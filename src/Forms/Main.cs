@@ -160,6 +160,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _lastDoNotPrompt = string.Empty;
         private VideoInfo _videoInfo = null;
         bool _splitDualSami = false;
+        bool _openFileDialogOn = false;
 
         private bool AutoRepeatContinueOn
         {
@@ -1899,21 +1900,39 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
         {
+            openToolStripMenuItem.Enabled = false;
             ReloadFromSourceView();
             OpenNewFile();
+            openToolStripMenuItem.Enabled = true;
         }
 
         private void OpenNewFile()
-        {
+        {            
+            if (_openFileDialogOn)
+                return;
+            _openFileDialogOn = true;
             _lastDoNotPrompt = string.Empty;
             if (!ContinueNewOrExit())
+            {
+                _openFileDialogOn = false;
                 return;
-            openFileDialog1.Title = _languageGeneral.OpenSubtitle;
-            openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
-
-            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
-              OpenSubtitle(openFileDialog1.FileName, null);
+            }
+            try
+            {
+                openFileDialog1.Title = _languageGeneral.OpenSubtitle;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
+                if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+                    OpenSubtitle(openFileDialog1.FileName, null);
+            }
+            catch
+            {
+                System.Diagnostics.Debug.WriteLine("Open file exception - might be called multiple times?");
+            }
+            finally
+            {
+                _openFileDialogOn = false;
+            }
         }
 
         public double CurrentFrameRate
