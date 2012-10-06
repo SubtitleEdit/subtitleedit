@@ -61,6 +61,7 @@ Subtitle Edit Changelog
    * Fixed insert line via F9 or waveform in network mode - thx Martin
    * Fixed crash in 'Compare' - thx SimplyTheBOSS
    * Fixed some bugs in remove interjections - thx Pson
+   * Fixed possible crash when clicking on "Open" file
 
 
 3.2.8 (3rd June 2012)
