@@ -167,6 +167,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Color CurrentDCinemaFontEffectColor { get; set; }
         public int CurrentDCinemaFontSize { get; set; }
 
+        public int CurrentCavena890LanguageId { get; set; }
+
         public bool SamiDisplayTwoClassesAsTwoSubtitles { get; set; }
 
         public SubtitleSettings()
@@ -204,6 +206,7 @@ namespace Nikse.SubtitleEdit.Logic
             CurrentDCinemaFontEffect = "border";
             CurrentDCinemaFontEffectColor = Color.Black;
             CurrentDCinemaFontSize = DCinemaFontSize;
+            CurrentCavena890LanguageId = -1;
         }
     }
 
