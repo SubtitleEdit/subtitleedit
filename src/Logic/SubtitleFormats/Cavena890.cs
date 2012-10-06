@@ -7,6 +7,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     class Cavena890 : SubtitleFormat
     {
+        const int LanguageIdHebrew = 20;
+        const int LanguageIdLatin = 68;
+        const int languageIdChinese = 84;
 
         static List<int> _hebrewCodes = new List<int> {
             0x40, // א
@@ -94,6 +97,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
 
             bool isChinese = false;
+            int languageId = LanguageIdLatin;
+            if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageId >= 0)
+                languageId = Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageId;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (p.Text.Contains("的") ||
@@ -109,14 +115,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.Text.Contains("上") ||
                     p.Text.Contains(""))
                 {
-                    isChinese = true;
+                    languageId = languageIdChinese;
                     _language = "CCKM44";
                     break;
                 }
             }
 
 
-            if (_language != null && _language.StartsWith("HEB") || isChinese)
+            if (languageId == languageIdChinese)
             {
                 byte[] buffer = new byte[388];
                 for (int i = 0; i < buffer.Length; i++)
@@ -152,7 +158,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 buffer[192] = 0x41;
 
 
-                if (isChinese)
+                if (languageId == languageIdChinese)
                 {
                     buffer[187] = 0x43; // CCKM44
                     buffer[188] = 0x43;
@@ -242,17 +248,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 WriteTime(fs, p.StartTime);
                 WriteTime(fs, p.EndTime);
 
-                var buffer = new byte[] { 0x14, 00, 00, 00, 00, 00, 00, 0x16 };
+                fs.WriteByte((byte)languageId);
+
+                var buffer = new byte[] { 00, 00, 00, 00, 00, 00, 0x16 };
                 fs.Write(buffer, 0, buffer.Length);
 
-                WriteText(fs, p.Text, p == subtitle.Paragraphs[subtitle.Paragraphs.Count-1]);
+                WriteText(fs, p.Text, p == subtitle.Paragraphs[subtitle.Paragraphs.Count-1], languageId);
 
                 number += 16;
             }
             fs.Close();
         }
 
-        private void WriteText(FileStream fs, string text, bool isLast)
+        private void WriteText(FileStream fs, string text, bool isLast, int languageId)
         {
             string line1 = string.Empty;
             string line2 = string.Empty;
@@ -269,13 +277,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 line2 = lines[0];
             }
 
-            var buffer = GetTextAsBytes(line1);
+            var buffer = GetTextAsBytes(line1, languageId);
             fs.Write(buffer, 0, buffer.Length);
 
             buffer = new byte[] { 00, 00, 00, 00, 00, 00 };
             fs.Write(buffer, 0, buffer.Length);
 
-            buffer = GetTextAsBytes(line2);
+            buffer = GetTextAsBytes(line2, languageId);
             fs.Write(buffer, 0, buffer.Length);
 
             buffer = new byte[] { 00, 00, 00, 00 };
@@ -283,14 +291,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 fs.Write(buffer, 0, buffer.Length);
         }
 
-        private byte[] GetTextAsBytes(string text)
+        private byte[] GetTextAsBytes(string text, int languageId)
         {
             byte[] buffer = new byte[51];
             int skipCount = 0;
             for (int i = 0; i < buffer.Length; i++)
                 buffer[i] = 0x7F;
 
-            if (_language != null && _language.StartsWith("CCKM44"))
+            if (languageId == languageIdChinese)
             {
                 for (int i = 0; i < buffer.Length; i++)
                     buffer[i] = 0;
@@ -305,7 +313,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     skipCount--;
                 }
-                else if (_language != null && _language.StartsWith("HEB"))
+                else if (languageId == LanguageIdHebrew)
                 {
                     int letterIndex = _hebrewLetters.IndexOf(current);
                     if (letterIndex >= 0)
@@ -328,7 +336,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     index++;
                 }
-                else if (_language != null && _language.StartsWith("CCKM44"))
+                else if (languageId == languageIdChinese)
                 {
                     encoding = Encoding.GetEncoding(1201);
                     if (index < 49)
@@ -493,7 +501,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private void WriteTime(FileStream fs, TimeCode timeCode)
         {
-            double totalMilliseconds = timeCode.TotalMilliseconds; // +TimeSpan.FromHours(10).TotalMilliseconds; // +10 hours
+            double totalMilliseconds = timeCode.TotalMilliseconds; 
             int frames = (int)Math.Round(totalMilliseconds / (1000.0 /Configuration.Settings.General.CurrentFrameRate));
             fs.WriteByte((byte)(frames / 256 / 256));
             fs.WriteByte((byte)(frames / 256));
@@ -547,8 +555,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 double startFrame = buffer[start - 14] * 256 * 256 + buffer[start - 13] * 256 + buffer[start - 12];
                 double endFrame = buffer[start - 11] * 256 * 256 + buffer[start - 10] * 256 + buffer[start - 9];
 
-                string line1 = FixText(buffer, start, TextLength);
-                string line2 = FixText(buffer, start + TextLength + 6, TextLength);
+                int languageId = buffer[start - 8];
+                Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageId = languageId;
+                
+                string line1 = FixText(buffer, start, TextLength, languageId);
+                string line2 = FixText(buffer, start + TextLength + 6, TextLength, languageId);
+                
                 if (lastNumber == number)
                 {
                     p = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
@@ -580,10 +592,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return Encoding.ASCII.GetString(buffer, 187, 6);
         }
 
-        private string FixText(byte[] buffer, int start, int textLength)
+        private string FixText(byte[] buffer, int start, int textLength, int languageId)
         {
             string text;
-            if (_language == "HEBNOA")
+
+            if (languageId == LanguageIdHebrew) // (_language == "HEBNOA")
             {
                 var encoding = Encoding.Default; // which encoding?? Encoding.GetEncoding("ISO-8859-5")
                 var sb = new StringBuilder();
@@ -604,12 +617,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 text = Utilities.FixEnglishTextInRightToLeftLanguage(text, ",.?-'/\"0123456789abcdefghijklmnopqrstuvwxyz");
             }
-            else if (_language == "CCKM44")
+            else if (languageId == languageIdChinese) //  (_language == "CCKM44" || _language == "TVB000")
             {
                 var sb = new StringBuilder();
                 int index = start;
 
-                text = Encoding.GetEncoding(1201).GetString(buffer, index, textLength - 1).Replace("\0", string.Empty);
+                text = Encoding.GetEncoding(1201).GetString(buffer, index, textLength - 1).Replace("\0", string.Empty).Replace(Convert.ToChar(127), ' ');
 
                 var encoding = Encoding.Default; // which encoding?? Encoding.GetEncoding("ISO-8859-5")
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
@@ -626,7 +639,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             else
             {
                 var encoding = Encoding.Default; // which encoding?? Encoding.GetEncoding("ISO-8859-5")
-                text = encoding.GetString(buffer, start, textLength);
+                text = encoding.GetString(buffer, start, textLength).Replace("\0", string.Empty);
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
                 text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
