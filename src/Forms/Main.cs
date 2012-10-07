@@ -6968,11 +6968,14 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             SetFontColor(p, color);
                             SubtitleListview1.SetText(item.Index, p.Text);
-                            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
                             {
                                 Paragraph original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
-                                SetFontColor(original, color);
-                                SubtitleListview1.SetAlternateText(item.Index, original.Text);
+                                if (original != null)
+                                {
+                                    SetFontColor(original, color);
+                                    SubtitleListview1.SetAlternateText(item.Index, original.Text);
+                                }
                             }
                         }
                     }
@@ -7037,11 +7040,14 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             SetFontName(p);
                             SubtitleListview1.SetText(item.Index, p.Text);
-                            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
                             {
                                 Paragraph original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
-                                SetFontName(original);
-                                SubtitleListview1.SetAlternateText(item.Index, original.Text);
+                                if (original != null)
+                                {
+                                    SetFontName(original);
+                                    SubtitleListview1.SetAlternateText(item.Index, original.Text);
+                                }
                             }
                         }
                     }
