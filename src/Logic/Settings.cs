@@ -571,6 +571,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string GeneralMergeOriginalAndTranslation { get; set; }
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
+        public string MainFileOpenKeepVideo { get; set; }
         public string MainFileSave { get; set; }
         public string MainFileSaveAs { get; set; }
         public string MainFileExportEbu { get; set; }
@@ -1602,6 +1603,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainFileOpen");
                 if (subNode != null)
                     settings.Shortcuts.MainFileOpen = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainFileOpenKeepVideo");
+                if (subNode != null)
+                    settings.Shortcuts.MainFileOpenKeepVideo = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainFileSave");
                 if (subNode != null)
                     settings.Shortcuts.MainFileSave = subNode.InnerText;
@@ -2186,6 +2190,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("GeneralMergeOriginalAndTranslation", settings.Shortcuts.GeneralMergeOriginalAndTranslation);
             textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
             textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
+            textWriter.WriteElementString("MainFileOpenKeepVideo", settings.Shortcuts.MainFileOpenKeepVideo);
             textWriter.WriteElementString("MainFileSave", settings.Shortcuts.MainFileSave);
             textWriter.WriteElementString("MainFileSaveAs", settings.Shortcuts.MainFileSaveAs);
             textWriter.WriteElementString("MainFileExportEbu", settings.Shortcuts.MainFileSaveAs);

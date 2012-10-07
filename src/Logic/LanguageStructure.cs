@@ -794,6 +794,7 @@
                     public string Title { get; set; }
                     public string New { get; set; }
                     public string Open { get; set; }
+                    public string OpenKeepVideo { get; set; }
                     public string Reopen { get; set; }
                     public string Save { get; set; }
                     public string SaveAs { get; set; }
