@@ -158,6 +158,12 @@
             public string FrameRateNotChanged { get; set; }
         }
 
+        public class ChangeSpeedInPercent
+        {
+            public string Title { get; set; }
+            public string Info { get; set; }
+        }
+
         public class ChooseEncoding
         {
             public string Title { get; set; }
@@ -705,6 +711,7 @@
             public string CasingCompleteMessageOnlyNames { get; set; }
             public string CasingCompleteMessage { get; set; }
             public string BeforeChangeFrameRate { get; set; }
+            public string BeforeAdjustSpeedInPercent { get; set; }
             public string FrameRateChangedFromXToY { get; set; }
             public string IdxFileNotFoundWarning { get; set; }
             public string InvalidVobSubHeader { get; set; }
@@ -849,6 +856,7 @@
                     public string RemoveTextForHearingImpaired { get; set; }
                     public string ChangeCasing { get; set; }
                     public string ChangeFrameRate { get; set; }
+                    public string ChangeSpeedInPercent { get; set; }                    
                     public string MergeShortLines { get; set; }
                     public string SplitLongLines { get; set; }
                     public string MinimumDisplayTimeBetweenParagraphs { get; set; }

@@ -1372,6 +1372,7 @@ namespace Nikse.SubtitleEdit.Forms
             removeTextForHearImparedToolStripMenuItem.Text = _language.Menu.Tools.RemoveTextForHearingImpaired;
             ChangeCasingToolStripMenuItem.Text = _language.Menu.Tools.ChangeCasing;
             toolStripMenuItemChangeFrameRate2.Text = _language.Menu.Tools.ChangeFrameRate;
+            changeSpeedInPercentToolStripMenuItem.Text = _language.Menu.Tools.ChangeSpeedInPercent;
             toolStripMenuItemAutoMergeShortLines.Text = _language.Menu.Tools.MergeShortLines;
             toolStripMenuItemAutoSplitLongLines.Text = _language.Menu.Tools.SplitLongLines;
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
@@ -15708,6 +15709,36 @@ namespace Nikse.SubtitleEdit.Forms
             OpenNewFile();
             _resetVideo = true;
             openToolStripMenuItem.Enabled = true;
+        }
+
+        private void changeSpeedInPercentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (IsSubtitleLoaded)
+            {
+                int lastSelectedIndex = 0;
+                if (SubtitleListview1.SelectedItems.Count > 0)
+                    lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+
+                ReloadFromSourceView();
+                var form = new ChangeSpeedInPercent();
+                _formPositionsAndSizes.SetPositionAndSize(form);
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo(_language.BeforeAdjustSpeedInPercent);
+                    _subtitle = form.AdjustSubtitle(_subtitle);
+                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
+                        _subtitleAlternate = form.AdjustSubtitle(_subtitleAlternate);
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(lastSelectedIndex);
+                }
+                _formPositionsAndSizes.SavePositionAndSize(form);
+            }
+            else
+            {
+                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
     }

@@ -176,6 +176,12 @@
     <Compile Include="Forms\ChangeFrameRate.Designer.cs">
       <DependentUpon>ChangeFrameRate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ChangeSpeedInPercent.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChangeSpeedInPercent.Designer.cs">
+      <DependentUpon>ChangeSpeedInPercent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ChooseLanguage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -945,6 +951,9 @@
     <EmbeddedResource Include="Forms\ChangeFrameRate.resx">
       <DependentUpon>ChangeFrameRate.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChangeSpeedInPercent.resx">
+      <DependentUpon>ChangeSpeedInPercent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ChooseEncoding.resx">
       <DependentUpon>ChooseEncoding.cs</DependentUpon>
