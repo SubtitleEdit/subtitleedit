@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.ChangeCasing ChangeCasing;
         public LanguageStructure.ChangeCasingNames ChangeCasingNames;
         public LanguageStructure.ChangeFrameRate ChangeFrameRate;
+        public LanguageStructure.ChangeSpeedInPercent ChangeSpeedInPercent;
         public LanguageStructure.ChooseEncoding ChooseEncoding;
         public LanguageStructure.ChooseLanguage ChooseLanguage;
         public LanguageStructure.CompareSubtitles CompareSubtitles;
@@ -244,6 +245,12 @@ namespace Nikse.SubtitleEdit.Logic
                 ToFrameRate = "To frame rate",
                 FrameRateNotCorrect = "Frame rate is not correct",
                 FrameRateNotChanged = "Frame rate is the same - nothing to convert",
+            };
+
+            ChangeSpeedInPercent = new LanguageStructure.ChangeSpeedInPercent
+            {
+                Title = "Adjust speed in percent",
+                Info = "Change speed of subtitle in percent",
             };
 
             ChooseEncoding = new LanguageStructure.ChooseEncoding
@@ -797,6 +804,7 @@ namespace Nikse.SubtitleEdit.Logic
                 CasingCompleteMessageNoNames = "Number of lines with casing changed: {0}/{1}",
                 CasingCompleteMessageOnlyNames = "Number of lines with names casing changed: {0}/{1}",
                 BeforeChangeFrameRate = "Before change frame rate",
+                BeforeAdjustSpeedInPercent = "Before adjust speed in percent",
                 FrameRateChangedFromXToY = "Frame rate changed from {0} to {1}",
                 IdxFileNotFoundWarning = "{0} not found! Import VobSub file anyway?",
                 InvalidVobSubHeader = "Header not valid VobSub file: {0}",
@@ -943,6 +951,7 @@ namespace Nikse.SubtitleEdit.Logic
                         RemoveTextForHearingImpaired = "Remove text for hearing impaired...",
                         ChangeCasing = "Change casing...",
                         ChangeFrameRate = "Change frame rate...",
+                        ChangeSpeedInPercent = "Changed speed (percent)...",
                         MergeShortLines = "Merge short lines...",
                         SplitLongLines = "Split long lines...",
                         MinimumDisplayTimeBetweenParagraphs = "Minimum display time between paragraphs...",

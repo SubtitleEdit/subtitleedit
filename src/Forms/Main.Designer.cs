@@ -65,6 +65,7 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemOpenKeepVideo = new System.Windows.Forms.ToolStripMenuItem();
             this.reopenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -402,7 +403,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemOpenKeepVideo = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeSpeedInPercentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -847,6 +848,13 @@
             this.openToolStripMenuItem.Size = new System.Drawing.Size(334, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemOpenKeepVideo
+            // 
+            this.toolStripMenuItemOpenKeepVideo.Name = "toolStripMenuItemOpenKeepVideo";
+            this.toolStripMenuItemOpenKeepVideo.Size = new System.Drawing.Size(334, 22);
+            this.toolStripMenuItemOpenKeepVideo.Text = "Open (keep video)";
+            this.toolStripMenuItemOpenKeepVideo.Click += new System.EventHandler(this.toolStripMenuItemOpenKeepVideo_Click);
             // 
             // reopenToolStripMenuItem
             // 
@@ -1673,7 +1681,8 @@
             this.visualSyncToolStripMenuItem,
             this.toolStripMenuItemPointSync,
             this.pointSyncViaOtherSubtitleToolStripMenuItem,
-            this.toolStripMenuItemChangeFrameRate2});
+            this.toolStripMenuItemChangeFrameRate2,
+            this.changeSpeedInPercentToolStripMenuItem});
             this.toolStripMenuItemSyncronization.Name = "toolStripMenuItemSyncronization";
             this.toolStripMenuItemSyncronization.Size = new System.Drawing.Size(97, 20);
             this.toolStripMenuItemSyncronization.Text = "Syncronization";
@@ -3977,12 +3986,12 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // toolStripMenuItemOpenKeepVideo
+            // changeSpeedInPercentToolStripMenuItem
             // 
-            this.toolStripMenuItemOpenKeepVideo.Name = "toolStripMenuItemOpenKeepVideo";
-            this.toolStripMenuItemOpenKeepVideo.Size = new System.Drawing.Size(334, 22);
-            this.toolStripMenuItemOpenKeepVideo.Text = "Open (keep video)";
-            this.toolStripMenuItemOpenKeepVideo.Click += new System.EventHandler(this.toolStripMenuItemOpenKeepVideo_Click);
+            this.changeSpeedInPercentToolStripMenuItem.Name = "changeSpeedInPercentToolStripMenuItem";
+            this.changeSpeedInPercentToolStripMenuItem.Size = new System.Drawing.Size(336, 22);
+            this.changeSpeedInPercentToolStripMenuItem.Text = "Change speed in percent...";
+            this.changeSpeedInPercentToolStripMenuItem.Click += new System.EventHandler(this.changeSpeedInPercentToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -4437,6 +4446,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemColumnImportText;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertTextFromSub;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenKeepVideo;
+        private System.Windows.Forms.ToolStripMenuItem changeSpeedInPercentToolStripMenuItem;
     }
 }
 
