@@ -121,7 +121,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_index > 0 && _index < _subtitle.Paragraphs.Count)
                 {
-                    var bmp = GenerateImageFromTextWithStyle(_subtitle.Paragraphs[_index].Text);
+                    string text = _subtitle.Paragraphs[_index].Text;
+                    var bmp = GenerateImageFromTextWithStyle(text);
                     pictureBox1.Image = bmp;
                     pictureBox1.Height = bmp.Height;
                     pictureBox1.Width = bmp.Width;
@@ -146,6 +147,10 @@ namespace Nikse.SubtitleEdit.Forms
                 var bmp = GenerateImageFromTextWithStyle(text);
                 pictureBox1.Top = groupBoxImageSettings.Top + groupBoxImageSettings.Height + 5;
                 pictureBox1.Left = 5;
+                if (comboBoxHAlign.SelectedIndex == 1) // center
+                {
+                    pictureBox1.Left = ((groupBoxImageSettings.Width - bmp.Width) / 2);
+                }
                 pictureBox1.Image = bmp;
                 pictureBox1.Height = bmp.Height;
                 pictureBox1.Width = bmp.Width;
@@ -173,6 +178,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Bitmap GenerateImageFromTextWithStyle(string text)
         {
+            bool subtitleFontBold = false;
+            bool subtitleAlignLeft = comboBoxHAlign.SelectedIndex == 0;
+            bool subtitleAlignRight = false;
+
             // remove styles for display text (except italic)
             text = RemoveSubStationAlphaFormatting(text);
             text = text.Replace("<b>", string.Empty);
@@ -183,38 +192,47 @@ namespace Nikse.SubtitleEdit.Forms
             text = text.Replace("</u>", string.Empty);
             text = text.Replace("<U>", string.Empty);
             text = text.Replace("</U>", string.Empty);
-            text = Utilities.RemoveHtmlFontTag(text);
 
             Font font;
             try
             {
-                font = new Font(_subtitleFontName, _subtitleFontSize);
+                var fontStyle = FontStyle.Regular;
+                if (subtitleFontBold)
+                    fontStyle = FontStyle.Bold;
+                font = new Font(_subtitleFontName, _subtitleFontSize, fontStyle);
             }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message);
-                font = new Font("Verdana", _subtitleFontSize);
+                font = new Font(FontFamily.Families[0].Name, _subtitleFontSize);
             }
             var bmp = new Bitmap(400, 200);
             var g = Graphics.FromImage(bmp);
 
             SizeF textSize = g.MeasureString("Hj!", font);
             var lineHeight = (textSize.Height * 0.64f);
-            float italicSpacing = textSize.Width / 8;
 
-            textSize = g.MeasureString(text, font);
+            textSize = g.MeasureString(Utilities.RemoveHtmlTags(text), font);
             g.Dispose();
             bmp.Dispose();
-            bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7) + 10);
+            int sizeX = (int)(textSize.Width * 0.8) + 40;
+            int sizeY = (int)(textSize.Height * 0.8) + 30;
+            if (sizeX < 1)
+                sizeX = 1;
+            if (sizeY < 1)
+                sizeY = 1;
+            bmp = new Bitmap(sizeX, sizeY);
             g = Graphics.FromImage(bmp);
 
             var lefts = new List<float>();
-            foreach (string line in text.Replace("<i>", "i").Replace("</i>", "i").Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in Utilities.RemoveHtmlFontTag(text.Replace("<i>", string.Empty).Replace("</i>", string.Empty)).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
-                if (comboBoxHAlign.SelectedIndex == 0) // left
+                if (subtitleAlignLeft)
                     lefts.Add(5);
+                else if (subtitleAlignRight)
+                    lefts.Add(bmp.Width - (TextDraw.MeasureTextWidth(font, line, subtitleFontBold) + 15));
                 else
-                    lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8) / 2);
+                    lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8 + 15) / 2);
             }
 
             if (checkBoxAntiAlias.Checked)
@@ -222,8 +240,9 @@ namespace Nikse.SubtitleEdit.Forms
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
                 g.SmoothingMode = SmoothingMode.AntiAlias;
             }
-            var sf = new StringFormat {Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near};
-            // draw the text to a path
+            var sf = new StringFormat();
+            sf.Alignment = StringAlignment.Near;
+            sf.LineAlignment = StringAlignment.Near;// draw the text to a path
             var path = new GraphicsPath();
 
             // display italic
@@ -231,35 +250,142 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 0;
             bool isItalic = false;
             float left = 5;
-            if (lefts.Count >= 0)
+            if (lefts.Count > 0)
                 left = lefts[0];
             float top = 5;
             bool newLine = false;
             int lineNumber = 0;
             float leftMargin = left;
             bool italicFromStart = false;
-            int pathPointsStart = -1;
+            int newLinePathPoint = -1;
+            Color c = _subtitleColor;
+            var colorStack = new Stack<Color>();
             while (i < text.Length)
             {
-                if (text.Substring(i).ToLower().StartsWith("<i>"))
+                if (text.Substring(i).ToLower().StartsWith("<font "))
+                {
+
+                    float addLeft = 0;
+                    int oldPathPointIndex = path.PointCount - 1;
+                    if (oldPathPointIndex < 0)
+                        oldPathPointIndex = 0;
+
+                    if (sb.Length > 0)
+                    {
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    }
+                    if (path.PointCount > 0)
+                    {
+                        for (int k = oldPathPointIndex; k < path.PathPoints.Length; k++)
+                        {
+                            if (path.PathPoints[k].X > addLeft)
+                                addLeft = path.PathPoints[k].X;
+                        }
+                    }
+                    if (addLeft == 0)
+                        addLeft = left + 2;
+                    left = addLeft;
+
+                    if (_borderWidth > 0)
+                        g.DrawPath(new Pen(_borderColor, _borderWidth), path);
+                    g.FillPath(new SolidBrush(c), path);
+                    path.Reset();
+                    path = new GraphicsPath();
+                    sb = new StringBuilder();
+
+
+
+                    int endIndex = text.Substring(i).IndexOf(">");
+                    if (endIndex == -1)
+                    {
+                        i += 9999;
+                    }
+                    else
+                    {
+                        string fontContent = text.Substring(i, endIndex);
+                        if (fontContent.Contains(" color="))
+                        {
+                            string[] arr = fontContent.Substring(fontContent.IndexOf(" color=") + 7).Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            if (arr.Length > 0)
+                            {
+                                string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
+                                try
+                                {
+                                    colorStack.Push(c); // save old color
+                                    if (fontColor.StartsWith("rgb("))
+                                    {
+                                        arr = fontColor.Remove(0, 4).TrimEnd(')').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                        c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                                    }
+                                    else
+                                    {
+                                        c = System.Drawing.ColorTranslator.FromHtml(fontColor);
+                                    }
+                                }
+                                catch
+                                {
+                                    c = _subtitleColor;
+                                }
+                            }
+                        }
+                        i += endIndex;
+                    }
+                }
+                else if (text.Substring(i).ToLower().StartsWith("</font>"))
+                {
+                    if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
+                    {
+                        float addLeft = 0;
+                        int oldPathPointIndex = path.PointCount - 1;
+                        if (oldPathPointIndex < 0)
+                            oldPathPointIndex = 0;
+                        if (sb.Length > 0)
+                        {
+                            TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                        }
+                        if (path.PointCount > 0)
+                        {
+                            for (int k = oldPathPointIndex; k < path.PathPoints.Length; k++)
+                            {
+                                if (path.PathPoints[k].X > addLeft)
+                                    addLeft = path.PathPoints[k].X;
+                            }
+                        }
+                        if (addLeft == 0)
+                            addLeft = left + 2;
+                        left = addLeft;
+
+
+                        if (_borderWidth > 0)
+                            g.DrawPath(new Pen(_borderColor, _borderWidth), path);
+                        g.FillPath(new SolidBrush(c), path);
+                        path.Reset();
+                        //path = new GraphicsPath();
+                        sb = new StringBuilder();
+                        if (colorStack.Count > 0)
+                            c = colorStack.Pop();
+                    }
+                    i += 6;
+                }
+                else if (text.Substring(i).ToLower().StartsWith("<i>"))
                 {
                     italicFromStart = i == 0;
                     if (sb.Length > 0)
                     {
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     isItalic = true;
                     i += 2;
                 }
                 else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
                 {
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     isItalic = false;
                     i += 3;
                 }
                 else if (text.Substring(i).StartsWith(Environment.NewLine))
                 {
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
                     top += lineHeight;
                     newLine = true;
@@ -280,15 +406,15 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
             }
             if (sb.Length > 0)
-            {
-                TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
-            }
+                TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
             if (_borderWidth > 0)
                 g.DrawPath(new Pen(_borderColor, _borderWidth), path);
-            g.FillPath(new SolidBrush(_subtitleColor), path);
+            g.FillPath(new SolidBrush(c), path);
             g.Dispose();
-            return bmp;
+            var nbmp = new NikseBitmap(bmp);
+            nbmp.CropTransparentSidesAndBottom(2);
+            return nbmp.GetBitmap();
         }
 
         private static string RemoveSubStationAlphaFormatting(string s)
