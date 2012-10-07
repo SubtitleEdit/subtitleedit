@@ -260,13 +260,14 @@ namespace Nikse.SubtitleEdit.Forms
             int newLinePathPoint = -1;
             Color c = _subtitleColor;
             var colorStack = new Stack<Color>();
+            var lastText = new StringBuilder();
             while (i < text.Length)
             {
                 if (text.Substring(i).ToLower().StartsWith("<font "))
                 {
 
                     float addLeft = 0;
-                    int oldPathPointIndex = path.PointCount - 1;
+                    int oldPathPointIndex = path.PointCount;
                     if (oldPathPointIndex < 0)
                         oldPathPointIndex = 0;
 
@@ -276,10 +277,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (path.PointCount > 0)
                     {
-                        for (int k = oldPathPointIndex; k < path.PathPoints.Length; k++)
+                        PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!                        
+                        for (int k = oldPathPointIndex; k < list.Length; k++)
                         {
-                            if (path.PathPoints[k].X > addLeft)
-                                addLeft = path.PathPoints[k].X;
+                            if (list[k].X > addLeft)
+                                addLeft = list[k].X;
                         }
                     }
                     if (addLeft == 0)
@@ -335,6 +337,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
                     {
+                        if (lastText.ToString().EndsWith(" ") && !sb.ToString().StartsWith(" "))
+                        {
+                            string t = sb.ToString();
+                            sb = new StringBuilder();
+                            sb.Append(" " + t);
+                        }
+
                         float addLeft = 0;
                         int oldPathPointIndex = path.PointCount - 1;
                         if (oldPathPointIndex < 0)
@@ -345,10 +354,11 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         if (path.PointCount > 0)
                         {
-                            for (int k = oldPathPointIndex; k < path.PathPoints.Length; k++)
+                            PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!                        
+                            for (int k = oldPathPointIndex; k < list.Length; k++)
                             {
-                                if (path.PathPoints[k].X > addLeft)
-                                    addLeft = path.PathPoints[k].X;
+                                if (list[k].X > addLeft)
+                                    addLeft = list[k].X;
                             }
                         }
                         if (addLeft == 0)
@@ -379,6 +389,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
                 {
+                    if (lastText.ToString().EndsWith(" ") && !sb.ToString().StartsWith(" "))
+                    {
+                        string t = sb.ToString();
+                        sb = new StringBuilder();
+                        sb.Append(" " + t);
+                    }
                     TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     isItalic = false;
                     i += 3;

@@ -11,18 +11,19 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var next = new PointF(left, top);
 
-
             if (path.PointCount > 0)
             {
                 int k = 0;
-                for (int i = path.PathPoints.Length - 1; i >= 0; i--)
+
+                PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!                        
+                for (int i = list.Length -1; i >= 0; i--)
                 {
-                    if (path.PathPoints[i].X > next.X)
-                        next.X = path.PathPoints[i].X;
+                    if (list[i].X > next.X)
+                        next.X = list[i].X;
                     k++;
-                    if (k > 50)
+                    if (k > 60)
                         break;
-                    if (i > pathPointsStart && pathPointsStart != -1)
+                    if (i <= pathPointsStart && pathPointsStart != -1)
                         break;
                 }
             }
@@ -67,21 +68,22 @@ namespace Nikse.SubtitleEdit.Logic
             TextDraw.DrawText(font, sf, path, sb, isItalic, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
 
             float width = 0;
-            int index = path.PathPoints.Length - 40;
+            PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!                        
+            int index = list.Length - 40;
             if (index < 0)
                 index = 0;
-            for (int i = index; i < path.PathPoints.Length; i++)
+            for (int i = index; i < list.Length; i++)
             {
-                if (path.PathPoints[i].X > width)
-                    width = path.PathPoints[i].X;
+                if (list[i].X > width)
+                    width = list[i].X;
             }
-            int max = 40;
-            if (max > path.PathPoints.Length)
-                max = path.PathPoints.Length;
+            int max = 45;
+            if (max > list.Length)
+                max = list.Length;
             for (int i = 0; i < max; i++)
             {
-                if (path.PathPoints[i].X > width)
-                    width = path.PathPoints[i].X;
+                if (list[i].X > width)
+                    width = list[i].X;
             }
 
             return width;
@@ -100,21 +102,22 @@ namespace Nikse.SubtitleEdit.Logic
             TextDraw.DrawText(font, sf, path, sb, isItalic, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
 
             float height = 0;
-            int index = path.PathPoints.Length - 80;
+            PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!                        
+            int index = list.Length - 80;
             if (index < 0)
                 index = 0;
-            for (int i = index; i < path.PathPoints.Length; i++)
+            for (int i = index; i < list.Length; i++)
             {
-                if (path.PathPoints[i].Y > height)
-                    height = path.PathPoints[i].Y;
+                if (list[i].Y > height)
+                    height = list[i].Y;
             }
-            int max = 80;
-            if (max > path.PathPoints.Length)
-                max = path.PathPoints.Length;
+            int max = 85;
+            if (max > list.Length)
+                max = list.Length;
             for (int i = 0; i < max; i++)
             {
-                if (path.PathPoints[i].Y > height)
-                    height = path.PathPoints[i].Y;
+                if (list[i].Y > height)
+                    height = list[i].Y;
             }
 
             return height;
