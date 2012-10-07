@@ -402,6 +402,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItemOpenKeepVideo = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -796,6 +797,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
             this.openToolStripMenuItem,
+            this.toolStripMenuItemOpenKeepVideo,
             this.reopenToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
@@ -3975,6 +3977,13 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
+            // toolStripMenuItemOpenKeepVideo
+            // 
+            this.toolStripMenuItemOpenKeepVideo.Name = "toolStripMenuItemOpenKeepVideo";
+            this.toolStripMenuItemOpenKeepVideo.Size = new System.Drawing.Size(334, 22);
+            this.toolStripMenuItemOpenKeepVideo.Text = "Open (keep video)";
+            this.toolStripMenuItemOpenKeepVideo.Click += new System.EventHandler(this.toolStripMenuItemOpenKeepVideo_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4427,6 +4436,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPasteSpecial;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemColumnImportText;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertTextFromSub;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenKeepVideo;
     }
 }
 

@@ -161,6 +161,7 @@ namespace Nikse.SubtitleEdit.Forms
         private VideoInfo _videoInfo = null;
         bool _splitDualSami = false;
         bool _openFileDialogOn = false;
+        bool _resetVideo = true;
 
         private bool AutoRepeatContinueOn
         {
@@ -1312,6 +1313,7 @@ namespace Nikse.SubtitleEdit.Forms
             fileToolStripMenuItem.Text = _language.Menu.File.Title;
             newToolStripMenuItem.Text = _language.Menu.File.New;
             openToolStripMenuItem.Text = _language.Menu.File.Open;
+            toolStripMenuItemOpenKeepVideo.Text = _language.Menu.File.OpenKeepVideo;
             reopenToolStripMenuItem.Text = _language.Menu.File.Reopen;
             saveToolStripMenuItem.Text = _language.Menu.File.Save;
             saveAsToolStripMenuItem.Text = _language.Menu.File.SaveAs;
@@ -2324,13 +2326,17 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.Items[0].Selected = true;
                     _findHelper = null;
                     _spellCheckForm = null;
-                    _videoFileName = null;
-                    _videoInfo = null;
-                    _videoAudioTrackNumber = -1;
-                    labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
-                    audioVisualizer.WavePeaks = null;
-                    audioVisualizer.ResetSpectrogram();
-                    audioVisualizer.Invalidate();
+
+                    if (_resetVideo)
+                    {
+                        _videoFileName = null;
+                        _videoInfo = null;
+                        _videoAudioTrackNumber = -1;
+                        labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
+                        audioVisualizer.WavePeaks = null;
+                        audioVisualizer.ResetSpectrogram();
+                        audioVisualizer.Invalidate();
+                    }
 
                     if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer)
                     {
@@ -11406,6 +11412,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripSeparator22.Visible = subtitleLoaded;
             toolStripMenuItemExport.Visible = subtitleLoaded;
             openOriginalToolStripMenuItem.Visible = subtitleLoaded;
+            toolStripMenuItemOpenKeepVideo.Visible = _videoFileName != null;
             if (subtitleLoaded && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
                 saveOriginalToolStripMenuItem.Visible = true;
@@ -11738,6 +11745,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             newToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileNew);
             openToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
+            toolStripMenuItemOpenKeepVideo.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileOpenKeepVideo);
             saveToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSave);
             saveAsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
             eBUSTLToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEbu);
@@ -15690,6 +15698,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+        }
+
+        private void toolStripMenuItemOpenKeepVideo_Click(object sender, EventArgs e)
+        {
+            openToolStripMenuItem.Enabled = false;
+            ReloadFromSourceView();
+            _resetVideo = false;
+            OpenNewFile();
+            _resetVideo = true;
+            openToolStripMenuItem.Enabled = true;
         }
 
     }
