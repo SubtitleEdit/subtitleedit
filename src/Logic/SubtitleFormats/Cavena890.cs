@@ -501,7 +501,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private void WriteTime(FileStream fs, TimeCode timeCode)
         {
-            double totalMilliseconds = timeCode.TotalMilliseconds; 
+            double totalMilliseconds = timeCode.TotalMilliseconds;
             int frames = (int)Math.Round(totalMilliseconds / (1000.0 /Configuration.Settings.General.CurrentFrameRate));
             fs.WriteByte((byte)(frames / 256 / 256));
             fs.WriteByte((byte)(frames / 256));
@@ -557,10 +557,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 int languageId = buffer[start - 8];
                 Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageId = languageId;
-                
+
                 string line1 = FixText(buffer, start, TextLength, languageId);
                 string line2 = FixText(buffer, start + TextLength + 6, TextLength, languageId);
-                
+
                 if (lastNumber == number)
                 {
                     p = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];

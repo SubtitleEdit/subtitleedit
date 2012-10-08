@@ -33,13 +33,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            //08:55:05	>>> WELCOME BACK.
-            //08:59:49	"""OFF THE RECORD"" STARTS RIGHT NOW."
-            //08:59:51	ON THE PANEL THIS WEEK WE HAVE EMILY LAWLER AND ZACH
-            //08:59:54	"GORCHOW, ALONG WITH RON DZWONKOWSKI."
+            //08:55:05  >>> WELCOME BACK.
+            //08:59:49  """OFF THE RECORD"" STARTS RIGHT NOW."
+            //08:59:51  ON THE PANEL THIS WEEK WE HAVE EMILY LAWLER AND ZACH
+            //08:59:54  "GORCHOW, ALONG WITH RON DZWONKOWSKI."
             //    HERE IS THE RUNDOWN.
             //    A POSSIBLE REDO OF THE EM LAW IF VOTERS REJECT IT.
-            //09:00:03	AND MIKE DUGAN AND LATER GENE CLEM IS DISCUSSING THIS
+            //09:00:03  AND MIKE DUGAN AND LATER GENE CLEM IS DISCUSSING THIS
 
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)

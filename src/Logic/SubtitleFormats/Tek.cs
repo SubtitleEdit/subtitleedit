@@ -50,17 +50,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb.AppendLine(@"ý Smart Titl Editor / Smart Titler  (A)(C)1992-2001. Dragutin Nikolic
 ý Serial No: XXXXXXXXXXXXXX
 ý Korisnik: Prava i Prevodi - prevodioci
-ý 
+ý
 ý KONFIGURACIONI PODACI
 ý Dozvoljeno slova u redu: 30
 ý Vremenska korekcija:  1.0000000000E+00
 ý Radjeno vremenskih korekcija: TRUE
 ý Slovni raspored ASCIR
-ý 
+ý
 ý                                       Kraj info blocka.");
             sb.AppendLine();
             int count = 0;
-            
+
             if (!subtitle.WasLoadedWithFrameNumbers)
                 subtitle.CalculateFrameNumbersFromTimeCodes(Configuration.Settings.General.CurrentFrameRate);
             foreach (Paragraph p in subtitle.Paragraphs)

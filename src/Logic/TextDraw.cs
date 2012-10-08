@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 int k = 0;
 
-                PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!                        
+                PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
                 for (int i = list.Length -1; i >= 0; i--)
                 {
                     if (list[i].X > next.X)
@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic
             TextDraw.DrawText(font, sf, path, sb, isItalic, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
 
             float width = 0;
-            PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!                        
+            PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
             int index = list.Length - 40;
             if (index < 0)
                 index = 0;
@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic
             TextDraw.DrawText(font, sf, path, sb, isItalic, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
 
             float height = 0;
-            PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!                        
+            PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
             int index = list.Length - 80;
             if (index < 0)
                 index = 0;
