@@ -856,7 +856,7 @@
                     public string RemoveTextForHearingImpaired { get; set; }
                     public string ChangeCasing { get; set; }
                     public string ChangeFrameRate { get; set; }
-                    public string ChangeSpeedInPercent { get; set; }                    
+                    public string ChangeSpeedInPercent { get; set; }
                     public string MergeShortLines { get; set; }
                     public string SplitLongLines { get; set; }
                     public string MinimumDisplayTimeBetweenParagraphs { get; set; }

@@ -277,7 +277,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (path.PointCount > 0)
                     {
-                        PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!                        
+                        PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
                         for (int k = oldPathPointIndex; k < list.Length; k++)
                         {
                             if (list[k].X > addLeft)
@@ -354,7 +354,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         if (path.PointCount > 0)
                         {
-                            PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!                        
+                            PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
                             for (int k = oldPathPointIndex; k < list.Length; k++)
                             {
                                 if (list[k].X > addLeft)

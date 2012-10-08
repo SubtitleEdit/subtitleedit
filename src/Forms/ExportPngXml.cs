@@ -864,11 +864,11 @@ namespace Nikse.SubtitleEdit.Forms
                     if (sb.Length > 0)
                     {
                         lastText.Append(sb.ToString());
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);                        
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     if (path.PointCount > 0)
                     {
-                        PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!                        
+                        PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
                         for (int k = oldPathPointIndex; k < list.Length; k++)
                         {
                             if (list[k].X > addLeft)
@@ -946,7 +946,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         if (path.PointCount > 0)
                         {
-                            PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!                        
+                            PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
                             for (int k = oldPathPointIndex; k < list.Length; k++)
                             {
                                 if (list[k].X > addLeft)
@@ -981,7 +981,7 @@ namespace Nikse.SubtitleEdit.Forms
                     i += 2;
                 }
                 else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
-                {                    
+                {
                     if (lastText.ToString().EndsWith(" ") && !sb.ToString().StartsWith(" "))
                     {
                         string t = sb.ToString();
@@ -1012,7 +1012,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    sb.Append(text.Substring(i, 1));                    
+                    sb.Append(text.Substring(i, 1));
                 }
                 i++;
             }

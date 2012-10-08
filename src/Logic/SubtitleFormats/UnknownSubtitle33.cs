@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     _errorCount++;
                 }
-            }            
+            }
             if (p != null && !string.IsNullOrEmpty(p.Text))
                 subtitle.Paragraphs.Add(p);
 
