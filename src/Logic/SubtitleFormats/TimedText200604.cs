@@ -28,6 +28,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string xmlAsString = sb.ToString().Trim();
+
+            if (xmlAsString.Contains("http://www.w3.org/2006/10"))
+                return false;
+
             if (xmlAsString.Contains("http://www.w3.org/") &&
                 xmlAsString.Contains("/ttaf1"))
             {
@@ -116,10 +120,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 no++;
             }
 
-            var ms = new MemoryStream();
-            var writer = new XmlTextWriter(ms, Encoding.UTF8) { Formatting = Formatting.Indented };
-            xml.Save(writer);
-            return Encoding.UTF8.GetString(ms.ToArray()).Trim();
+            return ToUtf8XmlString(xml);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

@@ -163,6 +163,11 @@ DIGITAL_CINEMA=YES
                     }
                 }
             }
+            if (paragraph != null && !string.IsNullOrEmpty(paragraph.Text))
+            {
+                paragraph.Text = paragraph.Text.Replace("[/BODY]", string.Empty).Trim();
+                subtitle.Paragraphs.Add(paragraph);
+            }
             subtitle.Renumber(1);
         }
 

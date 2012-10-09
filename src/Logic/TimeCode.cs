@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic
                 int frames;
                 if (int.TryParse(parts[0], out hours) && int.TryParse(parts[1], out minutes) && int.TryParse(parts[2], out seconds) && int.TryParse(parts[3], out frames))
                 {
-                    TimeSpan ts = new TimeSpan(0, hours, minutes, seconds, SubtitleFormat.FramesToMilliseconds(frames));
+                    TimeSpan ts = new TimeSpan(0, hours, minutes, seconds, SubtitleFormat.FramesToMillisecondsMax999(frames));
                     return ts.TotalMilliseconds;
                 }
             }

@@ -95,6 +95,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
+            if (p != null && text.Length > 0)
+            {
+                p.Text = text.ToString().Trim();
+                subtitle.Paragraphs.Add(p);
+            }
             subtitle.Renumber(1);
         }
 

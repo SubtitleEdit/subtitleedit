@@ -154,7 +154,7 @@ Sony,Sony DVD/UMD,1:85,16x9
         private TimeCode DecodeTimeCode(string timeCode)
         {
             string[] arr = timeCode.Split(":;,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMilliseconds(int.Parse(arr[3])));
+            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
         }
 
     }

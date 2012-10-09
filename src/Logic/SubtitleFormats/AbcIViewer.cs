@@ -59,11 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 reel.AppendChild(paragraph);
             }
 
-            MemoryStream ms = new MemoryStream();
-            XmlTextWriter writer = new XmlTextWriter(ms, Encoding.UTF8);
-            writer.Formatting = Formatting.Indented;
-            xml.Save(writer);
-            return Encoding.UTF8.GetString(ms.ToArray()).Trim();
+            return ToUtf8XmlString(xml);
         }
 
         private string ToTimeCode(double totalMilliseconds)

@@ -139,6 +139,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
             }
+            if (paragraph != null && !string.IsNullOrEmpty(paragraph.Text))
+                subtitle.Paragraphs.Add(paragraph);
+
             subtitle.Renumber(1);
         }
 
@@ -152,7 +155,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string seconds = parts[0];
             string frames = parts[1];
 
-            return new TimeCode(0, 0, int.Parse(seconds), FramesToMilliseconds(int.Parse(frames)));
+            return new TimeCode(0, 0, int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
         }
 
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using System.Text;
 
 namespace Test
 {
@@ -501,5 +502,97 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
 
         #endregion
 
+         #region All subtitle formats
+
+         [TestMethod()]
+         [DeploymentItem("SubtitleEdit.exe")]
+         public void LineCount()
+         {
+             var target = new SubStationAlpha_Accessor();
+             var subtitle = new Subtitle();
+             subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
+             subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
+             subtitle.Paragraphs.Add(new Paragraph("Line 3", 8000, 11000));
+             subtitle.Paragraphs.Add(new Paragraph("Line 4", 12000, 15000));
+
+             int expected = subtitle.Paragraphs.Count;
+             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+             {
+                 string text = format.ToText(subtitle, "test");
+                 var list = new List<string>();
+                 foreach (string line in text.Replace("\r\n", "\n").Split('\n'))
+                     list.Add(line);
+                 var s2 = new Subtitle();
+                 format.LoadSubtitle(s2, list, null);
+                 int actual = s2.Paragraphs.Count;
+                 Assert.AreEqual(expected, actual, format.FriendlyName);
+             }
+         }
+
+         [TestMethod()]
+         [DeploymentItem("SubtitleEdit.exe")]
+         public void LineContent()
+         {
+             var target = new SubStationAlpha_Accessor();
+             var subtitle = new Subtitle();
+             subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
+             subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
+             subtitle.Paragraphs.Add(new Paragraph("Line 3", 8000, 11000));
+             subtitle.Paragraphs.Add(new Paragraph("Line 4", 12000, 15000));
+             
+             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+             {
+                 string text = format.ToText(subtitle, "test");
+                 var list = new List<string>();
+                 foreach (string line in text.Replace("\r\n", "\n").Split('\n'))
+                     list.Add(line);
+                 var s2 = new Subtitle();
+                 format.LoadSubtitle(s2, list, null);
+
+                 if (s2.Paragraphs.Count == 4)
+                 {
+                     Assert.AreEqual(subtitle.Paragraphs[0].Text, s2.Paragraphs[0].Text, format.FriendlyName);
+                     Assert.AreEqual(subtitle.Paragraphs[3].Text, s2.Paragraphs[3].Text, format.FriendlyName);
+                 }
+             }
+         }
+
+         [TestMethod()]
+         [DeploymentItem("SubtitleEdit.exe")]
+         public void FormatReload()
+         {
+             var target = new SubStationAlpha_Accessor();
+             var subtitle = new Subtitle();
+             subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
+             subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
+             subtitle.Paragraphs.Add(new Paragraph("Line 3", 8000, 11000));
+             subtitle.Paragraphs.Add(new Paragraph("Line 4", 12000, 15000));
+
+             StringBuilder sb = new StringBuilder();
+             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+             {
+                 string text = format.ToText(subtitle, "test");
+                 var list = new List<string>();
+                 foreach (string line in text.Replace("\r\n", "\n").Split('\n'))
+                     list.Add(line);
+
+                 foreach (SubtitleFormat innerFormat in SubtitleFormat.AllSubtitleFormats)
+                 {
+                     if (innerFormat.IsMine(list, null))
+                     {
+                         if (format.FriendlyName != innerFormat.FriendlyName  && 
+                             !format.FriendlyName.Contains("Final Cut"))
+                         {
+//                             Assert.AreEqual(format.FriendlyName, innerFormat.FriendlyName, text);
+                             sb.AppendLine(innerFormat.FriendlyName + " takes " + format.FriendlyName);
+                         }
+                         break;
+                     }
+                 }
+             }
+            // System.Windows.Forms.MessageBox.Show(sb.ToString());
+         }
+
+        #endregion
     }
 }

@@ -36,6 +36,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            if (lines != null && lines.Count > 2 && !string.IsNullOrEmpty(lines[0]) && lines[0].Contains("{QTtext}"))
+                return false;
+
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
@@ -72,11 +75,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string line in lines)
             {
                 ReadLine(subtitle, line);
-                if (_text.Length > 10000)
+                if (_text.Length > 1000)
                     return;
             }
-            if (_paragraph.Text.Trim().Length > 0)
+            if (_text != null && _text.ToString().TrimStart().Length > 0)
+            {
+                _paragraph.Text = _text.ToString().Trim();
                 subtitle.Paragraphs.Add(_paragraph);
+            }
 
             subtitle.Renumber(1);
         }
@@ -102,12 +108,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         _text.AppendLine(line.TrimEnd());
                     }
-                    else
+                    else if (_paragraph != null && _paragraph.EndTime.TotalMilliseconds > 0)
                     {
                         _paragraph.Text = _text.ToString().Trim();
                         subtitle.Paragraphs.Add(_paragraph);
                         _paragraph = new Paragraph();
                         _expecting = ExpectingLine.TimeCodes;
+                    }
+                    else
+                    {
+                        _errorCount++;
                     }
                     break;
             }

@@ -439,10 +439,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 number++;
             }
 
-            var ms = new MemoryStream();
-            var writer = new XmlTextWriter(ms, Encoding.UTF8) {Formatting = Formatting.Indented};
-            xml.Save(writer);
-            string xmlAsText = Encoding.UTF8.GetString(ms.ToArray()).Trim();
+            string xmlAsText = ToUtf8XmlString(xml);
             xmlAsText = xmlAsText.Replace("xmeml[]", "xmeml");
             xmlAsText = xmlAsText.Replace(newLine, "&#13;");
             return xmlAsText;

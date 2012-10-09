@@ -61,7 +61,7 @@ NOTE=
             double start = 0;
             if (last != null)
                 start = last.EndTime.TotalSeconds;
-            return string.Format("{0:0.##}", (timeCode.TotalSeconds - start));
+            return string.Format("{0:0.0#}", (timeCode.TotalSeconds - start));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

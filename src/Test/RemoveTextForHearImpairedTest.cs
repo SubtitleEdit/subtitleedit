@@ -72,6 +72,9 @@ namespace Test
         public void RemoveColonTest()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveTextBeforeColon.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "Man over P.A.:\r\nGive back our homes.";
             string expected = "Give back our homes.";
             string actual = target.RemoveColon(text);
@@ -86,6 +89,8 @@ namespace Test
         public void RemoveHIInsideLine()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveTextBeforeColon.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "Be quiet. (SHUSHING) It's okay.";
             string expected = "Be quiet. It's okay.";
             string actual = target.RemoveHearImpairedtagsInsideLine(text);
@@ -100,6 +105,7 @@ namespace Test
         public void RemoveHI1()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "- Aw, save it. Storm?\r\n- [Storm]\r\nWe're outta here.";
             string expected = "- Aw, save it. Storm?\r\n- We're outta here.";
             string actual = target.RemoveTextFromHearImpaired(text);
@@ -114,6 +120,7 @@ namespace Test
         public void RemoveHI2()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "[Chuckles,\r\nCoughing]\r\nBut we lived through it.";
             string expected = "But we lived through it.";
             string actual = target.RemoveTextFromHearImpaired(text);
@@ -128,6 +135,7 @@ namespace Test
         public void RemoveHINot()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "is the body of a mutant kid\r\non the 6:00 news.";
             string expected = "is the body of a mutant kid\r\non the 6:00 news.";
             string actual = target.RemoveTextFromHearImpaired(text);
@@ -143,6 +151,8 @@ namespace Test
         public void RemoveHIMultilineItalic()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveTextBeforeColon.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "<i>NARRATOR:" + Environment.NewLine +
                           "Previously on NCIS</i>";
             string expected = "<i>Previously on NCIS</i>";
@@ -158,6 +168,8 @@ namespace Test
         public void RemoveHISecondLineDelay()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveTextBeforeColon.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "- JOHN: Hey." + Environment.NewLine +
                           "- ...hey.";
             string expected = "- Hey."+ Environment.NewLine +"- ...hey.";
@@ -170,6 +182,7 @@ namespace Test
         public void RemoveHIQuotes()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "- Where?!" + Environment.NewLine + "- Ow!";
             string expected = "Where?!";
             string actual = target.RemoveInterjections(text);
@@ -181,6 +194,7 @@ namespace Test
         public void RemoveHIDouble()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "[MAN]Where?![MAN]";
             string expected = "Where?!";
             string actual = target.RemoveTextFromHearImpaired(text);
@@ -193,6 +207,8 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveInterjections.Checked = false;
+            target.checkBoxRemoveTextBeforeColon.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "HECTOR: Hi." + Environment.NewLine + "-Oh, hey, Hector.";
             string expected = "- Hi." + Environment.NewLine + "- Oh, hey, Hector.";
             string actual = target.RemoveTextFromHearImpaired(text);
@@ -205,6 +221,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveInterjections.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "-Ballpark." + Environment.NewLine + "-Hmm.";
             string expected = "Ballpark.";
             string actual = target.RemoveInterjections(text);
@@ -217,6 +234,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveInterjections.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "-Ballpark." + Environment.NewLine + "-Mm-hm.";
             string expected = "Ballpark.";
             string actual = target.RemoveInterjections(text);
@@ -229,6 +247,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveInterjections.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "-Mm-hm." + Environment.NewLine + "-Ballpark.";
             string expected = "Ballpark.";
             string actual = target.RemoveInterjections(text);
@@ -241,6 +260,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveInterjections.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "- Mm-hm." + Environment.NewLine + "- Ballpark.";
             string expected = "Ballpark.";
             string actual = target.RemoveInterjections(text);
@@ -253,6 +273,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveInterjections.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "- Ballpark." + Environment.NewLine + "- Hmm.";
             string expected = "Ballpark.";
             string actual = target.RemoveInterjections(text);
@@ -265,6 +286,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveInterjections.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "Ballpark, mm-hm.";
             string expected = "Ballpark.";
             string actual = target.RemoveInterjections(text);
@@ -277,6 +299,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveInterjections.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "Mm-hm, Ballpark.";
             string expected = "Ballpark.";
             string actual = target.RemoveInterjections(text);
@@ -289,6 +312,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveInterjections.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "<i>Mm-hm, Ballpark.</i>";
             string expected = "<i>Ballpark.</i>";
             string actual = target.RemoveInterjections(text);
@@ -301,6 +325,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveInterjections.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "You like her, huh?";
             string expected = "You like her?";
             string actual = target.RemoveInterjections(text);
@@ -313,6 +338,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveInterjections.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "You like her, huh!";
             string expected = "You like her!";
             string actual = target.RemoveInterjections(text);
@@ -325,6 +351,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveInterjections.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "You like her, huh.";
             string expected = "You like her.";
             string actual = target.RemoveInterjections(text);
@@ -337,6 +364,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveInterjections.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "- You like her, huh." + Environment.NewLine + "- I do";
             string expected = "- You like her." + Environment.NewLine + "- I do";
             string actual = target.RemoveInterjections(text);
@@ -349,6 +377,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveInterjections.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "<i>- You like her, huh." + Environment.NewLine + "- I do</i>";
             string expected = "<i>- You like her." + Environment.NewLine + "- I do</i>";
             string actual = target.RemoveInterjections(text);
@@ -362,6 +391,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveInterjections.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
             string text = "- Ballpark, mm-hm." + Environment.NewLine + "- Oh yes!";
             string expected = "- Ballpark." + Environment.NewLine + "- Yes!";
             string actual = target.RemoveInterjections(text);

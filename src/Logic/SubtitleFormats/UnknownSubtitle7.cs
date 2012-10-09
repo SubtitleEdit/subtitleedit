@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), p.Text, Environment.NewLine));
             }
-            return sb.ToString().Trim();
+            return sb.ToString();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -68,8 +68,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
+            int count = 0;
             foreach (string line in lines)
             {
+                count++;
                 if (regexTimeCode.IsMatch(line))
                 {
                     string[] parts = line.Substring(0,11).Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -97,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                else if (regexTimeCodeEnd.IsMatch(line))
+                else if (regexTimeCodeEnd.IsMatch(line) || (count == lines.Count && regexTimeCodeEnd.IsMatch(line + "\t")))
                 {
                     string[] parts = line.Substring(0,11).Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)

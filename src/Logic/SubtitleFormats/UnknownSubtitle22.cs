@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 string text = Utilities.RemoveHtmlTags(p.Text);
-                sb.AppendLine(string.Format("{0}\t{1}\t{2}\r\n{3}\r\n", count, MakeTimeCode(p.StartTime), MakeTimeCode(p.EndTime), text));
+                sb.AppendLine(string.Format("{0}\t{1}\t{2:00}:{3:00}\t{4}\r\n{5}\r\n", count, MakeTimeCode(p.StartTime), p.Duration.Seconds, MillisecondsToFrames(p.Duration.Milliseconds), MakeTimeCode(p.EndTime), text));
                 count++;
             }
 
@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private TimeCode DecodeTimeCode(string timeCode)
         {
             string[] arr = timeCode.Split(":;,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMilliseconds(int.Parse(arr[3])));
+            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

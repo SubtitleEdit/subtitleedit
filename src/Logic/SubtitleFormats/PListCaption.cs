@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.AppendChild(keyNode);
 
                 valueNode = xml.CreateElement("real");
-                valueNode.InnerText = string.Format("{0:0.0###############}", p.StartTime.TotalSeconds); // 3.1600000000000001
+                valueNode.InnerText = string.Format("{0:0.0###############}", p.EndTime.TotalSeconds); // 3.1600000000000001
                 paragraph.AppendChild(valueNode);
 
                 int textNo = 0;
@@ -117,11 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 no++;
             }
 
-            MemoryStream ms = new MemoryStream();
-            XmlTextWriter writer = new XmlTextWriter(ms, Encoding.UTF8);
-            writer.Formatting = Formatting.Indented;
-            xml.Save(writer);
-            return Encoding.UTF8.GetString(ms.ToArray()).Trim().Replace("<plist>", "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" +  Environment.NewLine +
+            return ToUtf8XmlString(xml).Replace("<plist>", "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" +  Environment.NewLine +
                              "<plist version=\"1.0\">;");
         }
 
@@ -157,7 +153,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                     p.Text = pText.ToString().Trim();
-                    if (p.StartTime.TotalSeconds > 0 && p.EndTime.TotalMilliseconds > 0 && !string.IsNullOrEmpty(p.Text))
+                    if (p.StartTime.TotalSeconds >= 0 && p.EndTime.TotalMilliseconds > 0 && !string.IsNullOrEmpty(p.Text))
                         subtitle.Paragraphs.Add(p);
                 }
                 catch (Exception ex)

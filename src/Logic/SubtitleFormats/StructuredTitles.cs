@@ -114,10 +114,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(p.Text))
-                            p.Text = line.Trim();
-                        else
-                            p.Text += Environment.NewLine + line.Trim();
+                        if (!line.Trim().EndsWith(": --:--:--:--,--:--:--:--,-1"))
+                        {
+                            if (string.IsNullOrEmpty(p.Text))
+                                p.Text = line.Trim();
+                            else
+                                p.Text += Environment.NewLine + line.Trim();
+                        }
                     }
                 }
             }
