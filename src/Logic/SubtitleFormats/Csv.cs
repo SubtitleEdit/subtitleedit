@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text = text.Substring(1);
 
             if (text.EndsWith("\"") && text.Length > 1)
-                text = text.Substring(0, text.Length-2);
+                text = text.Substring(0, text.Length-1);
 
             return text.Replace("\"\"", "\"");
         }

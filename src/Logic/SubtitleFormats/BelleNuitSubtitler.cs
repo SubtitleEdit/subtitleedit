@@ -172,10 +172,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             node.InnerText = sb.ToString().Trim() + Environment.NewLine + Environment.NewLine;
             doc.DocumentElement.AppendChild(node);
 
-            var ms = new MemoryStream();
-            var writer = new XmlTextWriter(ms, Encoding.UTF8) {Formatting = Formatting.Indented};
-            doc.Save(writer);
-            return Encoding.UTF8.GetString(ms.ToArray()).Trim();
+            return ToUtf8XmlString(doc);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

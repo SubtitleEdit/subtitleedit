@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Unkown 28"; }
+            get { return "Unknown 28"; }
         }
 
         public override bool IsTimeBased
@@ -66,11 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 xml.DocumentElement.AppendChild(paragraph);
             }
 
-            var ms = new MemoryStream();
-            var writer = new XmlTextWriter(ms, Encoding.UTF8);
-            writer.Formatting = Formatting.Indented;
-            xml.Save(writer);
-            return Encoding.UTF8.GetString(ms.ToArray()).Trim();
+            return ToUtf8XmlString(xml);
         }
 
         private string ToTimeCode(double totalMilliseconds)

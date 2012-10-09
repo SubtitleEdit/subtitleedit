@@ -79,8 +79,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 ReadLine(subtitle, line);
             }
-            if (_paragraph.Text.Trim().Length > 0)
+            if (_text.ToString().Trim().Length > 0)
+            {
+                _paragraph.Text = _text.ToString().Trim();
                 subtitle.Paragraphs.Add(_paragraph);
+            }
 
             subtitle.Renumber(1);
         }
@@ -143,14 +146,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int startHours = int.Parse(parts[0]);
                     int startMinutes = int.Parse(parts[1]);
                     int startSeconds = int.Parse(parts[2]);
-                    int startMilliseconds = FramesToMilliseconds(int.Parse(parts[3]));
+                    int startMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[3]));
 
                     string end = line.Substring(17, 11);
                     parts = end.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     int endHours = int.Parse(parts[0]);
                     int endMinutes = int.Parse(parts[1]);
                     int endSeconds = int.Parse(parts[2]);
-                    int endMilliseconds = FramesToMilliseconds(int.Parse(parts[3]));
+                    int endMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[3]));
 
                     paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
                     paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);

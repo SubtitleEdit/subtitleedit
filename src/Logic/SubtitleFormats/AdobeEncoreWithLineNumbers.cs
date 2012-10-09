@@ -33,6 +33,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.AppendLine(line);
             if (sb.ToString().Contains("#INPOINT OUTPOINT PATH"))
                 return false; // Pinnacle Impression
+            if (sb.ToString().StartsWith("{{\\rtf1"))
+                return false;
 
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;

@@ -809,6 +809,9 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle32.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle33.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle34.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle35.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle36.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle37.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
     <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />

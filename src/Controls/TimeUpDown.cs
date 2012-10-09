@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                         int milliSeconds = 0;
                         if (Utilities.IsInteger(times[3]))
-                            milliSeconds = Logic.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(int.Parse(times[3]));
+                            milliSeconds = Logic.SubtitleFormats.SubtitleFormat.FramesToMillisecondsMax999(int.Parse(times[3]));
 
                         return new TimeCode(hours, minutes, seconds, milliSeconds);
                     }

@@ -130,9 +130,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
 
-            if (p != null && p.Text.Length > 0)
+            if (p != null && text.ToString().Trim().Length > 0)
             {
-                p.Text = text.ToString().Trim();
+                p.Text = text.ToString().Trim().TrimEnd('}').Trim();
                 subtitle.Paragraphs.Add(p);
             }
             subtitle.Renumber(1);

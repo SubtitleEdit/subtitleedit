@@ -149,6 +149,10 @@
     <FrameRateNotCorrect>Billeder per sekund er ikke korrekt</FrameRateNotCorrect>
     <FrameRateNotChanged>Antal billeder per sekund er den samme - ikke noget at konvertere</FrameRateNotChanged>
   </ChangeFrameRate>
+  <ChangeSpeedInPercent>
+    <Title>Juster hastighed i procent</Title>
+    <Info>Skift hastighed for undertekst i procent</Info>
+  </ChangeSpeedInPercent>
   <ChooseEncoding>
     <Title>Vælg tegntabel</Title>
     <CodePage>Tegntabel</CodePage>
@@ -513,6 +517,7 @@
         <Title>Filer</Title>
         <New>&amp;Ny</New>
         <Open>Åbn</Open>
+        <OpenKeepVideo>Åbn (behold video)</OpenKeepVideo>
         <Reopen>&amp;Genåbn</Reopen>
         <Save>&amp;Gem</Save>
         <SaveAs>Gem &amp;som...</SaveAs>
@@ -565,6 +570,7 @@
         <RemoveTextForHearingImpaired>Fjern tekst for hørehæmmede...</RemoveTextForHearingImpaired>
         <ChangeCasing>Skift store/små bogstaver...</ChangeCasing>
         <ChangeFrameRate>Skift frame rate...</ChangeFrameRate>
+        <ChangeSpeedInPercent>Ændr hastighed (procent)...</ChangeSpeedInPercent>
         <MergeShortLines>Flet korte linjer...</MergeShortLines>
         <SplitLongLines>Split lange linjer...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimum visningstid mellem tekster...</MinimumDisplayTimeBetweenParagraphs>
@@ -903,6 +909,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <CasingCompleteMessageOnlyNames>Antal af linjer hvor navn har ændret store/små bogstaver: {0}/{1}</CasingCompleteMessageOnlyNames>
     <CasingCompleteMessage>Antal af linjer med store/små bogstaver ændret: {0}/{1}, ændret casing for navne: {2}</CasingCompleteMessage>
     <BeforeChangeFrameRate>Før ændringen frame rate</BeforeChangeFrameRate>
+    <BeforeAdjustSpeedInPercent>Før justering af hastighed i procent</BeforeAdjustSpeedInPercent>
     <FrameRateChangedFromXToY>Frame rate ændret fra {0} til {1}</FrameRateChangedFromXToY>
     <IdxFileNotFoundWarning>{0} ikke fundet! Importer VobSub filen alligevel?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>Header ikke gyldig VobSub fil: {0}</InvalidVobSubHeader>

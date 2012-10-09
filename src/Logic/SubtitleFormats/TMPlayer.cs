@@ -25,6 +25,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            if (new UnknownSubtitle33().IsMine(lines, fileName) || new UnknownSubtitle36().IsMine(lines, fileName))
+                return false;
+
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
 

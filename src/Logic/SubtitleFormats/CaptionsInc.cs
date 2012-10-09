@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             try
             {
-                return new TimeCode(int.Parse(timeCode.Substring(0, 2)), int.Parse(timeCode.Substring(2, 2)), int.Parse(timeCode.Substring(4, 2)), FramesToMilliseconds(int.Parse(timeCode.Substring(6, 2))));
+                return new TimeCode(int.Parse(timeCode.Substring(0, 2)), int.Parse(timeCode.Substring(2, 2)), int.Parse(timeCode.Substring(4, 2)), FramesToMillisecondsMax999(int.Parse(timeCode.Substring(6, 2))));
             }
             catch (Exception exception)
             {

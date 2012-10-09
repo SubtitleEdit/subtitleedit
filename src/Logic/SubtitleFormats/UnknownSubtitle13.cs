@@ -62,11 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 id++;
             }
 
-            MemoryStream ms = new MemoryStream();
-            XmlTextWriter writer = new XmlTextWriter(ms, Encoding.UTF8);
-            writer.Formatting = Formatting.Indented;
-            xml.Save(writer);
-            return Encoding.UTF8.GetString(ms.ToArray()).Trim();
+            return ToUtf8XmlString(xml);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -101,8 +97,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string text = node.InnerText;
                     if (text.StartsWith("![CDATA["))
                         text = text.Remove(0, 8);
-                    if (text.StartsWith("]]"))
-                        text = text.Remove(text.Length-3, 2);
+                    if (text.StartsWith("<![CDATA["))
+                        text = text.Remove(0, 9);
+                    if (text.EndsWith("]]"))
+                        text = text.Remove(text.Length-2, 2);
 
                     subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text));
                 }

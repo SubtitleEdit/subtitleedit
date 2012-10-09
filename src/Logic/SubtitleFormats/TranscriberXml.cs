@@ -81,11 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 episode.AppendChild(section);
             }
 
-            var ms = new MemoryStream();
-            var writer = new XmlTextWriter(ms, Encoding.UTF8) {Formatting = Formatting.Indented};
-            xml.Save(writer);
-
-            string returnXml = Encoding.UTF8.GetString(ms.ToArray()).Trim();
+            string returnXml = ToUtf8XmlString(xml);
             returnXml = returnXml.Replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>", "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                           "<!DOCTYPE Trans SYSTEM \"trans-14.dtd\">");
             return returnXml;

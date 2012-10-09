@@ -314,10 +314,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 no++;
             }
 
-            var ms = new MemoryStream();
-            var writer = new XmlTextWriter(ms, Encoding.UTF8) {Formatting = Formatting.Indented};
-            xml.Save(writer);
-            return Encoding.UTF8.GetString(ms.ToArray()).Trim().Replace(" xmlns=\"\"", string.Empty).Replace(" xmlns:tts=\"http://www.w3.org/ns/10/ttml#style\">", ">");
+            return ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty).Replace(" xmlns:tts=\"http://www.w3.org/ns/10/ttml#style\">", ">");
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

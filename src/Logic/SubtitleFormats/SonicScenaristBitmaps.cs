@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string seconds = parts[2];
             string frames = parts[3];
 
-            int milliseconds = FramesToMilliseconds(double.Parse(frames));
+            int milliseconds = FramesToMillisecondsMax999(double.Parse(frames));
             if (milliseconds > 999)
                 milliseconds = 999;
 

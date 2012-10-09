@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         subtitle.Paragraphs.Add(p);
                     }
                 }
-                else if (line.Trim().Length == 0)
+                else if (line.Trim('-').Trim().Length == 0)
                 {
                     // skip these lines
                 }

@@ -509,7 +509,7 @@ namespace Nikse.SubtitleEdit.Forms
                 e.Handled = true;
                 return;
             }
-            if (e.Modifiers == Keys.None && e.KeyCode == Keys.End)
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.End)
             {
                 _index = _subtitle.Paragraphs.Count-1;
                 ShowCurrent();

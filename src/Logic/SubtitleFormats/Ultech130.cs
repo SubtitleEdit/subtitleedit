@@ -210,7 +210,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private TimeCode DecodeTimeStamp(byte[] buffer, int index)
         {
-            return new TimeCode(buffer[index], buffer[index + 1], buffer[index + 2], FramesToMilliseconds(buffer[index + 3]));
+            return new TimeCode(buffer[index], buffer[index + 1], buffer[index + 2], FramesToMillisecondsMax999(buffer[index + 3]));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

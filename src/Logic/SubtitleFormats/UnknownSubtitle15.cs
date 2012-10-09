@@ -69,23 +69,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text.InnerText = Utilities.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, " ").Replace("  ", " ");
                 paragraph.AppendChild(text);
 
-                XmlAttribute start = xml.CreateAttribute("startTime");
+                XmlNode start = xml.CreateElement("startTime");
                 start.InnerText = ToTimeCode(p.StartTime);
-                paragraph.Attributes.Append(start);
+                paragraph.AppendChild(start);
 
-                XmlAttribute duration = xml.CreateAttribute("endTime");
+                XmlNode duration = xml.CreateElement("endTime");
                 duration.InnerText = ToTimeCode(p.EndTime);
-                paragraph.Attributes.Append(duration);
+                paragraph.AppendChild(duration);
 
-                xml.DocumentElement.AppendChild(paragraph);
+                xml.DocumentElement.SelectSingleNode("video").AppendChild(paragraph);
                 id++;
             }
 
-            var ms = new MemoryStream();
-            var writer = new XmlTextWriter(ms, Encoding.UTF8);
-            writer.Formatting = Formatting.Indented;
-            xml.Save(writer);
-            return Encoding.UTF8.GetString(ms.ToArray()).Trim();
+            return ToUtf8XmlString(xml);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

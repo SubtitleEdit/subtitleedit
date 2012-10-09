@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
+using System.IO;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -82,7 +85,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new TimedText10(),
                     new TimedText200604(),
                     new TimedText(),
-                    new TimeXml(),
                     new TitleExchangePro(),
                     new TmpegEncText(),
                     new TmpegEncXml(),
@@ -126,10 +128,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new UnknownSubtitle32(),
                     new UnknownSubtitle33(),
                     new UnknownSubtitle34(),
+                    new UnknownSubtitle35(),
+                    new UnknownSubtitle36(),
+                    new UnknownSubtitle37(),
                     new UTSubtitleXml(),
                     new Utx(),
                     new UtxFrames(),
                     new WebVTT(),
+                    new TimeXml(),
                     new YouTubeAnnotations(),
                     new YouTubeSbv(),
                     new ZeroG(),
@@ -200,12 +206,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static int MillisecondsToFrames(double milliseconds)
         {
-            return (int)System.Math.Round(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            return (int)System.Math.Round(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate-1.0));
         }
 
         public static int FramesToMilliseconds(double frames)
         {
             return (int)System.Math.Round(frames * (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+        }
+
+        public static int FramesToMillisecondsMax999(double frames)
+        {
+            int ms = (int)System.Math.Round(frames * (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            if (ms > 999)
+                ms = 999;
+            return ms;
         }
 
         public virtual bool HasStyleSupport
@@ -214,6 +228,28 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 return false;
             }
+        }
+
+        public static string ToUtf8XmlString(XmlDocument xml, bool omitXmlDeclaration)
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Encoding = new UnicodeEncoding(false, false); // no BOM in a .NET string
+            settings.Indent = true;
+            settings.OmitXmlDeclaration = omitXmlDeclaration;
+
+            using (StringWriter textWriter = new StringWriter())
+            {
+                using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, settings))
+                {
+                    xml.Save(xmlWriter);
+                }
+                return textWriter.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"").Trim();
+            }
+        }
+
+        public static string ToUtf8XmlString(XmlDocument xml)
+        {
+            return ToUtf8XmlString(xml, false);
         }
 
     }
