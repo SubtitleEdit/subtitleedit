@@ -677,8 +677,8 @@ namespace Nikse.SubtitleEdit.Forms
         private string FormatFabTime(TimeCode time, MakeBitmapParameter param)
         {
             if (param.Bitmap.Width == 720 && param.Bitmap.Width == 480) // NTSC
-                return string.Format("{0:00};{1:00};{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(time.Milliseconds));
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(time.Milliseconds));
+                return string.Format("{0:00};{1:00};{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
         private void SetupImageParameters()
@@ -834,6 +834,8 @@ namespace Nikse.SubtitleEdit.Forms
             var sf = new StringFormat();
             sf.Alignment = StringAlignment.Near;
             sf.LineAlignment = StringAlignment.Near;// draw the text to a path
+
+//            Thread.CurrentThread.CurrentCulture = new CultureInfo(57007);
             var path = new GraphicsPath();
 
             // display italic

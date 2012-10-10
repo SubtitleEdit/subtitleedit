@@ -36,7 +36,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (sb.ToString().Contains(Environment.NewLine + "SP_NUMBER     START        END       FILE_NAME"))
                 return false; // SON
 
-
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
         }
@@ -61,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private string EncodeTimeCode(TimeCode time)
         {
             //00:03:15:22 (last is frame)
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFrames(time.Milliseconds));
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

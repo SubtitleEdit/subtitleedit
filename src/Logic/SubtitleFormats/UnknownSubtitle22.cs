@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private string MakeTimeCode(TimeCode tc)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", tc.Hours, tc.Minutes, tc.Seconds, MillisecondsToFrames(tc.Milliseconds));
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", tc.Hours, tc.Minutes, tc.Seconds, MillisecondsToFramesMaxFrameRate(tc.Milliseconds));
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 string text = Utilities.RemoveHtmlTags(p.Text);
-                sb.AppendLine(string.Format("{0}\t{1}\t{2:00}:{3:00}\t{4}\r\n{5}\r\n", count, MakeTimeCode(p.StartTime), p.Duration.Seconds, MillisecondsToFrames(p.Duration.Milliseconds), MakeTimeCode(p.EndTime), text));
+                sb.AppendLine(string.Format("{0}\t{1}\t{2:00}:{3:00}\t{4}\r\n{5}\r\n", count, MakeTimeCode(p.StartTime), p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds), MakeTimeCode(p.EndTime), text));
                 count++;
             }
 

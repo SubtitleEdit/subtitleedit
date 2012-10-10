@@ -680,7 +680,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             text = text.Replace(Environment.NewLine, Encoding.Default.GetString(new byte[] { 0xfe, 0x02, 0x03 })); // fix line breaks
 
             Encoding encoding = GetEncoding(_codePage);
-            byte[] textBuffer;
+            byte[] textBuffer;            
+
             if (_codePage == 3)
                 textBuffer = GetArabicBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"));
             else if (_codePage == 4)
@@ -761,7 +762,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             // write four bytes time code
             string highPart = string.Format("{0:00}", timeCode.Hours) + string.Format("{0:00}", timeCode.Minutes);
-            byte frames = (byte)MillisecondsToFrames(timeCode.Milliseconds);
+            byte frames = (byte)MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds);
             string lowPart = string.Format("{0:00}", timeCode.Seconds) + string.Format("{0:00}", frames);
 
             int high = int.Parse(highPart);
@@ -871,53 +872,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             int feIndex = index;
-            const int endDelimiter = 0x00;
+            int endDelimiter = 0x00;
+            var p = new Paragraph();
 
-            if (_codePage == -1)
-                GetCodePage(buffer, index, endDelimiter);
-
-            var sb = new StringBuilder();
-            index = feIndex + 3;
-            string preTextCode = System.Text.Encoding.ASCII.GetString(buffer, index +1, 3);
-            if (preTextCode == "W16")
-                index+=6;
-            while (index < buffer.Length && buffer[index] != endDelimiter)
-            {
-                if (preTextCode == "W16")
-                {
-                    sb.Append(System.Text.Encoding.GetEncoding(1200).GetString(buffer, index, 2)); // codepage 1200 = unicode
-                    index++;
-                }
-                else if (buffer[index] == 0xFF)
-                {
-                    sb.Append(" ");
-                }
-                else if (buffer[index] == 0xFE)
-                {
-                    sb.AppendLine();
-                    index += 2;
-                }
-                else if (_codePage == 0)
-                    sb.Append(GetLatinString(GetEncoding(_codePage), buffer, ref index));
-                else if (_codePage == 3)
-                    sb.Append(GetArabicString(buffer, ref index));
-                else if (_codePage == 4)
-                    sb.Append(GetHebrewString(buffer, ref index));
-                else if (_codePage == 6)
-                    sb.Append(GetCyrillicString(buffer, ref index));
-                else
-                {
-                    sb.Append(GetEncoding(_codePage).GetString(buffer, index, 1));
-                }
-                index++;
-            }
-            if (index + 20 >= buffer.Length)
-                return null;
-
-            var p = new Paragraph {Text = sb.ToString()};
-            p.Text = FixItalics(p.Text);
-            if (_codePage == 3)
-                p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
             int timeStartIndex = feIndex - 15;
             if (buffer[timeStartIndex] == 0x60)
             {
@@ -945,6 +902,73 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 return null;
             }
+            int textLength = buffer[timeStartIndex + 9] + buffer[timeStartIndex + 10] * 256;
+            int maxIndex = timeStartIndex + 10 + textLength;
+
+            if (_codePage == -1)
+                GetCodePage(buffer, index, endDelimiter);
+
+            var sb = new StringBuilder();
+            index = feIndex + 3;
+            string preTextCode = System.Text.Encoding.ASCII.GetString(buffer, index +1, 3);
+            if (preTextCode == "W16")
+                index+=5;
+            while (index < buffer.Length && index <= maxIndex) // buffer[index] != endDelimiter)
+            {
+                if (preTextCode == "W16")
+                {
+                    if (buffer[index] == 0xFE)
+                    {
+                        sb.AppendLine();
+                        preTextCode = System.Text.Encoding.ASCII.GetString(buffer, index + 4, 3);
+                        if (preTextCode == "W16")
+                            index += 7;
+                        index += 2;
+                    }
+                    else
+                    {
+                        if (buffer[index] == 0)
+                        {
+                            sb.Append(System.Text.Encoding.ASCII.GetString(buffer, index + 1, 1));
+                        }
+                        else
+                        {
+                            sb.Append(System.Text.Encoding.GetEncoding(950).GetString(buffer, index, 2));
+                        }
+                        index++;
+                    }
+                }
+                else if (buffer[index] == 0xFF)
+                {
+                    sb.Append(" ");
+                }
+                else if (buffer[index] == 0xFE)
+                {
+                    sb.AppendLine();
+                    index += 2;
+                }
+                else if (_codePage == 0)
+                    sb.Append(GetLatinString(GetEncoding(_codePage), buffer, ref index));
+                else if (_codePage == 3)
+                    sb.Append(GetArabicString(buffer, ref index));
+                else if (_codePage == 4)
+                    sb.Append(GetHebrewString(buffer, ref index));
+                else if (_codePage == 6)
+                    sb.Append(GetCyrillicString(buffer, ref index));
+                else
+                {
+                    sb.Append(GetEncoding(_codePage).GetString(buffer, index, 1));
+                }
+                index++;
+            }
+            if (index + 20 >= buffer.Length)
+                return null;
+
+            p.Text = sb.ToString();
+            p.Text = p.Text.Replace("\0", string.Empty);
+            p.Text = FixItalics(p.Text);
+            if (_codePage == 3)
+                p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
             return p;
         }
 

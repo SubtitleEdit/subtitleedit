@@ -557,41 +557,41 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
              }
          }
 
-         [TestMethod()]
-         [DeploymentItem("SubtitleEdit.exe")]
-         public void FormatReload()
-         {
-             var target = new SubStationAlpha_Accessor();
-             var subtitle = new Subtitle();
-             subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
-             subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
-             subtitle.Paragraphs.Add(new Paragraph("Line 3", 8000, 11000));
-             subtitle.Paragraphs.Add(new Paragraph("Line 4", 12000, 15000));
+//         [TestMethod()]
+//         [DeploymentItem("SubtitleEdit.exe")]
+//         public void FormatReload()
+//         {
+//             var target = new SubStationAlpha_Accessor();
+//             var subtitle = new Subtitle();
+//             subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
+//             subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
+//             subtitle.Paragraphs.Add(new Paragraph("Line 3", 8000, 11000));
+//             subtitle.Paragraphs.Add(new Paragraph("Line 4", 12000, 15000));
 
-             StringBuilder sb = new StringBuilder();
-             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
-             {
-                 string text = format.ToText(subtitle, "test");
-                 var list = new List<string>();
-                 foreach (string line in text.Replace("\r\n", "\n").Split('\n'))
-                     list.Add(line);
+//             StringBuilder sb = new StringBuilder();
+//             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+//             {
+//                 string text = format.ToText(subtitle, "test");
+//                 var list = new List<string>();
+//                 foreach (string line in text.Replace("\r\n", "\n").Split('\n'))
+//                     list.Add(line);
 
-                 foreach (SubtitleFormat innerFormat in SubtitleFormat.AllSubtitleFormats)
-                 {
-                     if (innerFormat.IsMine(list, null))
-                     {
-                         if (format.FriendlyName != innerFormat.FriendlyName  && 
-                             !format.FriendlyName.Contains("Final Cut"))
-                         {
-//                             Assert.AreEqual(format.FriendlyName, innerFormat.FriendlyName, text);
-                             sb.AppendLine(innerFormat.FriendlyName + " takes " + format.FriendlyName);
-                         }
-                         break;
-                     }
-                 }
-             }
-            // System.Windows.Forms.MessageBox.Show(sb.ToString());
-         }
+//                 foreach (SubtitleFormat innerFormat in SubtitleFormat.AllSubtitleFormats)
+//                 {
+//                     if (innerFormat.IsMine(list, null))
+//                     {
+//                         if (format.FriendlyName != innerFormat.FriendlyName  && 
+//                             !format.FriendlyName.Contains("Final Cut"))
+//                         {
+////                             Assert.AreEqual(format.FriendlyName, innerFormat.FriendlyName, text);
+//                             sb.AppendLine(innerFormat.FriendlyName + " takes " + format.FriendlyName);
+//                         }
+//                         break;
+//                     }
+//                 }
+//             }
+////             System.Windows.Forms.MessageBox.Show(sb.ToString());
+//         }
 
         #endregion
     }

@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             fs.WriteByte((byte)timeCode.Hours);
             fs.WriteByte((byte)timeCode.Minutes);
             fs.WriteByte((byte)timeCode.Seconds);
-            fs.WriteByte((byte)MillisecondsToFrames(timeCode.Milliseconds));
+            fs.WriteByte((byte)MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds));
         }
 
         public override bool IsMine(List<string> lines, string fileName)

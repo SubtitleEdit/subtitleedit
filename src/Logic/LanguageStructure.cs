@@ -124,6 +124,11 @@
             public string OnlyUnbreakLinesLongerThan { get; set; }
         }
 
+        public class Beamer
+        {
+            public string Title { get; set; }
+        }
+
         public class ChangeCasing
         {
             public string Title { get; set; }
@@ -1441,6 +1446,7 @@
             public string ListViewColumnDelete { get; set; }
             public string ListViewColumnInsert { get; set; }
             public string ListViewColumnPaste { get; set; }
+            public string ShowBeamer { get; set; }
         }
 
         public class ShowEarlierLater

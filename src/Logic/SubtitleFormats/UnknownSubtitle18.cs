@@ -60,8 +60,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string startTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFrames(p.StartTime.Milliseconds));
-                string timeOut = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFrames(p.EndTime.Milliseconds));
+                string startTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
+                string timeOut = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
                 sb.AppendLine(string.Format(paragraphWriteFormat, startTime, timeOut, p.Text, count));
                 count++;
             }

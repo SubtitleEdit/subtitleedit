@@ -33,6 +33,8 @@
             this.labelInfo = new System.Windows.Forms.Label();
             this.numericUpDownPercent = new System.Windows.Forms.NumericUpDown();
             this.labelPercent = new System.Windows.Forms.Label();
+            this.radioButtonSelectedLinesOnly = new System.Windows.Forms.RadioButton();
+            this.radioButtonAllLines = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).BeginInit();
             this.SuspendLayout();
             // 
@@ -41,7 +43,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(186, 91);
+            this.buttonCancel.Location = new System.Drawing.Point(238, 107);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 7;
@@ -53,7 +55,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(105, 91);
+            this.buttonOK.Location = new System.Drawing.Point(157, 107);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 6;
@@ -74,7 +76,7 @@
             // numericUpDownPercent
             // 
             this.numericUpDownPercent.DecimalPlaces = 3;
-            this.numericUpDownPercent.Location = new System.Drawing.Point(15, 48);
+            this.numericUpDownPercent.Location = new System.Drawing.Point(15, 35);
             this.numericUpDownPercent.Maximum = new decimal(new int[] {
             200,
             0,
@@ -98,17 +100,41 @@
             // 
             this.labelPercent.AutoSize = true;
             this.labelPercent.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelPercent.Location = new System.Drawing.Point(92, 50);
+            this.labelPercent.Location = new System.Drawing.Point(96, 37);
             this.labelPercent.Name = "labelPercent";
             this.labelPercent.Size = new System.Drawing.Size(15, 13);
             this.labelPercent.TabIndex = 10;
             this.labelPercent.Text = "%";
             // 
+            // radioButtonSelectedLinesOnly
+            // 
+            this.radioButtonSelectedLinesOnly.AutoSize = true;
+            this.radioButtonSelectedLinesOnly.Location = new System.Drawing.Point(15, 99);
+            this.radioButtonSelectedLinesOnly.Name = "radioButtonSelectedLinesOnly";
+            this.radioButtonSelectedLinesOnly.Size = new System.Drawing.Size(113, 17);
+            this.radioButtonSelectedLinesOnly.TabIndex = 42;
+            this.radioButtonSelectedLinesOnly.TabStop = true;
+            this.radioButtonSelectedLinesOnly.Text = "Selected lines only";
+            this.radioButtonSelectedLinesOnly.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonAllLines
+            // 
+            this.radioButtonAllLines.AutoSize = true;
+            this.radioButtonAllLines.Location = new System.Drawing.Point(15, 76);
+            this.radioButtonAllLines.Name = "radioButtonAllLines";
+            this.radioButtonAllLines.Size = new System.Drawing.Size(60, 17);
+            this.radioButtonAllLines.TabIndex = 41;
+            this.radioButtonAllLines.TabStop = true;
+            this.radioButtonAllLines.Text = "All lines";
+            this.radioButtonAllLines.UseVisualStyleBackColor = true;
+            // 
             // ChangeSpeedInPercent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(273, 124);
+            this.ClientSize = new System.Drawing.Size(325, 140);
+            this.Controls.Add(this.radioButtonSelectedLinesOnly);
+            this.Controls.Add(this.radioButtonAllLines);
             this.Controls.Add(this.numericUpDownPercent);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.buttonCancel);
@@ -136,5 +162,7 @@
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.NumericUpDown numericUpDownPercent;
         private System.Windows.Forms.Label labelPercent;
+        private System.Windows.Forms.RadioButton radioButtonSelectedLinesOnly;
+        private System.Windows.Forms.RadioButton radioButtonAllLines;
     }
 }

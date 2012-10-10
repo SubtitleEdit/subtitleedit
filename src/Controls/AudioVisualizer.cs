@@ -956,6 +956,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void WaveFormMouseEnter(object sender, EventArgs e)
         {
+            if (_wavePeaks == null || _wavePeaks.Header == null)
+                return;
+
             if (_noClear)
             {
                 _noClear = false;

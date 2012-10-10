@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private void WriteTime(FileStream fs, TimeCode timeCode, bool addEndBytes)
         {
-            string time = string.Format("{0:00}{1:00}{2:00}{3:00}", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, MillisecondsToFrames(timeCode.Milliseconds));
+            string time = string.Format("{0:00}{1:00}{2:00}{3:00}", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds));
             var buffer = Encoding.ASCII.GetBytes(time);
             fs.Write(buffer, 0, buffer.Length);
             if (addEndBytes)

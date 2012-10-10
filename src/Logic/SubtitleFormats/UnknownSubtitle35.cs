@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private string MakeTimeCode(TimeCode tc)
         {
-            return string.Format("{0:0000}.{1:00}", tc.TotalSeconds, MillisecondsToFrames(tc.Milliseconds));
+            return string.Format("{0:0000}.{1:00}", (int)tc.TotalSeconds, MillisecondsToFramesMaxFrameRate(tc.Milliseconds));
         }
 
         public override string ToText(Subtitle subtitle, string title)

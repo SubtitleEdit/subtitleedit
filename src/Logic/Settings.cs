@@ -591,6 +591,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainToolsRemoveTextForHI { get; set; }
         public string MainToolsChangeCasing { get; set; }
         public string MainToolsAutoDuration { get; set; }
+        public string MainToolsBeamer { get; set; }
         public string MainVideoPause { get; set; }
         public string MainVideoPlayPauseToggle { get; set; }
         public string MainVideoShowHideVideo { get; set; }
@@ -697,6 +698,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxItalic = "Control+I";
             MainTextBoxSplitAtCursor = "Control+Alt+V";
             MainToolsAutoDuration = string.Empty;
+            MainToolsBeamer = "Control+Shift+Alt+B";
             MainCreateInsertSubAtVideoPos = string.Empty;
             MainCreatePlayFromJustBefore = string.Empty;
             MainCreateSetStart = string.Empty;
@@ -1657,6 +1659,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainToolsAutoDuration");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsAutoDuration = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainToolsBeamer");
+                if (subNode != null)
+                    settings.Shortcuts.MainToolsBeamer = subNode.InnerText;                
                 subNode = node.SelectSingleNode("MainToolsToggleTranslationOriginalInPreviews");
                 if (subNode != null)
                     settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews = subNode.InnerText;
@@ -2208,6 +2213,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainToolsRemoveTextForHI", settings.Shortcuts.MainToolsRemoveTextForHI);
             textWriter.WriteElementString("MainToolsChangeCasing", settings.Shortcuts.MainToolsChangeCasing);
             textWriter.WriteElementString("MainToolsAutoDuration", settings.Shortcuts.MainToolsAutoDuration);
+            textWriter.WriteElementString("MainToolsBeamer", settings.Shortcuts.MainToolsBeamer);
             textWriter.WriteElementString("MainToolsToggleTranslationOriginalInPreviews", settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
             textWriter.WriteElementString("MainVideoPause", settings.Shortcuts.MainVideoPause);
             textWriter.WriteElementString("MainVideoPlayPauseToggle", settings.Shortcuts.MainVideoPlayPauseToggle);
