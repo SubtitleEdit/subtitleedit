@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
 
-            bool isChinese = false;
+            //bool isChinese = false;
             int languageId = LanguageIdLatin;
             if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageId >= 0)
                 languageId = Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageId;
