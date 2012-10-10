@@ -91,7 +91,7 @@ SelectLanguageLabel=Lütfen kurulum sýrasýnda kullanacaðýnýz dili seçiniz:
 
 ; *** Common wizard text
 ClickNext=Devam etmek için Ýleri'ye , çýkmak için Ýptal 'e basýnýz.
-BeveledLabel=Express Bilgisayar
+BeveledLabel=
 BrowseDialogTitle=Dizine Gözat
 BrowseDialogLabel=Aþaðýdaki listeden bir dizin seçip, daha sonra Tamam tuþuna basýnýz.
 NewFolderName=Yeni Dizin
