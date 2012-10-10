@@ -8,9 +8,10 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class ChangeSpeedInPercent : Form
     {
 
-        private double _adjustFactor = 0;
+        public double AdjustFactor { get; private set; }
+        public bool AdjustAllLines { get; private set; }
 
-        public ChangeSpeedInPercent()
+        public ChangeSpeedInPercent(int numberOfSelectedLines)
         {
             InitializeComponent();
             Text = Configuration.Settings.Language.ChangeSpeedInPercent.Title;
@@ -18,6 +19,11 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
+
+            if (numberOfSelectedLines > 1)
+                radioButtonSelectedLinesOnly.Checked = true;
+            else
+                radioButtonAllLines.Checked = true;
         }
 
         private void FixLargeFonts()
@@ -37,12 +43,11 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
         }
 
-        public Subtitle AdjustSubtitle(Subtitle subtitle)
+        public Subtitle AdjustAllParagraphs(Subtitle subtitle)
         {
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds * _adjustFactor;
-                p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds * _adjustFactor;
+                AdjustParagraph(p);
             }
 
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -55,13 +60,19 @@ namespace Nikse.SubtitleEdit.Forms
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
                 }
             }
-
             return subtitle;
+        }
+
+        public void AdjustParagraph(Paragraph p)
+        {
+            p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds * AdjustFactor;
+            p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds * AdjustFactor;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            _adjustFactor = Convert.ToDouble(numericUpDownPercent.Value) / 100.0;
+            AdjustFactor = Convert.ToDouble(numericUpDownPercent.Value) / 100.0;
+            AdjustAllLines = radioButtonAllLines.Checked;
             DialogResult = DialogResult.OK;
         }
 

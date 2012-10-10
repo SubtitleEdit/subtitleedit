@@ -121,6 +121,9 @@
     <OnlyBreakLinesLongerThan>Bryd kun linjer længere end</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Fjern kun linjeskift fra linjer længere end</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
+  <Beamer>
+    <Title>Undertekst fremviser</Title>
+  </Beamer>
   <ChangeCasing>
     <Title>Skift mellem STORE/små/Normal</Title>
     <ChangeCasingTo>Skift til</ChangeCasingTo>
@@ -1317,6 +1320,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <ListViewColumnDelete>Kolonne, slet tekst</ListViewColumnDelete>
     <ListViewColumnInsert>Column, indsæt tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Column, indsæt fra udklipsholder</ListViewColumnPaste>
+    <ShowBeamer>Start undertekst fremviser (fuldskærm)</ShowBeamer>
   </Settings>
   <ShowEarlierLater>
     <Title>Vis valgte linjer tidligere/senere</Title>

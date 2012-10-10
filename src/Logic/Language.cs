@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.AddWareForm AddWaveForm;
         public LanguageStructure.AdjustDisplayDuration AdjustDisplayDuration;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
+        public LanguageStructure.Beamer Beamer;
         public LanguageStructure.ChangeCasing ChangeCasing;
         public LanguageStructure.ChangeCasingNames ChangeCasingNames;
         public LanguageStructure.ChangeFrameRate ChangeFrameRate;
@@ -211,6 +212,11 @@ namespace Nikse.SubtitleEdit.Logic
                 LinesFoundX = "Lines found: {0}",
                 OnlyBreakLinesLongerThan = "Only break lines longer than",
                 OnlyUnbreakLinesLongerThan = "Only un-break lines longer than",
+            };
+
+            Beamer = new LanguageStructure.Beamer
+            {
+                Title = "Beamer",
             };
 
             ChangeCasing = new LanguageStructure.ChangeCasing
@@ -1527,6 +1533,7 @@ can edit in same subtitle file (collaboration)",
                 ListViewColumnDelete = "Column, delete text",
                 ListViewColumnInsert = "Column, insert text",
                 ListViewColumnPaste ="Column, paste",
+                ShowBeamer = "Start subtitle fullscreen beamer",
             };
 
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater

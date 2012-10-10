@@ -28,6 +28,8 @@ Subtitle Edit Changelog
    * Added fullscreen icon to video player (in main window only) - thx Leszek
    * Voikko spell check for Finnish - thx Harri + Ile
    * Added guess time codes to waveform context menu
+   * Added Sync -> Adjust in percent - thx Ralf
+   * Subtitle beamer - thx Ralf
    * Many new shortcuts
 * IMPROVED:
    * Improved support for Advanced Substation Alpha (+ Substation Alpha)
@@ -60,8 +62,10 @@ Subtitle Edit Changelog
    * Fixed "Timed Text" time codes with comma in seconds - thx Steffan
    * Fixed insert line via F9 or waveform in network mode - thx Martin
    * Fixed crash in 'Compare' - thx SimplyTheBOSS
-   * Fixed some bugs in remove interjections - thx Pson
+   * Fixed some bugs in 'Remove interjections' - thx Pson
    * Fixed possible crash when clicking on "Open" file
+   * Fixed frame rate calculated too high - thx Saulius
+   * Fixed missing last line in a couple of subtitle formats
 
 
 3.2.8 (3rd June 2012)

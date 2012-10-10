@@ -9,7 +9,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class Beamer : Form
+    public sealed partial class Beamer : Form
     {
         private Subtitle _subtitle;
         private int _index;
@@ -35,6 +35,8 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
             _index = index;
 
+            LanguageStructure.ChangeCasing language = Configuration.Settings.Language.ChangeCasing;
+            Text = language.Title;
             groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
             labelSubtitleFont.Text = Configuration.Settings.Language.ExportPngXml.FontFamily;
             labelSubtitleFontSize.Text = Configuration.Settings.Language.ExportPngXml.FontSize;

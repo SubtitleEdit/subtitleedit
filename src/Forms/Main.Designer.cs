@@ -179,6 +179,7 @@
             this.toolStripMenuItemPointSync = new System.Windows.Forms.ToolStripMenuItem();
             this.pointSyncViaOtherSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemChangeFrameRate2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeSpeedInPercentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoTranslate = new System.Windows.Forms.ToolStripMenuItem();
             this.translateByGoogleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translatepoweredByMicrosoftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -403,7 +404,6 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.changeSpeedInPercentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1727,6 +1727,13 @@
             this.toolStripMenuItemChangeFrameRate2.Size = new System.Drawing.Size(336, 22);
             this.toolStripMenuItemChangeFrameRate2.Text = "Change framerate...";
             this.toolStripMenuItemChangeFrameRate2.Click += new System.EventHandler(this.ToolStripMenuItemChangeFramerateClick);
+            // 
+            // changeSpeedInPercentToolStripMenuItem
+            // 
+            this.changeSpeedInPercentToolStripMenuItem.Name = "changeSpeedInPercentToolStripMenuItem";
+            this.changeSpeedInPercentToolStripMenuItem.Size = new System.Drawing.Size(336, 22);
+            this.changeSpeedInPercentToolStripMenuItem.Text = "Change speed in percent...";
+            this.changeSpeedInPercentToolStripMenuItem.Click += new System.EventHandler(this.changeSpeedInPercentToolStripMenuItem_Click);
             // 
             // toolStripMenuItemAutoTranslate
             // 
@@ -3985,13 +3992,6 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
-            // 
-            // changeSpeedInPercentToolStripMenuItem
-            // 
-            this.changeSpeedInPercentToolStripMenuItem.Name = "changeSpeedInPercentToolStripMenuItem";
-            this.changeSpeedInPercentToolStripMenuItem.Size = new System.Drawing.Size(336, 22);
-            this.changeSpeedInPercentToolStripMenuItem.Text = "Change speed in percent...";
-            this.changeSpeedInPercentToolStripMenuItem.Click += new System.EventHandler(this.changeSpeedInPercentToolStripMenuItem_Click);
             // 
             // Main
             // 

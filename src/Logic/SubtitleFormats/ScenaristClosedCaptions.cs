@@ -717,7 +717,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private string ToTimeCode(double totalMilliseconds)
         {
             TimeSpan ts = TimeSpan.FromMilliseconds(totalMilliseconds);
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds, MillisecondsToFrames(ts.Milliseconds));
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds, MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
         }
 
         public static SCCPositionAndStyle GetColorAndPosition(string code)

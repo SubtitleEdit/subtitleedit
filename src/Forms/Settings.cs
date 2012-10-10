@@ -528,6 +528,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.RemoveTextForHearingImpaired + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI));
             toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.ChangeCasing + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsChangeCasing));
             toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.AutoDurationCurrentLine + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsAutoDuration));
+            toolsNode.Nodes.Add(Configuration.Settings.Language.Settings.ShowBeamer + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsBeamer));
             treeViewShortcuts.Nodes.Add(toolsNode);
 
             var videoNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Video.Title);
@@ -1082,6 +1083,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainToolsChangeCasing = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.AutoDurationCurrentLine.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainToolsAutoDuration = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.ShowBeamer.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainToolsBeamer = GetShortcut(node.Text);
                 }
             }
 

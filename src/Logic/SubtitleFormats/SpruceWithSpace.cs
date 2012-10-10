@@ -81,7 +81,7 @@ $TapeOffset         =   FALSE
         private string EncodeTimeCode(TimeCode time)
         {
             //00:01:54:19
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFrames(time.Milliseconds));
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

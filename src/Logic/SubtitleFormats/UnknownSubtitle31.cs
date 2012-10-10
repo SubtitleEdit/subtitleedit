@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}.{1:00}", time.TotalSeconds, MillisecondsToFrames(time.Milliseconds));
+            return string.Format("{0:00}.{1:00}", (int)time.TotalSeconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
         private TimeCode DecodeTimeCode(string[] parts)

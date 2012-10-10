@@ -149,10 +149,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         for (int k = 0; k < count; k++)
                         {
                             int index = start + 2 + (14 * k);
-                            int number = buffer[index] + buffer[index + 1] * 255;
+                            int number = buffer[index] + buffer[index + 1] * 256;
                             if (number != lastNumber + 1)
                             {
-                                int tempNumber = buffer[index-2] + buffer[index -1] * 255;
+                                int tempNumber = buffer[index-2] + buffer[index -1] * 256;
                                 if (tempNumber == lastNumber + 1)
                                 {
                                     index -= 2;

@@ -206,7 +206,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static int MillisecondsToFrames(double milliseconds)
         {
-            return (int)System.Math.Round(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate-1.0));
+            return (int)System.Math.Round(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+        }
+
+        public static int MillisecondsToFramesMaxFrameRate(double milliseconds)
+        {
+            int frames = (int)System.Math.Round(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            if (frames >= Configuration.Settings.General.CurrentFrameRate)
+                frames = (int)(Configuration.Settings.General.CurrentFrameRate - 0.01);
+            return frames;
         }
 
         public static int FramesToMilliseconds(double frames)

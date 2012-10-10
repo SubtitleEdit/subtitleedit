@@ -154,20 +154,20 @@ namespace Nikse.SubtitleEdit.Logic
         public string ToShortStringHHMMSSFF()
         {
             if (_time.Minutes == 0 && _time.Hours == 0)
-                return string.Format("{0:00}:{1:00}", _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFrames(_time.Milliseconds));
+                return string.Format("{0:00}:{1:00}", _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(_time.Milliseconds));
             if (_time.Hours == 0)
-                return string.Format("{0:00}:{1:00}:{2:00}", _time.Minutes, _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFrames(_time.Milliseconds));
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", _time.Hours, _time.Minutes, _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFrames(_time.Milliseconds));
+                return string.Format("{0:00}:{1:00}:{2:00}", _time.Minutes, _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(_time.Milliseconds));
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", _time.Hours, _time.Minutes, _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(_time.Milliseconds));
         }
 
         public string ToHHMMSSFF()
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", _time.Hours, _time.Minutes, _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFrames(_time.Milliseconds));
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", _time.Hours, _time.Minutes, _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(_time.Milliseconds));
         }
 
         public string ToHHMMSSPeriodFF()
         {
-            return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", _time.Hours, _time.Minutes, _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFrames(_time.Milliseconds));
+            return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", _time.Hours, _time.Minutes, _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(_time.Milliseconds));
         }
 
     }

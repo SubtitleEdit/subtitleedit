@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (subtitle.Paragraphs.Count > 0)
                 milliseconds = subtitle.Paragraphs[subtitle.Paragraphs.Count-1].EndTime.TotalMilliseconds;
             var tc = new TimeCode(TimeSpan.FromMilliseconds(milliseconds));
-            sb.AppendLine(string.Format("Duration: {0:00}:{1:00}:{2:00}:{3:00}", tc.Hours, tc.Minutes, tc.Seconds, MillisecondsToFrames(tc.Milliseconds))); // 01:20:49:12
+            sb.AppendLine(string.Format("Duration: {0:00}:{1:00}:{2:00}:{3:00}", tc.Hours, tc.Minutes, tc.Seconds, MillisecondsToFramesMaxFrameRate(tc.Milliseconds))); // 01:20:49:12
             sb.AppendLine("Program start: 00:00:00:00");
             sb.AppendLine("Title count: " + subtitle.Paragraphs.Count);
             sb.AppendLine();
@@ -51,9 +51,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 count++;
                 string text = Utilities.RemoveHtmlTags(p.Text);
                 sb.AppendLine(string.Format("{13}\t{0:00}:{1:00}:{2:00}:{3:00}\t{4:00}:{5:00}:{6:00}:{7:00}\t{8:00}:{9:00}:{10:00}:{11:00}\r\n{12:00}" + Environment.NewLine,
-                                            p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFrames(p.StartTime.Milliseconds),
-                                            p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFrames(p.EndTime.Milliseconds),
-                                            p.Duration.Hours, p.Duration.Minutes, p.Duration.Seconds, MillisecondsToFrames(p.Duration.Milliseconds),
+                                            p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds),
+                                            p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds),
+                                            p.Duration.Hours, p.Duration.Minutes, p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds),
                                             text, count));
             }
             return sb.ToString().Trim() + Environment.NewLine + Environment.NewLine + Environment.NewLine;
