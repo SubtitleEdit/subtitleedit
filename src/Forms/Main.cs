@@ -7657,8 +7657,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ImportSubtitleFromTransportStream(string fileName)
         {
-            const int TeletextPacketLength = 45;
-//          const int TeletextPacketPayloadLength = TeletextPacketLength - 3; // without Clock Run-in and Framing Code
+            //const int TeletextPacketLength = 45;
+            //const int TeletextPacketPayloadLength = TeletextPacketLength - 3; // without Clock Run-in and Framing Code
 
 
             var tsParser = new Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamParser();
