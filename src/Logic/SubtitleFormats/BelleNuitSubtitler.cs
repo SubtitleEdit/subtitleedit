@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -41,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, p.Text));
+                sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, EncodeText(p.Text)));
             }
 
             var doc = new XmlDocument();
@@ -227,7 +226,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             if (paragraph != null && sb.ToString().Trim().Length > 0)
                             {
-                                paragraph.Text = sb.ToString().Trim().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine).Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                                paragraph.Text = DecodeText(sb);
                             }
 
                             var start = DecodeTimeCode(parts);
@@ -254,9 +253,72 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             if (paragraph != null && sb.ToString().Trim().Length > 0)
             {
-                paragraph.Text = sb.ToString().Trim().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine).Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                paragraph.Text = DecodeText(sb);
             }
             subtitle.Renumber(1);
+        }
+
+        private static string EncodeText(string s)
+        {
+            s = s.ToString();
+            s = s.Replace("<b>", string.Empty).Replace("<B>", string.Empty).Replace("</b>", string.Empty).Replace("</B>", string.Empty);
+            s = s.Replace("<u>", string.Empty).Replace("<U>", string.Empty).Replace("</u>", string.Empty).Replace("</U>", string.Empty);
+            s = Utilities.RemoveHtmlFontTag(s);
+            if (s.StartsWith("{\\an3}") || s.StartsWith("{\\an6}"))
+                s = "/STYLE RIGHT" + Environment.NewLine + s.Remove(0, 6).Trim();
+            if (s.StartsWith("{\\an1}") || s.StartsWith("{\\an4}"))
+                s = "/STYLE LEFT" + Environment.NewLine + s.Remove(0, 6).Trim();
+            if (s.StartsWith("{\\an7}") || s.StartsWith("{\\an8}") || s.StartsWith("{\\an9}"))
+                s = "/STYLE VERTICAL(-25)" + Environment.NewLine + s.Remove(0, 6).Trim();
+            if (s.StartsWith("{\\an2}") || s.StartsWith("{\\an5}"))
+                s = s.Remove(0, 6).Trim();
+            return s;
+        }
+
+        private static string DecodeText(StringBuilder sb)
+        {
+            string s = sb.ToString().Trim();
+            s = s.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine).Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            if (s.StartsWith("/STYLE RIGHT" + Environment.NewLine))
+                s = "{\\an3}" + s.Remove(0, 12).Trim();
+            if (s.StartsWith("/STYLE LEFT" + Environment.NewLine))
+                s = "{\\an1}" + s.Remove(0, 11).Trim();
+            if (s.StartsWith("/STYLE TOP" + Environment.NewLine))
+                s = "{\\an8}" + s.Remove(0, 10).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-25)" + Environment.NewLine))
+                s = "{\\an8}" + s.Remove(0, 20).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-24)" + Environment.NewLine))
+                s = "{\\an8}" + s.Remove(0, 20).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-23)" + Environment.NewLine))
+                s = "{\\an8}" + s.Remove(0, 20).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-22)" + Environment.NewLine))
+                s = "{\\an8}" + s.Remove(0, 20).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-21)" + Environment.NewLine))
+                s = "{\\an8}" + s.Remove(0, 20).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-20)" + Environment.NewLine))
+                s = "{\\an8}" + s.Remove(0, 20).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-19)" + Environment.NewLine))
+                s = "{\\an8}" + s.Remove(0, 20).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-18)" + Environment.NewLine))
+                s = "{\\an5}" + s.Remove(0, 20).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-17)" + Environment.NewLine))
+                s = "{\\an5}" + s.Remove(0, 20).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-16)" + Environment.NewLine))
+                s = "{\\an5}" + s.Remove(0, 20).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-15)" + Environment.NewLine))
+                s = "{\\an5}" + s.Remove(0, 20).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-14)" + Environment.NewLine))
+                s = "{\\an5}" + s.Remove(0, 20).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-13)" + Environment.NewLine))
+                s = "{\\an5}" + s.Remove(0, 20).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-12)" + Environment.NewLine))
+                s = "{\\an5}" + s.Remove(0, 20).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-11)" + Environment.NewLine))
+                s = "{\\an5}" + s.Remove(0, 20).Trim();
+            if (s.StartsWith("/STYLE VERTICAL(-10)" + Environment.NewLine))
+                s = "{\\an5}" + s.Remove(0, 20).Trim();
+            s = Utilities.FixInvalidItalicTags(s);
+            return s;
         }
 
         private string EncodeTimeCode(TimeCode time)
