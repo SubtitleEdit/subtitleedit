@@ -238,6 +238,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddFixActions(Subtitle subtitle, string threeLetterISOLanguageName)
         {
+            _turkishAnsiIndex = -1;
+            _danishLetterIIndex = -1;
+            _spanishInvertedQuestionAndExclamationMarksIndex = -1;
+
             FixCommonErrorsSettings ce = Configuration.Settings.CommonErrors;
             _fixActions = new List<FixItem>();
             _fixActions.Add(new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, string.Empty, delegate { FixEmptyLines(); }, ce.EmptyLinesTicked));
@@ -2693,7 +2697,7 @@ namespace Nikse.SubtitleEdit.Forms
                             string[] parts = Utilities.RemoveHtmlTags(text).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                             if (parts.Length == 2)
                             {
-                                bool doAdd = parts[0].Trim().EndsWith(".") || parts[0].Trim().EndsWith("!") || parts[0].Trim().EndsWith("?");
+                                bool doAdd = parts[0].Trim().EndsWith(".") || parts[0].Trim().EndsWith("!") || parts[0].Trim().EndsWith("?") || _autoDetectGoogleLanguage == "ko";
 
                                 if (parts[0].Trim().StartsWith("-") && parts[1].Contains(":"))
                                     doAdd = false;
@@ -2707,9 +2711,9 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         // add dash in second line.
                                         if (text.Contains(Environment.NewLine + "<i>"))
-                                            text.Replace(Environment.NewLine + "<i>", Environment.NewLine + "<i>- ");
+                                            text = text.Replace(Environment.NewLine + "<i>", Environment.NewLine + "<i>- ");
                                         else
-                                            text.Replace(Environment.NewLine, Environment.NewLine + "- ").Replace(Environment.NewLine + "-  ", Environment.NewLine + "- ");
+                                            text = text.Replace(Environment.NewLine, Environment.NewLine + "- ").Replace(Environment.NewLine + "-  ", Environment.NewLine + "- ");
                                     }
                                     else
                                     {
@@ -4168,8 +4172,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (_spanishInvertedQuestionAndExclamationMarksIndex > -1)
                 ce.SpanishInvertedQuestionAndExclamationMarksTicked = listView1.Items[_spanishInvertedQuestionAndExclamationMarksIndex].Checked;
 
-
-
             Configuration.Settings.Save();
         }
 
@@ -4830,6 +4832,11 @@ namespace Nikse.SubtitleEdit.Forms
                 _autoDetectGoogleLanguage = ci.TwoLetterISOLanguageName;
                 AddFixActions(_subtitle, ci.ThreeLetterISOLanguageName);
             }
+        }
+
+        private void comboBoxLanguage_Enter(object sender, EventArgs e)
+        {
+            SaveConfiguration();
         }
 
     }
