@@ -105,11 +105,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string seconds = time.Substring(4, 2);
             string frames = time.Substring(6, 2);
 
-            int milliseconds = (int)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames));
-            if (milliseconds > 999)
-                milliseconds = 999;
-
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
+            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
             return tc;
         }
 

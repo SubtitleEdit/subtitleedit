@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                                          "",
                                                          "",
                                                          "£",
-                                                         "",
+                                                         "♪",
                                                          "à",
                                                          "",
                                                          "è",
@@ -341,7 +341,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                                              "9134",  //  "",
                                                              "91b5",  //  "",
                                                              "91b6",  //  "£",
-                                                             "9137",  //  "",
+                                                             "9137",  //  "♪", 
                                                              "9138",  //  "à",
                                                              "91b9",  //  "",
                                                              "91ba",  //  "è",
@@ -611,7 +611,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             text = FixMax4LinesAndMax32CharsPerLine(text);
             var lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
+            int italic = 0;
             var sb = new StringBuilder();
             int count = 1;
             foreach (string line in lines)
@@ -628,7 +628,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string s = text.Substring(i, 1);
                     int index = _letters.IndexOf(s);
                     string newCode = string.Empty;
-                    if (index < 0)
+                    if (text.Substring(i).StartsWith("<i>"))
+                    {
+                        newCode = "91AE";
+                        i += 2;
+                        italic++;
+                    }
+                    else if (text.Substring(i).StartsWith("</i>") && italic > 0)
+                    {
+                        newCode = "9120";
+                        i += 3;
+                        italic--;
+                    }
+                    else if (index < 0)
                         newCode = _letterCodes[_letters.IndexOf(" ")];
                     else
                         newCode = _letterCodes[index];
@@ -1299,7 +1311,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 if (!sb.ToString().EndsWith(Environment.NewLine))
                                     sb.AppendLine();
                             }
-                            else if (part == "2c94"|| part == "2c52")
+                            else if (part == "2c94" || part == "2c52")
                             {
                             }
                             else if (result == null)
@@ -1322,6 +1334,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 first = false;
             }
             string res = sb.ToString().Replace("<i></i>", string.Empty).Replace("</i><i>", string.Empty);
+            res = res.Replace("♪♪", "♪");
             res = res.Replace("  ", " ").Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
             return Utilities.FixInvalidItalicTags(res);
         }
