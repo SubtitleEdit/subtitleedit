@@ -123,11 +123,7 @@ $TapeOffset         =   FALSE
             string seconds = time.Substring(6, 2);
             string frames = time.Substring(9, 2);
 
-            int milliseconds = (int)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames));
-            if (milliseconds > 999)
-                milliseconds = 999;
-
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
+            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
             return tc;
         }
 
