@@ -114,6 +114,21 @@
             this.checkBoxToolbarNew = new System.Windows.Forms.CheckBox();
             this.tabPageVideoPlayer = new System.Windows.Forms.TabPage();
             this.groupBoxMainWindowVideoControls = new System.Windows.Forms.GroupBox();
+            this.labelCustomSearch6 = new System.Windows.Forms.Label();
+            this.textBoxCustomSearchUrl6 = new System.Windows.Forms.TextBox();
+            this.comboBoxCustomSearch6 = new System.Windows.Forms.ComboBox();
+            this.labelCustomSearch5 = new System.Windows.Forms.Label();
+            this.textBoxCustomSearchUrl5 = new System.Windows.Forms.TextBox();
+            this.comboBoxCustomSearch5 = new System.Windows.Forms.ComboBox();
+            this.labelCustomSearch4 = new System.Windows.Forms.Label();
+            this.textBoxCustomSearchUrl4 = new System.Windows.Forms.TextBox();
+            this.comboBoxCustomSearch4 = new System.Windows.Forms.ComboBox();
+            this.labelCustomSearch3 = new System.Windows.Forms.Label();
+            this.textBoxCustomSearchUrl3 = new System.Windows.Forms.TextBox();
+            this.comboBoxCustomSearch3 = new System.Windows.Forms.ComboBox();
+            this.labelCustomSearch2 = new System.Windows.Forms.Label();
+            this.textBoxCustomSearchUrl2 = new System.Windows.Forms.TextBox();
+            this.comboBoxCustomSearch2 = new System.Windows.Forms.ComboBox();
             this.labelCustomSearch1 = new System.Windows.Forms.Label();
             this.textBoxCustomSearchUrl1 = new System.Windows.Forms.TextBox();
             this.labelCustomSearch = new System.Windows.Forms.Label();
@@ -237,21 +252,6 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.labelCustomSearch2 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl2 = new System.Windows.Forms.TextBox();
-            this.comboBoxCustomSearch2 = new System.Windows.Forms.ComboBox();
-            this.labelCustomSearch3 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl3 = new System.Windows.Forms.TextBox();
-            this.comboBoxCustomSearch3 = new System.Windows.Forms.ComboBox();
-            this.labelCustomSearch4 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl4 = new System.Windows.Forms.TextBox();
-            this.comboBoxCustomSearch4 = new System.Windows.Forms.ComboBox();
-            this.labelCustomSearch5 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl5 = new System.Windows.Forms.TextBox();
-            this.comboBoxCustomSearch5 = new System.Windows.Forms.ComboBox();
-            this.labelCustomSearch6 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl6 = new System.Windows.Forms.TextBox();
-            this.comboBoxCustomSearch6 = new System.Windows.Forms.ComboBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -412,7 +412,7 @@
             this.checkBoxSubtitleCenter.AutoSize = true;
             this.checkBoxSubtitleCenter.Location = new System.Drawing.Point(259, 300);
             this.checkBoxSubtitleCenter.Name = "checkBoxSubtitleCenter";
-            this.checkBoxSubtitleCenter.Size = new System.Drawing.Size(59, 17);
+            this.checkBoxSubtitleCenter.Size = new System.Drawing.Size(57, 17);
             this.checkBoxSubtitleCenter.TabIndex = 10;
             this.checkBoxSubtitleCenter.Text = "Center";
             this.checkBoxSubtitleCenter.UseVisualStyleBackColor = true;
@@ -537,7 +537,7 @@
             this.checkBoxAutoWrapWhileTyping.AutoSize = true;
             this.checkBoxAutoWrapWhileTyping.Location = new System.Drawing.Point(193, 177);
             this.checkBoxAutoWrapWhileTyping.Name = "checkBoxAutoWrapWhileTyping";
-            this.checkBoxAutoWrapWhileTyping.Size = new System.Drawing.Size(137, 17);
+            this.checkBoxAutoWrapWhileTyping.Size = new System.Drawing.Size(132, 17);
             this.checkBoxAutoWrapWhileTyping.TabIndex = 5;
             this.checkBoxAutoWrapWhileTyping.Text = "Auto-wrap while typing";
             this.checkBoxAutoWrapWhileTyping.UseVisualStyleBackColor = true;
@@ -627,7 +627,7 @@
             this.checkBoxPromptDeleteLines.AutoSize = true;
             this.checkBoxPromptDeleteLines.Location = new System.Drawing.Point(436, 309);
             this.checkBoxPromptDeleteLines.Name = "checkBoxPromptDeleteLines";
-            this.checkBoxPromptDeleteLines.Size = new System.Drawing.Size(142, 17);
+            this.checkBoxPromptDeleteLines.Size = new System.Drawing.Size(138, 17);
             this.checkBoxPromptDeleteLines.TabIndex = 27;
             this.checkBoxPromptDeleteLines.Text = "Prompt for deleting lines";
             this.checkBoxPromptDeleteLines.UseVisualStyleBackColor = true;
@@ -646,7 +646,7 @@
             this.checkBoxAllowEditOfOriginalSubtitle.AutoSize = true;
             this.checkBoxAllowEditOfOriginalSubtitle.Location = new System.Drawing.Point(436, 286);
             this.checkBoxAllowEditOfOriginalSubtitle.Name = "checkBoxAllowEditOfOriginalSubtitle";
-            this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(160, 17);
+            this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(155, 17);
             this.checkBoxAllowEditOfOriginalSubtitle.TabIndex = 26;
             this.checkBoxAllowEditOfOriginalSubtitle.Text = "Allow edit of original subtitle";
             this.checkBoxAllowEditOfOriginalSubtitle.UseVisualStyleBackColor = true;
@@ -779,7 +779,7 @@
             this.checkBoxRememberWindowPosition.AutoSize = true;
             this.checkBoxRememberWindowPosition.Location = new System.Drawing.Point(436, 101);
             this.checkBoxRememberWindowPosition.Name = "checkBoxRememberWindowPosition";
-            this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(223, 17);
+            this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(222, 17);
             this.checkBoxRememberWindowPosition.TabIndex = 17;
             this.checkBoxRememberWindowPosition.Text = "Remember main window position and size";
             this.checkBoxRememberWindowPosition.UseVisualStyleBackColor = true;
@@ -816,7 +816,7 @@
             this.checkBoxStartInSourceView.AutoSize = true;
             this.checkBoxStartInSourceView.Location = new System.Drawing.Point(436, 124);
             this.checkBoxStartInSourceView.Name = "checkBoxStartInSourceView";
-            this.checkBoxStartInSourceView.Size = new System.Drawing.Size(121, 17);
+            this.checkBoxStartInSourceView.Size = new System.Drawing.Size(119, 17);
             this.checkBoxStartInSourceView.TabIndex = 18;
             this.checkBoxStartInSourceView.Text = "Start in source view";
             this.checkBoxStartInSourceView.UseVisualStyleBackColor = true;
@@ -826,7 +826,7 @@
             this.checkBoxReopenLastOpened.AutoSize = true;
             this.checkBoxReopenLastOpened.Location = new System.Drawing.Point(444, 52);
             this.checkBoxReopenLastOpened.Name = "checkBoxReopenLastOpened";
-            this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(145, 17);
+            this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(140, 17);
             this.checkBoxReopenLastOpened.TabIndex = 15;
             this.checkBoxReopenLastOpened.Text = "Start with last file loaded";
             this.checkBoxReopenLastOpened.UseVisualStyleBackColor = true;
@@ -836,7 +836,7 @@
             this.checkBoxRememberRecentFiles.AutoSize = true;
             this.checkBoxRememberRecentFiles.Location = new System.Drawing.Point(436, 28);
             this.checkBoxRememberRecentFiles.Name = "checkBoxRememberRecentFiles";
-            this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(195, 17);
+            this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(188, 17);
             this.checkBoxRememberRecentFiles.TabIndex = 14;
             this.checkBoxRememberRecentFiles.Text = "Remember recent files (for reopen)";
             this.checkBoxRememberRecentFiles.UseVisualStyleBackColor = true;
@@ -847,7 +847,7 @@
             this.checkBoxSubtitleFontBold.AutoSize = true;
             this.checkBoxSubtitleFontBold.Location = new System.Drawing.Point(193, 300);
             this.checkBoxSubtitleFontBold.Name = "checkBoxSubtitleFontBold";
-            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(46, 17);
+            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(47, 17);
             this.checkBoxSubtitleFontBold.TabIndex = 9;
             this.checkBoxSubtitleFontBold.Text = "Bold";
             this.checkBoxSubtitleFontBold.UseVisualStyleBackColor = true;
@@ -937,7 +937,7 @@
             this.checkBoxShowFrameRate.AutoSize = true;
             this.checkBoxShowFrameRate.Location = new System.Drawing.Point(16, 29);
             this.checkBoxShowFrameRate.Name = "checkBoxShowFrameRate";
-            this.checkBoxShowFrameRate.Size = new System.Drawing.Size(154, 17);
+            this.checkBoxShowFrameRate.Size = new System.Drawing.Size(149, 17);
             this.checkBoxShowFrameRate.TabIndex = 34;
             this.checkBoxShowFrameRate.Text = "Show frame rate in toolbar";
             this.checkBoxShowFrameRate.UseVisualStyleBackColor = true;
@@ -1003,7 +1003,7 @@
             this.checkBoxHelp.AutoSize = true;
             this.checkBoxHelp.Location = new System.Drawing.Point(704, 80);
             this.checkBoxHelp.Name = "checkBoxHelp";
-            this.checkBoxHelp.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxHelp.Size = new System.Drawing.Size(56, 17);
             this.checkBoxHelp.TabIndex = 31;
             this.checkBoxHelp.Text = "Visible";
             this.checkBoxHelp.UseVisualStyleBackColor = true;
@@ -1030,7 +1030,7 @@
             this.checkBoxSettings.AutoSize = true;
             this.checkBoxSettings.Location = new System.Drawing.Point(628, 80);
             this.checkBoxSettings.Name = "checkBoxSettings";
-            this.checkBoxSettings.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxSettings.Size = new System.Drawing.Size(56, 17);
             this.checkBoxSettings.TabIndex = 28;
             this.checkBoxSettings.Text = "Visible";
             this.checkBoxSettings.UseVisualStyleBackColor = true;
@@ -1057,7 +1057,7 @@
             this.checkBoxSpellCheck.AutoSize = true;
             this.checkBoxSpellCheck.Location = new System.Drawing.Point(550, 80);
             this.checkBoxSpellCheck.Name = "checkBoxSpellCheck";
-            this.checkBoxSpellCheck.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxSpellCheck.Size = new System.Drawing.Size(56, 17);
             this.checkBoxSpellCheck.TabIndex = 26;
             this.checkBoxSpellCheck.Text = "Visible";
             this.checkBoxSpellCheck.UseVisualStyleBackColor = true;
@@ -1084,7 +1084,7 @@
             this.checkBoxVisualSync.AutoSize = true;
             this.checkBoxVisualSync.Location = new System.Drawing.Point(476, 80);
             this.checkBoxVisualSync.Name = "checkBoxVisualSync";
-            this.checkBoxVisualSync.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxVisualSync.Size = new System.Drawing.Size(56, 17);
             this.checkBoxVisualSync.TabIndex = 19;
             this.checkBoxVisualSync.Text = "Visible";
             this.checkBoxVisualSync.UseVisualStyleBackColor = true;
@@ -1111,7 +1111,7 @@
             this.checkBoxReplace.AutoSize = true;
             this.checkBoxReplace.Location = new System.Drawing.Point(400, 80);
             this.checkBoxReplace.Name = "checkBoxReplace";
-            this.checkBoxReplace.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxReplace.Size = new System.Drawing.Size(56, 17);
             this.checkBoxReplace.TabIndex = 16;
             this.checkBoxReplace.Text = "Visible";
             this.checkBoxReplace.UseVisualStyleBackColor = true;
@@ -1138,7 +1138,7 @@
             this.checkBoxToolbarFind.AutoSize = true;
             this.checkBoxToolbarFind.Location = new System.Drawing.Point(324, 80);
             this.checkBoxToolbarFind.Name = "checkBoxToolbarFind";
-            this.checkBoxToolbarFind.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxToolbarFind.Size = new System.Drawing.Size(56, 17);
             this.checkBoxToolbarFind.TabIndex = 13;
             this.checkBoxToolbarFind.Text = "Visible";
             this.checkBoxToolbarFind.UseVisualStyleBackColor = true;
@@ -1165,7 +1165,7 @@
             this.checkBoxToolbarSaveAs.AutoSize = true;
             this.checkBoxToolbarSaveAs.Location = new System.Drawing.Point(248, 80);
             this.checkBoxToolbarSaveAs.Name = "checkBoxToolbarSaveAs";
-            this.checkBoxToolbarSaveAs.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxToolbarSaveAs.Size = new System.Drawing.Size(56, 17);
             this.checkBoxToolbarSaveAs.TabIndex = 10;
             this.checkBoxToolbarSaveAs.Text = "Visible";
             this.checkBoxToolbarSaveAs.UseVisualStyleBackColor = true;
@@ -1192,7 +1192,7 @@
             this.checkBoxToolbarSave.AutoSize = true;
             this.checkBoxToolbarSave.Location = new System.Drawing.Point(172, 80);
             this.checkBoxToolbarSave.Name = "checkBoxToolbarSave";
-            this.checkBoxToolbarSave.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxToolbarSave.Size = new System.Drawing.Size(56, 17);
             this.checkBoxToolbarSave.TabIndex = 7;
             this.checkBoxToolbarSave.Text = "Visible";
             this.checkBoxToolbarSave.UseVisualStyleBackColor = true;
@@ -1219,7 +1219,7 @@
             this.checkBoxToolbarOpen.AutoSize = true;
             this.checkBoxToolbarOpen.Location = new System.Drawing.Point(96, 80);
             this.checkBoxToolbarOpen.Name = "checkBoxToolbarOpen";
-            this.checkBoxToolbarOpen.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxToolbarOpen.Size = new System.Drawing.Size(56, 17);
             this.checkBoxToolbarOpen.TabIndex = 4;
             this.checkBoxToolbarOpen.Text = "Visible";
             this.checkBoxToolbarOpen.UseVisualStyleBackColor = true;
@@ -1246,7 +1246,7 @@
             this.checkBoxToolbarNew.AutoSize = true;
             this.checkBoxToolbarNew.Location = new System.Drawing.Point(20, 80);
             this.checkBoxToolbarNew.Name = "checkBoxToolbarNew";
-            this.checkBoxToolbarNew.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxToolbarNew.Size = new System.Drawing.Size(56, 17);
             this.checkBoxToolbarNew.TabIndex = 1;
             this.checkBoxToolbarNew.Text = "Visible";
             this.checkBoxToolbarNew.UseVisualStyleBackColor = true;
@@ -1291,6 +1291,176 @@
             this.groupBoxMainWindowVideoControls.TabIndex = 15;
             this.groupBoxMainWindowVideoControls.TabStop = false;
             this.groupBoxMainWindowVideoControls.Text = "Main window video controls";
+            // 
+            // labelCustomSearch6
+            // 
+            this.labelCustomSearch6.AutoSize = true;
+            this.labelCustomSearch6.Location = new System.Drawing.Point(12, 175);
+            this.labelCustomSearch6.Name = "labelCustomSearch6";
+            this.labelCustomSearch6.Size = new System.Drawing.Size(13, 13);
+            this.labelCustomSearch6.TabIndex = 18;
+            this.labelCustomSearch6.Text = "6";
+            // 
+            // textBoxCustomSearchUrl6
+            // 
+            this.textBoxCustomSearchUrl6.Location = new System.Drawing.Point(185, 172);
+            this.textBoxCustomSearchUrl6.Name = "textBoxCustomSearchUrl6";
+            this.textBoxCustomSearchUrl6.Size = new System.Drawing.Size(574, 21);
+            this.textBoxCustomSearchUrl6.TabIndex = 17;
+            // 
+            // comboBoxCustomSearch6
+            // 
+            this.comboBoxCustomSearch6.FormattingEnabled = true;
+            this.comboBoxCustomSearch6.Items.AddRange(new object[] {
+            "Dictionary.com",
+            "learnersdictionary.com",
+            "Merriam-Webster",
+            "The Free Dictionary",
+            "Thesaurus.com",
+            "urbandictionary.com",
+            "VISUWORDS",
+            "Wikipedia"});
+            this.comboBoxCustomSearch6.Location = new System.Drawing.Point(31, 172);
+            this.comboBoxCustomSearch6.Name = "comboBoxCustomSearch6";
+            this.comboBoxCustomSearch6.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxCustomSearch6.TabIndex = 16;
+            this.comboBoxCustomSearch6.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
+            // 
+            // labelCustomSearch5
+            // 
+            this.labelCustomSearch5.AutoSize = true;
+            this.labelCustomSearch5.Location = new System.Drawing.Point(12, 149);
+            this.labelCustomSearch5.Name = "labelCustomSearch5";
+            this.labelCustomSearch5.Size = new System.Drawing.Size(13, 13);
+            this.labelCustomSearch5.TabIndex = 15;
+            this.labelCustomSearch5.Text = "5";
+            // 
+            // textBoxCustomSearchUrl5
+            // 
+            this.textBoxCustomSearchUrl5.Location = new System.Drawing.Point(185, 146);
+            this.textBoxCustomSearchUrl5.Name = "textBoxCustomSearchUrl5";
+            this.textBoxCustomSearchUrl5.Size = new System.Drawing.Size(574, 21);
+            this.textBoxCustomSearchUrl5.TabIndex = 14;
+            // 
+            // comboBoxCustomSearch5
+            // 
+            this.comboBoxCustomSearch5.FormattingEnabled = true;
+            this.comboBoxCustomSearch5.Items.AddRange(new object[] {
+            "Dictionary.com",
+            "learnersdictionary.com",
+            "Merriam-Webster",
+            "The Free Dictionary",
+            "Thesaurus.com",
+            "urbandictionary.com",
+            "VISUWORDS",
+            "Wikipedia"});
+            this.comboBoxCustomSearch5.Location = new System.Drawing.Point(31, 146);
+            this.comboBoxCustomSearch5.Name = "comboBoxCustomSearch5";
+            this.comboBoxCustomSearch5.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxCustomSearch5.TabIndex = 13;
+            this.comboBoxCustomSearch5.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
+            // 
+            // labelCustomSearch4
+            // 
+            this.labelCustomSearch4.AutoSize = true;
+            this.labelCustomSearch4.Location = new System.Drawing.Point(12, 122);
+            this.labelCustomSearch4.Name = "labelCustomSearch4";
+            this.labelCustomSearch4.Size = new System.Drawing.Size(13, 13);
+            this.labelCustomSearch4.TabIndex = 12;
+            this.labelCustomSearch4.Text = "4";
+            // 
+            // textBoxCustomSearchUrl4
+            // 
+            this.textBoxCustomSearchUrl4.Location = new System.Drawing.Point(185, 119);
+            this.textBoxCustomSearchUrl4.Name = "textBoxCustomSearchUrl4";
+            this.textBoxCustomSearchUrl4.Size = new System.Drawing.Size(574, 21);
+            this.textBoxCustomSearchUrl4.TabIndex = 11;
+            // 
+            // comboBoxCustomSearch4
+            // 
+            this.comboBoxCustomSearch4.FormattingEnabled = true;
+            this.comboBoxCustomSearch4.Items.AddRange(new object[] {
+            "Dictionary.com",
+            "learnersdictionary.com",
+            "Merriam-Webster",
+            "The Free Dictionary",
+            "Thesaurus.com",
+            "urbandictionary.com",
+            "VISUWORDS",
+            "Wikipedia"});
+            this.comboBoxCustomSearch4.Location = new System.Drawing.Point(31, 119);
+            this.comboBoxCustomSearch4.Name = "comboBoxCustomSearch4";
+            this.comboBoxCustomSearch4.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxCustomSearch4.TabIndex = 10;
+            this.comboBoxCustomSearch4.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
+            // 
+            // labelCustomSearch3
+            // 
+            this.labelCustomSearch3.AutoSize = true;
+            this.labelCustomSearch3.Location = new System.Drawing.Point(12, 95);
+            this.labelCustomSearch3.Name = "labelCustomSearch3";
+            this.labelCustomSearch3.Size = new System.Drawing.Size(13, 13);
+            this.labelCustomSearch3.TabIndex = 9;
+            this.labelCustomSearch3.Text = "3";
+            // 
+            // textBoxCustomSearchUrl3
+            // 
+            this.textBoxCustomSearchUrl3.Location = new System.Drawing.Point(185, 92);
+            this.textBoxCustomSearchUrl3.Name = "textBoxCustomSearchUrl3";
+            this.textBoxCustomSearchUrl3.Size = new System.Drawing.Size(574, 21);
+            this.textBoxCustomSearchUrl3.TabIndex = 8;
+            // 
+            // comboBoxCustomSearch3
+            // 
+            this.comboBoxCustomSearch3.FormattingEnabled = true;
+            this.comboBoxCustomSearch3.Items.AddRange(new object[] {
+            "Dictionary.com",
+            "learnersdictionary.com",
+            "Merriam-Webster",
+            "The Free Dictionary",
+            "Thesaurus.com",
+            "urbandictionary.com",
+            "VISUWORDS",
+            "Wikipedia"});
+            this.comboBoxCustomSearch3.Location = new System.Drawing.Point(31, 92);
+            this.comboBoxCustomSearch3.Name = "comboBoxCustomSearch3";
+            this.comboBoxCustomSearch3.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxCustomSearch3.TabIndex = 7;
+            this.comboBoxCustomSearch3.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
+            // 
+            // labelCustomSearch2
+            // 
+            this.labelCustomSearch2.AutoSize = true;
+            this.labelCustomSearch2.Location = new System.Drawing.Point(12, 68);
+            this.labelCustomSearch2.Name = "labelCustomSearch2";
+            this.labelCustomSearch2.Size = new System.Drawing.Size(13, 13);
+            this.labelCustomSearch2.TabIndex = 6;
+            this.labelCustomSearch2.Text = "2";
+            // 
+            // textBoxCustomSearchUrl2
+            // 
+            this.textBoxCustomSearchUrl2.Location = new System.Drawing.Point(185, 65);
+            this.textBoxCustomSearchUrl2.Name = "textBoxCustomSearchUrl2";
+            this.textBoxCustomSearchUrl2.Size = new System.Drawing.Size(574, 21);
+            this.textBoxCustomSearchUrl2.TabIndex = 5;
+            // 
+            // comboBoxCustomSearch2
+            // 
+            this.comboBoxCustomSearch2.FormattingEnabled = true;
+            this.comboBoxCustomSearch2.Items.AddRange(new object[] {
+            "Dictionary.com",
+            "learnersdictionary.com",
+            "Merriam-Webster",
+            "The Free Dictionary",
+            "Thesaurus.com",
+            "urbandictionary.com",
+            "VISUWORDS",
+            "Wikipedia"});
+            this.comboBoxCustomSearch2.Location = new System.Drawing.Point(31, 65);
+            this.comboBoxCustomSearch2.Name = "comboBoxCustomSearch2";
+            this.comboBoxCustomSearch2.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxCustomSearch2.TabIndex = 4;
+            this.comboBoxCustomSearch2.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
             // 
             // labelCustomSearch1
             // 
@@ -1365,7 +1535,7 @@
             this.checkBoxVideoPlayerShowMuteButton.AutoSize = true;
             this.checkBoxVideoPlayerShowMuteButton.Location = new System.Drawing.Point(9, 42);
             this.checkBoxVideoPlayerShowMuteButton.Name = "checkBoxVideoPlayerShowMuteButton";
-            this.checkBoxVideoPlayerShowMuteButton.Size = new System.Drawing.Size(114, 17);
+            this.checkBoxVideoPlayerShowMuteButton.Size = new System.Drawing.Size(112, 17);
             this.checkBoxVideoPlayerShowMuteButton.TabIndex = 11;
             this.checkBoxVideoPlayerShowMuteButton.Text = "Show mute button";
             this.checkBoxVideoPlayerShowMuteButton.UseVisualStyleBackColor = true;
@@ -1407,7 +1577,7 @@
             this.checkBoxVideoPlayerShowStopButton.AutoSize = true;
             this.checkBoxVideoPlayerShowStopButton.Location = new System.Drawing.Point(9, 19);
             this.checkBoxVideoPlayerShowStopButton.Name = "checkBoxVideoPlayerShowStopButton";
-            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(111, 17);
+            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(109, 17);
             this.checkBoxVideoPlayerShowStopButton.TabIndex = 10;
             this.checkBoxVideoPlayerShowStopButton.Text = "Show stop button";
             this.checkBoxVideoPlayerShowStopButton.UseVisualStyleBackColor = true;
@@ -1474,7 +1644,7 @@
             this.radioButtonVideoPlayerVLC.AutoSize = true;
             this.radioButtonVideoPlayerVLC.Location = new System.Drawing.Point(10, 46);
             this.radioButtonVideoPlayerVLC.Name = "radioButtonVideoPlayerVLC";
-            this.radioButtonVideoPlayerVLC.Size = new System.Drawing.Size(43, 17);
+            this.radioButtonVideoPlayerVLC.Size = new System.Drawing.Size(45, 17);
             this.radioButtonVideoPlayerVLC.TabIndex = 4;
             this.radioButtonVideoPlayerVLC.TabStop = true;
             this.radioButtonVideoPlayerVLC.Text = "VLC";
@@ -1530,7 +1700,7 @@
             this.radioButtonVideoPlayerDirectShow.AutoSize = true;
             this.radioButtonVideoPlayerDirectShow.Location = new System.Drawing.Point(10, 23);
             this.radioButtonVideoPlayerDirectShow.Name = "radioButtonVideoPlayerDirectShow";
-            this.radioButtonVideoPlayerDirectShow.Size = new System.Drawing.Size(82, 17);
+            this.radioButtonVideoPlayerDirectShow.Size = new System.Drawing.Size(83, 17);
             this.radioButtonVideoPlayerDirectShow.TabIndex = 1;
             this.radioButtonVideoPlayerDirectShow.TabStop = true;
             this.radioButtonVideoPlayerDirectShow.Text = "DirectShow ";
@@ -1541,7 +1711,7 @@
             this.radioButtonVideoPlayerManagedDirectX.AutoSize = true;
             this.radioButtonVideoPlayerManagedDirectX.Location = new System.Drawing.Point(10, 90);
             this.radioButtonVideoPlayerManagedDirectX.Name = "radioButtonVideoPlayerManagedDirectX";
-            this.radioButtonVideoPlayerManagedDirectX.Size = new System.Drawing.Size(106, 17);
+            this.radioButtonVideoPlayerManagedDirectX.Size = new System.Drawing.Size(108, 17);
             this.radioButtonVideoPlayerManagedDirectX.TabIndex = 6;
             this.radioButtonVideoPlayerManagedDirectX.TabStop = true;
             this.radioButtonVideoPlayerManagedDirectX.Text = "Managed DirectX";
@@ -1598,7 +1768,7 @@
             this.checkBoxGenerateSpectrogram.AutoSize = true;
             this.checkBoxGenerateSpectrogram.Location = new System.Drawing.Point(10, 20);
             this.checkBoxGenerateSpectrogram.Name = "checkBoxGenerateSpectrogram";
-            this.checkBoxGenerateSpectrogram.Size = new System.Drawing.Size(134, 17);
+            this.checkBoxGenerateSpectrogram.Size = new System.Drawing.Size(131, 17);
             this.checkBoxGenerateSpectrogram.TabIndex = 0;
             this.checkBoxGenerateSpectrogram.Text = "Generate spectrogram";
             this.checkBoxGenerateSpectrogram.UseVisualStyleBackColor = true;
@@ -1658,7 +1828,7 @@
             this.checkBoxReverseMouseWheelScrollDirection.AutoSize = true;
             this.checkBoxReverseMouseWheelScrollDirection.Location = new System.Drawing.Point(262, 31);
             this.checkBoxReverseMouseWheelScrollDirection.Name = "checkBoxReverseMouseWheelScrollDirection";
-            this.checkBoxReverseMouseWheelScrollDirection.Size = new System.Drawing.Size(202, 17);
+            this.checkBoxReverseMouseWheelScrollDirection.Size = new System.Drawing.Size(201, 17);
             this.checkBoxReverseMouseWheelScrollDirection.TabIndex = 6;
             this.checkBoxReverseMouseWheelScrollDirection.Text = "Reverse mouse wheel scroll direction";
             this.checkBoxReverseMouseWheelScrollDirection.UseVisualStyleBackColor = true;
@@ -1796,7 +1966,7 @@
             this.checkBoxSpellCheckAutoChangeNames.AutoSize = true;
             this.checkBoxSpellCheckAutoChangeNames.Location = new System.Drawing.Point(15, 20);
             this.checkBoxSpellCheckAutoChangeNames.Name = "checkBoxSpellCheckAutoChangeNames";
-            this.checkBoxSpellCheckAutoChangeNames.Size = new System.Drawing.Size(216, 17);
+            this.checkBoxSpellCheckAutoChangeNames.Size = new System.Drawing.Size(209, 17);
             this.checkBoxSpellCheckAutoChangeNames.TabIndex = 0;
             this.checkBoxSpellCheckAutoChangeNames.Text = "Auto fix names where only casing differ";
             this.checkBoxSpellCheckAutoChangeNames.UseVisualStyleBackColor = true;
@@ -1820,7 +1990,7 @@
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.AutoSize = true;
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Location = new System.Drawing.Point(15, 115);
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Name = "checkBoxFixCommonOcrErrorsUsingHardcodedRules";
-            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Size = new System.Drawing.Size(268, 17);
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Size = new System.Drawing.Size(264, 17);
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.TabIndex = 2;
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = "Fix common OCR errors - also use hardcoded rules";
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.UseVisualStyleBackColor = true;
@@ -2105,7 +2275,7 @@
             this.checkBoxNamesEtcOnline.AutoSize = true;
             this.checkBoxNamesEtcOnline.Location = new System.Drawing.Point(7, 22);
             this.checkBoxNamesEtcOnline.Name = "checkBoxNamesEtcOnline";
-            this.checkBoxNamesEtcOnline.Size = new System.Drawing.Size(163, 17);
+            this.checkBoxNamesEtcOnline.Size = new System.Drawing.Size(162, 17);
             this.checkBoxNamesEtcOnline.TabIndex = 26;
             this.checkBoxNamesEtcOnline.Text = "Use online names etc xml file";
             this.checkBoxNamesEtcOnline.UseVisualStyleBackColor = true;
@@ -2549,7 +2719,7 @@
             this.checkBoxShortcutsShift.Enabled = false;
             this.checkBoxShortcutsShift.Location = new System.Drawing.Point(245, 407);
             this.checkBoxShortcutsShift.Name = "checkBoxShortcutsShift";
-            this.checkBoxShortcutsShift.Size = new System.Drawing.Size(48, 17);
+            this.checkBoxShortcutsShift.Size = new System.Drawing.Size(47, 17);
             this.checkBoxShortcutsShift.TabIndex = 3;
             this.checkBoxShortcutsShift.Text = "Shift";
             this.checkBoxShortcutsShift.UseVisualStyleBackColor = true;
@@ -2560,7 +2730,7 @@
             this.checkBoxShortcutsAlt.Enabled = false;
             this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(176, 407);
             this.checkBoxShortcutsAlt.Name = "checkBoxShortcutsAlt";
-            this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(39, 17);
+            this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(38, 17);
             this.checkBoxShortcutsAlt.TabIndex = 2;
             this.checkBoxShortcutsAlt.Text = "Alt";
             this.checkBoxShortcutsAlt.UseVisualStyleBackColor = true;
@@ -2571,7 +2741,7 @@
             this.checkBoxShortcutsControl.Enabled = false;
             this.checkBoxShortcutsControl.Location = new System.Drawing.Point(89, 407);
             this.checkBoxShortcutsControl.Name = "checkBoxShortcutsControl";
-            this.checkBoxShortcutsControl.Size = new System.Drawing.Size(61, 17);
+            this.checkBoxShortcutsControl.Size = new System.Drawing.Size(59, 17);
             this.checkBoxShortcutsControl.TabIndex = 1;
             this.checkBoxShortcutsControl.Text = "Control";
             this.checkBoxShortcutsControl.UseVisualStyleBackColor = true;
@@ -2660,7 +2830,7 @@
             this.checkBoxSyntaxColorTextMoreThanTwoLines.AutoSize = true;
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Location = new System.Drawing.Point(20, 116);
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Name = "checkBoxSyntaxColorTextMoreThanTwoLines";
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.Size = new System.Drawing.Size(170, 17);
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.Size = new System.Drawing.Size(164, 17);
             this.checkBoxSyntaxColorTextMoreThanTwoLines.TabIndex = 3;
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Text = "Text - color if more than lines:";
             this.checkBoxSyntaxColorTextMoreThanTwoLines.UseVisualStyleBackColor = true;
@@ -2670,7 +2840,7 @@
             this.checkBoxSyntaxOverlap.AutoSize = true;
             this.checkBoxSyntaxOverlap.Location = new System.Drawing.Point(20, 154);
             this.checkBoxSyntaxOverlap.Name = "checkBoxSyntaxOverlap";
-            this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(129, 17);
+            this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(127, 17);
             this.checkBoxSyntaxOverlap.TabIndex = 4;
             this.checkBoxSyntaxOverlap.Text = "Time - color if overlap";
             this.checkBoxSyntaxOverlap.UseVisualStyleBackColor = true;
@@ -2699,7 +2869,7 @@
             this.checkBoxSyntaxColorTextTooLong.AutoSize = true;
             this.checkBoxSyntaxColorTextTooLong.Location = new System.Drawing.Point(20, 93);
             this.checkBoxSyntaxColorTextTooLong.Name = "checkBoxSyntaxColorTextTooLong";
-            this.checkBoxSyntaxColorTextTooLong.Size = new System.Drawing.Size(132, 17);
+            this.checkBoxSyntaxColorTextTooLong.Size = new System.Drawing.Size(128, 17);
             this.checkBoxSyntaxColorTextTooLong.TabIndex = 2;
             this.checkBoxSyntaxColorTextTooLong.Text = "Text - color if too long";
             this.checkBoxSyntaxColorTextTooLong.UseVisualStyleBackColor = true;
@@ -2709,7 +2879,7 @@
             this.checkBoxSyntaxColorDurationTooLarge.AutoSize = true;
             this.checkBoxSyntaxColorDurationTooLarge.Location = new System.Drawing.Point(20, 58);
             this.checkBoxSyntaxColorDurationTooLarge.Name = "checkBoxSyntaxColorDurationTooLarge";
-            this.checkBoxSyntaxColorDurationTooLarge.Size = new System.Drawing.Size(155, 17);
+            this.checkBoxSyntaxColorDurationTooLarge.Size = new System.Drawing.Size(150, 17);
             this.checkBoxSyntaxColorDurationTooLarge.TabIndex = 1;
             this.checkBoxSyntaxColorDurationTooLarge.Text = "Duration - color if too large";
             this.checkBoxSyntaxColorDurationTooLarge.UseVisualStyleBackColor = true;
@@ -2731,176 +2901,6 @@
             this.labelStatus.Size = new System.Drawing.Size(60, 13);
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
-            // 
-            // labelCustomSearch2
-            // 
-            this.labelCustomSearch2.AutoSize = true;
-            this.labelCustomSearch2.Location = new System.Drawing.Point(12, 68);
-            this.labelCustomSearch2.Name = "labelCustomSearch2";
-            this.labelCustomSearch2.Size = new System.Drawing.Size(13, 13);
-            this.labelCustomSearch2.TabIndex = 6;
-            this.labelCustomSearch2.Text = "2";
-            // 
-            // textBoxCustomSearchUrl2
-            // 
-            this.textBoxCustomSearchUrl2.Location = new System.Drawing.Point(185, 65);
-            this.textBoxCustomSearchUrl2.Name = "textBoxCustomSearchUrl2";
-            this.textBoxCustomSearchUrl2.Size = new System.Drawing.Size(574, 21);
-            this.textBoxCustomSearchUrl2.TabIndex = 5;
-            // 
-            // comboBoxCustomSearch2
-            // 
-            this.comboBoxCustomSearch2.FormattingEnabled = true;
-            this.comboBoxCustomSearch2.Items.AddRange(new object[] {
-            "Dictionary.com",
-            "learnersdictionary.com",
-            "Merriam-Webster",
-            "The Free Dictionary",
-            "Thesaurus.com",
-            "urbandictionary.com",
-            "VISUWORDS",
-            "Wikipedia"});
-            this.comboBoxCustomSearch2.Location = new System.Drawing.Point(31, 65);
-            this.comboBoxCustomSearch2.Name = "comboBoxCustomSearch2";
-            this.comboBoxCustomSearch2.Size = new System.Drawing.Size(148, 21);
-            this.comboBoxCustomSearch2.TabIndex = 4;
-            this.comboBoxCustomSearch2.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
-            // 
-            // labelCustomSearch3
-            // 
-            this.labelCustomSearch3.AutoSize = true;
-            this.labelCustomSearch3.Location = new System.Drawing.Point(12, 95);
-            this.labelCustomSearch3.Name = "labelCustomSearch3";
-            this.labelCustomSearch3.Size = new System.Drawing.Size(13, 13);
-            this.labelCustomSearch3.TabIndex = 9;
-            this.labelCustomSearch3.Text = "3";
-            // 
-            // textBoxCustomSearchUrl3
-            // 
-            this.textBoxCustomSearchUrl3.Location = new System.Drawing.Point(185, 92);
-            this.textBoxCustomSearchUrl3.Name = "textBoxCustomSearchUrl3";
-            this.textBoxCustomSearchUrl3.Size = new System.Drawing.Size(574, 21);
-            this.textBoxCustomSearchUrl3.TabIndex = 8;
-            // 
-            // comboBoxCustomSearch3
-            // 
-            this.comboBoxCustomSearch3.FormattingEnabled = true;
-            this.comboBoxCustomSearch3.Items.AddRange(new object[] {
-            "Dictionary.com",
-            "learnersdictionary.com",
-            "Merriam-Webster",
-            "The Free Dictionary",
-            "Thesaurus.com",
-            "urbandictionary.com",
-            "VISUWORDS",
-            "Wikipedia"});
-            this.comboBoxCustomSearch3.Location = new System.Drawing.Point(31, 92);
-            this.comboBoxCustomSearch3.Name = "comboBoxCustomSearch3";
-            this.comboBoxCustomSearch3.Size = new System.Drawing.Size(148, 21);
-            this.comboBoxCustomSearch3.TabIndex = 7;
-            this.comboBoxCustomSearch3.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
-            // 
-            // labelCustomSearch4
-            // 
-            this.labelCustomSearch4.AutoSize = true;
-            this.labelCustomSearch4.Location = new System.Drawing.Point(12, 122);
-            this.labelCustomSearch4.Name = "labelCustomSearch4";
-            this.labelCustomSearch4.Size = new System.Drawing.Size(13, 13);
-            this.labelCustomSearch4.TabIndex = 12;
-            this.labelCustomSearch4.Text = "4";
-            // 
-            // textBoxCustomSearchUrl4
-            // 
-            this.textBoxCustomSearchUrl4.Location = new System.Drawing.Point(185, 119);
-            this.textBoxCustomSearchUrl4.Name = "textBoxCustomSearchUrl4";
-            this.textBoxCustomSearchUrl4.Size = new System.Drawing.Size(574, 21);
-            this.textBoxCustomSearchUrl4.TabIndex = 11;
-            // 
-            // comboBoxCustomSearch4
-            // 
-            this.comboBoxCustomSearch4.FormattingEnabled = true;
-            this.comboBoxCustomSearch4.Items.AddRange(new object[] {
-            "Dictionary.com",
-            "learnersdictionary.com",
-            "Merriam-Webster",
-            "The Free Dictionary",
-            "Thesaurus.com",
-            "urbandictionary.com",
-            "VISUWORDS",
-            "Wikipedia"});
-            this.comboBoxCustomSearch4.Location = new System.Drawing.Point(31, 119);
-            this.comboBoxCustomSearch4.Name = "comboBoxCustomSearch4";
-            this.comboBoxCustomSearch4.Size = new System.Drawing.Size(148, 21);
-            this.comboBoxCustomSearch4.TabIndex = 10;
-            this.comboBoxCustomSearch4.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
-            // 
-            // labelCustomSearch5
-            // 
-            this.labelCustomSearch5.AutoSize = true;
-            this.labelCustomSearch5.Location = new System.Drawing.Point(12, 149);
-            this.labelCustomSearch5.Name = "labelCustomSearch5";
-            this.labelCustomSearch5.Size = new System.Drawing.Size(13, 13);
-            this.labelCustomSearch5.TabIndex = 15;
-            this.labelCustomSearch5.Text = "5";
-            // 
-            // textBoxCustomSearchUrl5
-            // 
-            this.textBoxCustomSearchUrl5.Location = new System.Drawing.Point(185, 146);
-            this.textBoxCustomSearchUrl5.Name = "textBoxCustomSearchUrl5";
-            this.textBoxCustomSearchUrl5.Size = new System.Drawing.Size(574, 21);
-            this.textBoxCustomSearchUrl5.TabIndex = 14;
-            // 
-            // comboBoxCustomSearch5
-            // 
-            this.comboBoxCustomSearch5.FormattingEnabled = true;
-            this.comboBoxCustomSearch5.Items.AddRange(new object[] {
-            "Dictionary.com",
-            "learnersdictionary.com",
-            "Merriam-Webster",
-            "The Free Dictionary",
-            "Thesaurus.com",
-            "urbandictionary.com",
-            "VISUWORDS",
-            "Wikipedia"});
-            this.comboBoxCustomSearch5.Location = new System.Drawing.Point(31, 146);
-            this.comboBoxCustomSearch5.Name = "comboBoxCustomSearch5";
-            this.comboBoxCustomSearch5.Size = new System.Drawing.Size(148, 21);
-            this.comboBoxCustomSearch5.TabIndex = 13;
-            this.comboBoxCustomSearch5.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
-            // 
-            // labelCustomSearch6
-            // 
-            this.labelCustomSearch6.AutoSize = true;
-            this.labelCustomSearch6.Location = new System.Drawing.Point(12, 175);
-            this.labelCustomSearch6.Name = "labelCustomSearch6";
-            this.labelCustomSearch6.Size = new System.Drawing.Size(13, 13);
-            this.labelCustomSearch6.TabIndex = 18;
-            this.labelCustomSearch6.Text = "6";
-            // 
-            // textBoxCustomSearchUrl6
-            // 
-            this.textBoxCustomSearchUrl6.Location = new System.Drawing.Point(185, 172);
-            this.textBoxCustomSearchUrl6.Name = "textBoxCustomSearchUrl6";
-            this.textBoxCustomSearchUrl6.Size = new System.Drawing.Size(574, 21);
-            this.textBoxCustomSearchUrl6.TabIndex = 17;
-            // 
-            // comboBoxCustomSearch6
-            // 
-            this.comboBoxCustomSearch6.FormattingEnabled = true;
-            this.comboBoxCustomSearch6.Items.AddRange(new object[] {
-            "Dictionary.com",
-            "learnersdictionary.com",
-            "Merriam-Webster",
-            "The Free Dictionary",
-            "Thesaurus.com",
-            "urbandictionary.com",
-            "VISUWORDS",
-            "Wikipedia"});
-            this.comboBoxCustomSearch6.Location = new System.Drawing.Point(31, 172);
-            this.comboBoxCustomSearch6.Name = "comboBoxCustomSearch6";
-            this.comboBoxCustomSearch6.Size = new System.Drawing.Size(148, 21);
-            this.comboBoxCustomSearch6.TabIndex = 16;
-            this.comboBoxCustomSearch6.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
             // 
             // Settings
             // 

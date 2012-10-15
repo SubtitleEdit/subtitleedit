@@ -31,7 +31,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.contextMenuStripListview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.normalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.italicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,6 +83,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageSuggestions = new System.Windows.Forms.TabPage();
             this.listBoxLogSuggestions = new System.Windows.Forms.ListBox();
             this.tabPageUnknownWords = new System.Windows.Forms.TabPage();
+            this.buttonAddToOcrReplaceList = new System.Windows.Forms.Button();
+            this.buttonUknownToUserDic = new System.Windows.Forms.Button();
+            this.buttonUknownToNames = new System.Windows.Forms.Button();
             this.listBoxUnknownWords = new System.Windows.Forms.ListBox();
             this.checkBoxPromptForUnknownWords = new System.Windows.Forms.CheckBox();
             this.checkBoxAutoBreakLines = new System.Windows.Forms.CheckBox();
@@ -103,6 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.groupBoxSubtitleImage = new System.Windows.Forms.GroupBox();
             this.checkBoxAutoTransparentBackground = new System.Windows.Forms.CheckBox();
+            this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.checkBoxShowOnlyForced = new System.Windows.Forms.CheckBox();
             this.checkBoxUseTimeCodesFromIdx = new System.Windows.Forms.CheckBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -110,7 +113,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom = new System.Windows.Forms.SplitContainer();
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.GroupBoxTesseractMethod.SuspendLayout();
@@ -130,23 +132,11 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEmphasis1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPattern)).BeginInit();
             this.groupBoxSubtitleImage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.splitContainerBottom.Panel1.SuspendLayout();
             this.splitContainerBottom.Panel2.SuspendLayout();
             this.splitContainerBottom.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // pictureBoxSubtitleImage
-            // 
-            this.pictureBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBoxSubtitleImage.ContextMenuStrip = this.contextMenuStripListview;
-            this.pictureBoxSubtitleImage.Location = new System.Drawing.Point(13, 60);
-            this.pictureBoxSubtitleImage.Name = "pictureBoxSubtitleImage";
-            this.pictureBoxSubtitleImage.Size = new System.Drawing.Size(636, 127);
-            this.pictureBoxSubtitleImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxSubtitleImage.TabIndex = 3;
-            this.pictureBoxSubtitleImage.TabStop = false;
             // 
             // contextMenuStripListview
             // 
@@ -165,7 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 248);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 226);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
@@ -692,6 +682,9 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // tabPageUnknownWords
             // 
+            this.tabPageUnknownWords.Controls.Add(this.buttonAddToOcrReplaceList);
+            this.tabPageUnknownWords.Controls.Add(this.buttonUknownToUserDic);
+            this.tabPageUnknownWords.Controls.Add(this.buttonUknownToNames);
             this.tabPageUnknownWords.Controls.Add(this.listBoxUnknownWords);
             this.tabPageUnknownWords.Location = new System.Drawing.Point(4, 22);
             this.tabPageUnknownWords.Name = "tabPageUnknownWords";
@@ -700,14 +693,52 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageUnknownWords.Text = "Unknown words";
             this.tabPageUnknownWords.UseVisualStyleBackColor = true;
             // 
+            // buttonAddToOcrReplaceList
+            // 
+            this.buttonAddToOcrReplaceList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAddToOcrReplaceList.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonAddToOcrReplaceList.Location = new System.Drawing.Point(219, 61);
+            this.buttonAddToOcrReplaceList.Name = "buttonAddToOcrReplaceList";
+            this.buttonAddToOcrReplaceList.Size = new System.Drawing.Size(150, 21);
+            this.buttonAddToOcrReplaceList.TabIndex = 43;
+            this.buttonAddToOcrReplaceList.Text = "Add ocr replace pair";
+            this.buttonAddToOcrReplaceList.UseVisualStyleBackColor = true;
+            this.buttonAddToOcrReplaceList.Click += new System.EventHandler(this.buttonAddToOcrReplaceList_Click);
+            // 
+            // buttonUknownToUserDic
+            // 
+            this.buttonUknownToUserDic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonUknownToUserDic.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonUknownToUserDic.Location = new System.Drawing.Point(219, 34);
+            this.buttonUknownToUserDic.Name = "buttonUknownToUserDic";
+            this.buttonUknownToUserDic.Size = new System.Drawing.Size(150, 21);
+            this.buttonUknownToUserDic.TabIndex = 42;
+            this.buttonUknownToUserDic.Text = "Add to user dictionary";
+            this.buttonUknownToUserDic.UseVisualStyleBackColor = true;
+            this.buttonUknownToUserDic.Click += new System.EventHandler(this.buttonUknownToUserDic_Click);
+            // 
+            // buttonUknownToNames
+            // 
+            this.buttonUknownToNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonUknownToNames.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonUknownToNames.Location = new System.Drawing.Point(219, 7);
+            this.buttonUknownToNames.Name = "buttonUknownToNames";
+            this.buttonUknownToNames.Size = new System.Drawing.Size(150, 21);
+            this.buttonUknownToNames.TabIndex = 41;
+            this.buttonUknownToNames.Text = "Add to names etc list";
+            this.buttonUknownToNames.UseVisualStyleBackColor = true;
+            this.buttonUknownToNames.Click += new System.EventHandler(this.buttonUknownToNames_Click);
+            // 
             // listBoxUnknownWords
             // 
-            this.listBoxUnknownWords.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listBoxUnknownWords.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxUnknownWords.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxUnknownWords.FormattingEnabled = true;
             this.listBoxUnknownWords.Location = new System.Drawing.Point(0, 0);
             this.listBoxUnknownWords.Name = "listBoxUnknownWords";
-            this.listBoxUnknownWords.Size = new System.Drawing.Size(375, 155);
+            this.listBoxUnknownWords.Size = new System.Drawing.Size(213, 147);
             this.listBoxUnknownWords.TabIndex = 40;
             this.listBoxUnknownWords.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             // 
@@ -902,6 +933,19 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxAutoTransparentBackground.UseVisualStyleBackColor = true;
             this.checkBoxAutoTransparentBackground.CheckedChanged += new System.EventHandler(this.checkBoxAutoTransparentBackground_CheckedChanged);
             // 
+            // pictureBoxSubtitleImage
+            // 
+            this.pictureBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxSubtitleImage.ContextMenuStrip = this.contextMenuStripListview;
+            this.pictureBoxSubtitleImage.Location = new System.Drawing.Point(13, 60);
+            this.pictureBoxSubtitleImage.Name = "pictureBoxSubtitleImage";
+            this.pictureBoxSubtitleImage.Size = new System.Drawing.Size(636, 127);
+            this.pictureBoxSubtitleImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxSubtitleImage.TabIndex = 3;
+            this.pictureBoxSubtitleImage.TabStop = false;
+            // 
             // checkBoxShowOnlyForced
             // 
             this.checkBoxShowOnlyForced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -988,6 +1032,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.Size = new System.Drawing.Size(631, 183);
             this.subtitleListView1.TabIndex = 4;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
+            this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
@@ -1017,7 +1062,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.Shown += new System.EventHandler(this.FormVobSubOcr_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubOcr_KeyDown);
             this.Resize += new System.EventHandler(this.VobSubOcr_Resize);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
             this.contextMenuStripListview.ResumeLayout(false);
             this.groupBoxOcrMethod.ResumeLayout(false);
             this.GroupBoxTesseractMethod.ResumeLayout(false);
@@ -1044,6 +1088,7 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPattern)).EndInit();
             this.groupBoxSubtitleImage.ResumeLayout(false);
             this.groupBoxSubtitleImage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
             this.splitContainerBottom.Panel1.ResumeLayout(false);
             this.splitContainerBottom.Panel1.PerformLayout();
             this.splitContainerBottom.Panel2.ResumeLayout(false);
@@ -1134,5 +1179,8 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxTesseractItalicsOn;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.Button buttonUknownToUserDic;
+        private System.Windows.Forms.Button buttonUknownToNames;
+        private System.Windows.Forms.Button buttonAddToOcrReplaceList;
     }
 }

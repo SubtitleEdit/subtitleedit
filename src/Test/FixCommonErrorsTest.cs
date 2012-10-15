@@ -253,7 +253,58 @@ namespace Test
         }
         #endregion
 
+        #region Fix Hyphens (add dash)
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixHyphensAddDash1()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "Hi Joe!" + Environment.NewLine + "- Hi Pete!");
+            target.FixHyphensAdd();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
+        }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixHyphensAddDash2()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "- Hi Joe!" + Environment.NewLine + "Hi Pete!");
+            target.FixHyphensAdd();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixHyphensAddDash2italic()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "<i>- Hi Joe!" + Environment.NewLine + "Hi Pete!</i>");
+            target.FixHyphensAdd();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>- Hi Joe!" + Environment.NewLine + "- Hi Pete!</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixHyphensAddDash3NoChange()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
+            target.FixHyphensAdd();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixHyphensAddDash4NoChange()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "- Hi!" + Environment.NewLine + "- Hi Pete!");
+            target.FixHyphensAdd();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- Hi!" + Environment.NewLine + "- Hi Pete!");
+        }
+
+        #endregion
 
         #region Fix OCR errors
         [TestMethod]
@@ -285,8 +336,6 @@ namespace Test
             target.FixOcrErrorsViaReplaceList("eng");
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The clock is 12 a.m.");
         }
-
-
         #endregion
 
     }

@@ -14,6 +14,8 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.General General;
         public LanguageStructure.About About;
         public LanguageStructure.AddToNames AddToNames;
+        public LanguageStructure.AddToOcrReplaceList AddToOcrReplaceList;
+        public LanguageStructure.AddToUserDictionary AddToUserDictionary;
         public LanguageStructure.AddWareForm AddWaveForm;
         public LanguageStructure.AdjustDisplayDuration AdjustDisplayDuration;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
@@ -169,10 +171,22 @@ namespace Nikse.SubtitleEdit.Logic
             };
 
             AddToNames = new LanguageStructure.AddToNames
-                             {
-                                 Title = "Add to names/etc list",
-                                 Description = "Add to names/noise list (case sensitive)",
-                             };
+            {
+                Title = "Add to names/etc list",
+                Description = "Add to names/noise list (case sensitive)",
+            };
+
+            AddToOcrReplaceList = new LanguageStructure.AddToOcrReplaceList
+            {
+                Title = "Add to ocr replace list",
+                Description = "Add pair to ocr replace list (case sensitive)",
+            };
+
+            AddToUserDictionary = new LanguageStructure.AddToUserDictionary
+            {
+                Title = "Add to user dictionary",
+                Description = "Add word to user dictionary (not case sensitive)",
+            };
 
             AddWaveForm = new LanguageStructure.AddWareForm
             {
@@ -840,6 +854,10 @@ namespace Nikse.SubtitleEdit.Logic
                 NumberOfLinesReplacedX = "Number of lines with text replaced: {0}",
                 NameXAddedToNamesEtcList = "The name '{0}' was added to names/etc list",
                 NameXNotAddedToNamesEtcList = "The name '{0}' was NOT added to names/etc list",
+                WordXAddedToUserDic = "The word '{0}' was added to the user dictionary",
+                WordXNotAddedToUserDic = "The name '{0}' was NOT added to the user dictionary",
+                OcrReplacePairXAdded = "The ocr replace list pair '{0} -> {1}' was added to the ocr replace list",
+                OcrReplacePairXNotAdded = "The ocr replace list pair '{0} -> {1}' was NOT added to the ocr replace list",
                 XLinesSelected = "{0} lines selected",
                 UnicodeMusicSymbolsAnsiWarning = "Subtitle contains unicode music notes. Saving using ANSI file encoding will lose these. Continue with saving?",
                 NegativeTimeWarning = "Subtitle contains negative time codes. Continue with saving?",
@@ -1571,6 +1589,7 @@ can edit in same subtitle file (collaboration)",
                 SkipAll = "&Skip all",
                 AddToUserDictionary = "Add to user dictionary",
                 AddToNamesAndIgnoreList = "Add to names/noise list (case sensitive)",
+                AddToOcrReplaceList = "Add pair to ocr replace list",
                 Abort = "Abort",
                 Use = "Use",
                 UseAlways = "&Use always",

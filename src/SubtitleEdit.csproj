@@ -128,6 +128,18 @@
     <Compile Include="Forms\AddToNames.Designer.cs">
       <DependentUpon>AddToNames.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\AddToOcrReplaceList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AddToOcrReplaceList.Designer.cs">
+      <DependentUpon>AddToOcrReplaceList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AddToUserDic.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AddToUserDic.Designer.cs">
+      <DependentUpon>AddToUserDic.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\AddWareForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -934,6 +946,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddToNames.resx">
       <DependentUpon>AddToNames.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AddToOcrReplaceList.resx">
+      <DependentUpon>AddToOcrReplaceList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AddToUserDic.resx">
+      <DependentUpon>AddToUserDic.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddWareForm.resx">
       <DependentUpon>AddWareForm.cs</DependentUpon>

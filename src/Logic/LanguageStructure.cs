@@ -84,6 +84,18 @@
             public string Description { get; set; }
         }
 
+        public class AddToOcrReplaceList
+        {
+            public string Title { get; set; }
+            public string Description { get; set; }
+        }
+
+        public class AddToUserDictionary
+        {
+            public string Title { get; set; }
+            public string Description { get; set; }
+        }
+
         public class AddWareForm
         {
             public string Title { get; set; }
@@ -746,6 +758,10 @@
             public string NumberOfLinesReplacedX { get; set; }
             public string NameXAddedToNamesEtcList { get; set; }
             public string NameXNotAddedToNamesEtcList { get; set; }
+            public string WordXAddedToUserDic { get; set; }
+            public string WordXNotAddedToUserDic { get; set; }
+            public string OcrReplacePairXAdded { get; set; }
+            public string OcrReplacePairXNotAdded { get; set; }
             public string XLinesSelected { get; set; }
             public string UnicodeMusicSymbolsAnsiWarning { get; set; }
             public string NegativeTimeWarning { get; set; }
@@ -1484,6 +1500,7 @@
             public string SkipAll { get; set; }
             public string AddToUserDictionary { get; set; }
             public string AddToNamesAndIgnoreList { get; set; }
+            public string AddToOcrReplaceList { get; set; }
             public string Abort { get; set; }
             public string Use { get; set; }
             public string UseAlways { get; set; }
