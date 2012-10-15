@@ -189,13 +189,18 @@ namespace Nikse.SubtitleEdit.Forms
                                 string[] arr = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                                 if (arr.Length == 2)
                                 {
+                                    int spacing1 = Configuration.Settings.General.MininumMillisecondsBetweenLines / 2;
+                                    int spacing2 = Configuration.Settings.General.MininumMillisecondsBetweenLines / 2;
+                                    if (Configuration.Settings.General.MininumMillisecondsBetweenLines % 2 == 1)
+                                        spacing2++;
+
                                     double duration = p.Duration.TotalMilliseconds / 2.0;
                                     Paragraph newParagraph1 = new Paragraph(p);
                                     Paragraph newParagraph2 = new Paragraph(p);
                                     newParagraph1.Text = Utilities.AutoBreakLine(arr[0]);
-                                    newParagraph1.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
+                                    newParagraph1.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration - spacing1;
                                     newParagraph2.Text = Utilities.AutoBreakLine(arr[1]);
-                                    newParagraph2.StartTime.TotalMilliseconds = newParagraph1.EndTime.TotalMilliseconds + 1;
+                                    newParagraph2.StartTime.TotalMilliseconds = newParagraph1.EndTime.TotalMilliseconds + spacing2;
 
                                     if (clearFixes)
                                         AddToListView(p, (splittedSubtitle.Paragraphs.Count + 1).ToString(), oldText);
@@ -207,7 +212,22 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (p1.EndsWith(".") || p1.EndsWith("!") || p1.EndsWith("?") || p1.EndsWith(":") || p1.EndsWith(")") || p1.EndsWith("]") || p1.EndsWith("♪"))
                                         p1Ends = true;
 
-                                    if (!p1Ends)
+                                    if (p1Ends)
+                                    {
+                                        if (newParagraph1.Text.StartsWith("-") && newParagraph2.Text.StartsWith("-"))
+                                        {
+                                            newParagraph1.Text = newParagraph1.Text.Remove(0, 1).Trim();
+                                            newParagraph2.Text = newParagraph2.Text.Remove(0, 1).Trim();
+                                        }
+                                        else if (newParagraph1.Text.StartsWith("<i>-") && newParagraph2.Text.StartsWith("-"))
+                                        {
+                                            newParagraph1.Text = newParagraph1.Text.Remove(3, 1).Trim();
+                                            if (newParagraph1.Text.StartsWith("<i> "))
+                                                newParagraph1.Text = newParagraph1.Text.Remove(3, 1).Trim();
+                                            newParagraph2.Text = newParagraph2.Text.Remove(0, 1).Trim();
+                                        }
+                                    }
+                                    else
                                     {
                                         string post = string.Empty;
                                         if (newParagraph1.Text.EndsWith("</i>"))
