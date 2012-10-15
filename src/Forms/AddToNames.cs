@@ -58,6 +58,28 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        internal void Initialize(Subtitle subtitle, string hunspellName, string text)
+        {
+             _subtitle = subtitle;
+
+            if (!string.IsNullOrEmpty(text))
+            {
+                textBoxAddName.Text = text.Trim().TrimEnd('.').TrimEnd('!').TrimEnd('?');
+                if (textBoxAddName.Text.Length > 1)
+                    textBoxAddName.Text = textBoxAddName.Text.Substring(0, 1).ToUpper() + textBoxAddName.Text.Substring(1);
+            }
+
+            comboBoxDictionaries.Items.Clear();
+            string languageName = Utilities.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle);
+            foreach (string name in Utilities.GetDictionaryLanguages())
+            {
+                comboBoxDictionaries.Items.Add(name);
+                if (hunspellName != null && name.ToLower() == hunspellName.ToLower())
+                    comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;                 
+            }
+        }
+
+
         private void ButtonOkClick(object sender, EventArgs e)
         {
             if (textBoxAddName.Text.Trim().Length > 0)
@@ -114,5 +136,6 @@ namespace Nikse.SubtitleEdit.Forms
                     DialogResult = DialogResult.Cancel;
             }
         }
+
     }
 }

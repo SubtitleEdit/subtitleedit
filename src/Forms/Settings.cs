@@ -934,7 +934,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 gs.SubtitleLineMaximumLength = 45;
 
-            gs.SubtitleMaximumCharactersPerSeconds = (double) numericUpDownMaxCharsSec.Value;
+            gs.SubtitleMaximumCharactersPerSeconds = (double)numericUpDownMaxCharsSec.Value;
 
             gs.AutoWrapLineWhileTyping = checkBoxAutoWrapWhileTyping.Checked;
 
@@ -2254,6 +2254,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
                 panelListViewSyntaxColorError.BackColor = colorDialogSSAStyle.Color;
         }
+
 
     }
 }

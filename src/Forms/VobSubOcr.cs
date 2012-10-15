@@ -200,6 +200,10 @@ namespace Nikse.SubtitleEdit.Forms
             tabControlLogs.TabPages[1].Text = language.GuessesUsed;
             tabControlLogs.TabPages[2].Text = language.UnknownWords;
 
+            buttonUknownToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
+            buttonUknownToUserDic.Text = Configuration.Settings.Language.SpellCheck.AddToUserDictionary;
+            buttonAddToOcrReplaceList.Text = Configuration.Settings.Language.SpellCheck.AddToOcrReplaceList;
+
             numericUpDownPixelsIsSpace.Left = labelNoOfPixelsIsSpace.Left + labelNoOfPixelsIsSpace.Width + 5;
             groupBoxSubtitleImage.Text = string.Empty;
             labelFixesMade.Text = string.Empty;
@@ -3210,7 +3214,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             listBoxUnknownWords.Top = listBoxLog.Top;
             listBoxUnknownWords.Left = listBoxLog.Left;
-            listBoxUnknownWords.Size = listBoxLog.Size;
+            //listBoxUnknownWords.Size = listBoxLog.Size;
         }
 
         private void importTextWithMatchingTimeCodesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3659,6 +3663,78 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(selIdx);
             else
                 subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView1.Items.Count-1);
+        }
+
+        private void buttonUknownToNames_Click(object sender, EventArgs e)
+        {
+            if (listBoxUnknownWords.Items.Count > 0 && listBoxUnknownWords.SelectedItems.Count > 0)
+            {
+                string text = listBoxUnknownWords.SelectedItems[0].ToString();
+                if (text.Contains(":"))
+                {
+                    if (_ocrFixEngine == null)
+                        LoadOcrFixEngine();
+
+                    text = text.Substring(text.IndexOf(":") + 1).Trim();
+                    var form = new AddToNamesList();
+                    form.Initialize(_subtitle, comboBoxDictionaries.Text, text);
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        LoadOcrFixEngine();
+                        MessageBox.Show(string.Format(Configuration.Settings.Language.Main.NameXAddedToNamesEtcList, form.NewName));
+                    }
+                    else if (!string.IsNullOrEmpty(form.NewName))
+                    {
+                        MessageBox.Show(string.Format(Configuration.Settings.Language.Main.NameXNotAddedToNamesEtcList, form.NewName));
+                    }
+                }
+            }
+        }
+
+        private void buttonUknownToUserDic_Click(object sender, EventArgs e)
+        {
+            if (listBoxUnknownWords.Items.Count > 0 && listBoxUnknownWords.SelectedItems.Count > 0)
+            {
+                string text = listBoxUnknownWords.SelectedItems[0].ToString();
+                if (text.Contains(":"))
+                {
+                    text = text.Substring(text.IndexOf(":") + 1).Trim().ToLower();
+                    var form = new AddToUserDic();
+                    form.Initialize(_subtitle, comboBoxDictionaries.Text, text);
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        LoadOcrFixEngine();
+                        MessageBox.Show(string.Format(Configuration.Settings.Language.Main.WordXAddedToUserDic, form.NewWord));
+                    }
+                    else if (!string.IsNullOrEmpty(form.NewWord))
+                    {
+                        MessageBox.Show(string.Format(Configuration.Settings.Language.Main.WordXNotAddedToUserDic, form.NewWord));
+                    }
+                }
+            }
+        }
+
+        private void buttonAddToOcrReplaceList_Click(object sender, EventArgs e)
+        {
+            if (listBoxUnknownWords.Items.Count > 0 && listBoxUnknownWords.SelectedItems.Count > 0)
+            {
+                string text = listBoxUnknownWords.SelectedItems[0].ToString();
+                if (text.Contains(":"))
+                {
+                    text = text.Substring(text.IndexOf(":") + 1).Trim().ToLower();
+                    var form = new AddToOcrReplaceList();
+                    form.Initialize(_subtitle, _languageId, comboBoxDictionaries.Text, text);
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        LoadOcrFixEngine();
+                        MessageBox.Show(string.Format(Configuration.Settings.Language.Main.OcrReplacePairXAdded, form.NewSource, form.NewTarget));
+                    }
+                    else 
+                    {
+                        MessageBox.Show(string.Format(Configuration.Settings.Language.Main.OcrReplacePairXNotAdded, form.NewSource, form.NewTarget));
+                    }
+                }
+            }
         }
 
     }

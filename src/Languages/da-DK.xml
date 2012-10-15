@@ -87,6 +87,14 @@
     <Title>Tilføj til navne mv. liste</Title>
     <Description>Tilføj til navne mv. listen (små bogstaver)</Description>
   </AddToNames>
+  <AddToOcrReplaceList>
+    <Title>Tilføj til OCR erstatt liste</Title>
+    <Description>Tilføj par til OCR erstat liste</Description>
+  </AddToOcrReplaceList>
+  <AddToUserDictionary>
+    <Title>Føj til brugerordbogen</Title>
+    <Description>Tilføj ord til brugerordbogen</Description>
+  </AddToUserDictionary>
   <AddWaveForm>
     <Title>Generer lyd kurve data</Title>
     <SourceVideoFile>Kilde video-fil:</SourceVideoFile>
@@ -942,6 +950,10 @@ Fortsæt?</SubtitleAppendPrompt>
     <NumberOfLinesReplacedX>Antal linjer hvor tekst er erstattet: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNamesEtcList>Navnet '{0}' blev tilføjet til navne mv, liste</NameXAddedToNamesEtcList>
     <NameXNotAddedToNamesEtcList>Navnet '{0}' blev ikke tilføjet til navne mv. liste</NameXNotAddedToNamesEtcList>
+    <WordXAddedToUserDic>Ordet '{0}' blev tilføjet til brugerordbog</WordXAddedToUserDic>
+    <WordXNotAddedToUserDic>Ordet '{0}'  blev IKKE tilføjet til brugerordbogen</WordXNotAddedToUserDic>
+    <OcrReplacePairXAdded>'{0} -&gt; {1}' blev tilføjet til OCR erstat listen</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>'{0} -&gt; {1}' blev IKKE tilføjet til OCR erstat listen</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} linjer valgt</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Undertekst indeholder unicode tegn. Gemmes i ANSI filformat vil disse gå tabt. Fortsæt?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Undertekst indeholder negative tidskoder. Gem?</NegativeTimeWarning>
@@ -1352,6 +1364,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <SkipAll>&amp;Skip alle</SkipAll>
     <AddToUserDictionary>Tilføj til bruger ordbog</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Tilføj til navne/støj-liste (versal følsom)</AddToNamesAndIgnoreList>
+    <AddToOcrReplaceList>Tilføj til OCR erstat liste</AddToOcrReplaceList>
     <Abort>Stop</Abort>
     <Use>Benyt</Use>
     <UseAlways>&amp;Benyt altid</UseAlways>
