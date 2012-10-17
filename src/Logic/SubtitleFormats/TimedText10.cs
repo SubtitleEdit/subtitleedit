@@ -326,9 +326,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument();
             xml.LoadXml(sb.ToString());
-
+            
+            string ns = "http://www.w3.org/ns/ttml";
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
-            nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+            nsmgr.AddNamespace("ttml", ns);
             XmlNode body = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
             subtitle.Header = sb.ToString();
             string defaultStyle = null;
@@ -361,17 +362,29 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         start = node.Attributes["begin"].InnerText;
                     }
+                    else if (node.Attributes["begin", ns] != null)
+                    {
+                        start = node.Attributes["begin", ns].InnerText;
+                    }
 
                     string end = string.Empty;
                     if (node.Attributes["end"] != null)
                     {
                         end = node.Attributes["end"].InnerText;
                     }
+                    else if (node.Attributes["end", ns] != null)
+                    {
+                        end = node.Attributes["end", ns].InnerText;
+                    }
 
                     string dur = string.Empty;
                     if (node.Attributes["dur"] != null)
                     {
                         dur = node.Attributes["dur"].InnerText;
+                    }
+                    else if (node.Attributes["dur", ns] != null)
+                    {
+                        dur = node.Attributes["dur", ns].InnerText;
                     }
 
                     var startCode = new TimeCode(TimeSpan.FromSeconds(startSeconds));
