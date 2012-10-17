@@ -1674,7 +1674,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!string.IsNullOrEmpty(_fileName))
                         promptText = string.Format(_language.SaveChangesToX, _fileName);
 
-                    DialogResult dr = MessageBox.Show(promptText, Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
+                    DialogResult dr = MessageBox.Show(this, promptText, Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
 
                     if (dr == DialogResult.Cancel)
                         return false;
@@ -1717,7 +1717,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!string.IsNullOrEmpty(_subtitleAlternateFileName))
                     promptText = string.Format(_language.SaveChangesToOriginalX, _subtitleAlternateFileName);
 
-                DialogResult dr = MessageBox.Show(promptText, Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
+                DialogResult dr = MessageBox.Show(this, promptText, Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
 
                 if (dr == DialogResult.Cancel)
                     return false;
@@ -1897,7 +1897,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
         }
@@ -1959,9 +1959,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (Path.GetExtension(fileName).ToLower() == ".sub" && IsVobSubFile(fileName, false))
                 {
-                    if (MessageBox.Show(_language.ImportThisVobSubSubtitle, _title, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show(this, _language.ImportThisVobSubSubtitle, _title, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        ImportAndOcrVobSubSubtitleNew(fileName);
+                        ImportAndOcrVobSubSubtitleNew(fileName, _loading);
                     }
                     return;
                 }
@@ -1970,12 +1970,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (IsBluRaySupFile(fileName))
                     {
-                        ImportAndOcrBluRaySup(fileName);
+                        ImportAndOcrBluRaySup(fileName, _loading);
                         return;
                     }
                     else if (IsSpDvdSupFile(fileName))
                     {
-                        ImportAndOcrSpDvdSup(fileName);
+                        ImportAndOcrSpDvdSup(fileName, _loading);
                         return;
                     }
                 }
@@ -2022,7 +2022,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (fi.Length > 1024 * 1024 * 10) // max 10 mb
                 {
-                    if (MessageBox.Show(string.Format(_language.FileXIsLargerThan10Mb + Environment.NewLine +
+                    if (MessageBox.Show(this, string.Format(_language.FileXIsLargerThan10Mb + Environment.NewLine +
                                                       Environment.NewLine +
                                                       _language.ContinueAnyway,
                                                       fileName), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -2373,16 +2373,16 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
                         if (!string.IsNullOrEmpty(errors))
-                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         errors = (format as SubStationAlpha).Errors;
                         if (!string.IsNullOrEmpty(errors))
-                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     else if (format.GetType() == typeof(AdvancedSubStationAlpha))
                     {
                         string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
                         if (!string.IsNullOrEmpty(errors))
-                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         errors = (format as AdvancedSubStationAlpha).Errors;
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -2391,13 +2391,13 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string errors = (format as SubRip).Errors;
                         if (!string.IsNullOrEmpty(errors))
-                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     else if (format.GetType() == typeof(MicroDvd))
                     {
                         string errors = (format as MicroDvd).Errors;
                         if (!string.IsNullOrEmpty(errors))
-                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 else
@@ -7218,6 +7218,12 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             MatroskaSubtitleChooser subtitleChooser = new MatroskaSubtitleChooser();
                             subtitleChooser.Initialize(subtitleList);
+                            if (_loading)
+                            {
+                                subtitleChooser.Icon = (Icon)this.Icon.Clone();
+                                subtitleChooser.ShowInTaskbar = true;
+                                subtitleChooser.ShowIcon = true;
+                            }
                             if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
                             {
                                 LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], fileName, false);
@@ -7473,6 +7479,12 @@ namespace Nikse.SubtitleEdit.Forms
                 var formSubOcr = new VobSubOcr();
                 _formPositionsAndSizes.SetPositionAndSize(formSubOcr);
                 formSubOcr.Initialize(mergedVobSubPacks, idx.Palette, Configuration.Settings.VobSubOcr, null); //TODO - language???
+                if (_loading)
+                {
+                    formSubOcr.Icon = (Icon)this.Icon.Clone();
+                    formSubOcr.ShowInTaskbar = true;
+                    formSubOcr.ShowIcon = true;
+                }
                 if (formSubOcr.ShowDialog(this) == DialogResult.OK)
                 {
                     ResetSubtitle();
@@ -7580,6 +7592,12 @@ namespace Nikse.SubtitleEdit.Forms
                 var formSubOcr = new VobSubOcr();
                 _formPositionsAndSizes.SetPositionAndSize(formSubOcr);
                 formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName);
+                if (_loading)
+                {
+                    formSubOcr.Icon = (Icon)this.Icon.Clone();
+                    formSubOcr.ShowInTaskbar = true;
+                    formSubOcr.ShowIcon = true;
+                }
                 if (formSubOcr.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
@@ -8297,7 +8315,7 @@ namespace Nikse.SubtitleEdit.Forms
             return false;
         }
 
-        private void ImportAndOcrSpDvdSup(string fileName)
+        private void ImportAndOcrSpDvdSup(string fileName, bool showInTaskbar)
         {
             var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read) { Position = 0 };
 
@@ -8323,6 +8341,12 @@ namespace Nikse.SubtitleEdit.Forms
             fs.Close();
 
             var vobSubOcr = new VobSubOcr();
+            if (showInTaskbar)
+            {
+                vobSubOcr.Icon = (Icon)this.Icon.Clone();
+                vobSubOcr.ShowInTaskbar = true;
+                vobSubOcr.ShowIcon = true;
+            }
             _formPositionsAndSizes.SetPositionAndSize(vobSubOcr);
             vobSubOcr.Initialize(fileName, null, Configuration.Settings.VobSubOcr, spList);
             if (vobSubOcr.ShowDialog(this) == DialogResult.OK)
@@ -8353,11 +8377,17 @@ namespace Nikse.SubtitleEdit.Forms
             _formPositionsAndSizes.SavePositionAndSize(vobSubOcr);
         }
 
-        private void ImportAndOcrVobSubSubtitleNew(string fileName)
+        private void ImportAndOcrVobSubSubtitleNew(string fileName, bool showInTaskbar)
         {
             if (IsVobSubFile(fileName, true))
             {
                 var vobSubOcr = new VobSubOcr();
+                if (showInTaskbar)
+                {
+                    vobSubOcr.Icon = (Icon)this.Icon.Clone();
+                    vobSubOcr.ShowInTaskbar = true;
+                    vobSubOcr.ShowIcon = true;
+                }
                 _formPositionsAndSizes.SetPositionAndSize(vobSubOcr);
                 if (vobSubOcr.Initialize(fileName, Configuration.Settings.VobSubOcr, true))
                 {
@@ -9853,7 +9883,7 @@ namespace Nikse.SubtitleEdit.Forms
                 openFileDialog1.Filter = _language.VobSubFiles + "|*.sub";
                 if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
                 {
-                    ImportAndOcrVobSubSubtitleNew(openFileDialog1.FileName);
+                    ImportAndOcrVobSubSubtitleNew(openFileDialog1.FileName, false);
                     openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
                 }
             }
@@ -10017,7 +10047,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (splitLongLines.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeMergeShortLines);
-                    _subtitle = splitLongLines.SplittedSubtitle;
+                    _subtitle.Paragraphs.Clear();
+                    foreach (Paragraph p in splitLongLines.SplittedSubtitle.Paragraphs)
+                        _subtitle.Paragraphs.Add(p);
                     ShowStatus(string.Format(_language.MergedShortLinesX, splitLongLines.NumberOfSplits));
                     SaveSubtitleListviewIndexes();
                     ShowSource();
@@ -12591,12 +12623,12 @@ namespace Nikse.SubtitleEdit.Forms
                 openFileDialog1.Filter = _language.BluRaySupFiles + "|*.sup";
                 if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
                 {
-                    ImportAndOcrBluRaySup(openFileDialog1.FileName);
+                    ImportAndOcrBluRaySup(openFileDialog1.FileName, false);
                 }
             }
         }
 
-        private void ImportAndOcrBluRaySup(string fileName)
+        private void ImportAndOcrBluRaySup(string fileName, bool showInTaskbar)
         {
             var log = new StringBuilder();
             var subtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
@@ -12604,6 +12636,12 @@ namespace Nikse.SubtitleEdit.Forms
             if (subtitles.Count > 0)
             {
                 var vobSubOcr = new VobSubOcr();
+                if (showInTaskbar)
+                {
+                    vobSubOcr.Icon = (Icon)this.Icon.Clone();
+                    vobSubOcr.ShowInTaskbar = true;
+                    vobSubOcr.ShowIcon = true;
+                }
                 _formPositionsAndSizes.SetPositionAndSize(vobSubOcr);
                 vobSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName);
                 vobSubOcr.FileName = Path.GetFileName(fileName);
@@ -14870,7 +14908,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.Paragraphs.Clear();
                         foreach (Paragraph p in applyDurationLimits.FixedSubtitle.Paragraphs)
                             _subtitle.Paragraphs.Add(new Paragraph(p));
-                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate );
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         RestoreSubtitleListviewIndexes();
                     }
 
