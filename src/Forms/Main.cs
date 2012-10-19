@@ -13508,6 +13508,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.Undocked = true;
 
             UnDockVideoPlayer();
+            splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - 109;
             if (toolStripButtonToggleVideo.Checked)
             {
                 _videoPlayerUnDocked.Show(this);
