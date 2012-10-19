@@ -778,6 +778,26 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public void UpdateFrames(Subtitle subtitle)
+        {
+            if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            {
+                BeginUpdate();
+                for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+                {
+                    if (i >= 0 && i < Items.Count)
+                    {
+                        ListViewItem item = Items[i];
+                        Paragraph p = subtitle.Paragraphs[i];
+                        item.SubItems[ColumnIndexStart].Text = p.StartTime.ToHHMMSSFF();
+                        item.SubItems[ColumnIndexEnd].Text = p.EndTime.ToHHMMSSFF();
+                        item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", p.Duration.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds));
+                    }
+                }
+                EndUpdate();
+            }
+        }
+
         public void SetStartTime(int index, Paragraph paragraph)
         {
             if (index >= 0 && index < Items.Count)

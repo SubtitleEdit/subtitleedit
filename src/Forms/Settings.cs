@@ -2225,7 +2225,7 @@ namespace Nikse.SubtitleEdit.Forms
                 sb.Append(comboBoxShortcutKey.Items[comboBoxShortcutKey.SelectedIndex]);
                 sb.Append("]");
 
-                if (sb.Length < 4 || sb.ToString().EndsWith("+]"))
+                if (sb.Length < 3 || sb.ToString().EndsWith("+]"))
                 {
                     MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.ShortcutIsNotValid, sb));
                     return;
