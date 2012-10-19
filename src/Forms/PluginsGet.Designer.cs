@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.labelChooseLanguageAndClickDownload = new System.Windows.Forms.Label();
+            this.labelClickDownload = new System.Windows.Forms.Label();
             this.buttonDownload = new System.Windows.Forms.Button();
             this.labelDescription1 = new System.Windows.Forms.Label();
-            this.linkLabelOpenDictionaryFolder = new System.Windows.Forms.LinkLabel();
+            this.linkLabelOpenPluginFolder = new System.Windows.Forms.LinkLabel();
             this.buttonOK = new System.Windows.Forms.Button();
             this.listViewGetPlugins = new System.Windows.Forms.ListView();
             this.columnHeaderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -42,10 +42,10 @@
             this.tabPageInstalledPlugins = new System.Windows.Forms.TabPage();
             this.buttonRemove = new System.Windows.Forms.Button();
             this.listViewInstalledPlugins = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderInsName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderInsDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderInsVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderInsType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPageGetPlugins = new System.Windows.Forms.TabPage();
             this.labelPleaseWait = new System.Windows.Forms.Label();
             this.tabControlPlugins.SuspendLayout();
@@ -55,12 +55,12 @@
             // 
             // labelChooseLanguageAndClickDownload
             // 
-            this.labelChooseLanguageAndClickDownload.AutoSize = true;
-            this.labelChooseLanguageAndClickDownload.Location = new System.Drawing.Point(13, 45);
-            this.labelChooseLanguageAndClickDownload.Name = "labelChooseLanguageAndClickDownload";
-            this.labelChooseLanguageAndClickDownload.Size = new System.Drawing.Size(181, 13);
-            this.labelChooseLanguageAndClickDownload.TabIndex = 23;
-            this.labelChooseLanguageAndClickDownload.Text = "Choose plugin and click \"Download\"";
+            this.labelClickDownload.AutoSize = true;
+            this.labelClickDownload.Location = new System.Drawing.Point(13, 45);
+            this.labelClickDownload.Name = "labelChooseLanguageAndClickDownload";
+            this.labelClickDownload.Size = new System.Drawing.Size(181, 13);
+            this.labelClickDownload.TabIndex = 23;
+            this.labelClickDownload.Text = "Choose plugin and click \"Download\"";
             // 
             // buttonDownload
             // 
@@ -82,17 +82,17 @@
             this.labelDescription1.TabIndex = 21;
             this.labelDescription1.Text = "Subtitle Edit plugins must be downloaded to the \"Plugins\" folder";
             // 
-            // linkLabelOpenDictionaryFolder
+            // linkLabelOpenPluginFolder
             // 
-            this.linkLabelOpenDictionaryFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.linkLabelOpenDictionaryFolder.AutoSize = true;
-            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(12, 285);
-            this.linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
-            this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(106, 13);
-            this.linkLabelOpenDictionaryFolder.TabIndex = 25;
-            this.linkLabelOpenDictionaryFolder.TabStop = true;
-            this.linkLabelOpenDictionaryFolder.Text = "Open \'Plug-ins\' folder";
-            this.linkLabelOpenDictionaryFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenDictionaryFolder_LinkClicked);
+            this.linkLabelOpenPluginFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.linkLabelOpenPluginFolder.AutoSize = true;
+            this.linkLabelOpenPluginFolder.Location = new System.Drawing.Point(12, 285);
+            this.linkLabelOpenPluginFolder.Name = "linkLabelOpenPluginFolder";
+            this.linkLabelOpenPluginFolder.Size = new System.Drawing.Size(106, 13);
+            this.linkLabelOpenPluginFolder.TabIndex = 25;
+            this.linkLabelOpenPluginFolder.TabStop = true;
+            this.linkLabelOpenPluginFolder.Text = "Open \'Plug-ins\' folder";
+            this.linkLabelOpenPluginFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenDictionaryFolder_LinkClicked);
             // 
             // buttonOK
             // 
@@ -140,7 +140,7 @@
             this.columnHeaderVersion.Text = "Version";
             this.columnHeaderVersion.Width = 80;
             // 
-            // columnHeaderDate
+            // columnHeaderType
             // 
             this.columnHeaderDate.Text = "Date";
             this.columnHeaderDate.Width = 70;
@@ -187,10 +187,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewInstalledPlugins.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader4});
+            this.columnHeaderInsName,
+            this.columnHeaderInsDescription,
+            this.columnHeaderInsVersion,
+            this.columnHeaderInsType});
             this.listViewInstalledPlugins.FullRowSelect = true;
             this.listViewInstalledPlugins.HideSelection = false;
             this.listViewInstalledPlugins.Location = new System.Drawing.Point(6, 6);
@@ -202,25 +202,25 @@
             this.listViewInstalledPlugins.UseCompatibleStateImageBehavior = false;
             this.listViewInstalledPlugins.View = System.Windows.Forms.View.Details;
             // 
-            // columnHeader1
+            // columnHeaderInsName
             // 
-            this.columnHeader1.Text = "Name";
-            this.columnHeader1.Width = 140;
+            this.columnHeaderInsName.Text = "Name";
+            this.columnHeaderInsName.Width = 140;
             // 
-            // columnHeader2
+            // columnHeaderInsDescription
             // 
-            this.columnHeader2.Text = "Description";
-            this.columnHeader2.Width = 280;
+            this.columnHeaderInsDescription.Text = "Description";
+            this.columnHeaderInsDescription.Width = 280;
             // 
-            // columnHeader3
+            // columnHeaderInsVersion
             // 
-            this.columnHeader3.Text = "Version";
-            this.columnHeader3.Width = 80;
+            this.columnHeaderInsVersion.Text = "Version";
+            this.columnHeaderInsVersion.Width = 80;
             // 
-            // columnHeader4
+            // columnHeaderInsDate
             // 
-            this.columnHeader4.Text = "Date";
-            this.columnHeader4.Width = 80;
+            this.columnHeaderInsType.Text = "Date";
+            this.columnHeaderInsType.Width = 80;
             // 
             // tabPageGetPlugins
             // 
@@ -228,7 +228,7 @@
             this.tabPageGetPlugins.Controls.Add(this.listViewGetPlugins);
             this.tabPageGetPlugins.Controls.Add(this.labelDescription1);
             this.tabPageGetPlugins.Controls.Add(this.buttonDownload);
-            this.tabPageGetPlugins.Controls.Add(this.labelChooseLanguageAndClickDownload);
+            this.tabPageGetPlugins.Controls.Add(this.labelClickDownload);
             this.tabPageGetPlugins.Location = new System.Drawing.Point(4, 22);
             this.tabPageGetPlugins.Name = "tabPageGetPlugins";
             this.tabPageGetPlugins.Padding = new System.Windows.Forms.Padding(3);
@@ -252,7 +252,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(648, 312);
             this.Controls.Add(this.tabControlPlugins);
-            this.Controls.Add(this.linkLabelOpenDictionaryFolder);
+            this.Controls.Add(this.linkLabelOpenPluginFolder);
             this.Controls.Add(this.buttonOK);
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -275,10 +275,10 @@
 
         #endregion
 
-        private System.Windows.Forms.Label labelChooseLanguageAndClickDownload;
+        private System.Windows.Forms.Label labelClickDownload;
         private System.Windows.Forms.Button buttonDownload;
         private System.Windows.Forms.Label labelDescription1;
-        private System.Windows.Forms.LinkLabel linkLabelOpenDictionaryFolder;
+        private System.Windows.Forms.LinkLabel linkLabelOpenPluginFolder;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.ListView listViewGetPlugins;
         private System.Windows.Forms.ColumnHeader columnHeaderName;
@@ -289,10 +289,10 @@
         private System.Windows.Forms.TabPage tabPageInstalledPlugins;
         private System.Windows.Forms.Button buttonRemove;
         private System.Windows.Forms.ListView listViewInstalledPlugins;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.ColumnHeader columnHeaderInsName;
+        private System.Windows.Forms.ColumnHeader columnHeaderInsDescription;
+        private System.Windows.Forms.ColumnHeader columnHeaderInsVersion;
+        private System.Windows.Forms.ColumnHeader columnHeaderInsType;
         private System.Windows.Forms.TabPage tabPageGetPlugins;
         private System.Windows.Forms.Label labelPleaseWait;
     }

@@ -6,6 +6,7 @@ using System.Net;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -13,21 +14,42 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private XmlDocument _pluginDoc = new XmlDocument();
         private string _downloadedPluginName;
+        readonly LanguageStructure.PluginsGet _language;
 
         public PluginsGet()
         {
             InitializeComponent();
+            _language = Configuration.Settings.Language.PluginsGet;
+            Text = _language.Title;
+            tabPageInstalledPlugins.Text = _language.InstalledPlugins;
+            tabPageGetPlugins.Text = _language.GetPlugins;
+
+            buttonDownload.Text = _language.Download;
+            buttonRemove.Text = _language.Remove;
+            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            linkLabelOpenPluginFolder.Text = _language.OpenPluginsFolder;
+            labelDescription1.Text = _language.GetPluginsInfo1;
+            labelClickDownload.Text = _language.GetPluginsInfo2;
+
+            columnHeaderName.Text = Configuration.Settings.Language.General.Name;
+            columnHeaderDescription.Text = _language.Description;
+            columnHeaderVersion.Text = _language.Version;
+            columnHeaderDate.Text = _language.Date;
+
+            columnHeaderInsName.Text = Configuration.Settings.Language.General.Name;
+            columnHeaderInsDescription.Text = _language.Description;
+            columnHeaderInsVersion.Text = _language.Version;
+            columnHeaderInsType.Text = _language.Type;
 
             try
             {
                 labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
                 this.Refresh();
-                string url = "http://www.nikse.dk/Content/SubtitleEdit/Plugins/Index.xml";
+                ShowInstalledPlugins();
+                string url = "http://subtitleedit.googlecode.com/files/Plugins.xml";
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += new DownloadDataCompletedEventHandler(PluginListDownloadDataCompleted);
                 wc.DownloadDataAsync(new Uri(url));
-
-                ShowInstalledPlugins();
             }
             catch (Exception exception)
             {
@@ -59,9 +81,9 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         ListViewItem item = new ListViewItem(name);
                         item.Tag = pluginFileName;
-                        item.SubItems.Add("Description");
-                        item.SubItems.Add("Version");
-                        item.SubItems.Add("Date");
+                        item.SubItems.Add(description);
+                        item.SubItems.Add(version.ToString());
+                        item.SubItems.Add(actionType);
                         listViewInstalledPlugins.Items.Add(item);
                     }
                     catch (Exception exception)
@@ -77,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Text = string.Empty;
             if (e.Error != null)
             {
-                MessageBox.Show("Download of plugin list failed: " + e.Error.Message);
+                MessageBox.Show(string.Format(_language.UnableToDownloadPluginListX, e.Error.Message));
                 return;
             }
             try
@@ -91,10 +113,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (currentVersion < requiredVersion)
                 {
-                    MessageBox.Show("You need a newer version of Subtitle Edit!");
+                    MessageBox.Show(_language.NewVersionOfSubtitleEditRequired);
                     DialogResult = DialogResult.Cancel;
                     return;
-                }
+                }                
 
                 foreach (XmlNode node in _pluginDoc.DocumentElement.SelectNodes("Plugin"))
                 {
@@ -103,11 +125,22 @@ namespace Nikse.SubtitleEdit.Forms
                     item.SubItems.Add(node.SelectSingleNode("Version").InnerText);
                     item.SubItems.Add(node.SelectSingleNode("Date").InnerText);
                     listViewGetPlugins.Items.Add(item);
+
+                    foreach (ListViewItem installed in listViewInstalledPlugins.Items)
+                    {
+                        if (installed.Text == node.SelectSingleNode("Name").InnerText &&
+                            installed.SubItems[2].Text.Replace(",", ".") != node.SelectSingleNode("Version").InnerText.Replace(",", "."))
+                        {
+                            item.BackColor = Color.LightGreen;
+                            installed.BackColor = Color.LightPink;
+                            installed.SubItems[0].Text = _language.UpdateAvailable;
+                        }
+                    }
                 }
             }
-            catch
+            catch (Exception exception)
             {
-                MessageBox.Show("Load of downloaded xml plugin-list faild!");
+                MessageBox.Show(string.Format(_language.UnableToDownloadPluginListX, exception.Message));
             }
         }
 
@@ -195,7 +228,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Enabled = true;
             buttonDownload.Enabled = true;
             listViewGetPlugins.Enabled = true;
-            MessageBox.Show(string.Format("Plugin '{0}' downloaded", _downloadedPluginName));
+            MessageBox.Show(string.Format(_language.PluginXDownloaded, _downloadedPluginName));
             ShowInstalledPlugins();
         }
 
