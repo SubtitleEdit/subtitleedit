@@ -1072,15 +1072,18 @@ Fortsæt?</SubtitleAppendPrompt>
     <Title>Plugins</Title>
     <InstalledPlugins>Installerede plugins</InstalledPlugins>
     <GetPlugins>Hent plugins</GetPlugins>
-    <Name>Name</Name>
     <Description>Beskrivelse</Description>
     <Version>Version</Version>
+    <Date>Dato</Date>
+    <Type>Type</Type>
     <OpenPluginsFolder>Åbn 'Plugins' mappe</OpenPluginsFolder>
-    <GetPluginsInfo1>Undertekst Rediger plugins skal downloades til 'Plugins' folder</GetPluginsInfo1>
-    <GetPluginsInfo2>Vælg plugin og klikke på ' , Download '</GetPluginsInfo2>
+    <GetPluginsInfo1>Subtitle Edit plugins skal downloades til 'Plugins' folder</GetPluginsInfo1>
+    <GetPluginsInfo2>Vælg plugin og klikke på 'Download'</GetPluginsInfo2>
     <PluginXDownloaded>Plugin {0} downloadet</PluginXDownloaded>
     <Download>&amp;Download</Download>
     <Remove>&amp;Fjern</Remove>
+    <UnableToDownloadPluginListX>Kunne ikke downloade plug liste: {0}</UnableToDownloadPluginListX>
+    <NewVersionOfSubtitleEditRequired>Nyere version af Subtitle Edit kræves!</NewVersionOfSubtitleEditRequired>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Fjern tekst for hørehæmmede</Title>
