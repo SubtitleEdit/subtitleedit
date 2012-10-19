@@ -693,6 +693,7 @@
             public string BeforeAddingTagX { get; set; }
             public string TagXAdded { get; set; }
             public string LineXOfY { get; set; }
+            public string XLinesSavedAsY { get; set; }
             public string XLinesDeleted { get; set; }
             public string BeforeDeletingXLines { get; set; }
             public string DeleteXLinesPrompt { get; set; }
@@ -814,6 +815,9 @@
             public string BeforeRunningPluginXVersionY { get; set; }
             public string UnableToReadPluginResult { get; set; }
             public string UnableToCreateBackupDirectory { get; set; }
+            public string BeforeDisplaySubtitleJoin { get; set; }
+            public string SubtitlesJoined { get; set; }
+
 
             public class MainMenu
             {
@@ -1108,6 +1112,7 @@
                 public string Fast { get; set; }
                 public string VeryFast { get; set; }
             }
+
 
         }
 

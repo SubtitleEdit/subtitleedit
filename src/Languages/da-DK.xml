@@ -885,6 +885,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeAddingTagX>Før du tilføjer &lt;{0}&gt; tag</BeforeAddingTagX>
     <TagXAdded>&lt;{0}&gt; tags tilføjet</TagXAdded>
     <LineXOfY>linje {0} af {1}</LineXOfY>
+    <XLinesSavedAsY>{0} linjer gemt som {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} slettet linjer</XLinesDeleted>
     <BeforeDeletingXLines>Før du sletter {0} linjer</BeforeDeletingXLines>
     <DeleteXLinesPrompt>Slet {0} linjer?</DeleteXLinesPrompt>
@@ -1006,6 +1007,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeRunningPluginXVersionY>Før kørsel af plugin: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Kan ikke læse underteksterne fra plugin!</UnableToReadPluginResult>
     <UnableToCreateBackupDirectory>Ikke oprette backup mappe {0}: {1}</UnableToCreateBackupDirectory>
+    <BeforeDisplaySubtitleJoin>Før flet af undertekster</BeforeDisplaySubtitleJoin>
+    <SubtitlesJoined>Undertekster flettet</SubtitlesJoined>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>

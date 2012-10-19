@@ -789,6 +789,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BeforeAddingTagX = "Before adding <{0}> tag",
                 TagXAdded = "<{0}> tags added",
                 LineXOfY = "line {0} of {1}",
+                XLinesSavedAsY = "{0} lines saved as {1}",
                 XLinesDeleted = "{0} lines deleted",
                 BeforeDeletingXLines = "Before deleting {0} lines",
                 DeleteXLinesPrompt = "Delete {0} lines?",
@@ -910,6 +911,8 @@ namespace Nikse.SubtitleEdit.Logic
                 BeforeRunningPluginXVersionY = "Before running plugin: {0}: {1}",
                 UnableToReadPluginResult = "Unable to read subtitle result from plugin!",
                 UnableToCreateBackupDirectory = "Unable to create backup directory {0}: {1}",
+                BeforeDisplaySubtitleJoin = "Before join of subtitles",
+                SubtitlesJoined = "Subtitles joined",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
