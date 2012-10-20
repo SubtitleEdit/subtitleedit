@@ -10,13 +10,13 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
     {
         // Win32 API functions for loading dlls dynamic
         [DllImport("kernel32.dll")]
-        public static extern IntPtr LoadLibrary(string dllToLoad);
+        private static extern IntPtr LoadLibrary(string dllToLoad);
 
         [DllImport("kernel32.dll")]
-        public static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+        private static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
 
         [DllImport("kernel32.dll")]
-        public static extern bool FreeLibrary(IntPtr hModule);
+        private static extern bool FreeLibrary(IntPtr hModule);
 
         // Voikko functions in dll
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
