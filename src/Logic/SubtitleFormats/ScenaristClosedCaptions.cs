@@ -341,7 +341,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                                              "9134",  //  "",
                                                              "91b5",  //  "",
                                                              "91b6",  //  "£",
-                                                             "9137",  //  "♪", 
+                                                             "9137",  //  "♪",
                                                              "9138",  //  "à",
                                                              "91b9",  //  "",
                                                              "91ba",  //  "è",

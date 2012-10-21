@@ -680,7 +680,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             text = text.Replace(Environment.NewLine, Encoding.Default.GetString(new byte[] { 0xfe, 0x02, 0x03 })); // fix line breaks
 
             Encoding encoding = GetEncoding(_codePage);
-            byte[] textBuffer;            
+            byte[] textBuffer;
 
             if (_codePage == 3)
                 textBuffer = GetArabicBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"));

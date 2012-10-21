@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             const string paragraphWriteFormat = "{0}           ,           {1}           ,{2}\r\n";
-            const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";            
+            const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         string[] threePart = line.Split(",".ToCharArray(), StringSplitOptions.None);
                         var p = new Paragraph();
-                        if (threePart.Length > 2 && 
+                        if (threePart.Length > 2 &&
                             line.Length > 58 &&
                             GetTimeCode(p.StartTime, threePart[0].Trim()) &&
                             GetTimeCode(p.EndTime, threePart[1].Trim()))
@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
         }
-      
+
         private static bool GetTimeCode(TimeCode timeCode, string timeString)
         {
             try

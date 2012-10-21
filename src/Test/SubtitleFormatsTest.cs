@@ -539,7 +539,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
              subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
              subtitle.Paragraphs.Add(new Paragraph("Line 3", 8000, 11000));
              subtitle.Paragraphs.Add(new Paragraph("Line 4", 12000, 15000));
-             
+
              foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
              {
                  string text = format.ToText(subtitle, "test");
@@ -580,7 +580,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
 //                 {
 //                     if (innerFormat.IsMine(list, null))
 //                     {
-//                         if (format.FriendlyName != innerFormat.FriendlyName  && 
+//                         if (format.FriendlyName != innerFormat.FriendlyName  &&
 //                             !format.FriendlyName.Contains("Final Cut"))
 //                         {
 ////                             Assert.AreEqual(format.FriendlyName, innerFormat.FriendlyName, text);

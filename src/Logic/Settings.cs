@@ -1661,7 +1661,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.Shortcuts.MainToolsAutoDuration = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainToolsBeamer");
                 if (subNode != null)
-                    settings.Shortcuts.MainToolsBeamer = subNode.InnerText;                
+                    settings.Shortcuts.MainToolsBeamer = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainToolsToggleTranslationOriginalInPreviews");
                 if (subNode != null)
                     settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews = subNode.InnerText;
