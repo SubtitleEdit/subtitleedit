@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(_language.NewVersionOfSubtitleEditRequired);
                     DialogResult = DialogResult.Cancel;
                     return;
-                }                
+                }
 
                 foreach (XmlNode node in _pluginDoc.DocumentElement.SelectNodes("Plugin"))
                 {

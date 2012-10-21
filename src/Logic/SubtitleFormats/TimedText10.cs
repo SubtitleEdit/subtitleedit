@@ -326,7 +326,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument();
             xml.LoadXml(sb.ToString());
-            
+
             string ns = "http://www.w3.org/ns/ttml";
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttml", ns);

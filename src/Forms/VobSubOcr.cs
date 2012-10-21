@@ -3729,7 +3729,7 @@ namespace Nikse.SubtitleEdit.Forms
                         LoadOcrFixEngine();
                         MessageBox.Show(string.Format(Configuration.Settings.Language.Main.OcrReplacePairXAdded, form.NewSource, form.NewTarget));
                     }
-                    else 
+                    else
                     {
                         MessageBox.Show(string.Format(Configuration.Settings.Language.Main.OcrReplacePairXNotAdded, form.NewSource, form.NewTarget));
                     }

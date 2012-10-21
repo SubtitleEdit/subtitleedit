@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void FixLargeFonts()
-        {            
+        {
             Graphics graphics = this.CreateGraphics();
             SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
             if (textSize.Height > buttonOK.Height - 4)
@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
                 language = language.Substring(0, language.IndexOf("]"));
 
             var userWordList = new List<string>();
-            
+
             Utilities.LoadUserWordList(userWordList, language);
             if (!string.IsNullOrEmpty(language) && NewWord.Length > 1 && !userWordList.Contains(NewWord))
             {
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.OK;
                 return;
             }
-            DialogResult = DialogResult.Cancel;            
+            DialogResult = DialogResult.Cancel;
         }
 
         internal void Initialize(Subtitle subtitle, string hunspellName, string text)
@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxDictionaries.Items.Add(name);
                 if (hunspellName != null && name.ToLower() == hunspellName.ToLower())
-                    comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;                 
+                    comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
             }
         }
 

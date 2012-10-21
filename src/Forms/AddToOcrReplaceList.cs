@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 wholeWords.AppendChild(node);
             }
-            doc.Save(replaceListXmlFileName);         
+            doc.Save(replaceListXmlFileName);
             DialogResult = DialogResult.OK;
             NewSource = key;
             NewTarget = value;

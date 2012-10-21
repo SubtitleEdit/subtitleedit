@@ -295,16 +295,16 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string t = sb.ToString().Trim();
             string[] tarr = t.Replace("\r\n", "\n").Split('\n');
-            if (checkBoxMergeShortLines.Checked == false && tarr.Length == 3 && 
-                tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength && 
+            if (checkBoxMergeShortLines.Checked == false && tarr.Length == 3 &&
+                tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
                 tarr[1].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
                 tarr[2].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
             {
                 _subtitle.Paragraphs.Add(new Paragraph() { Text = tarr[0] + Environment.NewLine + tarr[1] });
                 return;
             }
-            else if (checkBoxMergeShortLines.Checked == false && tarr.Length == 2 && 
-                tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength && 
+            else if (checkBoxMergeShortLines.Checked == false && tarr.Length == 2 &&
+                tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
                 tarr[1].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
             {
                 _subtitle.Paragraphs.Add(new Paragraph() { Text = tarr[0] + Environment.NewLine + tarr[1] });

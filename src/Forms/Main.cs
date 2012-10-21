@@ -3930,7 +3930,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var list = new List<string>(textBoxSource.Lines);
                     if (format != null && format.IsMine(list, null))
                         format.LoadSubtitle(temp, list, null);
-                    else 
+                    else
                         format = temp.ReloadLoadSubtitle(new List<string>(textBoxSource.Lines), null);
 
                     if (format == null)
@@ -7908,7 +7908,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 _formPositionsAndSizes.SavePositionAndSize(formSubOcr);
             }
-            
+
             return count > 0;
         }
 
@@ -14235,7 +14235,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.CurrentFrameRate = CurrentFrameRate;
             if (_loading)
                 return;
-            
+
             SubtitleListview1.UpdateFrames(_subtitle);
         }
 
