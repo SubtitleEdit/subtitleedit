@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             item.BackColor = Color.LightGreen;
                             installed.BackColor = Color.LightPink;
-                            installed.SubItems[0].Text = _language.UpdateAvailable;
+                            installed.SubItems[1].Text = _language.UpdateAvailable + " " + installed.SubItems[1].Text;
                         }
                     }
                 }

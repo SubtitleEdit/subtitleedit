@@ -1084,6 +1084,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <Remove>&amp;Fjern</Remove>
     <UnableToDownloadPluginListX>Kunne ikke downloade plug liste: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Nyere version af Subtitle Edit kræves!</NewVersionOfSubtitleEditRequired>
+    <UpdateAvailable>[Ny version findes!]</UpdateAvailable>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Fjern tekst for hørehæmmede</Title>
