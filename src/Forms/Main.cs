@@ -5553,7 +5553,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (showSource)
                     {
-                        MakeHistoryForUndoOnlyIfNotResent(_language.BeforeLineUpdatedInListView);
                         ShowSource();
                     }
                 }
