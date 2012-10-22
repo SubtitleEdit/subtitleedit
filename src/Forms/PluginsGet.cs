@@ -244,7 +244,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void PluginsGet_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
+            else if (e.KeyCode == Keys.F1)
+            {
+                Utilities.ShowHelp("#plugins");
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void buttonRemove_Click(object sender, EventArgs e)

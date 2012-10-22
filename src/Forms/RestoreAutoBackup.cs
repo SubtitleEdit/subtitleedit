@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewBackups.Columns[0].Text = l.DateAndTime;
             listViewBackups.Columns[1].Text = l.FileName;
             listViewBackups.Columns[2].Text = l.Extension;
+            labelInfo.Text = l.Information;
 
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;

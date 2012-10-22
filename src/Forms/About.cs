@@ -40,6 +40,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
+            else if (e.KeyCode == Keys.F1)
+            {
+                Utilities.ShowHelp(null);
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void RichTextBoxAbout1LinkClicked(object sender, LinkClickedEventArgs e)

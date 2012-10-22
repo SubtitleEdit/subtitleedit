@@ -1281,7 +1281,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.F1)
             {
-                Utilities.ShowHelp(string.Empty);
+                Utilities.ShowHelp("#export");
                 e.SuppressKeyPress = true;
             }
         }

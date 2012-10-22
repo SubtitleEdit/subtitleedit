@@ -183,7 +183,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " ßeta 1";
+                return _title + " ßeta 2";
             }
         }
 
@@ -12185,9 +12185,11 @@ namespace Nikse.SubtitleEdit.Forms
         void TimerAutoSaveTick(object sender, EventArgs e)
         {
             string currentText = _subtitle.ToText(GetCurrentSubtitleFormat());
-            if (_textAutoSave != null && _subtitle.Paragraphs.Count > 0)
+            if (_subtitle != null && _subtitle.Paragraphs.Count > 0)
             {
-                if (currentText != _textAutoSave && currentText.Trim().Length > 0)
+                if (_textAutoSave == null)
+                    _textAutoSave = _changeSubtitleToString;
+                if (!string.IsNullOrEmpty(_textAutoSave) && currentText.Trim() != _textAutoSave.Trim() && currentText.Trim().Length > 0)
                 {
                     if (!Directory.Exists(Configuration.AutoBackupFolder))
                     {

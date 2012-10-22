@@ -1,6 +1,6 @@
 Subtitle Edit Changelog
 
-3.3 Beta 1 (17th September 2012)
+3.3 Beta 2 (21st October 2012)
 * NEW:
    * Added column commands to list view context menu - thx Seungki
    * Edit -> Reverse RTL start/end (fix punctuations)
@@ -66,6 +66,7 @@ Subtitle Edit Changelog
    * Fixed possible crash when clicking on "Open" file
    * Fixed frame rate calculated too high - thx Saulius
    * Fixed missing last line in a couple of subtitle formats
+   * Minor fixes for "Change casing" + "Split long lines" - thx Marcio
 
 
 3.2.8 (3rd June 2012)

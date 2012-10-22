@@ -1331,7 +1331,7 @@ can edit in same subtitle file (collaboration)",
             RestoreAutoBackup = new LanguageStructure.RestoreAutoBackup
             {
                 Title = "Restore auto backup",
-                Information = "Open auto saved backup",
+                Information = "Open auto-saved backup",
                 DateAndTime = "Date and time",
                 FileName = "File name",
                 Extension = "Extension",
