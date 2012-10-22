@@ -95,7 +95,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void FormGetDictionaries_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
+            else if (e.KeyCode == Keys.F1)
+            {
+                Utilities.ShowHelp("#spellcheck");
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void LinkLabel3LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

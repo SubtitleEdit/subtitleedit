@@ -40,7 +40,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void ChangeSpeedInPercent_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
+            else if (e.KeyCode == Keys.F1)
+            {
+                Utilities.ShowHelp("#sync");
+                e.SuppressKeyPress = true;
+            }
         }
 
         public Subtitle AdjustAllParagraphs(Subtitle subtitle)
