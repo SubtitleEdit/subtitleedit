@@ -170,7 +170,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             else
             {
                 xml.LoadXml(subtitle.Header);
-                XmlNode divNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
+                XmlNode divNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).SelectSingleNode("ttml:div", nsmgr);
+                if (divNode == null)
+                    divNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
                 if (divNode != null)
                 {
                     var lst = new List<XmlNode>();
@@ -194,7 +196,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //XmlNode titleNode = xml.DocumentElement.SelectSingleNode("//ttml:head", nsmgr).FirstChild.FirstChild;
             //titleNode.InnerText = title;
 
-            XmlNode div = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
+            XmlNode div = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).SelectSingleNode("ttml:div", nsmgr);
+            if (div == null)
+                div = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
+
             int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
