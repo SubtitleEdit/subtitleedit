@@ -295,8 +295,8 @@
             "480p (848x480)",
             "PAL (720x576)",
             "NTSC (720x480)",
-            "640×352",
-            "640×272"});
+            "640x352",
+            "640x272"});
             this.comboBoxResolution.Location = new System.Drawing.Point(100, 78);
             this.comboBoxResolution.Name = "comboBoxResolution";
             this.comboBoxResolution.Size = new System.Drawing.Size(121, 21);

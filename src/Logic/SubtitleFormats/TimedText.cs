@@ -38,7 +38,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     var nsmgr = new XmlNamespaceManager(xml.NameTable);
                     nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
-                    XmlNode div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
+                    XmlNode div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
+                    if (div == null)
+                        div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
                     int numberOfParagraphs = div.ChildNodes.Count;
                     return numberOfParagraphs > 0;
                 }
@@ -85,7 +87,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             XmlNode titleNode = xml.DocumentElement.SelectSingleNode("//ttaf1:head", nsmgr).FirstChild.FirstChild;
             titleNode.InnerText = title;
 
-            XmlNode div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
+            XmlNode div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
+            if (div == null)
+                div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
+
             int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -135,7 +140,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
-            XmlNode div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
+            
+            XmlNode div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
+            if (div == null)
+                div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
+            
             foreach (XmlNode node in div.ChildNodes)
             {
                 try
