@@ -731,6 +731,7 @@
     <Compile Include="Logic\SubtitleFormats\AdvancedSubStationAlpha.cs" />
     <Compile Include="Logic\SubtitleFormats\AQTitle.cs" />
     <Compile Include="Logic\SubtitleFormats\AvidCaption.cs" />
+    <Compile Include="Logic\SubtitleFormats\AvidStl.cs" />
     <Compile Include="Logic\SubtitleFormats\BdnXml.cs" />
     <Compile Include="Logic\SubtitleFormats\BelleNuitSubtitler.cs" />
     <Compile Include="Logic\SubtitleFormats\CapMakerPlus.cs" />

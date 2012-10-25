@@ -306,6 +306,34 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        internal void RecalculateDisplayTimes(double maxCharactersPerSecond, System.Windows.Forms.ListView.SelectedIndexCollection selectedIndexes)
+        {
+            for (int i = 0; i < _paragraphs.Count; i++)
+            {
+                if (selectedIndexes == null || selectedIndexes.Contains(i))
+                {
+                    Paragraph p = _paragraphs[i];
+                    double duration = Utilities.GetDisplayMillisecondsFromText(p.Text) * 1.7;
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
+                    while (Utilities.GetCharactersPerSecond(p) > maxCharactersPerSecond)
+                    {
+                        duration ++;
+                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
+                    }
+
+                    Paragraph next = GetParagraphOrDefault(i + 1);
+                    if (next != null && p.StartTime.TotalMilliseconds + duration + Configuration.Settings.General.MininumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
+                    {
+                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                        if (p.Duration.TotalMilliseconds <= 0)
+                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
+                    }
+
+                }
+            }
+        }
+
+
         internal void Renumber(int startNumber)
         {
             int i = startNumber;

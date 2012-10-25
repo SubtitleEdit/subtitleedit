@@ -117,6 +117,7 @@
             public string AdjustVia { get; set; }
             public string Seconds { get; set; }
             public string Percent { get; set; }
+            public string Recalculate { get; set; }
             public string AddSeconds { get; set; }
             public string SetAsPercent { get; set; }
             public string Note { get; set; }

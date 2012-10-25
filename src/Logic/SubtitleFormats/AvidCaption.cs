@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         subtitle.Paragraphs.Add(p);
                     }
                 }
-                else if (line.Trim().Length == 0)
+                else if (line.Trim().Length == 0 || line.Trim().StartsWith("@"))
                 {
                     // skip these lines
                 }

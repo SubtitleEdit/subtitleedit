@@ -113,6 +113,7 @@
     <AdjustVia>Juster via</AdjustVia>
     <Seconds>Sekunder</Seconds>
     <Percent>Procent</Percent>
+    <Recalculate>Omberegn</Recalculate>
     <AddSeconds>Tilføj sekunder</AddSeconds>
     <SetAsPercent>Set som procent af varighed</SetAsPercent>
     <Note>Bemærk: Visningstid vil ikke overlappe starttidspunkt for næste tekst</Note>

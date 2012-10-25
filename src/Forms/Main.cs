@@ -519,6 +519,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Console.WriteLine("    Matroska (.mkv)");
                     Console.WriteLine("    Matroska subtitle (.mks)");
                     Console.WriteLine("    " + new NciCaption().FriendlyName);
+                    Console.WriteLine("    " + new AvidStl().FriendlyName);
                     Console.WriteLine("    " + new Pac().FriendlyName);
                     Console.WriteLine("    " + new Spt().FriendlyName);
                     Console.WriteLine("    " + new Ultech130().FriendlyName);
@@ -784,6 +785,17 @@ namespace Nikse.SubtitleEdit.Forms
                                     format = nciCaption;
                                 }
                             }
+
+                            if (format == null)
+                            {
+                                var avidStl = new AvidStl();
+                                if (avidStl.IsMine(null, fileName))
+                                {
+                                    avidStl.LoadSubtitle(_subtitle, null, fileName);
+                                    format = avidStl;
+                                }
+                            }
+
                         }
 
                         if (format == null)
@@ -2187,6 +2199,21 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         nciCaption.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = nciCaption;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+                if (format == null)
+                {
+                    var avidStl = new AvidStl();
+                    if (avidStl.IsMine(null, fileName))
+                    {
+                        avidStl.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = avidStl;
                         SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
@@ -4100,10 +4127,15 @@ namespace Nikse.SubtitleEdit.Forms
                         double percent = double.Parse(adjustDisplayTime.AdjustValue);
                         _subtitle.AdjustDisplayTimeUsingPercent(percent, selectedIndexes);
                     }
-                    else
+                    else if (adjustDisplayTime.AdjustUsingSeconds)
                     {
                         double seconds = double.Parse(adjustDisplayTime.AdjustValue);
                         _subtitle.AdjustDisplayTimeUsingSeconds(seconds, selectedIndexes);
+                    }
+                    else
+                    { // recalculate durations!!!                        
+                        double maxCharSeconds = (double)(adjustDisplayTime.MaxCharactersPerSecond);
+                        _subtitle.RecalculateDisplayTimes(maxCharSeconds, selectedIndexes);
                     }
                     ShowStatus(string.Format(_language.DisplayTimesAdjustedX, adjustDisplayTime.AdjustValue));
                     SaveSubtitleListviewIndexes();
@@ -15858,5 +15890,38 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void toolStripMenuItemAvidStl_Click(object sender, EventArgs e)
+        {
+            var avidStl = new AvidStl();
+            saveFileDialog1.Filter = avidStl.Name + "|*" + avidStl.Extension;
+            saveFileDialog1.Title = _language.SaveSubtitleAs;
+            saveFileDialog1.DefaultExt = "*" + avidStl.Extension;
+            saveFileDialog1.AddExtension = true;
+
+            if (!string.IsNullOrEmpty(_videoFileName))
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
+            else
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+
+            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+
+            DialogResult result = saveFileDialog1.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
+                string fileName = saveFileDialog1.FileName;
+                string ext = Path.GetExtension(fileName).ToLower();
+                bool extOk = ext == avidStl.Extension.ToLower();
+                if (!extOk)
+                {
+                    if (fileName.EndsWith("."))
+                        fileName = fileName.Substring(0, fileName.Length - 1);
+                    fileName += avidStl.Extension;
+                }
+                avidStl.Save(fileName, _subtitle);
+            }
+        }
+      
     }
 }

@@ -44,11 +44,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("text");
 
                 XmlAttribute start = xml.CreateAttribute("start");
-                start.InnerText = string.Format("{0}", p.StartTime.TotalMilliseconds / 1000);
+                start.InnerText = string.Format("{0}", p.StartTime.TotalMilliseconds / 1000).Replace(",", ".");
                 paragraph.Attributes.Append(start);
 
                 XmlAttribute duration = xml.CreateAttribute("dur");
-                duration.InnerText = string.Format("{0}", p.Duration.TotalMilliseconds / 1000);
+                duration.InnerText = string.Format("{0}", p.Duration.TotalMilliseconds / 1000).Replace(",", ".");
                 paragraph.Attributes.Append(duration);
 
                 paragraph.InnerText = p.Text;
