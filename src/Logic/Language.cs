@@ -210,6 +210,7 @@ namespace Nikse.SubtitleEdit.Logic
                 AddSeconds = "Add seconds",
                 SetAsPercent = "Set as percent of duration",
                 Percent = "Percent",
+                Recalculate = "Recalculate",
                 Seconds = "Seconds",
                 Note = "Note: Display time will not overlap start time of next text",
                 PleaseSelectAValueFromTheDropDownList = "Please select a value from the dropdown list",

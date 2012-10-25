@@ -91,6 +91,7 @@ namespace Test
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveTextBeforeColon.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxRemoveTextBetweenParentheses.Checked = true;
             string text = "Be quiet. (SHUSHING) It's okay.";
             string expected = "Be quiet. It's okay.";
             string actual = target.RemoveHearImpairedtagsInsideLine(text);
@@ -106,6 +107,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxRemoveTextBetweenSquares.Checked = true;
             string text = "- Aw, save it. Storm?\r\n- [Storm]\r\nWe're outta here.";
             string expected = "- Aw, save it. Storm?\r\n- We're outta here.";
             string actual = target.RemoveTextFromHearImpaired(text);
@@ -121,6 +123,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxRemoveTextBetweenSquares.Checked = true;
             string text = "[Chuckles,\r\nCoughing]\r\nBut we lived through it.";
             string expected = "But we lived through it.";
             string actual = target.RemoveTextFromHearImpaired(text);
@@ -195,6 +198,7 @@ namespace Test
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxRemoveTextBetweenSquares.Checked = true;
             string text = "[MAN]Where?![MAN]";
             string expected = "Where?!";
             string actual = target.RemoveTextFromHearImpaired(text);

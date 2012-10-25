@@ -93,8 +93,8 @@
             this.toolStripMenuItemImportTimeCodes = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemExport = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemTextTimeCodePair = new System.Windows.Forms.ToolStripMenuItem();
             this.adobeEncoreFABImageScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemAvidStl = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportPngXml = new System.Windows.Forms.ToolStripMenuItem();
             this.bluraySupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DvdStudioProStl = new System.Windows.Forms.ToolStripMenuItem();
@@ -104,6 +104,7 @@
             this.toolStripMenuItemExportCheetahCap = new System.Windows.Forms.ToolStripMenuItem();
             this.eBUSTLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImagePerFrame = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemTextTimeCodePair = new System.Windows.Forms.ToolStripMenuItem();
             this.pACScreenElectronicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plainTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportUltech130 = new System.Windows.Forms.ToolStripMenuItem();
@@ -1033,8 +1034,8 @@
             // toolStripMenuItemExport
             // 
             this.toolStripMenuItemExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemTextTimeCodePair,
             this.adobeEncoreFABImageScriptToolStripMenuItem,
+            this.toolStripMenuItemAvidStl,
             this.toolStripMenuItemExportPngXml,
             this.bluraySupToolStripMenuItem,
             this.DvdStudioProStl,
@@ -1044,6 +1045,7 @@
             this.toolStripMenuItemExportCheetahCap,
             this.eBUSTLToolStripMenuItem,
             this.toolStripMenuItemImagePerFrame,
+            this.toolStripMenuItemTextTimeCodePair,
             this.pACScreenElectronicsToolStripMenuItem,
             this.plainTextToolStripMenuItem,
             this.toolStripMenuItemExportUltech130,
@@ -1052,19 +1054,19 @@
             this.toolStripMenuItemExport.Size = new System.Drawing.Size(334, 22);
             this.toolStripMenuItemExport.Text = "Export";
             // 
-            // toolStripMenuItemTextTimeCodePair
-            // 
-            this.toolStripMenuItemTextTimeCodePair.Name = "toolStripMenuItemTextTimeCodePair";
-            this.toolStripMenuItemTextTimeCodePair.Size = new System.Drawing.Size(258, 22);
-            this.toolStripMenuItemTextTimeCodePair.Text = "Korean ATS file pair...";
-            this.toolStripMenuItemTextTimeCodePair.Click += new System.EventHandler(this.toolStripMenuItemTextTimeCodePair_Click);
-            // 
             // adobeEncoreFABImageScriptToolStripMenuItem
             // 
             this.adobeEncoreFABImageScriptToolStripMenuItem.Name = "adobeEncoreFABImageScriptToolStripMenuItem";
             this.adobeEncoreFABImageScriptToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.adobeEncoreFABImageScriptToolStripMenuItem.Text = "Adobe Encore FAB image script...";
             this.adobeEncoreFABImageScriptToolStripMenuItem.Click += new System.EventHandler(this.AdobeEncoreFabImageScriptToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemAvidStl
+            // 
+            this.toolStripMenuItemAvidStl.Name = "toolStripMenuItemAvidStl";
+            this.toolStripMenuItemAvidStl.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemAvidStl.Text = "Avid stl...";
+            this.toolStripMenuItemAvidStl.Click += new System.EventHandler(this.toolStripMenuItemAvidStl_Click);
             // 
             // toolStripMenuItemExportPngXml
             // 
@@ -1129,6 +1131,13 @@
             this.toolStripMenuItemImagePerFrame.Text = "Image per frame...";
             this.toolStripMenuItemImagePerFrame.Visible = false;
             this.toolStripMenuItemImagePerFrame.Click += new System.EventHandler(this.ToolStripMenuItemImagePerFrameClick);
+            // 
+            // toolStripMenuItemTextTimeCodePair
+            // 
+            this.toolStripMenuItemTextTimeCodePair.Name = "toolStripMenuItemTextTimeCodePair";
+            this.toolStripMenuItemTextTimeCodePair.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemTextTimeCodePair.Text = "Korean ATS file pair...";
+            this.toolStripMenuItemTextTimeCodePair.Click += new System.EventHandler(this.toolStripMenuItemTextTimeCodePair_Click);
             // 
             // pACScreenElectronicsToolStripMenuItem
             // 
@@ -4447,6 +4456,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertTextFromSub;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenKeepVideo;
         private System.Windows.Forms.ToolStripMenuItem changeSpeedInPercentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAvidStl;
     }
 }
 

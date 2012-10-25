@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -26,6 +26,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        public bool AdjustUsingSeconds
+        {
+            get
+            {
+                return radioButtonSeconds.Checked;
+            }
+        }
+
+        public decimal MaxCharactersPerSecond
+        {
+            get
+            {
+                return numericUpDownMaxCharsSec.Value;
+            }
+        }
+
         public AdjustDisplayDuration()
         {
             InitializeComponent();
@@ -39,12 +55,14 @@ namespace Nikse.SubtitleEdit.Forms
                 s = s.Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
                 comboBoxSeconds.Items[i] = s;
             }
+            numericUpDownMaxCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
 
             LanguageStructure.AdjustDisplayDuration language = Configuration.Settings.Language.AdjustDisplayDuration;
             Text = language.Title;
             groupBoxAdjustVia.Text = language.AdjustVia;
             radioButtonSeconds.Text = language.Seconds;
             radioButtonPercent.Text = language.Percent;
+            radioButtonAutoRecalculate.Text = language.Recalculate;
             labelAddSeconds.Text = language.AddSeconds;
             labelAddInPercent.Text = language.SetAsPercent;
             labelNote.Text = language.Note;
@@ -77,26 +95,34 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RadioButtonPercentCheckedChanged(object sender, EventArgs e)
         {
+            FixEnabled();
+        }
+
+        private void FixEnabled()
+        {
             if (radioButtonPercent.Checked)
             {
                 comboBoxPercent.Enabled = true;
+                comboBoxSeconds.Enabled = false;
+                numericUpDownMaxCharsSec.Enabled = false;
+            }
+            else if (radioButtonSeconds.Checked)
+            {
+                comboBoxPercent.Enabled = false;
+                comboBoxSeconds.Enabled = true;
+                numericUpDownMaxCharsSec.Enabled = false;
             }
             else
             {
                 comboBoxPercent.Enabled = false;
+                comboBoxSeconds.Enabled = false;
+                numericUpDownMaxCharsSec.Enabled = true;
             }
         }
 
         private void RadioButtonSecondsCheckedChanged(object sender, EventArgs e)
         {
-            if (radioButtonSeconds.Checked)
-            {
-                comboBoxSeconds.Enabled = true;
-            }
-            else
-            {
-                comboBoxSeconds.Enabled = false;
-            }
+            FixEnabled();
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
@@ -116,5 +142,11 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.OK;
             }
         }
+
+        private void radioButtonAutoRecalculate_CheckedChanged(object sender, EventArgs e)
+        {
+            FixEnabled();
+        }
+
     }
 }
