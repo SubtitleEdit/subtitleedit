@@ -39,7 +39,11 @@
             this.labelAddSeconds = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
+            this.radioButtonAutoRecalculate = new System.Windows.Forms.RadioButton();
+            this.numericUpDownMaxCharsSec = new System.Windows.Forms.NumericUpDown();
+            this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
             this.groupBoxAdjustVia.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
             this.SuspendLayout();
             // 
             // radioButtonPercent
@@ -59,7 +63,7 @@
             this.radioButtonSeconds.Checked = true;
             this.radioButtonSeconds.Location = new System.Drawing.Point(11, 21);
             this.radioButtonSeconds.Name = "radioButtonSeconds";
-            this.radioButtonSeconds.Size = new System.Drawing.Size(67, 17);
+            this.radioButtonSeconds.Size = new System.Drawing.Size(65, 17);
             this.radioButtonSeconds.TabIndex = 1;
             this.radioButtonSeconds.TabStop = true;
             this.radioButtonSeconds.Text = "Seconds";
@@ -68,11 +72,14 @@
             // 
             // groupBoxAdjustVia
             // 
+            this.groupBoxAdjustVia.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAdjustVia.Controls.Add(this.radioButtonAutoRecalculate);
             this.groupBoxAdjustVia.Controls.Add(this.radioButtonPercent);
             this.groupBoxAdjustVia.Controls.Add(this.radioButtonSeconds);
             this.groupBoxAdjustVia.Location = new System.Drawing.Point(13, 13);
             this.groupBoxAdjustVia.Name = "groupBoxAdjustVia";
-            this.groupBoxAdjustVia.Size = new System.Drawing.Size(365, 47);
+            this.groupBoxAdjustVia.Size = new System.Drawing.Size(468, 47);
             this.groupBoxAdjustVia.TabIndex = 2;
             this.groupBoxAdjustVia.TabStop = false;
             this.groupBoxAdjustVia.Text = "Adjust via";
@@ -158,6 +165,7 @@
             this.labelNote.Size = new System.Drawing.Size(279, 13);
             this.labelNote.TabIndex = 5;
             this.labelNote.Text = "Note: Display time will not overlap start time of next text";
+            this.labelNote.Click += new System.EventHandler(this.labelNote_Click);
             // 
             // labelAddInPercent
             // 
@@ -182,7 +190,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(303, 169);
+            this.buttonCancel.Location = new System.Drawing.Point(406, 169);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 9;
@@ -193,7 +201,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(222, 169);
+            this.buttonOK.Location = new System.Drawing.Point(325, 169);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 8;
@@ -201,11 +209,59 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
             // 
+            // radioButtonAutoRecalculate
+            // 
+            this.radioButtonAutoRecalculate.AutoSize = true;
+            this.radioButtonAutoRecalculate.Location = new System.Drawing.Point(344, 21);
+            this.radioButtonAutoRecalculate.Name = "radioButtonAutoRecalculate";
+            this.radioButtonAutoRecalculate.Size = new System.Drawing.Size(80, 17);
+            this.radioButtonAutoRecalculate.TabIndex = 2;
+            this.radioButtonAutoRecalculate.Text = "Recalculate";
+            this.radioButtonAutoRecalculate.UseVisualStyleBackColor = true;
+            this.radioButtonAutoRecalculate.CheckedChanged += new System.EventHandler(this.radioButtonradioButtonAutoRecalculate_CheckedChanged);
+            // 
+            // numericUpDownMaxCharsSec
+            // 
+            this.numericUpDownMaxCharsSec.DecimalPlaces = 1;
+            this.numericUpDownMaxCharsSec.Enabled = false;
+            this.numericUpDownMaxCharsSec.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownMaxCharsSec.Location = new System.Drawing.Point(357, 89);
+            this.numericUpDownMaxCharsSec.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
+            this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(56, 21);
+            this.numericUpDownMaxCharsSec.TabIndex = 49;
+            this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
+            24,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxCharsSec.ValueChanged += new System.EventHandler(this.numericUpDownMaxCharsSec_ValueChanged);
+            // 
+            // labelMaxCharsPerSecond
+            // 
+            this.labelMaxCharsPerSecond.AutoSize = true;
+            this.labelMaxCharsPerSecond.Location = new System.Drawing.Point(357, 70);
+            this.labelMaxCharsPerSecond.Name = "labelMaxCharsPerSecond";
+            this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(80, 13);
+            this.labelMaxCharsPerSecond.TabIndex = 50;
+            this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
+            this.labelMaxCharsPerSecond.Click += new System.EventHandler(this.labelMaxCharsPerSecond_Click);
+            // 
             // AdjustDisplayDuration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(390, 206);
+            this.ClientSize = new System.Drawing.Size(493, 206);
+            this.Controls.Add(this.numericUpDownMaxCharsSec);
+            this.Controls.Add(this.labelMaxCharsPerSecond);
             this.Controls.Add(this.comboBoxSeconds);
             this.Controls.Add(this.comboBoxPercent);
             this.Controls.Add(this.buttonCancel);
@@ -224,9 +280,11 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Adjust display time";
+            this.Load += new System.EventHandler(this.AdjustDisplayDuration_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormAdjustDisplayTime_KeyDown);
             this.groupBoxAdjustVia.ResumeLayout(false);
             this.groupBoxAdjustVia.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -244,5 +302,8 @@
         private System.Windows.Forms.Label labelAddSeconds;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.RadioButton radioButtonAutoRecalculate;
+        private System.Windows.Forms.NumericUpDown numericUpDownMaxCharsSec;
+        private System.Windows.Forms.Label labelMaxCharsPerSecond;
     }
 }

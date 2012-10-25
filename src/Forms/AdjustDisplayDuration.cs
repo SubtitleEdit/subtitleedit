@@ -63,6 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonSeconds.Text = language.Seconds;
             radioButtonPercent.Text = language.Percent;
             radioButtonAutoRecalculate.Text = language.Recalculate;
+            labelMaxCharsPerSecond.Text = Configuration.Settings.Language.Main.CharactersPerSecond;
             labelAddSeconds.Text = language.AddSeconds;
             labelAddInPercent.Text = language.SetAsPercent;
             labelNote.Text = language.Note;
@@ -146,6 +147,31 @@ namespace Nikse.SubtitleEdit.Forms
         private void radioButtonAutoRecalculate_CheckedChanged(object sender, EventArgs e)
         {
             FixEnabled();
+        }
+
+        private void radioButtonradioButtonAutoRecalculate_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelMaxCharsPerSecond_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelNote_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void numericUpDownMaxCharsSec_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AdjustDisplayDuration_Load(object sender, EventArgs e)
+        {
+
         }
 
     }
