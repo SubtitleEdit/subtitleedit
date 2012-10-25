@@ -5826,6 +5826,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
+                    SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
                 }
                 SubtitleListview1.EndUpdate();
                 RefreshSelectedParagraph();
