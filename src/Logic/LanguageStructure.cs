@@ -70,6 +70,9 @@
             public string Style { get; set; }
             public string Class { get; set; }
             public string GeneralText { get; set; }
+            public string LineNumber { get; set; }
+            public string Before { get; set; }
+            public string After { get; set; }
         }
 
         public class About
@@ -125,13 +128,17 @@
             public string PleaseChoose { get; set; }
         }
 
+        public class ApplyDurationLimits
+        {
+            public string Title { get; set; }
+            public string FixesAvailable { get; set; }
+            public string UnableToFix { get; set; }
+        }
+
         public class AutoBreakUnbreakLines
         {
             public string TitleAutoBreak { get; set; }
             public string TitleUnbreak { get; set; }
-            public string LineNumber { get; set; }
-            public string Before { get; set; }
-            public string After { get; set; }
             public string LinesFoundX { get; set; }
             public string OnlyBreakLinesLongerThan { get; set; }
             public string OnlyUnbreakLinesLongerThan { get; set; }
@@ -160,9 +167,6 @@
             public string NamesFoundInSubtitleX { get; set; }
             public string Enabled { get; set; }
             public string Name { get; set; }
-            public string LineNumber { get; set; }
-            public string Before { get; set; }
-            public string After { get; set; }
             public string LinesFoundX { get; set; }
         }
 
@@ -388,10 +392,7 @@
             public string Step2 { get; set; }
             public string Fixes { get; set; }
             public string Log { get; set; }
-            public string LineNumber { get; set; }
             public string Function { get; set; }
-            public string Before { get; set; }
-            public string After { get; set; }
             public string RemovedEmptyLine { get; set; }
             public string RemovedEmptyLineAtTop { get; set; }
             public string RemovedEmptyLineAtBottom { get; set; }
@@ -877,6 +878,7 @@
                 {
                     public string Title { get; set; }
                     public string AdjustDisplayDuration { get; set; }
+                    public string ApplyDurationLimits { get; set; }
                     public string FixCommonErrors { get; set; }
                     public string StartNumberingFrom { get; set; }
                     public string RemoveTextForHearingImpaired { get; set; }
@@ -1130,7 +1132,6 @@
             public string MaximumCharacters { get; set; }
             public string MaximumMillisecondsBetween { get; set; }
             public string NumberOfMergesX { get; set; }
-            public string LineNumber { get; set; }
             public string MergedText { get; set; }
             public string OnlyMergeContinuationLines { get; set; }
         }
@@ -1143,9 +1144,6 @@
             public string Normal { get; set; }
             public string CaseSensitive { get; set; }
             public string RegularExpression { get; set; }
-            public string LineNumber { get; set; }
-            public string Before { get; set; }
-            public string After { get; set; }
             public string LinesFoundX { get; set; }
             public string Delete { get; set; }
             public string Add { get; set; }
@@ -1220,9 +1218,6 @@
             public string RemoveTextBeforeColon { get; set; }
             public string OnlyIfTextIsUppercase { get; set; }
             public string OnlyIfInSeparateLine { get; set; }
-            public string LineNumber { get; set; }
-            public string Before { get; set; }
-            public string After { get; set; }
             public string LinesFoundX { get; set; }
             public string RemoveTextIfContains { get; set; }
             public string RemoveInterjections { get; set; }

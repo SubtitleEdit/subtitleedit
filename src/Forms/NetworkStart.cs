@@ -100,7 +100,15 @@ namespace Nikse.SubtitleEdit.Forms
         private void NetworkNew_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
+            else if (e.KeyCode == Keys.F1)
+            {
+                Utilities.ShowHelp("#networking");
+                e.SuppressKeyPress = true;
+            }
         }
+
     }
 }

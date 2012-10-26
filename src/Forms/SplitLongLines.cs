@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelLineContinuationBeginEnd.Text = Configuration.Settings.Language.SplitLongLines.LineContinuationBeginEndStrings;
 
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = Configuration.Settings.Language.MergedShortLines.LineNumber;
+            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
             listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Text;
 
             buttonOK.Text = Configuration.Settings.Language.General.OK;

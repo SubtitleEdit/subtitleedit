@@ -34,9 +34,9 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[3].Width = 290;
 
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = Configuration.Settings.Language.AutoBreakUnbreakLines.LineNumber;
-            listViewFixes.Columns[2].Text = Configuration.Settings.Language.AutoBreakUnbreakLines.Before;
-            listViewFixes.Columns[3].Text = Configuration.Settings.Language.AutoBreakUnbreakLines.After;
+            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
+            listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Before;
+            listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();

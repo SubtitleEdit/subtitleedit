@@ -23,9 +23,9 @@ namespace Nikse.SubtitleEdit.Forms
             listViewNames.Columns[1].Text = Configuration.Settings.Language.ChangeCasingNames.Name;
             groupBoxLinesFound.Text = string.Empty;
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = Configuration.Settings.Language.ChangeCasingNames.LineNumber;
-            listViewFixes.Columns[2].Text = Configuration.Settings.Language.ChangeCasingNames.Before;
-            listViewFixes.Columns[3].Text = Configuration.Settings.Language.ChangeCasingNames.After;
+            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
+            listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Before;
+            listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
