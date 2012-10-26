@@ -1105,6 +1105,7 @@ namespace Nikse.SubtitleEdit.Logic
                         InsertSubtitleAfter = "Insert subtitle after this line...",
                         CopyToClipboard = "Copy as text to clipboard",
                         Column = "Column",
+                        ColumnDeleteText = "Delete text",
                         ColumnDeleteTextAndShiftCellsUp = "Delete text and shift cells up",
                         ColumnInsertEmptyTextAndShiftCellsDown = "Insert empty text and shift cells down",
                         ColumnImportTextAndShiftCellsDown = "Import text and shift cells down",

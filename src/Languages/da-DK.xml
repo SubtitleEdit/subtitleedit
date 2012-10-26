@@ -687,6 +687,7 @@
         <InsertSubtitleAfter>Indsæt undertekst efter denne linje...</InsertSubtitleAfter>
         <CopyToClipboard>Kopier som tekst til udklipsholderen</CopyToClipboard>
         <Column>Kolonne</Column>
+        <ColumnDeleteText>Slet tekst</ColumnDeleteText>
         <ColumnDeleteTextAndShiftCellsUp>Slet tekst og flyt celler op</ColumnDeleteTextAndShiftCellsUp>
         <ColumnInsertEmptyTextAndShiftCellsDown>Indsæt tom tekst og flyt celler ned</ColumnInsertEmptyTextAndShiftCellsDown>
         <ColumnImportTextAndShiftCellsDown>Import tekst og flyt celler ned</ColumnImportTextAndShiftCellsDown>

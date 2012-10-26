@@ -206,6 +206,7 @@
             this.toolStripMenuItemInsertSubtitle = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemCopySourceText = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemColumn = new System.Windows.Forms.ToolStripMenuItem();
+            this.columnDeleteTextOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemColumnDeleteText = new System.Windows.Forms.ToolStripMenuItem();
             this.ShiftTextCellsDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInsertTextFromSub = new System.Windows.Forms.ToolStripMenuItem();
@@ -1914,7 +1915,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 760);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 782);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
@@ -1968,6 +1969,7 @@
             // toolStripMenuItemColumn
             // 
             this.toolStripMenuItemColumn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.columnDeleteTextOnlyToolStripMenuItem,
             this.toolStripMenuItemColumnDeleteText,
             this.ShiftTextCellsDownToolStripMenuItem,
             this.toolStripMenuItemInsertTextFromSub,
@@ -1976,6 +1978,13 @@
             this.toolStripMenuItemColumn.Name = "toolStripMenuItemColumn";
             this.toolStripMenuItemColumn.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemColumn.Text = "Column";
+            // 
+            // columnDeleteTextOnlyToolStripMenuItem
+            // 
+            this.columnDeleteTextOnlyToolStripMenuItem.Name = "columnDeleteTextOnlyToolStripMenuItem";
+            this.columnDeleteTextOnlyToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
+            this.columnDeleteTextOnlyToolStripMenuItem.Text = "Delete text";
+            this.columnDeleteTextOnlyToolStripMenuItem.Click += new System.EventHandler(this.columnDeleteTextOnlyToolStripMenuItem_Click);
             // 
             // toolStripMenuItemColumnDeleteText
             // 
@@ -4457,6 +4466,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenKeepVideo;
         private System.Windows.Forms.ToolStripMenuItem changeSpeedInPercentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAvidStl;
+        private System.Windows.Forms.ToolStripMenuItem columnDeleteTextOnlyToolStripMenuItem;
     }
 }
 
