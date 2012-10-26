@@ -1173,7 +1173,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <DefaultFrameRate>Standard frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Standard filkodningen</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto opdag ANSI-kodning</AutoDetectAnsiEncoding>
-    <SubtitleLineMaximumLength>undertekst max. længde</SubtitleLineMaximumLength>
+    <SubtitleLineMaximumLength>Linje max. længde</SubtitleLineMaximumLength>
+    <MaximumCharactersPerSecond>Maks tegn/sek</MaximumCharactersPerSecond>
     <AutoWrapWhileTyping>Auto-ombryd tekst mens du skriver</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. varighed, millisekunder</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. varighed, millisekunder</DurationMaximumMilliseconds>

@@ -35,8 +35,8 @@
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderExtension = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelInfo = new System.Windows.Forms.Label();
+            this.linkLabelOpenContainingFolder = new System.Windows.Forms.LinkLabel();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.buttonOpenContainingFolder = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -47,7 +47,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(466, 383);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 7;
+            this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -58,7 +58,7 @@
             this.buttonOK.Location = new System.Drawing.Point(385, 383);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 6;
+            this.buttonOK.TabIndex = 4;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -78,7 +78,7 @@
             this.listViewBackups.MultiSelect = false;
             this.listViewBackups.Name = "listViewBackups";
             this.listViewBackups.Size = new System.Drawing.Size(529, 333);
-            this.listViewBackups.TabIndex = 0;
+            this.listViewBackups.TabIndex = 1;
             this.listViewBackups.UseCompatibleStateImageBehavior = false;
             this.listViewBackups.View = System.Windows.Forms.View.Details;
             this.listViewBackups.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listViewBackups_MouseDoubleClick);
@@ -104,38 +104,36 @@
             this.labelInfo.Location = new System.Drawing.Point(13, 13);
             this.labelInfo.Name = "labelInfo";
             this.labelInfo.Size = new System.Drawing.Size(122, 13);
-            this.labelInfo.TabIndex = 8;
+            this.labelInfo.TabIndex = 0;
             this.labelInfo.Text = "Open auto save backup";
+            // 
+            // linkLabelOpenContainingFolder
+            // 
+            this.linkLabelOpenContainingFolder.AutoSize = true;
+            this.linkLabelOpenContainingFolder.Location = new System.Drawing.Point(13, 387);
+            this.linkLabelOpenContainingFolder.Name = "linkLabelOpenContainingFolder";
+            this.linkLabelOpenContainingFolder.Size = new System.Drawing.Size(124, 13);
+            this.linkLabelOpenContainingFolder.TabIndex = 2;
+            this.linkLabelOpenContainingFolder.TabStop = true;
+            this.linkLabelOpenContainingFolder.Text = "Open \'Dictionaries\' folder";
+            this.linkLabelOpenContainingFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenContainingFolder_LinkClicked);
             // 
             // labelStatus
             // 
-            this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(12, 388);
+            this.labelStatus.Location = new System.Drawing.Point(186, 387);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
-            this.labelStatus.TabIndex = 9;
+            this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
-            // 
-            // buttonOpenContainingFolder
-            // 
-            this.buttonOpenContainingFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOpenContainingFolder.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOpenContainingFolder.Location = new System.Drawing.Point(324, 9);
-            this.buttonOpenContainingFolder.Name = "buttonOpenContainingFolder";
-            this.buttonOpenContainingFolder.Size = new System.Drawing.Size(217, 21);
-            this.buttonOpenContainingFolder.TabIndex = 10;
-            this.buttonOpenContainingFolder.Text = "Open containing folder...";
-            this.buttonOpenContainingFolder.UseVisualStyleBackColor = true;
-            this.buttonOpenContainingFolder.Click += new System.EventHandler(this.buttonOpenContainingFolder_Click);
             // 
             // RestoreAutoBackup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(553, 414);
-            this.Controls.Add(this.buttonOpenContainingFolder);
             this.Controls.Add(this.labelStatus);
+            this.Controls.Add(this.linkLabelOpenContainingFolder);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -165,7 +163,7 @@
         private System.Windows.Forms.ColumnHeader columnHeaderFileName;
         private System.Windows.Forms.ColumnHeader columnHeaderExtension;
         private System.Windows.Forms.Label labelInfo;
+        private System.Windows.Forms.LinkLabel linkLabelOpenContainingFolder;
         private System.Windows.Forms.Label labelStatus;
-        private System.Windows.Forms.Button buttonOpenContainingFolder;
     }
 }
