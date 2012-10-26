@@ -1002,6 +1002,7 @@
                     public string InsertSubtitleAfter { get; set; }
                     public string CopyToClipboard { get; set; }
                     public string Column { get; set; }
+                    public string ColumnDeleteText { get; set; }
                     public string ColumnDeleteTextAndShiftCellsUp { get; set; }
                     public string ColumnInsertEmptyTextAndShiftCellsDown { get; set; }
                     public string ColumnImportTextAndShiftCellsDown { get; set; }

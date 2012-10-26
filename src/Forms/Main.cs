@@ -1506,6 +1506,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemCopySourceText.Text = _language.Menu.ContextMenu.CopyToClipboard;
 
             toolStripMenuItemColumn.Text = _language.Menu.ContextMenu.Column;
+            columnDeleteTextOnlyToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnDeleteText;
             toolStripMenuItemColumnDeleteText.Text = _language.Menu.ContextMenu.ColumnDeleteTextAndShiftCellsUp;
             ShiftTextCellsDownToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnInsertEmptyTextAndShiftCellsDown;
             toolStripMenuItemColumnImportText.Text = _language.Menu.ContextMenu.ColumnImportTextAndShiftCellsDown;
@@ -9159,6 +9160,16 @@ namespace Nikse.SubtitleEdit.Forms
                         _mainCreateStartDownEndUpParagraph = InsertNewTextAtVideoPosition();
                     e.SuppressKeyPress = true;
                 }
+                else if (_mainAdjustSelected100MsForward == e.KeyData)
+                {
+                    ShowEarlierOrLater(100, SelectionChoice.SelectionOnly);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_mainAdjustSelected100MsBack == e.KeyData)
+                {
+                    ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly);
+                    e.SuppressKeyPress = true;
+                }
             }
             else if (tabControlButtons.SelectedTab == tabPageTranslate)
             {
@@ -11387,7 +11398,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (_endSeconds <= 0 || !checkBoxAutoRepeatOn.Checked)
                         {
-                            if (!timerAutoDuration.Enabled)
+                            if (!timerAutoDuration.Enabled && !mediaPlayer.IsPaused)
                             {
                                 SubtitleListview1.BeginUpdate();
                                 SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
@@ -15923,6 +15934,20 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 avidStl.Save(fileName, _subtitle);
             }
+        }
+
+        private void columnDeleteTextOnlyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (SubtitleListview1.SelectedIndices.Count < 1)
+                return;
+
+            foreach (int index in SubtitleListview1.SelectedIndices)
+            {
+                _subtitle.Paragraphs[index].Text = string.Empty;
+                SubtitleListview1.SetText(index, string.Empty);
+                SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, _subtitle.Paragraphs[index]);
+            }
+            RefreshSelectedParagraph();
         }
       
     }
