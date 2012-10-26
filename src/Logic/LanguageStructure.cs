@@ -1307,6 +1307,7 @@
             public string DefaultFileEncoding { get; set; }
             public string AutoDetectAnsiEncoding { get; set; }
             public string SubtitleLineMaximumLength { get; set; }
+            public string MaximumCharactersPerSecond { get; set; }            
             public string AutoWrapWhileTyping { get; set; }
             public string DurationMinimumMilliseconds { get; set; }
             public string DurationMaximumMilliseconds { get; set; }
@@ -1462,6 +1463,7 @@
             public string SyntaxColorTextIfTooLong { get; set; }
             public string SyntaxColorTextMoreThanXLines { get; set; }
             public string SyntaxColorOverlap { get; set; }
+            public string SyntaxErrorColor { get; set; }
             public string GoToFirstSelectedLine { get; set; }
             public string MergeSelectedLines { get; set; }
             public string ToggleTranslationMode { get; set; }

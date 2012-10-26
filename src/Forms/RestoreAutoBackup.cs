@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var l = Configuration.Settings.Language.RestoreAutoBackup;
             Text = l.Title;
-            buttonOpenContainingFolder.Text = Configuration.Settings.Language.Main.Menu.File.OpenContainingFolder;
+            linkLabelOpenContainingFolder.Text = Configuration.Settings.Language.Main.Menu.File.OpenContainingFolder;
             listViewBackups.Columns[0].Text = l.DateAndTime;
             listViewBackups.Columns[1].Text = l.FileName;
             listViewBackups.Columns[2].Text = l.Extension;
@@ -53,14 +53,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             //2011-12-13_20-19-18_title
             var fileNamePattern = new Regex(@"^\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d_", RegexOptions.Compiled);
-
+            listViewBackups.Columns[2].Width = -2;
             if (Directory.Exists(Configuration.AutoBackupFolder))
             {
-                labelStatus.Text = Configuration.Settings.Language.General.PleaseWait;
-                Application.DoEvents();
-                Refresh();
-                Application.DoEvents();
-
                 _files = Directory.GetFiles(Configuration.AutoBackupFolder, "*.*");
                 foreach (string fileName in _files)
                 {
@@ -69,14 +64,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 listViewBackups.Sorting = SortOrder.Descending;
                 listViewBackups.Sort();
-                labelStatus.Text = string.Empty;
+                if (_files.Length > 0)
+                    return;
             }
-            else
-            {
-                buttonOpenContainingFolder.Visible = false;
-                labelStatus.Text = Configuration.Settings.Language.RestoreAutoBackup.NoBackedUpFilesFound;
-            }
-            listViewBackups.Columns[2].Width = -2;
+            linkLabelOpenContainingFolder.Visible = false;
+            labelStatus.Left = linkLabelOpenContainingFolder.Left;
+            labelStatus.Text = Configuration.Settings.Language.RestoreAutoBackup.NoBackedUpFilesFound;           
         }
 
         private void AddBackupToListView(string fileName)
@@ -131,7 +124,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewBackups.Columns[2].Width = -2;
         }
 
-        private void buttonOpenContainingFolder_Click(object sender, EventArgs e)
+        private void linkLabelOpenContainingFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             string folderName = Configuration.AutoBackupFolder;
             if (Utilities.IsRunningOnMono())
@@ -151,6 +144,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-
+    
     }
 }

@@ -4,7 +4,7 @@ Subtitle Edit Changelog
 * NEW:
    * Added column commands to list view context menu - thx Seungki
    * Edit -> Reverse RTL start/end (fix punctuations)
-   * Easy import of auto backed up files (File -> Restore auto-backup...)
+   * Easy import of auto-backup files (File -> Restore auto-backup...)
    * Advanced Substation Alpha style viewer/creater (right click in list view)
    * Timed Text style view/creater (right click in list view)
    * File -> D-Cinema properties (for both smtpe and interop)

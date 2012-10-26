@@ -32,6 +32,7 @@
             this.radioButtonPercent = new System.Windows.Forms.RadioButton();
             this.radioButtonSeconds = new System.Windows.Forms.RadioButton();
             this.groupBoxAdjustVia = new System.Windows.Forms.GroupBox();
+            this.radioButtonAutoRecalculate = new System.Windows.Forms.RadioButton();
             this.comboBoxPercent = new System.Windows.Forms.ComboBox();
             this.comboBoxSeconds = new System.Windows.Forms.ComboBox();
             this.labelNote = new System.Windows.Forms.Label();
@@ -39,7 +40,6 @@
             this.labelAddSeconds = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.radioButtonAutoRecalculate = new System.Windows.Forms.RadioButton();
             this.numericUpDownMaxCharsSec = new System.Windows.Forms.NumericUpDown();
             this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
             this.groupBoxAdjustVia.SuspendLayout();
@@ -52,7 +52,7 @@
             this.radioButtonPercent.Location = new System.Drawing.Point(171, 21);
             this.radioButtonPercent.Name = "radioButtonPercent";
             this.radioButtonPercent.Size = new System.Drawing.Size(62, 17);
-            this.radioButtonPercent.TabIndex = 0;
+            this.radioButtonPercent.TabIndex = 1;
             this.radioButtonPercent.Text = "Percent";
             this.radioButtonPercent.UseVisualStyleBackColor = true;
             this.radioButtonPercent.CheckedChanged += new System.EventHandler(this.RadioButtonPercentCheckedChanged);
@@ -63,8 +63,8 @@
             this.radioButtonSeconds.Checked = true;
             this.radioButtonSeconds.Location = new System.Drawing.Point(11, 21);
             this.radioButtonSeconds.Name = "radioButtonSeconds";
-            this.radioButtonSeconds.Size = new System.Drawing.Size(65, 17);
-            this.radioButtonSeconds.TabIndex = 1;
+            this.radioButtonSeconds.Size = new System.Drawing.Size(67, 17);
+            this.radioButtonSeconds.TabIndex = 0;
             this.radioButtonSeconds.TabStop = true;
             this.radioButtonSeconds.Text = "Seconds";
             this.radioButtonSeconds.UseVisualStyleBackColor = true;
@@ -80,9 +80,20 @@
             this.groupBoxAdjustVia.Location = new System.Drawing.Point(13, 13);
             this.groupBoxAdjustVia.Name = "groupBoxAdjustVia";
             this.groupBoxAdjustVia.Size = new System.Drawing.Size(468, 47);
-            this.groupBoxAdjustVia.TabIndex = 2;
+            this.groupBoxAdjustVia.TabIndex = 0;
             this.groupBoxAdjustVia.TabStop = false;
             this.groupBoxAdjustVia.Text = "Adjust via";
+            // 
+            // radioButtonAutoRecalculate
+            // 
+            this.radioButtonAutoRecalculate.AutoSize = true;
+            this.radioButtonAutoRecalculate.Location = new System.Drawing.Point(344, 21);
+            this.radioButtonAutoRecalculate.Name = "radioButtonAutoRecalculate";
+            this.radioButtonAutoRecalculate.Size = new System.Drawing.Size(82, 17);
+            this.radioButtonAutoRecalculate.TabIndex = 2;
+            this.radioButtonAutoRecalculate.Text = "Recalculate";
+            this.radioButtonAutoRecalculate.UseVisualStyleBackColor = true;
+            this.radioButtonAutoRecalculate.CheckedChanged += new System.EventHandler(this.radioButtonradioButtonAutoRecalculate_CheckedChanged);
             // 
             // comboBoxPercent
             // 
@@ -129,7 +140,7 @@
             this.comboBoxPercent.Location = new System.Drawing.Point(182, 89);
             this.comboBoxPercent.Name = "comboBoxPercent";
             this.comboBoxPercent.Size = new System.Drawing.Size(141, 21);
-            this.comboBoxPercent.TabIndex = 3;
+            this.comboBoxPercent.TabIndex = 4;
             // 
             // comboBoxSeconds
             // 
@@ -155,7 +166,7 @@
             this.comboBoxSeconds.Location = new System.Drawing.Point(13, 89);
             this.comboBoxSeconds.Name = "comboBoxSeconds";
             this.comboBoxSeconds.Size = new System.Drawing.Size(141, 21);
-            this.comboBoxSeconds.TabIndex = 4;
+            this.comboBoxSeconds.TabIndex = 2;
             // 
             // labelNote
             // 
@@ -163,7 +174,7 @@
             this.labelNote.Location = new System.Drawing.Point(10, 135);
             this.labelNote.Name = "labelNote";
             this.labelNote.Size = new System.Drawing.Size(279, 13);
-            this.labelNote.TabIndex = 5;
+            this.labelNote.TabIndex = 7;
             this.labelNote.Text = "Note: Display time will not overlap start time of next text";
             this.labelNote.Click += new System.EventHandler(this.labelNote_Click);
             // 
@@ -173,7 +184,7 @@
             this.labelAddInPercent.Location = new System.Drawing.Point(179, 70);
             this.labelAddInPercent.Name = "labelAddInPercent";
             this.labelAddInPercent.Size = new System.Drawing.Size(89, 13);
-            this.labelAddInPercent.TabIndex = 6;
+            this.labelAddInPercent.TabIndex = 3;
             this.labelAddInPercent.Text = "Adjust in percent";
             // 
             // labelAddSeconds
@@ -182,7 +193,7 @@
             this.labelAddSeconds.Location = new System.Drawing.Point(10, 70);
             this.labelAddSeconds.Name = "labelAddSeconds";
             this.labelAddSeconds.Size = new System.Drawing.Size(68, 13);
-            this.labelAddSeconds.TabIndex = 7;
+            this.labelAddSeconds.TabIndex = 1;
             this.labelAddSeconds.Text = "Add seconds";
             // 
             // buttonCancel
@@ -209,17 +220,6 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
             // 
-            // radioButtonAutoRecalculate
-            // 
-            this.radioButtonAutoRecalculate.AutoSize = true;
-            this.radioButtonAutoRecalculate.Location = new System.Drawing.Point(344, 21);
-            this.radioButtonAutoRecalculate.Name = "radioButtonAutoRecalculate";
-            this.radioButtonAutoRecalculate.Size = new System.Drawing.Size(80, 17);
-            this.radioButtonAutoRecalculate.TabIndex = 2;
-            this.radioButtonAutoRecalculate.Text = "Recalculate";
-            this.radioButtonAutoRecalculate.UseVisualStyleBackColor = true;
-            this.radioButtonAutoRecalculate.CheckedChanged += new System.EventHandler(this.radioButtonradioButtonAutoRecalculate_CheckedChanged);
-            // 
             // numericUpDownMaxCharsSec
             // 
             this.numericUpDownMaxCharsSec.DecimalPlaces = 1;
@@ -237,7 +237,7 @@
             0});
             this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
             this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(56, 21);
-            this.numericUpDownMaxCharsSec.TabIndex = 49;
+            this.numericUpDownMaxCharsSec.TabIndex = 6;
             this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
             24,
             0,
@@ -251,7 +251,7 @@
             this.labelMaxCharsPerSecond.Location = new System.Drawing.Point(357, 70);
             this.labelMaxCharsPerSecond.Name = "labelMaxCharsPerSecond";
             this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(80, 13);
-            this.labelMaxCharsPerSecond.TabIndex = 50;
+            this.labelMaxCharsPerSecond.TabIndex = 5;
             this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
             this.labelMaxCharsPerSecond.Click += new System.EventHandler(this.labelMaxCharsPerSecond_Click);
             // 

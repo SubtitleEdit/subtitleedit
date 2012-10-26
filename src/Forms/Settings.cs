@@ -220,6 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelDefaultFileEncoding.Text = language.DefaultFileEncoding;
             labelAutoDetectAnsiEncoding.Text = language.AutoDetectAnsiEncoding;
             labelSubMaxLen.Text = language.SubtitleLineMaximumLength;
+            labelMaxCharsPerSecond.Text = language.MaximumCharactersPerSecond;
             checkBoxAutoWrapWhileTyping.Text = language.AutoWrapWhileTyping;
 
             labelMinDuration.Text = language.DurationMinimumMilliseconds;
@@ -256,6 +257,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxTimeCodeMode.SelectedIndex = 1;
             else
                 comboBoxTimeCodeMode.SelectedIndex = 0;
+            labelTimeCodeMode.Text = language.TimeCodeMode;
             comboBoxTimeCodeMode.Left = labelTimeCodeMode.Left + labelTimeCodeMode.Width + 4;
 
             comboBoxAutoBackup.Items[0] = Configuration.Settings.Language.General.None;
@@ -652,6 +654,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxColorTextMoreThanTwoLines.Text = language.SyntaxColorTextMoreThanXLines;
             numericUpDownSyntaxColorTextMoreThanXLines.Left = checkBoxSyntaxColorTextMoreThanTwoLines.Left + checkBoxSyntaxColorTextMoreThanTwoLines.Width + 4;
             checkBoxSyntaxOverlap.Text = language.SyntaxColorOverlap;
+            buttonListViewSyntaxColorError.Text = language.SyntaxErrorColor;
 
             FixLargeFonts();
         }
