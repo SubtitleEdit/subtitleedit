@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxOnlyContinuationLines.Text = Configuration.Settings.Language.MergedShortLines.OnlyMergeContinuationLines;
 
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = Configuration.Settings.Language.MergedShortLines.LineNumber;
+            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
             listViewFixes.Columns[2].Text = Configuration.Settings.Language.MergedShortLines.MergedText;
 
             buttonOK.Text = Configuration.Settings.Language.General.OK;

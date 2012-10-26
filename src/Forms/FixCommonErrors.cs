@@ -319,10 +319,10 @@ namespace Nikse.SubtitleEdit.Forms
             tabControl1.TabPages[0].Text = _language.Fixes;
             tabControl1.TabPages[1].Text = _language.Log;
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = _language.LineNumber;
+            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
             listViewFixes.Columns[2].Text = _language.Function;
-            listViewFixes.Columns[3].Text = _language.Before;
-            listViewFixes.Columns[4].Text = _language.After;
+            listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.Before;
+            listViewFixes.Columns[4].Text = Configuration.Settings.Language.General.After;
             buttonNextFinish.Text = _language.Next;
             buttonBack.Text = _language.Back;
             buttonCancel.Text = _languageGeneral.Cancel;
@@ -3966,7 +3966,7 @@ namespace Nikse.SubtitleEdit.Forms
             string htmlFileName = Path.GetTempFileName() + ".html";
             var sb = new StringBuilder();
             sb.Append("<html><head><meta charset='utf-8'><title>Subtitle Edit - Fix common errors preview</title><style>body,p,td {font-size:90%; font-family:Tahoma;} td {border:1px solid black;padding:5px} table {border-collapse: collapse;}</style></head><body><table><tbody>");
-            sb.AppendLine(string.Format("<tr><td style='font-weight:bold'>{0}</td><td style='font-weight:bold'>{1}</td><td style='font-weight:bold'>{2}</td><td style='font-weight:bold'>{3}</td></tr>", _language.LineNumber, _language.Function, _language.Before, _language.After));
+            sb.AppendLine(string.Format("<tr><td style='font-weight:bold'>{0}</td><td style='font-weight:bold'>{1}</td><td style='font-weight:bold'>{2}</td><td style='font-weight:bold'>{3}</td></tr>", Configuration.Settings.Language.General.LineNumber, _language.Function, Configuration.Settings.Language.General.Before, Configuration.Settings.Language.General.After));
             foreach (ListViewItem item in listViewFixes.Items)
             {
                 if (item.Checked)

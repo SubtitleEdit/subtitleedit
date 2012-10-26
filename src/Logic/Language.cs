@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.AddToUserDictionary AddToUserDictionary;
         public LanguageStructure.AddWareForm AddWaveForm;
         public LanguageStructure.AdjustDisplayDuration AdjustDisplayDuration;
+        public LanguageStructure.ApplyDurationLimits ApplyDurationLimits;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
         public LanguageStructure.Beamer Beamer;
         public LanguageStructure.ChangeCasing ChangeCasing;
@@ -153,6 +154,9 @@ namespace Nikse.SubtitleEdit.Logic
                 Style = "Style",
                 Class = "Class",
                 GeneralText = "General",
+                LineNumber = "Line#",
+                Before = "Before",
+                After = "After",
             };
 
             About = new LanguageStructure.About
@@ -217,13 +221,17 @@ namespace Nikse.SubtitleEdit.Logic
                 PleaseChoose =" - Please choose - ",
             };
 
+            ApplyDurationLimits = new LanguageStructure.ApplyDurationLimits 
+            {
+                Title = "Apply duration limits",
+                FixesAvailable = "Fixes available: {0}",
+                UnableToFix = "Unable to fix: {0}",
+            };
+
             AutoBreakUnbreakLines = new LanguageStructure.AutoBreakUnbreakLines
             {
                 TitleAutoBreak = "Auto balance selected lines",
                 TitleUnbreak = "Remove line breaks from selected lines",
-                LineNumber = "Line#",
-                Before = "Before",
-                After = "After",
                 LinesFoundX = "Lines found: {0}",
                 OnlyBreakLinesLongerThan = "Only break lines longer than",
                 OnlyUnbreakLinesLongerThan = "Only un-break lines longer than",
@@ -252,9 +260,6 @@ namespace Nikse.SubtitleEdit.Logic
                 NamesFoundInSubtitleX = "Names found in subtitle: {0}",
                 Enabled = "Enabled",
                 Name = "Name",
-                LineNumber = "Line#",
-                Before = "Before",
-                After = "After",
                 LinesFoundX = "Lines found: {0}",
             };
 
@@ -479,10 +484,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Step2 = "Step 2/2 - Verify fixes",
                 Fixes = "Fixes",
                 Log = "Log",
-                LineNumber = "Line#",
                 Function = "Function",
-                Before = "Before",
-                After = "After",
                 RemovedEmptyLine = "Removed empty line",
                 RemovedEmptyLineAtTop = "Removed empty line at top",
                 RemovedEmptyLineAtBottom = "Removed empty line at bottom",
@@ -974,6 +976,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         Title = "Tools",
                         AdjustDisplayDuration = "&Adjust durations...",
+                        ApplyDurationLimits = "Apply duration limits...",
                         FixCommonErrors = "&Fix common errors...",
                         StartNumberingFrom = "Start numbering from...",
                         RemoveTextForHearingImpaired = "Remove text for hearing impaired...",
@@ -1215,7 +1218,6 @@ namespace Nikse.SubtitleEdit.Logic
                 MaximumCharacters = "Maximum characters in one paragraph",
                 MaximumMillisecondsBetween = "Maximum milliseconds between lines",
                 NumberOfMergesX = "Number of merges: {0}",
-                LineNumber = "Line#",
                 MergedText = "Merged text",
                 OnlyMergeContinuationLines = "Only merge continuation lines",
             };
@@ -1228,9 +1230,6 @@ namespace Nikse.SubtitleEdit.Logic
                 Normal = "Normal",
                 CaseSensitive = "Case sensitive",
                 RegularExpression = "Regular expression",
-                LineNumber = "Line#",
-                Before = "Before",
-                After = "After",
                 LinesFoundX = "Lines found: {0}",
                 Delete = "Delete",
                 Add = "Add",
@@ -1307,9 +1306,6 @@ can edit in same subtitle file (collaboration)",
                 RemoveTextBeforeColon = "Remove text before a colon (':')",
                 OnlyIfTextIsUppercase = "Only if text is UPPERCASE",
                 OnlyIfInSeparateLine = "Only if in separate line",
-                LineNumber = "Line#",
-                Before = "Before",
-                After = "After",
                 LinesFoundX = "Lines found: {0}",
                 RemoveTextIfContains = "Remove text if it contains:",
                 RemoveInterjections = "Remove interjections (shh, hmm, etc.)",

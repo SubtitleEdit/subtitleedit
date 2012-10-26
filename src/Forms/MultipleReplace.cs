@@ -42,9 +42,9 @@ namespace Nikse.SubtitleEdit.Forms
             listViewReplaceList.Columns[3].Text = Configuration.Settings.Language.MultipleReplace.SearchType;
             groupBoxLinesFound.Text = string.Empty;
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = Configuration.Settings.Language.MultipleReplace.LineNumber;
-            listViewFixes.Columns[2].Text = Configuration.Settings.Language.MultipleReplace.Before;
-            listViewFixes.Columns[3].Text = Configuration.Settings.Language.MultipleReplace.After;
+            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
+            listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Before;
+            listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
             deleteToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Delete;
             buttonRemoveAll.Text = Configuration.Settings.Language.MultipleReplace.RemoveAll;
             buttonImport.Text = Configuration.Settings.Language.MultipleReplace.Import;

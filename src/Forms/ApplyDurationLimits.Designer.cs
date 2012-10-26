@@ -183,7 +183,7 @@
             // columnHeader4
             // 
             this.columnHeader4.Text = "Apply";
-            this.columnHeader4.Width = 45;
+            this.columnHeader4.Width = 50;
             // 
             // columnHeader5
             // 
@@ -229,6 +229,7 @@
             this.subtitleListView1.Size = new System.Drawing.Size(905, 127);
             this.subtitleListView1.TabIndex = 111;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
+            this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             // 
             // ApplyDurationLimits
@@ -248,6 +249,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(620, 440);
             this.Name = "ApplyDurationLimits";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

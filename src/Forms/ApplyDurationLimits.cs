@@ -1,7 +1,7 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -17,11 +17,19 @@ namespace Nikse.SubtitleEdit.Forms
         public ApplyDurationLimits()
         {
             InitializeComponent();
+            Text = Configuration.Settings.Language.ApplyDurationLimits.Title;
+            labelMinDuration.Text = Configuration.Settings.Language.Settings.DurationMinimumMilliseconds;
+            labelMaxDuration.Text = Configuration.Settings.Language.Settings.DurationMaximumMilliseconds;
+            labelNote.Text = Configuration.Settings.Language.AdjustDisplayDuration.Note;
             numericUpDownDurationMin.Value = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
             numericUpDownDurationMax.Value = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
+            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
+            listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Before;
+            listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
             FixLargeFonts();
             _refreshTimer.Interval = 400;
             _refreshTimer.Tick += RefreshTimerTick;
@@ -76,8 +84,8 @@ namespace Nikse.SubtitleEdit.Forms
             FixShortDisplayTimes();
             FixLongDisplayTimes();
 
-            groupBoxFixesAvailable.Text = string.Format("Fixes available: {0}", _totalFixes);
-            groupBoxUnfixable.Text = string.Format("Unable to fix: {0}", _totalErrors);
+            groupBoxFixesAvailable.Text = string.Format(Configuration.Settings.Language.ApplyDurationLimits.FixesAvailable, _totalFixes);
+            groupBoxUnfixable.Text = string.Format(Configuration.Settings.Language.ApplyDurationLimits.UnableToFix, _totalErrors);
         }
 
         private void AddFixToListView(Paragraph p, string before, string after)
@@ -142,7 +150,6 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         unfixables.Paragraphs.Add(new Paragraph(p));
-                        //LogStatus(fixAction, string.Format(Configuration.Settings.Language.FixCommonErrors.UnableToFixTextXY, i + 1, p));
                         _totalErrors++;
                     }
                 }

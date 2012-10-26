@@ -67,6 +67,9 @@
     <Style>Style</Style>
     <Class>Class</Class>
     <GeneralText>General</GeneralText>
+    <LineNumber>Linje#</LineNumber>
+    <Before>Før</Before>
+    <After>Efter</After>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -120,12 +123,14 @@
     <PleaseSelectAValueFromTheDropDownList>Vælg en værdi fra listen</PleaseSelectAValueFromTheDropDownList>
     <PleaseChoose>- Vælg værdi -</PleaseChoose>
   </AdjustDisplayDuration>
+  <ApplyDurationLimits>
+    <Title>Overhold visnings-grænser</Title>
+    <FixesAvailable>Mulige rettelser: {0}</FixesAvailable>
+    <UnableToFix>Kan ikke rettes: {0}</UnableToFix>
+  </ApplyDurationLimits>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Auto ombryd valgte linjer</TitleAutoBreak>
     <TitleUnbreak>Fjern linjeskift i valgte linjer</TitleUnbreak>
-    <LineNumber>Linje#</LineNumber>
-    <Before>Før</Before>
-    <After>Efter</After>
     <LinesFoundX>Linjer fundet: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>Bryd kun linjer længere end</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Fjern kun linjeskift fra linjer længere end</OnlyUnbreakLinesLongerThan>
@@ -148,9 +153,6 @@
     <NamesFoundInSubtitleX>Antal navne fundet: {0}</NamesFoundInSubtitleX>
     <Enabled>Aktiv</Enabled>
     <Name>Navn</Name>
-    <LineNumber>Linje#</LineNumber>
-    <Before>Før</Before>
-    <After>Efter</After>
     <LinesFoundX>Antal linjer fundet: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
@@ -341,10 +343,7 @@
     <Step2>Trin 2/2 - Bekræft rettelser</Step2>
     <Fixes>Rettelser</Fixes>
     <Log>Log</Log>
-    <LineNumber>#</LineNumber>
     <Function>Funktion</Function>
-    <Before>Før</Before>
-    <After>Efter</After>
     <RemovedEmptyLine>Fjernede tom linje</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Fjernede tom linje øverst</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Fjernede tom linje i bunden</RemovedEmptyLineAtBottom>
@@ -577,6 +576,7 @@
       <Tools>
         <Title>Værktøj</Title>
         <AdjustDisplayDuration>&amp;Juster visningstider...</AdjustDisplayDuration>
+        <ApplyDurationLimits>Overhold visnings-grænser...</ApplyDurationLimits>
         <FixCommonErrors>&amp;Ret almindelige fejl...</FixCommonErrors>
         <StartNumberingFrom>Begynd nummerering fra...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Fjern tekst for hørehæmmede...</RemoveTextForHearingImpaired>
@@ -1021,7 +1021,6 @@ Fortsæt?</SubtitleAppendPrompt>
     <MaximumCharacters>Maksimum tegn i et afsnit</MaximumCharacters>
     <MaximumMillisecondsBetween>Største antal millisekunder mellem linjer der flettes</MaximumMillisecondsBetween>
     <NumberOfMergesX>Antal fletninger: {0}</NumberOfMergesX>
-    <LineNumber>Linje#</LineNumber>
     <MergedText>Sammenlagt tekst</MergedText>
     <OnlyMergeContinuationLines>Flet kun fortsættelses-linjer</OnlyMergeContinuationLines>
   </MergedShortLines>
@@ -1032,9 +1031,6 @@ Fortsæt?</SubtitleAppendPrompt>
     <Normal>Normal</Normal>
     <CaseSensitive>Versal følsom</CaseSensitive>
     <RegularExpression>Regulært udtryk</RegularExpression>
-    <LineNumber>Linje#</LineNumber>
-    <Before>Før</Before>
-    <After>Efter</After>
     <LinesFoundX>Linjer fundet: {0}</LinesFoundX>
     <Delete>Slet</Delete>
     <Add>Tilføj</Add>
@@ -1099,9 +1095,6 @@ Fortsæt?</SubtitleAppendPrompt>
     <RemoveTextBeforeColon>Fjern tekst før kolon (':')</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>Kun hvis tekst er med store bogstaver</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>Kun hvis på separat linje</OnlyIfInSeparateLine>
-    <LineNumber>#</LineNumber>
-    <Before>Før</Before>
-    <After>Efter</After>
     <LinesFoundX>Linjer fundet: {0}</LinesFoundX>
     <RemoveTextIfContains>Fjern tekst, hvis indeholder:</RemoveTextIfContains>
     <RemoveInterjections>Fjern følelsesudbrud (Ahh, hmm, osv.)</RemoveInterjections>
@@ -1330,6 +1323,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <SyntaxColorTextIfTooLong>Farve - tekst, hvis for lang</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanXLines>Farve - tekst, hvis mere end linjer:</SyntaxColorTextMoreThanXLines>
     <SyntaxColorOverlap>Farve - tidskode overlapper</SyntaxColorOverlap>
+    <SyntaxErrorColor>Fejl farve</SyntaxErrorColor>
     <GoToFirstSelectedLine>Gå til første valgte linje</GoToFirstSelectedLine>
     <MergeSelectedLines>Flet markerede linjer</MergeSelectedLines>
     <ToggleTranslationMode>Toggle oversættelses-tilstand</ToggleTranslationMode>
