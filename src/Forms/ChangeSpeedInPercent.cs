@@ -16,6 +16,8 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             Text = Configuration.Settings.Language.ChangeSpeedInPercent.Title;
             labelInfo.Text = Configuration.Settings.Language.ChangeSpeedInPercent.Info;
+            radioButtonAllLines.Text = Configuration.Settings.Language.ShowEarlierLater.AllLines;
+            radioButtonSelectedLinesOnly.Text = Configuration.Settings.Language.ShowEarlierLater.SelectedLinesOnly;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();

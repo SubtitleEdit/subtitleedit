@@ -25,7 +25,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
             buttonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
             radioButtonAllLines.Text = Configuration.Settings.Language.ShowEarlierLater.AllLines;
-            radioButtonSelectedLinesOnly.Text = Configuration.Settings.Language.ShowEarlierLater.SelectedLinesonly;
+            radioButtonSelectedLinesOnly.Text = Configuration.Settings.Language.ShowEarlierLater.SelectedLinesOnly;
+            radioButtonSelectedLineAndForward.Text = Configuration.Settings.Language.ShowEarlierLater.SelectedLinesAndForward;
             FixLargeFonts();
         }
 

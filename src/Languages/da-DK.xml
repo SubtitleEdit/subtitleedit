@@ -701,7 +701,7 @@
         <Underline>Understregning</Underline>
         <Color>Farve...</Color>
         <FontName>Font navn...</FontName>
-        <Alignment>Juestring...</Alignment>
+        <Alignment>Justering...</Alignment>
         <AutoBalanceSelectedLines>Auto balancer markerede linjer...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Fjern line-skift fra valgte linjer...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Skrivemaskine effekt...</TypewriterEffect>
@@ -1345,7 +1345,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <ShowLater>Vis senere</ShowLater>
     <TotalAdjustmentX>Samlede justering: {0}</TotalAdjustmentX>
     <AllLines>Alle linjer</AllLines>
-    <SelectedLinesonly>Valgte linjer</SelectedLinesonly>
+    <SelectedLinesOnly>Kun valgte linjer</SelectedLinesOnly>
     <SelectedLinesAndForward>Valgte linier og frem</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
