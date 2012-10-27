@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelOutputFormat.Text = Configuration.Settings.Language.Main.Controls.SubtitleFormat;
             labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
             groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
+            buttonOpenOutputFolder.Text = Configuration.Settings.Language.Main.Menu.File.Open;
 
             listViewParts.Columns[0].Text = l.Lines;
             listViewParts.Columns[1].Text = l.Characters;
@@ -46,6 +47,9 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSplit.Text = l.DoSplit;
             buttonBasic.Text = l.Basic;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+
+            comboBoxSubtitleFormats.Left = labelOutputFormat.Left + labelOutputFormat.Width + 3;
+            comboBoxEncoding.Left = labelEncoding.Left + labelEncoding.Width + 3;
 
             FixLargeFonts();
         }

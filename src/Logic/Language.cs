@@ -1569,7 +1569,7 @@ can edit in same subtitle file (collaboration)",
                 ShowLater = "Show later",
                 TotalAdjustmentX = "Total adjustment: {0}",
                 AllLines = "All lines",
-                SelectedLinesonly = "Selected lines only",
+                SelectedLinesOnly = "Selected lines only",
                 SelectedLinesAndForward = "Selected line(s) and forward",
             };
 

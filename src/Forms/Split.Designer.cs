@@ -222,7 +222,7 @@
             // labelEncoding
             // 
             this.labelEncoding.AutoSize = true;
-            this.labelEncoding.Location = new System.Drawing.Point(309, 110);
+            this.labelEncoding.Location = new System.Drawing.Point(336, 110);
             this.labelEncoding.Name = "labelEncoding";
             this.labelEncoding.Size = new System.Drawing.Size(52, 13);
             this.labelEncoding.TabIndex = 8;
@@ -232,7 +232,7 @@
             // 
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxEncoding.FormattingEnabled = true;
-            this.comboBoxEncoding.Location = new System.Drawing.Point(367, 107);
+            this.comboBoxEncoding.Location = new System.Drawing.Point(394, 107);
             this.comboBoxEncoding.Name = "comboBoxEncoding";
             this.comboBoxEncoding.Size = new System.Drawing.Size(221, 21);
             this.comboBoxEncoding.TabIndex = 9;
