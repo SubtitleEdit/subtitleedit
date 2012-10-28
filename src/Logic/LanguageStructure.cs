@@ -819,6 +819,7 @@
             public string UnableToCreateBackupDirectory { get; set; }
             public string BeforeDisplaySubtitleJoin { get; set; }
             public string SubtitlesJoined { get; set; }
+            public string StatusLog { get; set; }
 
 
             public class MainMenu
