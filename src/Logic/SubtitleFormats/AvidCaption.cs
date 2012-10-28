@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (string.IsNullOrEmpty(p.Text))
                         p.Text = line;
                     else
-                        p.Text = p.Text + Environment.NewLine + line;
+                        p.Text = p.Text.TrimEnd() + Environment.NewLine + line;
                 }
             }
             if (!beginFound)
