@@ -29,6 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxOnlyIfInSeparateLine.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeperateLines;
             checkBoxRemoveTextBeforeColon.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColon;
             checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase;
+            checkBoxColonSeparateLine.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine;
             checkBoxRemoveInterjections.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjections;
             checkBoxRemoveWhereContains.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains;
             comboBoxRemoveIfTextContains.Text = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText;
@@ -41,6 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveTextBeforeColon.Text = _language.RemoveTextBeforeColon;
             checkBoxRemoveTextBeforeColonOnlyUppercase.Text = _language.OnlyIfTextIsUppercase;
             checkBoxOnlyIfInSeparateLine.Text = _language.OnlyIfInSeparateLine;
+            checkBoxColonSeparateLine.Text = _language.OnlyIfInSeparateLine;
             checkBoxRemoveTextBetweenBrackets.Text = _language.Brackets;
             checkBoxRemoveTextBetweenParentheses.Text = _language.Parentheses;
             checkBoxRemoveTextBetweenQuestionMarks.Text = _language.QuestionMarks;
@@ -324,6 +326,14 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             if (s.StartsWith("Previously on") || s.StartsWith("<i>Previously on"))
                                 remove = false;
+
+                            if (remove && checkBoxColonSeparateLine.Checked)
+                            {
+                                if (indexOfColon == s.Length - 1 || s.Substring(indexOfColon + 1).StartsWith(Environment.NewLine))
+                                    remove = true;
+                                else
+                                    remove = false;
+                            }
 
                             if (remove)
                             {
@@ -974,6 +984,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeperateLines = checkBoxOnlyIfInSeparateLine.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColon = checkBoxRemoveTextBeforeColon.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase = checkBoxRemoveTextBeforeColonOnlyUppercase.Checked;
+            Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine = checkBoxColonSeparateLine.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjections = checkBoxRemoveInterjections.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains = checkBoxRemoveWhereContains.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText = comboBoxRemoveIfTextContains.Text;
@@ -989,6 +1000,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void checkBoxRemoveTextBeforeColon_CheckedChanged(object sender, EventArgs e)
         {
             checkBoxRemoveTextBeforeColonOnlyUppercase.Enabled = checkBoxRemoveTextBeforeColon.Checked;
+            checkBoxColonSeparateLine.Enabled = checkBoxRemoveTextBeforeColon.Checked;
             Cursor = Cursors.WaitCursor;
             GeneratePreview();
             Cursor = Cursors.Default;
