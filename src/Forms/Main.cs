@@ -1635,6 +1635,8 @@ namespace Nikse.SubtitleEdit.Forms
             showWaveformAndSpectrogramToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.ShowWaveformAndSpectrogram;
             showOnlyWaveformToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.ShowWaveformOnly;
             showOnlySpectrogramToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.ShowSpectrogramOnly;
+            seekSilenceToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.SeekSilence;
+            guessTimeCodesToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.GuessTimeCodes;
 
             toolStripButtonWaveFormZoomOut.ToolTipText = Configuration.Settings.Language.WaveForm.ZoomOut;
             toolStripButtonWaveFormZoomIn.ToolTipText = Configuration.Settings.Language.WaveForm.ZoomIn;

@@ -1822,6 +1822,8 @@
             public string ShowWaveformAndSpectrogram { get; set; }
             public string ShowWaveformOnly { get; set; }
             public string ShowSpectrogramOnly { get; set; }
+            public string GuessTimeCodes { get; set; }
+            public string SeekSilence { get; set; }
         }
 
         public class WaveFormGenerateTimeCodes
@@ -1840,6 +1842,7 @@
             public string BlockAverageVolMax2 { get; set; }
             public string SplitLongLinesAt1 { get; set; }
             public string SplitLongLinesAt2 { get; set; }
+            public string Other { get; set; }
         }
 
     }
