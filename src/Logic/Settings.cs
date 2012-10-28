@@ -739,6 +739,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool RemoveTextBetweenOnlySeperateLines { get; set; }
         public bool RemoveTextBeforeColon { get; set; }
         public bool RemoveTextBeforeColonOnlyIfUppercase { get; set; }
+        public bool RemoveTextBeforeColonOnlyOnSeparateLine { get; set; }
         public bool RemoveInterjections { get; set; }
         public bool RemoveIfContains { get; set; }
         public string RemoveIfContainsText { get; set; }
@@ -1887,6 +1888,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("RemoveTextBeforeColonOnlyIfUppercase");
                 if (subNode != null)
                     settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("RemoveTextBeforeColonOnlyOnSeparateLine");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine = Convert.ToBoolean(subNode.InnerText);               
                 subNode = node.SelectSingleNode("RemoveInterjections");
                 if (subNode != null)
                     settings.RemoveTextForHearingImpaired.RemoveInterjections = Convert.ToBoolean(subNode.InnerText);
@@ -2290,6 +2294,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("RemoveTextBetweenOnlySeperateLines", settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeperateLines.ToString());
             textWriter.WriteElementString("RemoveTextBeforeColon", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColon.ToString());
             textWriter.WriteElementString("RemoveTextBeforeColonOnlyIfUppercase", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase.ToString());
+            textWriter.WriteElementString("RemoveTextBeforeColonOnlyOnSeparateLine", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine.ToString());            
             textWriter.WriteElementString("RemoveInterjections", settings.RemoveTextForHearingImpaired.RemoveInterjections.ToString());
             textWriter.WriteElementString("RemoveIfContains", settings.RemoveTextForHearingImpaired.RemoveIfContains.ToString());
             textWriter.WriteElementString("RemoveIfContainsText", settings.RemoveTextForHearingImpaired.RemoveIfContainsText);
