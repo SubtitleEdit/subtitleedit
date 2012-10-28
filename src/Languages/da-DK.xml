@@ -1650,6 +1650,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <ShowWaveformAndSpectrogram>Vis bølgeform og spektrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Vis kun bølgeform</ShowWaveformOnly>
     <ShowSpectrogramOnly>Vis kun spektrogram</ShowSpectrogramOnly>
+    <GuessTimeCodes>Gæt tidskoder...</GuessTimeCodes>
+    <SeekSilence>Søg tavshed...</SeekSilence>
   </WaveForm>
   <WaveFormGenerateTimeCodes>
     <Title>Gæt tidskoder</Title>
@@ -1666,5 +1668,6 @@ Fortsæt?</SubtitleAppendPrompt>
     <BlockAverageVolMax2>% af den samlede maks lydstyrke</BlockAverageVolMax2>
     <SplitLongLinesAt1>Split lange undertekster ved</SplitLongLinesAt1>
     <SplitLongLinesAt2>millisekunder</SplitLongLinesAt2>
+    <Other>Øvrigt</Other>
   </WaveFormGenerateTimeCodes>
 </Language>

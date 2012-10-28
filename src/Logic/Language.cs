@@ -1913,6 +1913,8 @@ Keep changes?",
                 ShowWaveformAndSpectrogram = "Show waveform and spectrogram",
                 ShowWaveformOnly = "Show waveform only",
                 ShowSpectrogramOnly = "Show spectrogram only",
+                SeekSilence = "Seek silence...",
+                GuessTimeCodes = "Guess time codes...",               
             };
 
             WaveFormGenerateTimeCodes = new LanguageStructure.WaveFormGenerateTimeCodes
@@ -1931,6 +1933,7 @@ Keep changes?",
                 BlockAverageVolMax2 = "% of total max volume",
                 SplitLongLinesAt1 = "Split long subtitles at",
                 SplitLongLinesAt2 = "milliseconds",
+                Other = "Other",
             };
 
         }

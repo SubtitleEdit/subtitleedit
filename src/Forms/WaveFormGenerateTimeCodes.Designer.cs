@@ -33,22 +33,22 @@
             this.groupBoxStartFrom = new System.Windows.Forms.GroupBox();
             this.radioButtonStartFromPos = new System.Windows.Forms.RadioButton();
             this.radioButtonStartFromStart = new System.Windows.Forms.RadioButton();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelAbove1 = new System.Windows.Forms.Label();
             this.numericUpDownMinVol = new System.Windows.Forms.NumericUpDown();
             this.groupBoxDeleteLines = new System.Windows.Forms.GroupBox();
             this.radioButtonDeleteNone = new System.Windows.Forms.RadioButton();
             this.radioButtonForward = new System.Windows.Forms.RadioButton();
             this.radioButtonDeleteAll = new System.Windows.Forms.RadioButton();
             this.groupBoxDetectOptions = new System.Windows.Forms.GroupBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelBelow2 = new System.Windows.Forms.Label();
+            this.labelAbove2 = new System.Windows.Forms.Label();
             this.numericUpDownBlockSize = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.labelScanBlocksMs = new System.Windows.Forms.Label();
+            this.labelBelow1 = new System.Windows.Forms.Label();
             this.numericUpDownMaxVol = new System.Windows.Forms.NumericUpDown();
             this.groupBoxOther = new System.Windows.Forms.GroupBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.labelSplit2 = new System.Windows.Forms.Label();
+            this.labelSplit1 = new System.Windows.Forms.Label();
             this.numericUpDownDefaultMilliseconds = new System.Windows.Forms.NumericUpDown();
             this.groupBoxStartFrom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinVol)).BeginInit();
@@ -64,7 +64,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(357, 389);
+            this.buttonCancel.Location = new System.Drawing.Point(598, 389);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 4;
@@ -76,7 +76,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(276, 389);
+            this.buttonOK.Location = new System.Drawing.Point(517, 389);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 3;
@@ -92,7 +92,7 @@
             this.groupBoxStartFrom.Controls.Add(this.radioButtonStartFromStart);
             this.groupBoxStartFrom.Location = new System.Drawing.Point(12, 12);
             this.groupBoxStartFrom.Name = "groupBoxStartFrom";
-            this.groupBoxStartFrom.Size = new System.Drawing.Size(420, 76);
+            this.groupBoxStartFrom.Size = new System.Drawing.Size(661, 76);
             this.groupBoxStartFrom.TabIndex = 5;
             this.groupBoxStartFrom.TabStop = false;
             this.groupBoxStartFrom.Text = "Start from";
@@ -119,14 +119,14 @@
             this.radioButtonStartFromStart.Text = "Start";
             this.radioButtonStartFromStart.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // labelAbove1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 62);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(186, 13);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Block average volume must be above";
+            this.labelAbove1.AutoSize = true;
+            this.labelAbove1.Location = new System.Drawing.Point(6, 62);
+            this.labelAbove1.Name = "labelAbove1";
+            this.labelAbove1.Size = new System.Drawing.Size(186, 13);
+            this.labelAbove1.TabIndex = 6;
+            this.labelAbove1.Text = "Block average volume must be above";
             // 
             // numericUpDownMinVol
             // 
@@ -154,7 +154,7 @@
             this.groupBoxDeleteLines.Controls.Add(this.radioButtonDeleteAll);
             this.groupBoxDeleteLines.Location = new System.Drawing.Point(12, 94);
             this.groupBoxDeleteLines.Name = "groupBoxDeleteLines";
-            this.groupBoxDeleteLines.Size = new System.Drawing.Size(420, 99);
+            this.groupBoxDeleteLines.Size = new System.Drawing.Size(661, 99);
             this.groupBoxDeleteLines.TabIndex = 6;
             this.groupBoxDeleteLines.TabStop = false;
             this.groupBoxDeleteLines.Text = "Delete lines";
@@ -195,38 +195,38 @@
             // 
             this.groupBoxDetectOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxDetectOptions.Controls.Add(this.label4);
-            this.groupBoxDetectOptions.Controls.Add(this.label2);
+            this.groupBoxDetectOptions.Controls.Add(this.labelBelow2);
+            this.groupBoxDetectOptions.Controls.Add(this.labelAbove2);
             this.groupBoxDetectOptions.Controls.Add(this.numericUpDownBlockSize);
-            this.groupBoxDetectOptions.Controls.Add(this.label5);
-            this.groupBoxDetectOptions.Controls.Add(this.label3);
+            this.groupBoxDetectOptions.Controls.Add(this.labelScanBlocksMs);
+            this.groupBoxDetectOptions.Controls.Add(this.labelBelow1);
             this.groupBoxDetectOptions.Controls.Add(this.numericUpDownMaxVol);
-            this.groupBoxDetectOptions.Controls.Add(this.label1);
+            this.groupBoxDetectOptions.Controls.Add(this.labelAbove1);
             this.groupBoxDetectOptions.Controls.Add(this.numericUpDownMinVol);
             this.groupBoxDetectOptions.Location = new System.Drawing.Point(12, 199);
             this.groupBoxDetectOptions.Name = "groupBoxDetectOptions";
-            this.groupBoxDetectOptions.Size = new System.Drawing.Size(420, 121);
+            this.groupBoxDetectOptions.Size = new System.Drawing.Size(661, 121);
             this.groupBoxDetectOptions.TabIndex = 6;
             this.groupBoxDetectOptions.TabStop = false;
             this.groupBoxDetectOptions.Text = "Detect options";
             // 
-            // label4
+            // labelBelow2
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(265, 91);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(109, 13);
-            this.label4.TabIndex = 15;
-            this.label4.Text = "% of total max volume";
+            this.labelBelow2.AutoSize = true;
+            this.labelBelow2.Location = new System.Drawing.Point(265, 91);
+            this.labelBelow2.Name = "labelBelow2";
+            this.labelBelow2.Size = new System.Drawing.Size(109, 13);
+            this.labelBelow2.TabIndex = 15;
+            this.labelBelow2.Text = "% of total max volume";
             // 
-            // label2
+            // labelAbove2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(265, 62);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(129, 13);
-            this.label2.TabIndex = 14;
-            this.label2.Text = "% of total average volume";
+            this.labelAbove2.AutoSize = true;
+            this.labelAbove2.Location = new System.Drawing.Point(265, 62);
+            this.labelAbove2.Name = "labelAbove2";
+            this.labelAbove2.Size = new System.Drawing.Size(129, 13);
+            this.labelAbove2.TabIndex = 14;
+            this.labelAbove2.Text = "% of total average volume";
             // 
             // numericUpDownBlockSize
             // 
@@ -250,23 +250,23 @@
             0,
             0});
             // 
-            // label5
+            // labelScanBlocksMs
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 26);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(137, 13);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Scan blocks of milliseconds";
+            this.labelScanBlocksMs.AutoSize = true;
+            this.labelScanBlocksMs.Location = new System.Drawing.Point(6, 26);
+            this.labelScanBlocksMs.Name = "labelScanBlocksMs";
+            this.labelScanBlocksMs.Size = new System.Drawing.Size(137, 13);
+            this.labelScanBlocksMs.TabIndex = 12;
+            this.labelScanBlocksMs.Text = "Scan blocks of milliseconds";
             // 
-            // label3
+            // labelBelow1
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 89);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(184, 13);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "Block average volume must be below";
+            this.labelBelow1.AutoSize = true;
+            this.labelBelow1.Location = new System.Drawing.Point(7, 89);
+            this.labelBelow1.Name = "labelBelow1";
+            this.labelBelow1.Size = new System.Drawing.Size(184, 13);
+            this.labelBelow1.TabIndex = 9;
+            this.labelBelow1.Text = "Block average volume must be below";
             // 
             // numericUpDownMaxVol
             // 
@@ -289,33 +289,33 @@
             // 
             this.groupBoxOther.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxOther.Controls.Add(this.label7);
-            this.groupBoxOther.Controls.Add(this.label6);
+            this.groupBoxOther.Controls.Add(this.labelSplit2);
+            this.groupBoxOther.Controls.Add(this.labelSplit1);
             this.groupBoxOther.Controls.Add(this.numericUpDownDefaultMilliseconds);
             this.groupBoxOther.Location = new System.Drawing.Point(12, 326);
             this.groupBoxOther.Name = "groupBoxOther";
-            this.groupBoxOther.Size = new System.Drawing.Size(420, 57);
+            this.groupBoxOther.Size = new System.Drawing.Size(661, 57);
             this.groupBoxOther.TabIndex = 7;
             this.groupBoxOther.TabStop = false;
             this.groupBoxOther.Text = "Other";
             // 
-            // label7
+            // labelSplit2
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(185, 28);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(63, 13);
-            this.label7.TabIndex = 13;
-            this.label7.Text = "milliseconds";
+            this.labelSplit2.AutoSize = true;
+            this.labelSplit2.Location = new System.Drawing.Point(185, 28);
+            this.labelSplit2.Name = "labelSplit2";
+            this.labelSplit2.Size = new System.Drawing.Size(63, 13);
+            this.labelSplit2.TabIndex = 13;
+            this.labelSplit2.Text = "milliseconds";
             // 
-            // label6
+            // labelSplit1
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 28);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(103, 13);
-            this.label6.TabIndex = 12;
-            this.label6.Text = "Split long subtitles at";
+            this.labelSplit1.AutoSize = true;
+            this.labelSplit1.Location = new System.Drawing.Point(6, 28);
+            this.labelSplit1.Name = "labelSplit1";
+            this.labelSplit1.Size = new System.Drawing.Size(103, 13);
+            this.labelSplit1.TabIndex = 12;
+            this.labelSplit1.Text = "Split long subtitles at";
             // 
             // numericUpDownDefaultMilliseconds
             // 
@@ -343,7 +343,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(444, 422);
+            this.ClientSize = new System.Drawing.Size(685, 422);
             this.Controls.Add(this.groupBoxOther);
             this.Controls.Add(this.groupBoxDetectOptions);
             this.Controls.Add(this.groupBoxDeleteLines);
@@ -378,7 +378,7 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.GroupBox groupBoxStartFrom;
         private System.Windows.Forms.RadioButton radioButtonStartFromStart;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelAbove1;
         private System.Windows.Forms.NumericUpDown numericUpDownMinVol;
         private System.Windows.Forms.RadioButton radioButtonStartFromPos;
         private System.Windows.Forms.GroupBox groupBoxDeleteLines;
@@ -386,15 +386,15 @@
         private System.Windows.Forms.RadioButton radioButtonForward;
         private System.Windows.Forms.RadioButton radioButtonDeleteAll;
         private System.Windows.Forms.GroupBox groupBoxDetectOptions;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label labelBelow1;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxVol;
         private System.Windows.Forms.NumericUpDown numericUpDownBlockSize;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelScanBlocksMs;
+        private System.Windows.Forms.Label labelBelow2;
+        private System.Windows.Forms.Label labelAbove2;
         private System.Windows.Forms.GroupBox groupBoxOther;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label labelSplit1;
         private System.Windows.Forms.NumericUpDown numericUpDownDefaultMilliseconds;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label labelSplit2;
     }
 }
