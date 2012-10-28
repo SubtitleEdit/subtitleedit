@@ -20,8 +20,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (buffer[i] == 0x8f || buffer[i] == 0)
                     buffer[i] = 32;
+                else if (buffer[i] == 0x8a)
+                    buffer[i] = 0xa;
             }
             p.Text = System.Text.Encoding.GetEncoding(1252).GetString(buffer, index, TextLength).Trim();
+            p.Text = p.Text.Replace("\n", Environment.NewLine);
             return p;
         }
 
@@ -47,7 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             fs.WriteByte(1);
             fs.WriteByte(2);
             fs.WriteByte(0);
-            var buffer = System.Text.Encoding.GetEncoding(1252).GetBytes(p.Text);
+            var buffer = System.Text.Encoding.GetEncoding(1252).GetBytes(p.Text.Replace(Environment.NewLine, "Š"));
             if (buffer.Length <= 128)
             {
                 fs.Write(buffer, 0, buffer.Length);
@@ -95,17 +98,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             fs.Write(buffer, 0, buffer.Length);
             for (int i = 0; i < 0xde; i++)
                 fs.WriteByte(0);
-            buffer = new byte[] { 0x30, 0x30, 0x30, 0x31, 0x31, 0x30, 0x30, 0x30, 0x31, 0x31, 0x30, 0x30, 0x31 };
+            string numberOfLines = subtitle.Paragraphs.Count.ToString().PadLeft(5, '0');
+
+            buffer = System.Text.Encoding.ASCII.GetBytes(numberOfLines + numberOfLines + "001");
             fs.Write(buffer, 0, buffer.Length);
-            for (int i = 0; i < 0x13; i++)
+            for (int i = 0; i < 0x15; i++)
                 fs.WriteByte(0);
-            buffer = System.Text.Encoding.ASCII.GetBytes(subtitle.Paragraphs.Count.ToString());
-            if (buffer.Length < 4)
-                fs.WriteByte(0);
-            if (buffer.Length < 3)
-                fs.WriteByte(0);
-            if (buffer.Length < 2)
-                fs.WriteByte(0);
+            buffer = System.Text.Encoding.ASCII.GetBytes("11");
             fs.Write(buffer, 0, buffer.Length);
             while (fs.Length < 1024)
                 fs.WriteByte(0);
