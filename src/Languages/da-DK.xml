@@ -1011,6 +1011,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <UnableToCreateBackupDirectory>Ikke oprette backup mappe {0}: {1}</UnableToCreateBackupDirectory>
     <BeforeDisplaySubtitleJoin>Før flet af undertekster</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Undertekster flettet</SubtitlesJoined>
+    <StatusLog>Status beskeder</StatusLog>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>

@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -7,6 +8,7 @@ namespace Nikse.SubtitleEdit.Forms
         public StatusLog(string logText)
         {
             InitializeComponent();
+            Text = Configuration.Settings.Language.Main.StatusLog;
             textBoxStatusLog.Text = logText;
         }
 

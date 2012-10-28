@@ -916,6 +916,7 @@ namespace Nikse.SubtitleEdit.Logic
                 UnableToCreateBackupDirectory = "Unable to create backup directory {0}: {1}",
                 BeforeDisplaySubtitleJoin = "Before join of subtitles",
                 SubtitlesJoined = "Subtitles joined",
+                StatusLog = "Status log",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
