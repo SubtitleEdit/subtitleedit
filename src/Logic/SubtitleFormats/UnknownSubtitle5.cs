@@ -87,10 +87,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 try
                 {
                     string start = node.Attributes["start"].InnerText;
+                    if (!string.IsNullOrEmpty(start))
+                        start = start.Replace(",", ".");
                     string end = node.Attributes["dur"].InnerText;
+                    if (!string.IsNullOrEmpty(end))
+                        end = end.Replace(",", ".");
                     string text = node.InnerText;
 
-                    subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start)*1000.0, 1000.0 * (Convert.ToDouble(start) + Convert.ToDouble(end))));
+                    subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start, System.Globalization.CultureInfo.InvariantCulture) * 1000.0, 1000.0 * (Convert.ToDouble(start, System.Globalization.CultureInfo.InvariantCulture) + Convert.ToDouble(end, System.Globalization.CultureInfo.InvariantCulture))));
                 }
                 catch (Exception ex)
                 {
