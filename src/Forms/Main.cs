@@ -6678,8 +6678,6 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (currentParagraph != null)
                 {
-                    UpdateOverlapErrors(timeUpDownStartTime.TimeCode);
-                    UpdateListViewTextCharactersPerSeconds(labelCharactersPerSecond, currentParagraph);
 
                     // update _subtitle + listview
                     string oldDuration = currentParagraph.Duration.ToString();
@@ -6709,6 +6707,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                     currentParagraph.EndTime.TotalMilliseconds = temp.EndTime.TotalMilliseconds;
                     SubtitleListview1.SetDuration(firstSelectedIndex, currentParagraph);
+
+                    UpdateOverlapErrors(timeUpDownStartTime.TimeCode);
+                    UpdateListViewTextCharactersPerSeconds(labelCharactersPerSecond, currentParagraph);
 
                     if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                     {
