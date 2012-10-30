@@ -27,6 +27,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Main _main;
         private bool _noTimerAction;
         private long _videoStartTick;
+        Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         public Beamer(Main main, Subtitle subtitle, int index)
         {
@@ -525,14 +527,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     DialogResult = DialogResult.Cancel;
                 }
-                else if (e.KeyCode == Keys.Space || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt))
+                else if (e.KeyCode == Keys.Space || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt) || _mainGeneralGoToPrevSubtitle == e.KeyData)
                 {
                     if (_index < _subtitle.Paragraphs.Count - 1)
                         _index++;
                     ShowCurrent();
                     e.Handled = true;
                 }
-                else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt)
+                else if (_mainGeneralGoToPrevSubtitle == e.KeyData || (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt))
                 {
                     if (_index > 0)
                         _index--;

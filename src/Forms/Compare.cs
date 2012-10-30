@@ -15,6 +15,8 @@ namespace Nikse.SubtitleEdit.Forms
         Subtitle _subtitle2;
         List<int> _differences;
         bool _listView2Focused;
+        Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         public Compare()
         {
@@ -381,6 +383,33 @@ namespace Nikse.SubtitleEdit.Forms
                 ButtonNextDifferenceClick(null, null);
             else if (e.KeyCode == Keys.Left && buttonPreviousDifference.Enabled)
                 ButtonPreviousDifferenceClick(null, null);
+            else if (_mainGeneralGoToNextSubtitle == e.KeyData || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt))
+            {
+                SubtitleListView lv = subtitleListView1;
+                if (subtitleListView2.Focused)
+                    lv = subtitleListView2;
+                int selectedIndex = 0;
+                if (lv.SelectedItems.Count > 0)
+                {
+                    selectedIndex = lv.SelectedItems[0].Index;
+                    selectedIndex++;
+                }
+                lv.SelectIndexAndEnsureVisible(selectedIndex);
+            }
+            else if (_mainGeneralGoToPrevSubtitle == e.KeyData || (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt))
+            {
+                SubtitleListView lv = subtitleListView1;
+                if (subtitleListView2.Focused)
+                    lv = subtitleListView2;
+                int selectedIndex = 0;
+                if (lv.SelectedItems.Count > 0)
+                {
+                    selectedIndex = lv.SelectedItems[0].Index;
+                    selectedIndex--;
+                }
+                lv.SelectIndexAndEnsureVisible(selectedIndex);
+            }
+
         }
 
         private void SubtitleListView1SelectedIndexChanged(object sender, EventArgs e)

@@ -102,6 +102,7 @@
             this.subtitleListView1.Size = new System.Drawing.Size(593, 199);
             this.subtitleListView1.TabIndex = 11;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
+            this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListView1MouseDoubleClick);
             // 
@@ -237,6 +238,8 @@
             this.videoPlayerContainer1.FontSizeFactor = 1F;
             this.videoPlayerContainer1.Location = new System.Drawing.Point(12, 267);
             this.videoPlayerContainer1.Name = "videoPlayerContainer1";
+            this.videoPlayerContainer1.ShowFullscreenButton = true;
+            this.videoPlayerContainer1.ShowMuteButton = true;
             this.videoPlayerContainer1.ShowStopButton = true;
             this.videoPlayerContainer1.Size = new System.Drawing.Size(779, 263);
             this.videoPlayerContainer1.SubtitleText = "";

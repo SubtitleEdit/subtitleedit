@@ -150,6 +150,8 @@ namespace Nikse.SubtitleEdit.Forms
         VobSubOcrCharacter _vobSubOcrCharacter = new VobSubOcrCharacter();
 
         Keys _italicShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+        Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         private string[] _tesseractAsyncStrings = null;
         private int _tesseractAsyncIndex = 0;
@@ -2717,6 +2719,28 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.Items[goToLine.LineNumber - 1].EnsureVisible();
                     subtitleListView1.Items[goToLine.LineNumber - 1].Focused = true;
                 }
+            }
+            else if (_mainGeneralGoToNextSubtitle == e.KeyData)
+            {
+                int selectedIndex = 0;
+                if (subtitleListView1.SelectedItems.Count > 0)
+                {
+                    selectedIndex = subtitleListView1.SelectedItems[0].Index;
+                    selectedIndex++;
+                }
+                subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainGeneralGoToPrevSubtitle == e.KeyData)
+            {
+                int selectedIndex = 0;
+                if (subtitleListView1.SelectedItems.Count > 0)
+                {
+                    selectedIndex = subtitleListView1.SelectedItems[0].Index;
+                    selectedIndex--;
+                }
+                subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
+                e.SuppressKeyPress = true;
             }
         }
 

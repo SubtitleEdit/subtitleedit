@@ -70,8 +70,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         static readonly Regex FixAloneLowercaseIToUppercaseIRE = new Regex(@"\bi\b", RegexOptions.Compiled);
 
-        Keys _goToLine = Keys.None;
-        Keys _preview = Keys.None;
+        Keys _goToLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
+        Keys _preview = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrorsPreview);
+        Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         class FixItem
         {
@@ -231,8 +233,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             TopMost = true;
             BringToFront();
-            _goToLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
-            _preview = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrorsPreview);
             TopMost = false;
         }
 
@@ -3946,6 +3946,26 @@ namespace Nikse.SubtitleEdit.Forms
                 GoToLineNumber();
             else if (e.KeyData == _preview && listViewFixes.Items.Count > 0)
                 GenerateDiff();
+            else if (_mainGeneralGoToNextSubtitle == e.KeyData || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt))
+            {
+                int selectedIndex = 0;
+                if (subtitleListView1.SelectedItems.Count > 0)
+                {
+                    selectedIndex = subtitleListView1.SelectedItems[0].Index;
+                    selectedIndex++;
+                }
+                subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
+            }
+            else if (_mainGeneralGoToPrevSubtitle == e.KeyData || (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt))
+            {
+                int selectedIndex = 0;
+                if (subtitleListView1.SelectedItems.Count > 0)
+                {
+                    selectedIndex = subtitleListView1.SelectedItems[0].Index;
+                    selectedIndex--;
+                }
+                subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
+            }
         }
 
         private void GoToLineNumber()

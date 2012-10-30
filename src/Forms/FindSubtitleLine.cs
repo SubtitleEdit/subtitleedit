@@ -10,6 +10,8 @@ namespace Nikse.SubtitleEdit.Forms
     {
         int _startFindIndex = -1;
         List<Paragraph> _paragraphs = new List<Paragraph>();
+        Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         public int SelectedIndex
         {
@@ -121,7 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
-            else if (e.KeyCode == Keys.Down && e.Alt)
+            else if (_mainGeneralGoToNextSubtitle == e.KeyData || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt))
             {
                 int selectedIndex = 0;
                 if (subtitleListView1.SelectedItems.Count > 0)
@@ -131,7 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
             }
-            else if (e.KeyCode == Keys.Up && e.Alt)
+            else if (_mainGeneralGoToPrevSubtitle == e.KeyData || (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt))
             {
                 int selectedIndex = 0;
                 if (subtitleListView1.SelectedItems.Count > 0)
