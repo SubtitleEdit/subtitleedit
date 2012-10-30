@@ -26,6 +26,8 @@ namespace Nikse.SubtitleEdit.Forms
         Subtitle _originalSubtitle;
         Subtitle _otherSubtitle;
         SortedDictionary<int, TimeSpan> _syncronizationPoints = new SortedDictionary<int, TimeSpan>();
+        Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         public string VideoFileName
         {
@@ -239,6 +241,28 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyCode == Keys.F1)
             {
                 Utilities.ShowHelp("#sync");
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainGeneralGoToNextSubtitle == e.KeyData || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt))
+            {
+                int selectedIndex = 0;
+                if (SubtitleListview1.SelectedItems.Count > 0)
+                {
+                    selectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                    selectedIndex++;
+                }
+                SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndex);
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainGeneralGoToPrevSubtitle == e.KeyData || (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt))
+            {
+                int selectedIndex = 0;
+                if (SubtitleListview1.SelectedItems.Count > 0)
+                {
+                    selectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                    selectedIndex--;
+                }
+                SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndex);
                 e.SuppressKeyPress = true;
             }
         }

@@ -103,6 +103,8 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainGeneralToggleTranslationMode = Keys.None;
         Keys _mainGeneralSwitchTranslationAndOriginal = Keys.None;
         Keys _mainGeneralMergeTranslationAndOriginal = Keys.None;
+        Keys _mainGeneralGoToNextSubtitle = Keys.None;
+        Keys _mainGeneralGoToPrevSubtitle = Keys.None;
         Keys _mainToolsAutoDuration = Keys.None;
         Keys _mainToolsBeamer = Keys.None;
         Keys _toggleVideoDockUndock = Keys.None;
@@ -134,8 +136,6 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainInsertAfter = Keys.None;
         Keys _mainInsertBefore = Keys.None;
         Keys _mainMergeDialogue = Keys.None;
-        Keys _mainGoToNext = Keys.None;
-        Keys _mainGoToPrevious = Keys.None;
         Keys _mainToggleFocus = Keys.None;
         Keys _mainListViewToggleDashes = Keys.None;
         Keys _mainListViewAutoDuration = Keys.None;
@@ -8676,7 +8676,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     ButtonPreviousClick(null, null);
             }
-            else if (_mainGoToNext == e.KeyData && inListView)
+            else if (_mainGeneralGoToNextSubtitle == e.KeyData)
             {
                 if (AutoRepeatContinueOn)
                     Next();
@@ -8684,7 +8684,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ButtonNextClick(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGoToPrevious == e.KeyData && inListView)
+            else if (_mainGeneralGoToPrevSubtitle == e.KeyData)
             {
                 if (AutoRepeatContinueOn)
                     PlayPrevious();
@@ -10876,7 +10876,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _repeatCount = -1;
             }
-            labelStatus.Text = _language.VideoControls.Playing;
+            if (mediaPlayer.VideoPlayer != null)
+                labelStatus.Text = _language.VideoControls.Playing;
         }
 
         private void Next()
@@ -11867,6 +11868,8 @@ namespace Nikse.SubtitleEdit.Forms
             _mainGeneralToggleTranslationMode = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode);
             _mainGeneralSwitchTranslationAndOriginal = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
             _mainGeneralMergeTranslationAndOriginal = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation);
+            _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+            _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
             newToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileNew);
             openToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
@@ -11942,8 +11945,6 @@ namespace Nikse.SubtitleEdit.Forms
             _mainInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
             _mainInsertBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
             _mainMergeDialogue = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialogue);
-            _mainGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainGoToNext);
-            _mainGoToPrevious = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainGoToPrevious);
             _mainToggleFocus = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToogleFocus);
             _waveformVerticalZoom = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
             _waveformZoomIn = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomIn);

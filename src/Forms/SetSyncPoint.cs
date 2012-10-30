@@ -15,6 +15,8 @@ namespace Nikse.SubtitleEdit.Forms
         double _stopPosition = -1.0;
         Subtitle _subtitle;
         int _audioTrackNumber = -1;
+        Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         public string VideoFileName { get; private set; }
 
@@ -235,6 +237,28 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyCode == Keys.F1)
             {
                 Utilities.ShowHelp("#sync");
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainGeneralGoToNextSubtitle == e.KeyData || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt))
+            {
+                int selectedIndex = 0;
+                if (subtitleListView1.SelectedItems.Count > 0)
+                {
+                    selectedIndex = subtitleListView1.SelectedItems[0].Index;
+                    selectedIndex++;
+                }
+                subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainGeneralGoToPrevSubtitle == e.KeyData || (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt))
+            {
+                int selectedIndex = 0;
+                if (subtitleListView1.SelectedItems.Count > 0)
+                {
+                    selectedIndex = subtitleListView1.SelectedItems[0].Index;
+                    selectedIndex--;
+                }
+                subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
                 e.SuppressKeyPress = true;
             }
         }

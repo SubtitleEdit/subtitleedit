@@ -569,6 +569,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string GeneralToggleTranslationMode { get; set; }
         public string GeneralSwitchOriginalAndTranslation { get; set; }
         public string GeneralMergeOriginalAndTranslation { get; set; }
+        public string GeneralGoToNextSubtitle { get; set; }
+        public string GeneralGoToPrevSubtitle { get; set; }
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
         public string MainFileOpenKeepVideo { get; set; }
@@ -637,8 +639,6 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainInsertAfter { get; set; }
         public string MainInsertBefore { get; set; }
         public string MainMergeDialogue { get; set; }
-        public string MainGoToNext { get; set; }
-        public string MainGoToPrevious { get; set; }
         public string MainToogleFocus { get; set; }
         public string WaveformVerticalZoom { get; set; }
         public string WaveformZoomIn { get; set; }
@@ -661,6 +661,8 @@ namespace Nikse.SubtitleEdit.Logic
             GeneralToggleTranslationMode = "Control+U";
             GeneralSwitchOriginalAndTranslation = "Control+Shift+U";
             GeneralMergeOriginalAndTranslation = "Control+Alt+Shift+M";
+            GeneralGoToNextSubtitle = "Shift+Return";
+            GeneralGoToPrevSubtitle = string.Empty;
             MainFileNew = "Control+N";
             MainFileOpen = "Control+O";
             MainFileSave = "Control+S";
@@ -1600,6 +1602,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("GeneralMergeOriginalAndTranslation");
                 if (subNode != null)
                     settings.Shortcuts.GeneralMergeOriginalAndTranslation = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralGoToNextSubtitle");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralGoToNextSubtitle = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralGoToPrevSubtitle");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralGoToPrevSubtitle = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainFileNew");
                 if (subNode != null)
                     settings.Shortcuts.MainFileNew = subNode.InnerText;
@@ -1804,12 +1812,6 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainMergeDialogue");
                 if (subNode != null)
                     settings.Shortcuts.MainMergeDialogue = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainGoToNext");
-                if (subNode != null)
-                    settings.Shortcuts.MainGoToNext = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainGoToPrevious");
-                if (subNode != null)
-                    settings.Shortcuts.MainGoToPrevious = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainToogleFocus");
                 if (subNode != null)
                     settings.Shortcuts.MainToogleFocus = subNode.InnerText;
@@ -2197,6 +2199,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("GeneralToggleTranslationMode", settings.Shortcuts.GeneralToggleTranslationMode);
             textWriter.WriteElementString("GeneralSwitchOriginalAndTranslation", settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
             textWriter.WriteElementString("GeneralMergeOriginalAndTranslation", settings.Shortcuts.GeneralMergeOriginalAndTranslation);
+            textWriter.WriteElementString("GeneralGoToNextSubtitle", settings.Shortcuts.GeneralGoToNextSubtitle);
+            textWriter.WriteElementString("GeneralGoToPrevSubtitle", settings.Shortcuts.GeneralGoToPrevSubtitle);
             textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
             textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
             textWriter.WriteElementString("MainFileOpenKeepVideo", settings.Shortcuts.MainFileOpenKeepVideo);
@@ -2265,8 +2269,6 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
             textWriter.WriteElementString("MainInsertBefore", settings.Shortcuts.MainInsertBefore);
             textWriter.WriteElementString("MainMergeDialogue", settings.Shortcuts.MainMergeDialogue);
-            textWriter.WriteElementString("MainGoToNext", settings.Shortcuts.MainGoToNext);
-            textWriter.WriteElementString("MainGoToPrevious", settings.Shortcuts.MainGoToPrevious);
             textWriter.WriteElementString("MainToogleFocus", settings.Shortcuts.MainToogleFocus);
             textWriter.WriteElementString("WaveformVerticalZoom", settings.Shortcuts.WaveformVerticalZoom);
             textWriter.WriteElementString("WaveformZoomIn", settings.Shortcuts.WaveformZoomIn);
