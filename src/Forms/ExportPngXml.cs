@@ -36,6 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
             public byte[] Buffer { get; set; }
             public int ScreenWidth { get; set; }
             public int ScreenHeight { get; set; }
+            public bool SideBySide3D { get; set; }
             public double FramesPerSeconds { get; set; }
             public int BottomMargin { get; set; }
             public bool Saved { get; set; }
@@ -226,6 +227,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     BottomMargin =  comboBoxBottomMargin.SelectedIndex,
                                     Saved = false,
                                     Alignment = ContentAlignment.BottomCenter,
+                                    SideBySide3D = checkBoxSideBySide3D.Checked,
                                 };
             if (index < _subtitle.Paragraphs.Count)
             {
@@ -285,47 +287,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int width = 1920;
                 int height = 1080;
-                if (comboBoxResolution.SelectedIndex == 1)
-                {
-                    width = 1440;
-                    height = 1080;
-                }
-                else if (comboBoxResolution.SelectedIndex == 2)
-                {
-                    width = 1280;
-                    height = 720;
-                }
-                else if (comboBoxResolution.SelectedIndex == 3)
-                {
-                    width = 960;
-                    height = 720;
-                }
-                else if (comboBoxResolution.SelectedIndex == 4)
-                {
-                    width = 848;
-                    height = 480;
-                }
-                else if (comboBoxResolution.SelectedIndex == 5)
-                {
-                    width = 720;
-                    height = 576;
-                }
-                else if (comboBoxResolution.SelectedIndex == 6)
-                {
-                    width = 720;
-                    height = 480;
-                }
-                else if (comboBoxResolution.SelectedIndex == 7)
-                {
-                    width = 640;
-                    height = 352;
-                }
-                else if (comboBoxResolution.SelectedIndex == 8)
-                {
-                    string[] arr = comboBoxResolution.Text.Split('x');
-                    width = int.Parse(arr[0]);
-                    height = int.Parse(arr[1]);
-                }
+                GetResolution(ref width, ref height);
 
                 FileStream binarySubtitleFile = null;
                 VobSubWriter vobSubWriter = null;
@@ -474,6 +436,56 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             buttonExport.Enabled = true;
+        }
+
+        private void GetResolution(ref int width, ref int height)
+        {
+            if (comboBoxResolution.SelectedIndex == 1)
+            {
+                width = 1440;
+                height = 1080;
+            }
+            else if (comboBoxResolution.SelectedIndex == 2)
+            {
+                width = 1280;
+                height = 720;
+            }
+            else if (comboBoxResolution.SelectedIndex == 3)
+            {
+                width = 960;
+                height = 720;
+            }
+            else if (comboBoxResolution.SelectedIndex == 4)
+            {
+                width = 848;
+                height = 480;
+            }
+            else if (comboBoxResolution.SelectedIndex == 5)
+            {
+                width = 720;
+                height = 576;
+            }
+            else if (comboBoxResolution.SelectedIndex == 6)
+            {
+                width = 720;
+                height = 480;
+            }
+            else if (comboBoxResolution.SelectedIndex == 7)
+            {
+                width = 640;
+                height = 352;
+            }
+            else if (comboBoxResolution.SelectedIndex == 8)
+            {
+                string[] arr = comboBoxResolution.Text.Split('x');
+                width = int.Parse(arr[0]);
+                height = int.Parse(arr[1]);
+            }
+            else
+            {
+                width = 1920;
+                height = 1080;
+            }
         }
 
         private int WriteParagraph(int width, StringBuilder sb, int border, int height, int imagesSavedCount,
@@ -693,6 +705,17 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!string.IsNullOrEmpty(p.Extra))
                     {
+                        comboBoxSubtitleFont.Enabled = false;
+                        comboBoxSubtitleFontSize.Enabled = false;
+                        buttonBorderColor.Enabled = false;
+                        comboBoxHAlign.Enabled = false;
+                        panelBorderColor.Enabled = false;
+                        checkBoxBold.Enabled = false;
+                        buttonColor.Enabled = false;
+                        panelColor.Enabled = false;
+                        comboBoxBorderWidth.Enabled = false;
+                        comboBoxBottomMargin.Enabled = false;
+
                         SsaStyle style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
                         if (style != null)
                         {
@@ -758,6 +781,13 @@ namespace Nikse.SubtitleEdit.Forms
             mbp.SubtitleFontSize = _subtitleFontSize;
             mbp.SubtitleFontBold = _subtitleFontBold;
             mbp.P = new Paragraph(text, 0, 0);
+            
+            int width = 0;
+            int height = 0;
+            GetResolution(ref width, ref height);
+            mbp.ScreenWidth = width;
+            mbp.ScreenHeight = height;
+            mbp.SideBySide3D = checkBoxSideBySide3D.Checked;
 
             var bmp = GenerateImageFromTextWithStyle(mbp);
             if (_exportType == "VOBSUB" || _exportType == "STL")
@@ -1027,6 +1057,23 @@ namespace Nikse.SubtitleEdit.Forms
             g.Dispose();
             var nbmp = new NikseBitmap(bmp);
             nbmp.CropTransparentSidesAndBottom(2);
+
+            if (parameter.SideBySide3D)
+            {
+                Bitmap singleBmp = nbmp.GetBitmap();
+                Bitmap sideBySideBmp = new Bitmap(parameter.ScreenWidth, singleBmp.Height);
+                int singleWidth = parameter.ScreenWidth / 2;
+                int singleLeftMargin = (singleWidth - singleBmp.Width) / 2;
+
+                using(Graphics gSideBySide = Graphics.FromImage(sideBySideBmp))
+                {
+                    gSideBySide.DrawImage(singleBmp, singleLeftMargin, 0);
+                    gSideBySide.DrawImage(singleBmp, singleWidth + singleLeftMargin, 0);
+                }
+                nbmp = new NikseBitmap(sideBySideBmp);
+                nbmp.CropTransparentSidesAndBottom(2);
+            }
+
             return nbmp.GetBitmap();
         }
 
@@ -1064,6 +1111,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelSubtitleFontSize.Text = Configuration.Settings.Language.ExportPngXml.FontSize;
             buttonColor.Text = Configuration.Settings.Language.ExportPngXml.FontColor;
             checkBoxAntiAlias.Text = Configuration.Settings.Language.ExportPngXml.AntiAlias;
+            checkBoxSideBySide3D.Text = Configuration.Settings.Language.ExportPngXml.SideBySide3D;
             checkBoxBold.Text = Configuration.Settings.Language.General.Bold;
             buttonBorderColor.Text = Configuration.Settings.Language.ExportPngXml.BorderColor;
             labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderWidth;
@@ -1218,6 +1266,18 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
                         pictureBox1.Top = int.Parse(comboBoxBottomMargin.Text);
                 }
+                if (bmp.Width > groupBoxExportImage.Width + 20 || bmp.Height > groupBoxExportImage.Height + 20)
+                {
+                    pictureBox1.Left = 5;
+                    pictureBox1.Top = 20;
+                    pictureBox1.Width = groupBoxExportImage.Width - 10;
+                    pictureBox1.Height = groupBoxExportImage.Height - 30;
+                    pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                }
+                else
+                {
+                    pictureBox1.SizeMode = PictureBoxSizeMode.Normal;
+                }
                 groupBoxExportImage.Text = string.Format("{0}x{1}", bmp.Width, bmp.Height);
             }
         }
@@ -1321,6 +1381,21 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void comboBoxBottomMargin_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void checkBoxSideBySide3D_CheckedChanged(object sender, EventArgs e)
+        {
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void comboBoxResolution_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void ExportPngXml_SizeChanged(object sender, EventArgs e)
         {
             subtitleListView1_SelectedIndexChanged(null, null);
         }

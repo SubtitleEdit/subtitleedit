@@ -34,6 +34,7 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.checkBoxSideBySide3D = new System.Windows.Forms.CheckBox();
             this.buttonCustomResolution = new System.Windows.Forms.Button();
             this.checkBoxSkipEmptyFrameAtStart = new System.Windows.Forms.CheckBox();
             this.comboBoxBottomMargin = new System.Windows.Forms.ComboBox();
@@ -84,7 +85,7 @@
             this.buttonExport.Location = new System.Drawing.Point(517, 566);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(126, 21);
-            this.buttonExport.TabIndex = 3;
+            this.buttonExport.TabIndex = 5;
             this.buttonExport.Text = "Export all lines...";
             this.buttonExport.UseVisualStyleBackColor = true;
             this.buttonExport.Click += new System.EventHandler(this.ButtonExportClick);
@@ -97,7 +98,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(649, 566);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 4;
+            this.buttonCancel.TabIndex = 0;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -108,13 +109,14 @@
             this.progressBar1.Location = new System.Drawing.Point(12, 566);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(499, 21);
-            this.progressBar1.TabIndex = 20;
+            this.progressBar1.TabIndex = 4;
             this.progressBar1.Visible = false;
             // 
             // groupBoxImageSettings
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.checkBoxSideBySide3D);
             this.groupBoxImageSettings.Controls.Add(this.buttonCustomResolution);
             this.groupBoxImageSettings.Controls.Add(this.checkBoxSkipEmptyFrameAtStart);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxBottomMargin);
@@ -144,9 +146,20 @@
             this.groupBoxImageSettings.Location = new System.Drawing.Point(12, 218);
             this.groupBoxImageSettings.Name = "groupBoxImageSettings";
             this.groupBoxImageSettings.Size = new System.Drawing.Size(712, 161);
-            this.groupBoxImageSettings.TabIndex = 1;
+            this.groupBoxImageSettings.TabIndex = 2;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // checkBoxSideBySide3D
+            // 
+            this.checkBoxSideBySide3D.AutoSize = true;
+            this.checkBoxSideBySide3D.Location = new System.Drawing.Point(276, 108);
+            this.checkBoxSideBySide3D.Name = "checkBoxSideBySide3D";
+            this.checkBoxSideBySide3D.Size = new System.Drawing.Size(100, 17);
+            this.checkBoxSideBySide3D.TabIndex = 9;
+            this.checkBoxSideBySide3D.Text = "Side by side 3D";
+            this.checkBoxSideBySide3D.UseVisualStyleBackColor = true;
+            this.checkBoxSideBySide3D.CheckedChanged += new System.EventHandler(this.checkBoxSideBySide3D_CheckedChanged);
             // 
             // buttonCustomResolution
             // 
@@ -164,7 +177,7 @@
             this.checkBoxSkipEmptyFrameAtStart.AutoSize = true;
             this.checkBoxSkipEmptyFrameAtStart.Checked = true;
             this.checkBoxSkipEmptyFrameAtStart.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxSkipEmptyFrameAtStart.Location = new System.Drawing.Point(276, 131);
+            this.checkBoxSkipEmptyFrameAtStart.Location = new System.Drawing.Point(276, 135);
             this.checkBoxSkipEmptyFrameAtStart.Name = "checkBoxSkipEmptyFrameAtStart";
             this.checkBoxSkipEmptyFrameAtStart.Size = new System.Drawing.Size(147, 17);
             this.checkBoxSkipEmptyFrameAtStart.TabIndex = 10;
@@ -269,7 +282,7 @@
             this.checkBoxBold.Location = new System.Drawing.Point(276, 53);
             this.checkBoxBold.Name = "checkBoxBold";
             this.checkBoxBold.Size = new System.Drawing.Size(47, 17);
-            this.checkBoxBold.TabIndex = 8;
+            this.checkBoxBold.TabIndex = 7;
             this.checkBoxBold.Text = "Bold";
             this.checkBoxBold.UseVisualStyleBackColor = true;
             this.checkBoxBold.CheckedChanged += new System.EventHandler(this.checkBoxBold_CheckedChanged);
@@ -301,6 +314,7 @@
             this.comboBoxResolution.Name = "comboBoxResolution";
             this.comboBoxResolution.Size = new System.Drawing.Size(121, 21);
             this.comboBoxResolution.TabIndex = 2;
+            this.comboBoxResolution.SelectedIndexChanged += new System.EventHandler(this.comboBoxResolution_SelectedIndexChanged);
             // 
             // comboBoxHAlign
             // 
@@ -333,7 +347,7 @@
             this.checkBoxAntiAlias.Location = new System.Drawing.Point(276, 76);
             this.checkBoxAntiAlias.Name = "checkBoxAntiAlias";
             this.checkBoxAntiAlias.Size = new System.Drawing.Size(66, 17);
-            this.checkBoxAntiAlias.TabIndex = 9;
+            this.checkBoxAntiAlias.TabIndex = 8;
             this.checkBoxAntiAlias.Text = "AntiAlias";
             this.checkBoxAntiAlias.UseVisualStyleBackColor = true;
             this.checkBoxAntiAlias.CheckedChanged += new System.EventHandler(this.checkBoxAntiAlias_CheckedChanged);
@@ -516,7 +530,7 @@
             this.groupBoxExportImage.Location = new System.Drawing.Point(13, 386);
             this.groupBoxExportImage.Name = "groupBoxExportImage";
             this.groupBoxExportImage.Size = new System.Drawing.Size(711, 174);
-            this.groupBoxExportImage.TabIndex = 21;
+            this.groupBoxExportImage.TabIndex = 3;
             this.groupBoxExportImage.TabStop = false;
             // 
             // subtitleListView1
@@ -532,7 +546,7 @@
             this.subtitleListView1.Name = "subtitleListView1";
             this.subtitleListView1.OwnerDraw = true;
             this.subtitleListView1.Size = new System.Drawing.Size(712, 200);
-            this.subtitleListView1.TabIndex = 0;
+            this.subtitleListView1.TabIndex = 1;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
@@ -550,7 +564,6 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.subtitleListView1);
             this.KeyPreview = true;
-            this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(730, 630);
             this.Name = "ExportPngXml";
@@ -559,6 +572,7 @@
             this.Text = "ExportPngXml";
             this.Shown += new System.EventHandler(this.ExportPngXml_Shown);
             this.ResizeEnd += new System.EventHandler(this.ExportPngXml_ResizeEnd);
+            this.SizeChanged += new System.EventHandler(this.ExportPngXml_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExportPngXml_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBoxImageSettings.ResumeLayout(false);
@@ -606,5 +620,6 @@
         private System.Windows.Forms.CheckBox checkBoxSkipEmptyFrameAtStart;
         private System.Windows.Forms.Button buttonCustomResolution;
         private System.Windows.Forms.GroupBox groupBoxExportImage;
+        private System.Windows.Forms.CheckBox checkBoxSideBySide3D;
     }
 }

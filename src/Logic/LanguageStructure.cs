@@ -323,6 +323,7 @@
             public string BorderColor { get; set; }
             public string BorderWidth { get; set; }
             public string AntiAlias { get; set; }
+            public string SideBySide3D { get; set; }            
             public string ExportAllLines { get; set; }
             public string XImagesSavedInY { get; set; }
             public string VideoResolution { get; set; }
@@ -330,14 +331,11 @@
             public string Left { get; set; }
             public string Right { get; set; }
             public string Center { get; set; }
-
             public string BottomMargin { get; set; }
             public string SaveBluRraySupAs { get; set; }
             public string SaveVobSubAs { get; set; }
             public string SaveFabImageScriptAs { get; set; }
             public string SaveDvdStudioProStlAs { get; set; }
-
-
         }
 
         public class ExportText
