@@ -412,6 +412,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Export BDN XML/PNG",
                 ImageSettings = "Image settings",
                 AntiAlias = "Anti alias",
+                SideBySide3D = "Side-by-side 3D",
                 BorderColor = "Border color",
                 BorderWidth = "Border width",
                 ExportAllLines = "Export all lines...",
@@ -424,7 +425,6 @@ namespace Nikse.SubtitleEdit.Logic
                 Left = "Left",
                 Center = "Center",
                 Right = "Right",
-
                 BottomMargin = "Bottom margin",
                 SaveBluRraySupAs = "Choose Blu-ray sup file name",
                 SaveVobSubAs = "Choose VobSub file name",
