@@ -5,9 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class FabSubtitler : SubtitleFormat
+    class UnknownSubtitle38 : SubtitleFormat
     {
-        static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d  \d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        static Regex regexTimeCodes = new Regex(@"^\d+ \d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "FAB Subtitler"; }
+            get { return "Unknown 38"; }
         }
 
         public override bool IsTimeBased
@@ -37,10 +37,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                //00:50:34:22  00:50:39:13
+                //1 00:50:34:22 00:50:39:13
                 //Ich muss dafür sorgen,
                 //dass die Epsteins weiterleben
-                sb.AppendLine(string.Format("{0}  {1}{2}{3}{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, Utilities.RemoveHtmlTags(p.Text)));
+                sb.AppendLine(string.Format("{4} {0} {1}{2}{3}{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, Utilities.RemoveHtmlTags(p.Text), index));
                 index++;
             }
             return sb.ToString();
@@ -48,13 +48,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private string EncodeTimeCode(TimeCode time)
         {
-            //00:50:39:13 (last is frame)
+            //1 00:50:39:13 (last is frame)
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            //00:03:15:22  00:03:23:10 This is line one.
+            //1 00:03:15:22 00:03:23:10 
+            //This is line one.
             //This is line two.
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
@@ -62,16 +63,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (regexTimeCodes.IsMatch(line))
                 {
-                    string temp = line.Substring(0, regexTimeCodes.Match(line).Length);
-                    string start = temp.Substring(0, 11);
-                    string end = temp.Substring(13, 11);
-
-                    string[] startParts = start.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    string[] endParts = end.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    if (startParts.Length == 4 && endParts.Length == 4)
+                    string[] temp = line.Split(' ');
+                    if (temp.Length == 3)
                     {
-                        p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), string.Empty);
-                        subtitle.Paragraphs.Add(p);
+                        string start = temp[1];
+                        string end = temp[2];
+
+                        string[] startParts = start.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        if (startParts.Length == 4 && endParts.Length == 4)
+                        {
+                            p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), string.Empty);
+                            subtitle.Paragraphs.Add(p);
+                        }
                     }
                 }
                 else if (line.Trim().Length == 0)
