@@ -1310,6 +1310,7 @@ can edit in same subtitle file (collaboration)",
                 OnlyIfInSeparateLine = "Only if in separate line",
                 LinesFoundX = "Lines found: {0}",
                 RemoveTextIfContains = "Remove text if it contains:",
+                RemoveTextIfAllUppercase = "Remove line if UPPERCASE",
                 RemoveInterjections = "Remove interjections (shh, hmm, etc.)",
                 EditInterjections = "Edit...",
             };

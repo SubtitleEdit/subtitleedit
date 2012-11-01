@@ -1220,6 +1220,7 @@
             public string OnlyIfInSeparateLine { get; set; }
             public string LinesFoundX { get; set; }
             public string RemoveTextIfContains { get; set; }
+            public string RemoveTextIfAllUppercase { get; set; }
             public string RemoveInterjections { get; set; }
             public string EditInterjections { get; set; }
         }

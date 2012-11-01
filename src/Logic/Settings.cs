@@ -744,6 +744,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool RemoveTextBeforeColonOnlyOnSeparateLine { get; set; }
         public bool RemoveInterjections { get; set; }
         public bool RemoveIfContains { get; set; }
+        public bool RemoveIfAllUppercase { get; set; }        
         public string RemoveIfContainsText { get; set; }
 
         public RemoveTextForHearingImpairedSettings()
@@ -840,16 +841,16 @@ namespace Nikse.SubtitleEdit.Logic
             string settingsFileName = Configuration.SettingsFileName;
             if (File.Exists(settingsFileName))
             {
-                try
+             //   try
                 {
                     settings = CustomDeserialize(settingsFileName); //  15 msecs
 
                     //too slow... :(  - settings = Deserialize(Configuration.BaseDirectory + "Settings.xml"); // 688 msecs
                 }
-                catch
-                {
-                    settings = new Settings();
-                }
+                //catch
+                //{
+                //    settings = new Settings();
+                //}
 
                 if (!string.IsNullOrEmpty(settings.General.ListViewLineSeparatorString))
                     settings.General.ListViewLineSeparatorString = settings.General.ListViewLineSeparatorString.Replace("\n", string.Empty).Replace("\r", string.Empty);
@@ -1892,7 +1893,10 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase = Convert.ToBoolean(subNode.InnerText);
                 subNode = node.SelectSingleNode("RemoveTextBeforeColonOnlyOnSeparateLine");
                 if (subNode != null)
-                    settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine = Convert.ToBoolean(subNode.InnerText);               
+                    settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("RemoveIfAllUppercase");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase = Convert.ToBoolean(subNode.InnerText);
                 subNode = node.SelectSingleNode("RemoveInterjections");
                 if (subNode != null)
                     settings.RemoveTextForHearingImpaired.RemoveInterjections = Convert.ToBoolean(subNode.InnerText);
@@ -2298,6 +2302,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("RemoveTextBeforeColonOnlyIfUppercase", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase.ToString());
             textWriter.WriteElementString("RemoveTextBeforeColonOnlyOnSeparateLine", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine.ToString());            
             textWriter.WriteElementString("RemoveInterjections", settings.RemoveTextForHearingImpaired.RemoveInterjections.ToString());
+            textWriter.WriteElementString("RemoveIfAllUppercase", settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase.ToString());
             textWriter.WriteElementString("RemoveIfContains", settings.RemoveTextForHearingImpaired.RemoveIfContains.ToString());
             textWriter.WriteElementString("RemoveIfContainsText", settings.RemoveTextForHearingImpaired.RemoveIfContainsText);
             textWriter.WriteEndElement();
