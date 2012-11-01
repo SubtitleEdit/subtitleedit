@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string ConvertToTimeString(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}.{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+            return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
         public static void AddStyleToXml(XmlDocument xml, XmlNode head, XmlNamespaceManager nsmgr, string name, string fontFamily, string fontWeight, string fontStyle, string color, string fontSize)
@@ -395,17 +395,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var startCode = new TimeCode(TimeSpan.FromSeconds(startSeconds));
                     if (start != string.Empty)
                     {
-                        startCode = GetTimeCode(start);
+                        startCode = GetTimeCode(start, true);
                     }
 
                     TimeCode endCode;
                     if (end != string.Empty)
                     {
-                        endCode = GetTimeCode(end);
+                        endCode = GetTimeCode(end, true);
                     }
                     else if (dur != string.Empty)
                     {
-                        endCode = new TimeCode(TimeSpan.FromMilliseconds(GetTimeCode(dur).TotalMilliseconds + startCode.TotalMilliseconds));
+                        endCode = new TimeCode(TimeSpan.FromMilliseconds(GetTimeCode(dur, true).TotalMilliseconds + startCode.TotalMilliseconds));
                     }
                     else
                     {
@@ -487,7 +487,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 pText.Append("</bold>");
         }
 
-        public static TimeCode GetTimeCode(string s)
+        public static TimeCode GetTimeCode(string s, bool frames)
         {
             if (s.EndsWith("s"))
             {
@@ -502,6 +502,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return new TimeCode(ts);
             }
             string[] parts = s.Split(new[] { ':', '.', ',' });
+            if (frames)
+                return new TimeCode(new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3]))));
             return new TimeCode(new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3])));
         }
 

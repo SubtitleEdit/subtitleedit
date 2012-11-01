@@ -201,12 +201,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (node.Attributes["end"] != null)
                     {
                         string end = node.Attributes["end"].InnerText;
-                        subtitle.Paragraphs.Add(new Paragraph(TimedText10.GetTimeCode(start), TimedText10.GetTimeCode(end), text));
+                        subtitle.Paragraphs.Add(new Paragraph(TimedText10.GetTimeCode(start, false), TimedText10.GetTimeCode(end, false), text));
                     }
                     else if (node.Attributes["dur"] != null)
                     {
-                        TimeCode duration = TimedText10.GetTimeCode(node.Attributes["dur"].InnerText);
-                        TimeCode startTime = TimedText10.GetTimeCode(start);
+                        TimeCode duration = TimedText10.GetTimeCode(node.Attributes["dur"].InnerText, false);
+                        TimeCode startTime = TimedText10.GetTimeCode(start, false);
                         TimeCode endTime = new TimeCode(TimeSpan.FromMilliseconds(startTime.TotalMilliseconds + duration.TotalMilliseconds));
                         subtitle.Paragraphs.Add(new Paragraph(startTime, endTime, text));
                     }
