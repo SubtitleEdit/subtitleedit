@@ -121,9 +121,8 @@ namespace Nikse.SubtitleEdit.Forms
         List<Color> _palette;
 
         // BluRay sup
-        List<Logic.BluRaySup.BluRaySupPicture> _bluRaySubtitlesOriginal;
-        List<Logic.BluRaySup.BluRaySupPicture> _bluRaySubtitles;
-        Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupPalette _defaultPaletteInfo;
+        List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> _bluRaySubtitlesOriginal;
+        List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> _bluRaySubtitles;
 
         // SP list
         List<SpHeader> _spList;
@@ -358,7 +357,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetTesseractLanguageFromLanguageString(languageString);
         }
 
-        internal void Initialize(List<Logic.BluRaySup.BluRaySupPicture> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
+        internal void Initialize(List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
         {
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
@@ -629,7 +628,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _subtitle = new Subtitle();
 
-            _bluRaySubtitles = new List<Logic.BluRaySup.BluRaySupPicture>();
+            _bluRaySubtitles = new List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData>();
             int max = _bluRaySubtitlesOriginal.Count;
             for (int i = 0; i < max; i++)
             {
@@ -867,17 +866,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_bluRaySubtitlesOriginal != null)
             {
-                if (_bluRaySubtitles[index].Palettes.Count == 0 && _defaultPaletteInfo == null)
-                {
-                    for (int i = 0; i < _bluRaySubtitlesOriginal.Count; i++)
-                    {
-                        if (_bluRaySubtitlesOriginal[i].Palettes.Count > 0)
-                        {
-                            _defaultPaletteInfo = _bluRaySubtitlesOriginal[i].DecodePalette(null);
-                        }
-                    }
-                }
-                return _bluRaySubtitles[index].DecodeImage(_defaultPaletteInfo);
+                return _bluRaySubtitles[index].GetBitmap();
             }
             else if (checkBoxCustomFourColors.Checked)
             {
