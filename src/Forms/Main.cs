@@ -7584,7 +7584,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
                 _subtitleListViewIndex = -1;
                 _subtitle.Paragraphs.Clear();
-                List<BluRaySupPicture> subtitles = new List<BluRaySupPicture>();
+                var subtitles = new List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData>();
                 StringBuilder log = new StringBuilder();
                 foreach (SubtitleSequence p in sub)
                 {
@@ -7743,7 +7743,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var log = new StringBuilder();
-            List<BluRaySupPicture> subtitles = new List<BluRaySupPicture>();
+            var subtitles = new List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData>();
             var pesList = tsParser.GetSubtitlePesPackets(tsParser.SubtitlePacketIds[0]);
             foreach (var sp in pesList)
             {
@@ -12738,7 +12738,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var log = new StringBuilder();
             var subtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
-            subtitles = SplitBitmaps(subtitles);
             if (subtitles.Count > 0)
             {
                 var vobSubOcr = new VobSubOcr();
@@ -12778,44 +12777,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 _formPositionsAndSizes.SavePositionAndSize(vobSubOcr);
             }
-        }
-
-        private List<BluRaySupPicture> SplitBitmaps(List<BluRaySupPicture> subtitles)
-        {
-            return subtitles;
-            var list = new List<BluRaySupPicture>();
-            int lastCompositionNumber = -1;
-
-            foreach (var sub in subtitles)
-            {
-                for (int i=0; i<sub.ImageObjects.Count; i++)
-                {
-                    var s = new BluRaySupPicture(sub);
-                    s.ObjectId = i;
-                    if (s.CompositionNumber >= lastCompositionNumber)
-                    {
-                        int start = list.Count - 20;
-                        if (start < 0)
-                            start = 0;
-                        bool found = false;
-                        if (sub.ImageObjects.Count > 1)
-                        {
-
-                            for (int k = start; k < list.Count; k++)
-                            {
-                                if (list[k].ObjectIdImage.Width == sub.ObjectIdImage.Width && list[k].ObjectIdImage.Height == sub.ObjectIdImage.Height &&
-                                    list[k].ObjectIdImage.XOffset == sub.ObjectIdImage.XOffset && list[k].ObjectIdImage.YOffset == sub.ObjectIdImage.YOffset)
-                                    found = true;
-                            }
-                        }
-
-                        if (!found)
-                            list.Add(s);
-                    }
-                    lastCompositionNumber = s.CompositionNumber;
-                }
-            }
-            return list;
         }
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
