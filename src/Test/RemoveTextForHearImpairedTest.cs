@@ -72,6 +72,7 @@ namespace Test
         public void RemoveColonTest()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveTextBeforeColon.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
@@ -91,6 +92,7 @@ namespace Test
         public void RemoveHIInsideLine()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveTextBeforeColon.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBetweenParentheses.Checked = true;
@@ -110,6 +112,7 @@ namespace Test
         public void RemoveHI1()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBetweenSquares.Checked = true;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -128,6 +131,7 @@ namespace Test
         public void RemoveHI2()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBetweenSquares.Checked = true;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -146,6 +150,7 @@ namespace Test
         public void RemoveHINot()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
             target.checkBoxColonSeparateLine.Checked = false;
@@ -164,6 +169,7 @@ namespace Test
         public void RemoveHIMultilineItalic()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveTextBeforeColon.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -183,6 +189,7 @@ namespace Test
         public void RemoveHISecondLineDelay()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveTextBeforeColon.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -199,6 +206,7 @@ namespace Test
         public void RemoveHIQuotes()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
             target.checkBoxColonSeparateLine.Checked = false;
@@ -213,6 +221,7 @@ namespace Test
         public void RemoveHIDouble()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBetweenSquares.Checked = true;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -228,6 +237,7 @@ namespace Test
         public void RemoveRemoveNameOfFirstLine()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = false;
             target.checkBoxRemoveTextBeforeColon.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
@@ -244,6 +254,7 @@ namespace Test
         public void RemoveInterjections()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -259,6 +270,7 @@ namespace Test
         public void RemoveInterjections2()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -274,6 +286,7 @@ namespace Test
         public void RemoveInterjections3()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -289,6 +302,7 @@ namespace Test
         public void RemoveInterjections4()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -304,6 +318,7 @@ namespace Test
         public void RemoveInterjections5()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -319,6 +334,7 @@ namespace Test
         public void RemoveInterjections6a()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -334,6 +350,7 @@ namespace Test
         public void RemoveInterjections6b()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -349,6 +366,7 @@ namespace Test
         public void RemoveInterjections6bItalic()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -364,6 +382,7 @@ namespace Test
         public void RemoveInterjections7()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -379,6 +398,7 @@ namespace Test
         public void RemoveInterjections8()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -394,6 +414,7 @@ namespace Test
         public void RemoveInterjections9()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -409,6 +430,7 @@ namespace Test
         public void RemoveInterjections10()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -424,6 +446,7 @@ namespace Test
         public void RemoveInterjections10Italic()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -440,6 +463,7 @@ namespace Test
         public void RemoveInterjections11()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
@@ -455,6 +479,7 @@ namespace Test
         public void RemoveColonOnlyOnSeparateLine()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveInterjections.Checked = false;
             target.checkBoxRemoveTextBeforeColon.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;
@@ -465,6 +490,43 @@ namespace Test
             string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveLineIfAllUppercase1()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = true;
+            target.checkBoxRemoveInterjections.Checked = false;
+            target.checkBoxRemoveTextBeforeColon.Checked = false;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
+            target.checkBoxColonSeparateLine.Checked = false;
+            string text = "HECTOR " + Environment.NewLine + "Hi.";
+            string expected = "Hi.";
+            string actual = target.RemoveLineIfAllUppercase(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveLineIfAllUppercase2()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = true;
+            target.checkBoxRemoveInterjections.Checked = false;
+            target.checkBoxRemoveTextBeforeColon.Checked = false;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
+            target.checkBoxColonSeparateLine.Checked = false;
+            string text = "Please, Mr Krook." + Environment.NewLine + "SHOP DOOR BELL CLANGS";
+            string expected = "Please, Mr Krook.";
+            string actual = target.RemoveLineIfAllUppercase(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        
+
 
     }
 }

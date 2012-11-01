@@ -285,6 +285,7 @@
     <BorderColor>Kantfarve</BorderColor>
     <BorderWidth>Kantbredde</BorderWidth>
     <AntiAlias>Anti alias</AntiAlias>
+    <SideBySide3D>Side-by-side 3D</SideBySide3D>
     <ExportAllLines>Eksporter alle linjer...</ExportAllLines>
     <XImagesSavedInY>{0} billeder gemt i {1}</XImagesSavedInY>
     <VideoResolution>Video str</VideoResolution>
@@ -1099,6 +1100,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <OnlyIfInSeparateLine>Kun hvis på separat linje</OnlyIfInSeparateLine>
     <LinesFoundX>Linjer fundet: {0}</LinesFoundX>
     <RemoveTextIfContains>Fjern tekst, hvis indeholder:</RemoveTextIfContains>
+    <RemoveTextIfAllUppercase>Fjern linje hvis kun med STORE bogstaver</RemoveTextIfAllUppercase>
     <RemoveInterjections>Fjern følelsesudbrud (Ahh, hmm, osv.)</RemoveInterjections>
     <EditInterjections>Rediger...</EditInterjections>
   </RemoveTextFromHearImpaired>

@@ -32,6 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxColonSeparateLine.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine;
             checkBoxRemoveInterjections.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjections;
             checkBoxRemoveWhereContains.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains;
+            checkBoxRemoveIfAllUppercase.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase;
             comboBoxRemoveIfTextContains.Text = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText;
 
             _language = Configuration.Settings.Language.RemoveTextFromHearImpaired;
@@ -48,6 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveTextBetweenQuestionMarks.Text = _language.QuestionMarks;
             checkBoxRemoveTextBetweenSquares.Text = _language.SquareBrackets;
             checkBoxRemoveWhereContains.Text = _language.RemoveTextIfContains;
+            checkBoxRemoveIfAllUppercase.Text = _language.RemoveTextIfAllUppercase;
             checkBoxRemoveInterjections.Text = _language.RemoveInterjections;
             buttonEditInterjections.Text = _language.EditInterjections;
             buttonEditInterjections.Left = checkBoxRemoveInterjections.Left + checkBoxRemoveInterjections.Width;
@@ -558,6 +560,7 @@ namespace Nikse.SubtitleEdit.Forms
             text = st.Pre + sb.ToString().Trim() + st.Post;
             text = text.Replace("<i></i>", string.Empty).Trim();
             text = RemoveColon(text);
+            text = RemoveLineIfAllUppercase(text);
             text = RemoveHearImpairedtagsInsideLine(text);
             if (checkBoxRemoveInterjections.Checked)
                 text = RemoveInterjections(text);
@@ -987,6 +990,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine = checkBoxColonSeparateLine.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjections = checkBoxRemoveInterjections.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains = checkBoxRemoveWhereContains.Checked;
+            Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase = checkBoxRemoveIfAllUppercase.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText = comboBoxRemoveIfTextContains.Text;
         }
 
@@ -1001,6 +1005,42 @@ namespace Nikse.SubtitleEdit.Forms
         {
             checkBoxRemoveTextBeforeColonOnlyUppercase.Enabled = checkBoxRemoveTextBeforeColon.Checked;
             checkBoxColonSeparateLine.Enabled = checkBoxRemoveTextBeforeColon.Checked;
+            Cursor = Cursors.WaitCursor;
+            GeneratePreview();
+            Cursor = Cursors.Default;
+        }
+
+        private string RemoveLineIfAllUppercase(string text)
+        {
+            if (!checkBoxRemoveIfAllUppercase.Checked)
+                return text;
+
+            string[] lines = text.Replace(Environment.NewLine, "\n").Replace("\r", "\n").Split('\n');
+            var sb = new StringBuilder();
+            foreach (string line in lines)
+            {
+                string tmp = line.TrimEnd(new char[] { '.', '!', '?', ':', }).Trim();
+                if (line != line.ToLower() && line == line.ToUpper())
+                {
+                    if (tmp == "YES" || tmp == "NO" || tmp == "WHY" || tmp.Length == 1)
+                    {
+                        sb.AppendLine(line);
+                    }
+                    //else if (line.EndsWith(".") ||line.EndsWith("!") ||line.EndsWith("?"))
+                    //{
+                    //    sb.AppendLine(line);
+                    //}
+                }
+                else 
+                {
+                    sb.AppendLine(line);
+                }
+            }
+            return sb.ToString().Trim();
+        }
+
+        private void checkBoxRemoveIfAllUppercase_CheckedChanged(object sender, EventArgs e)
+        {
             Cursor = Cursors.WaitCursor;
             GeneratePreview();
             Cursor = Cursors.Default;
