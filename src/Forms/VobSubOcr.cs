@@ -1925,9 +1925,25 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _lastLine = text;
 
+                text = text.Replace("<i>-</i>", "-");
+                text = text.Replace("<i>a</i>", "a");
+                text = text.Replace("  ", " ");
+                text = text.Trim();
+
+                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+
                 // max allow 2 lines
                 if (checkBoxAutoBreakLines.Checked && text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
-                    text = Utilities.AutoBreakLine(text);
+                {
+                    text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+                    text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                    while (text.Contains(Environment.NewLine + Environment.NewLine))
+                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                    
+                    if (text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+                        text = Utilities.AutoBreakLine(text);
+                }
 
                 Application.DoEvents();
                 if (_abort)

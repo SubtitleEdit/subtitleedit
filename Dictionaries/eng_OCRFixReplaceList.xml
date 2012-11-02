@@ -96,6 +96,7 @@
     <Word from="9UnShQt" to="gunshot" />
     <Word from="a//" to="all" />
     <Word from="a/bum" to="album" />
+    <Word from="a/so" to="also" />
     <Word from="A/ways" to="Always" />
     <Word from="abcut" to="about" />
     <Word from="aboutjoining" to="about joining" />
@@ -233,6 +234,7 @@
     <Word from="comp/etey" to="completely" />
     <Word from="complainingabout" to="complaining about" />
     <Word from="coms" to="come" />
+    <Word from="cond/lion" to="condition" />
     <Word from="confdence" to="confidence" />
     <Word from="conhrmed" to="confirmed" />
     <Word from="connrm" to="confirm" />
@@ -261,6 +263,7 @@
     <Word from="D0" to="Do" />
     <Word from="D0asn't" to="Doesn't" />
     <Word from="Dad'//" to="Dad'll" />
+    <Word from="Dar//ng" to="Darling" />
     <Word from="dc" to="do" />
     <Word from="Dcbby" to="Dobby" />
     <Word from="dccsn't" to="doesn't" />
@@ -359,6 +362,7 @@
     <Word from="FIynn" to="Flynn" />
     <Word from="flll" to="fill" />
     <Word from="flra" to="fira" />
+    <Word from="Flylng" to="Flying" />
     <Word from="Fnends" to="Fiends" />
     <Word from="fo/low" to="follow" />
     <Word from="fonzvard" to="forward" />
@@ -526,6 +530,7 @@
     <Word from="ifl" to="if I" />
     <Word from="Iforgot" to="I forgot" />
     <Word from="Ifound" to="I found" />
+    <Word from="ifthat's" to="if that's" />
     <Word from="ifthe" to="if the" />
     <Word from="Ifthe" to="If the" />
     <Word from="ifthere's" to="if there's" />
@@ -736,6 +741,7 @@
     <Word from="Lfyou" to="If you" />
     <Word from="lfyou're" to="If you're" />
     <Word from="lget" to="I get" />
+    <Word from="lgive" to="I give" />
     <Word from="Li/0/Academy" to="Lilly Academy" />
     <Word from="li/lr." to="Mr." />
     <Word from="licence" to="license" />
@@ -803,6 +809,7 @@
     <Word from="lvluslc" to="MUSIC" />
     <Word from="lVlust" to="Must" />
     <Word from="LVly" to="Lily" />
+    <Word from="lwaited" to="I waited" />
     <Word from="lwamoto" to="Iwamoto" />
     <Word from="lwant" to="I want" />
     <Word from="lwanted" to="I wanted" />
@@ -814,6 +821,7 @@
     <Word from="lwould've" to="I would've" />
     <Word from="lx/Iorning" to="Morning" />
     <Word from="MACH/NE" to="MACHINE" />
+    <Word from="MacKenz/e" to="MacKenzie" />
     <Word from="majorjackpot" to="major jackpot" />
     <Word from="majormuscle" to="major muscle" />
     <Word from="Manuela_" to="Manuela." />
@@ -915,6 +923,7 @@
     <Word from="Offioer's" to="Officer's" />
     <Word from="offreedom" to="of freedom" />
     <Word from="offthe" to="off the" />
+    <Word from="offthis" to="off this" />
     <Word from="offto" to="off to" />
     <Word from="offun" to="of fun" />
     <Word from="ofguy" to="of guy" />
@@ -1058,6 +1067,7 @@
     <Word from="S'EOp" to="Stop" />
     <Word from="severa/parents" to="several parents" />
     <Word from="sfill" to="still" />
+    <Word from="Sﬂence" to="Silence" />
     <Word from="shallrise" to="shall rise" />
     <Word from="sHATTERING" to="SHATTERING" />
     <Word from="shcws" to="shows" />
@@ -1403,6 +1413,7 @@
     <Word from="Yuu've" to="You've" />
     <Word from="z'housand" to="thousand" />
     <Word from="zlPPING" to="ZIPPING" />
+    <Word from="Iongships" to="longships" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -1501,6 +1512,7 @@
     <LinePart from="get 0n" to="get on" />
     <LinePart from="go 0n" to="go on" />
     <LinePart from="Go 0n" to="Go on" />
+    <LinePart from="H3993' birthday" to="Happy birthday" />
     <LinePart from="hadn 't" to="hadn't" />
     <LinePart from="he 's" to="he's" />
     <LinePart from="He 's" to="He's" />
@@ -1664,5 +1676,7 @@
     <Line from="Noll" to="No!!" />
     <Line from="Where're you gﬂing?" to="Where're you going?" />
     <Line from="SQMEWH ERE ELSE" to="SOMEWHERE ELSE" />
+    <Line from="Hil‘ it!" to="Hit it!" />
+    <Line from="&lt;i&gt;Hil‘ it!&lt;/i&gt;" to="&lt;i&gt;Hit it!&lt;/i&gt;" />
   </WholeLines>
 </OCRFixReplaceList>
