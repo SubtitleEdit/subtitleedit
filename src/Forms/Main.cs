@@ -1117,7 +1117,7 @@ namespace Nikse.SubtitleEdit.Forms
                 beforeParagraph.EndTime.TotalMilliseconds == paragraph.EndTime.TotalMilliseconds)
                 _makeHistoryPaused = true;
 
-            int selectedIndex = FirstSelectedIndex;            
+            int selectedIndex = FirstSelectedIndex;
             int index = _subtitle.Paragraphs.IndexOf(paragraph);
             if (index == _subtitleListViewIndex)
             {
@@ -4144,7 +4144,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.AdjustDisplayTimeUsingSeconds(seconds, selectedIndexes);
                     }
                     else
-                    { // recalculate durations!!!                        
+                    { // recalculate durations!!!
                         double maxCharSeconds = (double)(adjustDisplayTime.MaxCharactersPerSecond);
                         _subtitle.RecalculateDisplayTimes(maxCharSeconds, selectedIndexes);
                     }
@@ -15940,6 +15940,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             RefreshSelectedParagraph();
         }
-      
+
     }
 }

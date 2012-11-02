@@ -1031,7 +1031,7 @@ namespace Nikse.SubtitleEdit.Forms
                     //    sb.AppendLine(line);
                     //}
                 }
-                else 
+                else
                 {
                     sb.AppendLine(line);
                 }

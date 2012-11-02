@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                     }
                 }
             }
-          
+
             /// <summary>
             /// Decode caption from the input stream
             /// </summary>
@@ -234,15 +234,15 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 bm.UnlockImage();
                 return bm.GetBitmap();
             }
-            
+
             private static void PutPixel(FastBitmap bmp, int index, int color, BluRaySupPalette palette)
             {
                 int x = index % bmp.Width;
                 int y = index / bmp.Width;
                 if (color > 0 && x < bmp.Width && y < bmp.Height)
                     bmp.SetPixel(x, y, Color.FromArgb(palette.GetArgb(color)));
-            }       
-         
+            }
+
         }
 
         public class PcsData
@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             /// <summary>
             /// if true, contains forced entry
             /// </summary>
-            public bool IsForced { 
+            public bool IsForced {
                 get
                 {
                     foreach (PcsObject obj in PcsObjects)
@@ -273,7 +273,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                     }
                     return false;
                 }
-            }           
+            }
 
             public Bitmap GetBitmap()
             {
@@ -301,8 +301,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                     singleBmp.Dispose();
                 }
                 return mergedBmp;
-            }         
-  
+            }
+
         }
 
 
@@ -331,11 +331,11 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         {
             /// <summary>
             /// Normal: doesn't have to be complete
-            /// </summary> 
+            /// </summary>
             Normal,
 
             /// <summary>
-            /// Acquisition point 
+            /// Acquisition point
             /// </summary>
             AcquPoint,
 
@@ -348,7 +348,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             /// Epoch continue
             /// </summary>
             EpochContinue,
-            
+
             /// <summary>
             /// Unknown value
             /// </summary>
@@ -377,7 +377,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             if (buffer[0] == 0x50 && buffer[1] == 0x47) // 80 + 71 - P G
             {
                 segment.PtsTimestamp = BigEndianInt32(buffer, 2); // read PTS
-                segment.DtsTimestamp = BigEndianInt32(buffer, 6); // read PTS              
+                segment.DtsTimestamp = BigEndianInt32(buffer, 6); // read PTS
                 segment.Type = buffer[10];
                 segment.Size = BigEndianInt16(buffer, 11);
             }
@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         {
             var pcs = new PcsObject();
             // composition_object:
-            pcs.ObjectId = BigEndianInt16(buffer, 11 + offset);	// 16bit object_id_ref
+            pcs.ObjectId = BigEndianInt16(buffer, 11 + offset); // 16bit object_id_ref
             pcs.WindowId = buffer[13 + offset];
             // skipped:  8bit  window_id_ref
             // object_cropped_flag: 0x80, forced_on_flag = 0x040, 6bit reserved
@@ -428,8 +428,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             pcs.StartTime = segment.PtsTimestamp;
             // 8bit  palette_update_flag (0x80), 7bit reserved
             pcs.PaletteUpdate = (buffer[8] == 0x80);
-            pcs.PaletteId = buffer[9];	// 8bit  palette_id_ref
-            int compositionObjectCount = buffer[10];	// 8bit  number_of_composition_objects (0..2)
+            pcs.PaletteId = buffer[9];  // 8bit  palette_id_ref
+            int compositionObjectCount = buffer[10];    // 8bit  number_of_composition_objects (0..2)
 
             sb.AppendFormat("CompNum: {0}, Pts: {1}, State: {2}, PalUpdate: {3}, PalId {4}", pcs.CompNum, ToolBox.PtsToTimeString(pcs.StartTime), pcs.CompositionState, pcs.PaletteUpdate, pcs.PaletteId);
 
@@ -459,7 +459,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         {
             if (pcs.PcsObjects.Count == 0)
                 return true;
-  
+
             if (!palettes.ContainsKey(pcs.PaletteId))
                 return false;
 
@@ -485,7 +485,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// <returns>number of valid palette entries (-1 for fault)</returns>
         private static PdsData ParsePds(byte[] buffer, SupSegment segment)
         {
-            int paletteId = buffer[0];	// 8bit palette ID (0..7)
+            int paletteId = buffer[0];  // 8bit palette ID (0..7)
             // 8bit palette version number (incremented for each palette change)
             int paletteUpdate = buffer[1];
 
@@ -508,7 +508,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         }
 
         /// <summary>
-        /// parse an ODS packet which contain the image data 
+        /// parse an ODS packet which contain the image data
         /// </summary>
         /// <param name="buffer">raw byte date, starting right after segment</param>
         /// <param name="segment">object containing info about the current segment</param>
@@ -517,9 +517,9 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// <returns>true if this is a valid new object (neither invalid nor a fragment)</returns>
         private static OdsData ParseOds(byte[] buffer, SupSegment segment, bool forceFirst)
         {
-            int objId = BigEndianInt16(buffer, 0);		// 16bit object_id
-            int objVer = buffer[2];		// 16bit object_id nikse - index 2 or 1???
-            int objSeq = buffer[3];		// 8bit  first_in_sequence (0x80),
+            int objId = BigEndianInt16(buffer, 0);      // 16bit object_id
+            int objVer = buffer[2];     // 16bit object_id nikse - index 2 or 1???
+            int objSeq = buffer[3];     // 8bit  first_in_sequence (0x80),
             // last_in_sequence (0x40), 6bits reserved
             bool first = ((objSeq & 0x80) == 0x80) || forceFirst;
             bool last = (objSeq & 0x40) == 0x40;
@@ -527,8 +527,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             var info = new ImageObjectFragment();
             if (first)
             {
-                int width = BigEndianInt16(buffer, 7);		// object_width
-                int height = BigEndianInt16(buffer, 9);		// object_height
+                int width = BigEndianInt16(buffer, 7);      // object_width
+                int height = BigEndianInt16(buffer, 9);     // object_height
 
                 info.ImagePacketSize = segment.Size - 11; // Image packet size (image bytes)
                 info.ImageBuffer = new byte[info.ImagePacketSize];
@@ -761,8 +761,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             }
 
             return pcsList;
-        }           
-      
+        }
+
         private static CompositionState GetCompositionState(byte type)
         {
             switch (type)
@@ -792,7 +792,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             if (buffer.Length < 4)
                 return 0;
             return (uint)((buffer[index + 3]) + (buffer[index + 2] << 8) + (buffer[index + 1] << 0x10) + (buffer[index + 0] << 0x18));
-        }            
+        }
 
     }
 }

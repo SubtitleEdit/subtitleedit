@@ -221,7 +221,7 @@ namespace Nikse.SubtitleEdit.Logic
                 PleaseChoose =" - Please choose - ",
             };
 
-            ApplyDurationLimits = new LanguageStructure.ApplyDurationLimits 
+            ApplyDurationLimits = new LanguageStructure.ApplyDurationLimits
             {
                 Title = "Apply duration limits",
                 FixesAvailable = "Fixes available: {0}",
@@ -1915,7 +1915,7 @@ Keep changes?",
                 ShowWaveformOnly = "Show waveform only",
                 ShowSpectrogramOnly = "Show spectrogram only",
                 SeekSilence = "Seek silence...",
-                GuessTimeCodes = "Guess time codes...",               
+                GuessTimeCodes = "Guess time codes...",
             };
 
             WaveFormGenerateTimeCodes = new LanguageStructure.WaveFormGenerateTimeCodes

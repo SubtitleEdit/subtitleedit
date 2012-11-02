@@ -323,7 +323,7 @@
             public string BorderColor { get; set; }
             public string BorderWidth { get; set; }
             public string AntiAlias { get; set; }
-            public string SideBySide3D { get; set; }            
+            public string SideBySide3D { get; set; }
             public string ExportAllLines { get; set; }
             public string XImagesSavedInY { get; set; }
             public string VideoResolution { get; set; }
@@ -1303,7 +1303,7 @@
             public string DefaultFileEncoding { get; set; }
             public string AutoDetectAnsiEncoding { get; set; }
             public string SubtitleLineMaximumLength { get; set; }
-            public string MaximumCharactersPerSecond { get; set; }            
+            public string MaximumCharactersPerSecond { get; set; }
             public string AutoWrapWhileTyping { get; set; }
             public string DurationMinimumMilliseconds { get; set; }
             public string DurationMaximumMilliseconds { get; set; }
