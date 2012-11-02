@@ -781,7 +781,7 @@ namespace Nikse.SubtitleEdit.Forms
             mbp.SubtitleFontSize = _subtitleFontSize;
             mbp.SubtitleFontBold = _subtitleFontBold;
             mbp.P = new Paragraph(text, 0, 0);
-            
+
             int width = 0;
             int height = 0;
             GetResolution(ref width, ref height);

@@ -1940,7 +1940,7 @@ namespace Nikse.SubtitleEdit.Forms
                     text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
                     while (text.Contains(Environment.NewLine + Environment.NewLine))
                         text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                    
+
                     if (text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
                         text = Utilities.AutoBreakLine(text);
                 }
@@ -3795,9 +3795,9 @@ namespace Nikse.SubtitleEdit.Forms
             ListBox lb = sender as ListBox;
             if (lb != null && lb.Items.Count > 0 && lb.SelectedItems.Count > 0)
             {
-                string text = lb.SelectedItems[0].ToString();                
+                string text = lb.SelectedItems[0].ToString();
                 Clipboard.SetText(text);
-            }            
+            }
         }
 
     }

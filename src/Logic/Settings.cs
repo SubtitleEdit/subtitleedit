@@ -744,7 +744,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool RemoveTextBeforeColonOnlyOnSeparateLine { get; set; }
         public bool RemoveInterjections { get; set; }
         public bool RemoveIfContains { get; set; }
-        public bool RemoveIfAllUppercase { get; set; }        
+        public bool RemoveIfAllUppercase { get; set; }
         public string RemoveIfContainsText { get; set; }
 
         public RemoveTextForHearingImpairedSettings()
@@ -2300,7 +2300,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("RemoveTextBetweenOnlySeperateLines", settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeperateLines.ToString());
             textWriter.WriteElementString("RemoveTextBeforeColon", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColon.ToString());
             textWriter.WriteElementString("RemoveTextBeforeColonOnlyIfUppercase", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase.ToString());
-            textWriter.WriteElementString("RemoveTextBeforeColonOnlyOnSeparateLine", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine.ToString());            
+            textWriter.WriteElementString("RemoveTextBeforeColonOnlyOnSeparateLine", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine.ToString());
             textWriter.WriteElementString("RemoveInterjections", settings.RemoveTextForHearingImpaired.RemoveInterjections.ToString());
             textWriter.WriteElementString("RemoveIfAllUppercase", settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase.ToString());
             textWriter.WriteElementString("RemoveIfContains", settings.RemoveTextForHearingImpaired.RemoveIfContains.ToString());

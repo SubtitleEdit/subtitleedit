@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             linkLabelOpenContainingFolder.Visible = false;
             labelStatus.Left = linkLabelOpenContainingFolder.Left;
-            labelStatus.Text = Configuration.Settings.Language.RestoreAutoBackup.NoBackedUpFilesFound;           
+            labelStatus.Text = Configuration.Settings.Language.RestoreAutoBackup.NoBackedUpFilesFound;
         }
 
         private void AddBackupToListView(string fileName)
@@ -144,6 +144,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-    
+
     }
 }
