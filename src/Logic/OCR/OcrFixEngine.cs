@@ -1300,7 +1300,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     {
                         wordsNotFound++;
                         if (log)
-                            UnknownWordsFound.Add(string.Format("#{0}: {1}", index + 1, word));
+                        {
+                            string nf = word;
+                            if (nf.StartsWith("<i>"))
+                                nf = nf.Remove(0, 3);
+                            UnknownWordsFound.Add(string.Format("#{0}: {1}", index + 1, nf));
+                        }
 
                         if (autoFix && useAutoGuess)
                         {

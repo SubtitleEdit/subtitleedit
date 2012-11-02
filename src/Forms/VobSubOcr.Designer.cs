@@ -83,6 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageSuggestions = new System.Windows.Forms.TabPage();
             this.listBoxLogSuggestions = new System.Windows.Forms.ListBox();
             this.tabPageUnknownWords = new System.Windows.Forms.TabPage();
+            this.buttonGoogleIt = new System.Windows.Forms.Button();
             this.buttonAddToOcrReplaceList = new System.Windows.Forms.Button();
             this.buttonUknownToUserDic = new System.Windows.Forms.Button();
             this.buttonUknownToNames = new System.Windows.Forms.Button();
@@ -276,7 +277,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK.Location = new System.Drawing.Point(911, 548);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 6;
+            this.buttonOK.TabIndex = 1;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
@@ -289,7 +290,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Location = new System.Drawing.Point(992, 548);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 7;
+            this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -302,7 +303,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
             this.groupBoxOcrMethod.Size = new System.Drawing.Size(392, 192);
-            this.groupBoxOcrMethod.TabIndex = 13;
+            this.groupBoxOcrMethod.TabIndex = 0;
             this.groupBoxOcrMethod.TabStop = false;
             this.groupBoxOcrMethod.Text = "OCR method";
             // 
@@ -317,7 +318,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxOcrMethod.Location = new System.Drawing.Point(13, 20);
             this.comboBoxOcrMethod.Name = "comboBoxOcrMethod";
             this.comboBoxOcrMethod.Size = new System.Drawing.Size(366, 21);
-            this.comboBoxOcrMethod.TabIndex = 33;
+            this.comboBoxOcrMethod.TabIndex = 0;
             this.comboBoxOcrMethod.SelectedIndexChanged += new System.EventHandler(this.ComboBoxOcrMethodSelectedIndexChanged);
             // 
             // GroupBoxTesseractMethod
@@ -329,7 +330,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.GroupBoxTesseractMethod.Location = new System.Drawing.Point(13, 31);
             this.GroupBoxTesseractMethod.Name = "GroupBoxTesseractMethod";
             this.GroupBoxTesseractMethod.Size = new System.Drawing.Size(366, 131);
-            this.GroupBoxTesseractMethod.TabIndex = 36;
+            this.GroupBoxTesseractMethod.TabIndex = 1;
             this.GroupBoxTesseractMethod.TabStop = false;
             this.GroupBoxTesseractMethod.Text = "Tesseract";
             // 
@@ -341,7 +342,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxTesseractItalicsOn.Location = new System.Drawing.Point(22, 101);
             this.checkBoxTesseractItalicsOn.Name = "checkBoxTesseractItalicsOn";
             this.checkBoxTesseractItalicsOn.Size = new System.Drawing.Size(53, 17);
-            this.checkBoxTesseractItalicsOn.TabIndex = 40;
+            this.checkBoxTesseractItalicsOn.TabIndex = 3;
             this.checkBoxTesseractItalicsOn.Text = "Italics";
             this.checkBoxTesseractItalicsOn.UseVisualStyleBackColor = true;
             // 
@@ -354,7 +355,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxUseModiInTesseractForUnknownWords.Location = new System.Drawing.Point(22, 74);
             this.checkBoxUseModiInTesseractForUnknownWords.Name = "checkBoxUseModiInTesseractForUnknownWords";
             this.checkBoxUseModiInTesseractForUnknownWords.Size = new System.Drawing.Size(165, 17);
-            this.checkBoxUseModiInTesseractForUnknownWords.TabIndex = 39;
+            this.checkBoxUseModiInTesseractForUnknownWords.TabIndex = 2;
             this.checkBoxUseModiInTesseractForUnknownWords.Text = "Try MODI for unknown words";
             this.checkBoxUseModiInTesseractForUnknownWords.UseVisualStyleBackColor = true;
             // 
@@ -364,7 +365,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelTesseractLanguage.Location = new System.Drawing.Point(18, 34);
             this.labelTesseractLanguage.Name = "labelTesseractLanguage";
             this.labelTesseractLanguage.Size = new System.Drawing.Size(54, 13);
-            this.labelTesseractLanguage.TabIndex = 4;
+            this.labelTesseractLanguage.TabIndex = 0;
             this.labelTesseractLanguage.Text = "Language";
             // 
             // comboBoxTesseractLanguages
@@ -374,7 +375,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxTesseractLanguages.Location = new System.Drawing.Point(99, 31);
             this.comboBoxTesseractLanguages.Name = "comboBoxTesseractLanguages";
             this.comboBoxTesseractLanguages.Size = new System.Drawing.Size(195, 21);
-            this.comboBoxTesseractLanguages.TabIndex = 34;
+            this.comboBoxTesseractLanguages.TabIndex = 1;
             this.comboBoxTesseractLanguages.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTesseractLanguagesSelectedIndexChanged);
             // 
             // groupBoxImageCompareMethod
@@ -389,7 +390,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxImageCompareMethod.Location = new System.Drawing.Point(13, 38);
             this.groupBoxImageCompareMethod.Name = "groupBoxImageCompareMethod";
             this.groupBoxImageCompareMethod.Size = new System.Drawing.Size(366, 131);
-            this.groupBoxImageCompareMethod.TabIndex = 35;
+            this.groupBoxImageCompareMethod.TabIndex = 2;
             this.groupBoxImageCompareMethod.TabStop = false;
             this.groupBoxImageCompareMethod.Text = "Image compare";
             // 
@@ -399,7 +400,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxRightToLeft.Location = new System.Drawing.Point(173, 100);
             this.checkBoxRightToLeft.Name = "checkBoxRightToLeft";
             this.checkBoxRightToLeft.Size = new System.Drawing.Size(80, 17);
-            this.checkBoxRightToLeft.TabIndex = 40;
+            this.checkBoxRightToLeft.TabIndex = 6;
             this.checkBoxRightToLeft.Text = "Right to left";
             this.checkBoxRightToLeft.UseVisualStyleBackColor = true;
             // 
@@ -418,7 +419,7 @@ namespace Nikse.SubtitleEdit.Forms
             0});
             this.numericUpDownPixelsIsSpace.Name = "numericUpDownPixelsIsSpace";
             this.numericUpDownPixelsIsSpace.Size = new System.Drawing.Size(50, 21);
-            this.numericUpDownPixelsIsSpace.TabIndex = 35;
+            this.numericUpDownPixelsIsSpace.TabIndex = 5;
             this.numericUpDownPixelsIsSpace.Value = new decimal(new int[] {
             1,
             0,
@@ -430,7 +431,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonEditCharacterDatabase.Location = new System.Drawing.Point(278, 46);
             this.buttonEditCharacterDatabase.Name = "buttonEditCharacterDatabase";
             this.buttonEditCharacterDatabase.Size = new System.Drawing.Size(68, 21);
-            this.buttonEditCharacterDatabase.TabIndex = 33;
+            this.buttonEditCharacterDatabase.TabIndex = 3;
             this.buttonEditCharacterDatabase.Text = "Edit";
             this.buttonEditCharacterDatabase.UseVisualStyleBackColor = true;
             this.buttonEditCharacterDatabase.Click += new System.EventHandler(this.ButtonEditCharacterDatabaseClick);
@@ -441,7 +442,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelNoOfPixelsIsSpace.Location = new System.Drawing.Point(6, 69);
             this.labelNoOfPixelsIsSpace.Name = "labelNoOfPixelsIsSpace";
             this.labelNoOfPixelsIsSpace.Size = new System.Drawing.Size(104, 13);
-            this.labelNoOfPixelsIsSpace.TabIndex = 34;
+            this.labelNoOfPixelsIsSpace.TabIndex = 4;
             this.labelNoOfPixelsIsSpace.Text = "No of pixels is space";
             // 
             // comboBoxCharacterDatabase
@@ -451,7 +452,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxCharacterDatabase.Location = new System.Drawing.Point(130, 19);
             this.comboBoxCharacterDatabase.Name = "comboBoxCharacterDatabase";
             this.comboBoxCharacterDatabase.Size = new System.Drawing.Size(142, 21);
-            this.comboBoxCharacterDatabase.TabIndex = 31;
+            this.comboBoxCharacterDatabase.TabIndex = 1;
             this.comboBoxCharacterDatabase.SelectedIndexChanged += new System.EventHandler(this.ComboBoxCharacterDatabaseSelectedIndexChanged);
             // 
             // labelImageDatabase
@@ -460,7 +461,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelImageDatabase.Location = new System.Drawing.Point(7, 22);
             this.labelImageDatabase.Name = "labelImageDatabase";
             this.labelImageDatabase.Size = new System.Drawing.Size(85, 13);
-            this.labelImageDatabase.TabIndex = 30;
+            this.labelImageDatabase.TabIndex = 0;
             this.labelImageDatabase.Text = "Image database";
             // 
             // buttonNewCharacterDatabase
@@ -468,7 +469,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonNewCharacterDatabase.Location = new System.Drawing.Point(278, 19);
             this.buttonNewCharacterDatabase.Name = "buttonNewCharacterDatabase";
             this.buttonNewCharacterDatabase.Size = new System.Drawing.Size(68, 21);
-            this.buttonNewCharacterDatabase.TabIndex = 32;
+            this.buttonNewCharacterDatabase.TabIndex = 2;
             this.buttonNewCharacterDatabase.Text = "New";
             this.buttonNewCharacterDatabase.UseVisualStyleBackColor = true;
             this.buttonNewCharacterDatabase.Click += new System.EventHandler(this.ButtonNewCharacterDatabaseClick);
@@ -480,7 +481,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxModiMethod.Location = new System.Drawing.Point(7, 50);
             this.groupBoxModiMethod.Name = "groupBoxModiMethod";
             this.groupBoxModiMethod.Size = new System.Drawing.Size(366, 131);
-            this.groupBoxModiMethod.TabIndex = 35;
+            this.groupBoxModiMethod.TabIndex = 3;
             this.groupBoxModiMethod.TabStop = false;
             this.groupBoxModiMethod.Text = "MODI";
             // 
@@ -500,7 +501,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxModiLanguage.Location = new System.Drawing.Point(108, 55);
             this.comboBoxModiLanguage.Name = "comboBoxModiLanguage";
             this.comboBoxModiLanguage.Size = new System.Drawing.Size(195, 21);
-            this.comboBoxModiLanguage.TabIndex = 9;
+            this.comboBoxModiLanguage.TabIndex = 0;
             this.comboBoxModiLanguage.SelectedIndexChanged += new System.EventHandler(this.ComboBoxModiLanguageSelectedIndexChanged);
             // 
             // groupBoxOCRControls
@@ -513,7 +514,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOCRControls.Location = new System.Drawing.Point(368, 207);
             this.groupBoxOCRControls.Name = "groupBoxOCRControls";
             this.groupBoxOCRControls.Size = new System.Drawing.Size(287, 84);
-            this.groupBoxOCRControls.TabIndex = 28;
+            this.groupBoxOCRControls.TabIndex = 2;
             this.groupBoxOCRControls.TabStop = false;
             this.groupBoxOCRControls.Text = "OCR Start/stop";
             // 
@@ -523,7 +524,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStartFrom.Location = new System.Drawing.Point(120, 26);
             this.labelStartFrom.Name = "labelStartFrom";
             this.labelStartFrom.Size = new System.Drawing.Size(127, 13);
-            this.labelStartFrom.TabIndex = 31;
+            this.labelStartFrom.TabIndex = 1;
             this.labelStartFrom.Text = "Start OCR from subtitle#";
             // 
             // numericUpDownStartNumber
@@ -541,7 +542,7 @@ namespace Nikse.SubtitleEdit.Forms
             0});
             this.numericUpDownStartNumber.Name = "numericUpDownStartNumber";
             this.numericUpDownStartNumber.Size = new System.Drawing.Size(64, 21);
-            this.numericUpDownStartNumber.TabIndex = 30;
+            this.numericUpDownStartNumber.TabIndex = 3;
             this.numericUpDownStartNumber.Value = new decimal(new int[] {
             1,
             0,
@@ -554,7 +555,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonStop.Location = new System.Drawing.Point(11, 52);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(105, 22);
-            this.buttonStop.TabIndex = 29;
+            this.buttonStop.TabIndex = 2;
             this.buttonStop.Text = "Stop OCR";
             this.buttonStop.UseVisualStyleBackColor = true;
             this.buttonStop.Click += new System.EventHandler(this.ButtonStopClick);
@@ -566,7 +567,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonStartOcr.Location = new System.Drawing.Point(11, 24);
             this.buttonStartOcr.Name = "buttonStartOcr";
             this.buttonStartOcr.Size = new System.Drawing.Size(105, 22);
-            this.buttonStartOcr.TabIndex = 28;
+            this.buttonStartOcr.TabIndex = 0;
             this.buttonStartOcr.Text = "Start OCR";
             this.buttonStartOcr.UseVisualStyleBackColor = true;
             this.buttonStartOcr.Click += new System.EventHandler(this.ButtonStartOcrClick);
@@ -585,7 +586,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOcrAutoFix.Location = new System.Drawing.Point(0, 0);
             this.groupBoxOcrAutoFix.Name = "groupBoxOcrAutoFix";
             this.groupBoxOcrAutoFix.Size = new System.Drawing.Size(400, 333);
-            this.groupBoxOcrAutoFix.TabIndex = 34;
+            this.groupBoxOcrAutoFix.TabIndex = 0;
             this.groupBoxOcrAutoFix.TabStop = false;
             this.groupBoxOcrAutoFix.Text = "OCR auto correction / spellchecking";
             // 
@@ -595,7 +596,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelFixesMade.Location = new System.Drawing.Point(151, 48);
             this.labelFixesMade.Name = "labelFixesMade";
             this.labelFixesMade.Size = new System.Drawing.Size(98, 13);
-            this.labelFixesMade.TabIndex = 35;
+            this.labelFixesMade.TabIndex = 3;
             this.labelFixesMade.Text = "NumberOfOcrFixes";
             // 
             // comboBoxDictionaries
@@ -607,7 +608,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxDictionaries.Location = new System.Drawing.Point(127, 20);
             this.comboBoxDictionaries.Name = "comboBoxDictionaries";
             this.comboBoxDictionaries.Size = new System.Drawing.Size(265, 21);
-            this.comboBoxDictionaries.TabIndex = 41;
+            this.comboBoxDictionaries.TabIndex = 1;
             this.comboBoxDictionaries.SelectedIndexChanged += new System.EventHandler(this.comboBoxDictionaries_SelectedIndexChanged);
             // 
             // checkBoxGuessUnknownWords
@@ -618,7 +619,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxGuessUnknownWords.Location = new System.Drawing.Point(11, 91);
             this.checkBoxGuessUnknownWords.Name = "checkBoxGuessUnknownWords";
             this.checkBoxGuessUnknownWords.Size = new System.Drawing.Size(162, 17);
-            this.checkBoxGuessUnknownWords.TabIndex = 39;
+            this.checkBoxGuessUnknownWords.TabIndex = 5;
             this.checkBoxGuessUnknownWords.Text = "Try to guess unknown words";
             this.checkBoxGuessUnknownWords.UseVisualStyleBackColor = true;
             // 
@@ -634,7 +635,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabControlLogs.Name = "tabControlLogs";
             this.tabControlLogs.SelectedIndex = 0;
             this.tabControlLogs.Size = new System.Drawing.Size(383, 181);
-            this.tabControlLogs.TabIndex = 35;
+            this.tabControlLogs.TabIndex = 7;
             // 
             // tabPageAllFixes
             // 
@@ -655,8 +656,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxLog.Location = new System.Drawing.Point(3, 3);
             this.listBoxLog.Name = "listBoxLog";
             this.listBoxLog.Size = new System.Drawing.Size(369, 149);
-            this.listBoxLog.TabIndex = 39;
+            this.listBoxLog.TabIndex = 0;
             this.listBoxLog.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
+            this.listBoxLog.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxCopyToClipboard_KeyDown);
             // 
             // tabPageSuggestions
             // 
@@ -679,9 +681,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxLogSuggestions.Size = new System.Drawing.Size(369, 149);
             this.listBoxLogSuggestions.TabIndex = 40;
             this.listBoxLogSuggestions.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
+            this.listBoxLogSuggestions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxCopyToClipboard_KeyDown);
             // 
             // tabPageUnknownWords
             // 
+            this.tabPageUnknownWords.Controls.Add(this.buttonGoogleIt);
             this.tabPageUnknownWords.Controls.Add(this.buttonAddToOcrReplaceList);
             this.tabPageUnknownWords.Controls.Add(this.buttonUknownToUserDic);
             this.tabPageUnknownWords.Controls.Add(this.buttonUknownToNames);
@@ -693,6 +697,18 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageUnknownWords.Text = "Unknown words";
             this.tabPageUnknownWords.UseVisualStyleBackColor = true;
             // 
+            // buttonGoogleIt
+            // 
+            this.buttonGoogleIt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonGoogleIt.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonGoogleIt.Location = new System.Drawing.Point(219, 88);
+            this.buttonGoogleIt.Name = "buttonGoogleIt";
+            this.buttonGoogleIt.Size = new System.Drawing.Size(150, 21);
+            this.buttonGoogleIt.TabIndex = 3;
+            this.buttonGoogleIt.Text = "Google it";
+            this.buttonGoogleIt.UseVisualStyleBackColor = true;
+            this.buttonGoogleIt.Click += new System.EventHandler(this.buttonGoogleIt_Click);
+            // 
             // buttonAddToOcrReplaceList
             // 
             this.buttonAddToOcrReplaceList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -700,7 +716,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonAddToOcrReplaceList.Location = new System.Drawing.Point(219, 61);
             this.buttonAddToOcrReplaceList.Name = "buttonAddToOcrReplaceList";
             this.buttonAddToOcrReplaceList.Size = new System.Drawing.Size(150, 21);
-            this.buttonAddToOcrReplaceList.TabIndex = 43;
+            this.buttonAddToOcrReplaceList.TabIndex = 2;
             this.buttonAddToOcrReplaceList.Text = "Add ocr replace pair";
             this.buttonAddToOcrReplaceList.UseVisualStyleBackColor = true;
             this.buttonAddToOcrReplaceList.Click += new System.EventHandler(this.buttonAddToOcrReplaceList_Click);
@@ -712,7 +728,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonUknownToUserDic.Location = new System.Drawing.Point(219, 34);
             this.buttonUknownToUserDic.Name = "buttonUknownToUserDic";
             this.buttonUknownToUserDic.Size = new System.Drawing.Size(150, 21);
-            this.buttonUknownToUserDic.TabIndex = 42;
+            this.buttonUknownToUserDic.TabIndex = 1;
             this.buttonUknownToUserDic.Text = "Add to user dictionary";
             this.buttonUknownToUserDic.UseVisualStyleBackColor = true;
             this.buttonUknownToUserDic.Click += new System.EventHandler(this.buttonUknownToUserDic_Click);
@@ -724,7 +740,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonUknownToNames.Location = new System.Drawing.Point(219, 7);
             this.buttonUknownToNames.Name = "buttonUknownToNames";
             this.buttonUknownToNames.Size = new System.Drawing.Size(150, 21);
-            this.buttonUknownToNames.TabIndex = 41;
+            this.buttonUknownToNames.TabIndex = 0;
             this.buttonUknownToNames.Text = "Add to names etc list";
             this.buttonUknownToNames.UseVisualStyleBackColor = true;
             this.buttonUknownToNames.Click += new System.EventHandler(this.buttonUknownToNames_Click);
@@ -741,6 +757,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxUnknownWords.Size = new System.Drawing.Size(213, 147);
             this.listBoxUnknownWords.TabIndex = 40;
             this.listBoxUnknownWords.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
+            this.listBoxUnknownWords.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxCopyToClipboard_KeyDown);
             // 
             // checkBoxPromptForUnknownWords
             // 
@@ -750,7 +767,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxPromptForUnknownWords.Location = new System.Drawing.Point(11, 69);
             this.checkBoxPromptForUnknownWords.Name = "checkBoxPromptForUnknownWords";
             this.checkBoxPromptForUnknownWords.Size = new System.Drawing.Size(246, 17);
-            this.checkBoxPromptForUnknownWords.TabIndex = 38;
+            this.checkBoxPromptForUnknownWords.TabIndex = 4;
             this.checkBoxPromptForUnknownWords.Text = "Prompt for unknown words (requires dictionary)";
             this.checkBoxPromptForUnknownWords.UseVisualStyleBackColor = true;
             // 
@@ -762,7 +779,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxAutoBreakLines.Location = new System.Drawing.Point(11, 113);
             this.checkBoxAutoBreakLines.Name = "checkBoxAutoBreakLines";
             this.checkBoxAutoBreakLines.Size = new System.Drawing.Size(200, 17);
-            this.checkBoxAutoBreakLines.TabIndex = 37;
+            this.checkBoxAutoBreakLines.TabIndex = 6;
             this.checkBoxAutoBreakLines.Text = "Auto break subtitle, if line number > 2";
             this.checkBoxAutoBreakLines.UseVisualStyleBackColor = true;
             // 
@@ -772,7 +789,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelDictionaryLoaded.Location = new System.Drawing.Point(11, 24);
             this.labelDictionaryLoaded.Name = "labelDictionaryLoaded";
             this.labelDictionaryLoaded.Size = new System.Drawing.Size(112, 13);
-            this.labelDictionaryLoaded.TabIndex = 36;
+            this.labelDictionaryLoaded.TabIndex = 0;
             this.labelDictionaryLoaded.Text = "labelDictionaryLoaded";
             // 
             // checkBoxAutoFixCommonErrors
@@ -783,7 +800,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxAutoFixCommonErrors.Location = new System.Drawing.Point(11, 47);
             this.checkBoxAutoFixCommonErrors.Name = "checkBoxAutoFixCommonErrors";
             this.checkBoxAutoFixCommonErrors.Size = new System.Drawing.Size(137, 17);
-            this.checkBoxAutoFixCommonErrors.TabIndex = 34;
+            this.checkBoxAutoFixCommonErrors.TabIndex = 2;
             this.checkBoxAutoFixCommonErrors.Text = "Fix common OCR errors";
             this.checkBoxAutoFixCommonErrors.UseVisualStyleBackColor = true;
             // 
@@ -953,7 +970,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxShowOnlyForced.Location = new System.Drawing.Point(369, 313);
             this.checkBoxShowOnlyForced.Name = "checkBoxShowOnlyForced";
             this.checkBoxShowOnlyForced.Size = new System.Drawing.Size(152, 17);
-            this.checkBoxShowOnlyForced.TabIndex = 37;
+            this.checkBoxShowOnlyForced.TabIndex = 4;
             this.checkBoxShowOnlyForced.Text = "Show only forced subtitles";
             this.checkBoxShowOnlyForced.UseVisualStyleBackColor = true;
             this.checkBoxShowOnlyForced.CheckedChanged += new System.EventHandler(this.checkBoxShowOnlyForced_CheckedChanged);
@@ -965,7 +982,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxUseTimeCodesFromIdx.Location = new System.Drawing.Point(369, 295);
             this.checkBoxUseTimeCodesFromIdx.Name = "checkBoxUseTimeCodesFromIdx";
             this.checkBoxUseTimeCodesFromIdx.Size = new System.Drawing.Size(186, 17);
-            this.checkBoxUseTimeCodesFromIdx.TabIndex = 38;
+            this.checkBoxUseTimeCodesFromIdx.TabIndex = 3;
             this.checkBoxUseTimeCodesFromIdx.Text = "Use lines/time codes from .idx file";
             this.checkBoxUseTimeCodesFromIdx.UseVisualStyleBackColor = true;
             this.checkBoxUseTimeCodesFromIdx.CheckedChanged += new System.EventHandler(this.checkBoxUseTimeCodesFromIdx_CheckedChanged);
@@ -1010,7 +1027,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxCurrentText.Multiline = true;
             this.textBoxCurrentText.Name = "textBoxCurrentText";
             this.textBoxCurrentText.Size = new System.Drawing.Size(354, 77);
-            this.textBoxCurrentText.TabIndex = 5;
+            this.textBoxCurrentText.TabIndex = 1;
             this.textBoxCurrentText.TextChanged += new System.EventHandler(this.TextBoxCurrentTextTextChanged);
             this.textBoxCurrentText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxCurrentText_KeyDown);
             // 
@@ -1030,7 +1047,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.Name = "subtitleListView1";
             this.subtitleListView1.OwnerDraw = true;
             this.subtitleListView1.Size = new System.Drawing.Size(631, 183);
-            this.subtitleListView1.TabIndex = 4;
+            this.subtitleListView1.TabIndex = 0;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
@@ -1182,5 +1199,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonUknownToUserDic;
         private System.Windows.Forms.Button buttonUknownToNames;
         private System.Windows.Forms.Button buttonAddToOcrReplaceList;
+        private System.Windows.Forms.Button buttonGoogleIt;
     }
 }
