@@ -204,6 +204,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonUknownToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
             buttonUknownToUserDic.Text = Configuration.Settings.Language.SpellCheck.AddToUserDictionary;
             buttonAddToOcrReplaceList.Text = Configuration.Settings.Language.SpellCheck.AddToOcrReplaceList;
+            buttonGoogleIt.Text = Configuration.Settings.Language.Main.VideoControls.GoogleIt;
 
             numericUpDownPixelsIsSpace.Left = labelNoOfPixelsIsSpace.Left + labelNoOfPixelsIsSpace.Width + 5;
             groupBoxSubtitleImage.Text = string.Empty;
@@ -2624,6 +2625,16 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle.Paragraphs[_selectedIndex].Text = text;
                 subtitleListView1.SetText(_selectedIndex, text);
             }
+            FixVerticalScrollBars(textBoxCurrentText);
+        }
+
+        private void FixVerticalScrollBars(TextBox tb)
+        {
+            var lineCount = Utilities.CountTagInText(tb.Text, Environment.NewLine) + 1;
+            if (lineCount > 5)
+                tb.ScrollBars = ScrollBars.Vertical;
+            else
+                tb.ScrollBars = ScrollBars.None;
         }
 
         private void ButtonNewCharacterDatabaseClick(object sender, EventArgs e)
@@ -3748,6 +3759,29 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
+
+        private void buttonGoogleIt_Click(object sender, EventArgs e)
+        {
+            if (listBoxUnknownWords.Items.Count > 0 && listBoxUnknownWords.SelectedItems.Count > 0)
+            {
+                string text = listBoxUnknownWords.SelectedItems[0].ToString();
+                if (text.Contains(":"))
+                {
+                    text = text.Substring(text.IndexOf(":") + 1).Trim();
+                    System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(text));
+                }
+            }
+        }
+
+        private void listBoxCopyToClipboard_KeyDown(object sender, KeyEventArgs e)
+        {
+            ListBox lb = sender as ListBox;
+            if (lb != null && lb.Items.Count > 0 && lb.SelectedItems.Count > 0)
+            {
+                string text = lb.SelectedItems[0].ToString();                
+                Clipboard.SetText(text);
+            }            
         }
 
     }

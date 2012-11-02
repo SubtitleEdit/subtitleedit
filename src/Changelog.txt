@@ -1,6 +1,6 @@
 Subtitle Edit Changelog
 
-3.3 Beta 2 (21st October 2012)
+3.3 Beta RC1 (? November 2012)
 * NEW:
    * Added column commands to list view context menu - thx Seungki
    * Edit -> Reverse RTL start/end (fix punctuations)
@@ -31,6 +31,7 @@ Subtitle Edit Changelog
    * Added Sync -> Adjust in percent - thx Ralf
    * Subtitle beamer - thx Ralf
    * Many new shortcuts
+   * Added "Remove line if all uppercase" to "Remove text for HI" 
 * IMPROVED:
    * Improved support for Advanced Substation Alpha (+ Substation Alpha)
    * Improved support for SAMI (now two different formats + font color support)
@@ -45,10 +46,12 @@ Subtitle Edit Changelog
    * New command line conversion parameters: /list, /overwrite, /inputfolder
    * File -> Export - can now choose custom video resolution + supports color
    * Timed Text now allows for time codes in ticks - thx Allan
+   * Upgraded Tesseract to version 3.02.02
 * FIXED:
    * Auto-translate now works for English to Portuguese - thx w.tambley
    * Shortcuts with numbers (0-9)
    * Reading of Bluray sup with errors in image - thx Simon
+   * Fixed bug in parsing of Bluray sup files - thx e.patic82
    * Reading of SAMI files with time codes in quotes - thx Josh
    * Reading of Ulead files with position codes - thx Steve
    * Reading of time codes + adjust with format SCC - thx Marquise
@@ -67,6 +70,7 @@ Subtitle Edit Changelog
    * Fixed frame rate calculated too high - thx Saulius
    * Fixed missing last line in a couple of subtitle formats
    * Minor fixes for "Change casing" + "Split long lines" - thx Marcio
+   * Timed Text 1.0 uses frames instead of milliseconds (if relevant) - thx Stefan
 
 
 3.2.8 (3rd June 2012)

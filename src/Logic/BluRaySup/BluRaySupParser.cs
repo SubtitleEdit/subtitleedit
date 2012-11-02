@@ -19,9 +19,9 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
-using System.Drawing.Imaging;
 
 namespace Nikse.SubtitleEdit.Logic.BluRaySup
 {
@@ -241,27 +241,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 int y = index / bmp.Width;
                 if (color > 0 && x < bmp.Width && y < bmp.Height)
                     bmp.SetPixel(x, y, Color.FromArgb(palette.GetArgb(color)));
-            }
-
-            private static int TestColorDiff(Color c1, Color c2, int maxDiff)
-            {
-                int rDiff = Math.Abs(c1.R - c2.R);
-                if (rDiff > maxDiff)
-                {
-                    return -1;
-                }
-                int gDiff = Math.Abs(c1.G - c2.G);
-                if (gDiff > maxDiff)
-                {
-                    return -1;
-                }
-                int bDiff = Math.Abs(c1.B - c2.B);
-                if (bDiff > maxDiff)
-                {
-                    return -1;
-                }
-                return Math.Max(rDiff, Math.Max(gDiff, bDiff));
-            }
+            }       
          
         }
 
@@ -297,39 +277,30 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
             public Bitmap GetBitmap()
             {
-                BluRaySupPalette palette = SupDecoder.DecodePalette(PaletteInfos);
-                List<Color> colors = new List<Color>();
-                for (int colorIndex = 0; colorIndex < 256; colorIndex++)
-                {
-                    colors.Add(Color.FromArgb(palette.GetArgb(colorIndex)));
-                }
+                if (PcsObjects.Count == 1)
+                    return SupDecoder.DecodeImage(PcsObjects[0], BitmapObjects[0], PaletteInfos);
 
-                Rectangle r = Rectangle.Empty;
+                var r = Rectangle.Empty;
                 for (int ioIndex = 0; ioIndex < PcsObjects.Count; ioIndex++)
                 {
                     Rectangle ioRect = new Rectangle(PcsObjects[ioIndex].Origin, BitmapObjects[ioIndex][0].Size);
                     if (r.IsEmpty)
-                    {
                         r = ioRect;
-                    }
                     else
-                    {
                         r = Rectangle.Union(r, ioRect);
-                    }
                 }
-
-                var bmp = new Bitmap(r.Width, r.Height, PixelFormat.Format32bppArgb);
+                var mergedBmp = new Bitmap(r.Width, r.Height, PixelFormat.Format32bppArgb);
                 for (int ioIndex = 0; ioIndex < PcsObjects.Count; ioIndex++)
                 {
                     Point offset = PcsObjects[ioIndex].Origin - new Size(r.Location);
                     var singleBmp = SupDecoder.DecodeImage(PcsObjects[ioIndex], BitmapObjects[ioIndex], PaletteInfos);
-                    using (Graphics gSideBySide = Graphics.FromImage(bmp))
+                    using (Graphics gSideBySide = Graphics.FromImage(mergedBmp))
                     {
                         gSideBySide.DrawImage(singleBmp, offset.X, offset.Y);
                     }
                     singleBmp.Dispose();
                 }
-                return bmp;
+                return mergedBmp;
             }         
   
         }
@@ -787,13 +758,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                             odsList.RemoveAt(1);
                     }
                 }
-            }
-
-            // Remove empty items
-            for (int i = pcsList.Count - 1; i > 0; i--)
-            { 
-                if (pcsList[i].PcsObjects.Count == 0)
-                    pcsList.RemoveAt(i);
             }
 
             return pcsList;
