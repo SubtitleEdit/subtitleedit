@@ -286,9 +286,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xe081, //=أ
             0xe09b, //=ؤ
             0xe09c, //=ئ
+            0xe09f, //=ي 
             0xe181, //=إ
             0xe281, //=آ
-            0xe781, //=اً
+            0xe781, //=اً           
             0x80,
             0x81, //=ا
             0x82, //=ب
@@ -327,6 +328,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "أ",
             "ؤ",
             "ئ",
+            "ي", // 0xe09f
             "إ",
             "آ",
             "اً",
@@ -865,7 +867,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (index +20 >= buffer.Length)
                     return null;
 
-                if (buffer[index] == 0xFE && (buffer[index - 15] == 0x60 ||buffer[index - 15] == 0x61))
+                if (buffer[index] == 0xFE && (buffer[index - 15] == 0x60 || buffer[index - 15] == 0x61))
                     con = false;
                 if (buffer[index] == 0xFE && (buffer[index - 12] == 0x60 || buffer[index - 12] == 0x61))
                     con = false;
