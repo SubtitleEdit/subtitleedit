@@ -184,7 +184,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     if (radioButtonDurationAuto.Checked)
-                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + (Utilities.GetDisplayMillisecondsFromText(p.Text) * 1.2);
+                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + (Utilities.GetOptimalDisplayMilliseconds(p.Text));
                     else
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + ((double)numericUpDownDurationFixed.Value);
                 }

@@ -10,7 +10,7 @@
     <OK>&amp;Ongi</OK>
     <Cancel>E&amp;zeztatu</Cancel>
     <Apply>Ezarri</Apply>
-    <None>Inoiz ez</None>
+    <None>Ezer ez</None>
     <Preview>Aurreikuspena</Preview>
     <SubtitleFiles>Azpidatzi agiriak</SubtitleFiles>
     <AllFiles>Agiri guztiak</AllFiles>
@@ -239,8 +239,8 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Hizki margoa</FontColor>
     <BorderColor>Hertz margoa</BorderColor>
     <BorderWidth>Hertz zabalera</BorderWidth>
-    <AntiAlias>Izenorde Aurkakoa</AntiAlias>
-    <ExportAllLines>Esport. lerro denak...</ExportAllLines>
+    <AntiAlias>Hertz lausopena</AntiAlias>
+    <ExportAllLines>Esportatu lerro denak...</ExportAllLines>
     <XImagesSavedInY>{0} irudi gordeta hemen {1}</XImagesSavedInY>
     <VideoResolution>Bideo Bereizmena</VideoResolution>
     <Align>Lerrokatu</Align>
@@ -265,7 +265,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Step1>1/2 Urratsa - Hautatu zein akats zuzendu</Step1>
     <WhatToFix>Zuzentzekoak</WhatToFix>
     <Example>Adibidea</Example>
-    <SelectAll>Hautatu dena</SelectAll>
+    <SelectAll>Hautatu denak</SelectAll>
     <InverseSelection>Alder. hautap.</InverseSelection>
     <Back>&lt; &amp;Atzera</Back>
     <Next>&amp;Hurrengoa &gt;</Next>
@@ -388,7 +388,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Hiztegiak behar dituzu?</Title>
-    <DescriptionLine1>Subtitle Edit-en idaz egiaztapena NHunspell motorean ohinarriturik dago.</DescriptionLine1>
+    <DescriptionLine1>Subtitle Edit-en idaz-egiaztapena NHunspell motorean ohinarriturik dago.</DescriptionLine1>
     <DescriptionLine2>Erabili idaz egiaztapen hiztegiak Open Officetik.</DescriptionLine2>
     <GetDictionariesHere>Lortu hiztegiak hemen:</GetDictionariesHere>
     <OpenOpenOfficeWiki>Ireki Open Office Wiki Hiztegi zerrenda</OpenOpenOfficeWiki>
@@ -446,22 +446,22 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>&amp;Agiria</Title>
         <New>&amp;Berria</New>
         <Open>&amp;Ireki</Open>
-        <Reopen>&amp;Birrireki</Reopen>
+        <Reopen>Bi&amp;rrireki</Reopen>
         <Save>&amp;Gorde</Save>
         <SaveAs>Gorde &amp;honela...</SaveAs>
-        <OpenOriginal>Ireki jatorrizko azpidatzia (itzultzaile eran)...</OpenOriginal>
+        <OpenOriginal>Ireki &amp;jatorrizko azpidatzia (itzultzaile eran)...</OpenOriginal>
         <SaveOriginal>Gorde jatorrizko azpidatzia</SaveOriginal>
         <CloseOriginal>Itxi jatorrizko azpidatzia</CloseOriginal>
-        <OpenContainingFolder>Ireki azpidatziaren agiritegia</OpenContainingFolder>
+        <OpenContainingFolder>Ireki a&amp;zpidatziaren agiritegia</OpenContainingFolder>
         <Compare>&amp;Alderatu...</Compare>
         <ImportOcrFromDvd>Inportatu/OCR azpidatzia vob/ifo (dvd)-tik...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>Inportatu/OCR VobSub (sub/idx) azpidatzia...</ImportOcrVobSubSubtitle>
+        <ImportOcrVobSubSubtitle>Inportatu/OCR &amp;VobSub (sub/idx) azpidatzia...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Inportatu/OCR Blu-ray azpidatzi agiria...</ImportBluRaySupFile>
-        <ImportSubtitleFromMatroskaFile>Inportatu azpidatzia Matroska agiritik...</ImportSubtitleFromMatroskaFile>
+        <ImportSubtitleFromMatroskaFile>Inportatu azpidatzia &amp;Matroska agiritik...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Inportatu azpidatzia eskuzko kodeaketa hautapenarekin...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Inportatu idatzi laua...</ImportText>
         <ImportTimecodes>Inportatu denbora &amp;kodeak...</ImportTimecodes>
-        <Export>Esportatu</Export>
+        <Export>&amp;Esportatu</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
@@ -484,13 +484,13 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
       </Edit>
       <Tools>
         <Title>&amp;Tresnak</Title>
-        <AdjustDisplayDuration>Ze&amp;haztu iraupenak...</AdjustDisplayDuration>
-        <FixCommonErrors>&amp;Zuzendu akats arruntak...</FixCommonErrors>
-        <StartNumberingFrom>Hasi zenbakitzea hemendik...</StartNumberingFrom>
-        <RemoveTextForHearingImpaired>Kendu gorrentzako idatzia...</RemoveTextForHearingImpaired>
+        <AdjustDisplayDuration>&amp;Zehaztu iraupenak...</AdjustDisplayDuration>
+        <FixCommonErrors>Zuzendu &amp;akats arruntak...</FixCommonErrors>
+        <StartNumberingFrom>&amp;Hasi zenbakitzea hemendik...</StartNumberingFrom>
+        <RemoveTextForHearingImpaired>&amp;Kendu gorrentzako idatzia...</RemoveTextForHearingImpaired>
         <ChangeCasing>Aldatu hizkia...</ChangeCasing>
-        <ChangeFrameRate>Aldatu frame neurria...</ChangeFrameRate>
-        <MergeShortLines>Batu lerro laburrak...</MergeShortLines>
+        <ChangeFrameRate>Aldatu &amp;frame neurria...</ChangeFrameRate>
+        <MergeShortLines>Batu &amp;lerro laburrak...</MergeShortLines>
         <SplitLongLines>&amp;Banandu lerro luzeak...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Gutxiengo erakus denbora esaldi artean...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Antolatu honela</SortBy>
@@ -512,16 +512,16 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>&amp;Bideoa</Title>
         <OpenVideo>&amp;Ireki bideo agiria...</OpenVideo>
         <ChooseAudioTrack>Hautatu audio bidea</ChooseAudioTrack>
-        <CloseVideo>Itxi bideo agiria</CloseVideo>
-        <ShowHideVideo>Erakutsi/ezkutatu &amp;bideoa</ShowHideVideo>
-        <ShowHideWaveForm>Erakutsi/ezkutatu &amp;uhinera</ShowHideWaveForm>
-        <ShowHideWaveformAndSpectrogram>Erakutsi/ezkutatu uhinera eta argilitzaera</ShowHideWaveformAndSpectrogram>
-        <UnDockVideoControls>U&amp;ztargabetu bideo aginteak</UnDockVideoControls>
+        <CloseVideo>It&amp;xi bideo agiria</CloseVideo>
+        <ShowHideVideo>E&amp;rakutsi/ezkutatu bideoa</ShowHideVideo>
+        <ShowHideWaveForm>&amp;Erakutsi/ezkutatu uhinera</ShowHideWaveForm>
+        <ShowHideWaveformAndSpectrogram>&amp;Erakutsi/ezkutatu uhinera eta argilitzaera</ShowHideWaveformAndSpectrogram>
+        <UnDockVideoControls>&amp;Uztargabetu bideo aginteak</UnDockVideoControls>
         <ReDockVideoControls>Bir-u&amp;ztartu bideo aginteak</ReDockVideoControls>
       </Video>
       <SpellCheck>
-        <Title>&amp;Idaz egiaztapena</Title>
-        <SpellCheck>&amp;Idaz egiaztapena...</SpellCheck>
+        <Title>&amp;Idaz-egiaztapena</Title>
+        <SpellCheck>&amp;Idaz-egiaztapena...</SpellCheck>
         <FindDoubleWords>Bilatu hitz bikoitzak</FindDoubleWords>
         <FindDoubleLines>Bilatu lerro bikoitzak</FindDoubleLines>
         <GetDictionaries>Eskuratu hiztegiak...</GetDictionaries>
@@ -535,10 +535,10 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <PointSyncViaOtherSubtitle>Aldiberetze gunea beste azpidatzi baten bidez...</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
-        <Title>Berez-itzulpena</Title>
-        <TranslatePoweredByGoogle>Itzuli (Googlek sostengatuta)...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Itzuli (Microsoftek sostengatuta)...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>Itzuli Suedieratik Danierara (nikse.dk-ek sostengatuta)...</TranslateFromSwedishToDanish>
+        <Title>Bere&amp;z-itzulpena</Title>
+        <TranslatePoweredByGoogle>Itzuli (&amp;Googlek sostengatuta)...</TranslatePoweredByGoogle>
+        <TranslatePoweredByMicrosoft>Itzuli (&amp;Microsoftek sostengatuta)...</TranslatePoweredByMicrosoft>
+        <TranslateFromSwedishToDanish>Itzuli Suedieratik Danierara (&amp;nikse.dk-ek sostengatuta)...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
         <Title>A&amp;ukerak</Title>
@@ -566,7 +566,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <Find>Bilatu</Find>
         <Replace>Ordeztu</Replace>
         <VisualSync>Ikus aldiberetzea</VisualSync>
-        <SpellCheck>Idaz egiaztapena</SpellCheck>
+        <SpellCheck>Idaz-egiaztapena</SpellCheck>
         <Settings>Ezarpenak</Settings>
         <Help>Laguntza</Help>
         <ShowHideWaveForm>Erakutsi/ezkutatu uhinera</ShowHideWaveForm>
@@ -579,7 +579,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <Paste>Itsatsi</Paste>
         <Delete>Ezabatu</Delete>
         <SplitLineAtCursorPosition>Banandu lerroa kurtsorearen kokapenean</SplitLineAtCursorPosition>
-        <SelectAll>Hautatu dena</SelectAll>
+        <SelectAll>Hautatu denak</SelectAll>
         <InsertFirstLine>Gehitu lerroa</InsertFirstLine>
         <InsertBefore>Gehitu aurretik</InsertBefore>
         <InsertAfter>Gehitu ondoren</InsertAfter>
@@ -657,7 +657,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Bideo kokapena:</VideoPosition>
       <TranslateTip>Aholkua: Erabili &lt;alt+gora/behera geziak&gt; joateko aurreko/hurrengo azpidatzira</TranslateTip>
-      <CreateTip>Aholkua: Erabili &lt;ctrl+ezk/esk geziak&gt;</CreateTip>
+      <CreateTip>Aholkua: Erabili &lt;ktrl+ezk/esk geziak&gt;</CreateTip>
       <AdjustTip>Aholkua: Erabili &lt;alt+gora/behera geziak&gt; joateko aurreko/hurrengo azpidatzira</AdjustTip>
       <BeforeChangingTimeInWaveFormX>Uhineran denbora aldatu baino lehen: {0}</BeforeChangingTimeInWaveFormX>
       <NewTextInsertAtX>Idatzi berria gehitu da {0}</NewTextInsertAtX>
@@ -688,8 +688,8 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <LoadedEmptyOrShort>Gertatutakoa hutsik dago edo azpidatzi oso laburra {0}</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>Agiria hutsik dago edo oso laburra da!</FileIsEmptyOrShort>
     <FileNotFound>Agiria ez da aurkitu: {0}</FileNotFound>
-    <SavedSubtitleX>Azpidatzia gordeta {0}</SavedSubtitleX>
-    <SavedOriginalSubtitleX>Jatorrizko azpidatzia gordeta {0}</SavedOriginalSubtitleX>
+    <SavedSubtitleX>Azpidatzia gordeta: {0}</SavedSubtitleX>
+    <SavedOriginalSubtitleX>Jatorrizko azpidatzia gordeta: {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>diskako agiria aldatuta</FileOnDiskModified>
     <OverwriteModifiedFile>Gainidatzi agira {0} aldatuta {1} {2}{3} oraingo agiriarekin diskatik gertatuta {4} {5}?</OverwriteModifiedFile>
     <UnableToSaveSubtitleX>Ezinezkoa azpidatzi agiria gordetzea {0}</UnableToSaveSubtitleX>
@@ -734,8 +734,6 @@ Nahi duzu agiriaren goialdetik hastea eta bilaketa beste behin egitea?</FindCont
     <TextingForHearingImpairedRemovedXLines>Gorrentzako idatzia kenduta : {0} lerro</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Azpidatzia bananduta</SubtitleSplitted>
     <SubtitleAppendPrompt>Honek dagoen azpidatzi bat gehituko du orain gertatuta dagoen azpidatziarekin zein bideo agiriarekin jadanik aldiberetuta dagoena.
-
-
 Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Atxiki azpidatzia</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Ireki azpidatzia atxikitzeko...</OpenSubtitleToAppend>
@@ -765,9 +763,9 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <NumberOfCorrectWords>Hitz zuzenen zenbatekoa: {0}</NumberOfCorrectWords>
     <NumberOfWordsAddedToDictionary>Hiztegira gehitutako hitz zenbatekoa: {0}</NumberOfWordsAddedToDictionary>
     <NumberOfNameHits>Lortutako izen zenbatekoa: {0}</NumberOfNameHits>
-    <SpellCheck>Idaz egiaztapena</SpellCheck>
-    <BeforeSpellCheck>Idaz egiaztapenaren aurretik</BeforeSpellCheck>
-    <SpellCheckChangedXToY>Idaz egiaztapena: Aldatuta '{0}' '{1}'-tik</SpellCheckChangedXToY>
+    <SpellCheck>Idaz-egiaztapena</SpellCheck>
+    <BeforeSpellCheck>Idaz-egiaztapenaren aurretik</BeforeSpellCheck>
+    <SpellCheckChangedXToY>Idaz-egiaztapena: Aldatuta '{0}' '{1}'-tik</SpellCheckChangedXToY>
     <BeforeAddingTagX>Gehitu aurretik &lt;{0}&gt; etiketa</BeforeAddingTagX>
     <TagXAdded>&lt;{0}&gt; etiketa gehituta</TagXAdded>
     <LineXOfY>{0} lerro {1}-tik</LineXOfY>
@@ -846,7 +844,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <BeforeInsertSubtitleAtVideoPosition>Azpidatzia bideo kokapenari gehitu aurretik</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Hasiera denbora ezarri eta gainontzekoa orekatu aurretik</BeforeSetStartTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Bideo kokapenari amaiera denbora ezarri eta hasiera berez kalkulatu aurretik</BeforeSetEndAndVideoPosition>
-    <ContinueWithCurrentSpellCheck>Jarraitu oraingo idaz egiaztapenarekin?</ContinueWithCurrentSpellCheck>
+    <ContinueWithCurrentSpellCheck>Jarraitu oraingo idaz-egiaztapenarekin?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Hizk/seg: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Hartu frame neurria bideo agiritik</GetFrameRateFromVideoFile>
     <NetworkMessage>Mezu berria: {0} ({1}): {2}</NetworkMessage>
@@ -859,10 +857,10 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <UserAndAction>Erabiltzailea/ekintza</UserAndAction>
     <NetworkMode>Sarean eran</NetworkMode>
     <XStartedSessionYAtZ>{0}: Saio hasita {1} {2}-tik</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>Idaz egiaztapena Word erabiliz {0} - lerroa {1} / {2}</SpellChekingViaWordXLineYOfX>
+    <SpellChekingViaWordXLineYOfX>Idaz-egiaztapena Word erabiliz {0} - lerroa {1} / {2}</SpellChekingViaWordXLineYOfX>
     <UnableToStartWord>Ezin da Microsoft Word abiarazi</UnableToStartWord>
-    <SpellCheckAbortedXCorrections>Idaz egiaztapena utzita. {0} lerro aldatuta.</SpellCheckAbortedXCorrections>
-    <SpellCheckCompletedXCorrections>Idaz egiaztapena osatuta. {0} lerro aldatuta.</SpellCheckCompletedXCorrections>
+    <SpellCheckAbortedXCorrections>Idaz-egiaztapena utzita. {0} lerro aldatuta.</SpellCheckAbortedXCorrections>
+    <SpellCheckCompletedXCorrections>Idaz-egiaztapena osatuta. {0} lerro aldatuta.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Ireki beste azpidatzi bat</OpenOtherSubtitle>
     <BeforeToggleDialogueDashes>Elkarrizketa marratxoak aldatu aurretik</BeforeToggleDialogueDashes>
     <ExportPlainTextAs>Esportatu idatzi laua honela</ExportPlainTextAs>
@@ -997,7 +995,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SubtitleBold>Lodia</SubtitleBold>
     <SubtitleFontColor>Azpidatzi hizki margoa:</SubtitleFontColor>
     <SubtitleBackgroundColor>Azpidatzi barren margoa:</SubtitleBackgroundColor>
-    <SpellChecker>Idaz egiaztapena:</SpellChecker>
+    <SpellChecker>Idaz-egiaztapena:</SpellChecker>
     <RememberRecentFiles>Gogoratu berrikiko agiriak (bir-irekitzeko)</RememberRecentFiles>
     <StartWithLastFileLoaded>Hasi azken agiria gertatuta</StartWithLastFileLoaded>
     <RememberSelectedLine>Gogoratu hautatutako lerroa</RememberSelectedLine>
@@ -1018,8 +1016,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <PromptDeleteLines>Ohartu lerro ezabaketaz</PromptDeleteLines>
     <VideoEngine>Bideo gailua</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
-    <DirectShowDescription>quartz.dll in system32 folder</DirectShowDescription>
-    <ManagedDirectX>DirectX kudeatuta</ManagedDirectX>
+    <DirectShowDescription>quartz.dll - system32 agiritegian</DirectShowDescription>
+    <ManagedDirectX>DirectX-ek kudeatuta</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioBideoIrakurketa -  .NET Kode kudeaketa DirectX-tik</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
@@ -1135,14 +1133,14 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <Rollback>Atzerabidea</Rollback>
   </ShowHistory>
   <SpellCheck>
-    <Title>Idaz egiaztapena</Title>
+    <Title>Idaz-egiaztapena</Title>
     <FullText>Idatzi osoa</FullText>
     <WordNotFound>Hitza ez da aurkitu</WordNotFound>
     <Language>Hizkuntza</Language>
     <Change>Aldatu</Change>
-    <ChangeAll>Aldatu dena</ChangeAll>
+    <ChangeAll>Aldatu denak</ChangeAll>
     <SkipOnce>Jauzi &amp;bat</SkipOnce>
-    <SkipAll>&amp;Jauzi dena</SkipAll>
+    <SkipAll>&amp;Jauzi denak</SkipAll>
     <AddToUserDictionary>Gehitu erabiltzaile hiztegira</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Geh izen/etab. zerr. (hizki larri-xehe artekoa)</AddToNamesAndIgnoreList>
     <Abort>Utzi</Abort>
@@ -1155,8 +1153,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <AddXToNamesEtc>Gehitu '{0}' izen/etab. zerrendara</AddXToNamesEtc>
     <AutoFixNames>Berez zuzendu azalean bakarrik ezberd. diren izenak</AutoFixNames>
     <ImageText>Irudi idazkia</ImageText>
-    <SpellCheckCompleted>Idaz egiaztapena osatuta.</SpellCheckCompleted>
-    <SpellCheckAborted>Idaz egiaztapena utzita</SpellCheckAborted>
+    <SpellCheckCompleted>Idaz-egiaztapena osatuta.</SpellCheckCompleted>
+    <SpellCheckAborted>Idaz-egiaztapena utzita</SpellCheckAborted>
   </SpellCheck>
   <SplitLongLines>
     <Title>Banandu lerro luzeak</Title>

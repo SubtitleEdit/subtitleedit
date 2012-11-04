@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.RemoveEmptyLines();
             Paragraph last = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
             if (last != null)
-                last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetDisplayMillisecondsFromText(last.Text) * 1.3;
+                last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
             subtitle.Renumber(1);
         }
 

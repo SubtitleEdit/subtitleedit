@@ -340,6 +340,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int MininumMillisecondsBetweenLines { get; set; }
         public bool AutoWrapLineWhileTyping { get; set; }
         public double SubtitleMaximumCharactersPerSeconds { get; set; }
+        public double SubtitleOptimalCharactersPerSeconds { get; set; }
         public string SpellCheckLanguage { get; set; }
         public string VideoPlayer { get; set; }
         public int VideoPlayerDefaultVolume { get; set; }
@@ -422,6 +423,7 @@ namespace Nikse.SubtitleEdit.Logic
             MininumMillisecondsBetweenLines = 25;
             AutoWrapLineWhileTyping = false;
             SubtitleMaximumCharactersPerSeconds = 25.0;
+            SubtitleOptimalCharactersPerSeconds = 14.7;
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 75;
@@ -1060,6 +1062,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SubtitleMaximumCharactersPerSeconds");
             if (subNode != null)
                 settings.General.SubtitleMaximumCharactersPerSeconds = Convert.ToDouble(subNode.InnerText, System.Globalization.CultureInfo.InvariantCulture);
+            subNode = node.SelectSingleNode("SubtitleOptimalCharactersPerSeconds");
+            if (subNode != null)
+                settings.General.SubtitleOptimalCharactersPerSeconds = Convert.ToDouble(subNode.InnerText, System.Globalization.CultureInfo.InvariantCulture);           
             subNode = node.SelectSingleNode("SpellCheckLanguage");
             if (subNode != null)
                 settings.General.SpellCheckLanguage = subNode.InnerText;
@@ -1999,6 +2004,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MininumMillisecondsBetweenLines", settings.General.MininumMillisecondsBetweenLines.ToString());
             textWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString());
             textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
             textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
             textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
             textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString());

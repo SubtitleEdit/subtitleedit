@@ -98,9 +98,30 @@ namespace Nikse.SubtitleEdit.Logic
             var lines = new List<string>();
             StreamReader sr;
             if (useThisEncoding != null)
+            {
                 sr = new StreamReader(fileName, useThisEncoding);
+            }
             else
-                sr = new StreamReader(fileName, Utilities.GetEncodingFromFile(fileName), true);
+            {
+                try
+                {
+                    sr = new StreamReader(fileName, Utilities.GetEncodingFromFile(fileName), true);
+                }
+                catch
+                {
+                    try
+                    {
+                        Stream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        sr = new StreamReader(fs);
+                    }
+                    catch (Exception exception)
+                    {
+                        System.Windows.Forms.MessageBox.Show(exception.Message);
+                        encoding = Encoding.UTF8;
+                        return null;
+                    }
+                }
+            }
 
             encoding = sr.CurrentEncoding;
             while (!sr.EndOfStream)
@@ -313,7 +334,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (selectedIndexes == null || selectedIndexes.Contains(i))
                 {
                     Paragraph p = _paragraphs[i];
-                    double duration = Utilities.GetDisplayMillisecondsFromText(p.Text) * 1.7;
+                    double duration = Utilities.GetOptimalDisplayMilliseconds(p.Text);
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
                     while (Utilities.GetCharactersPerSecond(p) > maxCharactersPerSecond)
                     {

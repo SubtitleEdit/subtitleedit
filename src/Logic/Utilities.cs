@@ -20,6 +20,29 @@ namespace Nikse.SubtitleEdit.Logic
     {
         internal const string WinXp2kUnicodeFontName = "Times New Roman";
 
+        public static byte[] ReadAllBytes(String path) 
+        { 
+            byte[] bytes; 
+            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) 
+            { 
+                int index = 0; 
+                long fileLength = fs.Length; 
+                if (fileLength > Int32.MaxValue) 
+                    throw new IOException("File too long"); 
+                int count = (int)fileLength; 
+                bytes = new byte[count]; 
+                while (count > 0) 
+                { 
+                    int n = fs.Read(bytes, index, count); 
+                    if (n == 0) 
+                        throw new InvalidOperationException("End of file reached before expected"); 
+                    index += n; 
+                    count -= n; 
+                } 
+            } 
+            return bytes; 
+        } 
+
         public static VideoInfo GetVideoInfo(string fileName, EventHandler event1)
         {
             VideoInfo info = TryReadVideoInfoViaAviHeader(fileName);
@@ -961,31 +984,21 @@ namespace Nikse.SubtitleEdit.Logic
             return list;
         }
 
-        /// <summary>
-        /// Get suggested display time in milliseconds (a tiny bit low).
-        /// </summary>
-        /// <param name="text">Subtitle text paragraph</param>
-        /// <returns>Suggested display time in milliseconds (a tiny bit low).</returns>
-        public static double GetDisplayMillisecondsFromText(string text)
+        public static double GetOptimalDisplayMilliseconds(string text)
         {
-            int l = text.Length;
+            double optimalCharactersPerSecond = Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds;
+            if (optimalCharactersPerSecond < 2 || optimalCharactersPerSecond > 100)
+                optimalCharactersPerSecond = 14.7;
+            double duration = (RemoveHtmlTags(text).Length / optimalCharactersPerSecond) * 1000.0;
 
-            if (l < 8)
-                return 800;
-            if (l < 15)
-                return 1000;
-            if (l < 25)
-                return 1300;
-            if (l < 35)
-                return 1500;
-            if (l < 50)
-                return 2000;
-            if (l < 75)
-                return 2500;
-            if (l < 90)
-                return 3000;
-            return 3500;
-        }
+            if (duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                duration = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+
+            if (duration > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                duration = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+
+            return duration;
+        }      
 
         private static int GetCount(string text,
                             string word1,

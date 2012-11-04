@@ -229,7 +229,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 i++;
             }
             if (last != null)
-                last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetDisplayMillisecondsFromText(last.Text);
+                last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
 
             for (i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {

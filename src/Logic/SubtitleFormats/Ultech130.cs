@@ -450,7 +450,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (last.EndTime.TotalMilliseconds == 0)
                     last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 2500;
                 if (last != null && last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                    last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetDisplayMillisecondsFromText(last.Text);
+                    last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
             }
 
             subtitle.Renumber(1);

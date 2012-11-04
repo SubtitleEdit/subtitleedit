@@ -5998,7 +5998,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p == null)
                         return;
 
-                    double duration = Utilities.GetDisplayMillisecondsFromText(textBoxListViewText.Text) * 1.4;
+                    double duration = Utilities.GetOptimalDisplayMilliseconds(textBoxListViewText.Text);
                     Paragraph next = _subtitle.GetParagraphOrDefault(index + 1);
                     if (next != null && p.StartTime.TotalMilliseconds + duration + Configuration.Settings.General.MininumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
                     {
@@ -6023,12 +6023,12 @@ namespace Nikse.SubtitleEdit.Forms
             if (p == null)
                 return;
 
-            double duration = Utilities.GetDisplayMillisecondsFromText(textBoxListViewText.Text) * 1.4;
+            double duration = Utilities.GetOptimalDisplayMilliseconds(textBoxListViewText.Text);
             Paragraph next = _subtitle.GetParagraphOrDefault(i+1);
             if (next != null && p.StartTime.TotalMilliseconds + duration + Configuration.Settings.General.MininumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
             {
                 duration = next.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
-                if (duration < 500)
+                if (duration < 400)
                     return;
             }
             SetDurationInSeconds(duration / 1000.0);
@@ -11104,7 +11104,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             labelAutoDuration.Visible = !labelAutoDuration.Visible;
 
-            double duration = Utilities.GetDisplayMillisecondsFromText(textBoxListViewText.Text) * 1.4;
+            double duration = Utilities.GetOptimalDisplayMilliseconds(textBoxListViewText.Text);
+
             SetDurationInSeconds(duration / 1000.0);
 
             // update _subtitle + listview
@@ -14139,7 +14140,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             timeUpDownStartTime.TimeCode = new TimeCode(TimeSpan.FromSeconds(videoPosition));
 
-            double duration = Utilities.GetDisplayMillisecondsFromText(textBoxListViewText.Text) * 1.4;
+            double duration = Utilities.GetOptimalDisplayMilliseconds(textBoxListViewText.Text);
 
             _subtitle.Paragraphs[index].StartTime.TotalMilliseconds = TimeSpan.FromSeconds(videoPosition).TotalMilliseconds;
             if (prev != null && prev.EndTime.TotalMilliseconds > _subtitle.Paragraphs[index].StartTime.TotalMilliseconds)
@@ -14180,7 +14181,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             p.EndTime = new TimeCode(TimeSpan.FromSeconds(videoPosition));
             if (p.Duration.TotalSeconds < 0 || p.Duration.TotalSeconds > 10)
-                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetDisplayMillisecondsFromText(p.Text);
+                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
 
             SubtitleListview1.SetStartTime(index, p);
             SubtitleListview1.SetDuration(index, p);

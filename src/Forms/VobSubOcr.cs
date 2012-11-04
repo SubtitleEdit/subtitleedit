@@ -139,6 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
         // Dictionaries/spellchecking/fixing
         OcrFixEngine _ocrFixEngine;
         int _tesseractOcrAutoFixes;
+//        List<string> _unknownWords = new List<string>();
 
         Subtitle _bdnXmlOriginal;
         Subtitle _bdnXmlSubtitle;
@@ -1522,9 +1523,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _ocrFixEngine.AutoGuessesUsed.Clear();
 
                 // Log unkown words guess (found via spelling dictionaries)
-                foreach (string unknownWord in _ocrFixEngine.UnknownWordsFound)
-                    listBoxUnknownWords.Items.Add(unknownWord);
-                _ocrFixEngine.UnknownWordsFound.Clear();
+                LogUnknownWords();
 
                 if (wordsNotFound >= 3)
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Red);
@@ -2388,9 +2387,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _ocrFixEngine.AutoGuessesUsed.Clear();
 
                 // Log unkown words guess (found via spelling dictionaries)
-                foreach (string unknownWord in _ocrFixEngine.UnknownWordsFound)
-                    listBoxUnknownWords.Items.Add(unknownWord);
-                _ocrFixEngine.UnknownWordsFound.Clear();
+                LogUnknownWords();
 
                 if (wordsNotFound >= 3)
                     subtitleListView1.SetBackgroundColor(index, Color.Red);
@@ -2431,6 +2428,19 @@ namespace Nikse.SubtitleEdit.Forms
                 bitmap.Dispose();
 
             return line;
+        }
+
+        private void LogUnknownWords()
+        {
+            foreach (string unknownWord in _ocrFixEngine.UnknownWordsFound)
+            {
+//                if (_unknownWords.IndexOf(unknownWord) == -1)
+//                {
+//                    _unknownWords.Add(unknownWord);
+                    listBoxUnknownWords.Items.Add(unknownWord);
+//                }
+            }
+            _ocrFixEngine.UnknownWordsFound.Clear();
         }
 
         private string TesseractResizeAndRetry(Bitmap bitmap)
