@@ -313,7 +313,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 i += length;
             }
             if (last != null && last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetDisplayMillisecondsFromText(last.Text);
+                last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
 
             subtitle.Renumber(1);
         }

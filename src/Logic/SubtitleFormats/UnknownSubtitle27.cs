@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (next != null)
                     current.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
                 else
-                    current.EndTime.TotalMilliseconds = current.StartTime.TotalMilliseconds + Utilities.GetDisplayMillisecondsFromText(current.Text);
+                    current.EndTime.TotalMilliseconds = current.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(current.Text);
 
                 if (current.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     current.EndTime.TotalMilliseconds = current.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;

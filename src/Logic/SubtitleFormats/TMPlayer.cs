@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         text = text.Replace("|", Environment.NewLine);
                         var start = new TimeCode(hours, minutes, seconds, 0);
-                        double duration = Utilities.GetDisplayMillisecondsFromText(text) * 1.2;
+                        double duration = Utilities.GetOptimalDisplayMilliseconds(text);
                         var end = new TimeCode(TimeSpan.FromMilliseconds(start.TotalMilliseconds + duration));
 
                         var p = new Paragraph(start, end, text);

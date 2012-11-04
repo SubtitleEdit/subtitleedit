@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (long.TryParse(ms, out milliseconds))
                             p.StartTime = new TimeCode(TimeSpan.FromMilliseconds(milliseconds));
                     }
-                    p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds + Utilities.GetDisplayMillisecondsFromText(p.Text)));
+                    p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text)));
 
                     subtitle.Paragraphs.Add(p);
                 }
