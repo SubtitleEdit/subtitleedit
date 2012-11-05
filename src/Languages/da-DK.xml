@@ -542,6 +542,7 @@
         <OpenContainingFolder>Åbn indeholdende mappe</OpenContainingFolder>
         <Compare>Sammenlign...</Compare>
         <Statistics>Statistik...</Statistics>
+        <Plugins>Plugins...</Plugins>
         <ImportOcrFromDvd>Import/OCR undertekster fra VOB/IFO (dvd) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importer/OCR VobSub (sub/idx) undertekst...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importer/OCR Blu-ray sup fil...</ImportBluRaySupFile>
@@ -557,6 +558,14 @@
         <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Almindelig tekst...</ExportPlainText>
+        <ExportAdobeEncoreFabImageScript>Adobe Encore FAB image script...</ExportAdobeEncoreFabImageScript>
+        <ExportKoreanAtsFilePair>Korean ATS file pair...</ExportKoreanAtsFilePair>
+        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
+        <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
+        <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
+        <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
+        <ExportUltech130>Ultech caption...</ExportUltech130>
         <Exit>&amp;Afslut</Exit>
       </File>
       <Edit>
@@ -691,6 +700,7 @@
         <ColumnDeleteText>Slet tekst</ColumnDeleteText>
         <ColumnDeleteTextAndShiftCellsUp>Slet tekst og flyt celler op</ColumnDeleteTextAndShiftCellsUp>
         <ColumnInsertEmptyTextAndShiftCellsDown>Indsæt tom tekst og flyt celler ned</ColumnInsertEmptyTextAndShiftCellsDown>
+        <ColumnInsertTextFromSubtitle>Indsæt tekst fra undertekst fil...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Import tekst og flyt celler ned</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Indsæt fra udklipsholder...</ColumnPasteFromClipboard>
         <Split>Split</Split>

@@ -1346,6 +1346,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemOpenContainingFolder.Text = _language.Menu.File.OpenContainingFolder;
             toolStripMenuItemCompare.Text = _language.Menu.File.Compare;
             toolStripMenuItemStatistics.Text = _language.Menu.File.Statistics;
+            toolStripMenuItemPlugins.Text = _language.Menu.File.Plugins;
             toolStripMenuItemImportDvdSubtitles.Text = _language.Menu.File.ImportOcrFromDvd;
             toolStripMenuItemSubIdx.Text = _language.Menu.File.ImportOcrVobSubSubtitle;
             toolStripButtonGetFrameRate.ToolTipText = _language.GetFrameRateFromVideoFile;
@@ -1359,14 +1360,18 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemExport.Text = _language.Menu.File.Export;
             toolStripMenuItemExportPngXml.Text = _language.Menu.File.ExportBdnXml;
             bluraySupToolStripMenuItem.Text = _language.Menu.File.ExportBluRaySup;
-
-            //vobSubsubidxToolStripMenuItem.Visible = true;
-            //vobSubsubidxToolStripMenuItem.Text = _language.Menu.File.ExportVobSub;
-
+            adobeEncoreFABImageScriptToolStripMenuItem.Text = _language.Menu.File.ExportAdobeEncoreFabImageScript;
+            toolStripMenuItemTextTimeCodePair.Text = _language.Menu.File.ExportKoreanAtsFilePair;            
+            vobSubsubidxToolStripMenuItem.Text = _language.Menu.File.ExportVobSub;
             toolStripMenuItemCavena890.Text = _language.Menu.File.ExportCavena890;
             eBUSTLToolStripMenuItem.Text = _language.Menu.File.ExportEbu;
             pACScreenElectronicsToolStripMenuItem.Text = _language.Menu.File.ExportPac;
             plainTextToolStripMenuItem.Text = _language.Menu.File.ExportPlainText;
+            toolStripMenuItemAvidStl.Text = _language.Menu.File.ExportAvidStl;
+            toolStripMenuItemExportCapMakerPlus.Text = _language.Menu.File.ExportCapMakerPlus;
+            toolStripMenuItemExportCaptionInc.Text = _language.Menu.File.ExportCaptionsInc;
+            toolStripMenuItemExportCheetahCap.Text = _language.Menu.File.ExportCheetahCap;
+            toolStripMenuItemExportUltech130.Text = _language.Menu.File.ExportUltech130;
             exitToolStripMenuItem.Text = _language.Menu.File.Exit;
 
             editToolStripMenuItem.Text = _language.Menu.Edit.Title;
@@ -1516,6 +1521,7 @@ namespace Nikse.SubtitleEdit.Forms
             columnDeleteTextOnlyToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnDeleteText;
             toolStripMenuItemColumnDeleteText.Text = _language.Menu.ContextMenu.ColumnDeleteTextAndShiftCellsUp;
             ShiftTextCellsDownToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnInsertEmptyTextAndShiftCellsDown;
+            toolStripMenuItemInsertTextFromSub.Text = _language.Menu.ContextMenu.ColumnInsertTextFromSubtitle;
             toolStripMenuItemColumnImportText.Text = _language.Menu.ContextMenu.ColumnImportTextAndShiftCellsDown;
             toolStripMenuItemPasteSpecial.Text = _language.Menu.ContextMenu.ColumnPasteFromClipboard;
 

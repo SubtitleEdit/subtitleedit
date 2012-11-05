@@ -840,6 +840,7 @@
                     public string OpenContainingFolder { get; set; }
                     public string Compare { get; set; }
                     public string Statistics { get; set; }
+                    public string Plugins { get; set; }
                     public string ImportOcrFromDvd { get; set; }
                     public string ImportOcrVobSubSubtitle { get; set; }
                     public string ImportBluRaySupFile { get; set; }
@@ -855,6 +856,14 @@
                     public string ExportEbu { get; set; }
                     public string ExportPac { get; set; }
                     public string ExportPlainText { get; set; }
+                    public string ExportAdobeEncoreFabImageScript { get; set; }
+                    public string ExportKoreanAtsFilePair { get; set; }
+                    public string ExportAvidStl { get; set; }
+                    public string ExportDvdStudioProStl { get; set; }
+                    public string ExportCapMakerPlus { get; set; }
+                    public string ExportCaptionsInc { get; set; }
+                    public string ExportCheetahCap { get; set; }
+                    public string ExportUltech130 { get; set; }                                                            
                     public string Exit { get; set; }
                 }
                 public class EditMenu
@@ -1004,6 +1013,7 @@
                     public string ColumnDeleteText { get; set; }
                     public string ColumnDeleteTextAndShiftCellsUp { get; set; }
                     public string ColumnInsertEmptyTextAndShiftCellsDown { get; set; }
+                    public string ColumnInsertTextFromSubtitle { get; set; }
                     public string ColumnImportTextAndShiftCellsDown { get; set; }
                     public string ColumnPasteFromClipboard { get; set; }
                     public string Split { get; set; }
