@@ -2843,7 +2843,19 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (Control.ModifierKeys == (Keys.Control | Keys.Shift))
                     allText = allText.Replace("\r\n", "\n");
-                File.WriteAllText(_fileName, allText, currentEncoding);
+
+                if (format.GetType() == typeof(ItunesTimedText))
+                {
+                    Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                    TextWriter file = new StreamWriter(_fileName, false, outputEnc); // open file with encoding
+                    file.Write(allText);
+                    file.Close(); // save and close it
+                }
+                else
+                {
+                    File.WriteAllText(_fileName, allText, currentEncoding);
+                }
+
                 _fileDateTime = File.GetLastWriteTime(_fileName);
                 ShowStatus(string.Format(_language.SavedSubtitleX, _fileName));
                 _changeSubtitleToString = _subtitle.ToText(new SubRip()).Trim();
@@ -3013,7 +3025,7 @@ namespace Nikse.SubtitleEdit.Forms
                     List<string> styles = new List<string>();
                     if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
                         styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-                    else if (format.GetType() == typeof(TimedText10))
+                    else if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
                         styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
                     else if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
                         styles = Sami.GetStylesFromHeader(_subtitle.Header);
@@ -5074,7 +5086,7 @@ namespace Nikse.SubtitleEdit.Forms
                     setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
                 }
             }
-            else if (GetCurrentSubtitleFormat().GetType() == typeof(TimedText10) && SubtitleListview1.SelectedItems.Count > 0)
+            else if ((GetCurrentSubtitleFormat().GetType() == typeof(TimedText10) || GetCurrentSubtitleFormat().GetType() == typeof(ItunesTimedText)) && SubtitleListview1.SelectedItems.Count > 0)
             {
                 toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.TimedTextStyles;
                 var styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
@@ -5382,7 +5394,7 @@ namespace Nikse.SubtitleEdit.Forms
             List<string> styles = new List<string>();
             if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
                 styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-            else if (format.GetType() == typeof(TimedText10))
+            else if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
                 styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
             else if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
                 styles = Sami.GetStylesFromHeader(_subtitle.Header);
@@ -5482,7 +5494,7 @@ namespace Nikse.SubtitleEdit.Forms
             var styles = new List<string>();
             if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
                 styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-            else if (format.GetType() == typeof(TimedText10))
+            else if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
                 styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
             else if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
                 styles = Sami.GetStylesFromHeader(_subtitle.Header);
@@ -11593,7 +11605,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemDCinemaProperties.Visible = false;
             }
 
-            if (format.GetType() == typeof(TimedText10))
+            if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
             {
                 toolStripMenuItemTTProperties.Visible = true;
             }
@@ -12445,7 +12457,7 @@ namespace Nikse.SubtitleEdit.Forms
             var styles = new List<string>();
             if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
                 styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-            else if (format.GetType() == typeof(TimedText10))
+            else if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
                 styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
             else if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
                 styles = Sami.GetStylesFromHeader(_subtitle.Header);
@@ -15225,7 +15237,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (styles.ShowDialog(this) == DialogResult.OK)
                     _subtitle.Header = styles.Header;
             }
-            else if (formatType == typeof(TimedText10))
+            else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
             {
                 var styles = new TimedTextStyles(_subtitle, GetCurrentSubtitleFormat());
                 if (styles.ShowDialog(this) == DialogResult.OK)
@@ -15478,7 +15490,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemTTPropertiesClick(object sender, EventArgs e)
         {
-            if (GetCurrentSubtitleFormat().GetType() == typeof(TimedText10))
+            if (GetCurrentSubtitleFormat().GetType() == typeof(TimedText10) || GetCurrentSubtitleFormat().GetType() == typeof(ItunesTimedText))
             {
                 var properties = new TimedTextProperties(_subtitle, _videoFileName);
                 _formPositionsAndSizes.SetPositionAndSize(properties, true);

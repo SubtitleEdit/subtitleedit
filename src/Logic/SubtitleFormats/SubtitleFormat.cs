@@ -50,6 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new GpacTtxt(),
                     new ImageLogicAutocaption(),
                     new IssXml(),
+                    new ItunesTimedText(),
                     new Json(),
                     new JsonType2(),
                     new JsonType3(),
