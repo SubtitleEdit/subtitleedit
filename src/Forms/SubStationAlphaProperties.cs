@@ -34,8 +34,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Text = l.Title;
             }
-            groupBoxScript.Text = l.Script;
-            labelTitle.Text = l.ScriptTitle;
 
             comboBoxWrapStyle.SelectedIndex = 2;
             comboBoxCollision.SelectedIndex = 0;
@@ -99,6 +97,23 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+
+            groupBoxScript.Text = l.Script;
+            labelTitle.Text = l.ScriptTitle;
+            labelOriginalScript.Text = l.OriginalScript;
+            labelTranslation.Text = l.Translation;
+            labelEditing.Text = l.Editing;
+            labelTiming.Text = l.Timing;
+            labelSyncPoint.Text = l.SyncPoint;
+            labelUpdatedBy.Text = l.UpdatedBy;
+            labelUpdateDetails.Text = l.UpdateDetails;
+            groupBoxResolution.Text = l.Resolution;
+            labelVideoResolution.Text = l.VideoResolution;
+            groupBoxOptions.Text = l.Options;
+            labelCollision.Text = l.Collision;
+            labelWrapStyle.Text = l.WrapStyle;
+            checkBoxScaleBorderAndShadow.Text = l.ScaleBorderAndShadow;
+
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
