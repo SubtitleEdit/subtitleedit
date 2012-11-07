@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -338,6 +337,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             XmlNode body = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
             if (body == null)
                 return;
+
+            XmlAttribute frameRateAttr = xml.DocumentElement.Attributes["ttp:frameRate"];
+            if (frameRateAttr != null)
+            {
+                double fr;
+                if (double.TryParse(frameRateAttr.Value, out fr))
+                    Configuration.Settings.General.CurrentFrameRate = fr;
+            }
 
             subtitle.Header = sb.ToString();
             string defaultStyle = null;
