@@ -686,8 +686,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideoPlayPauseToggle = "Control+P";
             MainVideoPause = "Control+Alt+P";
             MainVideoShowHideVideo = "Control+Q";
-            MainVideo100MsLeft = "Control+Left";
-            MainVideo100MsRight = "Control+Right";
+            MainVideo100MsLeft = string.Empty;
+            MainVideo100MsRight = string.Empty;
             MainVideo500MsLeft = "Alt+Left";
             MainVideo500MsRight = "Alt+Right";
             MainVideoFullscreen = "Alt+Return";
