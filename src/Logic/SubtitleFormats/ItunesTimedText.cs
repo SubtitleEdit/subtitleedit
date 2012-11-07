@@ -50,11 +50,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 catch
                 {
+                    styleHead = null;
                 }
                 if (styleHead == null && (subtitle.Header.Contains("[V4+ Styles]") || subtitle.Header.Contains("[V4 Styles]")))
                 {
                     var x = new XmlDocument();
-                    x.LoadXml(new TimedText10().ToText(new Subtitle(), "tt")); // load default xml
+                    x.LoadXml(new ItunesTimedText().ToText(new Subtitle(), "tt")); // load default xml
                     var xnsmgr = new XmlNamespaceManager(x.NameTable);
                     xnsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
                     styleHead = x.DocumentElement.SelectSingleNode("ttml:head", xnsmgr);
@@ -126,20 +127,27 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             else
             {
-                xml.LoadXml(subtitle.Header);
-                XmlNode divNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).SelectSingleNode("ttml:div", nsmgr);
-                if (divNode == null)
-                    divNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
-                if (divNode != null)
+                try
                 {
-                    var lst = new List<XmlNode>();
-                    foreach (XmlNode child in divNode.ChildNodes)
-                        lst.Add(child);
-                    foreach (XmlNode child in lst)
-                        divNode.RemoveChild(child);
+                    xml.LoadXml(subtitle.Header);
+                    XmlNode divNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).SelectSingleNode("ttml:div", nsmgr);
+                    if (divNode == null)
+                        divNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
+                    if (divNode != null)
+                    {
+                        var lst = new List<XmlNode>();
+                        foreach (XmlNode child in divNode.ChildNodes)
+                            lst.Add(child);
+                        foreach (XmlNode child in lst)
+                            divNode.RemoveChild(child);
+                    }
+                    else
+                    {
+                        xml.LoadXml(xmlStructure);
+                    }
                 }
-                else
-                {
+                catch
+                { 
                     xml.LoadXml(xmlStructure);
                 }
             }
@@ -154,19 +162,43 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (div == null)
                 div = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
 
+            bool hasBottomRegion = false;
+            bool hasTopRegion = false;
+            foreach (XmlNode node in xml.DocumentElement.SelectNodes("//ttml:head/ttml:layout/ttml:region", nsmgr))
+            {
+                string id = null;
+                if (node.Attributes["xml:id"] != null)
+                    id = node.Attributes["xml:id"].Value;
+                else if (node.Attributes["id"] != null)
+                    id = node.Attributes["id"].Value;
+                if (id != null && id == "bottom")
+                    hasBottomRegion = true;
+                if (id != null && id == "top")
+                    hasBottomRegion = true;
+            }
+
             int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
                 string text = p.Text;
-                
-                XmlAttribute regionP = xml.CreateAttribute("region");
-                regionP.InnerText = "bottom";
-                paragraph.Attributes.Append(regionP);
+
+                XmlAttribute regionP = xml.CreateAttribute("region");                    
                 if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an8}") || text.StartsWith("{\\an9}"))
                 {
-                    regionP.InnerText = "top";
+                    if (hasTopRegion)
+                    {
+                        regionP.InnerText = "top";
+                        paragraph.Attributes.Append(regionP);
+                    }
                 }
+                else if (hasBottomRegion)
+                {
+                    regionP.InnerText = "bottom";
+                    paragraph.Attributes.Append(regionP);
+                }
+                if (text.StartsWith("{\\an") && text.Length > 6 && text[5] == '}')
+                    text = text.Remove(0, 6);
 
                 if (!string.IsNullOrEmpty(p.Extra))
                 {
@@ -283,8 +315,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 div.AppendChild(paragraph);
                 no++;
             }
-
-            return ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty).Replace(" xmlns:tts=\"http://www.w3.org/ns/10/ttml#style\">", ">").Replace("<br />", "<br/>");
+            string xmlString = ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty).Replace(" xmlns:tts=\"http://www.w3.org/ns/10/ttml#style\">", ">").Replace("<br />", "<br/>");
+            if (subtitle.Header == null)
+                subtitle.Header = xmlString;
+            return xmlString;
         }
 
     }
