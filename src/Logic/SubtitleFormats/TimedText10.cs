@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return false;
         }
 
-        private static string ConvertToTimeString(TimeCode time)
+        internal static string ConvertToTimeString(TimeCode time)
         {
             return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
@@ -336,6 +336,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttml", ns);
             XmlNode body = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
+            if (body == null)
+                return;
+
             subtitle.Header = sb.ToString();
             string defaultStyle = null;
             if (body.Attributes["style"] != null)
