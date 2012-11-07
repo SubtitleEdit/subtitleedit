@@ -8607,10 +8607,13 @@ namespace Nikse.SubtitleEdit.Forms
             var fc = FindFocusedControl(this);
             if (fc != null && (fc is TextBox || fc is ComboBox))
             {
-                if (e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z)
-                    return;
-                if (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9)
-                    return;
+                if (e.Modifiers != Keys.Control && e.Modifiers != (Keys.Control | Keys.Shift) && e.Modifiers != (Keys.Control | Keys.Shift | Keys.Alt))
+                {
+                    if (e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z)
+                        return;
+                    if (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9)
+                        return;
+                }
             }
 
 
