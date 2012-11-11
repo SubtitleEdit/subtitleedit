@@ -424,7 +424,7 @@
             // 
             // numericUpDownMarginVertical
             // 
-            this.numericUpDownMarginVertical.Location = new System.Drawing.Point(148, 33);
+            this.numericUpDownMarginVertical.Location = new System.Drawing.Point(188, 33);
             this.numericUpDownMarginVertical.Name = "numericUpDownMarginVertical";
             this.numericUpDownMarginVertical.Size = new System.Drawing.Size(44, 20);
             this.numericUpDownMarginVertical.TabIndex = 5;
@@ -432,7 +432,7 @@
             // 
             // numericUpDownMarginRight
             // 
-            this.numericUpDownMarginRight.Location = new System.Drawing.Point(81, 33);
+            this.numericUpDownMarginRight.Location = new System.Drawing.Point(101, 33);
             this.numericUpDownMarginRight.Name = "numericUpDownMarginRight";
             this.numericUpDownMarginRight.Size = new System.Drawing.Size(44, 20);
             this.numericUpDownMarginRight.TabIndex = 3;
@@ -449,7 +449,7 @@
             // labelMarginVertical
             // 
             this.labelMarginVertical.AutoSize = true;
-            this.labelMarginVertical.Location = new System.Drawing.Point(145, 16);
+            this.labelMarginVertical.Location = new System.Drawing.Point(185, 16);
             this.labelMarginVertical.Name = "labelMarginVertical";
             this.labelMarginVertical.Size = new System.Drawing.Size(42, 13);
             this.labelMarginVertical.TabIndex = 4;
@@ -458,7 +458,7 @@
             // labelMarginRight
             // 
             this.labelMarginRight.AutoSize = true;
-            this.labelMarginRight.Location = new System.Drawing.Point(78, 16);
+            this.labelMarginRight.Location = new System.Drawing.Point(98, 16);
             this.labelMarginRight.Name = "labelMarginRight";
             this.labelMarginRight.Size = new System.Drawing.Size(32, 13);
             this.labelMarginRight.TabIndex = 2;
