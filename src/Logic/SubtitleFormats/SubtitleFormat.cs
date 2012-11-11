@@ -142,6 +142,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new TimeXml(),
                     new YouTubeAnnotations(),
                     new YouTubeSbv(),
+                    new YouTubeTranscript(),
                     new ZeroG(),
                 };
             }
