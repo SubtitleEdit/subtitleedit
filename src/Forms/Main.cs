@@ -10416,9 +10416,9 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonAutoBreak.Visible = false;
                 buttonSplitLine.Visible = false;
 
-                textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+                textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
                 textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 10)) / 2;
-                textBoxListViewTextAlternate.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+                textBoxListViewTextAlternate.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
                 textBoxListViewTextAlternate.Left = textBoxListViewText.Left + textBoxListViewText.Width + 3;
                 textBoxListViewTextAlternate.Width = textBoxListViewText.Width;
                 textBoxListViewTextAlternate.Visible = true;
