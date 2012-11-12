@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     class YouTubeTranscript : SubtitleFormat
     {
-        static Regex regexTimeCodes = new Regex(@"\d{1,2}:\d\d\t.+", RegexOptions.Compiled);
+        static Regex regexTimeCodes = new Regex(@"^\d{1,2}:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{0}\t{1}", EncodeTimeCode(p.StartTime), Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " "))));
+                sb.AppendLine(string.Format("{0}" + Environment.NewLine + "{1}", EncodeTimeCode(p.StartTime), Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " "))));
                 index++;
             }
             return sb.ToString();
@@ -61,8 +61,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (regexTimeCodes.IsMatch(line))
                 {
-                    string[] arr = line.Split("\t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    p = new Paragraph(DecodeTimeCode(arr[0]), new TimeCode(0,0,0,0), Utilities.AutoBreakLine(arr[1]));
+                    p = new Paragraph(DecodeTimeCode(line), new TimeCode(0,0,0,0), string.Empty);
                     subtitle.Paragraphs.Add(p);
                 }
                 else if (line.Trim().Length == 0)
@@ -76,6 +75,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else
                         p.Text = p.Text + Environment.NewLine + line;
                 }
+            }
+            foreach (Paragraph p2 in subtitle.Paragraphs)
+            {
+                p2.Text = Utilities.AutoBreakLine(p2.Text);
             }
             subtitle.RecalculateDisplayTimes(Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds, null);
             subtitle.Renumber(1);
