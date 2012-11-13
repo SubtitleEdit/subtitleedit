@@ -1,52 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-
-    //<TMPGEncVMESubtitleTextFormat>
-    //  ...
-    //  <Subtitle>
-    //    <SubtitleItem layoutindex="0" enable="1" starttime="00:01:57,269" endtime="00:01:59,169">
-    //        <Text>
-    //            <![CDATA[These hills here are full of Apaches.]]>
-    //        </Text>
-    //    </SubtitleItem>
-    //    ...
-
-    class TmpegEncXml : SubtitleFormat
+    class TmpegEncAW5 : TmpegEncXml
     {
-        public override string Extension
-        {
-            get { return ".xsubtitle"; }
-        }
 
         public override string Name
         {
-            get { return "TMPGEnc VME"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
-            if ((xmlAsString.Contains("<TMPGEncVMESubtitleTextFormat>") || xmlAsString.Contains("<SubtitleItem ")) && (xmlAsString.Contains("<Subtitle")))
-            {
-
-                var subtitle = new Subtitle();
-                LoadSubtitle(subtitle, lines, fileName);
-                return subtitle.Paragraphs.Count > _errorCount;
-            }
-            return false;
+            get { return "TMPGEnc AW5"; }
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -184,7 +148,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 string text = Utilities.RemoveHtmlTags(p.Text);
                 paragraph.InnerText = text;
-                paragraph.InnerXml = "<Text><![CDATA[" + paragraph.InnerXml.Replace(Environment.NewLine, "\\n") + "]]></Text>";
+                paragraph.InnerXml = "<Text><![CDATA[" + paragraph.InnerXml.Replace(Environment.NewLine, "\\n") + "\\n]]></Text>";
 
                 XmlAttribute layoutIndex = xml.CreateAttribute("layoutindex");
                 if (p.Text.Trim().StartsWith("<i>") && p.Text.Trim().EndsWith("</i>"))
@@ -213,125 +177,25 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return ToUtf8XmlString(xml);
         }
 
-        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        public override bool IsMine(List<string> lines, string fileName)
         {
-            LoadTMpeg(subtitle, lines, false);
-        }
-
-        internal void LoadTMpeg(Subtitle subtitle, List<string> lines, bool mustHaveLineBreakAsEnd)
-        {
-            _errorCount = 0;
-            double startSeconds = 0;
-
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            var xml = new XmlDocument();
-            xml.LoadXml(sb.ToString());
-            var italicStyles = new List<bool>();
-
-            foreach (XmlNode node in xml.DocumentElement.SelectNodes("Layout/LayoutItem"))
+            string xmlAsString = sb.ToString().Trim();
+            if ((xmlAsString.Contains("<TMPGEncVMESubtitleTextFormat>") || xmlAsString.Contains("<SubtitleItem ")) && (xmlAsString.Contains("<Subtitle")))
             {
-                XmlNode fontItalic = node.SelectSingleNode("FontItalic");
-                if (fontItalic != null && fontItalic.InnerText == "1")
-                    italicStyles.Add(true);
-                else
-                    italicStyles.Add(false);
+
+                var subtitle = new Subtitle();
+                LoadSubtitle(subtitle, lines, fileName);
+                return subtitle.Paragraphs.Count > _errorCount;
             }
-
-            foreach (XmlNode node in xml.DocumentElement.SelectNodes("Subtitle/SubtitleItem"))
-            {
-                try
-                {
-                    var pText = new StringBuilder();
-                    foreach (XmlNode innerNode in node.SelectSingleNode("Text").ChildNodes)
-                    {
-                        switch (innerNode.Name.ToString())
-                        {
-                            case "br":
-                                pText.AppendLine();
-                                break;
-                            default:
-                                pText.Append(innerNode.InnerText.Trim());
-                                break;
-                        }
-                    }
-
-                    string start = string.Empty;
-                    if (node.Attributes["starttime"] != null)
-                    {
-                        start = node.Attributes["starttime"].InnerText;
-                    }
-
-                    string end = string.Empty;
-                    if (node.Attributes["endtime"] != null)
-                    {
-                        end = node.Attributes["endtime"].InnerText;
-                    }
-
-                    var startCode = new TimeCode(TimeSpan.FromSeconds(startSeconds));
-                    if (start != string.Empty)
-                    {
-                        startCode = GetTimeCode(start);
-                    }
-
-                    TimeCode endCode;
-                    if (end != string.Empty)
-                    {
-                        endCode = GetTimeCode(end);
-                    }
-                    else
-                    {
-                        endCode = new TimeCode(TimeSpan.FromMilliseconds(startCode.TotalMilliseconds + 3000));
-                    }
-                    startSeconds = endCode.TotalSeconds;
-                    if (mustHaveLineBreakAsEnd)
-                    {
-                         if (!pText.ToString().EndsWith("\\n"))
-                             _errorCount++;
-                    }                        
-                    else 
-                    {
-                        if (pText.ToString().EndsWith("\\n"))
-                            _errorCount++;
-                    }
-                    
-                    var p = new Paragraph(startCode, endCode, pText.ToString().Trim().Replace("<Text>", string.Empty).Replace("</Text>", string.Empty).Replace("\\n", Environment.NewLine).TrimEnd());
-                    if (node.Attributes["layoutindex"] != null)
-                    {
-                        int idx;
-                        if (int.TryParse(node.Attributes["layoutindex"].InnerText, out idx))
-                        {
-                            if (idx >= 0 && idx < italicStyles.Count && italicStyles[idx])
-                                p.Text = "<i>" + p.Text + "</i>";
-                        }
-                    }
-                    subtitle.Paragraphs.Add(p);
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine(ex.Message);
-                    _errorCount++;
-                }
-            }
-            subtitle.Renumber(1);
+            return false;
         }
 
-        private static TimeCode GetTimeCode(string s)
+        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            if (s.EndsWith("s"))
-            {
-                s = s.TrimEnd('s');
-                var ts = TimeSpan.FromSeconds(double.Parse(s));
-                return new TimeCode(ts);
-            }
-            else
-            {
-                string[] parts = s.Split(new char[] { ':', '.', ',' });
-                var ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
-                return new TimeCode(ts);
-            }
+            LoadTMpeg(subtitle, lines, true);
         }
+
     }
 }
-
-

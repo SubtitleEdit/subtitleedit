@@ -88,6 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new TimedText(),
                     new TitleExchangePro(),
                     new TmpegEncText(),
+                    new TmpegEncAW5(),
                     new TmpegEncXml(),
                     new TMPlayer(),
                     new TranscriberXml(),
