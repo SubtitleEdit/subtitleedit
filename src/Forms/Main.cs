@@ -838,7 +838,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Environment.Exit(1);
         }
 
-        private void BatchConvertSave(string toFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IList<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite)
+        internal static void BatchConvertSave(string toFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IList<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite)
         {
             // adjust offset
             if (!string.IsNullOrEmpty(offset) && (offset.StartsWith("/offset:") || offset.StartsWith("offset:")))
@@ -865,7 +865,7 @@ namespace Nikse.SubtitleEdit.Forms
             string outputFileName;
             foreach (SubtitleFormat sf in formats)
             {
-                if (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                if (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower() || sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.Replace(" ", string.Empty).ToLower())
                 {
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, sf.Extension, outputFolder, overwrite);
@@ -972,7 +972,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        string FormatOutputFileNameForBatchConvert(string fileName, string extension, string outputFolder, bool overwrite)
+        static string FormatOutputFileNameForBatchConvert(string fileName, string extension, string outputFolder, bool overwrite)
         {
             string outputFileName = Path.ChangeExtension(fileName,extension);
             if (!string.IsNullOrEmpty(outputFolder))
@@ -2845,6 +2845,13 @@ namespace Nikse.SubtitleEdit.Forms
                     allText = allText.Replace("\r\n", "\n");
 
                 if (format.GetType() == typeof(ItunesTimedText))
+                {
+                    Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                    TextWriter file = new StreamWriter(_fileName, false, outputEnc); // open file with encoding
+                    file.Write(allText);
+                    file.Close(); // save and close it
+                }
+                else if (currentEncoding == Encoding.UTF8 && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
                 {
                     Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
                     TextWriter file = new StreamWriter(_fileName, false, outputEnc); // open file with encoding
@@ -9047,6 +9054,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MakeAutoDuration();
                 e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == (Keys.Control | Keys.Shift | Keys.Alt) && e.KeyCode == Keys.C) 
+            {
+                var form = new BatchConvert();
+                form.ShowDialog(this);
             }
 
 

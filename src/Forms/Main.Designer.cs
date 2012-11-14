@@ -470,7 +470,7 @@
             // 
             this.toolStripSelected.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripSelected.Name = "toolStripSelected";
-            this.toolStripSelected.Size = new System.Drawing.Size(43, 22);
+            this.toolStripSelected.Size = new System.Drawing.Size(260, 22);
             this.toolStripSelected.Spring = true;
             this.toolStripSelected.Text = "toolStripSelected";
             this.toolStripSelected.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -480,7 +480,7 @@
             this.toolStripStatusNetworking.Image = global::Nikse.SubtitleEdit.Properties.Resources.connect;
             this.toolStripStatusNetworking.Name = "toolStripStatusNetworking";
             this.toolStripStatusNetworking.Padding = new System.Windows.Forms.Padding(50, 0, 0, 0);
-            this.toolStripStatusNetworking.Size = new System.Drawing.Size(217, 22);
+            this.toolStripStatusNetworking.Size = new System.Drawing.Size(217, 16);
             this.toolStripStatusNetworking.Text = "toolStripStatusNetworking";
             this.toolStripStatusNetworking.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolStripStatusNetworking.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
@@ -3918,7 +3918,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1318, 206);
+            this.tabPage2.Size = new System.Drawing.Size(730, 217);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Source view";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -3933,7 +3933,7 @@
             this.textBoxSource.Multiline = true;
             this.textBoxSource.Name = "textBoxSource";
             this.textBoxSource.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxSource.Size = new System.Drawing.Size(1312, 200);
+            this.textBoxSource.Size = new System.Drawing.Size(724, 211);
             this.textBoxSource.TabIndex = 12;
             this.textBoxSource.WordWrap = false;
             this.textBoxSource.Click += new System.EventHandler(this.TextBoxSourceClick);

@@ -99,6 +99,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string SplitVia { get; set; }
         public string LastShowEarlierOrLaterSelection { get; set; }
         public string NewEmptyTranslationText { get; set; }
+        public string BatchConvertOutputFolder { get; set; }
+        public bool BatchConvertOverwrite { get; set; }
 
         public ToolsSettings()
         {
@@ -1267,6 +1269,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("NewEmptyTranslationText");
             if (subNode != null)
                 settings.Tools.NewEmptyTranslationText = subNode.InnerText;
+            subNode = node.SelectSingleNode("BatchConvertOutputFolder");
+            if (subNode != null)
+                settings.Tools.BatchConvertOutputFolder = subNode.InnerText;
+            subNode = node.SelectSingleNode("BatchConvertOverwrite");
+            if (subNode != null)
+                settings.Tools.BatchConvertOverwrite = Convert.ToBoolean(subNode.InnerText);
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -2076,6 +2084,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SplitNumberOfParts", settings.Tools.SplitNumberOfParts.ToString());
             textWriter.WriteElementString("SplitVia", settings.Tools.SplitVia);
             textWriter.WriteElementString("NewEmptyTranslationText", settings.Tools.NewEmptyTranslationText);
+            textWriter.WriteElementString("BatchConvertOutputFolder", settings.Tools.BatchConvertOutputFolder);
+            textWriter.WriteElementString("BatchConvertOverwrite", settings.Tools.BatchConvertOverwrite.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");

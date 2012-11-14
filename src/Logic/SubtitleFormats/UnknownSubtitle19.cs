@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
-using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -15,7 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Unknown19"; }
+            get { return "Unknown 19"; }
         }
 
         public override bool IsTimeBased
