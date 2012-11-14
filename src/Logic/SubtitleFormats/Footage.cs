@@ -5,10 +5,10 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class UnknownSubtitle31 : SubtitleFormat
+    class Footage : SubtitleFormat
     {
 
-        static readonly Regex RegexTimeCode = new Regex(@"^\d+\.\d\d$", RegexOptions.Compiled);
+        static readonly Regex RegexTimeCode = new Regex(@"^\s*\d+,\d\d$", RegexOptions.Compiled);
 
         enum ExpectingLine
         {
@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Unknown 31"; }
+            get { return "Footage"; }
         }
 
         public override bool IsTimeBased
@@ -42,16 +42,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            //1.
-            //8.03
-            //10.06
-            //- Labai aèiû.
-            //- Jûs rimtai?
+//1.
+//   66,13
+//   70,00
+//#Tā nu es sapazinos
+//#И так я познакомился
 
-            //2.
-            //16.00
-            //19.06
-            //Kaip reikalai ðunø grobimo versle?
+//2.
+//   71,14
+//   78,10
+//#ar dakteri Henriju Gūsu.
+//#с доктором Генри Гусом.
 
 
             const string paragraphWriteFormat = "{4}.{3}{0}{3}{1}{3}{2}{3}";
@@ -84,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (paragraph != null && expecting == ExpectingLine.TimeStart && RegexTimeCode.IsMatch(line))
                 {
-                    string[] parts = line.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2)
                     {
                         try
@@ -102,7 +103,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (paragraph != null && expecting == ExpectingLine.TimeEnd && RegexTimeCode.IsMatch(line))
                 {
-                    string[] parts = line.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2)
                     {
                         try
@@ -124,18 +125,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         if (line.Length > 0)
                         {
-                            string s = line;
+                            string s = line.Trim();
+                            if (s.StartsWith("#"))
+                                s = "<i>" + s.Remove(0, 1) + "</i>";
                             paragraph.Text = (paragraph.Text + Environment.NewLine + s).Trim();
+                            paragraph.Text = paragraph.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
                             if (paragraph.Text.Length > 2000)
                             {
                                 _errorCount += 100;
                                 return;
                             }
                         }
-                    }
-                    else if (line.Length > 0 && line != "@ headers")
-                    {
-                        _errorCount++;
                     }
                 }
             }
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}.{1:00}", (int)time.TotalSeconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return string.Format("{0:00}.{1:00}", (int)time.TotalSeconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds)).PadLeft(5, ' ');
         }
 
         private TimeCode DecodeTimeCode(string[] parts)

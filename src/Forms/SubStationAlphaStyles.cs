@@ -1169,5 +1169,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+
+        internal void MakeOnlyOneStyle()
+        {
+            groupBoxPreview.Top = groupBoxStyles.Top;
+            groupBoxPreview.Height = groupBoxProperties.Height;
+            groupBoxStyles.SendToBack();
+        }
     }
 }

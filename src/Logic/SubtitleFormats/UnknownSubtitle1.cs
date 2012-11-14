@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Unknown1"; }
+            get { return "Unknown 1"; }
         }
 
         public override bool IsTimeBased
