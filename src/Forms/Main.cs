@@ -6127,6 +6127,12 @@ namespace Nikse.SubtitleEdit.Forms
                             currentParagraph.Text = currentParagraph.Text.TrimStart('-').Trim();
                             newParagraph.Text = newParagraph.Text.TrimStart('-').Trim();
                         }
+                        if (currentParagraph.Text.StartsWith("<i>") && !currentParagraph.Text.Contains("</i>") &&
+                           newParagraph.Text.EndsWith("</i>") && !newParagraph.Text.Contains("<i>"))
+                        {
+                            currentParagraph.Text = currentParagraph.Text + "</i>";
+                            newParagraph.Text = "<i>" + newParagraph.Text;
+                        }
                     }
                     else if (lines.Length == 2 && (lines[0].EndsWith(".</i>") || lines[0].EndsWith("!</i>") || lines[0].EndsWith("?</i>")))
                     {
@@ -6142,7 +6148,7 @@ namespace Nikse.SubtitleEdit.Forms
                             newParagraph.Text = newParagraph.Text.Remove(3, 1);
                             if (newParagraph.Text[3] == ' ')
                                 newParagraph.Text = newParagraph.Text.Remove(3, 1);
-                        }
+                        }                       
                     }
                     else
                     {
@@ -6207,6 +6213,14 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             originalCurrent.Text = Utilities.AutoBreakLine(oldText.Substring(0, alternateTextIndex.Value).Trim());
                             originalNew.Text = Utilities.AutoBreakLine(oldText.Substring(alternateTextIndex.Value).Trim());
+
+                            if (originalCurrent.Text.StartsWith("<i>") && !originalCurrent.Text.Contains("</i>") &&
+                                originalNew.Text.EndsWith("</i>") && !originalNew.Text.Contains("<i>"))
+                            {
+                                originalCurrent.Text = originalCurrent.Text + "</i>";
+                                originalNew.Text = "<i>" + originalNew.Text;
+                            }
+
                             lines = new string[0];
                         }
                         else if (lines.Length == 2 && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")))
