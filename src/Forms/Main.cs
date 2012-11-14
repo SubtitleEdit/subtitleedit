@@ -81,6 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
         System.Windows.Forms.Timer _timerAutoSave = new Timer();
         System.Windows.Forms.Timer _timerClearStatus = new Timer();
         string _textAutoSave;
+        string _textAutoSaveOriginal;
         StringBuilder _statusLog = new StringBuilder();
         bool _makeHistoryPaused = false;
 
@@ -12377,6 +12378,36 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             _textAutoSave = currentText;
+
+            if (_subtitleAlternateFileName != null && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+            {
+                string currentTextAlternate = _subtitleAlternate.ToText(GetCurrentSubtitleFormat());
+                if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                {
+                    if (_textAutoSaveOriginal == null)
+                        _textAutoSaveOriginal = _changeSubtitleToString;
+                    if (!string.IsNullOrEmpty(_textAutoSaveOriginal) && currentTextAlternate.Trim() != _textAutoSaveOriginal.Trim() && currentTextAlternate.Trim().Length > 0)
+                    {
+                        if (!Directory.Exists(Configuration.AutoBackupFolder))
+                        {
+                            try
+                            {
+                                Directory.CreateDirectory(Configuration.AutoBackupFolder);
+                            }
+                            catch (Exception exception)
+                            {
+                            }
+                        }
+                        string title = string.Empty;
+                        if (!string.IsNullOrEmpty(_subtitleAlternateFileName))
+                            title = "_" + Path.GetFileNameWithoutExtension(_subtitleAlternateFileName);
+                        string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}", Configuration.AutoBackupFolder, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, "_Original" + title, GetCurrentSubtitleFormat().Extension);
+                        File.WriteAllText(fileName, currentTextAlternate);
+                    }
+                }
+                _textAutoSaveOriginal = currentTextAlternate;
+            }
+
         }
 
         private void mediaPlayer_DragDrop(object sender, DragEventArgs e)
