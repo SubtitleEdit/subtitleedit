@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (id != null && id == "bottom")
                     hasBottomRegion = true;
                 if (id != null && id == "top")
-                    hasBottomRegion = true;
+                    hasTopRegion = true;
             }
 
             int no = 0;
@@ -197,8 +197,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 if (text.StartsWith("{\\an") && text.Length > 6 && text[5] == '}')
                     text = text.Remove(0, 6);
-
-                if (!string.IsNullOrEmpty(p.Extra))
+               
+                if (subtitle.Header != null && p.Extra != null && GetStylesFromHeader(subtitle.Header).Contains(p.Extra))
+                {
+                    if (p.Extra != defaultStyle)
+                    {
+                        XmlAttribute styleAttr = xml.CreateAttribute("style");
+                        styleAttr.InnerText = p.Extra;
+                        paragraph.Attributes.Append(styleAttr);
+                    }
+                }
+                else if (!string.IsNullOrEmpty(p.Extra))
                 {
                     XmlAttribute styleP = xml.CreateAttribute("style");
                     styleP.InnerText = p.Extra;
@@ -298,17 +307,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 XmlAttribute end = xml.CreateAttribute("end");
                 end.InnerText = ConvertToTimeString(p.EndTime);
-                paragraph.Attributes.Append(end);
-
-                if (subtitle.Header != null && p.Extra != null && GetStylesFromHeader(subtitle.Header).Contains(p.Extra))
-                {
-                    if (p.Extra != defaultStyle)
-                    {
-                        XmlAttribute styleAttr = xml.CreateAttribute("style");
-                        styleAttr.InnerText = p.Extra;
-                        paragraph.Attributes.Append(styleAttr);
-                    }
-                }
+                paragraph.Attributes.Append(end);              
 
                 div.AppendChild(paragraph);
                 no++;
