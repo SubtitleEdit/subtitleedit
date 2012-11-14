@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         internal static string ConvertToTimeString(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
         public static void AddStyleToXml(XmlDocument xml, XmlNode head, XmlNamespaceManager nsmgr, string name, string fontFamily, string fontWeight, string fontStyle, string color, string fontSize)
@@ -427,6 +427,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.Extra = defaultStyle;
                     if (node.Attributes["style"] != null)
                         p.Extra = node.Attributes["style"].InnerText;
+
+                    if (node.Attributes["region"] != null)
+                    {
+                        string region = node.Attributes["region"].Value;
+                        if (region == "top")
+                            p.Text = "{\\an8}" + p.Text;
+                    }
 
                     subtitle.Paragraphs.Add(p);
                 }
