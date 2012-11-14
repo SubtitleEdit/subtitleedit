@@ -61,7 +61,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 count++;
-                string text = Utilities.RemoveHtmlFontTag(p.Text);
+                bool italic = false;
+                if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>"))
+                    italic = true;
+                string text = Utilities.RemoveHtmlTags(p.Text);
+                if (italic)
+                    text = "#" + text;
                 sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), text, Environment.NewLine, count));
             }
             return sb.ToString().Trim();
@@ -147,7 +152,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}.{1:00}", (int)time.TotalSeconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds)).PadLeft(5, ' ');
+            return string.Format("{0:00},{1:00}", (int)time.TotalSeconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds)).PadLeft(8);
         }
 
         private TimeCode DecodeTimeCode(string[] parts)
