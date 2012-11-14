@@ -6099,6 +6099,12 @@ namespace Nikse.SubtitleEdit.Forms
                         a = a + "</i>";
                         b = "<i>" + b;
                     }
+                    if (oldText.TrimStart().StartsWith("<b>") && oldText.TrimEnd().EndsWith("</b>") &&
+                        Utilities.CountTagInText(oldText, "<b>") == 1 && Utilities.CountTagInText(oldText, "</b>") == 1)
+                    {
+                        a = a + "</b>";
+                        b = "<b>" + b;
+                    }
                     if (a.StartsWith("-") && (a.EndsWith(".") || a.EndsWith("!") || a.EndsWith("?")) &&
                         b.StartsWith("-") && (b.EndsWith(".") || b.EndsWith("!") || b.EndsWith("?")))
                     {
@@ -6133,6 +6139,18 @@ namespace Nikse.SubtitleEdit.Forms
                             currentParagraph.Text = currentParagraph.Text + "</i>";
                             newParagraph.Text = "<i>" + newParagraph.Text;
                         }
+                        if (currentParagraph.Text.StartsWith("<b>") && !currentParagraph.Text.Contains("</b>") &&
+                           newParagraph.Text.EndsWith("</b>") && !newParagraph.Text.Contains("<b>"))
+                        {
+                            currentParagraph.Text = currentParagraph.Text + "</b>";
+                            newParagraph.Text = "<b>" + newParagraph.Text;
+                        }
+                        if (currentParagraph.Text.StartsWith("<i>-") && (currentParagraph.Text.EndsWith(".</i>") || currentParagraph.Text.EndsWith("!</i>")) &&
+                            newParagraph.Text.StartsWith("<i>-") && (newParagraph.Text.EndsWith(".</i>") || newParagraph.Text.EndsWith("!</i>")))
+                        {
+                            currentParagraph.Text = currentParagraph.Text.Remove(3, 1);
+                            newParagraph.Text = newParagraph.Text.Remove(3, 1);
+                        }
                     }
                     else if (lines.Length == 2 && (lines[0].EndsWith(".</i>") || lines[0].EndsWith("!</i>") || lines[0].EndsWith("?</i>")))
                     {
@@ -6166,6 +6184,14 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+                if (currentParagraph != null && newParagraph != null)
+                {
+                    if (currentParagraph.Text.StartsWith("<i> "))
+                        currentParagraph.Text = currentParagraph.Text.Remove(3, 1);
+                    if (newParagraph.Text.StartsWith("<i> "))
+                        newParagraph.Text = newParagraph.Text.Remove(3, 1);
+                }
+
 
                 double startFactor = 0;
                 double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds / 2);
@@ -6213,14 +6239,36 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             originalCurrent.Text = Utilities.AutoBreakLine(oldText.Substring(0, alternateTextIndex.Value).Trim());
                             originalNew.Text = Utilities.AutoBreakLine(oldText.Substring(alternateTextIndex.Value).Trim());
-
                             if (originalCurrent.Text.StartsWith("<i>") && !originalCurrent.Text.Contains("</i>") &&
                                 originalNew.Text.EndsWith("</i>") && !originalNew.Text.Contains("<i>"))
                             {
                                 originalCurrent.Text = originalCurrent.Text + "</i>";
                                 originalNew.Text = "<i>" + originalNew.Text;
                             }
-
+                            if (originalCurrent.Text.StartsWith("<b>") && !originalCurrent.Text.Contains("</b>") &&
+                                originalNew.Text.EndsWith("</b>") && !originalNew.Text.Contains("<b>"))
+                            {
+                                originalCurrent.Text = originalCurrent.Text + "</b>";
+                                originalNew.Text = "<b>" + originalNew.Text;
+                            }
+                            if (originalCurrent.Text.StartsWith("-") && (originalCurrent.Text.EndsWith(".") || originalCurrent.Text.EndsWith("!")) &&
+                                originalNew.Text.StartsWith("-") && (originalNew.Text.EndsWith(".") || originalNew.Text.EndsWith("!")))
+                            {
+                                originalCurrent.Text = originalCurrent.Text.Remove(0, 1).Trim();
+                                originalNew.Text = originalNew.Text.Remove(0, 1).Trim();
+                            }
+                            if (originalCurrent.Text.StartsWith("<i>-") && (originalCurrent.Text.EndsWith(".</i>") || originalCurrent.Text.EndsWith("!</i>")) &&
+                                originalNew.Text.StartsWith("<i>-") && (originalNew.Text.EndsWith(".</i>") || originalNew.Text.EndsWith("!</i>")))
+                            {
+                                originalCurrent.Text = originalCurrent.Text.Remove(3, 1);
+                                originalNew.Text = originalNew.Text.Remove(3, 1);
+                            }
+                            if (originalCurrent.Text.StartsWith("<b>-") && (originalCurrent.Text.EndsWith(".</b>") || originalCurrent.Text.EndsWith("!</b>")) &&
+                                originalNew.Text.StartsWith("<b>-") && (originalNew.Text.EndsWith(".</b>") || originalNew.Text.EndsWith("!</b>")))
+                            {
+                                originalCurrent.Text = originalCurrent.Text.Remove(3, 1);
+                                originalNew.Text = originalNew.Text.Remove(3, 1);
+                            }
                             lines = new string[0];
                         }
                         else if (lines.Length == 2 && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")))
@@ -6232,6 +6280,12 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 a = a + "</i>";
                                 b = "<i>" + b;
+                            }
+                            if (oldText.TrimStart().StartsWith("<b>") && oldText.TrimEnd().EndsWith("</b>") &&
+                                Utilities.CountTagInText(oldText, "<b>") == 1 && Utilities.CountTagInText(oldText, "</b>") == 1)
+                            {
+                                a = a + "</b>";
+                                b = "<b>" + b;
                             }
                             if (a.StartsWith("-") && (a.EndsWith(".") || a.EndsWith("!") || a.EndsWith("?")) &&
                                 b.StartsWith("-") && (b.EndsWith(".") || b.EndsWith("!") || b.EndsWith("?")))
@@ -6249,7 +6303,7 @@ namespace Nikse.SubtitleEdit.Forms
                             lines[0] = a;
                             lines[1] = b;
                             originalCurrent.Text = Utilities.AutoBreakLine(a);
-                            originalNew.Text = Utilities.AutoBreakLine(b);
+                            originalNew.Text = Utilities.AutoBreakLine(b);                                                       
                         }
                         else
                         {
@@ -6260,6 +6314,13 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             originalCurrent.Text = Utilities.AutoBreakLine(lines[0]);
                             originalNew.Text = Utilities.AutoBreakLine(lines[1]);
+                        }
+                        if (originalCurrent != null && originalNew != null)
+                        {
+                            if (originalCurrent.Text.StartsWith("<i> "))
+                                originalCurrent.Text = originalCurrent.Text.Remove(3, 1);
+                            if (originalNew.Text.StartsWith("<i> "))
+                                originalCurrent.Text = originalCurrent.Text.Remove(3, 1);
                         }
                         _subtitleAlternate.InsertParagraphInCorrectTimeOrder(originalNew);
                         _subtitleAlternate.Renumber(1);
