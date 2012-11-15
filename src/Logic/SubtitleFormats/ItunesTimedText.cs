@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string xmlStructure = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
             "<tt xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tt=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\" xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" xml:lang=\"" + language + "\" ttp:timeBase=\"smpte\" ttp:frameRate=\"" + frameRate + "\" ttp:frameRateMultiplier=\"" + frameRateMultiplier +"\" ttp:dropMode=\"nonDrop\">" + Environment.NewLine +
             "   <head>" + Environment.NewLine +
-            "       <styling>" + Environment.NewLine +          
+            "       <styling>" + Environment.NewLine +
             "         <style tts:fontSize=\"100%\" tts:color=\"white\" tts:fontStyle=\"normal\" tts:fontWeight=\"normal\" tts:fontFamily=\"sansSerif\" xml:id=\"normal\"/>" + Environment.NewLine +
             "         <style tts:fontSize=\"100%\" tts:color=\"white\" tts:fontStyle=\"normal\" tts:fontWeight=\"bold\" tts:fontFamily=\"sansSerif\" xml:id=\"bold\"/>" + Environment.NewLine +
             "         <style tts:fontSize=\"100%\" tts:color=\"white\" tts:fontStyle=\"italic\" tts:fontWeight=\"normal\" tts:fontFamily=\"sansSerif\" xml:id=\"italic\"/>" + Environment.NewLine +
@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
                 catch
-                { 
+                {
                     xml.LoadXml(xmlStructure);
                 }
             }
@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
                 string text = p.Text;
 
-                XmlAttribute regionP = xml.CreateAttribute("region");                    
+                XmlAttribute regionP = xml.CreateAttribute("region");
                 if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an8}") || text.StartsWith("{\\an9}"))
                 {
                     if (hasTopRegion)
@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 if (text.StartsWith("{\\an") && text.Length > 6 && text[5] == '}')
                     text = text.Remove(0, 6);
-               
+
                 if (subtitle.Header != null && p.Extra != null && GetStylesFromHeader(subtitle.Header).Contains(p.Extra))
                 {
                     if (p.Extra != defaultStyle)
@@ -307,7 +307,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 XmlAttribute end = xml.CreateAttribute("end");
                 end.InnerText = ConvertToTimeString(p.EndTime);
-                paragraph.Attributes.Append(end);              
+                paragraph.Attributes.Append(end);
 
                 div.AppendChild(paragraph);
                 no++;

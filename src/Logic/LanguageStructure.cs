@@ -863,7 +863,7 @@
                     public string ExportCapMakerPlus { get; set; }
                     public string ExportCaptionsInc { get; set; }
                     public string ExportCheetahCap { get; set; }
-                    public string ExportUltech130 { get; set; }                                                            
+                    public string ExportUltech130 { get; set; }
                     public string Exit { get; set; }
                 }
                 public class EditMenu

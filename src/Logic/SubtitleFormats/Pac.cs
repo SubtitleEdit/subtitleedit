@@ -286,10 +286,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xe081, //=أ
             0xe09b, //=ؤ
             0xe09c, //=ئ
-            0xe09f, //=ي 
+            0xe09f, //=ي
             0xe181, //=إ
             0xe281, //=آ
-            0xe781, //=اً           
+            0xe781, //=اً
             0x80,
             0x81, //=ا
             0x82, //=ب

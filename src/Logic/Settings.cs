@@ -1066,7 +1066,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.General.SubtitleMaximumCharactersPerSeconds = Convert.ToDouble(subNode.InnerText, System.Globalization.CultureInfo.InvariantCulture);
             subNode = node.SelectSingleNode("SubtitleOptimalCharactersPerSeconds");
             if (subNode != null)
-                settings.General.SubtitleOptimalCharactersPerSeconds = Convert.ToDouble(subNode.InnerText, System.Globalization.CultureInfo.InvariantCulture);           
+                settings.General.SubtitleOptimalCharactersPerSeconds = Convert.ToDouble(subNode.InnerText, System.Globalization.CultureInfo.InvariantCulture);
             subNode = node.SelectSingleNode("SpellCheckLanguage");
             if (subNode != null)
                 settings.General.SpellCheckLanguage = subNode.InnerText;

@@ -1362,7 +1362,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemExportPngXml.Text = _language.Menu.File.ExportBdnXml;
             bluraySupToolStripMenuItem.Text = _language.Menu.File.ExportBluRaySup;
             adobeEncoreFABImageScriptToolStripMenuItem.Text = _language.Menu.File.ExportAdobeEncoreFabImageScript;
-            toolStripMenuItemTextTimeCodePair.Text = _language.Menu.File.ExportKoreanAtsFilePair;            
+            toolStripMenuItemTextTimeCodePair.Text = _language.Menu.File.ExportKoreanAtsFilePair;
             vobSubsubidxToolStripMenuItem.Text = _language.Menu.File.ExportVobSub;
             toolStripMenuItemCavena890.Text = _language.Menu.File.ExportCavena890;
             eBUSTLToolStripMenuItem.Text = _language.Menu.File.ExportEbu;
@@ -6167,7 +6167,7 @@ namespace Nikse.SubtitleEdit.Forms
                             newParagraph.Text = newParagraph.Text.Remove(3, 1);
                             if (newParagraph.Text[3] == ' ')
                                 newParagraph.Text = newParagraph.Text.Remove(3, 1);
-                        }                       
+                        }
                     }
                     else
                     {
@@ -6304,7 +6304,7 @@ namespace Nikse.SubtitleEdit.Forms
                             lines[0] = a;
                             lines[1] = b;
                             originalCurrent.Text = Utilities.AutoBreakLine(a);
-                            originalNew.Text = Utilities.AutoBreakLine(b);                                                       
+                            originalNew.Text = Utilities.AutoBreakLine(b);
                         }
                         else
                         {
@@ -9131,7 +9131,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeAutoDuration();
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == (Keys.Control | Keys.Shift | Keys.Alt) && e.KeyCode == Keys.C) 
+            else if (e.Modifiers == (Keys.Control | Keys.Shift | Keys.Alt) && e.KeyCode == Keys.C)
             {
                 var form = new BatchConvert();
                 form.ShowDialog(this);

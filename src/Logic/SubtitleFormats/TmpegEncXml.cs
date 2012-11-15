@@ -51,140 +51,140 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         internal const string Layout = @"<?xml version='1.0' encoding='UTF-8'?>
 <TMPGEncVMESubtitleTextFormat>
-	<Layout>
-		<LayoutItem index='0'>
-			<Name>
-				<![CDATA[Picture bottom layout]]>
-			</Name>
-			<Position>4</Position>
-			<FontName>
-				<![CDATA[Tahoma]]>
-			</FontName>
-			<FontHeight>0.1</FontHeight>
-			<FontColor>17588159451135</FontColor>
-			<FontBold>0</FontBold>
-			<FontItalic>0</FontItalic>
-			<FontUnderline>0</FontUnderline>
-			<FontStrikeOut>0</FontStrikeOut>
-			<HorizonAlign>1</HorizonAlign>
-			<VerticalAlign>2</VerticalAlign>
-			<DirectionVertical>0</DirectionVertical>
-			<BorderActive>1</BorderActive>
-			<BorderSize>0.005</BorderSize>
-			<BorderColor>0</BorderColor>
-			<BorderOpacity>1</BorderOpacity>
-			<BackgroundActive>0</BackgroundActive>
-			<BackgroundSize>0.005</BackgroundSize>
-			<BackgroundColor>0</BackgroundColor>
-			<BackgroundOpacity>1</BackgroundOpacity>
-			<FadeInActive>0</FadeInActive>
-			<FadeInTime>1000</FadeInTime>
-			<FadeOutActive>0</FadeOutActive>
-			<FadeOutTime>1000</FadeOutTime>
-			<ScrollDirectionIndex>0</ScrollDirectionIndex>
-			<TextAlign>1</TextAlign>
-			<DirectionRightToLeft>0</DirectionRightToLeft>
-		</LayoutItem>
-		<LayoutItem index='1'>
-			<Name>
-				<![CDATA[Picture top layout]]>
-			</Name>
-			<Position>4</Position>
-			<FontName>
-				<![CDATA[Tahoma]]>
-			</FontName>
-			<FontHeight>0.1</FontHeight>
-			<FontColor>17588159451135</FontColor>
-			<FontBold>0</FontBold>
-			<FontItalic>0</FontItalic>
-			<FontUnderline>0</FontUnderline>
-			<FontStrikeOut>0</FontStrikeOut>
-			<HorizonAlign>1</HorizonAlign>
-			<VerticalAlign>0</VerticalAlign>
-			<DirectionVertical>0</DirectionVertical>
-			<BorderActive>1</BorderActive>
-			<BorderSize>0.005</BorderSize>
-			<BorderColor>0</BorderColor>
-			<BorderOpacity>1</BorderOpacity>
-			<BackgroundActive>0</BackgroundActive>
-			<BackgroundSize>0.005</BackgroundSize>
-			<BackgroundColor>0</BackgroundColor>
-			<BackgroundOpacity>1</BackgroundOpacity>
-			<FadeInActive>0</FadeInActive>
-			<FadeInTime>1000</FadeInTime>
-			<FadeOutActive>0</FadeOutActive>
-			<FadeOutTime>1000</FadeOutTime>
-			<ScrollDirectionIndex>0</ScrollDirectionIndex>
-			<TextAlign>1</TextAlign>
-			<DirectionRightToLeft>0</DirectionRightToLeft>
-		</LayoutItem>
-		<LayoutItem index='2'>
-			<Name>
-				<![CDATA[Picture left layout]]>
-			</Name>
-			<Position>4</Position>
-			<FontName>
-				<![CDATA[Tahoma]]>
-			</FontName>
-			<FontHeight>0.1</FontHeight>
-			<FontColor>17588159451135</FontColor>
-			<FontBold>0</FontBold>
-			<FontItalic>0</FontItalic>
-			<FontUnderline>0</FontUnderline>
-			<FontStrikeOut>0</FontStrikeOut>
-			<HorizonAlign>0</HorizonAlign>
-			<VerticalAlign>1</VerticalAlign>
-			<DirectionVertical>1</DirectionVertical>
-			<BorderActive>1</BorderActive>
-			<BorderSize>0.005</BorderSize>
-			<BorderColor>0</BorderColor>
-			<BorderOpacity>1</BorderOpacity>
-			<BackgroundActive>0</BackgroundActive>
-			<BackgroundSize>0.005</BackgroundSize>
-			<BackgroundColor>0</BackgroundColor>
-			<BackgroundOpacity>1</BackgroundOpacity>
-			<FadeInActive>0</FadeInActive>
-			<FadeInTime>1000</FadeInTime>
-			<FadeOutActive>0</FadeOutActive>
-			<FadeOutTime>1000</FadeOutTime>
-			<ScrollDirectionIndex>0</ScrollDirectionIndex>
-			<TextAlign>1</TextAlign>
-			<DirectionRightToLeft>1</DirectionRightToLeft>
-		</LayoutItem>
-		<LayoutItem index='3'>
-			<Name>
-				<![CDATA[Picture right layout]]>
-			</Name>
-			<Position>4</Position>
-			<FontName>
-				<![CDATA[Tahoma]]>
-			</FontName>
-			<FontHeight>0.1</FontHeight>
-			<FontColor>17588159451135</FontColor>
-			<FontBold>0</FontBold>
-			<FontItalic>0</FontItalic>
-			<FontUnderline>0</FontUnderline>
-			<FontStrikeOut>0</FontStrikeOut>
-			<HorizonAlign>2</HorizonAlign>
-			<VerticalAlign>1</VerticalAlign>
-			<DirectionVertical>1</DirectionVertical>
-			<BorderActive>1</BorderActive>
-			<BorderSize>0.005</BorderSize>
-			<BorderColor>0</BorderColor>
-			<BorderOpacity>1</BorderOpacity>
-			<BackgroundActive>0</BackgroundActive>
-			<BackgroundSize>0.005</BackgroundSize>
-			<BackgroundColor>0</BackgroundColor>
-			<BackgroundOpacity>1</BackgroundOpacity>
-			<FadeInActive>0</FadeInActive>
-			<FadeInTime>1000</FadeInTime>
-			<FadeOutActive>0</FadeOutActive>
-			<FadeOutTime>1000</FadeOutTime>
-			<ScrollDirectionIndex>0</ScrollDirectionIndex>
-			<TextAlign>1</TextAlign>
-			<DirectionRightToLeft>1</DirectionRightToLeft>
-		</LayoutItem>
-	</Layout>
+    <Layout>
+        <LayoutItem index='0'>
+            <Name>
+                <![CDATA[Picture bottom layout]]>
+            </Name>
+            <Position>4</Position>
+            <FontName>
+                <![CDATA[Tahoma]]>
+            </FontName>
+            <FontHeight>0.1</FontHeight>
+            <FontColor>17588159451135</FontColor>
+            <FontBold>0</FontBold>
+            <FontItalic>0</FontItalic>
+            <FontUnderline>0</FontUnderline>
+            <FontStrikeOut>0</FontStrikeOut>
+            <HorizonAlign>1</HorizonAlign>
+            <VerticalAlign>2</VerticalAlign>
+            <DirectionVertical>0</DirectionVertical>
+            <BorderActive>1</BorderActive>
+            <BorderSize>0.005</BorderSize>
+            <BorderColor>0</BorderColor>
+            <BorderOpacity>1</BorderOpacity>
+            <BackgroundActive>0</BackgroundActive>
+            <BackgroundSize>0.005</BackgroundSize>
+            <BackgroundColor>0</BackgroundColor>
+            <BackgroundOpacity>1</BackgroundOpacity>
+            <FadeInActive>0</FadeInActive>
+            <FadeInTime>1000</FadeInTime>
+            <FadeOutActive>0</FadeOutActive>
+            <FadeOutTime>1000</FadeOutTime>
+            <ScrollDirectionIndex>0</ScrollDirectionIndex>
+            <TextAlign>1</TextAlign>
+            <DirectionRightToLeft>0</DirectionRightToLeft>
+        </LayoutItem>
+        <LayoutItem index='1'>
+            <Name>
+                <![CDATA[Picture top layout]]>
+            </Name>
+            <Position>4</Position>
+            <FontName>
+                <![CDATA[Tahoma]]>
+            </FontName>
+            <FontHeight>0.1</FontHeight>
+            <FontColor>17588159451135</FontColor>
+            <FontBold>0</FontBold>
+            <FontItalic>0</FontItalic>
+            <FontUnderline>0</FontUnderline>
+            <FontStrikeOut>0</FontStrikeOut>
+            <HorizonAlign>1</HorizonAlign>
+            <VerticalAlign>0</VerticalAlign>
+            <DirectionVertical>0</DirectionVertical>
+            <BorderActive>1</BorderActive>
+            <BorderSize>0.005</BorderSize>
+            <BorderColor>0</BorderColor>
+            <BorderOpacity>1</BorderOpacity>
+            <BackgroundActive>0</BackgroundActive>
+            <BackgroundSize>0.005</BackgroundSize>
+            <BackgroundColor>0</BackgroundColor>
+            <BackgroundOpacity>1</BackgroundOpacity>
+            <FadeInActive>0</FadeInActive>
+            <FadeInTime>1000</FadeInTime>
+            <FadeOutActive>0</FadeOutActive>
+            <FadeOutTime>1000</FadeOutTime>
+            <ScrollDirectionIndex>0</ScrollDirectionIndex>
+            <TextAlign>1</TextAlign>
+            <DirectionRightToLeft>0</DirectionRightToLeft>
+        </LayoutItem>
+        <LayoutItem index='2'>
+            <Name>
+                <![CDATA[Picture left layout]]>
+            </Name>
+            <Position>4</Position>
+            <FontName>
+                <![CDATA[Tahoma]]>
+            </FontName>
+            <FontHeight>0.1</FontHeight>
+            <FontColor>17588159451135</FontColor>
+            <FontBold>0</FontBold>
+            <FontItalic>0</FontItalic>
+            <FontUnderline>0</FontUnderline>
+            <FontStrikeOut>0</FontStrikeOut>
+            <HorizonAlign>0</HorizonAlign>
+            <VerticalAlign>1</VerticalAlign>
+            <DirectionVertical>1</DirectionVertical>
+            <BorderActive>1</BorderActive>
+            <BorderSize>0.005</BorderSize>
+            <BorderColor>0</BorderColor>
+            <BorderOpacity>1</BorderOpacity>
+            <BackgroundActive>0</BackgroundActive>
+            <BackgroundSize>0.005</BackgroundSize>
+            <BackgroundColor>0</BackgroundColor>
+            <BackgroundOpacity>1</BackgroundOpacity>
+            <FadeInActive>0</FadeInActive>
+            <FadeInTime>1000</FadeInTime>
+            <FadeOutActive>0</FadeOutActive>
+            <FadeOutTime>1000</FadeOutTime>
+            <ScrollDirectionIndex>0</ScrollDirectionIndex>
+            <TextAlign>1</TextAlign>
+            <DirectionRightToLeft>1</DirectionRightToLeft>
+        </LayoutItem>
+        <LayoutItem index='3'>
+            <Name>
+                <![CDATA[Picture right layout]]>
+            </Name>
+            <Position>4</Position>
+            <FontName>
+                <![CDATA[Tahoma]]>
+            </FontName>
+            <FontHeight>0.1</FontHeight>
+            <FontColor>17588159451135</FontColor>
+            <FontBold>0</FontBold>
+            <FontItalic>0</FontItalic>
+            <FontUnderline>0</FontUnderline>
+            <FontStrikeOut>0</FontStrikeOut>
+            <HorizonAlign>2</HorizonAlign>
+            <VerticalAlign>1</VerticalAlign>
+            <DirectionVertical>1</DirectionVertical>
+            <BorderActive>1</BorderActive>
+            <BorderSize>0.005</BorderSize>
+            <BorderColor>0</BorderColor>
+            <BorderOpacity>1</BorderOpacity>
+            <BackgroundActive>0</BackgroundActive>
+            <BackgroundSize>0.005</BackgroundSize>
+            <BackgroundColor>0</BackgroundColor>
+            <BackgroundOpacity>1</BackgroundOpacity>
+            <FadeInActive>0</FadeInActive>
+            <FadeInTime>1000</FadeInTime>
+            <FadeOutActive>0</FadeOutActive>
+            <FadeOutTime>1000</FadeOutTime>
+            <ScrollDirectionIndex>0</ScrollDirectionIndex>
+            <TextAlign>1</TextAlign>
+            <DirectionRightToLeft>1</DirectionRightToLeft>
+        </LayoutItem>
+    </Layout>
     <Subtitle>
         @
     </Subtitle>
@@ -312,13 +312,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                          if (!pText.ToString().EndsWith("\\n"))
                              _errorCount++;
-                    }                        
-                    else 
+                    }
+                    else
                     {
                         if (pText.ToString().EndsWith("\\n"))
                             _errorCount++;
                     }
-                    
+
                     var p = new Paragraph(startCode, endCode, pText.ToString().Trim().Replace("<Text>", string.Empty).Replace("</Text>", string.Empty).Replace("\\n", Environment.NewLine).TrimEnd());
                     if (node.Attributes["layoutindex"] != null)
                     {
