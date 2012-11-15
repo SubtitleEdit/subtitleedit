@@ -450,7 +450,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             item.SubItems[3].Text = string.Format("Converted ({0})", converted - oldConverted);
                         }
-                        else 
+                        else
                         {
                             item.SubItems[3].Text = "ERROR";
                         }
@@ -459,7 +459,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                }                
+                }
             }
         }
 
