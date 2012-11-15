@@ -151,6 +151,7 @@
             this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.labelUserName);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "NetworkStart";
