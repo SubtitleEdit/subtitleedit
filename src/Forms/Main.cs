@@ -12394,7 +12394,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 Directory.CreateDirectory(Configuration.AutoBackupFolder);
                             }
-                            catch (Exception exception)
+                            catch
                             {
                             }
                         }
