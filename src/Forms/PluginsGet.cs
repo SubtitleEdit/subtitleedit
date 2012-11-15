@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
         private XmlDocument _pluginDoc = new XmlDocument();
         private string _downloadedPluginName;
         readonly LanguageStructure.PluginsGet _language;
+        bool _firstTry = true;
 
         public PluginsGet()
         {
@@ -46,7 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
                 this.Refresh();
                 ShowInstalledPlugins();
-                string url = "http://subtitleedit.googlecode.com/files/Plugins.xml";
+                string url = "http://www.nikse.dk/Content/SubtitleEdit/Plugins/Plugins.xml";
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += new DownloadDataCompletedEventHandler(PluginListDownloadDataCompleted);
                 wc.DownloadDataAsync(new Uri(url));
@@ -96,6 +97,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         void PluginListDownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
+            if (e.Error != null && _firstTry)
+            {
+                _firstTry = false;
+                string url = "http://subtitleedit.googlecode.com/files/Plugins.xml"; // retry with alternate download url
+                var wc = new WebClient { Proxy = Utilities.GetProxy() };
+                wc.DownloadDataCompleted += new DownloadDataCompletedEventHandler(PluginListDownloadDataCompleted);
+                wc.DownloadDataAsync(new Uri(url));
+                return;
+            }
+
             labelPleaseWait.Text = string.Empty;
             if (e.Error != null)
             {
