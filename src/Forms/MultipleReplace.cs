@@ -88,6 +88,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
+            else if (e.KeyCode == Keys.F1)
+                Utilities.ShowHelp("#multiple_replace");
         }
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
@@ -154,22 +156,11 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (searchType == Configuration.Settings.Language.MultipleReplace.RegularExpression)
                         {
-                            var regex = new Regex(findWhat, RegexOptions.Multiline);
-                            var match = regex.Match(newText);
-                            if (match.Success)
+                            string result = Regex.Replace(newText, findWhat, replaceWith, RegexOptions.Multiline);
+                            if (result != newText)
                             {
                                 hit = true;
-
-                                string groupName = Utilities.GetRegExGroup(findWhat);
-                                if (groupName != null && match.Groups[groupName] != null && match.Groups[groupName].Success)
-                                {
-                                    newText = newText.Remove(match.Groups[groupName].Index, match.Groups[groupName].Length);
-                                    newText = newText.Insert(match.Groups[groupName].Index, replaceWith);
-                                }
-                                else
-                                {
-                                    newText = regex.Replace(newText, replaceWith);
-                                }
+                                newText = result;
                             }
                         }
                         else
@@ -186,7 +177,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 index = newText.ToLower().IndexOf(findWhat.ToLower(), index+replaceWith.Length);
                             }
                         }
-
                     }
                 }
                 if (hit)
