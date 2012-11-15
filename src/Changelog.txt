@@ -1,6 +1,6 @@
 Subtitle Edit Changelog
 
-3.3 RC1 (2nd November 2012)
+3.3 RC1 (15th November 2012)
 * NEW:
    * Added column commands to list view context menu - thx Seungki
    * Edit -> Reverse RTL start/end (fix punctuations)
@@ -47,6 +47,7 @@ Subtitle Edit Changelog
    * File -> Export - can now choose custom video resolution + supports color
    * Timed Text now allows for time codes in ticks - thx Allan
    * Upgraded Tesseract to version 3.02.02
+   * Multiple replace: Changed RegEx to support back-references $1, $2 - thx Kurt
 * FIXED:
    * Auto-translate now works for English to Portuguese - thx w.tambley
    * Shortcuts with numbers (0-9)
@@ -71,6 +72,7 @@ Subtitle Edit Changelog
    * Fixed missing last line in a couple of subtitle formats
    * Minor fixes for "Change casing" + "Split long lines" - thx Marcio
    * Timed Text 1.0 uses frames instead of milliseconds (if relevant) - thx Stefan
+   * Auto-backup now also saves original subtitle - thx Trottel
 
 
 3.2.8 (3rd June 2012)
