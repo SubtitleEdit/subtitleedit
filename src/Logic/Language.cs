@@ -415,6 +415,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SideBySide3D = "Side-by-side 3D",
                 BorderColor = "Border color",
                 BorderWidth = "Border width",
+                ImageFormat = "Image format",
                 ExportAllLines = "Export all lines...",
                 FontColor = "Font color",
                 FontFamily = "Font family",

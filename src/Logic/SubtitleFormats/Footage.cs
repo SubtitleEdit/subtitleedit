@@ -152,15 +152,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0:00},{1:00}", (int)time.TotalSeconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds)).PadLeft(8);
+            int frames = MillisecondsToFrames(time.TotalMilliseconds);
+            int footage = frames / 16;
+            int rest = (int)((frames % 16) / 16.0 * 24.0);
+            return string.Format("{0:00},{1:00}", footage, rest).PadLeft(8);
         }
 
         private TimeCode DecodeTimeCode(string[] parts)
         {
-            string seconds = parts[0];
+            string frames16 = parts[0];
             string frames = parts[1];
-
-            return new TimeCode(0, 0, int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
+            return new TimeCode(0, 0, 0, FramesToMilliseconds(16 * int.Parse(frames16) + int.Parse(frames)));
         }
 
     }

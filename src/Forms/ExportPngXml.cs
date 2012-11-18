@@ -1109,12 +1109,14 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
             labelSubtitleFont.Text = Configuration.Settings.Language.ExportPngXml.FontFamily;
             labelSubtitleFontSize.Text = Configuration.Settings.Language.ExportPngXml.FontSize;
+            labelResolution.Text = Configuration.Settings.Language.ExportPngXml.VideoResolution;
             buttonColor.Text = Configuration.Settings.Language.ExportPngXml.FontColor;
             checkBoxAntiAlias.Text = Configuration.Settings.Language.ExportPngXml.AntiAlias;
             checkBoxSideBySide3D.Text = Configuration.Settings.Language.ExportPngXml.SideBySide3D;
             checkBoxBold.Text = Configuration.Settings.Language.General.Bold;
             buttonBorderColor.Text = Configuration.Settings.Language.ExportPngXml.BorderColor;
             labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderWidth;
+            labelImageFormat.Text = Configuration.Settings.Language.ExportPngXml.ImageFormat;
             buttonExport.Text = Configuration.Settings.Language.ExportPngXml.ExportAllLines;
             buttonCancel.Text = Configuration.Settings.Language.General.OK;
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;

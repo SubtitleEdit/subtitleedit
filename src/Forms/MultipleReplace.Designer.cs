@@ -38,6 +38,7 @@
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxReplaces = new System.Windows.Forms.GroupBox();
+            this.buttonRemoveAll = new System.Windows.Forms.Button();
             this.buttonExport = new System.Windows.Forms.Button();
             this.buttonImport = new System.Windows.Forms.Button();
             this.textBoxFind = new System.Windows.Forms.TextBox();
@@ -63,7 +64,6 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.buttonRemoveAll = new System.Windows.Forms.Button();
             this.groupBoxLinesFound.SuspendLayout();
             this.groupBoxReplaces.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -156,6 +156,8 @@
             this.groupBoxReplaces.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxReplaces.Controls.Add(this.radioButtonRegEx);
+            this.groupBoxReplaces.Controls.Add(this.radioButtonCaseSensitive);
             this.groupBoxReplaces.Controls.Add(this.buttonRemoveAll);
             this.groupBoxReplaces.Controls.Add(this.buttonExport);
             this.groupBoxReplaces.Controls.Add(this.buttonImport);
@@ -165,15 +167,24 @@
             this.groupBoxReplaces.Controls.Add(this.buttonAdd);
             this.groupBoxReplaces.Controls.Add(this.labelFindWhat);
             this.groupBoxReplaces.Controls.Add(this.labelReplaceWith);
-            this.groupBoxReplaces.Controls.Add(this.radioButtonRegEx);
-            this.groupBoxReplaces.Controls.Add(this.radioButtonCaseSensitive);
-            this.groupBoxReplaces.Controls.Add(this.radioButtonNormal);
             this.groupBoxReplaces.Controls.Add(this.listViewReplaceList);
+            this.groupBoxReplaces.Controls.Add(this.radioButtonNormal);
             this.groupBoxReplaces.Location = new System.Drawing.Point(8, 3);
             this.groupBoxReplaces.Name = "groupBoxReplaces";
             this.groupBoxReplaces.Size = new System.Drawing.Size(922, 312);
             this.groupBoxReplaces.TabIndex = 0;
             this.groupBoxReplaces.TabStop = false;
+            // 
+            // buttonRemoveAll
+            // 
+            this.buttonRemoveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRemoveAll.Location = new System.Drawing.Point(541, 285);
+            this.buttonRemoveAll.Name = "buttonRemoveAll";
+            this.buttonRemoveAll.Size = new System.Drawing.Size(120, 21);
+            this.buttonRemoveAll.TabIndex = 5;
+            this.buttonRemoveAll.Text = "Remove all";
+            this.buttonRemoveAll.UseVisualStyleBackColor = true;
+            this.buttonRemoveAll.Click += new System.EventHandler(this.buttonRemoveAll_Click);
             // 
             // buttonExport
             // 
@@ -405,17 +416,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // buttonRemoveAll
-            // 
-            this.buttonRemoveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRemoveAll.Location = new System.Drawing.Point(541, 285);
-            this.buttonRemoveAll.Name = "buttonRemoveAll";
-            this.buttonRemoveAll.Size = new System.Drawing.Size(120, 21);
-            this.buttonRemoveAll.TabIndex = 5;
-            this.buttonRemoveAll.Text = "Remove all";
-            this.buttonRemoveAll.UseVisualStyleBackColor = true;
-            this.buttonRemoveAll.Click += new System.EventHandler(this.buttonRemoveAll_Click);
             // 
             // MultipleReplace
             // 

@@ -322,6 +322,7 @@
             public string FontColor { get; set; }
             public string BorderColor { get; set; }
             public string BorderWidth { get; set; }
+            public string ImageFormat { get; set; }
             public string AntiAlias { get; set; }
             public string SideBySide3D { get; set; }
             public string ExportAllLines { get; set; }

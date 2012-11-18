@@ -423,7 +423,7 @@
     <RefreshFixes>Vernieuw beschikbaar reparaties</RefreshFixes>
     <ApplyFixes>Voer uit</ApplyFixes>
     <AutoBreak>Auto afbreken</AutoBreak>
-    <Unbreak>&amp;Unbreak</Unbreak>
+    <Unbreak>&amp;Niet afbreken</Unbreak>
     <FixDoubleDash>Herstel' - '-&gt;'... '</FixDoubleDash>
     <FixDoubleGreaterThan>Verwijder &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Verwijder beginpunten '...'</FixEllipsesStart>
@@ -531,6 +531,7 @@
         <OpenContainingFolder>Bijbehorende map openen</OpenContainingFolder>
         <Compare>&amp;Vergelijk...</Compare>
         <Statistics>Statistieken</Statistics>
+        <Plugins>Plugins</Plugins>
         <ImportOcrFromDvd>Import/OCR ondertiteling uit VOB/IFO (dvd)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) ondertitel...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Import/OCR Blu-ray-sup-bestand...</ImportBluRaySupFile>
@@ -546,6 +547,14 @@
         <ExportEbu>EBU stl...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Platte tekst...</ExportPlainText>
+        <ExportAdobeEncoreFabImageScript>Adobe Encore FAB image script...</ExportAdobeEncoreFabImageScript>
+        <ExportKoreanAtsFilePair>Korean ATS file pair...</ExportKoreanAtsFilePair>
+        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
+        <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
+        <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
+        <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
+        <ExportUltech130>Ultech caption...</ExportUltech130>
         <Exit>&amp;Sluiten</Exit>
       </File>
       <Edit>
@@ -680,6 +689,7 @@
         <ColumnDeleteText>Verwijder tekst</ColumnDeleteText>
         <ColumnDeleteTextAndShiftCellsUp>Verwijder tekst en verschuif cellen naar boven</ColumnDeleteTextAndShiftCellsUp>
         <ColumnInsertEmptyTextAndShiftCellsDown>Voeg lege tekst in en verschuif cellen naar beneden</ColumnInsertEmptyTextAndShiftCellsDown>
+        <ColumnInsertTextFromSubtitle>Voeg tekst van ondertitel in.</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Importeer tekst en verschuif cellen naar beneden</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Plakken vanuit klembord...</ColumnPasteFromClipboard>
         <Split>Splits</Split>
@@ -1376,7 +1386,7 @@
     <NumberOfCharactersX>Aantal karakters: {0:#,###,###}</NumberOfCharactersX>
     <Output>Output</Output>
     <FileName>Bestandsnaam</FileName>
-    <OutputFolder>Output folder</OutputFolder>
+    <OutputFolder>Output map</OutputFolder>
     <DoSplit>Splits</DoSplit>
     <Basic>Basis</Basic>
   </Split>
@@ -1600,10 +1610,10 @@
     <Italic>&amp;Cursief</Italic>
     <Abort>&amp;Afbreken</Abort>
     <Skip>&amp;Overslaan</Skip>
-    <Nordic>Nordic</Nordic>
+    <Nordic>Scandinavisch</Nordic>
     <Spanish>Spaans</Spanish>
     <German>Duits</German>
-    <AutoSubmitOnFirstChar>Auto submit on &amp;first char</AutoSubmitOnFirstChar>
+    <AutoSubmitOnFirstChar>Automatisch toewijzen aan&amp;eerste teken</AutoSubmitOnFirstChar>
     <EditLastX>Bewerken laatste: {0}</EditLastX>
   </VobSubOcrCharacter>
   <VobSubOcrCharacterInspect>
