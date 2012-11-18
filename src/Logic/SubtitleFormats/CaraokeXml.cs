@@ -44,11 +44,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlNode item = xml.CreateElement("item");
 
                 var start = xml.CreateAttribute("tc1");
-                start.InnerText = p.StartTime.TotalMilliseconds.ToString();
+                start.InnerText = p.StartTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture);
                 item.Attributes.Append(start);
 
                 var end = xml.CreateAttribute("tc2");
-                end.InnerText = p.EndTime.TotalMilliseconds.ToString();
+                end.InnerText = p.EndTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture);
                 item.Attributes.Append(end);
 
                 var attr = xml.CreateAttribute("attr");
@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string end = node.Attributes["tc2"].InnerText;
                     string text = node.InnerText;
 
-                    subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start), Convert.ToDouble(end)));
+                    subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start, System.Globalization.CultureInfo.InvariantCulture), Convert.ToDouble(end, System.Globalization.CultureInfo.InvariantCulture)));
                 }
                 catch (Exception ex)
                 {

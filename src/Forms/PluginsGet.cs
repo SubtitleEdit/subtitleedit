@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
 using System.Drawing;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -92,10 +93,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _pluginDoc.LoadXml(e.Result);
                 string[] arr = _pluginDoc.DocumentElement.SelectSingleNode("SubtitleEditVersion").InnerText.Split("., ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                double requiredVersion = Convert.ToDouble(arr[0] + "." + arr[1]);
+                double requiredVersion = Convert.ToDouble(arr[0] + "." + arr[1], CultureInfo.InvariantCulture);
 
                 string[] versionInfo = Utilities.AssemblyVersion.Split('.');
-                double currentVersion = Convert.ToDouble(versionInfo[0] + "." + versionInfo[1]);
+                double currentVersion = Convert.ToDouble(versionInfo[0] + "." + versionInfo[1], CultureInfo.InvariantCulture);
 
                 if (currentVersion < requiredVersion)
                 {
@@ -126,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception exception)
             {
-                MessageBox.Show(string.Format(_language.UnableToDownloadPluginListX, exception.Message));
+                MessageBox.Show(string.Format(_language.UnableToDownloadPluginListX, exception.Source + ": " + exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace));
             }
         }
 

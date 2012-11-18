@@ -363,7 +363,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private double StrToFloat(string p)
         {
-            return Convert.ToDouble(p);
+            return Convert.ToDouble(p, System.Globalization.CultureInfo.InvariantCulture);
         }
 
         private int StrToInt(string p)

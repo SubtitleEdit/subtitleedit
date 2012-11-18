@@ -982,7 +982,7 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("DefaultFrameRate");
             if (subNode != null)
             {
-                settings.General.DefaultFrameRate = Convert.ToDouble(subNode.InnerText);
+                settings.General.DefaultFrameRate = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
                 if (settings.General.DefaultFrameRate > 23975)
                     settings.General.DefaultFrameRate = 23.976;
                 settings.General.CurrentFrameRate = settings.General.DefaultFrameRate;
@@ -1289,7 +1289,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.SubtitleSettings.SsaFontName = subNode.InnerText;
                 subNode = node.SelectSingleNode("SsaFontSize");
                 if (subNode != null)
-                    settings.SubtitleSettings.SsaFontSize = Convert.ToDouble(subNode.InnerText);
+                    settings.SubtitleSettings.SsaFontSize = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
                 subNode = node.SelectSingleNode("SsaFontColorArgb");
                 if (subNode != null)
                     settings.SubtitleSettings.SsaFontColorArgb = Convert.ToInt32(subNode.InnerText);
@@ -1551,7 +1551,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.VobSubOcr.XOrMorePixelsMakesSpace = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("AllowDifferenceInPercent");
             if (subNode != null)
-                settings.VobSubOcr.AllowDifferenceInPercent = Convert.ToDouble(subNode.InnerText);
+                settings.VobSubOcr.AllowDifferenceInPercent = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
             subNode = node.SelectSingleNode("LastImageCompareFolder");
             if (subNode != null)
                 settings.VobSubOcr.LastImageCompareFolder = subNode.InnerText;
@@ -1989,7 +1989,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ShowAudioVisualizer", settings.General.ShowAudioVisualizer.ToString());
             textWriter.WriteElementString("ShowWaveform", settings.General.ShowWaveform.ToString());
             textWriter.WriteElementString("ShowSpectrogram", settings.General.ShowSpectrogram.ToString());
-            textWriter.WriteElementString("DefaultFrameRate", settings.General.DefaultFrameRate.ToString());
+            textWriter.WriteElementString("DefaultFrameRate", settings.General.DefaultFrameRate.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("DefaultSubtitleFormat", settings.General.DefaultSubtitleFormat);
             textWriter.WriteElementString("DefaultEncoding", settings.General.DefaultEncoding);
             textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString());
@@ -2095,7 +2095,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             textWriter.WriteStartElement("SubtitleSettings", "");
             textWriter.WriteElementString("SsaFontName", settings.SubtitleSettings.SsaFontName);
-            textWriter.WriteElementString("SsaFontSize", settings.SubtitleSettings.SsaFontSize.ToString());
+            textWriter.WriteElementString("SsaFontSize", settings.SubtitleSettings.SsaFontSize.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("SsaFontColorArgb", settings.SubtitleSettings.SsaFontColorArgb.ToString());
             textWriter.WriteElementString("DCinemaFontFile", settings.SubtitleSettings.DCinemaFontFile);
             textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString());
@@ -2193,7 +2193,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             textWriter.WriteStartElement("VobSubOcr", "");
             textWriter.WriteElementString("XOrMorePixelsMakesSpace", settings.VobSubOcr.XOrMorePixelsMakesSpace.ToString());
-            textWriter.WriteElementString("AllowDifferenceInPercent", settings.VobSubOcr.AllowDifferenceInPercent.ToString());
+            textWriter.WriteElementString("AllowDifferenceInPercent", settings.VobSubOcr.AllowDifferenceInPercent.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("LastImageCompareFolder", settings.VobSubOcr.LastImageCompareFolder);
             textWriter.WriteElementString("LastModiLanguageId", settings.VobSubOcr.LastModiLanguageId.ToString());
             textWriter.WriteElementString("LastOcrMethod", settings.VobSubOcr.LastOcrMethod);

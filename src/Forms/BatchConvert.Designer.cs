@@ -31,6 +31,7 @@
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxSplitOptions = new System.Windows.Forms.GroupBox();
+            this.checkBoxFixItalics = new System.Windows.Forms.CheckBox();
             this.checkBoxFixCasing = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveTextForHI = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveFormatting = new System.Windows.Forms.CheckBox();
@@ -68,7 +69,7 @@
             this.buttonConvert.Location = new System.Drawing.Point(782, 452);
             this.buttonConvert.Name = "buttonConvert";
             this.buttonConvert.Size = new System.Drawing.Size(98, 21);
-            this.buttonConvert.TabIndex = 3;
+            this.buttonConvert.TabIndex = 2;
             this.buttonConvert.Text = "&Convert";
             this.buttonConvert.UseVisualStyleBackColor = true;
             this.buttonConvert.Click += new System.EventHandler(this.buttonConvert_Click);
@@ -80,7 +81,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(886, 452);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 4;
+            this.buttonCancel.TabIndex = 3;
             this.buttonCancel.Text = "&Done";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -89,21 +90,32 @@
             // 
             this.groupBoxSplitOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSplitOptions.Controls.Add(this.checkBoxFixItalics);
             this.groupBoxSplitOptions.Controls.Add(this.checkBoxFixCasing);
             this.groupBoxSplitOptions.Controls.Add(this.checkBoxRemoveTextForHI);
             this.groupBoxSplitOptions.Controls.Add(this.checkBoxRemoveFormatting);
             this.groupBoxSplitOptions.Controls.Add(this.checkBoxBreakLongLines);
             this.groupBoxSplitOptions.Location = new System.Drawing.Point(702, 19);
             this.groupBoxSplitOptions.Name = "groupBoxSplitOptions";
-            this.groupBoxSplitOptions.Size = new System.Drawing.Size(241, 133);
-            this.groupBoxSplitOptions.TabIndex = 6;
+            this.groupBoxSplitOptions.Size = new System.Drawing.Size(241, 147);
+            this.groupBoxSplitOptions.TabIndex = 9;
             this.groupBoxSplitOptions.TabStop = false;
             this.groupBoxSplitOptions.Text = "Convert options";
+            // 
+            // checkBoxFixItalics
+            // 
+            this.checkBoxFixItalics.AutoSize = true;
+            this.checkBoxFixItalics.Location = new System.Drawing.Point(16, 47);
+            this.checkBoxFixItalics.Name = "checkBoxFixItalics";
+            this.checkBoxFixItalics.Size = new System.Drawing.Size(68, 17);
+            this.checkBoxFixItalics.TabIndex = 1;
+            this.checkBoxFixItalics.Text = "Fix italics";
+            this.checkBoxFixItalics.UseVisualStyleBackColor = true;
             // 
             // checkBoxFixCasing
             // 
             this.checkBoxFixCasing.AutoSize = true;
-            this.checkBoxFixCasing.Location = new System.Drawing.Point(16, 98);
+            this.checkBoxFixCasing.Location = new System.Drawing.Point(16, 93);
             this.checkBoxFixCasing.Name = "checkBoxFixCasing";
             this.checkBoxFixCasing.Size = new System.Drawing.Size(95, 17);
             this.checkBoxFixCasing.TabIndex = 3;
@@ -113,27 +125,27 @@
             // checkBoxRemoveTextForHI
             // 
             this.checkBoxRemoveTextForHI.AutoSize = true;
-            this.checkBoxRemoveTextForHI.Location = new System.Drawing.Point(16, 75);
+            this.checkBoxRemoveTextForHI.Location = new System.Drawing.Point(16, 116);
             this.checkBoxRemoveTextForHI.Name = "checkBoxRemoveTextForHI";
             this.checkBoxRemoveTextForHI.Size = new System.Drawing.Size(115, 17);
-            this.checkBoxRemoveTextForHI.TabIndex = 2;
+            this.checkBoxRemoveTextForHI.TabIndex = 4;
             this.checkBoxRemoveTextForHI.Text = "Remove text for HI";
             this.checkBoxRemoveTextForHI.UseVisualStyleBackColor = true;
             // 
             // checkBoxRemoveFormatting
             // 
             this.checkBoxRemoveFormatting.AutoSize = true;
-            this.checkBoxRemoveFormatting.Location = new System.Drawing.Point(16, 52);
+            this.checkBoxRemoveFormatting.Location = new System.Drawing.Point(16, 70);
             this.checkBoxRemoveFormatting.Name = "checkBoxRemoveFormatting";
             this.checkBoxRemoveFormatting.Size = new System.Drawing.Size(115, 17);
-            this.checkBoxRemoveFormatting.TabIndex = 1;
+            this.checkBoxRemoveFormatting.TabIndex = 2;
             this.checkBoxRemoveFormatting.Text = "Remove formatting";
             this.checkBoxRemoveFormatting.UseVisualStyleBackColor = true;
             // 
             // checkBoxBreakLongLines
             // 
             this.checkBoxBreakLongLines.AutoSize = true;
-            this.checkBoxBreakLongLines.Location = new System.Drawing.Point(16, 29);
+            this.checkBoxBreakLongLines.Location = new System.Drawing.Point(16, 24);
             this.checkBoxBreakLongLines.Name = "checkBoxBreakLongLines";
             this.checkBoxBreakLongLines.Size = new System.Drawing.Size(125, 17);
             this.checkBoxBreakLongLines.TabIndex = 0;
@@ -167,7 +179,7 @@
             this.buttonStyles.Location = new System.Drawing.Point(326, 100);
             this.buttonStyles.Name = "buttonStyles";
             this.buttonStyles.Size = new System.Drawing.Size(116, 23);
-            this.buttonStyles.TabIndex = 11;
+            this.buttonStyles.TabIndex = 6;
             this.buttonStyles.Text = "Style...";
             this.buttonStyles.UseVisualStyleBackColor = true;
             this.buttonStyles.Visible = false;
@@ -179,7 +191,7 @@
             this.checkBoxOverwrite.Location = new System.Drawing.Point(13, 67);
             this.checkBoxOverwrite.Name = "checkBoxOverwrite";
             this.checkBoxOverwrite.Size = new System.Drawing.Size(130, 17);
-            this.checkBoxOverwrite.TabIndex = 10;
+            this.checkBoxOverwrite.TabIndex = 3;
             this.checkBoxOverwrite.Text = "Overwrite exsiting files";
             this.checkBoxOverwrite.UseVisualStyleBackColor = true;
             // 
@@ -188,7 +200,7 @@
             this.buttonOpenOutputFolder.Location = new System.Drawing.Point(526, 39);
             this.buttonOpenOutputFolder.Name = "buttonOpenOutputFolder";
             this.buttonOpenOutputFolder.Size = new System.Drawing.Size(81, 23);
-            this.buttonOpenOutputFolder.TabIndex = 5;
+            this.buttonOpenOutputFolder.TabIndex = 2;
             this.buttonOpenOutputFolder.Text = "Open...";
             this.buttonOpenOutputFolder.UseVisualStyleBackColor = true;
             this.buttonOpenOutputFolder.Click += new System.EventHandler(this.buttonOpenOutputFolder_Click);
@@ -200,7 +212,7 @@
             this.comboBoxSubtitleFormats.Location = new System.Drawing.Point(80, 102);
             this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
             this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(225, 21);
-            this.comboBoxSubtitleFormats.TabIndex = 7;
+            this.comboBoxSubtitleFormats.TabIndex = 5;
             this.comboBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.comboBoxSubtitleFormats_SelectedIndexChanged);
             // 
             // labelEncoding
@@ -209,7 +221,7 @@
             this.labelEncoding.Location = new System.Drawing.Point(10, 137);
             this.labelEncoding.Name = "labelEncoding";
             this.labelEncoding.Size = new System.Drawing.Size(52, 13);
-            this.labelEncoding.TabIndex = 8;
+            this.labelEncoding.TabIndex = 7;
             this.labelEncoding.Text = "Encoding";
             // 
             // comboBoxEncoding
@@ -219,7 +231,7 @@
             this.comboBoxEncoding.Location = new System.Drawing.Point(80, 134);
             this.comboBoxEncoding.Name = "comboBoxEncoding";
             this.comboBoxEncoding.Size = new System.Drawing.Size(221, 21);
-            this.comboBoxEncoding.TabIndex = 9;
+            this.comboBoxEncoding.TabIndex = 8;
             // 
             // labelOutputFormat
             // 
@@ -227,7 +239,7 @@
             this.labelOutputFormat.Location = new System.Drawing.Point(10, 105);
             this.labelOutputFormat.Name = "labelOutputFormat";
             this.labelOutputFormat.Size = new System.Drawing.Size(39, 13);
-            this.labelOutputFormat.TabIndex = 6;
+            this.labelOutputFormat.TabIndex = 4;
             this.labelOutputFormat.Text = "Format";
             // 
             // labelChooseOutputFolder
@@ -244,7 +256,7 @@
             this.buttonChooseFolder.Location = new System.Drawing.Point(494, 39);
             this.buttonChooseFolder.Name = "buttonChooseFolder";
             this.buttonChooseFolder.Size = new System.Drawing.Size(26, 23);
-            this.buttonChooseFolder.TabIndex = 4;
+            this.buttonChooseFolder.TabIndex = 1;
             this.buttonChooseFolder.Text = "...";
             this.buttonChooseFolder.UseVisualStyleBackColor = true;
             this.buttonChooseFolder.Click += new System.EventHandler(this.buttonChooseFolder_Click);
@@ -254,7 +266,7 @@
             this.textBoxOutputFolder.Location = new System.Drawing.Point(11, 41);
             this.textBoxOutputFolder.Name = "textBoxOutputFolder";
             this.textBoxOutputFolder.Size = new System.Drawing.Size(477, 20);
-            this.textBoxOutputFolder.TabIndex = 3;
+            this.textBoxOutputFolder.TabIndex = 0;
             // 
             // groupBoxInput
             // 
@@ -394,6 +406,7 @@
         private System.Windows.Forms.ColumnHeader columnHeaderStatus;
         private System.Windows.Forms.CheckBox checkBoxOverwrite;
         private System.Windows.Forms.Button buttonStyles;
+        private System.Windows.Forms.CheckBox checkBoxFixItalics;
 
     }
 }

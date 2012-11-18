@@ -251,7 +251,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     //  ANS_time_pos=8.299958, ANS_width=624, ANS_height=352, ANS_fps=23.976025, ANS_video_format=1145656920, ANS_video_format=1145656920, ANS_video_codec=ffodivx,
                     //  ANS_length=1351.600213, ANS_volume=100.000000
                     case "ANS_time_pos":
-                        _timePosition = Convert.ToDouble(value);
+                        _timePosition = Convert.ToDouble(value.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);
                         break;
                     case "ANS_width":
                         Width = Convert.ToInt32(value);
@@ -262,7 +262,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     case "ANS_fps":
                         double d;
                         if (double.TryParse(value, out d))
-                            FramesPerSecond = (float)Convert.ToDouble(value);
+                            FramesPerSecond = (float)Convert.ToDouble(value.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);
                         else
                             FramesPerSecond = 25.0f;
                         break;
@@ -273,10 +273,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         VideoCodec = value;
                         break;
                     case "ANS_length":
-                        _lengthInSeconds = TimeSpan.FromSeconds(Convert.ToDouble(value));
+                        _lengthInSeconds = TimeSpan.FromSeconds(Convert.ToDouble(value.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture));
                         break;
                     case "ANS_volume":
-                        _volume = (float)Convert.ToDouble(value);
+                        _volume = (float)Convert.ToDouble(value.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);
                         break;
                     case "ANS_pause":
                         if (value == "yes" || value == "1")
