@@ -48,11 +48,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.AppendChild(number);
 
                 XmlNode start = xml.CreateElement("StartMilliseconds");
-                start.InnerText = p.StartTime.TotalMilliseconds.ToString();
+                start.InnerText = p.StartTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture);
                 paragraph.AppendChild(start);
 
                 XmlNode end = xml.CreateElement("EndMilliseconds");
-                end.InnerText = p.EndTime.TotalMilliseconds.ToString();
+                end.InnerText = p.EndTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture);
                 paragraph.AppendChild(end);
 
                 XmlNode text = xml.CreateElement("Text");
@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string end = node.SelectSingleNode("EndMilliseconds").InnerText;
                     string text = node.SelectSingleNode("Text").InnerText;
 
-                    subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start), Convert.ToDouble(end)));
+                    subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start, System.Globalization.CultureInfo.InvariantCulture), Convert.ToDouble(end, System.Globalization.CultureInfo.InvariantCulture)));
                 }
                 catch (Exception ex)
                 {

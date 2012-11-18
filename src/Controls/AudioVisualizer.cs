@@ -1275,8 +1275,8 @@ namespace Nikse.SubtitleEdit.Controls
         {
             var doc = new XmlDocument();
             doc.Load(Path.Combine(_spectrogramDirectory, "Info.xml"));
-            _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText);
-            _totalDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText);
+            _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText, System.Globalization.CultureInfo.InvariantCulture);
+            _totalDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText, System.Globalization.CultureInfo.InvariantCulture);
             ShowSpectrogram = _tempShowSpectrogram;
         }
 
@@ -1304,8 +1304,8 @@ namespace Nikse.SubtitleEdit.Controls
             if (File.Exists(xmlInfoFileName))
             {
                 doc.Load(xmlInfoFileName);
-                _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText);
-                _totalDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText);
+                _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText, System.Globalization.CultureInfo.InvariantCulture);
+                _totalDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText, System.Globalization.CultureInfo.InvariantCulture);
                 ShowSpectrogram = true;
             }
             else

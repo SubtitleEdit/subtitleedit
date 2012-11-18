@@ -144,6 +144,24 @@
             public string OnlyUnbreakLinesLongerThan { get; set; }
         }
 
+        public class BatchConvert
+        {
+            public string Title { get; set; }
+            public string Input { get; set; }
+            public string InputDescription { get; set; }
+            public string Status { get; set; }
+            public string Output { get; set; }
+            public string ChooseOutputFolder { get; set; }
+            public string OverwriteExistingFiles { get; set; }
+            public string Style { get; set; }
+            public string ConvertOptions { get; set; }
+            public string AutoBreakLongLines { get; set; }
+            public string RemoveFormatting { get; set; }
+            public string RemoveTextForHI { get; set; }
+            public string ReDoCasing { get; set; }
+            public string Convert { get; set; }
+        }
+        
         public class Beamer
         {
             public string Title { get; set; }
@@ -909,6 +927,7 @@
                     public string TextNumberOfCharactersPerSeconds { get; set; }
                     public string WordsPerMinute { get; set; }
                     public string MakeNewEmptyTranslationFromCurrentSubtitle { get; set; }
+                    public string BatchConvert { get; set; }                    
                     public string SplitSubtitle { get; set; }
                     public string AppendSubtitle { get; set; }
                     public string JoinSubtitles { get; set; }

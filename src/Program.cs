@@ -14,6 +14,8 @@ namespace Nikse.SubtitleEdit
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            if (Nikse.SubtitleEdit.Logic.Utilities.AllLetters == "A") // hack to force load of settings
+                return;
             Application.Run(new Main());
         }
     }

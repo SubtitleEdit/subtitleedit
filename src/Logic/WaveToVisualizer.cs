@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Xml;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -445,8 +446,8 @@ namespace Nikse.SubtitleEdit.Logic
             doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/></SpectrogramInfo>");
             double sampleDuration = Header.LengthInSeconds / (totalSamples / NFFT);
             double totalDuration = Header.LengthInSeconds;
-            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = sampleDuration.ToString();
-            doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText = totalDuration.ToString();
+            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = sampleDuration.ToString(CultureInfo.InvariantCulture);
+            doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText = totalDuration.ToString(CultureInfo.InvariantCulture);
             doc.Save(System.IO.Path.Combine(spectrogramDirectory, "Info.xml"));
 
             return bitmaps;

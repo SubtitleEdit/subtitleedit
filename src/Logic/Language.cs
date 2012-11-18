@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.AdjustDisplayDuration AdjustDisplayDuration;
         public LanguageStructure.ApplyDurationLimits ApplyDurationLimits;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
+        public LanguageStructure.BatchConvert BatchConvert;
         public LanguageStructure.Beamer Beamer;
         public LanguageStructure.ChangeCasing ChangeCasing;
         public LanguageStructure.ChangeCasingNames ChangeCasingNames;
@@ -235,6 +236,14 @@ namespace Nikse.SubtitleEdit.Logic
                 LinesFoundX = "Lines found: {0}",
                 OnlyBreakLinesLongerThan = "Only break lines longer than",
                 OnlyUnbreakLinesLongerThan = "Only un-break lines longer than",
+            };
+
+            BatchConvert = new LanguageStructure.BatchConvert
+            {
+                Title = "Batch convert",
+                Input = "Input",
+                Output = "Output",
+                ChooseOutputFolder = "Choose output folder",
             };
 
             Beamer = new LanguageStructure.Beamer
@@ -1009,6 +1018,7 @@ namespace Nikse.SubtitleEdit.Logic
                         TextNumberOfCharactersPerSeconds = "Text - number of chars/sec",
                         WordsPerMinute = "Text - words per minute (wpm)",
                         MakeNewEmptyTranslationFromCurrentSubtitle = "Make new empty translation from current subtitle",
+                        BatchConvert = "Batch convert...",
                         SplitSubtitle = "Split subtitle...",
                         AppendSubtitle = "Append subtitle...",
                         JoinSubtitles = "Join subtitles...",

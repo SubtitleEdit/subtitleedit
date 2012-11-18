@@ -1434,6 +1434,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemShowOriginalInPreview.Text = _language.Menu.Edit.ShowOriginalTextInAudioAndVideoPreview;
             toolStripMenuItemMakeEmptyFromCurrent.Text = _language.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle;
+            toolStripMenuItemBatchConvert.Text = _language.Menu.Tools.BatchConvert;
             splitToolStripMenuItem.Text = _language.Menu.Tools.SplitSubtitle;
             appendTextVisuallyToolStripMenuItem.Text = _language.Menu.Tools.AppendSubtitle;
             joinSubtitlesToolStripMenuItem.Text = _language.Menu.Tools.JoinSubtitles;
@@ -16120,6 +16121,14 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, _subtitle.Paragraphs[index]);
             }
             RefreshSelectedParagraph();
+        }
+
+        private void toolStripMenuItemBatchConvert_Click(object sender, EventArgs e)
+        {
+            var form = new BatchConvert();
+            _formPositionsAndSizes.SetPositionAndSize(form);
+            form.ShowDialog(this);
+            _formPositionsAndSizes.SavePositionAndSize(form);
         }
 
     }

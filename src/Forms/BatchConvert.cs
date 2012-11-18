@@ -14,10 +14,15 @@ namespace Nikse.SubtitleEdit.Forms
         string _ssaStyle;
         FormRemoveTextForHearImpaired _removeForHI = new FormRemoveTextForHearImpaired();
         ChangeCasing _changeCasing = new ChangeCasing();
+        ChangeCasingNames _changeCasingNames = new ChangeCasingNames();
 
         public BatchConvert()
         {
             InitializeComponent();
+            Text = Configuration.Settings.Language.BatchConvert.Title;
+            groupBoxInput.Text = Configuration.Settings.Language.BatchConvert.Input;
+            groupBoxOutput.Text = Configuration.Settings.Language.BatchConvert.Output;
+
             comboBoxSubtitleFormats.Left = labelOutputFormat.Left + labelOutputFormat.Width + 3;
             comboBoxEncoding.Left = labelEncoding.Left + labelEncoding.Width + 3;
             if (comboBoxSubtitleFormats.Left > comboBoxEncoding.Left)
@@ -284,6 +289,18 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show("Please choose output folder");
                 return;
             }
+            else if (!Directory.Exists(textBoxOutputFolder.Text))
+            {
+                try
+                {
+                    Directory.CreateDirectory(textBoxOutputFolder.Text);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                    return;
+                }                
+            }
 
             string toFormat = comboBoxSubtitleFormats.Text;
             int count = 0;
@@ -432,10 +449,16 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 p.Text = Utilities.AutoBreakLine(p.Text);
                             }
+                            if (checkBoxFixItalics.Checked)
+                            {
+                                p.Text = Utilities.FixInvalidItalicTags(p.Text);
+                            }
                         }
                         if (checkBoxFixCasing.Checked)
                         {
                             _changeCasing.FixCasing(sub, Utilities.AutoDetectGoogleLanguage(sub));
+                            _changeCasingNames.Initialize(sub);
+                            _changeCasingNames.FixCasing();
                             //TODO:ChangeCasingNames!
                         }
 
