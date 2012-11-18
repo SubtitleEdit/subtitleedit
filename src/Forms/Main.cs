@@ -6173,6 +6173,22 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan);
                         lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        if (lines.Length == 1)
+                        {
+                            s = Utilities.AutoBreakLine(currentParagraph.Text, 3, Configuration.Settings.General.SubtitleLineMaximumLength, 20);
+                            lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        }
+                        if (lines.Length == 1)
+                        {
+                            s = Utilities.AutoBreakLine(currentParagraph.Text, 3, Convert.ToInt32(Configuration.Settings.General.SubtitleLineMaximumLength * 0.7), 18);
+                            lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        }
+                        if (lines.Length == 1)
+                        {
+                            s = Utilities.AutoBreakLine(currentParagraph.Text, 3, Convert.ToInt32(Configuration.Settings.General.SubtitleLineMaximumLength * 0.5), 15);
+                            lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        }
+
                         if (lines.Length == 2)
                         {
                             if (Utilities.CountTagInText(s, "<i>") == 1 && lines[0].StartsWith("<i>") && lines[1].EndsWith("</i>"))
@@ -6182,6 +6198,11 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
                             newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
+                        }
+                        else if (lines.Length == 1)
+                        {
+                            currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
+                            newParagraph.Text = string.Empty;
                         }
                     }
                 }
@@ -6311,10 +6332,30 @@ namespace Nikse.SubtitleEdit.Forms
                             string s = Utilities.AutoBreakLine(originalCurrent.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan);
                             lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         }
+
+                        if (lines.Length == 1)
+                        {
+                            string s = Utilities.AutoBreakLine(lines[0], 3, Configuration.Settings.General.SubtitleLineMaximumLength, 20);
+                            lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        }
+                        if (lines.Length == 1)
+                        {
+                            string s = Utilities.AutoBreakLine(lines[0], 3, Convert.ToInt32(Configuration.Settings.General.SubtitleLineMaximumLength * 0.7), 18);
+                            lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        }
+                        if (lines.Length == 1)
+                        {
+                            string s = Utilities.AutoBreakLine(lines[0], 3, Convert.ToInt32(Configuration.Settings.General.SubtitleLineMaximumLength * 0.5), 15);
+                            lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        }
                         if (lines.Length == 2)
                         {
                             originalCurrent.Text = Utilities.AutoBreakLine(lines[0]);
                             originalNew.Text = Utilities.AutoBreakLine(lines[1]);
+                        }
+                        else if (lines.Length == 1)
+                        {
+                            originalNew.Text = string.Empty;
                         }
                         if (originalCurrent != null && originalNew != null)
                         {

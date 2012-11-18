@@ -34,6 +34,9 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonTimeCodeMs.Text = l.Milliseconds;
             radioButtonTimeCodeHHMMSSFF.Text = l.HHMMSSFF;
             labelTimeCodeSeperator.Text = l.TimeCodeSeperator;
+            labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = Configuration.Settings.Language.Main.Menu.File.SaveAs;
         }
 
         internal void Initialize(Logic.Subtitle subtitle, string fileName)

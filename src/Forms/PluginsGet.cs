@@ -49,8 +49,10 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowInstalledPlugins();
                 string url = "http://www.nikse.dk/Content/SubtitleEdit/Plugins/Plugins.xml";
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                wc.DownloadDataCompleted += new DownloadDataCompletedEventHandler(PluginListDownloadDataCompleted);
-                wc.DownloadDataAsync(new Uri(url));
+                wc.Encoding = System.Text.Encoding.UTF8;
+                wc.Headers.Add("Accept-Encoding", "");
+                wc.DownloadStringCompleted += new DownloadStringCompletedEventHandler(wc_DownloadStringCompleted);
+                wc.DownloadStringAsync(new Uri(url));
             }
             catch (Exception exception)
             {
@@ -62,48 +64,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ShowInstalledPlugins()
-        {
-            string path = Path.Combine(Configuration.BaseDirectory, "Plugins");
-            if (!Directory.Exists(path))
-                return;
-
-            listViewInstalledPlugins.Items.Clear();
-            string[] pluginFiles = Directory.GetFiles(path, "*.DLL");
-            foreach (string pluginFileName in pluginFiles)
-            {
-                string name, description, text, shortcut, actionType;
-                decimal version;
-                System.Reflection.MethodInfo mi;
-                Main.GetPropertiesAndDoAction(pluginFileName, out name, out text, out version, out description, out actionType, out shortcut, out mi);
-                if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
-                {
-                    try
-                    {
-                        ListViewItem item = new ListViewItem(name);
-                        item.Tag = pluginFileName;
-                        item.SubItems.Add(description);
-                        item.SubItems.Add(version.ToString());
-                        item.SubItems.Add(actionType);
-                        listViewInstalledPlugins.Items.Add(item);
-                    }
-                    catch (Exception exception)
-                    {
-                        MessageBox.Show("Error loading plugin:" + pluginFileName + ": " + exception.Message);
-                    }
-                }
-            }
-        }
-
-        void PluginListDownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        void wc_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
             if (e.Error != null && _firstTry)
             {
                 _firstTry = false;
                 string url = "http://subtitleedit.googlecode.com/files/Plugins.xml"; // retry with alternate download url
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                wc.DownloadDataCompleted += new DownloadDataCompletedEventHandler(PluginListDownloadDataCompleted);
-                wc.DownloadDataAsync(new Uri(url));
+                wc.Encoding = System.Text.Encoding.UTF8;
+                wc.Headers.Add("Accept-Encoding", "");
+                wc.DownloadStringCompleted += new DownloadStringCompletedEventHandler(wc_DownloadStringCompleted);
+                wc.DownloadStringAsync(new Uri(url));
                 return;
             }
 
@@ -115,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             try
             {
-                _pluginDoc.LoadXml(System.Text.Encoding.UTF8.GetString(e.Result));
+                _pluginDoc.LoadXml(e.Result);
                 string[] arr = _pluginDoc.DocumentElement.SelectSingleNode("SubtitleEditVersion").InnerText.Split("., ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 double requiredVersion = Convert.ToDouble(arr[0] + "." + arr[1]);
 
@@ -154,6 +125,39 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(string.Format(_language.UnableToDownloadPluginListX, exception.Message));
             }
         }
+
+        private void ShowInstalledPlugins()
+        {
+            string path = Path.Combine(Configuration.BaseDirectory, "Plugins");
+            if (!Directory.Exists(path))
+                return;
+
+            listViewInstalledPlugins.Items.Clear();
+            string[] pluginFiles = Directory.GetFiles(path, "*.DLL");
+            foreach (string pluginFileName in pluginFiles)
+            {
+                string name, description, text, shortcut, actionType;
+                decimal version;
+                System.Reflection.MethodInfo mi;
+                Main.GetPropertiesAndDoAction(pluginFileName, out name, out text, out version, out description, out actionType, out shortcut, out mi);
+                if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
+                {
+                    try
+                    {
+                        ListViewItem item = new ListViewItem(name);
+                        item.Tag = pluginFileName;
+                        item.SubItems.Add(description);
+                        item.SubItems.Add(version.ToString());
+                        item.SubItems.Add(actionType);
+                        listViewInstalledPlugins.Items.Add(item);
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show("Error loading plugin:" + pluginFileName + ": " + exception.Message);
+                    }
+                }
+            }
+        }       
 
         private void buttonDownload_Click(object sender, EventArgs e)
         {

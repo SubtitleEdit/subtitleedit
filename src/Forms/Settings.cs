@@ -657,6 +657,13 @@ namespace Nikse.SubtitleEdit.Forms
             buttonListViewSyntaxColorError.Text = language.SyntaxErrorColor;
 
             FixLargeFonts();
+
+            checkBoxShortcutsControl.Left = labelShortcut.Left + labelShortcut.Width + 9;
+            checkBoxShortcutsAlt.Left = checkBoxShortcutsControl.Left + checkBoxShortcutsControl.Width + 9;
+            checkBoxShortcutsShift.Left = checkBoxShortcutsAlt.Left + checkBoxShortcutsAlt.Width + 9;
+            labelShortcutKey.Left = checkBoxShortcutsShift.Left + checkBoxShortcutsShift.Width + 9;
+            comboBoxShortcutKey.Left = labelShortcutKey.Left + labelShortcutKey.Width + 2;
+            buttonUpdateShortcut.Left = comboBoxShortcutKey.Left + comboBoxShortcutKey.Width + 15;
         }
 
         private string GetShortcutText(string shortcut)
@@ -2256,8 +2263,7 @@ namespace Nikse.SubtitleEdit.Forms
             colorDialogSSAStyle.Color = panelListViewSyntaxColorError.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
                 panelListViewSyntaxColorError.BackColor = colorDialogSSAStyle.Color;
-        }
-
+        }       
 
     }
 }

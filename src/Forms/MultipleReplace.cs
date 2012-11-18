@@ -59,6 +59,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             moveUpToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubrip.MoveUp;
             moveDownToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubrip.MoveDown;
+
+            radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
+            radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
         }
 
         private void FixLargeFonts()

@@ -99,7 +99,7 @@
             this.groupBoxDvd.Controls.Add(this.textBoxIfoFileName);
             this.groupBoxDvd.Location = new System.Drawing.Point(4, 4);
             this.groupBoxDvd.Name = "groupBoxDvd";
-            this.groupBoxDvd.Size = new System.Drawing.Size(527, 264);
+            this.groupBoxDvd.Size = new System.Drawing.Size(544, 264);
             this.groupBoxDvd.TabIndex = 3;
             this.groupBoxDvd.TabStop = false;
             this.groupBoxDvd.Text = "DVD files/info";
@@ -108,7 +108,7 @@
             // 
             this.buttonClear.Location = new System.Drawing.Point(446, 131);
             this.buttonClear.Name = "buttonClear";
-            this.buttonClear.Size = new System.Drawing.Size(74, 21);
+            this.buttonClear.Size = new System.Drawing.Size(92, 21);
             this.buttonClear.TabIndex = 9;
             this.buttonClear.Text = "Clear";
             this.buttonClear.UseVisualStyleBackColor = true;
@@ -139,7 +139,7 @@
             this.groupBoxPalNtsc.Controls.Add(this.radioButtonPal);
             this.groupBoxPalNtsc.Location = new System.Drawing.Point(254, 212);
             this.groupBoxPalNtsc.Name = "groupBoxPalNtsc";
-            this.groupBoxPalNtsc.Size = new System.Drawing.Size(266, 46);
+            this.groupBoxPalNtsc.Size = new System.Drawing.Size(284, 46);
             this.groupBoxPalNtsc.TabIndex = 20;
             this.groupBoxPalNtsc.TabStop = false;
             this.groupBoxPalNtsc.Text = "PAL/NTSC";
@@ -161,7 +161,7 @@
             this.radioButtonPal.Checked = true;
             this.radioButtonPal.Location = new System.Drawing.Point(6, 19);
             this.radioButtonPal.Name = "radioButtonPal";
-            this.radioButtonPal.Size = new System.Drawing.Size(80, 17);
+            this.radioButtonPal.Size = new System.Drawing.Size(81, 17);
             this.radioButtonPal.TabIndex = 0;
             this.radioButtonPal.TabStop = true;
             this.radioButtonPal.Text = "PAL (25fps)";
@@ -171,7 +171,7 @@
             // 
             this.ButtonRemoveVob.Location = new System.Drawing.Point(447, 104);
             this.ButtonRemoveVob.Name = "ButtonRemoveVob";
-            this.ButtonRemoveVob.Size = new System.Drawing.Size(74, 21);
+            this.ButtonRemoveVob.Size = new System.Drawing.Size(91, 21);
             this.ButtonRemoveVob.TabIndex = 8;
             this.ButtonRemoveVob.Text = "Remove";
             this.ButtonRemoveVob.UseVisualStyleBackColor = true;
@@ -181,7 +181,7 @@
             // 
             this.ButtonMoveVobDown.Location = new System.Drawing.Point(446, 185);
             this.ButtonMoveVobDown.Name = "ButtonMoveVobDown";
-            this.ButtonMoveVobDown.Size = new System.Drawing.Size(74, 21);
+            this.ButtonMoveVobDown.Size = new System.Drawing.Size(92, 21);
             this.ButtonMoveVobDown.TabIndex = 12;
             this.ButtonMoveVobDown.Text = "Move down";
             this.ButtonMoveVobDown.UseVisualStyleBackColor = true;
@@ -191,7 +191,7 @@
             // 
             this.ButtonMoveVobUp.Location = new System.Drawing.Point(447, 158);
             this.ButtonMoveVobUp.Name = "ButtonMoveVobUp";
-            this.ButtonMoveVobUp.Size = new System.Drawing.Size(74, 21);
+            this.ButtonMoveVobUp.Size = new System.Drawing.Size(91, 21);
             this.ButtonMoveVobUp.TabIndex = 10;
             this.ButtonMoveVobUp.Text = "Move up";
             this.ButtonMoveVobUp.UseVisualStyleBackColor = true;
@@ -201,7 +201,7 @@
             // 
             this.buttonAddVobFile.Location = new System.Drawing.Point(447, 77);
             this.buttonAddVobFile.Name = "buttonAddVobFile";
-            this.buttonAddVobFile.Size = new System.Drawing.Size(73, 21);
+            this.buttonAddVobFile.Size = new System.Drawing.Size(91, 21);
             this.buttonAddVobFile.TabIndex = 5;
             this.buttonAddVobFile.Text = "Add...";
             this.buttonAddVobFile.UseVisualStyleBackColor = true;
@@ -235,7 +235,7 @@
             // 
             this.progressBarRip.Location = new System.Drawing.Point(117, 290);
             this.progressBarRip.Name = "progressBarRip";
-            this.progressBarRip.Size = new System.Drawing.Size(414, 14);
+            this.progressBarRip.Size = new System.Drawing.Size(431, 14);
             this.progressBarRip.TabIndex = 4;
             this.progressBarRip.Visible = false;
             // 
@@ -263,7 +263,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(536, 310);
+            this.ClientSize = new System.Drawing.Size(554, 310);
             this.Controls.Add(this.buttonStartRipping);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.progressBarRip);

@@ -30,7 +30,7 @@
         {
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.groupBoxImportOptions = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelEncoding = new System.Windows.Forms.Label();
             this.comboBoxEncoding = new System.Windows.Forms.ComboBox();
             this.checkBoxAddNewlineAfterTimeCodes = new System.Windows.Forms.CheckBox();
             this.checkBoxAddNewlineAfterLineNumber = new System.Windows.Forms.CheckBox();
@@ -75,7 +75,7 @@
             // groupBoxImportOptions
             // 
             this.groupBoxImportOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxImportOptions.Controls.Add(this.label1);
+            this.groupBoxImportOptions.Controls.Add(this.labelEncoding);
             this.groupBoxImportOptions.Controls.Add(this.comboBoxEncoding);
             this.groupBoxImportOptions.Controls.Add(this.checkBoxAddNewlineAfterTimeCodes);
             this.groupBoxImportOptions.Controls.Add(this.checkBoxAddNewlineAfterLineNumber);
@@ -92,14 +92,14 @@
             this.groupBoxImportOptions.TabStop = false;
             this.groupBoxImportOptions.Text = "Export options";
             // 
-            // label1
+            // labelEncoding
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 392);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(52, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Encoding";
+            this.labelEncoding.AutoSize = true;
+            this.labelEncoding.Location = new System.Drawing.Point(13, 392);
+            this.labelEncoding.Name = "labelEncoding";
+            this.labelEncoding.Size = new System.Drawing.Size(52, 13);
+            this.labelEncoding.TabIndex = 8;
+            this.labelEncoding.Text = "Encoding";
             // 
             // comboBoxEncoding
             // 
@@ -403,7 +403,7 @@
         private System.Windows.Forms.Label labelTimeCodeSeperator;
         private System.Windows.Forms.Label labelPreview;
         private System.Windows.Forms.CheckBox checkBoxRemoveStyling;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelEncoding;
         private System.Windows.Forms.ComboBox comboBoxEncoding;
     }
 }
