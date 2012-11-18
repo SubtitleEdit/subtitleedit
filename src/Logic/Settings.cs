@@ -379,6 +379,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int ListViewDurationWidth { get; set; }
         public int ListViewTextWidth { get; set; }
         public string VlcWaveTranscodeSettings { get; set; }
+        public string VlcLocation { get; set; }
         public bool UseTimeFormatHHMMSSFF { get; set; }
         public int ClearStatusBarAfterSeconds { get; set; }
         public bool ShowBetaStuff { get; set; }
@@ -1175,6 +1176,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("VlcWaveTranscodeSettings");
             if (subNode != null)
                 settings.General.VlcWaveTranscodeSettings = subNode.InnerText.Trim();
+            subNode = node.SelectSingleNode("VlcLocation");
+            if (subNode != null)
+                settings.General.VlcLocation = subNode.InnerText.Trim();
             subNode = node.SelectSingleNode("UseTimeFormatHHMMSSFF");
             if (subNode != null)
                 settings.General.UseTimeFormatHHMMSSFF = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -2049,6 +2053,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ListViewDurationWidth", settings.General.ListViewDurationWidth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ListViewTextWidth", settings.General.ListViewTextWidth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
+            textWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
             textWriter.WriteElementString("UseTimeFormatHHMMSSFF", settings.General.UseTimeFormatHHMMSSFF.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ClearStatusBarAfterSeconds", settings.General.ClearStatusBarAfterSeconds.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
