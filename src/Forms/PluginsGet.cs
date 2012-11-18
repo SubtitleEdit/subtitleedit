@@ -82,6 +82,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.Error != null)
             {
                 MessageBox.Show(string.Format(_language.UnableToDownloadPluginListX, e.Error.Message));
+                if (e.Error.InnerException != null)
+                {
+                    MessageBox.Show(e.Error.InnerException.Source + ": " + e.Error.InnerException.Message + Environment.NewLine + Environment.NewLine + e.Error.InnerException.StackTrace);
+                }                
                 return;
             }
             try
