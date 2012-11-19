@@ -158,6 +158,7 @@ namespace Nikse.SubtitleEdit.Logic
                 LineNumber = "Line#",
                 Before = "Before",
                 After = "After",
+                Size = "Size",
             };
 
             About = new LanguageStructure.About
@@ -244,6 +245,21 @@ namespace Nikse.SubtitleEdit.Logic
                 Input = "Input",
                 Output = "Output",
                 ChooseOutputFolder = "Choose output folder",
+                ConvertOptions = "Convert options",
+                FixItalics = "Fix italics",
+                RemoveTextForHI = "Remove text for HI",
+                InputDescription = "Input files (browse or drag'n'drop)",
+                AutoBreakLongLines = "Auto-break long lines",
+                Convert = "Convert",
+                OverwriteExistingFiles = "Overwrite existing files",
+                ReDoCasing = "Re-do casing",
+                RemoveFormatting = "Remove formatting tags",
+                Status = "Status",
+                Style = "Style...",
+                NothingToConvert = "Nothing to convert!",
+                PleaseChooseOutputFolder = "Please choose output folder",
+                Converted = "Converted",
+                ConvertedX = "Converted ({0})",
             };
 
             Beamer = new LanguageStructure.Beamer
