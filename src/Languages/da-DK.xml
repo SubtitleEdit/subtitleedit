@@ -70,6 +70,7 @@
     <LineNumber>Linje#</LineNumber>
     <Before>Før</Before>
     <After>Efter</After>
+    <Size>Størrelse</Size>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -135,6 +136,27 @@
     <OnlyBreakLinesLongerThan>Bryd kun linjer længere end</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Fjern kun linjeskift fra linjer længere end</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
+  <BatchConvert>
+    <Title>Batch konverter</Title>
+    <Input>Input</Input>
+    <InputDescription>Input filer (gennemse eller drag'n'drop)</InputDescription>
+    <Status>Status</Status>
+    <Output>Output</Output>
+    <ChooseOutputFolder>Vælg output mappe</ChooseOutputFolder>
+    <OverwriteExistingFiles>Overskriv eksisterende filer</OverwriteExistingFiles>
+    <Style>Style...</Style>
+    <ConvertOptions>Konverter indstillinger</ConvertOptions>
+    <AutoBreakLongLines>Auto-ombryd lange linjer</AutoBreakLongLines>
+    <FixItalics>Fix kursiv</FixItalics>
+    <RemoveFormatting>Fjern formaterings- tags</RemoveFormatting>
+    <RemoveTextForHI>fjerne tekst for høre-hæmmede</RemoveTextForHI>
+    <ReDoCasing>Sæt store/små bogstaver</ReDoCasing>
+    <Convert>Konverter</Convert>
+    <NothingToConvert>Intet at konvertere!</NothingToConvert>
+    <PleaseChooseOutputFolder>Vælg output mappe</PleaseChooseOutputFolder>
+    <Converted>Konverteret</Converted>
+    <ConvertedX>Konverteret ({0})</ConvertedX>
+  </BatchConvert>
   <Beamer>
     <Title>Undertekst fremviser</Title>
   </Beamer>
@@ -284,6 +306,7 @@
     <FontColor>Skriftfarve</FontColor>
     <BorderColor>Kantfarve</BorderColor>
     <BorderWidth>Kantbredde</BorderWidth>
+    <ImageFormat>Billed format</ImageFormat>
     <AntiAlias>Anti alias</AntiAlias>
     <SideBySide3D>Side-by-side 3D</SideBySide3D>
     <ExportAllLines>Eksporter alle linjer...</ExportAllLines>
@@ -608,6 +631,7 @@
         <TextNumberOfCharactersPerSeconds>Tekst - antallet af tegn/sek</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Tekst - ord i minuttet (WPM)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Dan ny tom oversættelse fra aktuelle undertekst</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <BatchConvert>Batch konverter...</BatchConvert>
         <SplitSubtitle>Split undertekst...</SplitSubtitle>
         <AppendSubtitle>Tilføj/append undertekst...</AppendSubtitle>
         <JoinSubtitles>Flet undertekster...</JoinSubtitles>

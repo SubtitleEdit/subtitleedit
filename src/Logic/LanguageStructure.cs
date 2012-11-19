@@ -73,6 +73,7 @@
             public string LineNumber { get; set; }
             public string Before { get; set; }
             public string After { get; set; }
+            public string Size { get; set; }
         }
 
         public class About
@@ -156,10 +157,17 @@
             public string Style { get; set; }
             public string ConvertOptions { get; set; }
             public string AutoBreakLongLines { get; set; }
+            public string FixItalics { get; set; }            
             public string RemoveFormatting { get; set; }
             public string RemoveTextForHI { get; set; }
             public string ReDoCasing { get; set; }
             public string Convert { get; set; }
+
+            public string NothingToConvert { get; set; }
+            public string PleaseChooseOutputFolder { get; set; }
+            public string Converted { get; set; }
+            public string ConvertedX { get; set; }
+           
         }
         
         public class Beamer

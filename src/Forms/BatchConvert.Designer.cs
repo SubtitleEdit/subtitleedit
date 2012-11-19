@@ -30,7 +30,7 @@
         {
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.groupBoxSplitOptions = new System.Windows.Forms.GroupBox();
+            this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
             this.checkBoxFixItalics = new System.Windows.Forms.CheckBox();
             this.checkBoxFixCasing = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveTextForHI = new System.Windows.Forms.CheckBox();
@@ -39,7 +39,6 @@
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
             this.buttonStyles = new System.Windows.Forms.Button();
             this.checkBoxOverwrite = new System.Windows.Forms.CheckBox();
-            this.buttonOpenOutputFolder = new System.Windows.Forms.Button();
             this.comboBoxSubtitleFormats = new System.Windows.Forms.ComboBox();
             this.labelEncoding = new System.Windows.Forms.Label();
             this.comboBoxEncoding = new System.Windows.Forms.ComboBox();
@@ -57,7 +56,8 @@
             this.columnHeaderStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.groupBoxSplitOptions.SuspendLayout();
+            this.buttonOpenOutputFolder = new System.Windows.Forms.Button();
+            this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.SuspendLayout();
@@ -86,21 +86,21 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
-            // groupBoxSplitOptions
+            // groupBoxConvertOptions
             // 
-            this.groupBoxSplitOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxSplitOptions.Controls.Add(this.checkBoxFixItalics);
-            this.groupBoxSplitOptions.Controls.Add(this.checkBoxFixCasing);
-            this.groupBoxSplitOptions.Controls.Add(this.checkBoxRemoveTextForHI);
-            this.groupBoxSplitOptions.Controls.Add(this.checkBoxRemoveFormatting);
-            this.groupBoxSplitOptions.Controls.Add(this.checkBoxBreakLongLines);
-            this.groupBoxSplitOptions.Location = new System.Drawing.Point(702, 19);
-            this.groupBoxSplitOptions.Name = "groupBoxSplitOptions";
-            this.groupBoxSplitOptions.Size = new System.Drawing.Size(241, 147);
-            this.groupBoxSplitOptions.TabIndex = 9;
-            this.groupBoxSplitOptions.TabStop = false;
-            this.groupBoxSplitOptions.Text = "Convert options";
+            this.groupBoxConvertOptions.Controls.Add(this.checkBoxFixItalics);
+            this.groupBoxConvertOptions.Controls.Add(this.checkBoxFixCasing);
+            this.groupBoxConvertOptions.Controls.Add(this.checkBoxRemoveTextForHI);
+            this.groupBoxConvertOptions.Controls.Add(this.checkBoxRemoveFormatting);
+            this.groupBoxConvertOptions.Controls.Add(this.checkBoxBreakLongLines);
+            this.groupBoxConvertOptions.Location = new System.Drawing.Point(702, 19);
+            this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
+            this.groupBoxConvertOptions.Size = new System.Drawing.Size(241, 147);
+            this.groupBoxConvertOptions.TabIndex = 9;
+            this.groupBoxConvertOptions.TabStop = false;
+            this.groupBoxConvertOptions.Text = "Convert options";
             // 
             // checkBoxFixItalics
             // 
@@ -163,7 +163,7 @@
             this.groupBoxOutput.Controls.Add(this.labelEncoding);
             this.groupBoxOutput.Controls.Add(this.comboBoxEncoding);
             this.groupBoxOutput.Controls.Add(this.labelOutputFormat);
-            this.groupBoxOutput.Controls.Add(this.groupBoxSplitOptions);
+            this.groupBoxOutput.Controls.Add(this.groupBoxConvertOptions);
             this.groupBoxOutput.Controls.Add(this.labelChooseOutputFolder);
             this.groupBoxOutput.Controls.Add(this.buttonChooseFolder);
             this.groupBoxOutput.Controls.Add(this.textBoxOutputFolder);
@@ -194,16 +194,6 @@
             this.checkBoxOverwrite.TabIndex = 3;
             this.checkBoxOverwrite.Text = "Overwrite exsiting files";
             this.checkBoxOverwrite.UseVisualStyleBackColor = true;
-            // 
-            // buttonOpenOutputFolder
-            // 
-            this.buttonOpenOutputFolder.Location = new System.Drawing.Point(526, 39);
-            this.buttonOpenOutputFolder.Name = "buttonOpenOutputFolder";
-            this.buttonOpenOutputFolder.Size = new System.Drawing.Size(81, 23);
-            this.buttonOpenOutputFolder.TabIndex = 2;
-            this.buttonOpenOutputFolder.Text = "Open...";
-            this.buttonOpenOutputFolder.UseVisualStyleBackColor = true;
-            this.buttonOpenOutputFolder.Click += new System.EventHandler(this.buttonOpenOutputFolder_Click);
             // 
             // comboBoxSubtitleFormats
             // 
@@ -349,6 +339,16 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // buttonOpenOutputFolder
+            // 
+            this.buttonOpenOutputFolder.Location = new System.Drawing.Point(526, 39);
+            this.buttonOpenOutputFolder.Name = "buttonOpenOutputFolder";
+            this.buttonOpenOutputFolder.Size = new System.Drawing.Size(102, 23);
+            this.buttonOpenOutputFolder.TabIndex = 2;
+            this.buttonOpenOutputFolder.Text = "Open...";
+            this.buttonOpenOutputFolder.UseVisualStyleBackColor = true;
+            this.buttonOpenOutputFolder.Click += new System.EventHandler(this.buttonOpenOutputFolder_Click);
+            // 
             // BatchConvert
             // 
             this.AllowDrop = true;
@@ -366,8 +366,8 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Batch convert";
-            this.groupBoxSplitOptions.ResumeLayout(false);
-            this.groupBoxSplitOptions.PerformLayout();
+            this.groupBoxConvertOptions.ResumeLayout(false);
+            this.groupBoxConvertOptions.PerformLayout();
             this.groupBoxOutput.ResumeLayout(false);
             this.groupBoxOutput.PerformLayout();
             this.groupBoxInput.ResumeLayout(false);
@@ -380,13 +380,12 @@
 
         private System.Windows.Forms.Button buttonConvert;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.GroupBox groupBoxSplitOptions;
+        private System.Windows.Forms.GroupBox groupBoxConvertOptions;
         private System.Windows.Forms.CheckBox checkBoxFixCasing;
         private System.Windows.Forms.CheckBox checkBoxRemoveTextForHI;
         private System.Windows.Forms.CheckBox checkBoxRemoveFormatting;
         private System.Windows.Forms.CheckBox checkBoxBreakLongLines;
         private System.Windows.Forms.GroupBox groupBoxOutput;
-        private System.Windows.Forms.Button buttonOpenOutputFolder;
         private System.Windows.Forms.ComboBox comboBoxSubtitleFormats;
         private System.Windows.Forms.Label labelEncoding;
         private System.Windows.Forms.ComboBox comboBoxEncoding;
@@ -407,6 +406,7 @@
         private System.Windows.Forms.CheckBox checkBoxOverwrite;
         private System.Windows.Forms.Button buttonStyles;
         private System.Windows.Forms.CheckBox checkBoxFixItalics;
+        private System.Windows.Forms.Button buttonOpenOutputFolder;
 
     }
 }

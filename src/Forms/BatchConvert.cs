@@ -19,9 +19,28 @@ namespace Nikse.SubtitleEdit.Forms
         public BatchConvert()
         {
             InitializeComponent();
-            Text = Configuration.Settings.Language.BatchConvert.Title;
-            groupBoxInput.Text = Configuration.Settings.Language.BatchConvert.Input;
-            groupBoxOutput.Text = Configuration.Settings.Language.BatchConvert.Output;
+
+            var l = Configuration.Settings.Language.BatchConvert;
+            Text = l.Title;
+            groupBoxInput.Text = l.Input;
+            labelChooseInputFiles.Text = l.InputDescription;
+            groupBoxOutput.Text = l.Output;
+            labelChooseOutputFolder.Text = l.ChooseOutputFolder;
+            checkBoxOverwrite.Text = l.OverwriteExistingFiles;
+            labelOutputFormat.Text = Configuration.Settings.Language.Main.Controls.SubtitleFormat;
+            labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
+            buttonStyles.Text = l.Style;
+            groupBoxConvertOptions.Text = l.ConvertOptions;
+            checkBoxBreakLongLines.Text = l.AutoBreakLongLines;
+            checkBoxFixItalics.Text = l.FixItalics;
+            checkBoxRemoveFormatting.Text = l.RemoveFormatting;
+            checkBoxFixCasing.Text = l.ReDoCasing;
+            checkBoxRemoveTextForHI.Text = l.RemoveTextForHI;
+            columnHeaderFName.Text = Configuration.Settings.Language.JoinSubtitles.FileName;
+            columnHeaderFormat.Text = Configuration.Settings.Language.Main.Controls.SubtitleFormat;
+            columnHeaderSize.Text = Configuration.Settings.Language.General.Size;
+            columnHeaderStatus.Text = l.Status;
+            buttonOpenOutputFolder.Text = Configuration.Settings.Language.Main.Menu.File.Open;
 
             comboBoxSubtitleFormats.Left = labelOutputFormat.Left + labelOutputFormat.Width + 3;
             comboBoxEncoding.Left = labelEncoding.Left + labelEncoding.Width + 3;
@@ -224,7 +243,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
-                    item.SubItems.Add("UNKNOWN SUBTITLE FORMAT!");
+                    item.SubItems.Add(Configuration.Settings.Language.UnknownSubtitle.Title);
                 }
                 else
                 {
@@ -281,12 +300,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listViewInputFiles.Items.Count == 0)
             {
-                MessageBox.Show("Nothing to convert");
+                MessageBox.Show(Configuration.Settings.Language.BatchConvert.NothingToConvert);
                 return;
             }
             else if (textBoxOutputFolder.Text.Length < 2)
             {
-                MessageBox.Show("Please choose output folder");
+                MessageBox.Show(Configuration.Settings.Language.BatchConvert.PleaseChooseOutputFolder);
                 return;
             }
             else if (!Directory.Exists(textBoxOutputFolder.Text))
@@ -459,25 +478,22 @@ namespace Nikse.SubtitleEdit.Forms
                             _changeCasing.FixCasing(sub, Utilities.AutoDetectGoogleLanguage(sub));
                             _changeCasingNames.Initialize(sub);
                             _changeCasingNames.FixCasing();
-                            //TODO:ChangeCasingNames!
                         }
-
 
                         int oldConverted = converted;
                         Main.BatchConvertSave(toFormat, null, GetCurrentEncoding(), textBoxOutputFolder.Text, count, ref converted, ref errors, allFormats, fileName, sub, format, checkBoxOverwrite.Checked);
                         if (converted == oldConverted + 1)
                         {
-                            item.SubItems[3].Text = "Converted";
+                            item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Converted;
                         }
                         else if (converted > oldConverted + 1)
                         {
-                            item.SubItems[3].Text = string.Format("Converted ({0})", converted - oldConverted);
+                            item.SubItems[3].Text = string.Format(Configuration.Settings.Language.BatchConvert.ConvertedX, converted - oldConverted);
                         }
                         else
                         {
                             item.SubItems[3].Text = "ERROR";
                         }
-
                     }
                 }
                 catch
@@ -522,6 +538,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
+
     }
 }
 
