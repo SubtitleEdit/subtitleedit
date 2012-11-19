@@ -2703,6 +2703,7 @@
             this.comboBoxShortcutKey.Name = "comboBoxShortcutKey";
             this.comboBoxShortcutKey.Size = new System.Drawing.Size(92, 21);
             this.comboBoxShortcutKey.TabIndex = 4;
+            this.comboBoxShortcutKey.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxShortcutKey_KeyDown);
             // 
             // labelShortcutKey
             // 
@@ -2719,7 +2720,7 @@
             this.checkBoxShortcutsShift.Enabled = false;
             this.checkBoxShortcutsShift.Location = new System.Drawing.Point(245, 407);
             this.checkBoxShortcutsShift.Name = "checkBoxShortcutsShift";
-            this.checkBoxShortcutsShift.Size = new System.Drawing.Size(48, 17);
+            this.checkBoxShortcutsShift.Size = new System.Drawing.Size(47, 17);
             this.checkBoxShortcutsShift.TabIndex = 3;
             this.checkBoxShortcutsShift.Text = "Shift";
             this.checkBoxShortcutsShift.UseVisualStyleBackColor = true;
@@ -2730,7 +2731,7 @@
             this.checkBoxShortcutsAlt.Enabled = false;
             this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(176, 407);
             this.checkBoxShortcutsAlt.Name = "checkBoxShortcutsAlt";
-            this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(39, 17);
+            this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(38, 17);
             this.checkBoxShortcutsAlt.TabIndex = 2;
             this.checkBoxShortcutsAlt.Text = "Alt";
             this.checkBoxShortcutsAlt.UseVisualStyleBackColor = true;
@@ -2741,7 +2742,7 @@
             this.checkBoxShortcutsControl.Enabled = false;
             this.checkBoxShortcutsControl.Location = new System.Drawing.Point(89, 407);
             this.checkBoxShortcutsControl.Name = "checkBoxShortcutsControl";
-            this.checkBoxShortcutsControl.Size = new System.Drawing.Size(61, 17);
+            this.checkBoxShortcutsControl.Size = new System.Drawing.Size(59, 17);
             this.checkBoxShortcutsControl.TabIndex = 1;
             this.checkBoxShortcutsControl.Text = "Control";
             this.checkBoxShortcutsControl.UseVisualStyleBackColor = true;
@@ -2830,7 +2831,7 @@
             this.checkBoxSyntaxColorTextMoreThanTwoLines.AutoSize = true;
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Location = new System.Drawing.Point(20, 116);
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Name = "checkBoxSyntaxColorTextMoreThanTwoLines";
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.Size = new System.Drawing.Size(170, 17);
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.Size = new System.Drawing.Size(164, 17);
             this.checkBoxSyntaxColorTextMoreThanTwoLines.TabIndex = 3;
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Text = "Text - color if more than lines:";
             this.checkBoxSyntaxColorTextMoreThanTwoLines.UseVisualStyleBackColor = true;
@@ -2840,7 +2841,7 @@
             this.checkBoxSyntaxOverlap.AutoSize = true;
             this.checkBoxSyntaxOverlap.Location = new System.Drawing.Point(20, 154);
             this.checkBoxSyntaxOverlap.Name = "checkBoxSyntaxOverlap";
-            this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(129, 17);
+            this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(127, 17);
             this.checkBoxSyntaxOverlap.TabIndex = 4;
             this.checkBoxSyntaxOverlap.Text = "Time - color if overlap";
             this.checkBoxSyntaxOverlap.UseVisualStyleBackColor = true;
@@ -2850,7 +2851,7 @@
             this.checkBoxSyntaxColorDurationTooSmall.AutoSize = true;
             this.checkBoxSyntaxColorDurationTooSmall.Location = new System.Drawing.Point(20, 35);
             this.checkBoxSyntaxColorDurationTooSmall.Name = "checkBoxSyntaxColorDurationTooSmall";
-            this.checkBoxSyntaxColorDurationTooSmall.Size = new System.Drawing.Size(154, 17);
+            this.checkBoxSyntaxColorDurationTooSmall.Size = new System.Drawing.Size(150, 17);
             this.checkBoxSyntaxColorDurationTooSmall.TabIndex = 0;
             this.checkBoxSyntaxColorDurationTooSmall.Text = "Duration - color if too small";
             this.checkBoxSyntaxColorDurationTooSmall.UseVisualStyleBackColor = true;
@@ -2870,7 +2871,7 @@
             this.checkBoxSyntaxColorTextTooLong.AutoSize = true;
             this.checkBoxSyntaxColorTextTooLong.Location = new System.Drawing.Point(20, 93);
             this.checkBoxSyntaxColorTextTooLong.Name = "checkBoxSyntaxColorTextTooLong";
-            this.checkBoxSyntaxColorTextTooLong.Size = new System.Drawing.Size(132, 17);
+            this.checkBoxSyntaxColorTextTooLong.Size = new System.Drawing.Size(128, 17);
             this.checkBoxSyntaxColorTextTooLong.TabIndex = 2;
             this.checkBoxSyntaxColorTextTooLong.Text = "Text - color if too long";
             this.checkBoxSyntaxColorTextTooLong.UseVisualStyleBackColor = true;
@@ -2880,7 +2881,7 @@
             this.checkBoxSyntaxColorDurationTooLarge.AutoSize = true;
             this.checkBoxSyntaxColorDurationTooLarge.Location = new System.Drawing.Point(20, 58);
             this.checkBoxSyntaxColorDurationTooLarge.Name = "checkBoxSyntaxColorDurationTooLarge";
-            this.checkBoxSyntaxColorDurationTooLarge.Size = new System.Drawing.Size(155, 17);
+            this.checkBoxSyntaxColorDurationTooLarge.Size = new System.Drawing.Size(150, 17);
             this.checkBoxSyntaxColorDurationTooLarge.TabIndex = 1;
             this.checkBoxSyntaxColorDurationTooLarge.Text = "Duration - color if too large";
             this.checkBoxSyntaxColorDurationTooLarge.UseVisualStyleBackColor = true;

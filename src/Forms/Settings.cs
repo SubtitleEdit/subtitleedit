@@ -1309,6 +1309,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
+            else if (e.KeyCode == Keys.F1)
+            {
+                Utilities.ShowHelp("#Settings");
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void ButtonSsaChooseFontClick(object sender, EventArgs e)
@@ -2263,7 +2268,28 @@ namespace Nikse.SubtitleEdit.Forms
             colorDialogSSAStyle.Color = panelListViewSyntaxColorError.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
                 panelListViewSyntaxColorError.BackColor = colorDialogSSAStyle.Color;
-        }       
+        }
+
+        private void comboBoxShortcutKey_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Tab ||
+                e.KeyCode == Keys.Down ||
+                e.KeyCode == Keys.Up ||
+                e.KeyCode == Keys.None)
+                return;
+
+            int i = 0;
+            foreach (var item in comboBoxShortcutKey.Items)
+            {
+                if (item.ToString() == e.KeyCode.ToString())
+                {
+                    comboBoxShortcutKey.SelectedIndex = i;
+                    e.SuppressKeyPress = true;
+                    break;
+                }
+                i++;
+            }
+        }
 
     }
 }
