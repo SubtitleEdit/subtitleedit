@@ -2,7 +2,7 @@
 <Language Name="Finnish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.3beta</Version>
+    <Version>3.3</Version>
     <TranslatedBy>Kääntänyt vm</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile>
@@ -42,8 +42,8 @@
     <VideoEncodingX>Videokoodaus: {0}</VideoEncodingX>
     <SingleLineLengths>Yhden rivin pituus:</SingleLineLengths>
     <TotalLengthX>Pituus yhteensä: {0}</TotalLengthX>
-    <TotalLengthXSplitLine>Kokonaiskesto: {0} (katkaise rivi!)</TotalLengthXSplitLine>
-    <SplitLine>Katkaise rivi!</SplitLine>
+    <TotalLengthXSplitLine>Kokonaiskesto: {0} (pilko rivi!)</TotalLengthXSplitLine>
+    <SplitLine>Pilko rivi!</SplitLine>
     <NotAvailable>PUUTTUU</NotAvailable>
     <OverlapPreviousLineX>Päällekkäisyys edelliseen riviin ({0: #,## 0.###})</OverlapPreviousLineX>
     <OverlapX>Päällekkäin ({0: #,## 0.###})</OverlapX>
@@ -54,11 +54,11 @@
     <CurrentSubtitle>Nykyinen tekstitys </CurrentSubtitle>
     <OriginalText>Alkuperäinen teksti</OriginalText>
     <OpenOriginalSubtitleFile>Avaa alkuperäinen tekstitystiedosto...</OpenOriginalSubtitleFile>
-    <PleaseWait>Odota...</PleaseWait>
+    <PleaseWait>Ole hyvä ja odota...</PleaseWait>
     <SessionKey>Istuntoavain</SessionKey>
     <UserName>Käyttäjänimi</UserName>
     <UserNameAlreadyInUse>Käyttäjänimi on jo käytössä</UserNameAlreadyInUse>
-    <WebServiceUrl>Verkkopalvelun URL</WebServiceUrl>
+    <WebServiceUrl>WebService url</WebServiceUrl>
     <IP>IP</IP>
     <VideoWindowTitle>Video - {0}</VideoWindowTitle>
     <AudioWindowTitle>Audio - {0}</AudioWindowTitle>
@@ -67,15 +67,16 @@
     <Style>Tyyli</Style>
     <Class>Luokka</Class>
     <GeneralText>Yleinen</GeneralText>
-    <LineNumber>Rivi No.</LineNumber>
+    <LineNumber>Rivi#</LineNumber>
     <Before>Ennen</Before>
     <After>Jälkeen</After>
+    <Size>Koko</Size>
   </General>
   <About>
     <Title>Tietoja Subtitle Editistä</Title>
     <AboutText1>
 Subtitle Edit on ilmainen GNU Public License ohjelma.Voit jakaa, muokata ja käyttää sitä vapaasti. C# lähdekoodi on saatavilla http://code.google.com/p/subtitleedit 
-Vieraile www.nikse.dk uusimman version saamiseksi.
+Vieraile www.nikse.dk uusimman version saamiseksi. 
 Ehdotukset ovat erittäin tervetulleita.
 Sähköposti: mailto:nikse.dk@gmail.com
 		</AboutText1>
@@ -87,36 +88,36 @@ Sähköposti: mailto:nikse.dk@gmail.com
   </AddToNames>
   <AddToOcrReplaceList>
     <Title>Lisää OCR korvausluetteloon</Title>
-    <Description>Lisää sanapari OCR korvausluetteloon (sama kirjainkoko)</Description>
+    <Description>Lisää pari OCR korvausluetteloon (sama kirjainkoko))</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Lisää käyttäjän sanakirjaan</Title>
-    <Description>Lisää sana käyttäjän sanakirjaan (kirjainkoko ei ole merkitsevä)</Description>
+    <Description>Lisää sana käyttäjän sanakirjaan (kirjainkoolla ei merkitystä)</Description>
   </AddToUserDictionary>
   <AddWaveForm>
     <Title>Muodosta aaltomuototiedot</Title>
     <SourceVideoFile>Lähdevideotiedosto:</SourceVideoFile>
-    <GenerateWaveFormData>Muodosta aaltomuototiedot</GenerateWaveFormData>
+    <GenerateWaveFormData>Muodosta aaltomuoto tiedoista</GenerateWaveFormData>
     <PleaseWait>Tämä voi kestää muutamia minuutteja - odota</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC Media Playeria ei löydy</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit tarvitsee VLC media Playerin 1.1.x tai uudemman äänidatan purkamiseksi.
 		</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>
-Haluatko mennä VLC media player-kotisivulle?
+Haluatko mennä VLC media playerin kotisivulle?
 		</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Muodostetaan peak-tiedosto...</GeneratingPeakFile>
-    <GeneratingSpectrogram>Muodostetaan spectrogram...</GeneratingSpectrogram>
+    <GeneratingSpectrogram>Muodostetaan spectrogrammi...</GeneratingSpectrogram>
     <ExtractingSeconds>Puretaan audio: {0:0.0} sekuntia</ExtractingSeconds>
     <ExtractingMinutes>Puretaan audio: {0}.{1: 00} minuuttia</ExtractingMinutes>
   </AddWaveForm>
   <AdjustDisplayDuration>
     <Title>Säädä kestot</Title>
-    <AdjustVia>Säädä via</AdjustVia>
+    <AdjustVia>Säädä </AdjustVia>
     <Seconds>Sekuntia</Seconds>
     <Percent>Prosenttia</Percent>
     <Recalculate>Laske uudelleen</Recalculate>
     <AddSeconds>Lisää sekuntia</AddSeconds>
-    <SetAsPercent>Määritä prosentteina kestosta</SetAsPercent>
+    <SetAsPercent>Aseta prosentteina kestosta</SetAsPercent>
     <Note>Huomautus: Näytön aika ei päällekkäisty seuraavan tekstin alkamisaikaan</Note>
     <PleaseSelectAValueFromTheDropDownList>Valitse arvo pudotusvalikon luettelosta</PleaseSelectAValueFromTheDropDownList>
     <PleaseChoose>-Valitse -</PleaseChoose>
@@ -124,22 +125,43 @@ Haluatko mennä VLC media player-kotisivulle?
   <ApplyDurationLimits>
     <Title>Käytä keston rajoja</Title>
     <FixesAvailable>Mahdollisia korjauksia: {0}</FixesAvailable>
-    <UnableToFix>Ei korjattavissa: {0}</UnableToFix>
+    <UnableToFix>Ei korjattavia: {0}</UnableToFix>
   </ApplyDurationLimits>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Automaattinen tasapaino valituille riveille</TitleAutoBreak>
     <TitleUnbreak>Poista rivinvaihdot valituilta riveiltä</TitleUnbreak>
     <LinesFoundX>Rivejä löytyi: {0}</LinesFoundX>
-    <OnlyBreakLinesLongerThan>Rivinvaihto vain pidemmille riveille kuin</OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesLongerThan>Poista rivinvaihto vain pidemmiltä riveiltä kuin</OnlyUnbreakLinesLongerThan>
+    <OnlyBreakLinesLongerThan>Rivinvaihto vain pidemmillä riveillä kuin</OnlyBreakLinesLongerThan>
+    <OnlyUnbreakLinesLongerThan>Yhdistä vain rivit pidempiä kuin</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
+  <BatchConvert>
+    <Title>Erämuunnos</Title>
+    <Input>Lähde</Input>
+    <InputDescription>Lähdetiedostot (selaa tai pudota)</InputDescription>
+    <Status>Tila</Status>
+    <Output>Kohde</Output>
+    <ChooseOutputFolder>Valitse kohdekansio</ChooseOutputFolder>
+    <OverwriteExistingFiles>Korvaa aiemmat tiedostot</OverwriteExistingFiles>
+    <Style>Tyyli...</Style>
+    <ConvertOptions>Muunnosasetukset</ConvertOptions>
+    <AutoBreakLongLines>Autom. pitkien rivien katkaisu</AutoBreakLongLines>
+    <FixItalics>Korjaa kursiivit</FixItalics>
+    <RemoveFormatting>Poista muotoilutunnisteet</RemoveFormatting>
+    <RemoveTextForHI>Poista HI teksti</RemoveTextForHI>
+    <ReDoCasing>Palauta kirjainkoko</ReDoCasing>
+    <Convert>Muunna</Convert>
+    <NothingToConvert>Ei muunnettavaa!</NothingToConvert>
+    <PleaseChooseOutputFolder>Valitse kohdekansio</PleaseChooseOutputFolder>
+    <Converted>Muunnettu</Converted>
+    <ConvertedX>Muunnetut ({0})</ConvertedX>
+  </BatchConvert>
   <Beamer>
-    <Title>Beamer</Title>
+    <Title>Videotykki</Title>
   </Beamer>
   <ChangeCasing>
     <Title>Muuta kirjainkokoa</Title>
     <ChangeCasingTo>Muuta kirjainkoko seuraavaksi</ChangeCasingTo>
-    <NormalCasing>Normaali koko. Lauseet alkavat isolla kirjaimella.</NormalCasing>
+    <NormalCasing>Normaali koko. Virkkeet alkavat isolla kirjaimella.</NormalCasing>
     <FixNamesCasing>Korjaa nimien kirjainkoko (Dictionaries\NamesEtc.xml kautta) </FixNamesCasing>
     <FixOnlyNamesCasing>Korjaa vain nimien kirjainkoko (Dictionaries\NamesEtc.xml kautta) </FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>Vaihda vain kaikki isoilla kirjaimilla olevat rivit.</OnlyChangeAllUppercaseLines>
@@ -147,7 +169,7 @@ Haluatko mennä VLC media player-kotisivulle?
     <AllLowercase>kaikki pienillä</AllLowercase>
   </ChangeCasing>
   <ChangeCasingNames>
-    <Title>Muuta kirjainkoko - Nimet</Title>
+    <Title>Muuta kirjainkokoa - Nimet</Title>
     <NamesFoundInSubtitleX>Löydetyt nimet tekstityksessä: {0}</NamesFoundInSubtitleX>
     <Enabled>Käytössä</Enabled>
     <Name>Nimi</Name>
@@ -155,7 +177,7 @@ Haluatko mennä VLC media player-kotisivulle?
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Muuta kuvataajuutta</Title>
-    <ConvertFrameRateOfSubtitle>Muunna tekstityksen kuvataajuutta</ConvertFrameRateOfSubtitle>
+    <ConvertFrameRateOfSubtitle>Muunna tekstityksen kuvataajuus</ConvertFrameRateOfSubtitle>
     <FromFrameRate>Alkaen taajuudesta</FromFrameRate>
     <ToFrameRate>Taajuuteen</ToFrameRate>
     <FrameRateNotCorrect>Kuvataajuus ei ole oikein</FrameRateNotCorrect>
@@ -163,7 +185,7 @@ Haluatko mennä VLC media player-kotisivulle?
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Säädä nopeus prosentteina</Title>
-    <Info>Säädä tekstityksen nopeutta prosentteina</Info>
+    <Info>Säädä tekstityksen nopeus prosentteina</Info>
   </ChangeSpeedInPercent>
   <ChooseEncoding>
     <Title>Valitse koodaus</Title>
@@ -183,12 +205,12 @@ Haluatko mennä VLC media player-kotisivulle?
     <XNumberOfDifference>Erojen määrä: {0}</XNumberOfDifference>
     <ShowOnlyDifferences>Näytä vain erot</ShowOnlyDifferences>
     <OnlyLookForDifferencesInText>Etsi erot vain tekstissä</OnlyLookForDifferencesInText>
-    <CannotCompareWithImageBasedSubtitles>Ei voi verrata kuvapohjaisiin tekstityksiin</CannotCompareWithImageBasedSubtitles>
+    <CannotCompareWithImageBasedSubtitles>Kuvaan perustuvia tekstityksiä ei voi verrata</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
   <DCinemaProperties>
-    <Title>D-elokuvan ominaisuudet (yhteentoimivuus)</Title>
+    <Title>D-elokuvan ominaisuudet (yhteensopivuus)</Title>
     <TitleSmpte>D-elokuvan ominaisuudet (smpte)</TitleSmpte>
-    <SubtitleId>Tekstitys ID</SubtitleId>
+    <SubtitleId>Tekstityksen ID</SubtitleId>
     <GenerateId>Muodosta ID</GenerateId>
     <MovieTitle>Elokuvan nimi</MovieTitle>
     <ReelNumber>Kelanumero</ReelNumber>
@@ -200,7 +222,7 @@ Haluatko mennä VLC media player-kotisivulle?
     <FontUri>URI</FontUri>
     <FontColor>Väri</FontColor>
     <FontEffect>Tehoste</FontEffect>
-    <FontEffectColor>Tehosteväri</FontEffectColor>
+    <FontEffectColor>Tehosteen väri</FontEffectColor>
     <FontSize>Koko</FontSize>
     <ChooseColor>Valitse väri...</ChooseColor>
   </DCinemaProperties>
@@ -222,34 +244,34 @@ Haluatko mennä VLC media player-kotisivulle?
     <StartRipping>Aloita rippaus</StartRipping>
     <Abort>Keskeytä</Abort>
     <AbortedByUser>Käyttäjän keskeyttämä</AbortedByUser>
-    <ReadingSubtitleData>Luetaan tekstitysdataa...</ReadingSubtitleData>
+    <ReadingSubtitleData>Luetaan tekstityksen tietoja...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Ripataan vob tiedosto {1} / {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>IFO-tyyppi on '{0}' eikä 'DVDVIDEO-VTS'.{1}Kokeile jotain muuta, kuin {2}</WrongIfoType>
+    <WrongIfoType>IFO-tyyppi on '{0}' eikä 'DVDVIDEO-VTS'.{1}Valitse muu tiedosto kuin {2}</WrongIfoType>
   </DvdSubrip>
   <DvdSubRipChooseLanguage>
     <Title>Valitse kieli</Title>
     <ChooseLanguageStreamId>Valitse kieli (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Tuntematon kieli</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Tekstityksen näköistiedosto {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Tekstitys-näköistiedosto {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Tekstityksen näköistiedosto</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOtpions>
     <Title>EBU tallennusasetukset</Title>
-    <GeneralSubtitleInformation>Tekstitystiedot</GeneralSubtitleInformation>
-    <CodePageNumber>Koodisivu</CodePageNumber>
-    <DiskFormatCode>Levyn formaattikoodi</DiskFormatCode>
+    <GeneralSubtitleInformation>Yleinen tekstitystieto</GeneralSubtitleInformation>
+    <CodePageNumber>Koodisivun numero</CodePageNumber>
+    <DiskFormatCode>Levyn muoto-koodi</DiskFormatCode>
     <CharacterCodeTable>Merkistö</CharacterCodeTable>
     <LanguageCode>Kielikoodi</LanguageCode>
     <OriginalProgramTitle>Alkuperäisen ohjelman nimi</OriginalProgramTitle>
     <OriginalEpisodeTitle>Alkuperäisen jakson nimi</OriginalEpisodeTitle>
     <TranslatedProgramTitle>Käännetyn ohjelman nimi</TranslatedProgramTitle>
-    <TranslatedEpisodeTitle>Käännetyn jakson nimi</TranslatedEpisodeTitle>
+    <TranslatedEpisodeTitle>Käännetty jakson nimi</TranslatedEpisodeTitle>
     <TranslatorsName>Kääntäjän nimi</TranslatorsName>
     <SubtitleListReferenceCode>Tekstitysluettelon viitekoodi</SubtitleListReferenceCode>
     <CountryOfOrigin>Alkuperämaa</CountryOfOrigin>
     <RevisionNumber>Muunnosnumero</RevisionNumber>
-    <MaxNoOfDisplayableChars>Merkkejä rivillä enintään</MaxNoOfDisplayableChars>
-    <MaxNumberOfDisplayableRows>Rivejä enintään</MaxNumberOfDisplayableRows>
+    <MaxNoOfDisplayableChars>Enintään merkkiä rivillä</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>Enintään riviä</MaxNumberOfDisplayableRows>
     <DiskSequenceNumber>Levyn sarjanumero</DiskSequenceNumber>
     <TotalNumberOfDisks>Levyjen määrä</TotalNumberOfDisks>
     <Import>Tuo...</Import>
@@ -257,22 +279,22 @@ Haluatko mennä VLC media player-kotisivulle?
     <JustificationCode>Rivintasauskoodi</JustificationCode>
     <Errors>Virheet</Errors>
     <ErrorsX>Virheitä: {0}</ErrorsX>
-    <MaxLengthError>Rivinpituus {0} ylittää enimmäispituuden ({1})   {2}: {3}</MaxLengthError>
+    <MaxLengthError>Rivinpituus {0} on suurempi kuin enimmäispituus ({1})   {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Muuttumaton esitys</TextUnchangedPresentation>
-    <TextLeftJustifiedText>Tasattu vasemmalle</TextLeftJustifiedText>
+    <TextLeftJustifiedText>Vasemmalle tasattu teksti</TextLeftJustifiedText>
     <TextCentredText>Keskitetty teksti</TextCentredText>
-    <TextRightJustifiedText>Tasattu oikealle</TextRightJustifiedText>
+    <TextRightJustifiedText>Oikealle tasattu teksti</TextRightJustifiedText>
   </EbuSaveOtpions>
   <EffectKaraoke>
     <Title>Karaoke tehoste</Title>
     <ChooseColor>Valitse väri:</ChooseColor>
     <TotalMilliseconds>Yhteensä ms:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Loppuviive ms:</EndDelayInMilliseconds>
+    <EndDelayInMilliseconds>Lopetusviive ms:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
-    <Title>Kirjoituskonetehoste</Title>
+    <Title>Kirjoituskone tehoste</Title>
     <TotalMilliseconds>Yhteensä ms:</TotalMilliseconds>
-    <EndDelayInMillisecs>Loppuviive ms:</EndDelayInMillisecs>
+    <EndDelayInMillisecs>Lopetusviive ms:</EndDelayInMillisecs>
   </EffectTypewriter>
   <ExportPngXml>
     <Title>Vie BDN XML/PNG</Title>
@@ -282,11 +304,12 @@ Haluatko mennä VLC media player-kotisivulle?
     <FontColor>Fonttiväri</FontColor>
     <BorderColor>Reunaväri</BorderColor>
     <BorderWidth>Reunan leveys</BorderWidth>
+    <ImageFormat>Kuvaformaatti</ImageFormat>
     <AntiAlias>Reunanpehmennys</AntiAlias>
     <SideBySide3D>Vierekkäin 3D</SideBySide3D>
     <ExportAllLines>Vie kaikki rivit...</ExportAllLines>
     <XImagesSavedInY>Tallennettu {0} kuvaa kohteeseen {1}</XImagesSavedInY>
-    <VideoResolution>Video res</VideoResolution>
+    <VideoResolution>Resoluutio</VideoResolution>
     <Align>Tasaus</Align>
     <Left>Vasen</Left>
     <Right>Oikea</Right>
@@ -326,13 +349,13 @@ Haluatko mennä VLC media player-kotisivulle?
     <RegularExpression>Säännöllinen lauseke</RegularExpression>
   </FindDialog>
   <FindSubtitleLine>
-    <Title>Etsi tekstitys rivi</Title>
+    <Title>Etsi tekstitysrivi</Title>
     <Find>Etsi</Find>
     <FindNext>Etsi seuraava</FindNext>
   </FindSubtitleLine>
   <FixCommonErrors>
     <Title>Yleisten virheiden korjaaminen</Title>
-    <Step1>Vaihe 1/2 - Valitse korjattavat virheet</Step1>
+    <Step1>Vaihe 1/2 - valitse korjattavat virheet</Step1>
     <WhatToFix>Mitä korjataan</WhatToFix>
     <Example>Esimerkki</Example>
     <SelectAll>Valitse kaikki</SelectAll>
@@ -356,7 +379,7 @@ Haluatko mennä VLC media player-kotisivulle?
     <RemoveUnneededPeriods>Poista tarpeettomat pisteet</RemoveUnneededPeriods>
     <FixMissingSpaces>Korjaa puuttuvat välilyönnit</FixMissingSpaces>
     <BreakLongLines>Katkaise pitkät rivit</BreakLongLines>
-    <RemoveLineBreaks>Poista rivinvaihdot lyhyistä, yksilauseisista teksteistä.</RemoveLineBreaks>
+    <RemoveLineBreaks>Poista rivinvaihdot lyhyistä teksteistä, joissa on vain yksi lause</RemoveLineBreaks>
     <RemoveLineBreaksAll>Poista rivinvaihdot lyhyistä teksteistä (kaikki paitsi vuoropuhelut)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Korjaa iso 'i' pienikirjaimisten sanojen sisällä  (ocr-virhe)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Korjaa kaksinkertaiset heittomerkit (' ') lainausmerkillä  (")</FixDoubleApostrophes>
@@ -376,9 +399,9 @@ Haluatko mennä VLC media player-kotisivulle?
     <AddMissingQuote>Lisää puuttuva lainausmerkki (")</AddMissingQuote>
     <AddMissingQuotes>Lisää puuttuvat lainausmerkit (")</AddMissingQuotes>
     <FixHyphens>Korjaa (poista viiva) yhdysmerkillä (-) alkavat rivit</FixHyphens>
-    <FixHyphensAdd>Korjaa (lisää viiva) riviparit, joissa vain yksi viiva (-)</FixHyphensAdd>
-    <FixHyphen>Korjaa  yhdysmerkillä (-) alkava rivi</FixHyphen>
-    <XHyphensFixed>Tavuviivoja poistettu: {0}</XHyphensFixed>
+    <FixHyphensAdd>Korjaa (lisää viiva) riviparit, joissa on vain yksi viiva (-)</FixHyphensAdd>
+    <FixHyphen>Korjaa (lisää viiva) yhdysmerkillä (-) alkavat riviparit</FixHyphen>
+    <XHyphensFixed>Yhdysviivoja poistettu: {0}</XHyphensFixed>
     <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Puuttuvia lainausmerkkejä lisätty: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Korjaa yli kahden rivin tekstitykset</Fix3PlusLines>
@@ -386,7 +409,7 @@ Haluatko mennä VLC media player-kotisivulle?
     <X3PlusLinesFixed>Korjattu yli kahden rivin tekstityksiä: {0}</X3PlusLinesFixed>
     <Analysing>Analysoidaan...</Analysing>
     <NothingToFix>Ei korjattavaa :)</NothingToFix>
-    <FixesFoundX>Korjauksia löytyi: {0}</FixesFoundX>
+    <FixesFoundX>Korjattavia löytyi: {0}</FixesFoundX>
     <XFixesApplied>Korjauksia tehty: {0}</XFixesApplied>
     <NothingToFixBut>Mitään korjattavaa ei löytynyt, mutta jotain voisi parantaa - lisätietoja lokissa</NothingToFixBut>
     <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Korjattavat yksinäiset 'i'-&gt;'I' (englanti)" ovat valittuina, mutta ladattu tekstitys ei näytä olevan englantia.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
@@ -409,8 +432,8 @@ Haluatko mennä VLC media player-kotisivulle?
     <FixMissingSpacesExample>Hey.Sinä. -&gt; Hei. Sinä.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>Maa on tasaInen. -&gt; Maa on tasainen.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Tekstinumero {0}: Alkamisaika on loppumisajan jälkeen: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
-    <UnableToFixStartTimeLaterThanEndTime>Tekstinumeroa {0} ei voi korjata: Alkamisaika on loppumisajan jälkeen: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Tekstinumero {0}: Alkamisaika on myöhäisempi kuin loppumisaika: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>Ei pysty korjaamaan tekstinumeroa {0}: Aloitusaika on myöhemmin kuin päättymisaika: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} korjattu -&gt;: {1} {2}</XFixedToYZ>
     <UnableToFixTextXY>Tekstinumeroa {0} ei voi korjata: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} päällekkäistä aikaleimaa korjattu</XOverlappingTimestampsFixed>
@@ -429,30 +452,30 @@ Haluatko mennä VLC media player-kotisivulle?
     <FixMissingPeriodAtEndOfLine>Lisää puuttuva piste rivin loppuun</FixMissingPeriodAtEndOfLine>
     <XDoubleApostrophesFixed>Korjattu {0} kaksinkertaista heittomerkkiä.</XDoubleApostrophesFixed>
     <XUppercaseIsFoundInsideLowercaseWords>Löydetty {0} isoa 'i' pienellä kirjoitetuissa sanoissa</XUppercaseIsFoundInsideLowercaseWords>
-    <RefreshFixes>Päivitä saatavilla olevat korjaukset</RefreshFixes>
-    <ApplyFixes>Tee valitut korjaukset</ApplyFixes>
-    <AutoBreak>Automaattinen &amp;br</AutoBreak>
-    <Unbreak>Yhdistä</Unbreak>
+    <RefreshFixes>Päivitä korjaukset</RefreshFixes>
+    <ApplyFixes>Käytä valittuja korjauksia</ApplyFixes>
+    <AutoBreak>Autom. rivinvaihto</AutoBreak>
+    <Unbreak>Rivinvaihdon poisto</Unbreak>
     <FixDoubleDash>Korjaa '--' --&gt; '...' </FixDoubleDash>
     <FixDoubleGreaterThan>Poista &gt;&gt;</FixDoubleGreaterThan>
-    <FixEllipsesStart>Poista edeltävät '...'</FixEllipsesStart>
+    <FixEllipsesStart>Poista alusta '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Korjaa riviltä puuttuva [ </FixMissingOpenBracket>
-    <FixMusicNotation>Korvaa musiikkisymbolit (e.g.âTª) suositellulla tunnuksella</FixMusicNotation>
+    <FixMusicNotation>Korvaa musiikkisymbolit  (e.g. âTª't) suositellulla tunnuksella</FixMusicNotation>
     <FixDoubleDashs>Korjaa '--'s -&gt; '...'s </FixDoubleDashs>
     <FixDoubleGreaterThans>Poista &gt;&gt; alusta</FixDoubleGreaterThans>
     <FixEllipsesStarts>Poista ... alusta</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Korjaa puuttuvat ['t</FixMissingOpenBrackets>
+    <FixMissingOpenBrackets>Korjaa puuttuvat [ merkit</FixMissingOpenBrackets>
     <FixMusicNotations>Korvaa âTª't merkillä *</FixMusicNotations>
     <XFixDoubleDash>Korjattu {0} '--'</XFixDoubleDash>
     <XFixDoubleGreaterThan>Poistettu {0} &gt;&gt; </XFixDoubleGreaterThan>
-    <XFixEllipsesStart>{0} poista alkupisteet '...'</XFixEllipsesStart>
-    <XFixMissingOpenBracket>Korjattu {0} riviltä puuttuvaa [ </XFixMissingOpenBracket>
-    <XFixMusicNotation>{0} korjattua nuotinnusta rivillä</XFixMusicNotation>
+    <XFixEllipsesStart>{0} alkupistetä '...' poistettu</XFixEllipsesStart>
+    <XFixMissingOpenBracket>Korjattu {0} riviltä puuttuvaa [ merkkiä</XFixMissingOpenBracket>
+    <XFixMusicNotation>{0} nuotinnusta korjattu rivillä</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa--um Joo!' --&gt; 'Whoa... um Joo!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Juoppo jätkä!'  --&gt; ' Robert: Juoppo jätkä!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... ja sitten me' --&gt; 'ja sitten me'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>kalinaa] Varo!'--&gt; '[kalinaa] Varo!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª makeat unet ovat' --&gt; '♫ makeat unet ovat'</FixMusicNotationExample>
+    <FixMusicNotationExample>'âTª makeat unet ovat'--&gt; ♫ makeat unet ovat'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} tärkeää lokiviestiä!</NumberOfImportantLogMessages>
     <FixedOkXY>Korjattu '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -463,7 +486,7 @@ Haluatko mennä VLC media player-kotisivulle?
     <GetDictionariesHere>Hae sanastot täältä:</GetDictionariesHere>
     <OpenOpenOfficeWiki>Open Office Wiki sanastoluettelo.</OpenOpenOfficeWiki>
     <GetAllDictionaries>Nouda kaikki sanastot</GetAllDictionaries>
-    <ChooseLanguageAndClickDownload>Valitse kieli ja klikkaa 'Lataa'</ChooseLanguageAndClickDownload>
+    <ChooseLanguageAndClickDownload>Valitse kieli ja klikkaa Lataa</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Avaa 'Dictionaries'-kansio</OpenDictionariesFolder>
     <Download>Lataa</Download>
     <XDownloaded>{0} on ladattu ja asennettu</XDownloaded>
@@ -487,7 +510,7 @@ Haluatko mennä VLC media player-kotisivulle?
     <MicrosoftTranslate>Microsoft-kääntäjä</MicrosoftTranslate>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
-    <Title>Siirry tekstityksen numeroon</Title>
+    <Title>Siirry tekstitysnumeroon</Title>
     <XIsNotAValidNumber>{0} ei ole kelvollinen numero.</XIsNotAValidNumber>
   </GoToLine>
   <ImportText>
@@ -497,10 +520,10 @@ Haluatko mennä VLC media player-kotisivulle?
     <Splitting>Jakaminen</Splitting>
     <AutoSplitText>Automaattinen tekstin jako</AutoSplitText>
     <OneLineIsOneSubtitle>Yksi rivi on yksi tekstitys</OneLineIsOneSubtitle>
-    <SplitAtBlankLines>Jaetaan tyhjät rivit</SplitAtBlankLines>
+    <SplitAtBlankLines>Jaa tyhjissä riveissä</SplitAtBlankLines>
     <MergeShortLines>Yhdistä lyhyitä rivejä jatkeella</MergeShortLines>
     <RemoveEmptyLines>Poista tyhjät rivit</RemoveEmptyLines>
-    <RemoveLinesWithoutLetters>Poista rivit, joissa ei ole kirjaimia</RemoveLinesWithoutLetters>
+    <RemoveLinesWithoutLetters>Poista rivit ilman kirjaimia</RemoveLinesWithoutLetters>
     <GapBetweenSubtitles>Tekstitysväli (millisekunteina)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
     <Fixed>Kiinteä</Fixed>
@@ -513,7 +536,7 @@ Haluatko mennä VLC media player-kotisivulle?
   </Interjections>
   <JoinSubtitles>
     <Title>Yhdistä tekstityksiä</Title>
-    <Information>Lisää yhdistettävät tekstitykset (pudotusta tuetaan)</Information>
+    <Information>Lisää yhdistettävä tekstitys (pudotusta tuetaan)</Information>
     <NumberOfLines>Riviä</NumberOfLines>
     <StartTime>Aloitusaika</StartTime>
     <EndTime>Loppuaika</EndTime>
@@ -534,13 +557,13 @@ Haluatko mennä VLC media player-kotisivulle?
         <RestoreAutoBackup>Palauta varmuuskopio...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Sub Station Alpha lisäominaisuudet...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha ominaisuudet...</SubStationAlphaProperties>
-        <OpenOriginal>Avaa alkuperäinen tekstitys  (kääntäjätilassa)...</OpenOriginal>
+        <OpenOriginal>Avaa alkuperäinen tekstitys  (käännöstila)...</OpenOriginal>
         <SaveOriginal>Tallenna alkuperäinen tekstitys</SaveOriginal>
         <CloseOriginal>Sulje alkuperäinen tekstitys</CloseOriginal>
         <OpenContainingFolder>Avaa sisältökansio</OpenContainingFolder>
         <Compare>Vertaa...</Compare>
         <Statistics>Tilastot...</Statistics>
-        <Plugins>Laajennukset...</Plugins>
+        <Plugins>Laajennukset</Plugins>
         <ImportOcrFromDvd>Tuo/OCR tekstitys vob/ifo (dvd) tiedostosta...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Tuo/OCR VobSub (sub/idx) tekstitys...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Tuo/OCR Blu-ray sup tiedosto...</ImportBluRaySupFile>
@@ -564,7 +587,7 @@ Haluatko mennä VLC media player-kotisivulle?
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
         <ExportUltech130>Ultech caption...</ExportUltech130>
-        <Exit>Lopeta</Exit>
+        <Exit>Poistu</Exit>
       </File>
       <Edit>
         <Title>Muokkaa</Title>
@@ -590,7 +613,7 @@ Haluatko mennä VLC media player-kotisivulle?
         <RemoveTextForHearingImpaired>Poista teksti kuulovammaisille...</RemoveTextForHearingImpaired>
         <ChangeCasing>Muuta kirjainkokoa...</ChangeCasing>
         <ChangeFrameRate>Muuta kuvataajuutta...</ChangeFrameRate>
-        <ChangeSpeedInPercent>Muutettu nopeus (prosenttia)...</ChangeSpeedInPercent>
+        <ChangeSpeedInPercent>Muuttunut nopeus (prosenttia)...</ChangeSpeedInPercent>
         <MergeShortLines>Yhdistä lyhyitä rivejä...</MergeShortLines>
         <SplitLongLines>Katkaise pitkiä rivejä...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Pienin näyttöaika kappaleiden välissä...</MinimumDisplayTimeBetweenParagraphs>
@@ -600,12 +623,13 @@ Haluatko mennä VLC media player-kotisivulle?
         <EndTime>Päättymisaika</EndTime>
         <Duration>Kesto</Duration>
         <TextAlphabetically>Teksti - aakkosjärjestyksessä</TextAlphabetically>
-        <TextSingleLineMaximumLength>Teksti -yhden rivin suurin pituus</TextSingleLineMaximumLength>
+        <TextSingleLineMaximumLength>Teksti - suurin yhden rivin pituus</TextSingleLineMaximumLength>
         <TextTotalLength>Teksti - pituus yhteensä</TextTotalLength>
         <TextNumberOfLines>Teksti - rivien määrä</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Teksti - merkkejä sekunnissa</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Teksti - sanaa minuutissa (wpm)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Tee uusi, tyhjä käännös nykyisestä tekstityksestä</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <BatchConvert>Erämuunnos...</BatchConvert>
         <SplitSubtitle>Katkaise tekstitys...</SplitSubtitle>
         <AppendSubtitle>Liitä tekstitys...</AppendSubtitle>
         <JoinSubtitles>Yhdistä tekstityksiä...</JoinSubtitles>
@@ -631,7 +655,7 @@ Haluatko mennä VLC media player-kotisivulle?
       </SpellCheck>
       <Synchronization>
         <Title>Synkronointi</Title>
-        <AdjustAllTimes>Säädä kaikki ajat (näytä aikaisemmin/myöhemmin)...</AdjustAllTimes>
+        <AdjustAllTimes>Säädä kaikki ajat (aikaisemmin/myöhemmin)...</AdjustAllTimes>
         <VisualSync>Visuaalinen synkronointi...</VisualSync>
         <PointSync>Kohdan synkronointi...</PointSync>
         <PointSyncViaOtherSubtitle>Kohdan synkronointi muiden tekstitysten mukaan...</PointSyncViaOtherSubtitle>
@@ -657,8 +681,8 @@ Haluatko mennä VLC media player-kotisivulle?
       </Networking>
       <Help>
         <Title>Ohje</Title>
-        <Help>O&amp;hje</Help>
-        <About>Tietoj&amp;a</About>
+        <Help>Ohje</Help>
+        <About>Tietoja</About>
       </Help>
       <ToolBar>
         <New>Uusi</New>
@@ -675,10 +699,10 @@ Haluatko mennä VLC media player-kotisivulle?
         <ShowHideVideo>Näytä/piilota video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
-        <AdvancedSubStationAlphaSetStyle>Sub Station Alpha lisäasetukset - aseta tyyli</AdvancedSubStationAlphaSetStyle>
+        <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - aseta tyyli</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - aseta tyyli</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Sub Station Alpha tyylit...</SubStationAlphaStyles>
-        <AdvancedSubStationAlphaStyles>Sub Station Alpha lisätyylit...</AdvancedSubStationAlphaStyles>
+        <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha tyylit...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Ajastettu teksti - aseta tyyli</TimedTextSetStyle>
         <TimedTextStyles>Ajastettu teksti tyylit...</TimedTextStyles>
         <SamiSetStyle>Sami - aseta luokka</SamiSetStyle>
@@ -686,7 +710,7 @@ Haluatko mennä VLC media player-kotisivulle?
         <Copy>Kopio</Copy>
         <Paste>Liitä</Paste>
         <Delete>Poista</Delete>
-        <SplitLineAtCursorPosition>Katkaise rivi kohdistimen kohdalta</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPosition>Katkaise rivi kursorin kohdalta</SplitLineAtCursorPosition>
         <AutoDurationCurrentLine>Automaattinen kesto (nykyinen rivi)</AutoDurationCurrentLine>
         <SelectAll>Valitse kaikki</SelectAll>
         <InsertFirstLine>Lisää rivi</InsertFirstLine>
@@ -698,7 +722,7 @@ Haluatko mennä VLC media player-kotisivulle?
         <ColumnDeleteText>Poista teksti</ColumnDeleteText>
         <ColumnDeleteTextAndShiftCellsUp>Poista teksti ja siirrä soluja ylöspäin</ColumnDeleteTextAndShiftCellsUp>
         <ColumnInsertEmptyTextAndShiftCellsDown>Lisää tyhjä teksti ja siirrä soluja alaspäin</ColumnInsertEmptyTextAndShiftCellsDown>
-        <ColumnInsertTextFromSubtitle>Lisää teksti tekstityksestä...</ColumnInsertTextFromSubtitle>
+        <ColumnInsertTextFromSubtitle>Lisätä teksti tekstityksestä...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Tuo teksti ja siirrä soluja alaspäin</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Liitä leikepöydältä...</ColumnPasteFromClipboard>
         <Split>Katkaisu</Split>
@@ -711,7 +735,7 @@ Haluatko mennä VLC media player-kotisivulle?
         <Color>Väri...</Color>
         <FontName>Fontin nimi...</FontName>
         <Alignment>Tasaus...</Alignment>
-        <AutoBalanceSelectedLines>Automaattinen valittujen rivien tasaus...</AutoBalanceSelectedLines>
+        <AutoBalanceSelectedLines>Automaattinen valittujen rivien tasapaino...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Poista rivinvaihdot valituilta riveiltä...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Kirjoituskonetehoste...</TypewriterEffect>
         <KaraokeEffect>Karaoketehoste...</KaraokeEffect>
@@ -720,8 +744,8 @@ Haluatko mennä VLC media player-kotisivulle?
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft käännös alkuperäiselle riville</GoogleAndMicrosoftTranslateSelectedLine>
         <GoogleTranslateSelectedLines>Google-käännös valituille riveille...</GoogleTranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Säädä valittujen rivien kestot...</AdjustDisplayDurationForSelectedLines>
-        <FixCommonErrorsInSelectedLines>Korjaa yleiset virheet valituilta riveiltä...</FixCommonErrorsInSelectedLines>
-        <ChangeCasingForSelectedLines>Muuta valittujen rivien kirjainkoko...</ChangeCasingForSelectedLines>
+        <FixCommonErrorsInSelectedLines>Korjaa yleiset virheet valituilla riveillä...</FixCommonErrorsInSelectedLines>
+        <ChangeCasingForSelectedLines>Vaihda kirjainkoko valituilla riveillä...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Tallenna valitut rivit...</SaveSelectedLines>
       </ContextMenu>
     </Menu>
@@ -731,9 +755,9 @@ Haluatko mennä VLC media player-kotisivulle?
       <ListView>Luettelonäkymä</ListView>
       <SourceView>Lähdenäkymä</SourceView>
       <UndoChangesInEditPanel>Kumoa muutokset muokkauspaneelissa</UndoChangesInEditPanel>
-      <Previous>&lt; Edellinen</Previous>
-      <Next>Seuraava &gt;</Next>
-      <AutoBreak>Auto-katkaisu</AutoBreak>
+      <Previous>Edellinen</Previous>
+      <Next>Seuraava</Next>
+      <AutoBreak>Autom. rivinvaihto</AutoBreak>
       <Unbreak>Yhdistä</Unbreak>
     </Controls>
     <VideoControls>
@@ -742,32 +766,32 @@ Haluatko mennä VLC media player-kotisivulle?
       <Adjust>Säädä</Adjust>
       <SelectCurrentElementWhilePlaying>Valitse nykyinen tekstitys toistettaessa</SelectCurrentElementWhilePlaying>
       <AutoRepeat>Automaattinen toisto</AutoRepeat>
-      <AutoRepeatOn>Automaattinen toisto päällä</AutoRepeatOn>
+      <AutoRepeatOn>Toista automaattisesti</AutoRepeatOn>
       <AutoRepeatCount>Toistojen määrä (kertaa)</AutoRepeatCount>
-      <AutoContinue>Jatka automaattisesti</AutoContinue>
-      <AutoContinueOn>Automaattinen jatko päällä</AutoContinueOn>
+      <AutoContinue>Automaattinen jatkaminen</AutoContinue>
+      <AutoContinueOn>Jatka automaattisesti</AutoContinueOn>
       <DelayInSeconds>Viive (sekunteina)</DelayInSeconds>
       <OriginalText>Alkuperäinen teksti</OriginalText>
       <Previous>&lt; Edellinen</Previous>
-      <Stop>Py&amp;säytä</Stop>
+      <Stop>Pysäytä</Stop>
       <PlayCurrent>Toista nykyinen</PlayCurrent>
       <Next>Seuraava &gt;</Next>
       <Playing>Toistetaan...</Playing>
       <RepeatingLastTime>Toistetaan... viimeinen kerta</RepeatingLastTime>
       <RepeatingXTimesLeft>Toistetaan... {0} kertaa jäljellä</RepeatingXTimesLeft>
-      <AutoContinueInOneSecond>Jatka automaattisesti yhden sekunnin kuluttua</AutoContinueInOneSecond>
-      <AutoContinueInXSeconds>Jatka automaattisesti {0} sekunnin kuluttua</AutoContinueInXSeconds>
-      <StillTypingAutoContinueStopped>Kirjoitetaan edelleen... autojatko pysäytetty</StillTypingAutoContinueStopped>
+      <AutoContinueInOneSecond>Automaattinen jatkaminen yhden sekunnin jälkeen</AutoContinueInOneSecond>
+      <AutoContinueInXSeconds>Automaattinen jatkaminen {0} sekunnin jälkeen</AutoContinueInXSeconds>
+      <StillTypingAutoContinueStopped>Kirjoitetaan vielä... autom.  jatkaminen pysäytetty</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>Lisää uusi tekstitys videokohtaan</InsertNewSubtitleAtVideoPosition>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Toista juuri ennen tekstiä</PlayFromJustBeforeText>
       <Pause>Tauko</Pause>
       <GoToSubtitlePositionAndPause>Siirry kohtaan ja tauota</GoToSubtitlePositionAndPause>
-      <SetStartTime>A&amp;seta aloitusaika</SetStartTime>
-      <SetEndTimeAndGoToNext>As&amp;eta loppu &amp;&amp; mene seuraavaan</SetEndTimeAndGoToNext>
-      <AdjustedViaEndTime>Tarkistettu loppuajan {0} mukaan</AdjustedViaEndTime>
-      <SetEndTime>As&amp;eta päättymisaika</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Aseta aloitusaika</SetstartTimeAndOffsetOfRest>
+      <SetStartTime>Aseta aloitusaika</SetStartTime>
+      <SetEndTimeAndGoToNext>Aseta loppu/mene seuraavaan</SetEndTimeAndGoToNext>
+      <AdjustedViaEndTime>Tarkista loppuajan {0} mukaan</AdjustedViaEndTime>
+      <SetEndTime>Aseta päättymisaika</SetEndTime>
+      <SetstartTimeAndOffsetOfRest>Aseta käynnistysaika</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Etsi teksti verkosta</SearchTextOnline>
       <GoogleTranslate>Google-kääntäjä</GoogleTranslate>
       <GoogleIt>Googleta</GoogleIt>
@@ -779,7 +803,7 @@ Haluatko mennä VLC media player-kotisivulle?
       <AdjustTip>Vihje: Käytä &lt;alt+nuoli ylös/alas&gt; mennäksesi edelliseen/seuraavaan tekstitykseen</AdjustTip>
       <BeforeChangingTimeInWaveFormX>Ennen ajan muuttamista aaltomuodossa: {0}</BeforeChangingTimeInWaveFormX>
       <NewTextInsertAtX>Uusi teksti lisätty kohtaan {0}</NewTextInsertAtX>
-      <Center>Keskelle</Center>
+      <Center>Keskitys</Center>
       <PlayRate>Toistosuhde (nopeus)</PlayRate>
       <Slow>Hidas</Slow>
       <Normal>Normaali</Normal>
@@ -788,7 +812,7 @@ Haluatko mennä VLC media player-kotisivulle?
     </VideoControls>
     <SaveChangesToUntitled>Tallennetaanko muutokset nimettömään?</SaveChangesToUntitled>
     <SaveChangesToX>Tallennetaanko muutokset kohteeseen {0}?</SaveChangesToX>
-    <SaveChangesToUntitledOriginal>Tallennetaanko muutokset nimettömään alkuperäiseen?</SaveChangesToUntitledOriginal>
+    <SaveChangesToUntitledOriginal>Tallenetaanko muutokset nimettömään alkuperäiseen?</SaveChangesToUntitledOriginal>
     <SaveChangesToOriginalX>Tallennetaanko muutokset alkuperäiseen {0}?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Tallenna tekstitys nimellä...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Tallenna alkuperäinen tekstitys nimellä...</SaveOriginalSubtitleAs>
@@ -797,7 +821,7 @@ Haluatko mennä VLC media player-kotisivulle?
     <VisualSyncTitle>Visuaalinen synkronointi</VisualSyncTitle>
     <BeforeVisualSync>Ennen visuaalista synkronointia</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visuaalinen synkronointi tehty valituille riveille</VisualSyncPerformedOnSelectedLines>
-    <VisualSyncPerformed>Visuaalinen synkronointi tehty</VisualSyncPerformed>
+    <VisualSyncPerformed>Visualinen synkronointi valmis</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Tuodaanko tämä VobSub tekstitys?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10Mb>Tiedosto on suurempi kuin 10 MB: {0}</FileXIsLargerThan10Mb>
     <ContinueAnyway>Haluatko jatkaa?</ContinueAnyway>
@@ -809,26 +833,26 @@ Haluatko mennä VLC media player-kotisivulle?
     <SavedSubtitleX>Tallennettu tekstitys {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Tallennettu alkuperäinen tekstitys {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>tiedostoa on muokattu</FileOnDiskModified>
-    <OverwriteModifiedFile>Korvaa tiedosto {0} kohteessa {1} muokattu  {2}{3} nykyisen levyltä ladatun tiedoston kanssa {4}  {5}?</OverwriteModifiedFile>
+    <OverwriteModifiedFile>Korvaa tiedosto {0} kohteessa {1} muokattu {2}{3} nykyisen levyltä ladatun tiedoston kanssa {4}   {5}?</OverwriteModifiedFile>
     <UnableToSaveSubtitleX>Tekstitystä {0} ei voi tallentaa</UnableToSaveSubtitleX>
     <BeforeNew>Ennen uutta</BeforeNew>
     <New>Uusi</New>
     <BeforeConvertingToX>Ennen muuntamista {0} muotoon</BeforeConvertingToX>
     <ConvertedToX>Muunnettu muotoon {0}</ConvertedToX>
-    <BeforeShowEarlier>Ennen aiemmin näytettyä</BeforeShowEarlier>
-    <BeforeShowLater>Ennen myöhemmin näytettyä</BeforeShowLater>
+    <BeforeShowEarlier>Ennen aiemman näyttöä</BeforeShowEarlier>
+    <BeforeShowLater>Ennen myöhemmän näyttöä</BeforeShowLater>
     <LineNumberX>Rivinumero: {0: #,## 0.##}</LineNumberX>
     <OpenVideoFile>Avaa videotiedosto...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Uutta kuvataajuutta ({0}) käytettiin laskettaessa alku-/loppuaikakoodit</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Uutta kuvataajuutta ({0}) käytettiin laskettaessa alku-/loppukuvien numerot</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>Etsittävää kohdetta ei löytynyt.
-Haluatko aloittaa alusta ja hakea vielä kerran?</FindContinue>
+ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <FindContinueTitle>Jatketaanko hakua?</FindContinueTitle>
     <ReplaceContinueNotFound>
-Etsittävää kohdetta ei löytynyt. Haluatko aloittaa alusta ja jatkaa 'Etsi ja korvaa' toimintoa?
+Etsittävää kohdetta ei löytynyt. Haluatko aloittaa asiakirjan alusta ja jatkaa Etsi ja korvaa toimintoa?
 		</ReplaceContinueNotFound>
     <ReplaceXContinue>
-Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa alusta ja jatkaa 'Etsi ja korvaa' toimintoa?
+Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa asiakirjan alusta ja jatkaa Etsi ja korvaa toimintoa?
 		</ReplaceXContinue>
     <ReplaceContinueTitle>Jatketaanko 'Korvausta'?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Etsitään '{0}' riviltä {1}...</SearchingForXFromLineY>
@@ -841,20 +865,20 @@ Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa alusta ja jatkaa 'Etsi 
     <ReplaceCountX>Korvausten määrä: {0}</ReplaceCountX>
     <NoXFoundAtLineY>Vastine löytyi riviltä {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>Yksi korvaus tehty.</OneReplacementMade>
-    <BeforeChangesMadeInSourceView>Lähdenäkymässä tehtävät muutokset ennen</BeforeChangesMadeInSourceView>
+    <BeforeChangesMadeInSourceView>Ennen lähdenäkymässä tehtyjä muutoksia</BeforeChangesMadeInSourceView>
     <UnableToParseSourceView>Lähdenäkymän tekstiä ei voi jäsentää!</UnableToParseSourceView>
     <GoToLineNumberX>Siirry rivinumeroon {0}</GoToLineNumberX>
     <CreateAdjustChangesApplied>Luo/säädä muutettuja rivejä</CreateAdjustChangesApplied>
     <SelectedLines>valitut rivit</SelectedLines>
-    <BeforeDisplayTimeAdjustment>Ennen näyttöajan säätöä</BeforeDisplayTimeAdjustment>
-    <DisplayTimeAdjustedX>Näytä säädetty aika: {0}</DisplayTimeAdjustedX>
-    <DisplayTimesAdjustedX>Näytä säädetyt ajat: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Muutettu käynnistysaika: {0}</StarTimeAdjustedX>
+    <BeforeDisplayTimeAdjustment>Ennen näytön aikasäätöä</BeforeDisplayTimeAdjustment>
+    <DisplayTimeAdjustedX>Näyttöaika säädetty: {0}</DisplayTimeAdjustedX>
+    <DisplayTimesAdjustedX>Näyttöajat säädetty: {0}</DisplayTimesAdjustedX>
+    <StarTimeAdjustedX>Alkuaika säädetty: {0}</StarTimeAdjustedX>
     <BeforeCommonErrorFixes>Ennen tavallisten virheiden korjauksia</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Yleisiä virheitä korjattu valituilla riveillä</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Yleisiä virheitä korjattu</CommonErrorsFixed>
     <BeforeRenumbering>Ennen uudelleennumerointia</BeforeRenumbering>
-    <RenumberedStartingFromX>Numeroitiin uudelleen alkaen: {0}</RenumberedStartingFromX>
+    <RenumberedStartingFromX>Uudelleen numeroitiin alkaen: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Ennen tekstityksen poistamista kuulovammaisille</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Tekstitys kuulovammaisille poistettu: Yksi rivi</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Tekstitys kuulovammaisille poistettu: {0} riviä</TextingForHearingImpairedRemovedXLines>
@@ -866,7 +890,7 @@ Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa alusta ja jatkaa 'Etsi 
     <AppendSynchronizedSubtitlePrompt>Liitetäänkö tämä synkronoitu tekstitys?</AppendSynchronizedSubtitlePrompt>
     <BeforeAppend>Ennen liittämistä</BeforeAppend>
     <SubtitleAppendedX>Liitetty tekstitys: {0}</SubtitleAppendedX>
-    <SubtitleNotAppended>Tekstitystä EI lisätty!</SubtitleNotAppended>
+    <SubtitleNotAppended>Tekstitystä EI liitetty!</SubtitleNotAppended>
     <GoogleTranslate>Google-kääntäjä</GoogleTranslate>
     <MicrosoftTranslate>Microsoft kääntäjä</MicrosoftTranslate>
     <BeforeGoogleTranslation>Ennen Google käännöstä</BeforeGoogleTranslation>
@@ -880,11 +904,11 @@ Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa alusta ja jatkaa 'Etsi 
     <TranslationFromSwedishToDanishFailed>Ruotsin käännös Tanskaan epäonnistui</TranslationFromSwedishToDanishFailed>
     <BeforeUndo>Ennen kumoamista</BeforeUndo>
     <UndoPerformed>Kumottu</UndoPerformed>
-    <RedoPerformed>Tehty uudelleen</RedoPerformed>
+    <RedoPerformed>Uudelleen suoritettu</RedoPerformed>
     <NothingToUndo>Mitään kumottavaa ei ole</NothingToUndo>
     <InvalidLanguageNameX>Virheellinen kielen nimi: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Kielen vaihtaminen ei onnistunut.</UnableToChangeLanguage>
-    <NumberOfCorrectedWords>Korjatut sanat: {0}</NumberOfCorrectedWords>
+    <NumberOfCorrectedWords>Korjattujen sanojen lukumäärä: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Ohitettuja sanoja: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Oikeita sanoja: {0}</NumberOfCorrectWords>
     <NumberOfWordsAddedToDictionary>Sanoja lisätty sanakirjaan: {0}</NumberOfWordsAddedToDictionary>
@@ -895,7 +919,7 @@ Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa alusta ja jatkaa 'Etsi 
     <BeforeAddingTagX>Ennen tunnisteen &lt;{0}&gt;  lisäämistä</BeforeAddingTagX>
     <TagXAdded>&lt;{0}&gt; tunnistetta lisätty</TagXAdded>
     <LineXOfY>rivi {0} / {1}</LineXOfY>
-    <XLinesSavedAsY>{0} riviä tallennettu -&gt; {1}</XLinesSavedAsY>
+    <XLinesSavedAsY>{0} riviä tallennettu {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} riviä poistettu</XLinesDeleted>
     <BeforeDeletingXLines>Ennen {0} rivin poistoa</BeforeDeletingXLines>
     <DeleteXLinesPrompt>Poistetaanko {0} riviä?</DeleteXLinesPrompt>
@@ -905,11 +929,11 @@ Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa alusta ja jatkaa 'Etsi 
     <BeforeInsertLine>Ennen rivin lisäämistä</BeforeInsertLine>
     <LineInserted>Rivi lisätty</LineInserted>
     <BeforeLineUpdatedInListView>Ennen rivin päivitystä luettelonäkymässä</BeforeLineUpdatedInListView>
-    <BeforeSettingFontToNormal>Ennen fontin normaaliksi asettamista</BeforeSettingFontToNormal>
+    <BeforeSettingFontToNormal>Ennen fontin asettamista normaaliksi</BeforeSettingFontToNormal>
     <BeforeSplitLine>Ennen rivin katkaisua</BeforeSplitLine>
     <LineSplitted>Rivi katkaistu</LineSplitted>
     <BeforeMergeLines>Ennen rivien yhdistämistä</BeforeMergeLines>
-    <LinesMerged>Riviä yhdistetty</LinesMerged>
+    <LinesMerged>Rivit yhdistetty</LinesMerged>
     <BeforeSettingColor>Ennen värin asetusta</BeforeSettingColor>
     <BeforeSettingFontName>Ennen fontin asetusta</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Ennen kirjoituskonetehostetta</BeforeTypeWriterEffect>
@@ -922,18 +946,18 @@ Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa alusta ja jatkaa 'Etsi 
     <ParsingMatroskaFile>Jäsennetään Matroska tiedostoa. Ole hyvä ja odota...</ParsingMatroskaFile>
     <BeforeImportFromMatroskaFile>Ennen tekstityksen tuontia Matroska tiedostosta</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Matroska tiedostosta tuotu tekstitys</SubtitleImportedFromMatroskaFile>
-    <DropFileXNotAccepted>Pudotettua tiedostoa {0} ei hyväksytä - tiedosto on liian iso</DropFileXNotAccepted>
+    <DropFileXNotAccepted>Pudotettua tiedostoa {0} ei hyväksytä - tiedosto liian iso</DropFileXNotAccepted>
     <DropOnlyOneFile>Voit pudottaa vain yhden tiedoston</DropOnlyOneFile>
     <BeforeCreateAdjustLines>Ennen rivien luontia/muokkausta</BeforeCreateAdjustLines>
     <OpenAnsiSubtitle>Avaa tekstitys...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Ennen kirjainkoon muutosta</BeforeChangeCasing>
-    <CasingCompleteMessageNoNames>Rivit, joiden kirjainkokoa muutettu: {0}/{1}</CasingCompleteMessageNoNames>
-    <CasingCompleteMessageOnlyNames>Rivit, joiden nimien kirjainkokoa muutettu: {0}/{1}</CasingCompleteMessageOnlyNames>
-    <CasingCompleteMessage>Rivt, joiden kirjainkokoa muutettu: {0}/{1}, nimien kirjainkokoja muutettu: {2}</CasingCompleteMessage>
+    <CasingCompleteMessageNoNames>Rivit, joiden kirjainkoko muutettu: {0}/{1}</CasingCompleteMessageNoNames>
+    <CasingCompleteMessageOnlyNames>Rivit, joiden kirjainkoko muutettu: {0}/{1}</CasingCompleteMessageOnlyNames>
+    <CasingCompleteMessage>Muutetulla kirjainkoolla olevat rivit: {0}/{1}, nimien kirjainkokoja muutettu: {2}</CasingCompleteMessage>
     <BeforeChangeFrameRate>Ennen kuvataajuuden muutosta</BeforeChangeFrameRate>
     <BeforeAdjustSpeedInPercent>Ennen nopeuden prosentuaalista säätöä</BeforeAdjustSpeedInPercent>
-    <FrameRateChangedFromXToY>Kuvanopeutta muutettu {0} -&gt; {1}</FrameRateChangedFromXToY>
-    <IdxFileNotFoundWarning>{0} ei löydy! Tuodaanko VobSub-tiedosto siitä huolimatta?</IdxFileNotFoundWarning>
+    <FrameRateChangedFromXToY>Kuvanopeus muutettu {0} -&gt; {1}</FrameRateChangedFromXToY>
+    <IdxFileNotFoundWarning>{0} ei löydy! Tuo VobSub-tiedosto siitä huolimatta?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>Otsake ei ole kelvollinen VobSub-tiedosto: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Avaa VobSub (sub/idx) tekstitys...</OpenVobSubFile>
     <VobSubFiles>VobSub tekstitystiedostot</VobSubFiles>
@@ -942,7 +966,7 @@ Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa alusta ja jatkaa 'Etsi 
     <BeforeImportingVobSubFile>Ennen VobSub-tekstityksen tuontia</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Ennen Blu-ray sup-tiedoston tuontia</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Ennen BDN xml tiedoston tuontia</BeforeImportingBdnXml>
-    <BeforeShowSelectedLinesEarlierLater>Ennen valittujen rivien näyttöä aikaisemmin/myöhemmin</BeforeShowSelectedLinesEarlierLater>
+    <BeforeShowSelectedLinesEarlierLater>Ennen valittujen rivien aikaisemmin/myöhemmin näyttöä</BeforeShowSelectedLinesEarlierLater>
     <ShowAllLinesXSecondsLinesEarlier>Näytä kaikki rivit {0:0.0##} sekuntia aikaisemmin</ShowAllLinesXSecondsLinesEarlier>
     <ShowAllLinesXSecondsLinesLater>Näytä kaikki rivit {0:0.0##} sekuntia myöhemmin</ShowAllLinesXSecondsLinesLater>
     <ShowSelectedLinesXSecondsLinesEarlier>Näytä valitut rivit {0:0.0##} sekuntia aikaisemmin</ShowSelectedLinesXSecondsLinesEarlier>
@@ -955,8 +979,8 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <DoubleWordsViaRegEx>Kaksoissanat regexin kautta {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Ennen lajittelua: {0}</BeforeSortX>
     <SortedByX>Lajittelutapa: {0}</SortedByX>
-    <BeforeAutoBalanceSelectedLines>Ennen automaattista valittujen rivien tasoitusta</BeforeAutoBalanceSelectedLines>
-    <NumberOfLinesAutoBalancedX>Automaattisest tasapainotetut rivit: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeAutoBalanceSelectedLines>Ennen automaattista valittujen rivien tasapainotusta</BeforeAutoBalanceSelectedLines>
+    <NumberOfLinesAutoBalancedX>Automaattisesti tasapainotettuja rivejä: {0}</NumberOfLinesAutoBalancedX>
     <BeforeRemoveLineBreaksInSelectedLines>Ennen rivinvaihtojen poistoa valituilta riveiltä</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Rivit, joista rivinvaihto poistettu:: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Ennen monikerta korvauksia</BeforeMultipleReplace>
@@ -967,9 +991,10 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <WordXNotAddedToUserDic>Sanaa '{0}' EI lisätty käyttäjän sanastoon
 		</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>
-Ocr korvauslistapari '{0} -&gt; {1}' lisättiin Ocr korvauslistalle</OcrReplacePairXAdded>
+Ocr korvauslistapari '{0} -&gt; {1}' lisättiin Ocr korvauslistapariin
+		</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>
-Ocr korvauslistaparia '{0} -&gt; {1}' EI lisätty Ocr korvauslistalle</OcrReplacePairXNotAdded>
+Ocr korvauslistaparia '{0} -&gt; {1}' EI lisätty Ocr korvauslistaan		</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} riviä valittu</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Tekstitys sisältää unicode-nuotteja. Tallennus ANSI-koodausta käyttäen hukkaa nämä. Jatketaanko?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Tekstityksessä on negatiivisia aikakoodeja. Haluatko jatkaa tallentamista?</NegativeTimeWarning>
@@ -985,22 +1010,22 @@ Ocr korvauslistaparia '{0} -&gt; {1}' EI lisätty Ocr korvauslistalle</OcrReplac
     <BeforeTimeCodeImport>Ennen aikakoodien tuontia</BeforeTimeCodeImport>
     <TimeCodeImportedFromXY>Aikakoodit tuotu kohteesta {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Ennen tekstityksen lisäystä videokohtaan</BeforeInsertSubtitleAtVideoPosition>
-    <BeforeSetStartTimeAndOffsetTheRest>Ennen aloitusajan ja lopputekstin siirtymän asetusta</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetStartTimeAndOffsetTheRest>Ennen aloitusajan ja loppusiirtymän asetusta</BeforeSetStartTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Ennen loppuajan asettamista videokohtaan ja automaattista aloitusajan laskemista</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Jatketaanko nykyistä oikeinkirjoituksen tarkistusta?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Merkkejä sekunnissa: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Hae kuvanopeus videotiedostosta </GetFrameRateFromVideoFile>
     <NetworkMessage>Uusi viesti: {0} ({1}): {2}</NetworkMessage>
-    <NetworkUpdate>Päivitetty rivi: {0} ({1}): Indeksi ={2}, Teksti={3}</NetworkUpdate>
-    <NetworkInsert>Rivi lisätty: {0} ({1}):Indeksi={2}, Teksti={3}</NetworkInsert>
-    <NetworkDelete>Rivi poistettu: {0} ({1}):Indeksi={2}</NetworkDelete>
+    <NetworkUpdate>Päivitettyjä rivejä: {0} ({1}): Index ={2}, Teksti={3}</NetworkUpdate>
+    <NetworkInsert>Rivi lisätty: {0} ({1}):Index={2}, Teksti={3}</NetworkInsert>
+    <NetworkDelete>Rivi poistettu: {0} ({1}):Index={2}</NetworkDelete>
     <NetworkNewUser>Uusi käyttäjä: {0} ({1})</NetworkNewUser>
     <NetworkByeUser>Heippa {0} ({1})</NetworkByeUser>
     <NetworkUnableToConnectToServer>Yhteyttä ei voi muodostaa palvelimeen: {0}</NetworkUnableToConnectToServer>
     <UserAndAction>Käyttäjä/toiminta</UserAndAction>
     <NetworkMode>Verkkotila</NetworkMode>
-    <XStartedSessionYAtZ>{0}: Aloitettua istuntoa {1} / {2}</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>Oikoluku Wordilla {0} - rivi {1} /  {2}</SpellChekingViaWordXLineYOfX>
+    <XStartedSessionYAtZ>{0}: Käynnistettyä istuntoa {1} / {2}</XStartedSessionYAtZ>
+    <SpellChekingViaWordXLineYOfX>Oikoluku käyttämällä Wordia {0} - rivi {1} /  {2}</SpellChekingViaWordXLineYOfX>
     <UnableToStartWord>Microsoft Wordin käynnistäminen ei onnistu</UnableToStartWord>
     <SpellCheckAbortedXCorrections>Oikoluku keskeytetty. {0} riviä muokattu.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Oikeinkirjoituksen tarkistaminen on valmis. {0} riviä muokattu.</SpellCheckCompletedXCorrections>
@@ -1009,32 +1034,32 @@ Ocr korvauslistaparia '{0} -&gt; {1}' EI lisätty Ocr korvauslistalle</OcrReplac
     <ExportPlainTextAs>Vie pelkkä teksti seuraavasti</ExportPlainTextAs>
     <TextFiles>Tekstitiedostot</TextFiles>
     <SubtitleExported>Tekstitys viety</SubtitleExported>
-    <LineNumberXErrorReadingFromSourceLineY>Rivi {0} - lukuvirhe: {1}</LineNumberXErrorReadingFromSourceLineY>
+    <LineNumberXErrorReadingFromSourceLineY>Rivi {0} - virhe luettaessa: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Rivi {0} - virhe luettaessa aikakoodia: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Rivi {0} - odotettu tekstitysnumero: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <BeforeGuessingTimeCodes>Ennen arvattuja aikakoodeja</BeforeGuessingTimeCodes>
+    <BeforeGuessingTimeCodes>Ennen aikakoodien arvailuja</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Ennen valittujen rivien auto-kestoja</BeforeAutoDuration>
     <BeforeColumnPaste>Ennen sarakkeen liittämistä</BeforeColumnPaste>
     <BeforeColumnDelete>Ennen sarakkeen poistoa</BeforeColumnDelete>
     <BeforeColumnImportText>Ennen tekstin tuomista sarakkeeseen</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Ennen sarakkeen solujen alassiirtoa</BeforeColumnShiftCellsDown>
-    <ErrorLoadingPluginXErrorY>Virhe ladattaessa laajennusta: {0}: {1}</ErrorLoadingPluginXErrorY>
-    <BeforeRunningPluginXVersionY>Enne laajennuksen ajamista: {0}: {1}</BeforeRunningPluginXVersionY>
-    <UnableToReadPluginResult>Tekstitystä ei voi lukea laajennuksesta!</UnableToReadPluginResult>
+    <ErrorLoadingPluginXErrorY>Virhe laajennuksen latauksessa: {0}: {1}</ErrorLoadingPluginXErrorY>
+    <BeforeRunningPluginXVersionY>Ennen laajennuksen ajamista: {0}: {1}</BeforeRunningPluginXVersionY>
+    <UnableToReadPluginResult>Tekstitystuloksia ei voi lukea laajennuksesta!</UnableToReadPluginResult>
     <UnableToCreateBackupDirectory>Varmuuskopiohakemistoa ei voi luoda {0}: {1}</UnableToCreateBackupDirectory>
-    <BeforeDisplaySubtitleJoin>Ennen tekstityksien liitosta</BeforeDisplaySubtitleJoin>
+    <BeforeDisplaySubtitleJoin>Ennen tekstityksien liittämistä</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Liitetyt tekstitykset</SubtitlesJoined>
     <StatusLog>Tilaloki</StatusLog>
   </Main>
   <MatroskaSubtitleChooser>
-    <Title>Valitse tekstitys Matroska tiedostosta</Title>
+    <Title>Valitse alaotsikko Matroska tiedostosta</Title>
     <PleaseChoose>Enemmän kuin yksi tekstitys löytyi - valitse</PleaseChoose>
     <TrackXLanguageYTypeZ>Raita {0} - {1} - kieli: {2} - tyyppi: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MergedShortLines>
     <Title>Yhdistä lyhyitä rivejä</Title>
     <MaximumCharacters>Merkkejä enintään yhdessä kappaleessa</MaximumCharacters>
-    <MaximumMillisecondsBetween>Millisekuntia enintään rivien välillä</MaximumMillisecondsBetween>
+    <MaximumMillisecondsBetween>Enintään millisekunteja rivien välissä</MaximumMillisecondsBetween>
     <NumberOfMergesX>Yhdistämisten määrä: {0}</NumberOfMergesX>
     <MergedText>Yhdistetty teksti</MergedText>
     <OnlyMergeContinuationLines>Yhdistä vain jatkuvat rivit</OnlyMergeContinuationLines>
@@ -1042,9 +1067,9 @@ Ocr korvauslistaparia '{0} -&gt; {1}' EI lisätty Ocr korvauslistalle</OcrReplac
   <MultipleReplace>
     <Title>Monikerta korvaus</Title>
     <FindWhat>Mitä etsitään</FindWhat>
-    <ReplaceWith>Korvataan</ReplaceWith>
+    <ReplaceWith>Korvaa</ReplaceWith>
     <Normal>Normaali</Normal>
-    <CaseSensitive>Sama kirjainkoko</CaseSensitive>
+    <CaseSensitive>Kirjainkoko merkitsevä</CaseSensitive>
     <RegularExpression>Säännöllinen lauseke</RegularExpression>
     <LinesFoundX>Rivejä löytyi: {0}</LinesFoundX>
     <Delete>Poista</Delete>
@@ -1095,13 +1120,13 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <Download>Lataa</Download>
     <Remove>Poista</Remove>
     <UnableToDownloadPluginListX>Laajennusluetteloa ei voi ladata: {0}</UnableToDownloadPluginListX>
-    <NewVersionOfSubtitleEditRequired>Uudempi Subtitle Edit versio vaaditaan!</NewVersionOfSubtitleEditRequired>
+    <NewVersionOfSubtitleEditRequired>Tarvitaan uudempi Subtitle Edit versio!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Päivitys saatavilla!]</UpdateAvailable>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Poista kuulovammaisten teksti</Title>
     <RemoveTextConditions>Poista tekstiehdot</RemoveTextConditions>
-    <RemoveTextBetween>Poista tekstiä seuraavien välistä</RemoveTextBetween>
+    <RemoveTextBetween>Poista tekstiä välistä</RemoveTextBetween>
     <SquareBrackets>'[' ja ']'</SquareBrackets>
     <Brackets>'{' ja '}'</Brackets>
     <Parentheses>'(' ja ')'</Parentheses>
@@ -1112,7 +1137,7 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <OnlyIfInSeparateLine>Vain, jos erillisellä rivillä</OnlyIfInSeparateLine>
     <LinesFoundX>Rivejä löytyi: {0}</LinesFoundX>
     <RemoveTextIfContains>Poista teksti, jos se sisältää:</RemoveTextIfContains>
-    <RemoveTextIfAllUppercase>Poista rivi, jos ISOILLA KIRJAIMILLA</RemoveTextIfAllUppercase>
+    <RemoveTextIfAllUppercase>Poista rivi, jos ISOILLA kirjaimilla</RemoveTextIfAllUppercase>
     <RemoveInterjections>Poista huudahdukset (shh, hmm jne.)</RemoveInterjections>
     <EditInterjections>Muokkaa...</EditInterjections>
   </RemoveTextFromHearImpaired>
@@ -1122,7 +1147,7 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <Normal>Normaali</Normal>
     <CaseSensitive>Sama kirjainkoko</CaseSensitive>
     <RegularExpression>Säännöllinen lauseke</RegularExpression>
-    <ReplaceWith>Korvaava</ReplaceWith>
+    <ReplaceWith>Korvaa</ReplaceWith>
     <Find>Etsi</Find>
     <Replace>Korvaa</Replace>
     <ReplaceAll>Korvaa kaikki</ReplaceAll>
@@ -1130,10 +1155,10 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
   <RestoreAutoBackup>
     <Title>Palauta automaattinen varmuuskopio</Title>
     <Information>Avaa automaattinen varmuuskopio</Information>
-    <DateAndTime>Päivämäärä ja aika</DateAndTime>
+    <DateAndTime>Päivämäärä ja kellonaika</DateAndTime>
     <FileName>Tiedostonimi</FileName>
     <Extension>Tarkennin</Extension>
-    <NoBackedUpFilesFound>Varmuuskopioita ei löytynyt!</NoBackedUpFilesFound>
+    <NoBackedUpFilesFound>Varmuuskopiotiedostoja ei löytynyt!</NoBackedUpFilesFound>
   </RestoreAutoBackup>
   <SeekSilence>
     <Title>Etsi hiljaisuutta</Title>
@@ -1144,7 +1169,7 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <MaxVolume>Voimakkuuden on oltava alle</MaxVolume>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
-    <Title>Aseta pienin näyttöaika kappaleiden välillä</Title>
+    <Title>Aseta vähimmäisnäyttöaika kappaleiden välillä</Title>
     <PreviewLinesModifiedX>Esikatselu - kappaleita muutettu: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Näytä vain muokatut rivit</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Pienin aika (ms) rivien välillä</MinimumMillisecondsBetweenParagraphs>
@@ -1152,10 +1177,10 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
   <SetSyncPoint>
     <Title>Aseta synkronointikohta riville {0}</Title>
     <SyncPointTimeCode>Synkronointikohdan aikakoodi</SyncPointTimeCode>
-    <ThreeSecondsBack>&lt;&lt; 3 sekuntia</ThreeSecondsBack>
-    <HalfASecondBack>&lt;&lt; ½ s</HalfASecondBack>
-    <HalfASecondForward>½ s &gt;&gt;</HalfASecondForward>
-    <ThreeSecondsForward>3 sekuntia &gt;&gt;</ThreeSecondsForward>
+    <ThreeSecondsBack>&lt;&lt; 3 sek.</ThreeSecondsBack>
+    <HalfASecondBack>&lt;&lt; ½ sek.</HalfASecondBack>
+    <HalfASecondForward>½ sek. &gt;&gt;</HalfASecondForward>
+    <ThreeSecondsForward>3 sek. &gt;&gt;</ThreeSecondsForward>
   </SetSyncPoint>
   <Settings>
     <Title>Asetukset</Title>
@@ -1180,37 +1205,37 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <Help>Ohje</Help>
     <ShowFrameRate>Näytä kuvataajuus työkalurivillä</ShowFrameRate>
     <DefaultFrameRate>Kuvataajuus (oletus)</DefaultFrameRate>
-    <DefaultFileEncoding>Tiedoston oletuskoodaus</DefaultFileEncoding>
+    <DefaultFileEncoding>Tiedoston koodaus (oletus)</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Autom. ANSI-koodin tunnistus</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Yhden rivin suurin pituus</SubtitleLineMaximumLength>
-    <MaximumCharactersPerSecond>Maks. merkkiä/sek</MaximumCharactersPerSecond>
+    <MaximumCharactersPerSecond>Maks. merk./sek</MaximumCharactersPerSecond>
     <AutoWrapWhileTyping>Automaattinen rivitys kirjoitettaessa</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Pienin kesto, millisekuntia</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Suurin kesto, millisekuntia</DurationMaximumMilliseconds>
     <SubtitleFont>Tekstitysfontti</SubtitleFont>
     <SubtitleFontSize>Tekstityksen fonttikoko</SubtitleFontSize>
     <SubtitleBold>Lihavoitu</SubtitleBold>
-    <SubtitleCenter>Keskellä</SubtitleCenter>
+    <SubtitleCenter>Keskitys</SubtitleCenter>
     <SubtitleFontColor>Tekstityksen fonttiväri</SubtitleFontColor>
     <SubtitleBackgroundColor>Tekstityksen taustaväri</SubtitleBackgroundColor>
-    <SpellChecker>Oikoluku</SpellChecker>
-    <RememberRecentFiles>Muista viimeksi käsitellyt tiedostot (uudelleenavaus)</RememberRecentFiles>
+    <SpellChecker>Oikolukija</SpellChecker>
+    <RememberRecentFiles>Muista viimeiset tiedostot (uudelleenavaus)</RememberRecentFiles>
     <StartWithLastFileLoaded>Aloita viimeksi ladatulla tiedostolla</StartWithLastFileLoaded>
     <RememberSelectedLine>Muista valittu rivi</RememberSelectedLine>
     <RememberPositionAndSize>Muista pääikkunan sijainti ja koko</RememberPositionAndSize>
     <StartInSourceView>Käynnistä lähdenäkymässä</StartInSourceView>
-    <RemoveBlankLinesWhenOpening>Tekstitystä avattaessa poista tyhjät rivit </RemoveBlankLinesWhenOpening>
+    <RemoveBlankLinesWhenOpening>Poista tyhjät rivit tekstitystä avattaessa </RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Näytä rivinvaihdot luettelonäkymässä seuraavasti</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Kaksoisklikkaus pääikkunan luettelorivillä:</MainListViewDoubleClickAction>
     <MainListViewNothing>Ei mitään</MainListViewNothing>
-    <MainListViewVideoGoToPositionAndPause>Siirry videokohtaan ja tauota</MainListViewVideoGoToPositionAndPause>
+    <MainListViewVideoGoToPositionAndPause>Siirry videokohtaan ja pysäytä</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Siirry videokohtaan ja toista</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>Siirry muokkausruutuun</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>Siirry videokohtaan - 1 sek ja tauko</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Siirry videokohtaan - 0.5 sek ja tauko</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>Siirry videokohtaan - 1 sek ja toista</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Siirry muokkausruutuun, ja tauko videokohdassa</MainListViewEditTextAndPause>
-    <AutoBackup>Autom. varmuuskopiointi</AutoBackup>
+    <AutoBackup>Varmuuskopiointi</AutoBackup>
     <AutoBackupEveryMinute>Joka minuutti</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Joka viides minuutti</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>15 minuutin välein</AutoBackupEveryFifteenMinutes>
@@ -1221,7 +1246,7 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Videomoottori</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
-    <DirectShowDescription>quartz.dll system32 kansiossa</DirectShowDescription>
+    <DirectShowDescription>Quartz.dll system32 kansiossa</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback- .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1235,7 +1260,7 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <VolumeNotes>0 = ei ääntä, 100 = voimakkain</VolumeNotes>
     <PreviewFontSize>Tekstityksen esikatselufontti</PreviewFontSize>
     <MainWindowVideoControls>Pääikkunan videon ohjaukset</MainWindowVideoControls>
-    <CustomSearchTextAndUrl>Mukautettu tekstin ja URL-osoitteen haku</CustomSearchTextAndUrl>
+    <CustomSearchTextAndUrl>Mukautettu tekstin ja URL  haku</CustomSearchTextAndUrl>
     <WaveFormAppearance>Aaltomuodon ulkonäkö</WaveFormAppearance>
     <WaveFormGridColor>Ruudukon väri</WaveFormGridColor>
     <WaveFormShowGridLines>Näytä ruudukko</WaveFormShowGridLines>
@@ -1244,10 +1269,10 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <WaveFormSelectedColor>Valinnan väri</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Taustaväri</WaveFormBackgroundColor>
     <WaveFormTextColor>Tekstiväri</WaveFormTextColor>
-    <WaveformAndSpectrogramsFolderEmpty>Tyhjennä 'Spektrograms' ja 'Waveforms' kansiot</WaveformAndSpectrogramsFolderEmpty>
-    <WaveformAndSpectrogramsFolderInfo>'Waveforms' ja 'Spektrograms' kansiot sisältävät {0} tiedostoa ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
+    <WaveformAndSpectrogramsFolderEmpty>Tyhjennä 'Spectrograms' ja 'Waveforms' kansiot</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderInfo>'Waveforms' ja 'Spectrograms' kansiot sisältävät {0} tiedostoa ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogrammi</Spectrogram>
-    <GenerateSpectrogram>Muodosta Spektrogrammi</GenerateSpectrogram>
+    <GenerateSpectrogram>Muodosta spektrogrammi</GenerateSpectrogram>
     <SpectrogramAppearance>Spektrogrammin ulkoasu</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Yksivärinen liukuvärjäys</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassinen</SpectrogramClassic>
@@ -1255,7 +1280,7 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <ChooseFont>Valitse fontti</ChooseFont>
     <ChooseColor>Valitse väri</ChooseColor>
     <Example>Esimerkki</Example>
-    <Testing123>Testataan 123...</Testing123>
+    <Testing123>Testataan 123...Testataan 123...Testataan 123...</Testing123>
     <Language>Kieli</Language>
     <NamesIgnoreLists>Nimet/ohituslista (sama kirjainkoko)</NamesIgnoreLists>
     <AddNameEtc>Lisää nimi</AddNameEtc>
@@ -1263,7 +1288,7 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <Remove>Poista</Remove>
     <AddPair>Lisää pari</AddPair>
     <UserWordList>Käyttäjän sanalista</UserWordList>
-    <OcrFixList>OCR korjauslista</OcrFixList>
+    <OcrFixList>OCR korjausluettelo</OcrFixList>
     <Location>Sijainti</Location>
     <UseOnlineNamesEtc>Käytä verkon 'names etc xml file'</UseOnlineNamesEtc>
     <WordAddedX>Sana lisätty: {0}</WordAddedX>
@@ -1278,14 +1303,14 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <ProxyPassword>Salasana</ProxyPassword>
     <ProxyDomain>Toimialue</ProxyDomain>
     <PlayXSecondsAndBack>Toista X sekuntia ja takaisin, X on</PlayXSecondsAndBack>
-    <StartSceneIndex>Käynnistyskohtauksen paikka on</StartSceneIndex>
-    <EndSceneIndex>Lopetuskohtauksen paikka on</EndSceneIndex>
+    <StartSceneIndex>Käynnistyskohtauksen kappale on</StartSceneIndex>
+    <EndSceneIndex>Lopetuskohtauksen kappale on</EndSceneIndex>
     <FirstPlusX>Ensimmäinen + {0}</FirstPlusX>
     <LastMinusX>Viimeinen - {0}</LastMinusX>
     <FixCommonerrors>Korjaa yleisiä virheitä</FixCommonerrors>
     <MergeLinesShorterThan>Yhdistä rivit lyhyempiä kuin</MergeLinesShorterThan>
     <MusicSymbol>Musiikkisymboli</MusicSymbol>
-    <MusicSymbolsToReplace>Korvattavat musiikkisymbolit (erota välilyönnillä)</MusicSymbolsToReplace>
+    <MusicSymbolsToReplace>Korvattavat nuotit (erota välilyönnillä)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Korjaa yleiset OCR-virheet, käytä myös kovakoodattuja sääntöjä</FixCommonOcrErrorsUseHardcodedRules>
     <Shortcuts>Pikakuvakkeet</Shortcuts>
     <Shortcut>Pikakuvake</Shortcut>
@@ -1309,14 +1334,14 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <MergeDialogue>Yhdistä vuoropuhelu (lisää viivoja)</MergeDialogue>
     <GoToNext>Siirry seuraavalle riville</GoToNext>
     <GoToPrevious>Siirry edelliselle riville</GoToPrevious>
-    <ToggleFocus>Vaihda näkymä listanäkymän ja tekstitysruudun kesken</ToggleFocus>
+    <ToggleFocus>Vaihda listanäkymän ja tekstitysruudun välillä</ToggleFocus>
     <ToggleDialogueDashes>Vaihda vuoropuhelun katkoviivat</ToggleDialogueDashes>
     <Alignment>Tasaus (valitut rivit)</Alignment>
     <CopyTextOnly>Kopioi vain teksti leikepöydälle (valitut rivit)</CopyTextOnly>
-    <AutoDurationSelectedLines>Automaattinen kesto (valitut rivit)</AutoDurationSelectedLines>
+    <AutoDurationSelectedLines>Auto-kesto (valitut rivit)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Käänteinen RTL alku/loppu</ReverseStartAndEndingForRTL>
-    <VerticalZoom>Pystyzoomaus</VerticalZoom>
-    <WaveformSeekSilenceForward>Hae hiljaisuus edestäpäin</WaveformSeekSilenceForward>
+    <VerticalZoom>Pystysuora zoomaus</VerticalZoom>
+    <WaveformSeekSilenceForward>Hae hiljaisuus eteenpäin</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Hae hiljaisuus takaisinpäin</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Lisää tekstiä tähän (uudelle valinnalle)</WaveformAddTextHere>
     <GoBack100Milliseconds>100 ms takaisin</GoBack100Milliseconds>
@@ -1325,7 +1350,7 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <GoForward500Milliseconds>500 ms eteenpäin</GoForward500Milliseconds>
     <TogglePlayPause>Vaihda toisto/tauko</TogglePlayPause>
     <Pause>Tauko</Pause>
-    <Fullscreen>Koko näyttö</Fullscreen>
+    <Fullscreen>Kokonäyttö</Fullscreen>
     <CustomSearch1>Käännös, mukautettu haku 1</CustomSearch1>
     <CustomSearch2>Käännös, mukautettu haku 2</CustomSearch2>
     <CustomSearch3>Käännös, mukautettu haku 3</CustomSearch3>
@@ -1351,17 +1376,17 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <ListViewColumnDelete>Sarake, poista teksti</ListViewColumnDelete>
     <ListViewColumnInsert>Sarake, lisää teksti</ListViewColumnInsert>
     <ListViewColumnPaste>Sarake, liitä</ListViewColumnPaste>
-    <ShowBeamer>Käynnistä tekstityksen koko näytön videotykki</ShowBeamer>
+    <ShowBeamer>Aloita tekstityksen kokonäytön videotykki</ShowBeamer>
   </Settings>
   <ShowEarlierLater>
     <Title>Näytä valitut rivit aikaisemmin/myöhemmin</Title>
     <TitleAll>Näytä kaikki rivit aikaisemmin/myöhemmin</TitleAll>
-    <ShowEarlier>Näytä aikaisemmin</ShowEarlier>
+    <ShowEarlier>Näytä aiemmin</ShowEarlier>
     <ShowLater>Näytä myöhemmin</ShowLater>
     <TotalAdjustmentX>Säätöjä yhteensä: {0}</TotalAdjustmentX>
     <AllLines>Kaikki rivit</AllLines>
     <SelectedLinesOnly>Vain valitut rivit</SelectedLinesOnly>
-    <SelectedLinesAndForward>Valittu(t) rivi(t) ja eteenpäin</SelectedLinesAndForward>
+    <SelectedLinesAndForward>Valitut rivi(t) ja eteenpäin</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Historia (kumoamista varten)</Title>
@@ -1388,11 +1413,11 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <Use>Käytä</Use>
     <UseAlways>Käytä aina</UseAlways>
     <Suggestions>Ehdotukset</Suggestions>
-    <SpellCheckProgress>Oikoluku [{0}] - {1}</SpellCheckProgress>
+    <SpellCheckProgress>Oikolue [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Muokkaa koko tekstiä</EditWholeText>
     <EditWordOnly>Muokkaa vain sanaa</EditWordOnly>
     <AddXToNamesEtc>Lisää {0} nimi/etc -luetteloon</AddXToNamesEtc>
-    <AutoFixNames>Korjaa nimet automaattisesti, joissa vain kirjainkoot eroavat </AutoFixNames>
+    <AutoFixNames>Korjaa autom. nimet, joissa vain kirjainkoot eroavat </AutoFixNames>
     <ImageText>Kuvateksti</ImageText>
     <SpellCheckCompleted>Oikoluku on valmis.</SpellCheckCompleted>
     <SpellCheckAborted>Oikoluku on keskeytetty</SpellCheckAborted>
@@ -1406,7 +1431,7 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <SubtitleInfo>Tietoa tekstityksestä</SubtitleInfo>
     <NumberOfLinesX>Rivien määrä: {0:#,###}</NumberOfLinesX>
     <NumberOfCharactersX>Merkkien määrä: {0:#,###,###}</NumberOfCharactersX>
-    <Output>Ulostulo</Output>
+    <Output>Lähtö</Output>
     <FileName>Tiedostonimi</FileName>
     <OutputFolder>Tallennuskansio</OutputFolder>
     <DoSplit>Jako</DoSplit>
@@ -1447,50 +1472,50 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <TitleWithFileName>Tilastot - {0}</TitleWithFileName>
     <GeneralStatistics>Yleiset tilastot</GeneralStatistics>
     <MostUsed>Eniten käytetty...</MostUsed>
-    <MostUsedLines>Eniten käytetyt lauseet</MostUsedLines>
+    <MostUsedLines>Eniten käytetyt rivit</MostUsedLines>
     <MostUsedWords>Eniten käytetyt sanat</MostUsedWords>
     <NothingFound>Mitään ei löytynyt</NothingFound>
     <NumberOfLinesX>Tekstitysrivien määrä: {0:#,###}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>Merkkien lukumäärä {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Merkkien lukumäärä vain tekstissä: {0:#,###,##0}</NumberOfCharactersInTextOnly>
-    <TotalCharsPerSecond>Yhteensä merkkiä/sekunti: {0:0.0} sekuntia</TotalCharsPerSecond>
-    <NumberOfItalicTags>Kursivointien määrä: {0}</NumberOfItalicTags>
-    <NumberOfBoldTags>Lihavointien määrä: {0}</NumberOfBoldTags>
-    <NumberOfUnderlineTags>Alleviivausten määrä: {0}</NumberOfUnderlineTags>
-    <NumberOfFontTags>Fonttienn määrä {0}</NumberOfFontTags>
-    <NumberOfAlignmentTags>Tasauksien määrä: {0}</NumberOfAlignmentTags>
+    <TotalCharsPerSecond>Yhteensä merkki/sekunti: {0:0.0} sekuntia</TotalCharsPerSecond>
+    <NumberOfItalicTags>Kursivointitunnisteiden määrä: {0}</NumberOfItalicTags>
+    <NumberOfBoldTags>Lihavointitunnisteiden määrä: {0}</NumberOfBoldTags>
+    <NumberOfUnderlineTags>Alleviivaustunnisteiden määrä: {0}</NumberOfUnderlineTags>
+    <NumberOfFontTags>Fonttitunnisteiden määrä: {0}</NumberOfFontTags>
+    <NumberOfAlignmentTags>Tasaustunnisteiden määrä: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Tekstityksen pituus - pienin: {0}</LineLengthMinimum>
     <LineLengthMaximum>Tekstityksen pituus - suurin: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Tekstityksen pituus - keskimäärin: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Tekstitys, rivien määrä - keskimäärin: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAvarage>Tekstityksen pituus - keskiarvo: {0}</LineLengthAvarage>
+    <LinesPerSubtitleAvarage>Tekstitys, rivien määrä - keskiarvo: {0:0.0}</LinesPerSubtitleAvarage>
     <SingleLineLengthMinimum>Yhden rivin pituus - pienin: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Yhden rivin pituus - suurin: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Yhden rivin pituus - keskimäärin: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAvarage>Yhden rivin pituus - keskiarvo: {0}</SingleLineLengthAvarage>
     <DurationMinimum>Kesto - pienin: {0:0.000} sekuntia</DurationMinimum>
     <DurationMaximum>Kesto - suurin: {0:0.000} sekuntia</DurationMaximum>
-    <DurationAvarage>Kesto - keskimäärin: {0:0.000} sekuntia</DurationAvarage>
+    <DurationAvarage>Kesto - keskiarvo: {0:0.000} sekuntia</DurationAvarage>
   </Statistics>
   <SubStationAlphaProperties>
-    <Title>Sub Station Alpha lisäominaisuudet</Title>
+    <Title>Advanced Sub Station Alpha ominaisuudet</Title>
     <TitleSubstationAlpha>Sub Station Alpha ominaisuudet</TitleSubstationAlpha>
     <Script>Skripti</Script>
     <ScriptTitle>Nimi</ScriptTitle>
     <OriginalScript>Alkuperäinen skripti</OriginalScript>
     <Translation>Käännös</Translation>
     <Editing>Muokkaus</Editing>
-    <Timing>Ajastus</Timing>
-    <SyncPoint>Synkronoitipaikka</SyncPoint>
+    <Timing>Ajoitus</Timing>
+    <SyncPoint>Synkronointi kohta</SyncPoint>
     <UpdatedBy>Päivittäjä</UpdatedBy>
-    <UpdateDetails>Päivitystiedot</UpdateDetails>
+    <UpdateDetails>Päivityksen tiedot</UpdateDetails>
     <Resolution>Resoluutio</Resolution>
-    <VideoResolution>Videon erotuskyky </VideoResolution>
+    <VideoResolution>Videon resoluutio</VideoResolution>
     <Options>Valinnat</Options>
-    <WrapStyle>Rivitystyyli</WrapStyle>
+    <WrapStyle>Rivitysmuoto</WrapStyle>
     <Collision>Ristiriita</Collision>
-    <ScaleBorderAndShadow>Skaalaa reunus ja varjo</ScaleBorderAndShadow>
+    <ScaleBorderAndShadow>Skaalaa raja ja varjo</ScaleBorderAndShadow>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
-    <Title>Sub Station Alpha lisätyylit</Title>
+    <Title>Advanced Sub Station Alpha tyylit</Title>
     <TitleSubstationAlpha>Sub Station Alpha tyylit</TitleSubstationAlpha>
     <Styles>Tyylit</Styles>
     <Properties>Ominaisuudet</Properties>
@@ -1501,8 +1526,8 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <UseCount>Käytetty</UseCount>
     <Primary>Ensisijainen</Primary>
     <Secondary>Toissijainen</Secondary>
-    <Tertiary>Kolmas</Tertiary>
-    <Outline>Ääriviiva</Outline>
+    <Tertiary>Kolmanneksi</Tertiary>
+    <Outline>Ääriviivat</Outline>
     <Shadow>Varjo</Shadow>
     <Back>Tausta</Back>
     <Alignment>Tasaus</Alignment>
@@ -1510,7 +1535,7 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <TopCenter>Ylä/keski</TopCenter>
     <TopRight>Ylä/oikea</TopRight>
     <MiddleLeft>Keski/vasen</MiddleLeft>
-    <MiddleCenter>Keskellä</MiddleCenter>
+    <MiddleCenter>Keski/keski</MiddleCenter>
     <MiddleRight>Keski/oikea</MiddleRight>
     <BottomLeft>Ala/vasen</BottomLeft>
     <BottomCenter>Ala/keski</BottomCenter>
@@ -1519,14 +1544,14 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <Margins>Marginaalit</Margins>
     <MarginLeft>Vasen marginaali</MarginLeft>
     <MarginRight>Oikea marginaali</MarginRight>
-    <MarginVertical>Pystymarginaali</MarginVertical>
+    <MarginVertical>Pysty marginaali</MarginVertical>
     <Border>Reunus</Border>
     <PlusShadow>+ Varjo</PlusShadow>
     <OpaqueBox>Läpinäkymätön laatikko (käyttää ääriviivaväriä)</OpaqueBox>
     <Import>Tuo...</Import>
     <Copy>Kopioi</Copy>
-    <CopyOfY>Kopioi {0}</CopyOfY>
-    <CopyXOfY>Kopioi {0} / {1}</CopyXOfY>
+    <CopyOfY>Kopio {0}</CopyOfY>
+    <CopyXOfY>Kopio {0} / {1}</CopyXOfY>
     <New>Uusi</New>
     <Remove>Poista</Remove>
     <RemoveAll>Poista kaikki</RemoveAll>
@@ -1534,23 +1559,23 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <ChooseStyle>Valitse tuotava tyyli</ChooseStyle>
   </SubStationAlphaStyles>
   <PointSync>
-    <Title>Pistesynkronointi</Title>
-    <TitleViaOtherSubtitle>Pistesynkronointi muista tekstityksistä</TitleViaOtherSubtitle>
+    <Title>Paikkasynkronointi</Title>
+    <TitleViaOtherSubtitle>Paikkasynkronointi muista tekstityksistä</TitleViaOtherSubtitle>
     <SyncHelp>Määritä vähintään kaksi synkronointipistettä karkeasynkronoinnille</SyncHelp>
-    <SetSyncPoint>Aseta synkronointipiste</SetSyncPoint>
-    <RemoveSyncPoint>Poista synkronointipiste</RemoveSyncPoint>
-    <SyncPointsX>Synkronointipisteitä: {0}</SyncPointsX>
+    <SetSyncPoint>Aseta synkronointipaikka</SetSyncPoint>
+    <RemoveSyncPoint>Poista synkronointipaikka</RemoveSyncPoint>
+    <SyncPointsX>Synkronointipaikkoja: {0}</SyncPointsX>
     <Info>Yksi synkronointipiste muuttaa paikkaa, kaksi tai useampi synkronointipiste säätää paikan ja nopeuden</Info>
     <ApplySync>Käytä</ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>Tuntematon tekstitystyyppi</Title>
-    <Message>Jos haluat korjata tämän, lähetä sähköpostia 'mailto:niksedk@gmail.com' ja sisällytä kopio tekstityksestä.</Message>
+    <Message>Jos haluat korjata tämän, lähetä sähköpostia 'mailto:niksedk@gmail.com' ja sisällä kopio tekstityksestä.</Message>
   </UnknownSubtitle>
   <VisualSync>
     <Title>Visuaalinen synkronointi</Title>
-    <StartScene>Kohtauksen alku</StartScene>
-    <EndScene>Kohtauksen loppu</EndScene>
+    <StartScene>Alkukohtaus</StartScene>
+    <EndScene>Loppukohtaus</EndScene>
     <Synchronize>Synkronointi</Synchronize>
     <HalfASecondBack>&lt; ½ sek</HalfASecondBack>
     <ThreeSecondsBack>&lt; 3 sek</ThreeSecondsBack>
@@ -1558,18 +1583,18 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <FindText>Etsi teksti</FindText>
     <GoToSubPosition>Siirry tekstikohtaan</GoToSubPosition>
     <KeepChangesTitle>Pidetäänkö muutokset?</KeepChangesTitle>
-    <KeepChangesMessage>Tekstitykseen on tehty muutoksia "Visual sync":ssa.
+    <KeepChangesMessage>Tekstitykseen on tehty muutoksia "Visuaalisessa synkronoinnissa".
 
-Säilytetäänkö muutokset?</KeepChangesMessage>
+Pidetäänkö muutokset?</KeepChangesMessage>
     <SynchronizationDone>Synkronointi valmis!</SynchronizationDone>
-    <StartSceneMustComeBeforeEndScene>Aloituskohtauksen on oltava ennen loppukohtausta !</StartSceneMustComeBeforeEndScene>
+    <StartSceneMustComeBeforeEndScene>Alkukohtauksen on oltava ennen loppukohtausta !</StartSceneMustComeBeforeEndScene>
     <Tip>Vihje: Käytä &lt;ctrl + vasen/oikea nuoli&gt; siirtyäksesi 100 ms taakse/eteen</Tip>
   </VisualSync>
   <VobSubEditCharacters>
-    <Title>Muokkaa kuvaa vertaa tietokantaa</Title>
+    <Title>Muokkaa kuvavertailu tietokantaa</Title>
     <ChooseCharacter>Valitse merkki(t)</ChooseCharacter>
-    <ImageCompareFiles>Vertaile kuvatiedostoja</ImageCompareFiles>
-    <CurrentCompareImage>Nykyinen vertailukuva</CurrentCompareImage>
+    <ImageCompareFiles>Vertailu kuvatiedostot</ImageCompareFiles>
+    <CurrentCompareImage>Nykyinen kuvavertailu</CurrentCompareImage>
     <TextAssociatedWithImage>Kuvaan liittyvä teksti</TextAssociatedWithImage>
     <IsItalic>Kursivoitu</IsItalic>
     <Update>Päivitä</Update>
@@ -1582,12 +1607,12 @@ Säilytetäänkö muutokset?</KeepChangesMessage>
     <Title>Tuo/OCR VobSub (sub/idx) tekstitys</Title>
     <TitleBluRay>Tuo/OCR Blu-ray (.sup) tekstitys</TitleBluRay>
     <OcrMethod>OCR-menetelmä</OcrMethod>
-    <OcrViaModi>Tekstintunnistus Microsoft Office Document Imaging (MODI ) kautta. Edellyttää MS Officea</OcrViaModi>
-    <OcrViaTesseract>OCR Tesseractin kautta</OcrViaTesseract>
+    <OcrViaModi>Tekstintunnistus Microsoft Office Document Imaging (MODI) avulla. Edellyttää MS Officea</OcrViaModi>
+    <OcrViaTesseract>OCR Tesseractin avulla</OcrViaTesseract>
     <Language>Kieli</Language>
-    <OcrViaImageCompare>OCR kuvavertailun kautta</OcrViaImageCompare>
+    <OcrViaImageCompare>OCR kuvavertailun avulla</OcrViaImageCompare>
     <ImageDatabase>Kuvapankki</ImageDatabase>
-    <NoOfPixelsIsSpace>Välilyönti, jos ei pikseleitä</NoOfPixelsIsSpace>
+    <NoOfPixelsIsSpace>Kuvapisteitä välilyöntinä</NoOfPixelsIsSpace>
     <New>Uusi</New>
     <Edit>Muokkaa</Edit>
     <StartOcr>Käynnistä OCR</StartOcr>
@@ -1595,22 +1620,21 @@ Säilytetäänkö muutokset?</KeepChangesMessage>
     <StartOcrFrom>Aloita OCR tekstitysnumerosta:</StartOcrFrom>
     <LoadingVobSubImages>Ladataan VobSub kuvia...</LoadingVobSubImages>
     <SubtitleImage>Tekstityskuva</SubtitleImage>
-    <SubtitleText>Tekstitys
-</SubtitleText>
-    <UnableToCreateCharacterDatabaseFolder>Mahdotnta luoda  'Character database folder': {0}</UnableToCreateCharacterDatabaseFolder>
+    <SubtitleText>Tekstitysteksti</SubtitleText>
+    <UnableToCreateCharacterDatabaseFolder>'Character database kansiota': {0} ei voi luoda</UnableToCreateCharacterDatabaseFolder>
     <SubtitleImageXofY>Tekstityskuva {0} / {1}</SubtitleImageXofY>
     <ImagePalette>Kuvan värivalikoima</ImagePalette>
-    <UseCustomColors>Käytä omia värejäsi</UseCustomColors>
-    <Transparent>Läpinäkyvä</Transparent>
+    <UseCustomColors>Käytä mukautettuja värejä</UseCustomColors>
+    <Transparent>Läpinäkyvyys</Transparent>
     <PromptForUnknownWords>Kysy tuntemattomat sanat</PromptForUnknownWords>
     <TryToGuessUnkownWords>Yritä arvata tuntemattomat sanat</TryToGuessUnkownWords>
-    <AutoBreakSubtitleIfMoreThanTwoLines>Automaattinen kappaleen vaihto, jos enemmän kuin kaksi riviä</AutoBreakSubtitleIfMoreThanTwoLines>
+    <AutoBreakSubtitleIfMoreThanTwoLines>Automaattinen kappaleen rivitys, jos enemmän kuin kaksi riviä</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Kaikki korjaukset</AllFixes>
-    <GuessesUsed>Arvauksia</GuessesUsed>
+    <GuessesUsed>Arvaukset</GuessesUsed>
     <UnknownWords>Tuntemattomat sanat</UnknownWords>
     <OcrAutoCorrectionSpellchecking>OCR automaattinen korjaus / oikoluku</OcrAutoCorrectionSpellchecking>
-    <FixOcrErrors>OCR-virheiden korjus</FixOcrErrors>
-    <ImportTextWithMatchingTimeCodes>Tuo teksti vastaavilla aikakoodeilla...</ImportTextWithMatchingTimeCodes>
+    <FixOcrErrors>Korjaa OCR virheet</FixOcrErrors>
+    <ImportTextWithMatchingTimeCodes>Tuo tekstit, joissa yhtenevät aikakoodit...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Tallenna kuvatekstitys nimellä...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Tallenna kaikki kuvat (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Tallenna kaikki kuvat html-indeksillä...</SaveAllSubtitleImagesWithHtml>
@@ -1619,7 +1643,7 @@ Säilytetäänkö muutokset?</KeepChangesMessage>
     <DictionaryX>Sanasto: {0}</DictionaryX>
     <RightToLeft>Oikealta vasemmalle</RightToLeft>
     <ShowOnlyForcedSubtitles>Näytä vain pakotetut tekstitykset</ShowOnlyForcedSubtitles>
-    <UseTimeCodesFromIdx>Käytä koodeja .idx-tiedostosta</UseTimeCodesFromIdx>
+    <UseTimeCodesFromIdx>Käytä aikakoodit .idx-tiedostosta</UseTimeCodesFromIdx>
     <NoMatch>&lt;Ei vastaa&gt;</NoMatch>
     <AutoTransparentBackground>Automaattinen läpinäkyvä tausta</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Tarkista vertailuvastaavuudet nykyisessä kuvassa...</InspectCompareMatchesForCurrentImage>
@@ -1638,8 +1662,8 @@ Säilytetäänkö muutokset?</KeepChangesMessage>
     <Nordic>Pohjoismainen</Nordic>
     <Spanish>Espanjalainen</Spanish>
     <German>Saksalainen</German>
-    <AutoSubmitOnFirstChar>Automaattinen ehdotus ensimmäiseksi merkiksi</AutoSubmitOnFirstChar>
-    <EditLastX>Muokkaa viimeistä: {0}</EditLastX>
+    <AutoSubmitOnFirstChar>Automaattinen ehdotus ensimmäisessä merkissä</AutoSubmitOnFirstChar>
+    <EditLastX>Muokkaa viimeisiä: {0}</EditLastX>
   </VobSubOcrCharacter>
   <VobSubOcrCharacterInspect>
     <Title>Tarkista vertailuvastaavuudet nykyisessä kuvassa</Title>
@@ -1648,7 +1672,7 @@ Säilytetäänkö muutokset?</KeepChangesMessage>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Uusi kansio</Title>
-    <Message>Anna uudelle merkkitietokantakansiolle nimi</Message>
+    <Message>Anna merkkitietokantakansiolle uusi nimi</Message>
   </VobSubOcrNewFolder>
   <WaveForm>
     <ClickToAddWaveForm>Lisää aaltomuoto klikkaamalla</ClickToAddWaveForm>
@@ -1661,30 +1685,30 @@ Säilytetäänkö muutokset?</KeepChangesMessage>
     <DeleteParagraph>Poista teksti</DeleteParagraph>
     <Split>Katkaise</Split>
     <SplitAtCursor>Katkaise kursoriin</SplitAtCursor>
-    <MergeWithPrevious>Yhdistä edelliseen</MergeWithPrevious>
+    <MergeWithPrevious>Yhdistä edellisen kanssa</MergeWithPrevious>
     <MergeWithNext>Yhdistä seuraavaan</MergeWithNext>
     <PlaySelection>Toista valinta</PlaySelection>
     <ShowWaveformAndSpectrogram>Näytä aaltomuoto ja spektrogrammi</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Näytä vain aaltomuoto</ShowWaveformOnly>
     <ShowSpectrogramOnly>Näytä vain spektrogrammi</ShowSpectrogramOnly>
-    <GuessTimeCodes>Arvioi ajat...</GuessTimeCodes>
-    <SeekSilence>Etsi hiljaisuutta</SeekSilence>
+    <GuessTimeCodes>Arvaa aikakoodit</GuessTimeCodes>
+    <SeekSilence>Etsi hiljaisuutta... </SeekSilence>
   </WaveForm>
   <WaveFormGenerateTimeCodes>
-    <Title>Oleta aikakoodit</Title>
+    <Title>Arvaa aikakoodit</Title>
     <StartFrom>Aloita kohdasta</StartFrom>
-    <CurrentVideoPosition>Nykyinen videokohta</CurrentVideoPosition>
+    <CurrentVideoPosition>Nykyinen videopaikka</CurrentVideoPosition>
     <Beginning>Alku</Beginning>
     <DeleteLines>Poista rivejä</DeleteLines>
     <FromCurrentVideoPosition>Nykyisestä videokohdasta</FromCurrentVideoPosition>
-    <DetectOptions>Tunnista vaihtoehdot</DetectOptions>
+    <DetectOptions>Tunnistusasetukset</DetectOptions>
     <ScanBlocksOfMs>Skannaa lohkot millisekunteina</ScanBlocksOfMs>
-    <BlockAverageVolMin1>Lohkon keskimääräisen voimakkuuden pitää olla yli</BlockAverageVolMin1>
+    <BlockAverageVolMin1>Lohkon keskimääräinen voimakkuus pitää olla yli</BlockAverageVolMin1>
     <BlockAverageVolMin2>% keskimääräisestä voimakkuudesta</BlockAverageVolMin2>
     <BlockAverageVolMax1>Lohkon keskimääräinen voimakkuus pitää olla alle</BlockAverageVolMax1>
     <BlockAverageVolMax2>% maksimi voimakkuudesta</BlockAverageVolMax2>
     <SplitLongLinesAt1>Jaa pitkät tekstitykset </SplitLongLinesAt1>
     <SplitLongLinesAt2>millisekuntia</SplitLongLinesAt2>
-    <Other>Muuta</Other>
+    <Other>Muut</Other>
   </WaveFormGenerateTimeCodes>
 </Language>
