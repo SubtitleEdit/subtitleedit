@@ -6089,6 +6089,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 var newParagraph = new Paragraph(currentParagraph);
 
+
+                currentParagraph.Text = currentParagraph.Text.Replace("< /i>", "</i>");
+                currentParagraph.Text = currentParagraph.Text.Replace("< i>", "<i>");
                 string oldText = currentParagraph.Text;
                 string[] lines = currentParagraph.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (textIndex != null && textIndex.Value > 2 && textIndex.Value < oldText.Length -2)
@@ -6204,6 +6207,25 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
                             newParagraph.Text = string.Empty;
+                        }
+
+                        if (currentParagraph.Text.StartsWith("<i>") && !currentParagraph.Text.Contains("</i>") &&
+                         newParagraph.Text.EndsWith("</i>") && !newParagraph.Text.Contains("<i>"))
+                        {
+                            currentParagraph.Text = currentParagraph.Text + "</i>";
+                            newParagraph.Text = "<i>" + newParagraph.Text;
+                        }
+                        if (currentParagraph.Text.StartsWith("<b>") && !currentParagraph.Text.Contains("</b>") &&
+                           newParagraph.Text.EndsWith("</b>") && !newParagraph.Text.Contains("<b>"))
+                        {
+                            currentParagraph.Text = currentParagraph.Text + "</b>";
+                            newParagraph.Text = "<b>" + newParagraph.Text;
+                        }
+                        if (currentParagraph.Text.StartsWith("<i>-") && (currentParagraph.Text.EndsWith(".</i>") || currentParagraph.Text.EndsWith("!</i>")) &&
+                            newParagraph.Text.StartsWith("<i>-") && (newParagraph.Text.EndsWith(".</i>") || newParagraph.Text.EndsWith("!</i>")))
+                        {
+                            currentParagraph.Text = currentParagraph.Text.Remove(3, 1);
+                            newParagraph.Text = newParagraph.Text.Remove(3, 1);
                         }
                     }
                 }
@@ -6351,6 +6373,36 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         if (lines.Length == 2)
                         {
+                            string a = lines[0].Trim();
+                            string b = lines[1].Trim();
+                            if (oldText.TrimStart().StartsWith("<i>") && oldText.TrimEnd().EndsWith("</i>") &&
+                                Utilities.CountTagInText(oldText, "<i>") == 1 && Utilities.CountTagInText(oldText, "</i>") == 1)
+                            {
+                                a = a + "</i>";
+                                b = "<i>" + b;
+                            }
+                            if (oldText.TrimStart().StartsWith("<b>") && oldText.TrimEnd().EndsWith("</b>") &&
+                                Utilities.CountTagInText(oldText, "<b>") == 1 && Utilities.CountTagInText(oldText, "</b>") == 1)
+                            {
+                                a = a + "</b>";
+                                b = "<b>" + b;
+                            }
+                            if (a.StartsWith("-") && (a.EndsWith(".") || a.EndsWith("!") || a.EndsWith("?")) &&
+                                b.StartsWith("-") && (b.EndsWith(".") || b.EndsWith("!") || b.EndsWith("?")))
+                            {
+                                a = a.TrimStart('-').TrimStart();
+                                b = b.TrimStart('-').TrimStart();
+                            }
+                            if (a.StartsWith("<i>-") && (a.EndsWith(".</i>") || a.EndsWith("!</i>") || a.EndsWith("?</i>")) &&
+                                b.StartsWith("<i>-") && (b.EndsWith(".</i>") || b.EndsWith("!</i>") || b.EndsWith("?</i>")))
+                            {
+                                a = a.Remove(3, 1).Replace("  ", " ");
+                                b = b.Remove(3, 1).Replace("  ", " ");
+                            }
+
+                            lines[0] = a;
+                            lines[1] = b;
+
                             originalCurrent.Text = Utilities.AutoBreakLine(lines[0]);
                             originalNew.Text = Utilities.AutoBreakLine(lines[1]);
                         }
