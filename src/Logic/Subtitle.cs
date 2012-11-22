@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Logic
             return FileName;
         }
 
-        internal string ToText(SubtitleFormat format)
+        public string ToText(SubtitleFormat format)
         {
             return format.ToText(this, Path.GetFileNameWithoutExtension(FileName));
         }
@@ -254,7 +254,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        internal void ChangeFramerate(double oldFramerate, double newFramerate)
+        public void ChangeFramerate(double oldFramerate, double newFramerate)
         {
             foreach (Paragraph p in Paragraphs)
             {
@@ -279,7 +279,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        internal void AdjustDisplayTimeUsingPercent(double percent, System.Windows.Forms.ListView.SelectedIndexCollection selectedIndexes)
+        public void AdjustDisplayTimeUsingPercent(double percent, System.Windows.Forms.ListView.SelectedIndexCollection selectedIndexes)
         {
             for (int i = 0; i < _paragraphs.Count; i++)
             {
@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        internal void AdjustDisplayTimeUsingSeconds(double seconds, System.Windows.Forms.ListView.SelectedIndexCollection selectedIndexes)
+        public void AdjustDisplayTimeUsingSeconds(double seconds, System.Windows.Forms.ListView.SelectedIndexCollection selectedIndexes)
         {
             for (int i = 0; i < _paragraphs.Count; i++)
             {
@@ -327,7 +327,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        internal void RecalculateDisplayTimes(double maxCharactersPerSecond, System.Windows.Forms.ListView.SelectedIndexCollection selectedIndexes)
+        public void RecalculateDisplayTimes(double maxCharactersPerSecond, System.Windows.Forms.ListView.SelectedIndexCollection selectedIndexes)
         {
             for (int i = 0; i < _paragraphs.Count; i++)
             {
@@ -354,8 +354,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-
-        internal void Renumber(int startNumber)
+        public void Renumber(int startNumber)
         {
             int i = startNumber;
             foreach (Paragraph p in _paragraphs)
@@ -365,7 +364,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        internal int GetIndex(Paragraph p)
+        public int GetIndex(Paragraph p)
         {
             if (p == null)
                 return -1;
@@ -389,7 +388,7 @@ namespace Nikse.SubtitleEdit.Logic
             return -1;
         }
 
-        internal Paragraph GetFirstAlike(Paragraph p)
+        public Paragraph GetFirstAlike(Paragraph p)
         {
             foreach (Paragraph item in _paragraphs)
             {
@@ -401,7 +400,7 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
-        internal Paragraph GetFirstParagraphByLineNumber(int number)
+        public Paragraph GetFirstParagraphByLineNumber(int number)
         {
             foreach (Paragraph p in _paragraphs)
             {
@@ -411,7 +410,7 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
-        internal int RemoveEmptyLines()
+        public int RemoveEmptyLines()
         {
             int count = 0;
             if (_paragraphs.Count > 0)
@@ -506,7 +505,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        internal void InsertParagraphInCorrectTimeOrder(Paragraph newParagraph)
+        public void InsertParagraphInCorrectTimeOrder(Paragraph newParagraph)
         {
             for (int i=0; i<Paragraphs.Count; i++)
             {
