@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class DCinemaSmpte : SubtitleFormat
+    public class DCinemaSmpte : SubtitleFormat
     {
         //<?xml version="1.0" encoding="UTF-8"?>
         //<dcst:SubtitleReel xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcst="http://www.smpte-ra.org/schemas/428-7/2010/DCST">

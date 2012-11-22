@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class UnknownSubtitle25 : SubtitleFormat
+    public class UnknownSubtitle25 : SubtitleFormat
     {
 
         //79.29 1.63

@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// <summary>
     /// http://trans.sourceforge.net
     /// </summary>
-    class TranscriberXml : SubtitleFormat
+    public class TranscriberXml : SubtitleFormat
     {
         public override string Extension
         {

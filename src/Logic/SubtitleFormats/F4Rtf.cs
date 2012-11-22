@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class F4Rtf : F4Text
+    public class F4Rtf : F4Text
     {
         public override string Extension
         {

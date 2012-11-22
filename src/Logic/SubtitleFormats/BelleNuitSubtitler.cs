@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class BelleNuitSubtitler : SubtitleFormat
+    public class BelleNuitSubtitler : SubtitleFormat
     {
         ///tc 00:00:35:09 00:00:38:05
         static readonly Regex RegexTimeCode = new Regex(@"^\/tc \d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);

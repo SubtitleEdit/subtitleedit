@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class HtmlSamiArray : SubtitleFormat
+    public class HtmlSamiArray : SubtitleFormat
     {
         public override string Extension
         {

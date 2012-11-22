@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// <summary>
     /// Crappy format... should always be saved as UTF-8 without BOM (hacked Main.cs) and <br /> tags should be oldstyle <br/>
     /// </summary>
-    class ItunesTimedText : TimedText10
+    public class ItunesTimedText : TimedText10
     {
         public override string Extension
         {

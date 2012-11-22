@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 //00:02:20:16            ,           00:02:24:00           ,Gente di questo quartiere |Un gran festival!
 
 
-    class UnknownSubtitle36 : SubtitleFormat
+    public class UnknownSubtitle36 : SubtitleFormat
     {
         static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+           ,           \d+:\d+:\d+:\d+           ,.*$", RegexOptions.Compiled);
 

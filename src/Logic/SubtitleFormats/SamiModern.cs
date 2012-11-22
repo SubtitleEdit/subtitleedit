@@ -2,7 +2,7 @@
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class SamiModern : Sami
+    public class SamiModern : Sami
     {
 
         public override string Name

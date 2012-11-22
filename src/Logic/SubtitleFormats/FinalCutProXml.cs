@@ -7,7 +7,7 @@ using System.Xml;
 //  - Mom, when you were my age&#13;what did you want to do?
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class FinalCutProXml : SubtitleFormat
+    public class FinalCutProXml : SubtitleFormat
     {
         public override string Extension
         {

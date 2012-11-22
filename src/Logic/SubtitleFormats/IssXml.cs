@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class IssXml : SubtitleFormat
+    public class IssXml : SubtitleFormat
     {
 
         static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled); //00:02:56:02

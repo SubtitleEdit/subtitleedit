@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class Wsb : SubtitleFormat
+    public class Wsb : SubtitleFormat
     {
         public override string Extension
         {

@@ -5,7 +5,7 @@ using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class CaptionsInc : SubtitleFormat
+    public class CaptionsInc : SubtitleFormat
     {
 
         public override string Extension

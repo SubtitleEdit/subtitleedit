@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class CaraokeXml : SubtitleFormat
+    public class CaraokeXml : SubtitleFormat
     {
         public override string Extension
         {
