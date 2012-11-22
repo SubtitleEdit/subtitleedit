@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class SonyDVDArchitectExplicitDuration : SubtitleFormat
+    public class SonyDVDArchitectExplicitDuration : SubtitleFormat
     {
         public override string Extension
         {

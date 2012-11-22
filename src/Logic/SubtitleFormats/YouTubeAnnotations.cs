@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class YouTubeAnnotations : SubtitleFormat
+    public class YouTubeAnnotations : SubtitleFormat
     {
         private bool _promtForStyles = true;
 

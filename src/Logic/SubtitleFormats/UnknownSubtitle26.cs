@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class UnknownSubtitle26 : SubtitleFormat
+    public class UnknownSubtitle26 : SubtitleFormat
     {
 
 //L'Enfant d'en haut

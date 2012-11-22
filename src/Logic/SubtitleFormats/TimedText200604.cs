@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class TimedText200604 : SubtitleFormat
+    public class TimedText200604 : SubtitleFormat
     {
         public override string Extension
         {

@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class YouTubeTranscript : SubtitleFormat
+    public class YouTubeTranscript : SubtitleFormat
     {
         static Regex regexTimeCodes = new Regex(@"^\d{1,2}:\d\d$", RegexOptions.Compiled);
 

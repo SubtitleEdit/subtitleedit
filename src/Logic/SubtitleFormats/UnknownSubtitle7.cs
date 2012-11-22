@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// <summary>
     /// Reported by dipa nuswantara
     /// </summary>
-    class UnknownSubtitle7 : SubtitleFormat
+    public class UnknownSubtitle7 : SubtitleFormat
     {
 
         enum ExpectingLine

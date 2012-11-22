@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class JsonType3 : SubtitleFormat
+    public class JsonType3 : SubtitleFormat
     {
         public override string Extension
         {

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class AQTitle : SubtitleFormat
+    public class AQTitle : SubtitleFormat
     {
 
         enum ExpectingLine

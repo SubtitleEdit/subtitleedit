@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class CheetahCaption : SubtitleFormat
+    public class CheetahCaption : SubtitleFormat
     {
 
           static readonly List<int> LatinCodes = new List<int> {

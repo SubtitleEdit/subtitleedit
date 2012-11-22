@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class UnknownSubtitle37 : UnknownSubtitle36
+    public class UnknownSubtitle37 : UnknownSubtitle36
     {
         public override string Extension
         {

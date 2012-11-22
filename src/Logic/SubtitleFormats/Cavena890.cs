@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class Cavena890 : SubtitleFormat
+    public class Cavena890 : SubtitleFormat
     {
         const int LanguageIdHebrew = 20;
         const int LanguageIdLatin = 68;

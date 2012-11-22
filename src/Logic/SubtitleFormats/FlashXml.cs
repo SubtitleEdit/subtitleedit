@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 //      <p begin="00:00:15.200" end="00:00:19.700"><![CDATA[<sub>Many other properties related to fonts, sizes, colors<br/>and list properties are in style.css file</sub>]]></p>
 // </div>
 //</tt>
-    class FlashXml : SubtitleFormat
+    public class FlashXml : SubtitleFormat
     {
         public override string Extension
         {

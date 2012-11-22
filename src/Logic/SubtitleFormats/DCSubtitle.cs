@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 //  </Font>
 //</DCSubtitle>
 
-    class DCSubtitle : SubtitleFormat
+    public class DCSubtitle : SubtitleFormat
     {
         public override string Extension
         {

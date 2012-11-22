@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class UnknownSubtitle28 : SubtitleFormat
+    public class UnknownSubtitle28 : SubtitleFormat
     {
         public override string Extension
         {

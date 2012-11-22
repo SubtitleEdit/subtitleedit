@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class OpenDvt : SubtitleFormat
+    public class OpenDvt : SubtitleFormat
     {
         public override string Extension
         {

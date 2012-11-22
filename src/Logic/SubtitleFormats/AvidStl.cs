@@ -5,7 +5,7 @@ using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class AvidStl : SubtitleFormat
+    public class AvidStl : SubtitleFormat
     {
         private const int TextLength = 112;
 

@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class TmpegEncAW5 : TmpegEncXml
+    public class TmpegEncAW5 : TmpegEncXml
     {
 
         public override string Name
