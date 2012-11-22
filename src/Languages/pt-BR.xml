@@ -70,6 +70,7 @@
     <LineNumber>Linha#</LineNumber>
     <Before>Antes</Before>
     <After>Depois</After>
+    <Size>Tamanho</Size>
   </General>
   <About>
     <Title>Sobre o Subtitle Edit</Title>
@@ -116,7 +117,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Percent>Porcentagem</Percent>
     <Recalculate>Recalcular</Recalculate>
     <AddSeconds>Adicionar segundos</AddSeconds>
-    <SetAsPercent>Ajustar como procentagem de duração</SetAsPercent>
+    <SetAsPercent>Ajustar como porcentagem de duração</SetAsPercent>
     <Note>Nota: A duracão não pode se sobrepor ao tempo de início do próximo texto</Note>
     <PleaseSelectAValueFromTheDropDownList>Por favor, selecione um valor da lista abaixo</PleaseSelectAValueFromTheDropDownList>
     <PleaseChoose> - Por favor, selecione - </PleaseChoose>
@@ -133,6 +134,27 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <OnlyBreakLinesLongerThan>Dividir somente linhas maiores que</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Somente unir linhas maiores que</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
+  <BatchConvert>
+    <Title>Conversão em lote</Title>
+    <Input>Entrada</Input>
+    <InputDescription>Arquivos de entrada (localize ou arraste aqui)</InputDescription>
+    <Status>Status</Status>
+    <Output>Saída</Output>
+    <ChooseOutputFolder>Escolha pasta de saída</ChooseOutputFolder>
+    <OverwriteExistingFiles>Substituir arquivos existentes</OverwriteExistingFiles>
+    <Style>Estilo...</Style>
+    <ConvertOptions>Opções de Conversão</ConvertOptions>
+    <AutoBreakLongLines>Auto dividir linhas longas</AutoBreakLongLines>
+    <FixItalics>Corrigir itálicos</FixItalics>
+    <RemoveFormatting>Remover tags de formatação</RemoveFormatting>
+    <RemoveTextForHI>Remover texto para surdos</RemoveTextForHI>
+    <ReDoCasing>Repetir processo</ReDoCasing>
+    <Convert>Converter</Convert>
+    <NothingToConvert>Nada para converter!</NothingToConvert>
+    <PleaseChooseOutputFolder>Por fvaor, escolha a pasta de saída</PleaseChooseOutputFolder>
+    <Converted>Convertido</Converted>
+    <ConvertedX>Convertido ({0})</ConvertedX>
+  </BatchConvert>
   <Beamer>
     <Title>Projetor</Title>
   </Beamer>
@@ -162,8 +184,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FrameRateNotChanged>Taxa de quadros idêntica - nada para converter</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
-    <Title>Ajustar velocidade em percentual</Title>
-    <Info>Alterar velocidade da legenda em percentual</Info>
+    <Title>Ajustar velocidade em porcentagem</Title>
+    <Info>Alterar velocidade da legenda em porcentagem</Info>
   </ChangeSpeedInPercent>
   <ChooseEncoding>
     <Title>Selecionar codificador</Title>
@@ -282,6 +304,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Cor da fonte</FontColor>
     <BorderColor>Cor da borda</BorderColor>
     <BorderWidth>Tamanho da borda</BorderWidth>
+    <ImageFormat>Formato de imagem</ImageFormat>
     <AntiAlias>Anti alias</AntiAlias>
     <SideBySide3D>3D lado-a-lado</SideBySide3D>
     <ExportAllLines>Exportar todas as linhas...</ExportAllLines>
@@ -590,7 +613,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <RemoveTextForHearingImpaired>Eliminar texto para surdos...</RemoveTextForHearingImpaired>
         <ChangeCasing>Alterar maiúsculas...</ChangeCasing>
         <ChangeFrameRate>Alterar taxa de quadros...</ChangeFrameRate>
-        <ChangeSpeedInPercent>Velocidade alterada (percentual)...</ChangeSpeedInPercent>
+        <ChangeSpeedInPercent>Velocidade alterada (porcentagem)...</ChangeSpeedInPercent>
         <MergeShortLines>Combinar linhas curtas...</MergeShortLines>
         <SplitLongLines>Dividir linhas longas...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Duração mínima entre parágrafos...</MinimumDisplayTimeBetweenParagraphs>
@@ -606,6 +629,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <TextNumberOfCharactersPerSeconds>Texto - número de caracteres/seg</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Texto - palavras por minuto</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Fazer nova tradução a partir da legenda atual</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <BatchConvert>Conversão em lote...</BatchConvert>
         <SplitSubtitle>Dividir legenda...</SplitSubtitle>
         <AppendSubtitle>Anexar legenda...</AppendSubtitle>
         <JoinSubtitles>Juntar legendas...</JoinSubtitles>
@@ -932,7 +956,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <CasingCompleteMessageOnlyNames>Número de linhas com formato de nomes alterado: {0}/{1}</CasingCompleteMessageOnlyNames>
     <CasingCompleteMessage>Número de linhas com formato alterado: {0}/{1}, nomes com formato alterado: {2}</CasingCompleteMessage>
     <BeforeChangeFrameRate>Antes de alterar a taxa de quadros</BeforeChangeFrameRate>
-    <BeforeAdjustSpeedInPercent>Antes de ajustar velocidade em percentagem</BeforeAdjustSpeedInPercent>
+    <BeforeAdjustSpeedInPercent>Antes de ajustar velocidade em porcentagem</BeforeAdjustSpeedInPercent>
     <FrameRateChangedFromXToY>Taxa de quadros alterada de {0} para {1}</FrameRateChangedFromXToY>
     <IdxFileNotFoundWarning>{0} não encontrado! Importar arquivo VobSub assim mesmo?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>Cabeçalho do arquivo VobSub inválido: {0}</InvalidVobSubHeader>

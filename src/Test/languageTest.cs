@@ -38,7 +38,35 @@ namespace Test
             Language defaultlang = new Language(); //Load the English version
             defaultlang.General.TranslatedBy = "Translated by ..."; // to avoid assertion
 
-            _list.Clear(); _list.Add("da-DK");
+
+            _list.Remove("ar-EG");
+            _list.Remove("bg-BG");
+            _list.Remove("ca-ES");
+  //          _list.Remove("cs-CZ");
+            _list.Remove("de-DE");
+            _list.Remove("el-GR");
+            _list.Remove("es-ES");
+            _list.Remove("eu-ES");
+            _list.Remove("fa-IR");
+            _list.Remove("fr-FR");
+            _list.Remove("hr-HR");
+            _list.Remove("hu-HU");
+            _list.Remove("it-IT");
+            _list.Remove("ja-JP");
+            _list.Remove("ko-KR");
+      //      _list.Remove("nl-NL");
+            _list.Remove("pl-PL");
+//            _list.Remove("pt-BR");
+            _list.Remove("pt-PT");
+            _list.Remove("ro-RO");
+            _list.Remove("ru-RU");
+            _list.Remove("sr-Cyrl-RS");
+            _list.Remove("sr-Latn-RS");
+            _list.Remove("tr-TR");
+            _list.Remove("xxx");
+            _list.Remove("xxx");
+            _list.Remove("sv-SE");
+
             foreach (String cultureName in _list) //Loop over all language files
             {
                 //Load language

@@ -70,6 +70,7 @@
     <LineNumber>行号</LineNumber>
     <Before>之前</Before>
     <After>之后</After>
+    <Size>大小</Size>
   </General>
   <About>
     <Title>关于 Subtitle Edit</Title>
@@ -131,6 +132,27 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <OnlyBreakLinesLongerThan>仅断开超过下列长度的行</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>仅不断开超过下列长度的行</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
+  <BatchConvert>
+    <Title>批量转换</Title>
+    <Input>输入</Input>
+    <InputDescription>输入文件 (浏览或拖放)</InputDescription>
+    <Status>状态</Status>
+    <Output>输出</Output>
+    <ChooseOutputFolder>选择输出文件夹</ChooseOutputFolder>
+    <OverwriteExistingFiles>覆盖已有文件</OverwriteExistingFiles>
+    <Style>样式...</Style>
+    <ConvertOptions>转换选项</ConvertOptions>
+    <AutoBreakLongLines>自动断开长行</AutoBreakLongLines>
+    <FixItalics>修复斜体</FixItalics>
+    <RemoveFormatting>删除格式化标签</RemoveFormatting>
+    <RemoveTextForHI>删除 HI 文本</RemoveTextForHI>
+    <ReDoCasing>重做外壳</ReDoCasing>
+    <Convert>转换</Convert>
+    <NothingToConvert>没有什么可转换的！</NothingToConvert>
+    <PleaseChooseOutputFolder>请选择输出文件夹</PleaseChooseOutputFolder>
+    <Converted>已转换</Converted>
+    <ConvertedX>已转换 ({0})</ConvertedX>
+  </BatchConvert>
   <Beamer>
     <Title>投影仪</Title>
   </Beamer>
@@ -280,6 +302,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <FontColor>字体颜色</FontColor>
     <BorderColor>边缘颜色</BorderColor>
     <BorderWidth>边缘宽度</BorderWidth>
+    <ImageFormat>图像格式</ImageFormat>
     <AntiAlias>反锯齿</AntiAlias>
     <SideBySide3D>并排 3D</SideBySide3D>
     <ExportAllLines>导出所有行...</ExportAllLines>
@@ -538,6 +561,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <OpenContainingFolder>打开所在文件夹</OpenContainingFolder>
         <Compare>比较(&amp;C)...</Compare>
         <Statistics>统计(&amp;C)...</Statistics>
+        <Plugins>插件(&amp;P)...</Plugins>
         <ImportOcrFromDvd>从 DVD 导入/OCR 字幕...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>导入/OCR VobSub 字幕...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>导入/OCR 蓝光字幕...</ImportBluRaySupFile>
@@ -553,6 +577,14 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <ExportEbu>EBU stl...</ExportEbu>
         <ExportPac>PAC (荧屏电子学)...</ExportPac>
         <ExportPlainText>纯文本...</ExportPlainText>
+        <ExportAdobeEncoreFabImageScript>Adobe Encore FAB 图像脚本...</ExportAdobeEncoreFabImageScript>
+        <ExportKoreanAtsFilePair>Korean ATS 文件对...</ExportKoreanAtsFilePair>
+        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
+        <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
+        <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
+        <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
+        <ExportUltech130>Ultech 标题...</ExportUltech130>
         <Exit>退出(&amp;X)</Exit>
       </File>
       <Edit>
@@ -595,6 +627,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <TextNumberOfCharactersPerSeconds>文字 - 字符数/秒</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>文字 - 字数/秒 (wpm)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>从当前字幕生成新的空白翻译</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <BatchConvert>批量转换...</BatchConvert>
         <SplitSubtitle>分割字幕...</SplitSubtitle>
         <AppendSubtitle>追加字幕...</AppendSubtitle>
         <JoinSubtitles>合并字幕</JoinSubtitles>
@@ -687,6 +720,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <ColumnDeleteText>删除文本</ColumnDeleteText>
         <ColumnDeleteTextAndShiftCellsUp>删除文本并将单元格上移</ColumnDeleteTextAndShiftCellsUp>
         <ColumnInsertEmptyTextAndShiftCellsDown>插入空白文本并将单元格下移</ColumnInsertEmptyTextAndShiftCellsDown>
+        <ColumnInsertTextFromSubtitle>从字幕插入文本...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>导入文本并将单元格下移</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>粘贴...</ColumnPasteFromClipboard>
         <Split>分割</Split>
@@ -1205,7 +1239,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed 代码来自 DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer 2/Mplayer</MPlayerDescription>
+    <MPlayerDescription>MPlayer2/MPlayer</MPlayerDescription>
     <VlcMediaPlayer>VLC 媒体播放器</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll 来自 VLC 媒体播放器 1.1.0 或更新</VlcMediaPlayerDescription>
     <ShowStopButton>显示「停止」按钮</ShowStopButton>

@@ -41,6 +41,8 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderSize.Text = Configuration.Settings.Language.General.Size;
             columnHeaderStatus.Text = l.Status;
             buttonOpenOutputFolder.Text = Configuration.Settings.Language.Main.Menu.File.Open;
+            buttonConvert.Text = l.Convert;
+            buttonCancel.Text = Configuration.Settings.Language.General.OK;
 
             comboBoxSubtitleFormats.Left = labelOutputFormat.Left + labelOutputFormat.Width + 3;
             comboBoxEncoding.Left = labelEncoding.Left + labelEncoding.Width + 3;

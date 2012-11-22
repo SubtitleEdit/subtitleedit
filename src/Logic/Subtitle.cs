@@ -66,6 +66,11 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        /// <summary>
+        /// Get the paragraph of index, null if out of bounds
+        /// </summary>
+        /// <param name="index">Index of wanted paragraph</param>
+        /// <returns>Paragraph, null if index is index is out of bounds</returns>
         public Paragraph GetParagraphOrDefault(int index)
         {
             if (_paragraphs == null || _paragraphs.Count <= index || index < 0)
@@ -178,6 +183,11 @@ namespace Nikse.SubtitleEdit.Logic
             return FileName;
         }
 
+        /// <summary>
+        /// Creates subtitle as text in it'snative format
+        /// </summary>
+        /// <param name="format">Format to output</param>
+        /// <returns>Native format as text string</returns>
         public string ToText(SubtitleFormat format)
         {
             return format.ToText(this, Path.GetFileNameWithoutExtension(FileName));

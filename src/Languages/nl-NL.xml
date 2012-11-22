@@ -70,6 +70,7 @@
     <LineNumber>Regelnummer</LineNumber>
     <Before>Ervoor</Before>
     <After>Erna</After>
+    <Size>Grootte</Size>
   </General>
   <About>
     <Title>Over Subtitle Edit</Title>
@@ -124,6 +125,27 @@
     <OnlyBreakLinesLongerThan>Breek alleen regels af langer dan</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Breek alleen regels niet af langer dan</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
+  <BatchConvert>
+    <Title>Batch converteren</Title>
+    <Input>Input</Input>
+    <InputDescription>Input bestanden (zoek of sleep en plaats)</InputDescription>
+    <Status>Status</Status>
+    <Output>Output</Output>
+    <ChooseOutputFolder>Kies doel map</ChooseOutputFolder>
+    <OverwriteExistingFiles>Overschrijf bestaande bestanden</OverwriteExistingFiles>
+    <Style>Stijl</Style>
+    <ConvertOptions>Converteer opties</ConvertOptions>
+    <AutoBreakLongLines>Breek automatisch lange regels af</AutoBreakLongLines>
+    <FixItalics>Herstel cursief (Italic)</FixItalics>
+    <RemoveFormatting>Verwijder formatteer tags</RemoveFormatting>
+    <RemoveTextForHI>Verwijder slechthorende tekst</RemoveTextForHI>
+    <ReDoCasing>Herdoe tekenstijl</ReDoCasing>
+    <Convert>Converteer</Convert>
+    <NothingToConvert>Niets te converteren</NothingToConvert>
+    <PleaseChooseOutputFolder>Kies alstublieft de doelmap</PleaseChooseOutputFolder>
+    <Converted>Geconverteerd</Converted>
+    <ConvertedX>Geconverteerd ({0})</ConvertedX>
+  </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
   </Beamer>
@@ -132,13 +154,13 @@
     <ChangeCasingTo>Verander Tekenstijl naar</ChangeCasingTo>
     <NormalCasing>Normale Tekenstijl. Zinnen beginnen met hoofdletter.</NormalCasing>
     <FixNamesCasing>Herstel Namen tekenstijl (via Woordenboeken \ NamenEtc.xml)</FixNamesCasing>
-    <FixOnlyNamesCasing>Herstel alleen namen teksstijl(via Woordenboeken \ NamenEtc.xml)</FixOnlyNamesCasing>
+    <FixOnlyNamesCasing>Herstel alleen namen tekststijl(via Woordenboeken \ NamenEtc.xml)</FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>Verander alleen alle regels in hoofdletters .</OnlyChangeAllUppercaseLines>
     <AllUppercase>ALLEMAAL HOOFDLETTERS</AllUppercase>
     <AllLowercase>allemaal kleine letters</AllLowercase>
   </ChangeCasing>
   <ChangeCasingNames>
-    <Title>Verander teksstijl - Namen</Title>
+    <Title>Verander tekststijl - Namen</Title>
     <NamesFoundInSubtitleX>Namen gevonden in ondertitel: {0}</NamesFoundInSubtitleX>
     <Enabled>Ingeschakeld</Enabled>
     <Name>Naam</Name>
@@ -273,6 +295,7 @@
     <FontColor>Tekenkleur</FontColor>
     <BorderColor>Randkleur</BorderColor>
     <BorderWidth>Randbreedte</BorderWidth>
+    <ImageFormat>Beeldformaat</ImageFormat>
     <AntiAlias>Anti alias</AntiAlias>
     <SideBySide3D>Side-by-side 3D</SideBySide3D>
     <ExportAllLines>Exporteer alle regels...</ExportAllLines>
@@ -307,7 +330,7 @@
     <Srt>.srt</Srt>
     <Milliseconds>Milliseconden</Milliseconds>
     <HHMMSSFF>HH:. MM: SS: FF</HHMMSSFF>
-    <TimeCodeSeperator>Tijdcode seperator</TimeCodeSeperator>
+    <TimeCodeSeperator>Tijdcode separator</TimeCodeSeperator>
   </ExportText>
   <FindDialog>
     <Title>Pas duur limiet aan</Title>
@@ -407,7 +430,7 @@
     <XOverlappingTimestampsFixed>{0} overlappende tijden gerepareerd</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} weergavetijd verlengd</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>{0} ongeldige HTML-tags gerepareerd</XInvalidHtmlTagsFixed>
-    <XDisplayTimesShortned>{0} Weergavetijden verkort</XDisplayTimesShortned>
+    <XDisplayTimesShortned>{0} Weergaventijden verkort</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} regels niet afgebroken</XLinesUnbreaked>
     <UnneededSpace>Onnodige spatie</UnneededSpace>
     <XUnneededSpacesRemoved>{0} onnodige spaties verwijderd</XUnneededSpacesRemoved>
@@ -437,7 +460,7 @@
     <XFixDoubleDash>{0} gerepareerd - '</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} verwijderd &gt;&gt;</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} verwijderen  begin'... "</XFixEllipsesStart>
-    <XFixMissingOpenBracket>{0} gerepareerd ontbrekende [in lregel</XFixMissingOpenBracket>
+    <XFixMissingOpenBracket>{0} gerepareerd ontbrekende [in regel</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} herstel muzieknotatie in regel</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa - um yeah!' -&gt; 'Whoa... um ja '</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>' &gt;&gt; Robert: Sup dude '-&gt;' Robert:! Sup dude '</FixDoubleGreaterThanExample>
@@ -510,7 +533,7 @@
     <EndTime>Eindtijd</EndTime>
     <FileName>Bestandsnaam</FileName>
     <Join>Voeg samen</Join>
-    <TotalNumberOfLinesX>Total aantal regels: {0:#,###,###}</TotalNumberOfLinesX>
+    <TotalNumberOfLinesX>Totaal aantal regels: {0:#,###,###}</TotalNumberOfLinesX>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -522,7 +545,7 @@
         <Reopen>&amp;Heropen</Reopen>
         <Save>&amp;Vertaling opslaan</Save>
         <SaveAs>Vertaling opslaan &amp;als...</SaveAs>
-        <RestoreAutoBackup>Herstellen auto-backup...</RestoreAutoBackup>
+        <RestoreAutoBackup>Herstellen autoback-up...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Geavanceerde Sub Station Alpha eigenschappen...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha eigenschappen...</SubStationAlphaProperties>
         <OpenOriginal>Open originele ondertitel (vertaalmodus)</OpenOriginal>
@@ -597,6 +620,7 @@
         <TextNumberOfCharactersPerSeconds>Tekst - aantal tekens/sec</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Tekst - woorden per minuut (wpm)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Maak nieuwe lege vertaling van de huidige ondertitel</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <BatchConvert>Converteren batch...</BatchConvert>
         <SplitSubtitle>Splits ondertitel...</SplitSubtitle>
         <AppendSubtitle>Sluit ondertitel aan...</AppendSubtitle>
         <JoinSubtitles>Voeg ondertitels samen...</JoinSubtitles>
@@ -922,7 +946,7 @@
     <IdxFileNotFoundWarning>{0} niet gevonden! Toch importeren VobSub-bestand?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>Koptekst niet geldig VobSub bestand: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Open VobSub (sub/idx) ondertitel...</OpenVobSubFile>
-    <VobSubFiles>VobSub ondertitelingsbestanden</VobSubFiles>
+    <VobSubFiles>VobSub ondertitelingbestanden</VobSubFiles>
     <OpenBluRaySupFile>Open Blu-ray. Sup-bestand...</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray. Sup bestanden</BluRaySupFiles>
     <BeforeImportingVobSubFile>Voor het importeren VobSub ondertiteling</BeforeImportingVobSubFile>
@@ -936,7 +960,7 @@
     <ShowSelectionAndForwardXSecondsLinesEarlier>Toon selectie en verplaats {0:0.0##} seconden eerder</ShowSelectionAndForwardXSecondsLinesEarlier>
     <ShowSelectionAndForwardXSecondsLinesLater>Toon selectie en verplaats {0:0.0##} seconden later</ShowSelectionAndForwardXSecondsLinesLater>
     <ShowSelectedLinesEarlierLaterPerformed>Toon eerder/later uitgevoerd op geselecteerde regels</ShowSelectedLinesEarlierLaterPerformed>
-    <DoubleWordsViaRegEx>Dubbele woorden via regex {0}</DoubleWordsViaRegEx>
+    <DoubleWordsViaRegEx>Dubbele woorden via regel {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Voor sorteren: {0}</BeforeSortX>
     <SortedByX>Gesorteerd op: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Voor auto balans geselecteerd lijnen</BeforeAutoBalanceSelectedLines>
@@ -963,7 +987,7 @@
     <TextImported>Tekst geïmporteerd</TextImported>
     <BeforePointSynchronization>Voor punt synchronisatie</BeforePointSynchronization>
     <PointSynchronizationDone>Punt synchronisatie gedaan</PointSynchronizationDone>
-    <BeforeTimeCodeImport>Voor inporteren van de tijd codes</BeforeTimeCodeImport>
+    <BeforeTimeCodeImport>Voor importeren van de tijd codes</BeforeTimeCodeImport>
     <TimeCodeImportedFromXY>Tijd codes geïmporteerd uit {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Voor ondertitel invoegen op video positie</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Voor ingestelde starttijd en pas de rest aan</BeforeSetStartTimeAndOffsetTheRest>
@@ -980,7 +1004,7 @@
     <NetworkUnableToConnectToServer>Kan geen verbinding maken met server: {0}</NetworkUnableToConnectToServer>
     <UserAndAction>Gebruiker/actie</UserAndAction>
     <NetworkMode>Netwerk modus</NetworkMode>
-    <XStartedSessionYAtZ>{0}: Gestartte sessie {1} in {2}</XStartedSessionYAtZ>
+    <XStartedSessionYAtZ>{0}: Gestarte sessie {1} in {2}</XStartedSessionYAtZ>
     <SpellChekingViaWordXLineYOfX>Spellingcontrole in Word {0} - regel {1} / {2}</SpellChekingViaWordXLineYOfX>
     <UnableToStartWord>Kan Microsoft Word niet starten</UnableToStartWord>
     <SpellCheckAbortedXCorrections>Spellingcontrole afgebroken. {0} regels werden gewijzigd.</SpellCheckAbortedXCorrections>
@@ -1129,7 +1153,7 @@
     <MinimumMillisecondsBetweenParagraphs>Minimum milliseconden tussen regels</MinimumMillisecondsBetweenParagraphs>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
-    <Title>Stel Sync punt voor  regel vast {0}</Title>
+    <Title>Stel Sync punt voor regel vast {0}</Title>
     <SyncPointTimeCode>Sync punt tijd code</SyncPointTimeCode>
     <ThreeSecondsBack>&lt;&lt;3 sec</ThreeSecondsBack>
     <HalfASecondBack>&lt;&lt;½ sec</HalfASecondBack>
@@ -1500,7 +1524,7 @@
     <MarginVertical>Marge verticale</MarginVertical>
     <Border>Grens</Border>
     <PlusShadow>+ Schaduw</PlusShadow>
-    <OpaqueBox>Opaque doos (gebruikt kleur wilt)</OpaqueBox>
+    <OpaqueBox>Opaque doos (gebruikt rand kleur)</OpaqueBox>
     <Import>Importeren...</Import>
     <Copy>Kopieer</Copy>
     <CopyOfY>Kopie van {0}</CopyOfY>
@@ -1527,8 +1551,8 @@
   </UnknownSubtitle>
   <VisualSync>
     <Title>Visual sync</Title>
-    <StartScene>Begin scene</StartScene>
-    <EndScene>Einde scene</EndScene>
+    <StartScene>Begin scène</StartScene>
+    <EndScene>Einde scène</EndScene>
     <Synchronize>Sync</Synchronize>
     <HalfASecondBack>&lt;½ sec</HalfASecondBack>
     <ThreeSecondsBack>&lt;3 sec</ThreeSecondsBack>
@@ -1538,7 +1562,7 @@
     <KeepChangesTitle>Wijzigingen behouden?</KeepChangesTitle>
     <KeepChangesMessage>Er zijn wijzigingen aangebracht in de ondertitels in 'Visual sync'. Veranderingen houden?</KeepChangesMessage>
     <SynchronizationDone>Sync gedaan!</SynchronizationDone>
-    <StartSceneMustComeBeforeEndScene>Start scène moet komen voor de einde scene!</StartSceneMustComeBeforeEndScene>
+    <StartSceneMustComeBeforeEndScene>Start scène moet komen voor de einde scène!</StartSceneMustComeBeforeEndScene>
     <Tip>Tip: Gebruik &lt;ctrl+pijl links/rechts&gt; toetsen om 100 ms verder/terug te gaan</Tip>
   </VisualSync>
   <VobSubEditCharacters>
@@ -1568,11 +1592,11 @@
     <Edit>Bewerken</Edit>
     <StartOcr>Start OCR</StartOcr>
     <Stop>Stop</Stop>
-    <StartOcrFrom>Start OCR vanuit ondertitel no:</StartOcrFrom>
+    <StartOcrFrom>Start OCR vanuit ondertitel nr:</StartOcrFrom>
     <LoadingVobSubImages>Laden VobSub afbeeldingen...</LoadingVobSubImages>
     <SubtitleImage>Ondertitel beeld</SubtitleImage>
     <SubtitleText>Ondertitel tekst</SubtitleText>
-    <UnableToCreateCharacterDatabaseFolder>Kan  'Character databank map' {0} niet maken</UnableToCreateCharacterDatabaseFolder>
+    <UnableToCreateCharacterDatabaseFolder>Kan  'Karakter databank map' {0} niet maken</UnableToCreateCharacterDatabaseFolder>
     <SubtitleImageXofY>Ondertitel beeld {0} van {1}</SubtitleImageXofY>
     <ImagePalette>Afbeelding palet</ImagePalette>
     <UseCustomColors>Aangepaste kleuren gebruiken</UseCustomColors>
@@ -1598,7 +1622,7 @@
     <NoMatch>&lt;. Geen overeenkomst&gt;</NoMatch>
     <AutoTransparentBackground>Auto transparante achtergrond</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Inspecteer vergelijken overeenkomsten voor huidige beeld...</InspectCompareMatchesForCurrentImage>
-    <EditLastAdditions>Bewerken laatste beeld ergelijken toevoegingen...</EditLastAdditions>
+    <EditLastAdditions>Bewerken laatste beeld vergelijken toevoegingen...</EditLastAdditions>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Handmatig beeld naar tekst</Title>

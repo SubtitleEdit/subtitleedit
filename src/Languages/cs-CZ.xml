@@ -69,6 +69,7 @@
     <LineNumber>Č. řádku</LineNumber>
     <Before>Před</Before>
     <After>Po</After>
+    <Size>Velikost</Size>
   </General>
   <About>
     <Title>O aplikaci Subtitle Edit</Title>
@@ -132,6 +133,27 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OnlyBreakLinesLongerThan>Zalamovat pouze řádky delší než</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Nezalamovat pouze řádky delší než</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
+  <BatchConvert>
+    <Title>Dávkový převod</Title>
+    <Input>Vstup</Input>
+    <InputDescription>Vstupní soubory (procházet nebo přetáhnout)</InputDescription>
+    <Status>Stav</Status>
+    <Output>Výstup</Output>
+    <ChooseOutputFolder>Vyberte výstupní složku</ChooseOutputFolder>
+    <OverwriteExistingFiles>Přepsat stávající soubory</OverwriteExistingFiles>
+    <Style>Styl...</Style>
+    <ConvertOptions>Volby převodu</ConvertOptions>
+    <AutoBreakLongLines>Automaticky zalomit dlouhé řádky</AutoBreakLongLines>
+    <FixItalics>Opravit kurzívu</FixItalics>
+    <RemoveFormatting>Odebrat tagy formátování</RemoveFormatting>
+    <RemoveTextForHI>Odebrat text pro sluchově postižené</RemoveTextForHI>
+    <ReDoCasing>Předělat velikost písmen</ReDoCasing>
+    <Convert>Převést</Convert>
+    <NothingToConvert>Není co převést!</NothingToConvert>
+    <PleaseChooseOutputFolder>Vyberte výstupní složku</PleaseChooseOutputFolder>
+    <Converted>Převedeno</Converted>
+    <ConvertedX>Převedeno ({0})</ConvertedX>
+  </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
   </Beamer>
@@ -281,6 +303,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Barva písma</FontColor>
     <BorderColor>Barva okraje</BorderColor>
     <BorderWidth>Šířka okraje</BorderWidth>
+    <ImageFormat>Formát obrázku</ImageFormat>
     <AntiAlias>Vyhlazování</AntiAlias>
     <SideBySide3D>3D vedle sebe</SideBySide3D>
     <ExportAllLines>Exportovat všechny řádky...</ExportAllLines>
@@ -298,22 +321,22 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ExportPngXml>
   <ExportText>
     <Title>Exportovat text</Title>
-    <Preview>Náhlad</Preview>
+    <Preview>Náhled</Preview>
     <ExportOptions>Volby exportu</ExportOptions>
-    <FormatText>Format text</FormatText>
+    <FormatText>Formátovat text</FormatText>
     <None>Žádný</None>
     <MergeAllLines>Sloučit všechny řádky</MergeAllLines>
     <UnbreakLines>Zrušit zalomení řádků</UnbreakLines>
     <RemoveStyling>Odebrat styly</RemoveStyling>
     <ShowLineNumbers>Zobrazit čísla řádků</ShowLineNumbers>
-    <AddNewLineAfterLineNumber>Přidat nový řádek za řádek číslo</AddNewLineAfterLineNumber>
+    <AddNewLineAfterLineNumber>Přidat nový řádek za číslo řádku</AddNewLineAfterLineNumber>
     <ShowTimeCode>Zobrazit časový kód</ShowTimeCode>
     <AddNewLineAfterTimeCode>Přidat nový řádek za časový kód</AddNewLineAfterTimeCode>
     <AddNewLineAfterTexts>Přidat nový řádek za text</AddNewLineAfterTexts>
     <AddNewLineBetweenSubtitles>Přidat nový řádek mezi titulky</AddNewLineBetweenSubtitles>
     <TimeCodeFormat>Formát časového kódu</TimeCodeFormat>
     <Srt>.srt</Srt>
-    <Milliseconds>Milisekund</Milliseconds>
+    <Milliseconds>Milisekundy</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
     <TimeCodeSeperator>Oddělovač časového kódu</TimeCodeSeperator>
   </ExportText>
@@ -605,6 +628,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TextNumberOfCharactersPerSeconds>Textu - počtu znaků za sekundu</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Textu - slov za minutu (szm)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Vytvořit nový prázdný překlad z aktuálních titulků</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <BatchConvert>Hromadný převod...</BatchConvert>
         <SplitSubtitle>Rozdělit titulky...</SplitSubtitle>
         <AppendSubtitle>Připojit titulky...</AppendSubtitle>
         <JoinSubtitles>Spojit titulky...</JoinSubtitles>
@@ -856,7 +880,7 @@ Chcete začít od začátku dokumentu a pokračovat v hledání a nahrazování?
     <TextingForHearingImpairedRemovedOneLine>Odebrány texty pro sluchově postižené: Jeden řádek</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Odebrány texty pro sluchově postižené: {0} řádků</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Titulky rozděleny</SubtitleSplitted>
-    <SubtitleAppendPrompt>Toto připojí existující titulky k aktuálně načteným titulkům, které by měly
+    <SubtitleAppendPrompt>Toto připojí stávající titulky k aktuálně načteným titulkům, které by měly
 již být synchronizované se souborem videa.
 
 Pokračovat?</SubtitleAppendPrompt>
@@ -1060,7 +1084,7 @@ Pokračovat?</SubtitleAppendPrompt>
   </NetworkChat>
   <NetworkJoin>
     <Title>Připojit se k síťové relaci</Title>
-    <Information>Připojit se k existující relaci, kde více lidí
+    <Information>Připojit se ke stávající relaci, kde více lidí
 může upravovat stejný soubor titulků (spolupráce)</Information>
     <Join>Připojit se</Join>
   </NetworkJoin>
@@ -1356,8 +1380,8 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ShowLater>Zobrazit později</ShowLater>
     <TotalAdjustmentX>Celková úprava: {0}</TotalAdjustmentX>
     <AllLines>Všechny řádky</AllLines>
-    <SelectedLinesonly>Pouze vybrané řádky</SelectedLinesonly>
-    <SelectedLinesAndForward>Vybrané řádky a posunout vpřed</SelectedLinesAndForward>
+    <SelectedLinesOnly>Pouze vybrané řádky</SelectedLinesOnly>
+    <SelectedLinesAndForward>Vybrané řádky a dopředu</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Historie (pro vrácení zpět)</Title>
@@ -1429,7 +1453,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <Part1>První část</Part1>
     <Part2>Druhá část</Part2>
     <UnableToSaveFileX>Nelze uložit {0}</UnableToSaveFileX>
-    <OverwriteExistingFiles>Přepsat existující soubory?</OverwriteExistingFiles>
+    <OverwriteExistingFiles>Přepsat stávající soubory?</OverwriteExistingFiles>
     <FolderNotFoundX>Složka nenalezena: {0}</FolderNotFoundX>
     <Untitled>Bez názvu</Untitled>
   </SplitSubtitle>
