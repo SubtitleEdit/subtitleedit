@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public static class Utilities
     {
-        internal const string WinXp2kUnicodeFontName = "Times New Roman";
+        public const string WinXp2kUnicodeFontName = "Times New Roman";
 
         public static byte[] ReadAllBytes(String path)
         {
@@ -184,7 +184,7 @@ namespace Nikse.SubtitleEdit.Logic
             return false;
         }
 
-        internal static SubtitleFormat GetSubtitleFormatByFriendlyName(string friendlyName)
+        public static SubtitleFormat GetSubtitleFormatByFriendlyName(string friendlyName)
         {
             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
             {
@@ -720,7 +720,7 @@ namespace Nikse.SubtitleEdit.Logic
             return RemoveHtmlFontTag(s);
         }
 
-        internal static string RemoveHtmlFontTag(string s)
+        public static string RemoveHtmlFontTag(string s)
         {
             s = s.Replace("</font>", string.Empty);
             s = s.Replace("</FONT>", string.Empty);
@@ -737,7 +737,7 @@ namespace Nikse.SubtitleEdit.Logic
             return s;
         }
 
-        internal static string RemoveParagraphTag(string s)
+        public static string RemoveParagraphTag(string s)
         {
             s = s.Replace("</p>", string.Empty);
             s = s.Replace("</P>", string.Empty);
@@ -1575,7 +1575,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        internal static void GetLineLengths(Label label, string text)
+        public static void GetLineLengths(Label label, string text)
         {
             label.ForeColor = Color.Black;
             string cleanText = Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, "|");
@@ -1609,7 +1609,7 @@ namespace Nikse.SubtitleEdit.Logic
             label.Text = sb.ToString();
         }
 
-        //internal static void DisplayLineLengths(Panel panelSingleLine, string text)
+        //public static void DisplayLineLengths(Panel panelSingleLine, string text)
         //{
         //    string cleanText = RemoveHtmlTags(text).Replace(Environment.NewLine, "|");
         //    string[] lines = cleanText.Split('|');
@@ -1761,7 +1761,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
 
-        internal static void LoadGlobalNamesEtc(List<string> namesEtcList, List<string> namesEtcMultiWordList)
+        public static void LoadGlobalNamesEtc(List<string> namesEtcList, List<string> namesEtcMultiWordList)
         {
             // Load names etc list (names/noise words)
             var namesEtcDoc = new XmlDocument();
@@ -1800,7 +1800,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
         }
 
-        internal static void LoadGlobalNamesEtc(HashSet<string> namesEtcList, HashSet<string> namesEtcMultiWordList)
+        public static void LoadGlobalNamesEtc(HashSet<string> namesEtcList, HashSet<string> namesEtcMultiWordList)
         {
             // Load names etc list (names/noise words)
             var namesEtcDoc = new XmlDocument();
@@ -1840,7 +1840,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
 
-        internal static string LoadLocalNamesEtc(List<string> namesEtcList, List<string> namesEtcMultiWordList, string languageName)
+        public static string LoadLocalNamesEtc(List<string> namesEtcList, List<string> namesEtcMultiWordList, string languageName)
         {
             string userNamesEtcXmlFileName = DictionaryFolder + languageName + "_names_etc.xml";
             if (languageName.Length == 2)
@@ -1872,7 +1872,7 @@ namespace Nikse.SubtitleEdit.Logic
             return userNamesEtcXmlFileName;
         }
 
-        internal static string LoadLocalNamesEtc(HashSet<string> namesEtcList, HashSet<string> namesEtcMultiWordList, string languageName)
+        public static string LoadLocalNamesEtc(HashSet<string> namesEtcList, HashSet<string> namesEtcMultiWordList, string languageName)
         {
             string userNamesEtcXmlFileName = DictionaryFolder + languageName + "_names_etc.xml";
             if (languageName.Length == 2)
@@ -1905,7 +1905,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
 
-        internal static bool IsInNamesEtcMultiWordList(List<string> namesEtcMultiWordList, string line, string word)
+        public static bool IsInNamesEtcMultiWordList(List<string> namesEtcMultiWordList, string line, string word)
         {
             string text = line.Replace(Environment.NewLine, " ");
             text = text.Replace("  ", " ");
@@ -1923,7 +1923,7 @@ namespace Nikse.SubtitleEdit.Logic
             return false;
         }
 
-        internal static bool IsInNamesEtcMultiWordList(HashSet<string> namesEtcMultiWordList, string line, string word)
+        public static bool IsInNamesEtcMultiWordList(HashSet<string> namesEtcMultiWordList, string line, string word)
         {
             string text = line.Replace(Environment.NewLine, " ");
             text = text.Replace("  ", " ");
@@ -1999,7 +1999,7 @@ namespace Nikse.SubtitleEdit.Logic
             return sb.ToString();
         }
 
-        internal static Color GetColorFromUserName(string userName)
+        public static Color GetColorFromUserName(string userName)
         {
             if (string.IsNullOrEmpty(userName))
                 return Color.Pink;
@@ -2037,7 +2037,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        internal static int GetNumber0To7FromUserName(string userName)
+        public static int GetNumber0To7FromUserName(string userName)
         {
             if (string.IsNullOrEmpty(userName))
                 return 0;
@@ -2050,7 +2050,7 @@ namespace Nikse.SubtitleEdit.Logic
             return (int)(number % 8);
         }
 
-        internal static string GetRegExGroup(string regEx)
+        public static string GetRegExGroup(string regEx)
         {
             int start = regEx.IndexOf("(?<");
             if (start >= 0 && regEx.IndexOf(")", start) > start)
@@ -2066,7 +2066,7 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
-        internal static string LowerCaseVowels
+        public static string LowerCaseVowels
         {
             get
             {
@@ -2074,7 +2074,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        internal static void SetButtonHeight(Control control, int newHeight, int level)
+        public static void SetButtonHeight(Control control, int newHeight, int level)
         {
             if (level > 6)
                 return;
@@ -2093,7 +2093,7 @@ namespace Nikse.SubtitleEdit.Logic
                 control.Height = newHeight;
         }
 
-        internal static int CountTagInText(string text, string tag)
+        public static int CountTagInText(string text, string tag)
         {
             int count = 0;
             int index = text.IndexOf(tag);
@@ -2105,7 +2105,7 @@ namespace Nikse.SubtitleEdit.Logic
             return count;
         }
 
-        internal static string FixInvalidItalicTags(string text)
+        public static string FixInvalidItalicTags(string text)
         {
             const string beginTag = "<i>";
             const string endTag = "</i>";
@@ -2218,7 +2218,7 @@ namespace Nikse.SubtitleEdit.Logic
             return text;
         }
 
-        internal static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
+        public static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
         {
             if (index < 0)
                 return null;
@@ -2246,7 +2246,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// </summary>
         /// <param name="text">Text string to encode</param>
         /// <returns>HTML-encoded text</returns>
-        internal static string HtmlEncode(string text)
+        public static string HtmlEncode(string text)
         {
             if (text == null)
                 return string.Empty;
@@ -2284,7 +2284,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// </summary>
         /// <param name="text">Text string to encode</param>
         /// <returns>HTML-decoded text</returns>
-        internal static string HtmlDecode(string text)
+        public static string HtmlDecode(string text)
         {
             if (text == null)
                 return string.Empty;
@@ -2611,7 +2611,7 @@ namespace Nikse.SubtitleEdit.Logic
             return System.Uri.UnescapeDataString(text);
         }
 
-        internal static bool IsWordInUserPhrases(List<string> userPhraseList, int index, string[] words)
+        public static bool IsWordInUserPhrases(List<string> userPhraseList, int index, string[] words)
         {
             string current = words[index];
             string prev = "-";
@@ -2630,7 +2630,7 @@ namespace Nikse.SubtitleEdit.Logic
             return false;
         }
 
-        internal static void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
+        public static void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
         {
             if (e.Modifiers == Keys.None && e.KeyCode != Keys.Enter && numberOfNewLines < 1 && textBox.Text.Length >= Configuration.Settings.General.SubtitleLineMaximumLength)
             {

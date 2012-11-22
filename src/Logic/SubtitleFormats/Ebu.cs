@@ -15,12 +15,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     {
         static readonly Regex RegExpr = new Regex(@"^[a-f0-9]{6}$", RegexOptions.Compiled);
 
-        internal EbuGeneralSubtitleInformation Header;
+        public EbuGeneralSubtitleInformation Header;
 
         /// <summary>
         /// GSI block (1024 bytes)
         /// </summary>
-        internal class EbuGeneralSubtitleInformation
+        public class EbuGeneralSubtitleInformation
         {
             public string CodePageNumber { get; set; } // 0..2
             public string DiskFormatCode { get; set; } // 3..10
@@ -174,7 +174,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 CommentFlag = 0;
             }
 
-            internal byte[] GetBytes(EbuGeneralSubtitleInformation header)
+            public byte[] GetBytes(EbuGeneralSubtitleInformation header)
             {
                 byte[] buffer = new byte[128]; // Text and Timing Information (TTI) block consists of 128 bytes
 
