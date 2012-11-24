@@ -678,7 +678,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainEditFind = "Control+F";
             MainEditFindNext = "F3";
             MainEditReplace = "Control+H";
-            MainEditMultipleReplace = string.Empty;
+            MainEditMultipleReplace = "Control+Alt+M";
             MainEditGoToLineNumber = "Control+G";
             MainEditRightToLeft = "Control+Shift+Alt+R";
             MainToolsFixCommonErrors = "Control+Shift+F";

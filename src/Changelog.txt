@@ -1,6 +1,6 @@
 Subtitle Edit Changelog
 
-3.3 RC1 (15th November 2012)
+3.3 (? 2012)
 * NEW:
    * Added column commands to list view context menu - thx Seungki
    * Edit -> Reverse RTL start/end (fix punctuations)
@@ -13,7 +13,7 @@ Subtitle Edit Changelog
    * New setting in Options: "Max. chars/second"
    * New settings in Options regarding "Min. duration" + "Max. duration"
    * New settings in Options regarding syntax coloring
-   * Many new subtitle formats (now 130+ formats supported!)
+   * Many new subtitle formats (now 140+ formats supported!)
    * New settings in Options, center subtitle (in SE text boxes)
    * Tools -> Join subtitles (merge of multiple parts)
    * Tools -> Apply duration limits
