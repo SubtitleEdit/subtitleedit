@@ -233,16 +233,16 @@
             // 
             // progressBarRip
             // 
-            this.progressBarRip.Location = new System.Drawing.Point(117, 290);
+            this.progressBarRip.Location = new System.Drawing.Point(133, 289);
             this.progressBarRip.Name = "progressBarRip";
-            this.progressBarRip.Size = new System.Drawing.Size(431, 14);
+            this.progressBarRip.Size = new System.Drawing.Size(415, 15);
             this.progressBarRip.TabIndex = 4;
             this.progressBarRip.Visible = false;
             // 
             // labelStatus
             // 
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(117, 273);
+            this.labelStatus.Location = new System.Drawing.Point(130, 273);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(38, 13);
             this.labelStatus.TabIndex = 5;
@@ -253,7 +253,7 @@
             this.buttonStartRipping.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonStartRipping.Location = new System.Drawing.Point(4, 273);
             this.buttonStartRipping.Name = "buttonStartRipping";
-            this.buttonStartRipping.Size = new System.Drawing.Size(107, 31);
+            this.buttonStartRipping.Size = new System.Drawing.Size(120, 31);
             this.buttonStartRipping.TabIndex = 25;
             this.buttonStartRipping.Text = "Start ripping";
             this.buttonStartRipping.UseVisualStyleBackColor = true;

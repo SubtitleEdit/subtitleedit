@@ -192,6 +192,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxEmphasis1Transparent.Text = language.Transparent;
             checkBoxEmphasis2Transparent.Text = language.Transparent;
             checkBoxAutoTransparentBackground.Text = language.AutoTransparentBackground;
+            checkBoxAutoTransparentBackground.Left = groupBoxSubtitleImage.Width - checkBoxAutoTransparentBackground.Width - 2;
             checkBoxPromptForUnknownWords.Text = language.PromptForUnknownWords;
             checkBoxPromptForUnknownWords.Checked = Configuration.Settings.VobSubOcr.PromptForUnknownWords;
 
@@ -278,6 +279,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             splitContainerBottom.Panel1MinSize = 400;
             splitContainerBottom.Panel2MinSize = 250;
+
+            pictureBoxBackground.Left = checkBoxCustomFourColors.Left + checkBoxCustomFourColors.Width + 8;
+            checkBoxBackgroundTransparent.Left = pictureBoxBackground.Left + pictureBoxBackground.Width + 3;
+            pictureBoxPattern.Left = checkBoxBackgroundTransparent.Left + checkBoxBackgroundTransparent.Width + 8;
+            checkBoxPatternTransparent.Left = pictureBoxPattern.Left + pictureBoxPattern.Width + 3;
+            pictureBoxEmphasis1.Left = checkBoxPatternTransparent.Left + checkBoxPatternTransparent.Width + 8;
+            checkBoxEmphasis1Transparent.Left = pictureBoxEmphasis1.Left + pictureBoxEmphasis1.Width + 3;
+            pictureBoxEmphasis2.Left = checkBoxEmphasis1Transparent.Left + checkBoxEmphasis1Transparent.Width + 8;
+            checkBoxEmphasis2Transparent.Left = pictureBoxEmphasis2.Left + pictureBoxEmphasis2.Width + 3;
         }
 
         private void FixLargeFonts()
