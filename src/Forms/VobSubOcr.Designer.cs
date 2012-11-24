@@ -701,9 +701,9 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonGoogleIt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGoogleIt.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGoogleIt.Location = new System.Drawing.Point(219, 88);
+            this.buttonGoogleIt.Location = new System.Drawing.Point(152, 88);
             this.buttonGoogleIt.Name = "buttonGoogleIt";
-            this.buttonGoogleIt.Size = new System.Drawing.Size(150, 21);
+            this.buttonGoogleIt.Size = new System.Drawing.Size(217, 21);
             this.buttonGoogleIt.TabIndex = 3;
             this.buttonGoogleIt.Text = "Google it";
             this.buttonGoogleIt.UseVisualStyleBackColor = true;
@@ -713,9 +713,9 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonAddToOcrReplaceList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAddToOcrReplaceList.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAddToOcrReplaceList.Location = new System.Drawing.Point(219, 61);
+            this.buttonAddToOcrReplaceList.Location = new System.Drawing.Point(152, 61);
             this.buttonAddToOcrReplaceList.Name = "buttonAddToOcrReplaceList";
-            this.buttonAddToOcrReplaceList.Size = new System.Drawing.Size(150, 21);
+            this.buttonAddToOcrReplaceList.Size = new System.Drawing.Size(217, 21);
             this.buttonAddToOcrReplaceList.TabIndex = 2;
             this.buttonAddToOcrReplaceList.Text = "Add ocr replace pair";
             this.buttonAddToOcrReplaceList.UseVisualStyleBackColor = true;
@@ -725,9 +725,9 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonUknownToUserDic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonUknownToUserDic.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonUknownToUserDic.Location = new System.Drawing.Point(219, 34);
+            this.buttonUknownToUserDic.Location = new System.Drawing.Point(152, 34);
             this.buttonUknownToUserDic.Name = "buttonUknownToUserDic";
-            this.buttonUknownToUserDic.Size = new System.Drawing.Size(150, 21);
+            this.buttonUknownToUserDic.Size = new System.Drawing.Size(217, 21);
             this.buttonUknownToUserDic.TabIndex = 1;
             this.buttonUknownToUserDic.Text = "Add to user dictionary";
             this.buttonUknownToUserDic.UseVisualStyleBackColor = true;
@@ -737,9 +737,9 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonUknownToNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonUknownToNames.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonUknownToNames.Location = new System.Drawing.Point(219, 7);
+            this.buttonUknownToNames.Location = new System.Drawing.Point(152, 7);
             this.buttonUknownToNames.Name = "buttonUknownToNames";
-            this.buttonUknownToNames.Size = new System.Drawing.Size(150, 21);
+            this.buttonUknownToNames.Size = new System.Drawing.Size(217, 21);
             this.buttonUknownToNames.TabIndex = 0;
             this.buttonUknownToNames.Text = "Add to names etc list";
             this.buttonUknownToNames.UseVisualStyleBackColor = true;
@@ -752,9 +752,9 @@ namespace Nikse.SubtitleEdit.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxUnknownWords.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxUnknownWords.FormattingEnabled = true;
-            this.listBoxUnknownWords.Location = new System.Drawing.Point(0, 0);
+            this.listBoxUnknownWords.Location = new System.Drawing.Point(3, 3);
             this.listBoxUnknownWords.Name = "listBoxUnknownWords";
-            this.listBoxUnknownWords.Size = new System.Drawing.Size(213, 147);
+            this.listBoxUnknownWords.Size = new System.Drawing.Size(143, 147);
             this.listBoxUnknownWords.TabIndex = 40;
             this.listBoxUnknownWords.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             this.listBoxUnknownWords.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxCopyToClipboard_KeyDown);
