@@ -12,7 +12,7 @@ Email: mailto:moob@live.com.pt</TranslatedBy>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
     <None>Nenhum</None>
-    <All>Todos</All>
+    <All>Todas</All>
     <Preview>Pré-visualizar</Preview>
     <SubtitleFiles>Ficheiros de legendas</SubtitleFiles>
     <AllFiles>Todos os ficheiros</AllFiles>
@@ -34,7 +34,7 @@ Email: mailto:moob@live.com.pt</TranslatedBy>
     <Italic>Itálico</Italic>
     <Underline>Sublinhado</Underline>
     <Visible>Visível</Visible>
-    <FrameRate>Frames por segundo</FrameRate>
+    <FrameRate>Taxa de frames</FrameRate>
     <Name>Nome</Name>
     <FileNameXAndSize>Nome do ficheiro: {0} ({1})</FileNameXAndSize>
     <ResolutionX>Resolução: {0}</ResolutionX>
@@ -71,6 +71,7 @@ Email: mailto:moob@live.com.pt</TranslatedBy>
     <LineNumber>Linha#</LineNumber>
     <Before>Antes</Before>
     <After>Depois</After>
+    <Size>Tamanho</Size>	
   </General>
   <About>
     <Title>Sobre o Subtitle Edit</Title>
@@ -134,6 +135,27 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OnlyBreakLinesLongerThan>Dividir só linhas maiores que</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Unir só linhas menores que</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
+    <BatchConvert>
+    <Title>Converter múltiplos ficheiros</Title>
+    <Input>Entrada</Input>
+    <InputDescription>Ficheiros de entrada (seleccione ou arraste e solte)</InputDescription>
+    <Status>Estado</Status>	
+    <Output>Saída</Output>
+    <ChooseOutputFolder>Seleccionar pasta de saída</ChooseOutputFolder>
+    <OverwriteExistingFiles>Substituir os ficheiros existentes</OverwriteExistingFiles>
+    <Style>Estilo...</Style>
+    <ConvertOptions>Opções de conversão</ConvertOptions>
+    <AutoBreakLongLines>Quebra de linha automática linhas longas</AutoBreakLongLines>
+    <FixItalics>Corrigir itálicos</FixItalics>
+    <RemoveFormatting>Remover etiquetas de formatação</RemoveFormatting>
+    <RemoveTextForHI>Eliminar texto para Surdos</RemoveTextForHI>
+    <ReDoCasing>Refazer maiúsculas/minúsculas</ReDoCasing>
+    <Convert>Converter</Convert>
+    <NothingToConvert>Nada para converter!</NothingToConvert>
+    <PleaseChooseOutputFolder>Por favor, seleccione a pasta de saída</PleaseChooseOutputFolder>
+    <Converted>Convertido</Converted>
+    <ConvertedX>Convertido ({0})</ConvertedX>	
+  </BatchConvert>
   <Beamer>
     <Title>Vídeo projector</Title>
   </Beamer>
@@ -279,16 +301,17 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Exportar BDN XML/PNG</Title>
     <ImageSettings>Ajuste de imagem</ImageSettings>
     <FontFamily>Tipo de letra</FontFamily>
-    <FontSize>Tamanho da letra</FontSize>
-    <FontColor>Cor da letra</FontColor>
+    <FontSize>Tamanho</FontSize>
+    <FontColor>Cor do tipo de letra</FontColor>
     <BorderColor>Cor da borda</BorderColor>
     <BorderWidth>Tamanho da borda</BorderWidth>
-    <AntiAlias>Serrilhado</AntiAlias>
-    <SideBySide3D>Lado-a-lado 3D</SideBySide3D>
-    <ExportAllLines>Exportar legendas...</ExportAllLines>
+	<ImageFormat>Formato de Imagem</ImageFormat>
+    <AntiAlias>Anti-alias</AntiAlias>
+    <SideBySide3D>3D lado-a-lado</SideBySide3D>
+    <ExportAllLines>Exportar legenda...</ExportAllLines>
     <XImagesSavedInY>{0} imagens guardadas em {1}</XImagesSavedInY>
-    <VideoResolution>Res. de vídeo</VideoResolution>
-    <Align>Alinhamento</Align>
+    <VideoResolution>Resolução vídeo</VideoResolution>
+    <Align>Alinhar</Align>
     <Left>Esquerda</Left>
     <Right>Direita</Right>
     <Center>Centro</Center>
@@ -514,7 +537,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </Interjections>
   <JoinSubtitles>
     <Title>Juntar legendas</Title>
-    <Information>Adicionar legendas para juntar (arrastar e largar suportado)</Information>
+    <Information>Adicionar legendas para juntar (arrastar e soltar suportado)</Information>
     <NumberOfLines>#Linhas</NumberOfLines>
     <StartTime>Tempo inicial</StartTime>
     <EndTime>Tempo final</EndTime>
@@ -607,6 +630,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TextNumberOfCharactersPerSeconds>Texto - número de caracteres/seg</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Texto - palavras por minuto (ppm)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Fazer nova tradução a partir da legenda actual</MakeNewEmptyTranslationFromCurrentSubtitle>
+		<BatchConvert>Converter múltiplos ficheiros...</BatchConvert>
         <SplitSubtitle>Dividir legenda...</SplitSubtitle>
         <AppendSubtitle>Anexar legenda...</AppendSubtitle>
         <JoinSubtitles>Juntar legendas...</JoinSubtitles>
@@ -734,7 +758,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <UndoChangesInEditPanel>Anular alterações no painel de edição</UndoChangesInEditPanel>
       <Previous>&lt;Anterior</Previous>
       <Next>Próxima &gt;</Next>
-      <AutoBreak>Parar &amp;auto</AutoBreak>
+      <AutoBreak>Quebra linha &amp;auto</AutoBreak>
       <Unbreak>Combinar</Unbreak>
     </Controls>
     <VideoControls>
@@ -797,8 +821,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VisualSyncSelectedLines>Sincronia visual - linhas seleccionadas</VisualSyncSelectedLines>
     <VisualSyncTitle>Sincronia visual</VisualSyncTitle>
     <BeforeVisualSync>Antes da Sincronia visual</BeforeVisualSync>
-    <VisualSyncPerformedOnSelectedLines>Sincronia visual realizada nas linhas seleccionadas</VisualSyncPerformedOnSelectedLines>
-    <VisualSyncPerformed>Sincronia visual realizada</VisualSyncPerformed>
+    <VisualSyncPerformedOnSelectedLines>Sincronia visual concluída nas linhas seleccionadas</VisualSyncPerformedOnSelectedLines>
+    <VisualSyncPerformed>Sincronia visual concluída</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Importar esta legenda VobSub?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10Mb>O ficheiro é maior que 10 MB: {0}</FileXIsLargerThan10Mb>
     <ContinueAnyway>Continuar mesmo assim?</ContinueAnyway>
@@ -839,8 +863,8 @@ Gostaria de começar do início do documento a localizar e substituir?</ReplaceX
     <FoundNothingToReplace>Não foi encontrado nada para substituir</FoundNothingToReplace>
     <ReplaceCountX>Número de substituições: {0}</ReplaceCountX>
     <NoXFoundAtLineY>Coincidências encontradas na linha {0}: {1}</NoXFoundAtLineY>
-    <OneReplacementMade>Uma substituição realizada.</OneReplacementMade>
-    <BeforeChangesMadeInSourceView>Antes de realizar alterações na visualização de origem</BeforeChangesMadeInSourceView>
+    <OneReplacementMade>Uma substituição concluída.</OneReplacementMade>
+    <BeforeChangesMadeInSourceView>Antes de concluir alterações na visualização de origem</BeforeChangesMadeInSourceView>
     <UnableToParseSourceView>Não foi possível analisar no texto original!</UnableToParseSourceView>
     <GoToLineNumberX>Ir para linha {0}</GoToLineNumberX>
     <CreateAdjustChangesApplied>Alterações aplicadas por Criar/Ajustar linhas</CreateAdjustChangesApplied>
@@ -858,7 +882,7 @@ Gostaria de começar do início do documento a localizar e substituir?</ReplaceX
     <TextingForHearingImpairedRemovedOneLine>Eliminadas as mensagens de texto para surdos : Uma linha</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Eliminadas as mensagens de texto para surdos : {0} linhas</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Legenda dividida</SubtitleSplitted>
-    <SubtitleAppendPrompt>Isto irá acrescentar uma legenda existente a uma legenda já carregada que deve
+    <SubtitleAppendPrompt>Isto irá acrescentar uma legenda existente à legenda já carregada que deve
 já estar em sincronia com o vídeo.
 
 Deseja continuar?</SubtitleAppendPrompt>
@@ -902,8 +926,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <BeforeDeletingXLines>Antes de eliminar {0} linhas</BeforeDeletingXLines>
     <DeleteXLinesPrompt>Eliminar {0} linhas?</DeleteXLinesPrompt>
     <OneLineDeleted>Linha eliminada</OneLineDeleted>
-    <BeforeDeletingOneLine>Antes de eliminar uma linha</BeforeDeletingOneLine>
-    <DeleteOneLinePrompt>Deseja eliminar uma linha?</DeleteOneLinePrompt>
+    <BeforeDeletingOneLine>Antes de eliminar linha</BeforeDeletingOneLine>
+    <DeleteOneLinePrompt>Deseja eliminar linha?</DeleteOneLinePrompt>
     <BeforeInsertLine>Antes de inserir linha</BeforeInsertLine>
     <LineInserted>Linha inserida</LineInserted>
     <BeforeLineUpdatedInListView>Antes de actualizar linha na lista</BeforeLineUpdatedInListView>
@@ -1180,15 +1204,15 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DefaultFileEncoding>Codificação padrão do ficheiro</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto detectar codificação ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Comprimento máximo de única linha</SubtitleLineMaximumLength>
-    <MaximumCharactersPerSecond>Max. Caracteres/seg</MaximumCharactersPerSecond>
+    <MaximumCharactersPerSecond>Máximo Caracteres/seg</MaximumCharactersPerSecond>
     <AutoWrapWhileTyping>Auto-ajustar linha durante digitação</AutoWrapWhileTyping>
-    <DurationMinimumMilliseconds>Duração Min; milissegundos</DurationMinimumMilliseconds>
-    <DurationMaximumMilliseconds>Duração Máx; milissegundos</DurationMaximumMilliseconds>
+    <DurationMinimumMilliseconds>Duração Mínima milissegundos</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>Duração Máxima milissegundos</DurationMaximumMilliseconds>
     <SubtitleFont>Tipo de letra</SubtitleFont>
     <SubtitleFontSize>Tamanho</SubtitleFontSize>
     <SubtitleBold>Negrito</SubtitleBold>
-    <SubtitleCenter>Centrado</SubtitleCenter>
-    <SubtitleFontColor>Cor da letra</SubtitleFontColor>
+    <SubtitleCenter>Centralizado</SubtitleCenter>
+    <SubtitleFontColor>Cor do tipo de letra</SubtitleFontColor>
     <SubtitleBackgroundColor>Cor de fundo</SubtitleBackgroundColor>
     <SpellChecker>Corrector ortográfico</SpellChecker>
     <RememberRecentFiles>Lembrar ficheiros recentes (para reabrir)</RememberRecentFiles>
@@ -1196,7 +1220,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <RememberSelectedLine>Lembrar linha seleccionada</RememberSelectedLine>
     <RememberPositionAndSize>Lembrar tamanho e posição da janela principal</RememberPositionAndSize>
     <StartInSourceView>Iniciar na aba (Original) da janela principal</StartInSourceView>
-    <RemoveBlankLinesWhenOpening>Eliminar linhas em branco ao abrir uma legenda</RemoveBlankLinesWhenOpening>
+    <RemoveBlankLinesWhenOpening>Eliminar linhas em branco ao abrir a legenda</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Ver quebras de linha na aba (Lista) da janela principal como</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Duplo clique na linha de texto na janela principal irá...</MainListViewDoubleClickAction>
     <MainListViewNothing>Não faz nada</MainListViewNothing>
@@ -1280,7 +1304,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <FirstPlusX>Primeiro + {0}</FirstPlusX>
     <LastMinusX>Último - {0}</LastMinusX>
     <FixCommonerrors>Corrigir erros comuns</FixCommonerrors>
-    <MergeLinesShorterThan>Combinar linhas menores que</MergeLinesShorterThan>
+    <MergeLinesShorterThan>Combinar linhas menores que...</MergeLinesShorterThan>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsToReplace>Símbolos musicais para substituir (separados por espaços)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros comuns de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
@@ -1424,7 +1448,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Description1>Insira o comprimento da primeira parte do vídeo ou localize</Description1>
     <Description2>e obtenha o comprimento do ficheiro de vídeo:</Description2>
     <Split>&amp;Dividir</Split>
-    <Done>&amp;Realizado</Done>
+    <Done>&amp;Concluído</Done>
     <NothingToSplit>Nada para dividir!</NothingToSplit>
     <SavePartOneAs>Guardar parte 1 como...</SavePartOneAs>
     <SavePartTwoAs>Guardar parte 2 como...</SavePartTwoAs>
@@ -1505,13 +1529,13 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Back>Fundo</Back>
     <Alignment>Alinhamento</Alignment>
     <TopLeft>Superior/esquerdo</TopLeft>
-    <TopCenter>Superior/centrado</TopCenter>
+    <TopCenter>Superior/centro</TopCenter>
     <TopRight>Superior/direito</TopRight>
     <MiddleLeft>Centro/esquerdo</MiddleLeft>
-    <MiddleCenter>Centro/centrado</MiddleCenter>
+    <MiddleCenter>Centro/centro</MiddleCenter>
     <MiddleRight>Centro/direito</MiddleRight>
     <BottomLeft>Inferior/esquerdo</BottomLeft>
-    <BottomCenter>Inferior/centrado</BottomCenter>
+    <BottomCenter>Inferior/centro</BottomCenter>
     <BottomRight>Inferior/direito</BottomRight>
     <Colors>Cores</Colors>
     <Margins>Margens</Margins>
@@ -1559,7 +1583,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <KeepChangesMessage>Foram feitas alterações na legenda com a sincronia visual.
 
 Manter as alterações?</KeepChangesMessage>
-    <SynchronizationDone>Sincronia realizada!</SynchronizationDone>
+    <SynchronizationDone>Sincronia concluída!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>A cena inicial deve antecipar a cena final!</StartSceneMustComeBeforeEndScene>
     <Tip>Dica: Usar teclas &lt;ctrl+seta esquerda/direita&gt; para mover 100 ms atrás/adiante</Tip>
   </VisualSync>
@@ -1679,7 +1703,7 @@ Manter as alterações?</KeepChangesMessage>
     <BlockAverageVolMin1>O volume variável do bloco deve estar a cima</BlockAverageVolMin1>
     <BlockAverageVolMin2>% do total variável de volume</BlockAverageVolMin2>
     <BlockAverageVolMax1>O volume variável do bloco deve estar a abaixo</BlockAverageVolMax1>
-    <BlockAverageVolMax2>% do total máx. de volume</BlockAverageVolMax2>
+    <BlockAverageVolMax2>% do total máximo de volume</BlockAverageVolMax2>
     <SplitLongLinesAt1>Dividir legendas longas em</SplitLongLinesAt1>
     <SplitLongLinesAt2>milissegundos</SplitLongLinesAt2>
     <Other>Outro</Other>
