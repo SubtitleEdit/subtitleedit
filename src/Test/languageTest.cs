@@ -55,9 +55,9 @@ namespace Test
             _list.Remove("ja-JP");
             _list.Remove("ko-KR");
       //      _list.Remove("nl-NL");
-            _list.Remove("pl-PL");
+//            _list.Remove("pl-PL");
 //            _list.Remove("pt-BR");
-            _list.Remove("pt-PT");
+//            _list.Remove("pt-PT");
             _list.Remove("ro-RO");
             _list.Remove("ru-RU");
             _list.Remove("sr-Cyrl-RS");
