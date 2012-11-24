@@ -1535,7 +1535,7 @@
             this.checkBoxVideoPlayerShowMuteButton.AutoSize = true;
             this.checkBoxVideoPlayerShowMuteButton.Location = new System.Drawing.Point(9, 42);
             this.checkBoxVideoPlayerShowMuteButton.Name = "checkBoxVideoPlayerShowMuteButton";
-            this.checkBoxVideoPlayerShowMuteButton.Size = new System.Drawing.Size(112, 17);
+            this.checkBoxVideoPlayerShowMuteButton.Size = new System.Drawing.Size(114, 17);
             this.checkBoxVideoPlayerShowMuteButton.TabIndex = 11;
             this.checkBoxVideoPlayerShowMuteButton.Text = "Show mute button";
             this.checkBoxVideoPlayerShowMuteButton.UseVisualStyleBackColor = true;
@@ -1543,7 +1543,7 @@
             // labelVideoPlayerPreviewFontSize
             // 
             this.labelVideoPlayerPreviewFontSize.AutoSize = true;
-            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(170, 54);
+            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(331, 54);
             this.labelVideoPlayerPreviewFontSize.Name = "labelVideoPlayerPreviewFontSize";
             this.labelVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(128, 13);
             this.labelVideoPlayerPreviewFontSize.TabIndex = 14;
@@ -1567,7 +1567,7 @@
             "18",
             "19",
             "20"});
-            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(304, 51);
+            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(465, 51);
             this.comboBoxlVideoPlayerPreviewFontSize.Name = "comboBoxlVideoPlayerPreviewFontSize";
             this.comboBoxlVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(121, 21);
             this.comboBoxlVideoPlayerPreviewFontSize.TabIndex = 13;
@@ -1577,7 +1577,7 @@
             this.checkBoxVideoPlayerShowStopButton.AutoSize = true;
             this.checkBoxVideoPlayerShowStopButton.Location = new System.Drawing.Point(9, 19);
             this.checkBoxVideoPlayerShowStopButton.Name = "checkBoxVideoPlayerShowStopButton";
-            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(109, 17);
+            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(111, 17);
             this.checkBoxVideoPlayerShowStopButton.TabIndex = 10;
             this.checkBoxVideoPlayerShowStopButton.Text = "Show stop button";
             this.checkBoxVideoPlayerShowStopButton.UseVisualStyleBackColor = true;
@@ -1586,7 +1586,7 @@
             // 
             this.comboBoxVideoPlayerDefaultVolume.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxVideoPlayerDefaultVolume.FormattingEnabled = true;
-            this.comboBoxVideoPlayerDefaultVolume.Location = new System.Drawing.Point(286, 20);
+            this.comboBoxVideoPlayerDefaultVolume.Location = new System.Drawing.Point(447, 20);
             this.comboBoxVideoPlayerDefaultVolume.Name = "comboBoxVideoPlayerDefaultVolume";
             this.comboBoxVideoPlayerDefaultVolume.Size = new System.Drawing.Size(121, 21);
             this.comboBoxVideoPlayerDefaultVolume.TabIndex = 12;
@@ -1594,7 +1594,7 @@
             // labelDefaultVol
             // 
             this.labelDefaultVol.AutoSize = true;
-            this.labelDefaultVol.Location = new System.Drawing.Point(168, 23);
+            this.labelDefaultVol.Location = new System.Drawing.Point(329, 23);
             this.labelDefaultVol.Name = "labelDefaultVol";
             this.labelDefaultVol.Size = new System.Drawing.Size(79, 13);
             this.labelDefaultVol.TabIndex = 6;
@@ -1605,7 +1605,7 @@
             this.labelVolDescr.AutoSize = true;
             this.labelVolDescr.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelVolDescr.ForeColor = System.Drawing.Color.Gray;
-            this.labelVolDescr.Location = new System.Drawing.Point(413, 24);
+            this.labelVolDescr.Location = new System.Drawing.Point(574, 24);
             this.labelVolDescr.Name = "labelVolDescr";
             this.labelVolDescr.Size = new System.Drawing.Size(150, 11);
             this.labelVolDescr.TabIndex = 9;
@@ -2800,7 +2800,7 @@
             this.groupBoxListViewSyntaxColoring.Location = new System.Drawing.Point(6, 6);
             this.groupBoxListViewSyntaxColoring.Name = "groupBoxListViewSyntaxColoring";
             this.groupBoxListViewSyntaxColoring.Size = new System.Drawing.Size(813, 432);
-            this.groupBoxListViewSyntaxColoring.TabIndex = 15;
+            this.groupBoxListViewSyntaxColoring.TabIndex = 0;
             this.groupBoxListViewSyntaxColoring.TabStop = false;
             this.groupBoxListViewSyntaxColoring.Text = "List view syntax coloring";
             // 
@@ -2819,7 +2819,7 @@
             0});
             this.numericUpDownSyntaxColorTextMoreThanXLines.Name = "numericUpDownSyntaxColorTextMoreThanXLines";
             this.numericUpDownSyntaxColorTextMoreThanXLines.Size = new System.Drawing.Size(48, 21);
-            this.numericUpDownSyntaxColorTextMoreThanXLines.TabIndex = 7;
+            this.numericUpDownSyntaxColorTextMoreThanXLines.TabIndex = 4;
             this.numericUpDownSyntaxColorTextMoreThanXLines.Value = new decimal(new int[] {
             10,
             0,
@@ -2842,7 +2842,7 @@
             this.checkBoxSyntaxOverlap.Location = new System.Drawing.Point(20, 154);
             this.checkBoxSyntaxOverlap.Name = "checkBoxSyntaxOverlap";
             this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(127, 17);
-            this.checkBoxSyntaxOverlap.TabIndex = 4;
+            this.checkBoxSyntaxOverlap.TabIndex = 5;
             this.checkBoxSyntaxOverlap.Text = "Time - color if overlap";
             this.checkBoxSyntaxOverlap.UseVisualStyleBackColor = true;
             // 
@@ -2861,7 +2861,7 @@
             this.buttonListViewSyntaxColorError.Location = new System.Drawing.Point(20, 192);
             this.buttonListViewSyntaxColorError.Name = "buttonListViewSyntaxColorError";
             this.buttonListViewSyntaxColorError.Size = new System.Drawing.Size(112, 21);
-            this.buttonListViewSyntaxColorError.TabIndex = 5;
+            this.buttonListViewSyntaxColorError.TabIndex = 6;
             this.buttonListViewSyntaxColorError.Text = "Error color";
             this.buttonListViewSyntaxColorError.UseVisualStyleBackColor = true;
             this.buttonListViewSyntaxColorError.Click += new System.EventHandler(this.buttonListViewSyntaxColorError_Click);
@@ -2892,7 +2892,7 @@
             this.panelListViewSyntaxColorError.Location = new System.Drawing.Point(142, 192);
             this.panelListViewSyntaxColorError.Name = "panelListViewSyntaxColorError";
             this.panelListViewSyntaxColorError.Size = new System.Drawing.Size(21, 20);
-            this.panelListViewSyntaxColorError.TabIndex = 6;
+            this.panelListViewSyntaxColorError.TabIndex = 7;
             this.panelListViewSyntaxColorError.Click += new System.EventHandler(this.buttonListViewSyntaxColorError_Click);
             // 
             // labelStatus

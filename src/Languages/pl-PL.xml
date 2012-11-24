@@ -69,6 +69,7 @@
     <LineNumber>Nr linii</LineNumber>
     <Before>Przed</Before>
     <After>Po</After>
+    <Size>Rozmiar</Size>
   </General>
   <About>
     <Title>O Subtitle Edit</Title>
@@ -133,6 +134,27 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OnlyBreakLinesLongerThan>Przełam tylko linie dłuższe, niż </OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Cofnij łamanie tylko linii dłuższych, niż</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
+  <BatchConvert>
+    <Title>Konwersja pakietowa</Title>
+    <Input>Wejście</Input>
+    <InputDescription>Pliki wejściowe (przeglądaj lub przeciągnij i upuść)</InputDescription>
+    <Status>Status</Status>
+    <Output>Wyjście</Output>
+    <ChooseOutputFolder>Wybierz folder wyjściowy</ChooseOutputFolder>
+    <OverwriteExistingFiles>Nadpisz istniejące pliki</OverwriteExistingFiles>
+    <Style>Styl...</Style>
+    <ConvertOptions>Opcje konwersji</ConvertOptions>
+    <AutoBreakLongLines>Automatycznie łam długie linie</AutoBreakLongLines>
+    <FixItalics>Popraw kursywy</FixItalics>
+    <RemoveFormatting>Usuń znaczniki formatujące</RemoveFormatting>
+    <RemoveTextForHI>Usuń tekst do HI</RemoveTextForHI>
+    <ReDoCasing>Ponów zadanie</ReDoCasing>
+    <Convert>Konwertuj</Convert>
+    <NothingToConvert>Nie ma nic do konwersji!</NothingToConvert>
+    <PleaseChooseOutputFolder>Proszę wybrać folder wyjściowy</PleaseChooseOutputFolder>
+    <Converted>Przekonwerotwano</Converted>
+    <ConvertedX>Przekonwertowano ({0})</ConvertedX>
+  </BatchConvert>
   <Beamer>
     <Title>Projektor</Title>
   </Beamer>
@@ -282,6 +304,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Kolor czcionki:</FontColor>
     <BorderColor>Kolor obramowania:</BorderColor>
     <BorderWidth>Szerokość obramowania:</BorderWidth>
+    <ImageFormat>Format obrazu</ImageFormat>
     <AntiAlias>Wygładzanie</AntiAlias>
     <SideBySide3D>Side-by-side 3D</SideBySide3D>
     <ExportAllLines>Eksport wszystkich linii...</ExportAllLines>
@@ -608,6 +631,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <TextNumberOfCharactersPerSeconds>Tekst - ilość znaków/sek.</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Tekst - słów na minutę (snm)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Utwórz pusty plik dla aktualnie tłumaczonych napisów</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <BatchConvert>Konwersja pakietowa...</BatchConvert>
         <SplitSubtitle>Podziel napisy...</SplitSubtitle>
         <AppendSubtitle>Połącz napisy...</AppendSubtitle>
         <JoinSubtitles>Dołącz napisy...</JoinSubtitles>
@@ -769,7 +793,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
       <SetEndTimeAndGoToNext>Ustaw &amp;koniec &amp;&amp; Przejdź dalej</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Dostosowano za pomocą czasu końcowego {0}</AdjustedViaEndTime>
       <SetEndTime>Ustaw czas &amp;końca</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Przesuń cza&amp;s rozpoczęcia</SetstartTimeAndOffsetOfRest>
+      <SetstartTimeAndOffsetOfRest>Ustaw start &amp;&amp; prze&amp;suń pozostałe</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Znajdź tekst online</SearchTextOnline>
       <GoogleTranslate>Tłumacz Google</GoogleTranslate>
       <GoogleIt>Strona Google</GoogleIt>
