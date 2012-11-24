@@ -135,7 +135,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OnlyUnbreakLinesLongerThan>Cofnij łamanie tylko linii dłuższych, niż</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
   <BatchConvert>
-    <Title>Konwersja pakietowa</Title>
+    <Title>Konwersja wielu plików równocześnie</Title>
     <Input>Wejście</Input>
     <InputDescription>Pliki wejściowe (przeglądaj lub przeciągnij i upuść)</InputDescription>
     <Status>Status</Status>
@@ -144,11 +144,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OverwriteExistingFiles>Nadpisz istniejące pliki</OverwriteExistingFiles>
     <Style>Styl...</Style>
     <ConvertOptions>Opcje konwersji</ConvertOptions>
-    <AutoBreakLongLines>Automatycznie łam długie linie</AutoBreakLongLines>
-    <FixItalics>Popraw kursywy</FixItalics>
+    <AutoBreakLongLines>Przełam automatycznie długie linie</AutoBreakLongLines>
+    <FixItalics>Popraw znaczniki kursywy</FixItalics>
     <RemoveFormatting>Usuń znaczniki formatujące</RemoveFormatting>
-    <RemoveTextForHI>Usuń tekst do HI</RemoveTextForHI>
-    <ReDoCasing>Ponów zadanie</ReDoCasing>
+    <RemoveTextForHI>Usuń tekst dla niesłyszących</RemoveTextForHI>
+    <ReDoCasing>Ustaw duże/małe litery</ReDoCasing>
     <Convert>Konwertuj</Convert>
     <NothingToConvert>Nie ma nic do konwersji!</NothingToConvert>
     <PleaseChooseOutputFolder>Proszę wybrać folder wyjściowy</PleaseChooseOutputFolder>
@@ -538,7 +538,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
   </Interjections>
   <JoinSubtitles>
     <Title>Dołącz napisy</Title>
-    <Information>Dodaj napisy do dołączenia (upuszczanie również obsługiwane)</Information>
+    <Information>Dodaj napisy do dołączenia ('Przeciągnij &amp;&amp; Upuść' również obsługiwane)</Information>
     <NumberOfLines>Nr linii</NumberOfLines>
     <StartTime>Czas rozpoczęcia</StartTime>
     <EndTime>Czas zakończenia</EndTime>
@@ -612,7 +612,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <ApplyDurationLimits>Zastosuj limity czasu trwania...</ApplyDurationLimits>
         <FixCommonErrors>&amp;Popraw pospolite błędy...</FixCommonErrors>
         <StartNumberingFrom>Rozpocznij numerowanie od...</StartNumberingFrom>
-        <RemoveTextForHearingImpaired>Usuń tekst dla słabo słyszących...</RemoveTextForHearingImpaired>
+        <RemoveTextForHearingImpaired>Usuń tekst dla niesłyszących...</RemoveTextForHearingImpaired>
         <ChangeCasing>Zmień budowę zdań...</ChangeCasing>
         <ChangeFrameRate>Zmień ilość klatek/sekundę...</ChangeFrameRate>
         <ChangeSpeedInPercent>Zmień prędkość (procentowo)...</ChangeSpeedInPercent>
@@ -631,7 +631,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <TextNumberOfCharactersPerSeconds>Tekst - ilość znaków/sek.</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Tekst - słów na minutę (snm)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Utwórz pusty plik dla aktualnie tłumaczonych napisów</MakeNewEmptyTranslationFromCurrentSubtitle>
-        <BatchConvert>Konwersja pakietowa...</BatchConvert>
+        <BatchConvert>Konwersja wielu plików równocześnie...</BatchConvert>
         <SplitSubtitle>Podziel napisy...</SplitSubtitle>
         <AppendSubtitle>Połącz napisy...</AppendSubtitle>
         <JoinSubtitles>Dołącz napisy...</JoinSubtitles>
@@ -806,11 +806,11 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
       <BeforeChangingTimeInWaveFormX>Przed zmianami czasu w panelu próbkowania audio: {0}</BeforeChangingTimeInWaveFormX>
       <NewTextInsertAtX>W pozycji {0} wstawiono nowy tekst napisu</NewTextInsertAtX>
       <Center>Środek</Center>
-      <PlayRate>Szybkość odtwarzania</PlayRate>
-      <Slow>Wolno</Slow>
-      <Normal>Normalna</Normal>
-      <Fast>Szybko</Fast>
-      <VeryFast>Bardzo szybko</VeryFast>
+      <PlayRate>Tempo odtwarzania</PlayRate>
+      <Slow>Wolne</Slow>
+      <Normal>Normalne</Normal>
+      <Fast>Szybkie</Fast>
+      <VeryFast>Bardzo szybkie</VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>Zapisać zmiany w pliku bez nazwy?</SaveChangesToUntitled>
     <SaveChangesToX>Zapisać zmiany w {0}?</SaveChangesToX>
@@ -879,9 +879,9 @@ Chcesz zacząć od początku dokumentu i kontynuować wyszukiwanie i zamianę?</
     <CommonErrorsFixed>Poprawione pospolite błędy</CommonErrorsFixed>
     <BeforeRenumbering>Przed przenumerowaniem</BeforeRenumbering>
     <RenumberedStartingFromX>Przenumerowanie rozpoczęte od: {0}</RenumberedStartingFromX>
-    <BeforeRemovalOfTextingForHearingImpaired>Przed usunięciem tekstu dialogów dla słabosłyszących</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Usunięty tekst dla słabosłyszących : Jedna linia</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Usunięto tekst dla słabosłyszących : {0} linii</TextingForHearingImpairedRemovedXLines>
+    <BeforeRemovalOfTextingForHearingImpaired>Przed usunięciem tekstu dialogów dla niesłyszących</BeforeRemovalOfTextingForHearingImpaired>
+    <TextingForHearingImpairedRemovedOneLine>Usunięty tekst dla niesłyszących : Jedna linia</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Usunięto tekst dla niesłyszących : {0} linii</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Dzielenie napisów</SubtitleSplitted>
     <SubtitleAppendPrompt>Opcja ta połączy drugi plik napisów z aktualnie wczytanymi napisami,
 które powinnny już być zsynchronizowane z plikiem wideo.
@@ -1124,7 +1124,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <UpdateAvailable>[Dostępna jest aktualizacja!]</UpdateAvailable>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
-    <Title>Usuwanie tekstu dla słabosłyszących</Title>
+    <Title>Usuwanie tekstu dla niesłyszących</Title>
     <RemoveTextConditions>Uwarunkowania dla usuwanego tekstu</RemoveTextConditions>
     <RemoveTextBetween>Opcja ta usunie tekst między:</RemoveTextBetween>
     <SquareBrackets>'[' i ']'</SquareBrackets>
@@ -1253,9 +1253,9 @@ Chcesz zapisać?</NegativeTimeWarning>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll z VLC Media Player 1.1.0 lub nowszy</VlcMediaPlayerDescription>
-    <ShowStopButton>Przycisk Stop</ShowStopButton>
-    <ShowMuteButton>Przycisk wyciszenia</ShowMuteButton>
-    <ShowFullscreenButton>Przyc. pł. ekranu</ShowFullscreenButton>
+    <ShowStopButton>Pokaż przycisk Stop</ShowStopButton>
+    <ShowMuteButton>Pokaż przycisk wyciszenia</ShowMuteButton>
+    <ShowFullscreenButton>Pokaż przycisk pełnego ekranu</ShowFullscreenButton>
     <DefaultVolume>Domyślna głośność:</DefaultVolume>
     <VolumeNotes>0 - bez dźwięku, 100 - najwyższa głośność</VolumeNotes>
     <PreviewFontSize>Rozmiar czcionki napisów dla podglądu:</PreviewFontSize>
@@ -1623,7 +1623,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <UnableToCreateCharacterDatabaseFolder>Nie mogę utworzyć 'Folderu bazy danych znaków': {0}</UnableToCreateCharacterDatabaseFolder>
     <SubtitleImageXofY>Obrazy napisu {0} z {1}</SubtitleImageXofY>
     <ImagePalette>Paleta obrazu</ImagePalette>
-    <UseCustomColors>Użyj podst. kolorów</UseCustomColors>
+    <UseCustomColors>Użyj podstawowych kolorów</UseCustomColors>
     <Transparent>Przezroczyste</Transparent>
     <PromptForUnknownWords>Powiadom o nieznanych wyrazach</PromptForUnknownWords>
     <TryToGuessUnkownWords>Próbuj odgadnąć nieznane wyrazy</TryToGuessUnkownWords>
@@ -1644,7 +1644,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <ShowOnlyForcedSubtitles>Pokaż tylko wymuszone napisy</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Użyj kodów czasowych z pliku .idx</UseTimeCodesFromIdx>
     <NoMatch>&lt;Brak zgodności&gt;</NoMatch>
-    <AutoTransparentBackground>Autom. przezroczyste tło</AutoTransparentBackground>
+    <AutoTransparentBackground>Automatycznie przezroczyste tło</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Sprawdź porównane zgodności dla bieżącego obrazu...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Edytuj ostatnio dodane porównania obrazu...</EditLastAdditions>
   </VobSubOcr>
