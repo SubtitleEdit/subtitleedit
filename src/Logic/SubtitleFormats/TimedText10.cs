@@ -214,7 +214,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         paragraph.AppendChild(br);
                     }
 
-                    var sb = new StringBuilder();
                     System.Collections.Generic.Stack<XmlNode> styles = new Stack<XmlNode>();
                     XmlNode currentStyle = xml.CreateTextNode(string.Empty);
                     paragraph.AppendChild(currentStyle);
