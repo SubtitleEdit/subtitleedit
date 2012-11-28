@@ -46,7 +46,7 @@ namespace Test
             _list.Remove("de-DE");
             _list.Remove("el-GR");
             _list.Remove("es-ES");
-            _list.Remove("eu-ES");
+ //           _list.Remove("eu-ES");
             _list.Remove("fa-IR");
             _list.Remove("fr-FR");
             _list.Remove("hr-HR");

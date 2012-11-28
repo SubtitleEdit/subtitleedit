@@ -5,8 +5,7 @@
     <Version>3.3</Version>
     <TranslatedBy>Превод на български: Ivo Ivanov и JJD</TranslatedBy>
     <CultureName>bg-BG</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile>Помощен файл</HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>Отказ</Cancel>
     <Apply>Прилагане</Apply>
@@ -70,6 +69,7 @@
     <LineNumber>Ред#</LineNumber>
     <Before>Преди</Before>
     <After>След</After>
+    <Size>Размер</Size>
   </General>
   <About>
     <Title>Относно Subtitle Edit</Title>
@@ -133,6 +133,27 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OnlyBreakLinesLongerThan>Прекъсване на редове по-дълги от</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Само непрекъснати редове над</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
+  <BatchConvert>
+    <Title>Групово конвертиране</Title>
+    <Input>Добавяне</Input>
+    <InputDescription>Добавяне файлове (намиране или влачене)</InputDescription>
+    <Status>Статус</Status>
+    <Output>Изход</Output>
+    <ChooseOutputFolder>Избор на изходна папка</ChooseOutputFolder>
+    <OverwriteExistingFiles>Презаписване на съществуващи файлове</OverwriteExistingFiles>
+    <Style>Стил...</Style>
+    <ConvertOptions>Опции на конвертирането</ConvertOptions>
+    <AutoBreakLongLines>Авто прекъсване на дългите редове</AutoBreakLongLines>
+    <FixItalics>Поправка на наклонените</FixItalics>
+    <RemoveFormatting>Премахване на форматни тагове</RemoveFormatting>
+    <RemoveTextForHI>Премахване на текст за ГЛУХИ</RemoveTextForHI>
+    <ReDoCasing>Редо рамка</ReDoCasing>
+    <Convert>Конвертиране</Convert>
+    <NothingToConvert>Няма нищо за конвертиране!</NothingToConvert>
+    <PleaseChooseOutputFolder>Моля изберете изходна папка</PleaseChooseOutputFolder>
+    <Converted>Конвертирани</Converted>
+    <ConvertedX>Конвертирани {0}</ConvertedX>
+  </BatchConvert>
   <Beamer>
     <Title>Сияещ</Title>
   </Beamer>
@@ -282,6 +303,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Цвят на шрифта</FontColor>
     <BorderColor>Цвят на контура</BorderColor>
     <BorderWidth>Широчина на контура</BorderWidth>
+    <ImageFormat>Формат на снимката</ImageFormat>
     <AntiAlias>Заглаждане</AntiAlias>
     <SideBySide3D>Side-by-side 3D</SideBySide3D>
     <ExportAllLines>Изнасяне на всички редове...</ExportAllLines>
@@ -606,6 +628,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TextNumberOfCharactersPerSeconds>Тест - брой символи/секунда</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Текст - думи за секунда (wpm)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Създаване на нов празен документ за превод на текущите субтитри</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <BatchConvert>Групово конвериране</BatchConvert>
         <SplitSubtitle>Разделяне на субтитри...</SplitSubtitle>
         <AppendSubtitle>Обединяване на субтитри...</AppendSubtitle>
         <JoinSubtitles>Обединяване на субтитри</JoinSubtitles>
@@ -1007,8 +1030,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Ред {0} - грешка в прочитане тайминга на: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Ред {0} - предполагаема грешка в субтитърен номер: {1}</LineNumberXExpectedNumberFromSourceLineY>
     <BeforeGuessingTimeCodes>Преди налучването на времевия код</BeforeGuessingTimeCodes>
-    <BeforeAutoDuration>
-    </BeforeAutoDuration>
+    <BeforeAutoDuration>Преди авто времетраене за избраните редове</BeforeAutoDuration>
     <BeforeColumnPaste>Преди поставянето на колона</BeforeColumnPaste>
     <BeforeColumnDelete>Преди изтриването на колона</BeforeColumnDelete>
     <BeforeColumnImportText>Преди колоната внасяне на текст </BeforeColumnImportText>
