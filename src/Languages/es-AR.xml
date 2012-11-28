@@ -5,10 +5,9 @@
     <Version>3.3</Version>
     <TranslatedBy>Traducido por Marcelo1ar</TranslatedBy>
     <CultureName>es-AR</CultureName>
-    <HelpFile>
-    </HelpFile>
-    <OK>OK</OK>
-    <Cancel>Cancelar</Cancel>
+    <HelpFile>http://www.nikse.dk/SubtitleEdit/HelpEs</HelpFile>
+    <OK>&amp;OK</OK>
+    <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
     <None>Cancelar</None>
     <All>Todo</All>

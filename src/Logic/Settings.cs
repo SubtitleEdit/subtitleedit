@@ -84,6 +84,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string Interjections { get; set; }
         public string MicrosoftBingApiId { get; set; }
         public string GoogleApiKey { get; set; }
+        public bool UseGooleApiPaidService { get; set; }
         public string GoogleTranslateLastTargetLanguage { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
         public bool ListViewSyntaxColorDurationBig { get; set; }
@@ -116,6 +117,7 @@ namespace Nikse.SubtitleEdit.Logic
             Interjections = "Ah;Ahh;Ahhh;Ahhhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Huh;Mm;Mmm;Mmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
             MicrosoftBingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
             GoogleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
+            UseGooleApiPaidService = false;
             GoogleTranslateLastTargetLanguage = "en";
             SpellCheckOneLetterWords = true;
             ListViewSyntaxColorDurationSmall = true;
@@ -1231,6 +1233,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("GoogleApiKey");
             if (subNode != null)
                 settings.Tools.GoogleApiKey = subNode.InnerText;
+            subNode = node.SelectSingleNode("UseGooleApiPaidService");
+            if (subNode != null)
+                settings.Tools.UseGooleApiPaidService = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("GoogleTranslateLastTargetLanguage");
             if (subNode != null)
                 settings.Tools.GoogleTranslateLastTargetLanguage = subNode.InnerText;
@@ -2075,6 +2080,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
             textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
             textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);
+            textWriter.WriteElementString("UseGooleApiPaidService", settings.Tools.UseGooleApiPaidService.ToString());
             textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
             textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString());
             textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString());

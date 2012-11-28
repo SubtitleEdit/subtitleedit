@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListViewFrom.Fill(subtitle);
             GoogleTranslate_Resize(null, null);
 
-            _googleApiNotWorking = true; // google has closed their free api service :(
+            _googleApiNotWorking = !Configuration.Settings.Tools.UseGooleApiPaidService; // google has closed their free api service :(
         }
 
         private void buttonTranslate_Click(object sender, EventArgs e)
