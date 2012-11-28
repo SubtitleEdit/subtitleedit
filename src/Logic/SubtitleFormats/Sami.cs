@@ -288,15 +288,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text = text.Replace("<br>", Environment.NewLine);
                 text = text.Replace("<br/>", Environment.NewLine);
                 text = text.Replace("<br />", Environment.NewLine);
-                text = text.Replace(Environment.NewLine + "   ", Environment.NewLine);
-                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-                text = text.Replace("   " + Environment.NewLine, Environment.NewLine);
-                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+                while (text.Contains("  "))
+                    text = text.Replace("  ", " ");
                 var cleanTextBuilder = new StringBuilder();
                 bool tagOn = false;
                 int skipCount = 0;
@@ -328,7 +321,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         cleanTextBuilder.Append(text[i]);
                 }
                 string cleanText = cleanTextBuilder.ToString();
-                cleanText = cleanText.Replace("&nbsp;", string.Empty).Replace("&NBSP;", string.Empty);
+                cleanText = cleanText.Replace("&nbsp;", " ").Replace("&NBSP;", " ");
+                while (cleanText.Contains("  "))
+                    cleanText = cleanText.Replace("  ", " ");
+                while (cleanText.Contains(Environment.NewLine + " "))
+                    cleanText = cleanText.Replace(Environment.NewLine + " ", Environment.NewLine);
+                while (cleanText.Contains(" " + Environment.NewLine))
+                    cleanText = cleanText.Replace(" " + Environment.NewLine, Environment.NewLine);
                 cleanText = cleanText.Trim();
                 if (cleanText.Contains("<font color=") && !cleanText.Contains("</font>"))
                     cleanText += "</font>";
@@ -354,6 +353,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     syncStartPos = allInputLower.IndexOf(syncTag, syncEndPos);
                     index = syncStartPos + syncTag.Length;
                 }
+            }
+            if (p != null && !string.IsNullOrEmpty(p.Text) && subtitle.Paragraphs.IndexOf(p) == -1)
+            {
+                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds +  Utilities.GetOptimalDisplayMilliseconds(p.Text);
+                subtitle.Paragraphs.Add(p);
             }
             subtitle.Renumber(1);
         }
