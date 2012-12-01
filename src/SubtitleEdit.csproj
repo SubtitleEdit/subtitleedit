@@ -1283,60 +1283,36 @@
   <ItemGroup>
     <Content Include="DLLs\Voikkox86.dll" />
     <Content Include="DLLs\Voikkox64.dll" />
-    <Content Include="Languages\ar-EG.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="Languages\Old\ar-EG.xml" />
     <Content Include="Languages\bg-BG.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Languages\ca-ES.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="Languages\Old\ca-ES.xml" />
     <Content Include="Languages\cs-CZ.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Languages\da-DK.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Languages\de-DE.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Languages\el-GR.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="Languages\Old\de-DE.xml" />
+    <None Include="Languages\Old\el-GR.xml" />
     <Content Include="Languages\es-AR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Languages\es-ES.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="Languages\Old\es-ES.xml" />
     <Content Include="Languages\eu-ES.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Languages\fa-IR.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="Languages\Old\fa-IR.xml" />
     <Content Include="Languages\fi-FI.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Languages\fr-FR.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Languages\hr-HR.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Languages\hu-HU.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Languages\it-IT.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Languages\ja-JP.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Languages\ko-KR.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="Languages\Old\fr-FR.xml" />
+    <None Include="Languages\Old\hr-HR.xml" />
+    <None Include="Languages\Old\hu-HU.xml" />
+    <None Include="Languages\Old\it-IT.xml" />
+    <None Include="Languages\Old\ja-JP.xml" />
+    <None Include="Languages\Old\ko-KR.xml" />
     <Content Include="Languages\nl-NL.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1349,24 +1325,12 @@
     <Content Include="Languages\pt-PT.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Languages\ro-RO.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Languages\ru-RU.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Languages\sr-Cyrl-RS.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Languages\sr-Latn-RS.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Languages\sv-SE.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Languages\tr-TR.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="Languages\Old\ro-RO.xml" />
+    <None Include="Languages\Old\ru-RU.xml" />
+    <None Include="Languages\Old\sr-Cyrl-RS.xml" />
+    <None Include="Languages\Old\sr-Latn-RS.xml" />
+    <None Include="Languages\Old\sv-SE.xml" />
+    <None Include="Languages\Old\tr-TR.xml" />
     <Content Include="Languages\zh-CHS.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
