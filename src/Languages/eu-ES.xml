@@ -5,8 +5,7 @@
     <Version>3.3</Version>
     <TranslatedBy>Itzultzailea: Xabier Aramendi</TranslatedBy>
     <CultureName>eu-ES</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile>http://www.nikse.dk/SubtitleEdit/HelpEU</HelpFile>
     <OK>&amp;Ongi</OK>
     <Cancel>E&amp;zeztatu</Cancel>
     <Apply>Ezarri</Apply>
