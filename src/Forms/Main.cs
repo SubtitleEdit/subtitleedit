@@ -9436,11 +9436,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GoFullscreen()
         {
+            if (mediaPlayer == null || mediaPlayer.VideoPlayer == null)
+                return;
+
             if (_videoPlayerUnDocked == null || _videoPlayerUnDocked.IsDisposed)
                 UndockVideoControlsToolStripMenuItemClick(null, null);
-            _videoPlayerUnDocked.Focus();
-            _videoPlayerUnDocked.GoFullscreen();
-            _videoPlayerUnDocked.RedockOnFullscreenEnd = true;
+
+            if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
+            {
+                _videoPlayerUnDocked.Focus();
+                _videoPlayerUnDocked.GoFullscreen();
+                _videoPlayerUnDocked.RedockOnFullscreenEnd = true;
+            }
         }
 
         private void RefreshTimeCodeMode()

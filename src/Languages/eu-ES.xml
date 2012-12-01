@@ -70,6 +70,7 @@
     <LineNumber>Lerro Zenbakia</LineNumber>
     <Before>Aurretik</Before>
     <After>Ondoren</After>
+    <Size>Neurria</Size>
   </General>
   <About>
     <Title>Subtitle Edit Buruz</Title>
@@ -134,6 +135,27 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <OnlyBreakLinesLongerThan>Hautsi bakarrik luzeagoak diren lerroak</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Ezhautsi bakarrik luzeagoak diren lerroak</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
+  <BatchConvert>
+    <Title>Multzo bihurketa</Title>
+    <Input>Sarrera</Input>
+    <InputDescription>Sarrera agiriak (bilatu edo arrastatu eta askatu)</InputDescription>
+    <Status>Egoera</Status>
+    <Output>Irteera</Output>
+    <ChooseOutputFolder>Hautatu irteera agiritegia:</ChooseOutputFolder>
+    <OverwriteExistingFiles>&amp;Gainidatzi dauden agiriak</OverwriteExistingFiles>
+    <Style>Estiloa...</Style>
+    <ConvertOptions>Bihurketa aukerak</ConvertOptions>
+    <AutoBreakLongLines>Berez-hautsi lerro luzeak</AutoBreakLongLines>
+    <FixItalics>Zuzendu etzanak</FixItalics>
+    <RemoveFormatting>Kendu heuskarri etiketak</RemoveFormatting>
+    <RemoveTextForHI>Kendu GA idazkia</RemoveTextForHI>
+    <ReDoCasing>Berregin xehe-larriak</ReDoCasing>
+    <Convert>&amp;Bihurtu</Convert>
+    <NothingToConvert>Ez dago ezer bihurtzeko!</NothingToConvert>
+    <PleaseChooseOutputFolder>Mesedez hautatu irteera agiritegia</PleaseChooseOutputFolder>
+    <Converted>Bihurtuta</Converted>
+    <ConvertedX>({0}) bihurtuta</ConvertedX>
+  </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
   </Beamer>
@@ -283,11 +305,12 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Hizki margoa</FontColor>
     <BorderColor>Hertz margoa</BorderColor>
     <BorderWidth>Hertz zabalera:</BorderWidth>
+    <ImageFormat>Irudi heuskarria</ImageFormat>
     <AntiAlias>Hertz lausopena</AntiAlias>
     <SideBySide3D>Aldez-alde 3D</SideBySide3D>
     <ExportAllLines>&amp;Esportatu lerro denak...</ExportAllLines>
     <XImagesSavedInY>{0} irudi gordeta hemen {1}</XImagesSavedInY>
-    <VideoResolution>Bideo Bereizmena</VideoResolution>
+    <VideoResolution>Bideo bereizm.:</VideoResolution>
     <Align>Lerrokatu:</Align>
     <Left>Ezkerrean</Left>
     <Right>Eskuinean</Right>
@@ -533,7 +556,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <Save>Gor&amp;de</Save>
         <SaveAs>Gorde &amp;honela...</SaveAs>
         <RestoreAutoBackup>&amp;Leheneratu berez-babeskopia...</RestoreAutoBackup>
-        <AdvancedSubStationAlphaProperties>A&amp;dvanced Sub Station Alpha ezugarriak...</AdvancedSubStationAlphaProperties>
+        <AdvancedSubStationAlphaProperties>Ad&amp;vanced Sub Station Alpha ezugarriak...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>&amp;Sub Station Alpha ezaugarriak...</SubStationAlphaProperties>
         <OpenOriginal>Ireki &amp;jatorrizko azpidatzia (itzultzaile eran)...</OpenOriginal>
         <SaveOriginal>G&amp;orde jatorrizko azpidatzia</SaveOriginal>
@@ -541,8 +564,9 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <OpenContainingFolder>Ireki a&amp;zpidatziaren agiritegia</OpenContainingFolder>
         <Compare>&amp;Alderatu...</Compare>
         <Statistics>Es&amp;tatistikak...</Statistics>
+        <Plugins>&amp;Pluginak</Plugins>
         <ImportOcrFromDvd>Inportatu/OCR azpidatzia vob/i&amp;fo (dvd)-tik...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>Inportatu/OCR &amp;VobSub (sub/idx) azpidatzia...</ImportOcrVobSubSubtitle>
+        <ImportOcrVobSubSubtitle>Inportatu/OCR VobSub (sub/id&amp;x) azpidatzia...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Inportatu/OCR Blu-ra&amp;y azpidatzi agiria...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Inportatu azpidatzia &amp;Matroska agiritik...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Inportatu azpidatzia esk&amp;uzko kodeaketa hautapenarekin...</ImportSubtitleWithManualChosenEncoding>
@@ -556,6 +580,14 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportEbu>EBU stl...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Esportatu idatzi laua...</ExportPlainText>
+        <ExportAdobeEncoreFabImageScript>Adobe Encore FAB irudi eskripta</ExportAdobeEncoreFabImageScript>
+        <ExportKoreanAtsFilePair>Korear ATS agiri parea</ExportKoreanAtsFilePair>
+        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
+        <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
+        <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
+        <ExportCheetahCap>Cheetah CAP</ExportCheetahCap>
+        <ExportUltech130>Ultech caption...</ExportUltech130>
         <Exit>Irte&amp;n</Exit>
       </File>
       <Edit>
@@ -598,6 +630,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <TextNumberOfCharactersPerSeconds>Idatzia - hizk./seg. zenbatekoa</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Idatzia - hitz minutuko (hm-ko)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Egin itzul&amp;pen huts berri bat uneko azpidatzitik</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <BatchConvert>&amp;Multzo bihurketa</BatchConvert>
         <SplitSubtitle>Ba&amp;nandu azpidatzia...</SplitSubtitle>
         <AppendSubtitle>Erant&amp;si azpidatzia...</AppendSubtitle>
         <JoinSubtitles>Ba&amp;tu azpidatziak...</JoinSubtitles>
@@ -690,6 +723,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnDeleteText>&amp;Ezabatu idatzia</ColumnDeleteText>
         <ColumnDeleteTextAndShiftCellsUp>E&amp;zabatu idatzia eta aldatu gelaxkak gora</ColumnDeleteTextAndShiftCellsUp>
         <ColumnInsertEmptyTextAndShiftCellsDown>&amp;Txertatu idatzia eta aldatu gelaxkak behera</ColumnInsertEmptyTextAndShiftCellsDown>
+        <ColumnInsertTextFromSubtitle>Txertatu id&amp;atzia azpidatzitik</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>I&amp;nportatu idatzia eta aldatu gelaxkak behera</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>It&amp;satsi gakotik...</ColumnPasteFromClipboard>
         <Split>Banandu</Split>
@@ -758,7 +792,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>Ezarri amaiera eta &amp;joan hurreng</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Zehaztu amaiera denboraren bidez {0}</AdjustedViaEndTime>
       <SetEndTime>Ezarri a&amp;maiera denbora</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Ezarri hasiera e&amp;ta orekatu gainontzekoa</SetstartTimeAndOffsetOfRest>
+      <SetstartTimeAndOffsetOfRest>Ezarri hasiera eta &amp;orekatu gainontzekoa</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Bilatu idatzia online</SearchTextOnline>
       <GoogleTranslate>Google itzultzailea</GoogleTranslate>
       <GoogleIt>Google bera</GoogleIt>
@@ -1033,16 +1067,16 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <RegularExpression>Esaera arrunta</RegularExpression>
     <LinesFoundX>Lerro aurkituta: {0}</LinesFoundX>
     <Delete>Ezabatu</Delete>
-    <Add>Gehitu</Add>
+    <Add>&amp;Gehitu</Add>
     <Update>&amp;Eguneratu</Update>
     <Enabled>Gaituta</Enabled>
     <SearchType>Bilaketa mota</SearchType>
-    <RemoveAll>Kendu denak</RemoveAll>
-    <Import>Inportatu...</Import>
-    <Export>Esportatu...</Export>
+    <RemoveAll>&amp;Kendu denak</RemoveAll>
+    <Import>I&amp;nportatu...</Import>
+    <Export>E&amp;sportatu...</Export>
     <ImportRulesTitle>Inportatu ordezpen araua(k) hemendik...</ImportRulesTitle>
     <ExportRulesTitle>Esportatu ordezpen araua(k) hona...</ExportRulesTitle>
-    <Rules>Esporatu arauak</Rules>
+    <Rules>Esportatu arauak</Rules>
   </MultipleReplace>
   <NetworkChat>
     <Title>Eztabaidagunea</Title>
@@ -1280,7 +1314,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <UpdateShortcut>Eguneratu</UpdateShortcut>
     <ShortcutIsNotValid>Lastertekla ez da baliozkoa: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Aldatu uztartu/uztargabetu bideo aginteak</ToggleDockUndockOfVideoControls>
-    <CreateSetEndAddNewAndGoToNew>Ezarri amaiera. gehitu berria eta joan berrira</CreateSetEndAddNewAndGoToNew>
+    <CreateSetEndAddNewAndGoToNew>Ezarri amaiera, gehitu berria eta joan berrira</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Zehaztu amaiera kokap bidez eta joan hurr.</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Ezarri hasiera, berez iraupena eta joan hurrengora</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Ezarri amaiera, hurrengo hasiera eta joan hurrengora</AdjustSetEndNextStartAndGoToNext>
@@ -1288,7 +1322,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <AdjustSelected100MsForward>Mugitu hautaturiko lerroa 100 sm aurrera</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Mugitu hautaturiko lerroa 100 sm atzera</AdjustSelected100MsBack>
     <AdjustSetStartTimeOnly>Ezarri hasiera denbora bakarrik</AdjustSetStartTimeOnly>
-    <MainCreateStartDownEndUp>Sortu behera-tekla berria, ezarri amaiera denbora gora-tekla</MainCreateStartDownEndUp>
+    <MainCreateStartDownEndUp>Sortu berria behera-tekla, ezarri amaiera denbora gora-tekla</MainCreateStartDownEndUp>
     <MergeDialogue>Batu elkarrizketa (txertatu marratxoak)</MergeDialogue>
     <GoToNext>Joan hurrengo lerrora</GoToNext>
     <GoToPrevious>Joan aurreko lerrora</GoToPrevious>
@@ -1456,20 +1490,20 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <Title>Advanced Sub Station Alpha ezaugarriak</Title>
     <TitleSubstationAlpha>Sub Station Alpha ezaugarriak</TitleSubstationAlpha>
     <Script>Eskripta</Script>
-    <ScriptTitle>Izenburua</ScriptTitle>
-    <OriginalScript>Jatorrizko eskripta</OriginalScript>
-    <Translation>Itzulpena</Translation>
-    <Editing>Edizioa</Editing>
-    <Timing>Denborapena</Timing>
-    <SyncPoint>Aldiberetze puntua</SyncPoint>
-    <UpdatedBy>Eguneratzailea</UpdatedBy>
-    <UpdateDetails>Eguneraketa xehetasunak</UpdateDetails>
+    <ScriptTitle>Izenburua:</ScriptTitle>
+    <OriginalScript>Jatorrizko eskripta:</OriginalScript>
+    <Translation>Itzulpena:</Translation>
+    <Editing>Edizioa:</Editing>
+    <Timing>Denborapena:</Timing>
+    <SyncPoint>Aldiberetze puntua:</SyncPoint>
+    <UpdatedBy>Eguneratzailea:</UpdatedBy>
+    <UpdateDetails>Eguneraketa xehetasunak:</UpdateDetails>
     <Resolution>Bereizmena</Resolution>
-    <VideoResolution>Bideo bereizmena</VideoResolution>
+    <VideoResolution>Bideo bereizmena:</VideoResolution>
     <Options>Aukerak</Options>
-    <WrapStyle>Estalki estiloa</WrapStyle>
-    <Collision>Elkarjotzea</Collision>
-    <ScaleBorderAndShadow>Neurriratu hertza eta itzala</ScaleBorderAndShadow>
+    <WrapStyle>Estalki estiloa:</WrapStyle>
+    <Collision>Elkarjotzea:</Collision>
+    <ScaleBorderAndShadow>&amp;Neurriratu hertza eta itzala</ScaleBorderAndShadow>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
     <Title>Advanced Sub Station Alpha estiloak</Title>

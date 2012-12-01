@@ -27,6 +27,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new AdvancedSubStationAlpha(),
                     new AQTitle(),
                     new AvidCaption(),
+                    new AvidDvd(),
                     new BelleNuitSubtitler(),
                     new Captionate(),
                     new CaptionateMs(),
