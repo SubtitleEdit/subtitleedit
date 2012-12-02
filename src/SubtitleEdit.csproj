@@ -1308,10 +1308,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Languages\Old\fr-FR.xml" />
-    <None Include="Languages\Old\hr-HR.xml" />
     <None Include="Languages\Old\hu-HU.xml" />
     <None Include="Languages\Old\it-IT.xml" />
     <None Include="Languages\Old\ko-KR.xml" />
+    <Content Include="Languages\hr-HR.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\ja-JP.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

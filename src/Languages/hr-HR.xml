@@ -2,15 +2,15 @@
 <Language Name="Hrvatski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.2</Version>
+    <Version>3.3</Version>
     <TranslatedBy>Prijevod: Jozo Marić</TranslatedBy>
     <CultureName>hr-HR</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile></HelpFile>
     <OK>&amp;U redu</OK>
     <Cancel>&amp;Otkaži</Cancel>
     <Apply>Primjeni</Apply>
     <None>Ništa</None>
+    <All>Sve</All>
     <Preview>Pregled</Preview>
     <SubtitleFiles>Podnaslovi</SubtitleFiles>
     <AllFiles>Sve datoteke</AllFiles>
@@ -30,6 +30,7 @@
     <HourMinutesSecondsMilliseconds>sat:min:sek:msek</HourMinutesSecondsMilliseconds>
     <Bold>Podebljaj</Bold>
     <Italic>Kurziv</Italic>
+    <Underline>Podvučeno</Underline>
     <Visible>Vidljivo</Visible>
     <FrameRate>&amp;Broj sličica</FrameRate>
     <Name>Oznaka</Name>
@@ -61,6 +62,14 @@
     <VideoWindowTitle>Video – {0}</VideoWindowTitle>
     <AudioWindowTitle>Zvuk – {0}</AudioWindowTitle>
     <ControlsWindowTitle>Kontrole – {0}</ControlsWindowTitle>
+    <Advanced>Napredno</Advanced>
+    <Style>Stil</Style>
+    <Class>Klasa</Class>
+    <GeneralText>Općenito</GeneralText>
+    <LineNumber>Linijski #</LineNumber>
+    <Before>Prije</Before>
+    <After>Poslije</After>
+    <Size>Veličina</Size>
   </General>
   <About>
     <Title>O programu</Title>
@@ -79,6 +88,14 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Dodavanje riječi u popis naziva/izuzetaka</Title>
     <Description>Dodajte riječ u popis naziva/izuzetaka:</Description>
   </AddToNames>
+  <AddToOcrReplaceList>
+    <Title>Dodaj u OCR zamjenski popis</Title>
+    <Description>Dodaj par OCR zamjenski popis ( osjetljivost na velika i mala slova)</Description>
+  </AddToOcrReplaceList>
+  <AddToUserDictionary>
+    <Title>Dodaj u korisnički rječnik</Title>
+    <Description>Dodaj riječ korisnički rječnik (neosjetljivost na velika i mala slova)</Description>
+  </AddToUserDictionary>
   <AddWaveForm>
     <Title>Generiranje valnih podataka</Title>
     <SourceVideoFile>Izvorna video datoteka:</SourceVideoFile>
@@ -97,29 +114,56 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustVia>Prilagodi preko:</AdjustVia>
     <Seconds>&amp;sekundi</Seconds>
     <Percent>&amp;postotaka</Percent>
+    <Recalculate>Preračunaj</Recalculate>
     <AddSeconds>Dodavanje sekundi:</AddSeconds>
     <SetAsPercent>Postotak trajanja:</SetAsPercent>
     <Note>Vrijeme prikaza neće preklapati početno vrijeme iduće linije.</Note>
     <PleaseSelectAValueFromTheDropDownList>Izaberite vrijednost iz padajućeg izbornika.</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> – izaberite – </PleaseChoose>
+    <PleaseChoose> – Izaberite – </PleaseChoose>
   </AdjustDisplayDuration>
+  <ApplyDurationLimits>
+    <Title>Primijeni ograničeno trajanje</Title>
+    <FixesAvailable>Dostupni popravci: {0}</FixesAvailable>
+    <UnableToFix>Nije moguće popraviti: {0}</UnableToFix>
+  </ApplyDurationLimits>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Prelamanje linija</TitleAutoBreak>
     <TitleUnbreak>Uklanjanje suvišnih redova</TitleUnbreak>
-    <LineNumber>Broj linije</LineNumber>
-    <Before>Prije</Before>
-    <After>Poslije</After>
     <LinesFoundX>Pronađeno linija: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>Prelomi linije duže od:</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Ne prelamaj linije duže od</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
+  <BatchConvert>
+    <Title>Batch konverzija</Title>
+    <Input>Ulaz</Input>
+    <InputDescription>Ulazne datoteke (Pregledavanje ili uzmi i spusti)</InputDescription>
+    <Status>Status</Status>
+    <Output>Izlaz</Output>
+    <ChooseOutputFolder>Odaberite izlaznu mapu</ChooseOutputFolder>
+    <OverwriteExistingFiles>Prepiši preko postojeće datoteke</OverwriteExistingFiles>
+    <Style>Stil...</Style>
+    <ConvertOptions>Opcije pretvaranja</ConvertOptions>
+    <AutoBreakLongLines>Auto-prelamanje dugih linija</AutoBreakLongLines>
+    <FixItalics>Popraviti kurziv</FixItalics>
+    <RemoveFormatting>Uklonite oblikovanja oznake</RemoveFormatting>
+    <RemoveTextForHI>Uklonite tekst za HI</RemoveTextForHI>
+    <ReDoCasing>Ponoviti (velika mala slova)</ReDoCasing>
+    <Convert>Pretvori</Convert>
+    <NothingToConvert>Ništa za pretvoriti!</NothingToConvert>
+    <PleaseChooseOutputFolder>Odaberite izlaznu mapu</PleaseChooseOutputFolder>
+    <Converted>Pretvoreno</Converted>
+    <ConvertedX>Pretvoreno ({0})</ConvertedX>
+  </BatchConvert>
+  <Beamer>
+    <Title>Beamer (Video projekcija)</Title>
+  </Beamer>
   <ChangeCasing>
     <Title>Promjena veličine slova</Title>
     <ChangeCasingTo>Promjena malih i velikih slova</ChangeCasingTo>
     <NormalCasing>&amp;Uobičajeno pravilo. Rečenice počinju s velikim slovom.</NormalCasing>
-    <FixNamesCasing>&amp;ispravi veličinu slova za nazive</FixNamesCasing>
+    <FixNamesCasing>&amp;Ispravi veličinu slova za nazive</FixNamesCasing>
     <FixOnlyNamesCasing>I&amp;spravi samo veličinu slova za nazive</FixOnlyNamesCasing>
-    <OnlyChangeAllUppercaseLines>i&amp;zmjeni linije napisane svim velikim slovima</OnlyChangeAllUppercaseLines>
+    <OnlyChangeAllUppercaseLines>I&amp;zmjeni linije napisane svim velikim slovima</OnlyChangeAllUppercaseLines>
     <AllUppercase>Sve &amp;velikim slovima</AllUppercase>
     <AllLowercase>Sve &amp;malim slovima</AllLowercase>
   </ChangeCasing>
@@ -128,9 +172,6 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <NamesFoundInSubtitleX>Pronađeno naziva: {0}</NamesFoundInSubtitleX>
     <Enabled>Primjena</Enabled>
     <Name>Naziv</Name>
-    <LineNumber>Linija</LineNumber>
-    <Before>Prije</Before>
-    <After>Poslije</After>
     <LinesFoundX>Pronađeno linija: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
@@ -141,6 +182,10 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <FrameRateNotCorrect>Broj sličica nije ispravan.</FrameRateNotCorrect>
     <FrameRateNotChanged>Broj sličica je isti. Promjena nije moguća.</FrameRateNotChanged>
   </ChangeFrameRate>
+  <ChangeSpeedInPercent>
+    <Title>Prilagodite brzinu u postocima</Title>
+    <Info>Promjena brzine titla u postocima</Info>
+  </ChangeSpeedInPercent>
   <ChooseEncoding>
     <Title>Odabir kodnog rasporeda</Title>
     <CodePage>Kodiranje</CodePage>
@@ -159,7 +204,27 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <XNumberOfDifference>Broj razlika: {0}</XNumberOfDifference>
     <ShowOnlyDifferences>P&amp;rikaži samo razlike</ShowOnlyDifferences>
     <OnlyLookForDifferencesInText>&amp;Traži samo razlike u tekstu</OnlyLookForDifferencesInText>
+    <CannotCompareWithImageBasedSubtitles>Ne može se usporediti sa slikovnim  titlovima</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <DCinemaProperties>
+    <Title>D-kino svojstva (Interop)</Title>
+    <TitleSmpte>D-kino svojstva (SMPTE)</TitleSmpte>
+    <SubtitleId>ID Titlova</SubtitleId>
+    <GenerateId>Generirajte ID</GenerateId>
+    <MovieTitle>Naslov filma</MovieTitle>
+    <ReelNumber>Stvaran broj</ReelNumber>
+    <Language>Jezik</Language>
+    <IssueDate>Datum izdavanja</IssueDate>
+    <EditRate>Uredi brzinu</EditRate>
+    <Font>Slova</Font>
+    <FontId>ID</FontId>
+    <FontUri>URI</FontUri>
+    <FontColor>Boja</FontColor>
+    <FontEffect>Učinak</FontEffect>
+    <FontEffectColor>Učinak boje</FontEffectColor>
+    <FontSize>Veličina</FontSize>
+    <ChooseColor>Odaberite boju...</ChooseColor>
+  </DCinemaProperties>
   <DvdSubrip>
     <Title>Vađenje DVD podnaslova</Title>
     <DvdGroupTitle>Datoteke DVD-a</DvdGroupTitle>
@@ -238,7 +303,9 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Boja &amp;fonta</FontColor>
     <BorderColor>Boja obruba:</BorderColor>
     <BorderWidth>Širina obruba:</BorderWidth>
+    <ImageFormat>Format slike</ImageFormat>
     <AntiAlias>&amp;Omekšavanje obruba</AntiAlias>
+    <SideBySide3D>Usporedni 3D</SideBySide3D>
     <ExportAllLines>I&amp;zvezi sve linije…</ExportAllLines>
     <XImagesSavedInY>Spremljeno slika: {0}. Odredište: {1}</XImagesSavedInY>
     <VideoResolution>Video rezolucija</VideoResolution>
@@ -246,7 +313,33 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <Left>Lijevo</Left>
     <Right>Pravo</Right>
     <Center>Centar</Center>
+    <BottomMargin>Donja granica</BottomMargin>
+    <SaveBluRraySupAs>Izaberite Blu-ray sup naziv</SaveBluRraySupAs>
+    <SaveVobSubAs>Odaberite naziv datoteke VobSub</SaveVobSubAs>
+    <SaveFabImageScriptAs>Izaberite Blu-ray sup naziv</SaveFabImageScriptAs>
+    <SaveDvdStudioProStlAs>Odaberite DVD Studio Pro STL naziv datoteke</SaveDvdStudioProStlAs>
   </ExportPngXml>
+  <ExportText>
+    <Title>Izvezi tekst</Title>
+    <Preview>Prikaz</Preview>
+    <ExportOptions>Mogućnosti izvoza</ExportOptions>
+    <FormatText>Oblikovanje teksta</FormatText>
+    <None>Ništa</None>
+    <MergeAllLines>Spoji sve linije</MergeAllLines>
+    <UnbreakLines>Ne prelamaj</UnbreakLines>
+    <RemoveStyling>Uklonite stil</RemoveStyling>
+    <ShowLineNumbers>Prikaži brojeve linija</ShowLineNumbers>
+    <AddNewLineAfterLineNumber>Dodaj novu liniju nakon linije broj...</AddNewLineAfterLineNumber>
+    <ShowTimeCode>Prikaži vremenski kod</ShowTimeCode>
+    <AddNewLineAfterTimeCode>Dodaj novu liniju nakon vremenskog koda</AddNewLineAfterTimeCode>
+    <AddNewLineAfterTexts>Dodaj novu liniju nakon teksta</AddNewLineAfterTexts>
+    <AddNewLineBetweenSubtitles>Dodaj novu liniju između titlova</AddNewLineBetweenSubtitles>
+    <TimeCodeFormat>Vremenski kod formata</TimeCodeFormat>
+    <Srt>. Srt</Srt>
+    <Milliseconds>Milisekundi</Milliseconds>
+    <HHMMSSFF>HH: MM: SS: FF</HHMMSSFF>
+    <TimeCodeSeperator>Razdvajač vremenskog koda</TimeCodeSeperator>
+  </ExportText>
   <FindDialog>
     <Title>Pretraga</Title>
     <Find>&amp;Pronađi</Find>
@@ -266,15 +359,12 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <Example>Primjer</Example>
     <SelectAll>O&amp;znači sve</SelectAll>
     <InverseSelection>O&amp;brni označeno</InverseSelection>
-    <Back>← &amp;Nazad</Back>
+    <Back>← &amp;Natrag</Back>
     <Next>N&amp;aprijed →</Next>
     <Step2>Korak 2 od 2: Provjerite ispravnost</Step2>
     <Fixes>Ispravke</Fixes>
     <Log>Izvještaj</Log>
-    <LineNumber>Broj linije</LineNumber>
     <Function>Ispravka</Function>
-    <Before>Prije</Before>
-    <After>Poslije</After>
     <RemovedEmptyLine>Prazna linija je uklonjena.</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Prazna linija na vrhu je uklonjena.</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Prazna linija na dnu je uklonjena.</RemovedEmptyLineAtBottom>
@@ -295,17 +385,20 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <AddPeriods>Dodaj točku poslije linija gdje sljedeća počinje s velikim slovom</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Počni s velikim slovom poslije novog reda</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Počni s velikim slovom poslije točke u novom redu</StartWithUppercaseLetterAfterPeriodInsideParagraph>
+    <StartWithUppercaseLetterAfterColon>Počnite s velikim slovom nakon ;/:</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>Promijeni malo latinično I u veliko kada se nalazi sâmo</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Ispravi česte greške u prepoznavanju znakova</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Ispravljeno grešaka u prepoznavanju znakova: {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Ukloni razmak između brojeva</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Ispravi dijaloge na jednoj liniji</FixDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Ispravljeno grešaka u uklanjanju razmaka između brojeva: {0}</RemoveSpaceBetweenNumbersFixed>
+    <FixTurkishAnsi>Popraviti turski ANSI (Islandski) slova u Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Ispravi dansko slovo I</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Ispravi obrnuti upitnik i uskličnik u španjolskom jeziku.</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Dodaj nedostajući navodnik</AddMissingQuote>
     <AddMissingQuotes>Dodaj nedostajuće navodnike</AddMissingQuotes>
     <FixHyphens>Ispravi liniju koja počinje s crticama</FixHyphens>
+    <FixHyphensAdd>Popraviti (crtice) linije parova sa samo jednom crticom (-)</FixHyphensAdd>
     <FixHyphen>Ispravi liniju koja počinje s crticom</FixHyphen>
     <XHyphensFixed>Ispravljeno crtica: {0}</XHyphensFixed>
     <AddMissingQuotesExample>"Kako si? → "Kako si?"</AddMissingQuotesExample>
@@ -426,6 +519,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <Splitting>Razdvajanje</Splitting>
     <AutoSplitText>&amp;Samostalno razdvoji tekst</AutoSplitText>
     <OneLineIsOneSubtitle>&amp;Jedna linija kao jedan podnaslov</OneLineIsOneSubtitle>
+    <SplitAtBlankLines>Razdijeli na praznim linijama</SplitAtBlankLines>
     <MergeShortLines>Spoji &amp;kratke linije</MergeShortLines>
     <RemoveEmptyLines>Ukloni &amp;prazne linije</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Ukloni &amp;linije bez slova</RemoveLinesWithoutLetters>
@@ -439,20 +533,36 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
   <Interjections>
     <Title>Uzvici</Title>
   </Interjections>
+  <JoinSubtitles>
+    <Title>Spoji podnaslove</Title>
+    <Information>Dodaj podnaslove za spajanje  (zgrabi i spusti također podržan)</Information>
+    <NumberOfLines>#Linije</NumberOfLines>
+    <StartTime>Vrijeme početka</StartTime>
+    <EndTime>Vrijeme završetka</EndTime>
+    <FileName>Naziv datoteke</FileName>
+    <Join>Spoji</Join>
+    <TotalNumberOfLinesX>Ukupni broj linija: {0:#,###,###}</TotalNumberOfLinesX>
+  </JoinSubtitles>
   <Main>
     <Menu>
       <File>
         <Title>&amp;Datoteka</Title>
         <New>&amp;Novo</New>
         <Open>&amp;Otvori…</Open>
+        <OpenKeepVideo>Otvorite (zadržati video)</OpenKeepVideo>
         <Reopen>&amp;Povijest</Reopen>
         <Save>&amp;Spremi</Save>
         <SaveAs>Spremi &amp;kao…</SaveAs>
+        <RestoreAutoBackup>Vraćanje sigurnosne kopije...</RestoreAutoBackup>
+        <AdvancedSubStationAlphaProperties>Napredna Sub Station Alpha svojstva...</AdvancedSubStationAlphaProperties>
+        <SubStationAlphaProperties>Sub Station Alpha svojstva...</SubStationAlphaProperties>
         <OpenOriginal>O&amp;tvori izvorni podnaslov…</OpenOriginal>
         <SaveOriginal>Spremi izvorni podnaslov</SaveOriginal>
         <CloseOriginal>&amp;Zatvori izvorni podnaslov</CloseOriginal>
         <OpenContainingFolder>Otvori &amp;mapu</OpenContainingFolder>
         <Compare>&amp;Usporedi…</Compare>
+        <Statistics>Statistik&amp;a...</Statistics>
+        <Plugins>Dodaci...</Plugins>
         <ImportOcrFromDvd>Prepoznaj znakove &amp;DVD podnaslova…</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Prepoznaj znakove &amp;Vobsub podnaslova…</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Prepoznaj znakove &amp;Blu-ray podnaslova…</ImportBluRaySupFile>
@@ -468,11 +578,20 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <ExportEbu>&amp;EBU STL…</ExportEbu>
         <ExportPac>&amp;PAC</ExportPac>
         <ExportPlainText>Običan tekst...</ExportPlainText>
-        <ExportPlainTextWithoutLineBreaks>Običan tekst bez prekidanja linija...</ExportPlainTextWithoutLineBreaks>
+        <ExportAdobeEncoreFabImageScript>Adobe Encore FAB slikovna skripta...</ExportAdobeEncoreFabImageScript>
+        <ExportKoreanAtsFilePair>Korejski ATS datotečni par...</ExportKoreanAtsFilePair>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
+        <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
+        <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
+        <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
+        <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
+        <ExportUltech130>Ultech naslov...</ExportUltech130>
         <Exit>Iz&amp;ađi</Exit>
       </File>
       <Edit>
         <Title>&amp;Uređivanje</Title>
+        <Undo>Poništi</Undo>
+        <Redo>Vrati poništeno</Redo>
         <ShowUndoHistory>P&amp;rikaži povijest</ShowUndoHistory>
         <InsertUnicodeSymbol>&amp;Unicode simboli</InsertUnicodeSymbol>
         <Find>&amp;Pronađi…</Find>
@@ -480,15 +599,20 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <Replace>&amp;Zamijeni…</Replace>
         <MultipleReplace>&amp;Višestruka zamjena…</MultipleReplace>
         <GoToSubtitleNumber>&amp;Idi na liniju broj…</GoToSubtitleNumber>
+        <RightToLeftMode>Zdesna na lijevo način</RightToLeftMode>
+        <ReverseRightToLeftStartEnd>Obrnuti RTL početak/kraj (za odabrane linije)</ReverseRightToLeftStartEnd>
+        <ShowOriginalTextInAudioAndVideoPreview>Prikaži originalni tekst u audio/video pregledima</ShowOriginalTextInAudioAndVideoPreview>
       </Edit>
       <Tools>
         <Title>&amp;Alati</Title>
         <AdjustDisplayDuration>&amp;Prilagodi trajanje…</AdjustDisplayDuration>
+        <ApplyDurationLimits>Ograničiti trajanje...</ApplyDurationLimits>
         <FixCommonErrors>&amp;Ispravi česte pogreške…</FixCommonErrors>
         <StartNumberingFrom>Počni &amp;nabrajanje…</StartNumberingFrom>
         <RemoveTextForHearingImpaired>&amp;Ukloni tekst za gluhe…</RemoveTextForHearingImpaired>
         <ChangeCasing>Promijeni &amp;mala i velika slova…</ChangeCasing>
         <ChangeFrameRate>P&amp;romijeni broj sličica…</ChangeFrameRate>
+        <ChangeSpeedInPercent>Promijeni brzinu (postocima)...</ChangeSpeedInPercent>
         <MergeShortLines>&amp;Spoji kratke linije…</MergeShortLines>
         <SplitLongLines>&amp;Razdvoji duge linije…</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Na&amp;jmanje vrijeme prikaza između linija…</MinimumDisplayTimeBetweenParagraphs>
@@ -502,10 +626,12 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <TextTotalLength>ukupnoj dužini</TextTotalLength>
         <TextNumberOfLines>broju linija</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Tekst - broj znakova/sek</TextNumberOfCharactersPerSeconds>
-        <ShowOriginalTextInAudioAndVideoPreview>Pri&amp;kaži izvorni tekst u pregledima zvuka i slike</ShowOriginalTextInAudioAndVideoPreview>
+        <WordsPerMinute>Tekst - riječi u minuti (wpm)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>&amp;Napravi prazan prijevod iz tekućeg podnaslova</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <BatchConvert>Batch konvertiranje...</BatchConvert>
         <SplitSubtitle>Raz&amp;dvoji podnaslov…</SplitSubtitle>
         <AppendSubtitle>Dodaj podnaslov…</AppendSubtitle>
+        <JoinSubtitles>Spojiti podnaslove...</JoinSubtitles>
       </Tools>
       <Video>
         <Title>&amp;Video zapis</Title>
@@ -572,18 +698,32 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <ShowHideVideo>Prikaži/sakrij video snimak</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <AdvancedSubStationAlphaSetStyle>Napredna Sub Station Alpha -  stil</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>SSA – Podešavanje stila</SubStationAlphaSetStyle>
+        <SubStationAlphaStyles>Sub Station Alpha stilovi...</SubStationAlphaStyles>
+        <AdvancedSubStationAlphaStyles>Napredne Sub Station Alpha stilovi...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetStyle>Vremenski Tekst - postavi stil</TimedTextSetStyle>
+        <TimedTextStyles>Vremenski Tekstualni stilovi...</TimedTextStyles>
+        <SamiSetStyle>Sami - skup klasa</SamiSetStyle>
         <Cut>Izreži</Cut>
         <Copy>Kopiraj</Copy>
         <Paste>Zalijepi</Paste>
         <Delete>Obriši</Delete>
         <SplitLineAtCursorPosition>Razdvoji liniju prema položaju pokazivača</SplitLineAtCursorPosition>
+        <AutoDurationCurrentLine>Auto trajanje (trenutni redak)</AutoDurationCurrentLine>
         <SelectAll>Iz&amp;aberi sve</SelectAll>
         <InsertFirstLine>Ubaci liniju</InsertFirstLine>
         <InsertBefore>Ubaci liniju iza</InsertBefore>
         <InsertAfter>Ubaci liniju ispred</InsertAfter>
         <InsertSubtitleAfter>Ubaci podnaslov iza linije…</InsertSubtitleAfter>
         <CopyToClipboard>Kopiraj u međuspremnik</CopyToClipboard>
+        <Column>Stup</Column>
+        <ColumnDeleteText>Brisanje teksta</ColumnDeleteText>
+        <ColumnDeleteTextAndShiftCellsUp>Brisanje teksta i pomak stanice do</ColumnDeleteTextAndShiftCellsUp>
+        <ColumnInsertEmptyTextAndShiftCellsDown>Umetnite prazan tekst i pomak prema dolje stanice</ColumnInsertEmptyTextAndShiftCellsDown>
+        <ColumnInsertTextFromSubtitle>Ubacite tekst iz podnaslova...</ColumnInsertTextFromSubtitle>
+        <ColumnImportTextAndShiftCellsDown>Uvoz tekst i pomak prema dolje stanice</ColumnImportTextAndShiftCellsDown>
+        <ColumnPasteFromClipboard>Zalijepi iz međuspremnika...</ColumnPasteFromClipboard>
         <Split>Razdvoji</Split>
         <MergeSelectedLines>Spoji izabrane linije</MergeSelectedLines>
         <MergeSelectedLinesASDialogue>Spoji odabrane linije kao dijalog</MergeSelectedLinesASDialogue>
@@ -593,6 +733,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <Underline>Podvuci</Underline>
         <Color>Promijeni boju…</Color>
         <FontName>Promijeni font…</FontName>
+        <Alignment>Poravnanje...</Alignment>
         <AutoBalanceSelectedLines>Prelomi izabrane linije…</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Ukloni suvišne redove…</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Dodaj efekt pisaće mašine…</TypewriterEffect>
@@ -604,6 +745,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <AdjustDisplayDurationForSelectedLines>Prilagodi trajanje…</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Ispravi česte pogreške…</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Promijeni mala i velika slova…</ChangeCasingForSelectedLines>
+        <SaveSelectedLines>Spremi odabrane linije kao...</SaveSelectedLines>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -705,6 +847,12 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <FindContinue>Nijedna stavka nije pronađena.
 Želite li da krenem s vrha stranice?</FindContinue>
     <FindContinueTitle>Nastavljanje pretrage</FindContinueTitle>
+    <ReplaceContinueNotFound>Traženi predmet nije pronađen.
+Želite li početi od vrha dokumenta i nastaviti pretraživanje i zamjenu?</ReplaceContinueNotFound>
+    <ReplaceXContinue>Traženi predmet je zamijenjen {0} vrijeme (s).
+Želite li početi od vrha dokumenta i nastaviti pretražvanje i zamjenu?</ReplaceXContinue>
+    <ReplaceContinueTitle>Nastavi 'Zamijeni'?</ReplaceContinueTitle>
+    <SearchingForXFromLineY>Potraži za '{0}' s linije broj {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>{0} su pronađene na liniji broj {1}.</XFoundAtLineNumberY>
     <XNotFound>{0} nisu pronađene.</XNotFound>
     <BeforeReplace>Zamijenjeno sa: {0}</BeforeReplace>
@@ -756,6 +904,7 @@ koji bi trebao biti usklađen s video datotekom.
     <TranslationFromSwedishToDanishFailed>Ne mogu da prevedem podnaslov sa Švedskog u Danski.</TranslationFromSwedishToDanishFailed>
     <BeforeUndo>Vraćanje</BeforeUndo>
     <UndoPerformed>Vraćanje učinjenog</UndoPerformed>
+    <RedoPerformed>Vrati poništeno (učinjeno)</RedoPerformed>
     <NothingToUndo>Ništa za vraćanje.</NothingToUndo>
     <InvalidLanguageNameX>Neispravan naziv jezika: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Promjena jezika nije uspjela!</UnableToChangeLanguage>
@@ -770,6 +919,7 @@ koji bi trebao biti usklađen s video datotekom.
     <BeforeAddingTagX>Dodano &lt;{0}&gt; oznaka</BeforeAddingTagX>
     <TagXAdded>Dodano oznaka: &lt;{0}&gt;</TagXAdded>
     <LineXOfY>linija {0} od {1}</LineXOfY>
+    <XLinesSavedAsY>{0} linija spremljeno kao {1}</XLinesSavedAsY>
     <XLinesDeleted>Obrisano linija: {0}</XLinesDeleted>
     <BeforeDeletingXLines>Obrisano linija: {0}</BeforeDeletingXLines>
     <DeleteXLinesPrompt>Želite li obrisati odabrane linije?</DeleteXLinesPrompt>
@@ -805,6 +955,7 @@ koji bi trebao biti usklađen s video datotekom.
     <CasingCompleteMessageOnlyNames>Broj linija s promijenjenom veličinom slova za nazive: {0}/{1}</CasingCompleteMessageOnlyNames>
     <CasingCompleteMessage>Broj linija s promijenjenom veličinom slova: {0}/{1}. Promijenjena mala i velika slova za nazive: {2}</CasingCompleteMessage>
     <BeforeChangeFrameRate>Promijenjen broj sličica</BeforeChangeFrameRate>
+    <BeforeAdjustSpeedInPercent>Prije prilagodbe brzine u postocima</BeforeAdjustSpeedInPercent>
     <FrameRateChangedFromXToY>Broj sličica je promijenjen iz {0} u {1}.</FrameRateChangedFromXToY>
     <IdxFileNotFoundWarning>Ne mogu pronaći datoteku {0}. Želite li uvesti Vobsub podnaslov?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>Izabrani podnaslov je neispravan: {0}</InvalidVobSubHeader>
@@ -812,11 +963,17 @@ koji bi trebao biti usklađen s video datotekom.
     <VobSubFiles>Vobsub podnaslovi</VobSubFiles>
     <OpenBluRaySupFile>Otvaranje Blu-ray podnaslova</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray podnaslovi</BluRaySupFiles>
-    <BeforeImportingVobSubFile>Uvezen Vobsub podnaslov</BeforeImportingVobSubFile>
-    <BeforeImportingBluRaySupFile>Uvezen Blu-ray podnaslov</BeforeImportingBluRaySupFile>
-    <BeforeImportingBdnXml>Uvezena datoteka BDN XML</BeforeImportingBdnXml>
-    <BeforeShowSelectedLinesEarlierLater>Pomjeren položaj linije (ranije ili kasnije)</BeforeShowSelectedLinesEarlierLater>
-    <ShowSelectedLinesEarlierLaterPerformed>Prikaži linije ranije ili kasnije</ShowSelectedLinesEarlierLaterPerformed>
+    <BeforeImportingVobSubFile>Prije uvoza datoteka Vobsub podnaslova</BeforeImportingVobSubFile>
+    <BeforeImportingBluRaySupFile>Prije uvoza datoteka Blu-ray podnaslov</BeforeImportingBluRaySupFile>
+    <BeforeImportingBdnXml>Prije uvoza datoteka BDN XML</BeforeImportingBdnXml>
+    <BeforeShowSelectedLinesEarlierLater>Prije prikaza odabranih linija prije/kasnije</BeforeShowSelectedLinesEarlierLater>
+    <ShowAllLinesXSecondsLinesEarlier>Prikaži sve linije {0:0.0##} sekundi prije</ShowAllLinesXSecondsLinesEarlier>
+    <ShowAllLinesXSecondsLinesLater>Prikaži sve linije {0:0.0##} sekundi kasnije</ShowAllLinesXSecondsLinesLater>
+    <ShowSelectedLinesXSecondsLinesEarlier>Prikaži odabrane linije {0:0.0##} sekundi prije</ShowSelectedLinesXSecondsLinesEarlier>
+    <ShowSelectedLinesXSecondsLinesLater>Prikaži odabrane linije {0:0.0##} sekundi kasnije</ShowSelectedLinesXSecondsLinesLater>
+    <ShowSelectionAndForwardXSecondsLinesEarlier>Prikaži odabrane i pomakni linije {0:0.0##} sekundi prije</ShowSelectionAndForwardXSecondsLinesEarlier>
+    <ShowSelectionAndForwardXSecondsLinesLater>Prikaži odabrane i pomakni linije {0:0.0##} sekundi kasnije</ShowSelectionAndForwardXSecondsLinesLater>
+    <ShowSelectedLinesEarlierLaterPerformed>Prikaži prije/kasnije učinak na odabrane linije</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Duplirane riječi putem regex-a {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Razvrstano: {0}</BeforeSortX>
     <SortedByX>Poredano po: {0}</SortedByX>
@@ -828,6 +985,10 @@ koji bi trebao biti usklađen s video datotekom.
     <NumberOfLinesReplacedX>Broj linija sa zamijenjenim tekstom: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNamesEtcList>Riječ „{0}“ je dodana u popis naziva/izuzetaka.</NameXAddedToNamesEtcList>
     <NameXNotAddedToNamesEtcList>Ne mogu dodati riječ „{0}“ u popis naziva/izuzetaka.</NameXNotAddedToNamesEtcList>
+    <WordXAddedToUserDic>Riječ '{0}' je dodana u korisnički riječnik</WordXAddedToUserDic>
+    <WordXNotAddedToUserDic>Ime '{0}' nije dodano u korisnički riječniki</WordXNotAddedToUserDic>
+    <OcrReplacePairXAdded>Popis OCR zamijeniti par '{0} -&gt; {1}' je dodan na popis OCR zamijeniti</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>Popis OCR zamijeniti par '{0} -&gt; {1}' nije dodan na popis OCR zamijeniti</OcrReplacePairXNotAdded>
     <XLinesSelected>Izabrano linija: {0}</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Podnaslov sadrži unicode glazbene note. Ako ih spremite u kodnom rasporedu ASCII, izgubićete ih. Želite li nastaviti?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Podnaslov sadrži negativne vremenske odrednice. Želite li nastaviti?</NegativeTimeWarning>
@@ -866,6 +1027,23 @@ koji bi trebao biti usklađen s video datotekom.
     <BeforeToggleDialogueDashes>Prije preklopni od dijaloga crtica</BeforeToggleDialogueDashes>
     <ExportPlainTextAs>Spremi običan tekst kao</ExportPlainTextAs>
     <TextFiles>Tekstualne datoteke</TextFiles>
+    <SubtitleExported>Podnaslov izvezen</SubtitleExported>
+    <LineNumberXErrorReadingFromSourceLineY>Linija {0} - pogreška čitanja: {1}</LineNumberXErrorReadingFromSourceLineY>
+    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Linija {0} - pogreška čitanja vremenskog koda: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>Linija {0} - očekivani broj podnaslova: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <BeforeGuessingTimeCodes>Prije nagađanje vremenskog koda</BeforeGuessingTimeCodes>
+    <BeforeAutoDuration>Prije auto-trajanja za odabrane linije</BeforeAutoDuration>
+    <BeforeColumnPaste>Zalijepiti prije stupca</BeforeColumnPaste>
+    <BeforeColumnDelete>Prije stupaca izbrisati</BeforeColumnDelete>
+    <BeforeColumnImportText>Prije stupca uvezi tekst</BeforeColumnImportText>
+    <BeforeColumnShiftCellsDown>Prije stupaca pomakni ćelije dolje</BeforeColumnShiftCellsDown>
+    <ErrorLoadingPluginXErrorY>Pogreška pri učitavanju dodatka: {0}: {1}</ErrorLoadingPluginXErrorY>
+    <BeforeRunningPluginXVersionY>Prije pokretanja dodatka: {0}: {1}</BeforeRunningPluginXVersionY>
+    <UnableToReadPluginResult>Nemoguće čitati rezultat podnaslova iz dodatka!!</UnableToReadPluginResult>
+    <UnableToCreateBackupDirectory>Nije moguće stvoriti sigurnosni direktorij {0}: {1}</UnableToCreateBackupDirectory>
+    <BeforeDisplaySubtitleJoin>Prije spajanja podnaslova</BeforeDisplaySubtitleJoin>
+    <SubtitlesJoined>Podnaslovi spojeni</SubtitlesJoined>
+    <StatusLog>Status izvješća</StatusLog>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Odabir podnaslova iz matroške</Title>
@@ -877,7 +1055,6 @@ koji bi trebao biti usklađen s video datotekom.
     <MaximumCharacters>Najviše znakova po redu:</MaximumCharacters>
     <MaximumMillisecondsBetween>Najviše milisekundi između linija:</MaximumMillisecondsBetween>
     <NumberOfMergesX>Broj spajanja: {0}</NumberOfMergesX>
-    <LineNumber>Broj linije</LineNumber>
     <MergedText>Spojen tekst</MergedText>
     <OnlyMergeContinuationLines>&amp;Spoji samo trajne linije</OnlyMergeContinuationLines>
   </MergedShortLines>
@@ -888,15 +1065,18 @@ koji bi trebao biti usklađen s video datotekom.
     <Normal>Normalan</Normal>
     <CaseSensitive>&amp;Podudaranje</CaseSensitive>
     <RegularExpression>&amp;Normalan izraz</RegularExpression>
-    <LineNumber>Linija</LineNumber>
-    <Before>Prije</Before>
-    <After>Poslije</After>
     <LinesFoundX>Pronađeno linija: {0}</LinesFoundX>
     <Delete>Obriši</Delete>
     <Add>&amp;Dodaj</Add>
     <Update>&amp;Ažuriraj</Update>
     <Enabled>Omogućeno</Enabled>
     <SearchType>Vrsta pretrage</SearchType>
+    <RemoveAll>Uklonite sve</RemoveAll>
+    <Import>Uvoz...</Import>
+    <Export>Izvoz...</Export>
+    <ImportRulesTitle>Promjena pravila uvoza (i) iz...</ImportRulesTitle>
+    <ExportRulesTitle>Promjena pravila izvoza (i) u...</ExportRulesTitle>
+    <Rules>Izvoz pravila</Rules>
   </MultipleReplace>
   <NetworkChat>
     <Title>Ćaskanje</Title>
@@ -919,6 +1099,24 @@ koji bi trebao biti usklađen s video datotekom.
     određeni podnaslov s drugim ljudima.</Information>
     <Start>&amp;Započni</Start>
   </NetworkStart>
+  <PluginsGet>
+    <Title>Dodaci</Title>
+    <InstalledPlugins>Instalirani dodaci</InstalledPlugins>
+    <GetPlugins>Dohvati dodatke</GetPlugins>
+    <Description>Opis</Description>
+    <Version>Verzija</Version>
+    <Date>Datum</Date>
+    <Type>Tip</Type>
+    <OpenPluginsFolder>Otvoriti mapu dodataka</OpenPluginsFolder>
+    <GetPluginsInfo1>Subtitle Editi dodaci moraju biti u mapi dodataka</GetPluginsInfo1>
+    <GetPluginsInfo2>Odaberite dodatak i kliknite za preuzimanje</GetPluginsInfo2>
+    <PluginXDownloaded>Dodatak {0} preuzet</PluginXDownloaded>
+    <Download>&amp;Preuzimanja</Download>
+    <Remove>&amp;Ukloni</Remove>
+    <UnableToDownloadPluginListX>Ne može se preuzeti popis dodataka: {0}</UnableToDownloadPluginListX>
+    <NewVersionOfSubtitleEditRequired>Zahtijeva se novija verzija Subtitle Edit-a!</NewVersionOfSubtitleEditRequired>
+    <UpdateAvailable>[Ažuriranje dostupano!]</UpdateAvailable>
+  </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Uklanjanje teksta za gluhe</Title>
     <RemoveTextConditions>Uklanjanje oznaka</RemoveTextConditions>
@@ -931,11 +1129,9 @@ koji bi trebao biti usklađen s video datotekom.
     <RemoveTextBeforeColon>U&amp;kloni tekst prije dvotočke</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>&amp;Samo ako je tekst velikim slovima</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>S&amp;amo ako je u odvojenoj liniji</OnlyIfInSeparateLine>
-    <LineNumber>Broj linije</LineNumber>
-    <Before>Prije</Before>
-    <After>Poslije</After>
     <LinesFoundX>Pronađeno linija: {0}</LinesFoundX>
     <RemoveTextIfContains>Uk&amp;loni tekst ako sadrži:</RemoveTextIfContains>
+    <RemoveTextIfAllUppercase>Uklonite liniju velikih slova</RemoveTextIfAllUppercase>
     <RemoveInterjections>Ukl&amp;oni uzvike</RemoveInterjections>
     <EditInterjections>U&amp;redi…</EditInterjections>
   </RemoveTextFromHearImpaired>
@@ -950,6 +1146,22 @@ koji bi trebao biti usklađen s video datotekom.
     <Replace>&amp;Zamijeni</Replace>
     <ReplaceAll>Zamijeni &amp;sve</ReplaceAll>
   </ReplaceDialog>
+  <RestoreAutoBackup>
+    <Title>Vraćanje sigurnosne kopije</Title>
+    <Information>Otvori automatsku spremljenu sigurnosnu kopiju</Information>
+    <DateAndTime>Datum i vrijeme</DateAndTime>
+    <FileName>Naziv datoteke</FileName>
+    <Extension>Proširenje</Extension>
+    <NoBackedUpFilesFound>Sigurnosna kopija nije pronađena!</NoBackedUpFilesFound>
+  </RestoreAutoBackup>
+  <SeekSilence>
+    <Title>Traži tišinu</Title>
+    <SearchDirection>Smjer pretrage</SearchDirection>
+    <Forward>Naprijed</Forward>
+    <Back>Natrag</Back>
+    <LengthInSeconds>Tišina mora biti najmanje (sekundi)</LengthInSeconds>
+    <MaxVolume>Glasnoća mora biti ispod</MaxVolume>
+  </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Postavljanje najmanjeg vremena između linija</Title>
     <PreviewLinesModifiedX>Pregled – izmijenjeno linija: {0}</PreviewLinesModifiedX>
@@ -990,12 +1202,14 @@ koji bi trebao biti usklađen s video datotekom.
     <DefaultFileEncoding>Podrazumijevano kodiranje:</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Samoprepoznavanje kodiranja:</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Najveća dužina podnaslova:</SubtitleLineMaximumLength>
+    <MaximumCharactersPerSecond>Maks. znakova/sek</MaximumCharactersPerSecond>
     <AutoWrapWhileTyping>p&amp;relamaj pri tipkanju</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. trajanje, milisekunde</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Maks. trajanje, milisekunde</DurationMaximumMilliseconds>
     <SubtitleFont>Tip fonta:</SubtitleFont>
     <SubtitleFontSize>Veličina:</SubtitleFontSize>
     <SubtitleBold>pod&amp;ebljano</SubtitleBold>
+    <SubtitleCenter>Centar</SubtitleCenter>
     <SubtitleFontColor>Boja fonta:</SubtitleFontColor>
     <SubtitleBackgroundColor>Boja pozadine:</SubtitleBackgroundColor>
     <SpellChecker>Provjera pravopisa:</SpellChecker>
@@ -1011,12 +1225,19 @@ koji bi trebao biti usklađen s video datotekom.
     <MainListViewVideoGoToPositionAndPause>prijeći na poziciju snimke i pauzirati</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>prijeći na poziciju snimke i pustiti</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>prijeći na polje za uređivanje</MainListViewEditText>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Idi na video poziciju - 1 sec i pauzirati</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Idi na video poziciju - 0,5 sec i pauzirati</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Idi na video poziciju - 1 sec i pokreni</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewEditTextAndPause>Idi na uređivanje tekstnog okvira, i pauziraj video na trenutnoj poziciji</MainListViewEditTextAndPause>
     <AutoBackup>Stvaranje rezervi:</AutoBackup>
     <AutoBackupEveryMinute>svaku minutu</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>svakih 5 minuta</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>svakih 15 minuta</AutoBackupEveryFifteenMinutes>
     <AllowEditOfOriginalSubtitle>&amp;Dozvoli uređivanje izvornog podnaslova</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Pitaj za brisanje linija</PromptDeleteLines>
+    <TimeCodeMode>Rad u vremenskom kodu</TimeCodeMode>
+    <TimeCodeModeHHMMSSMsec>HH: MM: SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSFF>HH: MM: SS: FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Dobavljač slike</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll u mapi „System32“</DirectShowDescription>
@@ -1027,6 +1248,8 @@ koji bi trebao biti usklađen s video datotekom.
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll iz VLC media player-a 1.1.0 ili novijeg izdanja</VlcMediaPlayerDescription>
     <ShowStopButton>&amp;Gumb za zaustavljanje</ShowStopButton>
+    <ShowMuteButton>Pokaži gumb za isključivanje zvuka</ShowMuteButton>
+    <ShowFullscreenButton>Prikaži  gumb za puni ekran</ShowFullscreenButton>
     <DefaultVolume>Jačina zvuka:</DefaultVolume>
     <VolumeNotes>(0 – isključeno, 100 – najglasnije)</VolumeNotes>
     <PreviewFontSize>Veličina fonta:  </PreviewFontSize>
@@ -1093,6 +1316,7 @@ koji bi trebao biti usklađen s video datotekom.
     <UpdateShortcut>Ažuriraj prečac</UpdateShortcut>
     <ShortcutIsNotValid>Prečac nije ispravan: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Zakači/otkači video kontrole</ToggleDockUndockOfVideoControls>
+    <CreateSetEndAddNewAndGoToNew>Postavite kraj, dodajte novi i idi na novi</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Prilagodi preko završnog položaja i prijeđi na slijedeći</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Postavit početak, auto trajanje  i idi na sljedeći</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Kraj, započeti i idite na sljedeći</AdjustSetEndNextStartAndGoToNext>
@@ -1106,9 +1330,14 @@ koji bi trebao biti usklađen s video datotekom.
     <GoToPrevious>Idi na prethodnu liniju</GoToPrevious>
     <ToggleFocus>Prebacivanje fokusa između prikaza popisa i podnaslova teksnog okvira</ToggleFocus>
     <ToggleDialogueDashes>Prebacivanje između dijaloga</ToggleDialogueDashes>
+    <Alignment>Poravnanje (odabrane linije)</Alignment>
+    <CopyTextOnly>Kopiranje teksta samo u međuspremnik (odabrane linije)</CopyTextOnly>
+    <AutoDurationSelectedLines>Auto-trajanje (odabrane linije)</AutoDurationSelectedLines>
+    <ReverseStartAndEndingForRTL>Obrnuti RTL početak/kraj</ReverseStartAndEndingForRTL>
     <VerticalZoom>Vertikalno uvećanje</VerticalZoom>
     <WaveformSeekSilenceForward>Traži tišinu naprijed</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Traži tišinu natrag</WaveformSeekSilenceBack>
+    <WaveformAddTextHere>Dodajte tekst ovdje (za novi odabir)</WaveformAddTextHere>
     <GoBack100Milliseconds>100 ms natrag</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms naprijed</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms natrag</GoBack500Milliseconds>
@@ -1116,6 +1345,32 @@ koji bi trebao biti usklađen s video datotekom.
     <TogglePlayPause>Prebacivanje reprodukcija/pauza</TogglePlayPause>
     <Pause>Pauza</Pause>
     <Fullscreen>Puni prikaz</Fullscreen>
+    <CustomSearch1>Prijevod, prilagođena pretraga 1</CustomSearch1>
+    <CustomSearch2>Prijevod, prilagođena pretraga 2</CustomSearch2>
+    <CustomSearch3>Prijevod, prilagođena pretraga 3</CustomSearch3>
+    <CustomSearch4>Prijevod, prilagođena pretraga 4</CustomSearch4>
+    <CustomSearch5>Prijevod, prilagođena pretraga 5</CustomSearch5>
+    <CustomSearch6>Prijevod, prilagođena pretraga 6</CustomSearch6>
+    <SyntaxColoring>Bojanje sintakse</SyntaxColoring>
+    <ListViewSyntaxColoring>Pregled liste/bojanje sintakse</ListViewSyntaxColoring>
+    <SyntaxColorDurationIfTooSmall>Trajanje boje ako je prekratko</SyntaxColorDurationIfTooSmall>
+    <SyntaxColorDurationIfTooLarge>Trajanje boje ako je predugo</SyntaxColorDurationIfTooLarge>
+    <SyntaxColorTextIfTooLong>Boja teksta ako je predugo</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextMoreThanXLines>Boja teksta ako je više linija:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorOverlap>Preklapanje boje vremanskog koda</SyntaxColorOverlap>
+    <SyntaxErrorColor>Pogreška boje</SyntaxErrorColor>
+    <GoToFirstSelectedLine>Idi na prvu odabranu liniju</GoToFirstSelectedLine>
+    <MergeSelectedLines>Spoji odabrane linije</MergeSelectedLines>
+    <ToggleTranslationMode>Promijeni način prevođenja</ToggleTranslationMode>
+    <SwitchOriginalAndTranslation>Prebacivanje izvornik i prijevod</SwitchOriginalAndTranslation>
+    <MergeOriginalAndTranslation>Spoji izvornik i prijevod</MergeOriginalAndTranslation>
+    <ShortcutIsAlreadyDefinedX>Prečac je već definiran:
+{0}</ShortcutIsAlreadyDefinedX>
+    <ToggleTranslationAndOriginalInPreviews>Prebacivanje prijevoda i izvornika u video/audio pregledu</ToggleTranslationAndOriginalInPreviews>
+    <ListViewColumnDelete>Stup, brisanje teksta</ListViewColumnDelete>
+    <ListViewColumnInsert>Stup, umetnuti tekst</ListViewColumnInsert>
+    <ListViewColumnPaste>Stup, zalijepiti</ListViewColumnPaste>
+    <ShowBeamer>Započni pregled podnaslova preko cijelog zaslona</ShowBeamer>
   </Settings>
   <ShowEarlierLater>
     <Title>Postavljanje linija ranije ili kasnije</Title>
@@ -1124,7 +1379,8 @@ koji bi trebao biti usklađen s video datotekom.
     <ShowLater>Postavi &amp;kasnije</ShowLater>
     <TotalAdjustmentX>Ukupno izmjena: {0}</TotalAdjustmentX>
     <AllLines>&amp;Sve linije</AllLines>
-    <SelectedLinesonly>&amp;Izabrane linije</SelectedLinesonly>
+    <SelectedLinesOnly>Samo odabrane linije</SelectedLinesOnly>
+    <SelectedLinesAndForward>Odabrane linija(e) i naprijed</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Povijest</Title>
@@ -1146,6 +1402,7 @@ koji bi trebao biti usklađen s video datotekom.
     <SkipAll>Pr&amp;eskoči sve</SkipAll>
     <AddToUserDictionary>D&amp;odaj u prilagođeni riječnik</AddToUserDictionary>
     <AddToNamesAndIgnoreList>&amp;Dodaj u riječnik naziva/nepoželjnosti</AddToNamesAndIgnoreList>
+    <AddToOcrReplaceList>Dodaj OCR par u zamjenski popis</AddToOcrReplaceList>
     <Abort>Odustani</Abort>
     <Use>&amp;Koristi</Use>
     <UseAlways>Koristi &amp;uvijek</UseAlways>
@@ -1159,6 +1416,21 @@ koji bi trebao biti usklađen s video datotekom.
     <SpellCheckCompleted>Provjera pravopisa je završena.</SpellCheckCompleted>
     <SpellCheckAborted>Provjera pravopisa je prekinuta.</SpellCheckAborted>
   </SpellCheck>
+  <Split>
+    <Title>Razdijeli</Title>
+    <SplitOptions>Opcije razdjeljivanja</SplitOptions>
+    <Lines>Linije</Lines>
+    <Characters>Znakovi</Characters>
+    <NumberOfEqualParts>Broj jednakih dijelova</NumberOfEqualParts>
+    <SubtitleInfo>Info podnaslova</SubtitleInfo>
+    <NumberOfLinesX>Broj linija: {0:#,###}</NumberOfLinesX>
+    <NumberOfCharactersX>Broj znakova: {0:#,###,###}</NumberOfCharactersX>
+    <Output>Izlaz</Output>
+    <FileName>Naziv datoteke</FileName>
+    <OutputFolder>Izlazna mapa</OutputFolder>
+    <DoSplit>Razdijeli</DoSplit>
+    <Basic>Osnovno</Basic>
+  </Split>
   <SplitLongLines>
     <Title>Razdvajanje dugih linija</Title>
     <SingleLineMaximumLength>Najveća dužina jedne linije:</SingleLineMaximumLength>
@@ -1180,12 +1452,106 @@ koji bi trebao biti usklađen s video datotekom.
     <Part1>Prvi dio</Part1>
     <Part2>Drugi dio</Part2>
     <UnableToSaveFileX>Nije moguće spremiti datoteku {0}.</UnableToSaveFileX>
+    <OverwriteExistingFiles>Prepiši preko postojeće datoteke?</OverwriteExistingFiles>
+    <FolderNotFoundX>Mapa nije pronađena: {0}</FolderNotFoundX>
+    <Untitled>Bezimeno</Untitled>
   </SplitSubtitle>
   <StartNumberingFrom>
     <Title>Nabrajanje</Title>
     <StartFromNumber>Započni od broja:</StartFromNumber>
     <PleaseEnterAValidNumber>Unesite željeni broj.</PleaseEnterAValidNumber>
   </StartNumberingFrom>
+  <Statistics>
+    <Title>Statistika</Title>
+    <TitleWithFileName>Statistika - {0}</TitleWithFileName>
+    <GeneralStatistics>Općenito statistika</GeneralStatistics>
+    <MostUsed>Najviše korišteno...</MostUsed>
+    <MostUsedLines>Najviše korištenih linija</MostUsedLines>
+    <MostUsedWords>Najviše korištenih riječi</MostUsedWords>
+    <NothingFound>Ništa nije pronađeno</NothingFound>
+    <NumberOfLinesX>Broj linija podnaslova: {0: # # # #}</NumberOfLinesX>
+    <LengthInFormatXinCharactersY>Broj znakova kao {0}: {1: #, ###, ##0}</LengthInFormatXinCharactersY>
+    <NumberOfCharactersInTextOnly>Broj znakova u tekstu samo: {0: #, # # #, # # 0}</NumberOfCharactersInTextOnly>
+    <TotalCharsPerSecond>Ukupno znakova / sekundi: {0:0.0} sekundi</TotalCharsPerSecond>
+    <NumberOfItalicTags>Broj kurzivnih oznaka: {0}</NumberOfItalicTags>
+    <NumberOfBoldTags>Broj podebljanh oznaka: {0}</NumberOfBoldTags>
+    <NumberOfUnderlineTags>Broj podvučenih oznaka: {0}</NumberOfUnderlineTags>
+    <NumberOfFontTags>Broj oznaka fonta : {0}</NumberOfFontTags>
+    <NumberOfAlignmentTags>Broj poravnatih oznaka: {0}</NumberOfAlignmentTags>
+    <LineLengthMinimum>Podnaslov duljina - minimalno: {0}</LineLengthMinimum>
+    <LineLengthMaximum>Podnaslov duljina - maksimalno: {0}</LineLengthMaximum>
+    <LineLengthAvarage>Podnaslov duljina - prosjek: {0}</LineLengthAvarage>
+    <LinesPerSubtitleAvarage>Podnaslov, broj linija - prosjek: {0:0.0}</LinesPerSubtitleAvarage>
+    <SingleLineLengthMinimum>Jedan redak duljina - minimalno: {0}</SingleLineLengthMinimum>
+    <SingleLineLengthMaximum>Jedan redak duljina - maksimalno: {0}</SingleLineLengthMaximum>
+    <SingleLineLengthAvarage>Jedan redak duljina - prosjek: {0}</SingleLineLengthAvarage>
+    <DurationMinimum>Trajanje - minimum: {0:0.000} sekundi</DurationMinimum>
+    <DurationMaximum>Trajanje - maksimalno: {0:0.000} sekundi</DurationMaximum>
+    <DurationAvarage>Trajanje - prosjek: {0:0.000} sekundi</DurationAvarage>
+  </Statistics>
+  <SubStationAlphaProperties>
+    <Title>Napredna Sub Station Alpha svojstva</Title>
+    <TitleSubstationAlpha>Sub Station Alpha svojstva</TitleSubstationAlpha>
+    <Script>Skripta</Script>
+    <ScriptTitle>Naslov</ScriptTitle>
+    <OriginalScript>Izvorni scenarij</OriginalScript>
+    <Translation>Prijevod</Translation>
+    <Editing>Uređivanje</Editing>
+    <Timing>Uštimavanje</Timing>
+    <SyncPoint>Sync točka</SyncPoint>
+    <UpdatedBy>Ažurirao</UpdatedBy>
+    <UpdateDetails>Detalji ažuriranja</UpdateDetails>
+    <Resolution>Rezolucija</Resolution>
+    <VideoResolution>Video razlučivost</VideoResolution>
+    <Options>Opcije</Options>
+    <WrapStyle>Wrap style</WrapStyle>
+    <Collision>Sudara</Collision>
+    <ScaleBorderAndShadow>Skala granice i sjena</ScaleBorderAndShadow>
+  </SubStationAlphaProperties>
+  <SubStationAlphaStyles>
+    <Title>Napredne Sub Station Alpha stilovi</Title>
+    <TitleSubstationAlpha>Sub Station Alpha stilovi</TitleSubstationAlpha>
+    <Styles>Stilovi</Styles>
+    <Properties>Svojstva</Properties>
+    <Name>Ime</Name>
+    <Font>Slova</Font>
+    <FontName>Naziv Slova</FontName>
+    <FontSize>Veličina Slova</FontSize>
+    <UseCount>Rabljeni</UseCount>
+    <Primary>Primarni</Primary>
+    <Secondary>Sekundarna</Secondary>
+    <Tertiary>Visoko</Tertiary>
+    <Outline>Obris</Outline>
+    <Shadow>Sjena</Shadow>
+    <Back>Natrag</Back>
+    <Alignment>Poravnanje</Alignment>
+    <TopLeft>Vrh/lijevo</TopLeft>
+    <TopCenter>Vrh/centar</TopCenter>
+    <TopRight>Vrh/desno</TopRight>
+    <MiddleLeft>Srednji/lijevo</MiddleLeft>
+    <MiddleCenter>Srednji/centar</MiddleCenter>
+    <MiddleRight>Srednji/desno</MiddleRight>
+    <BottomLeft>Dno/lijevo</BottomLeft>
+    <BottomCenter>Dno/centar</BottomCenter>
+    <BottomRight>Dno/desno</BottomRight>
+    <Colors>Boje</Colors>
+    <Margins>Margine</Margins>
+    <MarginLeft>Margina lijevo</MarginLeft>
+    <MarginRight>Margina pravo</MarginRight>
+    <MarginVertical>Margina vertikalna</MarginVertical>
+    <Border>Granica</Border>
+    <PlusShadow>+ Sjena</PlusShadow>
+    <OpaqueBox>Neprozirna kutija (koristi obris boje)</OpaqueBox>
+    <Import>Uvoz...</Import>
+    <Copy>Kopiraj</Copy>
+    <CopyOfY>Kopija {0}</CopyOfY>
+    <CopyXOfY>Kopiraj {0} od {1}</CopyXOfY>
+    <New>Novi</New>
+    <Remove>Ukloni</Remove>
+    <RemoveAll>Uklonite sve</RemoveAll>
+    <ImportStyleFromFile>Uvezi stil iz datoteke...</ImportStyleFromFile>
+    <ChooseStyle>Odaberite stil za uvoz</ChooseStyle>
+  </SubStationAlphaStyles>
   <PointSync>
     <Title>Točka usklađivanja</Title>
     <TitleViaOtherSubtitle>Točka usklađivanja iz drugog podnaslova</TitleViaOtherSubtitle>
@@ -1309,6 +1675,7 @@ koji bi trebao biti usklađen s video datotekom.
     <ZoomIn>Uvećaj</ZoomIn>
     <ZoomOut>Umanji</ZoomOut>
     <AddParagraphHere>Dodaj tekst ovdje</AddParagraphHere>
+    <AddParagraphHereAndPasteText>Dodaj tekst iz međuspremnika ovdje</AddParagraphHereAndPasteText>
     <DeleteParagraph>Obriši tekst</DeleteParagraph>
     <Split>Razdvoji</Split>
     <SplitAtCursor>Razdvoji prema pokazivaču miša</SplitAtCursor>
@@ -1318,5 +1685,24 @@ koji bi trebao biti usklađen s video datotekom.
     <ShowWaveformAndSpectrogram>Prikaži valni oblik i spektrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Prikaži samo valni oblik</ShowWaveformOnly>
     <ShowSpectrogramOnly>Prikaži samo spektrogram</ShowSpectrogramOnly>
+    <GuessTimeCodes>Pogodi vremenske kodove...</GuessTimeCodes>
+    <SeekSilence>Tražiti tišinu...</SeekSilence>
   </WaveForm>
+  <WaveFormGenerateTimeCodes>
+    <Title>Pogodi vremenske kodove...</Title>
+    <StartFrom>Počnite od</StartFrom>
+    <CurrentVideoPosition>Trenutna pozicija videozapisa</CurrentVideoPosition>
+    <Beginning>Početak</Beginning>
+    <DeleteLines>Brisanje linije</DeleteLines>
+    <FromCurrentVideoPosition>Iz trenutne pozicije videa</FromCurrentVideoPosition>
+    <DetectOptions>Detekcija mogućnosti</DetectOptions>
+    <ScanBlocksOfMs>Skeniraj blokove milisekundi</ScanBlocksOfMs>
+    <BlockAverageVolMin1>Blok volumen prosjek mora biti iznad</BlockAverageVolMin1>
+    <BlockAverageVolMin2>% Od ukupnog prosječnog volumena</BlockAverageVolMin2>
+    <BlockAverageVolMax1>Blok volumen prosječno mora biti ispod</BlockAverageVolMax1>
+    <BlockAverageVolMax2>% Od ukupnog volumena max</BlockAverageVolMax2>
+    <SplitLongLinesAt1>Razdijeli duge titlove na</SplitLongLinesAt1>
+    <SplitLongLinesAt2>Milisekundi</SplitLongLinesAt2>
+    <Other>Ostalo</Other>
+  </WaveFormGenerateTimeCodes>
 </Language>

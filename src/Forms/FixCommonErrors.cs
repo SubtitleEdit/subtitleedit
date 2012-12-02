@@ -2846,16 +2846,16 @@ namespace Nikse.SubtitleEdit.Forms
                     if (text.StartsWith("<i>... "))
                         text = text.Remove(6, 1);
                 }
-                if (text.EndsWith("-"))
-                {
-                    text = text.Substring(0, text.Length - 1) + "...";
-                    text = text.Replace(" ...", "...");
-                }
-                if (text.EndsWith("-</i>"))
-                {
-                    text = text.Replace("-</i>", "...</i>");
-                    text = text.Replace(" ...", "...");
-                }
+                //if (text.EndsWith("-"))
+                //{
+                //    text = text.Substring(0, text.Length - 1) + "...";
+                //    text = text.Replace(" ...", "...");
+                //}
+                //if (text.EndsWith("-</i>"))
+                //{
+                //    text = text.Replace("-</i>", "...</i>");
+                //    text = text.Replace(" ...", "...");
+                //}
 
                 if (p.Text.StartsWith("—"))
                 {
