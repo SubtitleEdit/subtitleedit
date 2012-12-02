@@ -1311,8 +1311,10 @@
     <None Include="Languages\Old\hr-HR.xml" />
     <None Include="Languages\Old\hu-HU.xml" />
     <None Include="Languages\Old\it-IT.xml" />
-    <None Include="Languages\Old\ja-JP.xml" />
     <None Include="Languages\Old\ko-KR.xml" />
+    <Content Include="Languages\ja-JP.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\nl-NL.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
