@@ -97,9 +97,9 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <Description>ユーザー辞書に追加 (大文字と小文字は区別されます)</Description>
   </AddToUserDictionary>
   <AddWaveForm>
-    <Title>Wave フォーム データの生成</Title>
+    <Title>波形データの生成</Title>
     <SourceVideoFile>ソース ビデオ ファイル:</SourceVideoFile>
-    <GenerateWaveFormData>Wave フォーム データの生成</GenerateWaveFormData>
+    <GenerateWaveFormData>波形データの生成</GenerateWaveFormData>
     <PleaseWait>これには数分かかる可能性があります - お待ちください</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC Media Player が見つかりません</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit は オーディオ データの抽出に VLC media player 1.1.x 以降を必要とします</VlcMediaPlayerNotFound>
@@ -639,8 +639,8 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
         <ChooseAudioTrack>オーディオ トラックの選択</ChooseAudioTrack>
         <CloseVideo>ビデオ ファイルを閉じる</CloseVideo>
         <ShowHideVideo>ビデオの表示/非表示の切り替え</ShowHideVideo>
-        <ShowHideWaveForm>Wave フォームの表示/非表示の切り替え</ShowHideWaveForm>
-        <ShowHideWaveformAndSpectrogram>Wave フォームとスペクトログラムの表示/非表示の切り替え</ShowHideWaveformAndSpectrogram>
+        <ShowHideWaveForm>波形の表示/非表示の切り替え</ShowHideWaveForm>
+        <ShowHideWaveformAndSpectrogram>波形とスペクトログラムの表示/非表示の切り替え</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>ビデオ コントロールのドッキング解除</UnDockVideoControls>
         <ReDockVideoControls>ビデオ コントロールの再ドッキング</ReDockVideoControls>
       </Video>
@@ -694,7 +694,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
         <SpellCheck>スペル チェック</SpellCheck>
         <Settings>設定</Settings>
         <Help>ヘルプ</Help>
-        <ShowHideWaveForm>Wave フォームの表示/非表示の切り替え</ShowHideWaveForm>
+        <ShowHideWaveForm>波形の表示/非表示の切り替え</ShowHideWaveForm>
         <ShowHideVideo>ビデオの表示/非表示の切り替え</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -800,7 +800,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
       <TranslateTip>ヒント: 前/次の字幕へ移動するには &lt;alt+↑/↓&gt; を使用します</TranslateTip>
       <CreateTip>ヒント: &lt;ctrl+←/→&gt; キーを使用します</CreateTip>
       <AdjustTip>ヒント: 前/次の字幕へ移動するには &lt;alt+↑/↓&gt; を使用します</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Wave フォームで時間を変更する前: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveFormX>波形で時間を変更する前: {0}</BeforeChangingTimeInWaveFormX>
       <NewTextInsertAtX>新しいテキストが {0} に挿入されました</NewTextInsertAtX>
       <Center>中央</Center>
       <PlayRate>再生レート (速度)</PlayRate>
@@ -1181,7 +1181,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <General>全般</General>
     <Toolbar>ツール バー</Toolbar>
     <VideoPlayer>ビデオ プレーヤー</VideoPlayer>
-    <WaveformAndSpectrogram>Wave フォーム/スペクトログラム</WaveformAndSpectrogram>
+    <WaveformAndSpectrogram>波形/スペクトログラム</WaveformAndSpectrogram>
     <Tools>ツール</Tools>
     <WordLists>単語の一覧</WordLists>
     <SsaStyle>SSA スタイル</SsaStyle>
@@ -1255,7 +1255,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <PreviewFontSize>字幕プレビューのフォント サイズ</PreviewFontSize>
     <MainWindowVideoControls>メイン ウィンドウのビデオ コントロール</MainWindowVideoControls>
     <CustomSearchTextAndUrl>カスタム検索のテキストと URL</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Wave フォームの外観</WaveFormAppearance>
+    <WaveFormAppearance>波形の外観</WaveFormAppearance>
     <WaveFormGridColor>グリッドの色</WaveFormGridColor>
     <WaveFormShowGridLines>グリッド線を表示する</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>マウス ホイールのスクロール方向を反転する</ReverseMouseWheelScrollDirection>
@@ -1668,8 +1668,8 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <Message>新しい文字データベース フォルダーの名前</Message>
   </VobSubOcrNewFolder>
   <WaveForm>
-    <ClickToAddWaveForm>Wave フォームを追加する</ClickToAddWaveForm>
-    <ClickToAddWaveformAndSpectrogram>Wave フォーム/スペクトログラムを追加する</ClickToAddWaveformAndSpectrogram>
+    <ClickToAddWaveForm>波形を追加する</ClickToAddWaveForm>
+    <ClickToAddWaveformAndSpectrogram>波形/スペクトログラムを追加する</ClickToAddWaveformAndSpectrogram>
     <Seconds>秒</Seconds>
     <ZoomIn>拡大</ZoomIn>
     <ZoomOut>縮小</ZoomOut>
@@ -1681,8 +1681,8 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <MergeWithPrevious>前と結合</MergeWithPrevious>
     <MergeWithNext>次と結合</MergeWithNext>
     <PlaySelection>選択範囲の再生</PlaySelection>
-    <ShowWaveformAndSpectrogram>Wave フォームとスペクトログラムの表示</ShowWaveformAndSpectrogram>
-    <ShowWaveformOnly>Wave フォームのみ表示</ShowWaveformOnly>
+    <ShowWaveformAndSpectrogram>波形とスペクトログラムの表示</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>波形のみ表示</ShowWaveformOnly>
     <ShowSpectrogramOnly>スペクトログラムのみ表示</ShowSpectrogramOnly>
     <GuessTimeCodes>タイム コードの推測...</GuessTimeCodes>
     <SeekSilence>無音の検索...</SeekSilence>
