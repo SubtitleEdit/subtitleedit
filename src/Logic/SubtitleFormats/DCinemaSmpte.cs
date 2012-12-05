@@ -50,12 +50,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string xmlAsString = sb.ToString().Trim();
-            if (xmlAsString.Contains("<dcst:SubtitleReel"))
+            if (xmlAsString.Contains("<dcst:SubtitleReel") || xmlAsString.Contains("<SubtitleReel"))
             {
                 var xml = new XmlDocument();
                 try
                 {
                     xmlAsString = xmlAsString.Replace("<dcst:", "<").Replace("</dcst:", "</");
+                    xmlAsString = xmlAsString.Replace("xmlns=\"http://www.smpte-ra.org/schemas/428-7/2007/DCST\"", string.Empty);
                     xml.LoadXml(xmlAsString);
                     var subtitles = xml.DocumentElement.SelectNodes("//Subtitle");
                     if (subtitles != null && subtitles.Count >= 0)
@@ -373,7 +374,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument();
-            xml.LoadXml(sb.ToString().Replace("<dcst:", "<").Replace("</dcst:", "</")); // tags might be prefixed with namespace (or not)... so we just remove them
+            xml.LoadXml(sb.ToString().Replace("<dcst:", "<").Replace("</dcst:", "</").Replace("xmlns=\"http://www.smpte-ra.org/schemas/428-7/2007/DCST\"", string.Empty)); // tags might be prefixed with namespace (or not)... so we just remove them
 
             var ss = Configuration.Settings.SubtitleSettings;
             try
@@ -541,6 +542,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     string start = node.Attributes["TimeIn"].InnerText;
                     string end = node.Attributes["TimeOut"].InnerText;
+
+                    if (node.ParentNode.Name == "Font" && node.ParentNode.Attributes["Italic"] != null && node.ParentNode.Attributes["Italic"].InnerText.ToLower() == "yes" &&
+                        !pText.ToString().Contains("<i>"))
+                    {
+                        string text = pText.ToString();
+                        if (text.StartsWith("{\\an") && text.Length > 6)
+                            text = text.Insert(6, "<i>") + "</i>";
+                        else
+                            text = "<i>" + text + "</i>";
+                        pText = new StringBuilder(text);
+                    }
 
                     subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), pText.ToString()));
                 }
