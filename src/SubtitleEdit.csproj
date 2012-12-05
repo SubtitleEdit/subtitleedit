@@ -1287,7 +1287,9 @@
     <Content Include="Languages\bg-BG.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Languages\Old\ca-ES.xml" />
+    <Content Include="Languages\ca-ES.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\cs-CZ.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

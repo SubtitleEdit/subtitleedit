@@ -521,6 +521,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string start = node.Attributes["TimeIn"].InnerText;
                     string end = node.Attributes["TimeOut"].InnerText;
 
+                    if (node.ParentNode.Name == "Font" && node.ParentNode.Attributes["Italic"] != null && node.ParentNode.Attributes["Italic"].InnerText.ToLower() == "yes" &&
+                        !pText.ToString().Contains("<i>"))
+                    {
+                        string text = pText.ToString();
+                        if (text.StartsWith("{\\an") && text.Length > 6)
+                            text = text.Insert(6, "<i>") + "</i>";
+                        else
+                            text = "<i>" + text + "</i>";
+                        pText = new StringBuilder(text);
+                    }
+
                     subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), pText.ToString()));
                 }
                 catch (Exception ex)
