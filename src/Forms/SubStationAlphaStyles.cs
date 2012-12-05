@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewStyles.Columns[5].Text = l.Outline;
             groupBoxProperties.Text = l.Properties;
             labelStyleName.Text = l.Name;
-            groupBoxFont.Text = l.FontSize;
+            groupBoxFont.Text = l.Font;
             labelFontName.Text = l.FontName;
             labelFontSize.Text = l.FontSize;
             checkBoxFontItalic.Text = Configuration.Settings.Language.General.Italic;
@@ -83,6 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAdd.Text = l.New;
             buttonRemove.Text = l.Remove;
             buttonRemoveAll.Text = l.RemoveAll;
+            groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
 
             if (_isSubStationAlpha)
             {
@@ -111,8 +112,9 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownOutline.Left = radioButtonOutline.Left + radioButtonOutline.Width + 5;
             labelShadow.Left = numericUpDownOutline.Left + numericUpDownOutline.Width + 5;
             numericUpDownShadowWidth.Left = labelShadow.Left + labelShadow.Width + 5;
-
             listViewStyles.Columns[5].Width = -2;
+            checkBoxFontItalic.Left = checkBoxFontBold.Left + checkBoxFontBold.Width + 9;
+            checkBoxFontUnderline.Left = checkBoxFontItalic.Left + checkBoxFontItalic.Width + 9;
         }
 
         void RefreshTimerTick(object sender, EventArgs e)
