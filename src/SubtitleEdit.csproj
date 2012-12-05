@@ -1336,7 +1336,9 @@
     <None Include="Languages\Old\sr-Latn-RS.xml" />
     <None Include="Languages\Old\sv-SE.xml" />
     <None Include="Languages\Old\tr-TR.xml" />
-    <Content Include="Languages\ru-RU.xml" />
+    <Content Include="Languages\ru-RU.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\zh-CHS.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
