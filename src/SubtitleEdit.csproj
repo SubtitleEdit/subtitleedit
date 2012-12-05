@@ -1332,11 +1332,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Languages\Old\ro-RO.xml" />
-    <None Include="Languages\Old\ru-RU.xml" />
     <None Include="Languages\Old\sr-Cyrl-RS.xml" />
     <None Include="Languages\Old\sr-Latn-RS.xml" />
     <None Include="Languages\Old\sv-SE.xml" />
     <None Include="Languages\Old\tr-TR.xml" />
+    <Content Include="Languages\ru-RU.xml" />
     <Content Include="Languages\zh-CHS.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
