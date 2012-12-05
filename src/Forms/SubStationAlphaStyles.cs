@@ -113,8 +113,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelShadow.Left = numericUpDownOutline.Left + numericUpDownOutline.Width + 5;
             numericUpDownShadowWidth.Left = labelShadow.Left + labelShadow.Width + 5;
             listViewStyles.Columns[5].Width = -2;
-            checkBoxFontItalic.Left = checkBoxFontBold.Left + checkBoxFontBold.Width + 9;
-            checkBoxFontUnderline.Left = checkBoxFontItalic.Left + checkBoxFontItalic.Width + 9;
+            checkBoxFontItalic.Left = checkBoxFontBold.Left + checkBoxFontBold.Width + 12;
+            checkBoxFontUnderline.Left = checkBoxFontItalic.Left + checkBoxFontItalic.Width + 12;
         }
 
         void RefreshTimerTick(object sender, EventArgs e)
