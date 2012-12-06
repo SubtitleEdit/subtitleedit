@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3</Version>
-    <TranslatedBy>Quetsbeek en minouhse</TranslatedBy>
+    <TranslatedBy>Vertaald door: Quetsbeek en minouhse</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile></HelpFile>
     <OK>&amp;Oké</OK>
@@ -73,7 +73,14 @@
   </General>
   <About>
     <Title>Over Subtitle Edit</Title>
-    <AboutText1>Subtitle Edit is vrije software onder de GNU Public License. U mag het verspreiden, wijzigen en vrij gebruik van maken. C # broncode is beschikbaar op http://code.google.com ./p/subtitleedit Bezoek www.nikse.dk voor de nieuwste versie Suggesties zijn van harte welkom E-mail:. mailto: nikse. dk@gmail.com</AboutText1>
+    <AboutText1>
+Subtitle Edit is vrije software onder de GNU Public License.      
+U mag het verspreiden, wijzigen en vrij gebruik van maken.
+      
+C# broncode is beschikbaar op http://code.google.com/p/subtitleedit
+Bezoek www.nikse.dk voor de nieuwste versie 
+
+Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Toevoegen aan namen/etc lijst</Title>
