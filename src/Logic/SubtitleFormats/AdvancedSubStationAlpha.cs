@@ -129,7 +129,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style, actor));
             }
 
-            if (!string.IsNullOrEmpty(subtitle.Footer) && subtitle.Footer.Contains("[fonts]" + Environment.NewLine))
+            if (!string.IsNullOrEmpty(subtitle.Footer) && (subtitle.Footer.Contains("[Fonts]" + Environment.NewLine) || subtitle.Footer.Contains("[Graphics]" + Environment.NewLine)))
             {
                 sb.AppendLine();
                 sb.AppendLine(subtitle.Footer);
@@ -595,6 +595,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             _errorCount = 0;
             bool eventsStarted = false;
             bool fontsStarted = false;
+            bool graphicsStarted = false;
             subtitle.Paragraphs.Clear();
             string[] format = "Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text".Split(',');
             int indexStart = 1;
@@ -606,11 +607,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             int lineNumber = 0;
 
             var header = new StringBuilder();
-            var fonts = new StringBuilder();
+            var footer = new StringBuilder();
             foreach (string line in lines)
             {
                 lineNumber++;
-                if (!eventsStarted && !fontsStarted)
+                if (!eventsStarted && !fontsStarted && !graphicsStarted)
                     header.AppendLine(line);
 
                 if (line.Trim().Length == 0)
@@ -625,22 +626,38 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 {
                     eventsStarted = true;
                     fontsStarted = false;
+                    graphicsStarted = false;
                 }
 
                 if (line.Trim().ToLower() == "[events]")
                 {
                     eventsStarted = true;
                     fontsStarted = false;
+                    graphicsStarted = false;
                 }
                 else if (line.Trim().ToLower() == "[fonts]")
                 {
                     eventsStarted = false;
                     fontsStarted = true;
-                    fonts.AppendLine("[fonts]");
+                    graphicsStarted = false;
+                    footer.AppendLine();
+                    footer.AppendLine("[Fonts]");
+                }
+                else if (line.Trim().ToLower() == "[graphics]")
+                {
+                    eventsStarted = false;
+                    fontsStarted = false;
+                    graphicsStarted = true;
+                    footer.AppendLine();
+                    footer.AppendLine("[Graphics]");
                 }
                 else if (fontsStarted)
                 {
-                    fonts.AppendLine(line);
+                    footer.AppendLine(line);
+                }
+                else if (graphicsStarted)
+                {
+                    footer.AppendLine(line);
                 }
                 else if (eventsStarted)
                 {
@@ -721,8 +738,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             }
             if (header.Length > 0)
                 subtitle.Header = header.ToString();
-            if (fonts.Length > 0)
-                subtitle.Footer = fonts.ToString();
+            if (footer.Length > 0)
+                subtitle.Footer = footer.ToString().Trim();
             subtitle.Renumber(1);
             Errors = errors.ToString();
         }
