@@ -344,6 +344,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     if (pre.Contains("<i>") && content.Contains("</i>"))
                                         newText = newText + Environment.NewLine + "<i>" + content;
+                                    else if (pre.Contains("<b>") && content.Contains("</b>"))
+                                        newText = newText + Environment.NewLine + "<b>" + content;
                                     else if (pre.Contains("[") && content.Contains("]"))
                                         newText = newText + Environment.NewLine + "[" + content;
                                     else if (pre.Contains("(") && content.EndsWith(")"))
@@ -362,6 +364,8 @@ namespace Nikse.SubtitleEdit.Forms
                                     newText = newText.TrimEnd(')');
                                 else if (newText.EndsWith("</i>") && text.StartsWith("<i>") && !newText.StartsWith("<i>"))
                                     newText = "<i>" + newText;
+                                else if (newText.EndsWith("</b>") && text.StartsWith("<b>") && !newText.StartsWith("<b>"))
+                                    newText = "<b>" + newText;
 
                                 if (!IsHIDescription(st.StrippedText))
                                     noOfNames++;
@@ -372,11 +376,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 newText = newText.Trim();
                                 if (newText.EndsWith("</i>") && text.StartsWith("<i>") && !newText.StartsWith("<i>"))
                                     newText = "<i>" + newText;
+                                else if (newText.EndsWith("</b>") && text.StartsWith("<b>") && !newText.StartsWith("<b>"))
+                                    newText = "<b>" + newText;
                             }
                         }
                         else
                         {
-
                             string s2 = s;
                             for (int k = 0; k < 2; k++)
                             {
@@ -420,7 +425,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (newText.EndsWith("</i>") && text.StartsWith("<i>") && !newText.StartsWith("<i>"))
                         newText = "<i>" + newText;
-
+                    else if (newText.EndsWith("</b>") && text.StartsWith("<b>") && !newText.StartsWith("<b>"))
+                        newText = "<b>" + newText;
                 }
                 count++;
             }
@@ -502,7 +508,7 @@ namespace Nikse.SubtitleEdit.Forms
                 pre = pre.Replace(comboBoxCustomStart.Text, string.Empty);
                 post = post.Replace(comboBoxCustomEnd.Text, string.Empty);
             }
-            StripableText st = new StripableText(text, pre, post);
+            var st = new StripableText(text, pre, post);
             var sb = new StringBuilder();
             string[] parts = st.StrippedText.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int lineNumber = 0;

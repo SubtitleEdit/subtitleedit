@@ -186,6 +186,26 @@ namespace Test
         ///</summary>
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveHIMultilineBold()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
+            target.checkBoxRemoveTextBeforeColon.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
+            target.checkBoxColonSeparateLine.Checked = false;
+            string text = "<b>NARRATOR:" + Environment.NewLine +
+                          "Previously on NCIS</b>";
+            string expected = "<b>Previously on NCIS</b>";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        ///A test for RemoveHI
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHISecondLineDelay()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
@@ -245,6 +265,23 @@ namespace Test
             target.checkBoxColonSeparateLine.Checked = false;
             string text = "HECTOR: Hi." + Environment.NewLine + "-Oh, hey, Hector.";
             string expected = "- Hi." + Environment.NewLine + "- Oh, hey, Hector.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }      
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveRemoveNameOfFirstLineBold()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
+            target.checkBoxRemoveInterjections.Checked = false;
+            target.checkBoxRemoveTextBeforeColon.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
+            target.checkBoxColonSeparateLine.Checked = false;
+            string text = "<b>HECTOR: Hi.</b>";
+            string expected = "<b>Hi.</b>";
             string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
