@@ -49,10 +49,28 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var sb = new StringBuilder();
             int count = 1;
+            bool italic = false;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                string text = Utilities.RemoveHtmlTags(p.Text);
+                string text = p.Text;
+                if (text.StartsWith("{") && text.Length > 6 && text[6] == '}')
+                    text = text.Remove(0,6);
+                if (text.StartsWith("<i>") && text.EndsWith("</i>"))
+                {
+                    if (!italic)
+                    {
+                        italic = true;
+                        sb.AppendLine("$Italic = TRUE");
+                    }
+                }
+                else if (italic)
+                {
+                    italic = false;
+                    sb.AppendLine("$Italic = FALSE");
+                }
+
+                text = Utilities.RemoveHtmlTags(text);
                 sb.AppendLine(string.Format("{0}\t{1}\t{2}\t{3}", count, MakeTimeCode(p.StartTime), MakeTimeCode(p.EndTime), text.Replace(Environment.NewLine, "|")));
                 sb.AppendLine();
                 count++;
@@ -72,6 +90,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             _errorCount = 0;
             Paragraph p = null;
             var sb = new StringBuilder();
+            bool italic = true;
             foreach (string line in lines)
             {
                 string s = line.TrimEnd();
@@ -89,10 +108,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (arr.Length >= 3)
                         {
                             string text = s.Remove(0, arr[0].Length + arr[1].Length + arr[2].Length + 2).Trim();
-                            sb.AppendLine(text);
+
                             if (text.Replace("0", string.Empty).Replace("1", string.Empty).Replace("2", string.Empty).Replace("3", string.Empty).Replace("4", string.Empty).Replace("5", string.Empty).
                                 Replace("6", string.Empty).Replace("7", string.Empty).Replace("8", string.Empty).Replace("9", string.Empty).Replace(".", string.Empty).Replace(":", string.Empty).Replace(",", string.Empty).Trim().Length == 0)
                                 _errorCount++;
+                            if (italic)
+                                text = "<i>" + text + "</i>";
+                            sb.AppendLine(text);
+
                             p = new Paragraph(DecodeTimeCode(arr[1]), DecodeTimeCode(arr[2]), string.Empty);
                         }
                     }
@@ -100,6 +123,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         _errorCount++;
                         p = null;
+                    }
+                }
+                else if (s.StartsWith("$"))
+                {
+                    if (s.Replace(" ", string.Empty).ToLower() == "$italic=true")
+                    {
+                        italic = true;
+                    }
+                    else if (s.Replace(" ", string.Empty).ToLower() == "$italic=false")
+                    {
+                        italic = false;
                     }
                 }
                 else if (s.Trim().Length > 0)
