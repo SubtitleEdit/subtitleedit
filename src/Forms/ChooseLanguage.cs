@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -49,10 +50,25 @@ namespace Nikse.SubtitleEdit.Forms
             List<string> list = new List<string>();
             if (Directory.Exists(Path.Combine(Configuration.BaseDirectory, "Languages")))
             {
+                string[] versionInfo = Utilities.AssemblyVersion.Split('.');
+                string currentVersion = String.Format("{0}.{1}", versionInfo[0], versionInfo[1]);
+                if (versionInfo.Length >= 3 && versionInfo[2] != "0")
+                    currentVersion += "." + versionInfo[2];
+
                 foreach (string fileName in Directory.GetFiles(Path.Combine(Configuration.BaseDirectory, "Languages"), "*.xml"))
                 {
                     string cultureName = Path.GetFileNameWithoutExtension(fileName);
-                    list.Add(cultureName);
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(fileName);
+                    try
+                    {
+                        string version = doc.DocumentElement.SelectSingleNode("General/Version").InnerText;
+                        if (version == currentVersion)
+                            list.Add(cultureName);
+                    }
+                    catch
+                    { 
+                    }
                 }
             }
             list.Sort();

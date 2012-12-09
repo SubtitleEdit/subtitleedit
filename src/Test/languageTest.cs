@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Logic;
+using System.Xml;
 
 namespace Test
 {
@@ -21,10 +22,21 @@ namespace Test
             _list = new List<string>();
             if (Directory.Exists(Path.Combine(Configuration.BaseDirectory, "Languages")))
             {
+                string[] versionInfo = Utilities.AssemblyVersion.Split('.');
+                string currentVersion = String.Format("{0}.{1}", versionInfo[0], versionInfo[1]);
+                if (versionInfo.Length >= 3 && versionInfo[2] != "0")
+                    currentVersion += "." + versionInfo[2];
+
                 foreach (string fileName in Directory.GetFiles(Path.Combine(Configuration.BaseDirectory, "Languages"), "*.xml"))
                 {
-                    string cultureName = Path.GetFileNameWithoutExtension(fileName);
-                    _list.Add(cultureName);
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(fileName);
+                    string version = doc.DocumentElement.SelectSingleNode("General/Version").InnerText;
+                    if (version == currentVersion)
+                    {
+                        string cultureName = Path.GetFileNameWithoutExtension(fileName);
+                        _list.Add(cultureName);
+                    }
                 }
             }
             _list.Sort();
