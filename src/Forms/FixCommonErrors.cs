@@ -671,22 +671,53 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixShortDisplayTime;
             int noOfShortDisplayTimes = 0;
+            bool skip = false;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
-                double minDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text) * 0.4;
-                if (minDisplayTime < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
-                    minDisplayTime = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
-                double displayTime = p.Duration.TotalMilliseconds;
-                if (displayTime < minDisplayTime)
+                double displayTime = p.Duration.TotalMilliseconds;                
+                if (displayTime < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 {
                     Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
-                    if (next == null || (p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text) * 0.4) < next.StartTime.TotalMilliseconds)
+                    if (next == null || (p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds) < next.StartTime.TotalMilliseconds)
+                    {
+                        Paragraph temp = new Paragraph(p);
+                        temp.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+                        if (Utilities.GetCharactersPerSecond(temp) <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                        {
+                            if (AllowFix(p, fixAction))
+                            {
+                                string oldCurrent = p.ToString();
+                                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+                                _totalFixes++;
+                                noOfShortDisplayTimes++;
+                                AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        LogStatus(_language.FixShortDisplayTimes, string.Format(_language.UnableToFixTextXY, i + 1, p));
+                        _totalErrors++;
+                        skip = true;
+                    }
+                }
+
+                double charactersPerSecond = Utilities.GetCharactersPerSecond(p);
+                if (!skip && charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                {
+                    Paragraph temp = new Paragraph(p);
+                    while (Utilities.GetCharactersPerSecond(temp) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                    {
+                        temp.EndTime.TotalMilliseconds++;
+                    }
+                    Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
+                    if (next == null || (temp.EndTime.TotalMilliseconds) < next.StartTime.TotalMilliseconds)
                     {
                         if (AllowFix(p, fixAction))
                         {
                             string oldCurrent = p.ToString();
-                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text) * 0.4;
+                            p.EndTime.TotalMilliseconds = temp.EndTime.TotalMilliseconds;
                             _totalFixes++;
                             noOfShortDisplayTimes++;
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
@@ -696,8 +727,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         LogStatus(_language.FixShortDisplayTimes, string.Format(_language.UnableToFixTextXY, i + 1, p));
                         _totalErrors++;
+                        skip = true;
                     }
                 }
+                skip = false;
             }
             if (noOfShortDisplayTimes > 0)
                 LogStatus(fixAction, string.Format(_language.XDisplayTimesProlonged, noOfShortDisplayTimes));
