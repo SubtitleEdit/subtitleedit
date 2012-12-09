@@ -1,6 +1,6 @@
 Subtitle Edit Changelog
 
-3.3 (? 2012)
+3.3 (9th December 2012)
 * NEW:
    * Added column commands to list view context menu - thx Seungki
    * Edit -> Reverse RTL start/end (fix punctuations)
