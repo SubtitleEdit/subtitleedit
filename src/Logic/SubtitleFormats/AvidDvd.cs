@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             _errorCount = 0;
             Paragraph p = null;
             var sb = new StringBuilder();
-            bool italic = true;
+            bool italic = false;
             foreach (string line in lines)
             {
                 string s = line.TrimEnd();
