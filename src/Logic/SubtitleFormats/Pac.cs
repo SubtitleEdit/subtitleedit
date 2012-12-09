@@ -679,7 +679,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 GetCodePage(null, 0, 0);
 
             string text = MakePacItalicsAndRemoveOtherTags(p.Text);
-            text = text.Replace(Environment.NewLine, Encoding.Default.GetString(new byte[] { 0xfe, 0x02, 0x03 })); // fix line breaks
 
             Encoding encoding = GetEncoding(_codePage);
             byte[] textBuffer;
@@ -1088,34 +1087,45 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int extra = 0;
             while (i < text.Length)
             {
-                string letter = text.Substring(i, 1);
-                int idx = LatinLetters.IndexOf(letter);
-                if (idx >= 0)
+                if (text.Substring(i).StartsWith(Environment.NewLine))
                 {
-                    int byteValue = LatinCodes[idx];
-                    if (byteValue < 256)
-                    {
-                        buffer[i + extra] = (byte)byteValue;
-                    }
-                    else
-                    {
-                        int high = byteValue / 256;
-                        int low = byteValue % 256;
-
-                        buffer[i + extra] = (byte)high;
-                        extra++;
-                        buffer[i + extra] = (byte)low;
-                    }
+                    buffer[i + extra] = 0xfe;
+                    i++;
+                    buffer[i + extra] = 2;
+                    extra++;
+                    buffer[i + extra] = 3;                    
                 }
                 else
                 {
-                    var values = encoding.GetBytes(letter);
-                    for (int k = 0; k < values.Length; k++)
+                    string letter = text.Substring(i, 1);
+                    int idx = LatinLetters.IndexOf(letter);
+                    if (idx >= 0)
                     {
-                        byte v = values[k];
-                        if (k > 0)
+                        int byteValue = LatinCodes[idx];
+                        if (byteValue < 256)
+                        {
+                            buffer[i + extra] = (byte)byteValue;
+                        }
+                        else
+                        {
+                            int high = byteValue / 256;
+                            int low = byteValue % 256;
+
+                            buffer[i + extra] = (byte)high;
                             extra++;
-                        buffer[i + extra] = v;
+                            buffer[i + extra] = (byte)low;
+                        }
+                    }
+                    else
+                    {
+                        var values = encoding.GetBytes(letter);
+                        for (int k = 0; k < values.Length; k++)
+                        {
+                            byte v = values[k];
+                            if (k > 0)
+                                extra++;
+                            buffer[i + extra] = v;
+                        }
                     }
                 }
                 i++;
@@ -1150,59 +1160,70 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int extra = 0;
             while (i < text.Length)
             {
-                bool doubleCharacter = false;
-                string letter = string.Empty;
-                int idx = -1;
-                if (i + 1 < text.Length)
+                if (text.Substring(i).StartsWith(Environment.NewLine))
                 {
-                    letter = text.Substring(i, 2);
-                    idx = letters.IndexOf(letter);
-                    if (idx >= 0)
-                        doubleCharacter = true;
-                }
-                if (idx < 0)
-                {
-                    letter = text.Substring(i, 1);
-                    idx = letters.IndexOf(letter);
-                }
-                if (idx >= 0)
-                {
-                    int byteValue = codes[idx];
-                    if (byteValue < 256)
-                    {
-                        buffer[i + extra] = (byte)byteValue;
-                    }
-                    else
-                    {
-                        int high = byteValue / 256;
-                        int low = byteValue % 256;
-                        buffer[i + extra] = (byte)high;
-                        if (doubleCharacter)
-                        {
-                            i++;
-                            doubleCharacter = false;
-                        }
-                        else
-                        {
-                            extra++;
-                        }
-                        buffer[i + extra] = (byte)low;
-                    }
+                    buffer[i + extra] = 0xfe;
+                    i++;
+                    buffer[i + extra] = 2;
+                    extra++;
+                    buffer[i + extra] = 3;
                 }
                 else
                 {
-                    var values = Encoding.Default.GetBytes(letter);
-                    for (int k = 0; k < values.Length; k++)
+                    bool doubleCharacter = false;
+                    string letter = string.Empty;
+                    int idx = -1;
+                    if (i + 1 < text.Length)
                     {
-                        byte v = values[k];
-                        if (k > 0)
-                            extra++;
-                        buffer[i + extra] = v;
+                        letter = text.Substring(i, 2);
+                        idx = letters.IndexOf(letter);
+                        if (idx >= 0)
+                            doubleCharacter = true;
                     }
+                    if (idx < 0)
+                    {
+                        letter = text.Substring(i, 1);
+                        idx = letters.IndexOf(letter);
+                    }
+                    if (idx >= 0)
+                    {
+                        int byteValue = codes[idx];
+                        if (byteValue < 256)
+                        {
+                            buffer[i + extra] = (byte)byteValue;
+                        }
+                        else
+                        {
+                            int high = byteValue / 256;
+                            int low = byteValue % 256;
+                            buffer[i + extra] = (byte)high;
+                            if (doubleCharacter)
+                            {
+                                i++;
+                                doubleCharacter = false;
+                            }
+                            else
+                            {
+                                extra++;
+                            }
+                            buffer[i + extra] = (byte)low;
+                        }
+                    }
+                    else
+                    {
+                        var values = Encoding.Default.GetBytes(letter);
+                        for (int k = 0; k < values.Length; k++)
+                        {
+                            byte v = values[k];
+                            if (k > 0)
+                                extra++;
+                            buffer[i + extra] = v;
+                        }
+                    }
+                    if (doubleCharacter)
+                        i++;
                 }
                 i++;
-                if (doubleCharacter)
-                    i++;
             }
 
             byte[] result = new byte[i + extra];
