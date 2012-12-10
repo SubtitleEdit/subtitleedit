@@ -157,7 +157,7 @@
             public string Style { get; set; }
             public string ConvertOptions { get; set; }
             public string AutoBreakLongLines { get; set; }
-            public string FixItalics { get; set; }            
+            public string FixItalics { get; set; }
             public string RemoveFormatting { get; set; }
             public string RemoveTextForHI { get; set; }
             public string ReDoCasing { get; set; }
@@ -167,9 +167,9 @@
             public string PleaseChooseOutputFolder { get; set; }
             public string Converted { get; set; }
             public string ConvertedX { get; set; }
-           
+
         }
-        
+
         public class Beamer
         {
             public string Title { get; set; }
@@ -935,7 +935,7 @@
                     public string TextNumberOfCharactersPerSeconds { get; set; }
                     public string WordsPerMinute { get; set; }
                     public string MakeNewEmptyTranslationFromCurrentSubtitle { get; set; }
-                    public string BatchConvert { get; set; }                    
+                    public string BatchConvert { get; set; }
                     public string SplitSubtitle { get; set; }
                     public string AppendSubtitle { get; set; }
                     public string JoinSubtitles { get; set; }

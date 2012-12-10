@@ -48,7 +48,7 @@ namespace Test
         public void TestAllLanguageTranslationsExists()
         {
             Language defaultlang = new Language(); //Load the English version
-            defaultlang.General.TranslatedBy = "Translated by ..."; // to avoid assertion        
+            defaultlang.General.TranslatedBy = "Translated by ..."; // to avoid assertion
 
             foreach (String cultureName in _list) //Loop over all language files
             {
