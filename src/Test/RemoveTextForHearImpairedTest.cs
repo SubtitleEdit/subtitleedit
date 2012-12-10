@@ -267,7 +267,7 @@ namespace Test
             string expected = "- Hi." + Environment.NewLine + "- Oh, hey, Hector.";
             string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
-        }      
+        }
 
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]

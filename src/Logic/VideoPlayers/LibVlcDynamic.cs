@@ -419,7 +419,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 if (File.Exists(path))
                     return path;
             }
-            
+
             // XP via registry path
             var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\VideoLAN\VLC");
             if (key != null)

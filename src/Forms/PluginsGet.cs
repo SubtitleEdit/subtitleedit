@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (e.Error.InnerException != null)
                 {
                     MessageBox.Show(e.Error.InnerException.Source + ": " + e.Error.InnerException.Message + Environment.NewLine + Environment.NewLine + e.Error.InnerException.StackTrace);
-                }                
+                }
                 return;
             }
             try
@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-        }       
+        }
 
         private void buttonDownload_Click(object sender, EventArgs e)
         {

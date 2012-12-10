@@ -675,7 +675,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
-                double displayTime = p.Duration.TotalMilliseconds;                
+                double displayTime = p.Duration.TotalMilliseconds;
                 if (displayTime < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 {
                     Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);

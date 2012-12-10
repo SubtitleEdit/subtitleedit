@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
                             list.Add(cultureName);
                     }
                     catch
-                    { 
+                    {
                     }
                 }
             }

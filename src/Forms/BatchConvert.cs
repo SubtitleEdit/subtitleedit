@@ -320,7 +320,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MessageBox.Show(exception.Message);
                     return;
-                }                
+                }
             }
 
             string toFormat = comboBoxSubtitleFormats.Text;

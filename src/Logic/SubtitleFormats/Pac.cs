@@ -1093,7 +1093,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     i++;
                     buffer[i + extra] = 2;
                     extra++;
-                    buffer[i + extra] = 3;                    
+                    buffer[i + extra] = 3;
                 }
                 else
                 {
