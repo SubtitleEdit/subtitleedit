@@ -44,6 +44,9 @@ namespace Nikse.SubtitleEdit.Forms
             labelBelow2.Left = numericUpDownMaxVol.Left + numericUpDownMaxVol.Width + 3;
             numericUpDownDefaultMilliseconds.Left = labelSplit1.Left + labelSplit1.Width + 3;
             labelSplit2.Left = numericUpDownDefaultMilliseconds.Left + numericUpDownDefaultMilliseconds.Width + 3;
+
+            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
