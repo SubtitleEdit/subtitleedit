@@ -367,22 +367,22 @@ ja.types_default=Default installation
 
 
 ; Korean
-kr.comp_translations=Translations
-kr.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-kr.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-kr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
-kr.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-kr.msg_OptimizingPerformance=Optimizing performance...
-kr.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
-kr.run_VisitWebsite=Visit Subtitle Edit's Website
-kr.sm_com_Changelog=Subtitle Edit's Changelog
-kr.tsk_AllUsers=For all users
-kr.tsk_CurrentUser=For the current user only
-kr.tsk_Other=Other:
-kr.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-kr.tsk_ResetSettings=Reset Subtitle Edit's settings
-kr.types_custom=Custom installation
-kr.types_default=Default installation
+kr.comp_translations=번역
+kr.msg_AppIsRunning=설치 프로그램이 Subtitle Edit가 현재 실행중에 있음을 발견했습니다.%n%n현재 사용하고 있는 Subtitle Edit의 모든 창을 닫아 주십시오, 그러고 나서 계속하려면 '확인'을 종료하려면 '취소'를 클릭하여 주십시오.
+kr.msg_AppIsRunningUninstall=삭제 프로그램이 Subtitle Edit가 현재 실행중에 있음을 발견했습니다.%n%n현재 사용하고 있는 Subtitle Edit의 모든 창을 닫아 주십시오, 그러고 나서 계속하려면 '확인'을 종료하려면 '취소'를 클릭하여 주십시오.
+kr.msg_AskToDownNET=Subtitle Edit는 .NET Framework 2.0이 필요합니다. .NET Framework를 다운 받고 설치한 후에 설치 프로그램을 다시 실행해 주십시오.%n%n지금 .NET Framework 2.0을 다운로드 하시겠습니까?
+kr.msg_DeleteSettings=Subtitle Edit의 설정 및 사전에 포함된 사용자 지정의 모든 변경 사항을 삭제하시겠습니까?%n%n만약 Subtitle Edit를 다시 설치할 계획이라면 그것을 삭제할 필요는 없습니다.
+kr.msg_OptimizingPerformance=성능 최적화...
+kr.msg_SetupIsRunningWarning=Subtitle Edit 설치 프로그램이 이미 실행 중입니다!
+kr.run_VisitWebsite=Subtitle Edit 웹사이트 방문
+kr.sm_com_Changelog=Subtitle Edit의 변경 기록
+kr.tsk_AllUsers=모든 사용자
+kr.tsk_CurrentUser=현재 사용자
+kr.tsk_Other=기타:
+kr.tsk_ResetDictionaries=사전 초기화 및 모든 사용자 이름 삭제
+kr.tsk_ResetSettings=Subtitle Edit 설정 초기화
+kr.types_custom=사용자 지정 설치
+kr.types_default=기본 설치
 
 
 ; Dutch
