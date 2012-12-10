@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             Text = Configuration.Settings.Language.AddToNames.Title;
             labelDescription.Text = Configuration.Settings.Language.AddToNames.Description;
+            labelLanguage.Text = Configuration.Settings.Language.SpellCheck.Language;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             FixLargeFonts();

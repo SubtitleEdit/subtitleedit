@@ -12,6 +12,10 @@ namespace Nikse.SubtitleEdit.Forms
         public ChooseResolution()
         {
             InitializeComponent();
+            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = Configuration.Settings.Language.ExportPngXml.VideoResolution;
+            labelVideoResolution.Text = Configuration.Settings.Language.ExportPngXml.VideoResolution;
         }
 
         private void button1_Click(object sender, EventArgs e)

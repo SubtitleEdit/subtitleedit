@@ -9,6 +9,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
             Text = Configuration.Settings.Language.Main.StatusLog;
+            buttonOK.Text = Configuration.Settings.Language.General.OK;
             textBoxStatusLog.Text = logText;
         }
 
