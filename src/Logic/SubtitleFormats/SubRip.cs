@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         Paragraph _paragraph;
+        Paragraph _lastParagraph;
         ExpectingLine _expecting = ExpectingLine.Number;
         static Regex _regexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$", RegexOptions.Compiled);
         static Regex _regexTimeCodes2 = new Regex(@"^\d+:\d+:\d+,\d+\s*-->\s*\d+:\d+:\d+,\d+$", RegexOptions.Compiled);
@@ -79,12 +80,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (i + 1 < lines.Count)
                     next = lines[i + 1];
 
+                string nextNext = string.Empty;
+                if (i + 2 < lines.Count)
+                    nextNext = lines[i + 2];
+
                 // A new line is missing between two paragraphs (buggy srt file)
                 if (_expecting == ExpectingLine.Text && i + 1 < lines.Count &&
                     _paragraph != null && !string.IsNullOrEmpty(_paragraph.Text) && Utilities.IsInteger(line) &&
                     _regexTimeCodes.IsMatch(lines[i+1]))
                 {
-                    ReadLine(subtitle, string.Empty, string.Empty);
+                    ReadLine(subtitle, string.Empty, string.Empty, string.Empty);
                 }
                 if (_expecting == ExpectingLine.Number && _regexTimeCodes.IsMatch(line))
                 {
@@ -92,7 +97,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     doRenum = true;
                 }
 
-                ReadLine(subtitle, line, next);
+                ReadLine(subtitle, line, next, nextNext);
             }
             if (_paragraph.Text.Trim().Length > 0)
                 subtitle.Paragraphs.Add(_paragraph);
@@ -106,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Errors = _errors.ToString();
         }
 
-        private void ReadLine(Subtitle subtitle, string line, string next)
+        private void ReadLine(Subtitle subtitle, string line, string next, string nextNext)
         {
             switch (_expecting)
             {
@@ -118,9 +123,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else if (line.Trim().Length > 0)
                     {
-                        if (_errors.Length < 2000)
-                            _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXExpectedNumberFromSourceLineY, _lineNumber, line));
-                        _errorCount++;
+                        if (_lastParagraph != null && nextNext != null && (_lastParagraph.Number+1).ToString() == nextNext)
+                        {
+                            _lastParagraph.Text = (_lastParagraph.Text + Environment.NewLine + line.Trim()).Trim();
+                        }
+                        else
+                        {
+                            if (_errors.Length < 2000)
+                                _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXExpectedNumberFromSourceLineY, _lineNumber, line));
+                            _errorCount++;
+                        }
                     }
                     break;
                 case ExpectingLine.TimeCodes:
@@ -156,6 +168,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (!string.IsNullOrEmpty(next) && (Utilities.IsInteger(next) || _regexTimeCodes.IsMatch(next)))
                         {
                             subtitle.Paragraphs.Add(_paragraph);
+                            _lastParagraph = _paragraph;
                             _paragraph = new Paragraph();
                             _expecting = ExpectingLine.Number;
                         }
@@ -163,6 +176,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else
                     {
                         subtitle.Paragraphs.Add(_paragraph);
+                        _lastParagraph = _paragraph;
                         _paragraph = new Paragraph();
                         _expecting = ExpectingLine.Number;
                     }
