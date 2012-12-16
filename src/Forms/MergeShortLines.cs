@@ -188,6 +188,9 @@ namespace Nikse.SubtitleEdit.Forms
                     lineNumbers = new StringBuilder();
                 }
             }
+            if (!lastMerged)
+                mergedSubtitle.Paragraphs.Add(new Paragraph(subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count-1)));
+
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
             return mergedSubtitle;
         }
@@ -303,15 +306,11 @@ namespace Nikse.SubtitleEdit.Forms
             int count;
             _mergedSubtitle = MergeShortLinesInSubtitle(_subtitle, mergedIndexes, out count, (double)numericUpDownMaxMillisecondsBetweenLines.Value, (int)numericUpDownMaxCharacters.Value, false);
             NumberOfMerges = count;
-
             SubtitleListview1.Fill(_subtitle);
-
             foreach (var index in mergedIndexes)
             {
                 SubtitleListview1.SetBackgroundColor(index, Color.Green);
             }
-
-
             SubtitleListview1.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergedShortLines.NumberOfMergesX, NumberOfMerges);
         }
