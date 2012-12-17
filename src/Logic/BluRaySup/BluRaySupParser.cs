@@ -760,7 +760,40 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 }
             }
 
+            for (int pcsIndex = pcsList.Count - 1; pcsIndex > 0; pcsIndex--)
+            {
+                var cur = pcsList[pcsIndex];
+                var prev = pcsList[pcsIndex - 1];
+                if (Math.Abs(prev.EndTime - cur.StartTime) < 10 && prev.Size.Width == cur.Size.Width && prev.Size.Height == cur.Size.Height)
+                {
+                    if (cur.BitmapObjects.Count > 0 && cur.BitmapObjects[0].Count > 0 &&
+                        prev.BitmapObjects.Count > 0 && prev.BitmapObjects[0].Count > 0 &&
+                        ByteArraysEqual(cur.BitmapObjects[0][0].Fragment.ImageBuffer, prev.BitmapObjects[0][0].Fragment.ImageBuffer))
+                    {
+                            prev.EndTime = cur.EndTime;
+                            pcsList.RemoveAt(pcsIndex);
+                    }                    
+                }
+            }
+
             return pcsList;
+        }
+
+        private static bool ByteArraysEqual(byte[] b1, byte[] b2)
+        {
+            if (b1 == b2) 
+                return true;
+            if (b1 == null || b2 == null) 
+                return false;
+            if (b1.Length != b2.Length) 
+                return false;
+
+            for (int i = 0; i < b1.Length; i++)
+            {
+                if (b1[i] != b2[i]) 
+                    return false;
+            }
+            return true;
         }
 
         private static CompositionState GetCompositionState(byte type)
