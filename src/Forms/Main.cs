@@ -4656,6 +4656,9 @@ namespace Nikse.SubtitleEdit.Forms
         /// <param name="undo">True equals undo, false triggers redo</param>
         private void UndoToIndex(bool undo)
         {
+            if (_networkSession != null)
+                return;
+
             lock (this)
             {
                 if (!undo && _undoIndex >= _subtitle.HistoryItems.Count - 1)
@@ -6425,7 +6428,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_networkSession != null)
                 {
                     _networkSession.TimerStop();
-                    NetworkGetSendUpdates(new List<int>(), firstSelectedIndex, newParagraph);
+                    SetDurationInSeconds(currentParagraph.Duration.TotalSeconds);
+                    _networkSession.UpdateLine(_subtitle.GetIndex(currentParagraph), currentParagraph);        
+                    NetworkGetSendUpdates(new List<int>(), firstSelectedIndex+1, newParagraph);
                 }
                 else
                 {
@@ -6702,7 +6707,6 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-
                                 original.Text = original.Text.Replace(Environment.NewLine, " ");
                                 original.Text += Environment.NewLine + originalNext.Text.Replace(Environment.NewLine, " ");
                                 original.Text = ChangeAllLinesItalictoSingleItalic(original.Text);
@@ -6747,8 +6751,9 @@ namespace Nikse.SubtitleEdit.Forms
                 currentParagraph.EndTime.TotalMilliseconds = nextParagraph.EndTime.TotalMilliseconds;
 
                 if (_networkSession != null)
-                {
+                {                    
                     _networkSession.TimerStop();
+                    SetDurationInSeconds(currentParagraph.Duration.TotalSeconds);
                     _networkSession.UpdateLine(_subtitle.GetIndex(currentParagraph), currentParagraph);
                     List<int> deleteIndices = new List<int>();
                     deleteIndices.Add(_subtitle.GetIndex(nextParagraph));
@@ -10281,6 +10286,13 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemRedo.Enabled = _subtitle != null && _subtitle.CanUndo && _undoIndex < _subtitle.HistoryItems.Count - 1;
             showHistoryforUndoToolStripMenuItem.Enabled = _subtitle != null && _subtitle.CanUndo;
             toolStripMenuItemShowOriginalInPreview.Visible = SubtitleListview1.IsAlternateTextColumnVisible;
+
+            if (_networkSession != null)
+            {
+                toolStripMenuItemUndo.Enabled = false;
+                toolStripMenuItemRedo.Enabled = false;
+                showHistoryforUndoToolStripMenuItem.Enabled = false;
+            }
         }
 
         private void InsertUnicodeGlyph(object sender, EventArgs e)
@@ -10315,7 +10327,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (formMergeShortLines.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeMergeShortLines);
-                    _subtitle = formMergeShortLines.MergedSubtitle;
+                    _subtitle.Paragraphs.Clear();
+                    foreach (Paragraph p in formMergeShortLines.MergedSubtitle.Paragraphs)
+                        _subtitle.Paragraphs.Add(p);
                     ShowStatus(string.Format(_language.MergedShortLinesX, formMergeShortLines.NumberOfMerges));
                     SaveSubtitleListviewIndexes();
                     ShowSource();
@@ -13325,6 +13339,8 @@ namespace Nikse.SubtitleEdit.Forms
             //Toolbar
             toolStripButtonFileNew.Enabled = enabled;
             toolStripButtonFileOpen.Enabled = enabled;
+            toolStripMenuItemOpenKeepVideo.Enabled = enabled;
+            toolStripMenuItemRestoreAutoBackup.Enabled = enabled;
             toolStripButtonVisualSync.Enabled = enabled;
 
             // textbox source
@@ -13572,10 +13588,33 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (_oldSelectedParagraph != null)
                 {
                     Paragraph p = _subtitle.GetFirstAlike(_oldSelectedParagraph);
-                    if (p != null)
+                    if (p == null)
+                    {
+                        Paragraph tmp = new Paragraph(_oldSelectedParagraph);
+                        tmp.Text = textBoxListViewText.Text;
+                        p = _subtitle.GetFirstAlike(tmp);
+                    }
+
+                    if (p == null)
+                    {
+                        int idx = oldCurrentSelectedIndex;
+                        if (idx >= _subtitle.Paragraphs.Count)
+                            idx = _subtitle.Paragraphs.Count - 1;
+
+                        if (idx >= 0 && idx < _subtitle.Paragraphs.Count)
+                        {
+                            SubtitleListview1.SelectIndexAndEnsureVisible(idx);
+                            _listViewTextUndoIndex = -1;
+                            SubtitleListView1SelectedIndexChange();
+                            textBoxListViewText.Text = _subtitle.Paragraphs[idx].Text;
+                        }
+                    }
+                    else
                     {
                         _subtitleListViewIndex = _subtitle.GetIndex(p);
                         SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex);
+                        _listViewTextUndoIndex = -1;
+                        SubtitleListView1SelectedIndexChange();
                     }
                 }
             }
