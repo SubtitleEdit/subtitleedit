@@ -10426,7 +10426,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _subtitleListViewIndex = -1;
                 MakeHistoryForUndo(_language.BeforePointSynchronization);
-                _subtitle = pointSync.FixedSubtitle;
+                _subtitle.Paragraphs.Clear();
+                foreach (Paragraph p in pointSync.FixedSubtitle.Paragraphs)
+                    _subtitle.Paragraphs.Add(p);
                 _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
                 ShowStatus(_language.PointSynchronizationDone);
                 ShowSource();
@@ -10459,7 +10461,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _subtitleListViewIndex = -1;
                     MakeHistoryForUndo(_language.BeforePointSynchronization);
-                    _subtitle = pointSync.FixedSubtitle;
+                    _subtitle.Paragraphs.Clear();
+                    foreach (Paragraph p in pointSync.FixedSubtitle.Paragraphs)
+                        _subtitle.Paragraphs.Add(p);
                     _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
                     ShowStatus(_language.PointSynchronizationDone);
                     ShowSource();
