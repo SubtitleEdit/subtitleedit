@@ -405,7 +405,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SyntaxColorLine(List<Paragraph> paragraphs, int i, Paragraph paragraph)
         {
-            if (UseSyntaxColoring && _settings != null && Items.Count > 0)
+            if (UseSyntaxColoring && _settings != null && Items.Count > 0 && i < Items.Count)
             {
                 var item = Items[i];
                 if (item.UseItemStyleForSubItems)
@@ -440,7 +440,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (!durationChanged && item.SubItems[ColumnIndexDuration].BackColor != BackColor)
                     item.SubItems[ColumnIndexDuration].BackColor = BackColor;
 
-                if (_settings.Tools.ListViewSyntaxColorOverlap && i > 0)
+                if (_settings.Tools.ListViewSyntaxColorOverlap && i > 0 && i < paragraphs.Count)
                 {
                     Paragraph prev = paragraphs[i - 1];
                     if (paragraph.StartTime.TotalMilliseconds < prev.EndTime.TotalMilliseconds)
