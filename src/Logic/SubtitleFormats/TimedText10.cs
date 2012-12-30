@@ -200,6 +200,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 div = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
 
             int no = 0;
+            var headerStyles = GetStylesFromHeader(subtitle.Header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
@@ -303,7 +304,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 end.InnerText = ConvertToTimeString(p.EndTime);
                 paragraph.Attributes.Append(end);
 
-                if (subtitle.Header != null && p.Extra != null && GetStylesFromHeader(subtitle.Header).Contains(p.Extra))
+                if (subtitle.Header != null && p.Extra != null && headerStyles.Contains(p.Extra))
                 {
                     if (p.Extra != defaultStyle)
                     {
