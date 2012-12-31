@@ -705,7 +705,9 @@ namespace Nikse.SubtitleEdit.Logic
                 return s;
 
             s = s.Replace("<i>", string.Empty);
+            s = s.Replace("<і>", string.Empty);  // different unicode chars
             s = s.Replace("</i>", string.Empty);
+            s = s.Replace("</і>", string.Empty); // different unicode chars
             s = s.Replace("<b>", string.Empty);
             s = s.Replace("</b>", string.Empty);
             s = s.Replace("<u>", string.Empty);

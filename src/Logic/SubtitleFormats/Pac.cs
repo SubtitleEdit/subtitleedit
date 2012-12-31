@@ -1006,7 +1006,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
             }
-            text = text.Replace("<i>", " <i>");
+//            text = text.Replace("<i>", " <i>");
             text = text.Replace("</i>", "</i> ");
             text = text.Replace("  ", " ");
             text = text.Replace(" " + Environment.NewLine , Environment.NewLine);

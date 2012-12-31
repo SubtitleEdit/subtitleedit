@@ -2322,6 +2322,11 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.RemoveEmptyLines();
                     }
 
+                    foreach (Paragraph p in _subtitle.Paragraphs)
+                    {
+                        p.Text = p.Text.Replace("<і>", "<i>").Replace("</і>", "</i>");  // different unicode chars
+                    }                    
+
                     _subtitleListViewIndex = -1;
                     SetCurrentFormat(format);
                     _subtitleAlternateFileName = null;
