@@ -1,10 +1,16 @@
-; *** Inno Setup version 5.5.0++ Turkish messages ***
-; Language	"Turkce"	Turkish
-; Translate by	"Ceviren"	Adil Yildiz		adil@kde.org.tr
-; Updated   by	"Guncelleme"	Taner Dag		tanerdag@gmail.com
+; *** Inno Setup version 5.5.3+ Turkish messages ***
+; Language	"Turkce" Turkish Translate by "Ceviren"	Adil YILDIZ	adilyildiz@gmail.com
+; To download user-contributed translations of this file, go to:
+;   http://www.jrsoftware.org/files/istrans/
 ;
+; Note: When translating this text, do not add periods (.) to the end of
+; messages that didn't have them already, because on those messages Inno
+; Setup adds the periods automatically (appending a period would result in
+; two periods being displayed).
 
 [LangOptions]
+; The following three entries are very important. Be sure to read and 
+; understand the '[LangOptions] section' topic in the help file.
 LanguageName=T<00FC>rk<00E7>e
 LanguageID=$041f
 LanguageCodePage=1254
@@ -201,6 +207,7 @@ ApplicationsFound=Aþaðýdaki uygulamalar, Kur tarafýndan güncelleþtirilmesi gerek
 ApplicationsFound2=Aþaðýdaki uygulamalar, Kur tarafýndan güncelleþtirilmesi gereken dosyalarý kullanýyor. Kur tarafýndan, bu uygulamalarýn otomatik kapatýlmasýna izin vermenizi öneririz. Yükleme tamamlandýktan sonra, Kur uygulamalarý yeniden baþlatmaya çalýþacaktýr.
 CloseApplications=&Uygulamalarý otomatik kapat
 DontCloseApplications=Uygulamalarý &kapatma
+ErrorCloseApplications=Kurulum otomatik olarak tüm programlarý kapatmakta baþarýsýz oldu. Devam etmeden önce Kurulum tarafýndan güncellenmesi gereken dosyalarý kullanan uygulamalarý kapatmanýz önerilir.
 
 ; *** "Kuruluyor" sihirbaz
 WizardInstalling=Kuruluyor
@@ -309,6 +316,9 @@ StatusUninstalling=%1 Kaldýrýlýyor...
 ; *** Shutdown block reasons
 ShutdownBlockReasonInstallingApp=%1 kuruluyor.
 ShutdownBlockReasonUninstallingApp=%1 kaldýrýlýyor.
+
+; The custom messages below aren't used by Setup itself, but if you make
+; use of them in your scripts, you'll want to translate them.
 
 [CustomMessages]
 
