@@ -852,7 +852,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <XNotFound>'{0}' niet gevonden</XNotFound>
     <BeforeReplace>Voor vervangen: {0}</BeforeReplace>
     <MatchFoundX>Overeenkomst gevonden: {0}</MatchFoundX>
-    <NoMatchFoundX>Geen overeenkomst gevonden: { 0}</NoMatchFoundX>
+    <NoMatchFoundX>Geen overeenkomst gevonden: {0}</NoMatchFoundX>
     <FoundNothingToReplace>Niets gevonden om te vervangen</FoundNothingToReplace>
     <ReplaceCountX>Vervang aantal: {0}</ReplaceCountX>
     <NoXFoundAtLineY>Overeenkomst gevonden op regel {0}: {1}</NoXFoundAtLineY>
@@ -976,7 +976,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeMultipleReplace>Voor meerdere vervangen</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Aantal regels met tekst vervangen: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNamesEtcList>De naam '{0}' is toegevoegd aan namen/etc lijst</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>De naam '{ 0} ' is NIET toegevoegd aan namen/etc lijst</NameXNotAddedToNamesEtcList>
+    <NameXNotAddedToNamesEtcList>De naam '{0} ' is NIET toegevoegd aan namen/etc lijst</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>Het woord' {0} ' werd toegevoegd aan het woordenboek</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>De naam' {0} '  is NIET toegevoegd aan het woordenboek</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>De ocr vervangen lijst pair '{0} -&gt; {1}' is toegevoegd aan de ocr vervangen lijst</OcrReplacePairXAdded>
@@ -1396,7 +1396,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Use>Gebruik</Use>
     <UseAlways>&amp;Gebruik altijd</UseAlways>
     <Suggestions>Tips</Suggestions>
-    <SpellCheckProgress>Spellingcontrole [{0}] - { 1}</SpellCheckProgress>
+    <SpellCheckProgress>Spellingcontrole [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Bewerken hele tekst</EditWholeText>
     <EditWordOnly>Alleen woord bewerken</EditWordOnly>
     <AddXToNamesEtc>Voeg '{0}' toe aan namen/etc lijst</AddXToNamesEtc>
