@@ -1,14 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.2</Version>
-    <TranslatedBy>&#220;bersetzung von JW 301</TranslatedBy>
-    <CultureName>de</CultureName>
+    <Version>3.3</Version>
+    <TranslatedBy>Übersetzt von Christoph Kitsche</TranslatedBy>
+    <CultureName>de-DE</CultureName>
+    <HelpFile />
     <OK>&amp;OK</OK>
     <Cancel>&amp;Abbrechen</Cancel>
     <Apply>&#220;bernehmen</Apply>
     <None>Kein</None>
+    <All>Alle</All>
     <Preview>Vorschau</Preview>
     <SubtitleFiles>Untertitel-Dateien</SubtitleFiles>
     <AllFiles>Alle Dateien</AllFiles>
@@ -25,9 +27,10 @@
     <NumberSymbol>#</NumberSymbol>
     <Number>Nummer</Number>
     <Text>Text</Text>
-    <HourMinutesSecondsMilliseconds>HH:min:sek:mills</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>HH:MM:SS:ms</HourMinutesSecondsMilliseconds>
     <Bold>Fett</Bold>
     <Italic>Kursiv</Italic>
+    <Underline>Unterstrichen</Underline>
     <Visible>Sichtbar</Visible>
     <FrameRate>Bildfrequenz</FrameRate>
     <Name>Name</Name>
@@ -59,6 +62,14 @@
     <VideoWindowTitle>Video - {0}</VideoWindowTitle>
     <AudioWindowTitle>Audio - {0}</AudioWindowTitle>
     <ControlsWindowTitle>Steuerung - {0}</ControlsWindowTitle>
+    <Advanced>Erweitert</Advanced>
+    <Style>Stil</Style>
+    <Class>Klasse</Class>
+    <GeneralText>Allgemeiner Text</GeneralText>
+    <LineNumber>Zeilenr.</LineNumber>
+    <Before>Vorher</Before>
+    <After>Nach</After>
+    <Size>Gr&#246;&#223;e</Size>
   </General>
   <About>
     <Title>&#220;ber Subtitle Edit</Title>
@@ -75,16 +86,24 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Zur Eigennamenliste hinzuf&#252;gen</Title>
-    <Description>Zur Eigennamenliste hinzuf&#252;gen (Gro&#223;-/Klein-sensitiv)</Description>
+    <Description>Zur Eigennamenliste hinzuf&#252;gen (Gro&#223;-/Kleinschreibung beachten)</Description>
   </AddToNames>
+  <AddToOcrReplaceList>
+    <Title>Zur OCR-Ersetzungsliste hinzuf&#252;gen</Title>
+    <Description>Paar zur OCR-Ersetzungsliste hinzuf&#252;gen (Gro&#223;-/Kleinschreibung beachten)</Description>
+  </AddToOcrReplaceList>
+  <AddToUserDictionary>
+    <Title>Zur Benutzerwortliste hinzuf&#252;gen</Title>
+    <Description>Wort zur Benutzterwortliste hinzuf&#252;gen (Gro&#223;-/Kleinschreibung ignorieren)</Description>
+  </AddToUserDictionary>
   <AddWaveForm>
     <Title>Wellenformdaten generieren</Title>
     <SourceVideoFile>Quell-Videodatei:</SourceVideoFile>
     <GenerateWaveFormData>Wellenformdaten generieren</GenerateWaveFormData>
     <PleaseWait>Das k&#246;nnte ein paar Minuten dauern - bitte warten</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC Media Player nicht gefunden</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit ben&#246;tigt VLC media player 1.1.x or h&#246;her um Audiodaten zu extrahieren.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Wollen Sie zur VLC media player Webseite wechseln?</GoToVlcMediaPlayerHomePage>
+    <VlcMediaPlayerNotFound>Subtitle Edit ben&#246;tigt VLC media player 1.1.x oder h&#246;her um Audiodaten zu extrahieren.</VlcMediaPlayerNotFound>
+    <GoToVlcMediaPlayerHomePage>Wollen Sie zur Website von VLC media player wechseln?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Wellenformdatei wird erzeugt...</GeneratingPeakFile>
     <GeneratingSpectrogram>Erzeuge Spektogramm...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrahiere Audio: {0:0.0} Sekunden</ExtractingSeconds>
@@ -95,22 +114,49 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustVia>Anpassen &#252;ber</AdjustVia>
     <Seconds>Sekunden</Seconds>
     <Percent>Prozent</Percent>
+    <Recalculate>Neuberechnen</Recalculate>
     <AddSeconds>Sekunden hinzuf&#252;gen</AddSeconds>
     <SetAsPercent>Als Prozent festlegen</SetAsPercent>
     <Note>Hinweis: Anzeigezeit wird nicht mit Startzeit des n&#228;chsten Items &#252;berlappen</Note>
     <PleaseSelectAValueFromTheDropDownList>Bitte w&#228;hlen Sie einen Wert aus der Auswahlliste.</PleaseSelectAValueFromTheDropDownList>
     <PleaseChoose> - Bitte w&#228;hlen - </PleaseChoose>
   </AdjustDisplayDuration>
+  <ApplyDurationLimits>
+    <Title>L&#228;ngenbegrenzungen anwenden</Title>
+    <FixesAvailable>Anpassungen verf&#252;gbar: {0}</FixesAvailable>
+    <UnableToFix>Keine Anpassung verf&#252;gbar: {0}</UnableToFix>
+  </ApplyDurationLimits>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Ausgew&#228;hlte Items ausbalancieren</TitleAutoBreak>
     <TitleUnbreak>Entferne Zeilenumbr&#252;che aus ausgew&#228;hlten Items</TitleUnbreak>
-    <LineNumber>Item #</LineNumber>
-    <Before>Vorher</Before>
-    <After>Nachher</After>
     <LinesFoundX>Items gefunden: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>Nur Items umbrechen, die l&#228;nger sind als</OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesShorterThan>Umbr&#252;che nur entfernen wenn Item k&#252;rzer als</OnlyUnbreakLinesShorterThan>
+    <OnlyUnbreakLinesShorterThan>Umbr&#252;che nur entfernen, wenn Item k&#252;rzer als</OnlyUnbreakLinesShorterThan>
   </AutoBreakUnbreakLines>
+  <BatchConvert>
+    <Title>Batch-Konvertierung</Title>
+    <Input>Eingabe</Input>
+    <InputDescription>Eingabedateien (Browsen oder Drag&amp;Drop)</InputDescription>
+    <Status>Status</Status>
+    <Output>Ausgabe</Output>
+    <ChooseOutputFolder>Ausgabeordner w&#228;hlen</ChooseOutputFolder>
+    <OverwriteExistingFiles>Vorhandene Dateien &#252;berschreiben</OverwriteExistingFiles>
+    <Style>Stil...</Style>
+    <ConvertOptions>Umwandlungsoptionen</ConvertOptions>
+    <AutoBreakLongLines>Lange Zeilen automatisch umwandeln</AutoBreakLongLines>
+    <FixItalics>Kursive Zeichen anpassen</FixItalics>
+    <RemoveFormatting>Formatierungs-Tags entfernen</RemoveFormatting>
+    <RemoveTextForHI>Text f&#252;r HI entfernen</RemoveTextForHI>
+    <ReDoCasing>Gro&#223;-/Kleinschreiben neusetzen</ReDoCasing>
+    <Convert>Umwandeln</Convert>
+    <NothingToConvert>Nicht umzuwandeln!</NothingToConvert>
+    <PleaseChooseOutputFolder>Bitte Ausgabeordner w&#228;hlen</PleaseChooseOutputFolder>
+    <Converted>Umgewandelt</Converted>
+    <ConvertedX>Umgewandelt ({0})</ConvertedX>
+  </BatchConvert>
+  <Beamer>
+    <Title>Beamer</Title>
+  </Beamer>
   <ChangeCasing>
     <Title>Gro&#223;-/Kleinschreibung</Title>
     <ChangeCasingTo>&#196;ndere Gro&#223;-/Kleinschreibung</ChangeCasingTo>
@@ -126,9 +172,6 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <NamesFoundInSubtitleX>Namen im Untertitel: {0}</NamesFoundInSubtitleX>
     <Enabled>Aktiviert</Enabled>
     <Name>Name</Name>
-    <LineNumber>Item #</LineNumber>
-    <Before>Vorher</Before>
-    <After>Nachher</After>
     <LinesFoundX>Items gefunden: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
@@ -139,16 +182,30 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FrameRateNotCorrect>Bildfrequenz ist nicht korrekt</FrameRateNotCorrect>
     <FrameRateNotChanged>Bildfrequenz ist gleich - nichts zu konvertieren</FrameRateNotChanged>
   </ChangeFrameRate>
+  <ChangeSpeedInPercent>
+    <Title>Geschwindigkeit prozentual ver&#228;ndern</Title>
+    <Info>Untertitel-Geschwindigkeit prozentual ver&#228;ndern</Info>
+  </ChangeSpeedInPercent>
   <ChooseEncoding>
     <Title>Kodierung auswählen</Title>
     <CodePage>Zeichentabelle</CodePage>
     <DisplayName>Anzeigename</DisplayName>
-    <PleaseSelectAnEncoding>Bitte kodierung ausw&#228;hlen</PleaseSelectAnEncoding>
+    <PleaseSelectAnEncoding>Bitte Kodierung ausw&#228;hlen</PleaseSelectAnEncoding>
   </ChooseEncoding>
   <ChooseLanguage>
     <Title>Sprache ausw&#228;hlen</Title>
     <Language>Sprache</Language>
   </ChooseLanguage>
+  <ColumnPaste>
+    <Title>Spalte einf&#252;gen</Title>
+    <ChooseColumn>Spalte auswählen</ChooseColumn>
+    <OverwriteShiftCellsDown>Zellen nach unten verschieben/&#252;berschreiben</OverwriteShiftCellsDown>
+    <Overwrite>&#220;berschreiben</Overwrite>
+    <ShiftCellsDown>Zellen nach untern verschieben</ShiftCellsDown>
+    <TimeCodesOnly>Nur Zeitstempel</TimeCodesOnly>
+    <TextOnly>Nur Text</TextOnly>
+    <OriginalTextOnly>Nur Originaltext</OriginalTextOnly>
+  </ColumnPaste>
   <CompareSubtitles>
     <Title>Untertitel vergleichen</Title>
     <PreviousDifference>&amp;Vorheriger Unterschied</PreviousDifference>
@@ -157,7 +214,27 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <XNumberOfDifference>Anzahl der Unterschiede: {0}</XNumberOfDifference>
     <ShowOnlyDifferences>Zeige nur Unterschiede</ShowOnlyDifferences>
     <OnlyLookForDifferencesInText>Nur nach Unterschieden im Text suchen</OnlyLookForDifferencesInText>
+    <CannotCompareWithImageBasedSubtitles>Cannot compare with image based subtitles</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <DCinemaProperties>
+    <Title>D-Cinema Eigenschaften (interop)</Title>
+    <TitleSmpte>D-Cinema Eigenschaften (smpte)</TitleSmpte>
+    <SubtitleId>Untertitle-ID</SubtitleId>
+    <GenerateId>ID erzeugen</GenerateId>
+    <MovieTitle>Filmtitel</MovieTitle>
+    <ReelNumber>Bandnummer</ReelNumber>
+    <Language>Sprache</Language>
+    <IssueDate>Ver&#246;ffentlichungsdatum</IssueDate>
+    <EditRate>Bearbeitungsrate</EditRate>
+    <Font>Font</Font>
+    <FontId>ID</FontId>
+    <FontUri>URI</FontUri>
+    <FontColor>Farbe</FontColor>
+    <FontEffect>Effekt</FontEffect>
+    <FontEffectColor>Effektfarbe</FontEffectColor>
+    <FontSize>Gr&#246;&#223;e</FontSize>
+    <ChooseColor>Farbe wählen...</ChooseColor>
+  </DCinemaProperties>
   <DvdSubrip>
     <Title>Untertitel aus IFO/VOB (DVD) extrahieren</Title>
     <DvdGroupTitle>DVD Dateien/Info</DvdGroupTitle>
@@ -188,7 +265,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImage>Untertitel-Bild</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOtpions>
-    <Title>EBU Speicheroptionen</Title>
+    <Title>EBU-Speicheroptionen</Title>
     <GeneralSubtitleInformation>Allgemeine Untertitel-Informationen</GeneralSubtitleInformation>
     <CodePageNumber>Codepage-Nummer</CodePageNumber>
     <DiskFormatCode>Disk Format Code</DiskFormatCode>
@@ -199,11 +276,11 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <TranslatedProgramTitle>&#220;bersetzter Programmtitel</TranslatedProgramTitle>
     <TranslatedEpisodeTitle>&#220;bersetzter Episodentitel</TranslatedEpisodeTitle>
     <TranslatorsName>&#220;bersetzername</TranslatorsName>
-    <SubtitleListReferenceCode>Untertitellisten Referenzcode</SubtitleListReferenceCode>
+    <SubtitleListReferenceCode>Untertitellisten-Referenzcode</SubtitleListReferenceCode>
     <CountryOfOrigin>Herkunftsland</CountryOfOrigin>
     <RevisionNumber>Versionsnummer</RevisionNumber>
-    <MaxNoOfDisplayableChars>Max Anzahl Zeichen pro Reihe</MaxNoOfDisplayableChars>
-    <MaxNumberOfDisplayableRows>Max Anzahl Reihen</MaxNumberOfDisplayableRows>
+    <MaxNoOfDisplayableChars>Max. Anzahl Zeichen pro Zeile</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>Max. Anzahl Zeile</MaxNumberOfDisplayableRows>
     <DiskSequenceNumber>Disk-Sequenz-Nummer</DiskSequenceNumber>
     <TotalNumberOfDisks>Gesamtzahl Disks</TotalNumberOfDisks>
     <Import>Importiere...</Import>
@@ -218,14 +295,14 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <TextRightJustifiedText>Text Blocksatz rechts</TextRightJustifiedText>
   </EbuSaveOtpions>
   <EffectKaraoke>
-    <Title>Karaoke-Effect</Title>
+    <Title>Karaoke-Effekt</Title>
     <ChooseColor>Farbe ausw&#228;hlen:</ChooseColor>
-    <TotalMilliseconds>Gesamt Millisek.:</TotalMilliseconds>
+    <TotalMilliseconds>Gesamt-Millisek.:</TotalMilliseconds>
     <EndDelayInMilliseconds>Endverz&#246;gerung in Millisek.::</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Schreibmaschinen-Effekt</Title>
-    <TotalMilliseconds>Gesamt Millisek.:</TotalMilliseconds>
+    <TotalMilliseconds>Gesamt-Millisek.:</TotalMilliseconds>
     <EndDelayInMillisecs>Endverz&#246;gerung in Millisek.:</EndDelayInMillisecs>
   </EffectTypewriter>
   <ExportPngXml>
@@ -236,10 +313,43 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Schriftfarbe</FontColor>
     <BorderColor>Rahmenfarbe</BorderColor>
     <BorderWidth>Rahmenbreite</BorderWidth>
+    <ImageFormat>Bildformat</ImageFormat>
     <AntiAlias>Antialiasing</AntiAlias>
+    <SideBySide3D>Side-by-side 3D</SideBySide3D>
     <ExportAllLines>Alle Zeilen exportieren...</ExportAllLines>
     <XImagesSavedInY>{0} Bilder gespeichert in {1}</XImagesSavedInY>
+    <VideoResolution>Videoauflösung</VideoResolution>
+    <Align>Ausrichtung</Align>
+    <Left>Links</Left>
+    <Right>Rechts</Right>
+    <Center>Zentriert</Center>
+    <BottomMargin>Bottom margin</BottomMargin>
+    <SaveBluRraySupAs>Blu-ray-sup-Dateiname wählen</SaveBluRraySupAs>
+    <SaveVobSubAs>VobSub-Dateiname wählen</SaveVobSubAs>
+    <SaveFabImageScriptAs>Blu-ray-sup-Dateiname wählen</SaveFabImageScriptAs>
+    <SaveDvdStudioProStlAs>DVD Studio Pro STL-Dateiname wählen</SaveDvdStudioProStlAs>
   </ExportPngXml>
+  <ExportText>
+    <Title>Text exportieren</Title>
+    <Preview>Vorschau</Preview>
+    <ExportOptions>Export-Optionen</ExportOptions>
+    <FormatText>Text formatieren</FormatText>
+    <None>kein</None>
+    <MergeAllLines>Alle Zeilen zusammenf&#252;hren</MergeAllLines>
+    <UnbreakLines>Zeilenumbrüche entfernen</UnbreakLines>
+    <RemoveStyling>Stile entfernen</RemoveStyling>
+    <ShowLineNumbers>Zeilennummern anzeigen</ShowLineNumbers>
+    <AddNewLineAfterLineNumber>Neue Zeile nach Zeilennummer einfügen</AddNewLineAfterLineNumber>
+    <ShowTimeCode>Zeitstempel anzeigen</ShowTimeCode>
+    <AddNewLineAfterTimeCode>Neue Zeile nach Zeitstempel einfügen</AddNewLineAfterTimeCode>
+    <AddNewLineAfterTexts>Neue Zeile nach Text einfügen</AddNewLineAfterTexts>
+    <AddNewLineBetweenSubtitles>Neue Zeile zwischen Untertitel einfügen</AddNewLineBetweenSubtitles>
+    <TimeCodeFormat>Zeitstempel-Format</TimeCodeFormat>
+    <Srt>.srt</Srt>
+    <Milliseconds>Millisekunend</Milliseconds>
+    <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
+    <TimeCodeSeperator>Zeitstempel-Separator</TimeCodeSeperator>
+  </ExportText>
   <FindDialog>
     <Title>Suchen</Title>
     <Find>Suchen</Find>
@@ -264,10 +374,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Step2>Schritt 2/2 - Korrekturen best&#228;tigen</Step2>
     <Fixes>Korrekturen</Fixes>
     <Log>Log</Log>
-    <LineNumber>Item #</LineNumber>
     <Function>Funktion</Function>
-    <Before>Vorher</Before>
-    <After>Nachher</After>
     <RemovedEmptyLine>Leere Items entfernen</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Leeres Item am Anfang entfernen</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Leeres Item am Ende entfernen</RemovedEmptyLineAtBottom>
@@ -288,17 +395,20 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <AddPeriods>Punkte einf&#252;gen am Ende einer Zeile, wenn die n&#228;chste Zeile mit Gro&#223;buchstaben beginnt.</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Mit Gro&#223;buchstaben beginnen am Anfang von Items, wenn das vorherige Item auf einen Punkt endete</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Mit Gro&#223;buchstaben beginnen nach Punkten innerhalb eines Items</StartWithUppercaseLetterAfterPeriodInsideParagraph>
+    <StartWithUppercaseLetterAfterColon>Mit Gro&#223;buchstaben beginnen nach Doppelpunkt/Semikolon</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>Alleine stehendes 'i' zu 'I' korrigieren (Englisch)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Korrigiere h&#228;ufige OCR-Fehler (benutze OCR-Korrekturen-Liste)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>H&#228;ufige OCR-Fehler korrigiert (OCR-Korrekturen-Liste benutzt): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Entferne Leerzeichen zwischen Zahlen</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Korrigiere Dialoge in einem Item</FixDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Leerzeichen zwischen zahlen entfernt: {0}</RemoveSpaceBetweenNumbersFixed>
-    <FixDanishLetterI>Korrigiere D&#228;nischen Buchstaben 'i'</FixDanishLetterI>
-    <FixSpanishInvertedQuestionAndExclamationMarks>Korrigiere spanische umgedrehte Frage- und Ausrufezeichen</FixSpanishInvertedQuestionAndExclamationMarks>
+    <FixTurkishAnsi>Wandle grönländische Buchstaben von ANSI in Unicode</FixTurkishAnsi>
+    <FixDanishLetterI>Korrigiere türkischen Buchstaben 'i'</FixDanishLetterI>
+    <FixSpanishInvertedQuestionAndExclamationMarks>Korrigiere spanische umgekehrte Frage- und Ausrufezeichen</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>F&#252;ge fehlendes Anf&#252;hrungszeichen hinzu (")</AddMissingQuote>
     <AddMissingQuotes>F&#252;ge fehlende Anf&#252;hrungszeichen hinzu (")</AddMissingQuotes>
     <FixHyphens>Korrigiere Zeilen mit Bindestrich (-)</FixHyphens>
+    <FixHyphensAdd>Korrigiere (ergänze Bindestrich) Zeilenpaare nur mit Bindestrich (-)</FixHyphensAdd>
     <FixHyphen>Korrigiere Zeile mit Bindestrich (-)</FixHyphen>
     <XHyphensFixed>Bindestriche korrigiert: {0}</XHyphensFixed>
     <AddMissingQuotesExample>"Wie geht's?  -&gt; "Wie geht's?"</AddMissingQuotesExample>
@@ -419,50 +529,79 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Splitting>Trennen</Splitting>
     <AutoSplitText>Text automatisch trennen</AutoSplitText>
     <OneLineIsOneSubtitle>Eine Zeile ist ein Item</OneLineIsOneSubtitle>
-    <MergeShortLines>Merge short lines with continuation</MergeShortLines>
+    <SplitAtBlankLines>Bei Leerzeilchen trennen</SplitAtBlankLines>
+    <MergeShortLines>Kurze Zeilen mit Bindestrich verbinden</MergeShortLines>
     <RemoveEmptyLines>Leere Items entfernen</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Items ohne Buchstaben entfernen</RemoveLinesWithoutLetters>
     <GapBetweenSubtitles>Abstand zwischen Items (Millisekunden)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
     <Fixed>Fest</Fixed>
     <Refresh>&amp;Aktualisieren</Refresh>
-    <Next>&amp;N&#228;chstes &gt;&gt;</Next>
     <TextFiles>Textdateien</TextFiles>
     <PreviewLinesModifiedX>Vorschau - ver&#228;nderte Items: {0}</PreviewLinesModifiedX>
   </ImportText>
   <Interjections>
-    <Title>Zwischenlaute</Title>
+    <Title>Interjektionen</Title>
   </Interjections>
+  <JoinSubtitles>
+    <Title>Untertitel verbinden</Title>
+    <Information>Untertitel zum Verbinden hinzufügen (auch per Drag&amp;Drop)</Information>
+    <NumberOfLines>Anz. Zeilen</NumberOfLines>
+    <StartTime>Startzeit</StartTime>
+    <EndTime>Endzeit</EndTime>
+    <FileName>Dateiname</FileName>
+    <Join>Verbinden</Join>
+    <TotalNumberOfLinesX>Gesamtanzahl Zeilen: {0:#,###,###}</TotalNumberOfLinesX>
+  </JoinSubtitles>
   <Main>
     <Menu>
       <File>
         <Title>&amp;Datei</Title>
         <New>&amp;Neu</New>
         <Open>&#214;&amp;ffnen</Open>
+        <OpenKeepVideo>&#214;&amp;ffnen (Video behalten)</OpenKeepVideo>
         <Reopen>&amp;Erneut &#246;ffnen</Reopen>
         <Save>&amp;Speichern</Save>
         <SaveAs>Speichern &amp;unter...</SaveAs>
+        <RestoreAutoBackup>Auto-Backup wiederherstellen...</RestoreAutoBackup>
+        <AdvancedSubStationAlphaProperties>Erweiterte SSA-Eigenschaften...</AdvancedSubStationAlphaProperties>
+        <SubStationAlphaProperties>SSA-Eigenschaften...</SubStationAlphaProperties>
         <OpenOriginal>Original-Untertitel &#246;ffnen (&#220;bersetzer-Modus)...</OpenOriginal>
         <SaveOriginal>Original-Untertitel speichern</SaveOriginal>
         <CloseOriginal>Original-Untertitel schlie&#223;en</CloseOriginal>
         <OpenContainingFolder>Beinhaltenden Ordner &#246;ffnen</OpenContainingFolder>
         <Compare>&amp;Vergleichen...</Compare>
-        <ImportOcrFromDvd>Importiere/OCR Untertitel aus VOB/IFO (DVD) ...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>Importiere/OCR VobSub (sub/idx) Untertitel...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Importiere/OCR Blu-Ray SUP-Datei...</ImportBluRaySupFile>
+        <Statistics>Statisti&amp;k...</Statistics>
+        <Plugins>Plugins...</Plugins>
+        <ImportOcrFromDvd>Importiere/OCR aus VOB/IFO (DVD)...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>Importiere/OCR aus VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Importiere/OCR aus Blu-Ray-SUP-Datei...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Importiere Untertitel aus Matroska-Datei...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importiere Untertitel mit manuell gew&#228;hlter Kodierung...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importiere Rein-Text...</ImportText>
         <ImportTimecodes>Importiere Zeitstempel...</ImportTimecodes>
         <Export>Exportiere</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
+        <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
+        <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
         <ExportEbu>EBU stl...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
+        <ExportPlainText>Rein-Text...</ExportPlainText>
+        <ExportAdobeEncoreFabImageScript>Adobe Encore FAB Image Script...</ExportAdobeEncoreFabImageScript>
+        <ExportKoreanAtsFilePair>Koreanisches ATS-Dateipaar...</ExportKoreanAtsFilePair>
+        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
+        <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
+        <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
+        <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
+        <ExportUltech130>Ultech caption...</ExportUltech130>
         <Exit>&amp;Beenden</Exit>
       </File>
       <Edit>
         <Title>Bearbeiten</Title>
+        <Undo>Rückgängig</Undo>
+        <Redo>Wiederherstellen</Redo>
         <ShowUndoHistory>Zeige Verlauf (f&#252;r R&#252;ckg&#228;ngig)</ShowUndoHistory>
         <InsertUnicodeSymbol>Unicode-Symbol einf&#252;gen</InsertUnicodeSymbol>
         <Find>&amp;Suchen</Find>
@@ -470,16 +609,22 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Replace>&amp;Ersetzen</Replace>
         <MultipleReplace>&amp;Mehrfach ersetzen...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Gehe zu Item Nummer...</GoToSubtitleNumber>
+        <RightToLeftMode>Rechts nach links</RightToLeftMode>
+	    <ReverseRightToLeftStartEnd>Rechts nach links Start/Ende umkehren</ReverseRightToLeftStartEnd>
+        <ShowOriginalTextInAudioAndVideoPreview>Original-Text in Audio-/Video-Vorschauf anzeigen</ShowOriginalTextInAudioAndVideoPreview>
       </Edit>
       <Tools>
         <Title>Werkzeuge</Title>
         <AdjustDisplayDuration>&amp;L&#228;ngen anpassen...</AdjustDisplayDuration>
+        <ApplyDurationLimits>L&#228;ngenbegrenzungen anwenden...</ApplyDurationLimits>
         <FixCommonErrors>H&#228;ufige &amp;Fehler korrigieren...</FixCommonErrors>
         <StartNumberingFrom>Nummerierung beginnen bei...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Entferne Untertitel f&#252;r H&#246;rgesch&#228;digte...</RemoveTextForHearingImpaired>
         <ChangeCasing>&#196;ndere Gro&#223;-/Kleinschreibung...</ChangeCasing>
         <ChangeFrameRate>Bildfrequenz &#228;ndern...</ChangeFrameRate>
+        <ChangeSpeedInPercent>Geschwindigkeit ändern (%)...</ChangeSpeedInPercent>
         <MergeShortLines>Kurze Items zusammenf&#252;hren...</MergeShortLines>
+        <MergeDuplicateText>Items mit gleichem Text zusammenführen...</MergeDuplicateText>
         <SplitLongLines>Lange Items trennen...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimale Anzeigezeit zwischen Items...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sortieren nach</SortBy>
@@ -492,10 +637,12 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <TextTotalLength>Text - Gesamtl&#228;nge</TextTotalLength>
         <TextNumberOfLines>Text - Anzahl Zeilen</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Text - Anzahl Zeichen/Sekunde</TextNumberOfCharactersPerSeconds>
-        <ShowOriginalTextInAudioAndVideoPreview>Original-Text in Audio-/Video-Vorschau zeigen</ShowOriginalTextInAudioAndVideoPreview>
+        <WordsPerMinute>Text - Wörter/Minute</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Neue leere &#220;bersetzung aus aktuellem Untertitel erstellen</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <BatchConvert>Stapelkonvertierung...</BatchConvert>
         <SplitSubtitle>Untertitel teilen...</SplitSubtitle>
         <AppendSubtitle>Untertitel anh&#228;ngen...</AppendSubtitle>
+        <JoinSubtitles>Untertitel verbinden...</JoinSubtitles>
       </Tools>
       <Video>
         <Title>Video</Title>
@@ -562,26 +709,43 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ShowHideVideo>Video anzeigen/verbergen</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
-        <SubStationAlphaSetStyle>(Fortgeschritten) Sub Station Alpha - Formatierung festlegen</SubStationAlphaSetStyle>
+        <AdvancedSubStationAlphaSetStyle>Erweiterte SSA-Formatierung festlegen</AdvancedSubStationAlphaSetStyle>
+        <SubStationAlphaSetStyle>SSA-Formatierung festlegen</SubStationAlphaSetStyle>
+        <SubStationAlphaStyles>SSA-Formatierungen...</SubStationAlphaStyles>
+        <AdvancedSubStationAlphaStyles>Erweiterte SSA-Formatierungen...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetStyle>Gezeitete Text-Formatierung festlegen</TimedTextSetStyle>
+        <TimedTextStyles>Gezeitete Text-Formatierungen...</TimedTextStyles>
+        <SamiSetStyle>Sami-Klasse festlegen</SamiSetStyle>
         <Cut>Ausschneiden</Cut>
         <Copy>Kopieren</Copy>
         <Paste>Einf&#252;gen</Paste>
         <Delete>L&#246;schen</Delete>
         <SplitLineAtCursorPosition>Item beim Cursor trennen</SplitLineAtCursorPosition>
+        <AutoDurationCurrentLine>Automatische Dauer (akt. Zeile)</AutoDurationCurrentLine>
         <SelectAll>Alle ausw&#228;hlen</SelectAll>
         <InsertFirstLine>Item einf&#252;gen</InsertFirstLine>
         <InsertBefore>Item davor einf&#252;gen</InsertBefore>
         <InsertAfter>Item danach einf&#252;gen</InsertAfter>
         <InsertSubtitleAfter>Untertitel nach dieser Zeile einf&#252;gen...</InsertSubtitleAfter>
         <CopyToClipboard>Als Text in Zwischenablage kopieren</CopyToClipboard>
+        <Column>Spalte</Column>
+        <ColumnDeleteText>Text löschen</ColumnDeleteText>
+        <ColumnDeleteTextAndShiftCellsUp>Text löschen und Zellen nach oben schieben</ColumnDeleteTextAndShiftCellsUp>
+        <ColumnInsertEmptyTextAndShiftCellsDown>Leertext einfügen und Zeilen nach unten verschieben</ColumnInsertEmptyTextAndShiftCellsDown>
+        <ColumnInsertTextFromSubtitle>Text aus Untertitel einfügen...</ColumnInsertTextFromSubtitle>
+        <ColumnImportTextAndShiftCellsDown>Text importieren und Zellen nach unten verschieben</ColumnImportTextAndShiftCellsDown>
+        <ColumnPasteFromClipboard>Aus Zwischenablage einfügen...</ColumnPasteFromClipboard>
+        <ColumnCopyOriginalTextToCurrent>Text vom Original in akt. Zelle einfügen</ColumnCopyOriginalTextToCurrent>
         <Split>Trennen</Split>
         <MergeSelectedLines>Ausgew&#228;hlte Items zusammenf&#252;hren</MergeSelectedLines>
+        <MergeSelectedLinesASDialogue>Selektierte Zeilen zusammenf&#252;hren (Dialog)</MergeSelectedLinesASDialogue>
         <MergeWithLineBefore>Mit vorherigem Item zusammenf&#252;hren</MergeWithLineBefore>
         <MergeWithLineAfter>Mit folgendem Item zusammenf&#252;hren</MergeWithLineAfter>
         <Normal>Normal</Normal>
         <Underline>Unterstrichen</Underline>
         <Color>Farbe...</Color>
         <FontName>Schriftart...</FontName>
+        <Alignment>Alignment...</Alignment>
         <AutoBalanceSelectedLines>Ausgew&#228;hlte Items ausbalancieren...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Zeilenumbruch aus ausgew&#228;hlten Items entfernen...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Schreibmaschinen-Effekt...</TypewriterEffect>
@@ -593,6 +757,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <AdjustDisplayDurationForSelectedLines>L&#228;nge der ausgew&#228;hlten Items anpassen...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>H&#228;ufige Fehler in ausgew&#228;hlten Items korrigieren...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Gro&#223;-/Kleinschreibung in ausgew&#228;hlten Items &#228;ndern...</ChangeCasingForSelectedLines>
+        <SaveSelectedLines>Ausgew&#228;hlte Items speichern unter...</SaveSelectedLines>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -694,6 +859,12 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FindContinue>Der Suchbegriff wurde nicht gefunden.
 M&#246;chten Sie vom Anfang des Dokuments weitersuchen?</FindContinue>
     <FindContinueTitle>Suche fortsetzen?</FindContinueTitle>
+    <ReplaceContinueNotFound>Der Suchbegriff wurde nicht gefunden.
+Möchten Sie die Suche am Anfang des Dokuments fortsetzen?</ReplaceContinueNotFound>
+    <ReplaceXContinue>Der Suchbegriff wurde {0} Mal ersetzt.
+Möchten Sie die Suche am Anfang des Dokuments fortsetzen?</ReplaceXContinue>
+    <ReplaceContinueTitle>Ersetzen fortsetzen?</ReplaceContinueTitle>
+    <SearchingForXFromLineY>Suche nach '{0}' ab Item Nr. {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' gefunden in Item {1}</XFoundAtLineNumberY>
     <XNotFound>'{0}' nicht gefunden</XNotFound>
     <BeforeReplace>Vor dem Ersetzen: {0}</BeforeReplace>
@@ -720,7 +891,6 @@ M&#246;chten Sie vom Anfang des Dokuments weitersuchen?</FindContinue>
     <BeforeRemovalOfTextingForHearingImpaired>Vor dem Entfernen von Text f&#252;r H&#246;rgesch&#228;digte</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Text f&#252;r H&#246;rgesch&#228;digte entfernt : Ein Item</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Text f&#252;r H&#246;rgesch&#228;digte entfernt: {0} Items</TextingForHearingImpairedRemovedXLines>
-    <SubtitleSplitted>Untertitel geteilt</SubtitleSplitted>
     <SubtitleAppendPrompt>Es wird ein existierender Untertitel an den aktuell geladenen Untertitel angeh&#228;ngt,
 der schon an das Video angepasst sein sollte.
 
@@ -745,6 +915,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <TranslationFromSwedishToDanishFailed>&#220;bersetzung vom Schwedischen ins D&#228;nische fehlgeschlagen</TranslationFromSwedishToDanishFailed>
     <BeforeUndo>Vor dem R&#252;ckg&#228;ngig machen</BeforeUndo>
     <UndoPerformed>R&#252;ckg&#228;ngig gemacht</UndoPerformed>
+    <RedoPerformed>Wiederherstellung durchgef&#252;hrt</RedoPerformed>
     <NothingToUndo>Nichts r&#252;ckg&#228;ngig zu machen</NothingToUndo>
     <InvalidLanguageNameX>Ung&#252;ltiger Sprach-Name: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Konnte Sprache nicht wechseln!</UnableToChangeLanguage>
@@ -759,6 +930,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <BeforeAddingTagX>Vor dem Hinzuf&#252;gen des &lt;{0}&gt; Tags</BeforeAddingTagX>
     <TagXAdded>&lt;{0}&gt; Tag hinzugef&#252;gt</TagXAdded>
     <LineXOfY>Item {0} von {1}</LineXOfY>
+    <XLinesSavedAsY>{0} Items gespeichert unter {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} Items gel&#246;scht</XLinesDeleted>
     <BeforeDeletingXLines>Vor dem L&#246;schen von {0} Items</BeforeDeletingXLines>
     <DeleteXLinesPrompt>L&#246;sche {0} Items?</DeleteXLinesPrompt>
@@ -794,6 +966,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <CasingCompleteMessageOnlyNames>Anzahl der Items mit ge&#228;nderter Gro&#223;-/Kleinschreibung bei Namen: {0}/{1}</CasingCompleteMessageOnlyNames>
     <CasingCompleteMessage>Anzahl der Items mit ge&#228;nderter Gro&#223;-/Kleinschreibung: {0}/{1}, Gro&#223;-/Kleinschreibung ge&#228;ndert f&#252;r Namen: {2}</CasingCompleteMessage>
     <BeforeChangeFrameRate>Vor dem &#196;ndern der Bildfrequenz</BeforeChangeFrameRate>
+    <BeforeAdjustSpeedInPercent>Vor Anpassung der Geschwindigkeit (%)</BeforeAdjustSpeedInPercent>
     <FrameRateChangedFromXToY>Bildfrequenz ge&#228;ndert von {0} zu {1}</FrameRateChangedFromXToY>
     <IdxFileNotFoundWarning>{0} nicht gefunden! VobSub-Datei trotzdem importieren?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>Kein g&#246;ltiger Kopf f&#252;r VobSub-Datei: {0}</InvalidVobSubHeader>
@@ -802,9 +975,15 @@ Fortfahren?</SubtitleAppendPrompt>
     <OpenBluRaySupFile>Blu-ray .sup Datei &#246;ffnen...</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray .sup Dateien</BluRaySupFiles>
     <BeforeImportingVobSubFile>Vor dem Import eines VobSub-Untertitels</BeforeImportingVobSubFile>
-    <BeforeImportingBluRaySupFile>Vor dem Import einer Blu-ray sup Datei</BeforeImportingBluRaySupFile>
+    <BeforeImportingBluRaySupFile>Vor dem Import einer Blu-ray .sup Datei</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Vor dem Import einer BDN xml Datei</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>Vor dem fr&#252;her/sp&#228;ter Anzeigen</BeforeShowSelectedLinesEarlierLater>
+    <ShowAllLinesXSecondsLinesEarlier>Alle Items {0:0.0##} s eher anzeigen</ShowAllLinesXSecondsLinesEarlier>
+    <ShowAllLinesXSecondsLinesLater>Alle Items {0:0.0##} s später anzeigen</ShowAllLinesXSecondsLinesLater>
+    <ShowSelectedLinesXSecondsLinesEarlier>Ausgewählte Zeilen {0:0.0##} s eher anzeigen</ShowSelectedLinesXSecondsLinesEarlier>
+    <ShowSelectedLinesXSecondsLinesLater>Ausgewählte Zeilen {0:0.0##} s später anzeigen</ShowSelectedLinesXSecondsLinesLater>
+    <ShowSelectionAndForwardXSecondsLinesEarlier>Auswahl anzeigen und fortfahren {0:0.0##} s eher</ShowSelectionAndForwardXSecondsLinesEarlier>
+    <ShowSelectionAndForwardXSecondsLinesLater>Auswahl anzeigen und fortfahren {0:0.0##} s später</ShowSelectionAndForwardXSecondsLinesLater>
     <ShowSelectedLinesEarlierLaterPerformed>Fr&#252;her/Sp&#228;ter anzeigen durchgef&#252;hrt bei ausgew&#228;hlten Items</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Doppelte W&#246;rter mittels RegEx {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Vor dem Sortieren: {0}</BeforeSortX>
@@ -817,6 +996,10 @@ Fortfahren?</SubtitleAppendPrompt>
     <NumberOfLinesReplacedX>Anzahl Items mit ersetztem Text: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNamesEtcList>Der Name '{0}' wurde zur Liste mit Eigennamen hinzugef&#252;gt.</NameXAddedToNamesEtcList>
     <NameXNotAddedToNamesEtcList>Der Name '{0}' wurde NICHT zur Liste mit Eigennamen hinzugef&#252;gt.</NameXNotAddedToNamesEtcList>
+    <WordXAddedToUserDic>Das Wort '{0}' wurde zur Benutzerwortliste hinzugefügt</WordXAddedToUserDic>
+    <WordXNotAddedToUserDic>Das Wort '{0}' wurde NICHT zur Benutzerwortliste hinzugefügt</WordXNotAddedToUserDic>
+    <OcrReplacePairXAdded>Das OCR-Ersetzungslisten-Paar '{0} -&gt; {1}' wurde zur OCR-Ersetzungsliste hinzugefügt</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>Das OCR-Ersetzungslisten-Paar '{0} -&gt; {1}' wurde NICHT zur OCR-Ersetzungsliste hinzugefügt</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} Items ausgew&#228;hlt</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Untertitel enth&#228;lt Unicode-Zeichen. Beim Speichern als ANSI gehen diese verloren. Mit Speichern fortfahren?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Untertitel enth&#228;lt negative Zeitstempel. Mit Speichern fortfahren?</NegativeTimeWarning>
@@ -852,18 +1035,40 @@ Fortfahren?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Rechtschreibpr&#252;fung abgebrochen. {0} Items wurden ver&#228;ndert.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Rechtschreibpr&#252;fung abgeschlossen. {0} Items wurden ver&#228;ndert.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Anderen Untertitel &#246;ffnen</OpenOtherSubtitle>
+    <BeforeToggleDialogueDashes>Vor dem Wechseln von Bindestrichen</BeforeToggleDialogueDashes>
+    <ExportPlainTextAs>Rein-Text exportieren unter</ExportPlainTextAs>
+    <TextFiles>Textdateien</TextFiles>
+    <SubtitleExported>Untertitel exportiert</SubtitleExported>
+    <LineNumberXErrorReadingFromSourceLineY>Zeile {0} - Fehler beim Lesen: {1}</LineNumberXErrorReadingFromSourceLineY>
+    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Zeile {0} - Fehler beim Lesen des Zeitstempels: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>Zeile {0} - Erwartete Item-Nr.: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <BeforeGuessingTimeCodes>Vor Ermitteln des Zeitstempels</BeforeGuessingTimeCodes>
+    <BeforeAutoDuration>Vor autom. Dauer für ausgewählte Items</BeforeAutoDuration>
+    <BeforeColumnPaste>Vor Item-Einfügen</BeforeColumnPaste>
+    <BeforeColumnDelete>Vor Item-Löschen</BeforeColumnDelete>
+    <BeforeColumnImportText>Vor Importiern des Zellentexts</BeforeColumnImportText>
+    <BeforeColumnShiftCellsDown>Vor Verschieben der Zellen nach unten</BeforeColumnShiftCellsDown>
+    <ErrorLoadingPluginXErrorY>Fehler beim Laden des Plugins: {0}: {1}</ErrorLoadingPluginXErrorY>
+    <BeforeRunningPluginXVersionY>Vor Ausführen des Plugins: {0}: {1}</BeforeRunningPluginXVersionY>
+    <UnableToReadPluginResult>Fehler beim Lesen der Untertitel vom Plugin!</UnableToReadPluginResult>
+    <UnableToCreateBackupDirectory>Fehler beim Erzeugen von Backup-Verzeichnis {0}: {1}</UnableToCreateBackupDirectory>
+    <BeforeDisplaySubtitleJoin>Vor Zusammenführen der Untertitel</BeforeDisplaySubtitleJoin>
+    <SubtitlesJoined>Untertitel zusammengeführt</SubtitlesJoined>
+    <StatusLog>Status-Protokoll</StatusLog>
   </Main>
   <MatroskaSubtitleChooser>
-    <Title>Untertitel aus Matroska-Datei ausw&#228;hlen</Title>
-    <PleaseChoose>Mehr als ein Untertitel gefunden - bitte w&#228;hlen</PleaseChoose>
-    <TrackXLanguageYTypeZ>Titel {0} - {1} - Sprache: {2} - Typ: {3}</TrackXLanguageYTypeZ>
+    <Title>Wähle Untertitel aus Matroska-Datei</Title>
+    <PleaseChoose>Mehr als ein Untertitel gefunden - bitte auswählen</PleaseChoose>
+    <TrackXLanguageYTypeZ>Track {0} - {1} - Sprache: {2} - Typ: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MergeDoubleLines>
+    <Title>Zeilen mit gleichen Text zusammenführen</Title>
+  </MergeDoubleLines>
   <MergedShortLines>
     <Title>Kurze Items zusammenf&#252;hren</Title>
     <MaximumCharacters>Maximale Anzahl Zeichen pro Item</MaximumCharacters>
     <MaximumMillisecondsBetween>Maximaler Abstand in Millisekunden zwischen Items</MaximumMillisecondsBetween>
     <NumberOfMergesX>Anzahl der Zusammenf&#252;hrungen: {0}</NumberOfMergesX>
-    <LineNumber>Item #</LineNumber>
     <MergedText>Zusammengef&#252;hrter Text</MergedText>
     <OnlyMergeContinuationLines>Nur zusammengeh&#246;rende Items zusammenf&#252;hren</OnlyMergeContinuationLines>
   </MergedShortLines>
@@ -874,15 +1079,18 @@ Fortfahren?</SubtitleAppendPrompt>
     <Normal>Normal</Normal>
     <CaseSensitive>Gro&#223;-/Kleinschreibung</CaseSensitive>
     <RegularExpression>Regul&#228;rer Ausdruck</RegularExpression>
-    <LineNumber>Item #</LineNumber>
-    <Before>Vorher</Before>
-    <After>Nachher</After>
     <LinesFoundX>Gefundene Items: {0}</LinesFoundX>
     <Delete>L&#246;schen</Delete>
     <Add>Hinzuf&#252;gen</Add>
     <Update>&#196;&amp;ndern</Update>
     <Enabled>Aktiv</Enabled>
     <SearchType>Suchtyp</SearchType>
+    <RemoveAll>Alle löschen</RemoveAll>
+    <Import>Importiere...</Import>
+    <Export>Exportiere...</Export>
+    <ImportRulesTitle>Importiere Ersetzungsregeln aus...</ImportRulesTitle>
+    <ExportRulesTitle>Exportiere Ersetzungsregeln nach...</ExportRulesTitle>
+    <Rules>Ersetzungsregeln</Rules>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -895,8 +1103,8 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <Join>Beitreten</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
-    <Title>Sitzungs-Informationen und Log anzeigen</Title>
-    <Log>Log:</Log>
+    <Title>Sitzungs-Informationen und Protokoll anzeigen</Title>
+    <Log>Protokoll:</Log>
   </NetworkLogAndInfo>
   <NetworkStart>
     <Title>Neue Sitzung beginnen</Title>
@@ -905,6 +1113,24 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
 Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <Start>Start</Start>
   </NetworkStart>
+  <PluginsGet>
+    <Title>Plugins</Title>
+    <InstalledPlugins>Installierte Plugins</InstalledPlugins>
+    <GetPlugins>Plugins laden</GetPlugins>
+    <Description>Beschreibung</Description>
+    <Version>Version</Version>
+    <Date>Datum</Date>
+    <Type>Typ</Type>
+    <OpenPluginsFolder>Plugin-Verzeichnis öffen</OpenPluginsFolder>
+    <GetPluginsInfo1>Untertitelbearbeitungs-Plugins müssen ins Plugin-Verzeichnis gespeichert werden</GetPluginsInfo1>
+    <GetPluginsInfo2>Plugin auswählen und auf 'Download' klicken</GetPluginsInfo2>
+    <PluginXDownloaded>Plugin {0} runtergeladen</PluginXDownloaded>
+    <Download>&amp;Download</Download>
+    <Remove>&amp;Löschen</Remove>
+    <UnableToDownloadPluginListX>Kann Plugin-Liste nicht runterladen: {0}</UnableToDownloadPluginListX>
+    <NewVersionOfSubtitleEditRequired>Neuere Version von Subtitle Edit erforderlich!</NewVersionOfSubtitleEditRequired>
+    <UpdateAvailable>[Update verfügbar!]</UpdateAvailable>
+  </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Entferne Untertitel f&#252;r H&#246;rgesch&#228;digte</Title>
     <RemoveTextConditions>Bedingungen f&#252;r entfernen</RemoveTextConditions>
@@ -917,11 +1143,9 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <RemoveTextBeforeColon>Entferne Text vor Doppelpunkt (':')</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>Nur wenn Text aus GROSSBUCHSTABEN besteht</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>Nur wenn Text in eigener Zeile</OnlyIfInSeparateLine>
-    <LineNumber>Item #</LineNumber>
-    <Before>Vorher</Before>
-    <After>Nachher</After>
     <LinesFoundX>Gefundene Items: {0}</LinesFoundX>
     <RemoveTextIfContains>Entferne Text, wenn er folgendes enth&#228;lt:</RemoveTextIfContains>
+    <RemoveTextIfAllUppercase>Entferne Items in GROSSBUCHSTABEN</RemoveTextIfAllUppercase>
     <RemoveInterjections>Entferne Zwischenlaute (hm, &#228;h, etc.)</RemoveInterjections>
     <EditInterjections>Bearbeiten...</EditInterjections>
   </RemoveTextFromHearImpaired>
@@ -936,6 +1160,22 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <Replace>&amp;Ersetzen</Replace>
     <ReplaceAll>Ersetzen &amp;alle</ReplaceAll>
   </ReplaceDialog>
+  <RestoreAutoBackup>
+    <Title>Auto-Backup wiederherstellen</Title>
+    <Information>Auto-Backup öffnen</Information>
+    <DateAndTime>Datum und Zeit</DateAndTime>
+    <FileName>Dateiname</FileName>
+    <Extension>Extension</Extension>
+    <NoBackedUpFilesFound>Keine Backup-Dateien gefunden!</NoBackedUpFilesFound>
+  </RestoreAutoBackup>
+  <SeekSilence>
+    <Title>Stille suchen</Title>
+    <SearchDirection>Suchrichtung</SearchDirection>
+    <Forward>Vorwärts</Forward>
+    <Back>Rückwärts</Back>
+    <LengthInSeconds>Mindestlänge der Stille (Sekunden)</LengthInSeconds>
+    <MaxVolume>Lautstärke unter</MaxVolume>
+  </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Setze minimale Anzeigezeit zwischen Items</Title>
     <PreviewLinesModifiedX>Vorschau - ver&#228;nderte Items: {0}</PreviewLinesModifiedX>
@@ -952,34 +1192,38 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
   </SetSyncPoint>
   <Settings>
     <Title>Einstellungen</Title>
-    <General>Allgemeinen</General>
+    <General>Allgemein</General>
     <Toolbar>Toolbar</Toolbar>
     <VideoPlayer>Video-Player</VideoPlayer>
     <WaveformAndSpectrogram>Wellenform/Spektrogramm</WaveformAndSpectrogram>
     <Tools>Werkzeuge</Tools>
     <WordLists>Wortlisten</WordLists>
-    <SsaStyle>SSA Formatierung</SsaStyle>
+    <SsaStyle>SSA-Formatierung</SsaStyle>
     <Proxy>Proxy</Proxy>
-    <ShowToolBarButtons>Toolbar-Kn&#246;pfe anzeigen</ShowToolBarButtons>
+    <ShowToolBarButtons>Toolbar-Buttons anzeigen</ShowToolBarButtons>
     <New>Neu</New>
-    <Open>&#214;ffnen</Open>
+    <Open>Öffnen</Open>
     <Save>Speichern</Save>
     <SaveAs>Speichern unter</SaveAs>
     <Find>Suchen</Find>
     <Replace>Ersetzen</Replace>
-    <VisualSync>Visuelle Anpassung</VisualSync>
-    <SpellCheck>Rechtschreibpr&#252;fung</SpellCheck>
+    <VisualSync>Visuelle Synch.</VisualSync>
+    <SpellCheck>Rechtschreibprüfung</SpellCheck>
     <SettingsName>Einstellungen</SettingsName>
     <Help>Hilfe</Help>
-    <ShowFrameRate>Zeige Bildfrequenz in Toolbar</ShowFrameRate>
-    <DefaultFrameRate>Standard-Bildfrequenz</DefaultFrameRate>
+    <ShowFrameRate>Bildrate in Toolbar anzeigen</ShowFrameRate>
+    <DefaultFrameRate>Standard-Bildrate</DefaultFrameRate>
     <DefaultFileEncoding>Standard-Zeichenkodierung</DefaultFileEncoding>
-    <AutoDetectAnsiEncoding>ANSI-Kodierung automatisch erkennen</AutoDetectAnsiEncoding>
-    <SubtitleLineMaximumLength>Maximale Einzelzeilenl&#228;nge</SubtitleLineMaximumLength>
+    <AutoDetectAnsiEncoding>ANSI-Kodierung autom. ermitteln</AutoDetectAnsiEncoding>
+    <SubtitleLineMaximumLength>Max. Länge von Einzelzeilen</SubtitleLineMaximumLength>
+    <MaximumCharactersPerSecond>Max. Zeichen/s</MaximumCharactersPerSecond>
     <AutoWrapWhileTyping>Automatischer Umbruch beim Tippen</AutoWrapWhileTyping>
+    <DurationMinimumMilliseconds>Min. Dauer (ms)</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>Max. Dauer (ms)</DurationMaximumMilliseconds>
     <SubtitleFont>Untertitel-Schriftart</SubtitleFont>
     <SubtitleFontSize>Untertitel-Schriftgr&#246;&#223;e</SubtitleFontSize>
     <SubtitleBold>Fett</SubtitleBold>
+    <SubtitleCenter>Zentriert</SubtitleCenter>
     <SubtitleFontColor>Untertitel-Schriftfarbe</SubtitleFontColor>
     <SubtitleBackgroundColor>Untertitel-Hintergrundfarbe</SubtitleBackgroundColor>
     <SpellChecker>Rechtschreibpr&#252;fung</SpellChecker>
@@ -995,12 +1239,19 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <MainListViewVideoGoToPositionAndPause>Zur Video-Position springen und Pause</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Zur Video-Position springen und Wiedergabe</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>Gehe zum Textbearbeitungsfeld</MainListViewEditText>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Zu Videoposition - 1 s springen und pausieren</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Zu Videoposition - 0.5 s springen und pausieren</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Zu Videoposition - 1 s springen und abspielen</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewEditTextAndPause>Zur Eingabetextfeld springen und pausiere beim Videoposition</MainListViewEditTextAndPause>
     <AutoBackup>Automatisches Speichern</AutoBackup>
     <AutoBackupEveryMinute>Jede Minute</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Alle 5 Minuten</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Alle 15 Minuten</AutoBackupEveryFifteenMinutes>
     <AllowEditOfOriginalSubtitle>Erlaube Bearbeitung des Original-Untertitels</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Nachfrage beim L&#246;schen von Items</PromptDeleteLines>
+    <TimeCodeMode>Time code mode</TimeCodeMode>
+    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Video-Engine</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll im system32-Ordner</DirectShowDescription>
@@ -1011,14 +1262,17 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll aus VLC Media Player 1.1.0 oder h&#246;her</VlcMediaPlayerDescription>
     <ShowStopButton>Zeige Stop-Knopf</ShowStopButton>
-    <DefaultVolume>Standard-Lautst&#228;rke</DefaultVolume>
+    <ShowMuteButton>Zeige 'Ton aus'-Knopf</ShowMuteButton>
+    <ShowFullscreenButton>Zeige Vollbild-Knopf</ShowFullscreenButton>
+    <DefaultVolume>Standard-Lautst&#228;rke          </DefaultVolume>
     <VolumeNotes>0 ist lautlos, 100 ist maximale Lautst&#228;rke</VolumeNotes>
-    <PreviewFontSize>Schriftart f&#252;r Untertitel-Vorschau</PreviewFontSize>
+    <PreviewFontSize>Schriftgröße f&#252;r Untertitel-Vorschau</PreviewFontSize>
     <MainWindowVideoControls>Hauptfenster-Videosteuerung</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Benutzerdefinierter Suchtext und URL</CustomSearchTextAndUrl>
     <WaveFormAppearance>Wellenform-Darstellung</WaveFormAppearance>
     <WaveFormGridColor>Rasterfarbe</WaveFormGridColor>
     <WaveFormShowGridLines>Zeige Raster</WaveFormShowGridLines>
+    <ReverseMouseWheelScrollDirection>Mausrad-Richtung umkehren</ReverseMouseWheelScrollDirection>
     <WaveFormColor>Farbe</WaveFormColor>
     <WaveFormSelectedColor>Farbe markiert</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Hintergrundfarbe</WaveFormBackgroundColor>
@@ -1042,9 +1296,9 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <Remove>Entfernen</Remove>
     <AddPair>Hinzuf&#252;gen</AddPair>
     <UserWordList>Benutzer-Wortliste</UserWordList>
-    <OcrFixList>OCR-Korrekturen-Liste</OcrFixList>
+    <OcrFixList>OCR-Korrekturliste</OcrFixList>
     <Location>Ort</Location>
-    <UseOnlineNamesEtc>Benutze online XML-Datei f&#252;r Eigennamen</UseOnlineNamesEtc>
+    <UseOnlineNamesEtc>Benutze Online-XML-Datei f&#252;r Eigennamen</UseOnlineNamesEtc>
     <WordAddedX>Word hinzugef&#252;gt: {0}</WordAddedX>
     <WordAlreadyExists>Wort existiert schon!</WordAlreadyExists>
     <WordNotFound>Word nicht gefunden</WordNotFound>
@@ -1068,7 +1322,7 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <FixCommonOcrErrorsUseHardcodedRules>H&#228;ufige OCR-Fehler beheben - auch Hardcoded-Regeln benutzen</FixCommonOcrErrorsUseHardcodedRules>
     <Shortcuts>Tastenkombinationen</Shortcuts>
     <Shortcut>Tastenkombination</Shortcut>
-    <Control>Steuerung</Control>
+    <Control>Strg</Control>
     <Alt>Alt</Alt>
     <Shift>Shift</Shift>
     <Key>Taste</Key>
@@ -1076,7 +1330,62 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <UpdateShortcut>&#196;nderung</UpdateShortcut>
     <ShortcutIsNotValid>Tastenkombination ist ung&#252;ltig: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>An-/abdocken der Videosteuerung umschalten</ToggleDockUndockOfVideoControls>
+    <CreateSetEndAddNewAndGoToNew>Set end, add new and go to new</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Mittels Endposition anpassen und zu N&#228;chstem gehen</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>Set start, auto duration and go to next</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetEndNextStartAndGoToNext>Set end, next start and go to next</AdjustSetEndNextStartAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>Key down=set start, Key up=set end and go to next</AdjustStartDownEndUpAndGoToNext>
+    <AdjustSelected100MsForward>Verschiebe ausgewählte Zeilen 100 ms vorwärts</AdjustSelected100MsForward>
+    <AdjustSelected100MsBack>Verschiebe ausgewählte Zeilen 100 ms rückwärts</AdjustSelected100MsBack>
+    <AdjustSetStartTimeOnly>Starzeit setzen, Endzeit behalten</AdjustSetStartTimeOnly>
+    <MainCreateStartDownEndUp>Create new at key-down, set end time at key-up</MainCreateStartDownEndUp>
+    <MergeDialogue>Zusammenführungs-Dialog (Bindestriche)</MergeDialogue>
+    <GoToNext>Springe zur nächsten Zeile</GoToNext>
+    <GoToPrevious>Springe zur vorhergehenden Zeile</GoToPrevious>
+    <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
+    <ToggleDialogueDashes>Toggle dialogue dashes</ToggleDialogueDashes>
+    <Alignment>Ausrichtung (ausgewählte Items)</Alignment>
+    <CopyTextOnly>Rein-Text in Zwischenablage kopieren (ausgewählte Items)</CopyTextOnly>
+    <AutoDurationSelectedLines>Auto-duration (ausgewählte Items)</AutoDurationSelectedLines>
+    <ReverseStartAndEndingForRTL>Rechts-nach-Links Start/Ende umkehren/end</ReverseStartAndEndingForRTL>
+    <VerticalZoom>Vertikaler Zoom</VerticalZoom>
+    <WaveformSeekSilenceForward>Stille suchen vorwärts</WaveformSeekSilenceForward>
+    <WaveformSeekSilenceBack>Stille suchen rückwärts</WaveformSeekSilenceBack>
+    <WaveformAddTextHere>Add text here (for new selection)</WaveformAddTextHere>
+    <GoBack100Milliseconds>100 ms zurück</GoBack100Milliseconds>
+    <GoForward100Milliseconds>100 ms vor</GoForward100Milliseconds>
+    <GoBack500Milliseconds>500 ms zurück</GoBack500Milliseconds>
+    <GoForward500Milliseconds>500 ms vor</GoForward500Milliseconds>
+    <TogglePlayPause>Toggle play/pause</TogglePlayPause>
+    <Pause>Pause</Pause>
+    <Fullscreen>Vollbild</Fullscreen>
+    <CustomSearch1>Übersetzen, benutzerdef. Suche 1</CustomSearch1>
+    <CustomSearch2>Übersetzen, benutzerdef. Suche 2</CustomSearch2>
+    <CustomSearch3>Übersetzen, benutzerdef. Suche 3</CustomSearch3>
+    <CustomSearch4>Übersetzen, benutzerdef. Suche 4</CustomSearch4>
+    <CustomSearch5>Übersetzen, benutzerdef. Suche 5</CustomSearch5>
+    <CustomSearch6>Übersetzen, benutzerdef. Suche 6</CustomSearch6>
+    <SyntaxColoring>Syntaxhervorhebung</SyntaxColoring>
+    <ListViewSyntaxColoring>Listenansicht Syntaxhervorhebung</ListViewSyntaxColoring>
+    <SyntaxColorDurationIfTooSmall>Farbe für Dauer zu kurz</SyntaxColorDurationIfTooSmall>
+    <SyntaxColorDurationIfTooLarge>Farbe für Dauer zu lang</SyntaxColorDurationIfTooLarge>
+    <SyntaxColorTextIfTooLong>Farbe für Text zu lang</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextMoreThanXLines>Farbe für Text mehr Zeilen als:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorOverlap>Farbe für Zeitstempel-Überlappung</SyntaxColorOverlap>
+    <SyntaxErrorColor>Farbe für Fehler</SyntaxErrorColor>
+    <GoToFirstSelectedLine>Springe zum ersten ausgewählten Item</GoToFirstSelectedLine>
+    <MergeSelectedLines>Ausgewählte Items zusmmenfügen</MergeSelectedLines>
+    <ToggleTranslationMode>Wechsle zu Übersetzungsmodus</ToggleTranslationMode>
+    <SwitchOriginalAndTranslation>Switch original and translation</SwitchOriginalAndTranslation>
+    <MergeOriginalAndTranslation>Merge original and translation</MergeOriginalAndTranslation>
+    <ShortcutIsAlreadyDefinedX>Tastenkombination bereits definiert: 
+{0}
+</ShortcutIsAlreadyDefinedX>
+    <ToggleTranslationAndOriginalInPreviews>Wechsle Übersetzung und Original in Video-/Audio-Vorschau</ToggleTranslationAndOriginalInPreviews>
+    <ListViewColumnDelete>Zelle, Text löschen</ListViewColumnDelete>
+    <ListViewColumnInsert>Zelle, Text einfügen</ListViewColumnInsert>
+    <ListViewColumnPaste>Zelle, Einfügen</ListViewColumnPaste>
+    <ShowBeamer>Start subtitle fullscreen beamer</ShowBeamer>
   </Settings>
   <ShowEarlierLater>
     <Title>Ausgew&#228;hlte Items fr&#252;her/sp&#228;ter anzeigen</Title>
@@ -1086,6 +1395,7 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <TotalAdjustmentX>Gesamte Anpassung: {0}</TotalAdjustmentX>
     <AllLines>Alle Items</AllLines>
     <SelectedLinesonly>Nur ausgew&#228;hlte Items</SelectedLinesonly>
+    <SelectedLinesAndForward>Selected line(s) and forward</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Verlauf (f&#252;r R&#252;ckg&#228;ngig)</Title>
@@ -1107,6 +1417,7 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <SkipAll>Alle &#252;berspringen</SkipAll>
     <AddToUserDictionary>Zu Benutzerw&#246;rterbuch hinzuf&#252;gen</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Zur Eigennamenliste hinzuf&#252;gen (Gro&#223;-/Klein-sensitiv)</AddToNamesAndIgnoreList>
+    <AddToOcrReplaceList>Paar zur OCR-Ersetzungsliste hinzufügen</AddToOcrReplaceList>
     <Abort>Beenden</Abort>
     <Use>Benutzen</Use>
     <UseAlways>&amp;Immer benutzen</UseAlways>
@@ -1115,16 +1426,31 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <EditWholeText>Gesamten Text bearbeiten</EditWholeText>
     <EditWordOnly>Nur Wort bearbeiten</EditWordOnly>
     <AddXToNamesEtc>F&#252;ge '{0}' der Eigennamenliste hinzu</AddXToNamesEtc>
-    <AutoFixNames>Namen automatisch korrigieren wenn nur Gro&#223;-/Klein-Unterschiede</AutoFixNames>
+    <AutoFixNames>Namen automatisch korrigieren, wenn nur Gro&#223;-/Klein-Unterschiede</AutoFixNames>
     <ImageText>Bildtext</ImageText>
     <SpellCheckCompleted>Rechtschreibpr&#252;fung abgeschlossen</SpellCheckCompleted>
     <SpellCheckAborted>Rechtschreibpr&#252;fung abgebrochen</SpellCheckAborted>
   </SpellCheck>
+  <Split>
+    <Title>Trennen</Title>
+    <SplitOptions>Trenn-Optionen</SplitOptions>
+    <Lines>Zeilen</Lines>
+    <Characters>Zeichen</Characters>
+    <NumberOfEqualParts>Anzahl gleicher Teile</NumberOfEqualParts>
+    <SubtitleInfo>Untertitel-Info</SubtitleInfo>
+    <NumberOfLinesX>Anzahl Zeilen: {0:#,###}</NumberOfLinesX>
+    <NumberOfCharactersX>Anzahl Spalten: {0:#,###,###}</NumberOfCharactersX>
+    <Output>Ausgabe</Output>
+    <FileName>Dateiname</FileName>
+    <OutputFolder>Ausgabeverzeichnis</OutputFolder>
+    <DoSplit>Trennen</DoSplit>
+    <Basic>Basic</Basic>
+  </Split>
   <SplitLongLines>
     <Title>Lange Items trennen</Title>
     <SingleLineMaximumLength>Maximale Einzelzeilenl&#228;nge</SingleLineMaximumLength>
     <LineMaximumLength>Maximale Item-L&#228;nge</LineMaximumLength>
-    <LineContinuationBeginEndStrings>Zeilenanfang/Ende</LineContinuationBeginEndStrings>
+    <LineContinuationBeginEndStrings>Zeilenanfang/-ende</LineContinuationBeginEndStrings>
     <NumberOfSplits>Anzahl der Trennungen: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>L&#228;ngste Einzelzeilenl&#228;nge ist {0} bei Item {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>L&#228;ngste Iteml&#228;nge ist  {0} bei Item {1}</LongestLineIsXAtY>
@@ -1141,12 +1467,106 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <Part1>Teil 1</Part1>
     <Part2>Teil 2</Part2>
     <UnableToSaveFileX>Speichern von {0} fehlgeschlagen</UnableToSaveFileX>
+    <OverwriteExistingFiles>Vorhandene Dateien überschreiben?</OverwriteExistingFiles>
+    <FolderNotFoundX>Verzeichnis nicht gefunden: {0}</FolderNotFoundX>
+    <Untitled>Unbenannt</Untitled>
   </SplitSubtitle>
   <StartNumberingFrom>
     <Title>Beginne Nummerierung von...</Title>
     <StartFromNumber>Beginne bei Nummer:</StartFromNumber>
     <PleaseEnterAValidNumber>Ups, bitte gib eine Nummer ein.</PleaseEnterAValidNumber>
   </StartNumberingFrom>
+  <Statistics>
+    <Title>Statistik</Title>
+    <TitleWithFileName>Statistik - {0}</TitleWithFileName>
+    <GeneralStatistics>Allgemeine Statistik</GeneralStatistics>
+    <MostUsed>Meistbenutzt...</MostUsed>
+    <MostUsedLines>Meistbenutzte Zeilen</MostUsedLines>
+    <MostUsedWords>Meistbenutzte Wörter</MostUsedWords>
+    <NothingFound>Nichts gefunden</NothingFound>
+    <NumberOfLinesX>Anzahl Untertitel-Zeilen: {0:#,###}</NumberOfLinesX>
+    <LengthInFormatXinCharactersY>Anzahl Zeichen als {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
+    <NumberOfCharactersInTextOnly>Anzahl Zeichen in Rein-Text: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalCharsPerSecond>Gesamtanzahl Zeichen/s: {0:0.0} s</TotalCharsPerSecond>
+    <NumberOfItalicTags>Anzahl Kursiv-Tags: {0}</NumberOfItalicTags>
+    <NumberOfBoldTags>Anzahl Fett-Tags: {0}</NumberOfBoldTags>
+    <NumberOfUnderlineTags>Anzahl Uterstrichen-Tags: {0}</NumberOfUnderlineTags>
+    <NumberOfFontTags>Anzahl Font-Tags: {0}</NumberOfFontTags>
+    <NumberOfAlignmentTags>Anzahl Ausrichtungs-Tags: {0}</NumberOfAlignmentTags>
+    <LineLengthMinimum>Untertitel-Länge - Minimum:      {0}</LineLengthMinimum>
+    <LineLengthMaximum>Untertitel-Länge - Maximum:      {0}</LineLengthMaximum>
+    <LineLengthAvarage>Untertitel-Länge - Durchschnitt: {0}</LineLengthAvarage>
+    <LinesPerSubtitleAvarage>Untertitel, Anzahl Zeilen - Durchschnitt: {0:0.0}</LinesPerSubtitleAvarage>
+    <SingleLineLengthMinimum>Einzelzeilen-Länge - Minimum:      {0}</SingleLineLengthMinimum>
+    <SingleLineLengthMaximum>Einzelzeilen-Länge - Maximum:      {0}</SingleLineLengthMaximum>
+    <SingleLineLengthAvarage>Einzelzeilen-Länge - Durchschnitt: {0}</SingleLineLengthAvarage>
+    <DurationMinimum>Dauer - Minimum:      {0:0.000} seconds</DurationMinimum>
+    <DurationMaximum>Dauer - Maximum:      {0:0.000} seconds</DurationMaximum>
+    <DurationAvarage>Dauer - Durchschnitt: {0:0.000} seconds</DurationAvarage>
+  </Statistics>
+  <SubStationAlphaProperties>
+    <Title>Erweiterte SSA-Eigenschaften</Title>
+    <TitleSubstationAlpha>SSA-Eigenschaften</TitleSubstationAlpha>
+    <Script>Skript</Script>
+    <ScriptTitle>Titel</ScriptTitle>
+    <OriginalScript>Original-Skript</OriginalScript>
+    <Translation>Übersetzung</Translation>
+    <Editing>Bearbeitung</Editing>
+    <Timing>Timing</Timing>
+    <SyncPoint>Synch.-Punkt</SyncPoint>
+    <UpdatedBy>Aktualisiert durch</UpdatedBy>
+    <UpdateDetails>Aktualisierungs-Details</UpdateDetails>
+    <Resolution>Auflösung</Resolution>
+    <VideoResolution>Video-Auflösung</VideoResolution>
+    <Options>Optionen</Options>
+    <WrapStyle>Umbruchstil</WrapStyle>
+    <Collision>Kollision</Collision>
+    <ScaleBorderAndShadow>Scale border and shadow</ScaleBorderAndShadow>
+  </SubStationAlphaProperties>
+  <SubStationAlphaStyles>
+    <Title>Erweiterte SSA-Formatierung</Title>
+    <TitleSubstationAlpha>SSA-Formatierung</TitleSubstationAlpha>
+    <Styles>Stile</Styles>
+    <Properties>Eigenschaften</Properties>
+    <Name>Name</Name>
+    <Font>Font</Font>
+    <FontName>Font-Name</FontName>
+    <FontSize>Font-Größe</FontSize>
+    <UseCount>Benutzt</UseCount>
+    <Primary>Primär</Primary>
+    <Secondary>Sekundär</Secondary>
+    <Tertiary>Tertiär</Tertiary>
+    <Outline>Outline</Outline>
+    <Shadow>Schatten</Shadow>
+    <Back>Zurück</Back>
+    <Alignment>Ausrichtung</Alignment>
+    <TopLeft>oben/links</TopLeft>
+    <TopCenter>oben/zentriert</TopCenter>
+    <TopRight>oben/rechts</TopRight>
+    <MiddleLeft>Mitte/links</MiddleLeft>
+    <MiddleCenter>Mitte/zentriert</MiddleCenter>
+    <MiddleRight>Mitte/rechts</MiddleRight>
+    <BottomLeft>unten/links</BottomLeft>
+    <BottomCenter>unten/zentriert</BottomCenter>
+    <BottomRight>unten/rechts</BottomRight>
+    <Colors>Farben</Colors>
+    <Margins>Ränder</Margins>
+    <MarginLeft>Rand links</MarginLeft>
+    <MarginRight>Rand rechts</MarginRight>
+    <MarginVertical>Rand vertikal</MarginVertical>
+    <Border>Umrandung</Border>
+    <PlusShadow>+ Shadow</PlusShadow>
+    <OpaqueBox>Opaque box (uses outline color)</OpaqueBox>
+    <Import>Importiere...</Import>
+    <Copy>Kopie</Copy>
+    <CopyOfY>Kopie von {0}</CopyOfY>
+    <CopyXOfY>Kopie {0} von {1}</CopyXOfY>
+    <New>Neu</New>
+    <Remove>Löschen</Remove>
+    <RemoveAll>Alle löschen</RemoveAll>
+    <ImportStyleFromFile>Importiere Stil aus Datei...</ImportStyleFromFile>
+    <ChooseStyle>Wähle Stil zum importieren</ChooseStyle>
+  </SubStationAlphaStyles>
   <PointSync>
     <Title>Punkt-Anpassung</Title>
     <TitleViaOtherSubtitle>Punkt-Anpassung mittels anderem Untertitel</TitleViaOtherSubtitle>
@@ -1269,6 +1689,7 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <ZoomIn>Hineinzoomen</ZoomIn>
     <ZoomOut>Herauszoomen</ZoomOut>
     <AddParagraphHere>Text hier einf&#252;gen</AddParagraphHere>
+    <AddParagraphHereAndPasteText>Add text from clipboard here</AddParagraphHereAndPasteText>
     <DeleteParagraph>Text entfernen</DeleteParagraph>
     <Split>Trennen</Split>
     <SplitAtCursor>Beim Cursor trennen</SplitAtCursor>
@@ -1278,5 +1699,24 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <ShowWaveformAndSpectrogram>Wellenform/Spektogramm anzeigen</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Nur Wellenform anzeigen</ShowWaveformOnly>
     <ShowSpectrogramOnly>Nur Spektogramm anzeigen</ShowSpectrogramOnly>
+    <GuessTimeCodes>Zeitstempel ermitteln...</GuessTimeCodes>
+    <SeekSilence>Stille suchen...</SeekSilence>
   </WaveForm>
+  <WaveFormGenerateTimeCodes>
+    <Title>Zeitstempel ermitteln</Title>
+    <StartFrom>Start von</StartFrom>
+    <CurrentVideoPosition>Akt. Video-Position</CurrentVideoPosition>
+    <Beginning>Anfang</Beginning>
+    <DeleteLines>Zeilen löschen</DeleteLines>
+    <FromCurrentVideoPosition>Ab akt. Video-Position</FromCurrentVideoPosition>
+    <DetectOptions>Optionen bestimmen</DetectOptions>
+    <ScanBlocksOfMs>Scan blocks of milliseconds</ScanBlocksOfMs>
+    <BlockAverageVolMin1>Block average volume must be above</BlockAverageVolMin1>
+    <BlockAverageVolMin2>% of total average volume</BlockAverageVolMin2>
+    <BlockAverageVolMax1>Block average volume must be below</BlockAverageVolMax1>
+    <BlockAverageVolMax2>% of total max volume</BlockAverageVolMax2>
+    <SplitLongLinesAt1>Split long subtitles at</SplitLongLinesAt1>
+    <SplitLongLinesAt2>Millisekunden</SplitLongLinesAt2>
+    <Other>Andere</Other>
+  </WaveFormGenerateTimeCodes>
 </Language>
