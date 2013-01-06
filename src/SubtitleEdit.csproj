@@ -332,6 +332,12 @@
     <Compile Include="Forms\JoinSubtitles.Designer.cs">
       <DependentUpon>JoinSubtitles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\MergeDoubleLines.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MergeDoubleLines.Designer.cs">
+      <DependentUpon>MergeDoubleLines.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\NetworkChat.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1065,6 +1071,9 @@
     <EmbeddedResource Include="Forms\JoinSubtitles.resx">
       <DependentUpon>JoinSubtitles.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MergeDoubleLines.resx">
+      <DependentUpon>MergeDoubleLines.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\NetworkChat.resx">
       <DependentUpon>NetworkChat.cs</DependentUpon>
     </EmbeddedResource>
@@ -1339,6 +1348,7 @@
     </Content>
     <Content Include="Languages\nl-NL.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\pl-PL.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1357,6 +1367,7 @@
     </Content>
     <Content Include="Languages\tr-TR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\ro-RO.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

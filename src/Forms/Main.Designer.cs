@@ -137,6 +137,7 @@
             this.removeTextForHearImparedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeCasingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoMergeShortLines = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemMergeDuplicateText = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoSplitLongLines = new System.Windows.Forms.ToolStripMenuItem();
             this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -213,6 +214,7 @@
             this.toolStripMenuItemInsertTextFromSub = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemColumnImportText = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemPasteSpecial = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyOriginalTextToCurrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.splitLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMergeLines = new System.Windows.Forms.ToolStripMenuItem();
@@ -1330,6 +1332,7 @@
             this.removeTextForHearImparedToolStripMenuItem,
             this.ChangeCasingToolStripMenuItem,
             this.toolStripMenuItemAutoMergeShortLines,
+            this.toolStripMenuItemMergeDuplicateText,
             this.toolStripMenuItemAutoSplitLongLines,
             this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem,
             this.toolStripMenuItem1,
@@ -1402,6 +1405,13 @@
             this.toolStripMenuItemAutoMergeShortLines.Size = new System.Drawing.Size(346, 22);
             this.toolStripMenuItemAutoMergeShortLines.Text = "Merge short lines...";
             this.toolStripMenuItemAutoMergeShortLines.Click += new System.EventHandler(this.ToolStripMenuItemAutoMergeShortLinesClick);
+            // 
+            // toolStripMenuItemMergeDuplicateText
+            // 
+            this.toolStripMenuItemMergeDuplicateText.Name = "toolStripMenuItemMergeDuplicateText";
+            this.toolStripMenuItemMergeDuplicateText.Size = new System.Drawing.Size(346, 22);
+            this.toolStripMenuItemMergeDuplicateText.Text = "Merge lines with same text...";
+            this.toolStripMenuItemMergeDuplicateText.Click += new System.EventHandler(this.toolStripMenuItemMergeDuplicateText_Click);
             // 
             // toolStripMenuItemAutoSplitLongLines
             // 
@@ -1924,7 +1934,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 782);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 760);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
@@ -1983,10 +1993,12 @@
             this.ShiftTextCellsDownToolStripMenuItem,
             this.toolStripMenuItemInsertTextFromSub,
             this.toolStripMenuItemColumnImportText,
-            this.toolStripMenuItemPasteSpecial});
+            this.toolStripMenuItemPasteSpecial,
+            this.copyOriginalTextToCurrentToolStripMenuItem});
             this.toolStripMenuItemColumn.Name = "toolStripMenuItemColumn";
             this.toolStripMenuItemColumn.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemColumn.Text = "Column";
+            this.toolStripMenuItemColumn.DropDownOpening += new System.EventHandler(this.toolStripMenuItemColumn_DropDownOpening);
             // 
             // columnDeleteTextOnlyToolStripMenuItem
             // 
@@ -2029,6 +2041,13 @@
             this.toolStripMenuItemPasteSpecial.Size = new System.Drawing.Size(313, 22);
             this.toolStripMenuItemPasteSpecial.Text = "Paste from clipboard...";
             this.toolStripMenuItemPasteSpecial.Click += new System.EventHandler(this.toolStripMenuItemPasteSpecial_Click);
+            // 
+            // copyOriginalTextToCurrentToolStripMenuItem
+            // 
+            this.copyOriginalTextToCurrentToolStripMenuItem.Name = "copyOriginalTextToCurrentToolStripMenuItem";
+            this.copyOriginalTextToCurrentToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
+            this.copyOriginalTextToCurrentToolStripMenuItem.Text = "Copy original text to current";
+            this.copyOriginalTextToCurrentToolStripMenuItem.Click += new System.EventHandler(this.copyOriginalTextToCurrentToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
@@ -3633,7 +3652,7 @@
             this.superscriptToolStripMenuItem,
             this.subscriptToolStripMenuItem});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(215, 374);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(215, 352);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
             // 
             // cutToolStripMenuItem
@@ -4481,6 +4500,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAvidStl;
         private System.Windows.Forms.ToolStripMenuItem columnDeleteTextOnlyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemBatchConvert;
+        private System.Windows.Forms.ToolStripMenuItem copyOriginalTextToCurrentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeDuplicateText;
     }
 }
 

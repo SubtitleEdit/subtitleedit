@@ -28,6 +28,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.ChangeSpeedInPercent ChangeSpeedInPercent;
         public LanguageStructure.ChooseEncoding ChooseEncoding;
         public LanguageStructure.ChooseLanguage ChooseLanguage;
+        public LanguageStructure.ColumnPaste ColumnPaste;
         public LanguageStructure.CompareSubtitles CompareSubtitles;
         public LanguageStructure.DCinemaProperties DCinemaProperties;
         public LanguageStructure.DvdSubRip DvdSubrip;
@@ -49,6 +50,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.JoinSubtitles JoinSubtitles;
         public LanguageStructure.Main Main;
         public LanguageStructure.MatroskaSubtitleChooser MatroskaSubtitleChooser;
+        public LanguageStructure.MergeDoubleLines MergeDoubleLines;
         public LanguageStructure.MergeShortLines MergedShortLines;
         public LanguageStructure.MultipleReplace MultipleReplace;
         public LanguageStructure.NetworkChat NetworkChat;
@@ -316,6 +318,18 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Choose language",
                 Language = "Language",
+            };
+
+            ColumnPaste = new LanguageStructure.ColumnPaste
+            {
+                Title = "Column paste",
+                ChooseColumn = "Choose column",
+                OverwriteShiftCellsDown = "Overwrite/Shift cells down",
+                Overwrite = "Overwrite",
+                ShiftCellsDown = "Shift cells down",
+                TimeCodesOnly = "Time codes only",
+                TextOnly = "Text only",
+                OriginalTextOnly = "Original text only",
             };
 
             CompareSubtitles = new LanguageStructure.CompareSubtitles
@@ -1020,6 +1034,7 @@ namespace Nikse.SubtitleEdit.Logic
                         ChangeFrameRate = "Change frame rate...",
                         ChangeSpeedInPercent = "Changed speed (percent)...",
                         MergeShortLines = "Merge short lines...",
+                        MergeDuplicateText = "Merge lines with same text...",
                         SplitLongLines = "Split long lines...",
                         MinimumDisplayTimeBetweenParagraphs = "Minimum display time between paragraphs...",
                         SortBy = "Sort by",
@@ -1148,6 +1163,7 @@ namespace Nikse.SubtitleEdit.Logic
                         ColumnInsertTextFromSubtitle = "Insert text from subtitle...",
                         ColumnImportTextAndShiftCellsDown = "Import text and shift cells down",
                         ColumnPasteFromClipboard = "Paste from clipboard...",
+                        ColumnCopyOriginalTextToCurrent = "Copy text from original to current",
                         Split = "Split",
                         MergeSelectedLines = "Merge selected lines",
                         MergeSelectedLinesASDialogue = "Merge selected lines as dialogue",
@@ -1249,6 +1265,11 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Choose subtitle from Matroska file",
                 PleaseChoose = "More than one subtitle found - please choose",
                 TrackXLanguageYTypeZ = "Track {0} - {1} - language: {2} - type: {3}",
+            };
+
+            MergeDoubleLines = new LanguageStructure.MergeDoubleLines
+            {
+                Title = "Merge lines with same text",
             };
 
             MergedShortLines = new LanguageStructure.MergeShortLines

@@ -226,6 +226,18 @@
             public string Language { get; set; }
         }
 
+        public class ColumnPaste
+        {
+            public string Title { get; set; }
+            public string ChooseColumn { get; set; }
+            public string OverwriteShiftCellsDown { get; set; }
+            public string Overwrite { get; set; }
+            public string ShiftCellsDown { get; set; }
+            public string TimeCodesOnly { get; set; }
+            public string TextOnly { get; set; }
+            public string OriginalTextOnly { get; set; }            
+        }
+
         public class CompareSubtitles
         {
             public string Title { get; set; }
@@ -921,6 +933,7 @@
                     public string ChangeFrameRate { get; set; }
                     public string ChangeSpeedInPercent { get; set; }
                     public string MergeShortLines { get; set; }
+                    public string MergeDuplicateText { get; set; }                    
                     public string SplitLongLines { get; set; }
                     public string MinimumDisplayTimeBetweenParagraphs { get; set; }
                     public string SortBy { get; set; }
@@ -1044,6 +1057,7 @@
                     public string ColumnInsertTextFromSubtitle { get; set; }
                     public string ColumnImportTextAndShiftCellsDown { get; set; }
                     public string ColumnPasteFromClipboard { get; set; }
+                    public string ColumnCopyOriginalTextToCurrent { get; set; }                    
                     public string Split { get; set; }
                     public string MergeSelectedLines { get; set; }
                     public string MergeSelectedLinesASDialogue { get; set; }
@@ -1162,6 +1176,11 @@
             public string Title { get; set; }
             public string PleaseChoose { get; set; }
             public string TrackXLanguageYTypeZ { get; set; }
+        }
+
+        public class MergeDoubleLines
+        {
+            public string Title { get; set; }
         }
 
         public class MergeShortLines

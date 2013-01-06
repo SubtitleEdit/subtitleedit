@@ -199,6 +199,16 @@
     <Title>Vælg sprog</Title>
     <Language>Sprog</Language>
   </ChooseLanguage>
+  <ColumnPaste>
+    <Title>Indsæt fra udklipsholder</Title>
+    <ChooseColumn>Vælg kolonne</ChooseColumn>
+    <OverwriteShiftCellsDown>Overskriv/flyt celler ned</OverwriteShiftCellsDown>
+    <Overwrite>Overskriv</Overwrite>
+    <ShiftCellsDown>Flyt celler ned</ShiftCellsDown>
+    <TimeCodesOnly>Kun tidskoder</TimeCodesOnly>
+    <TextOnly>Kun tekst</TextOnly>
+    <OriginalTextOnly>Kun original tekst</OriginalTextOnly>
+  </ColumnPaste>
   <CompareSubtitles>
     <Title>Sammenlign undertekster</Title>
     <PreviousDifference>&amp;Forrige ændring</PreviousDifference>
@@ -617,6 +627,7 @@
         <ChangeFrameRate>Skift frame rate...</ChangeFrameRate>
         <ChangeSpeedInPercent>Ændr hastighed (procent)...</ChangeSpeedInPercent>
         <MergeShortLines>Flet korte linjer...</MergeShortLines>
+        <MergeDuplicateText>Flet liner med samme tekst...</MergeDuplicateText>
         <SplitLongLines>Split lange linjer...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimum visningstid mellem tekster...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sorter efter</SortBy>
@@ -727,6 +738,7 @@
         <ColumnInsertTextFromSubtitle>Indsæt tekst fra undertekst fil...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Import tekst og flyt celler ned</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Indsæt fra udklipsholder...</ColumnPasteFromClipboard>
+        <ColumnCopyOriginalTextToCurrent>Kopier text fra original to aktuel</ColumnCopyOriginalTextToCurrent>
         <Split>Split</Split>
         <MergeSelectedLines>Flet markerede linjer</MergeSelectedLines>
         <MergeSelectedLinesASDialogue>Flet valgte linjer som dialog (bindestreg foran)</MergeSelectedLinesASDialogue>
@@ -1053,6 +1065,9 @@ Fortsæt?</SubtitleAppendPrompt>
     <PleaseChoose>Mere end en undertekst fundet - så vælg</PleaseChoose>
     <TrackXLanguageYTypeZ>Spor {0} - {1} - sprog: {2} - type: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MergeDoubleLines>
+    <Title>Flet linjer med samme tekst</Title>
+  </MergeDoubleLines>
   <MergedShortLines>
     <Title>Flet korte linjer</Title>
     <MaximumCharacters>Maksimum tegn i et afsnit</MaximumCharacters>
