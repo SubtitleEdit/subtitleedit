@@ -1401,6 +1401,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemChangeFrameRate2.Text = _language.Menu.Tools.ChangeFrameRate;
             changeSpeedInPercentToolStripMenuItem.Text = _language.Menu.Tools.ChangeSpeedInPercent;
             toolStripMenuItemAutoMergeShortLines.Text = _language.Menu.Tools.MergeShortLines;
+            toolStripMenuItemMergeDuplicateText.Text = _language.Menu.Tools.MergeDuplicateText;
             toolStripMenuItemAutoSplitLongLines.Text = _language.Menu.Tools.SplitLongLines;
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
             toolStripMenuItem1.Text = _language.Menu.Tools.SortBy;
@@ -1526,6 +1527,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemInsertTextFromSub.Text = _language.Menu.ContextMenu.ColumnInsertTextFromSubtitle;
             toolStripMenuItemColumnImportText.Text = _language.Menu.ContextMenu.ColumnImportTextAndShiftCellsDown;
             toolStripMenuItemPasteSpecial.Text = _language.Menu.ContextMenu.ColumnPasteFromClipboard;
+            copyOriginalTextToCurrentToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnCopyOriginalTextToCurrent;
 
             splitLineToolStripMenuItem.Text = _language.Menu.ContextMenu.Split;
             toolStripMenuItemMergeLines.Text = _language.Menu.ContextMenu.MergeSelectedLines;
@@ -16238,6 +16240,66 @@ namespace Nikse.SubtitleEdit.Forms
             _formPositionsAndSizes.SetPositionAndSize(form);
             form.ShowDialog(this);
             _formPositionsAndSizes.SavePositionAndSize(form);
+        }
+
+        private void copyOriginalTextToCurrentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_subtitleAlternate == null || !SubtitleListview1.IsAlternateTextColumnVisible || SubtitleListview1.SelectedIndices.Count < 1)
+                return;
+
+            bool first = true;
+            foreach (int index in SubtitleListview1.SelectedIndices)
+            {
+                Paragraph original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleAlternate.Paragraphs);
+                if (original != null)
+                {
+                    if (first)
+                    {
+                        MakeHistoryForUndo(_language.BeforeColumnPaste);
+                    }
+                    SubtitleListview1.SetText(index, original.Text);
+                    _subtitle.Paragraphs[index].Text = original.Text;
+                    SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, _subtitle.Paragraphs[index]);
+                    first = false;
+                }
+            }
+            RefreshSelectedParagraph();
+        }
+
+        private void toolStripMenuItemColumn_DropDownOpening(object sender, EventArgs e)
+        {
+            copyOriginalTextToCurrentToolStripMenuItem.Visible = !string.IsNullOrEmpty(copyOriginalTextToCurrentToolStripMenuItem.Text) && 
+                                                                 SubtitleListview1.IsAlternateTextColumnVisible &&
+                                                                 _subtitleAlternate != null;
+        }
+
+        private void toolStripMenuItemMergeDuplicateText_Click(object sender, EventArgs e)
+        {
+            if (IsSubtitleLoaded)
+            {
+                ReloadFromSourceView();
+                var form = new MergeDoubleLines();
+                _formPositionsAndSizes.SetPositionAndSize(form);
+                form.Initialize(_subtitle);
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo(_language.BeforeMergeShortLines);
+                    _subtitle.Paragraphs.Clear();
+                    foreach (Paragraph p in form.MergedSubtitle.Paragraphs)
+                        _subtitle.Paragraphs.Add(p);
+                    ShowStatus(string.Format(_language.MergedShortLinesX, form.NumberOfMerges));
+                    SaveSubtitleListviewIndexes();
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    RestoreSubtitleListviewIndexes();
+                }
+                _formPositionsAndSizes.SavePositionAndSize(form);
+            }
+            else
+            {
+                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
         }
 
     }

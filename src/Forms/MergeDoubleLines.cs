@@ -7,14 +7,16 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class MergeShortLines : Form
+    public partial class MergeDoubleLines : Form
     {
+
         Subtitle _subtitle;
         private Subtitle _mergedSubtitle;
+        bool loading = true;
 
         public int NumberOfMerges { get; private set; }
 
-        public MergeShortLines()
+        public MergeDoubleLines()
         {
             InitializeComponent();
             FixLargeFonts();
@@ -36,22 +38,12 @@ namespace Nikse.SubtitleEdit.Forms
             get { return _mergedSubtitle; }
         }
 
-        private void MergeShortLines_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape)
-                DialogResult = DialogResult.Cancel;
-        }
-
         public void Initialize(Subtitle subtitle)
         {
             if (subtitle.Paragraphs.Count > 0)
                 subtitle.Renumber(subtitle.Paragraphs[0].Number);
 
-            Text = Configuration.Settings.Language.MergedShortLines.Title;
-            labelMaxCharacters.Text = Configuration.Settings.Language.MergedShortLines.MaximumCharacters;
-            labelMaxMillisecondsBetweenLines.Text = Configuration.Settings.Language.MergedShortLines.MaximumMillisecondsBetween;
-
-            checkBoxOnlyContinuationLines.Text = Configuration.Settings.Language.MergedShortLines.OnlyMergeContinuationLines;
+            Text = Configuration.Settings.Language.MergeDoubleLines.Title;
 
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
@@ -63,7 +55,6 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.InitializeSubtitleFont(SubtitleListview1);
             SubtitleListview1.AutoSizeAllColumns(this);
             NumberOfMerges = 0;
-            numericUpDownMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
             _subtitle = subtitle;
         }
 
@@ -90,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
             int count;
-            _mergedSubtitle = MergeShortLinesInSubtitle(_subtitle, mergedIndexes, out count, (double)numericUpDownMaxMillisecondsBetweenLines.Value, (int)numericUpDownMaxCharacters.Value, true);
+            _mergedSubtitle = MergeLineswithSameTextInSubtitle(_subtitle, mergedIndexes, out count, true);
             NumberOfMerges = count;
 
             SubtitleListview1.Fill(_subtitle);
@@ -119,9 +110,12 @@ namespace Nikse.SubtitleEdit.Forms
             return true;
         }
 
-        public Subtitle MergeShortLinesInSubtitle(Subtitle subtitle, List<int> mergedIndexes, out int numberOfMerges, double maxMillisecondsBetweenLines, int maxCharacters, bool clearFixes)
+        public Subtitle MergeLineswithSameTextInSubtitle(Subtitle subtitle, List<int> mergedIndexes, out int numberOfMerges, bool clearFixes)
         {
-            listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
+            List<int> nextNext = new List<int>();
+            List<int> removed = new List<int>();
+            if (!loading)
+                listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
             if (clearFixes)
                 listViewFixes.Items.Clear();
             numberOfMerges = 0;
@@ -137,25 +131,12 @@ namespace Nikse.SubtitleEdit.Forms
                     mergedSubtitle.Paragraphs.Add(p);
                 }
                 Paragraph next = subtitle.GetParagraphOrDefault(i);
+                Paragraph afterNext = subtitle.GetParagraphOrDefault(i+1);
                 if (p != null && next != null)
                 {
-                    if (QualifiesForMerge(p, next, maxMillisecondsBetweenLines, maxCharacters) && IsFixAllowed(p))
+                    if (QualifiesForMerge(p, next) && IsFixAllowed(p))
                     {
-                        if (GetStartTag(p.Text) == GetStartTag(next.Text) &&
-                            GetEndTag(p.Text) == GetEndTag(next.Text))
-                        {
-                            string s1 = p.Text.Trim();
-                            s1 = s1.Substring(0, s1.Length - GetEndTag(s1).Length);
-                            string s2 = next.Text.Trim();
-                            s2 = s2.Substring(GetStartTag(s2).Length);
-                            p.Text = Utilities.AutoBreakLine(s1 + Environment.NewLine + s2);
-                        }
-                        else
-                        {
-                            p.Text = Utilities.AutoBreakLine(p.Text + Environment.NewLine + next.Text);
-                        }
                         p.EndTime = next.EndTime;
-
                         if (lastMerged)
                         {
                             lineNumbers.Append(next.Number.ToString() + ",");
@@ -167,6 +148,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         lastMerged = true;
+                        removed.Add(i);
                         numberOfMerges++;
                         if (!mergedIndexes.Contains(i))
                             mergedIndexes.Add(i);
@@ -175,14 +157,36 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        lastMerged = false;
-                    }
+                        if (checkBoxLineAfterNext.Checked && QualifiesForMerge(p, afterNext))
+                        {
+                            if (p.Duration.TotalMilliseconds > afterNext.Duration.TotalMilliseconds)
+                            {
+                                removed.Add(i + 2);
+                                nextNext.Add(i + 2);
+                                numberOfMerges++;
+                                if (lastMerged)
+                                {
+                                    lineNumbers.Append(afterNext.Number.ToString() + ",");
+                                }
+                                else
+                                {
+                                    lineNumbers.Append(p.Number.ToString() + ",");
+                                    lineNumbers.Append(afterNext.Number.ToString() + ",");
+                                }
+                                lastMerged = true;
+                            }
+                        }
+                        else
+                        {
+                            lastMerged = false;
+                        }
+                    }                   
                 }
                 else
                 {
                     lastMerged = false;
                 }
-                if (!lastMerged && lineNumbers.Length > 0 && clearFixes)
+                if (!removed.Contains(i) && lineNumbers.Length > 0 && clearFixes)
                 {
                     AddToListView(p, lineNumbers.ToString(), p.Text);
                     lineNumbers = new StringBuilder();
@@ -191,78 +195,21 @@ namespace Nikse.SubtitleEdit.Forms
             if (!lastMerged)
                 mergedSubtitle.Paragraphs.Add(new Paragraph(subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count-1)));
 
-            listViewFixes.ItemChecked += listViewFixes_ItemChecked;
+            if (!loading)
+                listViewFixes.ItemChecked += listViewFixes_ItemChecked;
+
             return mergedSubtitle;
         }
 
-        private static string GetEndTag(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return string.Empty;
-            text = text.Trim();
-            if (!text.EndsWith(">"))
-                return string.Empty;
-
-            string endTag = string.Empty;
-            int start = text.LastIndexOf("</");
-            if (start > 0 && start >= text.Length - 8)
-            {
-                endTag = text.Substring(start);
-            }
-            return endTag;
-        }
-
-        private static string GetStartTag(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return string.Empty;
-            text = text.Trim();
-            if (!text.StartsWith("<"))
-                return string.Empty;
-
-            string startTag = string.Empty;
-            int end = text.IndexOf(">");
-            if (end > 0 && end < 25)
-            {
-                startTag = text.Substring(0, end + 1);
-            }
-            return startTag;
-        }
-
-        private bool QualifiesForMerge(Paragraph p, Paragraph next, double maximumMillisecondsBetweenLines, int maximumTotalLength)
+        private bool QualifiesForMerge(Paragraph p, Paragraph next)
         {
             if (p != null && p.Text != null && next != null && next.Text != null)
             {
                 string s = Utilities.RemoveHtmlTags(p.Text.Trim());
-
-                if (p.Text.Length + next.Text.Length < maximumTotalLength && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < maximumMillisecondsBetweenLines)
-                {
-                    if (string.IsNullOrEmpty(s))
-                        return true;
-                    bool isLineContinuation = s.EndsWith(",") || s.EndsWith("-") || s.EndsWith("...") || Utilities.AllLettersAndNumbers.Contains(s.Substring(s.Length - 1));
-
-                    if (!checkBoxOnlyContinuationLines.Checked)
-                        return true;
-
-                    if (isLineContinuation)
-                        return true;
-                }
+                string s2 = Utilities.RemoveHtmlTags(next.Text.Trim());
+                return s == s2;
             }
             return false;
-        }
-
-        private void NumericUpDownMaxCharactersValueChanged(object sender, EventArgs e)
-        {
-            Cursor = Cursors.WaitCursor;
-            GeneratePreview();
-            Cursor = Cursors.Default;
-        }
-
-        private void NumericUpDownMaxMillisecondsBetweenLinesValueChanged(object sender, EventArgs e)
-        {
-            Cursor = Cursors.WaitCursor;
-            GeneratePreview();
-            Cursor = Cursors.Default;
         }
 
         private void ButtonCancelClick(object sender, EventArgs e)
@@ -298,13 +245,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
+            if (loading)
+                return;
+
             var mergedIndexes = new List<int>();
 
             NumberOfMerges = 0;
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
             int count;
-            _mergedSubtitle = MergeShortLinesInSubtitle(_subtitle, mergedIndexes, out count, (double)numericUpDownMaxMillisecondsBetweenLines.Value, (int)numericUpDownMaxCharacters.Value, false);
+            _mergedSubtitle = MergeLineswithSameTextInSubtitle(_subtitle, mergedIndexes, out count, false);
             NumberOfMerges = count;
             SubtitleListview1.Fill(_subtitle);
             foreach (var index in mergedIndexes)
@@ -315,20 +265,28 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergedShortLines.NumberOfMergesX, NumberOfMerges);
         }
 
-        private void MergeShortLines_Shown(object sender, EventArgs e)
-        {
-            GeneratePreview();
-            listViewFixes.Focus();
-            if (listViewFixes.Items.Count > 0)
-                listViewFixes.Items[0].Selected = true;
-        }
-
         private void checkBoxOnlyContinuationLines_CheckedChanged(object sender, EventArgs e)
         {
             Cursor = Cursors.WaitCursor;
             GeneratePreview();
             Cursor = Cursors.Default;
         }
-    }
 
+        private void MergeDoubleLines_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                DialogResult = DialogResult.Cancel;
+        }
+
+        private void MergeDoubleLines_Shown(object sender, EventArgs e)
+        {
+            GeneratePreview();
+            listViewFixes.Focus();
+            if (listViewFixes.Items.Count > 0)
+                listViewFixes.Items[0].Selected = true;
+            loading = false;
+            listViewFixes.ItemChecked += listViewFixes_ItemChecked;
+        }
+    
+    }
 }
