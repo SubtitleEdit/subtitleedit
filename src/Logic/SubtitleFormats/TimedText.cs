@@ -145,6 +145,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (div == null)
                 div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
 
+            var styleDic = new System.Collections.Generic.Dictionary<string, string>();
+            foreach (XmlNode node in xml.DocumentElement.SelectNodes("//ttaf1:style", nsmgr))
+            {
+                if (node.Attributes["tts:fontStyle"] != null && node.Attributes["xml:id"] != null)
+                {
+                    styleDic.Add(node.Attributes["xml:id"].Value, node.Attributes["tts:fontStyle"].Value);
+                }
+            }
+
             foreach (XmlNode node in div.ChildNodes)
             {
                 try
@@ -159,7 +168,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 break;
                             case "span":
                                 bool italic = false;
-                                if (innerNode.Attributes != null)
+                                if (innerNode.Attributes["style"] != null && styleDic.ContainsKey(innerNode.Attributes["style"].Value))
+                                {
+                                    if (styleDic[innerNode.Attributes["style"].Value].Contains("italic"))
+                                    {
+                                        italic = true;
+                                        pText.Append("<i>");
+                                    }
+                                }
+                                if (!italic && innerNode.Attributes != null)
                                 {
                                     var fs = innerNode.Attributes.GetNamedItem("tts:fontStyle");
                                     if (fs != null && fs.Value == "italic")
