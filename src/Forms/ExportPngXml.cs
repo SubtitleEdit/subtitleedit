@@ -41,6 +41,12 @@ namespace Nikse.SubtitleEdit.Forms
             public int BottomMargin { get; set; }
             public bool Saved { get; set; }
             public ContentAlignment Alignment { get; set; }
+            public Color BackgroundColor { get; set; }
+
+            public MakeBitmapParameter()
+            {
+                BackgroundColor = Color.Transparent;
+            }
         }
 
         private Subtitle _subtitle;
@@ -228,11 +234,38 @@ namespace Nikse.SubtitleEdit.Forms
                                     Saved = false,
                                     Alignment = ContentAlignment.BottomCenter,
                                     SideBySide3D = checkBoxSideBySide3D.Checked,
+                                    BackgroundColor = Color.Transparent,
                                 };
             if (index < _subtitle.Paragraphs.Count)
             {
                 parameter.P = _subtitle.Paragraphs[index];
                 parameter.Alignment = GetAlignmentFromParagraph(parameter.P,_format, _subtitle);
+
+                if (_format.HasStyleSupport && !string.IsNullOrEmpty(parameter.P.Extra))
+                {
+                    if (_format.GetType() == typeof(SubStationAlpha))
+                    {
+                        var style = AdvancedSubStationAlpha.GetSsaStyle(parameter.P.Extra, _subtitle.Header);
+                        parameter.SubtitleColor = style.Primary;
+                        parameter.SubtitleFontBold = style.Bold;
+                        parameter.SubtitleFontSize = style.FontSize;
+                        if (style.BorderStyle == "3")
+                        {
+                            parameter.BackgroundColor = style.Background;
+                        }
+                    }
+                    else if (_format.GetType() == typeof(AdvancedSubStationAlpha))
+                    {
+                        var style = AdvancedSubStationAlpha.GetSsaStyle(parameter.P.Extra, _subtitle.Header);
+                        parameter.SubtitleColor = style.Primary;
+                        parameter.SubtitleFontBold = style.Bold;
+                        parameter.SubtitleFontSize = style.FontSize;
+                        if (style.BorderStyle == "3")
+                        {
+                            parameter.BackgroundColor = style.Outline;
+                        }
+                    }
+                }
             }
             else
             {
@@ -768,7 +801,7 @@ namespace Nikse.SubtitleEdit.Forms
             return Color.FromArgb(150, borderColor.R, borderColor.G, borderColor.B);
         }
 
-        private Bitmap GenerateImageFromTextWithStyle(string text)
+        private Bitmap GenerateImageFromTextWithStyle(Paragraph p)
         {
             var mbp = new MakeBitmapParameter();
             mbp.AlignLeft = comboBoxHAlign.SelectedIndex == 0;
@@ -780,7 +813,36 @@ namespace Nikse.SubtitleEdit.Forms
             mbp.SubtitleColor = _subtitleColor;
             mbp.SubtitleFontSize = _subtitleFontSize;
             mbp.SubtitleFontBold = _subtitleFontBold;
-            mbp.P = new Paragraph(text, 0, 0);
+            mbp.P = p;
+
+
+            if (_format.HasStyleSupport && !string.IsNullOrEmpty(p.Extra))
+            {
+                if (_format.GetType() == typeof(SubStationAlpha))
+                {
+                    var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
+                    mbp.SubtitleColor = style.Primary;
+                    mbp.SubtitleFontBold = style.Bold;
+                    mbp.SubtitleFontSize = style.FontSize;
+                    if (style.BorderStyle == "3")
+                    {
+                        mbp.BackgroundColor = style.Background;
+                    }
+                }
+                else if (_format.GetType() == typeof(AdvancedSubStationAlpha))
+                {
+                    var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
+                    mbp.SubtitleColor = style.Primary;
+                    mbp.SubtitleFontBold = style.Bold;
+                    mbp.SubtitleFontSize = style.FontSize;
+                    if (style.BorderStyle == "3")
+                    {
+                        mbp.BackgroundColor = style.Outline;
+                    }
+                }
+            }
+
+
 
             int width = 0;
             int height = 0;
@@ -842,8 +904,10 @@ namespace Nikse.SubtitleEdit.Forms
                 sizeX = 1;
             if (sizeY < 1)
                 sizeY = 1;
-            bmp = new Bitmap(sizeX, sizeY);
+            bmp = new Bitmap(sizeX, sizeY);            
             g = Graphics.FromImage(bmp);
+            if (parameter.BackgroundColor != Color.Transparent)
+                g.FillRectangle(new SolidBrush(parameter.BackgroundColor), 0, 0, bmp.Width, bmp.Height);
 
             var lefts = new List<float>();
             foreach (string line in Utilities.RemoveHtmlFontTag(text.Replace("<i>", string.Empty).Replace("</i>", string.Empty)).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
@@ -1056,7 +1120,15 @@ namespace Nikse.SubtitleEdit.Forms
             g.FillPath(new SolidBrush(c), path);
             g.Dispose();
             var nbmp = new NikseBitmap(bmp);
-            nbmp.CropTransparentSidesAndBottom(2);
+            if (parameter.BackgroundColor == Color.Transparent)
+            {
+                nbmp.CropTransparentSidesAndBottom(2);
+            }
+            else
+            {
+                nbmp.CropSidesAndBottom(4, parameter.BackgroundColor);
+                nbmp.CropTop(4, parameter.BackgroundColor);
+            }
 
             if (parameter.SideBySide3D)
             {
@@ -1071,7 +1143,10 @@ namespace Nikse.SubtitleEdit.Forms
                     gSideBySide.DrawImage(singleBmp, singleWidth + singleLeftMargin, 0);
                 }
                 nbmp = new NikseBitmap(sideBySideBmp);
-                nbmp.CropTransparentSidesAndBottom(2);
+                if (parameter.BackgroundColor == Color.Transparent)
+                    nbmp.CropTransparentSidesAndBottom(2);
+                else
+                    nbmp.CropSidesAndBottom(4, parameter.BackgroundColor);
             }
 
             return nbmp.GetBitmap();
@@ -1247,7 +1322,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetupImageParameters();
             if (subtitleListView1.SelectedItems.Count > 0)
             {
-                var bmp = GenerateImageFromTextWithStyle(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index].Text);
+                var bmp = GenerateImageFromTextWithStyle(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index]);
                 pictureBox1.Image = bmp;
 
                 int w = groupBoxExportImage.Width - 4;
