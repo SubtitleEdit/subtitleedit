@@ -2,9 +2,11 @@
 <Language Name="Greek">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.2</Version>
+    <Version>3.3</Version>
     <TranslatedBy>Μετάφραση από CrazyRabbit</TranslatedBy>
     <CultureName>el-GR</CultureName>
+    <HelpFile>
+    </HelpFile>
     <OK>&amp;Εντάξει</OK>
     <Cancel>Α&amp;κύρωση</Cancel>
     <Apply>Εφαρμογή</Apply>
@@ -459,6 +461,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportCavena890>Cavena 890...</ExportCavena890>
         <ExportEbu>EBU stl...</ExportEbu>
         <ExportPac>PAC (Ηλεκτρονικά οθόνης)...</ExportPac>
+        <ExportPlainText>Εξαγωγή ως απλό κείμενο</ExportPlainText>
+        <ExportPlainTextWithoutLineBreaks>Εξαγωγή ως απλό κείμενο χωρίς line breaks</ExportPlainTextWithoutLineBreaks>
         <Exit>Έξο&amp;δος</Exit>
       </File>
       <Edit>
@@ -852,6 +856,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheckAbortedXCorrections>Ο ορθογραφικός έλεγχος ματαιώθηκε. {0} γραμμές τροποποιήθηκαν.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Ο ορθογραφικός έλεγχος ολοκληρώθηκε. {0} γραμμές τροποποιήθηκαν.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Άνοιγμα άλλου υπότιτλου</OpenOtherSubtitle>
+    <BeforeToggleDialogueDashes>σενάρια διαλόγου</BeforeToggleDialogueDashes>
+    <ExportPlainTextAs>Εξαγωγή απλού αρχείου κειμένου ως</ExportPlainTextAs>
+    <TextFiles>Αρχεία κειμένου</TextFiles>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Επιλογή υπότιτλου από αρχείο Matroska</Title>
@@ -1019,6 +1026,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveFormAppearance>Όψη κυματομορφής</WaveFormAppearance>
     <WaveFormGridColor>Χρώμα πλέγματος</WaveFormGridColor>
     <WaveFormShowGridLines>Εμφάνιση γραμμών πλέγματος</WaveFormShowGridLines>
+    <ReverseMouseWheelScrollDirection>Εναλλαγή κατεύθυνσης κύλισης με τη ρόδα του mouse</ReverseMouseWheelScrollDirection>
     <WaveFormColor>Χρώμα</WaveFormColor>
     <WaveFormSelectedColor>Επιλεγμένο χρώμα</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Χρώμα φόντου</WaveFormBackgroundColor>
@@ -1077,6 +1085,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShortcutIsNotValid>Η συντόμευση δεν είναι έγκυρη: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Εναλλαγή αγκύρωσης/απαγκύρωσης των στοιχείων ελέγχου βίντεο</ToggleDockUndockOfVideoControls>
     <AdjustViaEndAutoStartAndGoToNext>Προσαρμογή μέσω τελικής θέσης και μετάβαση στο επόμενο</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>Προσαρμογή μέσω αρχικής θέσης και μετάβαση στο επόμενο</AdjustSetStartAutoDurationAndGoToNext>
+    <ToggleDialogueDashes>Εναλλαγή γραμμών διαλόγου</ToggleDialogueDashes>
+    <VerticalZoom>Μεγέθυνση κάθετα</VerticalZoom>
+    <GoBack100Milliseconds>Πίσω 100 ms</GoBack100Milliseconds>
+    <GoForward100Milliseconds>Μπροστά 100 ms</GoForward100Milliseconds>
+    <GoBack500Milliseconds>Πίσω 500 ms</GoBack500Milliseconds>
+    <GoForward500Milliseconds>Μπροστά 500 ms</GoForward500Milliseconds>
   </Settings>
   <ShowEarlierLater>
     <Title>Εμφάνιση επιλεγμένων γραμμών νωρίτερα/αργότερα</Title>
