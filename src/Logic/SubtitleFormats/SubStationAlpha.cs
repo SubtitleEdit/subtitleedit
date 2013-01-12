@@ -157,17 +157,12 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         var ssaStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitle.Header);
                         if (ssaStyle != null)
                         {
-                            // Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-                            string styleFormat = "Style: {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},0,100,100,0,0,{10},{11},{12},{13},{14},{15},{16},1";
-                            string bold = "0";
+                            string bold = "-1";
                             if (ssaStyle.Bold)
                                 bold = "1";
                             string italic = "0";
                             if (ssaStyle.Italic)
                                 italic = "1";
-                            string underline = "0";
-                            if (ssaStyle.Underline)
-                                underline = "1";
 
                             string newAlignment = "2";
                             switch (ssaStyle.Alignment)
@@ -198,8 +193,12 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                     break;
                             }
 
+                            //Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
+                            string styleFormat = "Style: {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},0,1";
+                            //                           N   FN  FS  PC  SC  TC  BC  Bo  It  BS  O    Sh   Ali  ML   MR   MV   A Encoding
+
                             ttStyles.AppendLine(string.Format(styleFormat, ssaStyle.Name, ssaStyle.FontName, ssaStyle.FontSize, ssaStyle.Primary.ToArgb(), ssaStyle.Secondary.ToArgb(),
-                                                ssaStyle.Outline.ToArgb(), ssaStyle.Background.ToArgb(), bold, italic, underline, ssaStyle.BorderStyle, ssaStyle.OutlineWidth, ssaStyle.ShadowWidth,
+                                                ssaStyle.Outline.ToArgb(), ssaStyle.Background.ToArgb(), bold, italic, ssaStyle.BorderStyle, ssaStyle.OutlineWidth, ssaStyle.ShadowWidth,
                                                 newAlignment, ssaStyle.MarginLeft, ssaStyle.MarginRight, ssaStyle.MarginVertical));
                             styleFound = true;
                         }
