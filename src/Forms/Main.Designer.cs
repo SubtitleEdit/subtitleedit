@@ -107,6 +107,7 @@
             this.toolStripMenuItemTextTimeCodePair = new System.Windows.Forms.ToolStripMenuItem();
             this.pACScreenElectronicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plainTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportUltech130 = new System.Windows.Forms.ToolStripMenuItem();
             this.vobSubsubidxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
@@ -1052,6 +1053,7 @@
             this.toolStripMenuItemTextTimeCodePair,
             this.pACScreenElectronicsToolStripMenuItem,
             this.plainTextToolStripMenuItem,
+            this.toolStripMenuItem2,
             this.toolStripMenuItemExportUltech130,
             this.vobSubsubidxToolStripMenuItem});
             this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
@@ -1156,6 +1158,13 @@
             this.plainTextToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.plainTextToolStripMenuItem.Text = "Plain text...";
             this.plainTextToolStripMenuItem.Click += new System.EventHandler(this.PlainTextToolStripMenuItemClick);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItem2.Text = "Spumux...";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // toolStripMenuItemExportUltech130
             // 
@@ -4502,6 +4511,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemBatchConvert;
         private System.Windows.Forms.ToolStripMenuItem copyOriginalTextToCurrentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeDuplicateText;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
     }
 }
 

@@ -442,6 +442,131 @@ namespace Nikse.SubtitleEdit.Logic
             _bitmapData = newBitmapData;
         }
 
+        public void CropSidesAndBottom(int maximumCropping, Color transparentColor)
+        {
+            int leftStart = 0;
+            bool done = false;
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    Color c = GetPixel(x, y);
+                    if (c != transparentColor)
+                    {
+                        done = true;
+                        leftStart = x;
+                        leftStart -= maximumCropping;
+                        if (leftStart < 0)
+                            leftStart = 0;
+                        break;
+                    }
+                    if (done)
+                        break;
+                }
+            }
+
+            int rightEnd = Width - 1;
+            done = false;
+            for (int x = Width - 1; x >= 0; x--)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    Color c = GetPixel(x, y);
+                    if (c != transparentColor)
+                    {
+                        done = true;
+                        rightEnd = x;
+                        rightEnd += maximumCropping;
+                        if (rightEnd >= Width)
+                            rightEnd = Width - 1;
+                        break;
+                    }
+                    if (done)
+                        break;
+                }
+            }
+
+            //crop bottom
+            done = false;
+            int newHeight = Height;
+            for (int y = Height - 1; y > 0; y--)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    Color c = GetPixel(x, y);
+                    if (c != transparentColor)
+                    {
+                        done = true;
+                        newHeight = y + maximumCropping;
+                        if (newHeight > Height)
+                            newHeight = Height;
+                        break;
+                    }
+                    if (done)
+                        break;
+                }
+            }
+
+            if (leftStart < 2 && rightEnd >= Width - 3)
+                return;
+
+            int newWidth = rightEnd - leftStart + 1;
+            if (newWidth <= 0)
+                return;
+
+            var newBitmapData = new byte[newWidth * newHeight * 4];
+            int index = 0;
+            for (int y = 0; y < newHeight; y++)
+            {
+                int pixelAddress = (leftStart * 4) + (y * 4 * Width);
+                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * newWidth);
+                index += 4 * newWidth;
+            }
+            Width = newWidth;
+            Height = newHeight;
+            _bitmapData = newBitmapData;
+        }
+
+        public void CropTop(int maximumCropping, Color transparentColor)
+        {
+            bool done = false;
+            int newTop = 0;
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    Color c = GetPixel(x, y);
+                    if (c != transparentColor)
+                    {
+                        done = true;
+                        newTop = y - maximumCropping;
+                        if (newTop < 0)
+                            newTop = 0;
+                        break;
+                    }
+                    if (done)
+                        break;
+                }
+                if (done)
+                    break;
+            }
+
+            if (newTop == 0)
+                return;            
+
+            int newHeight = Height - newTop;
+            var newBitmapData = new byte[Width * newHeight * 4];
+            int index = 0;
+            for (int y = newTop; y < Height; y++)
+            {
+                int pixelAddress = y * 4 * Width;
+                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * Width);
+                index += 4 * Width;
+            }
+            Height = newHeight;
+            _bitmapData = newBitmapData;
+        }
+
         public void Fill(Color color)
         {
             byte[] buffer = new byte[4];
