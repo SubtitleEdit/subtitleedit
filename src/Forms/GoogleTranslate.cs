@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
         bool _googleTranslate = true;
         MicrosoftTranslationService.SoapService _microsoftTranslationService = null;
         private bool _googleApiNotWorking = false;
-        private const string _splitterString  = " == ";
+        private const string _splitterString = " == ";
         private const string _newlineString = " __ ";
 
         private Encoding _screenScrapingEncoding = null;
@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             string defaultFromLanguage = Utilities.AutoDetectGoogleLanguage(subtitle);
             FillComboWithLanguages(comboBoxFrom);
-            int i=0;
+            int i = 0;
             foreach (ComboBoxItem item in comboBoxFrom.Items)
             {
                 if (item.Value == defaultFromLanguage)
@@ -131,7 +131,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string temp = s.Replace("[", string.Empty).Replace("]", string.Empty);
                     if (temp.Length > 4)
                     {
-                        temp = temp.Substring(temp.Length - 5,2).ToLower();
+                        temp = temp.Substring(temp.Length - 5, 2).ToLower();
 
                         if (temp != uiCultureTL)
                         {
@@ -241,7 +241,7 @@ namespace Nikse.SubtitleEdit.Forms
                 lines.Add(s);
 
             int index = start;
-            foreach (string s in  lines)
+            foreach (string s in lines)
             {
                 if (index < _translatedSubtitle.Paragraphs.Count)
                 {
@@ -302,7 +302,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string TranslateTextViaApi(string input, string languagePair)
         {
-//            string googleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
+            //            string googleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
             string googleApiKey = Configuration.Settings.Tools.GoogleApiKey;
 
             input = input.Replace(Environment.NewLine, _newlineString);
@@ -310,7 +310,7 @@ namespace Nikse.SubtitleEdit.Forms
             // create the web request to the Google Translate REST interface
 
             //API V 1.0
-            string url = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + HttpUtility.UrlEncode(input) + "&langpair=" + languagePair + "&key=" +googleApiKey;
+            string url = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + HttpUtility.UrlEncode(input) + "&langpair=" + languagePair + "&key=" + googleApiKey;
 
             //API V 2.0 ?
             //string[] arr = languagePair.Split('|');
@@ -358,7 +358,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int endPosition = test.IndexOf(">", startPosition + key.Length);
                 if (endPosition == -1)
                     return test;
-                test = test.Remove(startPosition + 2, endPosition-startPosition-2);
+                test = test.Remove(startPosition + 2, endPosition - startPosition - 2);
 
             }
             return test;
@@ -373,8 +373,8 @@ namespace Nikse.SubtitleEdit.Forms
                 webClient.Proxy = Utilities.GetProxy();
                 string result = webClient.DownloadString(url).ToLower();
                 int idx = result.IndexOf("charset");
-                int end = result.IndexOf("\"", idx+8);
-                string charset = result.Substring(idx, end-idx).Replace("charset=", string.Empty);
+                int end = result.IndexOf("\"", idx + 8);
+                string charset = result.Substring(idx, end - idx).Replace("charset=", string.Empty);
                 return Encoding.GetEncoding(charset); // "koi8-r");
             }
             catch
@@ -397,49 +397,28 @@ namespace Nikse.SubtitleEdit.Forms
             input = input.Replace("'", "&apos;");
 
             //string url = String.Format("http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}", HttpUtility.UrlEncode(input), languagePair);
-
-
+            string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), HttpUtility.UrlEncode(input));
+            var webClient = new WebClient();
+            webClient.Proxy = Utilities.GetProxy();
+            webClient.Encoding = encoding;
+            string result = webClient.DownloadString(url);
+            int startIndex = result.IndexOf("<span id=result_box");
             var sb = new StringBuilder();
-            int method = 1;
-            if (method == 1)
+            if (startIndex > 0)
             {
-                string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), HttpUtility.UrlEncode(input));
-                var webClient = new WebClient();
-                webClient.Proxy = Utilities.GetProxy();
-                webClient.Encoding = System.Text.Encoding.UTF8;
-                string result = webClient.DownloadString(url);
-                int startIndex = result.IndexOf("<span id=result_box");
-                if (startIndex > 0)
+                startIndex = result.IndexOf("<span title=", startIndex);
+                while (startIndex > 0)
                 {
-                    startIndex = result.IndexOf("<span title=", startIndex);
-                    while (startIndex > 0)
+                    startIndex = result.IndexOf(">", startIndex);
+                    if (startIndex > 0)
                     {
-                        startIndex = result.IndexOf(">", startIndex);
-                        if (startIndex > 0)
-                        {
-                            startIndex++;
-                            int endIndex = result.IndexOf("</span>", startIndex);
-                            string translatedText = result.Substring(startIndex, endIndex - startIndex);
-                            string test = HttpUtility.HtmlDecode(translatedText);
-                            sb.Append(test);
-                            startIndex = result.IndexOf("<span title=", startIndex);
-                        }
+                        startIndex++;
+                        int endIndex = result.IndexOf("</span>", startIndex);
+                        string translatedText = result.Substring(startIndex, endIndex - startIndex);
+                        string test = HttpUtility.HtmlDecode(translatedText);
+                        sb.Append(test);
+                        startIndex = result.IndexOf("<span title=", startIndex);
                     }
-                }
-            }
-            else
-            {
-                // http://rupeshpatel.wordpress.com/2012/06/23/usage-of-google-translator-api-for-free/
-
-                string url = String.Format("http://translate.google.com/translate_a/t?client=t&text={2}&hl=en&sl={0}&tl={1}&ie=UTF-8&oe=UTF-8&multires=1&otf=1&ssel=0&tsel=0&sc=1", languagePair.Substring(0, 2), languagePair.Substring(3), HttpUtility.UrlEncode(input));
-                var webClient = new WebClient();
-                webClient.Proxy = Utilities.GetProxy();
-                webClient.Encoding = System.Text.Encoding.UTF8;
-                string result = webClient.DownloadString(url);
-                var arr = result.Split('"');
-                if (arr.Length > 0)
-                {
-                    sb.Append(arr[0]);
                 }
             }
             string res = sb.ToString();
@@ -478,12 +457,12 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-               // MicrosoftTranslationService.SoapService client = MsTranslationServiceClient;
+                // MicrosoftTranslationService.SoapService client = MsTranslationServiceClient;
 
                 //string[] locales = client.GetLanguagesForTranslate(BingApiId);
                 string[] locales = GetMsLocales();
 
-//                string[] names = client.GetLanguageNames(BingApiId, "en", locales);
+                //                string[] names = client.GetLanguageNames(BingApiId, "en", locales);
                 string[] names = GetMsNames();
 
                 for (int i = 0; i < locales.Length; i++)
@@ -500,7 +479,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string[] GetMsLocales()
         {
-            string[] locales =  {"ar", "bg", "zh-CHS", "zh-CHT", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "ht", "he", "hu", "id", "it", "ja", "ko", "lv", "lt", "no", "pl", "pt", "ro", "ru", "sk", "sl", "es", "sv", "th", "tr", "uk", "vi" };
+            string[] locales = { "ar", "bg", "zh-CHS", "zh-CHT", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "ht", "he", "hu", "id", "it", "ja", "ko", "lv", "lt", "no", "pl", "pt", "ro", "ru", "sk", "sl", "es", "sv", "th", "tr", "uk", "vi" };
             return locales;
         }
 
@@ -520,7 +499,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("AZERBAIJANI", "az"));
             comboBox.Items.Add(new ComboBoxItem("BASQUE", "eu"));
             comboBox.Items.Add(new ComboBoxItem("BELARUSIAN", "be"));
-            comboBox.Items.Add(new ComboBoxItem("BENGALI" , "bn"));
+            comboBox.Items.Add(new ComboBoxItem("BENGALI", "bn"));
             //            comboBox.Items.Add(new ComboBoxItem("BIHARI" , "bh"));
             comboBox.Items.Add(new ComboBoxItem("BULGARIAN", "bg"));
             //            comboBox.Items.Add(new ComboBoxItem("BURMESE" , "my"));
@@ -535,7 +514,7 @@ namespace Nikse.SubtitleEdit.Forms
             //            comboBox.Items.Add(new ComboBoxItem("DHIVEHI" , "dv"));
             comboBox.Items.Add(new ComboBoxItem("DUTCH", "nl"));
             comboBox.Items.Add(new ComboBoxItem("ENGLISH", "en"));
-            comboBox.Items.Add(new ComboBoxItem("ESPERANTO" , "eo"));
+            comboBox.Items.Add(new ComboBoxItem("ESPERANTO", "eo"));
             comboBox.Items.Add(new ComboBoxItem("ESTONIAN", "et"));
             comboBox.Items.Add(new ComboBoxItem("FILIPINO", "tl"));
             comboBox.Items.Add(new ComboBoxItem("FINNISH", "fi"));
@@ -545,7 +524,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("GERMAN", "de"));
             comboBox.Items.Add(new ComboBoxItem("GREEK", "el"));
             //            comboBox.Items.Add(new ComboBoxItem("GUARANI" , "gn"));
-            comboBox.Items.Add(new ComboBoxItem("GUJARATI" , "gu"));
+            comboBox.Items.Add(new ComboBoxItem("GUJARATI", "gu"));
             comboBox.Items.Add(new ComboBoxItem("HAITIAN CREOLE", "ht"));
             comboBox.Items.Add(new ComboBoxItem("HEBREW", "iw"));
             comboBox.Items.Add(new ComboBoxItem("HINDI", "hi"));
@@ -556,7 +535,7 @@ namespace Nikse.SubtitleEdit.Forms
             //            comboBox.Items.Add(new ComboBoxItem("INUKTITUT" , "iu"));
             comboBox.Items.Add(new ComboBoxItem("ITALIAN", "it"));
             comboBox.Items.Add(new ComboBoxItem("JAPANESE", "ja"));
-            comboBox.Items.Add(new ComboBoxItem("KANNADA" , "kn"));
+            comboBox.Items.Add(new ComboBoxItem("KANNADA", "kn"));
             //            comboBox.Items.Add(new ComboBoxItem("KAZAKH" , "kk"));
             //            comboBox.Items.Add(new ComboBoxItem("KHMER" , "km"));
             comboBox.Items.Add(new ComboBoxItem("KOREAN", "ko"));
@@ -592,9 +571,9 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("SWAHILI", "sw"));
             comboBox.Items.Add(new ComboBoxItem("SWEDISH", "sv"));
             //            comboBox.Items.Add(new ComboBoxItem("TAJIK" , "tg"));
-            comboBox.Items.Add(new ComboBoxItem("TAMIL" , "ta"));
+            comboBox.Items.Add(new ComboBoxItem("TAMIL", "ta"));
             //            comboBox.Items.Add(new ComboBoxItem("TAGALOG" , "tl"));
-            comboBox.Items.Add(new ComboBoxItem("TELUGU" , "te"));
+            comboBox.Items.Add(new ComboBoxItem("TELUGU", "te"));
             comboBox.Items.Add(new ComboBoxItem("THAI", "th"));
             //            comboBox.Items.Add(new ComboBoxItem("TIBETAN" , "bo"));
             comboBox.Items.Add(new ComboBoxItem("TURKISH", "tr"));
