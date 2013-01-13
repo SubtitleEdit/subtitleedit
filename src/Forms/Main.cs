@@ -16302,5 +16302,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         }
 
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            var exportBdnXmlPng = new ExportPngXml();
+            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "SPUMUX", _fileName, _videoInfo);
+            exportBdnXmlPng.ShowDialog(this);
+        }
+
     }
 }

@@ -316,7 +316,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _exportType == "BDNXML" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "FAB" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "IMAGE/FRAME" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "STL" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
+                _exportType == "STL" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == "SPUMUX" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 int width = 1920;
                 int height = 1080;
@@ -428,6 +429,17 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (_exportType == "STL")
                 {
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "DVD_Studio_Pro_Image_script.stl"), sb.ToString());
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
+                }
+                else if (_exportType == "SPUMUX")
+                {
+                    XmlDocument doc = new XmlDocument();
+                    string s = "<subpictures>" + Environment.NewLine +
+                               "\t<stream>" + Environment.NewLine +
+                               sb.ToString() +
+                               "\t</stream>" + Environment.NewLine +
+                               "</subpictures>";
+                    File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "spu.xml"), s);
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 }
                 else
@@ -582,6 +594,40 @@ namespace Nikse.SubtitleEdit.Forms
                         string startTime = string.Format(timeFormat, param.P.StartTime.Hours, param.P.StartTime.Minutes, param.P.StartTime.Seconds, (int)Math.Round(param.P.StartTime.Milliseconds / factor));
                         string endTime = string.Format(timeFormat, param.P.EndTime.Hours, param.P.EndTime.Minutes, param.P.EndTime.Seconds, (int)Math.Round(param.P.EndTime.Milliseconds / factor));
                         sb.Append(string.Format(paragraphWriteFormat, startTime, endTime, fileName));
+
+                        param.Saved = true;
+                    }
+                }
+                else if (_exportType == "SPUMUX")
+                {
+                    if (!param.Saved)
+                    {
+                        string numberString = string.Format("IMAGE{0:000}", i);
+                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
+
+                        
+                        foreach (var encoder in ImageCodecInfo.GetImageEncoders())
+                        {
+                            if (encoder.FormatID == ImageFormat.Png.Guid)
+                            {
+                                EncoderParameters parameters = new EncoderParameters();
+                                parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
+                                param.Bitmap.Save(fileName, encoder, parameters);
+                                break;
+                            }
+                        }
+                       
+                        
+                        
+                        imagesSavedCount++;
+
+                        const string paragraphWriteFormat = "\t\t<spu start=\"{0}\" end=\"{1}\" image=\"{2}\"  />";
+                        const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
+
+                        double factor = (1000.0 / Configuration.Settings.General.CurrentFrameRate);
+                        string startTime = string.Format(timeFormat, param.P.StartTime.Hours, param.P.StartTime.Minutes, param.P.StartTime.Seconds, (int)Math.Round(param.P.StartTime.Milliseconds / factor));
+                        string endTime = string.Format(timeFormat, param.P.EndTime.Hours, param.P.EndTime.Minutes, param.P.EndTime.Seconds, (int)Math.Round(param.P.EndTime.Milliseconds / factor));
+                        sb.AppendLine(string.Format(paragraphWriteFormat, startTime, endTime, fileName));
 
                         param.Saved = true;
                     }
@@ -852,7 +898,7 @@ namespace Nikse.SubtitleEdit.Forms
             mbp.SideBySide3D = checkBoxSideBySide3D.Checked;
 
             var bmp = GenerateImageFromTextWithStyle(mbp);
-            if (_exportType == "VOBSUB" || _exportType == "STL")
+            if (_exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
             {
                 var nbmp = new NikseBitmap(bmp);
                 nbmp.ConverToFourColors(Color.Transparent, _subtitleColor, _borderColor, GetOutlineColor(_borderColor));
