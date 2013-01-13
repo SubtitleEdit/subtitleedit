@@ -397,28 +397,49 @@ namespace Nikse.SubtitleEdit.Forms
             input = input.Replace("'", "&apos;");
 
             //string url = String.Format("http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}", HttpUtility.UrlEncode(input), languagePair);
-            string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), HttpUtility.UrlEncode(input));
-            var webClient = new WebClient();
-            webClient.Proxy = Utilities.GetProxy();
-            webClient.Encoding = encoding;
-            string result = webClient.DownloadString(url);
-            int startIndex = result.IndexOf("<span id=result_box");
+
+
             var sb = new StringBuilder();
-            if (startIndex > 0)
+            int method = 1;
+            if (method == 1)
             {
-                startIndex = result.IndexOf("<span title=", startIndex);
-                while (startIndex > 0)
+                string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), HttpUtility.UrlEncode(input));
+                var webClient = new WebClient();
+                webClient.Proxy = Utilities.GetProxy();
+                webClient.Encoding = System.Text.Encoding.UTF8;
+                string result = webClient.DownloadString(url);
+                int startIndex = result.IndexOf("<span id=result_box");
+                if (startIndex > 0)
                 {
-                    startIndex = result.IndexOf(">", startIndex);
-                    if (startIndex > 0)
+                    startIndex = result.IndexOf("<span title=", startIndex);
+                    while (startIndex > 0)
                     {
-                        startIndex++;
-                        int endIndex = result.IndexOf("</span>", startIndex);
-                        string translatedText = result.Substring(startIndex, endIndex - startIndex);
-                        string test = HttpUtility.HtmlDecode(translatedText);
-                        sb.Append(test);
-                        startIndex = result.IndexOf("<span title=", startIndex);
+                        startIndex = result.IndexOf(">", startIndex);
+                        if (startIndex > 0)
+                        {
+                            startIndex++;
+                            int endIndex = result.IndexOf("</span>", startIndex);
+                            string translatedText = result.Substring(startIndex, endIndex - startIndex);
+                            string test = HttpUtility.HtmlDecode(translatedText);
+                            sb.Append(test);
+                            startIndex = result.IndexOf("<span title=", startIndex);
+                        }
                     }
+                }
+            }
+            else
+            {
+                // http://rupeshpatel.wordpress.com/2012/06/23/usage-of-google-translator-api-for-free/
+
+                string url = String.Format("http://translate.google.com/translate_a/t?client=t&text={2}&hl=en&sl={0}&tl={1}&ie=UTF-8&oe=UTF-8&multires=1&otf=1&ssel=0&tsel=0&sc=1", languagePair.Substring(0, 2), languagePair.Substring(3), HttpUtility.UrlEncode(input));
+                var webClient = new WebClient();
+                webClient.Proxy = Utilities.GetProxy();
+                webClient.Encoding = System.Text.Encoding.UTF8;
+                string result = webClient.DownloadString(url);
+                var arr = result.Split('"');
+                if (arr.Length > 0)
+                {
+                    sb.Append(arr[0]);
                 }
             }
             string res = sb.ToString();

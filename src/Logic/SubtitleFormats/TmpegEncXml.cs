@@ -56,11 +56,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             <Name>
                 <![CDATA[Picture bottom layout]]>
             </Name>
-            <Position>4</Position>
+            <Position>23</Position>
             <FontName>
                 <![CDATA[Tahoma]]>
             </FontName>
-            <FontHeight>0.1</FontHeight>
+            <FontHeight>0.069</FontHeight>
             <FontColor>17588159451135</FontColor>
             <FontBold>0</FontBold>
             <FontItalic>0</FontItalic>
@@ -89,11 +89,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             <Name>
                 <![CDATA[Picture top layout]]>
             </Name>
-            <Position>4</Position>
+            <Position>23</Position>
             <FontName>
                 <![CDATA[Tahoma]]>
             </FontName>
-            <FontHeight>0.1</FontHeight>
+            <FontHeight>0.069</FontHeight>
             <FontColor>17588159451135</FontColor>
             <FontBold>0</FontBold>
             <FontItalic>0</FontItalic>
@@ -122,11 +122,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             <Name>
                 <![CDATA[Picture left layout]]>
             </Name>
-            <Position>4</Position>
+            <Position>23</Position>
             <FontName>
                 <![CDATA[Tahoma]]>
             </FontName>
-            <FontHeight>0.1</FontHeight>
+            <FontHeight>0.069</FontHeight>
             <FontColor>17588159451135</FontColor>
             <FontBold>0</FontBold>
             <FontItalic>0</FontItalic>
@@ -155,11 +155,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             <Name>
                 <![CDATA[Picture right layout]]>
             </Name>
-            <Position>4</Position>
+            <Position>23</Position>
             <FontName>
                 <![CDATA[Tahoma]]>
             </FontName>
-            <FontHeight>0.1</FontHeight>
+            <FontHeight>0.069</FontHeight>
             <FontColor>17588159451135</FontColor>
             <FontBold>0</FontBold>
             <FontItalic>0</FontItalic>
@@ -183,6 +183,39 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             <ScrollDirectionIndex>0</ScrollDirectionIndex>
             <TextAlign>1</TextAlign>
             <DirectionRightToLeft>1</DirectionRightToLeft>
+        </LayoutItem>
+        <LayoutItem index='4'>
+            <Name>
+                <![CDATA[Picture bottom layout]]>
+            </Name>
+            <Position>23</Position>
+            <FontName>
+                <![CDATA[Tahoma]]>
+            </FontName>
+            <FontHeight>0.069</FontHeight>
+            <FontColor>17588159451135</FontColor>
+            <FontBold>0</FontBold>
+            <FontItalic>1</FontItalic>
+            <FontUnderline>0</FontUnderline>
+            <FontStrikeOut>0</FontStrikeOut>
+            <HorizonAlign>1</HorizonAlign>
+            <VerticalAlign>2</VerticalAlign>
+            <DirectionVertical>0</DirectionVertical>
+            <BorderActive>1</BorderActive>
+            <BorderSize>0.005</BorderSize>
+            <BorderColor>0</BorderColor>
+            <BorderOpacity>1</BorderOpacity>
+            <BackgroundActive>0</BackgroundActive>
+            <BackgroundSize>0.005</BackgroundSize>
+            <BackgroundColor>0</BackgroundColor>
+            <BackgroundOpacity>1</BackgroundOpacity>
+            <FadeInActive>0</FadeInActive>
+            <FadeInTime>1000</FadeInTime>
+            <FadeOutActive>0</FadeOutActive>
+            <FadeOutTime>1000</FadeOutTime>
+            <ScrollDirectionIndex>0</ScrollDirectionIndex>
+            <TextAlign>1</TextAlign>
+            <DirectionRightToLeft>0</DirectionRightToLeft>
         </LayoutItem>
     </Layout>
     <Subtitle>
