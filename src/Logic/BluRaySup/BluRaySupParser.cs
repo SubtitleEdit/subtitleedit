@@ -191,29 +191,38 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                             int size;
                             if ((b & 0xC0) == 0x40)
                             {
-                                // 00 4x xx -> xxx zeroes
-                                size = ((b - 0x40) << 8) + (buf[index++] & 0xff);
-                                for (int i = 0; i < size; i++)
-                                    PutPixel(bm, ofs++, 0, pal);
-                                xpos += size;
+                                if (index < buf.Length)
+                                {
+                                    // 00 4x xx -> xxx zeroes
+                                    size = ((b - 0x40) << 8) + (buf[index++] & 0xff);
+                                    for (int i = 0; i < size; i++)
+                                        PutPixel(bm, ofs++, 0, pal);
+                                    xpos += size;
+                                }
                             }
                             else if ((b & 0xC0) == 0x80)
                             {
-                                // 00 8x yy -> x times value y
-                                size = (b - 0x80);
-                                b = buf[index++] & 0xff;
-                                for (int i = 0; i < size; i++)
-                                    PutPixel(bm, ofs++, b, pal);
-                                xpos += size;
+                                if (index < buf.Length)
+                                {
+                                    // 00 8x yy -> x times value y
+                                    size = (b - 0x80);
+                                    b = buf[index++] & 0xff;
+                                    for (int i = 0; i < size; i++)
+                                        PutPixel(bm, ofs++, b, pal);
+                                    xpos += size;
+                                }
                             }
                             else if ((b & 0xC0) != 0)
                             {
-                                // 00 cx yy zz -> xyy times value z
-                                size = ((b - 0xC0) << 8) + (buf[index++] & 0xff);
-                                b = buf[index++] & 0xff;
-                                for (int i = 0; i < size; i++)
-                                    PutPixel(bm, ofs++, b, pal);
-                                xpos += size;
+                                if (index < buf.Length)
+                                {
+                                    // 00 cx yy zz -> xyy times value z
+                                    size = ((b - 0xC0) << 8) + (buf[index++] & 0xff);
+                                    b = buf[index++] & 0xff;
+                                    for (int i = 0; i < size; i++)
+                                        PutPixel(bm, ofs++, b, pal);
+                                    xpos += size;
+                                }
                             }
                             else
                             {
