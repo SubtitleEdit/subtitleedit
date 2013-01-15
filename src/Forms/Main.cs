@@ -15521,7 +15521,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemSubStationAlpha_Click(object sender, EventArgs e)
         {
-            var properties = new SubStationAlphaProperties(_subtitle, GetCurrentSubtitleFormat(), _videoFileName);
+            var properties = new SubStationAlphaProperties(_subtitle, GetCurrentSubtitleFormat(), _videoFileName, _fileName);
             _formPositionsAndSizes.SetPositionAndSize(properties, true);
             properties.ShowDialog(this);
             _formPositionsAndSizes.SavePositionAndSize(properties);
