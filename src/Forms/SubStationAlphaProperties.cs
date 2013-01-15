@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _isSubStationAlpha;
         private string _videoFileName;
 
-        public SubStationAlphaProperties(Subtitle subtitle, SubtitleFormat format, string videoFileName)
+        public SubStationAlphaProperties(Subtitle subtitle, SubtitleFormat format, string videoFileName, string subtitleFileName)
         {
             InitializeComponent();
             _subtitle = subtitle;
@@ -37,9 +37,27 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxWrapStyle.SelectedIndex = 2;
             comboBoxCollision.SelectedIndex = 0;
-            if (subtitle.Header != null)
+
+            string header = subtitle.Header;
+            if (subtitle.Header == null)
             {
-                foreach (string line in subtitle.Header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                SubStationAlpha ssa = new SubStationAlpha();
+                var sub = new Subtitle();
+                var lines = new List<string>();
+                foreach (string line in subtitle.ToText(ssa).Replace(Environment.NewLine, "\n").Split('\n'))
+                    lines.Add(line);
+                string title = "Untitled";
+                if (!string.IsNullOrEmpty(subtitleFileName))
+                    title = System.IO.Path.GetFileNameWithoutExtension(subtitleFileName);
+                else if (!string.IsNullOrEmpty(videoFileName))
+                    title = System.IO.Path.GetFileNameWithoutExtension(videoFileName);
+                ssa.LoadSubtitle(sub, lines, title);
+                header = sub.Header;
+            }
+
+            if (header != null)
+            {
+                foreach (string line in header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 {
                     string s = line.ToLower().Trim();
                     if (s.StartsWith("title:"))
@@ -161,34 +179,34 @@ namespace Nikse.SubtitleEdit.Forms
             string title = textBoxTitle.Text;
             if (title.Trim().Length == 0)
                 title = "untitled";
-            UpdateTag("Title", title);
-            UpdateTag("Original Script", textBoxTitle.Text);
-            UpdateTag("Original Translation", textBoxTranslation.Text);
-            UpdateTag("Original Editing", textBoxEditing.Text);
-            UpdateTag("Original Timing", textBoxTiming.Text);
-            UpdateTag("Synch Point", textBoxSyncPoint.Text);
-            UpdateTag("Script Updated By", textBoxUpdatedBy.Text);
-            UpdateTag("Update Details", textBoxUpdateDetails.Text);
-            UpdateTag("PlayResX", numericUpDownVideoWidth.Value.ToString());
-            UpdateTag("PlayResY", numericUpDownVideoHeight.Value.ToString());
+            UpdateTag("Title", title, title.Trim().Length == 0);
+            UpdateTag("Original Script", textBoxOriginalScript.Text, textBoxOriginalScript.Text.Trim().Length == 0);
+            UpdateTag("Original Translation", textBoxTranslation.Text, textBoxTranslation.Text.Trim().Length == 0);
+            UpdateTag("Original Editing", textBoxEditing.Text, textBoxEditing.Text.Trim().Length == 0);
+            UpdateTag("Original Timing", textBoxTiming.Text, textBoxTiming.Text.Trim().Length == 0);
+            UpdateTag("Synch Point", textBoxSyncPoint.Text, textBoxSyncPoint.Text.Trim().Length == 0);
+            UpdateTag("Script Updated By", textBoxUpdatedBy.Text, textBoxUpdatedBy.Text.Trim().Length == 0);
+            UpdateTag("Update Details", textBoxUpdateDetails.Text, textBoxUpdateDetails.Text.Trim().Length == 0);
+            UpdateTag("PlayResX", numericUpDownVideoWidth.Value.ToString(), numericUpDownVideoWidth.Value == 0);
+            UpdateTag("PlayResY", numericUpDownVideoHeight.Value.ToString(), numericUpDownVideoHeight.Value == 0);
             if (comboBoxCollision.SelectedIndex == 0)
-                UpdateTag("collisions", "Normal"); // normal
+                UpdateTag("collisions", "Normal", false); // normal
             else
-                UpdateTag("collisions", "Reverse"); // reverse
+                UpdateTag("collisions", "Reverse", false); // reverse
 
             if (!_isSubStationAlpha)
             {
-                UpdateTag("wrapstyle", comboBoxWrapStyle.SelectedIndex.ToString());
+                UpdateTag("wrapstyle", comboBoxWrapStyle.SelectedIndex.ToString(), false);
                 if (checkBoxScaleBorderAndShadow.Checked)
-                    UpdateTag("ScaledBorderAndShadow", "yes");
+                    UpdateTag("ScaledBorderAndShadow", "yes", false);
                 else
-                    UpdateTag("ScaledBorderAndShadow", "no"); // no
+                    UpdateTag("ScaledBorderAndShadow", "no", false);
             }
 
             DialogResult = DialogResult.OK;
         }
 
-        private void UpdateTag(string tag, string text)
+        private void UpdateTag(string tag, string text, bool remove)
         {
             bool scriptInfoOn = false;
             var sb = new StringBuilder();
@@ -201,7 +219,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (line.StartsWith("["))
                 {
-                    if (!found && scriptInfoOn)
+                    if (!found && scriptInfoOn && !remove)
                         sb.AppendLine(tag + ": " + text);
                     sb.AppendLine();
                     scriptInfoOn = false;
@@ -210,7 +228,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string s = line.ToLower();
                 if (s.StartsWith(tag.ToLower() + ":"))
                 {
-                    if (text.Length > 0)
+                    if (!remove)
                         sb.AppendLine(line.Substring(0, tag.Length) + ": " + text);
                     found = true;
                 }
