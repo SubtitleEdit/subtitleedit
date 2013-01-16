@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             lastMerged = false;
                         }
-                    }                   
+                    }
                 }
                 else
                 {
@@ -287,6 +287,6 @@ namespace Nikse.SubtitleEdit.Forms
             loading = false;
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
         }
-    
+
     }
 }

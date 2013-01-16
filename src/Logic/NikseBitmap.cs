@@ -552,7 +552,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             if (newTop == 0)
-                return;            
+                return;
 
             int newHeight = Height - newTop;
             var newBitmapData = new byte[Width * newHeight * 4];
