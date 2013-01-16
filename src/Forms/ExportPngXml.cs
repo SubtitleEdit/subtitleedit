@@ -605,7 +605,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string numberString = string.Format("IMAGE{0:000}", i);
                         string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
 
-                        
+
                         foreach (var encoder in ImageCodecInfo.GetImageEncoders())
                         {
                             if (encoder.FormatID == ImageFormat.Png.Guid)
@@ -616,9 +616,9 @@ namespace Nikse.SubtitleEdit.Forms
                                 break;
                             }
                         }
-                       
-                        
-                        
+
+
+
                         imagesSavedCount++;
 
                         const string paragraphWriteFormat = "\t\t<spu start=\"{0}\" end=\"{1}\" image=\"{2}\"  />";
@@ -950,7 +950,7 @@ namespace Nikse.SubtitleEdit.Forms
                 sizeX = 1;
             if (sizeY < 1)
                 sizeY = 1;
-            bmp = new Bitmap(sizeX, sizeY);            
+            bmp = new Bitmap(sizeX, sizeY);
             g = Graphics.FromImage(bmp);
             if (parameter.BackgroundColor != Color.Transparent)
                 g.FillRectangle(new SolidBrush(parameter.BackgroundColor), 0, 0, bmp.Width, bmp.Height);

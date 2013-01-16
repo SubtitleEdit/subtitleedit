@@ -2327,7 +2327,7 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (Paragraph p in _subtitle.Paragraphs)
                     {
                         p.Text = p.Text.Replace("<і>", "<i>").Replace("</і>", "</i>");  // different unicode chars
-                    }                    
+                    }
 
                     _subtitleListViewIndex = -1;
                     SetCurrentFormat(format);
@@ -6436,7 +6436,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _networkSession.TimerStop();
                     SetDurationInSeconds(currentParagraph.Duration.TotalSeconds);
-                    _networkSession.UpdateLine(_subtitle.GetIndex(currentParagraph), currentParagraph);        
+                    _networkSession.UpdateLine(_subtitle.GetIndex(currentParagraph), currentParagraph);
                     NetworkGetSendUpdates(new List<int>(), firstSelectedIndex+1, newParagraph);
                 }
                 else
@@ -6758,7 +6758,7 @@ namespace Nikse.SubtitleEdit.Forms
                 currentParagraph.EndTime.TotalMilliseconds = nextParagraph.EndTime.TotalMilliseconds;
 
                 if (_networkSession != null)
-                {                    
+                {
                     _networkSession.TimerStop();
                     SetDurationInSeconds(currentParagraph.Duration.TotalSeconds);
                     _networkSession.UpdateLine(_subtitle.GetIndex(currentParagraph), currentParagraph);
@@ -16268,7 +16268,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemColumn_DropDownOpening(object sender, EventArgs e)
         {
-            copyOriginalTextToCurrentToolStripMenuItem.Visible = !string.IsNullOrEmpty(copyOriginalTextToCurrentToolStripMenuItem.Text) && 
+            copyOriginalTextToCurrentToolStripMenuItem.Visible = !string.IsNullOrEmpty(copyOriginalTextToCurrentToolStripMenuItem.Text) &&
                                                                  SubtitleListview1.IsAlternateTextColumnVisible &&
                                                                  _subtitleAlternate != null;
         }
