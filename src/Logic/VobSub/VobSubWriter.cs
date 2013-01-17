@@ -14,8 +14,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         {
             0x00, 0x00, 0x01,       // Start code
             0xba,                   // MPEG-2 Pack ID
-            0x44, 0x02, 0xec, 0xdf, // System clock reference
-            0xfe, 0x57,
+            0x44, 0x02, 0xc4, 0x82, // System clock reference
+            0x04, 0xa9,
             0x01, 0x89, 0xc3,       // Program mux rate
             0xf8                    // stuffing byte
         };
@@ -29,8 +29,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             0xbd,                   // bd = Private stream 1 (non MPEG audio, subpictures)
             0x00, 0x00,             // 18-19=PES packet length
             0x81,                   // 20=Flags: PES scrambling control, PES priority, data alignment indicator, copyright, original or copy
-            0x81,                   // 21=Flags: PTS DTS flags, ESCR flag, ES rate flag, DSM trick mode flag, additional copy info flag, PES CRC flag, PES extension flag
-            0x08                    // 22=PES header data length
+            0x80,                   // 21=Flags: PTS DTS flags, ESCR flag, ES rate flag, DSM trick mode flag, additional copy info flag, PES CRC flag, PES extension flag
+            0x05                    // 22=PES header data length
         };
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             var ms = new MemoryStream();
 
             // sup picture datasize
-            WriteEndianWord(twoPartBuffer.Length + 33, ms);
+            WriteEndianWord(twoPartBuffer.Length + 30, ms);
 
             // first display control sequence table address
             int startDisplayControlSequenceTableAddress = twoPartBuffer.Length + 4;
@@ -170,10 +170,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             // PTS (timestamp)
             FillPTS(p.StartTime);
             _subFile.Write(PresentationTimeStampBuffer, 0, PresentationTimeStampBuffer.Length);
-
-            _subFile.WriteByte(0x1e); // ??
-            _subFile.WriteByte(0x60); // ??
-            _subFile.WriteByte(0x3a); // ??
 
             _subFile.WriteByte((byte)_languageStreamId); //sub-stream number, 32=english
 

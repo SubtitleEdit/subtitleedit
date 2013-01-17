@@ -28,6 +28,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string xmlAsString = sb.ToString().Trim();
+
+            if (xmlAsString.Contains("xmlns:tts=\"http://www.w3.org/2006/04"))
+                return false;
+
             if (xmlAsString.Contains("http://www.w3.org/") &&
                 xmlAsString.Contains("/ttaf1"))
             {
