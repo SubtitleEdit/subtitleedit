@@ -678,7 +678,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (_codePage == -1)
                 GetCodePage(null, 0, 0);
 
-            string text = MakePacItalicsAndRemoveOtherTags(p.Text);
+            byte alignment = 2; // center
+            string text = p.Text;
+            if (text.StartsWith("{\\an1}"))
+            {
+                alignment = 1; // left
+            }
+            else if (text.StartsWith("{\\an3}"))
+            {
+                alignment = 0; // rigt
+            }
+            if (text.Length > 6 && text[0] == '{' && text[5] == '}')
+                text = text.Remove(0, 6);
+            text = MakePacItalicsAndRemoveOtherTags(text);
 
             Encoding encoding = GetEncoding(_codePage);
             byte[] textBuffer;
@@ -700,8 +712,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             fs.WriteByte(0x0a); // sometimes 0x0b?
             fs.WriteByte(0xfe);
-            fs.WriteByte(0x02); //2=centered, 1=left aligned, 0=right aligned, 09=Fount2 (large font),
-                                //55=safe area override (too long line), 0A=Fount2 + centered, 06=centered + safe area override
+            fs.WriteByte(alignment); //2=centered, 1=left aligned, 0=right aligned, 09=Fount2 (large font),
+                                     //55=safe area override (too long line), 0A=Fount2 + centered, 06=centered + safe area override
             fs.WriteByte(0x03);
 
             fs.Write(textBuffer, 0, textBuffer.Length);
