@@ -686,7 +686,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             else if (text.StartsWith("{\\an3}"))
             {
-                alignment = 0; // rigt
+                alignment = 0; // right
             }
             if (text.Length > 6 && text[0] == '{' && text[5] == '}')
                 text = text.Remove(0, 6);
@@ -696,13 +696,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             byte[] textBuffer;
 
             if (_codePage == 3)
-                textBuffer = GetArabicBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+                textBuffer = GetArabicBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), alignment);
             else if (_codePage == 4)
-                textBuffer = GetHebrewBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyz"));
+                textBuffer = GetHebrewBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyz"), alignment);
             else if (_codePage == 0)
-                textBuffer = GetLatinBytes(encoding, text);
+                textBuffer = GetLatinBytes(encoding, text, alignment);
             else if (_codePage == 6)
-                textBuffer = GetCyrillicBytes(text);
+                textBuffer = GetCyrillicBytes(text, alignment);
             else
                 textBuffer = encoding.GetBytes(text);
 
@@ -886,6 +886,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             int feIndex = index;
             int endDelimiter = 0x00;
+            byte alignment = buffer[feIndex + 1];
             var p = new Paragraph();
 
             int timeStartIndex = feIndex - 15;
@@ -982,6 +983,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             p.Text = FixItalics(p.Text);
             if (_codePage == 3)
                 p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+
+            if (alignment == 1)
+                p.Text = "{\\an1}" + p.Text;
+            else if (alignment == 0)
+                p.Text = "{\\an3}" + p.Text;
+
             return p;
         }
 
@@ -1092,7 +1099,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private byte[] GetLatinBytes(Encoding encoding, string text)
+        private byte[] GetLatinBytes(Encoding encoding, string text, byte alignment)
         {
             int i = 0;
             byte[] buffer = new byte[text.Length * 2];
@@ -1103,7 +1110,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     buffer[i + extra] = 0xfe;
                     i++;
-                    buffer[i + extra] = 2;
+                    buffer[i + extra] = alignment;
                     extra++;
                     buffer[i + extra] = 3;
                 }
@@ -1150,22 +1157,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
 
-        private byte[] GetArabicBytes(string text)
+        private byte[] GetArabicBytes(string text, byte alignment)
         {
-            return GetBytesViaLists(text, ArabicLetters, ArabicCodes);
+            return GetBytesViaLists(text, ArabicLetters, ArabicCodes, alignment);
         }
 
-        private byte[] GetHebrewBytes(string text)
+        private byte[] GetHebrewBytes(string text, byte alignment)
         {
-            return GetBytesViaLists(text, HebrewLetters, HebrewCodes);
+            return GetBytesViaLists(text, HebrewLetters, HebrewCodes, alignment);
         }
 
-        private byte[] GetCyrillicBytes(string text)
+        private byte[] GetCyrillicBytes(string text, byte alignment)
         {
-            return GetBytesViaLists(text, CyrillicLetters, CyrillicCodes);
+            return GetBytesViaLists(text, CyrillicLetters, CyrillicCodes, alignment);
         }
 
-        private byte[] GetBytesViaLists(string text, List<string> letters, List<int> codes)
+        private byte[] GetBytesViaLists(string text, List<string> letters, List<int> codes, byte alignment)
         {
             int i = 0;
             byte[] buffer = new byte[text.Length * 2];
@@ -1176,7 +1183,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     buffer[i + extra] = 0xfe;
                     i++;
-                    buffer[i + extra] = 2;
+                    buffer[i + extra] = alignment;
                     extra++;
                     buffer[i + extra] = 3;
                 }
