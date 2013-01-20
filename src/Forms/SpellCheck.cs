@@ -682,7 +682,7 @@ namespace Nikse.SubtitleEdit.Forms
             List<string> replaceNames = new List<string>();
             s = Utilities.RemoveHtmlTags(s);
             s = GetTextWithoutUserWordsAndNames(replaceIds, replaceNames, s);
-            _words = s.Split(" -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—♪♫„“".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            _words = s.Split(" -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             _words = FixWordsInserUserWordAndNames(replaceIds, replaceNames, _words);
             return s;
         }
@@ -693,7 +693,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string GetTextWithoutUserWordsAndNames(List<string> replaceIds, List<string> replaceNames, string text)
         {
 
-            string[] wordsWithDash = text.Split(" .,?!:;\"“”()[]{}|<>/+\r\n¿¡…—♪♫„“".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] wordsWithDash = text.Split(" .,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             foreach (string w in wordsWithDash)
             {
                 if (w.Contains("-") && DoSpell(w) && !_wordsWithDashesOrPeriods.Contains(w))
