@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class UnknownSubtitle44 : SubtitleFormat
+    public class UnknownSubtitle44 : SubtitleFormat
     {
 
 //>>> "COMMON GROUND" IS FUNDED BY  10:01:04:12                         1

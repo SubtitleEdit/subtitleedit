@@ -687,13 +687,19 @@ namespace Nikse.SubtitleEdit.Logic
             if (string.IsNullOrEmpty(gs.SubtitleFontName))
                 gs.SubtitleFontName = "Tahoma";
 
-            if (gs.SubtitleFontBold)
-                control.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize, FontStyle.Bold);
-            else
-                control.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize);
+            try
+            {
+                if (gs.SubtitleFontBold)
+                    control.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize, FontStyle.Bold);
+                else
+                    control.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize);
 
-            control.BackColor = gs.SubtitleBackgroundColor;
-            control.ForeColor = gs.SubtitleFontColor;
+                control.BackColor = gs.SubtitleBackgroundColor;
+                control.ForeColor = gs.SubtitleFontColor;
+            }
+            catch
+            { 
+            }
         }
 
         public static string RemoveHtmlTags(string s)
@@ -1385,6 +1391,12 @@ namespace Nikse.SubtitleEdit.Logic
             const string zeroWidthNoBreakSpace = "\uFEFF";
 
             string s = Utilities.RemoveHtmlTags(paragraph.Text).Replace(Environment.NewLine, string.Empty).Replace(zeroWhiteSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
+            if (s.StartsWith("{\\"))
+            { 
+                int k = s.IndexOf("}");
+                if (k < 10)
+                    s = s.Remove(0, k+1);
+            }
             return s.Length / paragraph.Duration.TotalSeconds;
         }
 

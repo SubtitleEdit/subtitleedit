@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
