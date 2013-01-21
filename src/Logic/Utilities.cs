@@ -346,6 +346,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoBreakLineMoreThanTwoLines(string text, int maximumLineLength)
         {
+            if (text == null || text.Length < 3)
+                return text;
+
             string s = AutoBreakLine(text, 0, maximumLineLength, 0);
 
             var arr = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -459,6 +462,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoBreakLine(string text, int mininumLength, int maximumLength, int mergeLinesShorterThan)
         {
+            if (text == null || text.Length <3)
+                return text;
+
             string s = text;
             s = s.Replace("</i> " + Environment.NewLine + "<i>", " ");
             s = s.Replace("</i>" + Environment.NewLine + " <i>", " ");
@@ -2114,6 +2120,8 @@ namespace Nikse.SubtitleEdit.Logic
             while (index >= 0)
             {
                 count++;
+                if (index == text.Length)
+                    return count;
                 index = text.IndexOf(tag, index + 1);
             }
             return count;
