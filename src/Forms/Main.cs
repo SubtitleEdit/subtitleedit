@@ -3129,12 +3129,19 @@ namespace Nikse.SubtitleEdit.Forms
             _formPositionsAndSizes.SavePositionAndSize(settings);
             settings.Dispose();
 
-            InitializeToolbar();
+            try
+            { // can have some problems with fonts...
+                Utilities.InitializeSubtitleFont(textBoxSource);
+                Utilities.InitializeSubtitleFont(textBoxListViewText);
+                Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
+                Utilities.InitializeSubtitleFont(SubtitleListview1);
+                InitializeToolbar();  
+            }
+            catch (Exception exception)
+            {
+                System.Diagnostics.Debug.WriteLine(exception.Message + Environment.NewLine + exception.StackTrace);
+            }
             UpdateRecentFilesUI();
-            Utilities.InitializeSubtitleFont(textBoxSource);
-            Utilities.InitializeSubtitleFont(textBoxListViewText);
-            Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
-            Utilities.InitializeSubtitleFont(SubtitleListview1);
             buttonCustomUrl1.Text = Configuration.Settings.VideoControls.CustomSearchText1;
             buttonCustomUrl1.Visible = Configuration.Settings.VideoControls.CustomSearchUrl1.Length > 1;
             buttonCustomUrl2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
@@ -3163,14 +3170,22 @@ namespace Nikse.SubtitleEdit.Forms
                                           Configuration.Settings.General.SubtitleFontSize +
                                           Configuration.Settings.General.SubtitleFontColor.ToArgb().ToString() +
                                           Configuration.Settings.General.SubtitleBackgroundColor.ToArgb().ToString() ||
-                oldSyntaxColoring != newSyntaxColoring)
+                                          oldSyntaxColoring != newSyntaxColoring)
             {
-                Utilities.InitializeSubtitleFont(textBoxListViewText);
-                Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
-                Utilities.InitializeSubtitleFont(textBoxSource);
-                SubtitleListview1.SubtitleFontName = Configuration.Settings.General.SubtitleFontName;
-                SubtitleListview1.SubtitleFontBold = Configuration.Settings.General.SubtitleFontBold;
-                SubtitleListview1.SubtitleFontSize = Configuration.Settings.General.SubtitleFontSize;
+                try
+                { // can have some problems with fonts...
+                    Utilities.InitializeSubtitleFont(textBoxListViewText);
+                    Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
+                    Utilities.InitializeSubtitleFont(textBoxSource);
+                    SubtitleListview1.SubtitleFontName = Configuration.Settings.General.SubtitleFontName;
+                    SubtitleListview1.SubtitleFontBold = Configuration.Settings.General.SubtitleFontBold;
+                    SubtitleListview1.SubtitleFontSize = Configuration.Settings.General.SubtitleFontSize;
+                }
+                catch (Exception exception)
+                {
+                    System.Diagnostics.Debug.WriteLine(exception.Message + Environment.NewLine + exception.StackTrace);
+                }
+
                 SubtitleListview1.ForeColor = Configuration.Settings.General.SubtitleFontColor;
                 SubtitleListview1.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
                 if (Configuration.Settings.General.CenterSubtitleInTextBox)
