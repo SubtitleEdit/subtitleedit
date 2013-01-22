@@ -5749,6 +5749,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonSplitLine.Visible = false;
             string s = Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
+            if (s.StartsWith("{\\"))
+            {
+                int k = s.IndexOf("}");
+                if (k < 10)
+                    s = s.Remove(0, k + 1);
+            }
+
             if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
             {
                 lineTotal.ForeColor = Color.Black;
@@ -14954,6 +14961,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if ((DateTime.Now.Ticks - _listViewTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
             {
+                if (index < 0 || index >= _subtitle.Paragraphs.Count)
+                    return;
                 string newText = _subtitle.Paragraphs[index].Text.TrimEnd();
                 string oldText = _listViewTextUndoLast;
                 if (oldText == null)
@@ -14962,7 +14971,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_listViewTextUndoLast != newText)
                 {
                     MakeHistoryForUndo(Configuration.Settings.Language.General.Text + ": " + _listViewTextUndoLast.TrimEnd() + " -> " + newText, false);
-                    _subtitle.HistoryItems[_subtitle.HistoryItems.Count - 1].Subtitle.Paragraphs[index].Text = _listViewTextUndoLast;
+                    int hidx = _subtitle.HistoryItems.Count - 1;
+                    if (hidx >= 0 && hidx < _subtitle.HistoryItems.Count)
+                        _subtitle.HistoryItems[hidx].Subtitle.Paragraphs[index].Text = _listViewTextUndoLast;
 
                     _listViewTextUndoLast = newText;
                     _listViewTextUndoIndex = -1;
@@ -15014,7 +15025,14 @@ namespace Nikse.SubtitleEdit.Forms
             int extraNewLineLength = Environment.NewLine.Length - 1;
             int lineBreakPos = textBox.Text.IndexOf(Environment.NewLine);
             int pos = textBox.SelectionStart;
-            int totalLength = Utilities.RemoveHtmlTags(textBox.Text).Replace(Environment.NewLine, string.Empty).Length; // we don't count new line in total length... correct?
+            var s = Utilities.RemoveHtmlTags(textBox.Text).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
+            if (s.StartsWith("{\\"))
+            {
+                int k = s.IndexOf("}");
+                if (k < 10)
+                    s = s.Remove(0, k + 1);
+            }
+            int totalLength = s.Length; 
             string totalL = "     " + string.Format(_languageGeneral.TotalLengthX, totalLength);
             if (lineBreakPos == -1 || pos <= lineBreakPos)
             {
