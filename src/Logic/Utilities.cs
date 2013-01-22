@@ -1599,6 +1599,12 @@ namespace Nikse.SubtitleEdit.Logic
         {
             label.ForeColor = Color.Black;
             string cleanText = Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, "|");
+            if (cleanText.StartsWith("{\\"))
+            {
+                int k = cleanText.IndexOf("}");
+                if (k < 10)
+                    cleanText = cleanText.Remove(0, k + 1);
+            }
             string[] lines = cleanText.Split('|');
 
             const int max = 3;
