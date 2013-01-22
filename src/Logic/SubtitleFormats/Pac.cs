@@ -34,6 +34,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x5d, // Ø
             0x5e, // ÷
             0x5f, // -
+            0x2d, // –
             0xE54f, // Ö
             0xE56f, // ö
             0xe541, // Ä
@@ -41,6 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xe555, // Ü
             0xe575, // ü
             0x81,   // ß
+            0x82,   // ²
             0xe241, // Á
             0xe249, // Í
             0xe255, // Ú
@@ -134,6 +136,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "Ø",
             "÷",
             "-",
+            "–",
             "Ö",
             "ö",
             "Ä",
@@ -141,6 +144,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "Ü",
             "ü",
             "ß",
+            "²",
             "Á",
             "Í",
             "Ú",
@@ -679,16 +683,27 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 GetCodePage(null, 0, 0);
 
             byte alignment = 2; // center
+            byte verticalAlignment = 0x0a; // bottom
+            if (!p.Text.Contains(Environment.NewLine))
+                verticalAlignment = 0x0b;
             string text = p.Text;
-            if (text.StartsWith("{\\an1}"))
+            if (text.StartsWith("{\\an1}") || text.StartsWith("{\\an4}") || text.StartsWith("{\\an7}"))
             {
                 alignment = 1; // left
             }
-            else if (text.StartsWith("{\\an3}"))
+            else if (text.StartsWith("{\\an3}") || text.StartsWith("{\\an6}") || text.StartsWith("{\\an9}"))
             {
                 alignment = 0; // right
             }
-            if (text.Length > 6 && text[0] == '{' && text[5] == '}')
+            if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an8}") || text.StartsWith("{\\an9}"))
+            {
+                verticalAlignment = 0; // top
+            }
+            else if (text.StartsWith("{\\an4}") || text.StartsWith("{\\an5}") || text.StartsWith("{\\an6}"))
+            {
+                verticalAlignment = 5; // center
+            }
+            if (text.Length >= 6 && text[0] == '{' && text[5] == '}')
                 text = text.Remove(0, 6);
             text = MakePacItalicsAndRemoveOtherTags(text);
 
@@ -710,7 +725,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var length = (UInt16)(textBuffer.Length + 4);
             fs.Write(BitConverter.GetBytes(length), 0, 2);
 
-            fs.WriteByte(0x0a); // sometimes 0x0b?
+            fs.WriteByte(verticalAlignment); // fs.WriteByte(0x0a); // sometimes 0x0b? - this seems to be vertical alignment - 0 to 11
             fs.WriteByte(0xfe);
             fs.WriteByte(alignment); //2=centered, 1=left aligned, 0=right aligned, 09=Fount2 (large font),
                                      //55=safe area override (too long line), 0A=Fount2 + centered, 06=centered + safe area override
@@ -887,6 +902,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int feIndex = index;
             int endDelimiter = 0x00;
             byte alignment = buffer[feIndex + 1];
+            byte verticalAlignment = buffer[feIndex - 1];
             var p = new Paragraph();
 
             int timeStartIndex = feIndex - 15;
@@ -984,10 +1000,32 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (_codePage == 3)
                 p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
-            if (alignment == 1)
-                p.Text = "{\\an1}" + p.Text;
-            else if (alignment == 0)
-                p.Text = "{\\an3}" + p.Text;
+
+            if (verticalAlignment < 5)
+            {
+                if (alignment == 1) // left
+                    p.Text = "{\\an7}" + p.Text;
+                else if (alignment == 0) // right
+                    p.Text = "{\\an9}" + p.Text;
+                else
+                    p.Text = "{\\an8}" + p.Text;
+            }
+            else if (verticalAlignment < 9)
+            {
+                if (alignment == 1) // left
+                    p.Text = "{\\an4}" + p.Text;
+                else if (alignment == 0) // right
+                    p.Text = "{\\an6}" + p.Text;
+                else
+                    p.Text = "{\\an5}" + p.Text;
+            }
+            else
+            {
+                if (alignment == 1) // left
+                    p.Text = "{\\an1}" + p.Text;
+                else if (alignment == 0) // right
+                    p.Text = "{\\an3}" + p.Text;
+            }
 
             return p;
         }
