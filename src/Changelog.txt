@@ -1,5 +1,29 @@
 Subtitle Edit Changelog
 
+3.3.1 (xth January 2013)
+* NEW:
+   * Added a few new subtitle formats (now 150 formats!)
+   * French language - thx thx JM GBT
+   * German language - thx Christoph Kitsche
+   * Greek language - thx Menes
+* IMPROVED:
+   * Improved reading of bad srt files - thx Ile
+   * Slow Timed Text 1.0 loading speeded up
+   * Sligtly improved reading of italics in time text draft - thx Jean
+   * Export to png/xml now uses font styles from ssa/ass 
+   * Export images - better cropping
+   * Using alignment tags when exporting to format PAC - thx Jussi
+* FIXED:
+   * No longer removes last lines in 'Merge short lines' - thx Pax
+   * Some fixes for networking mode regarding insert/split - thx Dan
+   * Fixed possible crash in list view regarding syntax coloring 
+   * Point sync no longer thows away ssa/ass styling - thx Mike
+   * Fixed bug in Dutch language file - thx jan bruyndonckx
+   * Fixed bug in converting ass to ssa
+   * Some fixes for xsubtitle - thx Ed
+   * File -> SSA/ASS properties - now only updates changed fields
+
+
 3.3 (9th December 2012)
 * NEW:
    * Added column commands to list view context menu - thx Seungki
