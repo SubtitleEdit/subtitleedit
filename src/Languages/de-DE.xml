@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.1</Version>
-    <TranslatedBy>Übersetzt von Christoph Kitsche</TranslatedBy>
+    <TranslatedBy>Christoph Kitsche</TranslatedBy>
     <CultureName>de-DE</CultureName>
     <HelpFile />
     <OK>&amp;OK</OK>
@@ -933,10 +933,10 @@ Fortfahren?</SubtitleAppendPrompt>
     <XLinesSavedAsY>{0} Items gespeichert unter {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} Items gel&#246;scht</XLinesDeleted>
     <BeforeDeletingXLines>Vor dem L&#246;schen von {0} Items</BeforeDeletingXLines>
-    <DeleteXLinesPrompt>L&#246;sche {0} Items?</DeleteXLinesPrompt>
+    <DeleteXLinesPrompt>{0} Items l&#246;schen?</DeleteXLinesPrompt>
     <OneLineDeleted>Item gel&#246;scht</OneLineDeleted>
     <BeforeDeletingOneLine>Vor dem L&#246;schen eines Items</BeforeDeletingOneLine>
-    <DeleteOneLinePrompt>Ein Item l&#246;schen?</DeleteOneLinePrompt>
+    <DeleteOneLinePrompt>Item l&#246;schen?</DeleteOneLinePrompt>
     <BeforeInsertLine>Vor dem Einf&#252;gen des Items</BeforeInsertLine>
     <LineInserted>Item eingef&#252;gt</LineInserted>
     <BeforeLineUpdatedInListView>Vor dem &#196;ndern des Items in Listenansicht</BeforeLineUpdatedInListView>
@@ -1155,10 +1155,10 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <Normal>Normal</Normal>
     <CaseSensitive>Gro&#223;-/Kleinschreibung</CaseSensitive>
     <RegularExpression>Regul&#228;rer Ausdruck</RegularExpression>
-    <ReplaceWith>Ersetze durch</ReplaceWith>
+    <ReplaceWith>Ersetze durch:</ReplaceWith>
     <Find>&amp;Suchen</Find>
     <Replace>&amp;Ersetzen</Replace>
-    <ReplaceAll>Ersetzen &amp;alle</ReplaceAll>
+    <ReplaceAll>&amp;Alle ersetzen</ReplaceAll>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>Auto-Backup wiederherstellen</Title>
@@ -1249,7 +1249,7 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <AutoBackupEveryFifteenMinutes>Alle 15 Minuten</AutoBackupEveryFifteenMinutes>
     <AllowEditOfOriginalSubtitle>Erlaube Bearbeitung des Original-Untertitels</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Nachfrage beim L&#246;schen von Items</PromptDeleteLines>
-    <TimeCodeMode>Time code mode</TimeCodeMode>
+    <TimeCodeMode>Zeitstemplel-Modus</TimeCodeMode>
     <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Video-Engine</VideoEngine>
@@ -1264,7 +1264,7 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <ShowStopButton>Zeige Stop-Knopf</ShowStopButton>
     <ShowMuteButton>Zeige 'Ton aus'-Knopf</ShowMuteButton>
     <ShowFullscreenButton>Zeige Vollbild-Knopf</ShowFullscreenButton>
-    <DefaultVolume>Standard-Lautst&#228;rke          </DefaultVolume>
+    <DefaultVolume> Standard-Lautst&#228;rke                        </DefaultVolume>
     <VolumeNotes>0 ist lautlos, 100 ist maximale Lautst&#228;rke</VolumeNotes>
     <PreviewFontSize>Schriftgröße f&#252;r Untertitel-Vorschau</PreviewFontSize>
     <MainWindowVideoControls>Hauptfenster-Videosteuerung</MainWindowVideoControls>
