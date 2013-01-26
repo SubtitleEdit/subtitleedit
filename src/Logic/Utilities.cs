@@ -475,7 +475,8 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace("  ", " ");
             s = s.Replace("  ", " ");
 
-            string temp = RemoveHtmlTags(s);
+            string temp = RemoveHtmlTags(s, true);
+
             if (temp.Length < mergeLinesShorterThan)
             {
                 string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -732,6 +733,34 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace("</U>", string.Empty);
             s = RemoveParagraphTag(s);
             return RemoveHtmlFontTag(s);
+        }
+
+        public static string RemoveHtmlTags(string s, bool alsoSsaTags)
+        {
+            if (s == null)
+                return null;
+
+            s = RemoveHtmlTags(s);
+
+            int k = s.IndexOf("{");
+            while (k >= 0)
+            {
+                int l = s.IndexOf("}", k);
+                if (l > k)
+                {
+                    s = s.Remove(k, l - k + 1);
+                    if (s.Length > 1 && s.Length > k)
+                        k = s.IndexOf("{", k);
+                    else
+                        k = -1;
+                }
+                else
+                {
+                    k = -1;
+                }
+            }
+
+            return s;
         }
 
         public static string RemoveHtmlFontTag(string s)
@@ -1003,7 +1032,7 @@ namespace Nikse.SubtitleEdit.Logic
             double optimalCharactersPerSecond = Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds;
             if (optimalCharactersPerSecond < 2 || optimalCharactersPerSecond > 100)
                 optimalCharactersPerSecond = 14.7;
-            double duration = (RemoveHtmlTags(text).Length / optimalCharactersPerSecond) * 1000.0;
+            double duration = (RemoveHtmlTags(text, true).Length / optimalCharactersPerSecond) * 1000.0;
 
             if (duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 duration = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
@@ -1381,7 +1410,7 @@ namespace Nikse.SubtitleEdit.Logic
             int maxLength = 0;
             foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
-                string s = RemoveHtmlTags(line);
+                string s = RemoveHtmlTags(line, true);
                 if (s.Length > maxLength)
                     maxLength = s.Length;
             }
@@ -1396,13 +1425,7 @@ namespace Nikse.SubtitleEdit.Logic
             const string zeroWhiteSpace = "\u200B";
             const string zeroWidthNoBreakSpace = "\uFEFF";
 
-            string s = Utilities.RemoveHtmlTags(paragraph.Text).Replace(Environment.NewLine, string.Empty).Replace(zeroWhiteSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
-            if (s.StartsWith("{\\"))
-            { 
-                int k = s.IndexOf("}");
-                if (k < 10)
-                    s = s.Remove(0, k+1);
-            }
+            string s = Utilities.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(zeroWhiteSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
             return s.Length / paragraph.Duration.TotalSeconds;
         }
 
@@ -1598,13 +1621,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static void GetLineLengths(Label label, string text)
         {
             label.ForeColor = Color.Black;
-            string cleanText = Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, "|");
-            if (cleanText.StartsWith("{\\"))
-            {
-                int k = cleanText.IndexOf("}");
-                if (k < 10)
-                    cleanText = cleanText.Remove(0, k + 1);
-            }
+            string cleanText = Utilities.RemoveHtmlTags(text, true).Replace(Environment.NewLine, "|");
             string[] lines = cleanText.Split('|');
 
             const int max = 3;
