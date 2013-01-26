@@ -203,6 +203,7 @@
             this.contextMenuStripListview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setStylesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAssStyles = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemWebVTT = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInsertBefore = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInsertAfter = new System.Windows.Forms.ToolStripMenuItem();
@@ -369,6 +370,8 @@
             this.labelText = new System.Windows.Forms.Label();
             this.textBoxListViewTextAlternate = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.contextMenuStripTextBoxListView = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemWebVttVoice = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorWebVTT = new System.Windows.Forms.ToolStripSeparator();
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1906,6 +1909,7 @@
             this.contextMenuStripListview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setStylesForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemAssStyles,
+            this.toolStripMenuItemWebVTT,
             this.toolStripMenuItemDelete,
             this.toolStripMenuItemInsertBefore,
             this.toolStripMenuItemInsertAfter,
@@ -1943,7 +1947,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 760);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 804);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
@@ -1958,6 +1962,12 @@
             this.toolStripMenuItemAssStyles.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemAssStyles.Text = "ASS: Styles...";
             this.toolStripMenuItemAssStyles.Click += new System.EventHandler(this.toolStripMenuItemAssStyles_Click);
+            // 
+            // toolStripMenuItemWebVTT
+            // 
+            this.toolStripMenuItemWebVTT.Name = "toolStripMenuItemWebVTT";
+            this.toolStripMenuItemWebVTT.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemWebVTT.Text = "WebVTT voice";
             // 
             // toolStripMenuItemDelete
             // 
@@ -3642,6 +3652,8 @@
             // contextMenuStripTextBoxListView
             // 
             this.contextMenuStripTextBoxListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemWebVttVoice,
+            this.toolStripSeparatorWebVTT,
             this.cutToolStripMenuItem,
             this.copyToolStripMenuItem,
             this.pasteToolStripMenuItem,
@@ -3661,8 +3673,19 @@
             this.superscriptToolStripMenuItem,
             this.subscriptToolStripMenuItem});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(215, 352);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(215, 402);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
+            // 
+            // toolStripMenuItemWebVttVoice
+            // 
+            this.toolStripMenuItemWebVttVoice.Name = "toolStripMenuItemWebVttVoice";
+            this.toolStripMenuItemWebVttVoice.Size = new System.Drawing.Size(214, 22);
+            this.toolStripMenuItemWebVttVoice.Text = "WebVTT voice";
+            // 
+            // toolStripSeparatorWebVTT
+            // 
+            this.toolStripSeparatorWebVTT.Name = "toolStripSeparatorWebVTT";
+            this.toolStripSeparatorWebVTT.Size = new System.Drawing.Size(211, 6);
             // 
             // cutToolStripMenuItem
             // 
@@ -4512,6 +4535,9 @@
         private System.Windows.Forms.ToolStripMenuItem copyOriginalTextToCurrentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeDuplicateText;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVTT;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVttVoice;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorWebVTT;
     }
 }
 

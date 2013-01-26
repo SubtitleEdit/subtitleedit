@@ -101,11 +101,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else if (p != null && line.Trim().Length > 0)
                 {
                     string text = line.Trim();
-                    text = RemoveFormatting("v", text);
-                    text = RemoveFormatting("rt", text);
-                    text = RemoveFormatting("ruby", text);
-                    text = RemoveFormatting("c", text);
-                    text = RemoveFormatting("span", text);
                     p.Text = (p.Text + Environment.NewLine + text).Trim();
                 }
             }
@@ -114,7 +109,54 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string RemoveFormatting(string tag, string text)
+        public override void RemoveNativeFormatting(Subtitle subtitle)
+        {
+            foreach (Paragraph p in subtitle.Paragraphs)
+            {                
+                if (p.Text.IndexOf("<") >= 0)
+                {
+                    string text = p.Text;
+                    text = RemoveTag("v", text);
+                    text = RemoveTag("rt", text);
+                    text = RemoveTag("ruby", text);
+                    text = RemoveTag("c", text);
+                    text = RemoveTag("span", text);
+                    p.Text = text;
+                }
+            }
+        }
+
+        public static List<string> GetVoices(Subtitle subtitle)
+        {
+            var list = new List<string>();
+            if (subtitle != null && subtitle.Paragraphs != null)
+            {
+                foreach (Paragraph p in subtitle.Paragraphs)
+                {
+                    string s = p.Text;
+                    int startIndex = s.IndexOf("<v ");
+                    while (startIndex >= 0)
+                    {
+                        int endIndex = s.IndexOf(">", startIndex);
+                        if (endIndex > startIndex)
+                        {
+                            string voice = s.Substring(startIndex + 2, endIndex - startIndex - 2).Trim();
+                            if (list.IndexOf(voice) == -1)
+                                list.Add(voice);
+                        }
+
+                        if (startIndex == s.Length - 1)
+                            startIndex = -1;
+                        else
+                            startIndex = s.IndexOf("<v ", startIndex +1);
+                    }
+                }
+
+            }
+            return list;
+        }
+
+        public static string RemoveTag(string tag, string text)
         {
             int indexOfTag = text.IndexOf("<" + tag + " ");
             if (indexOfTag >= 0)
@@ -123,7 +165,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (indexOfEnd > 0)
                 {
                     text = text.Remove(indexOfTag, indexOfEnd - indexOfTag + 1);
+                    text = text.Replace("</" + tag + ">", string.Empty);
                 }
+                
             }
             return text;
         }

@@ -21,7 +21,7 @@ Subtitle Edit Changelog
    * Fixed bug in Dutch language file - thx jan bruyndonckx
    * Fixed bug in converting ass to ssa
    * Some fixes for xsubtitle - thx Ed
-   * File -> SSA/ASS properties - now only updates changed fields
+   * File -> SSA/ASS properties - only update/add changed properties
 
 
 3.3 (9th December 2012)

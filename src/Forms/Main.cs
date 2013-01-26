@@ -2312,7 +2312,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _fileDateTime = File.GetLastWriteTime(fileName);
 
-                if (GetCurrentSubtitleFormat().IsFrameBased)
+                if (format != null && format.IsFrameBased)
                     _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                 else
                     _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
@@ -5098,9 +5098,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ContextMenuStripListviewOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if ((GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(SubStationAlpha))
-                && SubtitleListview1.SelectedItems.Count > 0)
+            var formatType = GetCurrentSubtitleFormat().GetType();
+            if ((formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha)) && SubtitleListview1.SelectedItems.Count > 0)
             {
+                toolStripMenuItemWebVTT.Visible = false;
                 var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
                 setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
                 foreach (string style in styles)
@@ -5109,7 +5110,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 setStylesForSelectedLinesToolStripMenuItem.Visible = styles.Count > 1;
                 toolStripMenuItemAssStyles.Visible = true;
-                if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha))
+                if (formatType == typeof(AdvancedSubStationAlpha))
                 {
                     toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
                     setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaSetStyle;
@@ -5120,8 +5121,9 @@ namespace Nikse.SubtitleEdit.Forms
                     setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
                 }
             }
-            else if ((GetCurrentSubtitleFormat().GetType() == typeof(TimedText10) || GetCurrentSubtitleFormat().GetType() == typeof(ItunesTimedText)) && SubtitleListview1.SelectedItems.Count > 0)
+            else if ((formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText)) && SubtitleListview1.SelectedItems.Count > 0)
             {
+                toolStripMenuItemWebVTT.Visible = false;
                 toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.TimedTextStyles;
                 var styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
                 setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
@@ -5133,8 +5135,9 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemAssStyles.Visible = true;
                 setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.TimedTextSetStyle;
             }
-            else if ((GetCurrentSubtitleFormat().GetType() == typeof(Sami) || GetCurrentSubtitleFormat().GetType() == typeof(SamiModern)) && SubtitleListview1.SelectedItems.Count > 0)
+            else if ((formatType == typeof(Sami) || formatType == typeof(SamiModern)) && SubtitleListview1.SelectedItems.Count > 0)
             {
+                toolStripMenuItemWebVTT.Visible = false;
                 toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.TimedTextStyles;
                 var styles = Sami.GetStylesFromHeader(_subtitle.Header);
                 setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
@@ -5146,10 +5149,26 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemAssStyles.Visible = false;
                 setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SamiSetStyle;
             }
+            else if ((formatType == typeof(WebVTT) && SubtitleListview1.SelectedItems.Count > 0))
+            {
+                setStylesForSelectedLinesToolStripMenuItem.Visible = false;
+                toolStripMenuItemAssStyles.Visible = false;
+                toolStripMenuItemWebVTT.Visible = true;
+                var voices = WebVTT.GetVoices(_subtitle);
+                toolStripMenuItemWebVTT.DropDownItems.Clear();
+                foreach (string style in voices)
+                {
+                    toolStripMenuItemWebVTT.DropDownItems.Add(style, null, WebVTTSetVoice);
+                }
+                toolStripMenuItemWebVTT.DropDownItems.Add("Set new voice...", null, WebVTTSetNewVoice); //TODO: Translate
+                if (voices.Count > 0)
+                    toolStripMenuItemWebVTT.DropDownItems.Add("Remove voices", null, WebVTTRemoveVoices); //TODO: Translate
+            }
             else
             {
                 setStylesForSelectedLinesToolStripMenuItem.Visible = false;
                 toolStripMenuItemAssStyles.Visible = false;
+                toolStripMenuItemWebVTT.Visible = false;
             }
 
 
@@ -5222,7 +5241,7 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemMergeDialogue.Visible = false;
                 }
 
-                if (GetCurrentSubtitleFormat().GetType() != typeof(SubRip))
+                if (formatType != typeof(SubRip))
                 {
                     karokeeEffectToolStripMenuItem.Visible = false;
                     toolStripSeparatorAdvancedFunctions.Visible = SubtitleListview1.SelectedItems.Count == 1 && noNetWorkSession;
@@ -5238,6 +5257,98 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _subtitle.Paragraphs[index].Extra = style;
                 SubtitleListview1.SetExtraText(index, style, SubtitleListview1.ForeColor);
+            }
+        }
+
+        void WebVTTSetVoice(object sender, EventArgs e)
+        {
+            string voice = (sender as ToolStripItem).Text;
+            if (!string.IsNullOrEmpty(voice))
+            {
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    _subtitle.Paragraphs[index].Text = WebVTT.RemoveTag("v", _subtitle.Paragraphs[index].Text);
+                    _subtitle.Paragraphs[index].Text = string.Format("<v {0}>{1}", voice, _subtitle.Paragraphs[index].Text);
+                    SubtitleListview1.SetText(index, _subtitle.Paragraphs[index].Text);
+                }
+                RefreshSelectedParagraph();
+            }
+        }
+
+        void WebVTTSetNewVoice(object sender, EventArgs e)
+        {
+            var form = new WebVttNewVoice();
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                string voice = form.VoiceName;
+                if (!string.IsNullOrEmpty(voice))
+                {
+                    foreach (int index in SubtitleListview1.SelectedIndices)
+                    {
+                        _subtitle.Paragraphs[index].Text = WebVTT.RemoveTag("v", _subtitle.Paragraphs[index].Text);
+                        _subtitle.Paragraphs[index].Text = string.Format("<v {0}>{1}", voice, _subtitle.Paragraphs[index].Text);
+                        SubtitleListview1.SetText(index, _subtitle.Paragraphs[index].Text);
+                    }
+                    RefreshSelectedParagraph();
+                }
+            }
+        }
+
+        void WebVTTRemoveVoices(object sender, EventArgs e)
+        {
+            foreach (int index in SubtitleListview1.SelectedIndices)
+            {
+                _subtitle.Paragraphs[index].Text = WebVTT.RemoveTag("v", _subtitle.Paragraphs[index].Text);
+                SubtitleListview1.SetText(index, _subtitle.Paragraphs[index].Text);
+            }
+            RefreshSelectedParagraph();
+        }
+
+        void WebVTTSetVoiceTextBox(object sender, EventArgs e)
+        {
+            string voice = (sender as ToolStripItem).Text;
+            if (!string.IsNullOrEmpty(voice))
+            {
+                TextBox tb = textBoxListViewText;
+                if (textBoxListViewTextAlternate.Focused)
+                    tb = textBoxListViewTextAlternate;
+
+                if (tb.SelectionLength > 0)
+                {
+                    string s = tb.SelectedText;
+                    s = WebVTT.RemoveTag("v", s);
+                    if (tb.SelectedText == tb.Text)
+                        s = string.Format("<v {0}>{1}", voice, s);
+                    else
+                        s = string.Format("<v {0}>{1}</v>", voice, s);
+                    tb.SelectedText = s;
+                }
+            }
+        }
+
+        void WebVTTSetNewVoiceTextBox(object sender, EventArgs e)
+        {
+            var form = new WebVttNewVoice();
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                string voice = form.VoiceName;
+                if (!string.IsNullOrEmpty(voice))
+                {
+                    TextBox tb = textBoxListViewText;
+                    if (textBoxListViewTextAlternate.Focused)
+                        tb = textBoxListViewTextAlternate;
+
+                    if (tb.SelectionLength > 0)
+                    {
+                        string s = tb.SelectedText;
+                        s = WebVTT.RemoveTag("v", s);
+                        if (tb.SelectedText == tb.Text)
+                            s = string.Format("<v {0}>{1}", voice, s);
+                        else
+                            s = string.Format("<v {0}>{1}</v>", voice, s);
+                        tb.SelectedText = s;
+                    }
+                }
             }
         }
 
@@ -5748,13 +5859,7 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.GetLineLengths(singleLine, text);
 
             buttonSplitLine.Visible = false;
-            string s = Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
-            if (s.StartsWith("{\\"))
-            {
-                int k = s.IndexOf("}");
-                if (k < 10)
-                    s = s.Remove(0, k + 1);
-            }
+            string s = Utilities.RemoveHtmlTags(text, true).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
 
             if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
             {
@@ -14562,6 +14667,26 @@ namespace Nikse.SubtitleEdit.Forms
                 superscriptToolStripMenuItem.Visible = false;
                 subscriptToolStripMenuItem.Visible = false;
             }
+
+            var formatType = GetCurrentSubtitleFormat().GetType();
+            if ((formatType == typeof(WebVTT) && tb.SelectionLength > 0))
+            {
+                toolStripSeparatorWebVTT.Visible = true;
+                toolStripMenuItemWebVttVoice.Visible = true;
+                var voices = WebVTT.GetVoices(_subtitle);
+                toolStripMenuItemWebVttVoice.DropDownItems.Clear();
+                foreach (string style in voices)
+                {
+                    toolStripMenuItemWebVttVoice.DropDownItems.Add(style, null, WebVTTSetVoiceTextBox);
+                }
+                toolStripMenuItemWebVttVoice.DropDownItems.Add("Set new voice...", null, WebVTTSetNewVoiceTextBox); //TODO: Translate
+            }
+            else
+            {
+                toolStripSeparatorWebVTT.Visible = false;
+                toolStripMenuItemWebVttVoice.Visible = false;
+            }
+
         }
 
         private void ToolStripMenuItemExportPngXmlClick(object sender, EventArgs e)
@@ -15025,13 +15150,7 @@ namespace Nikse.SubtitleEdit.Forms
             int extraNewLineLength = Environment.NewLine.Length - 1;
             int lineBreakPos = textBox.Text.IndexOf(Environment.NewLine);
             int pos = textBox.SelectionStart;
-            var s = Utilities.RemoveHtmlTags(textBox.Text).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
-            if (s.StartsWith("{\\"))
-            {
-                int k = s.IndexOf("}");
-                if (k < 10)
-                    s = s.Remove(0, k + 1);
-            }
+            var s = Utilities.RemoveHtmlTags(textBox.Text, true).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
             int totalLength = s.Length; 
             string totalL = "     " + string.Format(_languageGeneral.TotalLengthX, totalLength);
             if (lineBreakPos == -1 || pos <= lineBreakPos)
@@ -15542,7 +15661,24 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var styles = new SubStationAlphaStyles(_subtitle, GetCurrentSubtitleFormat());
                 if (styles.ShowDialog(this) == DialogResult.OK)
+                {
                     _subtitle.Header = styles.Header;
+                    var styleList  = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+                    if (styleList.Count > 0)
+                    { 
+                        for (int i=0; i<_subtitle.Paragraphs.Count; i++)
+                        {
+                            Paragraph p = _subtitle.Paragraphs[i];
+                            if (p.Extra == null || p.Extra != styleList[0])
+                            {
+                                p.Extra = styleList[0];
+                                SubtitleListview1.SetExtraText(i, p.Extra, SubtitleListview1.ForeColor);
+                            }
+                        }
+                            
+                    }
+
+                }
             }
             else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
             {

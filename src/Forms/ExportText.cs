@@ -102,10 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string s = p.Text;
                 if (checkBoxRemoveStyling.Checked)
                 {
-                    s = Utilities.RemoveHtmlTags(s);
-                    int indexOfEndBracket = s.IndexOf("}");
-                    if (s.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
-                        s = s.Remove(0, indexOfEndBracket+1);
+                    s = Utilities.RemoveHtmlTags(s, true);
                 }
 
                 if (radioButtonFormatUnbreak.Checked)

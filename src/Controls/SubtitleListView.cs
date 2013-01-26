@@ -460,7 +460,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_settings.Tools.ListViewSyntaxColorLongLines)
                 {
                     int noOfLines = paragraph.Text.Split(Environment.NewLine[0]).Length;
-                    string s = Utilities.RemoveHtmlTags(paragraph.Text);
+                    string s = Utilities.RemoveHtmlTags(paragraph.Text, true);
                     foreach (string line in s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                     {
                         if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
