@@ -792,7 +792,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BeforeRemovalOfTextingForHearingImpaired = "Before removal of texting for hearing impaired",
                 TextingForHearingImpairedRemovedOneLine = "Texting for hearing impaired removed : One line",
                 TextingForHearingImpairedRemovedXLines = "Texting for hearing impaired removed : {0} lines",
-                SubtitleSplitted = "Subtitle splitted",
+                SubtitleSplitted = "Subtitle was split",
                 SubtitleAppendPrompt = "This will append an existing subtitle to the currently loaded subtitle which should" + Environment.NewLine +
                                     "already be in sync with video file." + Environment.NewLine +
                                     Environment.NewLine +
@@ -844,7 +844,7 @@ namespace Nikse.SubtitleEdit.Logic
                 LineInserted = "Line inserted",
                 BeforeSettingFontToNormal = "Before setting font to normal",
                 BeforeSplitLine = "Before split line",
-                LineSplitted = "Line splitted",
+                LineSplitted = "Line was split",
                 BeforeMergeLines = "Before merge lines",
                 LinesMerged = "Lines merged",
                 BeforeSettingColor = "Before setting color",
