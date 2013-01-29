@@ -532,7 +532,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             get
             {
-                return new List<string>() { ".itt" }; // iTunes Timed Text
+                return new List<string>() { ".itt", ".dfxp" }; // iTunes Timed Text + ...
             }
         }
 
