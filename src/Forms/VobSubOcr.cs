@@ -2202,7 +2202,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if ((!textWithOutFixes.Contains(Environment.NewLine) || Utilities.CountTagInText("\n", textWithOutFixes) > 2)
-                && textWithOutFixes.Length < 17)
+                && (textWithOutFixes.Length < 17 || bitmap.Height < 50))
             {
                 string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 7"); // 7 = Treat the image as a single text line.
                 if (textWithOutFixes != psm)
