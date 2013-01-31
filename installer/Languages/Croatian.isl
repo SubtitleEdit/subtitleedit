@@ -130,6 +130,7 @@ SelectDirDesc=Direktorij gdje æe biti instaliran program.
 SelectDirLabel3=Instalacija æe instalirati [name] u slijedeæi direktorij
 SelectDirBrowseLabel=Za nastavak kliknite na Nastavak. Za odabrir drugog direktorija kliknite na Odaberi
 DiskSpaceMBLabel=Ovaj program zahtijeva minimalno [mb] MB slobodnog prostora na disku.
+ToUNCPathname=Instalacija ne može instalirati na UNC stazu. Ako pokušavate instalirati na mrežu, morate mapirati mrežni disk.
 InvalidPath=Morate unijeti punu stazu zajedno sa slovom diska; npr:%nC:\APP
 InvalidDrive=Disk koji ste odabrali ne postoji. Odaberite neki drugi.
 DiskSpaceWarningTitle=Nedovoljno prostora na disku
