@@ -136,6 +136,7 @@ SelectDirDesc=[name] ˜ÌÇ ÈÇíÏ äÕÈ ÔæÏ¿
 SelectDirLabel3=[name] ÏÑ æÔå ÒíÑ äÕÈ ÎæÇåÏ ÔÏ.
 SelectDirBrowseLabel=ÈÑÇí ÇÏÇãå¡ Óíä ÑÇ ÈİÔÇÑíÏ. ÇÑ ãíÎæÇåíÏ æÔå ÏíÑí ÇäÊÎÇÈ äãÇííÏ¡ ã˜Çä ÏíÑ ÑÇ ÈİÔÇÑíÏ.
 DiskSpaceMBLabel= ÏÓÊ˜ã Èå [mb] ãÇÈÇíÊ İÖÇí ÎÇáí äíÇÒ ÎæÇåÏ ÈæÏ.
+ToUNCPathname=Setup cannot install to a UNC pathname. If you are trying to install to a network, you will need to map a network drive.
 InvalidPath=ÔãÇ ÈÇíÏ í˜ ãÓíÑ ˜Çãá Èå åãÑÇå äÇã ÏÑÇíæ ÑÇ æÇÑÏ ˜äíÏº ÈÑÇí ãËÇá:%n%nC:\APP%n%níÇ Èå Ô˜á ãÓíÑ UNC:%n%n\\server\share
 InvalidDrive=Çíä ÏÑÇíæ íÇ ãÓíÑ UNC ˜å ÔãÇ ÇäÊÎÇÈ äãæÏåÇíÏ æÌæÏ äÏÇÑÏ íÇ ŞÇÈá ÏÓÊÑÓí äíÓÊ. ÎæÇåÔãäÏ ÇÓÊ ãÓíÑ ÏíÑí æÇÑÏ ˜äíÏ.
 DiskSpaceWarningTitle=Èå ÇäÏÇÒå ˜Çİí İÖÇí ÎÇáí æÌæÏ äÏÇÑÏ
