@@ -22,8 +22,8 @@
 
 
 ; preprocessor checks
-#if VER < EncodeVer(5,5,2)
-  #error Update your Inno Setup version (5.5.2 or newer)
+#if VER < EncodeVer(5,5,3)
+  #error Update your Inno Setup version (5.5.3 or newer)
 #endif
 
 #ifndef UNICODE
@@ -35,8 +35,8 @@
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
-#define TWO_DIGIT_VER
-;#define THREE_DIGIT_VER
+;#define TWO_DIGIT_VER
+#define THREE_DIGIT_VER
 
 
 #define VerMajor
