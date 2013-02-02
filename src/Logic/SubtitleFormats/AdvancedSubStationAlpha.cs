@@ -87,8 +87,8 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
 Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
-            const string paragraphWriteFormat = "Dialogue: 0,{0},{1},{3},{4},0000,0000,0000,,{2}";
-            const string commentWriteFormat = "Comment: 0,{0},{1},{3},{4},0000,0000,0000,,{2}";
+            const string paragraphWriteFormat = "Dialogue: 0,{0},{1},{3},{4},0,0,0,,{2}";
+            const string commentWriteFormat = "Comment: 0,{0},{1},{3},{4},0,0,0,,{2}";
 
             var sb = new StringBuilder();
             System.Drawing.Color fontColor = System.Drawing.Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
@@ -119,7 +119,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 string style = "Default";
                 if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
                     style = p.Extra;
-                string actor = "Default";
+                string actor = "";
                 if (!string.IsNullOrEmpty(p.Actor))
                     actor = p.Actor;
 
