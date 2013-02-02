@@ -801,7 +801,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (format == null)
                         {
-                            if (fi.Length < 1024 * 1024) // max 10 mb
+                            if (fi.Length < 1024 * 1024) // max 1 mb
                                 Console.WriteLine(string.Format("{0}: {1} - input file format unknown!", count, fileName, toFormat));
                             else
                                 Console.WriteLine(string.Format("{0}: {1} - input file too large!", count, fileName, toFormat));
@@ -7701,53 +7701,46 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (isSsa)
                 {
-                    int commaCount = 100;
                     _subtitle.Header = matroskaSubtitleInfo.CodecPrivate;
                     if (!_subtitle.Header.Contains("[Events]"))
                     {
                         _subtitle.Header = _subtitle.Header.Trim() + Environment.NewLine +
                                            Environment.NewLine +
-                                           "[Events]" + Environment.NewLine;
+                                           "[Events]" + Environment.NewLine +
+                                           "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine;                                            
                     }
                     else
                     {
                         _subtitle.Header = _subtitle.Header.Remove(_subtitle.Header.IndexOf("[Events]"));
                         _subtitle.Header = _subtitle.Header.Trim() + Environment.NewLine +
                                            Environment.NewLine +
-                                           "[Events]" + Environment.NewLine;
+                                           "[Events]" + Environment.NewLine +
+                                           "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine;
                     }
 
-                    foreach (SubtitleSequence p in sub)
+                    var lines = new List<string>();
+                    foreach (string l in _subtitle.Header.Trim().Replace(Environment.NewLine, "\n").Split('\n'))
+                        lines.Add(l);
+                    const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
+                    foreach (SubtitleSequence mp in sub)
                     {
-                        string s1 = p.Text;
-                        if (s1.Contains(@"{\"))
-                            s1 = s1.Substring(0, s1.IndexOf(@"{\"));
-                        int temp = s1.Split(',').Length;
-                        if (temp < commaCount)
-                            commaCount = temp;
-                    }
+                        Paragraph p = new Paragraph(string.Empty, mp.StartMilliseconds, mp.EndMilliseconds);
+                        string start = string.Format(timeCodeFormat,  p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
+                        string end = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
 
-                    foreach (SubtitleSequence p in sub)
-                    {
-                        string extra = null;
-                        string s = string.Empty;
-                        string[] arr = p.Text.Split(',');
-                        if (arr.Length >= commaCount)
+                        //MKS contains this: ReadOrder, Layer, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+
+                        string text = mp.Text;
+                        int idx = text.IndexOf(',') + 1;
+                        if (idx > 0 && idx < text.Length)
                         {
-
-                            extra = arr[2].TrimStart('*');
-
-                            for (int i = commaCount; i <= arr.Length; i++)
-                            {
-                                if (s.Length > 0)
-                                    s += ",";
-                                s += arr[i - 1];
-                            }
-                        }
-                        var p2 = new Paragraph(AdvancedSubStationAlpha.GetFormattedText(s), p.StartMilliseconds, p.EndMilliseconds);
-                        p2.Extra = extra;
-                        _subtitle.Paragraphs.Add(p2);
+                            text = text.Remove(0, idx); // remove ReadOrder
+                            idx = text.IndexOf(',');
+                            text = text.Insert(idx, "," + start + "," + end);
+                            lines.Add(text);
+                        }                        
                     }
+                    format.LoadSubtitle(_subtitle, lines, fileName);
                 }
                 else
                 {
