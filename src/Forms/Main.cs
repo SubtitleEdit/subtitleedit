@@ -12188,12 +12188,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.General.ShowBetaStuff)
             {
+                toolStripMenuItemMergeDuplicateText.Visible = true;
                 generateDatetimeInfoFromVideoToolStripMenuItem.Visible = true;
                 toolStripMenuItemExportCaptionInc.Visible = true;
                 toolStripMenuItemExportUltech130.Visible = true;
             }
             else
             {
+                toolStripMenuItemMergeDuplicateText.Visible = false;
                 generateDatetimeInfoFromVideoToolStripMenuItem.Visible = false;
                 toolStripMenuItemExportCaptionInc.Visible = false;
                 toolStripMenuItemExportUltech130.Visible = false;
@@ -13504,7 +13506,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception exception)
             {
-                MessageBox.Show(string.Format(_language.NetworkUnableToConnectToServer, exception.Message));
+                MessageBox.Show(string.Format(_language.NetworkUnableToConnectToServer, exception.Message + Environment.NewLine + exception.StackTrace));
                 _networkSession.TimerStop();
                 if (_networkChat != null && !_networkChat.IsDisposed)
                 {
