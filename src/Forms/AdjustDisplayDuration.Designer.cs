@@ -231,7 +231,7 @@
             65536});
             this.numericUpDownMaxCharsSec.Location = new System.Drawing.Point(357, 89);
             this.numericUpDownMaxCharsSec.Minimum = new decimal(new int[] {
-            10,
+            4,
             0,
             0,
             0});
