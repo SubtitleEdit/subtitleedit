@@ -1,0 +1,257 @@
+<ReplaceList>
+  <WholeWords>
+    <Word from="carj'" to="car j'" />
+    <Word from="Carj'" to="Car j'" />
+    <Word from="carla" to="car la" />
+    <Word from="etj'" to="et j'" />
+    <Word from="Etj'" to="Et j’" />
+    <Word from="etje" to="et je" />
+    <Word from="Etje" to="Et je" />
+    <Word from="dontj" to="dont j" />
+    <Word from="ontete" to="ont été" />
+    <Word from="I'" to="l'" />
+    <Word from="Ie" to="le" />
+    <Word from="Ies" to="les" />
+    <Word from="Ia" to="la" />
+    <Word from="Ià" to="Là" />
+    <Word from="Iimit" to="limit" />
+    <Word from="Iorsqu" to="Lorsqu" />
+    <Word from="Iester" to="Lester" />
+    <Word from="lé-" to="là-" />
+    <Word from="maintenanu" to="maintenant" />
+    <Word from="beaute" to="beauté" />
+    <Word from="@immatriculation" to="d'immatriculation" />
+    <Word from="meilleurjour" to="meilleur jour" />
+    <Word from="DrNo" to="Dr No" />
+    <Word from="aitjus" to="ait jus" />
+    <Word from="oitjus" to="oit jus" />
+    <Word from="erjus" to="er jus" />
+    <Word from="oitjamais" to="oit jamais" />
+    <Word from="aitjamais" to="ait jamais" />
+    <Word from="aientjamais" to="aient jamais" />
+    <Word from="estjamais" to="est jamais" />
+    <Word from="cœurjoie" to="cœur-joie" />
+    <Word from="hawaïennel" to="hawaïenne" />
+    <Word from="pourjouer" to="pour jouer" />
+    <Word from="acteurjoue" to="acteur joue" />
+    <Word from="cree" to="créé" />
+    <Word from="d'héro'l'ne" to="d'héroïne" />
+    <Word from="Mayer/ing" to="Mayerling" />
+    <Word from="etait" to="était" />
+    <Word from="etaient" to="étaient" />
+    <Word from="cles" to="clés" />
+    <Word from="general" to="général" />
+    <Word from="propriete" to="propriété" />
+    <Word from="completer" to="compléter" />
+    <Word from="Iynchage" to="lynchage" />
+    <Word from="frêre" to="frère" />
+    <Word from="torturee" to="torturée" />
+    <Word from="doublaitAlfo" to="doublait Alfo" />
+    <Word from="premierjour" to="premier jour" />
+    <Word from="speciale" to="spéciale" />
+    <Word from="d'AIbert" to="d’Albert" />
+    <Word from="equipe" to="équipe" />
+    <Word from="EtsouvenL" to="Et souvent" />
+    <Word from="isee" to="isée" />
+    <Word from="CEdipe" to="Œdipe" />
+    <Word from="acquer" to="acquér" />
+    <Word from="faiessayé" to="j'ai essayé" />
+    <Word from="aerien" to="aérien" />
+    <Word from="reévalu" to="réévalu" />
+    <Word from="I'" to="l'" />
+    <Word from="Uadmirable" to="L'admirable" />
+    <Word from="gaylns" to="gaijins" />
+    <Word from="Iaryngotomie" to="laryngotomie" />
+    <Word from="hawa'l'en" to="hawaïen" />
+    <Word from="Pépreuve" to="l'épreuve" />
+    <Word from="d'autodérision" to="d’auto-dérision" />
+    <Word from="protègeraient" to="protégeraient" />
+    <Word from="plateforme" to="plate-forme" />
+    <Word from="Féquipe" to="Équipe" />
+    <Word from="realisateur" to="réalisateur" />
+    <Word from="Ÿespère" to="J'espère" />
+    <Word from="defi" to="défi" />
+    <Word from="presenter" to="présenter" />
+    <Word from="daccord" to="d'accord" />
+    <Word from="ete" to="été" />
+    <Word from="Fidée" to="l'idée" />
+    <Word from="Cétait" to="C'était" />
+    <Word from="costumiere" to="costumière" />
+    <Word from="Fentrée" to="l'entrée" />
+    <Word from="Farrière" to="l'arrière" />
+    <Word from="c'etait" to="c’était" />
+    <Word from="operateur" to="opérateur" />
+    <Word from="scene" to="scène" />
+    <Word from="Fobjectif" to="l'objectif" />
+    <Word from="scenes" to="scènes" />
+    <Word from="idees" to="idées" />
+    <Word from="choregraphiee" to="chorégraphiée" />
+    <Word from="Fassomme" to="l'assomme" />
+    <Word from="Fespace" to="l'espace" />
+    <Word from="integrer" to="intégrer" />
+    <Word from="eviter" to="éviter" />
+    <Word from="idee" to="idée" />
+    <Word from="interessante" to="intéressante" />
+    <Word from="Farrivée" to="l'arrivée" />
+    <Word from="Fetranger" to="l'etranger" />
+    <Word from="Iogions" to="logions" />
+    <Word from="Fenseigne" to="l'enseigne" />
+    <Word from="C'etait" to="C’était" />
+    <Word from="decorateurs" to="décorateurs" />
+    <Word from="Uensemblier" to="L'ensemblier" />
+    <Word from="e'" to="é" />
+    <Word from="decors" to="décors" />
+    <Word from="Féclairage" to="l'éclairage" />
+    <Word from="Fentouraient" to="l'entouraient" />
+    <Word from="Fimage" to="l'image" />
+    <Word from="Fanniversaire" to="l'anniversaire" />
+    <Word from="mariee" to="mariée" />
+    <Word from="Festhétique" to="l'esthétique" />
+    <Word from="j'etais" to="j’étais" />
+    <Word from="dejà" to="déjà" />
+    <Word from="Vaise" to="l'aise" />
+    <Word from="alle" to="allé" />
+    <Word from="Fintrigue" to="l'intrigue" />
+    <Word from="Fexplique" to="l'explique" />
+    <Word from="aujourdhui" to="aujourd’hui" />
+    <Word from="pere" to="père" />
+    <Word from="insufflee" to="insufflée" />
+    <Word from="Cétaient" to="C'étaient" />
+    <Word from="détaient" to="c'étaient" />
+    <Word from="dexcellents" to="d'excellents" />
+    <Word from="Desole" to="Désolé" />
+    <Word from="Fhabituelle" to="l'habituelle" />
+    <Word from="dessayage" to="d'essayage" />
+    <Word from="preferes" to="préférés" />
+    <Word from="danniversaire" to="d'anniversaire" />
+    <Word from="Failure" to="l'alllure" />
+    <Word from="n'etait" to="n’était" />
+    <Word from="Cest" to="C'est" />
+    <Word from="fespérais" to="j'espérais" />
+    <Word from="Jessaie" to="J'essaie" />
+    <Word from="Fagent" to="l'agent" />
+    <Word from="Finfluence" to="l'influence" />
+    <Word from="Fhorloge" to="l'horloge" />
+    <Word from="fadore" to="j'adore" />
+    <Word from="Uouvre" to="L'ouvre" />
+    <Word from="scenario" to="scénario" />
+    <Word from="Fépoque" to="l'époque" />
+    <Word from="Faprès" to="l'après" />
+    <Word from="cinema" to="cinéma" />
+    <Word from="déjàm" to="déjà..." />
+    <Word from="etiez" to="étiez" />
+    <Word from="lepidopteres" to="lépidoptères" />
+    <Word from="dexpérience" to="d'expérience" />
+    <Word from="Fécran" to="l'écran" />
+    <Word from="dejeunait" to="déjeunait" />
+    <Word from="ecrit" to="écrit" />
+    <Word from="Févoque" to="l'évoque" />
+    <Word from="Fimpression" to="l'impression" />
+    <Word from="Fâge" to="l'âge" />
+    <Word from="Fendroit" to="l'endroit" />
+    <Word from="appele" to="appelé" />
+    <Word from="alles" to="allés" />
+    <Word from="n'avaiént" to="n'avaient" />
+    <Word from="Fintérieur" to="l'intérieur" />
+    <Word from="Fhéliport" to="l'héliport" />
+    <Word from="prevue" to="prévue" />
+    <Word from="én" to="en" />
+    <Word from="Fespère" to="l'espère" />
+    <Word from="apres" to="après" />
+    <Word from="Fextérieur" to="l'extérieur" />
+    <Word from="Fhélicoptère" to="l'hélicoptère" />
+    <Word from="Fhélistation" to="l'hélistation" />
+    <Word from="Fascenseur" to="l'ascenseur" />
+    <Word from="ÿétrangle" to="s'étrangle" />
+    <Word from="agreable" to="agréable" />
+    <Word from="Femplacement" to="l'emplacement" />
+    <Word from="Iumiere" to="lumiere" />
+    <Word from="cl'AIcatraz" to="d'Alcatraz" />
+    <Word from="Ÿappréciais" to="J'appréciais" />
+    <Word from="vecu" to="vécu" />
+    <Word from="immediatement" to="immédiatement" />
+    <Word from="elegant" to="élégant" />
+    <Word from="seances" to="séances" />
+    <Word from="sﬂécrasa" to="s'écrasa" />
+    <Word from="Ellé" to="Elle" />
+    <Word from="dérnièré" to="dernière" />
+    <Word from="ouvérté" to="ouverte" />
+    <Word from="ét" to="et" />
+    <Word from="qué" to="que" />
+    <Word from="s'arrétait" to="s’arrêtait" />
+    <Word from="Fapparence" to="l'apparence" />
+    <Word from="d'idees" to="d’idées" />
+    <Word from="Fimportance" to="l'importance" />
+    <Word from="Fatmosphère" to="l'atmosphère" />
+    <Word from="qwangoissé" to="qu'angoissé" />
+    <Word from="latéralémént" to="latéralement" />
+    <Word from="d'AIec" to="d'Alec" />
+    <Word from="decor" to="décor" />
+    <Word from="debattait" to="débattait" />
+    <Word from="aupres" to="auprès" />
+    <Word from="Fhonneur" to="l'honneur" />
+    <Word from="Févasion" to="l'évasion" />
+    <Word from="J'espere" to="J’espère" />
+    <Word from="dengager" to="d'engager" />
+    <Word from="Supen" to="Super" />
+    <Word from="c'etaient" to="c’étaient" />
+    <Word from="precipice" to="précipice" />
+    <Word from="Fattention" to="l'attention" />
+    <Word from="déquipement" to="d'équipement" />
+    <Word from="dexpériences" to="d'expériences" />
+    <Word from="prevu" to="prévu" />
+    <Word from="reussi" to="réussi" />
+    <Word from="sequence" to="séquence" />
+    <Word from="Fapres" to="l'apres" />
+    <Word from="Forigine" to="l'origine" />
+    <Word from="Foccasion" to="l'occasion" />
+    <Word from="vehicules" to="véhicules" />
+    <Word from="J'etais" to="J’étais" />
+    <Word from="Fordre" to="l'ordre" />
+    <Word from="cabossee" to="cabossée" />
+    <Word from="Fambiance" to="l'ambiance" />
+    <Word from="Fémotion" to="l'émotion" />
+    <Word from="Fexpérience" to="l'expérience" />
+    <Word from="dessence" to="d'essence" />
+    <Word from="dautres" to="d'autres" />
+    <Word from="detail" to="détail" />
+    <Word from="Favalanche" to="l'avalanche" />
+    <Word from="melange" to="mélange" />
+    <Word from="Farmée" to="l'armée" />
+    <Word from="maniere" to="manière" />
+    <Word from="Fensemble" to="l'ensemble" />
+    <Word from="litteraire" to="littéraire" />
+    <Word from="d'AIdous" to="d'Aldous" />
+    <Word from="Fépaisseur" to="l'épaisseur" />
+    <Word from="reception" to="réception" />
+    <Word from="Fabsence" to="l'absence" />
+    <Word from="Fassaut" to="l'assaut" />
+    <Word from="d'intensite" to="d’intensité" />
+    <Word from="Uexplosion" to="L'explosion" />
+    <Word from="Fexplosion" to="l'explosion" />
+    <Word from="Famener" to="l'amener" />
+    <Word from="s'ave'rer" to="s'avérer" />
+    <Word from="fadapter" to="t'adapter" />
+    <Word from="Finscription" to="l'inscription" />
+    <Word from="repute" to="réputé" />
+    <Word from="d'Arra'bida" to="d'Arrabida" />
+    <Word from="Fascension" to="l'ascension" />
+    <Word from="AII" to="All" />
+  </WholeWords>
+  <PartialLines />
+  <BeginLines />
+  <EndLines />
+  <WholeLines>
+    <Line from="&quot;D'ac:c:ord.&quot;" to="&quot;D'accord.&quot;" />
+    <Line from="“i QUÎ gagne, qui perd," to="ni qui gagne, qui perd," />
+    <Line from="L'ac:c:ent est mis &#xD;&#xA; &#xD;&#xA; sur son trajet jusqu'en Suisse." to="L'accent est mis &#xD;&#xA; &#xD;&#xA; sur son trajet jusqu'en Suisse." />
+    <Line from="C'est la plus gentille chose &#xD;&#xA; &#xD;&#xA; qu'Hitchc:oc:k m'ait jamais dite." to="C'est la plus gentille chose &#xD;&#xA; &#xD;&#xA; qu'Hitchcock m'ait jamais dite." />
+    <Line from="Tout le monde, en revanche, qualifie &#xD;&#xA; &#xD;&#xA; Goldfinger d'aventu re structurée," to="Tout le monde, en revanche, qualifie &#xD;&#xA; &#xD;&#xA; Goldfinger d'aventure structurée," />
+    <Line from="et le film Shadow of a man &#xD;&#xA; &#xD;&#xA; a lancé sa carrière au cinéma." to="et le film &lt;i&gt;Shadow of a man&lt;/i&gt; &#xD;&#xA; &#xD;&#xA; a lancé sa carrière au cinéma." />
+    <Line from="En 1948, Young est passé à la réalisation &#xD;&#xA; &#xD;&#xA; avec One night with you." to="En 1948, Young est passé à la réalisation &#xD;&#xA; &#xD;&#xA; avec &lt;i&gt;One night with you&lt;/i&gt;." />
+    <Line from="Il a construit tous ces véhicules &#xD;&#xA; &#xD;&#xA; à C)c:ala, en Floride." to="Il a construit tous ces véhicules &#xD;&#xA; &#xD;&#xA; à Ocala, en Floride." />
+    <Line from="Tokyo Pop et A Taxing Woman? Return." to="Tokyo Pop et A Taxing Woman's Return." />
+    <Line from="Peter H u nt." to="Peter Hunt." />
+    <Line from="&quot;C'est bien mieux dans Peau. &#xD;&#xA; &#xD;&#xA; On peut sﬂéclabousser, faire du bruit.&quot;" to="&quot;C'est bien mieux dans l'eau. &#xD;&#xA; &#xD;&#xA; On peut s'éclabousser, faire du bruit.&quot;" />
+  </WholeLines>
+</ReplaceList>
