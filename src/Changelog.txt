@@ -1,6 +1,6 @@
 Subtitle Edit Changelog
 
-3.3.1 (xth February 2013)
+3.3.1 (3rd February 2013)
 * NEW:
    * Added a few new subtitle formats (now 150 formats!)
    * French language - thx thx JM GBT
@@ -13,7 +13,7 @@ Subtitle Edit Changelog
    * Export to png/xml now uses font styles from ssa/ass 
    * Export images - better cropping
    * Alignment tags now works for format PAC - thx Jussi
-   * Allows chars/sec down to 4 due to languages such as Japanese - thx dandomina
+   * Allows chars/sec down to 4 due to e.g. Japanese - thx dandomina
 * FIXED:
    * No longer removes last lines in 'Merge short lines' - thx Pax
    * Some fixes for networking mode regarding insert/split - thx Dan
