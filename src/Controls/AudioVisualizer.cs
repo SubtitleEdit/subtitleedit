@@ -307,7 +307,7 @@ namespace Nikse.SubtitleEdit.Controls
             return imageHeight - result;
         }
 
-        private bool IsSelectedIndex(int pos, ref int lastCurrentEnd)
+        private bool IsSelectedIndex(int pos, ref int lastCurrentEnd, List<Paragraph> selectedParagraphs)
         {
             if (pos < lastCurrentEnd)
                 return true;
@@ -315,31 +315,42 @@ namespace Nikse.SubtitleEdit.Controls
             if (_selectedIndices == null || _subtitle == null)
                 return false;
 
-            foreach (int index in _selectedIndices)
+            foreach (Paragraph p in selectedParagraphs)
             {
-                try
+                if (pos >= p.StartFrame && pos <= p.EndFrame) // not really frames...
                 {
-                    var p = _subtitle.Paragraphs[index];
-                    int start = (int)Math.Round(p.StartTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor);
-                    int end = (int)Math.Round(p.EndTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor);
-                    if (pos >= start && pos <= end)
-                    {
-                        lastCurrentEnd = end;
-                        return true;
-                    }
-                }
-                catch
-                {
-                    return false;
+                    lastCurrentEnd = p.EndFrame;
+                    return true;
                 }
             }
             return false;
         }
 
-        private void WaveFormPaint(object sender, PaintEventArgs e)
+        internal void WaveFormPaint(object sender, PaintEventArgs e)
         {
             if (_wavePeaks != null && _wavePeaks.AllSamples != null)
             {
+                List<Paragraph> selectedParagraphs = new List<Paragraph>();
+                foreach (int index in _selectedIndices)
+                {
+                    Paragraph p = null;
+                    try
+                    {
+                        p = new Paragraph(_subtitle.Paragraphs[index]);
+                    }
+                    catch
+                    {
+                        return;
+                    }
+                    if (p != null)
+                    {
+                        // not really frames... just using them as position markers for better performance
+                        p.StartFrame = (int)(p.StartTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor);
+                        p.EndFrame = (int)(p.EndTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor);
+                        selectedParagraphs.Add(p);
+                    }
+                }
+
                 if (StartPositionSeconds < 0)
                     StartPositionSeconds = 0;
 
@@ -381,22 +392,22 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (ShowWaveform)
                 {
-                    if (_zoomFactor == 1.0)
+                    if (_zoomFactor > 0.9999 && ZoomFactor < 1.00001)
                     {
                         for (int i = 0; i < _wavePeaks.AllSamples.Count && i < Width; i++)
                         {
-                            if (begin + i < _wavePeaks.AllSamples.Count)
+                            int n = begin + i;
+                            if (n < _wavePeaks.AllSamples.Count)
                             {
-                                int newY = CalculateHeight(_wavePeaks.AllSamples[begin + i], imageHeight, maxHeight);
+                                int newY = CalculateHeight(_wavePeaks.AllSamples[n], imageHeight, maxHeight);
                                 graphics.DrawLine(pen, x, y, i, newY);
                                 //graphics.FillRectangle(new SolidBrush(Color), x, y, 1, 1); // draw pixel instead of line
 
                                 x = i;
                                 y = newY;
-                                int n = begin + i;
                                 if (n <= end && n >= start)
                                     pen = penSelected;
-                                else if (IsSelectedIndex(n, ref lastCurrentEnd))
+                                else if (IsSelectedIndex(n, ref lastCurrentEnd, selectedParagraphs))
                                     pen = penSelected;
                                 else
                                     pen = penNormal;
@@ -420,7 +431,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 int n = (int)(begin + x3);
                                 if (n <= end && n >= start)
                                     pen = penSelected;
-                                else if (IsSelectedIndex(n, ref lastCurrentEnd))
+                                else if (IsSelectedIndex(n, ref lastCurrentEnd, selectedParagraphs))
                                     pen = penSelected;
                                 else
                                     pen = penNormal;
@@ -437,8 +448,10 @@ namespace Nikse.SubtitleEdit.Controls
                     videoPosition -= begin;
                     if (videoPosition > 0 && videoPosition < Width)
                     {
-                        pen = new Pen(Color.Turquoise);
-                        e.Graphics.DrawLine(pen, videoPosition, 0, videoPosition, Height);
+                        using (var p = new Pen(Color.Turquoise))
+                        {
+                            graphics.DrawLine(p, videoPosition, 0, videoPosition, Height);
+                        }
                     }
                 }
 
@@ -457,17 +470,20 @@ namespace Nikse.SubtitleEdit.Controls
                     SolidBrush brush = new SolidBrush(Color.FromArgb(128, 255, 255, 255));
                     if (currentRegionLeft >= 0 && currentRegionLeft <= Width)
                     {
-                        e.Graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, e.Graphics.VisibleClipBounds.Height);
+                        graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, graphics.VisibleClipBounds.Height);
 
                         if (currentRegionWidth > 40)
                         {
                             SolidBrush textBrush = new SolidBrush(Color.Turquoise);
-                            e.Graphics.DrawString(string.Format("{0:0.###} {1}",((double)currentRegionWidth / _wavePeaks.Header.SampleRate / _zoomFactor),
+                            graphics.DrawString(string.Format("{0:0.###} {1}",((double)currentRegionWidth / _wavePeaks.Header.SampleRate / _zoomFactor),
                                                                 Configuration.Settings.Language.WaveForm.Seconds),
                                                   Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
                         }
                     }
                 }
+                pen.Dispose();
+                penNormal.Dispose();
+                penSelected.Dispose();
             }
             else
             {
@@ -487,6 +503,8 @@ namespace Nikse.SubtitleEdit.Controls
 
                     e.Graphics.DrawString(WaveFormNotLoadedText, textFont, textBrush, new PointF(1, 10), stringFormat);
                 }
+                textBrush.Dispose();
+                textFont.Dispose();
             }
         }
 
@@ -495,11 +513,21 @@ namespace Nikse.SubtitleEdit.Controls
             graphics.Clear(BackgroundColor);
             if (DrawGridLines)
             {
-                Pen pen = new Pen(new SolidBrush(GridColor));
-                for (int i = 0; i < Width; i += 10)
+                using (Pen pen = new Pen(new SolidBrush(GridColor)))
                 {
-                    graphics.DrawLine(pen, i, 0, i, Height);
-                    graphics.DrawLine(pen, 0, i, Width, i);
+                    for (int i = 0; i < Width; i += 10)
+                    {
+                        graphics.DrawLine(pen, i, 0, i, Height);
+                        graphics.DrawLine(pen, 0, i, Width, i);
+                    }
+                }
+            }
+            if (Focused)
+            {
+                using (Pen p = new Pen(Color.Gray))
+                {
+                    p.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                    graphics.DrawRectangle(p, new Rectangle(0, 0, Width - 1, Height - 1));
                 }
             }
         }
@@ -529,6 +557,8 @@ namespace Nikse.SubtitleEdit.Controls
                 seconds += 0.5;
                 position = SecondsToXPosition(seconds);
             }
+            pen.Dispose();
+            textBrush.Dispose();
         }
 
         private static string GetDisplayTime(double seconds)
@@ -597,7 +627,6 @@ namespace Nikse.SubtitleEdit.Controls
         {
             return (int)Math.Round(seconds * _wavePeaks.Header.SampleRate * _zoomFactor);
         }
-
 
         private void WaveFormMouseDown(object sender, MouseEventArgs e)
         {
