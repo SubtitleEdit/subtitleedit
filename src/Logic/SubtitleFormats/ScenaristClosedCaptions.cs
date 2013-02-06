@@ -458,7 +458,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
+            return subtitle.Paragraphs.Count > _errorCount;
         }
 
         private string FixMax4LinesAndMax32CharsPerLine(string text)
@@ -1328,7 +1328,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (part.Length > 0)
                 {
-                    if (first)
+                    if (!first)
                         errorCount++;
                 }
                 first = false;
