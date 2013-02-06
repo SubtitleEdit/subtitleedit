@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         public Subtitle Subtitle;
         public Subtitle OriginalSubtitle;
         public string SessionId;
+        public string UserName;
         public string FileName;
         public List<SeNetworkService.SeUser> Users;
         public StringBuilder Log;
@@ -52,6 +53,8 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         public void StartServer(string webServiceUrl, string sessionKey, string userName, string fileName, out string message)
         {
             SessionId = sessionKey;
+            UserName = userName;
+            FileName = fileName;
             var list = new List<SeNetworkService.SeSequence>();
             foreach (Paragraph p in Subtitle.Paragraphs)
             {
@@ -144,8 +147,11 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             List<SeNetworkService.SeUpdate> list = new List<SeNetworkService.SeUpdate>();
             DateTime newUpdateTime;
             var updates = _seWs.GetUpdates(SessionId, CurrentUser.UserName, _seWsLastUpdate, out message, out newUpdateTime, out numberOfLines);
-            foreach (var update in updates)
-                list.Add(update);
+            if (updates != null)
+            {
+                foreach (var update in updates)
+                    list.Add(update);
+            }
             _seWsLastUpdate = newUpdateTime;
             return list;
         }
@@ -298,6 +304,26 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             }
             if (removeThis != null)
                 UpdateLog.Remove(removeThis);
+        }
+
+        internal string Restart()
+        {
+            string message;
+            StartServer(_seWs.Url, SessionId, UserName, FileName, out message);
+            if (message == "Session is already running")
+            {
+                if (Join(_seWs.Url, UserName, SessionId, out message))
+                    message = "Reload";
+            }
+            return message;
+        }
+
+        internal string ReJoin()
+        {
+            string message;
+            if (Join(_seWs.Url, UserName, SessionId, out message))
+                message = "Reload";
+            return message;
         }
 
     }

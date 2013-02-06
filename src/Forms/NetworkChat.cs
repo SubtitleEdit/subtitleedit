@@ -9,6 +9,11 @@ namespace Nikse.SubtitleEdit.Forms
     {
         Logic.Networking.NikseWebServiceSession _networkSession;
 
+        protected override bool ShowWithoutActivation
+        {
+            get { return true; }
+        }
+
         public NetworkChat()
         {
             InitializeComponent();

@@ -102,6 +102,9 @@ namespace Nikse.SubtitleEdit.Logic
         public string NewEmptyTranslationText { get; set; }
         public string BatchConvertOutputFolder { get; set; }
         public bool BatchConvertOverwrite { get; set; }
+        public string ModifySelectionText { get; set; }
+        public string ModifySelectionRule { get; set; }
+        public bool ModifySelectionCaseSensitive { get; set; }
 
         public ToolsSettings()
         {
@@ -132,6 +135,8 @@ namespace Nikse.SubtitleEdit.Logic
             SplitNumberOfParts = 3;
             SplitVia = "Lines";
             NewEmptyTranslationText = string.Empty;
+            ModifySelectionRule = "Contains";
+            ModifySelectionText = string.Empty;
         }
     }
 
@@ -531,6 +536,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool TopToBottom { get; set; }
         public int DefaultMillisecondsForUnknownDurations { get; set; }
         public bool PromptForUnknownWords { get; set; }
+        public double ItalicFactor { get; set; }
 
         public VobSubOcrSettings()
         {
@@ -544,6 +550,7 @@ namespace Nikse.SubtitleEdit.Logic
             TopToBottom = true;
             DefaultMillisecondsForUnknownDurations = 5000;
             PromptForUnknownWords = true;
+            ItalicFactor = 0.2;
         }
     }
 
@@ -594,6 +601,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainEditRightToLeft { get; set; }
         public string MainEditReverseStartAndEndingForRTL { get; set; }
         public string MainEditToggleTranslationOriginalInPreviews { get; set; }
+        public string MainEditInverseSelection { get; set; }
+        public string MainEditModifySelection { get; set; }
         public string MainToolsFixCommonErrors { get; set; }
         public string MainToolsFixCommonErrorsPreview { get; set; }
         public string MainToolsRenumber { get; set; }
@@ -683,6 +692,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainEditMultipleReplace = "Control+Alt+M";
             MainEditGoToLineNumber = "Control+G";
             MainEditRightToLeft = "Control+Shift+Alt+R";
+            MainEditInverseSelection = "Control+Shift+I";
             MainToolsFixCommonErrors = "Control+Shift+F";
             MainToolsFixCommonErrorsPreview = "Control+P";
             MainToolsRenumber = "Control+Shift+N";
@@ -1284,6 +1294,16 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("BatchConvertOverwrite");
             if (subNode != null)
                 settings.Tools.BatchConvertOverwrite = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ModifySelectionRule");
+            if (subNode != null)
+                settings.Tools.ModifySelectionRule = subNode.InnerText;
+            subNode = node.SelectSingleNode("ModifySelectionText");
+            if (subNode != null)
+                settings.Tools.ModifySelectionText = subNode.InnerText;
+            subNode = node.SelectSingleNode("ModifySelectionCaseSensitive");
+            if (subNode != null)
+                settings.Tools.ModifySelectionCaseSensitive = Convert.ToBoolean(subNode.InnerText);
+
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -1587,6 +1607,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("PromptForUnknownWords");
             if (subNode != null)
                 settings.VobSubOcr.PromptForUnknownWords = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ItalicFactor");
+            if (subNode != null)
+                settings.VobSubOcr.ItalicFactor = Convert.ToDouble(subNode.InnerText);
 
             foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
             {
@@ -1697,6 +1720,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainToolsToggleTranslationOriginalInPreviews");
                 if (subNode != null)
                     settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainEditInverseSelection");
+                if (subNode != null)
+                    settings.Shortcuts.MainEditInverseSelection = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainEditModifySelection");
+                if (subNode != null)
+                    settings.Shortcuts.MainEditModifySelection = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainVideoPause");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoPause = subNode.InnerText;
@@ -2097,6 +2126,9 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("NewEmptyTranslationText", settings.Tools.NewEmptyTranslationText);
             textWriter.WriteElementString("BatchConvertOutputFolder", settings.Tools.BatchConvertOutputFolder);
             textWriter.WriteElementString("BatchConvertOverwrite", settings.Tools.BatchConvertOverwrite.ToString());
+            textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
+            textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
+            textWriter.WriteElementString("ModifySelectionCaseSensitive", settings.Tools.ModifySelectionCaseSensitive.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");
@@ -2210,6 +2242,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("TopToBottom", settings.VobSubOcr.TopToBottom.ToString());
             textWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString());
             textWriter.WriteElementString("PromptForUnknownWords", settings.VobSubOcr.PromptForUnknownWords.ToString());
+            textWriter.WriteElementString("ItalicFactor", settings.VobSubOcr.ItalicFactor.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("MultipleSearchAndReplaceList", "");
@@ -2254,6 +2287,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainToolsAutoDuration", settings.Shortcuts.MainToolsAutoDuration);
             textWriter.WriteElementString("MainToolsBeamer", settings.Shortcuts.MainToolsBeamer);
             textWriter.WriteElementString("MainToolsToggleTranslationOriginalInPreviews", settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
+            textWriter.WriteElementString("MainEditInverseSelection", settings.Shortcuts.MainEditInverseSelection);
+            textWriter.WriteElementString("MainEditModifySelection", settings.Shortcuts.MainEditModifySelection);                        
             textWriter.WriteElementString("MainVideoPause", settings.Shortcuts.MainVideoPause);
             textWriter.WriteElementString("MainVideoPlayPauseToggle", settings.Shortcuts.MainVideoPlayPauseToggle);
             textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);
