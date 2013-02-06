@@ -57,8 +57,30 @@ namespace Nikse.SubtitleEdit.Logic
             buffer[2] = 255;
             for (int i = 0; i < _bitmapData.Length; i += 4)
             {
-                if (_bitmapData[i+3] > 200 &&  _bitmapData[i+2] > 220 && _bitmapData[i+1] > 220 && _bitmapData[i] < 40)
+                if (_bitmapData[i + 3] > 200 && _bitmapData[i + 2] > 220 && _bitmapData[i + 1] > 220 && _bitmapData[i] < 40)
                     Buffer.BlockCopy(buffer, 0, _bitmapData, i, 3);
+            }
+        }
+
+        public void MakeOneColor(Color c)
+        {
+            byte[] buffer = new byte[4];
+            buffer[0] = c.B;
+            buffer[1] = c.G;
+            buffer[2] = c.R;
+            buffer[3] = c.A;
+
+            byte[] bufferTransparent = new byte[4];
+            bufferTransparent[0] = 0;
+            bufferTransparent[1] = 0;
+            bufferTransparent[2] = 0;
+            bufferTransparent[3] = 0;
+            for (int i = 0; i < _bitmapData.Length; i += 4)
+            {
+                if (_bitmapData[i] > 20)
+                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
+                else
+                    Buffer.BlockCopy(bufferTransparent, 0, _bitmapData, i, 4);
             }
         }
 

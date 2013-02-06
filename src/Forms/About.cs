@@ -24,10 +24,10 @@ namespace Nikse.SubtitleEdit.Forms
                                      _languageGeneral.TranslatedBy.Trim();
             okButton.Text = _languageGeneral.OK;
 
+            float height = TextDraw.MeasureTextHeight(richTextBoxAbout1.Font, richTextBoxAbout1.Text, false);
+
             // Autosize height
-            labelFindHeight.AutoSize = true;
-            labelFindHeight.Text = richTextBoxAbout1.Text;
-            richTextBoxAbout1.Height = labelFindHeight.Height + 25;
+            richTextBoxAbout1.Height = (int)(height + 25);
             Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 100;
         }
 

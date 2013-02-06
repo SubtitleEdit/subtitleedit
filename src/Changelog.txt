@@ -1,9 +1,26 @@
-Subtitle Edit Changelog
+ï»¿Subtitle Edit Changelog
+
+3.3.2 (x February 2013)
+* NEW:
+   * Added a few new subtitle formats
+   * Italian language - thx Johnny B. Goode
+   * Turkish language - thx Ã‡aÄŸdaÅŸ
+* IMPROVED:
+   * OCR: MUCH better ocr of italics when using Tesseract
+   * Waveform now performs better when many lines are selected
+   * Waveform now has focused rectangle
+   * Network mode more stable (auto-restart)
+   * Updated Czech language file - thx Trottel
+   * Updated German language file - thx Christoph Kitsche
+* FIXED:
+   * Possible crash in 'Fix common errors' on selected lines - thx Dan
+   * Drag'n'drop of large bluray sup files - thx AT
+
 
 3.3.1 (3rd February 2013)
 * NEW:
    * Added a few new subtitle formats (now 150 formats!)
-   * French language - thx thx JM GBT
+   * French language - thx JM GBT
    * German language - thx Christoph Kitsche
    * Greek language - thx Menes
 * IMPROVED:
@@ -107,7 +124,7 @@ Subtitle Edit Changelog
    * Added "Delete line(s)" context menu to ocr - thx Mario
  * IMPROVED:
    * Updated Chinese language file - thx FeiXJ
-   * Updated Brazilian Portuguese - thx Igor Rückert
+   * Updated Brazilian Portuguese - thx Igor RÃ¼ckert
    * Updated Polish language file - thx Adam Malich
    * Updated Romanian language file - thx dr. Jackson
    * Better reading of Cavena 890 format - thx Victor
@@ -227,14 +244,14 @@ Subtitle Edit Changelog
    * Crash (memory leak) when exporting images from a vobsub - thx Pete
    * Bug in Fix common errors with uncheck fix quotes -  thx jofafrazze
    * Bug in Import plain text when only non-English letters - thx Jasper
-   * Now detects encoding when opening son files - thx Jørgen
+   * Now detects encoding when opening son files - thx JÃ¸rgen
 
 
 3.2.3 (13th January 2012)
  * NEW:
    * Added Brazilian Portuguese - thx XXXXXXXXXX
    * Added Italian language file - thx Maff
-   * Added Portuguese (Portugal) language file - thx Ricardo Perdigão
+   * Added Portuguese (Portugal) language file - thx Ricardo PerdigÃ£o
    * Added Japanese language file - thx Nardog
    * Added Spanish language file - thx m2s
    * Support for subtitle format AvidCaption - thx Laszlo
@@ -335,7 +352,7 @@ Subtitle Edit Changelog
      background color
    * Fixed too much cropping for VobSub pictures
    * Now removes empty Unicode white spaces from Google translate
-   * Crash when entering invalid text in source view (thx Frédéric)
+   * Crash when entering invalid text in source view (thx FrÃ©dÃ©ric)
    * Fixed a few bugs in DVD Architect format + added another two 
      new variants (thx Jacob)
    * Fixed incorrect line-break in Microsoft Translate in last part of 
@@ -391,7 +408,7 @@ Subtitle Edit Changelog
    * Missing line break in Sony DVD Architect w line numbers (thx Rosa)
    * A minor bug in Visual Sync, if end scene was after video length (thx tsieberg)
    * OCR Fix Engine: Lines after "..." will no longer be changed to start with uppercase
-   * Fixed bug in reading of SSA files (',' was removed) - thx Péter
+   * Fixed bug in reading of SSA files (',' was removed) - thx PÃ©ter
    * Fixed line breaking bug in mpl format - thx Przemek
    * Fixed shortcuts for adjust commands Ctrl+Space/Shift+Space/F9/F10
 

@@ -110,6 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
         VobSubOcrSettings _vobSubOcrSettings;
         bool _italicCheckedLast;
         bool _useNewSubIdxCode;
+        double _unItalicFactor = 0.33;
 
         Type _modiType;
         Object _modiDoc;
@@ -242,6 +243,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxUseModiInTesseractForUnknownWords.Text = language.TryModiForUnknownWords;
             checkBoxTesseractItalicsOn.Checked = Configuration.Settings.VobSubOcr.UseItalicsInTesseract;
             checkBoxTesseractItalicsOn.Text = Configuration.Settings.Language.General.Italic;
+            _unItalicFactor = Configuration.Settings.VobSubOcr.ItalicFactor;
             checkBoxShowOnlyForced.Text = language.ShowOnlyForcedSubtitles;
             checkBoxUseTimeCodesFromIdx.Text = language.UseTimeCodesFromIdx;
 
@@ -397,7 +399,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _bluRaySubtitlesOriginal = subtitles;
 
-            groupBoxImagePalette.Visible = false;
+            groupBoxImagePalette.Visible = false;            
 
             Text = Configuration.Settings.Language.VobSubOcr.TitleBluRay;
             if (!string.IsNullOrEmpty(fileName))
@@ -1987,43 +1989,23 @@ namespace Nikse.SubtitleEdit.Forms
             return result;
         }
 
-        //public void UnItalic(Bitmap bmp)
-        //{
-        //    double xOffset = 0;
-        //    for (int y = 0; y < bmp.Height; y++)
-        //    {
-        //        int offset = (int)xOffset;
-        //        for (int x = bmp.Width - 1; x >= 0; x--)
-        //        {
-        //            if (x - offset >= 0)
-        //                bmp.SetPixel(x, y, bmp.GetPixel(x - offset, y));
-        //            else
-        //                bmp.SetPixel(x, y, Color.Transparent);
-        //        }
-        //        //                xOffset += 0.3;
-        //        xOffset += 0.05;
-        //    }
-        //}
+        public static Bitmap UnItalic(Bitmap bmp, double factor)
+        {
+            int left = (int)(bmp.Height * factor);
+            Bitmap unItaliced = new Bitmap(bmp.Width + left + 4, bmp.Height);
 
-        //public void UnItalic(Bitmap bmp, double factor)
-        //{
-        //    int left = (int)(bmp.Height*factor);
-        //    Bitmap unItaliced = new Bitmap(bmp.Width + left, bmp.Height);
-        //    double xOffset = 0;
-        //    for (int y = 0; y < bmp.Height; y++)
-        //    {
-        //        int offset = (int)xOffset;
-        //        for (int x = bmp.Width - 1; x >= 0; x--)
-        //        {
-        //            if (x - offset >= 0)
-        //                unItaliced.SetPixel(x, y, bmp.GetPixel(x - offset, y));
-        //            else
-        //                unItaliced.SetPixel(x, y, Color.Transparent);
-        //        }
-        //        //                xOffset += 0.3;
-        //        xOffset += 0.05;
-        //    }
-        //}
+            Point[] destinationPoints = {
+                new Point(0, 0),  // destination for upper-left point of  original 
+                new Point(bmp.Width, 0), // destination for upper-right point of original 
+                new Point(left, bmp.Height)   // destination for lower-left point of original
+            };  
+
+            using (var g = Graphics.FromImage(unItaliced))
+            {
+                g.DrawImage(bmp, destinationPoints);
+            }
+            return unItaliced;
+        }
 
         private string Tesseract3DoOcrViaExe(Bitmap bmp, string language, string psmMode)
         {
@@ -2265,12 +2247,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // fix italics
-            int italicStartCount = Utilities.CountTagInText(textWithOutFixes, "<i>");
-            if (textWithOutFixes.Contains("<i>") && italicStartCount > 1)
-                textWithOutFixes = "<i>" + textWithOutFixes.Replace("<i>", string.Empty).Replace("</i>", string.Empty) + "</i>";
-            else if (italicStartCount == 1 && textWithOutFixes.Length > 20 &&
-                     textWithOutFixes.IndexOf("<i>") > 1 && textWithOutFixes.IndexOf("<i>") < 10 && textWithOutFixes.EndsWith("</i>"))
-                textWithOutFixes = "<i>" + textWithOutFixes.Replace("<i>", string.Empty).Replace("</i>", string.Empty) + "</i>";
+            textWithOutFixes = FixItalics(textWithOutFixes);
 
             int numberOfWords = textWithOutFixes.ToString().Split((" " + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
 
@@ -2316,7 +2293,7 @@ namespace Nikse.SubtitleEdit.Forms
                             newText = newText.TrimEnd() + "?";
 
                         textWithOutFixes = newUnfixedText;
-                        line = newText;
+                        line = FixItalics(newText);
                     }
                     else if (correctWords > oldCorrectWords + 1 || (correctWords > oldCorrectWords && !textWithOutFixes.Contains(" ")))
                     {
@@ -2330,6 +2307,184 @@ namespace Nikse.SubtitleEdit.Forms
                         _ocrFixEngine.UnknownWordsFound.AddRange(oldUnkownWords);
                     }
                 }
+
+
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length < 2)
+                {
+                    if (_bluRaySubtitles != null && !line.Contains("<i>"))
+                    {
+                        _ocrFixEngine.AutoGuessesUsed.Clear();
+                        _ocrFixEngine.UnknownWordsFound.Clear();
+
+                        // which is best - normal image or one color image?
+                        NikseBitmap nbmp = new NikseBitmap(bitmap);
+                        nbmp.MakeOneColor(Color.White);
+                        Bitmap oneColorBitmap = nbmp.GetBitmap();
+                        string oneColorText = Tesseract3DoOcrViaExe(oneColorBitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.
+                        oneColorBitmap.Dispose();
+                        nbmp = null;
+
+                        if (oneColorText.Length > 1 &&
+                            !oneColorText.Contains("CD") &&
+                            (!oneColorText.Contains("0") || line.Contains("0")) &&
+                            (!oneColorText.Contains("2") || line.Contains("2")) &&
+                            (!oneColorText.Contains("3") || line.Contains("4")) &&
+                            (!oneColorText.Contains("5") || line.Contains("5")) &&
+                            (!oneColorText.Contains("9") || line.Contains("9")) &&
+                            (!oneColorText.Contains("•") || line.Contains("•")) &&
+                            (!oneColorText.Contains(")") || line.Contains(")")) &&
+                            Utilities.CountTagInText(oneColorText, "(") < 2 && Utilities.CountTagInText(oneColorText, ")") < 2 &&
+                            Utilities.CountTagInText(oneColorText, Environment.NewLine) < 3)
+                        {
+                            int modiCorrectWords;
+                            int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(oneColorText, out modiCorrectWords);
+                            string modiTextOcrFixed = oneColorText;
+                            if (checkBoxAutoFixCommonErrors.Checked)
+                                modiTextOcrFixed = _ocrFixEngine.FixOcrErrors(oneColorText, index, _lastLine, false, checkBoxGuessUnknownWords.Checked);
+                            int modiOcrCorrectedCorrectWords;
+                            int modiOcrCorrectedWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiTextOcrFixed, out modiOcrCorrectedCorrectWords);
+                            if (modiOcrCorrectedWordsNotFound <= modiWordsNotFound)
+                            {
+                                oneColorText = modiTextOcrFixed;
+                                modiWordsNotFound = modiOcrCorrectedWordsNotFound;
+                                modiCorrectWords = modiOcrCorrectedCorrectWords;
+                            }
+
+                            if (modiWordsNotFound < wordsNotFound || (textWithOutFixes.Length == 1 && modiWordsNotFound == 0))
+                            {
+                                line = FixItalics(oneColorText); // use one-color text
+                                wordsNotFound = modiWordsNotFound;
+                                correctWords = modiCorrectWords;
+                                if (checkBoxAutoFixCommonErrors.Checked)
+                                    line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                            }
+                            else if (wordsNotFound == modiWordsNotFound && oneColorText.EndsWith("!") && (line.EndsWith("l") || line.EndsWith("ﬂ")))
+                            {
+                                line = FixItalics(oneColorText);
+                                wordsNotFound = modiWordsNotFound;
+                                correctWords = modiCorrectWords;
+                                if (checkBoxAutoFixCommonErrors.Checked)
+                                    line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                            }
+                        }
+                    }
+                }
+
+                if (checkBoxTesseractItalicsOn.Checked)
+                {
+                    if (line.Contains("<i>") || wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length < 2)
+                    {
+                        _ocrFixEngine.AutoGuessesUsed.Clear();
+                        _ocrFixEngine.UnknownWordsFound.Clear();
+
+                        // which is best - normal image or de-italic'ed? We find out here
+                        var unItalicedBmp = UnItalic(bitmap, _unItalicFactor);
+                        string unItalicText = Tesseract3DoOcrViaExe(unItalicedBmp, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.
+                        unItalicedBmp.Dispose();
+
+                        if (unItalicText.Length > 1)
+                        {
+                            int modiCorrectWords;
+                            int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(unItalicText, out modiCorrectWords);
+                            string modiTextOcrFixed = unItalicText;
+                            if (checkBoxAutoFixCommonErrors.Checked)
+                                modiTextOcrFixed = _ocrFixEngine.FixOcrErrors(unItalicText, index, _lastLine, false, checkBoxGuessUnknownWords.Checked);
+                            int modiOcrCorrectedCorrectWords;
+                            int modiOcrCorrectedWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiTextOcrFixed, out modiOcrCorrectedCorrectWords);
+                            if (modiOcrCorrectedWordsNotFound <= modiWordsNotFound)
+                            {
+                                unItalicText = modiTextOcrFixed;
+                                modiWordsNotFound = modiOcrCorrectedWordsNotFound;
+                                modiCorrectWords = modiOcrCorrectedCorrectWords;
+                            }
+
+                            bool ok = modiWordsNotFound < wordsNotFound || (textWithOutFixes.Length == 1 && modiWordsNotFound == 0);
+
+                            if (!ok)
+                                ok = wordsNotFound == modiWordsNotFound && unItalicText.EndsWith("!") && (line.EndsWith("l") || line.EndsWith("ﬂ"));
+
+                            if (!ok)
+                                ok = wordsNotFound == modiWordsNotFound && line.StartsWith("<i>") && line.EndsWith("</i>");
+
+                            if (ok)
+                            {
+                                wordsNotFound = modiWordsNotFound;
+                                correctWords = modiCorrectWords;
+
+                                line = line.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Trim();
+
+                                if (line.Length > 7 && unItalicText.Length > 7 && unItalicText.StartsWith("I ") &&
+                                    line.StartsWith(unItalicText.Remove(0, 2).Substring(0, 4)))
+                                    unItalicText = unItalicText.Remove(0, 2);
+
+                                if (unItalicText.StartsWith("[") && !line.StartsWith("["))
+                                {
+                                    unItalicText = unItalicText.Remove(0, 1);
+                                    if (unItalicText.EndsWith("]"))
+                                        unItalicText = unItalicText.TrimEnd(']');
+                                }
+                                if (unItalicText.StartsWith("{") && !line.StartsWith("{"))
+                                {
+                                    unItalicText = unItalicText.Remove(0, 1);
+                                    if (unItalicText.EndsWith("}"))
+                                        unItalicText = unItalicText.TrimEnd('}');
+                                }
+                                if (unItalicText.EndsWith("}") && !line.EndsWith("}"))
+                                    unItalicText = unItalicText.TrimEnd('}');
+
+                                if (line.EndsWith("...") && unItalicText.EndsWith("”!"))
+                                    unItalicText = unItalicText.TrimEnd('!').TrimEnd('”') + ".";
+                                if (line.EndsWith("...") && unItalicText.EndsWith("\"!"))
+                                    unItalicText = unItalicText.TrimEnd('!').TrimEnd('"') + ".";
+
+                                if (line.EndsWith(".") && !unItalicText.EndsWith("."))
+                                {
+                                    if (unItalicText.EndsWith("'") && !line.EndsWith("'."))
+                                        unItalicText = unItalicText.TrimEnd('\'');
+                                    unItalicText += ".";
+                                }
+                                if (unItalicText.EndsWith(".") && !unItalicText.EndsWith("...") && line.EndsWith("..."))
+                                    unItalicText += "..";
+                                if (unItalicText.EndsWith("..") && !unItalicText.EndsWith("...") && line.EndsWith("..."))
+                                    unItalicText += ".";
+
+                                if (line.EndsWith("!") && !unItalicText.EndsWith("!"))
+                                {
+                                    if (unItalicText.EndsWith("!'"))
+                                        unItalicText = unItalicText.TrimEnd('\'');
+                                    else
+                                        unItalicText += "!";
+                                }
+                                if (line.EndsWith("?") && !unItalicText.EndsWith("?"))
+                                {
+                                    if (unItalicText.EndsWith("?'"))
+                                        unItalicText = unItalicText.TrimEnd('\'');
+                                    else
+                                        unItalicText += "?";
+                                }
+
+                                line = unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty);
+                                if (checkBoxAutoFixCommonErrors.Checked)
+                                    line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                                line = "<i>" + line + "</i>";
+                            }
+                            else
+                            {
+                                unItalicText = unItalicText.Replace("</i>", string.Empty);
+                                if (line.EndsWith("</i>") && unItalicText.EndsWith("."))
+                                {
+                                    line = line.Remove(line.Length - 4, 4);
+                                    if (line.EndsWith("-"))
+                                        line = line.TrimEnd('-') + ".";
+                                    if (Utilities.AllLetters.Contains(line.Substring(line.Length - 1)))
+                                        line += ".";
+                                    line += "</i>";
+                                }
+                            }
+                        }
+                    }
+                }
+
 
                 if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length < 2)
                 {
@@ -2383,6 +2538,7 @@ namespace Nikse.SubtitleEdit.Forms
                         line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, checkBoxGuessUnknownWords.Checked);
                     }
                 }
+
 
                 if (_ocrFixEngine.Abort)
                 {
@@ -2438,6 +2594,36 @@ namespace Nikse.SubtitleEdit.Forms
                 bitmap.Dispose();
 
             return line;
+        }
+
+        private static string FixItalics(string s)
+        {
+            int italicStartCount = Utilities.CountTagInText(s, "<i>");
+
+            s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+            s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+            s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
+            s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
+            s = s.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            s = s.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+
+            if (italicStartCount == 1 && s.Contains("<i>-</i>"))
+            {
+                s = s.Replace("<i>-</i>", "-");
+                s = s.Replace("  ", " ");
+            }
+
+            if (s.Contains("</i> / <i>"))
+                s = s.Replace("</i> / <i>", " I ").Replace("  ", " ");
+            if (s.StartsWith("/ <i>"))
+                s = ("<i>I " + s.Remove(0, 5)).Replace("  ", " ");
+            if (s.StartsWith("I <i>"))
+                s = ("<i>I " + s.Remove(0, 5)).Replace("  ", " ");
+            else if (italicStartCount == 1 && s.Length > 20 &&
+                     s.IndexOf("<i>") > 1 && s.IndexOf("<i>") < 10 && s.EndsWith("</i>"))
+                s = "<i>" + s.Replace("<i>", string.Empty).Replace("</i>", string.Empty) + "</i>";
+            s = s.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+            return s;
         }
 
         private void LogUnknownWords()
@@ -3605,6 +3791,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _tesseractThread.CancelAsync();
             _tesseractAsyncIndex = 10000;
             Configuration.Settings.VobSubOcr.UseItalicsInTesseract = checkBoxTesseractItalicsOn.Checked;
+            Configuration.Settings.VobSubOcr.ItalicFactor = _unItalicFactor;
             Configuration.Settings.VobSubOcr.UseModiInTesseractForUnknownWords = checkBoxUseModiInTesseractForUnknownWords.Checked;
             Configuration.Settings.VobSubOcr.PromptForUnknownWords = checkBoxPromptForUnknownWords.Checked;
         }
@@ -3818,6 +4005,13 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = lb.SelectedItems[0].ToString();
                 Clipboard.SetText(text);
             }
+        }
+
+        private void toolStripMenuItemSetUnItalicFactor_Click(object sender, EventArgs e)
+        {
+            var form = new VobSubOcrSetItalicFactor(GetSubtitleBitmap(_selectedIndex), _unItalicFactor);
+            form.ShowDialog(this);
+            _unItalicFactor = form.GetUnItalicFactor();            
         }
 
     }

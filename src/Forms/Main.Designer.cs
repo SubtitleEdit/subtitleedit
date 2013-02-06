@@ -129,6 +129,8 @@
             this.toolStripMenuItemRightToLeftMode = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemReverseRightToLeftStartEnd = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemModifySelection = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemInverseSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.editSelectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjustDisplayTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -172,6 +174,7 @@
             this.redockVideoControlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSpellCheckMain = new System.Windows.Forms.ToolStripMenuItem();
             this.spellCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSpellCheckFromCurrentLine = new System.Windows.Forms.ToolStripMenuItem();
             this.findDoubleWordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FindDoubleLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
@@ -1214,6 +1217,8 @@
             this.toolStripMenuItemRightToLeftMode,
             this.toolStripMenuItemReverseRightToLeftStartEnd,
             this.toolStripSeparator21,
+            this.toolStripMenuItemModifySelection,
+            this.toolStripMenuItemInverseSelection,
             this.editSelectAllToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
@@ -1326,6 +1331,22 @@
             // 
             this.toolStripSeparator21.Name = "toolStripSeparator21";
             this.toolStripSeparator21.Size = new System.Drawing.Size(302, 6);
+            // 
+            // toolStripMenuItemModifySelection
+            // 
+            this.toolStripMenuItemModifySelection.Name = "toolStripMenuItemModifySelection";
+            this.toolStripMenuItemModifySelection.Size = new System.Drawing.Size(305, 22);
+            this.toolStripMenuItemModifySelection.Text = "Create/modify selection...";
+            this.toolStripMenuItemModifySelection.Click += new System.EventHandler(this.toolStripMenuItemModifySelection_Click);
+            // 
+            // toolStripMenuItemInverseSelection
+            // 
+            this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
+            this.toolStripMenuItemInverseSelection.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.I)));
+            this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(305, 22);
+            this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
+            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
             // 
             // editSelectAllToolStripMenuItem
             // 
@@ -1659,6 +1680,7 @@
             // 
             this.toolStripMenuItemSpellCheckMain.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.spellCheckToolStripMenuItem,
+            this.toolStripMenuItemSpellCheckFromCurrentLine,
             this.findDoubleWordsToolStripMenuItem,
             this.FindDoubleLinesToolStripMenuItem,
             this.toolStripSeparator9,
@@ -1677,6 +1699,13 @@
             this.spellCheckToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
             this.spellCheckToolStripMenuItem.Text = "Spell check...";
             this.spellCheckToolStripMenuItem.Click += new System.EventHandler(this.SpellCheckToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemSpellCheckFromCurrentLine
+            // 
+            this.toolStripMenuItemSpellCheckFromCurrentLine.Name = "toolStripMenuItemSpellCheckFromCurrentLine";
+            this.toolStripMenuItemSpellCheckFromCurrentLine.Size = new System.Drawing.Size(296, 22);
+            this.toolStripMenuItemSpellCheckFromCurrentLine.Text = "Spell check from current line...";
+            this.toolStripMenuItemSpellCheckFromCurrentLine.Click += new System.EventHandler(this.toolStripMenuItemSpellCheckFromCurrentLine_Click);
             // 
             // findDoubleWordsToolStripMenuItem
             // 
@@ -1947,7 +1976,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 804);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 782);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
@@ -3673,7 +3702,7 @@
             this.superscriptToolStripMenuItem,
             this.subscriptToolStripMenuItem});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(215, 402);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(215, 380);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
             // 
             // toolStripMenuItemWebVttVoice
@@ -4538,6 +4567,9 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVTT;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVttVoice;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorWebVTT;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemModifySelection;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInverseSelection;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckFromCurrentLine;
     }
 }
 

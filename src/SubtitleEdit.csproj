@@ -338,6 +338,12 @@
     <Compile Include="Forms\MergeDoubleLines.Designer.cs">
       <DependentUpon>MergeDoubleLines.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ModifySelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ModifySelection.Designer.cs">
+      <DependentUpon>ModifySelection.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\NetworkChat.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -608,6 +614,12 @@
     <Compile Include="Forms\VobSubOcrNewFolder.Designer.cs">
       <DependentUpon>VobSubOcrNewFolder.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\VobSubOcrSetItalicFactor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VobSubOcrSetItalicFactor.Designer.cs">
+      <DependentUpon>VobSubOcrSetItalicFactor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Watermark.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -856,6 +868,8 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle43.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle44.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle45.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle46.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle47.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
     <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />
@@ -1083,6 +1097,9 @@
     <EmbeddedResource Include="Forms\MergeDoubleLines.resx">
       <DependentUpon>MergeDoubleLines.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ModifySelection.resx">
+      <DependentUpon>ModifySelection.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\NetworkChat.resx">
       <DependentUpon>NetworkChat.cs</DependentUpon>
     </EmbeddedResource>
@@ -1214,6 +1231,9 @@
     <EmbeddedResource Include="Forms\VobSubOcrNewFolder.resx">
       <DependentUpon>VobSubOcrNewFolder.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VobSubOcrSetItalicFactor.resx">
+      <DependentUpon>VobSubOcrSetItalicFactor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Watermark.resx">
       <DependentUpon>Watermark.cs</DependentUpon>
