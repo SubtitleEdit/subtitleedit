@@ -114,6 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom = new System.Windows.Forms.SplitContainer();
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.toolStripMenuItemSetUnItalicFactor = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.GroupBoxTesseractMethod.SuspendLayout();
@@ -153,10 +154,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparatorImageCompare,
             this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem,
             this.EditLastAdditionsToolStripMenuItem,
+            this.toolStripMenuItemSetUnItalicFactor,
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 226);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 270);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
@@ -1054,6 +1056,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
             // 
+            // toolStripMenuItemSetUnItalicFactor
+            // 
+            this.toolStripMenuItemSetUnItalicFactor.Name = "toolStripMenuItemSetUnItalicFactor";
+            this.toolStripMenuItemSetUnItalicFactor.Size = new System.Drawing.Size(305, 22);
+            this.toolStripMenuItemSetUnItalicFactor.Text = "Set un-italic factor...";
+            this.toolStripMenuItemSetUnItalicFactor.Click += new System.EventHandler(this.toolStripMenuItemSetUnItalicFactor_Click);
+            // 
             // VobSubOcr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1200,5 +1209,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonUknownToNames;
         private System.Windows.Forms.Button buttonAddToOcrReplaceList;
         private System.Windows.Forms.Button buttonGoogleIt;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetUnItalicFactor;
     }
 }

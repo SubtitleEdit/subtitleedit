@@ -79,6 +79,17 @@ namespace Nikse.SubtitleEdit.Logic
             return _paragraphs[index];
         }
 
+        public Paragraph GetParagraphOrDefaultById(string id)
+        {
+            foreach (Paragraph p in _paragraphs)
+            {
+                if (p.ID == id)
+                    return p;
+            }
+            return null;
+        }
+
+
         public SubtitleFormat ReloadLoadSubtitle(List<string> lines, string fileName)
         {
             Paragraphs.Clear();
