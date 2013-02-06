@@ -2,7 +2,7 @@
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.3.1</Version>
+    <Version>3.3.2</Version>
     <TranslatedBy>Christoph Kitsche</TranslatedBy>
     <CultureName>de-DE</CultureName>
     <HelpFile />
@@ -21,7 +21,7 @@
     <NoVideoLoaded>Kein Video gefunden</NoVideoLoaded>
     <VideoInformation>Video-Informationen</VideoInformation>
     <PositionX>Position / L&#228;nge: {0}</PositionX>
-    <StartTime>Anfangszeit</StartTime>
+    <StartTime>Startzeit</StartTime>
     <EndTime>Endzeit</EndTime>
     <Duration>L&#228;nge</Duration>
     <NumberSymbol>#</NumberSymbol>
@@ -441,8 +441,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Hey.Du. -&gt; Hey. Du.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>Die Erde ist fIach. -&gt; Die Erde ist flach.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Text Nummer {0}: Anfangszeit kommt nach Endzeit: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
-    <UnableToFixStartTimeLaterThanEndTime>Konnte Text Nummer {0} nicht korrigieren: Anfangszeit kommt nach Endzeit: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Text Nummer {0}: Startzeit kommt nach Endzeit: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>Konnte Text Nummer {0} nicht korrigieren: Startzeit kommt nach Endzeit: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} korrigiert zu: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Konnte Text Nummer {0} nicht korrigieren: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} &#252;berlappende Zeitstempel korrigieren</XOverlappingTimestampsFixed>
@@ -629,7 +629,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <MinimumDisplayTimeBetweenParagraphs>Minimale Anzeigezeit zwischen Items...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sortieren nach</SortBy>
         <Number>Nummer</Number>
-        <StartTime>Anfangszeit</StartTime>
+        <StartTime>Startzeit</StartTime>
         <EndTime>Endzeit</EndTime>
         <Duration>L&#228;nge</Duration>
         <TextAlphabetically>Text - alphabetsch</TextAlphabetically>
@@ -797,8 +797,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Von vor dem &amp;Text wiedergeben</PlayFromJustBeforeText>
       <Pause>Pause</Pause>
-      <GoToSubtitlePositionAndPause>Zur Anfangszeit und Pause</GoToSubtitlePositionAndPause>
-      <SetStartTime>Als &amp;Anfangszeit setzen</SetStartTime>
+      <GoToSubtitlePositionAndPause>Zur Startzeit und Pause</GoToSubtitlePositionAndPause>
+      <SetStartTime>Als &amp;Startzeit setzen</SetStartTime>
       <SetEndTimeAndGoToNext>Endzeit setzen &amp;&amp; &amp;N&#228;chstes</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Angepasst mittels Endzeit {0}</AdjustedViaEndTime>
       <SetEndTime>Als &amp;Endzeit setzen</SetEndTime>
@@ -882,7 +882,7 @@ Möchten Sie die Suche am Anfang des Dokuments fortsetzen?</ReplaceXContinue>
     <BeforeDisplayTimeAdjustment>Vor dem Anpassen der Anzeigezeit</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Anzeigezeit angepasst: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Anzeigezeiten angepasst: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Anfangszeit angepasst: {0}</StarTimeAdjustedX>
+    <StarTimeAdjustedX>Startzeit angepasst: {0}</StarTimeAdjustedX>
     <BeforeCommonErrorFixes>Vor dem Korrigieren h&#228;ufiger Fehler</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>H&#228;ufige Fehler in ausgew&#228;hlten Items korrigiert</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>H&#228;ufige Fehler korrigiert</CommonErrorsFixed>
@@ -1330,33 +1330,33 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <UpdateShortcut>&#196;nderung</UpdateShortcut>
     <ShortcutIsNotValid>Tastenkombination ist ung&#252;ltig: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>An-/abdocken der Videosteuerung umschalten</ToggleDockUndockOfVideoControls>
-    <CreateSetEndAddNewAndGoToNew>Set end, add new and go to new</CreateSetEndAddNewAndGoToNew>
+    <CreateSetEndAddNewAndGoToNew>Endzeit setzen, neues Item ergänzen und dorthin springen</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Mittels Endposition anpassen und zu N&#228;chstem gehen</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetStartAutoDurationAndGoToNext>Set start, auto duration and go to next</AdjustSetStartAutoDurationAndGoToNext>
-    <AdjustSetEndNextStartAndGoToNext>Set end, next start and go to next</AdjustSetEndNextStartAndGoToNext>
-    <AdjustStartDownEndUpAndGoToNext>Key down=set start, Key up=set end and go to next</AdjustStartDownEndUpAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>Startzeit setzen, autom. Dauer und zum nächsten Item</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetEndNextStartAndGoToNext>Endzeit setzen, neue Startzeit setzen und dorthin gehen</AdjustSetEndNextStartAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>Taste drücken=Startzeit setzen, Taste loslassen=Endzeit setzen und zum nächsten Item</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Verschiebe ausgewählte Zeilen 100 ms vorwärts</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Verschiebe ausgewählte Zeilen 100 ms rückwärts</AdjustSelected100MsBack>
     <AdjustSetStartTimeOnly>Starzeit setzen, Endzeit behalten</AdjustSetStartTimeOnly>
-    <MainCreateStartDownEndUp>Create new at key-down, set end time at key-up</MainCreateStartDownEndUp>
+    <MainCreateStartDownEndUp>Taste drücken=neues Item erzeugen, Taste loslassen=Endzeit setzen</MainCreateStartDownEndUp>
     <MergeDialogue>Zusammenführungs-Dialog (Bindestriche)</MergeDialogue>
     <GoToNext>Springe zur nächsten Zeile</GoToNext>
     <GoToPrevious>Springe zur vorhergehenden Zeile</GoToPrevious>
-    <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
-    <ToggleDialogueDashes>Toggle dialogue dashes</ToggleDialogueDashes>
+    <ToggleFocus>Fokus zwischen Listenansicht und Untertitel-Textfeld wechseln</ToggleFocus>
+    <ToggleDialogueDashes>Bindestriche umschalten</ToggleDialogueDashes>
     <Alignment>Ausrichtung (ausgewählte Items)</Alignment>
     <CopyTextOnly>Rein-Text in Zwischenablage kopieren (ausgewählte Items)</CopyTextOnly>
-    <AutoDurationSelectedLines>Auto-duration (ausgewählte Items)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Rechts-nach-Links Start/Ende umkehren/end</ReverseStartAndEndingForRTL>
+    <AutoDurationSelectedLines>Auto-Dauer (ausgewählte Items)</AutoDurationSelectedLines>
+    <ReverseStartAndEndingForRTL>Rechts-nach-Links Start/Ende umkehren/Ende</ReverseStartAndEndingForRTL>
     <VerticalZoom>Vertikaler Zoom</VerticalZoom>
     <WaveformSeekSilenceForward>Stille suchen vorwärts</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Stille suchen rückwärts</WaveformSeekSilenceBack>
-    <WaveformAddTextHere>Add text here (for new selection)</WaveformAddTextHere>
+    <WaveformAddTextHere>Text hier ergänzen (für neue Auswahl)</WaveformAddTextHere>
     <GoBack100Milliseconds>100 ms zurück</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms vor</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms zurück</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 ms vor</GoForward500Milliseconds>
-    <TogglePlayPause>Toggle play/pause</TogglePlayPause>
+    <TogglePlayPause>Abspielen/Pause umschalten</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Vollbild</Fullscreen>
     <CustomSearch1>Übersetzen, benutzerdef. Suche 1</CustomSearch1>
