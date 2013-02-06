@@ -196,6 +196,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Vybrat jazyk</Title>
     <Language>Jazyk</Language>
   </ChooseLanguage>
+  <ColumnPaste>
+    <Title>Vložit sloupec</Title>
+    <ChooseColumn>Vybrat sloupec</ChooseColumn>
+    <OverwriteShiftCellsDown>Přepsat/Posunout buňky dolů</OverwriteShiftCellsDown>
+    <Overwrite>Přepsat</Overwrite>
+    <ShiftCellsDown>Posunout buňky dolů</ShiftCellsDown>
+    <TimeCodesOnly>Pouze časové kódy</TimeCodesOnly>
+    <TextOnly>Pouze text</TextOnly>
+    <OriginalTextOnly>Pouze původní text</OriginalTextOnly>
+  </ColumnPaste>
   <CompareSubtitles>
     <Title>Porovnat titulky</Title>
     <PreviousDifference>&amp;Předchozí rozdíl</PreviousDifference>
@@ -398,7 +408,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AddMissingQuote>Přidat jedny chybějící uvozovky (")</AddMissingQuote>
     <AddMissingQuotes>Přidat více chybějících uvozovek (")</AddMissingQuotes>
     <FixHyphens>Opravit řádky začínající pomlčkou (-)</FixHyphens>
-    <FixHyphensAdd>Opravit (přidat pomlčku) dvojice řádků s pouze jednou pomlčkou (-)</FixHyphensAdd>
+    <FixHyphensAdd>Opravit (přidat pomlčku) dvojice řádků pouze s jednou pomlčkou (-)</FixHyphensAdd>
     <FixHyphen>Opravit řádek začínající pomlčkou (-)</FixHyphen>
     <XHyphensFixed>Opravených pomlček: {0}</XHyphensFixed>
     <AddMissingQuotesExample>"Jak se máte?  -&gt; "Jak se máte?"</AddMissingQuotesExample>
@@ -614,6 +624,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeFrameRate>Změnit snímkovou frekvenci...</ChangeFrameRate>
         <ChangeSpeedInPercent>Změnit rychlost (procenta)...</ChangeSpeedInPercent>
         <MergeShortLines>Sloučit krátké řádky...</MergeShortLines>
+        <MergeDuplicateText>Sloučit řádky se stejným textem...</MergeDuplicateText>
         <SplitLongLines>Rozdělit dlouhé řádky...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimální čas zobrazení mezi odstavci...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Seřadit podle</SortBy>
@@ -724,6 +735,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnInsertTextFromSubtitle>Vložit text z titulku...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Importovat text a posunout buňky dolů</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Vložit ze schránky...</ColumnPasteFromClipboard>
+        <ColumnCopyOriginalTextToCurrent>Kopírovat text z původního do aktuálního</ColumnCopyOriginalTextToCurrent>
         <Split>Rozdělit</Split>
         <MergeSelectedLines>Sloučit vybrané řádky</MergeSelectedLines>
         <MergeSelectedLinesASDialogue>Sloučit vybrané řádky jako dialog</MergeSelectedLinesASDialogue>
@@ -1050,6 +1062,9 @@ Pokračovat?</SubtitleAppendPrompt>
     <PleaseChoose>Nalezeny více než jedny titulky - vyberte</PleaseChoose>
     <TrackXLanguageYTypeZ>Stopa {0} - {1} - jazyk: {2} - typ: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MergeDoubleLines>
+    <Title>Sloučit řádky se stejným textem</Title>
+  </MergeDoubleLines>
   <MergedShortLines>
     <Title>Sloučit krátké řádky</Title>
     <MaximumCharacters>Maximálně znaků v jednom odstavci</MaximumCharacters>
