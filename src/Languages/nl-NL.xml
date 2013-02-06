@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Language Name="Engels">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.2</Version>
     <TranslatedBy>Vertaald door: Quetsbeek en minouhse</TranslatedBy>
     <CultureName>nl-NL</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile>
+    </HelpFile>
     <OK>&amp;Oké</OK>
     <Cancel>Afbreken</Cancel>
     <Apply>Voer uit</Apply>
@@ -32,12 +33,12 @@
     <Italic>Cursief</Italic>
     <Underline>Onderstrepen</Underline>
     <Visible>Zichtbaar</Visible>
-    <FrameRate>Frame snelheid</FrameRate>
+    <FrameRate>Beeld snelheid</FrameRate>
     <Name>Naam</Name>
     <FileNameXAndSize>Bestandsnaam: {0} ({1})</FileNameXAndSize>
     <ResolutionX>Resolutie: {0}</ResolutionX>
-    <FrameRateX>Frame snelheid: {0:0.0###}</FrameRateX>
-    <TotalFramesX>Totaal aantal frames: {0:#,##0.##}</TotalFramesX>
+    <FrameRateX>Beeld snelheid: {0:0.0###}</FrameRateX>
+    <TotalFramesX>Totaal aantal beelden: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Videocodering: {0}</VideoEncodingX>
     <SingleLineLengths>Enkele regellengte :</SingleLineLengths>
     <TotalLengthX>Totale lengte: {0}</TotalLengthX>
@@ -73,14 +74,14 @@
   </General>
   <About>
     <Title>Over Subtitle Edit</Title>
-    <AboutText1>
-Subtitle Edit is vrije software onder de GNU Public License.      
-U mag het verspreiden, wijzigen en vrij gebruik van maken.
-      
-C# broncode is beschikbaar op http://code.google.com/p/subtitleedit
-Bezoek www.nikse.dk voor de nieuwste versie 
+    <AboutText1>Subtitle Edit is vrije software onder de GNU Public License. 
+U mag het verspreiden, wijzigen en vrij gebruiken.
+C# broncode is beschikbaar op http://code.google.com/p/subtitleedit 
 
-Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
+Bezoek www.nikse.dk voor de nieuwste versie. 
+Suggesties zijn van harte welkom 
+                                  
+E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Toevoegen aan namen/etc lijst</Title>
@@ -122,7 +123,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   <ApplyDurationLimits>
     <Title>Pas limietduur aan</Title>
     <FixesAvailable>Aanwezige aanpassingen</FixesAvailable>
-    <UnableToFix>Onmogelijk aan te passen</UnableToFix>
+    <UnableToFix>Onmogelijk aan te passen:</UnableToFix>
   </ApplyDurationLimits>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Auto balans geselecteerde regels</TitleAutoBreak>
@@ -173,12 +174,12 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <LinesFoundX>Gevonden regels: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
-    <Title>Verander frame snelheid</Title>
-    <ConvertFrameRateOfSubtitle>Converteer frame snelheid van de ondertiteling</ConvertFrameRateOfSubtitle>
-    <FromFrameRate>Van frame snelheid</FromFrameRate>
-    <ToFrameRate>Naar frame snelheid</ToFrameRate>
-    <FrameRateNotCorrect>Frame snelheid is niet correct</FrameRateNotCorrect>
-    <FrameRateNotChanged>Frame snelheid is hetzelfde - niets om te zetten</FrameRateNotChanged>
+    <Title>Verander beeld snelheid</Title>
+    <ConvertFrameRateOfSubtitle>Converteer beeld snelheid van de ondertiteling</ConvertFrameRateOfSubtitle>
+    <FromFrameRate>Van beeld snelheid</FromFrameRate>
+    <ToFrameRate>Naar beeld snelheid</ToFrameRate>
+    <FrameRateNotCorrect>Beeld snelheid is niet correct</FrameRateNotCorrect>
+    <FrameRateNotChanged>Beeld snelheid is hetzelfde - niets om te zetten</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Pas de snelheid aan in procenten</Title>
@@ -194,6 +195,16 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Kies taal</Title>
     <Language>Taal</Language>
   </ChooseLanguage>
+  <ColumnPaste>
+    <Title>Voeg kolom in</Title>
+    <ChooseColumn>Kies kolom</ChooseColumn>
+    <OverwriteShiftCellsDown>Overschrijf/Shift cellen onder</OverwriteShiftCellsDown>
+    <Overwrite>Overschrijf</Overwrite>
+    <ShiftCellsDown>Shift cellen beneden</ShiftCellsDown>
+    <TimeCodesOnly>Alleen tijdcodes</TimeCodesOnly>
+    <TextOnly>Alleen tekst</TextOnly>
+    <OriginalTextOnly>Alleen originele tekst</OriginalTextOnly>
+  </ColumnPaste>
   <CompareSubtitles>
     <Title>Vergelijk ondertitels</Title>
     <PreviousDifference>&amp;Vorige verschil</PreviousDifference>
@@ -256,13 +267,13 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>EBU opslaan opties</Title>
     <GeneralSubtitleInformation>Algemene informatie over ondertitel</GeneralSubtitleInformation>
     <CodePageNumber>Code paginanummer</CodePageNumber>
-    <DiskFormatCode>Disk-formaat code</DiskFormatCode>
+    <DiskFormatCode>Diskformaat code</DiskFormatCode>
     <CharacterCodeTable>Karakter tabel</CharacterCodeTable>
     <LanguageCode>Taalcode</LanguageCode>
-    <OriginalProgramTitle>Originele titel van het programma</OriginalProgramTitle>
-    <OriginalEpisodeTitle>Originele episodetitel</OriginalEpisodeTitle>
-    <TranslatedProgramTitle>Vertaalde programmatitel</TranslatedProgramTitle>
-    <TranslatedEpisodeTitle>Vertaalde episodetitel</TranslatedEpisodeTitle>
+    <OriginalProgramTitle>Originele programma titel</OriginalProgramTitle>
+    <OriginalEpisodeTitle>Originele episode titel</OriginalEpisodeTitle>
+    <TranslatedProgramTitle>Vertaalde programma titel</TranslatedProgramTitle>
+    <TranslatedEpisodeTitle>Vertaalde episode titel</TranslatedEpisodeTitle>
     <TranslatorsName>Naam vertaler</TranslatorsName>
     <SubtitleListReferenceCode>Ondertitel lijst referentiecode</SubtitleListReferenceCode>
     <CountryOfOrigin>Land van herkomst</CountryOfOrigin>
@@ -303,7 +314,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderWidth>Randbreedte</BorderWidth>
     <ImageFormat>Beeldformaat</ImageFormat>
     <AntiAlias>Anti alias</AntiAlias>
-    <SideBySide3D>Side-by-side 3D</SideBySide3D>
+    <SideBySide3D>Zij-aan-zij 3D</SideBySide3D>
     <ExportAllLines>Exporteer alle regels...</ExportAllLines>
     <XImagesSavedInY>{0} afbeeldingen zijn opgeslagen in {1}</XImagesSavedInY>
     <VideoResolution>Video resolutie</VideoResolution>
@@ -335,7 +346,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <TimeCodeFormat>Tijdcode formaat</TimeCodeFormat>
     <Srt>.srt</Srt>
     <Milliseconds>Milliseconden</Milliseconds>
-    <HHMMSSFF>HH:. MM: SS: FF</HHMMSSFF>
+    <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
     <TimeCodeSeperator>Tijdcode separator</TimeCodeSeperator>
   </ExportText>
   <FindDialog>
@@ -343,7 +354,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Find>Zoek</Find>
     <Normal>&amp;Normaal</Normal>
     <CaseSensitive>&amp;Hoofdlettergevoelig</CaseSensitive>
-    <RegularExpression>Regelmatig e &amp;Xpression</RegularExpression>
+    <RegularExpression>Regelmatige e&amp;Xpressie</RegularExpression>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Zoek ondertitel regel</Title>
@@ -378,7 +389,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>Breek lange regels af</BreakLongLines>
     <RemoveLineBreaks>Verwijder regeleinden in korte teksten met slechts een zin</RemoveLineBreaks>
     <RemoveLineBreaksAll>Verwijder regeleinden in korte teksten (alles behalve dialogen )</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Herstel hoofdletter 'I' in kleine letters woorden (ocr-fout)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsindeLowercaseWords>Herstel hoofdletter 'I' in woorden met kleine letters  (ocr-fout)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Wijzig dubbele enkele aanhalingstekens ('') naar een enkel aanhalingsteken (")</FixDoubleApostrophes>
     <AddPeriods>Voeg punt toe na regel waar volgende regel begint met hoofdletter</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Start met hoofdletter na paragraaf</StartWithUppercaseLetterAfterParagraph>
@@ -387,9 +398,9 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixLowercaseIToUppercaseI>Wijzig alleenstaande kleine letter 'i' naar 'I' (Engels)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Herstel gemeenschappelijke OCR fouten (met behulp van OCR vervang lijst)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Gemeenschappelijke OCR fouten opgelost (OcrReplaceList bestand dat wordt gebruikt): {0}</CommonOcrErrorsFixed>
-    <RemoveSpaceBetweenNumber>Verwijder ruimte tussen de nummers</RemoveSpaceBetweenNumber>
+    <RemoveSpaceBetweenNumber>Verwijder ruimte tussen getallen</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Herstel dialogen op een regel</FixDialogsOnOneLine>
-    <RemoveSpaceBetweenNumbersFixed>Verwijder ruimte tussen de nummers vast: {0}</RemoveSpaceBetweenNumbersFixed>
+    <RemoveSpaceBetweenNumbersFixed>Herstelde verwijder ruimte tussen de getallen : {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Herstel Turkish ANSI (Icelandic) letters naar Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Herstel Deense letter "i"</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Herstel Spaanse omgekeerde vraag en uitroeptekens</FixSpanishInvertedQuestionAndExclamationMarks>
@@ -402,7 +413,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <AddMissingQuotesExample>"Hoe gaat het? -&gt; "Hoe gaat het?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Ontbrekende citaten toegevoegd: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Herstel ondertitels met meer dan twee regels</Fix3PlusLines>
-    <Fix3PlusLine>Herstel ondertitels met meer dan twee regels</Fix3PlusLine>
+    <Fix3PlusLine>Herstel ondertitel met meer dan twee regels</Fix3PlusLine>
     <X3PlusLinesFixed>Gerepareerde ondertitels met meer dan twee lijnen: {0}</X3PlusLinesFixed>
     <Analysing>Analyseren...</Analysing>
     <NothingToFix>Niets te repareren :)</NothingToFix>
@@ -423,14 +434,14 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Herstel ongeldig cursief tag</FixInvalidItalicTag>
     <FixShortDisplayTime>Herstel korte weergave tijd</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Herstel overlappende weergavetijd</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;Wat kan mij het schelen &lt;i&gt; -.&gt; &lt;i&gt; Wat kan mij het schelen &lt;/ i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>He jij daar.. -&gt; He jij daar.</RemoveUnneededSpacesExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>He  jij , daar. -&gt; He jij daar.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>De aarde is piat. -&gt; De aarde is plat.</FixUppercaseIInsindeLowercaseWordsExample>
-    <FixLowercaseIToUppercaseIExample>Wat kan het mij schelen. -&gt; Wat kan mij het schelen.</FixLowercaseIToUppercaseIExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Tekst nummer {0}: Starttijd is later dan eindtijd: {4} {1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
-    <UnableToFixStartTimeLaterThanEndTime>Kan tekst nummer {0} niet repareren: Startijdstip  is later dan eindetijdstip : {1}</UnableToFixStartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>Kan tekst nummer {0} niet repareren: Startijdstip  is later dan eindtijdstip : {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} gerepareerd naar: {1} {2}</XFixedToYZ>
     <UnableToFixTextXY>Kan tekst nummer {0} niet repareren: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} overlappende tijden gerepareerd</XOverlappingTimestampsFixed>
@@ -450,7 +461,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <XDoubleApostrophesFixed>{0} dubbele apostrofs gerepareerd</XDoubleApostrophesFixed>
     <XUppercaseIsFoundInsideLowercaseWords>{0} hoofdletters 'i's gevonden in kleine letters woorden</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Vernieuw beschikbaar reparaties</RefreshFixes>
-    <ApplyFixes>Voer uit</ApplyFixes>
+    <ApplyFixes>Voer uit </ApplyFixes>
     <AutoBreak>Auto afbreken</AutoBreak>
     <Unbreak>&amp;Niet afbreken</Unbreak>
     <FixDoubleDash>Herstel' - '-&gt;'... '</FixDoubleDash>
@@ -491,7 +502,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   <GoogleTranslate>
     <Title>Google vertalen</Title>
     <From>Van:</From>
-    <To>Tot:</To>
+    <To>naar:</To>
     <Translate>Vertalen</Translate>
     <PleaseWait>Even geduld aub... Dit kan enige tijd duren</PleaseWait>
     <PoweredByGoogleTranslate>Powered by Google Translate</PoweredByGoogleTranslate>
@@ -500,7 +511,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft vertalen</Title>
     <From>Van:</From>
-    <To>Tot:</To>
+    <To>Naar:</To>
     <Translate>Vertalen</Translate>
     <SourceText>Bron tekst</SourceText>
     <GoogleTranslate>Google vertaling</GoogleTranslate>
@@ -523,13 +534,13 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveLinesWithoutLetters>Verwijder regels zonder letters</RemoveLinesWithoutLetters>
     <GapBetweenSubtitles>Pauze tussen ondertitels (milliseconden)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
-    <Fixed>Vast</Fixed>
+    <Fixed>Vast (gerepareerd?)</Fixed>
     <Refresh>&amp;Vernieuwen</Refresh>
     <TextFiles>Tekstbestanden</TextFiles>
     <PreviewLinesModifiedX>Voorbeeld - paragrafen gewijzigd: {0}</PreviewLinesModifiedX>
   </ImportText>
   <Interjections>
-    <Title>Interjections</Title>
+    <Title>Tussenvoegsels</Title>
   </Interjections>
   <JoinSubtitles>
     <Title>Voeg ondertitels samen</Title>
@@ -609,9 +620,10 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <StartNumberingFrom>Beginnen met nummeren vanaf...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Tekst voor slechthorende verwijderen...</RemoveTextForHearingImpaired>
         <ChangeCasing>Wijzig tekenstijl...</ChangeCasing>
-        <ChangeFrameRate>Wijzig frame snelheid...</ChangeFrameRate>
+        <ChangeFrameRate>Wijzig beeld snelheid...</ChangeFrameRate>
         <ChangeSpeedInPercent>Wijzig snelheid (procent)...</ChangeSpeedInPercent>
-        <MergeShortLines>Samenvoegen korte lijnen...</MergeShortLines>
+        <MergeShortLines>Samenvoegen korte regels...</MergeShortLines>
+        <MergeDuplicateText>Voeg regels met dezelfde tekst samen</MergeDuplicateText>
         <SplitLongLines>Splits lange regels...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimale weergavetijd tussen regels</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sorteer op</SortBy>
@@ -639,12 +651,12 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ShowHideVideo>Toon/verberg video</ShowHideVideo>
         <ShowHideWaveForm>Toon/verberg golfvorm</ShowHideWaveForm>
         <ShowHideWaveformAndSpectrogram>Toon/verberg golfvorm en spectrogram</ShowHideWaveformAndSpectrogram>
-        <UnDockVideoControls>Un-dock video controles</UnDockVideoControls>
-        <ReDockVideoControls>Re-dock video controles</ReDockVideoControls>
+        <UnDockVideoControls>Ontkoppel video controles</UnDockVideoControls>
+        <ReDockVideoControls>Koppel weer de video controles</ReDockVideoControls>
       </Video>
       <SpellCheck>
         <Title>Spellingcontrole</Title>
-        <SpellCheck>&amp;Spellingscontrole...</SpellCheck>
+        <SpellCheck>&amp;Spellingcontrole...</SpellCheck>
         <FindDoubleWords>Zoek dubbele woorden</FindDoubleWords>
         <FindDoubleLines>Zoek dubbele regels</FindDoubleLines>
         <GetDictionaries>Haal woordenboeken...</GetDictionaries>
@@ -689,7 +701,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Find>Zoeken</Find>
         <Replace>Vervangen</Replace>
         <VisualSync>Visual sync</VisualSync>
-        <SpellCheck>Spellingscontrole</SpellCheck>
+        <SpellCheck>Spellingcontrole</SpellCheck>
         <Settings>Instellingen</Settings>
         <Help>Help</Help>
         <ShowHideWaveForm>Toon/verberg golfvorm</ShowHideWaveForm>
@@ -722,6 +734,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnInsertTextFromSubtitle>Voeg tekst van ondertitel in.</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Importeer tekst en verschuif cellen naar beneden</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Plakken vanuit klembord...</ColumnPasteFromClipboard>
+        <ColumnCopyOriginalTextToCurrent>Kopieer tekst van origineel naar huidige</ColumnCopyOriginalTextToCurrent>
         <Split>Splits</Split>
         <MergeSelectedLines>Voeg geselecteerde regels samen</MergeSelectedLines>
         <MergeSelectedLinesASDialogue>Geselecteerd regels samenvoegen als dialoog</MergeSelectedLinesASDialogue>
@@ -769,7 +782,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
       <AutoContinueOn>Automatisch doorgaan aan</AutoContinueOn>
       <DelayInSeconds>Vertraging (seconden)</DelayInSeconds>
       <OriginalText>Oorspronkelijke tekst</OriginalText>
-      <Previous>Vorige</Previous>
+      <Previous>&lt;Vorige</Previous>
       <Stop>&amp;Stop</Stop>
       <PlayCurrent>&amp;Speel huidige af</PlayCurrent>
       <Next>&amp;Volgende&gt;</Next>
@@ -795,9 +808,9 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Video positie:</VideoPosition>
-      <TranslateTip>gebruik &lt;alt+pijl omhoog/omlaag&gt; om naar vorige/volgende ondertitel te gaan</TranslateTip>
-      <CreateTip>Gebruik &lt;ctrl+pijl links/rechts&gt; toetsen</CreateTip>
-      <AdjustTip>gebruik &lt;alt+pijl omhoog/omlaag&gt; om naar vorige/volgende ondertitel te gaan</AdjustTip>
+      <TranslateTip>Tip: Gebruik &lt;alt+pijl omhoog/omlaag&gt; om naar vorige/volgende ondertitel te gaan</TranslateTip>
+      <CreateTip>Tip: Gebruik &lt;ctrl+pijl links/rechts&gt; toetsen</CreateTip>
+      <AdjustTip>Tip: Gebruik &lt;alt+pijl omhoog/omlaag&gt; om naar vorige/volgende ondertitel te gaan</AdjustTip>
       <BeforeChangingTimeInWaveFormX>Voor tijdaanpassing in geluidsgolf: {0}</BeforeChangingTimeInWaveFormX>
       <NewTextInsertAtX>Nieuwe tekst ingevoegd op {0}</NewTextInsertAtX>
       <Center>Midden</Center>
@@ -840,8 +853,8 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeShowLater>Voor later tonen</BeforeShowLater>
     <LineNumberX>Regelnummer: {0:#,##0.##}</LineNumberX>
     <OpenVideoFile>Open video bestand...</OpenVideoFile>
-    <NewFrameRateUsedToCalculateTimeCodes>Nieuwe frame snelheid({0}) is gebruikt voor de berekening van start/eind tijd codes</NewFrameRateUsedToCalculateTimeCodes>
-    <NewFrameRateUsedToCalculateFrameNumbers>Nieuwe frame snelheid ({0}) is gebruikt voor de berekening van begin/einde framenummers</NewFrameRateUsedToCalculateFrameNumbers>
+    <NewFrameRateUsedToCalculateTimeCodes>Nieuwe beeld snelheid({0}) is gebruikt voor de berekening van start/eind tijd codes</NewFrameRateUsedToCalculateTimeCodes>
+    <NewFrameRateUsedToCalculateFrameNumbers>Nieuwe beeld snelheid ({0}) is gebruikt voor de berekening van begin/einde beeldnummers</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>Het zoekterm  is niet gevonden.  Wilt u nog een keer zoeken vanaf het begin van het document?</FindContinue>
     <FindContinueTitle>Doorgaan met zoeken?</FindContinueTitle>
     <ReplaceContinueNotFound>Het zoekterm  is niet gevonden.  Wilt u nog een keer zoeken vanaf het begin van het document en zoeken/vervangen voortzetten?</ReplaceContinueNotFound>
@@ -860,17 +873,17 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeChangesMadeInSourceView>Voor wijzigingen in de bronweergave</BeforeChangesMadeInSourceView>
     <UnableToParseSourceView>Kan bronweergave tekst niet ontleden!</UnableToParseSourceView>
     <GoToLineNumberX>Ga naar regel nummer {0}</GoToLineNumberX>
-    <CreateAdjustChangesApplied>Create/adjust lines changes applied</CreateAdjustChangesApplied>
+    <CreateAdjustChangesApplied>Maken/aanpassen wijzigingen regels toegepast</CreateAdjustChangesApplied>
     <SelectedLines>geselecteerde regels</SelectedLines>
     <BeforeDisplayTimeAdjustment>Voor weergavetijd aanpassingen</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Weergave tijd aangepast: {0}</DisplayTimeAdjustedX>
-    <DisplayTimesAdjustedX>Weergave aantal aangepast: {0}</DisplayTimesAdjustedX>
+    <DisplayTimesAdjustedX>Weergave tijden aangepast: {0}</DisplayTimesAdjustedX>
     <StarTimeAdjustedX>Start tijd aangepast : {0}</StarTimeAdjustedX>
     <BeforeCommonErrorFixes>Voor reparatie veel voorkomende fouten</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Veelvoorkomende fouten vastgesteld in geselecteerde regels</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Veelvoorkomende fouten gerepareerd</CommonErrorsFixed>
     <BeforeRenumbering>Voor hernummering</BeforeRenumbering>
-    <RenumberedStartingFromX>Hernummerd vanaf: {0}</RenumberedStartingFromX>
+    <RenumberedStartingFromX>Hernummert vanaf: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Voor het verwijderen van slechthorenden indicaties</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Tekst voor doven verwijderd: Een regel</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Teksten voor doven verwijderd: {0} regels</TextingForHearingImpairedRemovedXLines>
@@ -879,7 +892,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleAppendPromptTitle>Sluit ondertitel aan</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Open de aan te sluiten ondertitel...</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Visual sync - aansluitende tweede deel van de ondertiteling</AppendViaVisualSyncTitle>
-    <AppendSynchronizedSubtitlePrompt>Deze gesynchroniseerd ondertitel aansluiten?</AppendSynchronizedSubtitlePrompt>
+    <AppendSynchronizedSubtitlePrompt>Deze gesynchroniseerde ondertitel aansluiten?</AppendSynchronizedSubtitlePrompt>
     <BeforeAppend>Voor aansluiten</BeforeAppend>
     <SubtitleAppendedX>Ondertitel aangesloten: {0}</SubtitleAppendedX>
     <SubtitleNotAppended>Ondertitel NIET aangesloten!</SubtitleNotAppended>
@@ -892,7 +905,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <TranslateSwedishToDanishWarning>Vertaal momenteel geladen Zweedse ondertitel  (weet je zeker dat het Zweeds is?) naar Deens?</TranslateSwedishToDanishWarning>
     <TranslatingViaNikseDkMt>Vertalen via www.nikse.dk/mt...</TranslatingViaNikseDkMt>
     <BeforeSwedishToDanishTranslation>Voor Zweeds naar Deens vertaling</BeforeSwedishToDanishTranslation>
-    <TranslationFromSwedishToDanishComplete>Vertaling van Zweeds naar Deens volledig</TranslationFromSwedishToDanishComplete>
+    <TranslationFromSwedishToDanishComplete>Vertaling van Zweeds naar Deens is af</TranslationFromSwedishToDanishComplete>
     <TranslationFromSwedishToDanishFailed>Vertaling van Zweeds naar Deens mislukte</TranslationFromSwedishToDanishFailed>
     <BeforeUndo>Voor ongedaan maken</BeforeUndo>
     <UndoPerformed>Ongedaan uitgevoerd</UndoPerformed>
@@ -907,7 +920,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <NumberOfNameHits>Aantal naam hits: {0}</NumberOfNameHits>
     <SpellCheck>Spellingcontrole</SpellCheck>
     <BeforeSpellCheck>Voor spellingcontrole</BeforeSpellCheck>
-    <SpellCheckChangedXToY>Spellingscontrole: Veranderd '{0}' naar '{1} '</SpellCheckChangedXToY>
+    <SpellCheckChangedXToY>Spellingcontrole: Veranderd '{0}' naar '{1} '</SpellCheckChangedXToY>
     <BeforeAddingTagX>Voor toevoeging van &lt;{0}&gt; tag</BeforeAddingTagX>
     <TagXAdded>&lt;{0}&gt;-tags toegevoegd</TagXAdded>
     <LineXOfY>Regel {0} van {1}</LineXOfY>
@@ -946,10 +959,10 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <CasingCompleteMessageNoNames>Aantal regels met veranderde tekenstijl: {0}/{1}</CasingCompleteMessageNoNames>
     <CasingCompleteMessageOnlyNames>Aantal regels met namen tekenstijl veranderd: {0}/{1}</CasingCompleteMessageOnlyNames>
     <CasingCompleteMessage>Aantal regels met veranderde tekenstijl: {0}/{1}, veranderd de tekenstijl voor namen: {2}</CasingCompleteMessage>
-    <BeforeChangeFrameRate>Voordat verandering beeldsnelheid</BeforeChangeFrameRate>
-    <BeforeAdjustSpeedInPercent>Voordat snelheid aanpassen in procenten</BeforeAdjustSpeedInPercent>
+    <BeforeChangeFrameRate>Voor verandering beeldsnelheid</BeforeChangeFrameRate>
+    <BeforeAdjustSpeedInPercent>Voor snelheid aanpassen in procenten</BeforeAdjustSpeedInPercent>
     <FrameRateChangedFromXToY>Beeldsnelheid gewijzigd van {0} tot {1}</FrameRateChangedFromXToY>
-    <IdxFileNotFoundWarning>{0} niet gevonden! Toch importeren VobSub-bestand?</IdxFileNotFoundWarning>
+    <IdxFileNotFoundWarning>{0} niet gevonden! Toch VobSub-bestand importeren?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>Koptekst niet geldig VobSub bestand: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Open VobSub (sub/idx) ondertitel...</OpenVobSubFile>
     <VobSubFiles>VobSub ondertitelingbestanden</VobSubFiles>
@@ -966,12 +979,12 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowSelectionAndForwardXSecondsLinesEarlier>Toon selectie en verplaats {0:0.0##} seconden eerder</ShowSelectionAndForwardXSecondsLinesEarlier>
     <ShowSelectionAndForwardXSecondsLinesLater>Toon selectie en verplaats {0:0.0##} seconden later</ShowSelectionAndForwardXSecondsLinesLater>
     <ShowSelectedLinesEarlierLaterPerformed>Toon eerder/later uitgevoerd op geselecteerde regels</ShowSelectedLinesEarlierLaterPerformed>
-    <DoubleWordsViaRegEx>Dubbele woorden via regel {0}</DoubleWordsViaRegEx>
+    <DoubleWordsViaRegEx>Dubbele woorden via reguliere expressie {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Voor sorteren: {0}</BeforeSortX>
     <SortedByX>Gesorteerd op: {0}</SortedByX>
-    <BeforeAutoBalanceSelectedLines>Voor auto balans geselecteerd lijnen</BeforeAutoBalanceSelectedLines>
-    <NumberOfLinesAutoBalancedX>Aantal lijnen auto balans: {0}</NumberOfLinesAutoBalancedX>
-    <BeforeRemoveLineBreaksInSelectedLines>Voor verwijderen regeleinden van geselecteerde lijnen</BeforeRemoveLineBreaksInSelectedLines>
+    <BeforeAutoBalanceSelectedLines>Voor auto balans geselecteerd regels</BeforeAutoBalanceSelectedLines>
+    <NumberOfLinesAutoBalancedX>Aantal regels auto balans: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeRemoveLineBreaksInSelectedLines>Voor verwijderen regeleinden van geselecteerde regels</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Aantal regels met verwijderd regeleinde: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Voor meerdere vervangen</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Aantal regels met tekst vervangen: {0}</NumberOfLinesReplacedX>
@@ -979,16 +992,16 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <NameXNotAddedToNamesEtcList>De naam '{0} ' is NIET toegevoegd aan namen/etc lijst</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>Het woord' {0} ' werd toegevoegd aan het woordenboek</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>De naam' {0} '  is NIET toegevoegd aan het woordenboek</WordXNotAddedToUserDic>
-    <OcrReplacePairXAdded>De ocr vervangen lijst pair '{0} -&gt; {1}' is toegevoegd aan de ocr vervangen lijst</OcrReplacePairXAdded>
-    <OcrReplacePairXNotAdded>De ocr vervangen lijst pair '{0} -&gt; {1}' is NIET toegevoegd aan de ocr vervangen lijst</OcrReplacePairXNotAdded>
+    <OcrReplacePairXAdded>De ocr vervangen lijst paar '{0} -&gt; {1}' is toegevoegd aan de ocr vervangen lijst</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>De ocr vervangen lijst paar '{0} -&gt; {1}' is NIET toegevoegd aan de ocr vervangen lijst</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} geselecteerde regels</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Ondertitel bevat unicode muziek noten. Bij opslaan met behulp van ANSI-codering gaan deze verloren. Verder gaan met opslaan?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Ondertitel bevat negatieve tijdcodes. Verder gaan met opslaan?</NegativeTimeWarning>
     <BeforeMergeShortLines>Voor samenvoegen korte regels</BeforeMergeShortLines>
     <BeforeSplitLongLines>Voor splitsen lange regels</BeforeSplitLongLines>
     <MergedShortLinesX>Aantal samengevoegde regels: {0}</MergedShortLinesX>
-    <BeforeSetMinimumDisplayTimeBetweenParagraphs>Voor  bepalen minimum-weergavetijd tussen paragrafen</BeforeSetMinimumDisplayTimeBetweenParagraphs>
-    <XMinimumDisplayTimeBetweenParagraphsChanged>Aantal veranderde regels met een minimum weergavetijd tussen paragrafen : {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
+    <BeforeSetMinimumDisplayTimeBetweenParagraphs>Voor bepalen minimum-weergavetijd tussen ondertitels</BeforeSetMinimumDisplayTimeBetweenParagraphs>
+    <XMinimumDisplayTimeBetweenParagraphsChanged>Aantal veranderde regels met een minimum weergavetijd tussen ondertitels : {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Voor importeren platte tekst</BeforeImportText>
     <TextImported>Tekst geïmporteerd</TextImported>
     <BeforePointSynchronization>Voor punt synchronisatie</BeforePointSynchronization>
@@ -998,8 +1011,8 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeInsertSubtitleAtVideoPosition>Voor ondertitel invoegen op video positie</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Voor ingestelde starttijd en pas de rest aan</BeforeSetStartTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Voor ingesteld eindtijd op video positie en automatisch berekenen start</BeforeSetEndAndVideoPosition>
-    <ContinueWithCurrentSpellCheck>Doorgaan met de huidige spellingscontrole?</ContinueWithCurrentSpellCheck>
-    <CharactersPerSecond>Karakter/sec: {0:0.00}</CharactersPerSecond>
+    <ContinueWithCurrentSpellCheck>Doorgaan met de huidige spellingcontrole?</ContinueWithCurrentSpellCheck>
+    <CharactersPerSecond>Karakters/sec: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Haal beeldsnelheid  uit videobestand</GetFrameRateFromVideoFile>
     <NetworkMessage>Nieuw bericht: {0} ({1}): {2}</NetworkMessage>
     <NetworkUpdate>Regel bijgewerkt: {0} ({1}): Index = {2}, Tekst = {3}</NetworkUpdate>
@@ -1024,12 +1037,12 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Regel {0} - fout bij lezen tijdcode : {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Regel {0} - verwachte ondertitel nummer: {1}</LineNumberXExpectedNumberFromSourceLineY>
     <BeforeGuessingTimeCodes>Voor gissen tijdcodes</BeforeGuessingTimeCodes>
-    <BeforeAutoDuration>Voor auto-weergavetijd voor geselecteerde lijnen</BeforeAutoDuration>
+    <BeforeAutoDuration>Voor auto-weergavetijd voor geselecteerde regels</BeforeAutoDuration>
     <BeforeColumnPaste>Voor kolom plakken</BeforeColumnPaste>
     <BeforeColumnDelete>Voor kolom verwijderen</BeforeColumnDelete>
     <BeforeColumnImportText>Voor kolom invoer tekst</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Voor kolomverschuiving cellen naar beneden</BeforeColumnShiftCellsDown>
-    <ErrorLoadingPluginXErrorY>Fout bij het laden van plugin: {0}: {1 }</ErrorLoadingPluginXErrorY>
+    <ErrorLoadingPluginXErrorY>Fout bij het laden van plugin: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Voor uitvoeren plug-in: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Kan ondertitel resultaat plugin niet lezen!</UnableToReadPluginResult>
     <UnableToCreateBackupDirectory>Kan backup map {0} niet maken: {1}</UnableToCreateBackupDirectory>
@@ -1040,11 +1053,14 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   <MatroskaSubtitleChooser>
     <Title>Kies ondertiteling uit Matroska bestand</Title>
     <PleaseChoose>Meer dan een ondertitel gevonden - kies aub</PleaseChoose>
-    <TrackXLanguageYTypeZ>Spoor {0} - {1 } - Taal: {2} - Type: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Spoor {0} - {1} - Taal: {2} - Type: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MergeDoubleLines>
+    <Title>Voeg regels met dezelfde tekst samen</Title>
+  </MergeDoubleLines>
   <MergedShortLines>
     <Title>Samenvoegen korte regels</Title>
-    <MaximumCharacters>Maximum aantal tekens in een paragraaf</MaximumCharacters>
+    <MaximumCharacters>Maximum aantal tekens in een ondertitel</MaximumCharacters>
     <MaximumMillisecondsBetween>Maximum milliseconden tussen regels</MaximumMillisecondsBetween>
     <NumberOfMergesX>Aantal samenvoegingen: {0}</NumberOfMergesX>
     <MergedText>Samengevoegde tekst</MergedText>
@@ -1066,9 +1082,9 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveAll>Verwijder alles</RemoveAll>
     <Import>Importeren...</Import>
     <Export>Exporteren...</Export>
-    <ImportRulesTitle>Import vervangen regel (s) van...</ImportRulesTitle>
-    <ExportRulesTitle>Export vervangen regel (s) naar...</ExportRulesTitle>
-    <Rules>Export regels</Rules>
+    <ImportRulesTitle>Importeer vervangingsregel (s) van...</ImportRulesTitle>
+    <ExportRulesTitle>Exporteer vervangingsregel (s) naar...</ExportRulesTitle>
+    <Rules>Exporteer regels</Rules>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1080,8 +1096,8 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Join>Doe mee.</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
-    <Title>Network sessie info en log</Title>
-    <Log>Log:</Log>
+    <Title>Network sessie info en logboek</Title>
+    <Log>Logboek:</Log>
   </NetworkLogAndInfo>
   <NetworkStart>
     <Title>Start netwerk sessie</Title>
@@ -1114,9 +1130,9 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SquareBrackets>'[' en ']'</SquareBrackets>
     <Brackets>'{' en '}'</Brackets>
     <Parentheses>'(' en ')'</Parentheses>
-    <QuestionMarks>en</QuestionMarks>
+    <QuestionMarks>'?' en '?'</QuestionMarks>
     <And>en</And>
-    <RemoveTextBeforeColon>Verwijder tekst vóór een dubbele punt '?' '?' (':')</RemoveTextBeforeColon>
+    <RemoveTextBeforeColon>Verwijder tekst vóór een dubbele punt (':')</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>Alleen als tekst in HOOFDLETTERS is</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>Alleen als in aparte regel</OnlyIfInSeparateLine>
     <LinesFoundX>Gevonden regels: {0}</LinesFoundX>
@@ -1150,28 +1166,28 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Forward>Vooruit</Forward>
     <Back>Terug</Back>
     <LengthInSeconds>Stilte moet tenminste zijn (seconden)</LengthInSeconds>
-    <MaxVolume>Volume moet lager zijn</MaxVolume>
+    <MaxVolume>Volume moet lager zijn dan</MaxVolume>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Stel minimum weergavetijd tussen regels vast</Title>
-    <PreviewLinesModifiedX>Voorbeeld - regels gewijzigd: {0}</PreviewLinesModifiedX>
+    <PreviewLinesModifiedX>Voorbeeld - ondertitels gewijzigd: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Toon alleen gewijzigde regels</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum milliseconden tussen regels</MinimumMillisecondsBetweenParagraphs>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Stel Sync punt voor  regel vast {0}</Title>
     <SyncPointTimeCode>Sync punt tijd code</SyncPointTimeCode>
-    <ThreeSecondsBack>&lt;&lt;3 sec</ThreeSecondsBack>
+    <ThreeSecondsBack>&lt;&lt;3 seconden</ThreeSecondsBack>
     <HalfASecondBack>&lt;&lt;½ sec</HalfASecondBack>
     <HalfASecondForward>½ sec &gt;&gt;</HalfASecondForward>
-    <ThreeSecondsForward>3 sec &gt;&gt;</ThreeSecondsForward>
+    <ThreeSecondsForward>3 seconden &gt;&gt;</ThreeSecondsForward>
   </SetSyncPoint>
   <Settings>
     <Title>Instellingen</Title>
     <General>Algemeen</General>
     <Toolbar>Werkbalk</Toolbar>
     <VideoPlayer>Videospeler</VideoPlayer>
-    <WaveformAndSpectrogram>Waveform/spectrogram</WaveformAndSpectrogram>
+    <WaveformAndSpectrogram>Golfvorm/spectrogram</WaveformAndSpectrogram>
     <Tools>Gereedschappen</Tools>
     <WordLists>Woordenlijsten</WordLists>
     <SsaStyle>SSA Style</SsaStyle>
@@ -1184,7 +1200,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Find>Zoeken</Find>
     <Replace>Vervangen</Replace>
     <VisualSync>Visual sync</VisualSync>
-    <SpellCheck>Spellingscontrole</SpellCheck>
+    <SpellCheck>Spellingcontrole</SpellCheck>
     <SettingsName>Instellingen</SettingsName>
     <Help>Help</Help>
     <ShowFrameRate>Toon beeldsnelheid in de werkbalk</ShowFrameRate>
@@ -1200,21 +1216,21 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleFontSize>Ondertitel lettergrootte</SubtitleFontSize>
     <SubtitleBold>Vet</SubtitleBold>
     <SubtitleCenter>Midden</SubtitleCenter>
-    <SubtitleFontColor>Ondertitel kleur van het lettertype</SubtitleFontColor>
-    <SubtitleBackgroundColor>Ondertitel achtergrondkleur</SubtitleBackgroundColor>
-    <SpellChecker>Spellingscontrole</SpellChecker>
+    <SubtitleFontColor>Ondertitel lettertype kleur</SubtitleFontColor>
+    <SubtitleBackgroundColor>Ondertitel achtergrond kleur</SubtitleBackgroundColor>
+    <SpellChecker>Spellingcontrole</SpellChecker>
     <RememberRecentFiles>Onthoud recente bestanden (voor heropenen)</RememberRecentFiles>
     <StartWithLastFileLoaded>Begin met laatste geladen bestand</StartWithLastFileLoaded>
-    <RememberSelectedLine>Onthoud geselecteerde lijn</RememberSelectedLine>
+    <RememberSelectedLine>Onthoud geselecteerde regel</RememberSelectedLine>
     <RememberPositionAndSize>Onthoud hoofdvenster positie en grootte</RememberPositionAndSize>
     <StartInSourceView>Start in bronweergave</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Verwijder lege regels bij het openen van een ondertitel</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Toon regeleinden in lijstweergave als</ShowLineBreaksAs>
-    <MainListViewDoubleClickAction>Dubbelklik op de regel in het hoofdvenster llijstweergave zal</MainListViewDoubleClickAction>
+    <MainListViewDoubleClickAction>Dubbelklik op de regel in het hoofdvenster lijstweergave zal</MainListViewDoubleClickAction>
     <MainListViewNothing>Niets</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Ga naar video positie en pauzeer</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Ga naar video positie en speel af</MainListViewVideoGoToPositionAndPlay>
-    <MainListViewEditText>Ga naar tekstvak bewerken</MainListViewEditText>
+    <MainListViewEditText>Ga naar bewerken tekstvak</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>Ga naar video POS - 1 sec en pauzeer</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Ga naar video POS - 0,5 sec en pauzeer</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>Ga naar video POS - 1 sec en speel af</MainListViewVideoGoToPositionMinus1SecAndPlay>
@@ -1226,8 +1242,8 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <AllowEditOfOriginalSubtitle>Sta bewerking van de oorspronkelijke ondertitel toe</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Vraag om verwijderen regels</PromptDeleteLines>
     <TimeCodeMode>Tijdcode-modus</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH: MM: SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
-    <TimeCodeModeHHMMSSFF>HH: MM: SS: FF (00:00:01: 12)</TimeCodeModeHHMMSSFF>
+    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01: 12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Video speler</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll in system32 map</DirectShowDescription>
@@ -1241,17 +1257,17 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowMuteButton>Toon mute-knop</ShowMuteButton>
     <ShowFullscreenButton>Toon volledige scherm knop</ShowFullscreenButton>
     <DefaultVolume>Standaard volume</DefaultVolume>
-    <VolumeNotes>0 is er geen geluid, 100 is het hoogste volume</VolumeNotes>
+    <VolumeNotes>0 is geen geluid, 100 is het hoogste volume</VolumeNotes>
     <PreviewFontSize>Ondertitel voorbeeld lettergrootte</PreviewFontSize>
     <MainWindowVideoControls>Hoofdvenster video controles</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Normale zoektekst en url</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Wave vorm uitvoering</WaveFormAppearance>
+    <WaveFormAppearance>Golf vorm uitvoering</WaveFormAppearance>
     <WaveFormGridColor>Rasterkleur</WaveFormGridColor>
     <WaveFormShowGridLines>Toon rasterlijnen</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Omgekeerd muiswiel scroll richting</ReverseMouseWheelScrollDirection>
     <WaveFormColor>Kleur</WaveFormColor>
     <WaveFormSelectedColor>Geselecteerde kleur</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Achtergrondkleur</WaveFormBackgroundColor>
+    <WaveFormBackgroundColor>Achtergrond kleur</WaveFormBackgroundColor>
     <WaveFormTextColor>Tekst kleur</WaveFormTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Maak 'Spectrogrammen' en 'golfvormen' mappen leeg</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'golfvormen' en 'Spectrogrammen' mappen bevatten {0} bestanden ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
@@ -1278,31 +1294,31 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <WordAddedX>Woord toegevoegd: {0}</WordAddedX>
     <WordAlreadyExists>Woord bestaat al!</WordAlreadyExists>
     <WordNotFound>Woord niet gevonden</WordNotFound>
-    <RemoveX>Verwijder {0}?</RemoveX>
+    <RemoveX>Verwijderen {0}?</RemoveX>
     <CannotUpdateNamesEtcOnline>Kan NamesEtc.xml niet online bijwerken!</CannotUpdateNamesEtcOnline>
     <ProxyServerSettings>Proxy server instellingen</ProxyServerSettings>
     <ProxyAddress>Proxy-adres</ProxyAddress>
-    <ProxyAuthentication>Authentication</ProxyAuthentication>
+    <ProxyAuthentication>Authorisatie</ProxyAuthentication>
     <ProxyUserName>Gebruikersnaam</ProxyUserName>
     <ProxyPassword>Wachtwoord</ProxyPassword>
     <ProxyDomain>Domein</ProxyDomain>
     <PlayXSecondsAndBack>Speel  X seconden en spoel terug, X</PlayXSecondsAndBack>
-    <StartSceneIndex>Start scène regel is</StartSceneIndex>
-    <EndSceneIndex>Einde scène regel is</EndSceneIndex>
+    <StartSceneIndex>Start scène ondertitel is</StartSceneIndex>
+    <EndSceneIndex>Einde scène ondertitel is</EndSceneIndex>
     <FirstPlusX>Eerste + {0}</FirstPlusX>
     <LastMinusX>Laatste - {0}</LastMinusX>
     <FixCommonerrors>Herstel veel voorkomende fouten</FixCommonerrors>
     <MergeLinesShorterThan>Voeg regels samen korter dan</MergeLinesShorterThan>
     <MusicSymbol>Muziek symbolen</MusicSymbol>
-    <MusicSymbolsToReplace>Muziek symbolen ter vervanging van (gescheiden door ruimte)</MusicSymbolsToReplace>
+    <MusicSymbolsToReplace>Muziek symbolen te vervangen (gescheiden door spatie)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Herstel gemeenschappelijke OCR fouten - maak ook gebruik van hardcoded regels</FixCommonOcrErrorsUseHardcodedRules>
     <Shortcuts>Snelkoppelingen</Shortcuts>
     <Shortcut>Snelkoppeling</Shortcut>
     <Control>Controle</Control>
     <Alt>Alt</Alt>
     <Shift>Shift</Shift>
-    <Key>Key</Key>
-    <TextBox>Textbox</TextBox>
+    <Key>Toets</Key>
+    <TextBox>Tekstbox</TextBox>
     <UpdateShortcut>Update</UpdateShortcut>
     <ShortcutIsNotValid>Snelkoppeling is niet geldig: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Wissel koppel/loskoppel video controles</ToggleDockUndockOfVideoControls>
@@ -1322,7 +1338,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ToggleDialogueDashes>Verander dialoog streepjes</ToggleDialogueDashes>
     <Alignment>Uitlijning (geselecteerde regels)</Alignment>
     <CopyTextOnly>Alleen tekst kopiëren naar klembord (geselecteerde regels)</CopyTextOnly>
-    <AutoDurationSelectedLines>Auto-duur (geselecteerde lijnen)</AutoDurationSelectedLines>
+    <AutoDurationSelectedLines>Auto-duur (geselecteerde regels)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Omgekeerde RNL start/einde</ReverseStartAndEndingForRTL>
     <VerticalZoom>Verticale zoom</VerticalZoom>
     <WaveformSeekSilenceForward>Zoek stilte vooruit</WaveformSeekSilenceForward>
@@ -1346,10 +1362,10 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SyntaxColorDurationIfTooSmall>Kleur indien duur te kort</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Kleur indien duur te lang</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Kleur tekst indien te lang</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Kleur tekst als er meer dan lijnen:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanXLines>Kleur tekst bij meer dan regels:</SyntaxColorTextMoreThanXLines>
     <SyntaxColorOverlap>Kleur tijdcode overlap</SyntaxColorOverlap>
     <SyntaxErrorColor>Fout kleur</SyntaxErrorColor>
-    <GoToFirstSelectedLine>Ga naar eerste geselecteerde lijn</GoToFirstSelectedLine>
+    <GoToFirstSelectedLine>Ga naar eerste geselecteerde regel</GoToFirstSelectedLine>
     <MergeSelectedLines>Samenvoegen geselecteerde regels</MergeSelectedLines>
     <ToggleTranslationMode>Verander vertaling modus</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Wijzig tussen origineel en vertaling</SwitchOriginalAndTranslation>
@@ -1376,7 +1392,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SelectRollbackPoint>Selecteer tijd/omschrijving voor terugdraaiing</SelectRollbackPoint>
     <Time>Tijd</Time>
     <Description>Beschrijving</Description>
-    <CompareHistoryItems>Vergelijk geschiedenisitems</CompareHistoryItems>
+    <CompareHistoryItems>Vergelijk geschiedenis items</CompareHistoryItems>
     <CompareWithCurrent>Vergelijk met de huidige</CompareWithCurrent>
     <Rollback>Maak ongedaan</Rollback>
   </ShowHistory>
@@ -1387,7 +1403,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Language>Taal</Language>
     <Change>Wijzigen</Change>
     <ChangeAll>Verander alles</ChangeAll>
-    <SkipOnce>Deze overslaan?</SkipOnce>
+    <SkipOnce>Deze overslaan</SkipOnce>
     <SkipAll>&amp;Alles overslaan</SkipAll>
     <AddToUserDictionary>Toevoegen aan gebruikerswoordenboek</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Toevoegen aan namen/ruis-lijst (hoofdlettergevoelig)</AddToNamesAndIgnoreList>
@@ -1403,7 +1419,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <AutoFixNames>Auto herstel namen waar alleen tekenstijl verschilt</AutoFixNames>
     <ImageText>Afbeelding tekst</ImageText>
     <SpellCheckCompleted>Spellingcontrole voltooid.</SpellCheckCompleted>
-    <SpellCheckAborted>Spellingscontrole afgebroken</SpellCheckAborted>
+    <SpellCheckAborted>Spellingcontrole afgebroken</SpellCheckAborted>
   </SpellCheck>
   <Split>
     <Title>Splits</Title>
@@ -1421,7 +1437,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Basic>Basis</Basic>
   </Split>
   <SplitLongLines>
-    <Title>Splits lange lijnen</Title>
+    <Title>Splits lange regels</Title>
     <SingleLineMaximumLength>Maximale lengte enkele regel</SingleLineMaximumLength>
     <LineMaximumLength>Maximale lengte regel</LineMaximumLength>
     <LineContinuationBeginEndStrings>Regel voortzetting begin/einde strings</LineContinuationBeginEndStrings>
@@ -1476,7 +1492,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SingleLineLengthAvarage>Enkele regellengte - gemiddelde: {0}</SingleLineLengthAvarage>
     <DurationMinimum>Duur - minimum: {0:0.000} seconden</DurationMinimum>
     <DurationMaximum>Duur - maximum: {0:0.000} seconden</DurationMaximum>
-    <DurationAvarage>Duur - average: {0:0.000} seconden</DurationAvarage>
+    <DurationAvarage>Duur - gemiddelde: {0:0.000} seconden</DurationAvarage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Geavanceerde Sub Station Alpha eigenschappen</Title>
@@ -1510,7 +1526,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Primary>Primaire</Primary>
     <Secondary>Secundaire</Secondary>
     <Tertiary>Tertiaire</Tertiary>
-    <Outline>Overzicht</Outline>
+    <Outline>Omlijsting</Outline>
     <Shadow>Schaduw</Shadow>
     <Back>Terug</Back>
     <Alignment>Uitlijning</Alignment>
@@ -1527,7 +1543,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Margins>Marges</Margins>
     <MarginLeft>Marge links</MarginLeft>
     <MarginRight>Marge rechts</MarginRight>
-    <MarginVertical>Marge verticale</MarginVertical>
+    <MarginVertical>Marge verticaal</MarginVertical>
     <Border>Grens</Border>
     <PlusShadow>+ Schaduw</PlusShadow>
     <OpaqueBox>Opaque doos (gebruikt rand kleur)</OpaqueBox>
@@ -1561,7 +1577,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <EndScene>Einde scène</EndScene>
     <Synchronize>Sync</Synchronize>
     <HalfASecondBack>&lt;½ sec</HalfASecondBack>
-    <ThreeSecondsBack>&lt;3 sec</ThreeSecondsBack>
+    <ThreeSecondsBack>&lt;3 seconden</ThreeSecondsBack>
     <PlayXSecondsAndBack>Speel {0} seconden en terug</PlayXSecondsAndBack>
     <FindText>Tekst zoeken</FindText>
     <GoToSubPosition>Ga naar ondertitel positie</GoToSubPosition>
@@ -1579,7 +1595,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <TextAssociatedWithImage>Tekst geassocieerd met beeld</TextAssociatedWithImage>
     <IsItalic>Is &amp;cursief</IsItalic>
     <Update>&amp;update</Update>
-    <Delete>&amp;Delete</Delete>
+    <Delete>&amp;Verwijder</Delete>
     <ImageDoubleSize>Afbeelding dubbele grootte</ImageDoubleSize>
     <ImageFileNotFound>Afbeelding bestand niet gevonden</ImageFileNotFound>
     <Image>Afbeelding</Image>
@@ -1613,7 +1629,7 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <AllFixes>Alle herstellingen</AllFixes>
     <GuessesUsed>Gebruikte schattingen</GuessesUsed>
     <UnknownWords>Onbekende woorden</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR automatische correctie / spellingscontrole</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellchecking>OCR automatische correctie / spellingcontrole</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Herstel OCR fouten</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importeer tekst met bijpassende tijdcodes...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Opslaan ondertitel beeld als...</SaveSubtitleImageAs>
@@ -1660,9 +1676,9 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ClickToAddWaveformAndSpectrogram>Klik om golfvorm/spectrogram toe te voegen</ClickToAddWaveformAndSpectrogram>
     <Seconds>Seconden</Seconds>
     <ZoomIn>Zoom in</ZoomIn>
-    <ZoomOut>Uitzoomen</ZoomOut>
+    <ZoomOut>Zoom uit</ZoomOut>
     <AddParagraphHere>Voeg hier tekst toe</AddParagraphHere>
-    <AddParagraphHereAndPasteText>Voeg tekst van het klembord hier</AddParagraphHereAndPasteText>
+    <AddParagraphHereAndPasteText>Voeg tekst van het klembord hier toe</AddParagraphHereAndPasteText>
     <DeleteParagraph>Tekst wissen</DeleteParagraph>
     <Split>Splits</Split>
     <SplitAtCursor>Splits op de cursor</SplitAtCursor>
@@ -1681,13 +1697,13 @@ Suggesties zijn van harte welkom E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <CurrentVideoPosition>Actuele video positie</CurrentVideoPosition>
     <Beginning>Begin</Beginning>
     <DeleteLines>Verwijder regels</DeleteLines>
-    <FromCurrentVideoPosition>Van de actuele videodrivers positie</FromCurrentVideoPosition>
+    <FromCurrentVideoPosition>Van de actuele video positie</FromCurrentVideoPosition>
     <DetectOptions>Detecteer opties</DetectOptions>
     <ScanBlocksOfMs>Scan blokken van milliseconden</ScanBlocksOfMs>
     <BlockAverageVolMin1>Blokgemiddelde volume moet boven</BlockAverageVolMin1>
     <BlockAverageVolMin2>% van het totale gemiddelde volume</BlockAverageVolMin2>
     <BlockAverageVolMax1>Blokgemiddelde volume moet lager zijn dan</BlockAverageVolMax1>
-    <BlockAverageVolMax2>% Van het totaal max volume</BlockAverageVolMax2>
+    <BlockAverageVolMax2>% van het totaal max volume</BlockAverageVolMax2>
     <SplitLongLinesAt1>Splits lange ondertitels op</SplitLongLinesAt1>
     <SplitLongLinesAt2>Milliseconden</SplitLongLinesAt2>
     <Other>Ander</Other>
