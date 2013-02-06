@@ -789,7 +789,7 @@ namespace Nikse.SubtitleEdit.Forms
             PrepareNextWord();
         }
 
-        public void DoSpellCheck(bool autoDetect, Subtitle subtitle, string dictionaryFolder, Main mainWindow)
+        public void DoSpellCheck(bool autoDetect, Subtitle subtitle, string dictionaryFolder, Main mainWindow, int startLine)
         {
             _subtitle = subtitle;
             _dictionaryFolder = dictionaryFolder;
@@ -889,6 +889,8 @@ namespace Nikse.SubtitleEdit.Forms
             _changeAllDictionary = new Dictionary<string, string>();
             LoadHunspell(dictionary);
             _currentIndex = 0;
+            if (startLine >= 0 && startLine < _subtitle.Paragraphs.Count)
+                _currentIndex = startLine;
             _currentParagraph = _subtitle.Paragraphs[_currentIndex];
             SetWords(_currentParagraph.Text);
             _wordsIndex = -1;
