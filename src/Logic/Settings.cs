@@ -2288,7 +2288,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainToolsBeamer", settings.Shortcuts.MainToolsBeamer);
             textWriter.WriteElementString("MainToolsToggleTranslationOriginalInPreviews", settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
             textWriter.WriteElementString("MainEditInverseSelection", settings.Shortcuts.MainEditInverseSelection);
-            textWriter.WriteElementString("MainEditModifySelection", settings.Shortcuts.MainEditModifySelection);                        
+            textWriter.WriteElementString("MainEditModifySelection", settings.Shortcuts.MainEditModifySelection);
             textWriter.WriteElementString("MainVideoPause", settings.Shortcuts.MainVideoPause);
             textWriter.WriteElementString("MainVideoPlayPauseToggle", settings.Shortcuts.MainVideoPlayPauseToggle);
             textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);

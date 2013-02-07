@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void RemoveNativeFormatting(Subtitle subtitle)
         {
             foreach (Paragraph p in subtitle.Paragraphs)
-            {                
+            {
                 if (p.Text.IndexOf("<") >= 0)
                 {
                     string text = p.Text;
@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text = text.Remove(indexOfTag, indexOfEnd - indexOfTag + 1);
                     text = text.Replace("</" + tag + ">", string.Empty);
                 }
-                
+
             }
             return text;
         }
