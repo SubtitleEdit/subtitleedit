@@ -28,13 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.contextMenuStripListview = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            this.contextMenuStripListview.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -66,6 +71,7 @@
             this.pictureBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxSubtitleImage.ContextMenuStrip = this.contextMenuStripListview;
             this.pictureBoxSubtitleImage.Location = new System.Drawing.Point(12, 47);
             this.pictureBoxSubtitleImage.Name = "pictureBoxSubtitleImage";
             this.pictureBoxSubtitleImage.Size = new System.Drawing.Size(743, 259);
@@ -107,6 +113,20 @@
             this.label1.Text = "Adjust value until text style is normal and not italic. Note that original image " +
     "should be italic.";
             // 
+            // contextMenuStripListview
+            // 
+            this.contextMenuStripListview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveImageAsToolStripMenuItem});
+            this.contextMenuStripListview.Name = "contextMenuStripListview";
+            this.contextMenuStripListview.Size = new System.Drawing.Size(158, 48);
+            // 
+            // saveImageAsToolStripMenuItem
+            // 
+            this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
+            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.saveImageAsToolStripMenuItem.Text = "Save image as...";
+            this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.saveImageAsToolStripMenuItem_Click);
+            // 
             // VobSubOcrSetItalicFactor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -124,10 +144,11 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Set de-italic factor";
+            this.Text = "Set un-italic factor";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubOcrSetItalicFactor_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            this.contextMenuStripListview.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -140,5 +161,8 @@
         private System.Windows.Forms.PictureBox pictureBoxSubtitleImage;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripListview;
+        private System.Windows.Forms.ToolStripMenuItem saveImageAsToolStripMenuItem;
     }
 }
