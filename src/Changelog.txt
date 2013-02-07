@@ -27,14 +27,14 @@
    * Improved reading of bad srt files - thx Ile
    * Slow Timed Text 1.0 loading speeded up
    * Sligtly improved reading of italics in timed text draft - thx Jean
-   * Export to png/xml now uses font styles from ssa/ass 
+   * Export to png/xml now uses font styles from ssa/ass
    * Export images - better cropping
    * Alignment tags now works for format PAC - thx Jussi
    * Allows chars/sec down to 4 due to e.g. Japanese - thx dandomina
 * FIXED:
    * No longer removes last lines in 'Merge short lines' - thx Pax
    * Some fixes for networking mode regarding insert/split - thx Dan
-   * Fixed possible crash in list view regarding syntax coloring 
+   * Fixed possible crash in list view regarding syntax coloring
    * Point sync no longer thows away ssa/ass styling - thx Mike
    * Fixed bug in Dutch language file - thx jan bruyndonckx
    * Fixed bug in converting ass to ssa
