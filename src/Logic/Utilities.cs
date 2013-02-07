@@ -705,7 +705,7 @@ namespace Nikse.SubtitleEdit.Logic
                 control.ForeColor = gs.SubtitleFontColor;
             }
             catch
-            { 
+            {
             }
         }
 

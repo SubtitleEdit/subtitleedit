@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
-                    if ((radioButtonSubtractFromSelection.Checked || radioButtonIntersect.Checked) && _subtitleListView.Items[i].Selected || 
+                    if ((radioButtonSubtractFromSelection.Checked || radioButtonIntersect.Checked) && _subtitleListView.Items[i].Selected ||
                         !radioButtonSubtractFromSelection.Checked && !radioButtonIntersect.Checked)
                     {
                         Paragraph p = _subtitle.Paragraphs[i];

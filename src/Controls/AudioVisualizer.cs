@@ -333,7 +333,7 @@ namespace Nikse.SubtitleEdit.Controls
                 List<Paragraph> selectedParagraphs = new List<Paragraph>();
                 foreach (int index in _selectedIndices)
                 {
-                    Paragraph p = _subtitle.GetParagraphOrDefault(index);                    
+                    Paragraph p = _subtitle.GetParagraphOrDefault(index);
                     if (p != null)
                     {
                         p = new Paragraph(p);

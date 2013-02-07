@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             pictureBoxSubtitleImage.Image = VobSubOcr.UnItalic(_bmp, (double)numericUpDown1.Value);
-        }       
+        }
 
         internal double GetUnItalicFactor()
         {

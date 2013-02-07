@@ -3135,7 +3135,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.InitializeSubtitleFont(textBoxListViewText);
                 Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
                 Utilities.InitializeSubtitleFont(SubtitleListview1);
-                InitializeToolbar();  
+                InitializeToolbar();
             }
             catch (Exception exception)
             {
@@ -4275,7 +4275,7 @@ namespace Nikse.SubtitleEdit.Forms
                             else
                             {
                                 _subtitle.Paragraphs[index] = p;
-                            }                            
+                            }
                             i++;
                         }
                         deletes.Reverse();
@@ -7727,7 +7727,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.Header = _subtitle.Header.Trim() + Environment.NewLine +
                                            Environment.NewLine +
                                            "[Events]" + Environment.NewLine +
-                                           "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine;                                            
+                                           "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine;
                     }
                     else
                     {
@@ -7758,7 +7758,7 @@ namespace Nikse.SubtitleEdit.Forms
                             idx = text.IndexOf(',');
                             text = text.Insert(idx, "," + start + "," + end);
                             lines.Add(text);
-                        }                        
+                        }
                     }
                     format.LoadSubtitle(_subtitle, lines, fileName);
                 }
@@ -13568,7 +13568,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     updates = _networkSession.GetUpdates(out message, out numberOfLines);
-                    numberOfRetries = 0; 
+                    numberOfRetries = 0;
                 }
                 catch (Exception exception)
                 {
@@ -15263,7 +15263,7 @@ namespace Nikse.SubtitleEdit.Forms
             int lineBreakPos = textBox.Text.IndexOf(Environment.NewLine);
             int pos = textBox.SelectionStart;
             var s = Utilities.RemoveHtmlTags(textBox.Text, true).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
-            int totalLength = s.Length; 
+            int totalLength = s.Length;
             string totalL = "     " + string.Format(_languageGeneral.TotalLengthX, totalLength);
             if (lineBreakPos == -1 || pos <= lineBreakPos)
             {
@@ -15777,7 +15777,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Header = styles.Header;
                     var styleList  = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
                     if (styleList.Count > 0)
-                    { 
+                    {
                         for (int i=0; i<_subtitle.Paragraphs.Count; i++)
                         {
                             Paragraph p = _subtitle.Paragraphs[i];
@@ -15787,7 +15787,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 SubtitleListview1.SetExtraText(i, p.Extra, SubtitleListview1.ForeColor);
                             }
                         }
-                            
+
                     }
 
                 }

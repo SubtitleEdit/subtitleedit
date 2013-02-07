@@ -399,7 +399,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _bluRaySubtitlesOriginal = subtitles;
 
-            groupBoxImagePalette.Visible = false;            
+            groupBoxImagePalette.Visible = false;
 
             Text = Configuration.Settings.Language.VobSubOcr.TitleBluRay;
             if (!string.IsNullOrEmpty(fileName))
@@ -1995,10 +1995,10 @@ namespace Nikse.SubtitleEdit.Forms
             Bitmap unItaliced = new Bitmap(bmp.Width + left + 4, bmp.Height);
 
             Point[] destinationPoints = {
-                new Point(0, 0),  // destination for upper-left point of  original 
-                new Point(bmp.Width, 0), // destination for upper-right point of original 
+                new Point(0, 0),  // destination for upper-left point of  original
+                new Point(bmp.Width, 0), // destination for upper-right point of original
                 new Point(left, bmp.Height)   // destination for lower-left point of original
-            };  
+            };
 
             using (var g = Graphics.FromImage(unItaliced))
             {
@@ -4011,7 +4011,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var form = new VobSubOcrSetItalicFactor(GetSubtitleBitmap(_selectedIndex), _unItalicFactor);
             form.ShowDialog(this);
-            _unItalicFactor = form.GetUnItalicFactor();            
+            _unItalicFactor = form.GetUnItalicFactor();
         }
 
     }

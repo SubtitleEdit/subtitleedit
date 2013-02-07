@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string[] arr = line.Split();
                 var timeCode = arr[arr.Length - 1];
                 if (regexTimeCodesAM.Match(timeCode).Success || regexTimeCodesPM.Match(timeCode).Success)
-                {                                      
+                {
                     try
                     {
                         arr = timeCode.Substring(0, 10).Split(':');
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             p = new Paragraph();
                             p.StartTime = new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
                             p.Text = s.Substring(0, s.IndexOf(timeCode)).Trim();
-                            subtitle.Paragraphs.Add(p);                            
+                            subtitle.Paragraphs.Add(p);
                         }
                     }
                     catch
