@@ -2231,11 +2231,20 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (italicBeginTagCount == 2 && italicEndTagCount == 1)
                 {
-                    int lastIndex = text.LastIndexOf(beginTag);
-                    if (text.Length > lastIndex + endTag.Length)
-                        text = text.Substring(0, lastIndex) + text.Substring(lastIndex - 1 + endTag.Length);
+                    var lines = text.Replace(Environment.NewLine, "\n").Split('\n');
+                    if (lines.Length == 2 && lines[0].StartsWith("<i>") && lines[0].EndsWith("</i>") &&
+                        lines[1].StartsWith("<i>"))
+                    {
+                        text = text.TrimEnd() + "</i>";
+                    }
                     else
-                        text = text.Substring(0, lastIndex - 1) + endTag;
+                    {
+                        int lastIndex = text.LastIndexOf(beginTag);
+                        if (text.Length > lastIndex + endTag.Length)
+                            text = text.Substring(0, lastIndex) + text.Substring(lastIndex - 1 + endTag.Length);
+                        else
+                            text = text.Substring(0, lastIndex - 1) + endTag;
+                    }
                 }
 
                 if (italicBeginTagCount == 1 && italicEndTagCount == 0)
