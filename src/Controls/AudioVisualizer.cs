@@ -508,6 +508,13 @@ namespace Nikse.SubtitleEdit.Controls
                 textBrush.Dispose();
                 textFont.Dispose();
             }
+            if (Focused)
+            {
+                using (Pen p = new Pen(SelectedColor))
+                {
+                    e.Graphics.DrawRectangle(p, new Rectangle(0, 0, Width - 1, Height - 1));
+                }
+            }
         }
 
         private void DrawBackground(Graphics graphics)
@@ -522,14 +529,6 @@ namespace Nikse.SubtitleEdit.Controls
                         graphics.DrawLine(pen, i, 0, i, Height);
                         graphics.DrawLine(pen, 0, i, Width, i);
                     }
-                }
-            }
-            if (Focused)
-            {
-                using (Pen p = new Pen(Color.Gray))
-                {
-                    p.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-                    graphics.DrawRectangle(p, new Rectangle(0, 0, Width - 1, Height - 1));
                 }
             }
         }
