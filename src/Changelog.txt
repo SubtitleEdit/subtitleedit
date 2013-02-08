@@ -7,12 +7,14 @@
    * Turkish language - thx Çağdaş
 * IMPROVED:
    * OCR: MUCH better ocr of italics when using Tesseract
+   * OCR: Added some detection of music symbols when using Tesseract
    * Waveform now performs better when many lines are selected
    * Waveform now has focused rectangle
    * Network mode more stable (auto-restart)
    * Updated Czech language file - thx Trottel
    * Updated German language file - thx Christoph Kitsche
 * FIXED:
+   * VobSub (sub/idx) files created by SE now have better compability
    * Possible crash+bug in 'Fix common errors' on selected lines - thx Dan
    * Drag'n'drop of large bluray sup files - thx AT
    * Minor fix in 'Fix common errors -> Fix invalid italic tags' - thx azu
