@@ -331,16 +331,25 @@ namespace Nikse.SubtitleEdit.Controls
             if (_wavePeaks != null && _wavePeaks.AllSamples != null)
             {
                 List<Paragraph> selectedParagraphs = new List<Paragraph>();
-                foreach (int index in _selectedIndices)
+                if (_selectedIndices != null)
                 {
-                    Paragraph p = _subtitle.GetParagraphOrDefault(index);
-                    if (p != null)
+                    try
                     {
-                        p = new Paragraph(p);
-                        // not really frames... just using them as position markers for better performance
-                        p.StartFrame = (int)(p.StartTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor);
-                        p.EndFrame = (int)(p.EndTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor);
-                        selectedParagraphs.Add(p);
+                        foreach (int index in _selectedIndices)
+                        {
+                            Paragraph p = _subtitle.GetParagraphOrDefault(index);
+                            if (p != null)
+                            {
+                                p = new Paragraph(p);
+                                // not really frames... just using them as position markers for better performance
+                                p.StartFrame = (int)(p.StartTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor);
+                                p.EndFrame = (int)(p.EndTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor);
+                                selectedParagraphs.Add(p);
+                            }
+                        }
+                    }
+                    catch
+                    {
                     }
                 }
 
