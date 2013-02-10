@@ -99,13 +99,17 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
             // fill out all info but the offets (determined later)
 
-            /* header - contains PTM */
-            int ptm = (int)paragraph.StartTime.TotalMilliseconds; // should be end time, but STC writes start time?
-            PacketizedElementaryStreamHeaderBufferFirst[9] = (byte)(((ptm >> 29) & 0x0E) | 0x21);
-            PacketizedElementaryStreamHeaderBufferFirst[10] = (byte)(ptm >> 22);
-            PacketizedElementaryStreamHeaderBufferFirst[11] = (byte)((ptm >> 14) | 1);
-            PacketizedElementaryStreamHeaderBufferFirst[12] = (byte)(ptm >> 7);
-            PacketizedElementaryStreamHeaderBufferFirst[13] = (byte)(ptm * 2 + 1);
+            // PTM
+            const string pre = "0011"; // 0011 or 0010 ?
+            long newPts = (long)(paragraph.StartTime.TotalSeconds * 90000.0 + 0.5);
+            string bString = Convert.ToString(newPts, 2).PadLeft(33, '0');
+            string fiveBytesString = pre + bString.Substring(0, 3) + "1" + bString.Substring(3, 15) + "1" + bString.Substring(18, 15) + "1";
+            for (int i = 0; i < 5; i++)
+            {
+                byte b = Convert.ToByte(fiveBytesString.Substring((i * 8), 8), 2);
+                PacketizedElementaryStreamHeaderBufferFirst[9+i] = b;
+            }
+
 
             // create control header 
             // palette (store reversed) 
@@ -233,6 +237,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 else
                     buf[ofs++] = twoPartBuffer.Buffer2[i - twoPartBuffer.Buffer1.Length];
             }
+
             int ofsRLE = tmp;
 
             // fill gap in first packet with (parts of) control header
@@ -434,7 +439,8 @@ langidx: 0
 # " + _languageName + @"
 id: " + _languageNameShort + @", index: 0
 # Decomment next line to activate alternative name in DirectVobSub / Windows Media Player 6.x
-# alt: English");
+# alt: English
+# Vob/Cell ID: 1, 1 (PTS: 0)");
             return sb;
         }
 
