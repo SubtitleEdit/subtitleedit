@@ -252,7 +252,7 @@ namespace Nikse.SubtitleEdit.Logic
             var twoParts = new RunLengthTwoParts();
             twoParts.Buffer1 = new byte[indexBufferEqual];
             Buffer.BlockCopy(bufferEqual, 0, twoParts.Buffer1, 0, indexBufferEqual);
-            twoParts.Buffer2 = new byte[indexBufferUnEqual];
+            twoParts.Buffer2 = new byte[indexBufferUnEqual+2];
             Buffer.BlockCopy(bufferUnEqual, 0, twoParts.Buffer2, 0, indexBufferUnEqual);
             return twoParts;
         }
