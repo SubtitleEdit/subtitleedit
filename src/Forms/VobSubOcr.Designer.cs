@@ -38,11 +38,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.importTextWithMatchingTimeCodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAllImagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExport = new System.Windows.Forms.ToolStripMenuItem();
+            this.vobSubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bluraySupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bDNXMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorImageCompare = new System.Windows.Forms.ToolStripSeparator();
             this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.EditLastAdditionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemSetUnItalicFactor = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelSubtitleText = new System.Windows.Forms.Label();
@@ -53,6 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
             this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
             this.GroupBoxTesseractMethod = new System.Windows.Forms.GroupBox();
+            this.checkBoxTesseractMusicOn = new System.Windows.Forms.CheckBox();
             this.checkBoxTesseractItalicsOn = new System.Windows.Forms.CheckBox();
             this.checkBoxUseModiInTesseractForUnknownWords = new System.Windows.Forms.CheckBox();
             this.labelTesseractLanguage = new System.Windows.Forms.Label();
@@ -114,7 +120,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom = new System.Windows.Forms.SplitContainer();
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.toolStripMenuItemSetUnItalicFactor = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.GroupBoxTesseractMethod.SuspendLayout();
@@ -149,16 +154,17 @@ namespace Nikse.SubtitleEdit.Forms
             this.importTextWithMatchingTimeCodesToolStripMenuItem,
             this.toolStripSeparator2,
             this.saveImageAsToolStripMenuItem,
-            this.saveAllImagesToolStripMenuItem,
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem,
+            this.toolStripMenuItemExport,
             this.toolStripSeparatorImageCompare,
             this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem,
             this.EditLastAdditionsToolStripMenuItem,
+            this.toolStripSeparator4,
             this.toolStripMenuItemSetUnItalicFactor,
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 270);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 276);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
@@ -199,19 +205,43 @@ namespace Nikse.SubtitleEdit.Forms
             this.saveImageAsToolStripMenuItem.Text = "Save image as...";
             this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.SaveImageAsToolStripMenuItemClick);
             // 
-            // saveAllImagesToolStripMenuItem
-            // 
-            this.saveAllImagesToolStripMenuItem.Name = "saveAllImagesToolStripMenuItem";
-            this.saveAllImagesToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
-            this.saveAllImagesToolStripMenuItem.Text = "Save all images (png/bdn xml)...";
-            this.saveAllImagesToolStripMenuItem.Click += new System.EventHandler(this.saveAllImagesToolStripMenuItem_Click);
-            // 
             // saveAllImagesWithHtmlIndexViewToolStripMenuItem
             // 
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Name = "saveAllImagesWithHtmlIndexViewToolStripMenuItem";
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = "Save all images with html index view...";
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Click += new System.EventHandler(this.saveAllImagesWithHtmlIndexViewToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItemExport
+            // 
+            this.toolStripMenuItemExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.vobSubToolStripMenuItem,
+            this.bluraySupToolStripMenuItem,
+            this.bDNXMLToolStripMenuItem});
+            this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
+            this.toolStripMenuItemExport.Size = new System.Drawing.Size(305, 22);
+            this.toolStripMenuItemExport.Text = "Export all images as...";
+            // 
+            // vobSubToolStripMenuItem
+            // 
+            this.vobSubToolStripMenuItem.Name = "vobSubToolStripMenuItem";
+            this.vobSubToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.vobSubToolStripMenuItem.Text = "VobSub...";
+            this.vobSubToolStripMenuItem.Click += new System.EventHandler(this.vobSubToolStripMenuItem_Click);
+            // 
+            // bluraySupToolStripMenuItem
+            // 
+            this.bluraySupToolStripMenuItem.Name = "bluraySupToolStripMenuItem";
+            this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.bluraySupToolStripMenuItem.Text = "Blu-ray sup...";
+            this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.bluraySupToolStripMenuItem_Click);
+            // 
+            // bDNXMLToolStripMenuItem
+            // 
+            this.bDNXMLToolStripMenuItem.Name = "bDNXMLToolStripMenuItem";
+            this.bDNXMLToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.bDNXMLToolStripMenuItem.Text = "BDN XML...";
+            this.bDNXMLToolStripMenuItem.Click += new System.EventHandler(this.bDNXMLToolStripMenuItem_Click);
             // 
             // toolStripSeparatorImageCompare
             // 
@@ -231,6 +261,18 @@ namespace Nikse.SubtitleEdit.Forms
             this.EditLastAdditionsToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
             this.EditLastAdditionsToolStripMenuItem.Text = "Edit last ocr image additions...";
             this.EditLastAdditionsToolStripMenuItem.Click += new System.EventHandler(this.inspectLastAdditionsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(302, 6);
+            // 
+            // toolStripMenuItemSetUnItalicFactor
+            // 
+            this.toolStripMenuItemSetUnItalicFactor.Name = "toolStripMenuItemSetUnItalicFactor";
+            this.toolStripMenuItemSetUnItalicFactor.Size = new System.Drawing.Size(305, 22);
+            this.toolStripMenuItemSetUnItalicFactor.Text = "Set un-italic factor...";
+            this.toolStripMenuItemSetUnItalicFactor.Click += new System.EventHandler(this.toolStripMenuItemSetUnItalicFactor_Click);
             // 
             // toolStripSeparator3
             // 
@@ -325,6 +367,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // GroupBoxTesseractMethod
             // 
+            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractMusicOn);
             this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractItalicsOn);
             this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxUseModiInTesseractForUnknownWords);
             this.GroupBoxTesseractMethod.Controls.Add(this.labelTesseractLanguage);
@@ -336,6 +379,18 @@ namespace Nikse.SubtitleEdit.Forms
             this.GroupBoxTesseractMethod.TabStop = false;
             this.GroupBoxTesseractMethod.Text = "Tesseract";
             // 
+            // checkBoxTesseractMusicOn
+            // 
+            this.checkBoxTesseractMusicOn.AutoSize = true;
+            this.checkBoxTesseractMusicOn.Checked = true;
+            this.checkBoxTesseractMusicOn.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxTesseractMusicOn.Location = new System.Drawing.Point(99, 101);
+            this.checkBoxTesseractMusicOn.Name = "checkBoxTesseractMusicOn";
+            this.checkBoxTesseractMusicOn.Size = new System.Drawing.Size(94, 17);
+            this.checkBoxTesseractMusicOn.TabIndex = 4;
+            this.checkBoxTesseractMusicOn.Text = "Music symbols";
+            this.checkBoxTesseractMusicOn.UseVisualStyleBackColor = true;
+            // 
             // checkBoxTesseractItalicsOn
             // 
             this.checkBoxTesseractItalicsOn.AutoSize = true;
@@ -343,7 +398,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxTesseractItalicsOn.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxTesseractItalicsOn.Location = new System.Drawing.Point(22, 101);
             this.checkBoxTesseractItalicsOn.Name = "checkBoxTesseractItalicsOn";
-            this.checkBoxTesseractItalicsOn.Size = new System.Drawing.Size(54, 17);
+            this.checkBoxTesseractItalicsOn.Size = new System.Drawing.Size(53, 17);
             this.checkBoxTesseractItalicsOn.TabIndex = 3;
             this.checkBoxTesseractItalicsOn.Text = "Italics";
             this.checkBoxTesseractItalicsOn.UseVisualStyleBackColor = true;
@@ -356,7 +411,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxUseModiInTesseractForUnknownWords.Enabled = false;
             this.checkBoxUseModiInTesseractForUnknownWords.Location = new System.Drawing.Point(22, 74);
             this.checkBoxUseModiInTesseractForUnknownWords.Name = "checkBoxUseModiInTesseractForUnknownWords";
-            this.checkBoxUseModiInTesseractForUnknownWords.Size = new System.Drawing.Size(167, 17);
+            this.checkBoxUseModiInTesseractForUnknownWords.Size = new System.Drawing.Size(165, 17);
             this.checkBoxUseModiInTesseractForUnknownWords.TabIndex = 2;
             this.checkBoxUseModiInTesseractForUnknownWords.Text = "Try MODI for unknown words";
             this.checkBoxUseModiInTesseractForUnknownWords.UseVisualStyleBackColor = true;
@@ -401,7 +456,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxRightToLeft.AutoSize = true;
             this.checkBoxRightToLeft.Location = new System.Drawing.Point(173, 100);
             this.checkBoxRightToLeft.Name = "checkBoxRightToLeft";
-            this.checkBoxRightToLeft.Size = new System.Drawing.Size(83, 17);
+            this.checkBoxRightToLeft.Size = new System.Drawing.Size(80, 17);
             this.checkBoxRightToLeft.TabIndex = 6;
             this.checkBoxRightToLeft.Text = "Right to left";
             this.checkBoxRightToLeft.UseVisualStyleBackColor = true;
@@ -620,7 +675,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxGuessUnknownWords.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxGuessUnknownWords.Location = new System.Drawing.Point(11, 91);
             this.checkBoxGuessUnknownWords.Name = "checkBoxGuessUnknownWords";
-            this.checkBoxGuessUnknownWords.Size = new System.Drawing.Size(164, 17);
+            this.checkBoxGuessUnknownWords.Size = new System.Drawing.Size(162, 17);
             this.checkBoxGuessUnknownWords.TabIndex = 5;
             this.checkBoxGuessUnknownWords.Text = "Try to guess unknown words";
             this.checkBoxGuessUnknownWords.UseVisualStyleBackColor = true;
@@ -768,7 +823,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxPromptForUnknownWords.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxPromptForUnknownWords.Location = new System.Drawing.Point(11, 69);
             this.checkBoxPromptForUnknownWords.Name = "checkBoxPromptForUnknownWords";
-            this.checkBoxPromptForUnknownWords.Size = new System.Drawing.Size(255, 17);
+            this.checkBoxPromptForUnknownWords.Size = new System.Drawing.Size(246, 17);
             this.checkBoxPromptForUnknownWords.TabIndex = 4;
             this.checkBoxPromptForUnknownWords.Text = "Prompt for unknown words (requires dictionary)";
             this.checkBoxPromptForUnknownWords.UseVisualStyleBackColor = true;
@@ -780,7 +835,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxAutoBreakLines.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxAutoBreakLines.Location = new System.Drawing.Point(11, 113);
             this.checkBoxAutoBreakLines.Name = "checkBoxAutoBreakLines";
-            this.checkBoxAutoBreakLines.Size = new System.Drawing.Size(208, 17);
+            this.checkBoxAutoBreakLines.Size = new System.Drawing.Size(200, 17);
             this.checkBoxAutoBreakLines.TabIndex = 6;
             this.checkBoxAutoBreakLines.Text = "Auto break subtitle, if line number > 2";
             this.checkBoxAutoBreakLines.UseVisualStyleBackColor = true;
@@ -801,7 +856,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxAutoFixCommonErrors.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxAutoFixCommonErrors.Location = new System.Drawing.Point(11, 47);
             this.checkBoxAutoFixCommonErrors.Name = "checkBoxAutoFixCommonErrors";
-            this.checkBoxAutoFixCommonErrors.Size = new System.Drawing.Size(139, 17);
+            this.checkBoxAutoFixCommonErrors.Size = new System.Drawing.Size(137, 17);
             this.checkBoxAutoFixCommonErrors.TabIndex = 2;
             this.checkBoxAutoFixCommonErrors.Text = "Fix common OCR errors";
             this.checkBoxAutoFixCommonErrors.UseVisualStyleBackColor = true;
@@ -833,7 +888,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxBackgroundTransparent.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxBackgroundTransparent.Location = new System.Drawing.Point(144, 19);
             this.checkBoxBackgroundTransparent.Name = "checkBoxBackgroundTransparent";
-            this.checkBoxBackgroundTransparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxBackgroundTransparent.Size = new System.Drawing.Size(83, 17);
             this.checkBoxBackgroundTransparent.TabIndex = 8;
             this.checkBoxBackgroundTransparent.Text = "Transparent";
             this.checkBoxBackgroundTransparent.UseVisualStyleBackColor = true;
@@ -854,7 +909,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxEmphasis2Transparent.AutoSize = true;
             this.checkBoxEmphasis2Transparent.Location = new System.Drawing.Point(507, 19);
             this.checkBoxEmphasis2Transparent.Name = "checkBoxEmphasis2Transparent";
-            this.checkBoxEmphasis2Transparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxEmphasis2Transparent.Size = new System.Drawing.Size(83, 17);
             this.checkBoxEmphasis2Transparent.TabIndex = 6;
             this.checkBoxEmphasis2Transparent.Text = "Transparent";
             this.checkBoxEmphasis2Transparent.UseVisualStyleBackColor = true;
@@ -865,7 +920,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxEmphasis1Transparent.AutoSize = true;
             this.checkBoxEmphasis1Transparent.Location = new System.Drawing.Point(387, 19);
             this.checkBoxEmphasis1Transparent.Name = "checkBoxEmphasis1Transparent";
-            this.checkBoxEmphasis1Transparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxEmphasis1Transparent.Size = new System.Drawing.Size(83, 17);
             this.checkBoxEmphasis1Transparent.TabIndex = 5;
             this.checkBoxEmphasis1Transparent.Text = "Transparent";
             this.checkBoxEmphasis1Transparent.UseVisualStyleBackColor = true;
@@ -876,7 +931,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxPatternTransparent.AutoSize = true;
             this.checkBoxPatternTransparent.Location = new System.Drawing.Point(266, 19);
             this.checkBoxPatternTransparent.Name = "checkBoxPatternTransparent";
-            this.checkBoxPatternTransparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxPatternTransparent.Size = new System.Drawing.Size(83, 17);
             this.checkBoxPatternTransparent.TabIndex = 4;
             this.checkBoxPatternTransparent.Text = "Transparent";
             this.checkBoxPatternTransparent.UseVisualStyleBackColor = true;
@@ -944,9 +999,9 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.checkBoxAutoTransparentBackground.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxAutoTransparentBackground.AutoSize = true;
-            this.checkBoxAutoTransparentBackground.Location = new System.Drawing.Point(481, 170);
+            this.checkBoxAutoTransparentBackground.Location = new System.Drawing.Point(485, 170);
             this.checkBoxAutoTransparentBackground.Name = "checkBoxAutoTransparentBackground";
-            this.checkBoxAutoTransparentBackground.Size = new System.Drawing.Size(168, 17);
+            this.checkBoxAutoTransparentBackground.Size = new System.Drawing.Size(164, 17);
             this.checkBoxAutoTransparentBackground.TabIndex = 36;
             this.checkBoxAutoTransparentBackground.Text = "Auto transparent background";
             this.checkBoxAutoTransparentBackground.UseVisualStyleBackColor = true;
@@ -1055,13 +1110,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
-            // 
-            // toolStripMenuItemSetUnItalicFactor
-            // 
-            this.toolStripMenuItemSetUnItalicFactor.Name = "toolStripMenuItemSetUnItalicFactor";
-            this.toolStripMenuItemSetUnItalicFactor.Size = new System.Drawing.Size(305, 22);
-            this.toolStripMenuItemSetUnItalicFactor.Text = "Set un-italic factor...";
-            this.toolStripMenuItemSetUnItalicFactor.Click += new System.EventHandler(this.toolStripMenuItemSetUnItalicFactor_Click);
             // 
             // VobSubOcr
             // 
@@ -1188,7 +1236,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxRightToLeft;
         private System.Windows.Forms.CheckBox checkBoxShowOnlyForced;
         private System.Windows.Forms.CheckBox checkBoxUseTimeCodesFromIdx;
-        private System.Windows.Forms.ToolStripMenuItem saveAllImagesToolStripMenuItem;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.ComboBox comboBoxDictionaries;
         private System.Windows.Forms.CheckBox checkBoxBackgroundTransparent;
@@ -1210,5 +1257,11 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonAddToOcrReplaceList;
         private System.Windows.Forms.Button buttonGoogleIt;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetUnItalicFactor;
+        private System.Windows.Forms.CheckBox checkBoxTesseractMusicOn;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExport;
+        private System.Windows.Forms.ToolStripMenuItem vobSubToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bluraySupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bDNXMLToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     }
 }

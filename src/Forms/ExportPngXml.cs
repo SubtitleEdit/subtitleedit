@@ -60,6 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _isLoading = true;
         private string _exportType = "BDNXML";
         private string _fileName;
+        private VobSubOcr _vobSubOcr;
 
         public ExportPngXml()
         {
@@ -343,60 +344,78 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.AppendLine();
                 }
 
-                var threadEqual = new Thread(DoWork);
-                var paramEqual = MakeMakeBitmapParameter(0, width, height);
-
-                var threadUnEqual = new Thread(DoWork);
-                var paramUnEqual = MakeMakeBitmapParameter(1, width, height);
-
-                threadEqual.Start(paramEqual);
-                int i = 1;
-                for (; i < _subtitle.Paragraphs.Count; i++)
+                if (_vobSubOcr != null)
                 {
+                    int i = 0;
+                    foreach (Paragraph p in _subtitle.Paragraphs)
+                    {
+                        var mp = MakeMakeBitmapParameter(i, width, height);
+                        mp.Bitmap = _vobSubOcr.GetSubtitleBitmap(i);
+                        imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, mp, i);
+                        i++;
+                        progressBar1.Refresh();
+                        Application.DoEvents();
+                        progressBar1.Value = i;
+                    }
+                }
+                else
+                {
+
+                    var threadEqual = new Thread(DoWork);
+                    var paramEqual = MakeMakeBitmapParameter(0, width, height);
+
+                    var threadUnEqual = new Thread(DoWork);
+                    var paramUnEqual = MakeMakeBitmapParameter(1, width, height);
+
+                    threadEqual.Start(paramEqual);
+                    int i = 1;
+                    for (; i < _subtitle.Paragraphs.Count; i++)
+                    {
+                        if (i % 2 == 0)
+                        {
+                            paramEqual = MakeMakeBitmapParameter(i, width, height);
+                            threadEqual = new Thread(DoWork);
+                            threadEqual.Start(paramEqual);
+
+                            if (threadUnEqual.ThreadState == ThreadState.Running)
+                                threadUnEqual.Join(3000);
+                            imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramUnEqual, i);
+                        }
+                        else
+                        {
+                            paramUnEqual = MakeMakeBitmapParameter(i, width, height);
+                            threadUnEqual = new Thread(DoWork);
+                            threadUnEqual.Start(paramUnEqual);
+
+                            if (threadEqual.ThreadState == ThreadState.Running)
+                                threadEqual.Join(3000);
+                            imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
+                        }
+                        progressBar1.Refresh();
+                        Application.DoEvents();
+                        progressBar1.Value = i;
+                    }
+
                     if (i % 2 == 0)
                     {
-                        paramEqual = MakeMakeBitmapParameter(i, width, height);
-                        threadEqual = new Thread(DoWork);
-                        threadEqual.Start(paramEqual);
-
+                        if (threadEqual.ThreadState == ThreadState.Running)
+                            threadEqual.Join(3000);
+                        imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
                         if (threadUnEqual.ThreadState == ThreadState.Running)
                             threadUnEqual.Join(3000);
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramUnEqual, i);
                     }
                     else
                     {
-                        paramUnEqual = MakeMakeBitmapParameter(i, width, height);
-                        threadUnEqual = new Thread(DoWork);
-                        threadUnEqual.Start(paramUnEqual);
-
+                        if (threadUnEqual.ThreadState == ThreadState.Running)
+                            threadUnEqual.Join(3000);
+                        imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter,
+                                                          binarySubtitleFile, paramUnEqual, i);
                         if (threadEqual.ThreadState == ThreadState.Running)
                             threadEqual.Join(3000);
-                        imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
+                        imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter,
+                                                          binarySubtitleFile, paramEqual, i);
                     }
-                    progressBar1.Refresh();
-                    Application.DoEvents();
-                    progressBar1.Value = i;
-                }
-
-                if (i % 2 == 0)
-                {
-                    if (threadEqual.ThreadState == ThreadState.Running)
-                        threadEqual.Join(3000);
-                    imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
-                    if (threadUnEqual.ThreadState == ThreadState.Running)
-                        threadUnEqual.Join(3000);
-                    imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramUnEqual, i);
-                }
-                else
-                {
-                    if (threadUnEqual.ThreadState == ThreadState.Running)
-                        threadUnEqual.Join(3000);
-                    imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter,
-                                                      binarySubtitleFile, paramUnEqual, i);
-                        if (threadEqual.ThreadState == ThreadState.Running)
-                        threadEqual.Join(3000);
-                    imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter,
-                                                      binarySubtitleFile, paramEqual, i);
                 }
 
                 progressBar1.Visible = false;
@@ -849,6 +868,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Bitmap GenerateImageFromTextWithStyle(Paragraph p)
         {
+            if (_vobSubOcr != null)
+            {
+                var index = _subtitle.GetIndex(p);
+                if (index >= 0)
+                    return _vobSubOcr.GetSubtitleBitmap(index);
+            }
+
             var mbp = new MakeBitmapParameter();
             mbp.AlignLeft = comboBoxHAlign.SelectedIndex == 0;
             mbp.AlignRight = comboBoxHAlign.SelectedIndex == 2;
@@ -1361,6 +1387,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
+        }
+
+        internal void InitializeFromVobSubOcr(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VobSubOcr vobSubOcr)
+        {
+            _vobSubOcr = vobSubOcr;
+            Initialize(subtitle, format, exportType, fileName, null);
         }
 
         private void subtitleListView1_SelectedIndexChanged(object sender, EventArgs e)
