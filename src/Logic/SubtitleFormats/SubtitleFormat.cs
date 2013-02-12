@@ -71,6 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new SamiModern(),
                     new Scenarist(),
                     new ScenaristClosedCaptions(),
+                    new SmilTimesheetData(),
                     new SonyDVDArchitect(),
                     new SonyDVDArchitectExplicitDuration(),
                     new SonyDVDArchitectLineAndDuration(),
