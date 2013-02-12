@@ -804,6 +804,7 @@
     <Compile Include="Logic\SubtitleFormats\SamiModern.cs" />
     <Compile Include="Logic\SubtitleFormats\Scenarist.cs" />
     <Compile Include="Logic\SubtitleFormats\ScenaristClosedCaptions.cs" />
+    <Compile Include="Logic\SubtitleFormats\SmilTimesheetData.cs" />
     <Compile Include="Logic\SubtitleFormats\SoftNiSub.cs" />
     <Compile Include="Logic\SubtitleFormats\Son.cs" />
     <Compile Include="Logic\SubtitleFormats\SonicScenaristBitmaps.cs" />
