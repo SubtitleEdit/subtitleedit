@@ -74,18 +74,16 @@
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
-    <AboutText1>
-      Subtitle Edit er fri software under GNU Public License.
-      Du kan distribuere, ændre og bruge det frit.
+    <AboutText1>Subtitle Edit er fri software under GNU Public License.
+Du kan distribuere, ændre og bruge det frit.
 
-      C# source code er tilgængelig her: http://code.google.com/p/subtitleedit/
+C# source code er tilgængelig her: http://code.google.com/p/subtitleedit/
 
-      Besøg www.nikse.dk for den nyeste version.
+Besøg www.nikse.dk for den nyeste version.
 
-      Forslag er meget velkomne.
+Forslag er meget velkomne.
 
-      E-mail: mailto:nikse.dk@gmail.com
-    </AboutText1>
+E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Tilføj til navne mv. liste</Title>
