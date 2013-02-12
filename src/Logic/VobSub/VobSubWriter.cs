@@ -439,7 +439,7 @@ langidx: 0
 # " + _languageName + @"
 id: " + _languageNameShort + @", index: 0
 # Decomment next line to activate alternative name in DirectVobSub / Windows Media Player 6.x
-# alt: English
+# alt: " + _languageName + @"
 # Vob/Cell ID: 1, 1 (PTS: 0)");
             return sb;
         }
