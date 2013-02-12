@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.2</Version>
-    <TranslatedBy>Çağdaş Tatar</TranslatedBy>
+    <TranslatedBy>Çevirmen: mailto:shadowxvb@windowslive.com</TranslatedBy>
     <CultureName>tr-TR</CultureName>
     <HelpFile>
     </HelpFile>
@@ -83,9 +83,7 @@ Son versiyon için www.nikse.dk adresini ziyaret edin.
 
 Önerilere açığız.
 
-E-posta: mailto:nikse.dk@gmail.com
-
-Çevirmen: shadowxvb@windowslive.com</AboutText1>
+E-posta: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>İsimler listesine ekle</Title>
