@@ -48,7 +48,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-
         internal class CompareMatch
         {
             public string Text { get; set; }
@@ -261,6 +260,11 @@ namespace Nikse.SubtitleEdit.Forms
             EditLastAdditionsToolStripMenuItem.Text = language.EditLastAdditions;
             checkBoxRightToLeft.Checked = Configuration.Settings.VobSubOcr.RightToLeft;
             deleteToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
+
+            toolStripMenuItemExport.Text = Configuration.Settings.Language.Main.Menu.File.Export;
+            vobSubToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportVobSub;
+            bDNXMLToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportBdnXml;
+            bluraySupToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportBluRaySup;
 
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
 
@@ -2476,14 +2480,14 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (unItalicText.EndsWith("..") && !unItalicText.EndsWith("...") && line.EndsWith("..."))
                                     unItalicText += ".";
 
-                                if (line.EndsWith("!") && !unItalicText.EndsWith("!"))
+                                if (line.EndsWith("!") && !unItalicText.EndsWith("!") && !unItalicText.EndsWith("!</i>"))
                                 {
                                     if (unItalicText.EndsWith("!'"))
                                         unItalicText = unItalicText.TrimEnd('\'');
                                     else
                                         unItalicText += "!";
                                 }
-                                if (line.EndsWith("?") && !unItalicText.EndsWith("?"))
+                                if (line.EndsWith("?") && !unItalicText.EndsWith("?") && !unItalicText.EndsWith("?</i>"))
                                 {
                                     if (unItalicText.EndsWith("?'"))
                                         unItalicText = unItalicText.TrimEnd('\'');
@@ -2573,9 +2577,21 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         line = "♪ " + line.Remove(0, 2).TrimStart();
                     }
+                    if (line.StartsWith("<i>J'"))
+                    {
+                        line = "<i>♪ " + line.Remove(0, 5).TrimStart();
+                    }
+                    if (line.StartsWith("[J'"))
+                    {
+                        line = "[♪ " + line.Remove(0, 3).TrimStart();
+                    }
                     if (line.EndsWith("J'"))
                     {
-                        line = line.Remove(line.Length - 3, 2).TrimEnd() + " ♪";
+                        line = line.Remove(line.Length - 2, 2).TrimEnd() + " ♪";
+                    }
+                    if (line.EndsWith("J'</i>"))
+                    {
+                        line = line.Remove(line.Length - 6, 6).TrimEnd() + " ♪</i>";
                     }
                     if (line.Contains(Environment.NewLine + "J'"))
                     {
@@ -2588,7 +2604,6 @@ namespace Nikse.SubtitleEdit.Forms
                         line = line.Replace("  ", " ");
                     }
                 }
-
 
                 if (_ocrFixEngine.Abort)
                 {

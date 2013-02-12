@@ -338,9 +338,19 @@ namespace Nikse.SubtitleEdit.Logic
         public bool StartRememberPositionAndSize { get; set; }
         public string StartPosition { get; set; }
         public string StartSize { get; set; }
-        public int StartListViewWidth { get; set; }
-        public int StartListViewHeight { get; set; }
-        public int StartTextBoxHeight { get; set; }
+
+        //public int StartListViewWidth { get; set; }
+        //public int StartListViewHeight { get; set; }
+        //public int StartTextBoxHeight { get; set; }
+        //public int ListViewAndTextBoxHeight { get; set; }
+
+        public int SplitContainerMainSplitterDistance { get; set; }
+        public int SplitContainer1SplitterDistance { get; set; }
+        public int SplitContainerListViewAndTextSplitterDistance { get; set; }
+
+
+
+
         public bool StartInSourceView { get; set; }
         public bool RemoveBlankLinesWhenOpening { get; set; }
         public int SubtitleLineMaximumLength { get; set; }
@@ -465,6 +475,7 @@ namespace Nikse.SubtitleEdit.Logic
             ClearStatusBarAfterSeconds = 10;
             ShowBetaStuff = false;
         }
+
     }
 
 
@@ -1046,15 +1057,24 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("StartSize");
             if (subNode != null)
                 settings.General.StartSize = subNode.InnerText;
-            subNode = node.SelectSingleNode("StartListViewWidth");
+
+
+     
+            //subNode = node.SelectSingleNode("StartListViewWidth");
+            //if (subNode != null)
+            //    settings.General.StartListViewWidth = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("SplitContainerMainSplitterDistance");
             if (subNode != null)
-                settings.General.StartListViewWidth = Convert.ToInt32(subNode.InnerText);
-            subNode = node.SelectSingleNode("StartListViewHeight");
+                settings.General.SplitContainerMainSplitterDistance = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("SplitContainer1SplitterDistance");
             if (subNode != null)
-                settings.General.StartListViewHeight = Convert.ToInt32(subNode.InnerText);
-            subNode = node.SelectSingleNode("StartTextBoxHeight");
+                settings.General.SplitContainer1SplitterDistance = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("SplitContainerListViewAndTextSplitterDistance");
             if (subNode != null)
-                settings.General.StartTextBoxHeight = Convert.ToInt32(subNode.InnerText);
+                settings.General.SplitContainerListViewAndTextSplitterDistance = Convert.ToInt32(subNode.InnerText);
+
+
+
             subNode = node.SelectSingleNode("StartInSourceView");
             if (subNode != null)
                 settings.General.StartInSourceView = Convert.ToBoolean(subNode.InnerText);
@@ -2044,9 +2064,9 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("StartRememberPositionAndSize", settings.General.StartRememberPositionAndSize.ToString());
             textWriter.WriteElementString("StartPosition", settings.General.StartPosition);
             textWriter.WriteElementString("StartSize", settings.General.StartSize);
-            textWriter.WriteElementString("StartListViewWidth", settings.General.StartListViewWidth.ToString());
-            textWriter.WriteElementString("StartListViewHeight", settings.General.StartListViewHeight.ToString());
-            textWriter.WriteElementString("StartTextBoxHeight", settings.General.StartTextBoxHeight.ToString());
+            textWriter.WriteElementString("SplitContainerMainSplitterDistance", settings.General.SplitContainerMainSplitterDistance.ToString());
+            textWriter.WriteElementString("SplitContainer1SplitterDistance", settings.General.SplitContainer1SplitterDistance.ToString());
+            textWriter.WriteElementString("SplitContainerListViewAndTextSplitterDistance", settings.General.SplitContainerListViewAndTextSplitterDistance.ToString());            
             textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString());
             textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString());
             textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString());

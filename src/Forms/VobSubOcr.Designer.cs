@@ -215,9 +215,9 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripMenuItemExport
             // 
             this.toolStripMenuItemExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.vobSubToolStripMenuItem,
+            this.bDNXMLToolStripMenuItem,
             this.bluraySupToolStripMenuItem,
-            this.bDNXMLToolStripMenuItem});
+            this.vobSubToolStripMenuItem});
             this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
             this.toolStripMenuItemExport.Size = new System.Drawing.Size(305, 22);
             this.toolStripMenuItemExport.Text = "Export all images as...";
@@ -225,21 +225,21 @@ namespace Nikse.SubtitleEdit.Forms
             // vobSubToolStripMenuItem
             // 
             this.vobSubToolStripMenuItem.Name = "vobSubToolStripMenuItem";
-            this.vobSubToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.vobSubToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.vobSubToolStripMenuItem.Text = "VobSub...";
             this.vobSubToolStripMenuItem.Click += new System.EventHandler(this.vobSubToolStripMenuItem_Click);
             // 
             // bluraySupToolStripMenuItem
             // 
             this.bluraySupToolStripMenuItem.Name = "bluraySupToolStripMenuItem";
-            this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.bluraySupToolStripMenuItem.Text = "Blu-ray sup...";
             this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.bluraySupToolStripMenuItem_Click);
             // 
             // bDNXMLToolStripMenuItem
             // 
             this.bDNXMLToolStripMenuItem.Name = "bDNXMLToolStripMenuItem";
-            this.bDNXMLToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.bDNXMLToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.bDNXMLToolStripMenuItem.Text = "BDN XML...";
             this.bDNXMLToolStripMenuItem.Click += new System.EventHandler(this.bDNXMLToolStripMenuItem_Click);
             // 

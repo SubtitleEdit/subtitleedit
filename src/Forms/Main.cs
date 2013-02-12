@@ -238,6 +238,7 @@ namespace Nikse.SubtitleEdit.Forms
  //           try
 //            {
                 InitializeComponent();
+
                 textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
                 labelAlternateCharactersPerSecond.Visible = false;
@@ -1241,9 +1242,6 @@ namespace Nikse.SubtitleEdit.Forms
             splitContainerMain.Panel1MinSize = 200;
             splitContainerMain.Panel2MinSize = 220;
 
-            if (Configuration.Settings.General.StartListViewWidth < 250)
-                Configuration.Settings.General.StartListViewWidth = (Width / 3) * 2;
-
             if (Configuration.Settings.General.StartRememberPositionAndSize &&
                 !string.IsNullOrEmpty(Configuration.Settings.General.StartPosition))
             {
@@ -1266,9 +1264,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     CenterFormOnCurrentScreen();
                     WindowState = FormWindowState.Maximized;
-                    if (!splitContainer1.Panel2Collapsed && Configuration.Settings.General.StartRememberPositionAndSize)
-                        splitContainer1.SplitterDistance = Configuration.Settings.General.StartListViewWidth;
-                    SetTextBoxHeight();
+//                    SetTextBoxHeight();
                     return;
                 }
 
@@ -1301,13 +1297,6 @@ namespace Nikse.SubtitleEdit.Forms
                 CenterFormOnCurrentScreen();
             }
 
-            if (!splitContainer1.Panel2Collapsed && Configuration.Settings.General.StartRememberPositionAndSize)
-                splitContainer1.SplitterDistance = Configuration.Settings.General.StartListViewWidth;
-
-            if (Configuration.Settings.General.StartRememberPositionAndSize && Configuration.Settings.General.StartListViewHeight > 20 && Configuration.Settings.General.StartListViewHeight < Width - 40)
-                splitContainerMain.SplitterDistance = Configuration.Settings.General.StartListViewHeight;
-            SetTextBoxHeight();
-
             if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXp2kUnicodeFontName) // 6 == Vista/Win2008Server/Win7
             {
                 const string unicodeFontName = Utilities.WinXp2kUnicodeFontName;
@@ -1319,14 +1308,12 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripWaveControls.RenderMode = ToolStripRenderMode.System;
                 toolStripMenuItemSurroundWithMusicSymbols.Font = new Font(unicodeFontName, fontSize);
             }
+            
         }
 
         private void SetTextBoxHeight()
         {
-            if (Configuration.Settings.General.StartRememberPositionAndSize && Configuration.Settings.General.StartTextBoxHeight > 104 && Configuration.Settings.General.StartTextBoxHeight < splitContainerListViewAndText.Height - 40)
-                splitContainerListViewAndText.SplitterDistance = Configuration.Settings.General.StartTextBoxHeight;
-            else
-                splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - 109;
+            //nixe harboe debug
         }
 
         private void InitializeLanguage()
@@ -2965,7 +2952,6 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.ResetSpectrogram();
             audioVisualizer.Invalidate();
 
-            ShowStatus(_language.New);
             _sourceViewChange = false;
 
             _subtitleListViewIndex = -1;
@@ -2992,6 +2978,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetUndockedWindowsTitle();
             if (mediaPlayer != null)
                 mediaPlayer.SubtitleText = string.Empty;
+            ShowStatus(_language.New);
         }
 
         private void FileNew()
@@ -4008,6 +3995,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _statusLog.AppendLine(string.Format("{0:0000}-{1:00}-{2:00} {3}: {4}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.ToLongTimeString(), message));
                 _timerClearStatus.Start();
             }
+            ShowSourceLineNumber();
+            ShowLineInformationListView();
         }
 
         private void ReloadFromSourceView()
@@ -7210,13 +7199,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.General.StartSize = "Maximized";
                     else
                         Configuration.Settings.General.StartSize = Width + ";" + Height;
-                    Configuration.Settings.General.StartListViewWidth = splitContainer1.SplitterDistance;
-                    Configuration.Settings.General.StartListViewHeight = splitContainerMain.SplitterDistance;
-                    Configuration.Settings.General.StartTextBoxHeight = splitContainerListViewAndText.SplitterDistance;
-                }
-                else if (Configuration.Settings.General.StartRememberPositionAndSize)
-                {
-                    Configuration.Settings.General.StartListViewWidth = splitContainer1.SplitterDistance;
+
+                    Configuration.Settings.General.SplitContainerMainSplitterDistance = splitContainerMain.SplitterDistance;
+                    Configuration.Settings.General.SplitContainer1SplitterDistance = splitContainer1.SplitterDistance;
+                    Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance = splitContainerListViewAndText.SplitterDistance;                    
                 }
                 Configuration.Settings.General.AutoRepeatOn = checkBoxAutoRepeatOn.Checked;
                 Configuration.Settings.General.AutoContinueOn = checkBoxAutoContinue.Checked;
@@ -12226,6 +12212,15 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemModifySelection.Visible = false;
                 toolStripMenuItemInverseSelection.Visible = false;
                 toolStripMenuItemSpellCheckFromCurrentLine.Visible = false;
+            }
+
+            if (Configuration.Settings.General.SplitContainerMainSplitterDistance > 0 &&
+                Configuration.Settings.General.SplitContainer1SplitterDistance > 0 &&
+                Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance > 0)
+            {
+                splitContainerMain.SplitterDistance = Configuration.Settings.General.SplitContainerMainSplitterDistance;
+                splitContainer1.SplitterDistance = Configuration.Settings.General.SplitContainer1SplitterDistance;
+                splitContainerListViewAndText.SplitterDistance = Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance;
             }
 
             LoadPlugins();

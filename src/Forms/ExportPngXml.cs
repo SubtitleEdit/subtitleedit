@@ -355,7 +355,8 @@ namespace Nikse.SubtitleEdit.Forms
                         i++;
                         progressBar1.Refresh();
                         Application.DoEvents();
-                        progressBar1.Value = i;
+                        if (i < progressBar1.Maximum)
+                            progressBar1.Value = i;
                     }
                 }
                 else
