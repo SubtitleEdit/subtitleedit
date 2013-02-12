@@ -249,7 +249,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var className = new StringBuilder();
                     int startClass = textToLower.IndexOf(" class=");
                     int indexClass = startClass + 7;
-                    while (indexClass < textToLower.Length && Utilities.LowercaseLettersWithNumbers.Contains(textToLower[indexClass].ToString()))
+                    while (indexClass < textToLower.Length && (Utilities.LowercaseLettersWithNumbers + "'\"").Contains(textToLower[indexClass].ToString()))
                     {
                         className.Append(text[indexClass].ToString());
                         indexClass++;
@@ -359,6 +359,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds +  Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 subtitle.Paragraphs.Add(p);
             }
+            foreach (Paragraph p2 in subtitle.Paragraphs)
+                p2.Text = Utilities.HtmlDecode(p2.Text);
             subtitle.Renumber(1);
         }
 
