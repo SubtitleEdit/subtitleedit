@@ -35,6 +35,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxImage = new System.Windows.Forms.GroupBox();
+            this.buttonSaveAs = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).BeginInit();
             this.groupBoxImage.SuspendLayout();
             this.SuspendLayout();
@@ -119,11 +120,24 @@
             this.groupBoxImage.TabStop = false;
             this.groupBoxImage.Text = "Subtitle image";
             // 
+            // buttonSaveAs
+            // 
+            this.buttonSaveAs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSaveAs.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonSaveAs.Location = new System.Drawing.Point(487, 281);
+            this.buttonSaveAs.Name = "buttonSaveAs";
+            this.buttonSaveAs.Size = new System.Drawing.Size(118, 21);
+            this.buttonSaveAs.TabIndex = 15;
+            this.buttonSaveAs.Text = "Save as...";
+            this.buttonSaveAs.UseVisualStyleBackColor = true;
+            this.buttonSaveAs.Click += new System.EventHandler(this.buttonSaveAs_Click);
+            // 
             // DvdSubRipChooseLanguage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(779, 314);
+            this.Controls.Add(this.buttonSaveAs);
             this.Controls.Add(this.groupBoxImage);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -157,5 +171,6 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.GroupBox groupBoxImage;
+        private System.Windows.Forms.Button buttonSaveAs;
     }
 }

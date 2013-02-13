@@ -754,7 +754,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 int.Parse(timeCode[3]) * 10);
         }
 
-        public override void RemoveNativeFormatting(Subtitle subtitle)
+        public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -774,6 +774,18 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         s.StartsWith("{\\an9}"))
                     {
                         pre = s.Substring(0, 6);
+                    }
+                    else if (s.StartsWith("{\\an1\\") ||
+                        s.StartsWith("{\\an2\\") ||
+                        s.StartsWith("{\\an3\\") ||
+                        s.StartsWith("{\\an4\\") ||
+                        s.StartsWith("{\\an5\\") ||
+                        s.StartsWith("{\\an6\\") ||
+                        s.StartsWith("{\\an7\\") ||
+                        s.StartsWith("{\\an8\\") ||
+                        s.StartsWith("{\\an9\\"))
+                    {
+                        pre = s.Substring(0, 5) + "}";
                     }
                     int indexOfEnd = p.Text.IndexOf("}");
                     p.Text = p.Text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);

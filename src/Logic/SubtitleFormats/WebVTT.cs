@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        public override void RemoveNativeFormatting(Subtitle subtitle)
+        public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
             foreach (Paragraph p in subtitle.Paragraphs)
             {

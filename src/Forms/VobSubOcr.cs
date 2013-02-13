@@ -380,6 +380,27 @@ namespace Nikse.SubtitleEdit.Forms
             SetTesseractLanguageFromLanguageString(languageString);
         }
 
+        internal void InitializeQuick(List<VobSubMergedPack> vobSubMergedPackist, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string languageString)
+        {
+            buttonOK.Enabled = false;
+            buttonCancel.Enabled = false;
+            buttonStartOcr.Enabled = false;
+            buttonStop.Enabled = false;
+            buttonNewCharacterDatabase.Enabled = false;
+            buttonEditCharacterDatabase.Enabled = false;
+            labelStatus.Text = string.Empty;
+            progressBar1.Visible = false;
+            progressBar1.Maximum = 100;
+            progressBar1.Value = 0;
+            numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
+            _vobSubOcrSettings = vobSubOcrSettings;
+            _vobSubMergedPackist = vobSubMergedPackist;
+            _palette = palette;
+
+            if (_palette == null)
+                checkBoxCustomFourColors.Checked = true;
+        }
+
         internal void Initialize(List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
         {
             buttonOK.Enabled = false;
@@ -1823,25 +1844,38 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                _vobSubMergedPackistOriginal = new List<VobSubMergedPack>();
-                bool hasIdxTimeCodes = false;
-                bool hasForcedSubtitles = false;
-                foreach (var x in _vobSubMergedPackist)
-                {
-                    _vobSubMergedPackistOriginal.Add(x);
-                    if (x.IdxLine != null)
-                        hasIdxTimeCodes = true;
-                    if (x.SubPicture.Forced)
-                        hasForcedSubtitles = true;
-                }
-                checkBoxUseTimeCodesFromIdx.CheckedChanged -= checkBoxUseTimeCodesFromIdx_CheckedChanged;
-                checkBoxUseTimeCodesFromIdx.Visible = hasIdxTimeCodes;
-                checkBoxUseTimeCodesFromIdx.Checked = hasIdxTimeCodes;
-                checkBoxUseTimeCodesFromIdx.CheckedChanged += checkBoxUseTimeCodesFromIdx_CheckedChanged;
-                checkBoxShowOnlyForced.Enabled = hasForcedSubtitles;
-                LoadVobRip();
+                ReadyVobSubRip();
             }
             VobSubOcr_Resize(null, null);
+        }
+
+        public void DoHide()
+        {
+            base.SetVisibleCore(false);
+        }
+
+        public Subtitle ReadyVobSubRip()
+        {
+            _vobSubMergedPackistOriginal = new List<VobSubMergedPack>();
+            bool hasIdxTimeCodes = false;
+            bool hasForcedSubtitles = false;
+            if (_vobSubMergedPackist == null)
+                return null;
+            foreach (var x in _vobSubMergedPackist)
+            {
+                _vobSubMergedPackistOriginal.Add(x);
+                if (x.IdxLine != null)
+                    hasIdxTimeCodes = true;
+                if (x.SubPicture.Forced)
+                    hasForcedSubtitles = true;
+            }
+            checkBoxUseTimeCodesFromIdx.CheckedChanged -= checkBoxUseTimeCodesFromIdx_CheckedChanged;
+            checkBoxUseTimeCodesFromIdx.Visible = hasIdxTimeCodes;
+            checkBoxUseTimeCodesFromIdx.Checked = hasIdxTimeCodes;
+            checkBoxUseTimeCodesFromIdx.CheckedChanged += checkBoxUseTimeCodesFromIdx_CheckedChanged;
+            checkBoxShowOnlyForced.Enabled = hasForcedSubtitles;
+            LoadVobRip();
+            return _subtitle;
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
