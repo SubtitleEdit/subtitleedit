@@ -34,7 +34,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSetSyncPoint.Text = Configuration.Settings.Language.PointSync.SetSyncPoint;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            subtitleListView1.InitializeTimeStampColumWidths(this);
+            Utilities.InitializeSubtitleFont(subtitleListView1);
+            subtitleListView1.AutoSizeAllColumns(this);
             buttonFindTextEnd.Text = Configuration.Settings.Language.VisualSync.FindText;
             FixLargeFonts();
         }
