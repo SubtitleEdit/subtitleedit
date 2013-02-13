@@ -209,7 +209,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return Extension == new Idx().Extension; }
         }
 
-        public virtual void RemoveNativeFormatting(Subtitle subtitle)
+        public virtual void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
         }
 

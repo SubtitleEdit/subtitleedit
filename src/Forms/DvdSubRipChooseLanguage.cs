@@ -39,6 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelChooseLanguage.Text = Configuration.Settings.Language.DvdSubRipChooseLanguage.ChooseLanguageStreamId;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonSaveAs.Text = Configuration.Settings.Language.Main.Menu.File.SaveAs;
             FixLargeFonts();
             groupBoxImage.Text = Configuration.Settings.Language.DvdSubRipChooseLanguage.SubtitleImage;
         }
@@ -173,6 +174,31 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 DialogResult = DialogResult.Cancel;
             }
+        }
+
+        private void buttonSaveAs_Click(object sender, EventArgs e)
+        {
+            if (listBox1.Items.Count > -1)
+            {
+                if (_languages != null && comboBoxLanguages.SelectedIndex >= 0 && comboBoxLanguages.SelectedIndex < _languages.Count)
+                    SelectedLanguageString = _languages[comboBoxLanguages.SelectedIndex];
+                else
+                    SelectedLanguageString = null;
+
+                var subs = new List<VobSubMergedPack>();
+                foreach (var x in listBox1.Items)
+                {
+                    subs.Add((x as SubListBoxItem).SubPack);
+                }
+
+                var formSubOcr = new VobSubOcr();
+                formSubOcr.InitializeQuick(subs, _palette, Configuration.Settings.VobSubOcr, SelectedLanguageString);
+                var subtitle = formSubOcr.ReadyVobSubRip();
+                var exportBdnXmlPng = new ExportPngXml();
+                exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Nikse.SubtitleEdit.Logic.SubtitleFormats.SubRip(), "VOBSUB", "DVD", formSubOcr);
+                exportBdnXmlPng.ShowDialog(this);
+            }
+
         }
 
     }

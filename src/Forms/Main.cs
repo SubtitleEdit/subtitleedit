@@ -689,7 +689,16 @@ namespace Nikse.SubtitleEdit.Forms
                                                 if (toFormat.ToLower() != new AdvancedSubStationAlpha().Name.ToLower().Replace(" ", string.Empty) &&
                                                     toFormat.ToLower() != new SubStationAlpha().Name.ToLower().Replace(" ", string.Empty))
                                                 {
-                                                    format.RemoveNativeFormatting(sub);
+
+                                                    foreach (SubtitleFormat sf in formats)
+                                                    {
+                                                        if (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower() || sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.Replace(" ", string.Empty).ToLower())
+                                                        {
+                                                            format.RemoveNativeFormatting(sub, sf);
+                                                            break;
+                                                        }
+                                                    }
+                                                    
                                                 }
                                             }
 
@@ -3001,7 +3010,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 _subtitle.MakeHistoryForUndo(string.Format(_language.BeforeConvertingToX, GetCurrentSubtitleFormat().FriendlyName), _oldSubtitleFormat, _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName, _subtitleListViewIndex, textBoxListViewText.SelectionStart, textBoxListViewTextAlternate.SelectionStart);
-                _oldSubtitleFormat.RemoveNativeFormatting(_subtitle);
+                _oldSubtitleFormat.RemoveNativeFormatting(_subtitle, GetCurrentSubtitleFormat());
                 SaveSubtitleListviewIndexes();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndexes();
