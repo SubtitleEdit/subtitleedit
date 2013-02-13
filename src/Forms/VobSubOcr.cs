@@ -247,7 +247,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxTesseractMusicOn.Text = Configuration.Settings.Language.Settings.MusicSymbol;
             checkBoxTesseractMusicOn.Left = checkBoxTesseractItalicsOn.Left + checkBoxTesseractItalicsOn.Width + 15;
 
-            _unItalicFactor = Configuration.Settings.VobSubOcr.ItalicFactor;
+            if (Configuration.Settings.VobSubOcr.ItalicFactor >= 0.1 && Configuration.Settings.VobSubOcr.ItalicFactor < 1)
+                _unItalicFactor = Configuration.Settings.VobSubOcr.ItalicFactor;
             checkBoxShowOnlyForced.Text = language.ShowOnlyForcedSubtitles;
             checkBoxUseTimeCodesFromIdx.Text = language.UseTimeCodesFromIdx;
 
@@ -2430,6 +2431,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 if (checkBoxTesseractMusicOn.Checked)
                                 {
+                                    if ((line.StartsWith("J' ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Substring(1, 2) == "' ")
+                                    {
+                                        unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
+                                    }
+
                                     if (unItalicText.StartsWith("J'") && (line.StartsWith("♪") || textWithOutFixes.StartsWith("♪") || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
                                     {
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
@@ -2573,6 +2579,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (checkBoxTesseractMusicOn.Checked)
                 {
+                    line = line.Replace(" J' ", " ♪ ");
+
                     if (line.StartsWith("J'"))
                     {
                         line = "♪ " + line.Remove(0, 2).TrimStart();

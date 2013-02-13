@@ -12214,7 +12214,8 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemSpellCheckFromCurrentLine.Visible = false;
             }
 
-            if (Configuration.Settings.General.SplitContainerMainSplitterDistance > 0 &&
+            if (Configuration.Settings.General.StartRememberPositionAndSize &&
+                Configuration.Settings.General.SplitContainerMainSplitterDistance > 0 &&
                 Configuration.Settings.General.SplitContainer1SplitterDistance > 0 &&
                 Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance > 0)
             {
