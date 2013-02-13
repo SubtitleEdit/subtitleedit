@@ -1634,7 +1634,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.VobSubOcr.PromptForUnknownWords = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ItalicFactor");
             if (subNode != null)
-                settings.VobSubOcr.ItalicFactor = Convert.ToDouble(subNode.InnerText);
+                settings.VobSubOcr.ItalicFactor = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
 
             foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
             {
@@ -2268,7 +2268,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("TopToBottom", settings.VobSubOcr.TopToBottom.ToString());
             textWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString());
             textWriter.WriteElementString("PromptForUnknownWords", settings.VobSubOcr.PromptForUnknownWords.ToString());
-            textWriter.WriteElementString("ItalicFactor", settings.VobSubOcr.ItalicFactor.ToString());
+            textWriter.WriteElementString("ItalicFactor", settings.VobSubOcr.ItalicFactor.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("MultipleSearchAndReplaceList", "");
