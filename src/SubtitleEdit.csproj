@@ -819,6 +819,7 @@
     <Compile Include="Logic\SubtitleFormats\Spt.cs" />
     <Compile Include="Logic\SubtitleFormats\StructuredTitles.cs" />
     <Compile Include="Logic\SubtitleFormats\SubtitleEditorProject.cs" />
+    <Compile Include="Logic\SubtitleFormats\SwiftInterchange2.cs" />
     <Compile Include="Logic\SubtitleFormats\SwiftText .cs" />
     <Compile Include="Logic\SubtitleFormats\Tek.cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText10.cs" />

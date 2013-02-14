@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds);
                 string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
-                sb.Append(string.Format(paragraphWriteFormat, startTime, endTime, Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " "))));
+                sb.AppendLine(string.Format(paragraphWriteFormat, startTime, endTime, Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " "))));
             }
             return sb.ToString().Trim();
         }

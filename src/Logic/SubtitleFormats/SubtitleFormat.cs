@@ -85,6 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new SubtitleEditorProject(),
                     new SubViewer10(),
                     new SubViewer20(),
+                    new SwiftInterchange2(),
                     new SwiftText(),
                     new Tek(),
                     new TimeXml(),
