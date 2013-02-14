@@ -2583,7 +2583,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return s;
-        }
+        }      
 
         private void FixHyphens()
         {
@@ -2626,9 +2626,9 @@ namespace Nikse.SubtitleEdit.Forms
                             string[] parts = Utilities.RemoveHtmlTags(text).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                             if (parts.Length == 2)
                             {
-                                if (parts[0].Trim().StartsWith("-") && parts[1].Contains(":"))
+                                if (parts[0].Trim().StartsWith("-") && parts[1].Contains(": "))
                                     remove = false;
-                                if (parts[1].Trim().StartsWith("-") && parts[0].Contains(":"))
+                                if (parts[1].Trim().StartsWith("-") && parts[0].Contains(": "))
                                     remove = false;
                             }
 
