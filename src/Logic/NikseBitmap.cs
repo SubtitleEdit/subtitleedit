@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Logic
                         lastColor = color;
                         count = 1;
                     }
-                    else if (lastColor == color)
+                    else if (lastColor == color && count < 64) // only allow up to 63 run-length (for SubtitleCreator compatibility)
                     {
                         count++;
                     }
