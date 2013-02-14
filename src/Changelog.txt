@@ -13,11 +13,14 @@
    * Network mode more stable (auto-restart)
    * Updated Czech language file - thx Trottel
    * Updated German language file - thx Christoph Kitsche
+   * Remembers size of controls in main window better - thx George/Leszek
+   * Format Sami: html-decodes text + reads class attributtes better 
 * FIXED:
    * VobSub (sub/idx) files created by SE now have better compability
    * Possible crash+bug in 'Fix common errors' on selected lines - thx Dan
    * Drag'n'drop of large bluray sup files - thx AT
    * Minor fix in 'Fix common errors -> Fix invalid italic tags' - thx azu
+   * List view height in "Set sync point" with large font - thx fox
 
 
 3.3.1 (3rd February 2013)
