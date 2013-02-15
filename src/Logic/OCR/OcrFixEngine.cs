@@ -836,6 +836,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
+                if (input.StartsWith("~"))
+                    input = ("- " + input.Remove(0, 1)).Replace("  ", " ");
+
+                input = input.Replace(Environment.NewLine + "~", Environment.NewLine + "- ").Replace("  ", " ");
+
                 if (input.Length < 10 && input.Length > 4 && !input.Contains(Environment.NewLine) && input.StartsWith("II") && input.EndsWith("II"))
                 {
                     input = "\"" + input.Substring(2, input.Length - 4) + "\"";
