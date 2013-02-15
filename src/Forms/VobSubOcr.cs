@@ -2452,6 +2452,21 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!ok)
                                 ok = wordsNotFound == modiWordsNotFound && line.StartsWith("<i>") && line.EndsWith("</i>");
 
+                            if (ok && Utilities.CountTagInText(unItalicText, "/") > Utilities.CountTagInText(line, "/") + 1)
+                                ok = false;
+                            if (ok && Utilities.CountTagInText(unItalicText, "\\") > Utilities.CountTagInText(line, "\\"))
+                                ok = false;
+                            if (ok && Utilities.CountTagInText(unItalicText, ")") > Utilities.CountTagInText(line, ")") + 1)
+                                ok = false;
+                            if (ok && Utilities.CountTagInText(unItalicText, "(") > Utilities.CountTagInText(line, "(") + 1)
+                                ok = false;
+                            if (ok && Utilities.CountTagInText(unItalicText, "$") > Utilities.CountTagInText(line, "$") + 1)
+                                ok = false;
+                            if (ok && Utilities.CountTagInText(unItalicText, "€") > Utilities.CountTagInText(line, "€") + 1)
+                                ok = false;
+                            if (ok && Utilities.CountTagInText(unItalicText, "•") > Utilities.CountTagInText(line, "•"))
+                                ok = false;
+
                             if (ok)
                             {
                                 wordsNotFound = modiWordsNotFound;
@@ -4075,6 +4090,11 @@ namespace Nikse.SubtitleEdit.Forms
             exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BDNXML", FileName, this);
             exportBdnXmlPng.ShowDialog(this);
         }
+
+        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listBoxUnknownWords.Items.Clear();
+        }    
 
     }
 }
