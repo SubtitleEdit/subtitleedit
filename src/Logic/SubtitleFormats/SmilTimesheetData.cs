@@ -38,13 +38,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public override string ToText(Subtitle subtitle, string title)
-        {          
+        {
             string header =
 @"<!DOCTYPE html>
 <html>
-<head>" + Environment.NewLine + 
+<head>" + Environment.NewLine +
 "\t<meta charset=\"utf-8\">" + Environment.NewLine +
-"\t<title>SMIL Timesheet</title>" + @" 
+"\t<title>SMIL Timesheet</title>" + @"
 </head>
 <body>" + Environment.NewLine +
 "\t<div id=\"media\" data-timecontainer=\"excl\" data-timeaction=\"display\">" + Environment.NewLine +
@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private string EncodeTime(TimeCode time)
         {
-            //3:15:22 
+            //3:15:22
             if (time.Hours > 0)
                 return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 10);
             if (time.Minutes > 9)
@@ -169,9 +169,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             {
                                 _errorCount++;
                             }
-                        }                        
+                        }
                     }
-                    
+
                 }
                 if (syncEndPos <= 0)
                 {

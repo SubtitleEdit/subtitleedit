@@ -1059,7 +1059,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.General.StartSize = subNode.InnerText;
 
 
-     
+
             //subNode = node.SelectSingleNode("StartListViewWidth");
             //if (subNode != null)
             //    settings.General.StartListViewWidth = Convert.ToInt32(subNode.InnerText);
@@ -2066,7 +2066,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("StartSize", settings.General.StartSize);
             textWriter.WriteElementString("SplitContainerMainSplitterDistance", settings.General.SplitContainerMainSplitterDistance.ToString());
             textWriter.WriteElementString("SplitContainer1SplitterDistance", settings.General.SplitContainer1SplitterDistance.ToString());
-            textWriter.WriteElementString("SplitContainerListViewAndTextSplitterDistance", settings.General.SplitContainerListViewAndTextSplitterDistance.ToString());            
+            textWriter.WriteElementString("SplitContainerListViewAndTextSplitterDistance", settings.General.SplitContainerListViewAndTextSplitterDistance.ToString());
             textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString());
             textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString());
             textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString());
