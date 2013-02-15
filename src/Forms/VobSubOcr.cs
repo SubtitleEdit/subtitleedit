@@ -3234,7 +3234,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(exception.Message);
                 }
             }
-        }     
+        }
 
         private void NormalToolStripMenuItemClick(object sender, EventArgs e)
         {
@@ -4075,6 +4075,6 @@ namespace Nikse.SubtitleEdit.Forms
             exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BDNXML", FileName, this);
             exportBdnXmlPng.ShowDialog(this);
         }
-     
+
     }
 }

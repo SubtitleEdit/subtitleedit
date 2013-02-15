@@ -2583,7 +2583,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return s;
-        }      
+        }
 
         private void FixHyphens()
         {

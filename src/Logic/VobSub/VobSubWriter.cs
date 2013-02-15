@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                     BitPointer = 0;
                     // Start new line at next even position
                     //if (pos % 2 != 0)
-                    //	WriteByte(0);
+                    //    WriteByte(0);
                 }
             }
 
@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 {
                     if (Color == 0)
                     {
-                        Write2bits(true);		// Flush buffer and write
+                        Write2bits(true);       // Flush buffer and write
                         WriteInt16(0);
                     }
                     else
@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                         Write2bits(0);
                         Write2bits(0); // 7x
                         Write2bits(Color);
-                        Write2bits(true);		// Flush buffer and write
+                        Write2bits(true);       // Flush buffer and write
                     }
                     return;
                 }
@@ -387,8 +387,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
                     // This is only for first packet
                     SubHeader[20] = 0x81;   // mark as original
-                    SubHeader[21] = 0x80;	// first packet: PTS
-                    SubHeader[22] = 0x05;	// PES header data length
+                    SubHeader[21] = 0x80;   // first packet: PTS
+                    SubHeader[22] = 0x05;   // PES header data length
 
                     // PTS (90kHz):
                     //--------------
@@ -419,7 +419,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 }
 
                 if ((toWrite + header_size) <= 0x800)
-                { 
+                {
                     // write whole image in one 0x800 part
 
                     long j = (header_size - 20) + toWrite;
@@ -436,7 +436,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
                     // Pad remaining space
                     paddingsize = 0x800 - header_size - toWrite;
-                    for (int x = 0; x < paddingsize; x++) 
+                    for (int x = 0; x < paddingsize; x++)
                         mwsub.WriteByte(0xff);
 
                     toWrite = 0;

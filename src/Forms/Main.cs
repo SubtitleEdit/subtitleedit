@@ -698,7 +698,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                             break;
                                                         }
                                                     }
-                                                    
+
                                                 }
                                             }
 
@@ -1317,7 +1317,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripWaveControls.RenderMode = ToolStripRenderMode.System;
                 toolStripMenuItemSurroundWithMusicSymbols.Font = new Font(unicodeFontName, fontSize);
             }
-            
+
         }
 
         private void SetTextBoxHeight()
@@ -7211,7 +7211,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     Configuration.Settings.General.SplitContainerMainSplitterDistance = splitContainerMain.SplitterDistance;
                     Configuration.Settings.General.SplitContainer1SplitterDistance = splitContainer1.SplitterDistance;
-                    Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance = splitContainerListViewAndText.SplitterDistance;                    
+                    Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance = splitContainerListViewAndText.SplitterDistance;
                 }
                 Configuration.Settings.General.AutoRepeatOn = checkBoxAutoRepeatOn.Checked;
                 Configuration.Settings.General.AutoContinueOn = checkBoxAutoContinue.Checked;

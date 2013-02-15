@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         return;
                     }
                     p.Text = (p.Text + Environment.NewLine + line).Trim();
-                }                   
+                }
             }
             if (p != null)
                 subtitle.Paragraphs.Add(p);
