@@ -1457,6 +1457,66 @@
     <Word from="m/g/7ty" to="mighty" />
     <Word from="call/ng" to="calling" />
     <Word from="joseph" to="Joseph" />
+    <Word from="thejury" to="the jury" />
+    <Word from="Mccallisters" to="McCallisters" />
+    <Word from="mejust" to="me just" />
+    <Word from="Mccallister" to="McCallister" />
+    <Word from="McCa/Iister" to="McCallister" />
+    <Word from="Iknew" to="I knew" />
+    <Word from="gamlenias" to="gardenias" />
+    <Word from="I'rn" to="I'm" />
+    <Word from="McCallisler" to="McCallister" />
+    <Word from="yourjewelry" to="your jewelry" />
+    <Word from="fairthat" to="fair that" />
+    <Word from="C/latter/'/7g" to="Chattering" />
+    <Word from="An5wer" to="Answer" />
+    <Word from="thejoint" to="the joint" />
+    <Word from="yaurparents" to="your parents" />
+    <Word from="fiam/'/y" to="family" />
+    <Word from="it'lljust" to="it'll just" />
+    <Word from="somez'/7/ng" to="something" />
+    <Word from="/'//" to="I'll" />
+    <Word from="saidyou" to="said you" />
+    <Word from="wr/'2'/ng" to="writing" />
+    <Word from="/hope" to="I hope" />
+    <Word from="Unfon'unate/y" to="Unfortunately" />
+    <Word from="herboyfr/end" to="her boyfriend" />
+    <Word from="smarfest" to="smartest" />
+    <Word from="Let'sjust" to="Let's just" />
+    <Word from="antiquejoke" to="antique joke" />
+    <Word from="Shejust" to="She just" />
+    <Word from="Charliejust" to="Charlie just" />
+    <Word from="afier" to="after" />
+    <Word from="Nowjust" to="Now just" />
+    <Word from="ifshe" to="if she" />
+    <Word from="dairyjust" to="dairy just" />
+    <Word from="kidsjumped" to="kids jumped" />
+    <Word from="apejust" to="ape just" />
+    <Word from="gotjumped" to="got jumped" />
+    <Word from="ofwashington" to="of Washington" />
+    <Word from="stealsjeans" to="steals jeans" />
+    <Word from="tojudge" to="to judge" />
+    <Word from="walkjust" to="walk just" />
+    <Word from="that'sjust" to="that's just" />
+    <Word from="Fouﬂeen" to="Fourteen" />
+    <Word from="lfeelonelung" to="l feel one lung" />
+    <Word from="Ihope" to="I hope" />
+    <Word from="reaHy" to="really" />
+    <Word from="aboutyou" to="about you" />
+    <Word from="lostyou" to="lost you" />
+    <Word from="lsuppose" to="I suppose" />
+    <Word from="Shutup" to="Shut up" />
+    <Word from="youWlneversee" to="you'll never see" />
+    <Word from="Vvelooked" to="We looked" />
+    <Word from="readytolaunchu" to="ready to launch.." />
+    <Word from="Hlneed" to="I'll need" />
+    <Word from="Dﬂnk" to="Drink" />
+    <Word from="Shouﬂng" to="Shouting" />
+    <Word from="ourfathers" to="our fathers" />
+    <Word from="Iockdown" to="lockdown" />
+    <Word from="byjust" to="by just" />
+    <Word from="andlaughs" to="and laughs" />
+    <Word from="tojoin" to="to join" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -1498,12 +1558,18 @@
     <WordPart from="°" to="o" />
     <WordPart from=")/" to="y" />
     <WordPart from=")'" to="y" />
+    <WordPart from="a’" to="d" />
   </PartialWords>
   <PartialLines>
     <LinePart from=" /be " to=" I be " />
     <LinePart from=" aren '1'" to=" aren't" />
     <LinePart from=" aren'tyou" to=" aren't you" />
     <LinePart from=" doesn '1'" to=" doesn't" />
+    <LinePart from=" fr/eno'" to=" friend" />
+    <LinePart from=" fr/eno'." to=" friend." />
+    <LinePart from=" haven 'z' " to=" haven't " />
+    <LinePart from=" haven 'z'." to=" haven't." />
+    <LinePart from=" I ha ve " to=" I have " />
     <LinePart from=" I']I " to=" I'll " />
     <LinePart from=" L am" to=" I am" />
     <LinePart from=" L can" to=" I can" />
@@ -1515,13 +1581,21 @@
     <LinePart from=" L would" to=" I would" />
     <LinePart from=" L'll " to=" I'll " />
     <LinePart from=" L've " to=" I've " />
+    <LinePart from=" m y family" to=" my family" />
     <LinePart from=" 's " to="'s " />
     <LinePart from=" shou/dn '1 " to=" shouldn't " />
+    <LinePart from=" won 'z' " to=" won't " />
+    <LinePart from=" won 'z'." to=" won't." />
+    <LinePart from=" wou/c/n 'z' " to=" wouldn't " />
+    <LinePart from=" wou/c/n 'z'." to=" wouldn't." />
+    <LinePart from=" wou/dn 'z' " to=" wouldn't " />
+    <LinePart from=" wou/dn 'z'." to=" wouldn't." />
     <LinePart from="/ did" to="I did" />
     <LinePart from="/ have " to="I have " />
     <LinePart from="/ just " to="I just " />
     <LinePart from="/ loved " to="I loved " />
     <LinePart from="/ need" to="I need" />
+    <LinePart from="|was11" to="I was 11" />
     <LinePart from="at Hrst" to="at first" />
     <LinePart from="B ullshiz'" to="Bullshit" />
     <LinePart from="big lunk" to="love you" />
@@ -1546,6 +1620,8 @@
     <LinePart from="doesn'1‘ " to="doesn't " />
     <LinePart from="don '1' " to="don't " />
     <LinePart from="don '1‘ " to="don't " />
+    <LinePart from="don '2' " to="don't " />
+    <LinePart from="don '2‘ " to="don't " />
     <LinePart from="don 't" to="don't" />
     <LinePart from="Don' t " to="Don't " />
     <LinePart from="Don 't " to="Don't " />
@@ -1597,6 +1673,7 @@
     <LinePart from="-ls that" to="- Is that" />
     <LinePart from="ls this" to="Is this" />
     <LinePart from="-ls this" to="- Is this" />
+    <LinePart from="Maze] tov" to="Mazel tov" />
     <LinePart from="N02' " to="Not " />
     <LinePart from="of 0ur" to="of our" />
     <LinePart from="ot mine" to="of mine" />
@@ -1629,6 +1706,7 @@
     <LinePart from="weren 't" to="weren't" />
     <LinePart from="who 's" to="who's" />
     <LinePart from="won 't" to="won't" />
+    <LinePart from="would ha ve" to="would have " />
     <LinePart from="wouldn 't" to="wouldn't" />
     <LinePart from="Wouldn 't" to="Wouldn't" />
     <LinePart from="y()u" to="you" />
@@ -1641,6 +1719,8 @@
     <LinePart from="you 've " to="you've " />
   </PartialLines>
   <BeginLines>
+    <Beginning from="|was" to="I was" />
+    <Beginning from="|am " to="I am" />
     <Beginning from="No w, " to="Now, " />
     <Beginning from="l... I " to="I... I " />
     <Beginning from="L... I " to="I... I " />
@@ -1703,6 +1783,13 @@
     <Beginning from="L hope " to="I hope " />
     <Beginning from="|’E'$ " to="It's " />
     <Beginning from="The y're " to="They're " />
+    <Beginning from="&lt;i&gt;/ " to="&lt;i&gt;I " />
+    <Beginning from="/ " to="I " />
+    <Beginning from="&lt;i&gt;/n " to="&lt;i&gt;In " />
+    <Beginning from="/n " to="In " />
+    <Beginning from="&lt;i&gt;Ana’ " to="&lt;i&gt;And " />
+    <Beginning from="&lt;i&gt;Ana' " to="&lt;i&gt;And " />
+    <Beginning from="~ " to="- " />
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
@@ -1719,6 +1806,12 @@
     <Line from="N0." to="No." />
     <Line from="-N0." to="-No." />
     <Line from="Noll" to="No!!" />
+    <Line from="(G ROANS)" to="(GROANS)" />
+    <Line from="[G ROANS]" to="[GROANS]" />
+    <Line from="(M EOWS)" to="(MEOWS)" />
+    <Line from="[M EOWS]" to="[MEOWS]" />
+    <Line from="Uaughs]" to="[laughs]" />
+    <Line from="[chitte rs]" to="[chitters]" />
     <Line from="Where're you gﬂing?" to="Where're you going?" />
     <Line from="SQMEWH ERE ELSE" to="SOMEWHERE ELSE" />
     <Line from="Hil‘ it!" to="Hit it!" />
