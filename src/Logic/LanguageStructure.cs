@@ -776,6 +776,8 @@
             public string VobSubFiles { get; set; }
             public string OpenBluRaySupFile { get; set; }
             public string BluRaySupFiles { get; set; }
+            public string OpenXSubFiles { get; set; }
+            public string XSubFiles { get; set; }
             public string BeforeImportingVobSubFile { get; set; }
             public string BeforeImportingBluRaySupFile { get; set; }
             public string BeforeImportingBdnXml { get; set; }

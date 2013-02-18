@@ -876,6 +876,8 @@ namespace Nikse.SubtitleEdit.Logic
                 VobSubFiles = "VobSub subtitle files",
                 OpenBluRaySupFile = "Open Blu-ray .sup file...",
                 BluRaySupFiles = "Blu-ray .sup files",
+                OpenXSubFiles = "Open xsub file...",
+                XSubFiles = "xsub files",
                 BeforeImportingVobSubFile = "Before importing VobSub subtitle",
                 BeforeImportingBluRaySupFile = "Before importing Blu-ray sup file",
                 BeforeImportingBdnXml = "Before importing BDN xml file",

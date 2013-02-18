@@ -11968,8 +11968,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripMenuItemTTProperties.Visible = false;
             }
-
             toolStripSeparator20.Visible = subtitleLoaded;
+
+            toolStripMenuItemImportXSub.Visible = !string.IsNullOrEmpty(_language.OpenXSubFiles) && !string.IsNullOrEmpty(_language.XSubFiles);
+                
         }
 
         private void toolStripMenuItemOpenContainingFolder_Click(object sender, EventArgs e)
@@ -16614,6 +16616,29 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _spellCheckForm = null;
             SpellCheck(true, FirstSelectedIndex);
+        }
+
+        private void toolStripMenuItemImportXSub_Click(object sender, EventArgs e)
+        {
+            if (ContinueNewOrExit())
+            {
+                openFileDialog1.Title = _language.OpenXSubFiles;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = _language.XSubFiles + "|*.divx;*.avi";
+                if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+                {
+                    ShowStatus(Configuration.Settings.Language.General.PleaseWait);
+                    if (ImportSubtitleFromDivX(openFileDialog1.FileName))
+                    {
+                        ShowStatus(string.Format(_language.LoadedSubtitleX, openFileDialog1.FileName));
+                    }
+                    else
+                    {
+                        ShowStatus(string.Empty);
+                        MessageBox.Show("Not a valid xsub file!");
+                    }
+                }
+            }
         }
 
     }
