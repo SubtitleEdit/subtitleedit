@@ -48,7 +48,7 @@
             this.listBox1.Location = new System.Drawing.Point(5, 57);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(298, 212);
-            this.listBox1.TabIndex = 2;
+            this.listBox1.TabIndex = 1;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1SelectedIndexChanged);
             // 
             // pictureBoxImage
@@ -69,7 +69,7 @@
             this.comboBoxLanguages.Location = new System.Drawing.Point(6, 30);
             this.comboBoxLanguages.Name = "comboBoxLanguages";
             this.comboBoxLanguages.Size = new System.Drawing.Size(297, 21);
-            this.comboBoxLanguages.TabIndex = 1;
+            this.comboBoxLanguages.TabIndex = 0;
             this.comboBoxLanguages.SelectedIndexChanged += new System.EventHandler(this.ComboBoxLanguagesSelectedIndexChanged);
             // 
             // labelChooseLanguage
@@ -89,7 +89,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(692, 281);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 4;
+            this.buttonCancel.TabIndex = 6;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.ButtonCancelClick);
@@ -102,7 +102,7 @@
             this.buttonOK.Location = new System.Drawing.Point(611, 281);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 3;
+            this.buttonOK.TabIndex = 5;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
@@ -116,7 +116,7 @@
             this.groupBoxImage.Location = new System.Drawing.Point(309, 30);
             this.groupBoxImage.Name = "groupBoxImage";
             this.groupBoxImage.Size = new System.Drawing.Size(464, 239);
-            this.groupBoxImage.TabIndex = 14;
+            this.groupBoxImage.TabIndex = 3;
             this.groupBoxImage.TabStop = false;
             this.groupBoxImage.Text = "Subtitle image";
             // 
@@ -127,7 +127,7 @@
             this.buttonSaveAs.Location = new System.Drawing.Point(487, 281);
             this.buttonSaveAs.Name = "buttonSaveAs";
             this.buttonSaveAs.Size = new System.Drawing.Size(118, 21);
-            this.buttonSaveAs.TabIndex = 15;
+            this.buttonSaveAs.TabIndex = 4;
             this.buttonSaveAs.Text = "Save as...";
             this.buttonSaveAs.UseVisualStyleBackColor = true;
             this.buttonSaveAs.Click += new System.EventHandler(this.buttonSaveAs_Click);
