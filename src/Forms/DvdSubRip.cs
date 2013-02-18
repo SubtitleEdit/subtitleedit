@@ -216,6 +216,13 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = string.Empty;
 
             MergedVobSubPacks = vobSub.MergeVobSubPacks(); // Merge splitted-packs to whole-packs
+            if (MergedVobSubPacks.Count == 0)
+            {
+                MessageBox.Show(Configuration.Settings.Language.Main.NoSubtitlesFound);
+                buttonStartRipping.Text = _language.StartRipping;
+                buttonStartRipping.Enabled = true;
+                return;
+            }
             Languages = new List<string>();
             for (int k = 0; k < comboBoxLanguages.Items.Count; k++)
                 Languages.Add(string.Format("{0} (0x{1:x})", comboBoxLanguages.Items[k], k + 32));

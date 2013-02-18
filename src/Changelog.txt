@@ -21,6 +21,7 @@
    * Drag'n'drop of large bluray sup files - thx AT
    * Minor fix in 'Fix common errors -> Fix invalid italic tags' - thx azu
    * List view height in "Set sync point" with large font - thx fox
+   * Can now load ass files with "[V4 Styles]" in header
 
 
 3.3.1 (3rd February 2013)
