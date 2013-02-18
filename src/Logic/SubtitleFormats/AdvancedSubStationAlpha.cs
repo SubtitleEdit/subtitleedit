@@ -47,13 +47,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!string.IsNullOrEmpty(fileName) && fileName.ToLower().EndsWith(".ass") && !all.Contains("[V4 Styles]"))
             {
             }
-            else if (!all.Contains("[V4+ Styles]"))
+            else if (!all.ToLower().Contains("dialogue:"))
+            {
+                return false;
+            }
+            else if (!all.Contains("[V4+ Styles]") && new SubStationAlpha().IsMine(lines, fileName))
             {
                 return false;
             }
 
             LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            if (subtitle.Paragraphs.Count > _errorCount)
+            {
+                if (!string.IsNullOrEmpty(subtitle.Header))
+                    subtitle.Header = subtitle.Header.Replace("[V4 Styles]", "[V4+ Styles]");
+                return true;
+            }
+            return false;
         }
 
         public override string ToText(Subtitle subtitle, string title)
