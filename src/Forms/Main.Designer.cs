@@ -416,6 +416,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItemImportXSub = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -832,6 +833,7 @@
             this.toolStripMenuItemImportDvdSubtitles,
             this.toolStripMenuItemSubIdx,
             this.toolStripMenuItemImportBluRaySup,
+            this.toolStripMenuItemImportXSub,
             this.matroskaImportStripMenuItem,
             this.toolStripMenuItemManualAnsi,
             this.toolStripMenuItemImportText,
@@ -4104,6 +4106,13 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
+            // toolStripMenuItemImportXSub
+            // 
+            this.toolStripMenuItemImportXSub.Name = "toolStripMenuItemImportXSub";
+            this.toolStripMenuItemImportXSub.Size = new System.Drawing.Size(334, 22);
+            this.toolStripMenuItemImportXSub.Text = "Import/OCR xsub from divx/avi...";
+            this.toolStripMenuItemImportXSub.Click += new System.EventHandler(this.toolStripMenuItemImportXSub_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4570,6 +4579,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemModifySelection;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInverseSelection;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckFromCurrentLine;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportXSub;
     }
 }
 
