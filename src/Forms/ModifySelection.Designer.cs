@@ -42,9 +42,9 @@
             this.buttonApply = new System.Windows.Forms.Button();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.listViewFixes = new System.Windows.Forms.ListView();
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderApply = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderLine = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelInfo = new System.Windows.Forms.Label();
             this.groupBoxWhatToDo.SuspendLayout();
             this.groupBoxRule.SuspendLayout();
@@ -212,9 +212,9 @@
             // 
             this.listViewFixes.CheckBoxes = true;
             this.listViewFixes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader4,
-            this.columnHeader5,
-            this.columnHeader7});
+            this.columnHeaderApply,
+            this.columnHeaderLine,
+            this.columnHeaderText});
             this.listViewFixes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.Location = new System.Drawing.Point(3, 16);
@@ -224,20 +224,20 @@
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
             // 
-            // columnHeader4
+            // columnHeaderApply
             // 
-            this.columnHeader4.Text = "Apply";
-            this.columnHeader4.Width = 45;
+            this.columnHeaderApply.Text = "Apply";
+            this.columnHeaderApply.Width = 45;
             // 
-            // columnHeader5
+            // columnHeaderLine
             // 
-            this.columnHeader5.Text = "Line#";
-            this.columnHeader5.Width = 122;
+            this.columnHeaderLine.Text = "Line#";
+            this.columnHeaderLine.Width = 122;
             // 
-            // columnHeader7
+            // columnHeaderText
             // 
-            this.columnHeader7.Text = "Text";
-            this.columnHeader7.Width = 500;
+            this.columnHeaderText.Text = "Text";
+            this.columnHeaderText.Width = 500;
             // 
             // labelInfo
             // 
@@ -294,9 +294,9 @@
         private System.Windows.Forms.Button buttonApply;
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.ListView listViewFixes;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.ColumnHeader columnHeader5;
-        private System.Windows.Forms.ColumnHeader columnHeader7;
+        private System.Windows.Forms.ColumnHeader columnHeaderApply;
+        private System.Windows.Forms.ColumnHeader columnHeaderLine;
+        private System.Windows.Forms.ColumnHeader columnHeaderText;
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.CheckBox checkBoxCaseSensitive;
         private System.Windows.Forms.RadioButton radioButtonIntersect;

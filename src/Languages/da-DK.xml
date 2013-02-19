@@ -144,8 +144,6 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <OverwriteExistingFiles>Overskriv eksisterende filer</OverwriteExistingFiles>
     <Style>Style...</Style>
     <ConvertOptions>Konverter indstillinger</ConvertOptions>
-    <AutoBreakLongLines>Auto-ombryd lange linjer</AutoBreakLongLines>
-    <FixItalics>Fix kursiv</FixItalics>
     <RemoveFormatting>Fjern formaterings- tags</RemoveFormatting>
     <RemoveTextForHI>fjerne tekst for høre-hæmmede</RemoveTextForHI>
     <ReDoCasing>Sæt store/små bogstaver</ReDoCasing>
@@ -154,6 +152,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <PleaseChooseOutputFolder>Vælg output mappe</PleaseChooseOutputFolder>
     <Converted>Konverteret</Converted>
     <ConvertedX>Konverteret ({0})</ConvertedX>
+    <Settings>Indstillinger</Settings>
   </BatchConvert>
   <Beamer>
     <Title>Undertekst fremviser</Title>
@@ -613,6 +612,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <RightToLeftMode>Højre-mod-venstre mode</RightToLeftMode>
         <ReverseRightToLeftStartEnd>Byt rundt på højre-mod-venstre start/slut</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Vis oprindelig tekst i audio/video previews</ShowOriginalTextInAudioAndVideoPreview>
+        <ModifySelection>Modificer markering...</ModifySelection>
+        <InverseSelection>Byt rundt på markering</InverseSelection>
       </Edit>
       <Tools>
         <Title>Værktøj</Title>
@@ -659,6 +660,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
       <SpellCheck>
         <Title>Stavekontrol</Title>
         <SpellCheck>&amp;Stavekontrol...</SpellCheck>
+        <SpellCheckFromCurrentLine>Stavekontrol fra aktuelle linje...</SpellCheckFromCurrentLine>
         <FindDoubleWords>Find dobbelt ord</FindDoubleWords>
         <FindDoubleLines>Find dobbelte linjer</FindDoubleLines>
         <GetDictionaries>Hent ordbøger...</GetDictionaries>
@@ -976,6 +978,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <VobSubFiles>VobSub undertekst filer</VobSubFiles>
     <OpenBluRaySupFile>Åbn Blu-ray sup fil...</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray sup filer</BluRaySupFiles>
+    <OpenXSubFiles>Åbn xsub file...</OpenXSubFiles>
+    <XSubFiles>xsub filer</XSubFiles>
     <BeforeImportingVobSubFile>Før import af VobSub undertekst</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Før import af Blu-ray sup undertekst</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Før importer af BDN xml</BeforeImportingBdnXml>
@@ -1074,6 +1078,17 @@ Fortsæt?</SubtitleAppendPrompt>
     <MergedText>Sammenlagt tekst</MergedText>
     <OnlyMergeContinuationLines>Flet kun fortsættelses-linjer</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <ModifySelection>
+    <Title>Modificer markering</Title>
+    <Rule>Regel</Rule>
+    <CaseSensitive>Versalfølsom</CaseSensitive>
+    <DoWithMatches>Hvad gør man med linjer med hits</DoWithMatches>
+    <MakeNewSelection>Opret ny markering</MakeNewSelection>
+    <AddToCurrentSelection>Tilføj til aktuelle markering</AddToCurrentSelection>
+    <SubtractFromCurrentSelection>Subtraher fra aktuelle markering</SubtractFromCurrentSelection>
+    <IntersectWithCurrentSelection>Intersect med aktuelle markering</IntersectWithCurrentSelection>
+    <MatchingLinesX>Matchende linjer: {0}</MatchingLinesX>
+  </ModifySelection>
   <MultipleReplace>
     <Title>Multi søg og erstat</Title>
     <FindWhat>Find hvad</FindWhat>

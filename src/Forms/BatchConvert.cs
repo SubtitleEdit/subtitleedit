@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -14,7 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
         string _ssaStyle;
         FormRemoveTextForHearImpaired _removeForHI = new FormRemoveTextForHearImpaired();
         ChangeCasing _changeCasing = new ChangeCasing();
-        ChangeCasingNames _changeCasingNames = new ChangeCasingNames();
+        ChangeCasingNames _changeCasingNames = new ChangeCasingNames();        
         bool _converting = false;
 
         public BatchConvert()
@@ -32,12 +33,9 @@ namespace Nikse.SubtitleEdit.Forms
             labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
             buttonStyles.Text = l.Style;
             groupBoxConvertOptions.Text = l.ConvertOptions;
-            checkBoxBreakLongLines.Text = l.AutoBreakLongLines;
-            checkBoxFixItalics.Text = l.FixItalics;
             checkBoxRemoveFormatting.Text = l.RemoveFormatting;
             checkBoxFixCasing.Text = l.ReDoCasing;
             checkBoxRemoveTextForHI.Text = l.RemoveTextForHI;
-            checkBoxFixAloneLowercaseI.Text = Configuration.Settings.Language.FixCommonErrors.FixLowercaseIToUppercaseI;
             columnHeaderFName.Text = Configuration.Settings.Language.JoinSubtitles.FileName;
             columnHeaderFormat.Text = Configuration.Settings.Language.Main.Controls.SubtitleFormat;
             columnHeaderSize.Text = Configuration.Settings.Language.General.Size;
@@ -106,6 +104,13 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 textBoxOutputFolder.Text = Configuration.Settings.Tools.BatchConvertOutputFolder;
             checkBoxOverwrite.Checked = Configuration.Settings.Tools.BatchConvertOverwrite;
+            checkBoxFixCasing.Checked = Configuration.Settings.Tools.BatchConvertFixCasing;
+            checkBoxFixCommonErrors.Checked = Configuration.Settings.Tools.BatchConvertFixCommonErrors;
+            checkBoxRemoveFormatting.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormatting;
+            checkBoxRemoveTextForHI.Checked = Configuration.Settings.Tools.BatchConvertRemoveTextForHI;
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.Settings))
+                buttonFixCommonErrorSettings.Text = Configuration.Settings.Language.BatchConvert.Settings;
+            checkBoxFixCommonErrors.Text = Configuration.Settings.Language.FixCommonErrors.Title;
         }
 
         private void FixLargeFonts()
@@ -160,7 +165,6 @@ namespace Nikse.SubtitleEdit.Forms
                 FileInfo fi = new FileInfo(fileName);
                 var item = new ListViewItem(fileName);
                 item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-
 
                 SubtitleFormat format = null;
                 Encoding encoding;
@@ -317,6 +321,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return Encoding.UTF8;
+        }
+
+        private SubtitleFormat GetCurrentSubtitleFormat()
+        {
+            return Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
         }
 
         private void buttonConvert_Click(object sender, EventArgs e)
@@ -488,24 +497,25 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (p.Text.StartsWith("{") && p.Text.Length > 6 && p.Text[4] == '}')
                                     p.Text = p.Text.Remove(0, 5);
                             }
-                            if (checkBoxBreakLongLines.Checked)
-                            {
-                                p.Text = Utilities.AutoBreakLine(p.Text);
-                            }
-                            if (checkBoxFixItalics.Checked)
-                            {
-                                p.Text = Utilities.FixInvalidItalicTags(p.Text);
-                            }
-                            if (checkBoxFixAloneLowercaseI.Checked)
-                            {
-                                p.Text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(FixCommonErrors.FixAloneLowercaseIToUppercaseIRE, p.Text, p.Text, 'i');
-                            }
                         }
                         if (checkBoxFixCasing.Checked)
                         {
                             _changeCasing.FixCasing(sub, Utilities.AutoDetectGoogleLanguage(sub));
                             _changeCasingNames.Initialize(sub);
                             _changeCasingNames.FixCasing();
+                        }
+                        if (checkBoxFixCommonErrors.Checked)
+                        {
+                            try
+                            {
+                                FixCommonErrors fixCommonErrors = new FixCommonErrors();
+                                fixCommonErrors.RunBatch(sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage);
+                                sub = fixCommonErrors.FixedSubtitle;
+                            }
+                            catch (Exception exception)
+                            {
+                                item.SubItems[3].Text = "FCE ERROR: " + exception.Message;
+                            }
                         }
 
                         double fromFrameRate;
@@ -624,6 +634,28 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Delete)
                 RemoveSelectedFiles();
+        }
+
+        private void buttonFixCommonErrorSettings_Click(object sender, EventArgs e)
+        {
+            var form = new FixCommonErrors();
+            form.RunBatchSettings(new Subtitle(), GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage);
+            form.ShowDialog(this);
+            Configuration.Settings.Tools.BatchConvertLanguage = form.Language;
+        }
+
+        private void BatchConvert_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Configuration.Settings.Tools.BatchConvertFixCasing = checkBoxFixCasing.Checked;
+            Configuration.Settings.Tools.BatchConvertFixCommonErrors = checkBoxFixCommonErrors.Checked;
+            Configuration.Settings.Tools.BatchConvertRemoveFormatting = checkBoxRemoveFormatting.Checked;
+            Configuration.Settings.Tools.BatchConvertRemoveTextForHI = checkBoxRemoveTextForHI.Checked;
+
+        }
+
+        private void checkBoxFixCommonErrors_CheckedChanged(object sender, EventArgs e)
+        {
+            buttonFixCommonErrorSettings.Enabled = checkBoxFixCommonErrors.Checked;
         }
 
     }

@@ -87,6 +87,7 @@
             this.toolStripMenuItemImportDvdSubtitles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSubIdx = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportBluRaySup = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportXSub = new System.Windows.Forms.ToolStripMenuItem();
             this.matroskaImportStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemManualAnsi = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportText = new System.Windows.Forms.ToolStripMenuItem();
@@ -416,7 +417,6 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemImportXSub = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1010,6 +1010,13 @@
             this.toolStripMenuItemImportBluRaySup.Size = new System.Drawing.Size(334, 22);
             this.toolStripMenuItemImportBluRaySup.Text = "Import/OCR BluRay sup file...";
             this.toolStripMenuItemImportBluRaySup.Click += new System.EventHandler(this.toolStripMenuItemImportBluRaySup_Click);
+            // 
+            // toolStripMenuItemImportXSub
+            // 
+            this.toolStripMenuItemImportXSub.Name = "toolStripMenuItemImportXSub";
+            this.toolStripMenuItemImportXSub.Size = new System.Drawing.Size(334, 22);
+            this.toolStripMenuItemImportXSub.Text = "Import/OCR xsub from divx/avi...";
+            this.toolStripMenuItemImportXSub.Click += new System.EventHandler(this.toolStripMenuItemImportXSub_Click);
             // 
             // matroskaImportStripMenuItem
             // 
@@ -4105,13 +4112,6 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
-            // 
-            // toolStripMenuItemImportXSub
-            // 
-            this.toolStripMenuItemImportXSub.Name = "toolStripMenuItemImportXSub";
-            this.toolStripMenuItemImportXSub.Size = new System.Drawing.Size(334, 22);
-            this.toolStripMenuItemImportXSub.Text = "Import/OCR xsub from divx/avi...";
-            this.toolStripMenuItemImportXSub.Click += new System.EventHandler(this.toolStripMenuItemImportXSub_Click);
             // 
             // Main
             // 

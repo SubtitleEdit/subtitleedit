@@ -156,18 +156,15 @@
             public string OverwriteExistingFiles { get; set; }
             public string Style { get; set; }
             public string ConvertOptions { get; set; }
-            public string AutoBreakLongLines { get; set; }
-            public string FixItalics { get; set; }
             public string RemoveFormatting { get; set; }
             public string RemoveTextForHI { get; set; }
             public string ReDoCasing { get; set; }
             public string Convert { get; set; }
-
             public string NothingToConvert { get; set; }
             public string PleaseChooseOutputFolder { get; set; }
             public string Converted { get; set; }
             public string ConvertedX { get; set; }
-
+            public string Settings { get; set; }
         }
 
         public class Beamer
@@ -922,6 +919,8 @@
                     public string RightToLeftMode { get; set; }
                     public string ReverseRightToLeftStartEnd { get; set; }
                     public string ShowOriginalTextInAudioAndVideoPreview { get; set; }
+                    public string ModifySelection { get; set; }
+                    public string InverseSelection { get; set; }                    
                 }
                 public class ToolsMenu
                 {
@@ -971,6 +970,7 @@
                 {
                     public string Title { get; set; }
                     public string SpellCheck { get; set; }
+                    public string SpellCheckFromCurrentLine { get; set; }
                     public string FindDoubleWords { get; set; }
                     public string FindDoubleLines { get; set; }
                     public string GetDictionaries { get; set; }
@@ -1170,7 +1170,6 @@
                 public string VeryFast { get; set; }
             }
 
-
         }
 
         public class MatroskaSubtitleChooser
@@ -1194,6 +1193,19 @@
             public string MergedText { get; set; }
             public string OnlyMergeContinuationLines { get; set; }
         }
+
+        public class ModifySelection
+        {
+            public string Title { get; set; }
+            public string Rule { get; set; }
+            public string CaseSensitive { get; set; }
+            public string DoWithMatches { get; set; }
+            public string MakeNewSelection { get; set; }
+            public string AddToCurrentSelection { get; set; }
+            public string SubtractFromCurrentSelection { get; set; }
+            public string IntersectWithCurrentSelection { get; set; }
+            public string MatchingLinesX { get; set; }
+        }       
 
         public class MultipleReplace
         {
