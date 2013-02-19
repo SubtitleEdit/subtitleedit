@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         static readonly Regex RemoveSpaceBetweenNumbersRegEx = new Regex(@"\d \d", RegexOptions.Compiled);
 
-        static readonly Regex FixAloneLowercaseIToUppercaseIRE = new Regex(@"\bi\b", RegexOptions.Compiled);
+        public static readonly Regex FixAloneLowercaseIToUppercaseIRE = new Regex(@"\bi\b", RegexOptions.Compiled);
 
         Keys _goToLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
         Keys _preview = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrorsPreview);

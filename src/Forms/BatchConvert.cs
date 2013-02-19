@@ -15,11 +15,12 @@ namespace Nikse.SubtitleEdit.Forms
         FormRemoveTextForHearImpaired _removeForHI = new FormRemoveTextForHearImpaired();
         ChangeCasing _changeCasing = new ChangeCasing();
         ChangeCasingNames _changeCasingNames = new ChangeCasingNames();
+        bool _converting = false;
 
         public BatchConvert()
         {
             InitializeComponent();
-
+            
             var l = Configuration.Settings.Language.BatchConvert;
             Text = l.Title;
             groupBoxInput.Text = l.Input;
@@ -36,13 +37,20 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveFormatting.Text = l.RemoveFormatting;
             checkBoxFixCasing.Text = l.ReDoCasing;
             checkBoxRemoveTextForHI.Text = l.RemoveTextForHI;
+            checkBoxFixAloneLowercaseI.Text = Configuration.Settings.Language.FixCommonErrors.FixLowercaseIToUppercaseI;
             columnHeaderFName.Text = Configuration.Settings.Language.JoinSubtitles.FileName;
             columnHeaderFormat.Text = Configuration.Settings.Language.Main.Controls.SubtitleFormat;
             columnHeaderSize.Text = Configuration.Settings.Language.General.Size;
             columnHeaderStatus.Text = l.Status;
-            buttonOpenOutputFolder.Text = Configuration.Settings.Language.Main.Menu.File.Open;
+            linkLabelOpenOutputFolder.Text = Configuration.Settings.Language.Main.Menu.File.Open;
             buttonConvert.Text = l.Convert;
             buttonCancel.Text = Configuration.Settings.Language.General.OK;
+
+            groupBoxChangeFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.Title;
+            groupBoxOffsetTimeCodes.Text = Configuration.Settings.Language.ShowEarlierLater.TitleAll;
+            labelFromFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.FromFrameRate;
+            labelToFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.ToFrameRate;
+            labelHoursMinSecsMilliSecs.Text = Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
 
             comboBoxSubtitleFormats.Left = labelOutputFormat.Left + labelOutputFormat.Width + 3;
             comboBoxEncoding.Left = labelEncoding.Left + labelEncoding.Width + 3;
@@ -55,6 +63,19 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxSubtitleFormats.Left = comboBoxEncoding.Left;
             }
             buttonStyles.Left = comboBoxSubtitleFormats.Left + comboBoxSubtitleFormats.Width + 5;
+
+            timeUpDownAdjust.MaskedTextBox.Text = "000000000";
+
+            comboBoxFrameRateFrom.Items.Add((23.976).ToString());
+            comboBoxFrameRateFrom.Items.Add((24.0).ToString());
+            comboBoxFrameRateFrom.Items.Add((25.0).ToString());
+            comboBoxFrameRateFrom.Items.Add((29.97).ToString());
+
+            comboBoxFrameRateTo.Items.Add((23.976).ToString());
+            comboBoxFrameRateTo.Items.Add((24.0).ToString());
+            comboBoxFrameRateTo.Items.Add((25.0).ToString());
+            comboBoxFrameRateTo.Items.Add((29.97).ToString());
+
 
             FixLargeFonts();
 
@@ -323,6 +344,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            _converting = true;
             string toFormat = comboBoxSubtitleFormats.Text;
             int count = 0;
             int converted = 0;
@@ -474,12 +496,29 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 p.Text = Utilities.FixInvalidItalicTags(p.Text);
                             }
+                            if (checkBoxFixAloneLowercaseI.Checked)
+                            {
+                                p.Text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(FixCommonErrors.FixAloneLowercaseIToUppercaseIRE, p.Text, p.Text, 'i');
+                            }
                         }
                         if (checkBoxFixCasing.Checked)
                         {
                             _changeCasing.FixCasing(sub, Utilities.AutoDetectGoogleLanguage(sub));
                             _changeCasingNames.Initialize(sub);
                             _changeCasingNames.FixCasing();
+                        }
+
+                        double fromFrameRate;
+                        double toFrameRate;
+                        if (double.TryParse(comboBoxFrameRateFrom.Text, out fromFrameRate) &&
+                            double.TryParse(comboBoxFrameRateTo.Text, out toFrameRate))
+                        {
+                            sub.ChangeFramerate(fromFrameRate, toFrameRate);
+                        }
+
+                        if (timeUpDownAdjust.TimeCode.Milliseconds > 0.00001)
+                        {
+                            sub.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(timeUpDownAdjust.TimeCode.TotalMilliseconds));
                         }
 
                         int oldConverted = converted;
@@ -502,9 +541,10 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                 }
             }
+            _converting = false;
         }
 
-        private void comboBoxSubtitleFormats_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBoxSubtitleFormatsSelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBoxSubtitleFormats.Text == new AdvancedSubStationAlpha().Name || comboBoxSubtitleFormats.Text == new SubStationAlpha().Name)
             {
@@ -518,7 +558,7 @@ namespace Nikse.SubtitleEdit.Forms
             _ssaStyle = null;
         }
 
-        private void buttonStyles_Click(object sender, EventArgs e)
+        private void ButtonStylesClick(object sender, EventArgs e)
         {
             if (comboBoxSubtitleFormats.Text == new AdvancedSubStationAlpha().Name)
             {
@@ -539,6 +579,51 @@ namespace Nikse.SubtitleEdit.Forms
                     _ssaStyle = form.Header;
                 }
             }
+        }
+
+        private void LinkLabelOpenOutputFolderLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (System.IO.Directory.Exists(textBoxOutputFolder.Text))
+                System.Diagnostics.Process.Start(textBoxOutputFolder.Text);
+            else
+                MessageBox.Show(string.Format(Configuration.Settings.Language.SplitSubtitle.FolderNotFoundX, textBoxOutputFolder.Text));
+        }
+
+        private void ContextMenuStripFilesOpening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (listViewInputFiles.Items.Count == 0)
+            {
+                e.Cancel = true;
+                return;
+            }
+            removeToolStripMenuItem.Visible = listViewInputFiles.SelectedItems.Count > 0;
+        }
+
+        private void RemoveAllToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            listViewInputFiles.Items.Clear();
+        }
+
+        private void RemoveSelectedFiles()
+        {
+            if (_converting)
+                return;
+
+            for (int i = listViewInputFiles.SelectedIndices.Count-1; i>=0; i--)
+            {
+                listViewInputFiles.Items.RemoveAt(listViewInputFiles.SelectedIndices[i]);
+            }
+        }
+
+        private void RemoveToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            RemoveSelectedFiles();
+        }
+
+        private void ListViewInputFilesKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+                RemoveSelectedFiles();
         }
 
     }
