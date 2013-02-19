@@ -7717,6 +7717,54 @@ namespace Nikse.SubtitleEdit.Forms
                 if (isSsa)
                 {
                     _subtitle.Header = matroskaSubtitleInfo.CodecPrivate;
+                    var lines = new List<string>();
+                    foreach (string l in _subtitle.Header.Trim().Replace(Environment.NewLine, "\n").Split('\n'))
+                        lines.Add(l);
+                    StringBuilder footer = new StringBuilder();
+                    Subtitle comments = new Subtitle();
+                    if (!string.IsNullOrEmpty(matroskaSubtitleInfo.CodecPrivate))
+                    {
+                        bool footerOn = false;
+                        foreach (string line in lines)
+                        {
+                            if (footerOn)
+                            {
+                                footer.AppendLine(line);
+                            }
+                            else if (line.Trim() == "[Events]")
+                            {
+                                footerOn = false;                                
+                            }
+                            else if (line.Trim() == "[Fonts]" || line.Trim() == "[Graphics]")
+                            {
+                                footerOn = true;
+                                footer.AppendLine();
+                                footer.AppendLine();
+                                footer.AppendLine(line);
+                            }
+                            else if (line.StartsWith("Comment:"))
+                            {
+                                var arr = line.Split(',');
+                                if (arr.Length > 3)
+                                {
+                                    arr = arr[1].Split(":.".ToCharArray());
+                                    if (arr.Length == 4)
+                                    {
+                                        int hour;
+                                        int min;
+                                        int sec;
+                                        int ms;
+                                        if (int.TryParse(arr[0], out hour) && int.TryParse(arr[1], out min) &&
+                                            int.TryParse(arr[2], out sec) && int.TryParse(arr[3], out ms))
+                                        {
+                                            comments.Paragraphs.Add(new Paragraph(new TimeCode(hour, min, sec, ms * 10), new TimeCode(0, 0, 0, 0), line));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }                    
+                    
                     if (!_subtitle.Header.Contains("[Events]"))
                     {
                         _subtitle.Header = _subtitle.Header.Trim() + Environment.NewLine +
@@ -7732,10 +7780,10 @@ namespace Nikse.SubtitleEdit.Forms
                                            "[Events]" + Environment.NewLine +
                                            "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine;
                     }
-
-                    var lines = new List<string>();
+                    lines = new List<string>();
                     foreach (string l in _subtitle.Header.Trim().Replace(Environment.NewLine, "\n").Split('\n'))
                         lines.Add(l);
+
                     const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
                     foreach (SubtitleSequence mp in sub)
                     {
@@ -7745,6 +7793,19 @@ namespace Nikse.SubtitleEdit.Forms
 
                         //MKS contains this: ReadOrder, Layer, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
+                        for (int commentIndex = 0; commentIndex < comments.Paragraphs.Count; commentIndex++)
+                        {
+                            var cp = comments.Paragraphs[commentIndex];
+                            if (cp.StartTime.TotalMilliseconds <= p.StartTime.TotalMilliseconds)
+                                lines.Add(cp.Text);
+                        }
+                        for (int commentIndex = comments.Paragraphs.Count - 1; commentIndex >= 0; commentIndex--)
+                        {
+                            var cp = comments.Paragraphs[commentIndex];
+                            if (cp.StartTime.TotalMilliseconds <= p.StartTime.TotalMilliseconds)
+                                comments.Paragraphs.RemoveAt(commentIndex);
+                        }
+
                         string text = mp.Text;
                         int idx = text.IndexOf(',') + 1;
                         if (idx > 0 && idx < text.Length)
@@ -7752,9 +7813,13 @@ namespace Nikse.SubtitleEdit.Forms
                             text = text.Remove(0, idx); // remove ReadOrder
                             idx = text.IndexOf(',');
                             text = text.Insert(idx, "," + start + "," + end);
-                            lines.Add(text);
+                            lines.Add("Dialogue: " + text);
                         }
                     }
+
+                    foreach (string l in footer.ToString().Replace(Environment.NewLine, "\n").Split('\n'))
+                        lines.Add(l);
+
                     format.LoadSubtitle(_subtitle, lines, fileName);
                 }
                 else
