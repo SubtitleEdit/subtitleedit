@@ -308,21 +308,52 @@ namespace Nikse.SubtitleEdit.Logic.Networking
 
         internal string Restart()
         {
-            string message;
-            StartServer(_seWs.Url, SessionId, UserName, FileName, out message);
+            string message = string.Empty;
+            int retries = 0;
+            int maxRetries = 10;
+            while (retries < maxRetries)
+            {
+                try
+                {
+                    System.Threading.Thread.Sleep(200);
+                    StartServer(_seWs.Url, SessionId, UserName, FileName, out message);
+                    retries = maxRetries;
+                }
+                catch
+                {
+                    System.Threading.Thread.Sleep(200);
+                    retries++;
+                }
+            }
+
             if (message == "Session is already running")
             {
-                if (Join(_seWs.Url, UserName, SessionId, out message))
-                    message = "Reload";
+                return ReJoin();
             }
             return message;
         }
 
         internal string ReJoin()
         {
-            string message;
-            if (Join(_seWs.Url, UserName, SessionId, out message))
-                message = "Reload";
+            string message = string.Empty;
+            int retries = 0;
+            int maxRetries = 10;
+            while (retries < maxRetries)
+            {
+                try
+                {
+                    System.Threading.Thread.Sleep(200);
+                    if (Join(_seWs.Url, UserName, SessionId, out message))
+                        message = "Reload";
+                    retries = maxRetries;
+                }
+                catch
+                {
+                    System.Threading.Thread.Sleep(200);
+                    retries++;
+                }
+            }
+
             return message;
         }
 
