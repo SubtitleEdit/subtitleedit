@@ -1385,6 +1385,10 @@ namespace Nikse.SubtitleEdit.Forms
             gotoLineNumberToolStripMenuItem.Text = _language.Menu.Edit.GoToSubtitleNumber;
             toolStripMenuItemRightToLeftMode.Text = _language.Menu.Edit.RightToLeftMode;
             toolStripMenuItemReverseRightToLeftStartEnd.Text = _language.Menu.Edit.ReverseRightToLeftStartEnd;
+            if (!string.IsNullOrEmpty(_language.Menu.Edit.ModifySelection))
+                toolStripMenuItemModifySelection.Text = _language.Menu.Edit.ModifySelection;
+            if (!string.IsNullOrEmpty(_language.Menu.Edit.InverseSelection))
+                toolStripMenuItemInverseSelection.Text = _language.Menu.Edit.InverseSelection;
             editSelectAllToolStripMenuItem.Text = _language.Menu.ContextMenu.SelectAll;
 
             toolsToolStripMenuItem.Text = _language.Menu.Tools.Title;
@@ -1452,6 +1456,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemSpellCheckMain.Text = _language.Menu.SpellCheck.Title;
             spellCheckToolStripMenuItem.Text = _language.Menu.SpellCheck.SpellCheck;
+            if (!string.IsNullOrEmpty(_language.Menu.SpellCheck.SpellCheckFromCurrentLine))
+                toolStripMenuItemSpellCheckFromCurrentLine.Text = _language.Menu.SpellCheck.SpellCheckFromCurrentLine;
             findDoubleWordsToolStripMenuItem.Text = _language.Menu.SpellCheck.FindDoubleWords;
             FindDoubleLinesToolStripMenuItem.Text = _language.Menu.SpellCheck.FindDoubleLines;
             GetDictionariesToolStripMenuItem.Text = _language.Menu.SpellCheck.GetDictionaries;
@@ -7815,6 +7821,11 @@ namespace Nikse.SubtitleEdit.Forms
                             text = text.Insert(idx, "," + start + "," + end);
                             lines.Add("Dialogue: " + text);
                         }
+                    }
+                    for (int commentIndex = 0; commentIndex < comments.Paragraphs.Count; commentIndex++)
+                    {
+                        var cp = comments.Paragraphs[commentIndex];
+                            lines.Add(cp.Text);
                     }
 
                     foreach (string l in footer.ToString().Replace(Environment.NewLine, "\n").Split('\n'))

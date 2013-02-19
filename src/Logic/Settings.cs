@@ -102,6 +102,11 @@ namespace Nikse.SubtitleEdit.Logic
         public string NewEmptyTranslationText { get; set; }
         public string BatchConvertOutputFolder { get; set; }
         public bool BatchConvertOverwrite { get; set; }
+        public bool BatchConvertRemoveFormatting { get; set; }
+        public bool BatchConvertFixCasing { get; set; }
+        public bool BatchConvertRemoveTextForHI { get; set; }
+        public bool BatchConvertFixCommonErrors { get; set; }
+        public string BatchConvertLanguage { get; set; }
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
         public bool ModifySelectionCaseSensitive { get; set; }
@@ -135,6 +140,7 @@ namespace Nikse.SubtitleEdit.Logic
             SplitNumberOfParts = 3;
             SplitVia = "Lines";
             NewEmptyTranslationText = string.Empty;
+            BatchConvertLanguage = "en";
             ModifySelectionRule = "Contains";
             ModifySelectionText = string.Empty;
         }
@@ -1316,6 +1322,21 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("BatchConvertOverwrite");
             if (subNode != null)
                 settings.Tools.BatchConvertOverwrite = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("BatchConvertRemoveFormatting");
+            if (subNode != null)
+                settings.Tools.BatchConvertRemoveFormatting = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("BatchConvertFixCasing");
+            if (subNode != null)
+                settings.Tools.BatchConvertFixCasing = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("BatchConvertRemoveTextForHI");
+            if (subNode != null)
+                settings.Tools.BatchConvertRemoveTextForHI = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("BatchConvertFixCommonErrors");
+            if (subNode != null)
+                settings.Tools.BatchConvertFixCommonErrors = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("BatchConvertLanguage");
+            if (subNode != null)
+                settings.Tools.BatchConvertLanguage = subNode.InnerText;
             subNode = node.SelectSingleNode("ModifySelectionRule");
             if (subNode != null)
                 settings.Tools.ModifySelectionRule = subNode.InnerText;
@@ -2151,6 +2172,11 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("NewEmptyTranslationText", settings.Tools.NewEmptyTranslationText);
             textWriter.WriteElementString("BatchConvertOutputFolder", settings.Tools.BatchConvertOutputFolder);
             textWriter.WriteElementString("BatchConvertOverwrite", settings.Tools.BatchConvertOverwrite.ToString());
+            textWriter.WriteElementString("BatchConvertRemoveFormatting", settings.Tools.BatchConvertRemoveFormatting.ToString());
+            textWriter.WriteElementString("BatchConvertFixCasing", settings.Tools.BatchConvertFixCasing.ToString());
+            textWriter.WriteElementString("BatchConvertRemoveTextForHI", settings.Tools.BatchConvertRemoveTextForHI.ToString());
+            textWriter.WriteElementString("BatchConvertFixCommonErrors", settings.Tools.BatchConvertFixCommonErrors.ToString());
+            textWriter.WriteElementString("BatchConvertLanguage", settings.Tools.BatchConvertLanguage);
             textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
             textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
             textWriter.WriteElementString("ModifySelectionCaseSensitive", settings.Tools.ModifySelectionCaseSensitive.ToString());

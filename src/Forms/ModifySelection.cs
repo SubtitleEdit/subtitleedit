@@ -21,9 +21,20 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitleListView = subtitleListView;
             labelInfo.Text = string.Empty;
             comboBoxRule.SelectedIndex = 0;
-           // Text = Configuration.Settings.Language.ModifySelection.Title;
+            Text = Configuration.Settings.Language.ModifySelection.Title;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonApply.Text = Configuration.Settings.Language.General.Apply;
+            groupBoxRule.Text = Configuration.Settings.Language.ModifySelection.Rule;
+            checkBoxCaseSensitive.Text = Configuration.Settings.Language.ModifySelection.CaseSensitive;
+            radioButtonNewSelection.Text = Configuration.Settings.Language.ModifySelection.MakeNewSelection;
+            radioButtonAddToSelection.Text = Configuration.Settings.Language.ModifySelection.AddToCurrentSelection;
+            radioButtonSubtractFromSelection.Text = Configuration.Settings.Language.ModifySelection.SubtractFromCurrentSelection;
+            radioButtonIntersect.Text = Configuration.Settings.Language.ModifySelection.IntersectWithCurrentSelection;
+            columnHeaderApply.Text = Configuration.Settings.Language.General.Apply;
+            columnHeaderLine.Text = Configuration.Settings.Language.General.LineNumber;
+            columnHeaderText.Text = Configuration.Settings.Language.General.Text;
+
             FixLargeFonts();
 
             checkBoxCaseSensitive.Checked = Configuration.Settings.Tools.ModifySelectionCaseSensitive;
@@ -155,7 +166,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             listViewFixes.EndUpdate();
-            groupBoxPreview.Text = string.Format("Matching lines: {0}", listViewFixes.Items.Count);
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ModifySelection.MatchingLinesX))
+                groupBoxPreview.Text = string.Format(Configuration.Settings.Language.ModifySelection.MatchingLinesX, listViewFixes.Items.Count);
+            else
+                groupBoxPreview.Text = string.Format("Matching lines: {0}", listViewFixes.Items.Count);
         }
 
         private void ApplySelection()

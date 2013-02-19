@@ -134,6 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
         List<FixItem> _fixActions;
         int _subtitleListViewIndex = -1;
         bool _onlyListFixes = true;
+        bool _batchMode = false;
         string _autoDetectGoogleLanguage;
         List<string> _namesEtcList;
         List<string> _abbreviationList;
@@ -145,6 +146,102 @@ namespace Nikse.SubtitleEdit.Forms
         public Subtitle FixedSubtitle
         {
             get { return _originalSubtitle; }
+        }
+
+        public void RunBatchSettings(Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language)
+        {
+            _autoDetectGoogleLanguage = language;
+            var ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
+            string threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
+
+            comboBoxLanguage.Items.Clear();
+            foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+                comboBoxLanguage.Items.Add(x);
+            comboBoxLanguage.Sorted = true;
+            int languageIndex = 0;
+            int j = 0;
+            foreach (var x in comboBoxLanguage.Items)
+            {
+                var xci = (CultureInfo)x;
+                if (xci.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
+                {
+                    languageIndex = j;
+                    break;
+                }
+                else if (xci.TwoLetterISOLanguageName == "en")
+                {
+                    languageIndex = j;
+                }
+                j++;
+            }
+            comboBoxLanguage.SelectedIndex = languageIndex;
+            AddFixActions(subtitle, threeLetterISOLanguageName);
+            _originalSubtitle = new Subtitle(subtitle); // copy constructor
+            _subtitle = new Subtitle(subtitle); // copy constructor
+            _format = format;
+            _encoding = encoding;
+            _onlyListFixes = false;
+            InitUI();
+            groupBoxStep1.Text = string.Empty;
+            buttonBack.Visible = false;
+            buttonNextFinish.Visible = false;
+            buttonCancel.Text = Configuration.Settings.Language.General.OK;
+        }
+
+        public string Language
+        {
+            get
+            { 
+                var ci = (CultureInfo)comboBoxLanguage.SelectedItem;
+                if (ci == null)
+                    return "en";
+                return ci.TwoLetterISOLanguageName;
+            }
+        }
+
+        public void RunBatch(Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language)
+        {
+            _autoDetectGoogleLanguage = language;
+            var ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
+            string threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
+
+            comboBoxLanguage.Items.Clear();
+            foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+                comboBoxLanguage.Items.Add(x);
+            comboBoxLanguage.Sorted = true;
+            int languageIndex = 0;
+            int j = 0;
+            foreach (var x in comboBoxLanguage.Items)
+            {
+                var xci = (CultureInfo)x;
+                if (xci.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
+                {
+                    languageIndex = j;
+                    break;
+                }
+                else if (xci.TwoLetterISOLanguageName == "en")
+                {
+                    languageIndex = j;
+                }
+                j++;
+            }
+            comboBoxLanguage.SelectedIndex = languageIndex;
+
+            AddFixActions(subtitle, threeLetterISOLanguageName);
+
+            _originalSubtitle = new Subtitle(subtitle); // copy constructor
+            _subtitle = new Subtitle(subtitle); // copy constructor
+            _format = format;
+            _encoding = encoding;
+            _onlyListFixes = true;
+            _hasFixesBeenMade = true;
+            _numberOfImportantLogMessages = 0;
+            _onlyListFixes = false;
+            _totalFixes = 0;
+            _totalErrors = 0;
+            _batchMode = true;
+            RunSelectedActions();
+            _originalSubtitle = _subtitle;
         }
 
         public void Initialize(Subtitle subtitle, SubtitleFormat format, Encoding encoding)
@@ -183,6 +280,11 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = new Subtitle(subtitle); // copy constructor
             _format = format;
             _encoding = encoding;
+            InitUI();
+        }
+
+        private void InitUI()
+        {
             labelStatus.Text = string.Empty;
             labelTextLineLengths.Text = string.Empty;
             labelTextLineTotal.Text = string.Empty;
@@ -397,7 +499,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
 
             //if (!buttonBack.Enabled)
-            if (_onlyListFixes)
+            if (_onlyListFixes || _batchMode)
                 return true;
 
             string ln = p.Number.ToString();

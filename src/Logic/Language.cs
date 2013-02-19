@@ -52,6 +52,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.MatroskaSubtitleChooser MatroskaSubtitleChooser;
         public LanguageStructure.MergeDoubleLines MergeDoubleLines;
         public LanguageStructure.MergeShortLines MergedShortLines;
+        public LanguageStructure.ModifySelection ModifySelection;        
         public LanguageStructure.MultipleReplace MultipleReplace;
         public LanguageStructure.NetworkChat NetworkChat;
         public LanguageStructure.NetworkJoin NetworkJoin;
@@ -248,10 +249,8 @@ namespace Nikse.SubtitleEdit.Logic
                 Output = "Output",
                 ChooseOutputFolder = "Choose output folder",
                 ConvertOptions = "Convert options",
-                FixItalics = "Fix italics",
                 RemoveTextForHI = "Remove text for HI",
                 InputDescription = "Input files (browse or drag'n'drop)",
-                AutoBreakLongLines = "Auto-break long lines",
                 Convert = "Convert",
                 OverwriteExistingFiles = "Overwrite existing files",
                 ReDoCasing = "Re-do casing",
@@ -262,6 +261,7 @@ namespace Nikse.SubtitleEdit.Logic
                 PleaseChooseOutputFolder = "Please choose output folder",
                 Converted = "Converted",
                 ConvertedX = "Converted ({0})",
+                Settings = "Settings",
             };
 
             Beamer = new LanguageStructure.Beamer
@@ -1022,6 +1022,8 @@ namespace Nikse.SubtitleEdit.Logic
                         RightToLeftMode = "Right-to-left mode",
                         ReverseRightToLeftStartEnd = "Reverse RTL start/end (for selected lines)",
                         ShowOriginalTextInAudioAndVideoPreview = "Show original text in audio/video previews",
+                        ModifySelection = "Modify selection...",
+                        InverseSelection = "Inverse selection",
                     },
 
                     Tools = new LanguageStructure.Main.MainMenu.ToolsMenu
@@ -1076,6 +1078,7 @@ namespace Nikse.SubtitleEdit.Logic
                         FindDoubleWords = "Find double words",
                         FindDoubleLines = "Find double lines",
                         SpellCheck = "&Spell check...",
+                        SpellCheckFromCurrentLine = "Spell check from current line...",
                         GetDictionaries = "Get dictionaries...",
                         AddToNamesEtcList = "Add word to names/ect list",
                     },
@@ -1282,6 +1285,19 @@ namespace Nikse.SubtitleEdit.Logic
                 NumberOfMergesX = "Number of merges: {0}",
                 MergedText = "Merged text",
                 OnlyMergeContinuationLines = "Only merge continuation lines",
+            };
+
+            ModifySelection = new LanguageStructure.ModifySelection
+            {
+                Title = "Modify selection",
+                Rule = "Rule",
+                CaseSensitive = "Case sensitive",
+                DoWithMatches = "What to do with matches",
+                MakeNewSelection = "Make new selection",
+                AddToCurrentSelection = "Add to current selection",
+                SubtractFromCurrentSelection = "Subtract from current selection",
+                IntersectWithCurrentSelection = "Intersect with current selection",
+                MatchingLinesX = "Matching lines: {0}",
             };
 
             MultipleReplace = new LanguageStructure.MultipleReplace
