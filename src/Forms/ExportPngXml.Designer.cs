@@ -437,10 +437,36 @@
             "73",
             "74",
             "75",
+            "76",
+            "77",
+            "78",
+            "79",
             "80",
+            "81",
+            "82",
+            "83",
+            "84",
             "85",
+            "86",
+            "87",
+            "88",
+            "89",
             "90",
-            "100"});
+            "91",
+            "92",
+            "93",
+            "94",
+            "95",
+            "96",
+            "97",
+            "98",
+            "99",
+            "100",
+            "110",
+            "120",
+            "130",
+            "140",
+            "150"});
             this.comboBoxSubtitleFontSize.Location = new System.Drawing.Point(100, 51);
             this.comboBoxSubtitleFontSize.Name = "comboBoxSubtitleFontSize";
             this.comboBoxSubtitleFontSize.Size = new System.Drawing.Size(121, 21);
@@ -476,7 +502,17 @@
             "2",
             "3",
             "4",
-            "5"});
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15"});
             this.comboBoxBorderWidth.Location = new System.Drawing.Point(537, 51);
             this.comboBoxBorderWidth.Name = "comboBoxBorderWidth";
             this.comboBoxBorderWidth.Size = new System.Drawing.Size(121, 21);
