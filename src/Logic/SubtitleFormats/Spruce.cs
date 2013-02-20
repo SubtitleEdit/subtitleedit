@@ -102,6 +102,8 @@ $ColorIndex4    = 3
             //00:01:54:19,00:01:56:17,We should be thankful|they accepted our offer.
             subtitle.Paragraphs.Clear();
             var regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,.+", RegexOptions.Compiled);
+            if (fileName != null && fileName.ToLower().EndsWith(".stl")) // allow empty text if extension is ".stl"...
+                regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,", RegexOptions.Compiled);
             foreach (string line in lines)
             {
                 if (regexTimeCodes.IsMatch(line))
