@@ -849,7 +849,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Environment.Exit(1);
         }
 
-        internal static void BatchConvertSave(string toFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IList<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite)
+        internal static bool BatchConvertSave(string toFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IList<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite)
         {
             // adjust offset
             if (!string.IsNullOrEmpty(offset) && (offset.StartsWith("/offset:") || offset.StartsWith("offset:")))
@@ -976,10 +976,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Console.WriteLine(string.Format("{0}: {1} - target format '{2}' not found!", count, fileName, toFormat));
                 errors++;
+                return false;
             }
             else
             {
                 converted++;
+                return true;
             }
         }
 
@@ -9457,10 +9459,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == (Keys.Control | Keys.Shift | Keys.Alt) && e.KeyCode == Keys.C)
             {
-                var form = new BatchConvert();
-                form.ShowDialog(this);
+                toolStripMenuItemBatchConvert_Click(null, null);
             }
-
 
             // TABS - MUST BE LAST
             else if (tabControlButtons.SelectedTab == tabPageAdjust)
@@ -16600,10 +16600,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemBatchConvert_Click(object sender, EventArgs e)
         {
+            this.Visible = false;
             var form = new BatchConvert();
             _formPositionsAndSizes.SetPositionAndSize(form);
             form.ShowDialog(this);
             _formPositionsAndSizes.SavePositionAndSize(form);
+            this.Visible = true;
         }
 
         private void copyOriginalTextToCurrentToolStripMenuItem_Click(object sender, EventArgs e)
