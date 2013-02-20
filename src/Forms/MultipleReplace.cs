@@ -85,6 +85,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             GeneratePreview();
+            if (subtitle == null || subtitle.Paragraphs == null || subtitle.Paragraphs.Count == 0)
+                groupBoxLinesFound.Enabled = false;
         }
 
         private void MultipleReplace_KeyDown(object sender, KeyEventArgs e)

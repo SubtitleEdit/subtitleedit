@@ -40,7 +40,6 @@
             this.comboBoxFrameRateFrom = new System.Windows.Forms.ComboBox();
             this.labelFromFrameRate = new System.Windows.Forms.Label();
             this.groupBoxOffsetTimeCodes = new System.Windows.Forms.GroupBox();
-            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.labelHoursMinSecsMilliSecs = new System.Windows.Forms.Label();
             this.checkBoxFixCasing = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveTextForHI = new System.Windows.Forms.CheckBox();
@@ -71,6 +70,11 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.radioButtonShowLater = new System.Windows.Forms.RadioButton();
+            this.radioButtonShowEarlier = new System.Windows.Forms.RadioButton();
+            this.checkBoxMultipleReplace = new System.Windows.Forms.CheckBox();
+            this.buttonMultipleReplaceSettings = new System.Windows.Forms.Button();
+            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxChangeFrameRate.SuspendLayout();
             this.groupBoxOffsetTimeCodes.SuspendLayout();
@@ -107,6 +111,8 @@
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.buttonMultipleReplaceSettings);
+            this.groupBoxConvertOptions.Controls.Add(this.checkBoxMultipleReplace);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxFixCommonErrors);
             this.groupBoxConvertOptions.Controls.Add(this.buttonFixCommonErrorSettings);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeFrameRate);
@@ -124,18 +130,17 @@
             // checkBoxFixCommonErrors
             // 
             this.checkBoxFixCommonErrors.AutoSize = true;
-            this.checkBoxFixCommonErrors.Location = new System.Drawing.Point(16, 91);
+            this.checkBoxFixCommonErrors.Location = new System.Drawing.Point(16, 97);
             this.checkBoxFixCommonErrors.Name = "checkBoxFixCommonErrors";
             this.checkBoxFixCommonErrors.Size = new System.Drawing.Size(111, 17);
             this.checkBoxFixCommonErrors.TabIndex = 3;
             this.checkBoxFixCommonErrors.Text = "Fix common errors";
             this.checkBoxFixCommonErrors.UseVisualStyleBackColor = true;
-            this.checkBoxFixCommonErrors.CheckedChanged += new System.EventHandler(this.checkBoxFixCommonErrors_CheckedChanged);
             // 
             // buttonFixCommonErrorSettings
             // 
             this.buttonFixCommonErrorSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonFixCommonErrorSettings.Location = new System.Drawing.Point(149, 88);
+            this.buttonFixCommonErrorSettings.Location = new System.Drawing.Point(149, 93);
             this.buttonFixCommonErrorSettings.Name = "buttonFixCommonErrorSettings";
             this.buttonFixCommonErrorSettings.Size = new System.Drawing.Size(87, 21);
             this.buttonFixCommonErrorSettings.TabIndex = 4;
@@ -152,69 +157,61 @@
             this.groupBoxChangeFrameRate.Location = new System.Drawing.Point(249, 12);
             this.groupBoxChangeFrameRate.Name = "groupBoxChangeFrameRate";
             this.groupBoxChangeFrameRate.Size = new System.Drawing.Size(270, 73);
-            this.groupBoxChangeFrameRate.TabIndex = 5;
+            this.groupBoxChangeFrameRate.TabIndex = 7;
             this.groupBoxChangeFrameRate.TabStop = false;
             this.groupBoxChangeFrameRate.Text = "Change frame rate";
             // 
             // comboBoxFrameRateTo
             // 
             this.comboBoxFrameRateTo.FormattingEnabled = true;
-            this.comboBoxFrameRateTo.Location = new System.Drawing.Point(144, 47);
+            this.comboBoxFrameRateTo.Location = new System.Drawing.Point(106, 47);
             this.comboBoxFrameRateTo.Name = "comboBoxFrameRateTo";
             this.comboBoxFrameRateTo.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrameRateTo.TabIndex = 3;
             // 
             // labelToFrameRate
             // 
-            this.labelToFrameRate.Location = new System.Drawing.Point(3, 47);
+            this.labelToFrameRate.AutoSize = true;
+            this.labelToFrameRate.Location = new System.Drawing.Point(6, 50);
             this.labelToFrameRate.Name = "labelToFrameRate";
-            this.labelToFrameRate.Size = new System.Drawing.Size(141, 21);
+            this.labelToFrameRate.Size = new System.Drawing.Size(70, 13);
             this.labelToFrameRate.TabIndex = 2;
             this.labelToFrameRate.Text = "To frame rate";
-            this.labelToFrameRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // comboBoxFrameRateFrom
             // 
             this.comboBoxFrameRateFrom.FormattingEnabled = true;
-            this.comboBoxFrameRateFrom.Location = new System.Drawing.Point(144, 18);
+            this.comboBoxFrameRateFrom.Location = new System.Drawing.Point(106, 18);
             this.comboBoxFrameRateFrom.Name = "comboBoxFrameRateFrom";
             this.comboBoxFrameRateFrom.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrameRateFrom.TabIndex = 1;
             // 
             // labelFromFrameRate
             // 
-            this.labelFromFrameRate.Location = new System.Drawing.Point(5, 18);
+            this.labelFromFrameRate.AutoSize = true;
+            this.labelFromFrameRate.Location = new System.Drawing.Point(6, 21);
             this.labelFromFrameRate.Name = "labelFromFrameRate";
-            this.labelFromFrameRate.Size = new System.Drawing.Size(139, 21);
+            this.labelFromFrameRate.Size = new System.Drawing.Size(80, 13);
             this.labelFromFrameRate.TabIndex = 0;
             this.labelFromFrameRate.Text = "From frame rate";
-            this.labelFromFrameRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // groupBoxOffsetTimeCodes
             // 
+            this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowLater);
+            this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowEarlier);
             this.groupBoxOffsetTimeCodes.Controls.Add(this.timeUpDownAdjust);
             this.groupBoxOffsetTimeCodes.Controls.Add(this.labelHoursMinSecsMilliSecs);
             this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(249, 89);
             this.groupBoxOffsetTimeCodes.Name = "groupBoxOffsetTimeCodes";
             this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(270, 98);
-            this.groupBoxOffsetTimeCodes.TabIndex = 6;
+            this.groupBoxOffsetTimeCodes.TabIndex = 8;
             this.groupBoxOffsetTimeCodes.TabStop = false;
             this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
-            // 
-            // timeUpDownAdjust
-            // 
-            this.timeUpDownAdjust.AutoSize = true;
-            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 33);
-            this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownAdjust.Name = "timeUpDownAdjust";
-            this.timeUpDownAdjust.Size = new System.Drawing.Size(92, 24);
-            this.timeUpDownAdjust.TabIndex = 1;
             // 
             // labelHoursMinSecsMilliSecs
             // 
             this.labelHoursMinSecsMilliSecs.AutoSize = true;
-            this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(6, 16);
+            this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(6, 20);
             this.labelHoursMinSecsMilliSecs.Name = "labelHoursMinSecsMilliSecs";
             this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(107, 13);
             this.labelHoursMinSecsMilliSecs.TabIndex = 0;
@@ -223,7 +220,7 @@
             // checkBoxFixCasing
             // 
             this.checkBoxFixCasing.AutoSize = true;
-            this.checkBoxFixCasing.Location = new System.Drawing.Point(16, 45);
+            this.checkBoxFixCasing.Location = new System.Drawing.Point(16, 47);
             this.checkBoxFixCasing.Name = "checkBoxFixCasing";
             this.checkBoxFixCasing.Size = new System.Drawing.Size(95, 17);
             this.checkBoxFixCasing.TabIndex = 1;
@@ -233,7 +230,7 @@
             // checkBoxRemoveTextForHI
             // 
             this.checkBoxRemoveTextForHI.AutoSize = true;
-            this.checkBoxRemoveTextForHI.Location = new System.Drawing.Point(16, 68);
+            this.checkBoxRemoveTextForHI.Location = new System.Drawing.Point(16, 72);
             this.checkBoxRemoveTextForHI.Name = "checkBoxRemoveTextForHI";
             this.checkBoxRemoveTextForHI.Size = new System.Drawing.Size(115, 17);
             this.checkBoxRemoveTextForHI.TabIndex = 2;
@@ -452,20 +449,20 @@
             this.removeToolStripMenuItem,
             this.removeAllToolStripMenuItem});
             this.contextMenuStripFiles.Name = "contextMenuStripStyles";
-            this.contextMenuStripFiles.Size = new System.Drawing.Size(153, 70);
+            this.contextMenuStripFiles.Size = new System.Drawing.Size(133, 48);
             this.contextMenuStripFiles.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripFilesOpening);
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.RemoveToolStripMenuItemClick);
             // 
             // removeAllToolStripMenuItem
             // 
             this.removeAllToolStripMenuItem.Name = "removeAllToolStripMenuItem";
-            this.removeAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeAllToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.removeAllToolStripMenuItem.Text = "Remove all";
             this.removeAllToolStripMenuItem.Click += new System.EventHandler(this.RemoveAllToolStripMenuItemClick);
             // 
@@ -492,6 +489,59 @@
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
             // 
+            // radioButtonShowLater
+            // 
+            this.radioButtonShowLater.AutoSize = true;
+            this.radioButtonShowLater.Checked = true;
+            this.radioButtonShowLater.Location = new System.Drawing.Point(108, 61);
+            this.radioButtonShowLater.Name = "radioButtonShowLater";
+            this.radioButtonShowLater.Size = new System.Drawing.Size(75, 17);
+            this.radioButtonShowLater.TabIndex = 3;
+            this.radioButtonShowLater.TabStop = true;
+            this.radioButtonShowLater.Text = "Show later";
+            this.radioButtonShowLater.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonShowEarlier
+            // 
+            this.radioButtonShowEarlier.AutoSize = true;
+            this.radioButtonShowEarlier.Location = new System.Drawing.Point(108, 38);
+            this.radioButtonShowEarlier.Name = "radioButtonShowEarlier";
+            this.radioButtonShowEarlier.Size = new System.Drawing.Size(83, 17);
+            this.radioButtonShowEarlier.TabIndex = 2;
+            this.radioButtonShowEarlier.Text = "Show earlier";
+            this.radioButtonShowEarlier.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxMultipleReplace
+            // 
+            this.checkBoxMultipleReplace.AutoSize = true;
+            this.checkBoxMultipleReplace.Location = new System.Drawing.Point(16, 122);
+            this.checkBoxMultipleReplace.Name = "checkBoxMultipleReplace";
+            this.checkBoxMultipleReplace.Size = new System.Drawing.Size(100, 17);
+            this.checkBoxMultipleReplace.TabIndex = 5;
+            this.checkBoxMultipleReplace.Text = "Multiple replace";
+            this.checkBoxMultipleReplace.UseVisualStyleBackColor = true;
+            // 
+            // buttonMultipleReplaceSettings
+            // 
+            this.buttonMultipleReplaceSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonMultipleReplaceSettings.Location = new System.Drawing.Point(149, 119);
+            this.buttonMultipleReplaceSettings.Name = "buttonMultipleReplaceSettings";
+            this.buttonMultipleReplaceSettings.Size = new System.Drawing.Size(87, 21);
+            this.buttonMultipleReplaceSettings.TabIndex = 6;
+            this.buttonMultipleReplaceSettings.Text = "Settings...";
+            this.buttonMultipleReplaceSettings.UseVisualStyleBackColor = true;
+            this.buttonMultipleReplaceSettings.Click += new System.EventHandler(this.buttonMultipleReplaceSettings_Click);
+            // 
+            // timeUpDownAdjust
+            // 
+            this.timeUpDownAdjust.AutoSize = true;
+            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 37);
+            this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownAdjust.Name = "timeUpDownAdjust";
+            this.timeUpDownAdjust.Size = new System.Drawing.Size(92, 24);
+            this.timeUpDownAdjust.TabIndex = 1;
+            // 
             // BatchConvert
             // 
             this.AllowDrop = true;
@@ -507,13 +557,13 @@
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(1024, 578);
             this.Name = "BatchConvert";
-            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Batch convert";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BatchConvert_FormClosing);
             this.groupBoxConvertOptions.ResumeLayout(false);
             this.groupBoxConvertOptions.PerformLayout();
             this.groupBoxChangeFrameRate.ResumeLayout(false);
+            this.groupBoxChangeFrameRate.PerformLayout();
             this.groupBoxOffsetTimeCodes.ResumeLayout(false);
             this.groupBoxOffsetTimeCodes.PerformLayout();
             this.groupBoxOutput.ResumeLayout(false);
@@ -570,6 +620,10 @@
         private System.Windows.Forms.Button buttonFixCommonErrorSettings;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.RadioButton radioButtonShowLater;
+        private System.Windows.Forms.RadioButton radioButtonShowEarlier;
+        private System.Windows.Forms.Button buttonMultipleReplaceSettings;
+        private System.Windows.Forms.CheckBox checkBoxMultipleReplace;
 
     }
 }
