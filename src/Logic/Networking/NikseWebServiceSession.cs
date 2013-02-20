@@ -43,7 +43,9 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             Subtitle = subtitle;
             OriginalSubtitle = originalSubtitle;
             _timerWebService = new System.Windows.Forms.Timer();
-            _timerWebService.Interval = 5000;
+            if (Configuration.Settings.NetworkSettings.PollIntervalSeconds < 1)
+                Configuration.Settings.NetworkSettings.PollIntervalSeconds = 1;
+            _timerWebService.Interval = Configuration.Settings.NetworkSettings.PollIntervalSeconds * 1000;
             _timerWebService.Tick += TimerWebServiceTick;
             Log = new StringBuilder();
             OnUpdateTimerTick = onUpdateTimerTick;

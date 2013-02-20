@@ -345,19 +345,9 @@ namespace Nikse.SubtitleEdit.Logic
         public bool StartRememberPositionAndSize { get; set; }
         public string StartPosition { get; set; }
         public string StartSize { get; set; }
-
-        //public int StartListViewWidth { get; set; }
-        //public int StartListViewHeight { get; set; }
-        //public int StartTextBoxHeight { get; set; }
-        //public int ListViewAndTextBoxHeight { get; set; }
-
         public int SplitContainerMainSplitterDistance { get; set; }
         public int SplitContainer1SplitterDistance { get; set; }
         public int SplitContainerListViewAndTextSplitterDistance { get; set; }
-
-
-
-
         public bool StartInSourceView { get; set; }
         public bool RemoveBlankLinesWhenOpening { get; set; }
         public int SubtitleLineMaximumLength { get; set; }
@@ -587,12 +577,14 @@ namespace Nikse.SubtitleEdit.Logic
         public string UserName { get; set; }
         public string WebServiceUrl { get; set; }
         public string SessionKey { get; set; }
+        public int PollIntervalSeconds { get; set; }
 
         public NetworkSettings()
         {
             UserName = string.Empty;
             SessionKey = "DemoSession"; // TODO - leave blank or use guid
             WebServiceUrl = "http://www.nikse.dk/se/SeService.asmx";
+            PollIntervalSeconds = 5;
         }
     }
 
@@ -1064,12 +1056,6 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("StartSize");
             if (subNode != null)
                 settings.General.StartSize = subNode.InnerText;
-
-
-
-            //subNode = node.SelectSingleNode("StartListViewWidth");
-            //if (subNode != null)
-            //    settings.General.StartListViewWidth = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("SplitContainerMainSplitterDistance");
             if (subNode != null)
                 settings.General.SplitContainerMainSplitterDistance = Convert.ToInt32(subNode.InnerText);
@@ -1079,9 +1065,6 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SplitContainerListViewAndTextSplitterDistance");
             if (subNode != null)
                 settings.General.SplitContainerListViewAndTextSplitterDistance = Convert.ToInt32(subNode.InnerText);
-
-
-
             subNode = node.SelectSingleNode("StartInSourceView");
             if (subNode != null)
                 settings.General.StartInSourceView = Convert.ToBoolean(subNode.InnerText);
@@ -1614,6 +1597,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("WebServiceUrl");
                 if (subNode != null)
                     settings.NetworkSettings.WebServiceUrl = subNode.InnerText;
+                subNode = node.SelectSingleNode("PollIntervalSeconds");
+                if (subNode != null)
+                    settings.NetworkSettings.PollIntervalSeconds = Convert.ToInt32(subNode.InnerText);
             }
 
             settings.VobSubOcr = new Nikse.SubtitleEdit.Logic.VobSubOcrSettings();
@@ -2283,6 +2269,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SessionKey", settings.NetworkSettings.SessionKey);
             textWriter.WriteElementString("UserName", settings.NetworkSettings.UserName);
             textWriter.WriteElementString("WebServiceUrl", settings.NetworkSettings.WebServiceUrl);
+            textWriter.WriteElementString("PollIntervalSeconds", settings.NetworkSettings.PollIntervalSeconds.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("VobSubOcr", "");
