@@ -5220,10 +5220,12 @@ namespace Nikse.SubtitleEdit.Forms
                 typeEffectToolStripMenuItem.Visible = noNetWorkSession;
                 karokeeEffectToolStripMenuItem.Visible = noNetWorkSession;
                 toolStripSeparatorAdvancedFunctions.Visible = noNetWorkSession;
-                showSelectedLinesEarlierlaterToolStripMenuItem.Visible = true;
-                visualSyncSelectedLinesToolStripMenuItem.Visible = true;
-                googleTranslateSelectedLinesToolStripMenuItem.Visible = true;
-                adjustDisplayTimeForSelectedLinesToolStripMenuItem.Visible = true;
+                fixCommonErrorsInSelectedLinesToolStripMenuItem.Visible = noNetWorkSession;
+                adjustDisplayTimeForSelectedLinesToolStripMenuItem.Visible = noNetWorkSession;
+                showSelectedLinesEarlierlaterToolStripMenuItem.Visible = noNetWorkSession;
+                visualSyncSelectedLinesToolStripMenuItem.Visible = noNetWorkSession;
+                googleTranslateSelectedLinesToolStripMenuItem.Visible = noNetWorkSession;
+                toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
                 toolStripMenuItemUnbreakLines.Visible = true;
                 toolStripMenuItemAutoBreakLines.Visible = true;
                 toolStripSeparatorBreakLines.Visible = true;
@@ -5236,7 +5238,8 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemUnbreakLines.Visible = false;
                     toolStripMenuItemAutoBreakLines.Visible = false;
                     toolStripSeparatorBreakLines.Visible = false;
-                    toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = _subtitleAlternate != null;
+                    if (_subtitleAlternate != null && noNetWorkSession)
+                        toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = true;
                     toolStripMenuItemMergeDialogue.Visible = false;
                 }
                 else if (SubtitleListview1.SelectedItems.Count == 2)
@@ -5273,7 +5276,7 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripSeparatorAdvancedFunctions.Visible = SubtitleListview1.SelectedItems.Count == 1 && noNetWorkSession;
                 }
             }
-            toolStripMenuItemPasteSpecial.Visible = Clipboard.ContainsText();
+            toolStripMenuItemPasteSpecial.Visible = Clipboard.ContainsText();            
         }
 
         void tsi_Click(object sender, EventArgs e)
