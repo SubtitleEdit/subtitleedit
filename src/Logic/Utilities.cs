@@ -1135,7 +1135,8 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "pt"; // Portuguese
 
-            count = GetCount(text, "μου", "είναι", "Είναι", "αυτό", "Τόμπυ", "καλά");
+            count = GetCount(text, "μου", "είναι", "Είναι", "αυτό", "Τόμπυ", "καλά") +
+                    GetCount(text, "Ενταξει", "Ενταξει", "πρεπει", "Λοιπον", "τιποτα", "ξερεις");
             if (count > bestCount)
                 return "el"; // Greek
 
