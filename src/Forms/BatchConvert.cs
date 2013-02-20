@@ -6,22 +6,58 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using System.Globalization;
+using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public partial class BatchConvert : Form
     {
+        public class ThreadDoWorkParameter
+        {
+            public bool FixCommonErrors { get; set; }
+            public ListViewItem Item { get; set; }
+            public Subtitle Subtitle { get; set; }
+            public SubtitleFormat Format { get; set; }
+            public Encoding Encoding { get; set; }
+            public string Language { get; set; }
+            public string Error { get; set; }
+            public string FileName { get; set; }
+            public string ToFormat { get; set; }
+            public SubtitleFormat SourceFormat { get; set; } 
+
+            public ThreadDoWorkParameter(bool fixCommonErrors, ListViewItem item, Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language, string fileName, string toFormat, SubtitleFormat sourceFormat)
+            {
+                FixCommonErrors = fixCommonErrors;
+                Item = item;
+                Subtitle = subtitle;
+                Format = format;
+                Encoding = encoding;
+                Language = language;
+                FileName = fileName;
+                ToFormat = toFormat;
+                SourceFormat = sourceFormat;
+            }
+        }
+
         string _assStyle;
         string _ssaStyle;
         FormRemoveTextForHearImpaired _removeForHI = new FormRemoveTextForHearImpaired();
         ChangeCasing _changeCasing = new ChangeCasing();
         ChangeCasingNames _changeCasingNames = new ChangeCasingNames();        
         bool _converting = false;
+        int _count = 0;
+        int _converted = 0;
+        int _errors = 0;
+        IList<SubtitleFormat> _allFormats = SubtitleFormat.AllSubtitleFormats;
+        bool _abort = false;
 
         public BatchConvert()
         {
             InitializeComponent();
-            
+
+            progressBar1.Visible = false;
+            labelStatus.Text = string.Empty;
             var l = Configuration.Settings.Language.BatchConvert;
             Text = l.Title;
             groupBoxInput.Text = l.Input;
@@ -287,12 +323,23 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewInputFiles_DragEnter(object sender, DragEventArgs e)
         {
+            if (_converting)
+            {
+                e.Effect = DragDropEffects.None;
+                return;
+            }
+
             if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
                 e.Effect = DragDropEffects.All;
         }
 
         private void listViewInputFiles_DragDrop(object sender, DragEventArgs e)
         {
+            if (_converting)
+            {
+                return;
+            }
+
             string[] fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (string fileName in fileNames)
             {
@@ -354,13 +401,37 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _converting = true;
+            buttonConvert.Enabled = false;
+            buttonCancel.Enabled = false;
+            progressBar1.Maximum = listViewInputFiles.Items.Count;
+            progressBar1.Value = 0;
+            progressBar1.Visible = progressBar1.Maximum > 2;
             string toFormat = comboBoxSubtitleFormats.Text;
-            int count = 0;
-            int converted = 0;
-            int errors = 0;
-            var allFormats = SubtitleFormat.AllSubtitleFormats;
+            groupBoxOutput.Enabled = false;
+            groupBoxConvertOptions.Enabled = false;
+            buttonInputBrowse.Enabled = false;
+            _count = 0;
+            _converted = 0;
+            _errors = 0;
+            _abort = false;
+
+            BackgroundWorker worker1 = new BackgroundWorker();
+            BackgroundWorker worker2 = new BackgroundWorker();
+            BackgroundWorker worker3 = new BackgroundWorker();
+            worker1.DoWork += new DoWorkEventHandler(DoThreadWork);
+            worker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ThreadWorkerCompleted);
+            worker2.DoWork += new DoWorkEventHandler(DoThreadWork);
+            worker2.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ThreadWorkerCompleted);
+            worker3.DoWork += new DoWorkEventHandler(DoThreadWork);
+            worker3.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ThreadWorkerCompleted);
+
             foreach (ListViewItem item in listViewInputFiles.Items)
+                item.SubItems[3].Text = "-";
+
+            int index = 0;
+            while (index < listViewInputFiles.Items.Count && _abort == false)
             {
+                ListViewItem item = listViewInputFiles.Items[index];
                 string fileName = item.Text;
                 string friendlyName = item.SubItems[1].Text;
 
@@ -470,7 +541,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (format == null)
                     {
-
+                        if (progressBar1.Value < progressBar1.Maximum)
+                            progressBar1.Value++;
+                        labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
                     }
                     else
                     {
@@ -504,19 +577,6 @@ namespace Nikse.SubtitleEdit.Forms
                             _changeCasingNames.Initialize(sub);
                             _changeCasingNames.FixCasing();
                         }
-                        if (checkBoxFixCommonErrors.Checked)
-                        {
-                            try
-                            {
-                                FixCommonErrors fixCommonErrors = new FixCommonErrors();
-                                fixCommonErrors.RunBatch(sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage);
-                                sub = fixCommonErrors.FixedSubtitle;
-                            }
-                            catch (Exception exception)
-                            {
-                                item.SubItems[3].Text = "FCE ERROR: " + exception.Message;
-                            }
-                        }
 
                         double fromFrameRate;
                         double toFrameRate;
@@ -531,27 +591,89 @@ namespace Nikse.SubtitleEdit.Forms
                             sub.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(timeUpDownAdjust.TimeCode.TotalMilliseconds));
                         }
 
-                        int oldConverted = converted;
-                        Main.BatchConvertSave(toFormat, null, GetCurrentEncoding(), textBoxOutputFolder.Text, count, ref converted, ref errors, allFormats, fileName, sub, format, checkBoxOverwrite.Checked);
-                        if (converted == oldConverted + 1)
+                        while (worker1.IsBusy && worker2.IsBusy && worker3.IsBusy)
                         {
-                            item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Converted;
+                            Application.DoEvents();
+                            System.Threading.Thread.Sleep(100);
                         }
-                        else if (converted > oldConverted + 1)
-                        {
-                            item.SubItems[3].Text = string.Format(Configuration.Settings.Language.BatchConvert.ConvertedX, converted - oldConverted);
-                        }
-                        else
-                        {
-                            item.SubItems[3].Text = "ERROR";
-                        }
+
+                        ThreadDoWorkParameter parameter = new ThreadDoWorkParameter(checkBoxFixCommonErrors.Checked, item, sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage, fileName, toFormat, format);
+                        if (!worker1.IsBusy)
+                            worker1.RunWorkerAsync(parameter);
+                        else if (!worker2.IsBusy)
+                            worker2.RunWorkerAsync(parameter);
+                        else if (!worker3.IsBusy)
+                            worker3.RunWorkerAsync(parameter);
                     }
+                    
                 }
                 catch
                 {
+                    if (progressBar1.Value < progressBar1.Maximum)
+                        progressBar1.Value++;
+                    labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
                 }
+                index++;
+            }
+            while (worker1.IsBusy || worker2.IsBusy || worker3.IsBusy)
+            {
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(100);
             }
             _converting = false;
+            labelStatus.Text = string.Empty;
+            progressBar1.Visible = false;
+            buttonConvert.Enabled = true;
+            buttonCancel.Enabled = true;
+            groupBoxOutput.Enabled = true;
+            groupBoxConvertOptions.Enabled = true;
+            buttonInputBrowse.Enabled = true;
+            checkBoxFixCommonErrors_CheckedChanged(null, null);
+        }
+
+        void DoThreadWork(object sender, DoWorkEventArgs e)
+        {
+            ThreadDoWorkParameter p = (ThreadDoWorkParameter)e.Argument;
+            if (p.FixCommonErrors)
+            {
+                try
+                {
+                    FixCommonErrors fixCommonErrors = new FixCommonErrors();
+                    fixCommonErrors.RunBatch(p.Subtitle, p.Format, p.Encoding, Configuration.Settings.Tools.BatchConvertLanguage);
+                    p.Subtitle = fixCommonErrors.FixedSubtitle;
+                }
+                catch (Exception exception)
+                {
+                    p.Error = "FCE ERROR: " + exception.Message;
+                }
+            }
+            e.Result = p;
+        }
+
+        void ThreadWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            ThreadDoWorkParameter p = (ThreadDoWorkParameter)e.Result;
+            if (!string.IsNullOrEmpty(p.Error))
+            {
+                p.Item.SubItems[3].Text = p.Error;  
+            }
+            else
+            {
+                bool success = Main.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), textBoxOutputFolder.Text, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, checkBoxOverwrite.Checked);
+                if (success)
+                {
+                    p.Item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Converted;
+                }
+                else
+                {
+                    p.Item.SubItems[3].Text = "ERROR";
+                }
+            }
+            if (progressBar1.Value < progressBar1.Maximum)
+                progressBar1.Value++;
+            labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
+            if (progressBar1.Value == progressBar1.Maximum)
+                labelStatus.Text = string.Empty;
         }
 
         private void ComboBoxSubtitleFormatsSelectedIndexChanged(object sender, EventArgs e)
@@ -601,7 +723,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ContextMenuStripFilesOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (listViewInputFiles.Items.Count == 0)
+            if (listViewInputFiles.Items.Count == 0 || _converting)
             {
                 e.Cancel = true;
                 return;
@@ -634,6 +756,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Delete)
                 RemoveSelectedFiles();
+            if (e.KeyCode == Keys.Escape)
+                _abort = true;
         }
 
         private void buttonFixCommonErrorSettings_Click(object sender, EventArgs e)
@@ -646,11 +770,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void BatchConvert_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (_converting)
+            {
+                e.Cancel = true;
+                return;
+            }
+
             Configuration.Settings.Tools.BatchConvertFixCasing = checkBoxFixCasing.Checked;
             Configuration.Settings.Tools.BatchConvertFixCommonErrors = checkBoxFixCommonErrors.Checked;
             Configuration.Settings.Tools.BatchConvertRemoveFormatting = checkBoxRemoveFormatting.Checked;
             Configuration.Settings.Tools.BatchConvertRemoveTextForHI = checkBoxRemoveTextForHI.Checked;
-
         }
 
         private void checkBoxFixCommonErrors_CheckedChanged(object sender, EventArgs e)

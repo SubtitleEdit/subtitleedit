@@ -33,12 +33,14 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
             this.checkBoxFixCommonErrors = new System.Windows.Forms.CheckBox();
+            this.buttonFixCommonErrorSettings = new System.Windows.Forms.Button();
             this.groupBoxChangeFrameRate = new System.Windows.Forms.GroupBox();
             this.comboBoxFrameRateTo = new System.Windows.Forms.ComboBox();
             this.labelToFrameRate = new System.Windows.Forms.Label();
             this.comboBoxFrameRateFrom = new System.Windows.Forms.ComboBox();
             this.labelFromFrameRate = new System.Windows.Forms.Label();
             this.groupBoxOffsetTimeCodes = new System.Windows.Forms.GroupBox();
+            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.labelHoursMinSecsMilliSecs = new System.Windows.Forms.Label();
             this.checkBoxFixCasing = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveTextForHI = new System.Windows.Forms.CheckBox();
@@ -67,8 +69,8 @@
             this.removeAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.buttonFixCommonErrorSettings = new System.Windows.Forms.Button();
-            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.labelStatus = new System.Windows.Forms.Label();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxChangeFrameRate.SuspendLayout();
             this.groupBoxOffsetTimeCodes.SuspendLayout();
@@ -130,6 +132,17 @@
             this.checkBoxFixCommonErrors.UseVisualStyleBackColor = true;
             this.checkBoxFixCommonErrors.CheckedChanged += new System.EventHandler(this.checkBoxFixCommonErrors_CheckedChanged);
             // 
+            // buttonFixCommonErrorSettings
+            // 
+            this.buttonFixCommonErrorSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonFixCommonErrorSettings.Location = new System.Drawing.Point(149, 88);
+            this.buttonFixCommonErrorSettings.Name = "buttonFixCommonErrorSettings";
+            this.buttonFixCommonErrorSettings.Size = new System.Drawing.Size(87, 21);
+            this.buttonFixCommonErrorSettings.TabIndex = 4;
+            this.buttonFixCommonErrorSettings.Text = "Settings...";
+            this.buttonFixCommonErrorSettings.UseVisualStyleBackColor = true;
+            this.buttonFixCommonErrorSettings.Click += new System.EventHandler(this.buttonFixCommonErrorSettings_Click);
+            // 
             // groupBoxChangeFrameRate
             // 
             this.groupBoxChangeFrameRate.Controls.Add(this.comboBoxFrameRateTo);
@@ -187,6 +200,16 @@
             this.groupBoxOffsetTimeCodes.TabIndex = 6;
             this.groupBoxOffsetTimeCodes.TabStop = false;
             this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
+            // 
+            // timeUpDownAdjust
+            // 
+            this.timeUpDownAdjust.AutoSize = true;
+            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 33);
+            this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownAdjust.Name = "timeUpDownAdjust";
+            this.timeUpDownAdjust.Size = new System.Drawing.Size(92, 24);
+            this.timeUpDownAdjust.TabIndex = 1;
             // 
             // labelHoursMinSecsMilliSecs
             // 
@@ -429,20 +452,20 @@
             this.removeToolStripMenuItem,
             this.removeAllToolStripMenuItem});
             this.contextMenuStripFiles.Name = "contextMenuStripStyles";
-            this.contextMenuStripFiles.Size = new System.Drawing.Size(133, 48);
+            this.contextMenuStripFiles.Size = new System.Drawing.Size(153, 70);
             this.contextMenuStripFiles.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripFilesOpening);
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.RemoveToolStripMenuItemClick);
             // 
             // removeAllToolStripMenuItem
             // 
             this.removeAllToolStripMenuItem.Name = "removeAllToolStripMenuItem";
-            this.removeAllToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.removeAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.removeAllToolStripMenuItem.Text = "Remove all";
             this.removeAllToolStripMenuItem.Click += new System.EventHandler(this.RemoveAllToolStripMenuItemClick);
             // 
@@ -450,26 +473,24 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // buttonFixCommonErrorSettings
+            // progressBar1
             // 
-            this.buttonFixCommonErrorSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonFixCommonErrorSettings.Location = new System.Drawing.Point(149, 88);
-            this.buttonFixCommonErrorSettings.Name = "buttonFixCommonErrorSettings";
-            this.buttonFixCommonErrorSettings.Size = new System.Drawing.Size(87, 21);
-            this.buttonFixCommonErrorSettings.TabIndex = 4;
-            this.buttonFixCommonErrorSettings.Text = "Settings...";
-            this.buttonFixCommonErrorSettings.UseVisualStyleBackColor = true;
-            this.buttonFixCommonErrorSettings.Click += new System.EventHandler(this.buttonFixCommonErrorSettings_Click);
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar1.Location = new System.Drawing.Point(15, 556);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(833, 10);
+            this.progressBar1.TabIndex = 8;
             // 
-            // timeUpDownAdjust
+            // labelStatus
             // 
-            this.timeUpDownAdjust.AutoSize = true;
-            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 33);
-            this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownAdjust.Name = "timeUpDownAdjust";
-            this.timeUpDownAdjust.Size = new System.Drawing.Size(92, 24);
-            this.timeUpDownAdjust.TabIndex = 1;
+            this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelStatus.AutoSize = true;
+            this.labelStatus.Location = new System.Drawing.Point(12, 540);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(59, 13);
+            this.labelStatus.TabIndex = 9;
+            this.labelStatus.Text = "labelStatus";
             // 
             // BatchConvert
             // 
@@ -477,6 +498,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1048, 580);
+            this.Controls.Add(this.labelStatus);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.groupBoxOutput);
             this.Controls.Add(this.groupBoxInput);
             this.Controls.Add(this.buttonConvert);
@@ -485,7 +508,6 @@
             this.MinimumSize = new System.Drawing.Size(1024, 578);
             this.Name = "BatchConvert";
             this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Batch convert";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BatchConvert_FormClosing);
@@ -500,6 +522,7 @@
             this.groupBoxInput.PerformLayout();
             this.contextMenuStripFiles.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -545,6 +568,8 @@
         private System.Windows.Forms.ToolStripMenuItem removeAllToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBoxFixCommonErrors;
         private System.Windows.Forms.Button buttonFixCommonErrorSettings;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Label labelStatus;
 
     }
 }
