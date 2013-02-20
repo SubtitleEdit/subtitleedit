@@ -106,6 +106,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool BatchConvertFixCasing { get; set; }
         public bool BatchConvertRemoveTextForHI { get; set; }
         public bool BatchConvertFixCommonErrors { get; set; }
+        public bool BatchConvertMultipleReplace { get; set; }        
         public string BatchConvertLanguage { get; set; }
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
@@ -1334,6 +1335,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("BatchConvertFixCommonErrors");
             if (subNode != null)
                 settings.Tools.BatchConvertFixCommonErrors = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("BatchConvertMultipleReplace");
+            if (subNode != null)
+                settings.Tools.BatchConvertMultipleReplace = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("BatchConvertLanguage");
             if (subNode != null)
                 settings.Tools.BatchConvertLanguage = subNode.InnerText;
@@ -2176,6 +2180,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("BatchConvertFixCasing", settings.Tools.BatchConvertFixCasing.ToString());
             textWriter.WriteElementString("BatchConvertRemoveTextForHI", settings.Tools.BatchConvertRemoveTextForHI.ToString());
             textWriter.WriteElementString("BatchConvertFixCommonErrors", settings.Tools.BatchConvertFixCommonErrors.ToString());
+            textWriter.WriteElementString("BatchConvertMultipleReplace", settings.Tools.BatchConvertMultipleReplace.ToString());
             textWriter.WriteElementString("BatchConvertLanguage", settings.Tools.BatchConvertLanguage);
             textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
             textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);

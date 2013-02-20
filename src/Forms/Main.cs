@@ -16601,7 +16601,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemBatchConvert_Click(object sender, EventArgs e)
         {
             this.Visible = false;
-            var form = new BatchConvert();
+            var form = new BatchConvert(this.Icon);
             _formPositionsAndSizes.SetPositionAndSize(form);
             form.ShowDialog(this);
             _formPositionsAndSizes.SavePositionAndSize(form);

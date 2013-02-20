@@ -1,13 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using System.Globalization;
-using System.ComponentModel;
-using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -16,6 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
         public class ThreadDoWorkParameter
         {
             public bool FixCommonErrors { get; set; }
+            public bool MultipleReplaceActive { get; set; }
             public ListViewItem Item { get; set; }
             public Subtitle Subtitle { get; set; }
             public SubtitleFormat Format { get; set; }
@@ -26,9 +26,10 @@ namespace Nikse.SubtitleEdit.Forms
             public string ToFormat { get; set; }
             public SubtitleFormat SourceFormat { get; set; } 
 
-            public ThreadDoWorkParameter(bool fixCommonErrors, ListViewItem item, Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language, string fileName, string toFormat, SubtitleFormat sourceFormat)
+            public ThreadDoWorkParameter(bool fixCommonErrors, bool multipleReplace, ListViewItem item, Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language, string fileName, string toFormat, SubtitleFormat sourceFormat)
             {
                 FixCommonErrors = fixCommonErrors;
+                MultipleReplaceActive = multipleReplace;
                 Item = item;
                 Subtitle = subtitle;
                 Format = format;
@@ -52,9 +53,10 @@ namespace Nikse.SubtitleEdit.Forms
         IList<SubtitleFormat> _allFormats = SubtitleFormat.AllSubtitleFormats;
         bool _abort = false;
 
-        public BatchConvert()
+        public BatchConvert(Icon icon)
         {
             InitializeComponent();
+            this.Icon = (Icon)icon.Clone();
 
             progressBar1.Visible = false;
             labelStatus.Text = string.Empty;
@@ -142,11 +144,15 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxOverwrite.Checked = Configuration.Settings.Tools.BatchConvertOverwrite;
             checkBoxFixCasing.Checked = Configuration.Settings.Tools.BatchConvertFixCasing;
             checkBoxFixCommonErrors.Checked = Configuration.Settings.Tools.BatchConvertFixCommonErrors;
+            checkBoxMultipleReplace.Checked = Configuration.Settings.Tools.BatchConvertMultipleReplace;
             checkBoxRemoveFormatting.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormatting;
             checkBoxRemoveTextForHI.Checked = Configuration.Settings.Tools.BatchConvertRemoveTextForHI;
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.Settings))
                 buttonFixCommonErrorSettings.Text = Configuration.Settings.Language.BatchConvert.Settings;
             checkBoxFixCommonErrors.Text = Configuration.Settings.Language.FixCommonErrors.Title;
+            checkBoxMultipleReplace.Text = Configuration.Settings.Language.MultipleReplace.Title;
+            radioButtonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
+            radioButtonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
         }
 
         private void FixLargeFonts()
@@ -215,7 +221,6 @@ namespace Nikse.SubtitleEdit.Forms
                         var ebu = new Ebu();
                         if (ebu.IsMine(null, fileName))
                         {
-                            //     ebu.LoadSubtitle(sub, null, fileName);
                             format = ebu;
                         }
                     }
@@ -224,7 +229,6 @@ namespace Nikse.SubtitleEdit.Forms
                         var pac = new Pac();
                         if (pac.IsMine(null, fileName))
                         {
-                            //     pac.LoadSubtitle(sub, null, fileName);
                             format = pac;
                         }
                     }
@@ -233,7 +237,6 @@ namespace Nikse.SubtitleEdit.Forms
                         var cavena890 = new Cavena890();
                         if (cavena890.IsMine(null, fileName))
                         {
-                            //   cavena890.LoadSubtitle(sub, null, fileName);
                             format = cavena890;
                         }
                     }
@@ -242,7 +245,6 @@ namespace Nikse.SubtitleEdit.Forms
                         var spt = new Spt();
                         if (spt.IsMine(null, fileName))
                         {
-                            // spt.LoadSubtitle(sub, null, fileName);
                             format = spt;
                         }
                     }
@@ -251,7 +253,6 @@ namespace Nikse.SubtitleEdit.Forms
                         var cheetahCaption = new CheetahCaption();
                         if (cheetahCaption.IsMine(null, fileName))
                         {
-                            //       cheetahCaption.LoadSubtitle(_subtitle, null, fileName);
                             format = cheetahCaption;
                         }
                     }
@@ -260,7 +261,6 @@ namespace Nikse.SubtitleEdit.Forms
                         var capMakerPlus = new CapMakerPlus();
                         if (capMakerPlus.IsMine(null, fileName))
                         {
-                            //      capMakerPlus.LoadSubtitle(_subtitle, null, fileName);
                             format = capMakerPlus;
                         }
                     }
@@ -269,7 +269,6 @@ namespace Nikse.SubtitleEdit.Forms
                         var captionate = new Captionate();
                         if (captionate.IsMine(null, fileName))
                         {
-                            //           captionate.LoadSubtitle(_subtitle, null, fileName);
                             format = captionate;
                         }
                     }
@@ -278,7 +277,6 @@ namespace Nikse.SubtitleEdit.Forms
                         var ultech130 = new Ultech130();
                         if (ultech130.IsMine(null, fileName))
                         {
-                            //                ultech130.LoadSubtitle(_subtitle, null, fileName);
                             format = ultech130;
                         }
                     }
@@ -287,7 +285,6 @@ namespace Nikse.SubtitleEdit.Forms
                         var nciCaption = new NciCaption();
                         if (nciCaption.IsMine(null, fileName))
                         {
-                            //                 nciCaption.LoadSubtitle(_subtitle, null, fileName);
                             format = nciCaption;
                         }
                     }
@@ -297,7 +294,6 @@ namespace Nikse.SubtitleEdit.Forms
                         var avidStl = new AvidStl();
                         if (avidStl.IsMine(null, fileName))
                         {
-                            //        avidStl.LoadSubtitle(_subtitle, null, fileName);
                             format = avidStl;
                         }
                     }
@@ -306,7 +302,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
-                    item.SubItems.Add(Configuration.Settings.Language.UnknownSubtitle.Title);
+                    if (Main.IsBluRaySupFile(fileName))
+                        item.SubItems.Add("Blu-ray");
+                    else if (Main.HasVobSubHeader(fileName))
+                        item.SubItems.Add("VobSub");
+                    else
+                        item.SubItems.Add(Configuration.Settings.Language.UnknownSubtitle.Title);
                 }
                 else
                 {
@@ -425,8 +426,11 @@ namespace Nikse.SubtitleEdit.Forms
             worker3.DoWork += new DoWorkEventHandler(DoThreadWork);
             worker3.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ThreadWorkerCompleted);
 
+            listViewInputFiles.BeginUpdate();
             foreach (ListViewItem item in listViewInputFiles.Items)
                 item.SubItems[3].Text = "-";
+            listViewInputFiles.EndUpdate();
+            Refresh();
 
             int index = 0;
             while (index < listViewInputFiles.Items.Count && _abort == false)
@@ -588,7 +592,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (timeUpDownAdjust.TimeCode.Milliseconds > 0.00001)
                         {
-                            sub.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(timeUpDownAdjust.TimeCode.TotalMilliseconds));
+                            var totalMilliseconds = timeUpDownAdjust.TimeCode.Milliseconds;
+                            if (radioButtonShowEarlier.Checked)
+                                totalMilliseconds *= -1;
+                            sub.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(totalMilliseconds));
                         }
 
                         while (worker1.IsBusy && worker2.IsBusy && worker3.IsBusy)
@@ -597,7 +604,7 @@ namespace Nikse.SubtitleEdit.Forms
                             System.Threading.Thread.Sleep(100);
                         }
 
-                        ThreadDoWorkParameter parameter = new ThreadDoWorkParameter(checkBoxFixCommonErrors.Checked, item, sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage, fileName, toFormat, format);
+                        ThreadDoWorkParameter parameter = new ThreadDoWorkParameter(checkBoxFixCommonErrors.Checked, checkBoxMultipleReplace.Checked, item, sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage, fileName, toFormat, format);
                         if (!worker1.IsBusy)
                             worker1.RunWorkerAsync(parameter);
                         else if (!worker2.IsBusy)
@@ -628,7 +635,6 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxOutput.Enabled = true;
             groupBoxConvertOptions.Enabled = true;
             buttonInputBrowse.Enabled = true;
-            checkBoxFixCommonErrors_CheckedChanged(null, null);
         }
 
         void DoThreadWork(object sender, DoWorkEventArgs e)
@@ -645,6 +651,19 @@ namespace Nikse.SubtitleEdit.Forms
                 catch (Exception exception)
                 {
                     p.Error = "FCE ERROR: " + exception.Message;
+                }
+            }
+            if (p.MultipleReplaceActive)
+            {
+                try
+                {
+                    var form = new MultipleReplace();
+                    form.Initialize(p.Subtitle);
+                    p.Subtitle = form.FixedSubtitle;
+                }
+                catch (Exception exception)
+                {
+                    p.Error = "MultipleReplace error: " + exception.Message;
                 }
             }
             e.Result = p;
@@ -782,9 +801,11 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertRemoveTextForHI = checkBoxRemoveTextForHI.Checked;
         }
 
-        private void checkBoxFixCommonErrors_CheckedChanged(object sender, EventArgs e)
+        private void buttonMultipleReplaceSettings_Click(object sender, EventArgs e)
         {
-            buttonFixCommonErrorSettings.Enabled = checkBoxFixCommonErrors.Checked;
+            var form = new MultipleReplace();
+            form.Initialize(new Subtitle());
+            form.ShowDialog(this);
         }
 
     }
