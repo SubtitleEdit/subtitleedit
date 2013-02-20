@@ -4325,7 +4325,8 @@ namespace Nikse.SubtitleEdit.Forms
             ce.FixDialogsOnOneLineTicked = listView1.Items[IndexDialogsOnOneLine].Checked;
             if (_danishLetterIIndex > -1)
                 ce.DanishLetterITicked = listView1.Items[_danishLetterIIndex].Checked;
-
+            if (_turkishAnsiIndex > -1)
+                ce.TurkishAnsiTicked = listView1.Items[_turkishAnsiIndex].Checked;
             if (_spanishInvertedQuestionAndExclamationMarksIndex > -1)
                 ce.SpanishInvertedQuestionAndExclamationMarksTicked = listView1.Items[_spanishInvertedQuestionAndExclamationMarksIndex].Checked;
 
