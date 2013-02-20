@@ -7019,7 +7019,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
             {
                 int seconds = (int)numericUpDownDuration.Value;
-                int frames = (int)(Convert.ToDouble(numericUpDownDuration.Value) % 1.0 * 100.0);
+                int frames = (int)Math.Round((Convert.ToDouble(numericUpDownDuration.Value) % 1.0 * 100.0));
                 return seconds * 1000.0 + frames * (1000.0 / Configuration.Settings.General.CurrentFrameRate);
             }
             return ((double)numericUpDownDuration.Value * 1000.0);
@@ -7058,13 +7058,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                     {
-                        int frames = (int)(Convert.ToDouble(numericUpDownDuration.Value) % 1.0 * 100.0);
+                        int frames = (int)Math.Round((Convert.ToDouble(numericUpDownDuration.Value) % 1.0 * 100.0));
                         if (frames > Configuration.Settings.General.CurrentFrameRate-1)
                         {
                             int seconds = (int)numericUpDownDuration.Value;
                             numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
-                            int extraSeconds = (int)(frames / (Configuration.Settings.General.CurrentFrameRate-1));
-                            int restFrames = (int)(frames % (Configuration.Settings.General.CurrentFrameRate-1));
+                            int extraSeconds = (int)Math.Round((frames / (Configuration.Settings.General.CurrentFrameRate-1)));
+                            int restFrames = (int)Math.Round((frames % (Configuration.Settings.General.CurrentFrameRate-1)));
                             if (frames == 99)
                                 numericUpDownDuration.Value = (decimal)(seconds + (((int)(Configuration.Settings.General.CurrentFrameRate - 1)) / 100.0));
                             else
