@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.BluRaySup;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -439,7 +440,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string fileName = item.Text;
                 string friendlyName = item.SubItems[1].Text;
 
-                try
+              //  try
                 {
                     SubtitleFormat format = null;
                     Encoding encoding;
@@ -543,7 +544,21 @@ namespace Nikse.SubtitleEdit.Forms
 
                     }
 
-                    if (format == null)
+                    List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> bluRaySubtitles = new List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData>();
+                    bool isVobSub = false;
+                    if (format == null && fileName.ToLower().EndsWith(".sup") && Main.IsBluRaySupFile(fileName))
+                    {
+                        var log = new StringBuilder();
+                        bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
+                    }
+                    else if (format == null && fileName.ToLower().EndsWith(".sub") && Main.HasVobSubHeader(fileName))
+                    {
+                        isVobSub = true;
+                    }
+
+
+
+                    if (format == null && bluRaySubtitles.Count == 0 && !isVobSub)
                     {
                         if (progressBar1.Value < progressBar1.Maximum)
                             progressBar1.Value++;
@@ -551,6 +566,22 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
+                        if (bluRaySubtitles.Count > 0)
+                        {
+                            item.SubItems[3].Text = "OCR...";
+                            var vobSubOcr = new VobSubOcr();
+                            vobSubOcr.FileName = Path.GetFileName(fileName);
+                            vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName);
+                            sub = vobSubOcr.SubtitleFromOcr;
+                        }
+                        else if (isVobSub)
+                        {
+                            item.SubItems[3].Text = "OCR...";
+                            var vobSubOcr = new VobSubOcr();
+                            vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, true);
+                            sub = vobSubOcr.SubtitleFromOcr;
+                        }
+
                         if (comboBoxSubtitleFormats.Text == new AdvancedSubStationAlpha().Name && _assStyle != null)
                         {
                             sub.Header = _assStyle;
@@ -614,17 +645,23 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     
                 }
-                catch
-                {
-                    if (progressBar1.Value < progressBar1.Maximum)
-                        progressBar1.Value++;
-                    labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
-                }
+                //catch
+                //{
+                //    if (progressBar1.Value < progressBar1.Maximum)
+                //        progressBar1.Value++;
+                //    labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
+                //}
                 index++;
             }
             while (worker1.IsBusy || worker2.IsBusy || worker3.IsBusy)
             {
-                Application.DoEvents();
+                try
+                {
+                    Application.DoEvents();
+                }
+                catch
+                { 
+                }
                 System.Threading.Thread.Sleep(100);
             }
             _converting = false;
@@ -674,10 +711,13 @@ namespace Nikse.SubtitleEdit.Forms
             ThreadDoWorkParameter p = (ThreadDoWorkParameter)e.Result;
             if (!string.IsNullOrEmpty(p.Error))
             {
-                p.Item.SubItems[3].Text = p.Error;  
+                p.Item.SubItems[3].Text = p.Error;
             }
             else
             {
+                if (p.SourceFormat == null)
+                    p.SourceFormat = new SubRip();
+
                 bool success = Main.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), textBoxOutputFolder.Text, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, checkBoxOverwrite.Checked);
                 if (success)
                 {
@@ -687,12 +727,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     p.Item.SubItems[3].Text = "ERROR";
                 }
+                if (progressBar1.Value < progressBar1.Maximum)
+                    progressBar1.Value++;
+                labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
+                if (progressBar1.Value == progressBar1.Maximum)
+                    labelStatus.Text = string.Empty;                
             }
-            if (progressBar1.Value < progressBar1.Maximum)
-                progressBar1.Value++;
-            labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
-            if (progressBar1.Value == progressBar1.Maximum)
-                labelStatus.Text = string.Empty;
         }
 
         private void ComboBoxSubtitleFormatsSelectedIndexChanged(object sender, EventArgs e)

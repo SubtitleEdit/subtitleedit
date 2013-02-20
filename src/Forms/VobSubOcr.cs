@@ -312,6 +312,86 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool useNewSubIdxCode)
+        {
+            Initialize(vobSubFileName, vobSubOcrSettings, useNewSubIdxCode);
+            FormVobSubOcr_Shown(null, null);
+
+            int max = GetSubtitleCount();
+            if (comboBoxOcrMethod.SelectedIndex == 0 && _tesseractAsyncStrings == null)
+            {
+                _tesseractAsyncStrings = new string[max];
+                _tesseractAsyncIndex = (int)numericUpDownStartNumber.Value + 5;
+                _tesseractThread = new BackgroundWorker();
+                _tesseractThread.DoWork += TesseractThreadDoWork;
+                _tesseractThread.RunWorkerCompleted += TesseractThreadRunWorkerCompleted;
+                _tesseractThread.WorkerSupportsCancellation = true;
+                if (_tesseractAsyncIndex >= 0 && _tesseractAsyncIndex < max)
+                    _tesseractThread.RunWorkerAsync(GetSubtitleBitmap(_tesseractAsyncIndex));
+            }
+            System.Threading.Thread.Sleep(1000);
+            subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
+            for (int i = 0; i < max; i++)
+            {
+                var startTime = new TimeCode(TimeSpan.FromMilliseconds(GetSubtitleStartTimeMilliseconds(i)));
+                var endTime = new TimeCode(TimeSpan.FromMilliseconds(GetSubtitleEndTimeMilliseconds(i)));
+                Application.DoEvents();
+                if (_abort)
+                {
+                    SetButtonsEnabledAfterOcrDone();
+                    return;
+                }
+
+                subtitleListView1.SelectIndexAndEnsureVisible(i);
+                string text = OcrViaTesseract(GetSubtitleBitmap(i), i);
+
+                _lastLine = text;
+
+                text = text.Replace("<i>-</i>", "-");
+                text = text.Replace("<i>a</i>", "a");
+                text = text.Replace("  ", " ");
+                text = text.Trim();
+
+                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+
+                // max allow 2 lines
+                if (checkBoxAutoBreakLines.Checked && text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+                {
+                    text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+                    text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                    while (text.Contains(Environment.NewLine + Environment.NewLine))
+                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+
+                    if (text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+                        text = Utilities.AutoBreakLine(text);
+                }
+
+                Application.DoEvents();
+                if (_abort)
+                {
+                    textBoxCurrentText.Text = text;
+                    SetButtonsEnabledAfterOcrDone();
+                    return;
+                }
+
+                text = text.Trim();
+                text = text.Replace("  ", " ");
+                text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                text = text.Replace("  ", " ");
+                text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+
+                Paragraph p = _subtitle.GetParagraphOrDefault(i);
+                if (p != null)
+                    p.Text = text;
+                if (subtitleListView1.SelectedItems.Count == 1 && subtitleListView1.SelectedItems[0].Index == i)
+                    textBoxCurrentText.Text = text;
+                else
+                    subtitleListView1.SetText(i, text);
+            }
+            SetButtonsEnabledAfterOcrDone();
+        }
+
         internal bool Initialize(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool useNewSubIdxCode)
         {
             _useNewSubIdxCode = useNewSubIdxCode;
@@ -399,6 +479,87 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_palette == null)
                 checkBoxCustomFourColors.Checked = true;
+        }
+
+        internal void InitializeBatch(List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
+        {
+            Initialize(subtitles, vobSubOcrSettings, fileName);
+            FormVobSubOcr_Shown(null, null);
+            checkBoxPromptForUnknownWords.Checked = false;
+
+            int max = GetSubtitleCount();
+            if (comboBoxOcrMethod.SelectedIndex == 0 && _tesseractAsyncStrings == null)
+            {
+                _tesseractAsyncStrings = new string[max];
+                _tesseractAsyncIndex = (int)numericUpDownStartNumber.Value + 5;
+                _tesseractThread = new BackgroundWorker();
+                _tesseractThread.DoWork += TesseractThreadDoWork;
+                _tesseractThread.RunWorkerCompleted += TesseractThreadRunWorkerCompleted;
+                _tesseractThread.WorkerSupportsCancellation = true;
+                if (_tesseractAsyncIndex >= 0 && _tesseractAsyncIndex < max)
+                    _tesseractThread.RunWorkerAsync(GetSubtitleBitmap(_tesseractAsyncIndex));
+            }
+            System.Threading.Thread.Sleep(1000);
+            subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
+            for (int i = 0; i < max; i++)
+            {
+                var startTime = new TimeCode(TimeSpan.FromMilliseconds(GetSubtitleStartTimeMilliseconds(i)));
+                var endTime = new TimeCode(TimeSpan.FromMilliseconds(GetSubtitleEndTimeMilliseconds(i)));
+                Application.DoEvents();
+                if (_abort)
+                {
+                    SetButtonsEnabledAfterOcrDone();
+                    return;
+                }
+
+                subtitleListView1.SelectIndexAndEnsureVisible(i);
+                string text = OcrViaTesseract(GetSubtitleBitmap(i), i);
+
+                _lastLine = text;
+
+                text = text.Replace("<i>-</i>", "-");
+                text = text.Replace("<i>a</i>", "a");
+                text = text.Replace("  ", " ");
+                text = text.Trim();
+
+                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+
+                // max allow 2 lines
+                if (checkBoxAutoBreakLines.Checked && text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+                {
+                    text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+                    text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                    while (text.Contains(Environment.NewLine + Environment.NewLine))
+                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+
+                    if (text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+                        text = Utilities.AutoBreakLine(text);
+                }
+
+                Application.DoEvents();
+                if (_abort)
+                {
+                    textBoxCurrentText.Text = text;
+                    SetButtonsEnabledAfterOcrDone();
+                    return;
+                }
+
+                text = text.Trim();
+                text = text.Replace("  ", " ");
+                text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                text = text.Replace("  ", " ");
+                text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+
+                Paragraph p = _subtitle.GetParagraphOrDefault(i);
+                if (p != null)
+                    p.Text = text;
+                if (subtitleListView1.SelectedItems.Count == 1 && subtitleListView1.SelectedItems[0].Index == i)
+                    textBoxCurrentText.Text = text;
+                else
+                    subtitleListView1.SetText(i, text);
+            }
+            SetButtonsEnabledAfterOcrDone();
         }
 
         internal void Initialize(List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
