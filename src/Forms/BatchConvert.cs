@@ -440,7 +440,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string fileName = item.Text;
                 string friendlyName = item.SubItems[1].Text;
 
-              //  try
+                try
                 {
                     SubtitleFormat format = null;
                     Encoding encoding;
@@ -645,12 +645,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     
                 }
-                //catch
-                //{
-                //    if (progressBar1.Value < progressBar1.Maximum)
-                //        progressBar1.Value++;
-                //    labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
-                //}
+                catch
+                {
+                    if (progressBar1.Value < progressBar1.Maximum)
+                        progressBar1.Value++;
+                    labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
+                }
                 index++;
             }
             while (worker1.IsBusy || worker2.IsBusy || worker3.IsBusy)
