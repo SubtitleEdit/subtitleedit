@@ -4,10 +4,10 @@
     <Title>Subtitle Edit</Title>
     <Version>3.3.2</Version>
     <TranslatedBy> ------------------------------------------------------------------------------------------------
-Traduzido sem o novo Acordo Ortográfico para Português de Portugal, por Marco Barbosa
+Traduzido sem o novo Acordo Ortográfico para Português de Portugal, por moob
 Email: mailto:moob@live.com.pt</TranslatedBy>
     <CultureName>pt-PT</CultureName>
-    <HelpFile>Ajuda</HelpFile>
+    <HelpFile></HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
@@ -145,8 +145,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OverwriteExistingFiles>Substituir os ficheiros existentes</OverwriteExistingFiles>
     <Style>Estilo...</Style>
     <ConvertOptions>Opções de conversão</ConvertOptions>
-    <AutoBreakLongLines>Quebra de linha automática linhas longas</AutoBreakLongLines>
-    <FixItalics>Corrigir itálicos</FixItalics>
     <RemoveFormatting>Remover etiquetas de formatação</RemoveFormatting>
     <RemoveTextForHI>Eliminar texto para Surdos</RemoveTextForHI>
     <ReDoCasing>Refazer maiúsculas/minúsculas</ReDoCasing>
@@ -154,7 +152,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NothingToConvert>Nada para converter!</NothingToConvert>
     <PleaseChooseOutputFolder>Por favor, seleccione a pasta de saída</PleaseChooseOutputFolder>
     <Converted>Convertido</Converted>
-    <ConvertedX>Convertido ({0})</ConvertedX>	
+    <ConvertedX>Convertido ({0})</ConvertedX>
+    <Settings>Configurações</Settings>
   </BatchConvert>
   <Beamer>
     <Title>Vídeo projector</Title>
@@ -198,6 +197,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Escolha o idioma</Title>
     <Language>Idioma</Language>
   </ChooseLanguage>
+    <ColumnPaste>
+    <Title>Colar coluna</Title>
+    <ChooseColumn>Escolher coluna</ChooseColumn>
+    <OverwriteShiftCellsDown>Substituir/Deslocar células para baixo</OverwriteShiftCellsDown>
+    <Overwrite>Substituir</Overwrite>
+    <ShiftCellsDown>Deslocar células para baixo</ShiftCellsDown>
+    <TimeCodesOnly>Só códigos de tempo</TimeCodesOnly>
+    <TextOnly>Só texto</TextOnly>
+    <OriginalTextOnly>Só texto original</OriginalTextOnly>
+  </ColumnPaste>
   <CompareSubtitles>
     <Title>Comparar legendas</Title>
     <PreviousDifference>&amp;Diferença anterior</PreviousDifference>
@@ -455,7 +464,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XUppercaseIsFoundInsideLowercaseWords>{0} maiúsculas 'i's encontradas palavras minúsculas</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Actualizar correcções disponíveis</RefreshFixes>
     <ApplyFixes>Aplicar correcções seleccionadas</ApplyFixes>
-    <AutoBreak>Auto &amp;br</AutoBreak>
+    <AutoBreak>Quebra linha &amp;auto</AutoBreak>
     <Unbreak>&amp;Combinar</Unbreak>
     <FixDoubleDash>Corrigir '--' -&gt; '...' </FixDoubleDash>
     <FixDoubleGreaterThan>Remover &gt;&gt; </FixDoubleGreaterThan>
@@ -604,6 +613,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RightToLeftMode>Modo Direita-para-esquerda</RightToLeftMode>
         <ReverseRightToLeftStartEnd>Reverter RTL inicio/fim (para linhas seleccionadas)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Mostrar o texto original na pré-visualização de áudio/vídeo</ShowOriginalTextInAudioAndVideoPreview>
+        <ModifySelection>Modificar a selecção...</ModifySelection>
+        <InverseSelection>Inverter a selecção</InverseSelection>		
       </Edit>
       <Tools>
         <Title>Ferramentas</Title>
@@ -616,6 +627,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeFrameRate>Alterar taxa de frames...</ChangeFrameRate>
         <ChangeSpeedInPercent>Alterar a velocidade (percentagem)...</ChangeSpeedInPercent>
         <MergeShortLines>Combinar linhas curtas...</MergeShortLines>
+		<MergeDuplicateText>Combinar linhas com o mesmo texto...</MergeDuplicateText>
         <SplitLongLines>Dividir linhas longas...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Duração mínima entre parágrafos...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>
@@ -649,6 +661,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SpellCheck>
         <Title>Ortografia</Title>
         <SpellCheck>&amp;Verificar ortografia...</SpellCheck>
+        <SpellCheckFromCurrentLine>Verificar ortografia desde da linha corrente...</SpellCheckFromCurrentLine>		
         <FindDoubleWords>Localizar palavras duplicadas</FindDoubleWords>
         <FindDoubleLines>Localizar linhas duplas</FindDoubleLines>
         <GetDictionaries>Obter dicionários...</GetDictionaries>
@@ -726,6 +739,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 		<ColumnInsertTextFromSubtitle>Inserir texto através da legenda...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Importar texto e deslocar células para baixo</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Colar da área de transferência...</ColumnPasteFromClipboard>
+        <ColumnCopyOriginalTextToCurrent>Copiar texto do original para o actual</ColumnCopyOriginalTextToCurrent>		
         <Split>Dividir</Split>
         <MergeSelectedLines>Combinar linhas seleccionadas</MergeSelectedLines>
         <MergeSelectedLinesASDialogue>Combinar linhas seleccionadas como dialogo</MergeSelectedLinesASDialogue>
@@ -748,6 +762,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FixCommonErrorsInSelectedLines>Corrigir erros comuns nas linhas seleccionadas...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Alterar maiúsculas das linhas seleccionadas...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Guardar linhas seleccionadas como...</SaveSelectedLines>
+        <WebVTTSetNewVoice>Definir nova voz...</WebVTTSetNewVoice>
+        <WebVTTRemoveVoices>Remover vozes</WebVTTRemoveVoices>		
       </ContextMenu>
     </Menu>
     <Controls>
@@ -881,7 +897,7 @@ Gostaria de começar do início do documento a localizar e substituir?</ReplaceX
     <BeforeRemovalOfTextingForHearingImpaired>Antes de eliminar as mensagens de texto para surdos</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Eliminadas as mensagens de texto para surdos : Uma linha</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Eliminadas as mensagens de texto para surdos : {0} linhas</TextingForHearingImpairedRemovedXLines>
-    <SubtitleSplitted>Legenda dividida</SubtitleSplitted>
+    <SubtitleSplitted>Legenda foi dividida</SubtitleSplitted>
     <SubtitleAppendPrompt>Isto irá acrescentar uma legenda existente à legenda já carregada que deve
 já estar em sincronia com o vídeo.
 
@@ -933,7 +949,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <BeforeLineUpdatedInListView>Antes de actualizar linha na lista</BeforeLineUpdatedInListView>
     <BeforeSettingFontToNormal>Antes de definir o tipo de letra para normal</BeforeSettingFontToNormal>
     <BeforeSplitLine>Antes de dividir a linha</BeforeSplitLine>
-    <LineSplitted>Linha dividida</LineSplitted>
+    <LineSplitted>Linha foi dividida</LineSplitted>
     <BeforeMergeLines>Antes de combinar linhas</BeforeMergeLines>
     <LinesMerged>Linhas combinadas</LinesMerged>
     <BeforeSettingColor>Antes de definir a cor</BeforeSettingColor>
@@ -965,6 +981,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <VobSubFiles>Ficheiros de legenda VobSub</VobSubFiles>
     <OpenBluRaySupFile>Abrir ficheiro (.sup) de Blu-ray...</OpenBluRaySupFile>
     <BluRaySupFiles>Ficheiros Blu-ray (.sup)</BluRaySupFiles>
+    <OpenXSubFiles>Abrir Ficheiros xsub...</OpenXSubFiles>
+    <XSubFiles>Ficheiros xsub</XSubFiles>
     <BeforeImportingVobSubFile>Antes de importar legenda VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Antes de importar ficheiro (.sup) de Blu-ray</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Antes de importar ficheiro BDN xml</BeforeImportingBdnXml>
@@ -1052,6 +1070,9 @@ Deseja continuar?</SubtitleAppendPrompt>
     <PleaseChoose>Encontrada mais do que uma legenda - por favor, escolha uma</PleaseChoose>
     <TrackXLanguageYTypeZ>Faixa {0} - {1} - idioma: {2} - tipo: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MergeDoubleLines>
+    <Title>Combinar linhas com o mesmo texto</Title>
+  </MergeDoubleLines>  
   <MergedShortLines>
     <Title>Combinar linhas curtas</Title>
     <MaximumCharacters>Máximo de caracteres num parágrafo</MaximumCharacters>
@@ -1060,6 +1081,17 @@ Deseja continuar?</SubtitleAppendPrompt>
     <MergedText>Texto combinado</MergedText>
     <OnlyMergeContinuationLines>Só combinar linhas continuadas</OnlyMergeContinuationLines>
   </MergedShortLines>
+    <ModifySelection>
+    <Title>Modificar a selecção</Title>
+    <Rule>Regra</Rule>
+    <CaseSensitive>Maiúsculas/Minúsculas</CaseSensitive>
+    <DoWithMatches>O que fazer com as correspondências</DoWithMatches>
+    <MakeNewSelection>Fazer nova selecção</MakeNewSelection>
+    <AddToCurrentSelection>Adicionar à selecção corrente</AddToCurrentSelection>
+    <SubtractFromCurrentSelection>Extrair da selecção corrente</SubtractFromCurrentSelection>
+    <IntersectWithCurrentSelection>Intersectar com a corrente selecção</IntersectWithCurrentSelection>
+    <MatchingLinesX>Linhas com correspondência: {0}</MatchingLinesX>
+  </ModifySelection>
   <MultipleReplace>
     <Title>Múltipla substituição</Title>
     <FindWhat>Localizar</FindWhat>
@@ -1252,8 +1284,6 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ShowStopButton>Mostrar botão parar</ShowStopButton>
     <ShowMuteButton>Mostrar botão (Sem som)</ShowMuteButton>
     <ShowFullscreenButton>Mostrar botão (Ecrã inteiro)</ShowFullscreenButton>
-    <DefaultVolume>Volume padrão</DefaultVolume>
-    <VolumeNotes>0 sem som, 100 volume máximo</VolumeNotes>
     <PreviewFontSize>Tamanho da letra da legenda na pré-visualização</PreviewFontSize>
     <MainWindowVideoControls>Controlos de vídeo na janela principal</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Procura de texto e URL personalizada</CustomSearchTextAndUrl>
@@ -1708,4 +1738,8 @@ Manter as alterações?</KeepChangesMessage>
     <SplitLongLinesAt2>milissegundos</SplitLongLinesAt2>
     <Other>Outro</Other>
   </WaveFormGenerateTimeCodes>
+  <WebVttNewVoice>
+    <Title>WebVTT - definir nova voz</Title>
+    <VoiceName>Nome da voz</VoiceName>
+  </WebVttNewVoice>   
 </Language>

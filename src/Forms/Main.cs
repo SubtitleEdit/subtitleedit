@@ -1791,6 +1791,7 @@ namespace Nikse.SubtitleEdit.Forms
             ReloadFromSourceView();
             var about = new About();
             _formPositionsAndSizes.SetPositionAndSize(about);
+            about.Initialize();
             about.ShowDialog(this);
             _formPositionsAndSizes.SavePositionAndSize(about);
         }
