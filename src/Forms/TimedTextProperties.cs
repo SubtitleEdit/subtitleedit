@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+using System.Globalization;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
-using System.Globalization;
+using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -40,7 +35,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch
             {
-                _xml.LoadXml(new TimedText10().ToText(new Subtitle(), "tt")); // load default xml
+                subtitle.Header = new TimedText10().ToText(new Subtitle(), "tt");
+                _xml.LoadXml(subtitle.Header); // load default xml
             }
             _nsmgr = new XmlNamespaceManager(_xml.NameTable);
             _nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
@@ -239,8 +235,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (node != null && node.Attributes["style"] != null)
             {
                 node.Attributes["style"].Value = comboBoxDefaultStyle.Text;
-                if (attr.Value.Length == 0)
-                    _xml.DocumentElement.Attributes.Remove(attr);
             }
             else if (comboBoxDefaultStyle.Text.Length > 0 && node != null)
             {
@@ -253,8 +247,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (node != null && node.Attributes["region"] != null)
             {
                 node.Attributes["region"].Value = comboBoxDefaultRegion.Text;
-                if (attr.Value.Length == 0)
-                    _xml.DocumentElement.Attributes.Remove(attr);
             }
             else if (comboBoxDefaultRegion.Text.Length > 0 && node != null)
             {

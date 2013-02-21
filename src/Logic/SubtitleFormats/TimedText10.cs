@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.Globalization;
 
 //http://www.w3.org/TR/ttaf1-dfxp/
 //Timed Text Markup Language (TTML) 1.0
@@ -57,6 +58,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         internal static string ConvertToTimeString(TimeCode time)
         {
+            if (string.IsNullOrEmpty(Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat))
+                return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            else if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower() == "seconds")
+                return string.Format(CultureInfo.InvariantCulture, "{0:0.0#}s", time.TotalSeconds);
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
@@ -253,7 +258,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             int endIndex = line.Substring(i + 1).IndexOf(">");
                             if (endIndex > 0)
                             {
-                                skipCount = endIndex +1;
+                                skipCount = endIndex + 1;
                                 string fontContent = line.Substring(i, skipCount);
                                 if (fontContent.Contains(" color="))
                                 {
@@ -572,16 +577,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var list = new List<string>();
             var xml = new XmlDocument();
-            xml.LoadXml(xmlAsString);
-            var nsmgr = new XmlNamespaceManager(xml.NameTable);
-            nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-            XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
-            foreach (XmlNode node in head.SelectNodes("//ttml:region", nsmgr))
+            try
             {
-                if (node.Attributes["xml:id"] != null)
-                    list.Add(node.Attributes["xml:id"].Value);
-                else if (node.Attributes["id"] != null)
-                    list.Add(node.Attributes["id"].Value);
+                xml.LoadXml(xmlAsString);
+                var nsmgr = new XmlNamespaceManager(xml.NameTable);
+                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
+                foreach (XmlNode node in head.SelectNodes("//ttml:region", nsmgr))
+                {
+                    if (node.Attributes["xml:id"] != null)
+                        list.Add(node.Attributes["xml:id"].Value);
+                    else if (node.Attributes["id"] != null)
+                        list.Add(node.Attributes["id"].Value);
+                }
+            }
+            catch
+            {
             }
             return list;
         }
