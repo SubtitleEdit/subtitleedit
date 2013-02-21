@@ -16,6 +16,7 @@
    * Remembers size of controls in main window better - thx George/Leszek
    * Format Sami: html-decodes text + reads class attributes better
    * Batch convert can now also "Fix common errors" and more - thx Adem
+   * Volume level is now remembered (no longer in settings) - thx fox
 * FIXED:
    * VobSub files created by SE now have better compatibility - thx George
    * Possible crash+bug in 'Fix common errors' on selected lines - thx Dan

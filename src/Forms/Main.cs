@@ -4234,7 +4234,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixToolStripMenuItemClick(object sender, EventArgs e)
         {
-            FixCommonErrors(false);
+            if (_networkSession == null)
+                FixCommonErrors(false);
         }
 
         private void FixCommonErrors(bool onlySelectedLines)
@@ -4244,8 +4245,6 @@ namespace Nikse.SubtitleEdit.Forms
                 ReloadFromSourceView();
                 SaveSubtitleListviewIndexes();
                 var fixErrors = new FixCommonErrors();
-                //_formPositionsAndSizes.SetPositionAndSize(fixErrors);
-
                 if (onlySelectedLines)
                 {
                     var selectedLines = new Subtitle { WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers };
@@ -4268,6 +4267,7 @@ namespace Nikse.SubtitleEdit.Forms
                         List<int> deletes = new List<int>();
                         if (_networkSession != null)
                         {
+                            _networkSession.TimerStop();
                             foreach (int index in SubtitleListview1.SelectedIndices)
                             {
                                 var pOld = _subtitle.Paragraphs[index];
@@ -4283,18 +4283,10 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                                 i++;
                             }
-                            NetworkGetSendUpdates(new List<int>(), 0, null);
-                            deletes.Reverse();
-                            foreach (int index in deletes)
-                            {
-                                _subtitle.Paragraphs.RemoveAt(index);
-                            }
-                            deletes.Reverse();
                             NetworkGetSendUpdates(deletes, 0, null);
                         }
                         else
                         {
-
                             foreach (int index in SubtitleListview1.SelectedIndices)
                             {
                                 var pOld = _subtitle.Paragraphs[index];
@@ -4328,7 +4320,6 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     RestoreSubtitleListviewIndexes();
-                    //_formPositionsAndSizes.SavePositionAndSize(fixErrors);
                 }
                 Configuration.Settings.CommonErrors.StartSize = fixErrors.Width + ";" + fixErrors.Height;
                 Configuration.Settings.CommonErrors.StartPosition = fixErrors.Left + ";" + fixErrors.Top;
