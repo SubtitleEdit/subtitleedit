@@ -66,8 +66,8 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour
 Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
-            const string paragraphWriteFormat = "Dialogue: Marked=0,{0},{1},{3},NTP,0000,0000,0000,!Effect,{2}";
-            const string commentWriteFormat = "Comment: Marked=0,{0},{1},{3},NTP,0000,0000,0000,!Effect,{2}";
+            const string paragraphWriteFormat = "Dialogue: Marked={4},{0},{1},{3},{5},0000,0000,0000,{6},{2}";
+            const string commentWriteFormat = "Comment: Marked={4},{0},{1},{3},{5},0000,0000,0000,{6},{2}";
 
             var sb = new StringBuilder();
             System.Drawing.Color fontColor = System.Drawing.Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
@@ -100,12 +100,24 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 string start = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
                 string end = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
                 string style = "Default";
+                string actor = "NTP";
+                if (!string.IsNullOrEmpty(p.Actor))
+                    actor = p.Actor;
+                string effect = "!Effect";
+                if (!string.IsNullOrEmpty(p.Effect))
+                    effect = p.Effect;
+                string layer = "0";
+                if (!string.IsNullOrEmpty(p.Layer))
+                {
+                    if (Utilities.IsInteger(p.Layer))
+                        layer = p.Layer;
+                }
                 if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
                     style = p.Extra;
                 if (p.IsComment)
-                    sb.AppendLine(string.Format(commentWriteFormat, start, end, FormatText(p), style));
+                    sb.AppendLine(string.Format(commentWriteFormat, start, end, FormatText(p), style, layer, actor, effect));
                 else
-                    sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style));
+                    sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style, layer, actor, effect));
             }
             return sb.ToString().Trim();
         }
@@ -345,9 +357,12 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             bool eventsStarted = false;
             subtitle.Paragraphs.Clear();
             string[] format = "Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text".Split(',');
+            int indexLayer = 0;
             int indexStart = 1;
             int indexEnd = 2;
             int indexStyle = 3;
+            int indexName = 4;
+            int indexEffect = 8;
             int indexText = 9;
             var errors = new StringBuilder();
             int lineNumber = 0;
@@ -377,12 +392,16 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             format = line.ToLower().Substring(8).Split(',');
                             for (int i = 0; i < format.Length; i++)
                             {
-                                if (format[i].Trim().ToLower() == "start")
+                                if (format[i].Trim().ToLower() == "layer")
+                                    indexLayer = i;
+                                else if (format[i].Trim().ToLower() == "start")
                                     indexStart = i;
                                 else if (format[i].Trim().ToLower() == "end")
                                     indexEnd = i;
                                 else if (format[i].Trim().ToLower() == "text")
                                     indexText = i;
+                                else if (format[i].Trim().ToLower() == "effect")
+                                    indexEffect = i;
                                 else if (format[i].Trim().ToLower() == "style")
                                     indexStyle = i;
                             }
@@ -394,6 +413,9 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         string start = string.Empty;
                         string end = string.Empty;
                         string style = string.Empty;
+                        string layer = string.Empty;
+                        string effect = string.Empty;
+                        string name = string.Empty;
 
                         string[] splittedLine;
 
@@ -408,10 +430,16 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                 start = splittedLine[i].Trim();
                             else if (i == indexEnd)
                                 end = splittedLine[i].Trim();
+                            else if (i == indexLayer)
+                                layer = splittedLine[i];
+                            else if (i == indexEffect)
+                                effect = splittedLine[i];
                             else if (i == indexText)
                                 text = splittedLine[i];
                             else if (i == indexStyle)
                                 style = splittedLine[i];
+                            else if (i == indexName)
+                                name = splittedLine[i];
                             else if (i > indexText)
                                 text += "," + splittedLine[i];
                         }
@@ -425,6 +453,12 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             p.Text = AdvancedSubStationAlpha.GetFormattedText(text);
                             if (!string.IsNullOrEmpty(style))
                                 p.Extra = style;
+                            if (!string.IsNullOrEmpty(effect))
+                                p.Extra = effect;
+                            if (!string.IsNullOrEmpty(layer))
+                                p.Extra = layer;
+                            if (!string.IsNullOrEmpty(name))
+                                p.Actor = name;
                             p.IsComment = s.StartsWith("comment:");
                             subtitle.Paragraphs.Add(p);
                         }
