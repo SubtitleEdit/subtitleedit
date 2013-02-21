@@ -13,16 +13,19 @@
    * Network mode more stable (auto-restart)
    * Updated Czech language file - thx Trottel
    * Updated German language file - thx Christoph Kitsche
+   * Updated Portuguese language file - thx moob
    * Remembers size of controls in main window better - thx George/Leszek
    * Format Sami: html-decodes text + reads class attributes better
    * Batch convert can now also "Fix common errors" and more - thx Adem
    * Volume level is now remembered (no longer in settings) - thx fox
+   * Some improvements to language detection - thx fox/mihai
+   * Better import of ssa/ass from Matroska files - thx Mike
 * FIXED:
    * VobSub files created by SE now have better compatibility - thx George
    * Possible crash+bug in 'Fix common errors' on selected lines - thx Dan
    * Drag'n'drop of large bluray sup files - thx AT
    * Minor fix in 'Fix common errors -> Fix invalid italic tags' - thx azu
-   * List view height in "Set sync point" with large font - thx fox
+   * List view height in "Set sync point" etc. with large font - thx fox
    * Can now load ass files with "[V4 Styles]" in header - thx Derek
    * "Frame mode" no longer auto-changes duration/end-time - thx Gerard
 
