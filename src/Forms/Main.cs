@@ -1275,7 +1275,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     CenterFormOnCurrentScreen();
                     WindowState = FormWindowState.Maximized;
-//                    SetTextBoxHeight();
                     return;
                 }
 
@@ -1310,21 +1309,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXp2kUnicodeFontName) // 6 == Vista/Win2008Server/Win7
             {
-                const string unicodeFontName = Utilities.WinXp2kUnicodeFontName;
-                Configuration.Settings.General.SubtitleFontName = unicodeFontName;
-                float fontSize = toolStripMenuItemInsertUnicodeSymbol.Font.Size;
-                textBoxSource.Font = new Font(unicodeFontName, fontSize);
-                textBoxListViewText.Font = new Font(unicodeFontName, fontSize);
-                SubtitleListview1.Font = new Font(unicodeFontName, fontSize);
-                toolStripWaveControls.RenderMode = ToolStripRenderMode.System;
-                toolStripMenuItemSurroundWithMusicSymbols.Font = new Font(unicodeFontName, fontSize);
+                //const string unicodeFontName = Utilities.WinXp2kUnicodeFontName;
+                //Configuration.Settings.General.SubtitleFontName = unicodeFontName;
+                //float fontSize = toolStripMenuItemInsertUnicodeSymbol.Font.Size;
+                //textBoxSource.Font = new Font(unicodeFontName, fontSize);
+                //textBoxListViewText.Font = new Font(unicodeFontName, fontSize);
+                //SubtitleListview1.Font = new Font(unicodeFontName, fontSize);
+                //toolStripWaveControls.RenderMode = ToolStripRenderMode.System;
+                //toolStripMenuItemSurroundWithMusicSymbols.Font = new Font(unicodeFontName, fontSize);
+                Utilities.InitializeSubtitleFont(SubtitleListview1);
+                Refresh();
             }
 
-        }
-
-        private void SetTextBoxHeight()
-        {
-            //nixe harboe debug
         }
 
         private void InitializeLanguage()
@@ -4270,24 +4266,54 @@ namespace Nikse.SubtitleEdit.Forms
                     { // we only update selected lines
                         int i = 0;
                         List<int> deletes = new List<int>();
-                        foreach (int index in SubtitleListview1.SelectedIndices)
+                        if (_networkSession != null)
                         {
-                            var pOld = _subtitle.Paragraphs[index];
-                            var p = fixErrors.FixedSubtitle.GetParagraphOrDefaultById(pOld.ID);
-                            if (p == null)
+                            foreach (int index in SubtitleListview1.SelectedIndices)
                             {
-                                deletes.Add(index);
+                                var pOld = _subtitle.Paragraphs[index];
+                                var p = fixErrors.FixedSubtitle.GetParagraphOrDefaultById(pOld.ID);
+                                if (p == null)
+                                {
+                                    deletes.Add(index);
+                                }
+                                else
+                                {
+                                    _subtitle.Paragraphs[index] = p;
+                                    SubtitleListview1.SetTimeAndText(index, p);
+                                }
+                                i++;
                             }
-                            else
+                            NetworkGetSendUpdates(new List<int>(), 0, null);
+                            deletes.Reverse();
+                            foreach (int index in deletes)
                             {
-                                _subtitle.Paragraphs[index] = p;
+                                _subtitle.Paragraphs.RemoveAt(index);
                             }
-                            i++;
+                            deletes.Reverse();
+                            NetworkGetSendUpdates(deletes, 0, null);
                         }
-                        deletes.Reverse();
-                        foreach (int index in deletes)
+                        else
                         {
-                            _subtitle.Paragraphs.RemoveAt(index);
+
+                            foreach (int index in SubtitleListview1.SelectedIndices)
+                            {
+                                var pOld = _subtitle.Paragraphs[index];
+                                var p = fixErrors.FixedSubtitle.GetParagraphOrDefaultById(pOld.ID);
+                                if (p == null)
+                                {
+                                    deletes.Add(index);
+                                }
+                                else
+                                {
+                                    _subtitle.Paragraphs[index] = p;
+                                }
+                                i++;
+                            }
+                            deletes.Reverse();
+                            foreach (int index in deletes)
+                            {
+                                _subtitle.Paragraphs.RemoveAt(index);
+                            }
                         }
                         ShowStatus(_language.CommonErrorsFixedInSelectedLines);
                     }
@@ -5220,11 +5246,11 @@ namespace Nikse.SubtitleEdit.Forms
                 typeEffectToolStripMenuItem.Visible = noNetWorkSession;
                 karokeeEffectToolStripMenuItem.Visible = noNetWorkSession;
                 toolStripSeparatorAdvancedFunctions.Visible = noNetWorkSession;
-                fixCommonErrorsInSelectedLinesToolStripMenuItem.Visible = noNetWorkSession;
-                adjustDisplayTimeForSelectedLinesToolStripMenuItem.Visible = noNetWorkSession;
-                showSelectedLinesEarlierlaterToolStripMenuItem.Visible = noNetWorkSession;
-                visualSyncSelectedLinesToolStripMenuItem.Visible = noNetWorkSession;
-                googleTranslateSelectedLinesToolStripMenuItem.Visible = noNetWorkSession;
+                fixCommonErrorsInSelectedLinesToolStripMenuItem.Visible = true;
+                adjustDisplayTimeForSelectedLinesToolStripMenuItem.Visible = true;
+                showSelectedLinesEarlierlaterToolStripMenuItem.Visible = true;
+                visualSyncSelectedLinesToolStripMenuItem.Visible = true;
+                googleTranslateSelectedLinesToolStripMenuItem.Visible = true;
                 toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
                 toolStripMenuItemUnbreakLines.Visible = true;
                 toolStripMenuItemAutoBreakLines.Visible = true;
@@ -12235,7 +12261,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Configuration.Settings.General.Undocked = false;
                 UndockVideoControlsToolStripMenuItemClick(null, null);
-                SetTextBoxHeight();
             }
             Main_Resize(null, null);
 
