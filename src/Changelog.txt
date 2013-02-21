@@ -5,6 +5,8 @@
    * Added a few new subtitle formats
    * Italian language - thx Johnny B. Goode
    * Turkish language - thx Çağdaş
+   * Can now export to blu-ray sup/vobsub from ocr window
+   * Can save to vobsub from dvdrip 'Choose language' window
 * IMPROVED:
    * OCR: MUCH better ocr of italics when using Tesseract
    * OCR: Added some detection of music symbols when using Tesseract
