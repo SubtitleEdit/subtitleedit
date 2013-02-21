@@ -187,6 +187,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public bool SamiDisplayTwoClassesAsTwoSubtitles { get; set; }
 
+        public string TimedText10TimeCodeFormat { get; set; }
+
         public SubtitleSettings()
         {
             SsaFontName = "Arial";
@@ -199,6 +201,8 @@ namespace Nikse.SubtitleEdit.Logic
             DCinemaFadeUpDownTime = 5;
 
             SamiDisplayTwoClassesAsTwoSubtitles = true;
+
+            TimedText10TimeCodeFormat = "Default";
         }
 
         public void InitializeDCinameSettings(bool smpte)
@@ -1363,6 +1367,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("SamiDisplayTwoClassesAsTwoSubtitles");
                 if (subNode != null)
                     settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("TimedText10TimeCodeFormat");
+                if (subNode != null)
+                    settings.SubtitleSettings.TimedText10TimeCodeFormat = subNode.InnerText;
             }
 
             settings.Proxy = new Nikse.SubtitleEdit.Logic.ProxySettings();
@@ -2182,6 +2189,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("DCinemaBottomMargin", settings.SubtitleSettings.DCinemaBottomMargin.ToString());
             textWriter.WriteElementString("DCinemaFadeUpDownTime", settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString());
             textWriter.WriteElementString("SamiDisplayTwoClassesAsTwoSubtitles", settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles.ToString());
+            textWriter.WriteElementString("TimedText10TimeCodeFormat", settings.SubtitleSettings.TimedText10TimeCodeFormat);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Proxy", "");
