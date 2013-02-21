@@ -4,10 +4,12 @@
     <Title>Subtitle Edit</Title>
     <Version>3.3.2</Version>
     <TranslatedBy> ------------------------------------------------------------------------------------------------
-Traduzido sem o novo Acordo Ortográfico para Português de Portugal, por moob
-Email: mailto:moob@live.com.pt</TranslatedBy>
+Traduzido sem o novo Acordo Ortográfico para Português de Portugal, por moob e Ricardo Perdigão
+Contactos:
+moob: mailto:moob@live.com.pt
+Ricardo Perdigão: mailto:ricardofonseca1977@gmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile />
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
