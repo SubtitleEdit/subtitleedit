@@ -1205,7 +1205,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxVolumeBar.Width = (int)(max * percent / 100.0);
             if (_videoPlayer != null)
                 _videoPlayer.Volume = (int)percent;
-
+            Configuration.Settings.General.VideoPlayerDefaultVolume = (int)percent;
         }
 
         private void PictureBoxVolumeBarBackgroundMouseDown(object sender, MouseEventArgs e)
