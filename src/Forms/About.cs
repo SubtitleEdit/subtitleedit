@@ -13,7 +13,12 @@ namespace Nikse.SubtitleEdit.Forms
         public About()
         {
             InitializeComponent();
-            base.Text = _language.Title;
+        }
+
+        public void Initialize()
+        {
+            Text = _language.Title;
+            okButton.Text = _languageGeneral.OK;
             string[] versionInfo = Utilities.AssemblyVersion.Split('.');
             string minorMinorVersion = string.Empty;
             if (versionInfo.Length >= 3 && versionInfo[2] != "0")
@@ -22,13 +27,9 @@ namespace Nikse.SubtitleEdit.Forms
             richTextBoxAbout1.Text = _language.AboutText1.TrimEnd() + Environment.NewLine +
                                      Environment.NewLine +
                                      _languageGeneral.TranslatedBy.Trim();
-            okButton.Text = _languageGeneral.OK;
-
-            var height = TextDraw.MeasureTextHeight(richTextBoxAbout1.Font, richTextBoxAbout1.Text, false) * 1.4;
-
-            // Autosize height
+            var height = TextDraw.MeasureTextHeight(richTextBoxAbout1.Font, richTextBoxAbout1.Text, false) * 1.4 + 20;
             richTextBoxAbout1.Height = (int)height;
-            Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 100;
+            Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 90;
         }
 
         private void OkButtonClick(object sender, EventArgs e)
