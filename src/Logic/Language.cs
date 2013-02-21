@@ -86,6 +86,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.VobSubOcrNewFolder VobSubOcrNewFolder;
         public LanguageStructure.WaveForm WaveForm;
         public LanguageStructure.WaveFormGenerateTimeCodes WaveFormGenerateTimeCodes;
+        public LanguageStructure.WebVttNewVoice WebVttNewVoice;
 
         public Language()
         {
@@ -1191,6 +1192,8 @@ namespace Nikse.SubtitleEdit.Logic
                         FixCommonErrorsInSelectedLines = "Fix common errors in selected lines...",
                         ChangeCasingForSelectedLines = "Change casing for selected lines...",
                         SaveSelectedLines = "Save selected lines as...",
+                        WebVTTSetNewVoice = "Set new voice...",
+                        WebVTTRemoveVoices = "Remove voices",
                     }
                 },
 
@@ -2011,6 +2014,12 @@ Keep changes?",
                 SplitLongLinesAt1 = "Split long subtitles at",
                 SplitLongLinesAt2 = "milliseconds",
                 Other = "Other",
+            };
+
+            WebVttNewVoice = new LanguageStructure.WebVttNewVoice
+            {
+                Title = "WebVTT - set new voice",
+                VoiceName = "Name of voice",
             };
 
         }

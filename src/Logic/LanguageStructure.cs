@@ -1082,6 +1082,9 @@
                     public string FixCommonErrorsInSelectedLines { get; set; }
                     public string ChangeCasingForSelectedLines { get; set; }
                     public string SaveSelectedLines { get; set; }
+                    public string WebVTTSetNewVoice { get; set; }
+                    public string WebVTTRemoveVoices { get; set; }
+                    
                 }
 
                 public FileMenu File { get; set; }
@@ -1913,6 +1916,12 @@
             public string SplitLongLinesAt1 { get; set; }
             public string SplitLongLinesAt2 { get; set; }
             public string Other { get; set; }
+        }
+
+        public class WebVttNewVoice
+        {
+            public string Title { get; set; }
+            public string VoiceName { get; set; }
         }
 
     }
