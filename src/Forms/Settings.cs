@@ -114,11 +114,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (!Utilities.IsQuartsDllInstalled)
                 radioButtonVideoPlayerDirectShow.Enabled = false;
 
-            comboBoxVideoPlayerDefaultVolume.Items.Clear();
-            for (int i=0; i<= 100; i++)
-                comboBoxVideoPlayerDefaultVolume.Items.Add(i.ToString());
-            if (gs.VideoPlayerDefaultVolume >= 0 && gs.VideoPlayerDefaultVolume <= 100)
-                comboBoxVideoPlayerDefaultVolume.SelectedIndex = gs.VideoPlayerDefaultVolume;
             checkBoxVideoPlayerShowStopButton.Checked = gs.VideoPlayerShowStopButton;
             checkBoxVideoPlayerShowMuteButton.Checked = gs.VideoPlayerShowMuteButton;
             checkBoxVideoPlayerShowFullscreenButton.Checked = gs.VideoPlayerShowFullscreenButton;
@@ -281,11 +276,6 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxVideoPlayerShowStopButton.Text = language.ShowStopButton;
             checkBoxVideoPlayerShowMuteButton.Text = language.ShowMuteButton;
             checkBoxVideoPlayerShowFullscreenButton.Text = language.ShowFullscreenButton;
-
-            labelDefaultVol.Text = language.DefaultVolume;
-            comboBoxVideoPlayerDefaultVolume.Left = labelDefaultVol.Left + labelDefaultVol.Width;
-            labelVolDescr.Text = language.VolumeNotes;
-            labelVolDescr.Left = comboBoxVideoPlayerDefaultVolume.Left + comboBoxVideoPlayerDefaultVolume.Width + 4;
 
             labelVideoPlayerPreviewFontSize.Text = language.PreviewFontSize;
             comboBoxlVideoPlayerPreviewFontSize.Left = labelVideoPlayerPreviewFontSize.Left + labelVideoPlayerPreviewFontSize.Width;
@@ -914,13 +904,9 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.VideoPlayer = "VLC";
             else
                 gs.VideoPlayer = "DirectShow";
-            gs.VideoPlayerDefaultVolume = comboBoxVideoPlayerDefaultVolume.SelectedIndex;
-            if (gs.VideoPlayerDefaultVolume < 0 || gs.VideoPlayerDefaultVolume > 100)
-                comboBoxVideoPlayerDefaultVolume.SelectedIndex = 50;
             gs.VideoPlayerShowStopButton = checkBoxVideoPlayerShowStopButton.Checked;
             gs.VideoPlayerShowMuteButton = checkBoxVideoPlayerShowMuteButton.Checked;
             gs.VideoPlayerShowFullscreenButton = checkBoxVideoPlayerShowFullscreenButton.Checked;
-
             gs.VideoPlayerPreviewFontSize = int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString()) + comboBoxlVideoPlayerPreviewFontSize.SelectedIndex;
 
             Configuration.Settings.VideoControls.CustomSearchText1 = comboBoxCustomSearch1.Text;

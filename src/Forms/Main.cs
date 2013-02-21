@@ -7269,9 +7269,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
 
                 SaveUndockedPositions();
-
                 SaveListViewWidths();
-
                 Configuration.Settings.Save();
 
                 if (mediaPlayer.VideoPlayer != null)
@@ -12345,7 +12343,7 @@ namespace Nikse.SubtitleEdit.Forms
                 splitContainer1.SplitterDistance = Configuration.Settings.General.SplitContainer1SplitterDistance;
                 splitContainerListViewAndText.SplitterDistance = Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance;
             }
-
+            mediaPlayer.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
             LoadPlugins();
         }
 

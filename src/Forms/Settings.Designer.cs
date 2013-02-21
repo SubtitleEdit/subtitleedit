@@ -139,9 +139,6 @@
             this.labelVideoPlayerPreviewFontSize = new System.Windows.Forms.Label();
             this.comboBoxlVideoPlayerPreviewFontSize = new System.Windows.Forms.ComboBox();
             this.checkBoxVideoPlayerShowStopButton = new System.Windows.Forms.CheckBox();
-            this.comboBoxVideoPlayerDefaultVolume = new System.Windows.Forms.ComboBox();
-            this.labelDefaultVol = new System.Windows.Forms.Label();
-            this.labelVolDescr = new System.Windows.Forms.Label();
             this.groupBoxVideoEngine = new System.Windows.Forms.GroupBox();
             this.labelVideoPlayerVLC = new System.Windows.Forms.Label();
             this.radioButtonVideoPlayerVLC = new System.Windows.Forms.RadioButton();
@@ -1512,9 +1509,6 @@
             this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.comboBoxlVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowStopButton);
-            this.groupBoxVideoPlayerDefault.Controls.Add(this.comboBoxVideoPlayerDefaultVolume);
-            this.groupBoxVideoPlayerDefault.Controls.Add(this.labelDefaultVol);
-            this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVolDescr);
             this.groupBoxVideoPlayerDefault.Location = new System.Drawing.Point(7, 135);
             this.groupBoxVideoPlayerDefault.Name = "groupBoxVideoPlayerDefault";
             this.groupBoxVideoPlayerDefault.Size = new System.Drawing.Size(813, 98);
@@ -1526,7 +1520,7 @@
             this.checkBoxVideoPlayerShowFullscreenButton.AutoSize = true;
             this.checkBoxVideoPlayerShowFullscreenButton.Location = new System.Drawing.Point(9, 65);
             this.checkBoxVideoPlayerShowFullscreenButton.Name = "checkBoxVideoPlayerShowFullscreenButton";
-            this.checkBoxVideoPlayerShowFullscreenButton.Size = new System.Drawing.Size(134, 17);
+            this.checkBoxVideoPlayerShowFullscreenButton.Size = new System.Drawing.Size(136, 17);
             this.checkBoxVideoPlayerShowFullscreenButton.TabIndex = 12;
             this.checkBoxVideoPlayerShowFullscreenButton.Text = "Show fullscreen button";
             this.checkBoxVideoPlayerShowFullscreenButton.UseVisualStyleBackColor = true;
@@ -1536,7 +1530,7 @@
             this.checkBoxVideoPlayerShowMuteButton.AutoSize = true;
             this.checkBoxVideoPlayerShowMuteButton.Location = new System.Drawing.Point(9, 42);
             this.checkBoxVideoPlayerShowMuteButton.Name = "checkBoxVideoPlayerShowMuteButton";
-            this.checkBoxVideoPlayerShowMuteButton.Size = new System.Drawing.Size(112, 17);
+            this.checkBoxVideoPlayerShowMuteButton.Size = new System.Drawing.Size(114, 17);
             this.checkBoxVideoPlayerShowMuteButton.TabIndex = 11;
             this.checkBoxVideoPlayerShowMuteButton.Text = "Show mute button";
             this.checkBoxVideoPlayerShowMuteButton.UseVisualStyleBackColor = true;
@@ -1544,7 +1538,7 @@
             // labelVideoPlayerPreviewFontSize
             // 
             this.labelVideoPlayerPreviewFontSize.AutoSize = true;
-            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(331, 54);
+            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(331, 21);
             this.labelVideoPlayerPreviewFontSize.Name = "labelVideoPlayerPreviewFontSize";
             this.labelVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(128, 13);
             this.labelVideoPlayerPreviewFontSize.TabIndex = 14;
@@ -1568,7 +1562,7 @@
             "18",
             "19",
             "20"});
-            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(465, 51);
+            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(465, 18);
             this.comboBoxlVideoPlayerPreviewFontSize.Name = "comboBoxlVideoPlayerPreviewFontSize";
             this.comboBoxlVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(121, 21);
             this.comboBoxlVideoPlayerPreviewFontSize.TabIndex = 13;
@@ -1578,39 +1572,10 @@
             this.checkBoxVideoPlayerShowStopButton.AutoSize = true;
             this.checkBoxVideoPlayerShowStopButton.Location = new System.Drawing.Point(9, 19);
             this.checkBoxVideoPlayerShowStopButton.Name = "checkBoxVideoPlayerShowStopButton";
-            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(109, 17);
+            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(111, 17);
             this.checkBoxVideoPlayerShowStopButton.TabIndex = 10;
             this.checkBoxVideoPlayerShowStopButton.Text = "Show stop button";
             this.checkBoxVideoPlayerShowStopButton.UseVisualStyleBackColor = true;
-            // 
-            // comboBoxVideoPlayerDefaultVolume
-            // 
-            this.comboBoxVideoPlayerDefaultVolume.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxVideoPlayerDefaultVolume.FormattingEnabled = true;
-            this.comboBoxVideoPlayerDefaultVolume.Location = new System.Drawing.Point(447, 20);
-            this.comboBoxVideoPlayerDefaultVolume.Name = "comboBoxVideoPlayerDefaultVolume";
-            this.comboBoxVideoPlayerDefaultVolume.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxVideoPlayerDefaultVolume.TabIndex = 12;
-            // 
-            // labelDefaultVol
-            // 
-            this.labelDefaultVol.AutoSize = true;
-            this.labelDefaultVol.Location = new System.Drawing.Point(329, 23);
-            this.labelDefaultVol.Name = "labelDefaultVol";
-            this.labelDefaultVol.Size = new System.Drawing.Size(79, 13);
-            this.labelDefaultVol.TabIndex = 6;
-            this.labelDefaultVol.Text = "Default volume";
-            // 
-            // labelVolDescr
-            // 
-            this.labelVolDescr.AutoSize = true;
-            this.labelVolDescr.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelVolDescr.ForeColor = System.Drawing.Color.Gray;
-            this.labelVolDescr.Location = new System.Drawing.Point(574, 24);
-            this.labelVolDescr.Name = "labelVolDescr";
-            this.labelVolDescr.Size = new System.Drawing.Size(150, 11);
-            this.labelVolDescr.TabIndex = 9;
-            this.labelVolDescr.Text = "0 is no sound, 100 is higest volume";
             // 
             // groupBoxVideoEngine
             // 
@@ -3065,9 +3030,6 @@
         private System.Windows.Forms.Label labelSubMaxLen;
         private System.Windows.Forms.TabPage tabPageVideoPlayer;
         private System.Windows.Forms.CheckBox checkBoxVideoPlayerShowStopButton;
-        private System.Windows.Forms.ComboBox comboBoxVideoPlayerDefaultVolume;
-        private System.Windows.Forms.Label labelDefaultVol;
-        private System.Windows.Forms.Label labelVolDescr;
         private System.Windows.Forms.GroupBox groupBoxVideoEngine;
         private System.Windows.Forms.Label labelVideoPlayerMPlayer;
         private System.Windows.Forms.Label labelDirectShowDescription;
