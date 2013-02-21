@@ -761,6 +761,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <FixCommonErrorsInSelectedLines>Ret almindelige fejl i valgte linjer...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Skift casing (små/store/normal) for valgte linjer...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Gem valgte linjer som...</SaveSelectedLines>
+        <WebVTTSetNewVoice>Angiv ny  stemme...</WebVTTSetNewVoice>
+        <WebVTTRemoveVoices>Fjern stemmer</WebVTTRemoveVoices>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1734,4 +1736,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <SplitLongLinesAt2>millisekunder</SplitLongLinesAt2>
     <Other>Øvrigt</Other>
   </WaveFormGenerateTimeCodes>
+  <WebVttNewVoice>
+    <Title>WebVTT - angiv ny stemme</Title>
+    <VoiceName>Stemme-navn</VoiceName>
+  </WebVttNewVoice>
 </Language>

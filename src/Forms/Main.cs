@@ -5212,9 +5212,17 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     toolStripMenuItemWebVTT.DropDownItems.Add(style, null, WebVTTSetVoice);
                 }
-                toolStripMenuItemWebVTT.DropDownItems.Add("Set new voice...", null, WebVTTSetNewVoice); //TODO: Translate
+                if (string.IsNullOrEmpty(_language.Menu.ContextMenu.WebVTTSetNewVoice)) //TODO: In 3.4 remove if
+                    toolStripMenuItemWebVTT.DropDownItems.Add("Set new voice...", null, WebVTTSetNewVoice); 
+                else
+                    toolStripMenuItemWebVTT.DropDownItems.Add(_language.Menu.ContextMenu.WebVTTSetNewVoice, null, WebVTTSetNewVoice); 
                 if (voices.Count > 0)
-                    toolStripMenuItemWebVTT.DropDownItems.Add("Remove voices", null, WebVTTRemoveVoices); //TODO: Translate
+                {
+                    if (string.IsNullOrEmpty(_language.Menu.ContextMenu.WebVTTRemoveVoices)) //TODO: In 3.4 remove if
+                        toolStripMenuItemWebVTT.DropDownItems.Add("Remove voices", null, WebVTTRemoveVoices); 
+                    else
+                        toolStripMenuItemWebVTT.DropDownItems.Add(_language.Menu.ContextMenu.WebVTTRemoveVoices, null, WebVTTRemoveVoices);
+                }
             }
             else
             {
@@ -5222,7 +5230,6 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemAssStyles.Visible = false;
                 toolStripMenuItemWebVTT.Visible = false;
             }
-
 
             toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
             if (SubtitleListview1.SelectedItems.Count == 0)
@@ -15535,10 +15542,11 @@ namespace Nikse.SubtitleEdit.Forms
                             if (original.Text.Contains(tag))
                             {
                                 original.Text = original.Text.Replace(tag, string.Empty);
+                                original.Text = original.Text.Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
                             }
                             else
                             {
-                                original.Text = string.Format("{0}{1}{0}", tag, original.Text.Replace(Environment.NewLine, "♪" + Environment.NewLine + "♪"));
+                                original.Text = string.Format("{0} {1} {0}", tag, original.Text.Replace(Environment.NewLine, " ♪" + Environment.NewLine + "♪ "));
                             }
                             SubtitleListview1.SetAlternateText(i, original.Text);
                         }
@@ -15546,11 +15554,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (_subtitle.Paragraphs[i].Text.Contains(tag))
                     {
-                        _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.Replace("♪", string.Empty);
+                        _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.Replace("♪", string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
                     }
                     else
                     {
-                        _subtitle.Paragraphs[i].Text = string.Format("{0}{1}{0}", tag, _subtitle.Paragraphs[i].Text.Replace(Environment.NewLine, "♪" + Environment.NewLine + "♪"));
+                        _subtitle.Paragraphs[i].Text = string.Format("{0} {1} {0}", tag, _subtitle.Paragraphs[i].Text.Replace(Environment.NewLine, " ♪" + Environment.NewLine + "♪ "));
                     }
                     SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
                 }

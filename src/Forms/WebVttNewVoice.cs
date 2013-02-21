@@ -12,7 +12,10 @@ namespace Nikse.SubtitleEdit.Forms
         public WebVttNewVoice()
         {
             InitializeComponent();
-            //Text = Configuration.Settings.Language.GoToLine.Title; //TODO: Translate
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.WebVttNewVoice.Title)) //TODO: Remove in 3.4
+                Text = Configuration.Settings.Language.WebVttNewVoice.Title;
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.WebVttNewVoice.VoiceName)) //TODO: Remove in 3.4
+                labelVoiceName.Text = Configuration.Settings.Language.WebVttNewVoice.VoiceName;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
