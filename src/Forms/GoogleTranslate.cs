@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void Initialize(Subtitle subtitle, string title, bool googleTranslate)
+        internal void Initialize(Subtitle subtitle, string title, bool googleTranslate, Encoding encoding)
         {
             if (title != null)
                 Text = title;
@@ -108,7 +108,10 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
             _translatedSubtitle = new Subtitle(subtitle);
 
-            string defaultFromLanguage = Utilities.AutoDetectGoogleLanguage(subtitle);
+            string defaultFromLanguage = Utilities.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
+            if (string.IsNullOrEmpty(defaultFromLanguage))
+                defaultFromLanguage = Utilities.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
+
             FillComboWithLanguages(comboBoxFrom);
             int i = 0;
             foreach (ComboBoxItem item in comboBoxFrom.Items)

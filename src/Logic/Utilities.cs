@@ -1066,6 +1066,65 @@ namespace Nikse.SubtitleEdit.Logic
             return count;
         }
 
+        public static string AutoDetectGoogleLanguage(Encoding encoding)
+        {
+            if (encoding.CodePage == 949)
+                return "ko"; // Korean
+            if (encoding.CodePage == 950)
+                return "zh"; // Chinese
+            if (encoding.CodePage == 1253)
+                return "el"; // Greek
+            if (encoding.CodePage == 1254)
+                return "tr"; // Turkish
+            if (encoding.CodePage == 1255)
+                return "he"; // Hebrew
+            if (encoding.CodePage == 1256)
+                return "ar"; // Arabic
+            if (encoding.CodePage == 1258)
+                return "vi"; // Vietnamese
+            if (encoding.CodePage == 1361)
+                return "ko"; // Korean
+            if (encoding.CodePage == 10001)
+                return "ja"; // Japanese
+            if (encoding.CodePage == 20000)
+                return "zh"; // Chinese
+            if (encoding.CodePage == 20002)
+                return "zh"; // Chinese
+            if (encoding.CodePage == 20932)
+                return "ja"; // Japanese
+            if (encoding.CodePage == 20936)
+                return "zh"; // Chinese
+            if (encoding.CodePage == 20949)
+                return "ko"; // Korean
+            if (encoding.CodePage == 28596)
+                return "ar"; // Arabic
+            if (encoding.CodePage == 28597)
+                return "el"; // Greek
+            if (encoding.CodePage == 28598)
+                return "he"; // Hebrew
+            if (encoding.CodePage == 28599)
+                return "tr"; // Turkish
+            if (encoding.CodePage == 50220)
+                return "ja"; // Japanese
+            if (encoding.CodePage == 50221)
+                return "ja"; // Japanese
+            if (encoding.CodePage == 50222)
+                return "ja"; // Japanese
+            if (encoding.CodePage == 50225)
+                return "ko"; // Korean
+            if (encoding.CodePage == 51932)
+                return "ja"; // Japanese
+            if (encoding.CodePage == 51936)
+                return "zh"; // Chinese
+            if (encoding.CodePage == 51949)
+                return "ko"; // Korean
+            if (encoding.CodePage == 52936)
+                return "zh"; // Chinese
+            if (encoding.CodePage == 54936)
+                return "zh"; // Chinese
+            return null;
+        }
+
         public static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
             int count = GetCount(text, "we", "are", "and", "you", "your", "what");

@@ -4557,11 +4557,11 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (int index in SubtitleListview1.SelectedIndices)
                         selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
                     title += " - " + _language.SelectedLines;
-                    googleTranslate.Initialize(selectedLines, title, useGoogle);
+                    googleTranslate.Initialize(selectedLines, title, useGoogle, GetCurrentEncoding());
                 }
                 else
                 {
-                    googleTranslate.Initialize(_subtitle, title, useGoogle);
+                    googleTranslate.Initialize(_subtitle, title, useGoogle, GetCurrentEncoding());
                 }
                 if (googleTranslate.ShowDialog(this) == DialogResult.OK)
                 {
