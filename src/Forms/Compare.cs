@@ -34,6 +34,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListView2.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            Utilities.InitializeSubtitleFont(subtitleListView1);
+            Utilities.InitializeSubtitleFont(subtitleListView2);
             FixLargeFonts();
         }
 
