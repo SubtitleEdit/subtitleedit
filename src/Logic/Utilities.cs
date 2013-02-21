@@ -1105,8 +1105,8 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 int spanishWords = GetCount(text, "Hola", "nada", "Vamos", "pasa", "los", "como"); // not french words
                 int italianWords = GetCount(text, "Cosa", "sono", "Grazie", "Buongiorno", "bene", "questo");
-
-                if (spanishWords < 2 && italianWords < 2)
+                int romanianWords = GetCount(text, "sînt", "aici", "Sînt", "domnule", "pentru", "Vreau");
+                if (spanishWords < 2 && italianWords < 2 && romanianWords < 5)
                     return "fr";
             }
 
@@ -1199,6 +1199,10 @@ namespace Nikse.SubtitleEdit.Logic
             count = GetCount(text, "että", "kuin", "minä", "mitään", "Mutta", "siitä") + GetCount(text, "täällä", "poika", "Kiitos", "enää", "vielä", "tässä");
             if (count > bestCount)
                 return "fi"; // Finnish
+
+            count = GetCount(text, "sînt", "aici", "Sînt", "domnule", "pentru", "Vreau") + GetCount(text, "trãiascã", "niciodatã", "înseamnã", "vorbesti", "oamenii", "Asteaptã");
+            if (count > bestCount)
+                return "ro"; // Romanian
 
             return string.Empty;
         }
