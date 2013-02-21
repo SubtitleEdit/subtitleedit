@@ -34,6 +34,10 @@ namespace Nikse.SubtitleEdit.Logic
 
         public string Actor { get; set; }
 
+        public string Effect { get; set; }
+
+        public string Layer { get; set; }
+
         public string ID { get; set; }
 
         public Paragraph()
@@ -64,6 +68,8 @@ namespace Nikse.SubtitleEdit.Logic
             Extra = paragraph.Extra;
             IsComment = paragraph.IsComment;
             Actor = paragraph.Actor;
+            Effect = paragraph.Effect;
+            Layer = paragraph.Layer;
             ID = paragraph.ID;
         }
 
