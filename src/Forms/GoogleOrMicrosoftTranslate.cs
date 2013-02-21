@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Forms
                 GoogleTranslate gt = new GoogleTranslate();
                 Subtitle subtitle = new Subtitle();
                 subtitle.Paragraphs.Add(new Paragraph(0,0,textBoxSourceText.Text));
-                gt.Initialize(subtitle, string.Empty, false);
+                gt.Initialize(subtitle, string.Empty, false, System.Text.Encoding.UTF8);
                 from = FixMsLocale(from);
                 to = FixMsLocale(to);
                 gt.DoMicrosoftTranslate(from, to);
