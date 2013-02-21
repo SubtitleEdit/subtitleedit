@@ -62,6 +62,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
             else if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower() == "seconds")
                 return string.Format(CultureInfo.InvariantCulture, "{0:0.0#}s", time.TotalSeconds);
+            else if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower() == "milliseconds")
+                return string.Format(CultureInfo.InvariantCulture, "{0}ms", time.TotalMilliseconds);
+            else if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower() == "ticks")
+                return string.Format(CultureInfo.InvariantCulture, "{0}t", TimeSpan.FromMilliseconds(time.TotalMilliseconds).Ticks);
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
@@ -515,7 +519,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static TimeCode GetTimeCode(string s, bool frames)
         {
-            if (s.EndsWith("s"))
+            if (s.EndsWith("ms"))
+            {
+                s = s.TrimEnd('s');
+                s = s.TrimEnd('m');
+                TimeSpan ts = TimeSpan.FromMilliseconds(double.Parse(s.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture));
+                return new TimeCode(ts);
+            }
+            else if (s.EndsWith("s"))
             {
                 s = s.TrimEnd('s');
                 TimeSpan ts = TimeSpan.FromSeconds(double.Parse(s.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture));
