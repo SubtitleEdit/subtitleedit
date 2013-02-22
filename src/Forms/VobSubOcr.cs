@@ -2685,16 +2685,38 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (line.EndsWith("...") && unItalicText.EndsWith("\"!"))
                                     unItalicText = unItalicText.TrimEnd('!').TrimEnd('"') + ".";
 
-                                if (line.EndsWith(".") && !unItalicText.EndsWith("."))
+                                if (line.EndsWith(".") && !unItalicText.EndsWith(".") && !unItalicText.EndsWith(".</i>"))
                                 {
+                                    string post = string.Empty;
+                                    if (unItalicText.EndsWith("</i>"))
+                                    {
+                                        post = "</i>";
+                                        unItalicText = unItalicText.Remove(unItalicText.Length - 4);
+                                    }
                                     if (unItalicText.EndsWith("'") && !line.EndsWith("'."))
                                         unItalicText = unItalicText.TrimEnd('\'');
-                                    unItalicText += ".";
+                                    unItalicText += "." + post;
                                 }
-                                if (unItalicText.EndsWith(".") && !unItalicText.EndsWith("...") && line.EndsWith("..."))
-                                    unItalicText += "..";
-                                if (unItalicText.EndsWith("..") && !unItalicText.EndsWith("...") && line.EndsWith("..."))
-                                    unItalicText += ".";
+                                if (unItalicText.EndsWith(".") && !unItalicText.EndsWith("...") && !unItalicText.EndsWith("...</i>") && line.EndsWith("..."))
+                                {
+                                    string post = string.Empty;
+                                    if (unItalicText.EndsWith("</i>"))
+                                    {
+                                        post = "</i>";
+                                        unItalicText = unItalicText.Remove(unItalicText.Length - 4);
+                                    }
+                                    unItalicText += ".." + post;
+                                }
+                                if (unItalicText.EndsWith("..") && !unItalicText.EndsWith("...") && !unItalicText.EndsWith("...</i>") && line.EndsWith("..."))
+                                {
+                                    string post = string.Empty;
+                                    if (unItalicText.EndsWith("</i>"))
+                                    {
+                                        post = "</i>";
+                                        unItalicText = unItalicText.Remove(unItalicText.Length - 4);
+                                    }
+                                    unItalicText += "." + post;
+                                }
 
                                 if (line.EndsWith("!") && !unItalicText.EndsWith("!") && !unItalicText.EndsWith("!</i>"))
                                 {
@@ -2730,6 +2752,45 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
+                    }
+                }
+
+                if (checkBoxTesseractMusicOn.Checked)
+                {
+                    if (line == "[J'J'J~]" || line == "[J'J'J']")
+                        line = "[ ♪ ♪ ♪ ]";
+
+                    line = line.Replace(" J' ", " ♪ ");
+
+                    if (line.StartsWith("J'"))
+                    {
+                        line = "♪ " + line.Remove(0, 2).TrimStart();
+                    }
+                    if (line.StartsWith("<i>J'"))
+                    {
+                        line = "<i>♪ " + line.Remove(0, 5).TrimStart();
+                    }
+                    if (line.StartsWith("[J'"))
+                    {
+                        line = "[♪ " + line.Remove(0, 3).TrimStart();
+                    }
+                    if (line.EndsWith("J'"))
+                    {
+                        line = line.Remove(line.Length - 2, 2).TrimEnd() + " ♪";
+                    }
+                    if (line.EndsWith("J'</i>"))
+                    {
+                        line = line.Remove(line.Length - 6, 6).TrimEnd() + " ♪</i>";
+                    }
+                    if (line.Contains(Environment.NewLine + "J'"))
+                    {
+                        line = line.Replace(Environment.NewLine + "J'", Environment.NewLine + "♪ ");
+                        line = line.Replace("  ", " ");
+                    }
+                    if (line.Contains("J'" + Environment.NewLine))
+                    {
+                        line = line.Replace("J'" + Environment.NewLine, " ♪" + Environment.NewLine);
+                        line = line.Replace("  ", " ");
                     }
                 }
 
@@ -2784,42 +2845,6 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     { // fix some error manually (modi not available)
                         line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, checkBoxGuessUnknownWords.Checked);
-                    }
-                }
-
-                if (checkBoxTesseractMusicOn.Checked)
-                {
-                    line = line.Replace(" J' ", " ♪ ");
-
-                    if (line.StartsWith("J'"))
-                    {
-                        line = "♪ " + line.Remove(0, 2).TrimStart();
-                    }
-                    if (line.StartsWith("<i>J'"))
-                    {
-                        line = "<i>♪ " + line.Remove(0, 5).TrimStart();
-                    }
-                    if (line.StartsWith("[J'"))
-                    {
-                        line = "[♪ " + line.Remove(0, 3).TrimStart();
-                    }
-                    if (line.EndsWith("J'"))
-                    {
-                        line = line.Remove(line.Length - 2, 2).TrimEnd() + " ♪";
-                    }
-                    if (line.EndsWith("J'</i>"))
-                    {
-                        line = line.Remove(line.Length - 6, 6).TrimEnd() + " ♪</i>";
-                    }
-                    if (line.Contains(Environment.NewLine + "J'"))
-                    {
-                        line = line.Replace(Environment.NewLine + "J'", Environment.NewLine + "♪ ");
-                        line = line.Replace("  ", " ");
-                    }
-                    if (line.Contains("J'" + Environment.NewLine))
-                    {
-                        line = line.Replace("J'" + Environment.NewLine, " ♪" + Environment.NewLine);
-                        line = line.Replace("  ", " ");
                     }
                 }
 
