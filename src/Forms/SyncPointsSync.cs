@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var getTime = new SetSyncPoint();
                     int index = SubtitleListview1.SelectedItems[0].Index;
                     getTime.Initialize(_subtitle, _subtitleFileName, index, _videoFileName, _audioTrackNumber);
-                    if (getTime.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    if (getTime.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
                     {
                         if (_syncronizationPoints.ContainsKey(index))
                             _syncronizationPoints[index] = getTime.SyncronizationPoint;
