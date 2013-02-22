@@ -1259,7 +1259,9 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "fi"; // Finnish
 
-            count = GetCount(text, "sînt", "aici", "Sînt", "domnule", "pentru", "Vreau") + GetCount(text, "trãiascã", "niciodatã", "înseamnã", "vorbesti", "oamenii", "Asteaptã");
+            count = GetCount(text, "sînt", "aici", "Sînt", "domnule", "pentru", "Vreau") + 
+                    GetCount(text, "trãiascã", "niciodatã", "înseamnã", "vorbesti", "oamenii", "Asteaptã") +
+                    GetCount(text, "fãcut", "Fãrã", "spune", "decât", "pentru", "vreau");
             if (count > bestCount)
                 return "ro"; // Romanian
 
