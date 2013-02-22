@@ -80,6 +80,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string UnicodeSymbolsToInsert { get; set; }
         public bool SpellCheckAutoChangeNames { get; set; }
         public bool SpellCheckOneLetterWords { get; set; }
+        public bool SpellCheckEnglishAllowInQuoteAsIng { get; set; }
         public bool OcrFixUseHardcodedRules { get; set; }
         public string Interjections { get; set; }
         public string MicrosoftBingApiId { get; set; }
@@ -129,6 +130,7 @@ namespace Nikse.SubtitleEdit.Logic
             UseGooleApiPaidService = false;
             GoogleTranslateLastTargetLanguage = "en";
             SpellCheckOneLetterWords = true;
+            SpellCheckEnglishAllowInQuoteAsIng = false;
             ListViewSyntaxColorDurationSmall = true;
             ListViewSyntaxColorDurationBig = true;
             ListViewSyntaxColorOverlap = true;
@@ -1247,6 +1249,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SpellCheckOneLetterWords");
             if (subNode != null)
                 settings.Tools.SpellCheckOneLetterWords = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("SpellCheckEnglishAllowInQuoteAsIng");
+            if (subNode != null)
+                settings.Tools.SpellCheckEnglishAllowInQuoteAsIng = Convert.ToBoolean(subNode.InnerText);           
             subNode = node.SelectSingleNode("OcrFixUseHardcodedRules");
             if (subNode != null)
                 settings.Tools.OcrFixUseHardcodedRules = Convert.ToBoolean(subNode.InnerText);
@@ -2148,6 +2153,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("UnicodeSymbolsToInsert", settings.Tools.UnicodeSymbolsToInsert);
             textWriter.WriteElementString("SpellCheckAutoChangeNames", settings.Tools.SpellCheckAutoChangeNames.ToString());
             textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.SpellCheckOneLetterWords.ToString());
+            textWriter.WriteElementString("SpellCheckEnglishAllowInQuoteAsIng", settings.Tools.SpellCheckEnglishAllowInQuoteAsIng.ToString());            
             textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString());
             textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
             textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);

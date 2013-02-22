@@ -1247,6 +1247,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i].TrimStart('\'');
+                string wordNotEndTrimmed = word;
                 word = word.TrimEnd('\'');
                 string wordNoItalics = word.Replace("<i>", string.Empty).Replace("</i>", string.Empty);
                 if (!IsWordKnownOrNumber(wordNoItalics, line) && !localIgnoreWords.Contains(wordNoItalics))
@@ -1261,6 +1262,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
                     if (!correct && !line.Contains(word))
                         correct = true; // already fixed
+
+                    if (!correct && Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng && wordNotEndTrimmed.EndsWith("'") &&
+                        SpellCheckDictionaryName.StartsWith("en_") && word.ToLower().EndsWith("in"))
+                    {
+                        correct = DoSpell(word + "g");
+                    }
 
                     if (!correct)
                     {
