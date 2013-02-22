@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.3.2 (22 February 2013)
+3.3.2 (23 February 2013)
 * NEW:
    * Added a few new subtitle formats
    * Italian language - thx Johnny B. Goode
