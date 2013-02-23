@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.MatroskaSubtitleChooser MatroskaSubtitleChooser;
         public LanguageStructure.MergeDoubleLines MergeDoubleLines;
         public LanguageStructure.MergeShortLines MergedShortLines;
-        public LanguageStructure.ModifySelection ModifySelection;        
+        public LanguageStructure.ModifySelection ModifySelection;
         public LanguageStructure.MultipleReplace MultipleReplace;
         public LanguageStructure.NetworkChat NetworkChat;
         public LanguageStructure.NetworkJoin NetworkJoin;

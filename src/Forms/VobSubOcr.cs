@@ -4280,7 +4280,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             listBoxUnknownWords.Items.Clear();
-        }    
+        }
 
     }
 }

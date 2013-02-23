@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
             public string Error { get; set; }
             public string FileName { get; set; }
             public string ToFormat { get; set; }
-            public SubtitleFormat SourceFormat { get; set; } 
+            public SubtitleFormat SourceFormat { get; set; }
 
             public ThreadDoWorkParameter(bool fixCommonErrors, bool multipleReplace, ListViewItem item, Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language, string fileName, string toFormat, SubtitleFormat sourceFormat)
             {
@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
         string _ssaStyle;
         FormRemoveTextForHearImpaired _removeForHI = new FormRemoveTextForHearImpaired();
         ChangeCasing _changeCasing = new ChangeCasing();
-        ChangeCasingNames _changeCasingNames = new ChangeCasingNames();        
+        ChangeCasingNames _changeCasingNames = new ChangeCasingNames();
         bool _converting = false;
         int _count = 0;
         int _converted = 0;
@@ -643,7 +643,7 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (!worker3.IsBusy)
                             worker3.RunWorkerAsync(parameter);
                     }
-                    
+
                 }
                 catch
                 {
@@ -660,7 +660,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Application.DoEvents();
                 }
                 catch
-                { 
+                {
                 }
                 System.Threading.Thread.Sleep(100);
             }
@@ -731,7 +731,7 @@ namespace Nikse.SubtitleEdit.Forms
                     progressBar1.Value++;
                 labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
                 if (progressBar1.Value == progressBar1.Maximum)
-                    labelStatus.Text = string.Empty;                
+                    labelStatus.Text = string.Empty;
             }
         }
 
