@@ -5,10 +5,10 @@
    * Added a few new subtitle formats
    * Italian language - thx Johnny B. Goode
    * Turkish language - thx Çağdaş
-   * Can now export to blu-ray sup/vobsub from ocr window
-   * Can save to vobsub from dvdrip 'Choose language' window
+   * Can now export to Blu-ray sup/VobSub from OCR window
+   * Can save to VobSub from dvdrip 'Choose language' window
 * IMPROVED:
-   * OCR: MUCH better ocr of italics when using Tesseract
+   * OCR: MUCH better OCR of italics when using Tesseract
    * OCR: Added some detection of music symbols when using Tesseract
    * Waveform now performs better when many lines are selected
    * Waveform now has focused rectangle
@@ -25,7 +25,7 @@
 * FIXED:
    * VobSub files created by SE now have better compatibility - thx George
    * Possible crash+bug in 'Fix common errors' on selected lines - thx Dan
-   * Drag'n'drop of large bluray sup files - thx AT
+   * Drag'n'drop of large Blu-ray sup files - thx AT
    * Minor fix in 'Fix common errors -> Fix invalid italic tags' - thx azu
    * List view height in "Set sync point" etc. with large font - thx fox
    * Can now load ass files with "[V4 Styles]" in header - thx Derek
@@ -108,8 +108,8 @@
 * FIXED:
    * Auto-translate now works for English to Portuguese - thx w.tambley
    * Shortcuts with numbers (0-9)
-   * Reading of Bluray sup with errors in image - thx Simon
-   * Fixed bug in parsing of Bluray sup files - thx e.patic82
+   * Reading of Blu-ray sup with errors in image - thx Simon
+   * Fixed bug in parsing of Blu-ray sup files - thx e.patic82
    * Reading of SAMI files with time codes in quotes - thx Josh
    * Reading of Ulead files with position codes - thx Steve
    * Reading of time codes + adjust with format SCC - thx Marquise
@@ -117,7 +117,7 @@
    * Now always uses output folder in command line convert - thx the hulk
    * Cropping of bottom images in File -> Export - thx moob
    * Possible crash in OcrFixEngine - thx Ile
-   * Possible crash when importing vobsub from mkv files - thx Ile
+   * Possible crash when importing VobSub from mkv files - thx Ile
    * Can now read SCC with ";" in time code - thx Thane
    * Crash when splitting an empty line - thx Pimmetje
    * Fixed "Timed Text" time codes with comma in seconds - thx Steffan
@@ -152,7 +152,7 @@
    * Bug (skip of subtitles) in dvd sub ripping - thx kowenant/cipry
    * Minor fix for Blu-ray sup reading
    * Correct time codes in EBU when reading 24 fps
-   * HD DVD SUP lines are now re-numbered when importing for ocr
+   * HD DVD SUP lines are now re-numbered when importing for OCR
    * Bug in waveform regarding new selection/right-click-menu
    * Sets default encoding at start if no subtitle is loaded - thx TC
    * Can now set single line max length to large values - thx cmaj135
@@ -182,8 +182,8 @@
    * New-line character in Final Cut Pro Xml format - thx Axel Schmidt
    * Bug in "Import plain text" regarding "Auto split text"
    * Crash in AutoBr line
-   * Crash/skip-subtitle-bug in vobsub reading - thx T.S.
-   * Crash when reading vobsub files with errors - thx Sofiaguy
+   * Crash/skip-subtitle-bug in VobSub reading - thx T.S.
+   * Crash when reading VobSub files with errors - thx Sofiaguy
    * EBU stl format reading now skips user data - thx Peter
    * Fixed crash in MPlayer due to unknown frame rate
 
@@ -194,7 +194,7 @@
  * IMPROVED:
    * Adjust mode improved a bit and also two new shortcuts - thx Deanna/Seamlik
    * Focus correct list view line after merging/deleting - thx Verteller
-   * Minor improvements to ocr (missing '.' with small fonts sometimes) - thx Bas
+   * Minor improvements to OCR (missing '.' with small fonts sometimes) - thx Bas
  * FIXED:
    * Fix overlapping time codes (regression from 3.2.4) - thx menes
    * PAC line numbers beyond 255 is now written correctly
@@ -214,7 +214,7 @@
    * Merge selected lines with 2+ lines - thx Verteller
    * Prompt for save changes when opening new sub (if changed) - thx Chris
    * No save prompt if subtitle is not changed (but was) - thx XhmikosR
-   * Context menu normal/italic in ocr window - thx cipry
+   * Context menu normal/italic in OCR window - thx cipry
    * Editing search type for "Multiple replace"
    * Wrong positioning of some texts (mostly at startup) - thx Trottel
    * Fix crash in image export (due to blank lines) - thx Mahdi
@@ -256,7 +256,7 @@
    * Wrong time codes when appending frame based subs - thx Klos
    * MPlayer works much better now, also on Linux. 
      (Use MPlayer2 for precise seeking)
-   * Crash (memory leak) when exporting images from a vobsub - thx Pete
+   * Crash (memory leak) when exporting images from a VobSub - thx Pete
    * Bug in Fix common errors with uncheck fix quotes -  thx jofafrazze
    * Bug in Import plain text when only non-English letters - thx Jasper
    * Now detects encoding when opening son files - thx Jørgen
@@ -278,7 +278,7 @@
      Arabic, Hebrew, Hindi and Thai
    * Undo improved so it also works for textbox + redo (Ctrl+Y)
    * Many new configurable shortcuts (e.g. for fullscreen video player)
-   * OCR tweaked a bit + BluRay sup files are processed faster
+   * OCR tweaked a bit + Blu-ray sup files are processed faster
    * TextBox with current subtitle now shows cursor position - thx Leszek
    * Subtitle format PAC much improved - thx Peter
    * Subtitle format FCP Xml improved - thx Ulrik
@@ -292,7 +292,7 @@
    * Fixed crash when setting Options - thx karmazyn
    * Fixed crash in set color (or set font) - thx LEO33
    * Fixed crash/freeze when loading large subtitle files - thx Ulrik
-   * Fixed bug when clicking in list view while running ocr - thx sialivi
+   * Fixed bug when clicking in list view while running OCR - thx sialivi
    * Fixed de-selecting text in textbox via single click - thx XhmikosR
    * Fixed possible crash in spell check + German dictionary should work
    * Fixed missing save/load of a fix common errors setting - thx menes
@@ -317,11 +317,11 @@
    * Possible crash when fixing italics - thx StainlessS
    * Fixed bug when editing time codes - issue 46, thx mobo
    * Fixed memory leak in spell check - thx thx aMvEL
-   * Fixed WinXP crash when ocr'ing Blu-ray/SON - thx edea
+   * Fixed WinXP crash when OCR'ing Blu-ray/SON - thx edea
    * Can now acutally use MPlayer2 on windows - thx rotulos1
    * Fixed a (rare) crash in change casing - fix names
    * Fixed a bug in format Timed Text draft - thx Thomas
-   * Fix for using Chinese traditional tesseract ocr dictionary
+   * Fix for using Chinese traditional tesseract OCR dictionary
 
 
 3.2 (8th October 2011)
@@ -330,7 +330,7 @@
    * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0, Captionate, 
      Flash xml, YouTube annotations and more
    * Most important shortcuts in Options -> Settings
-   * Export bdn-xml/images + import/ocr bdn-xml/images
+   * Export bdn-xml/images + import/OCR bdn-xml/images
    * Added "Point sync via other subtitle" (thx ioannis)
    * Tools -> Make empty translation from current subtitle (thx vmb)
    * Tools -> Show original text in audio/video previews (thx vmb)
@@ -342,7 +342,7 @@
    * List view context menu: Copy as text to clipboard 
      (you can also use ctrl+c/ctrl+v)
    * Text box context menu -> Split line at cursor position (thx DrJackson)
-   * Import+ocr of Blu-ray sup files inside matroska files
+   * Import+OCR of Blu-ray sup files inside matroska files
    * Now remembers undocked controls pos/size
    * New customizable shortcut for Adjust mode: 
      Set current subtitle end time 
