@@ -920,7 +920,7 @@
                     public string ReverseRightToLeftStartEnd { get; set; }
                     public string ShowOriginalTextInAudioAndVideoPreview { get; set; }
                     public string ModifySelection { get; set; }
-                    public string InverseSelection { get; set; }                    
+                    public string InverseSelection { get; set; }
                 }
                 public class ToolsMenu
                 {
@@ -1084,7 +1084,7 @@
                     public string SaveSelectedLines { get; set; }
                     public string WebVTTSetNewVoice { get; set; }
                     public string WebVTTRemoveVoices { get; set; }
-                    
+
                 }
 
                 public FileMenu File { get; set; }
@@ -1208,7 +1208,7 @@
             public string SubtractFromCurrentSelection { get; set; }
             public string IntersectWithCurrentSelection { get; set; }
             public string MatchingLinesX { get; set; }
-        }       
+        }
 
         public class MultipleReplace
         {

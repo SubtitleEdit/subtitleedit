@@ -5205,13 +5205,13 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemWebVTT.DropDownItems.Add(style, null, WebVTTSetVoice);
                 }
                 if (string.IsNullOrEmpty(_language.Menu.ContextMenu.WebVTTSetNewVoice)) //TODO: In 3.4 remove if
-                    toolStripMenuItemWebVTT.DropDownItems.Add("Set new voice...", null, WebVTTSetNewVoice); 
+                    toolStripMenuItemWebVTT.DropDownItems.Add("Set new voice...", null, WebVTTSetNewVoice);
                 else
-                    toolStripMenuItemWebVTT.DropDownItems.Add(_language.Menu.ContextMenu.WebVTTSetNewVoice, null, WebVTTSetNewVoice); 
+                    toolStripMenuItemWebVTT.DropDownItems.Add(_language.Menu.ContextMenu.WebVTTSetNewVoice, null, WebVTTSetNewVoice);
                 if (voices.Count > 0)
                 {
                     if (string.IsNullOrEmpty(_language.Menu.ContextMenu.WebVTTRemoveVoices)) //TODO: In 3.4 remove if
-                        toolStripMenuItemWebVTT.DropDownItems.Add("Remove voices", null, WebVTTRemoveVoices); 
+                        toolStripMenuItemWebVTT.DropDownItems.Add("Remove voices", null, WebVTTRemoveVoices);
                     else
                         toolStripMenuItemWebVTT.DropDownItems.Add(_language.Menu.ContextMenu.WebVTTRemoveVoices, null, WebVTTRemoveVoices);
                 }
@@ -5301,7 +5301,7 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripSeparatorAdvancedFunctions.Visible = SubtitleListview1.SelectedItems.Count == 1 && noNetWorkSession;
                 }
             }
-            toolStripMenuItemPasteSpecial.Visible = Clipboard.ContainsText();            
+            toolStripMenuItemPasteSpecial.Visible = Clipboard.ContainsText();
         }
 
         void tsi_Click(object sender, EventArgs e)
@@ -7767,7 +7767,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else if (line.Trim() == "[Events]")
                             {
-                                footerOn = false;                                
+                                footerOn = false;
                             }
                             else if (line.Trim() == "[Fonts]" || line.Trim() == "[Graphics]")
                             {
@@ -7797,8 +7797,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
-                    }                    
-                    
+                    }
+
                     if (!_subtitle.Header.Contains("[Events]"))
                     {
                         _subtitle.Header = _subtitle.Header.Trim() + Environment.NewLine +
@@ -12073,7 +12073,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripSeparator20.Visible = subtitleLoaded;
 
             toolStripMenuItemImportXSub.Visible = !string.IsNullOrEmpty(_language.OpenXSubFiles) && !string.IsNullOrEmpty(_language.XSubFiles);
-                
+
         }
 
         private void toolStripMenuItemOpenContainingFolder_Click(object sender, EventArgs e)

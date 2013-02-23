@@ -191,7 +191,7 @@ namespace Nikse.SubtitleEdit.Forms
         public string Language
         {
             get
-            { 
+            {
                 var ci = (CultureInfo)comboBoxLanguage.SelectedItem;
                 if (ci == null)
                     return "en";
