@@ -1254,6 +1254,43 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = "DVD Studio Pro STL";
             else
                 Text = Configuration.Settings.Language.ExportPngXml.Title;
+
+            if (_exportType == "VOBSUB" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubFontName))
+                _subtitleFontName = Configuration.Settings.Tools.ExportVobSubFontName;
+            else if (_exportType == "BLURAYSUP" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayFontName))
+                _subtitleFontName = Configuration.Settings.Tools.ExportBluRayFontName;
+            if (_exportType == "VOBSUB" && Configuration.Settings.Tools.ExportVobSubFontSize > 0)
+                _subtitleFontSize = Configuration.Settings.Tools.ExportVobSubFontSize;
+            else if (_exportType == "BLURAYSUP" && Configuration.Settings.Tools.ExportBluRaybFontSize > 0)
+                _subtitleFontSize = Configuration.Settings.Tools.ExportBluRaybFontSize;
+
+            if (_exportType == "VOBSUB")
+            {
+                comboBoxSubtitleFontSize.SelectedIndex = 7;
+                int i = 0;
+                foreach (string item in comboBoxSubtitleFontSize.Items)
+                {
+                    if (item == Convert.ToInt32(_subtitleFontSize).ToString())
+                        comboBoxSubtitleFontSize.SelectedIndex = i;
+                    i++;
+                }
+            }
+            else if (_exportType == "BLURAYSUP")
+            {
+                comboBoxSubtitleFontSize.SelectedIndex = 16;
+                int i = 0;
+                foreach (string item in comboBoxSubtitleFontSize.Items)
+                {
+                    if (item == Convert.ToInt32(_subtitleFontSize).ToString())
+                        comboBoxSubtitleFontSize.SelectedIndex = i;
+                    i++;
+                }
+            }
+            else
+            {
+                comboBoxSubtitleFontSize.SelectedIndex = 16;
+            }
+
             groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
             labelSubtitleFont.Text = Configuration.Settings.Language.ExportPngXml.FontFamily;
             labelSubtitleFontSize.Text = Configuration.Settings.Language.ExportPngXml.FontSize;
@@ -1294,6 +1331,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (exportType == "VOBSUB")
             {
+
                 comboBoxBorderWidth.SelectedIndex = 3;
                 comboBoxResolution.SelectedIndex = 5;
                 labelLanguage.Visible = true;
@@ -1504,11 +1542,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ExportPngXml_Shown(object sender, EventArgs e)
         {
-            _isLoading = false;
-            if (_exportType == "VOBSUB")
-                comboBoxSubtitleFontSize.SelectedIndex = 7;
-            else
-                comboBoxSubtitleFontSize.SelectedIndex = 16;
+            _isLoading = false;          
         }
 
         private void comboBoxHAlign_SelectedIndexChanged(object sender, EventArgs e)
@@ -1554,6 +1588,20 @@ namespace Nikse.SubtitleEdit.Forms
         private void ExportPngXml_SizeChanged(object sender, EventArgs e)
         {
             subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void ExportPngXml_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (_exportType == "VOBSUB")
+            {
+                Configuration.Settings.Tools.ExportVobSubFontName = _subtitleFontName;
+                Configuration.Settings.Tools.ExportVobSubFontSize = (int)_subtitleFontSize;
+            }
+            else if (_exportType == "BLURAYSUP")
+            {
+                Configuration.Settings.Tools.ExportBluRayFontName = _subtitleFontName;
+                Configuration.Settings.Tools.ExportBluRaybFontSize = (int)_subtitleFontSize;
+            }
         }
 
     }

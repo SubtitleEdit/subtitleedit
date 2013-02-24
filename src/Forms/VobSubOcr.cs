@@ -267,6 +267,10 @@ namespace Nikse.SubtitleEdit.Forms
             bDNXMLToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportBdnXml;
             bluraySupToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportBluRaySup;
 
+            toolStripMenuItemClearFixes.Text = Configuration.Settings.Language.DvdSubrip.Clear;
+            toolStripMenuItemClearGuesses.Text = Configuration.Settings.Language.DvdSubrip.Clear;
+            clearToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubrip.Clear;
+
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
 
             Utilities.InitializeSubtitleFont(subtitleListView1);
@@ -4280,6 +4284,16 @@ namespace Nikse.SubtitleEdit.Forms
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             listBoxUnknownWords.Items.Clear();
+        }
+
+        private void toolStripMenuItemClearFixes_Click(object sender, EventArgs e)
+        {
+            listBoxLog.Items.Clear();
+        }
+
+        private void toolStripMenuItemClearGuesses_Click(object sender, EventArgs e)
+        {
+            listBoxLogSuggestions.Items.Clear();
         }
 
     }

@@ -35,6 +35,7 @@
             this.buttonUseSuggestion = new System.Windows.Forms.Button();
             this.listBoxSuggestions = new System.Windows.Forms.ListBox();
             this.GroupBoxEditWord = new System.Windows.Forms.GroupBox();
+            this.buttonGoogleIt = new System.Windows.Forms.Button();
             this.buttonAddToDictionary = new System.Windows.Forms.Button();
             this.buttonChangeAll = new System.Windows.Forms.Button();
             this.buttonChange = new System.Windows.Forms.Button();
@@ -67,7 +68,7 @@
             this.buttonAbort.Location = new System.Drawing.Point(623, 442);
             this.buttonAbort.Name = "buttonAbort";
             this.buttonAbort.Size = new System.Drawing.Size(85, 21);
-            this.buttonAbort.TabIndex = 24;
+            this.buttonAbort.TabIndex = 4;
             this.buttonAbort.Text = "Abort";
             this.buttonAbort.UseVisualStyleBackColor = true;
             this.buttonAbort.Click += new System.EventHandler(this.ButtonAbortClick);
@@ -90,7 +91,7 @@
             this.groupBoxSuggestions.Location = new System.Drawing.Point(320, 249);
             this.groupBoxSuggestions.Name = "groupBoxSuggestions";
             this.groupBoxSuggestions.Size = new System.Drawing.Size(388, 187);
-            this.groupBoxSuggestions.TabIndex = 32;
+            this.groupBoxSuggestions.TabIndex = 3;
             this.groupBoxSuggestions.TabStop = false;
             this.groupBoxSuggestions.Text = "Suggestions";
             // 
@@ -100,7 +101,7 @@
             this.buttonUseSuggestionAlways.Location = new System.Drawing.Point(291, 16);
             this.buttonUseSuggestionAlways.Name = "buttonUseSuggestionAlways";
             this.buttonUseSuggestionAlways.Size = new System.Drawing.Size(87, 21);
-            this.buttonUseSuggestionAlways.TabIndex = 33;
+            this.buttonUseSuggestionAlways.TabIndex = 1;
             this.buttonUseSuggestionAlways.Text = "Use always";
             this.buttonUseSuggestionAlways.UseVisualStyleBackColor = true;
             this.buttonUseSuggestionAlways.Click += new System.EventHandler(this.ButtonUseSuggestionAlwaysClick);
@@ -111,7 +112,7 @@
             this.buttonUseSuggestion.Location = new System.Drawing.Point(206, 16);
             this.buttonUseSuggestion.Name = "buttonUseSuggestion";
             this.buttonUseSuggestion.Size = new System.Drawing.Size(79, 21);
-            this.buttonUseSuggestion.TabIndex = 32;
+            this.buttonUseSuggestion.TabIndex = 0;
             this.buttonUseSuggestion.Text = "Use";
             this.buttonUseSuggestion.UseVisualStyleBackColor = true;
             this.buttonUseSuggestion.Click += new System.EventHandler(this.ButtonUseSuggestionClick);
@@ -124,11 +125,12 @@
             this.listBoxSuggestions.Location = new System.Drawing.Point(6, 39);
             this.listBoxSuggestions.Name = "listBoxSuggestions";
             this.listBoxSuggestions.Size = new System.Drawing.Size(372, 134);
-            this.listBoxSuggestions.TabIndex = 30;
+            this.listBoxSuggestions.TabIndex = 2;
             // 
             // GroupBoxEditWord
             // 
             this.GroupBoxEditWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.GroupBoxEditWord.Controls.Add(this.buttonGoogleIt);
             this.GroupBoxEditWord.Controls.Add(this.buttonAddToDictionary);
             this.GroupBoxEditWord.Controls.Add(this.buttonChangeAll);
             this.GroupBoxEditWord.Controls.Add(this.buttonChange);
@@ -139,16 +141,26 @@
             this.GroupBoxEditWord.Location = new System.Drawing.Point(12, 249);
             this.GroupBoxEditWord.Name = "GroupBoxEditWord";
             this.GroupBoxEditWord.Size = new System.Drawing.Size(302, 187);
-            this.GroupBoxEditWord.TabIndex = 33;
+            this.GroupBoxEditWord.TabIndex = 2;
             this.GroupBoxEditWord.TabStop = false;
             this.GroupBoxEditWord.Text = "Word not found";
+            // 
+            // buttonGoogleIt
+            // 
+            this.buttonGoogleIt.Location = new System.Drawing.Point(6, 97);
+            this.buttonGoogleIt.Name = "buttonGoogleIt";
+            this.buttonGoogleIt.Size = new System.Drawing.Size(141, 21);
+            this.buttonGoogleIt.TabIndex = 4;
+            this.buttonGoogleIt.Text = "&Google it";
+            this.buttonGoogleIt.UseVisualStyleBackColor = true;
+            this.buttonGoogleIt.Click += new System.EventHandler(this.buttonGoogleIt_Click);
             // 
             // buttonAddToDictionary
             // 
             this.buttonAddToDictionary.Location = new System.Drawing.Point(6, 151);
             this.buttonAddToDictionary.Name = "buttonAddToDictionary";
             this.buttonAddToDictionary.Size = new System.Drawing.Size(290, 21);
-            this.buttonAddToDictionary.TabIndex = 35;
+            this.buttonAddToDictionary.TabIndex = 7;
             this.buttonAddToDictionary.Text = "Add to user dictionary (not case sensitive)";
             this.buttonAddToDictionary.UseVisualStyleBackColor = true;
             this.buttonAddToDictionary.Click += new System.EventHandler(this.ButtonAddToDictionaryClick);
@@ -158,7 +170,7 @@
             this.buttonChangeAll.Location = new System.Drawing.Point(6, 45);
             this.buttonChangeAll.Name = "buttonChangeAll";
             this.buttonChangeAll.Size = new System.Drawing.Size(290, 21);
-            this.buttonChangeAll.TabIndex = 34;
+            this.buttonChangeAll.TabIndex = 1;
             this.buttonChangeAll.Text = "Change and add to ocr fix list (case sensitive)";
             this.buttonChangeAll.UseVisualStyleBackColor = true;
             this.buttonChangeAll.Click += new System.EventHandler(this.ButtonChangeAllClick);
@@ -168,7 +180,7 @@
             this.buttonChange.Location = new System.Drawing.Point(6, 72);
             this.buttonChange.Name = "buttonChange";
             this.buttonChange.Size = new System.Drawing.Size(141, 21);
-            this.buttonChange.TabIndex = 33;
+            this.buttonChange.TabIndex = 2;
             this.buttonChange.Text = "Change once";
             this.buttonChange.UseVisualStyleBackColor = true;
             this.buttonChange.Click += new System.EventHandler(this.ButtonChangeClick);
@@ -178,7 +190,7 @@
             this.buttonSkipAll.Location = new System.Drawing.Point(155, 97);
             this.buttonSkipAll.Name = "buttonSkipAll";
             this.buttonSkipAll.Size = new System.Drawing.Size(141, 21);
-            this.buttonSkipAll.TabIndex = 32;
+            this.buttonSkipAll.TabIndex = 5;
             this.buttonSkipAll.Text = "&Skip all";
             this.buttonSkipAll.UseVisualStyleBackColor = true;
             this.buttonSkipAll.Click += new System.EventHandler(this.ButtonSkipAllClick);
@@ -189,7 +201,7 @@
             this.textBoxWord.Location = new System.Drawing.Point(6, 19);
             this.textBoxWord.Name = "textBoxWord";
             this.textBoxWord.Size = new System.Drawing.Size(290, 22);
-            this.textBoxWord.TabIndex = 31;
+            this.textBoxWord.TabIndex = 0;
             this.textBoxWord.TextChanged += new System.EventHandler(this.textBoxWord_TextChanged);
             this.textBoxWord.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxWordKeyDown);
             // 
@@ -198,7 +210,7 @@
             this.buttonSkipOnce.Location = new System.Drawing.Point(155, 72);
             this.buttonSkipOnce.Name = "buttonSkipOnce";
             this.buttonSkipOnce.Size = new System.Drawing.Size(141, 21);
-            this.buttonSkipOnce.TabIndex = 30;
+            this.buttonSkipOnce.TabIndex = 3;
             this.buttonSkipOnce.Text = "Skip &once";
             this.buttonSkipOnce.UseVisualStyleBackColor = true;
             this.buttonSkipOnce.Click += new System.EventHandler(this.ButtonSkipOnceClick);
@@ -208,7 +220,7 @@
             this.buttonAddToNames.Location = new System.Drawing.Point(6, 124);
             this.buttonAddToNames.Name = "buttonAddToNames";
             this.buttonAddToNames.Size = new System.Drawing.Size(290, 21);
-            this.buttonAddToNames.TabIndex = 29;
+            this.buttonAddToNames.TabIndex = 6;
             this.buttonAddToNames.Text = "Add to names/noise list (case sensitive)";
             this.buttonAddToNames.UseVisualStyleBackColor = true;
             this.buttonAddToNames.Click += new System.EventHandler(this.ButtonAddToNamesClick);
@@ -276,7 +288,7 @@
             this.groupBoxTextAsImage.Location = new System.Drawing.Point(12, 12);
             this.groupBoxTextAsImage.Name = "groupBoxTextAsImage";
             this.groupBoxTextAsImage.Size = new System.Drawing.Size(696, 152);
-            this.groupBoxTextAsImage.TabIndex = 34;
+            this.groupBoxTextAsImage.TabIndex = 0;
             this.groupBoxTextAsImage.TabStop = false;
             this.groupBoxTextAsImage.Text = "Image text";
             // 
@@ -301,7 +313,7 @@
             this.groupBoxText.Location = new System.Drawing.Point(12, 170);
             this.groupBoxText.Name = "groupBoxText";
             this.groupBoxText.Size = new System.Drawing.Size(696, 72);
-            this.groupBoxText.TabIndex = 38;
+            this.groupBoxText.TabIndex = 1;
             this.groupBoxText.TabStop = false;
             this.groupBoxText.Text = "Text";
             // 
@@ -313,7 +325,7 @@
             this.richTextBoxParagraph.Name = "richTextBoxParagraph";
             this.richTextBoxParagraph.ReadOnly = true;
             this.richTextBoxParagraph.Size = new System.Drawing.Size(296, 54);
-            this.richTextBoxParagraph.TabIndex = 39;
+            this.richTextBoxParagraph.TabIndex = 0;
             this.richTextBoxParagraph.Text = "";
             // 
             // buttonEditWholeText
@@ -321,7 +333,7 @@
             this.buttonEditWholeText.Location = new System.Drawing.Point(308, 17);
             this.buttonEditWholeText.Name = "buttonEditWholeText";
             this.buttonEditWholeText.Size = new System.Drawing.Size(128, 21);
-            this.buttonEditWholeText.TabIndex = 38;
+            this.buttonEditWholeText.TabIndex = 1;
             this.buttonEditWholeText.Text = "Edit whole text";
             this.buttonEditWholeText.UseVisualStyleBackColor = true;
             this.buttonEditWholeText.Click += new System.EventHandler(this.ButtonEditWholeTextClick);
@@ -331,7 +343,7 @@
             this.buttonEditWord.Location = new System.Drawing.Point(308, 43);
             this.buttonEditWord.Name = "buttonEditWord";
             this.buttonEditWord.Size = new System.Drawing.Size(128, 21);
-            this.buttonEditWord.TabIndex = 37;
+            this.buttonEditWord.TabIndex = 2;
             this.buttonEditWord.Text = "Edit word";
             this.buttonEditWord.UseVisualStyleBackColor = true;
             this.buttonEditWord.Click += new System.EventHandler(this.ButtonEditWordClick);
@@ -346,8 +358,8 @@
             this.Controls.Add(this.buttonAbort);
             this.Controls.Add(this.labelWordNotFound);
             this.Controls.Add(this.groupBoxSuggestions);
-            this.Controls.Add(this.groupBoxEditWholeText);
             this.Controls.Add(this.GroupBoxEditWord);
+            this.Controls.Add(this.groupBoxEditWholeText);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "OcrSpellCheck";
             this.ShowIcon = false;
@@ -394,5 +406,6 @@
         private System.Windows.Forms.Button buttonAddToDictionary;
         private System.Windows.Forms.Button buttonSkipText;
         private System.Windows.Forms.Button buttonChangeAllWholeText;
+        private System.Windows.Forms.Button buttonGoogleIt;
     }
 }

@@ -112,6 +112,10 @@ namespace Nikse.SubtitleEdit.Logic
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
         public bool ModifySelectionCaseSensitive { get; set; }
+        public string ExportVobSubFontName { get; set; }
+        public int ExportVobSubFontSize { get; set; }
+        public string ExportBluRayFontName { get; set; }
+        public int ExportBluRaybFontSize { get; set; }
 
         public ToolsSettings()
         {
@@ -1342,7 +1346,18 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ModifySelectionCaseSensitive");
             if (subNode != null)
                 settings.Tools.ModifySelectionCaseSensitive = Convert.ToBoolean(subNode.InnerText);
-
+            subNode = node.SelectSingleNode("ExportVobSubFontName");
+            if (subNode != null)
+                settings.Tools.ExportVobSubFontName = subNode.InnerText;
+            subNode = node.SelectSingleNode("ExportVobSubFontSize");
+            if (subNode != null)
+                settings.Tools.ExportVobSubFontSize = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportBluRayFontName");
+            if (subNode != null)
+                settings.Tools.ExportBluRayFontName = subNode.InnerText;
+            subNode = node.SelectSingleNode("ExportBluRaybFontSize");
+            if (subNode != null)
+                settings.Tools.ExportBluRaybFontSize = Convert.ToInt32(subNode.InnerText);
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -2184,6 +2199,10 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
             textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
             textWriter.WriteElementString("ModifySelectionCaseSensitive", settings.Tools.ModifySelectionCaseSensitive.ToString());
+            textWriter.WriteElementString("ExportVobSubFontName", settings.Tools.ExportVobSubFontName);
+            textWriter.WriteElementString("ExportVobSubFontSize", settings.Tools.ExportVobSubFontSize.ToString());
+            textWriter.WriteElementString("ExportBluRayFontName", settings.Tools.ExportBluRayFontName);
+            textWriter.WriteElementString("ExportBluRaybFontSize", settings.Tools.ExportBluRaybFontSize.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");

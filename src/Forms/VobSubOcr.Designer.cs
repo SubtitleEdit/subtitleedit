@@ -94,6 +94,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonUknownToUserDic = new System.Windows.Forms.Button();
             this.buttonUknownToNames = new System.Windows.Forms.Button();
             this.listBoxUnknownWords = new System.Windows.Forms.ListBox();
+            this.contextMenuStripUnknownWords = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxPromptForUnknownWords = new System.Windows.Forms.CheckBox();
             this.checkBoxAutoBreakLines = new System.Windows.Forms.CheckBox();
             this.labelDictionaryLoaded = new System.Windows.Forms.Label();
@@ -120,8 +122,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom = new System.Windows.Forms.SplitContainer();
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.contextMenuStripUnknownWords = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripAllFixes = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemClearFixes = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripGuessesUsed = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemClearGuesses = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.GroupBoxTesseractMethod.SuspendLayout();
@@ -135,6 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageAllFixes.SuspendLayout();
             this.tabPageSuggestions.SuspendLayout();
             this.tabPageUnknownWords.SuspendLayout();
+            this.contextMenuStripUnknownWords.SuspendLayout();
             this.groupBoxImagePalette.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBackground)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEmphasis2)).BeginInit();
@@ -145,7 +150,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom.Panel1.SuspendLayout();
             this.splitContainerBottom.Panel2.SuspendLayout();
             this.splitContainerBottom.SuspendLayout();
-            this.contextMenuStripUnknownWords.SuspendLayout();
+            this.contextMenuStripAllFixes.SuspendLayout();
+            this.contextMenuStripGuessesUsed.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuStripListview
@@ -688,6 +694,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabControlLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControlLogs.ContextMenuStrip = this.contextMenuStripAllFixes;
             this.tabControlLogs.Controls.Add(this.tabPageAllFixes);
             this.tabControlLogs.Controls.Add(this.tabPageSuggestions);
             this.tabControlLogs.Controls.Add(this.tabPageUnknownWords);
@@ -819,6 +826,20 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxUnknownWords.TabIndex = 40;
             this.listBoxUnknownWords.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             this.listBoxUnknownWords.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxCopyToClipboard_KeyDown);
+            // 
+            // contextMenuStripUnknownWords
+            // 
+            this.contextMenuStripUnknownWords.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearToolStripMenuItem});
+            this.contextMenuStripUnknownWords.Name = "contextMenuStripUnknownWords";
+            this.contextMenuStripUnknownWords.Size = new System.Drawing.Size(102, 26);
+            // 
+            // clearToolStripMenuItem
+            // 
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
+            this.clearToolStripMenuItem.Text = "Clear";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // checkBoxPromptForUnknownWords
             // 
@@ -1115,19 +1136,33 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
             // 
-            // contextMenuStripUnknownWords
+            // contextMenuStripAllFixes
             // 
-            this.contextMenuStripUnknownWords.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.clearToolStripMenuItem});
-            this.contextMenuStripUnknownWords.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripUnknownWords.Size = new System.Drawing.Size(153, 48);
+            this.contextMenuStripAllFixes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemClearFixes});
+            this.contextMenuStripAllFixes.Name = "contextMenuStripUnknownWords";
+            this.contextMenuStripAllFixes.Size = new System.Drawing.Size(102, 26);
             // 
-            // clearToolStripMenuItem
+            // toolStripMenuItemClearFixes
             // 
-            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.clearToolStripMenuItem.Text = "Clear";
-            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            this.toolStripMenuItemClearFixes.Name = "toolStripMenuItemClearFixes";
+            this.toolStripMenuItemClearFixes.Size = new System.Drawing.Size(101, 22);
+            this.toolStripMenuItemClearFixes.Text = "Clear";
+            this.toolStripMenuItemClearFixes.Click += new System.EventHandler(this.toolStripMenuItemClearFixes_Click);
+            // 
+            // contextMenuStripGuessesUsed
+            // 
+            this.contextMenuStripGuessesUsed.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemClearGuesses});
+            this.contextMenuStripGuessesUsed.Name = "contextMenuStripUnknownWords";
+            this.contextMenuStripGuessesUsed.Size = new System.Drawing.Size(153, 48);
+            // 
+            // toolStripMenuItemClearGuesses
+            // 
+            this.toolStripMenuItemClearGuesses.Name = "toolStripMenuItemClearGuesses";
+            this.toolStripMenuItemClearGuesses.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemClearGuesses.Text = "Clear";
+            this.toolStripMenuItemClearGuesses.Click += new System.EventHandler(this.toolStripMenuItemClearGuesses_Click);
             // 
             // VobSubOcr
             // 
@@ -1172,6 +1207,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageAllFixes.ResumeLayout(false);
             this.tabPageSuggestions.ResumeLayout(false);
             this.tabPageUnknownWords.ResumeLayout(false);
+            this.contextMenuStripUnknownWords.ResumeLayout(false);
             this.groupBoxImagePalette.ResumeLayout(false);
             this.groupBoxImagePalette.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBackground)).EndInit();
@@ -1185,7 +1221,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom.Panel1.PerformLayout();
             this.splitContainerBottom.Panel2.ResumeLayout(false);
             this.splitContainerBottom.ResumeLayout(false);
-            this.contextMenuStripUnknownWords.ResumeLayout(false);
+            this.contextMenuStripAllFixes.ResumeLayout(false);
+            this.contextMenuStripGuessesUsed.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1284,5 +1321,9 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripUnknownWords;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripAllFixes;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemClearFixes;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripGuessesUsed;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemClearGuesses;
     }
 }
