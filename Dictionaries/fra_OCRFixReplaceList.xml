@@ -1,4 +1,4 @@
-<ReplaceList>
+﻿<ReplaceList>
   <WholeWords>
     <Word from="carj'" to="car j'" />
     <Word from="Carj'" to="Car j'" />
@@ -9,7 +9,6 @@
     <Word from="Etje" to="Et je" />
     <Word from="dontj" to="dont j" />
     <Word from="ontete" to="ont été" />
-    <Word from="I'" to="l'" />
     <Word from="Ie" to="le" />
     <Word from="Ies" to="les" />
     <Word from="Ia" to="la" />
@@ -58,7 +57,6 @@
     <Word from="faiessayé" to="j'ai essayé" />
     <Word from="aerien" to="aérien" />
     <Word from="reévalu" to="réévalu" />
-    <Word from="I'" to="l'" />
     <Word from="Uadmirable" to="L'admirable" />
     <Word from="gaylns" to="gaijins" />
     <Word from="Iaryngotomie" to="laryngotomie" />
@@ -238,7 +236,10 @@
     <Word from="Fascension" to="l'ascension" />
     <Word from="AII" to="All" />
   </WholeWords>
-  <PartialLines />
+  <PartialLines>
+    <LinePart from=" I' to=" l'" />
+    <LinePart from=" |' to=" l'" />
+  </PartialLines>
   <BeginLines />
   <EndLines />
   <WholeLines>
