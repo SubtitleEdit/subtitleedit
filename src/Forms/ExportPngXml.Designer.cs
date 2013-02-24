@@ -606,6 +606,7 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ExportPngXml";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ExportPngXml_FormClosing);
             this.Shown += new System.EventHandler(this.ExportPngXml_Shown);
             this.ResizeEnd += new System.EventHandler(this.ExportPngXml_ResizeEnd);
             this.SizeChanged += new System.EventHandler(this.ExportPngXml_SizeChanged);

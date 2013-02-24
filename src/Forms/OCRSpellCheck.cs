@@ -273,5 +273,12 @@ namespace Nikse.SubtitleEdit.Forms
             buttonChangeAllWholeText.Enabled = buttonChangeWholeText.Enabled;
         }
 
+        private void buttonGoogleIt_Click(object sender, EventArgs e)
+        {
+            string text = textBoxWord.Text;
+            if (text.Trim().Length > 0)
+                System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(text));
+        }
+     
     }
 }
