@@ -64,6 +64,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new PE2(),
                     new PinnacleImpression(),
                     new PListCaption(),
+                    new QubeMasterImport(),
                     new QuickTimeText(),
                     new RealTime(),
                     new RhozetHarmonic(),
