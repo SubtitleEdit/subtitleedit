@@ -78,6 +78,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private delegate int libvlc_audio_set_track(IntPtr mediaPlayer, int trackNumber);
         libvlc_audio_set_track _libvlc_audio_set_track;
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int libvlc_video_take_snapshot(IntPtr mediaPlayer, byte num, byte[] filePath, UInt32 width, UInt32 height);
+        libvlc_video_take_snapshot _libvlc_video_take_snapshot;
+       
+
         // LibVLC Audio Controls - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__audio.html
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int libvlc_audio_get_volume(IntPtr mediaPlayer);
@@ -165,6 +170,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _libvlc_audio_get_track_count = (libvlc_audio_get_track_count)GetDllType(typeof(libvlc_audio_get_track_count), "libvlc_audio_get_track_count");
             _libvlc_audio_get_track = (libvlc_audio_get_track)GetDllType(typeof(libvlc_audio_get_track), "libvlc_audio_get_track");
             _libvlc_audio_set_track = (libvlc_audio_set_track)GetDllType(typeof(libvlc_audio_set_track), "libvlc_audio_set_track");
+            _libvlc_video_take_snapshot = (libvlc_video_take_snapshot)GetDllType(typeof(libvlc_video_take_snapshot), "libvlc_video_take_snapshot");
 
             _libvlc_audio_get_volume = (libvlc_audio_get_volume)GetDllType(typeof(libvlc_audio_get_volume), "libvlc_audio_get_volume");
             _libvlc_audio_set_volume = (libvlc_audio_set_volume)GetDllType(typeof(libvlc_audio_set_volume), "libvlc_audio_set_volume");
@@ -342,6 +348,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 _libvlc_audio_set_track(_mediaPlayer, value+1);
             }
+        }
+
+        public bool TakeSnapshot(string fileName, UInt32 width, UInt32 height)
+        {
+            if (_libvlc_video_take_snapshot == null)
+                return false;
+
+            return _libvlc_video_take_snapshot(_mediaPlayer, 0, Encoding.UTF8.GetBytes(fileName + "\0"), width, height) == 1;
         }
 
         public LibVlc11xDynamic MakeSecondMediaPlayer(System.Windows.Forms.Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
