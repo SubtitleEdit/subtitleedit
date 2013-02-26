@@ -9483,10 +9483,6 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeAutoDuration();
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == (Keys.Control | Keys.Shift | Keys.Alt) && e.KeyCode == Keys.C)
-            {
-                toolStripMenuItemBatchConvert_Click(null, null);
-            }
 
             // TABS - MUST BE LAST
             else if (tabControlButtons.SelectedTab == tabPageAdjust)
@@ -12399,6 +12395,7 @@ namespace Nikse.SubtitleEdit.Forms
             removeTextForHearImparedToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI);
             ChangeCasingToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsChangeCasing);
             toolStripMenuItemShowOriginalInPreview.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
+            toolStripMenuItemBatchConvert.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsBatchConvert);
 
             showhideVideoToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
             _toggleVideoDockUndock = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
