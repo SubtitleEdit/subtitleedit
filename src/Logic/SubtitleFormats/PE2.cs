@@ -111,6 +111,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         var tc = DecodeTimeCode(parts);
                         paragraph.EndTime = tc;
                         subtitle.Paragraphs.Add(paragraph);
+                        if (paragraph.StartTime.TotalMilliseconds < 0.001)
+                            _errorCount++;
                         paragraph = new Paragraph();
                         expecting = ExpectingLine.TimeStart;
                     }
@@ -132,7 +134,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
                     }
-                    else if (line.Trim().Length > 0)
+                    else if (line.Trim().Length > 0 && line != "#PE2 Format file")
                     {
                         _errorCount++;
                     }
