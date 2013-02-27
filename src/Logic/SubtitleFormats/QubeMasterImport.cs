@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             subtitle.Paragraphs.Add(p);
                         else
                             _errorCount++;                            
-                        p = null;
+                        p = new Paragraph();
                     }
                 }                
                 else if (line.Trim().Length > 0 && p != null)
