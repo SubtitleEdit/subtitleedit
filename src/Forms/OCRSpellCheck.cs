@@ -279,6 +279,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (text.Trim().Length > 0)
                 System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(text));
         }
-     
+
     }
 }

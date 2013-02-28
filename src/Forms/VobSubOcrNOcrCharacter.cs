@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
-        }     
+        }
 
         public NOcrChar NOcrChar
         {
@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             pictureBoxSubtitleImage.Image = vobSubImage;
-            pictureBoxCharacter.Image = character.Bitmap;            
+            pictureBoxCharacter.Image = character.Bitmap;
 
             Bitmap org = (Bitmap)vobSubImage.Clone();
             Bitmap bm = new Bitmap(org.Width, org.Height);
