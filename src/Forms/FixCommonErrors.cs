@@ -1517,6 +1517,57 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                //fix missing spaces in "The<i>Bombshell</i> will gone." to "The <i>Bombshell</i> will gone."
+                if ((p.Text.Contains("<i>") && p.Text.Length > 5))
+                {
+                    int index = p.Text.IndexOf("<i>");
+                    string newText = p.Text;
+                    while (index != -1)
+                    {
+                        if (newText.Length > index + 6 && index > 1)
+                        {
+                            if (Utilities.AllLettersAndNumbers.Contains(newText[index + 3].ToString()) &&
+                                Utilities.AllLettersAndNumbers.Contains(newText[index - 1].ToString()))
+                                newText = newText.Insert(index, " ");
+                        }
+                        index = newText.IndexOf("<i>", index + 3);
+                    }
+                    if (newText != p.Text && AllowFix(p, fixAction))
+                    {
+                        _totalFixes++;
+                        missingSpaces++;
+
+                        string oldText = p.Text;
+                        p.Text = newText;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
+                }
+
+                //fix missing spaces in "The <i>Bombshell</i>will gone." to "The <i>Bombshell</i> will gone."
+                if ((p.Text.Contains("</i>") && p.Text.Length > 5))
+                {
+                    int index = p.Text.IndexOf("</i>");
+                    string newText = p.Text;
+                    while (index != -1)
+                    {
+                        if (newText.Length > index + 6 && index > 1)
+                        {
+                            if (Utilities.AllLettersAndNumbers.Contains(newText[index + 3].ToString()) &&
+                                Utilities.AllLettersAndNumbers.Contains(newText[index - 1].ToString()))
+                                newText = newText.Insert(index + 4, " ");
+                        }
+                        index = newText.IndexOf("</i>", index + 4);
+                    }
+                    if (newText != p.Text && AllowFix(p, fixAction))
+                    {
+                        _totalFixes++;
+                        missingSpaces++;
+
+                        string oldText = p.Text;
+                        p.Text = newText;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
+                }
 
             }
             if (missingSpaces > 0)

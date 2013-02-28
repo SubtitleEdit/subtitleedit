@@ -1803,6 +1803,7 @@
             public string OcrMethod { get; set; }
             public string OcrViaModi { get; set; }
             public string OcrViaTesseract { get; set; }
+            public string OcrViaNOCR { get; set; }
             public string Language { get; set; }
             public string OcrViaImageCompare { get; set; }
             public string ImageDatabase { get; set; }

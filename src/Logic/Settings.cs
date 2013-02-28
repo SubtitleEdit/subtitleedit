@@ -215,12 +215,12 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (smpte)
             {
-                CurrentDCinemaSubtitleId = "urn:uuid:40950d85-63eb-4ee2-b1e8-45c126601b94";
+                CurrentDCinemaSubtitleId = "urn:uuid:" + Guid.NewGuid().ToString();
                 CurrentDCinemaLanguage = "en";
             }
             else
             {
-                CurrentDCinemaSubtitleId = "40950d85-63eb-4ee2-b1e8-45c126601b94";
+                CurrentDCinemaSubtitleId = Guid.NewGuid().ToString();
                 CurrentDCinemaLanguage = "English";
             }
             CurrentDCinemaIssueDate = DateTime.Now.ToString("s") + ".000-00:00";

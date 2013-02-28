@@ -68,6 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
+            bool expectStartTime = true;
             var p = new Paragraph();
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
@@ -81,10 +82,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         try
                         {
-                            if (p.StartTime.TotalMilliseconds == 0)
+                            if (expectStartTime)
+                            {
                                 p.StartTime = DecodeTimeCode(parts);
+                                expectStartTime = false;
+                            }
                             else
+                            {
+                                if (p.EndTime.TotalMilliseconds < 0.01)
+                                    _errorCount++;
                                 p.EndTime = DecodeTimeCode(parts);
+                            }
                         }
                         catch (Exception exception)
                         {
@@ -97,15 +105,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (p != null)
                     {
-                        if (p.StartTime.TotalMilliseconds > 0 && p.EndTime.TotalMilliseconds > 0)
-                            subtitle.Paragraphs.Add(p);
+                        if (p.StartTime.TotalMilliseconds == 0 && p.EndTime.TotalMilliseconds == 0)
+                            _errorCount++;
                         else
-                            _errorCount++;                            
+                            subtitle.Paragraphs.Add(p);
                         p = new Paragraph();
                     }
                 }                
                 else if (line.Trim().Length > 0 && p != null)
                 {
+                    expectStartTime = true;
                     p.Text = (p.Text + Environment.NewLine + line).Trim();
                     if (p.Text.Length > 500)
                     {

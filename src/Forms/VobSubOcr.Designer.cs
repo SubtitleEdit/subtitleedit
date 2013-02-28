@@ -56,13 +56,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
-            this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
-            this.GroupBoxTesseractMethod = new System.Windows.Forms.GroupBox();
-            this.checkBoxTesseractMusicOn = new System.Windows.Forms.CheckBox();
-            this.checkBoxTesseractItalicsOn = new System.Windows.Forms.CheckBox();
-            this.checkBoxUseModiInTesseractForUnknownWords = new System.Windows.Forms.CheckBox();
-            this.labelTesseractLanguage = new System.Windows.Forms.Label();
-            this.comboBoxTesseractLanguages = new System.Windows.Forms.ComboBox();
+            this.groupBoxNOCR = new System.Windows.Forms.GroupBox();
+            this.checkBoxNOcrCorrect = new System.Windows.Forms.CheckBox();
+            this.checkBoxRightToLeftNOCR = new System.Windows.Forms.CheckBox();
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR = new System.Windows.Forms.NumericUpDown();
+            this.labelNumberOfPixelsIsSpaceNOCR = new System.Windows.Forms.Label();
             this.groupBoxImageCompareMethod = new System.Windows.Forms.GroupBox();
             this.checkBoxRightToLeft = new System.Windows.Forms.CheckBox();
             this.numericUpDownPixelsIsSpace = new System.Windows.Forms.NumericUpDown();
@@ -71,6 +69,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxCharacterDatabase = new System.Windows.Forms.ComboBox();
             this.labelImageDatabase = new System.Windows.Forms.Label();
             this.buttonNewCharacterDatabase = new System.Windows.Forms.Button();
+            this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
+            this.GroupBoxTesseractMethod = new System.Windows.Forms.GroupBox();
+            this.checkBoxTesseractMusicOn = new System.Windows.Forms.CheckBox();
+            this.checkBoxTesseractItalicsOn = new System.Windows.Forms.CheckBox();
+            this.checkBoxUseModiInTesseractForUnknownWords = new System.Windows.Forms.CheckBox();
+            this.labelTesseractLanguage = new System.Windows.Forms.Label();
+            this.comboBoxTesseractLanguages = new System.Windows.Forms.ComboBox();
             this.groupBoxModiMethod = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxModiLanguage = new System.Windows.Forms.ComboBox();
@@ -84,6 +89,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxDictionaries = new System.Windows.Forms.ComboBox();
             this.checkBoxGuessUnknownWords = new System.Windows.Forms.CheckBox();
             this.tabControlLogs = new System.Windows.Forms.TabControl();
+            this.contextMenuStripAllFixes = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemClearFixes = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPageAllFixes = new System.Windows.Forms.TabPage();
             this.listBoxLog = new System.Windows.Forms.ListBox();
             this.tabPageSuggestions = new System.Windows.Forms.TabPage();
@@ -122,20 +129,22 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom = new System.Windows.Forms.SplitContainer();
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.contextMenuStripAllFixes = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItemClearFixes = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripGuessesUsed = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemClearGuesses = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkBoxNOcrItalic = new System.Windows.Forms.CheckBox();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
-            this.GroupBoxTesseractMethod.SuspendLayout();
+            this.groupBoxNOCR.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumberOfPixelsIsSpaceNOCR)).BeginInit();
             this.groupBoxImageCompareMethod.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPixelsIsSpace)).BeginInit();
+            this.GroupBoxTesseractMethod.SuspendLayout();
             this.groupBoxModiMethod.SuspendLayout();
             this.groupBoxOCRControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStartNumber)).BeginInit();
             this.groupBoxOcrAutoFix.SuspendLayout();
             this.tabControlLogs.SuspendLayout();
+            this.contextMenuStripAllFixes.SuspendLayout();
             this.tabPageAllFixes.SuspendLayout();
             this.tabPageSuggestions.SuspendLayout();
             this.tabPageUnknownWords.SuspendLayout();
@@ -150,7 +159,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom.Panel1.SuspendLayout();
             this.splitContainerBottom.Panel2.SuspendLayout();
             this.splitContainerBottom.SuspendLayout();
-            this.contextMenuStripAllFixes.SuspendLayout();
             this.contextMenuStripGuessesUsed.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -173,7 +181,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 276);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 254);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
@@ -349,9 +357,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxOcrMethod
             // 
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
             this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
@@ -360,89 +369,70 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOcrMethod.TabStop = false;
             this.groupBoxOcrMethod.Text = "OCR method";
             // 
-            // comboBoxOcrMethod
+            // groupBoxNOCR
             // 
-            this.comboBoxOcrMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxOcrMethod.FormattingEnabled = true;
-            this.comboBoxOcrMethod.Items.AddRange(new object[] {
-            "OCR via tesseract",
-            "OCR via image compare",
-            "OCR via Microsoftr MODI"});
-            this.comboBoxOcrMethod.Location = new System.Drawing.Point(13, 20);
-            this.comboBoxOcrMethod.Name = "comboBoxOcrMethod";
-            this.comboBoxOcrMethod.Size = new System.Drawing.Size(366, 21);
-            this.comboBoxOcrMethod.TabIndex = 0;
-            this.comboBoxOcrMethod.SelectedIndexChanged += new System.EventHandler(this.ComboBoxOcrMethodSelectedIndexChanged);
+            this.groupBoxNOCR.Controls.Add(this.checkBoxNOcrItalic);
+            this.groupBoxNOCR.Controls.Add(this.checkBoxNOcrCorrect);
+            this.groupBoxNOCR.Controls.Add(this.checkBoxRightToLeftNOCR);
+            this.groupBoxNOCR.Controls.Add(this.numericUpDownNumberOfPixelsIsSpaceNOCR);
+            this.groupBoxNOCR.Controls.Add(this.labelNumberOfPixelsIsSpaceNOCR);
+            this.groupBoxNOCR.Location = new System.Drawing.Point(7, 38);
+            this.groupBoxNOCR.Name = "groupBoxNOCR";
+            this.groupBoxNOCR.Size = new System.Drawing.Size(366, 131);
+            this.groupBoxNOCR.TabIndex = 7;
+            this.groupBoxNOCR.TabStop = false;
+            this.groupBoxNOCR.Text = "nOCR";
             // 
-            // GroupBoxTesseractMethod
+            // checkBoxNOcrCorrect
             // 
-            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractMusicOn);
-            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractItalicsOn);
-            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxUseModiInTesseractForUnknownWords);
-            this.GroupBoxTesseractMethod.Controls.Add(this.labelTesseractLanguage);
-            this.GroupBoxTesseractMethod.Controls.Add(this.comboBoxTesseractLanguages);
-            this.GroupBoxTesseractMethod.Location = new System.Drawing.Point(13, 31);
-            this.GroupBoxTesseractMethod.Name = "GroupBoxTesseractMethod";
-            this.GroupBoxTesseractMethod.Size = new System.Drawing.Size(366, 131);
-            this.GroupBoxTesseractMethod.TabIndex = 1;
-            this.GroupBoxTesseractMethod.TabStop = false;
-            this.GroupBoxTesseractMethod.Text = "Tesseract";
+            this.checkBoxNOcrCorrect.AutoSize = true;
+            this.checkBoxNOcrCorrect.Location = new System.Drawing.Point(27, 38);
+            this.checkBoxNOcrCorrect.Name = "checkBoxNOcrCorrect";
+            this.checkBoxNOcrCorrect.Size = new System.Drawing.Size(116, 17);
+            this.checkBoxNOcrCorrect.TabIndex = 7;
+            this.checkBoxNOcrCorrect.Text = "Draw missing texts";
+            this.checkBoxNOcrCorrect.UseVisualStyleBackColor = true;
             // 
-            // checkBoxTesseractMusicOn
+            // checkBoxRightToLeftNOCR
             // 
-            this.checkBoxTesseractMusicOn.AutoSize = true;
-            this.checkBoxTesseractMusicOn.Checked = true;
-            this.checkBoxTesseractMusicOn.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxTesseractMusicOn.Location = new System.Drawing.Point(99, 101);
-            this.checkBoxTesseractMusicOn.Name = "checkBoxTesseractMusicOn";
-            this.checkBoxTesseractMusicOn.Size = new System.Drawing.Size(94, 17);
-            this.checkBoxTesseractMusicOn.TabIndex = 4;
-            this.checkBoxTesseractMusicOn.Text = "Music symbols";
-            this.checkBoxTesseractMusicOn.UseVisualStyleBackColor = true;
+            this.checkBoxRightToLeftNOCR.AutoSize = true;
+            this.checkBoxRightToLeftNOCR.Location = new System.Drawing.Point(173, 100);
+            this.checkBoxRightToLeftNOCR.Name = "checkBoxRightToLeftNOCR";
+            this.checkBoxRightToLeftNOCR.Size = new System.Drawing.Size(83, 17);
+            this.checkBoxRightToLeftNOCR.TabIndex = 6;
+            this.checkBoxRightToLeftNOCR.Text = "Right to left";
+            this.checkBoxRightToLeftNOCR.UseVisualStyleBackColor = true;
             // 
-            // checkBoxTesseractItalicsOn
+            // numericUpDownNumberOfPixelsIsSpaceNOCR
             // 
-            this.checkBoxTesseractItalicsOn.AutoSize = true;
-            this.checkBoxTesseractItalicsOn.Checked = true;
-            this.checkBoxTesseractItalicsOn.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxTesseractItalicsOn.Location = new System.Drawing.Point(22, 101);
-            this.checkBoxTesseractItalicsOn.Name = "checkBoxTesseractItalicsOn";
-            this.checkBoxTesseractItalicsOn.Size = new System.Drawing.Size(53, 17);
-            this.checkBoxTesseractItalicsOn.TabIndex = 3;
-            this.checkBoxTesseractItalicsOn.Text = "Italics";
-            this.checkBoxTesseractItalicsOn.UseVisualStyleBackColor = true;
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Location = new System.Drawing.Point(173, 67);
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Name = "numericUpDownNumberOfPixelsIsSpaceNOCR";
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Size = new System.Drawing.Size(50, 21);
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.TabIndex = 5;
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
-            // checkBoxUseModiInTesseractForUnknownWords
+            // labelNumberOfPixelsIsSpaceNOCR
             // 
-            this.checkBoxUseModiInTesseractForUnknownWords.AutoSize = true;
-            this.checkBoxUseModiInTesseractForUnknownWords.Checked = true;
-            this.checkBoxUseModiInTesseractForUnknownWords.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxUseModiInTesseractForUnknownWords.Enabled = false;
-            this.checkBoxUseModiInTesseractForUnknownWords.Location = new System.Drawing.Point(22, 74);
-            this.checkBoxUseModiInTesseractForUnknownWords.Name = "checkBoxUseModiInTesseractForUnknownWords";
-            this.checkBoxUseModiInTesseractForUnknownWords.Size = new System.Drawing.Size(165, 17);
-            this.checkBoxUseModiInTesseractForUnknownWords.TabIndex = 2;
-            this.checkBoxUseModiInTesseractForUnknownWords.Text = "Try MODI for unknown words";
-            this.checkBoxUseModiInTesseractForUnknownWords.UseVisualStyleBackColor = true;
-            // 
-            // labelTesseractLanguage
-            // 
-            this.labelTesseractLanguage.AutoSize = true;
-            this.labelTesseractLanguage.Location = new System.Drawing.Point(18, 34);
-            this.labelTesseractLanguage.Name = "labelTesseractLanguage";
-            this.labelTesseractLanguage.Size = new System.Drawing.Size(54, 13);
-            this.labelTesseractLanguage.TabIndex = 0;
-            this.labelTesseractLanguage.Text = "Language";
-            // 
-            // comboBoxTesseractLanguages
-            // 
-            this.comboBoxTesseractLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTesseractLanguages.FormattingEnabled = true;
-            this.comboBoxTesseractLanguages.Location = new System.Drawing.Point(99, 31);
-            this.comboBoxTesseractLanguages.Name = "comboBoxTesseractLanguages";
-            this.comboBoxTesseractLanguages.Size = new System.Drawing.Size(195, 21);
-            this.comboBoxTesseractLanguages.TabIndex = 1;
-            this.comboBoxTesseractLanguages.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTesseractLanguagesSelectedIndexChanged);
+            this.labelNumberOfPixelsIsSpaceNOCR.AutoSize = true;
+            this.labelNumberOfPixelsIsSpaceNOCR.Location = new System.Drawing.Point(6, 69);
+            this.labelNumberOfPixelsIsSpaceNOCR.Name = "labelNumberOfPixelsIsSpaceNOCR";
+            this.labelNumberOfPixelsIsSpaceNOCR.Size = new System.Drawing.Size(104, 13);
+            this.labelNumberOfPixelsIsSpaceNOCR.TabIndex = 4;
+            this.labelNumberOfPixelsIsSpaceNOCR.Text = "No of pixels is space";
             // 
             // groupBoxImageCompareMethod
             // 
@@ -539,6 +529,91 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonNewCharacterDatabase.Text = "New";
             this.buttonNewCharacterDatabase.UseVisualStyleBackColor = true;
             this.buttonNewCharacterDatabase.Click += new System.EventHandler(this.ButtonNewCharacterDatabaseClick);
+            // 
+            // comboBoxOcrMethod
+            // 
+            this.comboBoxOcrMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxOcrMethod.FormattingEnabled = true;
+            this.comboBoxOcrMethod.Items.AddRange(new object[] {
+            "OCR via tesseract",
+            "OCR via image compare",
+            "OCR via Microsoftr MODI",
+            "OCR via nOCR"});
+            this.comboBoxOcrMethod.Location = new System.Drawing.Point(13, 20);
+            this.comboBoxOcrMethod.Name = "comboBoxOcrMethod";
+            this.comboBoxOcrMethod.Size = new System.Drawing.Size(366, 21);
+            this.comboBoxOcrMethod.TabIndex = 0;
+            this.comboBoxOcrMethod.SelectedIndexChanged += new System.EventHandler(this.ComboBoxOcrMethodSelectedIndexChanged);
+            // 
+            // GroupBoxTesseractMethod
+            // 
+            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractMusicOn);
+            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractItalicsOn);
+            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxUseModiInTesseractForUnknownWords);
+            this.GroupBoxTesseractMethod.Controls.Add(this.labelTesseractLanguage);
+            this.GroupBoxTesseractMethod.Controls.Add(this.comboBoxTesseractLanguages);
+            this.GroupBoxTesseractMethod.Location = new System.Drawing.Point(13, 31);
+            this.GroupBoxTesseractMethod.Name = "GroupBoxTesseractMethod";
+            this.GroupBoxTesseractMethod.Size = new System.Drawing.Size(366, 131);
+            this.GroupBoxTesseractMethod.TabIndex = 1;
+            this.GroupBoxTesseractMethod.TabStop = false;
+            this.GroupBoxTesseractMethod.Text = "Tesseract";
+            // 
+            // checkBoxTesseractMusicOn
+            // 
+            this.checkBoxTesseractMusicOn.AutoSize = true;
+            this.checkBoxTesseractMusicOn.Checked = true;
+            this.checkBoxTesseractMusicOn.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxTesseractMusicOn.Location = new System.Drawing.Point(99, 101);
+            this.checkBoxTesseractMusicOn.Name = "checkBoxTesseractMusicOn";
+            this.checkBoxTesseractMusicOn.Size = new System.Drawing.Size(94, 17);
+            this.checkBoxTesseractMusicOn.TabIndex = 4;
+            this.checkBoxTesseractMusicOn.Text = "Music symbols";
+            this.checkBoxTesseractMusicOn.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxTesseractItalicsOn
+            // 
+            this.checkBoxTesseractItalicsOn.AutoSize = true;
+            this.checkBoxTesseractItalicsOn.Checked = true;
+            this.checkBoxTesseractItalicsOn.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxTesseractItalicsOn.Location = new System.Drawing.Point(22, 101);
+            this.checkBoxTesseractItalicsOn.Name = "checkBoxTesseractItalicsOn";
+            this.checkBoxTesseractItalicsOn.Size = new System.Drawing.Size(53, 17);
+            this.checkBoxTesseractItalicsOn.TabIndex = 3;
+            this.checkBoxTesseractItalicsOn.Text = "Italics";
+            this.checkBoxTesseractItalicsOn.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxUseModiInTesseractForUnknownWords
+            // 
+            this.checkBoxUseModiInTesseractForUnknownWords.AutoSize = true;
+            this.checkBoxUseModiInTesseractForUnknownWords.Checked = true;
+            this.checkBoxUseModiInTesseractForUnknownWords.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxUseModiInTesseractForUnknownWords.Enabled = false;
+            this.checkBoxUseModiInTesseractForUnknownWords.Location = new System.Drawing.Point(22, 74);
+            this.checkBoxUseModiInTesseractForUnknownWords.Name = "checkBoxUseModiInTesseractForUnknownWords";
+            this.checkBoxUseModiInTesseractForUnknownWords.Size = new System.Drawing.Size(165, 17);
+            this.checkBoxUseModiInTesseractForUnknownWords.TabIndex = 2;
+            this.checkBoxUseModiInTesseractForUnknownWords.Text = "Try MODI for unknown words";
+            this.checkBoxUseModiInTesseractForUnknownWords.UseVisualStyleBackColor = true;
+            // 
+            // labelTesseractLanguage
+            // 
+            this.labelTesseractLanguage.AutoSize = true;
+            this.labelTesseractLanguage.Location = new System.Drawing.Point(18, 34);
+            this.labelTesseractLanguage.Name = "labelTesseractLanguage";
+            this.labelTesseractLanguage.Size = new System.Drawing.Size(54, 13);
+            this.labelTesseractLanguage.TabIndex = 0;
+            this.labelTesseractLanguage.Text = "Language";
+            // 
+            // comboBoxTesseractLanguages
+            // 
+            this.comboBoxTesseractLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTesseractLanguages.FormattingEnabled = true;
+            this.comboBoxTesseractLanguages.Location = new System.Drawing.Point(99, 31);
+            this.comboBoxTesseractLanguages.Name = "comboBoxTesseractLanguages";
+            this.comboBoxTesseractLanguages.Size = new System.Drawing.Size(195, 21);
+            this.comboBoxTesseractLanguages.TabIndex = 1;
+            this.comboBoxTesseractLanguages.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTesseractLanguagesSelectedIndexChanged);
             // 
             // groupBoxModiMethod
             // 
@@ -703,6 +778,20 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabControlLogs.SelectedIndex = 0;
             this.tabControlLogs.Size = new System.Drawing.Size(383, 181);
             this.tabControlLogs.TabIndex = 7;
+            // 
+            // contextMenuStripAllFixes
+            // 
+            this.contextMenuStripAllFixes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemClearFixes});
+            this.contextMenuStripAllFixes.Name = "contextMenuStripUnknownWords";
+            this.contextMenuStripAllFixes.Size = new System.Drawing.Size(102, 26);
+            // 
+            // toolStripMenuItemClearFixes
+            // 
+            this.toolStripMenuItemClearFixes.Name = "toolStripMenuItemClearFixes";
+            this.toolStripMenuItemClearFixes.Size = new System.Drawing.Size(101, 22);
+            this.toolStripMenuItemClearFixes.Text = "Clear";
+            this.toolStripMenuItemClearFixes.Click += new System.EventHandler(this.toolStripMenuItemClearFixes_Click);
             // 
             // tabPageAllFixes
             // 
@@ -1136,33 +1225,29 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
             // 
-            // contextMenuStripAllFixes
-            // 
-            this.contextMenuStripAllFixes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemClearFixes});
-            this.contextMenuStripAllFixes.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripAllFixes.Size = new System.Drawing.Size(102, 26);
-            // 
-            // toolStripMenuItemClearFixes
-            // 
-            this.toolStripMenuItemClearFixes.Name = "toolStripMenuItemClearFixes";
-            this.toolStripMenuItemClearFixes.Size = new System.Drawing.Size(101, 22);
-            this.toolStripMenuItemClearFixes.Text = "Clear";
-            this.toolStripMenuItemClearFixes.Click += new System.EventHandler(this.toolStripMenuItemClearFixes_Click);
-            // 
             // contextMenuStripGuessesUsed
             // 
             this.contextMenuStripGuessesUsed.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemClearGuesses});
             this.contextMenuStripGuessesUsed.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripGuessesUsed.Size = new System.Drawing.Size(153, 48);
+            this.contextMenuStripGuessesUsed.Size = new System.Drawing.Size(102, 26);
             // 
             // toolStripMenuItemClearGuesses
             // 
             this.toolStripMenuItemClearGuesses.Name = "toolStripMenuItemClearGuesses";
-            this.toolStripMenuItemClearGuesses.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemClearGuesses.Size = new System.Drawing.Size(101, 22);
             this.toolStripMenuItemClearGuesses.Text = "Clear";
             this.toolStripMenuItemClearGuesses.Click += new System.EventHandler(this.toolStripMenuItemClearGuesses_Click);
+            // 
+            // checkBoxNOcrItalic
+            // 
+            this.checkBoxNOcrItalic.AutoSize = true;
+            this.checkBoxNOcrItalic.Location = new System.Drawing.Point(187, 28);
+            this.checkBoxNOcrItalic.Name = "checkBoxNOcrItalic";
+            this.checkBoxNOcrItalic.Size = new System.Drawing.Size(49, 17);
+            this.checkBoxNOcrItalic.TabIndex = 8;
+            this.checkBoxNOcrItalic.Text = "Italic";
+            this.checkBoxNOcrItalic.UseVisualStyleBackColor = true;
             // 
             // VobSubOcr
             // 
@@ -1191,11 +1276,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.Resize += new System.EventHandler(this.VobSubOcr_Resize);
             this.contextMenuStripListview.ResumeLayout(false);
             this.groupBoxOcrMethod.ResumeLayout(false);
-            this.GroupBoxTesseractMethod.ResumeLayout(false);
-            this.GroupBoxTesseractMethod.PerformLayout();
+            this.groupBoxNOCR.ResumeLayout(false);
+            this.groupBoxNOCR.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumberOfPixelsIsSpaceNOCR)).EndInit();
             this.groupBoxImageCompareMethod.ResumeLayout(false);
             this.groupBoxImageCompareMethod.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPixelsIsSpace)).EndInit();
+            this.GroupBoxTesseractMethod.ResumeLayout(false);
+            this.GroupBoxTesseractMethod.PerformLayout();
             this.groupBoxModiMethod.ResumeLayout(false);
             this.groupBoxModiMethod.PerformLayout();
             this.groupBoxOCRControls.ResumeLayout(false);
@@ -1204,6 +1292,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOcrAutoFix.ResumeLayout(false);
             this.groupBoxOcrAutoFix.PerformLayout();
             this.tabControlLogs.ResumeLayout(false);
+            this.contextMenuStripAllFixes.ResumeLayout(false);
             this.tabPageAllFixes.ResumeLayout(false);
             this.tabPageSuggestions.ResumeLayout(false);
             this.tabPageUnknownWords.ResumeLayout(false);
@@ -1221,7 +1310,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom.Panel1.PerformLayout();
             this.splitContainerBottom.Panel2.ResumeLayout(false);
             this.splitContainerBottom.ResumeLayout(false);
-            this.contextMenuStripAllFixes.ResumeLayout(false);
             this.contextMenuStripGuessesUsed.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1325,5 +1413,11 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemClearFixes;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripGuessesUsed;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemClearGuesses;
+        private System.Windows.Forms.GroupBox groupBoxNOCR;
+        private System.Windows.Forms.CheckBox checkBoxRightToLeftNOCR;
+        private System.Windows.Forms.NumericUpDown numericUpDownNumberOfPixelsIsSpaceNOCR;
+        private System.Windows.Forms.Label labelNumberOfPixelsIsSpaceNOCR;
+        private System.Windows.Forms.CheckBox checkBoxNOcrCorrect;
+        private System.Windows.Forms.CheckBox checkBoxNOcrItalic;
     }
 }
