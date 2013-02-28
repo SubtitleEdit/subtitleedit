@@ -1542,7 +1542,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ExportPngXml_Shown(object sender, EventArgs e)
         {
-            _isLoading = false;          
+            _isLoading = false;
         }
 
         private void comboBoxHAlign_SelectedIndexChanged(object sender, EventArgs e)

@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int libvlc_video_take_snapshot(IntPtr mediaPlayer, byte num, byte[] filePath, UInt32 width, UInt32 height);
         libvlc_video_take_snapshot _libvlc_video_take_snapshot;
-       
+
 
         // LibVLC Audio Controls - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__audio.html
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

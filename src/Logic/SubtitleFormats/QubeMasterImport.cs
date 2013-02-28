@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 // ToText code by Tosil Velkoff, tosil@velkoff.net
 // Based on UnknownSubtitle44
     //SubLine1
-    //SubLine2  
+    //SubLine2
     //10:01:04:12
     //10:01:07:09
         static Regex regexTimeCodes1 = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
@@ -46,17 +46,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var sb = new StringBuilder();
             int index = 0;
-            
+
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (index != 0) sb.AppendLine();
                 index++;
-                
+
                 StringBuilder text = new StringBuilder();
                 sb.AppendLine(Utilities.RemoveHtmlTags(p.Text));
                 sb.AppendLine(EncodeTimeCode(p.StartTime));
                 sb.AppendLine(EncodeTimeCode(p.EndTime));
-               
+
             }
             return sb.ToString();
         }
@@ -73,10 +73,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
-                string s = line.Trim();               
+                string s = line.Trim();
                 var match = regexTimeCodes1.Match(s);
                 if (match.Success)
-                {                   
+                {
                     string[] parts = s.Split(':');
                     if (parts.Length == 4)
                     {
@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             subtitle.Paragraphs.Add(p);
                         p = new Paragraph();
                     }
-                }                
+                }
                 else if (line.Trim().Length > 0 && p != null)
                 {
                     expectStartTime = true;
@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         _errorCount+=10;
                         return;
-                    }                    
+                    }
                 }
             }
             if (p != null && p.EndTime.TotalMilliseconds > 0)

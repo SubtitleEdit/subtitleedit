@@ -1215,7 +1215,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            
+
             if (checkBoxNOcrItalic.Checked)
             {
 
@@ -1223,7 +1223,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int crop;
                 nbmp = new NikseBitmap(ImageSplitter.CropTopAndBottom(unItalicedBmp, out crop));
                 unItalicedBmp.Dispose();
-                 
+
 
                 //NikseBitmap nbmp = new NikseBitmap(bmp);
                // nbmp = unItalicedBmp;
@@ -1286,7 +1286,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (result == null)
             {
                 if (checkBoxNOcrCorrect.Checked)
-                    return null; 
+                    return null;
                 else
                     return new CompareMatch("?", false, 0, null);
             }

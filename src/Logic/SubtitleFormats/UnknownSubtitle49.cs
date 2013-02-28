@@ -42,18 +42,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-//10 04 36 02 
-//10 04 37 04 
-// 
-//Greetings. 
-//10 04 37 06 
-//10 04 40 08 
-//It's confirmed, after reading 
-//Not Out on the poster.. 
-//10 04 40 15 
-//10 04 44 06 
-//..you have not come to pass you 
-//time, in this unique story. 
+//10 04 36 02
+//10 04 37 04
+//
+//Greetings.
+//10 04 37 06
+//10 04 40 08
+//It's confirmed, after reading
+//Not Out on the poster..
+//10 04 40 15
+//10 04 44 06
+//..you have not come to pass you
+//time, in this unique story.
 
             const string paragraphWriteFormat = "{0}{3}{1}{3}{2}";
             var sb = new StringBuilder();
