@@ -338,5 +338,28 @@ namespace Test
         }
         #endregion
 
+
+        #region Fix missingspaces
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingSpacesItalicBegin()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "The<i>Bombshell</i> will gone.");
+            target.FixMissingSpaces();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The <i>Bombshell</i> will gone.");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingSpacesItalicEnd()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "The<i>Bombshell</i> will gone.");
+            target.FixMissingSpaces();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The <i>Bombshell</i> will gone.");
+        }
+
+        #endregion
     }
 }
