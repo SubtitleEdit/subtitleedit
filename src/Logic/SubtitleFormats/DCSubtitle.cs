@@ -97,8 +97,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 languageEnglishName = "English";
             }
 
+            string hex = Guid.NewGuid().ToString().Replace("-", string.Empty);
+            hex = hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+
             string xmlStructure = "<DCSubtitle Version=\"1.0\">" + Environment.NewLine +
-                                    "    <SubtitleID>" + "4EB245B8-4D3A-4158-9516-95DD20E8322E".ToLower() + "</SubtitleID>" + Environment.NewLine +
+                                    "    <SubtitleID>" + hex.ToLower() + "</SubtitleID>" + Environment.NewLine +
                                     "    <MovieTitle></MovieTitle>" + Environment.NewLine +
                                     "    <ReelNumber>1</ReelNumber>" + Environment.NewLine +
                                     "    <Language>" + languageEnglishName + "</Language>" + Environment.NewLine +
@@ -122,7 +125,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Configuration.Settings.SubtitleSettings.InitializeDCinameSettings(true);
 
             xml.DocumentElement.SelectSingleNode("MovieTitle").InnerText = ss.CurrentDCinemaMovieTitle;
-            xml.DocumentElement.SelectSingleNode("SubtitleID").InnerText = ss.CurrentDCinemaSubtitleId;
+            xml.DocumentElement.SelectSingleNode("SubtitleID").InnerText = ss.CurrentDCinemaSubtitleId.Replace("urn:uuid:", string.Empty);
             xml.DocumentElement.SelectSingleNode("ReelNumber").InnerText = ss.CurrentDCinemaReelNumber;
             xml.DocumentElement.SelectSingleNode("Language").InnerText = ss.CurrentDCinemaLanguage;
             xml.DocumentElement.SelectSingleNode("LoadFont").Attributes["URI"].InnerText = ss.CurrentDCinemaFontUri;

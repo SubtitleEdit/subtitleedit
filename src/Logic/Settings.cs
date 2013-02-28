@@ -220,7 +220,9 @@ namespace Nikse.SubtitleEdit.Logic
             }
             else
             {
-                CurrentDCinemaSubtitleId = Guid.NewGuid().ToString();
+                string hex = Guid.NewGuid().ToString().Replace("-", string.Empty).ToLower();
+                hex = hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+                CurrentDCinemaSubtitleId = hex;
                 CurrentDCinemaLanguage = "English";
             }
             CurrentDCinemaIssueDate = DateTime.Now.ToString("s") + ".000-00:00";
