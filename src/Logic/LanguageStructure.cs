@@ -165,6 +165,7 @@
             public string Converted { get; set; }
             public string ConvertedX { get; set; }
             public string Settings { get; set; }
+            public string AutoBalance { get; set; }            
         }
 
         public class Beamer
