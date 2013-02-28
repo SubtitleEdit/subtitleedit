@@ -263,6 +263,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Converted = "Converted",
                 ConvertedX = "Converted ({0})",
                 Settings = "Settings",
+                AutoBalance = "Auto balance lines",
             };
 
             Beamer = new LanguageStructure.Beamer

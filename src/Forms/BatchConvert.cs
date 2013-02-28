@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             public bool FixCommonErrors { get; set; }
             public bool MultipleReplaceActive { get; set; }
+            public bool AutoBalanceActive { get; set; }
             public ListViewItem Item { get; set; }
             public Subtitle Subtitle { get; set; }
             public SubtitleFormat Format { get; set; }
@@ -27,10 +28,11 @@ namespace Nikse.SubtitleEdit.Forms
             public string ToFormat { get; set; }
             public SubtitleFormat SourceFormat { get; set; }
 
-            public ThreadDoWorkParameter(bool fixCommonErrors, bool multipleReplace, ListViewItem item, Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language, string fileName, string toFormat, SubtitleFormat sourceFormat)
+            public ThreadDoWorkParameter(bool fixCommonErrors, bool multipleReplace, bool autoBalance, ListViewItem item, Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language, string fileName, string toFormat, SubtitleFormat sourceFormat)
             {
                 FixCommonErrors = fixCommonErrors;
                 MultipleReplaceActive = multipleReplace;
+                AutoBalanceActive = autoBalance;
                 Item = item;
                 Subtitle = subtitle;
                 Format = format;
@@ -146,12 +148,14 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxFixCasing.Checked = Configuration.Settings.Tools.BatchConvertFixCasing;
             checkBoxFixCommonErrors.Checked = Configuration.Settings.Tools.BatchConvertFixCommonErrors;
             checkBoxMultipleReplace.Checked = Configuration.Settings.Tools.BatchConvertMultipleReplace;
+            checkBoxAutoBalance.Checked = Configuration.Settings.Tools.BatchConvertAutoBalance;
             checkBoxRemoveFormatting.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormatting;
             checkBoxRemoveTextForHI.Checked = Configuration.Settings.Tools.BatchConvertRemoveTextForHI;
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.Settings))
                 buttonFixCommonErrorSettings.Text = Configuration.Settings.Language.BatchConvert.Settings;
             checkBoxFixCommonErrors.Text = Configuration.Settings.Language.FixCommonErrors.Title;
             checkBoxMultipleReplace.Text = Configuration.Settings.Language.MultipleReplace.Title;
+            checkBoxAutoBalance.Text = Configuration.Settings.Language.BatchConvert.AutoBalance;
             radioButtonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
             radioButtonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
         }
@@ -635,7 +639,7 @@ namespace Nikse.SubtitleEdit.Forms
                             System.Threading.Thread.Sleep(100);
                         }
 
-                        ThreadDoWorkParameter parameter = new ThreadDoWorkParameter(checkBoxFixCommonErrors.Checked, checkBoxMultipleReplace.Checked, item, sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage, fileName, toFormat, format);
+                        ThreadDoWorkParameter parameter = new ThreadDoWorkParameter(checkBoxFixCommonErrors.Checked, checkBoxMultipleReplace.Checked, checkBoxAutoBalance.Checked, item, sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage, fileName, toFormat, format);
                         if (!worker1.IsBusy)
                             worker1.RunWorkerAsync(parameter);
                         else if (!worker2.IsBusy)
@@ -701,6 +705,18 @@ namespace Nikse.SubtitleEdit.Forms
                 catch (Exception exception)
                 {
                     p.Error = "MultipleReplace error: " + exception.Message;
+                }
+            }
+            if (p.AutoBalanceActive)
+            {
+                try
+                {
+                    foreach (Paragraph paragraph in p.Subtitle.Paragraphs)
+                        paragraph.Text = Utilities.AutoBreakLine(paragraph.Text);
+                }
+                catch (Exception exception)
+                {
+                    p.Error = "AutoBalance error: " + exception.Message;
                 }
             }
             e.Result = p;

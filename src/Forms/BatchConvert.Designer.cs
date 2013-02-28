@@ -32,6 +32,8 @@
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
+            this.buttonMultipleReplaceSettings = new System.Windows.Forms.Button();
+            this.checkBoxMultipleReplace = new System.Windows.Forms.CheckBox();
             this.checkBoxFixCommonErrors = new System.Windows.Forms.CheckBox();
             this.buttonFixCommonErrorSettings = new System.Windows.Forms.Button();
             this.groupBoxChangeFrameRate = new System.Windows.Forms.GroupBox();
@@ -40,6 +42,9 @@
             this.comboBoxFrameRateFrom = new System.Windows.Forms.ComboBox();
             this.labelFromFrameRate = new System.Windows.Forms.Label();
             this.groupBoxOffsetTimeCodes = new System.Windows.Forms.GroupBox();
+            this.radioButtonShowLater = new System.Windows.Forms.RadioButton();
+            this.radioButtonShowEarlier = new System.Windows.Forms.RadioButton();
+            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.labelHoursMinSecsMilliSecs = new System.Windows.Forms.Label();
             this.checkBoxFixCasing = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveTextForHI = new System.Windows.Forms.CheckBox();
@@ -70,11 +75,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.radioButtonShowLater = new System.Windows.Forms.RadioButton();
-            this.radioButtonShowEarlier = new System.Windows.Forms.RadioButton();
-            this.checkBoxMultipleReplace = new System.Windows.Forms.CheckBox();
-            this.buttonMultipleReplaceSettings = new System.Windows.Forms.Button();
-            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.checkBoxAutoBalance = new System.Windows.Forms.CheckBox();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxChangeFrameRate.SuspendLayout();
             this.groupBoxOffsetTimeCodes.SuspendLayout();
@@ -111,6 +112,7 @@
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.checkBoxAutoBalance);
             this.groupBoxConvertOptions.Controls.Add(this.buttonMultipleReplaceSettings);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxMultipleReplace);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxFixCommonErrors);
@@ -126,6 +128,27 @@
             this.groupBoxConvertOptions.TabIndex = 10;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
+            // 
+            // buttonMultipleReplaceSettings
+            // 
+            this.buttonMultipleReplaceSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonMultipleReplaceSettings.Location = new System.Drawing.Point(149, 119);
+            this.buttonMultipleReplaceSettings.Name = "buttonMultipleReplaceSettings";
+            this.buttonMultipleReplaceSettings.Size = new System.Drawing.Size(87, 21);
+            this.buttonMultipleReplaceSettings.TabIndex = 6;
+            this.buttonMultipleReplaceSettings.Text = "Settings...";
+            this.buttonMultipleReplaceSettings.UseVisualStyleBackColor = true;
+            this.buttonMultipleReplaceSettings.Click += new System.EventHandler(this.buttonMultipleReplaceSettings_Click);
+            // 
+            // checkBoxMultipleReplace
+            // 
+            this.checkBoxMultipleReplace.AutoSize = true;
+            this.checkBoxMultipleReplace.Location = new System.Drawing.Point(16, 122);
+            this.checkBoxMultipleReplace.Name = "checkBoxMultipleReplace";
+            this.checkBoxMultipleReplace.Size = new System.Drawing.Size(100, 17);
+            this.checkBoxMultipleReplace.TabIndex = 5;
+            this.checkBoxMultipleReplace.Text = "Multiple replace";
+            this.checkBoxMultipleReplace.UseVisualStyleBackColor = true;
             // 
             // checkBoxFixCommonErrors
             // 
@@ -207,6 +230,38 @@
             this.groupBoxOffsetTimeCodes.TabIndex = 8;
             this.groupBoxOffsetTimeCodes.TabStop = false;
             this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
+            // 
+            // radioButtonShowLater
+            // 
+            this.radioButtonShowLater.AutoSize = true;
+            this.radioButtonShowLater.Checked = true;
+            this.radioButtonShowLater.Location = new System.Drawing.Point(108, 61);
+            this.radioButtonShowLater.Name = "radioButtonShowLater";
+            this.radioButtonShowLater.Size = new System.Drawing.Size(75, 17);
+            this.radioButtonShowLater.TabIndex = 3;
+            this.radioButtonShowLater.TabStop = true;
+            this.radioButtonShowLater.Text = "Show later";
+            this.radioButtonShowLater.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonShowEarlier
+            // 
+            this.radioButtonShowEarlier.AutoSize = true;
+            this.radioButtonShowEarlier.Location = new System.Drawing.Point(108, 38);
+            this.radioButtonShowEarlier.Name = "radioButtonShowEarlier";
+            this.radioButtonShowEarlier.Size = new System.Drawing.Size(83, 17);
+            this.radioButtonShowEarlier.TabIndex = 2;
+            this.radioButtonShowEarlier.Text = "Show earlier";
+            this.radioButtonShowEarlier.UseVisualStyleBackColor = true;
+            // 
+            // timeUpDownAdjust
+            // 
+            this.timeUpDownAdjust.AutoSize = true;
+            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 37);
+            this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownAdjust.Name = "timeUpDownAdjust";
+            this.timeUpDownAdjust.Size = new System.Drawing.Size(92, 24);
+            this.timeUpDownAdjust.TabIndex = 1;
             // 
             // labelHoursMinSecsMilliSecs
             // 
@@ -489,58 +544,15 @@
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
             // 
-            // radioButtonShowLater
+            // checkBoxAutoBalance
             // 
-            this.radioButtonShowLater.AutoSize = true;
-            this.radioButtonShowLater.Checked = true;
-            this.radioButtonShowLater.Location = new System.Drawing.Point(108, 61);
-            this.radioButtonShowLater.Name = "radioButtonShowLater";
-            this.radioButtonShowLater.Size = new System.Drawing.Size(75, 17);
-            this.radioButtonShowLater.TabIndex = 3;
-            this.radioButtonShowLater.TabStop = true;
-            this.radioButtonShowLater.Text = "Show later";
-            this.radioButtonShowLater.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonShowEarlier
-            // 
-            this.radioButtonShowEarlier.AutoSize = true;
-            this.radioButtonShowEarlier.Location = new System.Drawing.Point(108, 38);
-            this.radioButtonShowEarlier.Name = "radioButtonShowEarlier";
-            this.radioButtonShowEarlier.Size = new System.Drawing.Size(83, 17);
-            this.radioButtonShowEarlier.TabIndex = 2;
-            this.radioButtonShowEarlier.Text = "Show earlier";
-            this.radioButtonShowEarlier.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxMultipleReplace
-            // 
-            this.checkBoxMultipleReplace.AutoSize = true;
-            this.checkBoxMultipleReplace.Location = new System.Drawing.Point(16, 122);
-            this.checkBoxMultipleReplace.Name = "checkBoxMultipleReplace";
-            this.checkBoxMultipleReplace.Size = new System.Drawing.Size(100, 17);
-            this.checkBoxMultipleReplace.TabIndex = 5;
-            this.checkBoxMultipleReplace.Text = "Multiple replace";
-            this.checkBoxMultipleReplace.UseVisualStyleBackColor = true;
-            // 
-            // buttonMultipleReplaceSettings
-            // 
-            this.buttonMultipleReplaceSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonMultipleReplaceSettings.Location = new System.Drawing.Point(149, 119);
-            this.buttonMultipleReplaceSettings.Name = "buttonMultipleReplaceSettings";
-            this.buttonMultipleReplaceSettings.Size = new System.Drawing.Size(87, 21);
-            this.buttonMultipleReplaceSettings.TabIndex = 6;
-            this.buttonMultipleReplaceSettings.Text = "Settings...";
-            this.buttonMultipleReplaceSettings.UseVisualStyleBackColor = true;
-            this.buttonMultipleReplaceSettings.Click += new System.EventHandler(this.buttonMultipleReplaceSettings_Click);
-            // 
-            // timeUpDownAdjust
-            // 
-            this.timeUpDownAdjust.AutoSize = true;
-            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 37);
-            this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownAdjust.Name = "timeUpDownAdjust";
-            this.timeUpDownAdjust.Size = new System.Drawing.Size(92, 24);
-            this.timeUpDownAdjust.TabIndex = 1;
+            this.checkBoxAutoBalance.AutoSize = true;
+            this.checkBoxAutoBalance.Location = new System.Drawing.Point(16, 145);
+            this.checkBoxAutoBalance.Name = "checkBoxAutoBalance";
+            this.checkBoxAutoBalance.Size = new System.Drawing.Size(113, 17);
+            this.checkBoxAutoBalance.TabIndex = 9;
+            this.checkBoxAutoBalance.Text = "Auto balance lines";
+            this.checkBoxAutoBalance.UseVisualStyleBackColor = true;
             // 
             // BatchConvert
             // 
@@ -624,6 +636,7 @@
         private System.Windows.Forms.RadioButton radioButtonShowEarlier;
         private System.Windows.Forms.Button buttonMultipleReplaceSettings;
         private System.Windows.Forms.CheckBox checkBoxMultipleReplace;
+        private System.Windows.Forms.CheckBox checkBoxAutoBalance;
 
     }
 }
