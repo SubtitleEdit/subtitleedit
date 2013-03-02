@@ -373,6 +373,18 @@ namespace Nikse.SubtitleEdit.Controls
                                         catch
                                         {
                                             fontFound = false;
+                                            if (s.Length > 0)
+                                            {
+                                                try
+                                                {
+                                                    fontColor = System.Drawing.ColorTranslator.FromHtml("#" + s);
+                                                    fontFound = true;
+                                                }
+                                                catch
+                                                {
+                                                    fontFound = false;
+                                                }
+                                            }
                                         }
                                     }
                                 }
