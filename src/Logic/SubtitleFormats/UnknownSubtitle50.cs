@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string paragraphWriteFormat = "{0}-{1}\r\n{2}\r\n\r\n";
+            const string paragraphWriteFormat = "{0}-{1}\r\n{2}";
             var sb = new StringBuilder();
             sb.AppendLine();
             sb.AppendLine();
@@ -62,9 +62,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text = Utilities.AutoBreakLine(text);
                 if (!text.Contains(Environment.NewLine))
                     text = Environment.NewLine + text;
-                sb.Append(string.Format(paragraphWriteFormat, FormatTime(p.StartTime), FormatTime(p.EndTime), text));
+                sb.AppendLine(string.Format(paragraphWriteFormat, FormatTime(p.StartTime), FormatTime(p.EndTime), text));
             }
-            return sb.ToString().Trim();
+            return sb.ToString().TrimEnd();
         }
 
         private string FormatTime(TimeCode timeCode)
