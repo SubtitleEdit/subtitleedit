@@ -40,7 +40,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelSubtitleImage = new System.Windows.Forms.Label();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBoxNewInput = new System.Windows.Forms.GroupBox();
             this.buttonZoomOut = new System.Windows.Forms.Button();
             this.buttonZoomIn = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -48,15 +48,15 @@
             this.radioButtonHot = new System.Windows.Forms.RadioButton();
             this.label2 = new System.Windows.Forms.Label();
             this.listBoxlinesBackground = new System.Windows.Forms.ListBox();
-            this.labelLines = new System.Windows.Forms.Label();
-            this.listBoxLinesForeground = new System.Windows.Forms.ListBox();
             this.contextMenuStripLinesBackground = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeBackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelLines = new System.Windows.Forms.Label();
+            this.listBoxLinesForeground = new System.Windows.Forms.ListBox();
             this.contextMenuLinesForeground = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeForegroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
-            this.groupBox1.SuspendLayout();
+            this.groupBoxNewInput.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.contextMenuStripLinesBackground.SuspendLayout();
             this.contextMenuLinesForeground.SuspendLayout();
@@ -91,7 +91,7 @@
             this.buttonAbort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAbort.DialogResult = System.Windows.Forms.DialogResult.Abort;
             this.buttonAbort.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAbort.Location = new System.Drawing.Point(541, 523);
+            this.buttonAbort.Location = new System.Drawing.Point(541, 613);
             this.buttonAbort.Name = "buttonAbort";
             this.buttonAbort.Size = new System.Drawing.Size(75, 21);
             this.buttonAbort.TabIndex = 25;
@@ -101,7 +101,7 @@
             // labelCharacters
             // 
             this.labelCharacters.AutoSize = true;
-            this.labelCharacters.Location = new System.Drawing.Point(185, 38);
+            this.labelCharacters.Location = new System.Drawing.Point(185, 88);
             this.labelCharacters.Name = "labelCharacters";
             this.labelCharacters.Size = new System.Drawing.Size(64, 13);
             this.labelCharacters.TabIndex = 30;
@@ -109,7 +109,7 @@
             // 
             // pictureBoxCharacter
             // 
-            this.pictureBoxCharacter.Location = new System.Drawing.Point(183, 59);
+            this.pictureBoxCharacter.Location = new System.Drawing.Point(183, 109);
             this.pictureBoxCharacter.Name = "pictureBoxCharacter";
             this.pictureBoxCharacter.Size = new System.Drawing.Size(99, 47);
             this.pictureBoxCharacter.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -122,7 +122,7 @@
             // labelCharactersAsText
             // 
             this.labelCharactersAsText.AutoSize = true;
-            this.labelCharactersAsText.Location = new System.Drawing.Point(9, 89);
+            this.labelCharactersAsText.Location = new System.Drawing.Point(185, 26);
             this.labelCharactersAsText.Name = "labelCharactersAsText";
             this.labelCharactersAsText.Size = new System.Drawing.Size(98, 13);
             this.labelCharactersAsText.TabIndex = 28;
@@ -130,7 +130,7 @@
             // 
             // textBoxCharacters
             // 
-            this.textBoxCharacters.Location = new System.Drawing.Point(12, 110);
+            this.textBoxCharacters.Location = new System.Drawing.Point(188, 47);
             this.textBoxCharacters.Name = "textBoxCharacters";
             this.textBoxCharacters.Size = new System.Drawing.Size(107, 20);
             this.textBoxCharacters.TabIndex = 22;
@@ -139,7 +139,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(379, 523);
+            this.buttonOK.Location = new System.Drawing.Point(379, 613);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 23;
@@ -152,7 +152,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(460, 523);
+            this.buttonCancel.Location = new System.Drawing.Point(460, 613);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 24;
@@ -162,7 +162,7 @@
             // labelSubtitleImage
             // 
             this.labelSubtitleImage.AutoSize = true;
-            this.labelSubtitleImage.Location = new System.Drawing.Point(33, 15);
+            this.labelSubtitleImage.Location = new System.Drawing.Point(12, 17);
             this.labelSubtitleImage.Name = "labelSubtitleImage";
             this.labelSubtitleImage.Size = new System.Drawing.Size(73, 13);
             this.labelSubtitleImage.TabIndex = 27;
@@ -170,38 +170,40 @@
             // 
             // pictureBoxSubtitleImage
             // 
-            this.pictureBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.pictureBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBoxSubtitleImage.Location = new System.Drawing.Point(36, 36);
+            this.pictureBoxSubtitleImage.Location = new System.Drawing.Point(12, 36);
             this.pictureBoxSubtitleImage.Name = "pictureBoxSubtitleImage";
-            this.pictureBoxSubtitleImage.Size = new System.Drawing.Size(580, 205);
+            this.pictureBoxSubtitleImage.Size = new System.Drawing.Size(604, 205);
             this.pictureBoxSubtitleImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxSubtitleImage.TabIndex = 26;
             this.pictureBoxSubtitleImage.TabStop = false;
             // 
-            // groupBox1
+            // groupBoxNewInput
             // 
-            this.groupBox1.Controls.Add(this.buttonZoomOut);
-            this.groupBox1.Controls.Add(this.buttonZoomIn);
-            this.groupBox1.Controls.Add(this.groupBox2);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.listBoxlinesBackground);
-            this.groupBox1.Controls.Add(this.labelLines);
-            this.groupBox1.Controls.Add(this.labelCharacters);
-            this.groupBox1.Controls.Add(this.pictureBoxCharacter);
-            this.groupBox1.Controls.Add(this.listBoxLinesForeground);
-            this.groupBox1.Controls.Add(this.labelCharactersAsText);
-            this.groupBox1.Controls.Add(this.textBoxCharacters);
-            this.groupBox1.Location = new System.Drawing.Point(36, 247);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(579, 270);
-            this.groupBox1.TabIndex = 33;
-            this.groupBox1.TabStop = false;
+            this.groupBoxNewInput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxNewInput.Controls.Add(this.buttonZoomOut);
+            this.groupBoxNewInput.Controls.Add(this.buttonZoomIn);
+            this.groupBoxNewInput.Controls.Add(this.groupBox2);
+            this.groupBoxNewInput.Controls.Add(this.label2);
+            this.groupBoxNewInput.Controls.Add(this.listBoxlinesBackground);
+            this.groupBoxNewInput.Controls.Add(this.labelLines);
+            this.groupBoxNewInput.Controls.Add(this.labelCharacters);
+            this.groupBoxNewInput.Controls.Add(this.pictureBoxCharacter);
+            this.groupBoxNewInput.Controls.Add(this.listBoxLinesForeground);
+            this.groupBoxNewInput.Controls.Add(this.labelCharactersAsText);
+            this.groupBoxNewInput.Controls.Add(this.textBoxCharacters);
+            this.groupBoxNewInput.Location = new System.Drawing.Point(15, 247);
+            this.groupBoxNewInput.Name = "groupBoxNewInput";
+            this.groupBoxNewInput.Size = new System.Drawing.Size(600, 360);
+            this.groupBoxNewInput.TabIndex = 33;
+            this.groupBoxNewInput.TabStop = false;
             // 
             // buttonZoomOut
             // 
-            this.buttonZoomOut.Location = new System.Drawing.Point(255, 27);
+            this.buttonZoomOut.Location = new System.Drawing.Point(255, 77);
             this.buttonZoomOut.Name = "buttonZoomOut";
             this.buttonZoomOut.Size = new System.Drawing.Size(25, 23);
             this.buttonZoomOut.TabIndex = 32;
@@ -211,7 +213,7 @@
             // 
             // buttonZoomIn
             // 
-            this.buttonZoomIn.Location = new System.Drawing.Point(286, 27);
+            this.buttonZoomIn.Location = new System.Drawing.Point(286, 77);
             this.buttonZoomIn.Name = "buttonZoomIn";
             this.buttonZoomIn.Size = new System.Drawing.Size(25, 23);
             this.buttonZoomIn.TabIndex = 31;
@@ -255,7 +257,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(410, 146);
+            this.label2.Location = new System.Drawing.Point(9, 230);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(110, 13);
             this.label2.TabIndex = 20;
@@ -265,28 +267,10 @@
             // 
             this.listBoxlinesBackground.ContextMenuStrip = this.contextMenuStripLinesBackground;
             this.listBoxlinesBackground.FormattingEnabled = true;
-            this.listBoxlinesBackground.Location = new System.Drawing.Point(410, 162);
+            this.listBoxlinesBackground.Location = new System.Drawing.Point(12, 246);
             this.listBoxlinesBackground.Name = "listBoxlinesBackground";
-            this.listBoxlinesBackground.Size = new System.Drawing.Size(160, 95);
+            this.listBoxlinesBackground.Size = new System.Drawing.Size(151, 95);
             this.listBoxlinesBackground.TabIndex = 19;
-            // 
-            // labelLines
-            // 
-            this.labelLines.AutoSize = true;
-            this.labelLines.Location = new System.Drawing.Point(407, 19);
-            this.labelLines.Name = "labelLines";
-            this.labelLines.Size = new System.Drawing.Size(92, 13);
-            this.labelLines.TabIndex = 18;
-            this.labelLines.Text = "Lines - foreground";
-            // 
-            // listBoxLinesForeground
-            // 
-            this.listBoxLinesForeground.ContextMenuStrip = this.contextMenuLinesForeground;
-            this.listBoxLinesForeground.FormattingEnabled = true;
-            this.listBoxLinesForeground.Location = new System.Drawing.Point(410, 35);
-            this.listBoxLinesForeground.Name = "listBoxLinesForeground";
-            this.listBoxLinesForeground.Size = new System.Drawing.Size(160, 95);
-            this.listBoxLinesForeground.TabIndex = 17;
             // 
             // contextMenuStripLinesBackground
             // 
@@ -301,6 +285,24 @@
             this.removeBackToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.removeBackToolStripMenuItem.Text = "Remove";
             this.removeBackToolStripMenuItem.Click += new System.EventHandler(this.removeForegroundToolStripMenuItem_Click);
+            // 
+            // labelLines
+            // 
+            this.labelLines.AutoSize = true;
+            this.labelLines.Location = new System.Drawing.Point(9, 93);
+            this.labelLines.Name = "labelLines";
+            this.labelLines.Size = new System.Drawing.Size(92, 13);
+            this.labelLines.TabIndex = 18;
+            this.labelLines.Text = "Lines - foreground";
+            // 
+            // listBoxLinesForeground
+            // 
+            this.listBoxLinesForeground.ContextMenuStrip = this.contextMenuLinesForeground;
+            this.listBoxLinesForeground.FormattingEnabled = true;
+            this.listBoxLinesForeground.Location = new System.Drawing.Point(12, 109);
+            this.listBoxLinesForeground.Name = "listBoxLinesForeground";
+            this.listBoxLinesForeground.Size = new System.Drawing.Size(151, 108);
+            this.listBoxLinesForeground.TabIndex = 17;
             // 
             // contextMenuLinesForeground
             // 
@@ -320,23 +322,25 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(648, 552);
-            this.Controls.Add(this.groupBox1);
+            this.ClientSize = new System.Drawing.Size(648, 642);
+            this.Controls.Add(this.groupBoxNewInput);
             this.Controls.Add(this.buttonShrinkSelection);
             this.Controls.Add(this.buttonExpandSelection);
             this.Controls.Add(this.buttonAbort);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.labelSubtitleImage);
             this.Controls.Add(this.pictureBoxSubtitleImage);
+            this.Controls.Add(this.labelSubtitleImage);
             this.KeyPreview = true;
             this.Name = "VobSubOcrNOcrCharacter";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "VobSubOcrNOcrCharacter";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubOcrNOcrCharacter_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupBoxNewInput.ResumeLayout(false);
+            this.groupBoxNewInput.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.contextMenuStripLinesBackground.ResumeLayout(false);
@@ -359,7 +363,7 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelSubtitleImage;
         private System.Windows.Forms.PictureBox pictureBoxSubtitleImage;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBoxNewInput;
         private System.Windows.Forms.Button buttonZoomOut;
         private System.Windows.Forms.Button buttonZoomIn;
         private System.Windows.Forms.GroupBox groupBox2;
