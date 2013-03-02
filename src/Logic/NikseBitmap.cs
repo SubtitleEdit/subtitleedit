@@ -383,9 +383,12 @@ namespace Nikse.SubtitleEdit.Logic
         {
             int leftStart = 0;
             bool done = false;
-            for (int x = 0; x < Width; x++)
+            int x = 0;
+            int y = 0;
+            while (!done && x < Width)
             {
-                for (int y = 0; y < Height; y++)
+                y = 0;
+                while (!done && y < Height)
                 {
                     Color c = GetPixel(x, y);
                     if (c.A != 0)
@@ -395,18 +398,19 @@ namespace Nikse.SubtitleEdit.Logic
                         leftStart -= maximumCropping;
                         if (leftStart < 0)
                             leftStart = 0;
-                        break;
                     }
-                    if (done)
-                        break;
+                    y++;
                 }
+                x++;
             }
 
             int rightEnd = Width-1;
             done = false;
-            for (int x = Width - 1; x >= 0; x--)
+            x = Width - 1;
+            while (!done && x >= 0)
             {
-                for (int y = 0; y < Height; y++)
+                y = 0;
+                while (!done && y < Height)
                 {
                     Color c = GetPixel(x, y);
                     if (c.A != 0)
@@ -416,19 +420,20 @@ namespace Nikse.SubtitleEdit.Logic
                         rightEnd += maximumCropping;
                         if (rightEnd >= Width)
                             rightEnd = Width-1;
-                        break;
                     }
-                    if (done)
-                        break;
+                    y++;
                 }
+                x--;
             }
 
             //crop bottom
             done = false;
-            int newHeight = Height;
-            for (int y = Height - 1; y > 0; y--)
+            int newHeight = Height;            
+            y = Height - 1;
+            while (!done && y > 0)
             {
-                for (int x = 0; x < Width; x++)
+                x = 0;
+                while (!done && x < Width)
                 {
                     Color c = GetPixel(x, y);
                     if (c.A != 0)
@@ -437,11 +442,10 @@ namespace Nikse.SubtitleEdit.Logic
                         newHeight = y + maximumCropping;
                         if (newHeight > Height)
                             newHeight = Height;
-                        break;
                     }
-                    if (done)
-                        break;
+                    x++;
                 }
+                y--;
             }
 
             if (leftStart < 2 && rightEnd >= Width - 3)
@@ -453,7 +457,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             var newBitmapData = new byte[newWidth * newHeight * 4];
             int index = 0;
-            for (int y = 0; y < newHeight; y++)
+            for (y = 0; y < newHeight; y++)
             {
                 int pixelAddress = (leftStart * 4) + (y * 4 * Width);
                 Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * newWidth);
@@ -468,9 +472,12 @@ namespace Nikse.SubtitleEdit.Logic
         {
             int leftStart = 0;
             bool done = false;
-            for (int x = 0; x < Width; x++)
+            int x = 0;
+            int y = 0;
+            while (!done && x < Width)
             {
-                for (int y = 0; y < Height; y++)
+                y = 0;
+                while (!done && y < Height)
                 {
                     Color c = GetPixel(x, y);
                     if (c != transparentColor)
@@ -480,18 +487,19 @@ namespace Nikse.SubtitleEdit.Logic
                         leftStart -= maximumCropping;
                         if (leftStart < 0)
                             leftStart = 0;
-                        break;
                     }
-                    if (done)
-                        break;
+                    y++;
                 }
+                x++;
             }
 
             int rightEnd = Width - 1;
             done = false;
-            for (int x = Width - 1; x >= 0; x--)
+            x = Width - 1;
+            while (!done && x >= 0)
             {
-                for (int y = 0; y < Height; y++)
+                y = 0;
+                while (!done && y < Height)
                 {
                     Color c = GetPixel(x, y);
                     if (c != transparentColor)
@@ -501,19 +509,20 @@ namespace Nikse.SubtitleEdit.Logic
                         rightEnd += maximumCropping;
                         if (rightEnd >= Width)
                             rightEnd = Width - 1;
-                        break;
                     }
-                    if (done)
-                        break;
+                    y++;
                 }
+                x--;
             }
 
             //crop bottom
             done = false;
             int newHeight = Height;
-            for (int y = Height - 1; y > 0; y--)
+            y = Height - 1;
+            while (!done && y > 0)
             {
-                for (int x = 0; x < Width; x++)
+                x = 0;
+                while (!done && x < Width)
                 {
                     Color c = GetPixel(x, y);
                     if (c != transparentColor)
@@ -522,11 +531,10 @@ namespace Nikse.SubtitleEdit.Logic
                         newHeight = y + maximumCropping;
                         if (newHeight > Height)
                             newHeight = Height;
-                        break;
                     }
-                    if (done)
-                        break;
+                    x++;
                 }
+                y--;
             }
 
             if (leftStart < 2 && rightEnd >= Width - 3)
@@ -538,7 +546,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             var newBitmapData = new byte[newWidth * newHeight * 4];
             int index = 0;
-            for (int y = 0; y < newHeight; y++)
+            for (y = 0; y < newHeight; y++)
             {
                 int pixelAddress = (leftStart * 4) + (y * 4 * Width);
                 Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * newWidth);
@@ -553,9 +561,12 @@ namespace Nikse.SubtitleEdit.Logic
         {
             bool done = false;
             int newTop = 0;
-            for (int y = 0; y < Height; y++)
+            int y = 0;
+            int x = 0;
+            while (!done && y < Height)
             {
-                for (int x = 0; x < Width; x++)
+                x = 0;
+                while (!done &&  x < Width)
                 {
                     Color c = GetPixel(x, y);
                     if (c != transparentColor)
@@ -564,13 +575,10 @@ namespace Nikse.SubtitleEdit.Logic
                         newTop = y - maximumCropping;
                         if (newTop < 0)
                             newTop = 0;
-                        break;
                     }
-                    if (done)
-                        break;
+                    x++;
                 }
-                if (done)
-                    break;
+                y++;
             }
 
             if (newTop == 0)
@@ -579,7 +587,7 @@ namespace Nikse.SubtitleEdit.Logic
             int newHeight = Height - newTop;
             var newBitmapData = new byte[Width * newHeight * 4];
             int index = 0;
-            for (int y = newTop; y < Height; y++)
+            for (y = newTop; y < Height; y++)
             {
                 int pixelAddress = y * 4 * Width;
                 Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * Width);

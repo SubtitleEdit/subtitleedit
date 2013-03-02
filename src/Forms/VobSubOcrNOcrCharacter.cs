@@ -75,6 +75,7 @@ namespace Nikse.SubtitleEdit.Forms
             _nocrChar = new NOcrChar();
             _imageWidth = character.Bitmap.Width;
             _imageHeight = character.Bitmap.Height;
+            _drawLineOn = false;
 
             buttonShrinkSelection.Visible = showShrink;
 
@@ -112,11 +113,63 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
+        private bool IsMatch()
+        {
+            NikseBitmap nbmp = new NikseBitmap(pictureBoxCharacter.Image as Bitmap);
+            foreach (NOcrPoint op in _nocrChar.LinesForeground)
+            {
+                foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
+                {
+                    if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+                    {
+                        Color c = nbmp.GetPixel(point.X, point.Y);
+                        if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                        {
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            foreach (NOcrPoint op in _nocrChar.LinesBackground)
+            {
+                foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
+                {
+                    if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+                    {
+                        Color c = nbmp.GetPixel(point.X, point.Y);
+                        if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            if (listBoxLinesForeground.Items.Count == 0)
+            {
+                MessageBox.Show("No foreground lines!");
+                return;
+            }
+            if (listBoxlinesBackground.Items.Count == 0)
+            {
+                MessageBox.Show("No not-foreground lines!");
+                return;
+            }
             if (textBoxCharacters.Text.Length == 0)
             {
                 MessageBox.Show("Text is empty!");
+                return;
+            }
+            if (!IsMatch())
+            {
+                MessageBox.Show("Lines does not match image!");
                 return;
             }
             _nocrChar.Text = textBoxCharacters.Text;
@@ -209,6 +262,14 @@ namespace Nikse.SubtitleEdit.Forms
                     _drawLineOn = false;
                     pictureBoxCharacter.Invalidate();
                     ShowOcrPoints();
+
+                    if ((ModifierKeys & Keys.Control) == Keys.Control)
+                    {
+                        _start = new Point((int)Math.Round(e.Location.X / _zoomFactor), (int)Math.Round(e.Location.Y / _zoomFactor));
+                        _startDone = true;
+                        _drawLineOn = true;
+                        pictureBoxCharacter.Invalidate();
+                    }
                 }
                 else
                 {
