@@ -115,33 +115,30 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //Right         : 12 01 00 00 00 00 03 0F 1E
                 //Left          : 12 03 00 00 00 00 03 0F 07
 
-                if (text.StartsWith("{\\a6}"))
+
+                if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an8}") || text.StartsWith("{\\an9}"))
                 {
-                    text = p.Text.Remove(0, 5);
-                    buffer[7] = 1; // align top
+                    buffer[7] = 1; // align top (vertial)
                 }
-                else if (text.StartsWith("{\\a1}"))
+                else if (text.StartsWith("{\\an4}") || text.StartsWith("{\\an5}") || text.StartsWith("{\\an6}"))
                 {
-                    text = p.Text.Remove(0, 5);
-                    buffer[8] = 0x0A; // align left
+                    buffer[7] = 8; // center (vertical)
                 }
-                else if (text.StartsWith("{\\a3}"))
+
+                if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an4}") || text.StartsWith("{\\an1}"))
                 {
-                    text = p.Text.Remove(0, 5);
-                    buffer[8] = 0x1E; // align right
+                    buffer[8] = 2; // align left (horizontal)
                 }
-                else if (text.StartsWith("{\\a5}"))
+                else if (text.StartsWith("{\\an9}") || text.StartsWith("{\\an6}") || text.StartsWith("{\\an3}"))
                 {
-                    text = p.Text.Remove(0, 5);
-                    buffer[7] = 1; // align top
-                    buffer[8] = 05; // align left
+                    buffer[8] = 0x1e; // align right (vertical)
                 }
-                else if (text.StartsWith("{\\a7}"))
+
+                int startTag = text.IndexOf("}");
+                if (text.StartsWith("{\\") && startTag > 0 && startTag < 10)
                 {
-                    text = p.Text.Remove(0, 5);
-                    buffer[7] = 1; // align top
-                    buffer[8] = 0xc; // align right
-                }
+                    text = text.Remove(0, startTag + 1);
+                }               
 
                 var textBytes = new List<byte>();
                 bool italic = false;
