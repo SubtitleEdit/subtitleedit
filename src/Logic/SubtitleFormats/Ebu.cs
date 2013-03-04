@@ -454,9 +454,29 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     tti.VerticalPosition = 0x14;
                 else
                     tti.VerticalPosition = 0x16;
+
                 tti.JustificationCode = saveOptions.JustificationCode;
+                if (p.Text.StartsWith("{\\an1}") || p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an7}"))
+                {
+                    tti.JustificationCode = 1; // 01h=left-justified text
+                }
+                else if (p.Text.StartsWith("{\\an2}") || p.Text.StartsWith("{\\an5}") || p.Text.StartsWith("{\\an8}"))
+                {
+                    tti.JustificationCode = 2; // 02h=centred text
+                }
+                else if (p.Text.StartsWith("{\\an3}") || p.Text.StartsWith("{\\an6}") || p.Text.StartsWith("{\\an9}"))
+                {
+                    tti.JustificationCode = 3; // 03h=right-justified
+                }                  
+
                 tti.SubtitleNumber = (ushort)subtitleNumber;
                 tti.TextField = p.Text;
+                int startTag = tti.TextField.IndexOf("}");
+                if (tti.TextField.StartsWith("{\\") && startTag > 0 && startTag < 10)
+                {
+                    tti.TextField = tti.TextField.Remove(0, startTag + 1);
+                }
+
                 tti.TimeCodeInHours = p.StartTime.Hours;
                 tti.TimeCodeInMinutes = p.StartTime.Minutes;
                 tti.TimeCodeInSeconds = p.StartTime.Seconds;
@@ -959,6 +979,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
                 tti.TextField = sb.ToString().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine).TrimEnd() + endTags;
+
+                if (tti.JustificationCode == 1) // left
+                    tti.TextField = "{\\an1}" + tti.TextField;
+                if (tti.JustificationCode == 3) // right
+                    tti.TextField = "{\\an3}" + tti.TextField;
+
                 index += ttiSize;
                 list.Add(tti);
             }
