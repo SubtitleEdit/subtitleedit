@@ -940,10 +940,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             // remove styles for display text (except italic)
             text = RemoveSubStationAlphaFormatting(text);
-            text = text.Replace("<b>", string.Empty);
-            text = text.Replace("</b>", string.Empty);
-            text = text.Replace("<B>", string.Empty);
-            text = text.Replace("</B>", string.Empty);
+
+            text = text.Replace("<I>", "<i>");
+            text = text.Replace("</I>", "</i>");
+
+            text = text.Replace("<B>", "<b>");
+            text = text.Replace("</B>", "</b>");
+
             text = text.Replace("<u>", string.Empty);
             text = text.Replace("</u>", string.Empty);
             text = text.Replace("<U>", string.Empty);
@@ -971,8 +974,8 @@ namespace Nikse.SubtitleEdit.Forms
             textSize = g.MeasureString(Utilities.RemoveHtmlTags(text), font);
             g.Dispose();
             bmp.Dispose();
-            int sizeX = (int)(textSize.Width * 0.8) + 40;
-            int sizeY = (int)(textSize.Height * 0.8) + 30;
+            int sizeX = (int)(textSize.Width * 1.8) + 150;
+            int sizeY = (int)(textSize.Height * 0.9) + 50;
             if (sizeX < 1)
                 sizeX = 1;
             if (sizeY < 1)
@@ -1001,14 +1004,11 @@ namespace Nikse.SubtitleEdit.Forms
             var sf = new StringFormat();
             sf.Alignment = StringAlignment.Near;
             sf.LineAlignment = StringAlignment.Near;// draw the text to a path
-
-//            Thread.CurrentThread.CurrentCulture = new CultureInfo(57007);
             var path = new GraphicsPath();
-
-            // display italic
             var sb = new StringBuilder();
             int i = 0;
             bool isItalic = false;
+            bool isBold = parameter.SubtitleFontBold;
             float left = 5;
             if (lefts.Count > 0)
                 left = lefts[0];
@@ -1016,7 +1016,6 @@ namespace Nikse.SubtitleEdit.Forms
             bool newLine = false;
             int lineNumber = 0;
             float leftMargin = left;
-            bool italicFromStart = false;
             int newLinePathPoint = -1;
             Color c = parameter.SubtitleColor;
             var colorStack = new Stack<Color>();
@@ -1126,12 +1125,10 @@ namespace Nikse.SubtitleEdit.Forms
                             addLeft = left + 2;
                         left = addLeft;
 
-
                         if (parameter.BorderWidth > 0)
                             g.DrawPath(new Pen(parameter.BorderColor, parameter.BorderWidth), path);
                         g.FillPath(new SolidBrush(c), path);
                         path.Reset();
-                        //path = new GraphicsPath();
                         sb = new StringBuilder();
                         if (colorStack.Count > 0)
                             c = colorStack.Pop();
@@ -1140,7 +1137,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (text.Substring(i).ToLower().StartsWith("<i>"))
                 {
-                    italicFromStart = i == 0;
                     if (sb.Length > 0)
                     {
                         lastText.Append(sb.ToString());
@@ -1162,10 +1158,33 @@ namespace Nikse.SubtitleEdit.Forms
                     isItalic = false;
                     i += 3;
                 }
+                else if (text.Substring(i).ToLower().StartsWith("<b>"))
+                {
+                    if (sb.Length > 0)
+                    {
+                        lastText.Append(sb.ToString());
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    }
+                    isBold = true;
+                    i += 2;
+                }
+                else if (text.Substring(i).ToLower().StartsWith("</b>") && isBold)
+                {
+                    if (lastText.ToString().EndsWith(" ") && !sb.ToString().StartsWith(" "))
+                    {
+                        string t = sb.ToString();
+                        sb = new StringBuilder();
+                        sb.Append(" " + t);
+                    }
+                    lastText.Append(sb.ToString());
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    isBold = false;
+                    i += 3;
+                }
                 else if (text.Substring(i).StartsWith(Environment.NewLine))
                 {
                     lastText.Append(sb.ToString());
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
                     top += lineHeight;
                     newLine = true;
@@ -1176,8 +1195,6 @@ namespace Nikse.SubtitleEdit.Forms
                         leftMargin = lefts[lineNumber];
                         left = leftMargin;
                     }
-                    if (isItalic)
-                        italicFromStart = true;
                 }
                 else
                 {
