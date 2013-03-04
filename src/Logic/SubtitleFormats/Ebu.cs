@@ -449,11 +449,26 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int subtitleNumber = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                var tti = new EbuTextTimingInformation();
-                if (p.Text.Contains(Environment.NewLine))
-                    tti.VerticalPosition = 0x14;
+                var tti = new EbuTextTimingInformation();                
+
+                int rows;
+                if (header == null || !int.TryParse(header.MaximumNumberOfDisplayableRows, out rows))
+                    rows = 23;
+                if (p.Text.StartsWith("{\\an7}") || p.Text.StartsWith("{\\an8}") || p.Text.StartsWith("{\\an9}"))
+                {
+                    tti.VerticalPosition = 1; // top (vertical)
+                }
+                else if (p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an5}") || p.Text.StartsWith("{\\an6}"))
+                {
+                    tti.VerticalPosition = (byte) (rows / 2); // middle (vertical)
+                }
                 else
-                    tti.VerticalPosition = 0x16;
+                {
+                    int startRow = (rows-1) - Utilities.CountTagInText(p.Text, Environment.NewLine) * 2;
+                    if (startRow < 0)
+                        startRow = 0;
+                    tti.VerticalPosition = (byte)startRow;  // bottom (vertical)
+                }                  
 
                 tti.JustificationCode = saveOptions.JustificationCode;
                 if (p.Text.StartsWith("{\\an1}") || p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an7}"))
@@ -980,11 +995,34 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 tti.TextField = sb.ToString().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine).TrimEnd() + endTags;
 
-                if (tti.JustificationCode == 1) // left
-                    tti.TextField = "{\\an1}" + tti.TextField;
-                if (tti.JustificationCode == 3) // right
-                    tti.TextField = "{\\an3}" + tti.TextField;
-
+                int rows;
+                if (header == null || !int.TryParse(header.MaximumNumberOfDisplayableRows, out rows))
+                    rows = 23;
+                if (tti.VerticalPosition < 3)
+                {
+                    if (tti.JustificationCode == 1) // left
+                        tti.TextField = "{\\an7}" + tti.TextField;
+                    else if (tti.JustificationCode == 3) // right
+                        tti.TextField = "{\\an9}" + tti.TextField;
+                    else
+                        tti.TextField = "{\\an8}" + tti.TextField;
+                }
+                else if (tti.VerticalPosition <= rows / 2 + 1)
+                {
+                    if (tti.JustificationCode == 1) // left
+                        tti.TextField = "{\\an4}" + tti.TextField;
+                    else if (tti.JustificationCode == 3) // right
+                        tti.TextField = "{\\an6}" + tti.TextField;
+                    else
+                        tti.TextField = "{\\an5}" + tti.TextField;
+                }
+                else
+                {
+                    if (tti.JustificationCode == 1) // left
+                        tti.TextField = "{\\an1}" + tti.TextField;
+                    else if (tti.JustificationCode == 3) // right
+                        tti.TextField = "{\\an3}" + tti.TextField;
+                }
                 index += ttiSize;
                 list.Add(tti);
             }
