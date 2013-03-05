@@ -9233,7 +9233,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused && !textBoxSource.Focused && mediaPlayer.VideoPlayer != null)
                 {
-                    if (audioVisualizer != null && audioVisualizer.Focused || mediaPlayer != null && mediaPlayer.Focused)
+                    if (audioVisualizer != null && audioVisualizer.Focused || mediaPlayer != null && mediaPlayer.Focused || SubtitleListview1.Focused && mediaPlayer != null)
                     {
                         _endSeconds = -1;
                         mediaPlayer.TogglePlayPause();
