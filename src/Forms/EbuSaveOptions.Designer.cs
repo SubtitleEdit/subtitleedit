@@ -132,7 +132,7 @@
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(758, 422);
-            this.tabControl1.TabIndex = 32;
+            this.tabControl1.TabIndex = 0;
             // 
             // tabPageHeader
             // 
@@ -183,7 +183,7 @@
             this.textBoxCountryOfOrigin.MaxLength = 3;
             this.textBoxCountryOfOrigin.Name = "textBoxCountryOfOrigin";
             this.textBoxCountryOfOrigin.Size = new System.Drawing.Size(219, 20);
-            this.textBoxCountryOfOrigin.TabIndex = 62;
+            this.textBoxCountryOfOrigin.TabIndex = 10;
             // 
             // labelCountryOfOrigin
             // 
@@ -201,7 +201,7 @@
             this.textBoxCodePageNumber.MaxLength = 3;
             this.textBoxCodePageNumber.Name = "textBoxCodePageNumber";
             this.textBoxCodePageNumber.Size = new System.Drawing.Size(219, 20);
-            this.textBoxCodePageNumber.TabIndex = 61;
+            this.textBoxCodePageNumber.TabIndex = 0;
             // 
             // contextMenuStripCodeTable
             // 
@@ -259,7 +259,7 @@
             0});
             this.numericUpDownMaxRows.Name = "numericUpDownMaxRows";
             this.numericUpDownMaxRows.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownMaxRows.TabIndex = 12;
+            this.numericUpDownMaxRows.TabIndex = 14;
             // 
             // labelMaxNumberOfDisplayableRows
             // 
@@ -327,7 +327,7 @@
             0});
             this.numericUpDownMaxCharacters.Name = "numericUpDownMaxCharacters";
             this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownMaxCharacters.TabIndex = 11;
+            this.numericUpDownMaxCharacters.TabIndex = 13;
             this.numericUpDownMaxCharacters.ValueChanged += new System.EventHandler(this.numericUpDownMaxCharacters_ValueChanged);
             // 
             // labelMaxNoOfDisplayableChars
@@ -349,7 +349,7 @@
             0});
             this.numericUpDownDiskSequenceNumber.Name = "numericUpDownDiskSequenceNumber";
             this.numericUpDownDiskSequenceNumber.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownDiskSequenceNumber.TabIndex = 13;
+            this.numericUpDownDiskSequenceNumber.TabIndex = 15;
             // 
             // numericUpDownTotalNumberOfDiscs
             // 
@@ -361,7 +361,7 @@
             0});
             this.numericUpDownTotalNumberOfDiscs.Name = "numericUpDownTotalNumberOfDiscs";
             this.numericUpDownTotalNumberOfDiscs.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownTotalNumberOfDiscs.TabIndex = 14;
+            this.numericUpDownTotalNumberOfDiscs.TabIndex = 16;
             // 
             // numericUpDownRevisionNumber
             // 
@@ -373,7 +373,7 @@
             0});
             this.numericUpDownRevisionNumber.Name = "numericUpDownRevisionNumber";
             this.numericUpDownRevisionNumber.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownRevisionNumber.TabIndex = 10;
+            this.numericUpDownRevisionNumber.TabIndex = 12;
             // 
             // labelDiskSequenceNumber
             // 
@@ -458,7 +458,7 @@
             this.buttonImport.Location = new System.Drawing.Point(613, 6);
             this.buttonImport.Name = "buttonImport";
             this.buttonImport.Size = new System.Drawing.Size(134, 21);
-            this.buttonImport.TabIndex = 15;
+            this.buttonImport.TabIndex = 11;
             this.buttonImport.Text = "Import...";
             this.buttonImport.UseVisualStyleBackColor = true;
             this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
