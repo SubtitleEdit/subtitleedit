@@ -686,9 +686,33 @@ namespace Nikse.SubtitleEdit.Forms
 
                 bool canBeEqual = _format != null && (_format.GetType() == typeof(AdvancedSubStationAlpha) || _format.GetType() == typeof(SubStationAlpha));
 
-                if (prev != null && ((canBeEqual && p.StartTime.TotalMilliseconds < prev.EndTime.TotalMilliseconds) || (!canBeEqual && p.StartTime.TotalMilliseconds <= prev.EndTime.TotalMilliseconds)))
+                if (prev != null && ((canBeEqual && p.StartTime.TotalMilliseconds <= prev.EndTime.TotalMilliseconds) || (!canBeEqual && p.StartTime.TotalMilliseconds <= prev.EndTime.TotalMilliseconds)))
                 {
-                    if (prevWantedDisplayTime <= (p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds))
+                    if (!Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart && p.StartTime.TotalMilliseconds == prev.EndTime.TotalMilliseconds &&
+                        prev.Duration.TotalMilliseconds > 100)                        
+                    {
+                        if (AllowFix(target, fixAction))
+                        {
+                            if (!canBeEqual)
+                            {
+                                bool okEqual = true;
+                                if (prev.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                                    prev.EndTime.TotalMilliseconds--;
+                                else if (p.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                                    p.StartTime.TotalMilliseconds++;
+                                else
+                                    okEqual = false;
+                                if (okEqual)
+                                {
+                                    _totalFixes++;
+                                    noOfOverlappingDisplayTimesFixed++;
+                                    AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
+                                }
+                            }
+                        }
+                        prev.EndTime.TotalMilliseconds--;
+                    }
+                    else if (prevWantedDisplayTime <= (p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds))
                     {
                         if (AllowFix(target, fixAction))
                         {

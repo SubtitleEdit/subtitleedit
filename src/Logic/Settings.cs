@@ -117,6 +117,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int ExportVobSubFontSize { get; set; }
         public string ExportBluRayFontName { get; set; }
         public int ExportBluRaybFontSize { get; set; }
+        public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
 
         public ToolsSettings()
         {
@@ -1365,6 +1366,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportBluRaybFontSize");
             if (subNode != null)
                 settings.Tools.ExportBluRaybFontSize = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("FixCommonErrorsFixOverlapAllowEqualEndStart");
+            if (subNode != null)
+                settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart = Convert.ToBoolean(subNode.InnerText);            
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -2214,6 +2218,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ExportVobSubFontSize", settings.Tools.ExportVobSubFontSize.ToString());
             textWriter.WriteElementString("ExportBluRayFontName", settings.Tools.ExportBluRayFontName);
             textWriter.WriteElementString("ExportBluRaybFontSize", settings.Tools.ExportBluRaybFontSize.ToString());
+            textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());            
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");
