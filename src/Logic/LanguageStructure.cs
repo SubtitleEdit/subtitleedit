@@ -1736,6 +1736,7 @@
             public string PlusShadow { get; set; }
             public string OpaqueBox { get; set; }
             public string Import { get; set; }
+            public string Export { get; set; }
             public string Copy { get; set; }
             public string CopyOfY { get; set; }
             public string CopyXOfY { get; set; }
@@ -1743,6 +1744,7 @@
             public string Remove { get; set; }
             public string RemoveAll { get; set; }
             public string ImportStyleFromFile { get; set; }
+            public string ExportStyleToFile { get; set; }
             public string ChooseStyle { get; set; }
         }
 
