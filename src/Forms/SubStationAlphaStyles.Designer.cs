@@ -96,6 +96,8 @@
             this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.openFileDialogImport = new System.Windows.Forms.OpenFileDialog();
+            this.buttonExport = new System.Windows.Forms.Button();
+            this.saveFileDialogStyle = new System.Windows.Forms.SaveFileDialog();
             this.contextMenuStripStyles.SuspendLayout();
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxProperties.SuspendLayout();
@@ -236,6 +238,7 @@
             // 
             this.groupBoxStyles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxStyles.Controls.Add(this.buttonExport);
             this.groupBoxStyles.Controls.Add(this.buttonImport);
             this.groupBoxStyles.Controls.Add(this.buttonCopy);
             this.groupBoxStyles.Controls.Add(this.buttonRemoveAll);
@@ -806,6 +809,22 @@
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
             // 
+            // buttonExport
+            // 
+            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonExport.Location = new System.Drawing.Point(16, 311);
+            this.buttonExport.Name = "buttonExport";
+            this.buttonExport.Size = new System.Drawing.Size(82, 21);
+            this.buttonExport.TabIndex = 6;
+            this.buttonExport.Text = "Export...";
+            this.buttonExport.UseVisualStyleBackColor = true;
+            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
+            // 
+            // saveFileDialogStyle
+            // 
+            this.saveFileDialogStyle.OverwritePrompt = false;
+            // 
             // SubStationAlphaStyles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -923,5 +942,7 @@
         private System.Windows.Forms.Button buttonImport;
         private System.Windows.Forms.OpenFileDialog openFileDialogImport;
         private System.Windows.Forms.ColumnHeader columnHeaderUseCount;
+        private System.Windows.Forms.Button buttonExport;
+        private System.Windows.Forms.SaveFileDialog saveFileDialogStyle;
     }
 }

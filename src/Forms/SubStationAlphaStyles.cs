@@ -79,6 +79,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelShadow.Text = l.PlusShadow;
             radioButtonOpaqueBox.Text = l.OpaqueBox;
             buttonImport.Text = l.Import;
+            buttonExport.Text = l.Export;
+            buttonExport.Visible = !string.IsNullOrEmpty(l.Export);
             buttonCopy.Text = l.Copy;
             buttonAdd.Text = l.New;
             buttonRemove.Text = l.Remove;
@@ -1111,9 +1113,9 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialogImport.Title = Configuration.Settings.Language.SubStationAlphaStyles.ImportStyleFromFile;
             openFileDialogImport.FileName = string.Empty;
             if (_isSubStationAlpha)
-                openFileDialogImport.Filter = new SubStationAlpha().FriendlyName + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialogImport.Filter = new SubStationAlpha().Name + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
             else
-                openFileDialogImport.Filter = new AdvancedSubStationAlpha().FriendlyName + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialogImport.Filter = new AdvancedSubStationAlpha().Name + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
 
             if (openFileDialogImport.ShowDialog(this) == DialogResult.OK)
             {
@@ -1171,12 +1173,101 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-
         internal void MakeOnlyOneStyle()
         {
             groupBoxPreview.Top = groupBoxStyles.Top;
             groupBoxPreview.Height = groupBoxProperties.Height;
             groupBoxStyles.SendToBack();
+        }
+
+        private void buttonExport_Click(object sender, EventArgs e)
+        {
+            if (listViewStyles.SelectedItems.Count != 1)
+                return;
+
+            string styleName = listViewStyles.SelectedItems[0].Text;
+
+            saveFileDialogStyle.Title = Configuration.Settings.Language.SubStationAlphaStyles.ExportStyleToFile;
+            saveFileDialogStyle.FileName = string.Empty;
+            if (_isSubStationAlpha)
+                saveFileDialogStyle.Filter = new SubStationAlpha().Name + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+            else
+                saveFileDialogStyle.Filter = new AdvancedSubStationAlpha().Name + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+
+            if (saveFileDialogStyle.ShowDialog(this) == DialogResult.OK)
+            {
+                if (System.IO.File.Exists(saveFileDialogStyle.FileName))
+                {
+                    Encoding encoding = null;
+                    var s = new Subtitle();
+                    var format = s.LoadSubtitle(saveFileDialogStyle.FileName, out encoding, null);
+                    if (format == null)
+                    {
+                        MessageBox.Show("Not subtitle format: " + _format.Name);
+                    }
+                    else if (format.Name != _format.Name)
+                    {
+                        MessageBox.Show(string.Format("Cannot save {1} style in {0} file!", format.Name, _format.Name));
+                    }
+                    else
+                    {
+                        var sb = new StringBuilder();
+                        bool stylesOn = false;
+                        bool done = false;
+                        string styleFormat = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
+                        foreach (string line in System.IO.File.ReadAllLines(saveFileDialogStyle.FileName))
+                        {
+                            if (line.ToLower().StartsWith("format:"))
+                            {
+                                styleFormat = line;
+                            }
+                            else if (line.ToLower().StartsWith("style:"))
+                            {
+                                stylesOn = true;
+                            }
+                            else if (stylesOn && !done)
+                            {
+                                done = true;
+                                SsaStyle style = GetSsaStyle(styleName);
+                                if (_isSubStationAlpha)
+                                {
+                                    sb.AppendLine(style.ToRawSsa(styleFormat));
+                                }
+                                else
+                                {
+                                    sb.AppendLine(style.ToRawAss(styleFormat));
+                                }                                
+                            }
+                            sb.AppendLine(line);
+                        }
+                        System.IO.File.WriteAllText(saveFileDialogStyle.FileName, sb.ToString(), Encoding.UTF8);
+                    }
+                }
+                else
+                {
+                    var sb = new StringBuilder();
+                    foreach (string line in Header.Replace(Environment.NewLine, "\n").Split('\n'))
+                    {
+                        if (line.ToLower().StartsWith("style:"))
+                        {
+                            if (line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + styleName.ToLower().Trim()))
+                                sb.AppendLine(line);
+                        }
+                        else
+                        {
+                            sb.AppendLine(line);
+                        }
+                    }
+                    string content = sb.ToString();
+                    if (content.Trim().EndsWith("[Events]"))
+                    {
+                        content = content.Trim() + Environment.NewLine +
+                            "Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine +
+                            "Dialogue: 0,0:00:31.91,0:00:33.91,Default,,0,0,0,,My Styles :)";
+                    }
+                    System.IO.File.WriteAllText(saveFileDialogStyle.FileName, content, Encoding.UTF8);
+                }
+            }
         }
     }
 }

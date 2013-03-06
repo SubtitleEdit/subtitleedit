@@ -15887,10 +15887,25 @@ namespace Nikse.SubtitleEdit.Forms
                         for (int i=0; i<_subtitle.Paragraphs.Count; i++)
                         {
                             Paragraph p = _subtitle.Paragraphs[i];
-                            if (p.Extra == null || p.Extra != styleList[0])
+                            
+                            if (p.Extra == null) 
                             {
                                 p.Extra = styleList[0];
                                 SubtitleListview1.SetExtraText(i, p.Extra, SubtitleListview1.ForeColor);
+                            }
+                            else
+                            {
+                                bool found = false;
+                                foreach (string s in styleList)
+                                {
+                                    if (s.ToLower() == p.Extra.ToLower())
+                                        found = true;
+                                }
+                                if (!found)
+                                {
+                                    p.Extra = styleList[0];
+                                    SubtitleListview1.SetExtraText(i, p.Extra, SubtitleListview1.ForeColor);
+                                }
                             }
                         }
 
