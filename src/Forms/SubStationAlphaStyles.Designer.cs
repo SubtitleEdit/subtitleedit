@@ -44,6 +44,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxStyles = new System.Windows.Forms.GroupBox();
+            this.buttonExport = new System.Windows.Forms.Button();
             this.buttonImport = new System.Windows.Forms.Button();
             this.buttonCopy = new System.Windows.Forms.Button();
             this.buttonRemoveAll = new System.Windows.Forms.Button();
@@ -96,7 +97,6 @@
             this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.openFileDialogImport = new System.Windows.Forms.OpenFileDialog();
-            this.buttonExport = new System.Windows.Forms.Button();
             this.saveFileDialogStyle = new System.Windows.Forms.SaveFileDialog();
             this.contextMenuStripStyles.SuspendLayout();
             this.groupBoxStyles.SuspendLayout();
@@ -251,6 +251,18 @@
             this.groupBoxStyles.TabIndex = 0;
             this.groupBoxStyles.TabStop = false;
             this.groupBoxStyles.Text = "Styles";
+            // 
+            // buttonExport
+            // 
+            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonExport.Location = new System.Drawing.Point(16, 311);
+            this.buttonExport.Name = "buttonExport";
+            this.buttonExport.Size = new System.Drawing.Size(82, 21);
+            this.buttonExport.TabIndex = 6;
+            this.buttonExport.Text = "Export...";
+            this.buttonExport.UseVisualStyleBackColor = true;
+            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
             // 
             // buttonImport
             // 
@@ -428,6 +440,11 @@
             // numericUpDownMarginVertical
             // 
             this.numericUpDownMarginVertical.Location = new System.Drawing.Point(188, 33);
+            this.numericUpDownMarginVertical.Maximum = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
             this.numericUpDownMarginVertical.Name = "numericUpDownMarginVertical";
             this.numericUpDownMarginVertical.Size = new System.Drawing.Size(44, 20);
             this.numericUpDownMarginVertical.TabIndex = 5;
@@ -436,6 +453,11 @@
             // numericUpDownMarginRight
             // 
             this.numericUpDownMarginRight.Location = new System.Drawing.Point(101, 33);
+            this.numericUpDownMarginRight.Maximum = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
             this.numericUpDownMarginRight.Name = "numericUpDownMarginRight";
             this.numericUpDownMarginRight.Size = new System.Drawing.Size(44, 20);
             this.numericUpDownMarginRight.TabIndex = 3;
@@ -444,6 +466,11 @@
             // numericUpDownMarginLeft
             // 
             this.numericUpDownMarginLeft.Location = new System.Drawing.Point(16, 33);
+            this.numericUpDownMarginLeft.Maximum = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
             this.numericUpDownMarginLeft.Name = "numericUpDownMarginLeft";
             this.numericUpDownMarginLeft.Size = new System.Drawing.Size(44, 20);
             this.numericUpDownMarginLeft.TabIndex = 1;
@@ -808,18 +835,6 @@
             this.pictureBoxPreview.Size = new System.Drawing.Size(549, 188);
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
-            // 
-            // buttonExport
-            // 
-            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonExport.Location = new System.Drawing.Point(16, 311);
-            this.buttonExport.Name = "buttonExport";
-            this.buttonExport.Size = new System.Drawing.Size(82, 21);
-            this.buttonExport.TabIndex = 6;
-            this.buttonExport.Text = "Export...";
-            this.buttonExport.UseVisualStyleBackColor = true;
-            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
             // 
             // saveFileDialogStyle
             // 
