@@ -3931,7 +3931,7 @@
             65536});
             this.numericUpDownDuration.Location = new System.Drawing.Point(123, 27);
             this.numericUpDownDuration.Maximum = new decimal(new int[] {
-            99999,
+            999999999,
             0,
             0,
             0});

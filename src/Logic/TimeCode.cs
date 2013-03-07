@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public int Hours
         {
-            get { return _time.Hours; }
+            get { return _time.Hours + _time.Days * 24; }
             set { _time = new TimeSpan(0, value, _time.Minutes, _time.Seconds, _time.Milliseconds); }
         }
 
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public override string ToString()
         {
-            string s = string.Format("{0:00}:{1:00}:{2:00},{3:000}", _time.Hours, _time.Minutes, _time.Seconds, _time.Milliseconds);
+            string s = string.Format("{0:00}:{1:00}:{2:00},{3:000}", _time.Hours + _time.Days * 24, _time.Minutes, _time.Seconds, _time.Milliseconds);
 
             if (TotalMilliseconds >= 0)
                 return s;
@@ -138,12 +138,12 @@ namespace Nikse.SubtitleEdit.Logic
         public string ToShortString()
         {
             string s;
-            if (_time.Minutes == 0 && _time.Hours == 0)
+            if (_time.Minutes == 0 && _time.Hours == 0 && _time.Days == 0)
                 s = string.Format("{0:0},{1:000}", _time.Seconds, _time.Milliseconds);
-            else if (_time.Hours == 0)
+            else if (_time.Hours == 0 && _time.Days == 0)
                 s = string.Format("{0:0}:{1:00},{2:000}", _time.Minutes, _time.Seconds, _time.Milliseconds);
             else
-                s = string.Format("{0:0}:{1:00}:{2:00},{3:000}", _time.Hours, _time.Minutes, _time.Seconds, _time.Milliseconds);
+                s = string.Format("{0:0}:{1:00}:{2:00},{3:000}", _time.Hours + _time.Days * 24, _time.Minutes, _time.Seconds, _time.Milliseconds);
 
             if (TotalMilliseconds >= 0)
                 return s;
