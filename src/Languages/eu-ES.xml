@@ -144,8 +144,6 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <OverwriteExistingFiles>&amp;Gainidatzi dauden agiriak</OverwriteExistingFiles>
     <Style>Estiloa...</Style>
     <ConvertOptions>Bihurketa aukerak</ConvertOptions>
-    <AutoBreakLongLines>Berez-hautsi lerro luzeak</AutoBreakLongLines>
-    <FixItalics>Zuzendu etzanak</FixItalics>
     <RemoveFormatting>Kendu heuskarri etiketak</RemoveFormatting>
     <RemoveTextForHI>Kendu GA idazkia</RemoveTextForHI>
     <ReDoCasing>Berregin xehe-larriak</ReDoCasing>
@@ -154,6 +152,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <PleaseChooseOutputFolder>Mesedez hautatu irteera agiritegia</PleaseChooseOutputFolder>
     <Converted>Bihurtuta</Converted>
     <ConvertedX>({0}) bihurtuta</ConvertedX>
+    <Settings>Ezarpenak</Settings>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -197,6 +196,16 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Hautatu hizkuntza</Title>
     <Language>Hizkuntza</Language>
   </ChooseLanguage>
+  <ColumnPaste>
+    <Title>Zutabe itsatsia</Title>
+    <ChooseColumn>Hautatu zutabea</ChooseColumn>
+    <OverwriteShiftCellsDown>Gainidatzi/Aldatu  gelaxkak behera</OverwriteShiftCellsDown>
+    <Overwrite>Gainidatzi</Overwrite>
+    <ShiftCellsDown>Aldatu gelaxkak behera</ShiftCellsDown>
+    <TimeCodesOnly>Denbora kodeak bakarrik</TimeCodesOnly>
+    <TextOnly>Idazkia bakarrik</TextOnly>
+    <OriginalTextOnly>Jatorrizko idazkia bakarrik</OriginalTextOnly>
+  </ColumnPaste>
   <CompareSubtitles>
     <Title>Alderatu azpidatziak</Title>
     <PreviousDifference>&amp;Aurreko ezberdintasuna</PreviousDifference>
@@ -426,11 +435,11 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Zuzendu etiketa etzanak</FixInvalidItalicTag>
     <FixShortDisplayTime>Zuzendu erakus denbora laburrak</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Zuzendu erakus denbora gainjarpenak</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>Hei  Frankie , han. -&gt; Hey Frankie, han.</RemoveUnneededSpacesExample>
-    <RemoveUnneededPeriodsExample>Hei Frankie!. -&gt; Hey Frankie!</RemoveUnneededPeriodsExample>
-    <FixMissingSpacesExample>Hei.Frankie -&gt; Hei. Frankie.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Zerekin joIasten duzu? -&gt; Zerekin jolasten duzu.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;Ez zait axola.&lt;i&gt; -&gt; &lt;i&gt;Ez zait axola.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>Kaixo  Xabier , han. -&gt; Kaixo Xabier, han.</RemoveUnneededSpacesExample>
+    <RemoveUnneededPeriodsExample>Kaixo Xabier!. -&gt; Kaixo Xabier!</RemoveUnneededPeriodsExample>
+    <FixMissingSpacesExample>Kaixo.Xabier -&gt; Kaixo. Xabier.</FixMissingSpacesExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>Zerekin joIasten duzu? -&gt; Zerekin jolasten duzu?</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Idatzi zenbakia {0}: Hasiera denbora amaiera denboraren ondoren da: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Ezgaitu idatzi zenbakia zuzentzea {0}: Hasiera denbora amaiera denbora amaitu ondoren da: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -443,12 +452,12 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <XLinesUnbreaked>{0} lerro hautsi gabe</XLinesUnbreaked>
     <UnneededSpace>Ezbeharrezko tartea</UnneededSpace>
     <XUnneededSpacesRemoved>{0} ezbeharrezko tarte kenduta</XUnneededSpacesRemoved>
-    <UnneededPeriod>Ezbeharrezko aldi</UnneededPeriod>
-    <XUnneededPeriodsRemoved>{0} ezbeharrezko aldi kenduta</XUnneededPeriodsRemoved>
+    <UnneededPeriod>Ezbeharrezko puntua</UnneededPeriod>
+    <XUnneededPeriodsRemoved>{0} ezbeharrezko puntu kenduta</XUnneededPeriodsRemoved>
     <FixMissingSpace>Zuzendu galdutako tarteak</FixMissingSpace>
     <XMissingSpacesAdded>{0} galdutako tarte gehituta</XMissingSpacesAdded>
     <FixUppercaseIInsideLowercaseWord>Zuzendu 'i' hizki larria hizki xehe hitzetan</FixUppercaseIInsideLowercaseWord>
-    <XPeriodsAdded>{0} aldi gehituta.</XPeriodsAdded>
+    <XPeriodsAdded>{0} puntu gehituta.</XPeriodsAdded>
     <FixMissingPeriodAtEndOfLine>Gehitu galdutako puntua lerro amaieran</FixMissingPeriodAtEndOfLine>
     <XDoubleApostrophesFixed>{0} adartxo bikoitz zuzenduta.</XDoubleApostrophesFixed>
     <XUppercaseIsFoundInsideLowercaseWords>{0} 'i' hizki larri aurkituta hizki xeheko hitzetan</XUppercaseIsFoundInsideLowercaseWords>
@@ -472,10 +481,10 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixMissingOpenBracket>{0} zuzendutako galduak [ lerroan</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} zuzendu musika idatziak lerroan</XFixMusicNotation>
     <FixDoubleDashExample>'Uhau-- um bai!' --&gt; 'Uhau... um bai!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Lagun!' --&gt; 'Robert: Lagun!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Iñaki: Lagun!' --&gt; 'Iñaki: Lagun!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... eta orduan guk' -&gt; 'eta orduan guk'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Kontuz!' --&gt; '[clanks] Kontuz!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'kolpeak] Kontuz!' --&gt; '[kolpeak] Kontuz!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª amets goxoak dira' --&gt; '♫ amets goxoak dira'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} ohar mezu garrantzitsu!</NumberOfImportantLogMessages>
     <FixedOkXY>Zuzenduta eta Ongi - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -603,6 +612,8 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <RightToLeftMode>Eskuin-ezker &amp;modua</RightToLeftMode>
         <ReverseRightToLeftStartEnd>Aldera&amp;ntzizkatu ESEZ hasiera/amaiera (hautaturiko lerroetan)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Erakutsi jatorrizko idatzia audio/bideo aurreikuspenetan</ShowOriginalTextInAudioAndVideoPreview>
+        <ModifySelection>Aldatu hautapena...</ModifySelection>
+        <InverseSelection>Alderantzizkatu hautapena</InverseSelection>
       </Edit>
       <Tools>
         <Title>&amp;Tresnak</Title>
@@ -615,6 +626,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeFrameRate>Aldatu &amp;frame neurria...</ChangeFrameRate>
         <ChangeSpeedInPercent>Aldatu &amp;abiadura (ehunekoa)...</ChangeSpeedInPercent>
         <MergeShortLines>Batu &amp;lerro laburrak...</MergeShortLines>
+        <MergeDuplicateText>Batu idazki bera duten lerroak</MergeDuplicateText>
         <SplitLongLines>&amp;Banandu lerro luzeak...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>&amp;Gutxiengo erakus denbora esaldi artean...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Antolatu h&amp;onela</SortBy>
@@ -648,6 +660,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
       <SpellCheck>
         <Title>&amp;Idaz-egiaztapena</Title>
         <SpellCheck>&amp;Idaz-egiaztapena...</SpellCheck>
+        <SpellCheckFromCurrentLine>Idaz-egiaztapena oraingo lerrotik...</SpellCheckFromCurrentLine>
         <FindDoubleWords>Bilatu &amp;hitz bikoitzak</FindDoubleWords>
         <FindDoubleLines>Bilatu &amp;lerro bikoitzak</FindDoubleLines>
         <GetDictionaries>&amp;Eskuratu hiztegiak...</GetDictionaries>
@@ -725,6 +738,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnInsertTextFromSubtitle>Txertatu id&amp;atzia azpidatzitik</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>I&amp;nportatu idatzia eta aldatu gelaxkak behera</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>It&amp;satsi gakotik...</ColumnPasteFromClipboard>
+        <ColumnCopyOriginalTextToCurrent>Kopiatu idazkia jatorrizkotik oraingora</ColumnCopyOriginalTextToCurrent>
         <Split>Banandu</Split>
         <MergeSelectedLines>Batu hautaturiko lerroak</MergeSelectedLines>
         <MergeSelectedLinesASDialogue>Batu hautaturiko lerroak elkarrizketa bezala</MergeSelectedLinesASDialogue>
@@ -747,6 +761,8 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <FixCommonErrorsInSelectedLines>Zuzendu akats arruntak hautatur&amp;iko lerroetan...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Al&amp;datu hizkiak hautaturiko lerroetan...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Gorde hautaturiko lerroak honela...</SaveSelectedLines>
+        <WebVTTSetNewVoice>Ezarri ahots berria...</WebVTTSetNewVoice>
+        <WebVTTRemoveVoices>Kendu ahotsak</WebVTTRemoveVoices>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -962,6 +978,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <VobSubFiles>VobSub azpidatzi agiriak</VobSubFiles>
     <OpenBluRaySupFile>Ireki Blu-ray .sup agiria...</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray .sup agiriak</BluRaySupFiles>
+    <OpenXSubFiles>Ireki xsub agiriak</OpenXSubFiles>
+    <XSubFiles>xsub agiriak</XSubFiles>
     <BeforeImportingVobSubFile>VobSub azpidatzia inportatu aurretik</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Blu-ray .sup agiria inportatu aurretik</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>BDN xml agiria inportatu aurretik</BeforeImportingBdnXml>
@@ -1049,6 +1067,9 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <PleaseChoose>Azpidatzi bat baino gehiago aurkitu da - mesedez hautatu</PleaseChoose>
     <TrackXLanguageYTypeZ>Bidea {0} - {1} - Hizkuntza: {2} - Mota: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MergeDoubleLines>
+    <Title>Batu idazki bera duten lerroak</Title>
+  </MergeDoubleLines>
   <MergedShortLines>
     <Title>Batu lerro laburrak</Title>
     <MaximumCharacters>Gehinezko hizkirri esaldi bakarrean</MaximumCharacters>
@@ -1057,6 +1078,17 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <MergedText>Batutako idatzia</MergedText>
     <OnlyMergeContinuationLines>Batu bakarrik lerro jarraipenak</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <ModifySelection>
+    <Title>Aldatu hautapena</Title>
+    <Rule>Araua</Rule>
+    <CaseSensitive>Bereizi larri-xeheak</CaseSensitive>
+    <DoWithMatches>Zer egin bat datozenekin</DoWithMatches>
+    <MakeNewSelection>Egin hautapen berria</MakeNewSelection>
+    <AddToCurrentSelection>Gehitu oraingo hautapenera</AddToCurrentSelection>
+    <SubtractFromCurrentSelection>Kendu oraingo hautapenetik</SubtractFromCurrentSelection>
+    <IntersectWithCurrentSelection>Gurutzatu oraingo hautapenarekin</IntersectWithCurrentSelection>
+    <MatchingLinesX>Bat datozen lerroak: {0}</MatchingLinesX>
+  </ModifySelection>
   <MultipleReplace>
     <Title>Ordezte anitza</Title>
     <FindWhat>Bilatu</FindWhat>
@@ -1700,4 +1732,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SplitLongLinesAt2>segundumilaen</SplitLongLinesAt2>
     <Other>Bestelakoa</Other>
   </WaveFormGenerateTimeCodes>
+  <WebVttNewVoice>
+    <Title>WebVTT - ezarri ahots berria</Title>
+    <VoiceName>Ahotsaren izena</VoiceName>
+  </WebVttNewVoice>
 </Language>
