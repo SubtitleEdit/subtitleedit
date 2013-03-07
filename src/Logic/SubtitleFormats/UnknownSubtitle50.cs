@@ -60,11 +60,27 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string text = p.Text;
                 if (Utilities.CountTagInText(text, Environment.NewLine) > 1)
                     text = Utilities.AutoBreakLine(text);
+                text = Utilities.RemoveHtmlTags(text, true);
+                if (p.Text.Contains("<i>"))
+                {
+                    if (Utilities.CountTagInText(p.Text, "<i>") == 1 && Utilities.CountTagInText(p.Text, "</i>") == 1 &&
+                        p.Text.StartsWith("<i>") && p.Text.StartsWith("<i>"))
+                    {
+                        text = "||" + text.Replace(Environment.NewLine, "||" + Environment.NewLine + "||") + "||";
+                    }
+                    else if (Utilities.CountTagInText(p.Text, "<i>") == 2 && Utilities.CountTagInText(p.Text, "</i>") == 2 &&
+                        p.Text.StartsWith("<i>") && p.Text.StartsWith("<i>") && p.Text.Contains("</i>" + Environment.NewLine + "<i>"))
+                    {
+                        text = "||" + text.Replace(Environment.NewLine, "||" + Environment.NewLine + "||") + "||";
+                    }
+                }
+
                 if (!text.Contains(Environment.NewLine))
                     text = Environment.NewLine + text;
                 sb.AppendLine(string.Format(paragraphWriteFormat, FormatTime(p.StartTime), FormatTime(p.EndTime), text));
             }
-            return sb.ToString().TrimEnd();
+            sb.AppendLine();
+            return sb.ToString();
         }
 
         private string FormatTime(TimeCode timeCode)
@@ -108,6 +124,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else
                     {
+                        if (line.StartsWith("||"))
+                            line = "<i>" + line.Replace("||", string.Empty) +  "</i>";
                         p.Text = line.Trim();
                         expecting = ExpectingLine.Text2;
                     }
@@ -121,6 +139,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else
                     {
+                        if (line.StartsWith("||"))
+                            line = "<i>" + line.Replace("||", string.Empty) + "</i>";
                         p.Text = (p.Text + Environment.NewLine + line).Trim();
                         expecting = ExpectingLine.TimeCodes;
                     }
