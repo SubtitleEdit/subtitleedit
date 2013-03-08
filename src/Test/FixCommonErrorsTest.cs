@@ -355,7 +355,7 @@ namespace Test
         public void FixMissingSpacesItalicEnd()
         {
             var target = new FixCommonErrors_Accessor();
-            InitializeFixCommonErrorsLine(target, "The<i>Bombshell</i> will gone.");
+            InitializeFixCommonErrorsLine(target, "The <i>Bombshell</i>will gone.");
             target.FixMissingSpaces();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The <i>Bombshell</i> will gone.");
         }
