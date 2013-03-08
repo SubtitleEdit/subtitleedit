@@ -51,6 +51,8 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
+            this.groupBoxTimeCodes = new System.Windows.Forms.GroupBox();
+            this.checkBoxGenerateTimeCodes = new System.Windows.Forms.CheckBox();
             this.groupBoxImportText.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
             this.groupBoxDuration.SuspendLayout();
@@ -58,6 +60,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGapBetweenLines)).BeginInit();
             this.groupBoxSplitting.SuspendLayout();
             this.groupBoxImportResult.SuspendLayout();
+            this.groupBoxTimeCodes.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOpenText
@@ -79,7 +82,7 @@
             this.groupBoxImportText.Controls.Add(this.buttonOpenText);
             this.groupBoxImportText.Location = new System.Drawing.Point(12, 12);
             this.groupBoxImportText.Name = "groupBoxImportText";
-            this.groupBoxImportText.Size = new System.Drawing.Size(517, 326);
+            this.groupBoxImportText.Size = new System.Drawing.Size(517, 351);
             this.groupBoxImportText.TabIndex = 0;
             this.groupBoxImportText.TabStop = false;
             this.groupBoxImportText.Text = "Import text";
@@ -95,7 +98,7 @@
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxText.Size = new System.Drawing.Size(505, 272);
-            this.textBoxText.TabIndex = 2;
+            this.textBoxText.TabIndex = 1;
             this.textBoxText.TextChanged += new System.EventHandler(this.TextBoxTextTextChanged);
             this.textBoxText.DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBoxTextDragDrop);
             this.textBoxText.DragEnter += new System.Windows.Forms.DragEventHandler(this.TextBoxTextDragEnter);
@@ -103,17 +106,16 @@
             // groupBoxImportOptions
             // 
             this.groupBoxImportOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImportOptions.Controls.Add(this.checkBoxGenerateTimeCodes);
+            this.groupBoxImportOptions.Controls.Add(this.groupBoxTimeCodes);
             this.groupBoxImportOptions.Controls.Add(this.checkBoxMergeShortLines);
-            this.groupBoxImportOptions.Controls.Add(this.groupBoxDuration);
             this.groupBoxImportOptions.Controls.Add(this.buttonRefresh);
-            this.groupBoxImportOptions.Controls.Add(this.numericUpDownGapBetweenLines);
-            this.groupBoxImportOptions.Controls.Add(this.labelGapBetweenSubtitles);
             this.groupBoxImportOptions.Controls.Add(this.checkBoxRemoveLinesWithoutLetters);
             this.groupBoxImportOptions.Controls.Add(this.groupBoxSplitting);
             this.groupBoxImportOptions.Controls.Add(this.checkBoxRemoveEmptyLines);
             this.groupBoxImportOptions.Location = new System.Drawing.Point(535, 12);
             this.groupBoxImportOptions.Name = "groupBoxImportOptions";
-            this.groupBoxImportOptions.Size = new System.Drawing.Size(341, 326);
+            this.groupBoxImportOptions.Size = new System.Drawing.Size(341, 351);
             this.groupBoxImportOptions.TabIndex = 1;
             this.groupBoxImportOptions.TabStop = false;
             this.groupBoxImportOptions.Text = "Import options";
@@ -136,10 +138,10 @@
             this.groupBoxDuration.Controls.Add(this.numericUpDownDurationFixed);
             this.groupBoxDuration.Controls.Add(this.radioButtonDurationFixed);
             this.groupBoxDuration.Controls.Add(this.radioButtonDurationAuto);
-            this.groupBoxDuration.Location = new System.Drawing.Point(6, 223);
+            this.groupBoxDuration.Location = new System.Drawing.Point(9, 47);
             this.groupBoxDuration.Name = "groupBoxDuration";
-            this.groupBoxDuration.Size = new System.Drawing.Size(298, 70);
-            this.groupBoxDuration.TabIndex = 6;
+            this.groupBoxDuration.Size = new System.Drawing.Size(247, 70);
+            this.groupBoxDuration.TabIndex = 2;
             this.groupBoxDuration.TabStop = false;
             this.groupBoxDuration.Text = "Duration";
             // 
@@ -171,7 +173,7 @@
             this.radioButtonDurationFixed.AutoSize = true;
             this.radioButtonDurationFixed.Location = new System.Drawing.Point(16, 42);
             this.radioButtonDurationFixed.Name = "radioButtonDurationFixed";
-            this.radioButtonDurationFixed.Size = new System.Drawing.Size(50, 17);
+            this.radioButtonDurationFixed.Size = new System.Drawing.Size(51, 17);
             this.radioButtonDurationFixed.TabIndex = 1;
             this.radioButtonDurationFixed.Text = "Fixed";
             this.radioButtonDurationFixed.UseVisualStyleBackColor = true;
@@ -183,7 +185,7 @@
             this.radioButtonDurationAuto.Checked = true;
             this.radioButtonDurationAuto.Location = new System.Drawing.Point(16, 19);
             this.radioButtonDurationAuto.Name = "radioButtonDurationAuto";
-            this.radioButtonDurationAuto.Size = new System.Drawing.Size(47, 17);
+            this.radioButtonDurationAuto.Size = new System.Drawing.Size(48, 17);
             this.radioButtonDurationAuto.TabIndex = 0;
             this.radioButtonDurationAuto.TabStop = true;
             this.radioButtonDurationAuto.Text = "Auto";
@@ -193,17 +195,17 @@
             // buttonRefresh
             // 
             this.buttonRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRefresh.Location = new System.Drawing.Point(42, 299);
+            this.buttonRefresh.Location = new System.Drawing.Point(6, 324);
             this.buttonRefresh.Name = "buttonRefresh";
             this.buttonRefresh.Size = new System.Drawing.Size(102, 21);
-            this.buttonRefresh.TabIndex = 7;
+            this.buttonRefresh.TabIndex = 6;
             this.buttonRefresh.Text = "Refresh";
             this.buttonRefresh.UseVisualStyleBackColor = true;
             this.buttonRefresh.Click += new System.EventHandler(this.ButtonRefreshClick);
             // 
             // numericUpDownGapBetweenLines
             // 
-            this.numericUpDownGapBetweenLines.Location = new System.Drawing.Point(19, 192);
+            this.numericUpDownGapBetweenLines.Location = new System.Drawing.Point(192, 20);
             this.numericUpDownGapBetweenLines.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -216,7 +218,7 @@
             0});
             this.numericUpDownGapBetweenLines.Name = "numericUpDownGapBetweenLines";
             this.numericUpDownGapBetweenLines.Size = new System.Drawing.Size(64, 21);
-            this.numericUpDownGapBetweenLines.TabIndex = 5;
+            this.numericUpDownGapBetweenLines.TabIndex = 1;
             this.numericUpDownGapBetweenLines.Value = new decimal(new int[] {
             1000,
             0,
@@ -227,10 +229,10 @@
             // labelGapBetweenSubtitles
             // 
             this.labelGapBetweenSubtitles.AutoSize = true;
-            this.labelGapBetweenSubtitles.Location = new System.Drawing.Point(19, 175);
+            this.labelGapBetweenSubtitles.Location = new System.Drawing.Point(6, 23);
             this.labelGapBetweenSubtitles.Name = "labelGapBetweenSubtitles";
             this.labelGapBetweenSubtitles.Size = new System.Drawing.Size(180, 13);
-            this.labelGapBetweenSubtitles.TabIndex = 4;
+            this.labelGapBetweenSubtitles.TabIndex = 0;
             this.labelGapBetweenSubtitles.Text = "Gap between subtitles (milliseconds)";
             // 
             // checkBoxRemoveLinesWithoutLetters
@@ -264,7 +266,7 @@
             this.radioButtonSplitAtBlankLines.Location = new System.Drawing.Point(159, 19);
             this.radioButtonSplitAtBlankLines.Name = "radioButtonSplitAtBlankLines";
             this.radioButtonSplitAtBlankLines.Size = new System.Drawing.Size(110, 17);
-            this.radioButtonSplitAtBlankLines.TabIndex = 1;
+            this.radioButtonSplitAtBlankLines.TabIndex = 2;
             this.radioButtonSplitAtBlankLines.Text = "Split at blank lines";
             this.radioButtonSplitAtBlankLines.UseVisualStyleBackColor = true;
             this.radioButtonSplitAtBlankLines.CheckedChanged += new System.EventHandler(this.radioButtonSplitAtBlankLines_CheckedChanged);
@@ -275,7 +277,7 @@
             this.radioButtonAutoSplit.Checked = true;
             this.radioButtonAutoSplit.Location = new System.Drawing.Point(14, 19);
             this.radioButtonAutoSplit.Name = "radioButtonAutoSplit";
-            this.radioButtonAutoSplit.Size = new System.Drawing.Size(93, 17);
+            this.radioButtonAutoSplit.Size = new System.Drawing.Size(88, 17);
             this.radioButtonAutoSplit.TabIndex = 0;
             this.radioButtonAutoSplit.TabStop = true;
             this.radioButtonAutoSplit.Text = "Auto split text";
@@ -287,8 +289,8 @@
             this.radioButtonLineMode.AutoSize = true;
             this.radioButtonLineMode.Location = new System.Drawing.Point(14, 42);
             this.radioButtonLineMode.Name = "radioButtonLineMode";
-            this.radioButtonLineMode.Size = new System.Drawing.Size(133, 17);
-            this.radioButtonLineMode.TabIndex = 2;
+            this.radioButtonLineMode.Size = new System.Drawing.Size(131, 17);
+            this.radioButtonLineMode.TabIndex = 1;
             this.radioButtonLineMode.Text = "One line is one subtitle";
             this.radioButtonLineMode.UseVisualStyleBackColor = true;
             this.radioButtonLineMode.CheckedChanged += new System.EventHandler(this.RadioButtonLineModeCheckedChanged);
@@ -312,9 +314,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxImportResult.Controls.Add(this.SubtitleListview1);
-            this.groupBoxImportResult.Location = new System.Drawing.Point(12, 344);
+            this.groupBoxImportResult.Location = new System.Drawing.Point(12, 369);
             this.groupBoxImportResult.Name = "groupBoxImportResult";
-            this.groupBoxImportResult.Size = new System.Drawing.Size(864, 227);
+            this.groupBoxImportResult.Size = new System.Drawing.Size(864, 228);
             this.groupBoxImportResult.TabIndex = 2;
             this.groupBoxImportResult.TabStop = false;
             this.groupBoxImportResult.Text = "Preview";
@@ -335,7 +337,7 @@
             this.SubtitleListview1.MultiSelect = false;
             this.SubtitleListview1.Name = "SubtitleListview1";
             this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(852, 186);
+            this.SubtitleListview1.Size = new System.Drawing.Size(852, 187);
             this.SubtitleListview1.TabIndex = 0;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.UseSyntaxColoring = true;
@@ -349,7 +351,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(795, 579);
+            this.buttonCancel.Location = new System.Drawing.Point(795, 605);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 4;
@@ -361,7 +363,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(714, 579);
+            this.buttonOK.Location = new System.Drawing.Point(714, 605);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 3;
@@ -369,11 +371,35 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
             // 
+            // groupBoxTimeCodes
+            // 
+            this.groupBoxTimeCodes.Controls.Add(this.labelGapBetweenSubtitles);
+            this.groupBoxTimeCodes.Controls.Add(this.numericUpDownGapBetweenLines);
+            this.groupBoxTimeCodes.Controls.Add(this.groupBoxDuration);
+            this.groupBoxTimeCodes.Enabled = false;
+            this.groupBoxTimeCodes.Location = new System.Drawing.Point(6, 192);
+            this.groupBoxTimeCodes.Name = "groupBoxTimeCodes";
+            this.groupBoxTimeCodes.Size = new System.Drawing.Size(329, 126);
+            this.groupBoxTimeCodes.TabIndex = 5;
+            this.groupBoxTimeCodes.TabStop = false;
+            this.groupBoxTimeCodes.Text = "Time codes";
+            // 
+            // checkBoxGenerateTimeCodes
+            // 
+            this.checkBoxGenerateTimeCodes.AutoSize = true;
+            this.checkBoxGenerateTimeCodes.Location = new System.Drawing.Point(19, 167);
+            this.checkBoxGenerateTimeCodes.Name = "checkBoxGenerateTimeCodes";
+            this.checkBoxGenerateTimeCodes.Size = new System.Drawing.Size(125, 17);
+            this.checkBoxGenerateTimeCodes.TabIndex = 4;
+            this.checkBoxGenerateTimeCodes.Text = "Generate time codes";
+            this.checkBoxGenerateTimeCodes.UseVisualStyleBackColor = true;
+            this.checkBoxGenerateTimeCodes.CheckedChanged += new System.EventHandler(this.checkBoxGenerateTimeCodes_CheckedChanged);
+            // 
             // ImportText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(888, 616);
+            this.ClientSize = new System.Drawing.Size(888, 642);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxImportResult);
@@ -399,6 +425,8 @@
             this.groupBoxSplitting.ResumeLayout(false);
             this.groupBoxSplitting.PerformLayout();
             this.groupBoxImportResult.ResumeLayout(false);
+            this.groupBoxTimeCodes.ResumeLayout(false);
+            this.groupBoxTimeCodes.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -428,5 +456,7 @@
         private System.Windows.Forms.RadioButton radioButtonDurationAuto;
         private System.Windows.Forms.CheckBox checkBoxMergeShortLines;
         private System.Windows.Forms.RadioButton radioButtonSplitAtBlankLines;
+        private System.Windows.Forms.CheckBox checkBoxGenerateTimeCodes;
+        private System.Windows.Forms.GroupBox groupBoxTimeCodes;
     }
 }

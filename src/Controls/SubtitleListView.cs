@@ -499,10 +499,16 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (Configuration.Settings != null  && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
             {
-                subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToHHMMSSFF());
+                if (paragraph.StartTime.IsMaxTime)
+                    subItem = new ListViewItem.ListViewSubItem(item, "-");
+                else
+                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToHHMMSSFF());
                 item.SubItems.Add(subItem);
 
-                subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToHHMMSSFF());
+                if (paragraph.EndTime.IsMaxTime)
+                    subItem = new ListViewItem.ListViewSubItem(item, "-");
+                else
+                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToHHMMSSFF());
                 item.SubItems.Add(subItem);
 
                 subItem = new ListViewItem.ListViewSubItem(item, string.Format("{0},{1:00}", paragraph.Duration.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds)));
@@ -510,10 +516,16 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToString());
+                if (paragraph.StartTime.IsMaxTime)
+                    subItem = new ListViewItem.ListViewSubItem(item, "-");
+                else
+                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToString());
                 item.SubItems.Add(subItem);
 
-                subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToString());
+                if (paragraph.EndTime.IsMaxTime)
+                    subItem = new ListViewItem.ListViewSubItem(item, "-");
+                else
+                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToString());
                 item.SubItems.Add(subItem);
 
                 subItem = new ListViewItem.ListViewSubItem(item, string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds));
@@ -639,14 +651,30 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                 {
-                    item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToHHMMSSFF();
-                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
+                    if (paragraph.StartTime.IsMaxTime)
+                        item.SubItems[ColumnIndexStart].Text = "-";
+                    else
+                        item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToHHMMSSFF();
+
+                    if (paragraph.EndTime.IsMaxTime)
+                        item.SubItems[ColumnIndexEnd].Text = "-";
+                    else
+                        item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
+
                     item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
                 }
                 else
                 {
-                    item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToString();
-                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
+                    if (paragraph.StartTime.IsMaxTime)
+                        item.SubItems[ColumnIndexStart].Text = "-";
+                    else
+                        item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToString();
+
+                    if (paragraph.EndTime.IsMaxTime)
+                        item.SubItems[ColumnIndexEnd].Text = "-";
+                    else
+                        item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
+
                     item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds);
                 }
                 Items[index].SubItems[ColumnIndexText].Text = paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString);
@@ -805,13 +833,27 @@ namespace Nikse.SubtitleEdit.Controls
                 ListViewItem item = Items[index];
                 if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                 {
-                    item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToHHMMSSFF();
-                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
+                    if (paragraph.StartTime.IsMaxTime)
+                        item.SubItems[ColumnIndexStart].Text = "-";
+                    else
+                        item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToHHMMSSFF();
+
+                    if (paragraph.EndTime.IsMaxTime)
+                        item.SubItems[ColumnIndexEnd].Text = "-";
+                    else
+                        item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
                 }
                 else
                 {
-                    item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToString();
-                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
+                    if (paragraph.StartTime.IsMaxTime)
+                        item.SubItems[ColumnIndexStart].Text = "-";
+                    else
+                        item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToString();
+
+                    if (paragraph.EndTime.IsMaxTime)
+                        item.SubItems[ColumnIndexEnd].Text = "-";
+                    else
+                        item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
                 }
             }
         }

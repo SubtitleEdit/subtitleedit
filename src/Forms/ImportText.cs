@@ -34,17 +34,26 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxMergeShortLines.Text = Configuration.Settings.Language.ImportText.MergeShortLines;
             checkBoxRemoveEmptyLines.Text = Configuration.Settings.Language.ImportText.RemoveEmptyLines;
             checkBoxRemoveLinesWithoutLetters.Text = Configuration.Settings.Language.ImportText.RemoveLinesWithoutLetters;
+            checkBoxGenerateTimeCodes.Text = Configuration.Settings.Language.ImportText.GenerateTimeCodes;
             labelGapBetweenSubtitles.Text = Configuration.Settings.Language.ImportText.GapBetweenSubtitles;
+            numericUpDownGapBetweenLines.Left = labelGapBetweenSubtitles.Left + labelGapBetweenSubtitles.Width + 3;
             groupBoxDuration.Text = Configuration.Settings.Language.General.Duration;
             radioButtonDurationAuto.Text = Configuration.Settings.Language.ImportText.Auto;
             radioButtonDurationFixed.Text = Configuration.Settings.Language.ImportText.Fixed;
             buttonRefresh.Text = Configuration.Settings.Language.ImportText.Refresh;
+            groupBoxTimeCodes.Text = Configuration.Settings.Language.ImportText.TimeCodes;
             groupBoxImportResult.Text = Configuration.Settings.Language.General.Preview;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(SubtitleListview1);
             SubtitleListview1.AutoSizeAllColumns(this);
+
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.GenerateTimeCodes)) //TODO: Remove in SE 3.4
+            {
+                checkBoxGenerateTimeCodes.Checked = true;
+                checkBoxGenerateTimeCodes.Visible = false;
+            }
 
             numericUpDownDurationFixed.Enabled = radioButtonDurationFixed.Checked;
             FixLargeFonts();
@@ -111,8 +120,19 @@ namespace Nikse.SubtitleEdit.Forms
                 MergeLinesWithContinuation();
 
             _subtitle.Renumber(1);
-            FixDurations();
-            MakePseudoStartTime();
+            if (checkBoxGenerateTimeCodes.Checked)
+            {
+                FixDurations();
+                MakePseudoStartTime();
+            }
+            else
+            {
+                foreach (Paragraph p in _subtitle.Paragraphs)
+                {
+                    p.StartTime = TimeCode.MaxTime;
+                    p.EndTime = TimeCode.MaxTime;
+                }
+            }
 
             groupBoxImportResult.Text = string.Format(Configuration.Settings.Language.ImportText.PreviewLinesModifiedX, _subtitle.Paragraphs.Count);
             SubtitleListview1.Fill(_subtitle);
@@ -591,6 +611,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void radioButtonSplitAtBlankLines_CheckedChanged(object sender, EventArgs e)
         {
+            GeneratePreview();
+        }
+
+        private void checkBoxGenerateTimeCodes_CheckedChanged(object sender, EventArgs e)
+        {
+            groupBoxTimeCodes.Enabled = checkBoxGenerateTimeCodes.Checked;
             GeneratePreview();
         }
 

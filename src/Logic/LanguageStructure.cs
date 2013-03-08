@@ -596,12 +596,14 @@
             public string MergeShortLines { get; set; }
             public string RemoveEmptyLines { get; set; }
             public string RemoveLinesWithoutLetters { get; set; }
+            public string GenerateTimeCodes { get; set; }
             public string GapBetweenSubtitles { get; set; }
             public string Auto { get; set; }
             public string Fixed { get; set; }
             public string Refresh { get; set; }
             public string TextFiles { get; set; }
             public string PreviewLinesModifiedX { get; set; }
+            public string TimeCodes { get; set; }
         }
 
         public class Interjections

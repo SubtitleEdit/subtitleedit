@@ -695,12 +695,14 @@ namespace Nikse.SubtitleEdit.Logic
                 MergeShortLines = "Merge short lines with continuation",
                 RemoveEmptyLines = "Remove empty lines",
                 RemoveLinesWithoutLetters = "Remove lines without letters",
+                GenerateTimeCodes = "Generate time codes",
                 GapBetweenSubtitles = "Gap between subtitles (milliseconds)",
                 Auto = "Auto",
                 Fixed = "Fixed",
                 Refresh = "&Refresh",
                 TextFiles = "Text files",
                 PreviewLinesModifiedX = "Preview - paragraphs modified: {0}",
+                TimeCodes = "Time codes",
             };
 
             Interjections = new LanguageStructure.Interjections
