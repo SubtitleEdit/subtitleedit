@@ -65,6 +65,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool showShrink, VobSubOcr.CompareMatch bestGuess, List<VobSubOcr.ImageCompareAddition> additions, VobSubOcr vobSubForm)
         {
+            NikseBitmap nbmp = new NikseBitmap(vobSubImage);
+            nbmp.ReplaceTransparentWith(Color.Black);
+            vobSubImage = nbmp.GetBitmap();          
+
             radioButtonHot.Checked = true;
             ShrinkSelection = false;
             ExpandSelection = false;

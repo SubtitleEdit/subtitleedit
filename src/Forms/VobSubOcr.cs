@@ -1165,6 +1165,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private Point MakePointItalic(Point p, int height)
+        {
+            return new Point((int)Math.Round(p.X + (height - p.Y) * _unItalicFactor), p.Y);
+        }
+
         private string NOcrFindBestMatch(Bitmap bmp, out bool italic)
         {
             italic = false;
@@ -1179,7 +1184,51 @@ namespace Nikse.SubtitleEdit.Forms
             double widthPercent = nbmp.Height * 100.0 / nbmp.Width;
             foreach (NOcrChar oc in _nocrChars)
             {
-                if (Math.Abs(oc.Width - widthPercent) < 20)
+                if (Math.Abs(oc.Width - widthPercent) < 30)
+                {
+                    bool ok = true;
+                    foreach (NOcrPoint op in oc.LinesForeground)
+                    {
+                        foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
+                        {
+                            if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+                            {
+                                Color c = nbmp.GetPixel(point.X, point.Y);
+                                if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                {
+                                }
+                                else
+                                {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    foreach (NOcrPoint op in oc.LinesBackground)
+                    {
+                        foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
+                        {
+                            if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+                            {
+                                Color c = nbmp.GetPixel(point.X, point.Y);
+                                if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (ok)
+                        return oc.Text;
+                }
+            }
+
+            foreach (NOcrChar oc in _nocrChars)
+            {
+                var w = Math.Abs(oc.Width - widthPercent);
+                if (w >= 30 && w < 80)
                 {
                     bool ok = true;
                     foreach (NOcrPoint op in oc.LinesForeground)
@@ -1224,16 +1273,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (NOcrChar oc in _nocrChars)
                 {
-                    //if (Math.Abs(oc.Width - widthPercent) < 90)
+                    if (Math.Abs(oc.Width - widthPercent) < 99)
                     {
                         bool ok = true;
                         foreach (NOcrPoint op in oc.LinesForeground)
                         {
-                            NOcrPoint p = new NOcrPoint();
-                            p.Start = new PointF((float)(op.Start.X + _unItalicFactor * (100- op.Start.Y)), op.Start.Y);
-                            p.End = new PointF((float)(op.End.X + _unItalicFactor * (100 - op.Start.Y)), op.End.Y);
-                            foreach (Point point in p.GetPoints(nbmp.Width, nbmp.Height))
-                            {                                
+                            foreach (Point point in NOcrPoint.GetPoints(MakePointItalic(op.GetStart(bmp.Width, bmp.Height), bmp.Height), MakePointItalic(op.GetEnd(bmp.Width, bmp.Height), bmp.Height)))
+                            {
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                                 {
                                     Color c = nbmp.GetPixel(point.X, point.Y);
@@ -1250,10 +1296,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         foreach (NOcrPoint op in oc.LinesBackground)
                         {
-                            NOcrPoint p = new NOcrPoint();
-                            p.Start = new PointF((float)(op.Start.X + _unItalicFactor * (100 - op.Start.Y)), op.Start.Y);
-                            p.End = new PointF((float)(op.End.X + _unItalicFactor * (100 - op.Start.Y)), op.End.Y);
-                            foreach (Point point in p.GetPoints(nbmp.Width, nbmp.Height))
+                            foreach (Point point in NOcrPoint.GetPoints(MakePointItalic(op.GetStart(bmp.Width, bmp.Height), bmp.Height), MakePointItalic(op.GetEnd(bmp.Width, bmp.Height), bmp.Height)))
                             {
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                                 {
@@ -1267,7 +1310,10 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                         if (ok)
+                        {
+                            italic = true;
                             return oc.Text;
+                        }
                     }
                 }
 
@@ -1281,6 +1327,8 @@ namespace Nikse.SubtitleEdit.Forms
                 //NikseBitmap nbmp = new NikseBitmap(bmp);
                // nbmp = unItalicedBmp;
             //TODO:SOme cropping!!!!
+
+
                 foreach (NOcrChar oc in _nocrChars)
                 {
                     if (Math.Abs(oc.Width - widthPercent) < 99)
@@ -2018,11 +2066,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadNOcr(string fileName)
         {
+            _nocrChars = new List<NOcrChar>();
             if (File.Exists(fileName))
             {
                 try
                 {
-                    _nocrChars = new List<NOcrChar>();
                     var doc = new XmlDocument();
                     doc.Load(fileName);
                     foreach (XmlNode node in doc.DocumentElement.SelectNodes("Char"))
@@ -2066,8 +2114,25 @@ namespace Nikse.SubtitleEdit.Forms
             if (_nocrChars == null)
                 LoadNOcr(Path.Combine(Configuration.DictionariesFolder, "nOCR_eng.xml"));
 
+            NikseBitmap nbmp = new NikseBitmap(bitmap);
+            nbmp.ReplaceNonWhiteWithTransparent();
+            bitmap = nbmp.GetBitmap();
+
             var matches = new List<CompareMatch>();
             List<ImageSplitterItem> list = ImageSplitter.SplitBitmapToLetters(bitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom);
+
+            foreach (ImageSplitterItem item in list)
+            {
+                if (item.Bitmap != null)
+                {
+                    nbmp = new NikseBitmap(item.Bitmap);
+                    nbmp.ReplaceNonWhiteWithTransparent();
+                    nbmp.CropTopTransparent(0);
+                    nbmp.CropTransparentSidesAndBottom(0);
+                    nbmp.ReplaceTransparentWith(Color.Black);
+                    item.Bitmap = nbmp.GetBitmap();
+                }
+            }
             int index = 0;
             bool expandSelection = false;
             bool shrinkSelection = false;
