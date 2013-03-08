@@ -1574,7 +1574,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (newText.Length > index + 6 && index > 1)
                         {
-                            if (Utilities.AllLettersAndNumbers.Contains(newText[index + 3].ToString()) &&
+                            if (Utilities.AllLettersAndNumbers.Contains(newText[index + 4].ToString()) &&
                                 Utilities.AllLettersAndNumbers.Contains(newText[index - 1].ToString()))
                                 newText = newText.Insert(index + 4, " ");
                         }
