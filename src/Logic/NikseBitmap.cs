@@ -62,6 +62,34 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public void ReplaceNonWhiteWithTransparent()
+        {
+            byte[] buffer = new byte[4];
+            buffer[0] = 0;
+            buffer[1] = 0;
+            buffer[2] = 0;
+            buffer[3] = 0;
+            for (int i = 0; i < _bitmapData.Length; i += 4)
+            {
+                if (_bitmapData[i + 2] < 160 || _bitmapData[i + 1] < 160 || _bitmapData[i] < 160)
+                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
+            }
+        }
+
+        public void ReplaceTransparentWith(Color c)
+        {
+            byte[] buffer = new byte[4];
+            buffer[0] = c.B;
+            buffer[1] = c.G;
+            buffer[2] = c.R;
+            buffer[3] = c.A;
+            for (int i = 0; i < _bitmapData.Length; i += 4)
+            {
+                if (_bitmapData[i + 3] < 10)
+                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
+            }
+        }
+
         public void MakeOneColor(Color c)
         {
             byte[] buffer = new byte[4];
@@ -566,10 +594,50 @@ namespace Nikse.SubtitleEdit.Logic
             while (!done && y < Height)
             {
                 x = 0;
-                while (!done &&  x < Width)
+                while (!done && x < Width)
                 {
                     Color c = GetPixel(x, y);
                     if (c != transparentColor)
+                    {
+                        done = true;
+                        newTop = y - maximumCropping;
+                        if (newTop < 0)
+                            newTop = 0;
+                    }
+                    x++;
+                }
+                y++;
+            }
+
+            if (newTop == 0)
+                return;
+
+            int newHeight = Height - newTop;
+            var newBitmapData = new byte[Width * newHeight * 4];
+            int index = 0;
+            for (y = newTop; y < Height; y++)
+            {
+                int pixelAddress = y * 4 * Width;
+                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * Width);
+                index += 4 * Width;
+            }
+            Height = newHeight;
+            _bitmapData = newBitmapData;
+        }
+
+        public void CropTopTransparent(int maximumCropping)
+        {
+            bool done = false;
+            int newTop = 0;
+            int y = 0;
+            int x = 0;
+            while (!done && y < Height)
+            {
+                x = 0;
+                while (!done && x < Width)
+                {
+                    Color c = GetPixel(x, y);
+                    if (c.A > 10)
                     {
                         done = true;
                         newTop = y - maximumCropping;
