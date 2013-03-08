@@ -335,9 +335,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Width = MinimumSize.Width;
                 Height = MinimumSize.Height;
             }
-            TopMost = true;
-            BringToFront();
-            TopMost = false;
+            Activate();
         }
 
         private void AddFixActions(Subtitle subtitle, string threeLetterISOLanguageName)
