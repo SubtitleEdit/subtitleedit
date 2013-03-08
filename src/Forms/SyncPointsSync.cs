@@ -191,6 +191,7 @@ namespace Nikse.SubtitleEdit.Forms
                         RefreshSyncronizationPointsUI();
                         _videoFileName = getTime.VideoFileName;
                     }
+                    Activate();
                     _videoFileName = getTime.VideoFileName;
                 }
             }
