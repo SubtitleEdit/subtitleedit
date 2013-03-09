@@ -679,13 +679,15 @@ namespace Nikse.SubtitleEdit.Forms
                     target = prev;
                 string oldCurrent = p.ToString();
                 string oldPrevious = prev.ToString();
-                double prevWantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(prev.Text);
-                double currentWantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
-
+                double prevWantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(prev.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
+                double currentWantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
                 bool canBeEqual = _format != null && (_format.GetType() == typeof(AdvancedSubStationAlpha) || _format.GetType() == typeof(SubStationAlpha));
 
-                if (prev != null && ((canBeEqual && p.StartTime.TotalMilliseconds <= prev.EndTime.TotalMilliseconds) || (!canBeEqual && p.StartTime.TotalMilliseconds <= prev.EndTime.TotalMilliseconds)))
+                if (prev != null && !prev.StartTime.IsMaxTime && !p.StartTime.IsMaxTime && 
+                    ((canBeEqual && p.StartTime.TotalMilliseconds <= prev.EndTime.TotalMilliseconds) || (!canBeEqual && p.StartTime.TotalMilliseconds <= prev.EndTime.TotalMilliseconds)))
                 {
+                    double diff = prev.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds;
+                    int diffHalf = (int)(diff / 2);
                     if (!Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart && p.StartTime.TotalMilliseconds == prev.EndTime.TotalMilliseconds &&
                         prev.Duration.TotalMilliseconds > 100)                        
                     {
@@ -748,6 +750,18 @@ namespace Nikse.SubtitleEdit.Forms
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
+                    else if (diff > 0 && currentWantedDisplayTime <= p.Duration.TotalMilliseconds - diffHalf &&
+                             prevWantedDisplayTime <= prev.Duration.TotalMilliseconds - diffHalf)
+                    {
+                        if (AllowFix(p, fixAction))
+                        {
+                            prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - diffHalf;
+                            p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
+                            _totalFixes++;
+                            noOfOverlappingDisplayTimesFixed++;
+                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                        }
+                    }                      
                     else if (Math.Abs(p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds) < 10 && Math.Abs(p.EndTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds) < 10)
                     { // merge lines with same time codes
                         if (AllowFix(target, fixAction))
@@ -801,8 +815,9 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
+                skip = p.StartTime.IsMaxTime || p.EndTime.IsMaxTime;
                 double displayTime = p.Duration.TotalMilliseconds;
-                if (displayTime < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                if (!skip && displayTime < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 {
                     Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
                     if (next == null || (p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds) < next.StartTime.TotalMilliseconds)
