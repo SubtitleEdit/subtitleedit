@@ -60,7 +60,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             VideoPlayerUnDocked_MouseMove(null, null);
 
-            if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Enter)
+            if (e.Modifiers == Keys.None && e.KeyCode == Keys.Space)
+            {
+                _videoPlayerContainer.TogglePlayPause();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Enter)
             {
                 if (WindowState == FormWindowState.Maximized)
                 {
