@@ -982,6 +982,20 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFullscreen.Visible = false;
         }
 
+        public void ShowFullScreenControls()
+        {
+            _pictureBoxFullscreen.Image = ((Image)(_resources.GetObject("pictureBoxNoFS.Image")));
+            _pictureBoxFullscreenDown.Image = ((Image)(_resources.GetObject("pictureBoxNoFSDown.Image")));
+            _pictureBoxFullscreenOver.Image = ((Image)(_resources.GetObject("pictureBoxNoFSOver.Image")));
+        }
+
+        public void ShowNonFullScreenControls()
+        {
+            _pictureBoxFullscreen.Image = ((Image)(_resources.GetObject("pictureBoxFS.Image")));
+            _pictureBoxFullscreenDown.Image = ((Image)(_resources.GetObject("pictureBoxFSDown.Image")));
+            _pictureBoxFullscreenOver.Image = ((Image)(_resources.GetObject("pictureBoxFSOver.Image")));
+        }
+
         private void PictureBoxFullscreenMouseEnter(object sender, EventArgs e)
         {
             HideAllFullscreenImages();
@@ -1007,6 +1021,7 @@ namespace Nikse.SubtitleEdit.Controls
         private void PictureBoxFullscreenOverMouseUp(object sender, MouseEventArgs e)
         {
             HideAllFullscreenImages();
+            _pictureBoxFullscreen.Visible = true;
         }
         #endregion
 
