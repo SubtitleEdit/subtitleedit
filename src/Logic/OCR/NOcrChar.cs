@@ -5,12 +5,20 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 {
     public class NOcrChar
     {
-        public string Text { get; set; }
-        public Double Width { get; set; }
-        public Double MaxErrorPercent { get; set; }
+        public string Text { get; set; }        
+        public int Width { get; set; }
+        public int Height { get; set; }
         public List<NOcrPoint> LinesForeground { get; private set; }
         public List<NOcrPoint> LinesBackground { get; private set; }
         public string Id { get; set; }
+
+        public Double WidthPercent 
+        {
+            get
+            {
+                return Height * 100 / Width;
+            }
+        }
 
         public NOcrChar()
         {
@@ -18,7 +26,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             LinesForeground = new List<NOcrPoint>();
             LinesBackground = new List<NOcrPoint>();
             Text = string.Empty;
-            MaxErrorPercent = 0;
         }
 
         public NOcrChar(string text) : this()

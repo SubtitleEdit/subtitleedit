@@ -799,6 +799,7 @@
     <Compile Include="Logic\SubtitleFormats\IssXml.cs" />
     <Compile Include="Logic\SubtitleFormats\ItunesTimedText.cs" />
     <Compile Include="Logic\SubtitleFormats\JsonType3.cs" />
+    <Compile Include="Logic\SubtitleFormats\MacCaption.cs" />
     <Compile Include="Logic\SubtitleFormats\NciCaption.cs" />
     <Compile Include="Logic\SubtitleFormats\QubeMasterImport.cs" />
     <Compile Include="Logic\SubtitleFormats\RhozetHarmonic.cs" />

@@ -1184,7 +1184,7 @@ namespace Nikse.SubtitleEdit.Forms
             double widthPercent = nbmp.Height * 100.0 / nbmp.Width;
             foreach (NOcrChar oc in _nocrChars)
             {
-                if (Math.Abs(oc.Width - widthPercent) < 30)
+                if (Math.Abs(oc.WidthPercent - widthPercent) < 30)
                 {
                     bool ok = true;
                     foreach (NOcrPoint op in oc.LinesForeground)
@@ -1227,7 +1227,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (NOcrChar oc in _nocrChars)
             {
-                var w = Math.Abs(oc.Width - widthPercent);
+                var w = Math.Abs(oc.WidthPercent - widthPercent);
                 if (w >= 30 && w < 80)
                 {
                     bool ok = true;
@@ -1273,7 +1273,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (NOcrChar oc in _nocrChars)
                 {
-                    if (Math.Abs(oc.Width - widthPercent) < 99)
+                    if (Math.Abs(oc.WidthPercent - widthPercent) < 99)
                     {
                         bool ok = true;
                         foreach (NOcrPoint op in oc.LinesForeground)
@@ -1331,7 +1331,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 foreach (NOcrChar oc in _nocrChars)
                 {
-                    if (Math.Abs(oc.Width - widthPercent) < 99)
+                    if (Math.Abs(oc.WidthPercent - widthPercent) < 99)
                     {
                         bool ok = true;
                         foreach (NOcrPoint op in oc.LinesForeground)
@@ -2035,20 +2035,22 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     textWriter.WriteStartElement("Char", "");
                     textWriter.WriteAttributeString("Text", oc.Text);
-                    textWriter.WriteElementString("Width", oc.Width.ToString(CultureInfo.InvariantCulture));
-                    textWriter.WriteElementString("MaxErrorPercent", oc.MaxErrorPercent.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteAttributeString("Width", oc.Width.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteAttributeString("Height", oc.Height.ToString(CultureInfo.InvariantCulture));
                     foreach (NOcrPoint op in oc.LinesForeground)
                     {
-                        textWriter.WriteStartElement("PointForeground", "");
-                        textWriter.WriteElementString("Start", op.Start.X.ToString(CultureInfo.InvariantCulture) + "," + op.Start.Y.ToString(CultureInfo.InvariantCulture));
-                        textWriter.WriteElementString("End", op.End.X.ToString(CultureInfo.InvariantCulture) + "," + op.End.Y.ToString(CultureInfo.InvariantCulture));
+                        textWriter.WriteStartElement("Point", "");
+                        textWriter.WriteAttributeString("On", true.ToString());
+                        textWriter.WriteAttributeString("Start", op.Start.X.ToString(CultureInfo.InvariantCulture) + "," + op.Start.Y.ToString(CultureInfo.InvariantCulture));
+                        textWriter.WriteAttributeString("End", op.End.X.ToString(CultureInfo.InvariantCulture) + "," + op.End.Y.ToString(CultureInfo.InvariantCulture));
                         textWriter.WriteEndElement();
                     }
                     foreach (NOcrPoint op in oc.LinesBackground)
                     {
-                        textWriter.WriteStartElement("PointBackground", "");
-                        textWriter.WriteElementString("Start", op.Start.X.ToString(CultureInfo.InvariantCulture) + "," + op.Start.Y.ToString(CultureInfo.InvariantCulture));
-                        textWriter.WriteElementString("End", op.End.X.ToString(CultureInfo.InvariantCulture) + "," + op.End.Y.ToString(CultureInfo.InvariantCulture));
+                        textWriter.WriteStartElement("Point", "");
+                        textWriter.WriteAttributeString("On", false.ToString());
+                        textWriter.WriteAttributeString("Start", op.Start.X.ToString(CultureInfo.InvariantCulture) + "," + op.Start.Y.ToString(CultureInfo.InvariantCulture));
+                        textWriter.WriteAttributeString("End", op.End.X.ToString(CultureInfo.InvariantCulture) + "," + op.End.Y.ToString(CultureInfo.InvariantCulture));
                         textWriter.WriteEndElement();
                     }
                     textWriter.WriteEndElement();
@@ -2076,20 +2078,17 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (XmlNode node in doc.DocumentElement.SelectNodes("Char"))
                     {
                         var oc = new NOcrChar(node.Attributes["Text"].Value);
-                        oc.Width = Convert.ToDouble(node.SelectSingleNode("Width").InnerText, CultureInfo.InvariantCulture);
-                        foreach (XmlNode pointNode in node.SelectNodes("PointForeground"))
+                        oc.Width = Convert.ToInt32(node.Attributes["Width"].Value, CultureInfo.InvariantCulture);
+                        oc.Height = Convert.ToInt32(node.Attributes["Height"].Value, CultureInfo.InvariantCulture);
+                        foreach (XmlNode pointNode in node.SelectNodes("Point"))
                         {
                             var op = new NOcrPoint();
-                            op.Start = DecodePoint(pointNode.SelectSingleNode("Start").InnerText);
-                            op.End = DecodePoint(pointNode.SelectSingleNode("End").InnerText);
-                            oc.LinesForeground.Add(op);
-                        }
-                        foreach (XmlNode pointNode in node.SelectNodes("PointBackground"))
-                        {
-                            var op = new NOcrPoint();
-                            op.Start = DecodePoint(pointNode.SelectSingleNode("Start").InnerText);
-                            op.End = DecodePoint(pointNode.SelectSingleNode("End").InnerText);
-                            oc.LinesBackground.Add(op);
+                            op.Start = DecodePoint(pointNode.Attributes["Start"].Value);
+                            op.End = DecodePoint(pointNode.Attributes["End"].Value);
+                            if (Convert.ToBoolean(pointNode.Attributes["On"].Value))
+                                oc.LinesForeground.Add(op);
+                            else
+                                oc.LinesBackground.Add(op);
                         }
                         _nocrChars.Add(oc);
                     }

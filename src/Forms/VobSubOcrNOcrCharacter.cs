@@ -258,7 +258,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_startDone)
                 {
                     _end = new Point((int)Math.Round(e.Location.X / _zoomFactor), (int)Math.Round(e.Location.Y / _zoomFactor));
-                    _nocrChar.Width = pictureBoxCharacter.Image.Height * 100.0 / pictureBoxCharacter.Image.Width;
+                    _nocrChar.Width = pictureBoxCharacter.Image.Width;
+                    _nocrChar.Height = pictureBoxCharacter.Image.Height;
                     if (radioButtonHot.Checked)
                         _nocrChar.LinesForeground.Add(new NOcrPoint(_start, _end, _imageWidth, _imageHeight));
                     else
