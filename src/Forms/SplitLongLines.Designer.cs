@@ -257,6 +257,7 @@
             this.SubtitleListview1.Size = new System.Drawing.Size(750, 301);
             this.SubtitleListview1.TabIndex = 5;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
+            this.SubtitleListview1.UseSyntaxColoring = true;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             // 
             // SplitLongLines
@@ -277,6 +278,7 @@
             this.Controls.Add(this.SubtitleListview1);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
+            this.MinimumSize = new System.Drawing.Size(780, 500);
             this.Name = "SplitLongLines";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
