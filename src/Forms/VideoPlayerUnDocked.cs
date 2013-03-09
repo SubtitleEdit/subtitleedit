@@ -64,14 +64,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (WindowState == FormWindowState.Maximized)
                 {
-                    FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-                    WindowState = FormWindowState.Normal;
-                    _videoPlayerContainer.FontSizeFactor = 1.0F;
-                    _videoPlayerContainer.SetSubtitleFont();
-                    _videoPlayerContainer.SubtitleText = string.Empty;
-                    _videoPlayerContainer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
-                    if (RedockOnFullscreenEnd)
-                        this.Close();
+                    e.SuppressKeyPress = true;
+                    NoFullscreen();
                 }
                 else if (WindowState == FormWindowState.Normal)
                 {
@@ -81,15 +75,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Escape && WindowState == FormWindowState.Maximized)
             {
-                FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-                WindowState = FormWindowState.Normal;
-                _videoPlayerContainer.FontSizeFactor = 1.0F;
-                _videoPlayerContainer.SetSubtitleFont();
-                _videoPlayerContainer.SubtitleText = string.Empty;
-                _videoPlayerContainer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
                 e.SuppressKeyPress = true;
-                if (RedockOnFullscreenEnd)
-                    this.Close();
+                NoFullscreen();
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.A)
             {
@@ -148,8 +135,29 @@ namespace Nikse.SubtitleEdit.Forms
             _videoPlayerContainer.FontSizeFactor = 1.5F;
             _videoPlayerContainer.SetSubtitleFont();
             _videoPlayerContainer.SubtitleText = string.Empty;
-            _videoPlayerContainer.ShowFullscreenButton = false;
+            _videoPlayerContainer.ShowFullScreenControls();
             timer1.Start();
+        }
+
+        internal bool IsFullscreen
+        {
+            get 
+            {
+                return WindowState == FormWindowState.Maximized;
+            }
+        }
+
+        internal void NoFullscreen()
+        {
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            WindowState = FormWindowState.Normal;
+            _videoPlayerContainer.FontSizeFactor = 1.0F;
+            _videoPlayerContainer.SetSubtitleFont();
+            _videoPlayerContainer.SubtitleText = string.Empty;
+            _videoPlayerContainer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
+            _videoPlayerContainer.ShowNonFullScreenControls();
+            if (RedockOnFullscreenEnd)
+                this.Close();
         }
 
         private void VideoPlayerUnDocked_Shown(object sender, System.EventArgs e)

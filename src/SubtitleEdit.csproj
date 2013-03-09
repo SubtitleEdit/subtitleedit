@@ -1431,6 +1431,9 @@
     <Content Include="Languages\zh-CHS.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\pictureBoxNoFSOver.Image.png" />
+    <None Include="Resources\pictureBoxNoFSDown.Image.png" />
+    <None Include="Resources\pictureBoxNoFS.Image.png" />
     <None Include="Web References\SeNetworkService\SeService.disco" />
     <None Include="DLLs\Interop.QuartzTypeLib.dll" />
     <None Include="DLLs\NHunspell.dll" />

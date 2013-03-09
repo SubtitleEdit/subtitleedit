@@ -9691,14 +9691,21 @@ namespace Nikse.SubtitleEdit.Forms
             if (mediaPlayer == null || mediaPlayer.VideoPlayer == null)
                 return;
 
+            mediaPlayer.ShowFullScreenControls();
+            bool setRedockOnFullscreenEnd = false;
+
             if (_videoPlayerUnDocked == null || _videoPlayerUnDocked.IsDisposed)
+            {
                 UndockVideoControlsToolStripMenuItemClick(null, null);
+                setRedockOnFullscreenEnd = true;
+            }
 
             if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
             {
                 _videoPlayerUnDocked.Focus();
                 _videoPlayerUnDocked.GoFullscreen();
-                _videoPlayerUnDocked.RedockOnFullscreenEnd = true;
+                if (setRedockOnFullscreenEnd)
+                    _videoPlayerUnDocked.RedockOnFullscreenEnd = true;
             }
         }
 
@@ -10972,7 +10979,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             PictureBox pb = (PictureBox)(sender as PictureBox);
             if (pb != null && (sender as PictureBox).Name == "_pictureBoxFullscreenOver")
-                GoFullscreen();
+            {
+                if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed && _videoPlayerUnDocked.IsFullscreen)
+                    _videoPlayerUnDocked.NoFullscreen();
+                else
+                    GoFullscreen();
+            }
         }
 
         private void SetWaveFormPosition(double startPositionSeconds, double currentVideoPositionSeconds, int subtitleIndex)
@@ -14291,6 +14303,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!Configuration.Settings.General.Undocked)
                 return;
+
+            if (mediaPlayer != null)
+                mediaPlayer.ShowNonFullScreenControls();
 
             SaveUndockedPositions();
 
