@@ -11435,7 +11435,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSetStartTime_Click(object sender, EventArgs e)
         {
-            SetStartTime(true);
+            SetStartTime(false);
         }
 
         private void SetStartTime(bool adjustEndTime)
@@ -11445,6 +11445,8 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
                 int index = SubtitleListview1.SelectedItems[0].Index;
                 Paragraph oldParagraph = new Paragraph(_subtitle.Paragraphs[index]);
+                if (oldParagraph.StartTime.IsMaxTime || oldParagraph.EndTime.IsMaxTime)
+                    adjustEndTime = true;
                 double videoPosition = mediaPlayer.CurrentPosition;
 
                 timeUpDownStartTime.TimeCode = new TimeCode(TimeSpan.FromSeconds(videoPosition));
