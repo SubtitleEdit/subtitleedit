@@ -1029,7 +1029,12 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static double GetOptimalDisplayMilliseconds(string text)
         {
-            double optimalCharactersPerSecond = Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds;
+            return GetOptimalDisplayMilliseconds(text, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
+        }
+
+        public static double GetOptimalDisplayMilliseconds(string text, double charactersPerSecond)
+        {
+            double optimalCharactersPerSecond = charactersPerSecond;
             if (optimalCharactersPerSecond < 2 || optimalCharactersPerSecond > 100)
                 optimalCharactersPerSecond = 14.7;
             double duration = (RemoveHtmlTags(text, true).Length / optimalCharactersPerSecond) * 1000.0;
