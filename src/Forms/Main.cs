@@ -10660,6 +10660,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowStatus(_language.TextImported);
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
                 }
             }
         }
