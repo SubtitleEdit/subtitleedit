@@ -2,7 +2,7 @@
 <Language Name="Dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.3.2</Version>
+    <Version>3.3.3</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <HelpFile>
@@ -153,6 +153,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Converted>Konverteret</Converted>
     <ConvertedX>Konverteret ({0})</ConvertedX>
     <Settings>Indstillinger</Settings>
+    <AutoBalance>Auto-balancer linjer</AutoBalance>
   </BatchConvert>
   <Beamer>
     <Title>Undertekst fremviser</Title>
@@ -533,12 +534,14 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <MergeShortLines>Flet kort linjer med fortsættelsen</MergeShortLines>
     <RemoveEmptyLines>Fjern tomme linjer</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Fjern linjer uden bogstaver</RemoveLinesWithoutLetters>
+    <GenerateTimeCodes>Generer tidskoder</GenerateTimeCodes>
     <GapBetweenSubtitles>Gap mellem undertekster (millisekunder)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
     <Fixed>Fast</Fixed>
     <Refresh>&amp;Opdater</Refresh>
     <TextFiles>Tekstfiler</TextFiles>
     <PreviewLinesModifiedX>Preview - ændrede linjer: {0}</PreviewLinesModifiedX>
+    <TimeCodes>Tidskoder</TimeCodes>
   </ImportText>
   <Interjections>
     <Title>Følelsesudbrud</Title>
@@ -1283,8 +1286,6 @@ Fortsæt?</SubtitleAppendPrompt>
     <ShowStopButton>Vis stop-knap</ShowStopButton>
     <ShowMuteButton>Vis mute-knap</ShowMuteButton>
     <ShowFullscreenButton>Vis fuldskærm knap</ShowFullscreenButton>
-    <DefaultVolume>Standard volumen</DefaultVolume>
-    <VolumeNotes>0 er ingen lyd, 100 er højeste lydstyrke</VolumeNotes>
     <PreviewFontSize>Undertekst preview skriftstørrelse</PreviewFontSize>
     <MainWindowVideoControls>Hovedvinduet video-kontrol</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Egen defineret søge titel og url</CustomSearchTextAndUrl>
@@ -1576,6 +1577,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <PlusShadow>+ Skygge</PlusShadow>
     <OpaqueBox>Kasse (bruger konturfarve)</OpaqueBox>
     <Import>Importer...</Import>
+    <Export>Eksporter...</Export>
     <Copy>Kopi</Copy>
     <CopyOfY>Kopi af {0}</CopyOfY>
     <CopyXOfY>Kopier {0} af {1}</CopyXOfY>
@@ -1583,6 +1585,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <Remove>Fjern</Remove>
     <RemoveAll>Fjern alle</RemoveAll>
     <ImportStyleFromFile>Importer style fra fil...</ImportStyleFromFile>
+    <ExportStyleToFile>Export style til fil...</ExportStyleToFile>
     <ChooseStyle>Vælg style der skal importeres</ChooseStyle>
   </SubStationAlphaStyles>
   <PointSync>
@@ -1634,6 +1637,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <OcrMethod>OCR-metoden</OcrMethod>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Kræver MS Office</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
+    <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
     <Language>Sprog</Language>
     <OcrViaImageCompare>OCR via billede sammenligning</OcrViaImageCompare>
     <ImageDatabase>Billeddatabase</ImageDatabase>
