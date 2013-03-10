@@ -118,6 +118,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string ExportBluRayFontName { get; set; }
         public int ExportBluRaybFontSize { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
+        public string ImportTextSplitting { get; set; }
+        public bool ImportTextMergeShortLines { get; set; }
 
         public ToolsSettings()
         {
@@ -1368,7 +1370,13 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.ExportBluRaybFontSize = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("FixCommonErrorsFixOverlapAllowEqualEndStart");
             if (subNode != null)
-                settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart = Convert.ToBoolean(subNode.InnerText);            
+                settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ImportTextSplitting");
+            if (subNode != null)
+                settings.Tools.ImportTextSplitting = subNode.InnerText;
+            subNode = node.SelectSingleNode("ImportTextMergeShortLines");
+            if (subNode != null)
+                settings.Tools.ImportTextMergeShortLines = Convert.ToBoolean(subNode.InnerText);            
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -2218,7 +2226,9 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ExportVobSubFontSize", settings.Tools.ExportVobSubFontSize.ToString());
             textWriter.WriteElementString("ExportBluRayFontName", settings.Tools.ExportBluRayFontName);
             textWriter.WriteElementString("ExportBluRaybFontSize", settings.Tools.ExportBluRaybFontSize.ToString());
-            textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());            
+            textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
+            textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
+            textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());            
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");
