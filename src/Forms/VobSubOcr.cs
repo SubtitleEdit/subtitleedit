@@ -658,7 +658,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Bitmap bmp = null;
                     using (var ms = new MemoryStream(File.ReadAllBytes(bmpFileName))) // load bmp without file lock
                     {
-                        bmp = (Bitmap)Bitmap.FromStream(ms);
+                        bmp = (Bitmap)Bitmap.FromStream(ms, false, false);
                     }
 
                     _compareBitmaps.Add(new CompareItem(bmp, name, isItalic, expandCount));
@@ -1600,7 +1600,9 @@ namespace Nikse.SubtitleEdit.Forms
                             smallestDifference = dif;
                             smallestIndex = index;
                             if (dif == 0)
+                            {
                                 break; // foreach ending
+                            }
                         }
                     }
                     index++;
@@ -1809,6 +1811,18 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+
+            //if (smallestDifference == 0)
+            //{
+            //    if (smallestIndex > 200)
+            //    {
+            //        CompareItem hit = _compareBitmaps[smallestIndex];
+            //        _compareBitmaps.RemoveAt(smallestIndex);
+            //        _compareBitmaps.Insert(0, hit);
+            //        smallestIndex = 0;
+            //        index = 0;
+            //    }
+            //}
         }
 
         private string SaveCompareItem(Bitmap newTarget, string text, bool isItalic, int expandCount)
