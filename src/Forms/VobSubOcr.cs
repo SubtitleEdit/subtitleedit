@@ -1585,8 +1585,9 @@ namespace Nikse.SubtitleEdit.Forms
             return bmp;
         }
 
-        private void FindBestMatch(ref int index, ref int smallestDifference, ref int smallestIndex, Bitmap target)
+        private void FindBestMatch(ref int index, ref int smallestDifference, ref int smallestIndex, Bitmap target2)
         {
+            NikseBitmap target = new NikseBitmap(target2);
             if (smallestDifference > 0)
             {
                 index = 0;
@@ -1812,17 +1813,17 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            //if (smallestDifference == 0)
-            //{
-            //    if (smallestIndex > 200)
-            //    {
-            //        CompareItem hit = _compareBitmaps[smallestIndex];
-            //        _compareBitmaps.RemoveAt(smallestIndex);
-            //        _compareBitmaps.Insert(0, hit);
-            //        smallestIndex = 0;
-            //        index = 0;
-            //    }
-            //}
+            if (smallestDifference == 0)
+            {
+                if (smallestIndex > 200)
+                {
+                    CompareItem hit = _compareBitmaps[smallestIndex];
+                    _compareBitmaps.RemoveAt(smallestIndex);
+                    _compareBitmaps.Insert(0, hit);
+                    smallestIndex = 0;
+                    index = 0;
+                }
+            }
         }
 
         private string SaveCompareItem(Bitmap newTarget, string text, bool isItalic, int expandCount)
