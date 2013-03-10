@@ -681,6 +681,8 @@ namespace Nikse.SubtitleEdit.Forms
                 string oldPrevious = prev.ToString();
                 double prevWantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(prev.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
                 double currentWantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
+                double prevOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(prev.Text);
+                double currentOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 bool canBeEqual = _format != null && (_format.GetType() == typeof(AdvancedSubStationAlpha) || _format.GetType() == typeof(SubStationAlpha));
 
                 if (prev != null && !prev.StartTime.IsMaxTime && !p.StartTime.IsMaxTime && 
@@ -711,6 +713,56 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                         prev.EndTime.TotalMilliseconds--;
+                    }
+                    else if (diff > 0 && currentOptimalDisplayTime <= p.Duration.TotalMilliseconds - diffHalf &&
+                             prevOptimalDisplayTime <= prev.Duration.TotalMilliseconds - diffHalf)
+                    {
+                        if (AllowFix(p, fixAction))
+                        {
+                            prev.EndTime.TotalMilliseconds -= diffHalf;
+                            p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
+                            _totalFixes++;
+                            noOfOverlappingDisplayTimesFixed++;
+                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                        }
+                    }
+                    else if (prevOptimalDisplayTime <= (p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds))
+                    {
+                        if (AllowFix(target, fixAction))
+                        {
+                            prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;
+                            if (canBeEqual)
+                                prev.EndTime.TotalMilliseconds++;
+                            _totalFixes++;
+                            noOfOverlappingDisplayTimesFixed++;
+                            AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
+                        }
+                    }
+                    else if (currentOptimalDisplayTime <= p.EndTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds)
+                    {
+                        if (AllowFix(p, fixAction))
+                        {
+                            p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
+                            if (canBeEqual)
+                                p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
+
+                            _totalFixes++;
+                            noOfOverlappingDisplayTimesFixed++;
+                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                        }
+                    }
+
+                    else if (diff > 0 && currentWantedDisplayTime <= p.Duration.TotalMilliseconds - diffHalf &&
+                             prevWantedDisplayTime <= prev.Duration.TotalMilliseconds - diffHalf)
+                    {
+                        if (AllowFix(p, fixAction))
+                        {
+                            prev.EndTime.TotalMilliseconds -= diffHalf;
+                            p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
+                            _totalFixes++;
+                            noOfOverlappingDisplayTimesFixed++;
+                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                        }
                     }
                     else if (prevWantedDisplayTime <= (p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds))
                     {
@@ -750,18 +802,6 @@ namespace Nikse.SubtitleEdit.Forms
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
-                    else if (diff > 0 && currentWantedDisplayTime <= p.Duration.TotalMilliseconds - diffHalf &&
-                             prevWantedDisplayTime <= prev.Duration.TotalMilliseconds - diffHalf)
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - diffHalf;
-                            p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
-                            _totalFixes++;
-                            noOfOverlappingDisplayTimesFixed++;
-                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                        }
-                    }                      
                     else if (Math.Abs(p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds) < 10 && Math.Abs(p.EndTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds) < 10)
                     { // merge lines with same time codes
                         if (AllowFix(target, fixAction))
