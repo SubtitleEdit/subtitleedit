@@ -1,5 +1,28 @@
 ﻿Subtitle Edit Changelog
 
+3.3.3 (x March 2013)
+* NEW:
+   * Added a few new subtitle formats
+   * Added "return-from-fullscreen" button to fullscreen player - thx fox/Leszek
+* IMPROVED:
+   * Fix overlapping display times now smarter
+   * Updated Basque language file - thx Xabier Aramendi
+   * Fix missing spaces now works better with italics - thx doc. Jackson
+   * Added EBU alignment tags ({\an1}..{\an9}) 
+   * Added "auto balance lines" to batch converter - thx hacker
+   * Export to image based formats: bold tag support - thx moob
+   * Updated French ocr replace list - thx Bruno
+* FIXED:
+   * After closing "SSA/ASS style designer", first style was applied
+     to all lines - thx vicgol/Xabier/Mike
+   * "Set start time" (F11) now does not adjust the endtime - thx fox
+   * Fix overlapping display times now checks minimum duration 
+     (and not only optimal duration) - thx Frisbee
+   * SSA/ASS - allow left margin up to 250 - thx vicgol
+   * Allow key 'space' in list view to toggle play/pause of video - thx Jakov
+   * Allow key 'space' in video fullscreen to toggle play/pause  - thx fox
+
+
 3.3.2 (23 February 2013)
 * NEW:
    * Added a few new subtitle formats
