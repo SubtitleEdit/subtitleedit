@@ -32,14 +32,16 @@
             this.groupBoxImportText = new System.Windows.Forms.GroupBox();
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.groupBoxImportOptions = new System.Windows.Forms.GroupBox();
-            this.checkBoxMergeShortLines = new System.Windows.Forms.CheckBox();
+            this.checkBoxGenerateTimeCodes = new System.Windows.Forms.CheckBox();
+            this.groupBoxTimeCodes = new System.Windows.Forms.GroupBox();
+            this.labelGapBetweenSubtitles = new System.Windows.Forms.Label();
+            this.numericUpDownGapBetweenLines = new System.Windows.Forms.NumericUpDown();
             this.groupBoxDuration = new System.Windows.Forms.GroupBox();
             this.numericUpDownDurationFixed = new System.Windows.Forms.NumericUpDown();
             this.radioButtonDurationFixed = new System.Windows.Forms.RadioButton();
             this.radioButtonDurationAuto = new System.Windows.Forms.RadioButton();
+            this.checkBoxMergeShortLines = new System.Windows.Forms.CheckBox();
             this.buttonRefresh = new System.Windows.Forms.Button();
-            this.numericUpDownGapBetweenLines = new System.Windows.Forms.NumericUpDown();
-            this.labelGapBetweenSubtitles = new System.Windows.Forms.Label();
             this.checkBoxRemoveLinesWithoutLetters = new System.Windows.Forms.CheckBox();
             this.groupBoxSplitting = new System.Windows.Forms.GroupBox();
             this.radioButtonSplitAtBlankLines = new System.Windows.Forms.RadioButton();
@@ -51,16 +53,14 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.groupBoxTimeCodes = new System.Windows.Forms.GroupBox();
-            this.checkBoxGenerateTimeCodes = new System.Windows.Forms.CheckBox();
             this.groupBoxImportText.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
+            this.groupBoxTimeCodes.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGapBetweenLines)).BeginInit();
             this.groupBoxDuration.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationFixed)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGapBetweenLines)).BeginInit();
             this.groupBoxSplitting.SuspendLayout();
             this.groupBoxImportResult.SuspendLayout();
-            this.groupBoxTimeCodes.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOpenText
@@ -120,18 +120,61 @@
             this.groupBoxImportOptions.TabStop = false;
             this.groupBoxImportOptions.Text = "Import options";
             // 
-            // checkBoxMergeShortLines
+            // checkBoxGenerateTimeCodes
             // 
-            this.checkBoxMergeShortLines.AutoSize = true;
-            this.checkBoxMergeShortLines.Checked = true;
-            this.checkBoxMergeShortLines.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxMergeShortLines.Location = new System.Drawing.Point(19, 98);
-            this.checkBoxMergeShortLines.Name = "checkBoxMergeShortLines";
-            this.checkBoxMergeShortLines.Size = new System.Drawing.Size(193, 17);
-            this.checkBoxMergeShortLines.TabIndex = 1;
-            this.checkBoxMergeShortLines.Text = "Merge short lines with continuation";
-            this.checkBoxMergeShortLines.UseVisualStyleBackColor = true;
-            this.checkBoxMergeShortLines.CheckedChanged += new System.EventHandler(this.CheckBoxMergeShortLinesCheckedChanged);
+            this.checkBoxGenerateTimeCodes.AutoSize = true;
+            this.checkBoxGenerateTimeCodes.Location = new System.Drawing.Point(19, 167);
+            this.checkBoxGenerateTimeCodes.Name = "checkBoxGenerateTimeCodes";
+            this.checkBoxGenerateTimeCodes.Size = new System.Drawing.Size(124, 17);
+            this.checkBoxGenerateTimeCodes.TabIndex = 4;
+            this.checkBoxGenerateTimeCodes.Text = "Generate time codes";
+            this.checkBoxGenerateTimeCodes.UseVisualStyleBackColor = true;
+            this.checkBoxGenerateTimeCodes.CheckedChanged += new System.EventHandler(this.checkBoxGenerateTimeCodes_CheckedChanged);
+            // 
+            // groupBoxTimeCodes
+            // 
+            this.groupBoxTimeCodes.Controls.Add(this.labelGapBetweenSubtitles);
+            this.groupBoxTimeCodes.Controls.Add(this.numericUpDownGapBetweenLines);
+            this.groupBoxTimeCodes.Controls.Add(this.groupBoxDuration);
+            this.groupBoxTimeCodes.Enabled = false;
+            this.groupBoxTimeCodes.Location = new System.Drawing.Point(6, 192);
+            this.groupBoxTimeCodes.Name = "groupBoxTimeCodes";
+            this.groupBoxTimeCodes.Size = new System.Drawing.Size(329, 126);
+            this.groupBoxTimeCodes.TabIndex = 5;
+            this.groupBoxTimeCodes.TabStop = false;
+            this.groupBoxTimeCodes.Text = "Time codes";
+            // 
+            // labelGapBetweenSubtitles
+            // 
+            this.labelGapBetweenSubtitles.AutoSize = true;
+            this.labelGapBetweenSubtitles.Location = new System.Drawing.Point(6, 23);
+            this.labelGapBetweenSubtitles.Name = "labelGapBetweenSubtitles";
+            this.labelGapBetweenSubtitles.Size = new System.Drawing.Size(180, 13);
+            this.labelGapBetweenSubtitles.TabIndex = 0;
+            this.labelGapBetweenSubtitles.Text = "Gap between subtitles (milliseconds)";
+            // 
+            // numericUpDownGapBetweenLines
+            // 
+            this.numericUpDownGapBetweenLines.Location = new System.Drawing.Point(192, 20);
+            this.numericUpDownGapBetweenLines.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numericUpDownGapBetweenLines.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownGapBetweenLines.Name = "numericUpDownGapBetweenLines";
+            this.numericUpDownGapBetweenLines.Size = new System.Drawing.Size(64, 21);
+            this.numericUpDownGapBetweenLines.TabIndex = 1;
+            this.numericUpDownGapBetweenLines.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownGapBetweenLines.ValueChanged += new System.EventHandler(this.NumericUpDownGapBetweenLinesValueChanged);
             // 
             // groupBoxDuration
             // 
@@ -173,7 +216,7 @@
             this.radioButtonDurationFixed.AutoSize = true;
             this.radioButtonDurationFixed.Location = new System.Drawing.Point(16, 42);
             this.radioButtonDurationFixed.Name = "radioButtonDurationFixed";
-            this.radioButtonDurationFixed.Size = new System.Drawing.Size(51, 17);
+            this.radioButtonDurationFixed.Size = new System.Drawing.Size(50, 17);
             this.radioButtonDurationFixed.TabIndex = 1;
             this.radioButtonDurationFixed.Text = "Fixed";
             this.radioButtonDurationFixed.UseVisualStyleBackColor = true;
@@ -185,12 +228,25 @@
             this.radioButtonDurationAuto.Checked = true;
             this.radioButtonDurationAuto.Location = new System.Drawing.Point(16, 19);
             this.radioButtonDurationAuto.Name = "radioButtonDurationAuto";
-            this.radioButtonDurationAuto.Size = new System.Drawing.Size(48, 17);
+            this.radioButtonDurationAuto.Size = new System.Drawing.Size(47, 17);
             this.radioButtonDurationAuto.TabIndex = 0;
             this.radioButtonDurationAuto.TabStop = true;
             this.radioButtonDurationAuto.Text = "Auto";
             this.radioButtonDurationAuto.UseVisualStyleBackColor = true;
             this.radioButtonDurationAuto.CheckedChanged += new System.EventHandler(this.RadioButtonDurationAutoCheckedChanged);
+            // 
+            // checkBoxMergeShortLines
+            // 
+            this.checkBoxMergeShortLines.AutoSize = true;
+            this.checkBoxMergeShortLines.Checked = true;
+            this.checkBoxMergeShortLines.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxMergeShortLines.Location = new System.Drawing.Point(19, 98);
+            this.checkBoxMergeShortLines.Name = "checkBoxMergeShortLines";
+            this.checkBoxMergeShortLines.Size = new System.Drawing.Size(189, 17);
+            this.checkBoxMergeShortLines.TabIndex = 1;
+            this.checkBoxMergeShortLines.Text = "Merge short lines with continuation";
+            this.checkBoxMergeShortLines.UseVisualStyleBackColor = true;
+            this.checkBoxMergeShortLines.CheckedChanged += new System.EventHandler(this.CheckBoxMergeShortLinesCheckedChanged);
             // 
             // buttonRefresh
             // 
@@ -203,38 +259,6 @@
             this.buttonRefresh.UseVisualStyleBackColor = true;
             this.buttonRefresh.Click += new System.EventHandler(this.ButtonRefreshClick);
             // 
-            // numericUpDownGapBetweenLines
-            // 
-            this.numericUpDownGapBetweenLines.Location = new System.Drawing.Point(192, 20);
-            this.numericUpDownGapBetweenLines.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.numericUpDownGapBetweenLines.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownGapBetweenLines.Name = "numericUpDownGapBetweenLines";
-            this.numericUpDownGapBetweenLines.Size = new System.Drawing.Size(64, 21);
-            this.numericUpDownGapBetweenLines.TabIndex = 1;
-            this.numericUpDownGapBetweenLines.Value = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownGapBetweenLines.ValueChanged += new System.EventHandler(this.NumericUpDownGapBetweenLinesValueChanged);
-            // 
-            // labelGapBetweenSubtitles
-            // 
-            this.labelGapBetweenSubtitles.AutoSize = true;
-            this.labelGapBetweenSubtitles.Location = new System.Drawing.Point(6, 23);
-            this.labelGapBetweenSubtitles.Name = "labelGapBetweenSubtitles";
-            this.labelGapBetweenSubtitles.Size = new System.Drawing.Size(180, 13);
-            this.labelGapBetweenSubtitles.TabIndex = 0;
-            this.labelGapBetweenSubtitles.Text = "Gap between subtitles (milliseconds)";
-            // 
             // checkBoxRemoveLinesWithoutLetters
             // 
             this.checkBoxRemoveLinesWithoutLetters.AutoSize = true;
@@ -242,7 +266,7 @@
             this.checkBoxRemoveLinesWithoutLetters.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxRemoveLinesWithoutLetters.Location = new System.Drawing.Point(19, 144);
             this.checkBoxRemoveLinesWithoutLetters.Name = "checkBoxRemoveLinesWithoutLetters";
-            this.checkBoxRemoveLinesWithoutLetters.Size = new System.Drawing.Size(162, 17);
+            this.checkBoxRemoveLinesWithoutLetters.Size = new System.Drawing.Size(158, 17);
             this.checkBoxRemoveLinesWithoutLetters.TabIndex = 3;
             this.checkBoxRemoveLinesWithoutLetters.Text = "Remove lines without letters";
             this.checkBoxRemoveLinesWithoutLetters.UseVisualStyleBackColor = true;
@@ -302,7 +326,7 @@
             this.checkBoxRemoveEmptyLines.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxRemoveEmptyLines.Location = new System.Drawing.Point(19, 121);
             this.checkBoxRemoveEmptyLines.Name = "checkBoxRemoveEmptyLines";
-            this.checkBoxRemoveEmptyLines.Size = new System.Drawing.Size(122, 17);
+            this.checkBoxRemoveEmptyLines.Size = new System.Drawing.Size(121, 17);
             this.checkBoxRemoveEmptyLines.TabIndex = 2;
             this.checkBoxRemoveEmptyLines.Text = "Remove empty lines";
             this.checkBoxRemoveEmptyLines.UseVisualStyleBackColor = true;
@@ -371,30 +395,6 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
             // 
-            // groupBoxTimeCodes
-            // 
-            this.groupBoxTimeCodes.Controls.Add(this.labelGapBetweenSubtitles);
-            this.groupBoxTimeCodes.Controls.Add(this.numericUpDownGapBetweenLines);
-            this.groupBoxTimeCodes.Controls.Add(this.groupBoxDuration);
-            this.groupBoxTimeCodes.Enabled = false;
-            this.groupBoxTimeCodes.Location = new System.Drawing.Point(6, 192);
-            this.groupBoxTimeCodes.Name = "groupBoxTimeCodes";
-            this.groupBoxTimeCodes.Size = new System.Drawing.Size(329, 126);
-            this.groupBoxTimeCodes.TabIndex = 5;
-            this.groupBoxTimeCodes.TabStop = false;
-            this.groupBoxTimeCodes.Text = "Time codes";
-            // 
-            // checkBoxGenerateTimeCodes
-            // 
-            this.checkBoxGenerateTimeCodes.AutoSize = true;
-            this.checkBoxGenerateTimeCodes.Location = new System.Drawing.Point(19, 167);
-            this.checkBoxGenerateTimeCodes.Name = "checkBoxGenerateTimeCodes";
-            this.checkBoxGenerateTimeCodes.Size = new System.Drawing.Size(125, 17);
-            this.checkBoxGenerateTimeCodes.TabIndex = 4;
-            this.checkBoxGenerateTimeCodes.Text = "Generate time codes";
-            this.checkBoxGenerateTimeCodes.UseVisualStyleBackColor = true;
-            this.checkBoxGenerateTimeCodes.CheckedChanged += new System.EventHandler(this.checkBoxGenerateTimeCodes_CheckedChanged);
-            // 
             // ImportText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -413,20 +413,21 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import text";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ImportText_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImportTextKeyDown);
             this.groupBoxImportText.ResumeLayout(false);
             this.groupBoxImportText.PerformLayout();
             this.groupBoxImportOptions.ResumeLayout(false);
             this.groupBoxImportOptions.PerformLayout();
+            this.groupBoxTimeCodes.ResumeLayout(false);
+            this.groupBoxTimeCodes.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGapBetweenLines)).EndInit();
             this.groupBoxDuration.ResumeLayout(false);
             this.groupBoxDuration.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationFixed)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGapBetweenLines)).EndInit();
             this.groupBoxSplitting.ResumeLayout(false);
             this.groupBoxSplitting.PerformLayout();
             this.groupBoxImportResult.ResumeLayout(false);
-            this.groupBoxTimeCodes.ResumeLayout(false);
-            this.groupBoxTimeCodes.PerformLayout();
             this.ResumeLayout(false);
 
         }

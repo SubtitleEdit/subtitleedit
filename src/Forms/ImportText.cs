@@ -55,6 +55,14 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxGenerateTimeCodes.Visible = false;
             }
 
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.ImportTextSplitting))
+                radioButtonAutoSplit.Checked = true;
+            else if (Configuration.Settings.Tools.ImportTextSplitting.ToLower() == "blank lines")
+                radioButtonSplitAtBlankLines.Checked = true;
+            else if (Configuration.Settings.Tools.ImportTextSplitting.ToLower() == "line")
+                radioButtonLineMode.Checked = true;
+            checkBoxMergeShortLines.Checked = Configuration.Settings.Tools.ImportTextMergeShortLines;
+
             numericUpDownDurationFixed.Enabled = radioButtonDurationFixed.Checked;
             FixLargeFonts();
             _refreshTimer.Interval = 400;
@@ -618,6 +626,17 @@ namespace Nikse.SubtitleEdit.Forms
         {
             groupBoxTimeCodes.Enabled = checkBoxGenerateTimeCodes.Checked;
             GeneratePreview();
+        }
+
+        private void ImportText_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (radioButtonSplitAtBlankLines.Checked)
+                Configuration.Settings.Tools.ImportTextSplitting = "blank lines";            
+            else if (radioButtonLineMode.Checked)
+                Configuration.Settings.Tools.ImportTextSplitting = "line";
+            else
+                Configuration.Settings.Tools.ImportTextSplitting = "auto";
+            Configuration.Settings.Tools.ImportTextMergeShortLines = checkBoxMergeShortLines.Checked;
         }
 
     }
