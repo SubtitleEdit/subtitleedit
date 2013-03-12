@@ -825,6 +825,8 @@ namespace Nikse.SubtitleEdit.Logic
                     encoding = Encoding.BigEndianUnicode;
                 else if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) // ucs-4
                     encoding = Encoding.UTF32;
+                else if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76 && (bom[3] == 0x38 || bom[3] == 0x39 ||bom[3] == 0x2b ||bom[3] == 0x2f)) // utf-7
+                    encoding = Encoding.UTF7;
                 else if (encoding == Encoding.Default && file.Length > 12)
                 {
                     int length = (int)file.Length;
