@@ -289,12 +289,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         var encoding = Encoding.GetEncoding("ISO-8859-1");
                         byte[] bytes = new byte[1];
-                        bytes[0] = (byte)num;                        
+                        bytes[0] = (byte)num;
                         sb.Append(encoding.GetString(bytes));
                     }
                 }
                 catch
-                { 
+                {
                 }
             }
             string res = sb.ToString().Replace("<i></i>", string.Empty).Replace("</i><i>", string.Empty);

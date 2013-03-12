@@ -685,13 +685,13 @@ namespace Nikse.SubtitleEdit.Forms
                 double currentOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 bool canBeEqual = _format != null && (_format.GetType() == typeof(AdvancedSubStationAlpha) || _format.GetType() == typeof(SubStationAlpha));
 
-                if (prev != null && !prev.StartTime.IsMaxTime && !p.StartTime.IsMaxTime && 
+                if (prev != null && !prev.StartTime.IsMaxTime && !p.StartTime.IsMaxTime &&
                     ((canBeEqual && p.StartTime.TotalMilliseconds <= prev.EndTime.TotalMilliseconds) || (!canBeEqual && p.StartTime.TotalMilliseconds <= prev.EndTime.TotalMilliseconds)))
                 {
                     double diff = prev.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds;
                     int diffHalf = (int)(diff / 2);
                     if (!Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart && p.StartTime.TotalMilliseconds == prev.EndTime.TotalMilliseconds &&
-                        prev.Duration.TotalMilliseconds > 100)                        
+                        prev.Duration.TotalMilliseconds > 100)
                     {
                         if (AllowFix(target, fixAction))
                         {

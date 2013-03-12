@@ -1343,7 +1343,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.BatchConvertMultipleReplace = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("BatchConvertAutoBalance");
             if (subNode != null)
-                settings.Tools.BatchConvertAutoBalance = Convert.ToBoolean(subNode.InnerText);            
+                settings.Tools.BatchConvertAutoBalance = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("BatchConvertLanguage");
             if (subNode != null)
                 settings.Tools.BatchConvertLanguage = subNode.InnerText;
@@ -1376,7 +1376,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.ImportTextSplitting = subNode.InnerText;
             subNode = node.SelectSingleNode("ImportTextMergeShortLines");
             if (subNode != null)
-                settings.Tools.ImportTextMergeShortLines = Convert.ToBoolean(subNode.InnerText);            
+                settings.Tools.ImportTextMergeShortLines = Convert.ToBoolean(subNode.InnerText);
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -2217,7 +2217,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("BatchConvertRemoveTextForHI", settings.Tools.BatchConvertRemoveTextForHI.ToString());
             textWriter.WriteElementString("BatchConvertFixCommonErrors", settings.Tools.BatchConvertFixCommonErrors.ToString());
             textWriter.WriteElementString("BatchConvertMultipleReplace", settings.Tools.BatchConvertMultipleReplace.ToString());
-            textWriter.WriteElementString("BatchConvertAutoBalance", settings.Tools.BatchConvertAutoBalance.ToString());            
+            textWriter.WriteElementString("BatchConvertAutoBalance", settings.Tools.BatchConvertAutoBalance.ToString());
             textWriter.WriteElementString("BatchConvertLanguage", settings.Tools.BatchConvertLanguage);
             textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
             textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
@@ -2228,7 +2228,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ExportBluRaybFontSize", settings.Tools.ExportBluRaybFontSize.ToString());
             textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
             textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
-            textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());            
+            textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");

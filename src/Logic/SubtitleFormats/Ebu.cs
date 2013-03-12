@@ -449,7 +449,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int subtitleNumber = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                var tti = new EbuTextTimingInformation();                
+                var tti = new EbuTextTimingInformation();
 
                 int rows;
                 if (header == null || !int.TryParse(header.MaximumNumberOfDisplayableRows, out rows))
@@ -468,7 +468,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (startRow < 0)
                         startRow = 0;
                     tti.VerticalPosition = (byte)startRow;  // bottom (vertical)
-                }                  
+                }
 
                 tti.JustificationCode = saveOptions.JustificationCode;
                 if (p.Text.StartsWith("{\\an1}") || p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an7}"))
@@ -482,7 +482,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else if (p.Text.StartsWith("{\\an3}") || p.Text.StartsWith("{\\an6}") || p.Text.StartsWith("{\\an9}"))
                 {
                     tti.JustificationCode = 3; // 03h=right-justified
-                }                  
+                }
 
                 tti.SubtitleNumber = (ushort)subtitleNumber;
                 tti.TextField = p.Text;

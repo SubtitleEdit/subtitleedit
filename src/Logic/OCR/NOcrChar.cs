@@ -5,14 +5,14 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 {
     public class NOcrChar
     {
-        public string Text { get; set; }        
+        public string Text { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public List<NOcrPoint> LinesForeground { get; private set; }
         public List<NOcrPoint> LinesBackground { get; private set; }
         public string Id { get; set; }
 
-        public Double WidthPercent 
+        public Double WidthPercent
         {
             get
             {

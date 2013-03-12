@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             NikseBitmap nbmp = new NikseBitmap(vobSubImage);
             nbmp.ReplaceTransparentWith(Color.Black);
-            vobSubImage = nbmp.GetBitmap();          
+            vobSubImage = nbmp.GetBitmap();
 
             radioButtonHot.Checked = true;
             ShrinkSelection = false;
