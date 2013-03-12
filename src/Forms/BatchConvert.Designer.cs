@@ -32,6 +32,7 @@
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
+            this.checkBoxAutoBalance = new System.Windows.Forms.CheckBox();
             this.buttonMultipleReplaceSettings = new System.Windows.Forms.Button();
             this.checkBoxMultipleReplace = new System.Windows.Forms.CheckBox();
             this.checkBoxFixCommonErrors = new System.Windows.Forms.CheckBox();
@@ -50,6 +51,7 @@
             this.checkBoxRemoveTextForHI = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveFormatting = new System.Windows.Forms.CheckBox();
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
+            this.checkBoxOverwriteOriginalFiles = new System.Windows.Forms.CheckBox();
             this.linkLabelOpenOutputFolder = new System.Windows.Forms.LinkLabel();
             this.buttonStyles = new System.Windows.Forms.Button();
             this.checkBoxOverwrite = new System.Windows.Forms.CheckBox();
@@ -61,6 +63,7 @@
             this.buttonChooseFolder = new System.Windows.Forms.Button();
             this.textBoxOutputFolder = new System.Windows.Forms.TextBox();
             this.groupBoxInput = new System.Windows.Forms.GroupBox();
+            this.buttonSearchFolder = new System.Windows.Forms.Button();
             this.buttonInputBrowse = new System.Windows.Forms.Button();
             this.labelChooseInputFiles = new System.Windows.Forms.Label();
             this.listViewInputFiles = new System.Windows.Forms.ListView();
@@ -75,7 +78,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.checkBoxAutoBalance = new System.Windows.Forms.CheckBox();
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs = new System.Windows.Forms.CheckBox();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxChangeFrameRate.SuspendLayout();
             this.groupBoxOffsetTimeCodes.SuspendLayout();
@@ -112,6 +115,7 @@
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.checkBoxSetMinimumDisplayTimeBetweenSubs);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxAutoBalance);
             this.groupBoxConvertOptions.Controls.Add(this.buttonMultipleReplaceSettings);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxMultipleReplace);
@@ -128,6 +132,16 @@
             this.groupBoxConvertOptions.TabIndex = 10;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
+            // 
+            // checkBoxAutoBalance
+            // 
+            this.checkBoxAutoBalance.AutoSize = true;
+            this.checkBoxAutoBalance.Location = new System.Drawing.Point(16, 145);
+            this.checkBoxAutoBalance.Name = "checkBoxAutoBalance";
+            this.checkBoxAutoBalance.Size = new System.Drawing.Size(113, 17);
+            this.checkBoxAutoBalance.TabIndex = 9;
+            this.checkBoxAutoBalance.Text = "Auto balance lines";
+            this.checkBoxAutoBalance.UseVisualStyleBackColor = true;
             // 
             // buttonMultipleReplaceSettings
             // 
@@ -306,6 +320,7 @@
             // 
             this.groupBoxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxOutput.Controls.Add(this.checkBoxOverwriteOriginalFiles);
             this.groupBoxOutput.Controls.Add(this.linkLabelOpenOutputFolder);
             this.groupBoxOutput.Controls.Add(this.buttonStyles);
             this.groupBoxOutput.Controls.Add(this.checkBoxOverwrite);
@@ -324,10 +339,21 @@
             this.groupBoxOutput.TabStop = false;
             this.groupBoxOutput.Text = "Output";
             // 
+            // checkBoxOverwriteOriginalFiles
+            // 
+            this.checkBoxOverwriteOriginalFiles.AutoSize = true;
+            this.checkBoxOverwriteOriginalFiles.Location = new System.Drawing.Point(9, 19);
+            this.checkBoxOverwriteOriginalFiles.Name = "checkBoxOverwriteOriginalFiles";
+            this.checkBoxOverwriteOriginalFiles.Size = new System.Drawing.Size(300, 17);
+            this.checkBoxOverwriteOriginalFiles.TabIndex = 11;
+            this.checkBoxOverwriteOriginalFiles.Text = "Overwrite original files (new extension if format is changed)";
+            this.checkBoxOverwriteOriginalFiles.UseVisualStyleBackColor = true;
+            this.checkBoxOverwriteOriginalFiles.CheckedChanged += new System.EventHandler(this.checkBoxOverwriteOriginalFiles_CheckedChanged);
+            // 
             // linkLabelOpenOutputFolder
             // 
             this.linkLabelOpenOutputFolder.AutoSize = true;
-            this.linkLabelOpenOutputFolder.Location = new System.Drawing.Point(434, 44);
+            this.linkLabelOpenOutputFolder.Location = new System.Drawing.Point(434, 74);
             this.linkLabelOpenOutputFolder.Name = "linkLabelOpenOutputFolder";
             this.linkLabelOpenOutputFolder.Size = new System.Drawing.Size(42, 13);
             this.linkLabelOpenOutputFolder.TabIndex = 3;
@@ -337,7 +363,7 @@
             // 
             // buttonStyles
             // 
-            this.buttonStyles.Location = new System.Drawing.Point(311, 100);
+            this.buttonStyles.Location = new System.Drawing.Point(311, 141);
             this.buttonStyles.Name = "buttonStyles";
             this.buttonStyles.Size = new System.Drawing.Size(116, 23);
             this.buttonStyles.TabIndex = 7;
@@ -349,7 +375,7 @@
             // checkBoxOverwrite
             // 
             this.checkBoxOverwrite.AutoSize = true;
-            this.checkBoxOverwrite.Location = new System.Drawing.Point(13, 67);
+            this.checkBoxOverwrite.Location = new System.Drawing.Point(13, 97);
             this.checkBoxOverwrite.Name = "checkBoxOverwrite";
             this.checkBoxOverwrite.Size = new System.Drawing.Size(130, 17);
             this.checkBoxOverwrite.TabIndex = 4;
@@ -360,7 +386,7 @@
             // 
             this.comboBoxSubtitleFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSubtitleFormats.FormattingEnabled = true;
-            this.comboBoxSubtitleFormats.Location = new System.Drawing.Point(80, 102);
+            this.comboBoxSubtitleFormats.Location = new System.Drawing.Point(80, 143);
             this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
             this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(225, 21);
             this.comboBoxSubtitleFormats.TabIndex = 6;
@@ -369,7 +395,7 @@
             // labelEncoding
             // 
             this.labelEncoding.AutoSize = true;
-            this.labelEncoding.Location = new System.Drawing.Point(10, 137);
+            this.labelEncoding.Location = new System.Drawing.Point(10, 178);
             this.labelEncoding.Name = "labelEncoding";
             this.labelEncoding.Size = new System.Drawing.Size(52, 13);
             this.labelEncoding.TabIndex = 8;
@@ -379,7 +405,7 @@
             // 
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxEncoding.FormattingEnabled = true;
-            this.comboBoxEncoding.Location = new System.Drawing.Point(80, 134);
+            this.comboBoxEncoding.Location = new System.Drawing.Point(80, 175);
             this.comboBoxEncoding.Name = "comboBoxEncoding";
             this.comboBoxEncoding.Size = new System.Drawing.Size(225, 21);
             this.comboBoxEncoding.TabIndex = 9;
@@ -387,7 +413,7 @@
             // labelOutputFormat
             // 
             this.labelOutputFormat.AutoSize = true;
-            this.labelOutputFormat.Location = new System.Drawing.Point(10, 105);
+            this.labelOutputFormat.Location = new System.Drawing.Point(10, 146);
             this.labelOutputFormat.Name = "labelOutputFormat";
             this.labelOutputFormat.Size = new System.Drawing.Size(39, 13);
             this.labelOutputFormat.TabIndex = 5;
@@ -396,7 +422,7 @@
             // labelChooseOutputFolder
             // 
             this.labelChooseOutputFolder.AutoSize = true;
-            this.labelChooseOutputFolder.Location = new System.Drawing.Point(10, 25);
+            this.labelChooseOutputFolder.Location = new System.Drawing.Point(10, 55);
             this.labelChooseOutputFolder.Name = "labelChooseOutputFolder";
             this.labelChooseOutputFolder.Size = new System.Drawing.Size(105, 13);
             this.labelChooseOutputFolder.TabIndex = 0;
@@ -404,7 +430,7 @@
             // 
             // buttonChooseFolder
             // 
-            this.buttonChooseFolder.Location = new System.Drawing.Point(402, 39);
+            this.buttonChooseFolder.Location = new System.Drawing.Point(402, 69);
             this.buttonChooseFolder.Name = "buttonChooseFolder";
             this.buttonChooseFolder.Size = new System.Drawing.Size(26, 23);
             this.buttonChooseFolder.TabIndex = 2;
@@ -414,7 +440,7 @@
             // 
             // textBoxOutputFolder
             // 
-            this.textBoxOutputFolder.Location = new System.Drawing.Point(11, 41);
+            this.textBoxOutputFolder.Location = new System.Drawing.Point(11, 71);
             this.textBoxOutputFolder.Name = "textBoxOutputFolder";
             this.textBoxOutputFolder.Size = new System.Drawing.Size(385, 20);
             this.textBoxOutputFolder.TabIndex = 1;
@@ -424,6 +450,7 @@
             this.groupBoxInput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxInput.Controls.Add(this.buttonSearchFolder);
             this.groupBoxInput.Controls.Add(this.buttonInputBrowse);
             this.groupBoxInput.Controls.Add(this.labelChooseInputFiles);
             this.groupBoxInput.Controls.Add(this.listViewInputFiles);
@@ -433,6 +460,17 @@
             this.groupBoxInput.TabIndex = 0;
             this.groupBoxInput.TabStop = false;
             this.groupBoxInput.Text = "Input";
+            // 
+            // buttonSearchFolder
+            // 
+            this.buttonSearchFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSearchFolder.Location = new System.Drawing.Point(868, 12);
+            this.buttonSearchFolder.Name = "buttonSearchFolder";
+            this.buttonSearchFolder.Size = new System.Drawing.Size(116, 23);
+            this.buttonSearchFolder.TabIndex = 8;
+            this.buttonSearchFolder.Text = "Search folder...";
+            this.buttonSearchFolder.UseVisualStyleBackColor = true;
+            this.buttonSearchFolder.Click += new System.EventHandler(this.buttonSearchFolder_Click);
             // 
             // buttonInputBrowse
             // 
@@ -544,15 +582,15 @@
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
             // 
-            // checkBoxAutoBalance
+            // checkBoxSetMinimumDisplayTimeBetweenSubs
             // 
-            this.checkBoxAutoBalance.AutoSize = true;
-            this.checkBoxAutoBalance.Location = new System.Drawing.Point(16, 145);
-            this.checkBoxAutoBalance.Name = "checkBoxAutoBalance";
-            this.checkBoxAutoBalance.Size = new System.Drawing.Size(113, 17);
-            this.checkBoxAutoBalance.TabIndex = 9;
-            this.checkBoxAutoBalance.Text = "Auto balance lines";
-            this.checkBoxAutoBalance.UseVisualStyleBackColor = true;
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.AutoSize = true;
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Location = new System.Drawing.Point(16, 169);
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Name = "checkBoxSetMinimumDisplayTimeBetweenSubs";
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Size = new System.Drawing.Size(190, 17);
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.TabIndex = 10;
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Text = "Set min. millisecs between subtitles";
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.UseVisualStyleBackColor = true;
             // 
             // BatchConvert
             // 
@@ -572,6 +610,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Batch convert";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BatchConvert_FormClosing);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
             this.groupBoxConvertOptions.PerformLayout();
             this.groupBoxChangeFrameRate.ResumeLayout(false);
@@ -637,6 +676,9 @@
         private System.Windows.Forms.Button buttonMultipleReplaceSettings;
         private System.Windows.Forms.CheckBox checkBoxMultipleReplace;
         private System.Windows.Forms.CheckBox checkBoxAutoBalance;
+        private System.Windows.Forms.CheckBox checkBoxOverwriteOriginalFiles;
+        private System.Windows.Forms.Button buttonSearchFolder;
+        private System.Windows.Forms.CheckBox checkBoxSetMinimumDisplayTimeBetweenSubs;
 
     }
 }
