@@ -7,8 +7,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 {
     public class NOcrPoint
     {
-        public PointF Start { get; set; }
-        public PointF End { get; set; }
+        public Point Start { get; set; }
+        public Point End { get; set; }
         public string Id { get; set; }
 
         public NOcrPoint()
@@ -18,10 +18,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             End = new Point();
         }
 
-        public NOcrPoint(Point start, Point end, int pixelWidth, int pixelHeight) : this()
+        public NOcrPoint(Point start, Point end)
         {
-            Start = PointPixelsToPercent(start, pixelWidth, pixelHeight);
-            End = PointPixelsToPercent(end, pixelWidth, pixelHeight);
+            Id = Guid.NewGuid().ToString();
+            Start = new Point(start.X, start.Y);
+            End = new Point(end.X, end.Y);
         }
 
         public PointF PointPixelsToPercent(Point p, int pixelWidth, int pixelHeight)
@@ -36,22 +37,22 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "{0:0.#},{1:0.#} -> {2:0.#},{3:0.#} ", Start.X, Start.Y, End.X, End.Y);
+            return string.Format(CultureInfo.InvariantCulture, "{0},{1} -> {2},{3} ", Start.X, Start.Y, End.X, End.Y);
         }
 
-        public Point GetStart(int width, int height)
+        public PointF GetStartPercent(int width, int height)
         {
-            return PointPercentToPixels(Start, width, height);
+            return PointPixelsToPercent(Start, width, height);
         }
 
-        public Point GetEnd(int width, int height)
+        public PointF GetEnd(int width, int height)
         {
-            return PointPercentToPixels(End, width, height);
+            return PointPixelsToPercent(End, width, height);
         }
 
         public List<Point> GetPoints(int width, int height)
         {
-            return GetPoints(GetStart(width, height), GetEnd(width, height));
+            return GetPoints(Start, End);
         }
 
         public static List<Point> GetPoints(Point start, Point end)
@@ -90,5 +91,15 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return list;
         }
 
+
+        internal Point GetScaledStart(NOcrChar ocrChar, int width, int height)
+        {
+            return new Point((int)Math.Round(Start.X * 100.0 / ocrChar.Width * width / 100.0), (int)Math.Round(Start.Y * 100.0 / ocrChar.Height * height / 100.0));
+        }
+
+        internal Point GetScaledEnd(NOcrChar ocrChar, int width, int height)
+        {
+            return new Point((int)Math.Round(End.X * 100.0 / ocrChar.Width * width / 100.0), (int)Math.Round(End.Y * 100.0 / ocrChar.Height * height / 100.0));
+        }
     }
 }

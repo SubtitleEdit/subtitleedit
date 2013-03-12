@@ -1278,7 +1278,7 @@ namespace Nikse.SubtitleEdit.Forms
                         bool ok = true;
                         foreach (NOcrPoint op in oc.LinesForeground)
                         {
-                            foreach (Point point in NOcrPoint.GetPoints(MakePointItalic(op.GetStart(bmp.Width, bmp.Height), bmp.Height), MakePointItalic(op.GetEnd(bmp.Width, bmp.Height), bmp.Height)))
+                            foreach (Point point in NOcrPoint.GetPoints(MakePointItalic(op.Start, bmp.Height), MakePointItalic(op.End, bmp.Height)))
                             {
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                                 {
@@ -1296,7 +1296,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         foreach (NOcrPoint op in oc.LinesBackground)
                         {
-                            foreach (Point point in NOcrPoint.GetPoints(MakePointItalic(op.GetStart(bmp.Width, bmp.Height), bmp.Height), MakePointItalic(op.GetEnd(bmp.Width, bmp.Height), bmp.Height)))
+                            foreach (Point point in NOcrPoint.GetPoints(MakePointItalic(op.Start, bmp.Height), MakePointItalic(op.End, bmp.Height)))
                             {
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                                 {
@@ -2097,9 +2097,7 @@ namespace Nikse.SubtitleEdit.Forms
                         oc.Height = Convert.ToInt32(node.Attributes["Height"].Value, CultureInfo.InvariantCulture);
                         foreach (XmlNode pointNode in node.SelectNodes("Point"))
                         {
-                            var op = new NOcrPoint();
-                            op.Start = DecodePoint(pointNode.Attributes["Start"].Value);
-                            op.End = DecodePoint(pointNode.Attributes["End"].Value);
+                            var op = new NOcrPoint(DecodePoint(pointNode.Attributes["Start"].Value), DecodePoint(pointNode.Attributes["End"].Value));
                             if (Convert.ToBoolean(pointNode.Attributes["On"].Value))
                                 oc.LinesForeground.Add(op);
                             else
@@ -2115,10 +2113,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private PointF DecodePoint(string text)
+        private Point DecodePoint(string text)
         {
             var arr = text.Split(',');
-            return new PointF((float)(Convert.ToDouble(arr[0], CultureInfo.InvariantCulture)), (float)Convert.ToDouble(Convert.ToDouble(arr[1], CultureInfo.InvariantCulture)));
+            return new Point(Convert.ToInt32(arr[0], CultureInfo.InvariantCulture), Convert.ToInt32(arr[1], CultureInfo.InvariantCulture));
         }
 
         private string OcrViaNOCR(Bitmap bitmap, int listViewIndex)

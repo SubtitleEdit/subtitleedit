@@ -158,6 +158,7 @@
             public string ConvertOptions { get; set; }
             public string RemoveFormatting { get; set; }
             public string RemoveTextForHI { get; set; }
+            public string OverwriteOriginalFiles { get; set; }            
             public string ReDoCasing { get; set; }
             public string Convert { get; set; }
             public string NothingToConvert { get; set; }
@@ -166,6 +167,8 @@
             public string ConvertedX { get; set; }
             public string Settings { get; set; }
             public string AutoBalance { get; set; }
+            public string ScanFolder { get; set; }
+            public string ScanningFolder { get; set; }
         }
 
         public class Beamer
