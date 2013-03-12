@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic.Enums;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -19,6 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int WindowPositionTop { get; set; }
         public int StartLineIndex { get; set; }
         public bool MatchInOriginal { get; set; }
+        public List<string> FindTextHistory { get; private set; }
 
         public int FindTextLength
         {
@@ -44,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public FindReplaceDialogHelper(FindType findType, string findText, Regex regEx, string replaceText, int left, int top, int startLineIndex)
+        public FindReplaceDialogHelper(FindType findType, string findText, List<string> history, Regex regEx, string replaceText, int left, int top, int startLineIndex)
         {
             FindType = findType;
             _findText = findText;
@@ -54,6 +56,7 @@ namespace Nikse.SubtitleEdit.Logic
             WindowPositionLeft = left;
             WindowPositionTop = top;
             StartLineIndex = startLineIndex;
+            FindTextHistory = history;
         }
 
         public bool Find(Subtitle subtitle, Subtitle originalSubtitle, int startIndex)
@@ -203,6 +206,13 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
             return false;
+        }
+
+        internal void AddHistory(string findText)
+        {
+            if (FindTextHistory.Contains(findText))
+                FindTextHistory.Remove(findText);
+            FindTextHistory.Add(findText);
         }
     }
 }

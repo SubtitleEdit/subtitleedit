@@ -1,15 +1,17 @@
 ﻿using System;
+using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Enums;
-using System.Drawing;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class FindDialog : Form
     {
         private Regex _regEx;
+        private List<string> _history = new List<string>();
 
         public FindDialog()
         {
@@ -38,7 +40,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-
         private FindType GetFindType()
         {
             if (radioButtonNormal.Checked)
@@ -48,9 +49,19 @@ namespace Nikse.SubtitleEdit.Forms
             return FindType.RegEx;
         }
 
+        private string FindText
+        {
+            get
+            {
+                if (textBoxFind.Visible)
+                    return textBoxFind.Text;
+                return comboBoxFind.Text;
+            }
+        }
+
         public FindReplaceDialogHelper GetFindDialogHelper(int startLineIndex)
         {
-            return new FindReplaceDialogHelper(GetFindType(), textBoxFind.Text, _regEx, string.Empty, 200, 300, startLineIndex);
+            return new FindReplaceDialogHelper(GetFindType(), FindText, _history, _regEx, string.Empty, 200, 300, startLineIndex);
         }
 
         private void FormFindDialog_KeyDown(object sender, KeyEventArgs e)
@@ -63,7 +74,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFindClick(object sender, EventArgs e)
         {
-            string searchText = textBoxFind.Text.Trim();
+            string searchText = FindText;
+            textBoxFind.Text = searchText;
+            comboBoxFind.Text = searchText;
+            _history.Add(searchText);
 
             if (searchText.Length == 0)
             {
@@ -81,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    _regEx = new Regex(textBoxFind.Text, RegexOptions.Compiled);
+                    _regEx = new Regex(FindText, RegexOptions.Compiled);
                     DialogResult = DialogResult.OK;
                 }
                 catch (Exception exception)
@@ -95,21 +109,59 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Enter)
                 ButtonFindClick(null, null);
+        }
 
+        private void comboBoxFind_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                ButtonFindClick(null, null);
         }
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
         {
             if (sender == radioButtonRegEx)
-                textBoxFind.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
+            {
+                if (textBoxFind.Visible)
+                {
+                    comboBoxFind.ContextMenuStrip = null;
+                    textBoxFind.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
+                }
+                else
+                {
+                    textBoxFind.ContextMenu = null;
+                    comboBoxFind.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
+                }
+            }
             else
+            {
                 textBoxFind.ContextMenuStrip = null;
+                comboBoxFind.ContextMenuStrip = null;
+            }
         }
 
         internal void Initialize(string selectedText, FindReplaceDialogHelper findHelper)
         {
-            textBoxFind.Text = selectedText;
-            textBoxFind.SelectAll();
+            if (findHelper != null && findHelper.FindTextHistory.Count > 0)
+            {
+                textBoxFind.Visible = false;
+                comboBoxFind.Visible = true;
+                comboBoxFind.Text = selectedText;
+                comboBoxFind.SelectAll();
+                comboBoxFind.Items.Clear();
+                _history = new List<string>();
+                foreach (string s in findHelper.FindTextHistory)
+                {
+                    comboBoxFind.Items.Add(s);
+                    _history.Add(s);
+                }
+            }
+            else
+            {
+                comboBoxFind.Visible = false;
+                textBoxFind.Visible = true;
+                textBoxFind.Text = selectedText;
+                textBoxFind.SelectAll();
+            }
 
             if (findHelper != null)
             {
