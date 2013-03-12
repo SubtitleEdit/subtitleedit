@@ -714,18 +714,6 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         prev.EndTime.TotalMilliseconds--;
                     }
-                    else if (diff > 0 && currentOptimalDisplayTime <= p.Duration.TotalMilliseconds - diffHalf &&
-                             prevOptimalDisplayTime <= prev.Duration.TotalMilliseconds - diffHalf)
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            prev.EndTime.TotalMilliseconds -= diffHalf;
-                            p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
-                            _totalFixes++;
-                            noOfOverlappingDisplayTimesFixed++;
-                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                        }
-                    }
                     else if (prevOptimalDisplayTime <= (p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds))
                     {
                         if (AllowFix(target, fixAction))
@@ -736,6 +724,18 @@ namespace Nikse.SubtitleEdit.Forms
                             _totalFixes++;
                             noOfOverlappingDisplayTimesFixed++;
                             AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
+                        }
+                    }
+                    else if (diff > 0 && currentOptimalDisplayTime <= p.Duration.TotalMilliseconds - diffHalf &&
+                             prevOptimalDisplayTime <= prev.Duration.TotalMilliseconds - diffHalf)
+                    {
+                        if (AllowFix(p, fixAction))
+                        {
+                            prev.EndTime.TotalMilliseconds -= diffHalf;
+                            p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
+                            _totalFixes++;
+                            noOfOverlappingDisplayTimesFixed++;
+                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
                     else if (currentOptimalDisplayTime <= p.EndTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds)
