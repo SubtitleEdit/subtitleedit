@@ -631,7 +631,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ImportText_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (radioButtonSplitAtBlankLines.Checked)
-                Configuration.Settings.Tools.ImportTextSplitting = "blank lines";            
+                Configuration.Settings.Tools.ImportTextSplitting = "blank lines";
             else if (radioButtonLineMode.Checked)
                 Configuration.Settings.Tools.ImportTextSplitting = "line";
             else

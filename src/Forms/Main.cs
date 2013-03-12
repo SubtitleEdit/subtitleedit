@@ -10685,7 +10685,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             Activate();
             _videoFileName = pointSync.VideoFileName;
-            _formPositionsAndSizes.SavePositionAndSize(pointSync);            
+            _formPositionsAndSizes.SavePositionAndSize(pointSync);
         }
 
         private void pointSyncViaOtherSubtitleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -12262,7 +12262,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (_subtitle.Paragraphs[index].StartTime.IsMaxTime)
                 {
-                    timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;                    
+                    timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
                     _subtitle.Paragraphs[index].EndTime.TotalSeconds = videoPosition;
                     _subtitle.Paragraphs[index].StartTime.TotalMilliseconds = _subtitle.Paragraphs[index].EndTime.TotalMilliseconds - Utilities.GetOptimalDisplayMilliseconds(_subtitle.Paragraphs[index].Text);
                     if (_subtitle.Paragraphs[index].StartTime.TotalMilliseconds < 0)
@@ -15985,8 +15985,8 @@ namespace Nikse.SubtitleEdit.Forms
                         for (int i=0; i<_subtitle.Paragraphs.Count; i++)
                         {
                             Paragraph p = _subtitle.Paragraphs[i];
-                            
-                            if (p.Extra == null) 
+
+                            if (p.Extra == null)
                             {
                                 p.Extra = styleList[0];
                                 SubtitleListview1.SetExtraText(i, p.Extra, SubtitleListview1.ForeColor);

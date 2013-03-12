@@ -1236,7 +1236,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 else
                                 {
                                     sb.AppendLine(style.ToRawAss(styleFormat));
-                                }                                
+                                }
                             }
                             sb.AppendLine(line);
                         }

@@ -456,7 +456,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             //crop bottom
             done = false;
-            int newHeight = Height;            
+            int newHeight = Height;
             y = Height - 1;
             while (!done && y > 0)
             {

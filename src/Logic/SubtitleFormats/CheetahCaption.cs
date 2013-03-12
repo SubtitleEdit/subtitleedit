@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (text.StartsWith("{\\") && startTag > 0 && startTag < 10)
                 {
                     text = text.Remove(0, startTag + 1);
-                }               
+                }
 
                 var textBytes = new List<byte>();
                 bool italic = false;

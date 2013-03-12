@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     //00.00.05.09-00.00.08.29
-    //We don't have a fancy stock abbreviation 
+    //We don't have a fancy stock abbreviation
     //to go alongside our name in the press.
     //00.00.09.15-00.00.11.09
 
@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         expecting = ExpectingLine.TimeCodes;
                     }
                 }
-                
+
             }
             if (p.Text.Trim().Length > 0)
                 subtitle.Paragraphs.Add(p);

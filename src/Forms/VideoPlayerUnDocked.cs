@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal bool IsFullscreen
         {
-            get 
+            get
             {
                 return WindowState == FormWindowState.Maximized;
             }
