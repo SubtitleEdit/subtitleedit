@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
             var onlyFixedSubtitle = new Subtitle();
 
             double minumumMillisecondsBetweenLines = (double)numericUpDownMinMillisecondsBetweenLines.Value;
-            for (int i = 0; i < FixedSubtitle.Paragraphs.Count - 2; i++)
+            for (int i = 0; i < FixedSubtitle.Paragraphs.Count - 1; i++)
             {
                 Paragraph p = FixedSubtitle.GetParagraphOrDefault(i);
                 Paragraph next = FixedSubtitle.GetParagraphOrDefault(i + 1);
