@@ -264,6 +264,9 @@ namespace Nikse.SubtitleEdit.Logic
                 ConvertedX = "Converted ({0})",
                 Settings = "Settings",
                 AutoBalance = "Auto balance lines",
+                OverwriteOriginalFiles = "Overwrite original files (new extension if format is changed)",
+                ScanFolder = "Scan folder...",
+                ScanningFolder = "Scanning {0} and subfolders for subtitle files..."
             };
 
             Beamer = new LanguageStructure.Beamer

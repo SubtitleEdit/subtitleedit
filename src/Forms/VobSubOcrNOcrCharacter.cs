@@ -190,11 +190,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (NOcrPoint op in _nocrChar.LinesForeground)
                 {
-                    e.Graphics.DrawLine(foreground, op.GetStart(pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetEnd(pictureBoxCharacter.Width, pictureBoxCharacter.Height));
+                    e.Graphics.DrawLine(foreground, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
                 }
                 foreach (NOcrPoint op in _nocrChar.LinesBackground)
                 {
-                    e.Graphics.DrawLine(background, op.GetStart(pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetEnd(pictureBoxCharacter.Width, pictureBoxCharacter.Height));
+                    e.Graphics.DrawLine(background, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
                 }
             }
 
@@ -261,9 +261,9 @@ namespace Nikse.SubtitleEdit.Forms
                     _nocrChar.Width = pictureBoxCharacter.Image.Width;
                     _nocrChar.Height = pictureBoxCharacter.Image.Height;
                     if (radioButtonHot.Checked)
-                        _nocrChar.LinesForeground.Add(new NOcrPoint(_start, _end, _imageWidth, _imageHeight));
+                        _nocrChar.LinesForeground.Add(new NOcrPoint(_start, _end));
                     else
-                        _nocrChar.LinesBackground.Add(new NOcrPoint(_start, _end, _imageWidth, _imageHeight));
+                        _nocrChar.LinesBackground.Add(new NOcrPoint(_start, _end));
                     _drawLineOn = false;
                     pictureBoxCharacter.Invalidate();
                     ShowOcrPoints();
