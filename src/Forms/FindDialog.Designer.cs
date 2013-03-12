@@ -34,6 +34,7 @@
             this.radioButtonNormal = new System.Windows.Forms.RadioButton();
             this.radioButtonCaseSensitive = new System.Windows.Forms.RadioButton();
             this.radioButtonRegEx = new System.Windows.Forms.RadioButton();
+            this.comboBoxFind = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // textBoxFind
@@ -99,11 +100,21 @@
             this.radioButtonRegEx.UseVisualStyleBackColor = true;
             this.radioButtonRegEx.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
             // 
+            // comboBoxFind
+            // 
+            this.comboBoxFind.FormattingEnabled = true;
+            this.comboBoxFind.Location = new System.Drawing.Point(12, 12);
+            this.comboBoxFind.Name = "comboBoxFind";
+            this.comboBoxFind.Size = new System.Drawing.Size(189, 21);
+            this.comboBoxFind.TabIndex = 0;
+            this.comboBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxFind_KeyDown);
+            // 
             // FindDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(298, 135);
+            this.Controls.Add(this.comboBoxFind);
             this.Controls.Add(this.radioButtonRegEx);
             this.Controls.Add(this.radioButtonCaseSensitive);
             this.Controls.Add(this.radioButtonNormal);
@@ -133,5 +144,6 @@
         private System.Windows.Forms.RadioButton radioButtonNormal;
         private System.Windows.Forms.RadioButton radioButtonCaseSensitive;
         private System.Windows.Forms.RadioButton radioButtonRegEx;
+        private System.Windows.Forms.ComboBox comboBoxFind;
     }
 }
