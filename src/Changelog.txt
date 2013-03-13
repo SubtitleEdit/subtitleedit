@@ -8,7 +8,7 @@
    * Fix overlapping display times now smarter
    * Updated Basque language file - thx Xabier Aramendi
    * Fix missing spaces now works better with italics - thx doc. Jackson
-   * Added EBU alignment tags ({\an1}..{\an9}) 
+   * Added EBU alignment tags ({\an1}..{\an9})
    * Added "auto balance lines" to batch converter - thx hacker
    * Export to image based formats: bold tag support - thx moob
    * Updated French ocr replace list - thx Bruno
@@ -20,7 +20,7 @@
      (and not only optimal duration) - thx Frisbee
    * SSA/ASS - allow left margin up to 250 - thx vicgol
    * Allow key 'space' in list view to toggle play/pause of video - thx Jakov
-   * Allow key 'space' in video fullscreen to toggle play/pause  - thx fox
+   * Allow key 'space' in video fullscreen to toggle play/pause - thx fox
 
 
 3.3.2 (23 February 2013)
@@ -258,7 +258,7 @@
    * Export images alignment - thx Marcin
    * Export images can now use bold font
    * Many improvements to fix common errors - thx Majid
-   * Settings -> Word lists -> "Ocr fix list" is now sorted - thx Majid
+   * Settings -> Word lists -> "OCR fix list" is now sorted - thx Majid
    * Main window now lists all encodings
    * Current pos in time line (waveform) does not jump when using VLC/MPlayer
    * Subtitle text box now shows vertical scroll-bar when 3+ lines
@@ -280,7 +280,7 @@
    * MPlayer works much better now, also on Linux. 
      (Use MPlayer2 for precise seeking)
    * Crash (memory leak) when exporting images from a VobSub - thx Pete
-   * Bug in Fix common errors with uncheck fix quotes -  thx jofafrazze
+   * Bug in Fix common errors with uncheck fix quotes - thx jofafrazze
    * Bug in Import plain text when only non-English letters - thx Jasper
    * Now detects encoding when opening son files - thx Jørgen
 

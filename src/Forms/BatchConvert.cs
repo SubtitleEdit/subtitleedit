@@ -791,7 +791,7 @@ namespace Nikse.SubtitleEdit.Forms
                     progressBar1.Value++;
                 labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
                 if (progressBar1.Value == progressBar1.Maximum)
-                    labelStatus.Text = string.Empty;                
+                    labelStatus.Text = string.Empty;
             }
         }
 
@@ -979,7 +979,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 catch
-                { 
+                {
                 }
             }
             foreach (string directory in Directory.GetDirectories(path))
