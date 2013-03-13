@@ -1991,7 +1991,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                         else
                                         {
-                                            if (before == " " && !Utilities.LowerCaseVowels.Contains(after.ToLower()))
+                                            if ("‘’¡¿„“()[]♪' ".Contains(before) && !(Utilities.LowerCaseVowels).Contains(after.ToLower()))
                                             {
                                             }
                                             else
