@@ -1111,11 +1111,17 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonImport_Click(object sender, EventArgs e)
         {
             openFileDialogImport.Title = Configuration.Settings.Language.SubStationAlphaStyles.ImportStyleFromFile;
-            openFileDialogImport.FileName = string.Empty;
+            openFileDialogImport.InitialDirectory = Configuration.DataDirectory;
             if (_isSubStationAlpha)
+            {
                 openFileDialogImport.Filter = new SubStationAlpha().Name + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                saveFileDialogStyle.FileName = "my_styles.ssa";
+            }
             else
+            {
                 openFileDialogImport.Filter = new AdvancedSubStationAlpha().Name + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                saveFileDialogStyle.FileName = "my_styles.ass";
+            }
 
             if (openFileDialogImport.ShowDialog(this) == DialogResult.OK)
             {
@@ -1188,11 +1194,17 @@ namespace Nikse.SubtitleEdit.Forms
             string styleName = listViewStyles.SelectedItems[0].Text;
 
             saveFileDialogStyle.Title = Configuration.Settings.Language.SubStationAlphaStyles.ExportStyleToFile;
-            saveFileDialogStyle.FileName = string.Empty;
+            saveFileDialogStyle.InitialDirectory = Configuration.DataDirectory;
             if (_isSubStationAlpha)
+            {
                 saveFileDialogStyle.Filter = new SubStationAlpha().Name + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                saveFileDialogStyle.FileName = "my_styles.ssa";
+            }
             else
+            {
                 saveFileDialogStyle.Filter = new AdvancedSubStationAlpha().Name + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                saveFileDialogStyle.FileName = "my_styles.ass";
+            }
 
             if (saveFileDialogStyle.ShowDialog(this) == DialogResult.OK)
             {
