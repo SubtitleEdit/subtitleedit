@@ -88,6 +88,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSearchFolder.Text = l.ScanFolder;
             buttonConvert.Text = l.Convert;
             buttonCancel.Text = Configuration.Settings.Language.General.OK;
+            checkBoxScanFolderRecursive.Text = l.Recursive;
+            checkBoxScanFolderRecursive.Left = buttonSearchFolder.Left - checkBoxScanFolderRecursive.Width - 5;
 
             groupBoxChangeFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.Title;
             groupBoxOffsetTimeCodes.Text = Configuration.Settings.Language.ShowEarlierLater.TitleAll;
@@ -162,7 +164,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxMultipleReplace.Text = Configuration.Settings.Language.MultipleReplace.Title;
             checkBoxAutoBalance.Text = Configuration.Settings.Language.BatchConvert.AutoBalance;
             radioButtonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
-            radioButtonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
+            radioButtonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;            
 
             buttonSearchFolder.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.ScanningFolder); //TODO: Remove in 3.4
             if (string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.OverwriteOriginalFiles)) //TODO: Remove in 3.4
@@ -982,12 +984,15 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                 }
             }
-            foreach (string directory in Directory.GetDirectories(path))
+            if (checkBoxScanFolderRecursive.Checked)
             {
-                if (directory != "." && directory != "..")
-                    SearchFolder(directory);
-                if (_abort)
-                    return;
+                foreach (string directory in Directory.GetDirectories(path))
+                {
+                    if (directory != "." && directory != "..")
+                        SearchFolder(directory);
+                    if (_abort)
+                        return;
+                }
             }
         }
 
