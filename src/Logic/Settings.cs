@@ -2222,7 +2222,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("BatchConvertFixCommonErrors", settings.Tools.BatchConvertFixCommonErrors.ToString());
             textWriter.WriteElementString("BatchConvertMultipleReplace", settings.Tools.BatchConvertMultipleReplace.ToString());
             textWriter.WriteElementString("BatchConvertAutoBalance", settings.Tools.BatchConvertAutoBalance.ToString());
-            textWriter.WriteElementString("BatchConvertSetMinDisplayTimeBetweenSubtitles", settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles.ToString());                        
+            textWriter.WriteElementString("BatchConvertSetMinDisplayTimeBetweenSubtitles", settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles.ToString());
             textWriter.WriteElementString("BatchConvertLanguage", settings.Tools.BatchConvertLanguage);
             textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
             textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
