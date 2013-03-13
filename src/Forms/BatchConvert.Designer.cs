@@ -32,6 +32,7 @@
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs = new System.Windows.Forms.CheckBox();
             this.checkBoxAutoBalance = new System.Windows.Forms.CheckBox();
             this.buttonMultipleReplaceSettings = new System.Windows.Forms.Button();
             this.checkBoxMultipleReplace = new System.Windows.Forms.CheckBox();
@@ -63,6 +64,7 @@
             this.buttonChooseFolder = new System.Windows.Forms.Button();
             this.textBoxOutputFolder = new System.Windows.Forms.TextBox();
             this.groupBoxInput = new System.Windows.Forms.GroupBox();
+            this.checkBoxScanFolderRecursive = new System.Windows.Forms.CheckBox();
             this.buttonSearchFolder = new System.Windows.Forms.Button();
             this.buttonInputBrowse = new System.Windows.Forms.Button();
             this.labelChooseInputFiles = new System.Windows.Forms.Label();
@@ -78,7 +80,6 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs = new System.Windows.Forms.CheckBox();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxChangeFrameRate.SuspendLayout();
             this.groupBoxOffsetTimeCodes.SuspendLayout();
@@ -132,6 +133,16 @@
             this.groupBoxConvertOptions.TabIndex = 10;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
+            // 
+            // checkBoxSetMinimumDisplayTimeBetweenSubs
+            // 
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.AutoSize = true;
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Location = new System.Drawing.Point(16, 169);
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Name = "checkBoxSetMinimumDisplayTimeBetweenSubs";
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Size = new System.Drawing.Size(190, 17);
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.TabIndex = 10;
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Text = "Set min. millisecs between subtitles";
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.UseVisualStyleBackColor = true;
             // 
             // checkBoxAutoBalance
             // 
@@ -450,6 +461,7 @@
             this.groupBoxInput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxInput.Controls.Add(this.checkBoxScanFolderRecursive);
             this.groupBoxInput.Controls.Add(this.buttonSearchFolder);
             this.groupBoxInput.Controls.Add(this.buttonInputBrowse);
             this.groupBoxInput.Controls.Add(this.labelChooseInputFiles);
@@ -460,6 +472,18 @@
             this.groupBoxInput.TabIndex = 0;
             this.groupBoxInput.TabStop = false;
             this.groupBoxInput.Text = "Input";
+            // 
+            // checkBoxScanFolderRecursive
+            // 
+            this.checkBoxScanFolderRecursive.AutoSize = true;
+            this.checkBoxScanFolderRecursive.Checked = true;
+            this.checkBoxScanFolderRecursive.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxScanFolderRecursive.Location = new System.Drawing.Point(788, 16);
+            this.checkBoxScanFolderRecursive.Name = "checkBoxScanFolderRecursive";
+            this.checkBoxScanFolderRecursive.Size = new System.Drawing.Size(74, 17);
+            this.checkBoxScanFolderRecursive.TabIndex = 9;
+            this.checkBoxScanFolderRecursive.Text = "Recursive";
+            this.checkBoxScanFolderRecursive.UseVisualStyleBackColor = true;
             // 
             // buttonSearchFolder
             // 
@@ -582,16 +606,6 @@
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
             // 
-            // checkBoxSetMinimumDisplayTimeBetweenSubs
-            // 
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.AutoSize = true;
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Location = new System.Drawing.Point(16, 169);
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Name = "checkBoxSetMinimumDisplayTimeBetweenSubs";
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Size = new System.Drawing.Size(190, 17);
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.TabIndex = 10;
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Text = "Set min. millisecs between subtitles";
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.UseVisualStyleBackColor = true;
-            // 
             // BatchConvert
             // 
             this.AllowDrop = true;
@@ -679,6 +693,7 @@
         private System.Windows.Forms.CheckBox checkBoxOverwriteOriginalFiles;
         private System.Windows.Forms.Button buttonSearchFolder;
         private System.Windows.Forms.CheckBox checkBoxSetMinimumDisplayTimeBetweenSubs;
+        private System.Windows.Forms.CheckBox checkBoxScanFolderRecursive;
 
     }
 }

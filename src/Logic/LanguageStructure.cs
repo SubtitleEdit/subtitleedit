@@ -169,6 +169,7 @@
             public string AutoBalance { get; set; }
             public string ScanFolder { get; set; }
             public string ScanningFolder { get; set; }
+            public string Recursive { get; set; }
         }
 
         public class Beamer
