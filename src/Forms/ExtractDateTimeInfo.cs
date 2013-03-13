@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string format in Configuration.Settings.Tools.GenerateTimeCodePatterns.Split(';'))
             {
                 _formats.Add(format);
-                comboBoxDateTimeFormats.Items.Add(format + "   " + DecodeFormat(DateTime.Now, format).Replace(Environment.NewLine, "<br />"));
+                comboBoxDateTimeFormats.Items.Add(format);
             }
             if (_formats.Count > 0)
                 comboBoxDateTimeFormats.SelectedIndex = 0;
@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 foreach (string s in format.Replace("<br />", "@").Replace("<br/>", "@").Replace("<br>", "@").Split('@'))
                 {
-                    sb.AppendLine(dateTime.ToString(format));
+                    sb.AppendLine(dateTime.ToString(s));
                 }
                 return sb.ToString().Trim();
             }
@@ -116,12 +116,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string FormatDateTime(DateTime dt)
         {
-            if (comboBoxDateTimeFormats.SelectedIndex < _formats.Count)
-                return DecodeFormat(dt, _formats[comboBoxDateTimeFormats.SelectedIndex]);
-            return "";
+            return DecodeFormat(dt, comboBoxDateTimeFormats.Text);
         }
 
         private void comboBoxDateTimeFormats_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            textBoxExample.Text = FormatDateTime(DateTime.Now);
+        }
+
+        private void comboBoxDateTimeFormats_TextChanged(object sender, EventArgs e)
         {
             textBoxExample.Text = FormatDateTime(DateTime.Now);
         }
