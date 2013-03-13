@@ -94,7 +94,6 @@
             // 
             // comboBoxDateTimeFormats
             // 
-            this.comboBoxDateTimeFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDateTimeFormats.FormattingEnabled = true;
             this.comboBoxDateTimeFormats.Items.AddRange(new object[] {
             "M/d/yyyy hh:mm:ss ",
@@ -109,6 +108,7 @@
             this.comboBoxDateTimeFormats.Size = new System.Drawing.Size(332, 21);
             this.comboBoxDateTimeFormats.TabIndex = 55;
             this.comboBoxDateTimeFormats.SelectedIndexChanged += new System.EventHandler(this.comboBoxDateTimeFormats_SelectedIndexChanged);
+            this.comboBoxDateTimeFormats.TextChanged += new System.EventHandler(this.comboBoxDateTimeFormats_TextChanged);
             // 
             // labelWriteFormat
             // 
