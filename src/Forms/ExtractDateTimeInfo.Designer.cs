@@ -101,7 +101,9 @@
             "M/d/yyyy<br />hh:mm:ss",
             "F  (Tuesday, April 10, 2012 9:15:07 PM)",
             "dd MMM yyyy, HH:mm:ss (10 Apr 2012 21:15:07)",
-            "Current culture"});
+            "Current culture",
+            "hh:mm:ss",
+            "HH:mm:ss"});
             this.comboBoxDateTimeFormats.Location = new System.Drawing.Point(12, 153);
             this.comboBoxDateTimeFormats.Name = "comboBoxDateTimeFormats";
             this.comboBoxDateTimeFormats.Size = new System.Drawing.Size(332, 21);

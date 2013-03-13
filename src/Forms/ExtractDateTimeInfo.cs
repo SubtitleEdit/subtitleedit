@@ -15,14 +15,40 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public Subtitle DateTimeSubtitle { get; private set; }
         public string VideoFileName { get; private set; }
+        private List<string> _formats = new List<string>();
 
         public ExtractDateTimeInfo()
         {
             InitializeComponent();
             comboBoxDateTimeFormats.SelectedIndex = 0;
             labelVideoFileName.Text = string.Empty;
-            timeUpDownStartTime.TimeCode = new TimeCode(12, 0, 0, 0);
+            timeUpDownStartTime.TimeCode = new TimeCode(0, 0, 0, 0);
             timeUpDownDuration.TimeCode = new TimeCode(1, 0, 0, 0);
+            comboBoxDateTimeFormats.Items.Clear();
+            foreach (string format in Configuration.Settings.Tools.GenerateTimeCodePatterns.Split(';'))
+            {
+                _formats.Add(format);
+                comboBoxDateTimeFormats.Items.Add(format + "   " + DecodeFormat(DateTime.Now, format).Replace(Environment.NewLine, "<br />"));
+            }
+            if (_formats.Count > 0)
+                comboBoxDateTimeFormats.SelectedIndex = 0;
+        }
+
+        private string DecodeFormat(DateTime dateTime, string format)
+        {
+            try
+            {
+                var sb = new StringBuilder();
+                foreach (string s in format.Replace("<br />", "@").Replace("<br/>", "@").Replace("<br>", "@").Split('@'))
+                {
+                    sb.AppendLine(dateTime.ToString(format));
+                }
+                return sb.ToString().Trim();
+            }
+            catch
+            {
+                return "Error";
+            }
         }
 
         private void buttonGenerateTimeInfo_Click(object sender, EventArgs e)
@@ -90,16 +116,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string FormatDateTime(DateTime dt)
         {
-            if (comboBoxDateTimeFormats.SelectedIndex == 4)
-                return dt.ToString(CultureInfo.CurrentUICulture);
-            else if (comboBoxDateTimeFormats.SelectedIndex == 3)
-                return dt.ToString("dd MMM yyyy, HH:mm:ss");
-            else if (comboBoxDateTimeFormats.SelectedIndex == 2)
-                return dt.ToString("F");
-            else if (comboBoxDateTimeFormats.SelectedIndex == 1)
-                return dt.ToString("M/d/yyyy") + Environment.NewLine + dt.ToString("hh:mm:ss");
-            else
-                return dt.ToString("M/d/yyyy hh:mm:ss");
+            if (comboBoxDateTimeFormats.SelectedIndex < _formats.Count)
+                return DecodeFormat(dt, _formats[comboBoxDateTimeFormats.SelectedIndex]);
+            return "";
         }
 
         private void comboBoxDateTimeFormats_SelectedIndexChanged(object sender, EventArgs e)

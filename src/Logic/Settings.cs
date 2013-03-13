@@ -121,6 +121,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public string ImportTextSplitting { get; set; }
         public bool ImportTextMergeShortLines { get; set; }
+        public string GenerateTimeCodePatterns { get; set; }        
 
         public ToolsSettings()
         {
@@ -155,6 +156,7 @@ namespace Nikse.SubtitleEdit.Logic
             BatchConvertLanguage = "en";
             ModifySelectionRule = "Contains";
             ModifySelectionText = string.Empty;
+            GenerateTimeCodePatterns = "HH:mm:ss;HH:mm;MM/dd/yyyy;dddd, dd MMMM yyyy HH:mm:ss;h:mm tt;yyyy'-'MM'-'dd'T'HH':'mm':'ss";
         }
     }
 
@@ -1381,6 +1383,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ImportTextMergeShortLines");
             if (subNode != null)
                 settings.Tools.ImportTextMergeShortLines = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("GenerateTimeCodePatterns");
+            if (subNode != null)
+                settings.Tools.GenerateTimeCodePatterns = subNode.InnerText;
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -2234,6 +2239,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
             textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
             textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
+            textWriter.WriteElementString("GenerateTimeCodePatterns", settings.Tools.GenerateTimeCodePatterns);            
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");
