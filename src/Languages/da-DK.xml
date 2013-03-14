@@ -146,6 +146,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertOptions>Konverter indstillinger</ConvertOptions>
     <RemoveFormatting>Fjern formaterings- tags</RemoveFormatting>
     <RemoveTextForHI>fjerne tekst for høre-hæmmede</RemoveTextForHI>
+    <OverwriteOriginalFiles>Overskriv originale filer (kun hvis format ikke ændres)</OverwriteOriginalFiles>
     <ReDoCasing>Sæt store/små bogstaver</ReDoCasing>
     <Convert>Konverter</Convert>
     <NothingToConvert>Intet at konvertere!</NothingToConvert>
@@ -154,6 +155,9 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertedX>Konverteret ({0})</ConvertedX>
     <Settings>Indstillinger</Settings>
     <AutoBalance>Auto-balancer linjer</AutoBalance>
+    <ScanFolder>Scan mappe...</ScanFolder>
+    <ScanningFolder>Scanner {0} og undermapper for undertekster...</ScanningFolder>
+    <Recursive>Medtag undermapper</Recursive>
   </BatchConvert>
   <Beamer>
     <Title>Undertekst fremviser</Title>
@@ -1587,6 +1591,9 @@ Fortsæt?</SubtitleAppendPrompt>
     <ImportStyleFromFile>Importer style fra fil...</ImportStyleFromFile>
     <ExportStyleToFile>Export style til fil...</ExportStyleToFile>
     <ChooseStyle>Vælg style der skal importeres</ChooseStyle>
+    <StyleAlreadyExits>Style findes allerede: {0}</StyleAlreadyExits>
+    <StyleXExportedToFileY>Style '{0}' eksporteret til '{1}'</StyleXExportedToFileY>
+    <StyleXImportedFromFileY>Style '{0}' importeret fra '{1}'</StyleXImportedFromFileY>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Punkt synkronisering</Title>

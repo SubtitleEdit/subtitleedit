@@ -98,6 +98,8 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.openFileDialogImport = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialogStyle = new System.Windows.Forms.SaveFileDialog();
+            this.labelStatus = new System.Windows.Forms.Label();
+            this.timerClearStatus = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripStyles.SuspendLayout();
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxProperties.SuspendLayout();
@@ -840,11 +842,26 @@
             // 
             this.saveFileDialogStyle.OverwritePrompt = false;
             // 
+            // labelStatus
+            // 
+            this.labelStatus.AutoSize = true;
+            this.labelStatus.Location = new System.Drawing.Point(15, 577);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(59, 13);
+            this.labelStatus.TabIndex = 6;
+            this.labelStatus.Text = "labelStatus";
+            // 
+            // timerClearStatus
+            // 
+            this.timerClearStatus.Interval = 9000;
+            this.timerClearStatus.Tick += new System.EventHandler(this.timerClearStatus_Tick);
+            // 
             // SubStationAlphaStyles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(982, 602);
+            this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.groupBoxProperties);
             this.Controls.Add(this.groupBoxStyles);
             this.Controls.Add(this.buttonCancel);
@@ -885,6 +902,7 @@
             this.groupBoxPreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -959,5 +977,7 @@
         private System.Windows.Forms.ColumnHeader columnHeaderUseCount;
         private System.Windows.Forms.Button buttonExport;
         private System.Windows.Forms.SaveFileDialog saveFileDialogStyle;
+        private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.Timer timerClearStatus;
     }
 }

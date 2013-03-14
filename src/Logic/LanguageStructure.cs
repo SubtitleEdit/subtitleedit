@@ -1752,6 +1752,9 @@
             public string ImportStyleFromFile { get; set; }
             public string ExportStyleToFile { get; set; }
             public string ChooseStyle { get; set; }
+            public string StyleAlreadyExits { get; set; }
+            public string StyleXExportedToFileY { get; set; }
+            public string StyleXImportedFromFileY { get; set; }
         }
 
         public class PointSync

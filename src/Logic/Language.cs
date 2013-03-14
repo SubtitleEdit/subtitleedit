@@ -267,7 +267,7 @@ namespace Nikse.SubtitleEdit.Logic
                 OverwriteOriginalFiles = "Overwrite original files (new extension if format is changed)",
                 ScanFolder = "Scan folder...",
                 ScanningFolder = "Scanning {0} and subfolders for subtitle files...",
-                Recursive = "Resursive",
+                Recursive = "Include sub folders",
             };
 
             Beamer = new LanguageStructure.Beamer
@@ -1847,6 +1847,9 @@ can edit in same subtitle file (collaboration)",
                 ImportStyleFromFile = "Import style from file...",
                 ExportStyleToFile = "Export style to file... (will add style if file already exists)",
                 ChooseStyle = "Choose style to import",
+                StyleAlreadyExits = "Style already exists: {0}",
+                StyleXExportedToFileY = "Style '{0}' exported to file '{1}'",
+                StyleXImportedFromFileY = "Style '{0}' imported from file '{1}'",
             };
 
             PointSync = new LanguageStructure.PointSync

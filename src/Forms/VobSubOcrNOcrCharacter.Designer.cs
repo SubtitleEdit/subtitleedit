@@ -134,6 +134,7 @@
             this.textBoxCharacters.Name = "textBoxCharacters";
             this.textBoxCharacters.Size = new System.Drawing.Size(107, 20);
             this.textBoxCharacters.TabIndex = 22;
+            this.textBoxCharacters.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxCharacters_KeyDown);
             // 
             // buttonOK
             // 
