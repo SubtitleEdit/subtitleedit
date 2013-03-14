@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Logic
             BatchConvertLanguage = "en";
             ModifySelectionRule = "Contains";
             ModifySelectionText = string.Empty;
-            GenerateTimeCodePatterns = "HH:mm:ss;HH:mm;MM/dd/yyyy;dddd, dd MMMM yyyy HH:mm:ss;h:mm tt;yyyy'-'MM'-'dd'T'HH':'mm':'ss";
+            GenerateTimeCodePatterns = "HH:mm:ss;yyyy-MM-dd;dddd dd MMMM yyyy <br>HH:mm:ss;dddd dd MMMM yyyy <br>hh:mm:ss tt;s";
         }
     }
 
