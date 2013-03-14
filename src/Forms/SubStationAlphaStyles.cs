@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
+            labelStatus.Text = string.Empty;
             Header = subtitle.Header;
             _format = format;
             _isSubStationAlpha = _format.FriendlyName == new SubStationAlpha().FriendlyName;
@@ -308,6 +309,22 @@ namespace Nikse.SubtitleEdit.Forms
                 subItem.BackColor = ssaStyle.Background;
             else
                 subItem.BackColor = ssaStyle.Outline;
+            subItem.Text = Configuration.Settings.Language.General.Text;
+            subItem.ForeColor = ssaStyle.Primary;
+            try
+            {
+                if (ssaStyle.Bold || ssaStyle.Italic)
+                    subItem.Font = new Font(ssaStyle.FontName, subItem.Font.Size, FontStyle.Bold | FontStyle.Italic);
+                else if (ssaStyle.Bold)
+                    subItem.Font = new Font(ssaStyle.FontName, subItem.Font.Size, FontStyle.Bold);
+                else if (ssaStyle.Italic)
+                    subItem.Font = new Font(ssaStyle.FontName, subItem.Font.Size, FontStyle.Italic);
+                else if (ssaStyle.Italic)
+                    subItem.Font = new Font(ssaStyle.FontName, subItem.Font.Size, FontStyle.Regular);
+            }
+            catch
+            {
+            }
             item.SubItems.Add(subItem);
 
             lv.Items.Add(item);
@@ -570,7 +587,8 @@ namespace Nikse.SubtitleEdit.Forms
             colorDialogSSAStyle.Color = panelPrimaryColor.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
             {
-                listViewStyles.SelectedItems[0].SubItems[3].BackColor = colorDialogSSAStyle.Color;
+                listViewStyles.SelectedItems[0].SubItems[4].BackColor = colorDialogSSAStyle.Color;
+                listViewStyles.SelectedItems[0].SubItems[5].ForeColor = colorDialogSSAStyle.Color;
                 panelPrimaryColor.BackColor = colorDialogSSAStyle.Color;
                 string name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "primarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
@@ -1173,6 +1191,10 @@ namespace Nikse.SubtitleEdit.Forms
                             _doUpdate = true;
                             SetControlsFromStyle(style);
                             listViewStyles_SelectedIndexChanged(null, null);
+
+                            if (!string.IsNullOrEmpty(Configuration.Settings.Language.SubStationAlphaStyles.StyleXImportedFromFileY)) // TODO: Remove in 3.4
+                                labelStatus.Text = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleXImportedFromFileY, style.Name, openFileDialogImport.FileName);
+                            timerClearStatus.Start();
                         }
                     }
                 }
@@ -1209,17 +1231,19 @@ namespace Nikse.SubtitleEdit.Forms
             if (saveFileDialogStyle.ShowDialog(this) == DialogResult.OK)
             {
                 if (System.IO.File.Exists(saveFileDialogStyle.FileName))
-                {
+                {                    
                     Encoding encoding = null;
                     var s = new Subtitle();
                     var format = s.LoadSubtitle(saveFileDialogStyle.FileName, out encoding, null);
                     if (format == null)
                     {
                         MessageBox.Show("Not subtitle format: " + _format.Name);
+                        return;
                     }
                     else if (format.Name != _format.Name)
                     {
                         MessageBox.Show(string.Format("Cannot save {1} style in {0} file!", format.Name, _format.Name));
+                        return;
                     }
                     else
                     {
@@ -1251,6 +1275,11 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                             sb.AppendLine(line);
+                            if (stylesOn && line.Replace(" ", string.Empty).Trim().ToLower().StartsWith("style:" + styleName.Replace(" ", string.Empty).Trim().ToLower() + ","))
+                            {
+                                MessageBox.Show(string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleAlreadyExits, styleName));
+                                return;
+                            }
                         }
                         System.IO.File.WriteAllText(saveFileDialogStyle.FileName, sb.ToString(), Encoding.UTF8);
                     }
@@ -1280,6 +1309,16 @@ namespace Nikse.SubtitleEdit.Forms
                     System.IO.File.WriteAllText(saveFileDialogStyle.FileName, content, Encoding.UTF8);
                 }
             }
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.SubStationAlphaStyles.StyleXImportedFromFileY)) // TODO: Remove in 3.4
+                labelStatus.Text = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleXExportedToFileY, styleName, saveFileDialogStyle.FileName);
+            timerClearStatus.Start();
         }
+
+        private void timerClearStatus_Tick(object sender, EventArgs e)
+        {
+            timerClearStatus.Stop();
+            labelStatus.Text = string.Empty;
+        }
+
     }
 }

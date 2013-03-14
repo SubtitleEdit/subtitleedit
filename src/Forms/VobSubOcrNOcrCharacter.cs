@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
         int _imageHeight;
         int _mx;
         int _my;
+        bool _warningNoNotForegroundLinesShown = false;
 
         public VobSubOcrNOcrCharacter()
         {
@@ -77,9 +78,11 @@ namespace Nikse.SubtitleEdit.Forms
             _vobSubForm = vobSubForm;
             _additions = additions;
             _nocrChar = new NOcrChar();
+            _nocrChar.MarginTop = character.Y;
             _imageWidth = character.Bitmap.Width;
             _imageHeight = character.Bitmap.Height;
             _drawLineOn = false;
+            _warningNoNotForegroundLinesShown = false;
 
             buttonShrinkSelection.Visible = showShrink;
 
@@ -161,9 +164,10 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show("No foreground lines!");
                 return;
             }
-            if (listBoxlinesBackground.Items.Count == 0)
+            if (listBoxlinesBackground.Items.Count == 0 && !_warningNoNotForegroundLinesShown)
             {
                 MessageBox.Show("No not-foreground lines!");
+                _warningNoNotForegroundLinesShown = true;
                 return;
             }
             if (textBoxCharacters.Text.Length == 0)
@@ -331,6 +335,15 @@ namespace Nikse.SubtitleEdit.Forms
                 _nocrChar.LinesForeground.Remove(op);
             }
             ShowOcrPoints();
+        }
+
+        private void textBoxCharacters_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                buttonOK_Click(null, null);
+            }
         }
 
     }

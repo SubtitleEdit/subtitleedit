@@ -2052,6 +2052,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textWriter.WriteAttributeString("Text", oc.Text);
                     textWriter.WriteAttributeString("Width", oc.Width.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteAttributeString("Height", oc.Height.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteAttributeString("MarginTop", oc.MarginTop.ToString(CultureInfo.InvariantCulture));
                     foreach (NOcrPoint op in oc.LinesForeground)
                     {
                         textWriter.WriteStartElement("Point", "");
@@ -2095,6 +2096,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var oc = new NOcrChar(node.Attributes["Text"].Value);
                         oc.Width = Convert.ToInt32(node.Attributes["Width"].Value, CultureInfo.InvariantCulture);
                         oc.Height = Convert.ToInt32(node.Attributes["Height"].Value, CultureInfo.InvariantCulture);
+                        oc.MarginTop = Convert.ToInt32(node.Attributes["MarginTop"].Value, CultureInfo.InvariantCulture);
                         foreach (XmlNode pointNode in node.SelectNodes("Point"))
                         {
                             var op = new NOcrPoint(DecodePoint(pointNode.Attributes["Start"].Value), DecodePoint(pointNode.Attributes["End"].Value));
