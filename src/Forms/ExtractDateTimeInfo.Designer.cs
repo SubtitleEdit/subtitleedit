@@ -219,8 +219,11 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ExtractDateTimeInfo";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Extract date and time information";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExtractDateTimeInfo_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.Globalization;
-using System.IO;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -39,7 +35,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 var sb = new StringBuilder();
-                foreach (string s in format.Replace("<br />", "@").Replace("<br/>", "@").Replace("<br>", "@").Split('@'))
+                foreach (string s in format.Replace("<br />", "@").Replace("<BR />", "@").Replace("<br/>", "@").Replace("<BR/>", "@").Replace("<br>", "@").Replace("<BR>", "@").Split('@'))
                 {
                     sb.AppendLine(dateTime.ToString(s));
                 }
@@ -128,5 +124,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             textBoxExample.Text = FormatDateTime(DateTime.Now);
         }
+
+        private void ExtractDateTimeInfo_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                DialogResult = DialogResult.Cancel;
+            }
+        }
+
     }
 }
