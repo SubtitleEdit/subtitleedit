@@ -433,7 +433,7 @@ namespace Nikse.SubtitleEdit.Forms
             g.FillPath(new SolidBrush(c), path);
             g.Dispose();
             var nbmp = new NikseBitmap(bmp);
-            nbmp.CropTransparentSidesAndBottom(2);
+            nbmp.CropTransparentSidesAndBottom(2, true);
             return nbmp.GetBitmap();
         }
 

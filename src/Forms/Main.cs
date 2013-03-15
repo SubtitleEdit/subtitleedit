@@ -235,8 +235,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Main()
         {
- //           try
-//            {
+            try
+            {
                 InitializeComponent();
 
                 textBoxListViewTextAlternate.Visible = false;
@@ -326,17 +326,60 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string fileName = string.Empty;
                 string[] args = Environment.GetCommandLineArgs();
+                int srcLineNumber = -1;
                 if (args.Length >= 2 && args[1].ToLower() == "/convert")
                 {
                     BatchConvert(args);
                     return;
                 }
                 else if (args.Length >= 2)
+                {
                     fileName = args[1];
+                    if (args.Length > 2 && args[2].ToLower().StartsWith("/srcline:"))
+                    {
+                        string srcLine = args[2].Remove(0, 9);
+                        if (!int.TryParse(srcLine, out srcLineNumber))
+                            srcLineNumber = -1;
+                    }
+                }
 
                 if (fileName.Length > 0 && File.Exists(fileName))
                 {
                     OpenSubtitle(fileName, null);
+                    if (srcLineNumber >= 0 && GetCurrentSubtitleFormat().GetType() == typeof(SubRip) && srcLineNumber < textBoxSource.Lines.Length)
+                    {
+                        int pos = 0;
+                        for (int i = 0; i < srcLineNumber; i++)
+                        {
+                            pos += textBoxSource.Lines[i].Length;
+                        }
+                        if (pos + 35 < textBoxSource.TextLength)
+                            pos += 35;
+                        string s = textBoxSource.Text.Substring(0, pos);
+                        int lastTimeCode = s.LastIndexOf(" --> "); // 00:02:26,407 --> 00:02:31,356
+                        if (lastTimeCode > 14 && lastTimeCode + 16 >= s.Length)
+                        {
+                            s = s.Substring(0, lastTimeCode - 5);
+                            lastTimeCode = s.LastIndexOf(" --> ");
+                        }
+
+                        if (lastTimeCode > 14 && lastTimeCode + 16 < s.Length)
+                        {
+                            string tc = s.Substring(lastTimeCode - 13, 30).Trim();
+                            int index = 0;
+                            foreach (Paragraph p in _subtitle.Paragraphs)
+                            {
+                                if (tc == p.StartTime.ToString() + " --> " + p.EndTime.ToString())
+                                {
+                                    SubtitleListview1.SelectNone();
+                                    SubtitleListview1.Items[0].Selected = false;
+                                    SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                                    break;
+                                }
+                                index++;
+                            }
+                        }
+                    }                
                 }
                 else if (Configuration.Settings.General.StartLoadLastFile)
                 {
@@ -413,12 +456,12 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripComboBoxWaveForm.SelectedIndexChanged += toolStripComboBoxWaveForm_SelectedIndexChanged;
 
                 FixLargeFonts();
-            //}
-            //catch (Exception exception)
-            //{
-            //    Cursor = Cursors.Default;
-            //    MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
-            //}
+            }
+            catch (Exception exception)
+            {
+                Cursor = Cursors.Default;
+                MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
+            }
         }
 
         void TimerClearStatus_Tick(object sender, EventArgs e)

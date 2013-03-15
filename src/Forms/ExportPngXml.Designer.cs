@@ -28,15 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.buttonExport = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
-            this.checkBoxSideBySide3D = new System.Windows.Forms.CheckBox();
+            this.labelDepth = new System.Windows.Forms.Label();
+            this.label3D = new System.Windows.Forms.Label();
+            this.comboBox3D = new System.Windows.Forms.ComboBox();
+            this.numericUpDownDepth3D = new System.Windows.Forms.NumericUpDown();
             this.buttonCustomResolution = new System.Windows.Forms.Button();
-            this.checkBoxSkipEmptyFrameAtStart = new System.Windows.Forms.CheckBox();
             this.comboBoxBottomMargin = new System.Windows.Forms.ComboBox();
             this.labelBottomMargin = new System.Windows.Forms.Label();
             this.labelFrameRate = new System.Windows.Forms.Label();
@@ -61,12 +64,15 @@
             this.buttonBorderColor = new System.Windows.Forms.Button();
             this.panelColor = new System.Windows.Forms.Panel();
             this.buttonColor = new System.Windows.Forms.Button();
+            this.checkBoxSkipEmptyFrameAtStart = new System.Windows.Forms.CheckBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxExportImage = new System.Windows.Forms.GroupBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.timerPreview = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxImageSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).BeginInit();
             this.groupBoxExportImage.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -116,9 +122,11 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxImageSettings.Controls.Add(this.checkBoxSideBySide3D);
+            this.groupBoxImageSettings.Controls.Add(this.labelDepth);
+            this.groupBoxImageSettings.Controls.Add(this.label3D);
+            this.groupBoxImageSettings.Controls.Add(this.comboBox3D);
+            this.groupBoxImageSettings.Controls.Add(this.numericUpDownDepth3D);
             this.groupBoxImageSettings.Controls.Add(this.buttonCustomResolution);
-            this.groupBoxImageSettings.Controls.Add(this.checkBoxSkipEmptyFrameAtStart);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxBottomMargin);
             this.groupBoxImageSettings.Controls.Add(this.labelBottomMargin);
             this.groupBoxImageSettings.Controls.Add(this.labelFrameRate);
@@ -143,6 +151,7 @@
             this.groupBoxImageSettings.Controls.Add(this.buttonBorderColor);
             this.groupBoxImageSettings.Controls.Add(this.panelColor);
             this.groupBoxImageSettings.Controls.Add(this.buttonColor);
+            this.groupBoxImageSettings.Controls.Add(this.checkBoxSkipEmptyFrameAtStart);
             this.groupBoxImageSettings.Location = new System.Drawing.Point(12, 218);
             this.groupBoxImageSettings.Name = "groupBoxImageSettings";
             this.groupBoxImageSettings.Size = new System.Drawing.Size(712, 161);
@@ -150,16 +159,46 @@
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
             // 
-            // checkBoxSideBySide3D
+            // labelDepth
             // 
-            this.checkBoxSideBySide3D.AutoSize = true;
-            this.checkBoxSideBySide3D.Location = new System.Drawing.Point(276, 108);
-            this.checkBoxSideBySide3D.Name = "checkBoxSideBySide3D";
-            this.checkBoxSideBySide3D.Size = new System.Drawing.Size(100, 17);
-            this.checkBoxSideBySide3D.TabIndex = 9;
-            this.checkBoxSideBySide3D.Text = "Side by side 3D";
-            this.checkBoxSideBySide3D.UseVisualStyleBackColor = true;
-            this.checkBoxSideBySide3D.CheckedChanged += new System.EventHandler(this.checkBoxSideBySide3D_CheckedChanged);
+            this.labelDepth.AutoSize = true;
+            this.labelDepth.Location = new System.Drawing.Point(304, 137);
+            this.labelDepth.Name = "labelDepth";
+            this.labelDepth.Size = new System.Drawing.Size(36, 13);
+            this.labelDepth.TabIndex = 37;
+            this.labelDepth.Text = "Depth";
+            // 
+            // label3D
+            // 
+            this.label3D.AutoSize = true;
+            this.label3D.Location = new System.Drawing.Point(273, 113);
+            this.label3D.Name = "label3D";
+            this.label3D.Size = new System.Drawing.Size(21, 13);
+            this.label3D.TabIndex = 40;
+            this.label3D.Text = "3D";
+            // 
+            // comboBox3D
+            // 
+            this.comboBox3D.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox3D.FormattingEnabled = true;
+            this.comboBox3D.Location = new System.Drawing.Point(298, 110);
+            this.comboBox3D.Name = "comboBox3D";
+            this.comboBox3D.Size = new System.Drawing.Size(121, 21);
+            this.comboBox3D.TabIndex = 39;
+            this.comboBox3D.SelectedIndexChanged += new System.EventHandler(this.comboBox3D_SelectedIndexChanged);
+            // 
+            // numericUpDownDepth3D
+            // 
+            this.numericUpDownDepth3D.Location = new System.Drawing.Point(342, 135);
+            this.numericUpDownDepth3D.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownDepth3D.Name = "numericUpDownDepth3D";
+            this.numericUpDownDepth3D.Size = new System.Drawing.Size(47, 20);
+            this.numericUpDownDepth3D.TabIndex = 38;
+            this.numericUpDownDepth3D.ValueChanged += new System.EventHandler(this.numericUpDownDepth3D_ValueChanged);
             // 
             // buttonCustomResolution
             // 
@@ -171,18 +210,6 @@
             this.buttonCustomResolution.Text = "...";
             this.buttonCustomResolution.UseVisualStyleBackColor = true;
             this.buttonCustomResolution.Click += new System.EventHandler(this.buttonCustomResolution_Click);
-            // 
-            // checkBoxSkipEmptyFrameAtStart
-            // 
-            this.checkBoxSkipEmptyFrameAtStart.AutoSize = true;
-            this.checkBoxSkipEmptyFrameAtStart.Checked = true;
-            this.checkBoxSkipEmptyFrameAtStart.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxSkipEmptyFrameAtStart.Location = new System.Drawing.Point(276, 135);
-            this.checkBoxSkipEmptyFrameAtStart.Name = "checkBoxSkipEmptyFrameAtStart";
-            this.checkBoxSkipEmptyFrameAtStart.Size = new System.Drawing.Size(147, 17);
-            this.checkBoxSkipEmptyFrameAtStart.TabIndex = 10;
-            this.checkBoxSkipEmptyFrameAtStart.Text = "Skip empty frames at start";
-            this.checkBoxSkipEmptyFrameAtStart.UseVisualStyleBackColor = true;
             // 
             // comboBoxBottomMargin
             // 
@@ -279,7 +306,7 @@
             // checkBoxBold
             // 
             this.checkBoxBold.AutoSize = true;
-            this.checkBoxBold.Location = new System.Drawing.Point(276, 53);
+            this.checkBoxBold.Location = new System.Drawing.Point(276, 50);
             this.checkBoxBold.Name = "checkBoxBold";
             this.checkBoxBold.Size = new System.Drawing.Size(47, 17);
             this.checkBoxBold.TabIndex = 7;
@@ -344,7 +371,7 @@
             this.checkBoxAntiAlias.AutoSize = true;
             this.checkBoxAntiAlias.Checked = true;
             this.checkBoxAntiAlias.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxAntiAlias.Location = new System.Drawing.Point(276, 76);
+            this.checkBoxAntiAlias.Location = new System.Drawing.Point(276, 71);
             this.checkBoxAntiAlias.Name = "checkBoxAntiAlias";
             this.checkBoxAntiAlias.Size = new System.Drawing.Size(66, 17);
             this.checkBoxAntiAlias.TabIndex = 8;
@@ -557,6 +584,18 @@
             this.buttonColor.UseVisualStyleBackColor = true;
             this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
             // 
+            // checkBoxSkipEmptyFrameAtStart
+            // 
+            this.checkBoxSkipEmptyFrameAtStart.AutoSize = true;
+            this.checkBoxSkipEmptyFrameAtStart.Checked = true;
+            this.checkBoxSkipEmptyFrameAtStart.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxSkipEmptyFrameAtStart.Location = new System.Drawing.Point(276, 92);
+            this.checkBoxSkipEmptyFrameAtStart.Name = "checkBoxSkipEmptyFrameAtStart";
+            this.checkBoxSkipEmptyFrameAtStart.Size = new System.Drawing.Size(147, 17);
+            this.checkBoxSkipEmptyFrameAtStart.TabIndex = 10;
+            this.checkBoxSkipEmptyFrameAtStart.Text = "Skip empty frames at start";
+            this.checkBoxSkipEmptyFrameAtStart.UseVisualStyleBackColor = true;
+            // 
             // groupBoxExportImage
             // 
             this.groupBoxExportImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -588,6 +627,11 @@
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             // 
+            // timerPreview
+            // 
+            this.timerPreview.Interval = 500;
+            this.timerPreview.Tick += new System.EventHandler(this.timerPreview_Tick);
+            // 
             // ExportPngXml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -614,6 +658,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBoxImageSettings.ResumeLayout(false);
             this.groupBoxImageSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).EndInit();
             this.groupBoxExportImage.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -657,6 +702,10 @@
         private System.Windows.Forms.CheckBox checkBoxSkipEmptyFrameAtStart;
         private System.Windows.Forms.Button buttonCustomResolution;
         private System.Windows.Forms.GroupBox groupBoxExportImage;
-        private System.Windows.Forms.CheckBox checkBoxSideBySide3D;
+        private System.Windows.Forms.NumericUpDown numericUpDownDepth3D;
+        private System.Windows.Forms.Label labelDepth;
+        private System.Windows.Forms.Label label3D;
+        private System.Windows.Forms.ComboBox comboBox3D;
+        private System.Windows.Forms.Timer timerPreview;
     }
 }
