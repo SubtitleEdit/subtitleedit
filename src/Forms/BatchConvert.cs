@@ -57,11 +57,14 @@ namespace Nikse.SubtitleEdit.Forms
         int _errors = 0;
         IList<SubtitleFormat> _allFormats = SubtitleFormat.AllSubtitleFormats;
         bool _abort = false;
+        Main _main;
+        ListViewItem _matroskaListViewItem;
 
-        public BatchConvert(Icon icon)
+        public BatchConvert(Icon icon, Main main)
         {
             InitializeComponent();
             this.Icon = (Icon)icon.Clone();
+            _main = main;
 
             progressBar1.Visible = false;
             labelStatus.Text = string.Empty;
@@ -323,11 +326,60 @@ namespace Nikse.SubtitleEdit.Forms
                 if (format == null)
                 {
                     if (Main.IsBluRaySupFile(fileName))
+                    {
                         item.SubItems.Add("Blu-ray");
+                    }
                     else if (Main.HasVobSubHeader(fileName))
+                    {
                         item.SubItems.Add("VobSub");
+                    }
+                    else if (Path.GetExtension(fileName).ToLower() == ".mkv" || Path.GetExtension(fileName).ToLower() == ".mks")
+                    {
+                        Matroska mkv = new Matroska();
+                        bool isValid = false;
+                        bool hasConstantFrameRate = false;
+                        double frameRate = 0;
+                        int width = 0;
+                        int height = 0;
+                        double milliseconds = 0;
+                        string videoCodec = string.Empty;
+                        mkv.GetMatroskaInfo(fileName, ref isValid, ref hasConstantFrameRate, ref frameRate, ref width, ref height, ref milliseconds, ref videoCodec);
+                        int mkvCount = 0;
+                        if (isValid)
+                        {
+                            var subtitleList = mkv.GetMatroskaSubtitleTracks(fileName, out isValid);
+                            if (subtitleList.Count > 0)
+                            {
+                                foreach (MatroskaSubtitleInfo x in subtitleList)
+                                {
+                                    if (x.CodecId.ToUpper() == "S_VOBSUB")
+                                    {
+                                        //TODO: convert from VobSub image based format!
+                                    }
+                                    else if (x.CodecId.ToUpper() == "S_HDMV/PGS")
+                                    {
+                                        //TODO: convert from Blu-ray image based format!
+                                    }
+                                    else if (x.CodecId.ToUpper() == "S_TEXT/UTF8" || x.CodecId.ToUpper() == "S_TEXT/SSA" || x.CodecId.ToUpper() == "S_TEXT/ASS")
+                                    {
+                                        mkvCount++;
+                                    }
+                                }
+                            }
+                        }
+                        if (mkvCount > 0)
+                        {
+                            item.SubItems.Add("Matroska - " + mkvCount);
+                        }
+                        else
+                        {
+                            item.SubItems.Add(Configuration.Settings.Language.UnknownSubtitle.Title);
+                        }
+                    }
                     else
+                    {
                         item.SubItems.Add(Configuration.Settings.Language.UnknownSubtitle.Title);
+                    }
                 }
                 else
                 {
@@ -571,6 +623,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> bluRaySubtitles = new List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData>();
                     bool isVobSub = false;
+                    bool isMatroska = false;
                     if (format == null && fileName.ToLower().EndsWith(".sup") && Main.IsBluRaySupFile(fileName))
                     {
                         var log = new StringBuilder();
@@ -580,10 +633,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         isVobSub = true;
                     }
+                    else if (format == null && fileName.ToLower().EndsWith(".mkv") && item.SubItems[2].Text.StartsWith("Matroska"))
+                    {
+                        isMatroska = true;
+                    }
 
-
-
-                    if (format == null && bluRaySubtitles.Count == 0 && !isVobSub)
+                    if (format == null && bluRaySubtitles.Count == 0 && !isVobSub && !isMatroska)
                     {
                         if (progressBar1.Value < progressBar1.Maximum)
                             progressBar1.Value++;
@@ -591,7 +646,75 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        if (bluRaySubtitles.Count > 0)
+                        if (isMatroska)
+                        {
+                            if (Path.GetExtension(fileName).ToLower() == ".mkv" || Path.GetExtension(fileName).ToLower() == ".mks")
+                            {
+                                Matroska mkv = new Matroska();
+                                bool isValid = false;
+                                bool hasConstantFrameRate = false;
+                                double frameRate = 0;
+                                int width = 0;
+                                int height = 0;
+                                double milliseconds = 0;
+                                string videoCodec = string.Empty;
+                                mkv.GetMatroskaInfo(fileName, ref isValid, ref hasConstantFrameRate, ref frameRate, ref width, ref height, ref milliseconds, ref videoCodec);
+                                if (isValid)
+                                {
+                                    var subtitleList = mkv.GetMatroskaSubtitleTracks(fileName, out isValid);
+                                    if (subtitleList.Count > 0)
+                                    {
+                                        foreach (MatroskaSubtitleInfo x in subtitleList)
+                                        {
+                                            if (x.CodecId.ToUpper() == "S_VOBSUB")
+                                            {
+                                                //TODO: convert from VobSub image based format
+                                            }
+                                            else if (x.CodecId.ToUpper() == "S_HDMV/PGS")
+                                            {
+                                                //TODO: convert from Blu-ray image based format
+                                            }
+                                            else if (x.CodecId.ToUpper() == "S_TEXT/UTF8" || x.CodecId.ToUpper() == "S_TEXT/SSA" || x.CodecId.ToUpper() == "S_TEXT/ASS")
+                                            {
+                                                _matroskaListViewItem = item;
+                                                List<SubtitleSequence> mkvSub = mkv.GetMatroskaSubtitle(fileName, (int)x.TrackNumber, out isValid, MatroskaProgress);
+
+                                                bool isSsa = false;
+                                                if (x.CodecPrivate.ToLower().Contains("[script info]"))
+                                                {
+                                                    if (x.CodecPrivate.ToLower().Contains("[V4 Styles]".ToLower()))
+                                                        format = new SubStationAlpha();
+                                                    else
+                                                        format = new AdvancedSubStationAlpha();
+                                                    isSsa = true;
+                                                }
+                                                else
+                                                {
+                                                    format = new SubRip();
+                                                }
+
+                                                if (isSsa)
+                                                {
+                                                    foreach (Paragraph p in Main.LoadMatroskaSSa(x, fileName, format, mkvSub).Paragraphs)
+                                                    {
+                                                        sub.Paragraphs.Add(p);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    foreach (SubtitleSequence p in mkvSub)
+                                                    {
+                                                        sub.Paragraphs.Add(new Paragraph(p.Text, p.StartMilliseconds, p.EndMilliseconds));
+                                                    }
+                                                }
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (bluRaySubtitles.Count > 0)
                         {
                             item.SubItems[3].Text = "OCR...";
                             var vobSubOcr = new VobSubOcr();
@@ -698,6 +821,13 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxConvertOptions.Enabled = true;
             buttonInputBrowse.Enabled = true;
             buttonSearchFolder.Enabled = true;
+        }
+
+        private void MatroskaProgress(long position, long total)
+        {
+            _matroskaListViewItem.SubItems[3].Text = string.Format("{0:0}%", position * 100 / total);
+            if (DateTime.Now.Ticks % 10 == 0)
+                Application.DoEvents();
         }
 
         void DoThreadWork(object sender, DoWorkEventArgs e)
