@@ -364,7 +364,10 @@
             public string BorderWidth { get; set; }
             public string ImageFormat { get; set; }
             public string AntiAlias { get; set; }
+            public string Text3D { get; set; }
             public string SideBySide3D { get; set; }
+            public string HalfTopBottom3D { get; set; }
+            public string Depth { get; set; }
             public string ExportAllLines { get; set; }
             public string XImagesSavedInY { get; set; }
             public string VideoResolution { get; set; }
@@ -377,6 +380,7 @@
             public string SaveVobSubAs { get; set; }
             public string SaveFabImageScriptAs { get; set; }
             public string SaveDvdStudioProStlAs { get; set; }
+            public string SomeLinesWereTooLongX { get; set; }
         }
 
         public class ExportText

@@ -457,7 +457,10 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Export BDN XML/PNG",
                 ImageSettings = "Image settings",
                 AntiAlias = "Anti alias",
-                SideBySide3D = "Side-by-side 3D",
+                Text3D = "3D",
+                SideBySide3D = "Half-side-by-side",
+                HalfTopBottom3D = "Half-Top/Bottom",
+                Depth = "Depth",
                 BorderColor = "Border color",
                 BorderWidth = "Border width",
                 ImageFormat = "Image format",
@@ -476,6 +479,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SaveVobSubAs = "Choose VobSub file name",
                 SaveFabImageScriptAs = "Choose Blu-ray sup file name",
                 SaveDvdStudioProStlAs = "Choose DVD Studio Pro STL file name",
+                SomeLinesWereTooLongX = "Some lines were too long:\r\n{0}",
             };
 
             ExportText = new LanguageStructure.ExportText

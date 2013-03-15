@@ -36,12 +36,14 @@ namespace Nikse.SubtitleEdit.Forms
             public byte[] Buffer { get; set; }
             public int ScreenWidth { get; set; }
             public int ScreenHeight { get; set; }
-            public bool SideBySide3D { get; set; }
+            public int Type3D { get; set; }
+            public int Depth3D { get; set; }
             public double FramesPerSeconds { get; set; }
             public int BottomMargin { get; set; }
             public bool Saved { get; set; }
             public ContentAlignment Alignment { get; set; }
             public Color BackgroundColor { get; set; }
+            public string Error { get; set; }
 
             public MakeBitmapParameter()
             {
@@ -234,7 +236,8 @@ namespace Nikse.SubtitleEdit.Forms
                                     BottomMargin =  comboBoxBottomMargin.SelectedIndex,
                                     Saved = false,
                                     Alignment = ContentAlignment.BottomCenter,
-                                    SideBySide3D = checkBoxSideBySide3D.Checked,
+                                    Type3D = comboBox3D.SelectedIndex,
+                                    Depth3D = (int)numericUpDownDepth3D.Value,
                                     BackgroundColor = Color.Transparent,
                                 };
             if (index < _subtitle.Paragraphs.Count)
@@ -277,6 +280,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonExportClick(object sender, EventArgs e)
         {
+            List<string> errors = new List<string>();
             buttonExport.Enabled = false;
             SetupImageParameters();
 
@@ -361,7 +365,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-
                     var threadEqual = new Thread(DoWork);
                     var paramEqual = MakeMakeBitmapParameter(0, width, height);
 
@@ -381,6 +384,10 @@ namespace Nikse.SubtitleEdit.Forms
                             if (threadUnEqual.ThreadState == ThreadState.Running)
                                 threadUnEqual.Join(3000);
                             imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramUnEqual, i);
+                            if (!string.IsNullOrEmpty(paramUnEqual.Error))
+                            {
+                                errors.Add(paramUnEqual.Error);
+                            }
                         }
                         else
                         {
@@ -391,6 +398,10 @@ namespace Nikse.SubtitleEdit.Forms
                             if (threadEqual.ThreadState == ThreadState.Running)
                                 threadEqual.Join(3000);
                             imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
+                            if (!string.IsNullOrEmpty(paramEqual.Error))
+                            {
+                                errors.Add(paramEqual.Error);
+                            }
                         }
                         progressBar1.Refresh();
                         Application.DoEvents();
@@ -417,6 +428,20 @@ namespace Nikse.SubtitleEdit.Forms
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter,
                                                           binarySubtitleFile, paramEqual, i);
                     }
+                }
+
+                if (errors.Count > 0)
+                {
+                    var errorSB = new StringBuilder();
+                    for (int i = 0; i < 20; i++)
+                    {
+                        if (i < errors.Count)
+                            errorSB.AppendLine(errors[i]);
+                    }
+                    if (errors.Count > 20)
+                        errorSB.AppendLine("...");
+                    if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.SomeLinesWereTooLongX)) //TODO: Fix in 3.4
+                        MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.SomeLinesWereTooLongX, errorSB.ToString()));
                 }
 
                 progressBar1.Visible = false;
@@ -867,8 +892,11 @@ namespace Nikse.SubtitleEdit.Forms
             return Color.FromArgb(150, borderColor.R, borderColor.G, borderColor.B);
         }
 
-        private Bitmap GenerateImageFromTextWithStyle(Paragraph p)
+        private Bitmap GenerateImageFromTextWithStyle(Paragraph p, out MakeBitmapParameter mbp)
         {
+            mbp = new MakeBitmapParameter();
+            mbp.P = p;
+
             if (_vobSubOcr != null)
             {
                 var index = _subtitle.GetIndex(p);
@@ -876,7 +904,6 @@ namespace Nikse.SubtitleEdit.Forms
                     return _vobSubOcr.GetSubtitleBitmap(index);
             }
 
-            var mbp = new MakeBitmapParameter();
             mbp.AlignLeft = comboBoxHAlign.SelectedIndex == 0;
             mbp.AlignRight = comboBoxHAlign.SelectedIndex == 2;
             mbp.AntiAlias = checkBoxAntiAlias.Checked;
@@ -886,8 +913,6 @@ namespace Nikse.SubtitleEdit.Forms
             mbp.SubtitleColor = _subtitleColor;
             mbp.SubtitleFontSize = _subtitleFontSize;
             mbp.SubtitleFontBold = _subtitleFontBold;
-            mbp.P = p;
-
 
             if (_format.HasStyleSupport && !string.IsNullOrEmpty(p.Extra))
             {
@@ -922,9 +947,11 @@ namespace Nikse.SubtitleEdit.Forms
             GetResolution(ref width, ref height);
             mbp.ScreenWidth = width;
             mbp.ScreenHeight = height;
-            mbp.SideBySide3D = checkBoxSideBySide3D.Checked;
+            mbp.Type3D = comboBox3D.SelectedIndex;
+            mbp.Depth3D = (int)numericUpDownDepth3D.Value;
+            mbp.BottomMargin = comboBoxBottomMargin.SelectedIndex;
 
-            var bmp = GenerateImageFromTextWithStyle(mbp);
+            var bmp = GenerateImageFromTextWithStyle(mbp);          
             if (_exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
             {
                 var nbmp = new NikseBitmap(bmp);
@@ -1212,34 +1239,94 @@ namespace Nikse.SubtitleEdit.Forms
             var nbmp = new NikseBitmap(bmp);
             if (parameter.BackgroundColor == Color.Transparent)
             {
-                nbmp.CropTransparentSidesAndBottom(2);
+                nbmp.CropTransparentSidesAndBottom(2, true);
             }
             else
             {
-                nbmp.CropSidesAndBottom(4, parameter.BackgroundColor);
+                nbmp.CropSidesAndBottom(4, parameter.BackgroundColor, true);
                 nbmp.CropTop(4, parameter.BackgroundColor);
             }
 
-            if (parameter.SideBySide3D)
+            if (nbmp.Width > parameter.ScreenWidth)
+            {
+                parameter.Error = "#" + parameter.P.Number.ToString() + ": " + nbmp.Width.ToString() + " > " + parameter.ScreenWidth.ToString();
+            }
+
+            if (parameter.Type3D == 1) // Half-side-by-side 3D
             {
                 Bitmap singleBmp = nbmp.GetBitmap();
-                Bitmap sideBySideBmp = new Bitmap(parameter.ScreenWidth, singleBmp.Height);
+                Bitmap singleHalfBmp = ScaleToHalfWidth(singleBmp);
+                singleBmp.Dispose();
+                Bitmap sideBySideBmp = new Bitmap(parameter.ScreenWidth, singleHalfBmp.Height);
                 int singleWidth = parameter.ScreenWidth / 2;
-                int singleLeftMargin = (singleWidth - singleBmp.Width) / 2;
+                int singleLeftMargin = (singleWidth - singleHalfBmp.Width) / 2;
 
-                using(Graphics gSideBySide = Graphics.FromImage(sideBySideBmp))
+                using (Graphics gSideBySide = Graphics.FromImage(sideBySideBmp))
                 {
-                    gSideBySide.DrawImage(singleBmp, singleLeftMargin, 0);
-                    gSideBySide.DrawImage(singleBmp, singleWidth + singleLeftMargin, 0);
+                    gSideBySide.DrawImage(singleHalfBmp, singleLeftMargin + parameter.Depth3D, 0);
+                    gSideBySide.DrawImage(singleHalfBmp, singleWidth + singleLeftMargin - parameter.Depth3D, 0);
                 }
                 nbmp = new NikseBitmap(sideBySideBmp);
                 if (parameter.BackgroundColor == Color.Transparent)
-                    nbmp.CropTransparentSidesAndBottom(2);
+                    nbmp.CropTransparentSidesAndBottom(2, true);
                 else
-                    nbmp.CropSidesAndBottom(4, parameter.BackgroundColor);
+                    nbmp.CropSidesAndBottom(4, parameter.BackgroundColor, true);
             }
+            else if (parameter.Type3D == 2) // Half-Top/Bottom 3D
+            {
+                Bitmap singleBmp = nbmp.GetBitmap();
+                Bitmap singleHalfBmp = ScaleToHalfHeight(singleBmp);
+                singleBmp.Dispose();
+                Bitmap topBottomBmp = new Bitmap(parameter.ScreenWidth, parameter.ScreenHeight - parameter.BottomMargin);
+                int singleHeight = parameter.ScreenHeight / 2;
+                int leftM = (parameter.ScreenWidth / 2) -  (singleHalfBmp.Width / 2);
 
+                using (Graphics gTopBottom = Graphics.FromImage(topBottomBmp))
+                {
+                    gTopBottom.DrawImage(singleHalfBmp, leftM + parameter.Depth3D, singleHeight - singleHalfBmp.Height - parameter.BottomMargin);
+                    gTopBottom.DrawImage(singleHalfBmp, leftM - parameter.Depth3D, parameter.ScreenHeight - parameter.BottomMargin - singleHalfBmp.Height);
+                }
+                nbmp = new NikseBitmap(topBottomBmp);
+                if (parameter.BackgroundColor == Color.Transparent)
+                {
+                    nbmp.CropTop(2, Color.Transparent);
+                    nbmp.CropTransparentSidesAndBottom(2, false);
+                }
+                else
+                {
+                    nbmp.CropTop(4, parameter.BackgroundColor);
+                    nbmp.CropSidesAndBottom(4, parameter.BackgroundColor, false);
+                }
+            }
             return nbmp.GetBitmap();
+        }
+
+        private static Bitmap ScaleToHalfWidth(Bitmap bmp)
+        {
+            int w = bmp.Width / 2;
+            Bitmap newImage = new Bitmap(w, bmp.Height);
+            using (Graphics gr = Graphics.FromImage(newImage))
+            {
+                gr.SmoothingMode = SmoothingMode.HighQuality;
+                gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                gr.DrawImage(bmp, new Rectangle(0, 0, w, bmp.Height));
+            }
+            return newImage;
+        }
+
+        private static Bitmap ScaleToHalfHeight(Bitmap bmp)
+        {
+            int h = bmp.Height / 2;
+            Bitmap newImage = new Bitmap(bmp.Width, h);
+            using (Graphics gr = Graphics.FromImage(newImage))
+            {
+                gr.SmoothingMode = SmoothingMode.HighQuality;
+                gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                gr.DrawImage(bmp, new Rectangle(0, 0, bmp.Width, h));
+            }
+            return newImage;
         }
 
         private static string RemoveSubStationAlphaFormatting(string s)
@@ -1314,7 +1401,24 @@ namespace Nikse.SubtitleEdit.Forms
             labelResolution.Text = Configuration.Settings.Language.ExportPngXml.VideoResolution;
             buttonColor.Text = Configuration.Settings.Language.ExportPngXml.FontColor;
             checkBoxAntiAlias.Text = Configuration.Settings.Language.ExportPngXml.AntiAlias;
-            checkBoxSideBySide3D.Text = Configuration.Settings.Language.ExportPngXml.SideBySide3D;
+
+            comboBox3D.Items.Clear();
+            comboBox3D.Items.Add(Configuration.Settings.Language.General.None);
+            comboBox3D.Items.Add(Configuration.Settings.Language.ExportPngXml.SideBySide3D);
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.HalfTopBottom3D)) //TODO: Remove in SE 3.4
+                comboBox3D.Items.Add(Configuration.Settings.Language.ExportPngXml.HalfTopBottom3D);
+            comboBox3D.SelectedIndex = 0;
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.Depth)) //TODO: Remove in SE 3.4
+                labelDepth.Text = Configuration.Settings.Language.ExportPngXml.Depth;
+
+            numericUpDownDepth3D.Left = labelDepth.Left + labelDepth.Width + 3;
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.Text3D)) //TODO: Remove in SE 3.4
+                label3D.Text = Configuration.Settings.Language.ExportPngXml.Text3D;
+
+            comboBox3D.Left = label3D.Left + label3D.Width + 3;
+
             checkBoxBold.Text = Configuration.Settings.Language.General.Bold;
             buttonBorderColor.Text = Configuration.Settings.Language.ExportPngXml.BorderColor;
             labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderWidth;
@@ -1456,7 +1560,8 @@ namespace Nikse.SubtitleEdit.Forms
             SetupImageParameters();
             if (subtitleListView1.SelectedItems.Count > 0)
             {
-                var bmp = GenerateImageFromTextWithStyle(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index]);
+                MakeBitmapParameter mbp;
+                var bmp = GenerateImageFromTextWithStyle(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index], out mbp);
                 pictureBox1.Image = bmp;
 
                 int w = groupBoxExportImage.Width - 4;
@@ -1490,6 +1595,15 @@ namespace Nikse.SubtitleEdit.Forms
                     pictureBox1.SizeMode = PictureBoxSizeMode.Normal;
                 }
                 groupBoxExportImage.Text = string.Format("{0}x{1}", bmp.Width, bmp.Height);
+                if (!string.IsNullOrEmpty(mbp.Error))
+                {
+                    groupBoxExportImage.BackColor = Color.Red;
+                    groupBoxExportImage.Text = groupBoxExportImage.Text + " - " + mbp.Error;
+                }
+                else
+                {
+                    groupBoxExportImage.BackColor = groupBoxImageSettings.BackColor;
+                }
             }
         }
 
@@ -1619,6 +1733,23 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.Tools.ExportBluRayFontName = _subtitleFontName;
                 Configuration.Settings.Tools.ExportBluRaybFontSize = (int)_subtitleFontSize;
             }
+        }
+
+        private void numericUpDownDepth3D_ValueChanged(object sender, EventArgs e)
+        {
+            if (!timerPreview.Enabled)
+                timerPreview.Start();
+        }
+
+        private void comboBox3D_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void timerPreview_Tick(object sender, EventArgs e)
+        {
+            timerPreview.Stop();
+            subtitleListView1_SelectedIndexChanged(null, null);
         }
 
     }

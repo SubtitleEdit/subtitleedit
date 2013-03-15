@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Logic
             return 0;
         }
 
-        public void CropTransparentSidesAndBottom(int maximumCropping)
+        public void CropTransparentSidesAndBottom(int maximumCropping, bool bottom)
         {
             int leftStart = 0;
             bool done = false;
@@ -457,23 +457,26 @@ namespace Nikse.SubtitleEdit.Logic
             //crop bottom
             done = false;
             int newHeight = Height;
-            y = Height - 1;
-            while (!done && y > 0)
+            if (bottom)
             {
-                x = 0;
-                while (!done && x < Width)
+                y = Height - 1;
+                while (!done && y > 0)
                 {
-                    Color c = GetPixel(x, y);
-                    if (c.A != 0)
+                    x = 0;
+                    while (!done && x < Width)
                     {
-                        done = true;
-                        newHeight = y + maximumCropping;
-                        if (newHeight > Height)
-                            newHeight = Height;
+                        Color c = GetPixel(x, y);
+                        if (c.A != 0)
+                        {
+                            done = true;
+                            newHeight = y + maximumCropping;
+                            if (newHeight > Height)
+                                newHeight = Height;
+                        }
+                        x++;
                     }
-                    x++;
+                    y--;
                 }
-                y--;
             }
 
             if (leftStart < 2 && rightEnd >= Width - 3)
@@ -496,7 +499,7 @@ namespace Nikse.SubtitleEdit.Logic
             _bitmapData = newBitmapData;
         }
 
-        public void CropSidesAndBottom(int maximumCropping, Color transparentColor)
+        public void CropSidesAndBottom(int maximumCropping, Color transparentColor, bool bottom)
         {
             int leftStart = 0;
             bool done = false;
@@ -546,23 +549,26 @@ namespace Nikse.SubtitleEdit.Logic
             //crop bottom
             done = false;
             int newHeight = Height;
-            y = Height - 1;
-            while (!done && y > 0)
+            if (bottom)
             {
-                x = 0;
-                while (!done && x < Width)
+                y = Height - 1;
+                while (!done && y > 0)
                 {
-                    Color c = GetPixel(x, y);
-                    if (c != transparentColor)
+                    x = 0;
+                    while (!done && x < Width)
                     {
-                        done = true;
-                        newHeight = y + maximumCropping;
-                        if (newHeight > Height)
-                            newHeight = Height;
+                        Color c = GetPixel(x, y);
+                        if (c != transparentColor)
+                        {
+                            done = true;
+                            newHeight = y + maximumCropping;
+                            if (newHeight > Height)
+                                newHeight = Height;
+                        }
+                        x++;
                     }
-                    x++;
+                    y--;
                 }
-                y--;
             }
 
             if (leftStart < 2 && rightEnd >= Width - 3)
@@ -597,7 +603,7 @@ namespace Nikse.SubtitleEdit.Logic
                 while (!done && x < Width)
                 {
                     Color c = GetPixel(x, y);
-                    if (c != transparentColor)
+                    if (c != transparentColor && !(c.A == 0 && transparentColor.A == 0))
                     {
                         done = true;
                         newTop = y - maximumCropping;

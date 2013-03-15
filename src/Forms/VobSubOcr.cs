@@ -1322,7 +1322,7 @@ namespace Nikse.SubtitleEdit.Forms
                 nbmp = new NikseBitmap(unItalicedBmp);
                 unItalicedBmp.Dispose();
                 nbmp.CropTop(5, Color.Transparent);
-                nbmp.CropTransparentSidesAndBottom(0);
+                nbmp.CropTransparentSidesAndBottom(0, true);
 
                 //NikseBitmap nbmp = new NikseBitmap(bmp);
                // nbmp = unItalicedBmp;
@@ -2142,7 +2142,7 @@ namespace Nikse.SubtitleEdit.Forms
                     nbmp = new NikseBitmap(item.Bitmap);
                     nbmp.ReplaceNonWhiteWithTransparent();
                     nbmp.CropTopTransparent(0);
-                    nbmp.CropTransparentSidesAndBottom(0);
+                    nbmp.CropTransparentSidesAndBottom(0, true);
                     nbmp.ReplaceTransparentWith(Color.Black);
                     item.Bitmap = nbmp.GetBitmap();
                 }
