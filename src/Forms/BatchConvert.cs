@@ -100,6 +100,14 @@ namespace Nikse.SubtitleEdit.Forms
             labelToFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.ToFrameRate;
             labelHoursMinSecsMilliSecs.Text = Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
 
+
+            comboBoxFrameRateFrom.Left = labelFromFrameRate.Left + labelFromFrameRate.Width + 3;
+            comboBoxFrameRateTo.Left = labelToFrameRate.Left + labelToFrameRate.Width + 3;
+            if (comboBoxFrameRateFrom.Left > comboBoxFrameRateTo.Left)
+                comboBoxFrameRateTo.Left = comboBoxFrameRateFrom.Left;
+            else
+                comboBoxFrameRateFrom.Left = comboBoxFrameRateTo.Left;
+
             comboBoxSubtitleFormats.Left = labelOutputFormat.Left + labelOutputFormat.Width + 3;
             comboBoxEncoding.Left = labelEncoding.Left + labelEncoding.Width + 3;
             if (comboBoxSubtitleFormats.Left > comboBoxEncoding.Left)
@@ -161,14 +169,20 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveFormatting.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormatting;
             checkBoxRemoveTextForHI.Checked = Configuration.Settings.Tools.BatchConvertRemoveTextForHI;
             checkBoxSetMinimumDisplayTimeBetweenSubs.Checked = Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles;
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.Settings))
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.Settings)) //TODO: remove in 3.4
                 buttonFixCommonErrorSettings.Text = Configuration.Settings.Language.BatchConvert.Settings;
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.Settings)) //TODO: remove in 3.4
+                buttonMultipleReplaceSettings.Text = Configuration.Settings.Language.BatchConvert.Settings;
             checkBoxFixCommonErrors.Text = Configuration.Settings.Language.FixCommonErrors.Title;
             checkBoxMultipleReplace.Text = Configuration.Settings.Language.MultipleReplace.Title;
             checkBoxAutoBalance.Text = Configuration.Settings.Language.BatchConvert.AutoBalance;
             radioButtonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
-            radioButtonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;            
-
+            radioButtonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.SetMinMsBetweenSubtitles)) //TODO: remove in 3.4
+                checkBoxSetMinimumDisplayTimeBetweenSubs.Text = Configuration.Settings.Language.BatchConvert.SetMinMsBetweenSubtitles;
+            else
+                checkBoxSetMinimumDisplayTimeBetweenSubs.Visible = false;
+            
             buttonSearchFolder.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.ScanningFolder); //TODO: Remove in 3.4
             if (string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.OverwriteOriginalFiles)) //TODO: Remove in 3.4
             {

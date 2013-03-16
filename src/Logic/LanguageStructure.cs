@@ -170,6 +170,7 @@
             public string ScanFolder { get; set; }
             public string ScanningFolder { get; set; }
             public string Recursive { get; set; }
+            public string SetMinMsBetweenSubtitles { get; set; }
         }
 
         public class Beamer
