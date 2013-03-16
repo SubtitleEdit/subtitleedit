@@ -894,6 +894,7 @@
                     public string ImportOcrFromDvd { get; set; }
                     public string ImportOcrVobSubSubtitle { get; set; }
                     public string ImportBluRaySupFile { get; set; }
+                    public string ImportXSub { get; set; }
                     public string ImportSubtitleFromMatroskaFile { get; set; }
                     public string ImportSubtitleWithManualChosenEncoding { get; set; }
                     public string ImportText { get; set; }
