@@ -1388,9 +1388,9 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemImportDvdSubtitles.Text = _language.Menu.File.ImportOcrFromDvd;
             toolStripMenuItemSubIdx.Text = _language.Menu.File.ImportOcrVobSubSubtitle;
             toolStripButtonGetFrameRate.ToolTipText = _language.GetFrameRateFromVideoFile;
-
             toolStripMenuItemImportBluRaySup.Text = _language.Menu.File.ImportBluRaySupFile;
-
+            if (!string.IsNullOrEmpty(_language.Menu.File.ImportXSub)) //TODO: Fix in 3.4
+                toolStripMenuItemImportXSub.Text = _language.Menu.File.ImportXSub;
             matroskaImportStripMenuItem.Text = _language.Menu.File.ImportSubtitleFromMatroskaFile;
             toolStripMenuItemManualAnsi.Text = _language.Menu.File.ImportSubtitleWithManualChosenEncoding;
             toolStripMenuItemImportText.Text = _language.Menu.File.ImportText;
@@ -12159,7 +12159,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             toolStripSeparator20.Visible = subtitleLoaded;
 
-            toolStripMenuItemImportXSub.Visible = !string.IsNullOrEmpty(_language.OpenXSubFiles) && !string.IsNullOrEmpty(_language.XSubFiles);
+            toolStripMenuItemImportXSub.Visible = !string.IsNullOrEmpty(_language.OpenXSubFiles) && !string.IsNullOrEmpty(_language.XSubFiles) && !string.IsNullOrEmpty(_language.Menu.File.ImportXSub); //TODO: remove in 3.4
 
         }
 

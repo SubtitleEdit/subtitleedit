@@ -997,6 +997,7 @@ namespace Nikse.SubtitleEdit.Logic
                         ImportOcrFromDvd = "Import/OCR subtitle from vob/ifo (dvd) ...",
                         ImportOcrVobSubSubtitle = "Import/OCR VobSub (sub/idx) subtitle...",
                         ImportBluRaySupFile = "Import/OCR Blu-ray sup file...",
+                        ImportXSub = "Import/OCR xsub from divx/avi...",
                         ImportSubtitleFromMatroskaFile = "Import subtitle from Matroska file...",
                         ImportSubtitleWithManualChosenEncoding = "Import subtitle with manual chosen encoding...",
                         ImportText = "Import plain text...",
