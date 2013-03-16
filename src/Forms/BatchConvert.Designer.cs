@@ -159,7 +159,7 @@
             this.buttonMultipleReplaceSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonMultipleReplaceSettings.Location = new System.Drawing.Point(149, 119);
             this.buttonMultipleReplaceSettings.Name = "buttonMultipleReplaceSettings";
-            this.buttonMultipleReplaceSettings.Size = new System.Drawing.Size(87, 21);
+            this.buttonMultipleReplaceSettings.Size = new System.Drawing.Size(94, 21);
             this.buttonMultipleReplaceSettings.TabIndex = 6;
             this.buttonMultipleReplaceSettings.Text = "Settings...";
             this.buttonMultipleReplaceSettings.UseVisualStyleBackColor = true;
@@ -190,7 +190,7 @@
             this.buttonFixCommonErrorSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonFixCommonErrorSettings.Location = new System.Drawing.Point(149, 93);
             this.buttonFixCommonErrorSettings.Name = "buttonFixCommonErrorSettings";
-            this.buttonFixCommonErrorSettings.Size = new System.Drawing.Size(87, 21);
+            this.buttonFixCommonErrorSettings.Size = new System.Drawing.Size(94, 21);
             this.buttonFixCommonErrorSettings.TabIndex = 4;
             this.buttonFixCommonErrorSettings.Text = "Settings...";
             this.buttonFixCommonErrorSettings.UseVisualStyleBackColor = true;
