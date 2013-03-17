@@ -407,6 +407,16 @@
             public string TimeCodeSeperator { get; set; }
         }
 
+        public class ExtractDateTimeInfo
+        {
+            public string Title { get; set; }
+            public string Description { get; set; }
+            public string StartFrom { get; set; }
+            public string DateTimeFormat { get; set; }
+            public string Example { get; set; }
+            public string GenerateSubtitle { get; set; }
+        }
+
         public class FindDialog
         {
             public string Title { get; set; }
@@ -963,6 +973,7 @@
                     public string WordsPerMinute { get; set; }
                     public string MakeNewEmptyTranslationFromCurrentSubtitle { get; set; }
                     public string BatchConvert { get; set; }
+                    public string GenerateTimeAsText { get; set; }                    
                     public string SplitSubtitle { get; set; }
                     public string AppendSubtitle { get; set; }
                     public string JoinSubtitles { get; set; }
@@ -1221,6 +1232,11 @@
             public string SubtractFromCurrentSelection { get; set; }
             public string IntersectWithCurrentSelection { get; set; }
             public string MatchingLinesX { get; set; }
+            public string Contains { get; set; }
+            public string StartsWith { get; set; }
+            public string EndsWith { get; set; }
+            public string NoContains { get; set; }
+            public string RegEx { get; set; }
         }
 
         public class MultipleReplace

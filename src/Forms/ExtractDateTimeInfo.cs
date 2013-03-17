@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownStartTime.TimeCode = new TimeCode(0, 0, 0, 0);
             timeUpDownDuration.TimeCode = new TimeCode(1, 0, 0, 0);
             comboBoxDateTimeFormats.Items.Clear();
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             foreach (string format in Configuration.Settings.Tools.GenerateTimeCodePatterns.Split(';'))
             {
                 _formats.Add(format);
@@ -28,6 +29,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (_formats.Count > 0)
                 comboBoxDateTimeFormats.SelectedIndex = 0;
+
+            var l = Configuration.Settings.Language.ExtractDateTimeInfo;
+            if (!string.IsNullOrEmpty(l.Title)) // Remove in SE 3.4
+            {
+                Text = l.Title;
+                labelDescription.Text = l.Description;
+                labelStartFrom.Text = l.StartFrom;
+                labelDuration.Text = Configuration.Settings.Language.General.Duration;
+                labelExample.Text = l.Example;
+                buttonOK.Text = l.GenerateSubtitle;
+                labelWriteFormat.Text = l.DateTimeFormat;
+            }
         }
 
         private string DecodeFormat(DateTime dateTime, string format)
@@ -35,7 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 var sb = new StringBuilder();
-                foreach (string s in format.Replace("<br />", "@").Replace("<BR />", "@").Replace("<br/>", "@").Replace("<BR/>", "@").Replace("<br>", "@").Replace("<BR>", "@").Split('@'))
+                foreach (string s in format.Replace("<br />", "|").Replace("<BR />", "|").Replace("<br/>", "|").Replace("<BR/>", "|").Replace("<br>", "|").Replace("<BR>", "|").Split('|'))
                 {
                     sb.AppendLine(dateTime.ToString(s));
                 }

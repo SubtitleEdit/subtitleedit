@@ -631,7 +631,7 @@ namespace Nikse.SubtitleEdit.Logic
             _bitmapData = newBitmapData;
         }
 
-        public void CropTopTransparent(int maximumCropping)
+        public int CropTopTransparent(int maximumCropping)
         {
             bool done = false;
             int newTop = 0;
@@ -656,7 +656,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             if (newTop == 0)
-                return;
+                return 0;
 
             int newHeight = Height - newTop;
             var newBitmapData = new byte[Width * newHeight * 4];
@@ -669,6 +669,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             Height = newHeight;
             _bitmapData = newBitmapData;
+            return newTop;
         }
 
         public void Fill(Color color)

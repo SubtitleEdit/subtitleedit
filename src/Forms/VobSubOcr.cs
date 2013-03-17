@@ -242,7 +242,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxOcrMethod.Items.Add(language.OcrViaTesseract);
             comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
             comboBoxOcrMethod.Items.Add(language.OcrViaModi);
-            comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
+            if (!string.IsNullOrEmpty(language.OcrViaNOCR) && Configuration.Settings.General.ShowBetaStuff)
+                comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
 
             checkBoxUseModiInTesseractForUnknownWords.Text = language.TryModiForUnknownWords;
             checkBoxTesseractItalicsOn.Checked = Configuration.Settings.VobSubOcr.UseItalicsInTesseract;
@@ -1170,21 +1171,59 @@ namespace Nikse.SubtitleEdit.Forms
             return new Point((int)Math.Round(p.X + (height - p.Y) * _unItalicFactor), p.Y);
         }
 
-        private string NOcrFindBestMatch(Bitmap bmp, out bool italic)
+        private string NOcrFindBestMatch(Bitmap bmp, int topMargin, out bool italic)
         {
             italic = false;
 
             var nbmp = new NikseBitmap(bmp);
-            //nbmp.EraseColorTop(3);
-            //nbmp.EraseColorBottom(3);
-            //nbmp.CropTop(3, Color.Transparent);
-            //nbmp.CropSidesAndBottom(3, Color.Transparent);
+            foreach (NOcrChar oc in _nocrChars)
+            {
+                if (Math.Abs(oc.Width - nbmp.Width) < 3 && Math.Abs(oc.Height - nbmp.Height) < 3 && Math.Abs(oc.MarginTop - topMargin) < 3)
+                {
+                    bool ok = true;
+                    foreach (NOcrPoint op in oc.LinesForeground)
+                    {
+                        foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
+                        {
+                            if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+                            {
+                                Color c = nbmp.GetPixel(point.X, point.Y);
+                                if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                {
+                                }
+                                else
+                                {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    foreach (NOcrPoint op in oc.LinesBackground)
+                    {
+                        foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
+                        {
+                            if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+                            {
+                                Color c = nbmp.GetPixel(point.X, point.Y);
+                                if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (ok)
+                        return oc.Text;
+                }
+            }
 
-            //var nbmp = bmp;
+
             double widthPercent = nbmp.Height * 100.0 / nbmp.Width;
             foreach (NOcrChar oc in _nocrChars)
             {
-                if (Math.Abs(oc.WidthPercent - widthPercent) < 30)
+                if (Math.Abs(oc.WidthPercent - widthPercent) < 10 && nbmp.Width > 25 && nbmp.Height > 20 && Math.Abs(oc.MarginTop - topMargin) < nbmp.Height / 5)
                 {
                     bool ok = true;
                     foreach (NOcrPoint op in oc.LinesForeground)
@@ -1225,60 +1264,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            foreach (NOcrChar oc in _nocrChars)
-            {
-                var w = Math.Abs(oc.WidthPercent - widthPercent);
-                if (w >= 30 && w < 80)
-                {
-                    bool ok = true;
-                    foreach (NOcrPoint op in oc.LinesForeground)
-                    {
-                        foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
-                        {
-                            if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
-                            {
-                                Color c = nbmp.GetPixel(point.X, point.Y);
-                                if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
-                                {
-                                }
-                                else
-                                {
-                                    ok = false;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    foreach (NOcrPoint op in oc.LinesBackground)
-                    {
-                        foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
-                        {
-                            if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
-                            {
-                                Color c = nbmp.GetPixel(point.X, point.Y);
-                                if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
-                                {
-                                    ok = false;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if (ok)
-                        return oc.Text;
-                }
-            }
-
-            if (checkBoxNOcrItalic.Checked)
+            if (!checkBoxNOcrCorrect.Checked)
             {
                 foreach (NOcrChar oc in _nocrChars)
                 {
-                    if (Math.Abs(oc.WidthPercent - widthPercent) < 99)
+                    if (Math.Abs(oc.WidthPercent - widthPercent) < 40 && nbmp.Width > 20 && nbmp.Height > 10 && Math.Abs(oc.MarginTop - topMargin) < 10)
                     {
                         bool ok = true;
                         foreach (NOcrPoint op in oc.LinesForeground)
                         {
-                            foreach (Point point in NOcrPoint.GetPoints(MakePointItalic(op.Start, bmp.Height), MakePointItalic(op.End, bmp.Height)))
+                            foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
                             {
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                                 {
@@ -1296,7 +1291,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         foreach (NOcrPoint op in oc.LinesBackground)
                         {
-                            foreach (Point point in NOcrPoint.GetPoints(MakePointItalic(op.Start, bmp.Height), MakePointItalic(op.End, bmp.Height)))
+                            foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
                             {
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                                 {
@@ -1310,38 +1305,23 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                         if (ok)
-                        {
-                            italic = true;
                             return oc.Text;
-                        }
                     }
                 }
-
-
-                var unItalicedBmp = UnItalic(bmp, _unItalicFactor);
-                nbmp = new NikseBitmap(unItalicedBmp);
-                unItalicedBmp.Dispose();
-                nbmp.CropTop(5, Color.Transparent);
-                nbmp.CropTransparentSidesAndBottom(0, true);
-
-                //NikseBitmap nbmp = new NikseBitmap(bmp);
-               // nbmp = unItalicedBmp;
-            //TODO:SOme cropping!!!!
-
-
+            
                 foreach (NOcrChar oc in _nocrChars)
                 {
-                    if (Math.Abs(oc.WidthPercent - widthPercent) < 99)
+                    if (Math.Abs(oc.WidthPercent - widthPercent) < 40 && nbmp.Width > 20 && nbmp.Height > 10 && Math.Abs(oc.MarginTop - topMargin) < 10)
                     {
                         bool ok = true;
                         foreach (NOcrPoint op in oc.LinesForeground)
                         {
-                            foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
+                            foreach (Point point in op.GetPoints(nbmp.Width-3, nbmp.Height))
                             {
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                                 {
                                     Color c = nbmp.GetPixel(point.X, point.Y);
-                                    if (c.A > 100 && c.R > 90 && c.G > 90 && c.B > 90)
+                                    if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
                                     {
                                     }
                                     else
@@ -1354,12 +1334,12 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         foreach (NOcrPoint op in oc.LinesBackground)
                         {
-                            foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
+                            foreach (Point point in op.GetPoints(nbmp.Width-3, nbmp.Height))
                             {
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                                 {
                                     Color c = nbmp.GetPixel(point.X, point.Y);
-                                    if (c.A > 140 && c.R > 120 && c.G > 120 && c.B > 120)
+                                    if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
                                     {
                                         ok = false;
                                         break;
@@ -1368,23 +1348,59 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                         if (ok)
-                        {
-                            italic = true;
                             return oc.Text;
+                    }
+                }
+
+                foreach (NOcrChar oc in _nocrChars)
+                {
+                    if (Math.Abs(oc.WidthPercent - widthPercent) < 40 && nbmp.Width > 20 && nbmp.Height > 10 && Math.Abs(oc.MarginTop - topMargin) < 10)
+                    {
+                        bool ok = true;
+                        foreach (NOcrPoint op in oc.LinesForeground)
+                        {
+                            foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height-4))
+                            {
+                                if (point.X >= 0 && point.Y+4 >= 0 && point.X < nbmp.Width && point.Y+4 < nbmp.Height)
+                                {
+                                    Color c = nbmp.GetPixel(point.X, point.Y+4);
+                                    if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                    {
+                                    }
+                                    else
+                                    {
+                                        ok = false;
+                                        break;
+                                    }
+                                }
+                            }
                         }
+                        foreach (NOcrPoint op in oc.LinesBackground)
+                        {
+                            foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height-4))
+                            {
+                                if (point.X >= 0 && point.Y+4 >= 0 && point.X < nbmp.Width && point.Y+4 < nbmp.Height)
+                                {
+                                    Color c = nbmp.GetPixel(point.X, point.Y+4);
+                                    if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                    {
+                                        ok = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (ok)
+                            return oc.Text;
                     }
                 }
 
             }
 
-
-            //  crop top / bottom - do this before all?
-            //nbmp.EraseColorTop(3);
-            //nbmp.EraseColorBottom(3);
-            //nbmp.CropTransparentSidesAndBottom(3);
             //foreach (NOcrChar oc in _nocrChars)
             //{
-            //    if (Math.Abs(oc.Width - widthPercent) < 90)
+            //    var w = Math.Abs(oc.WidthPercent - widthPercent);
+            //    if (w >= 30 && w < 80)
             //    {
             //        bool ok = true;
             //        foreach (NOcrPoint op in oc.LinesForeground)
@@ -1425,6 +1441,162 @@ namespace Nikse.SubtitleEdit.Forms
             //    }
             //}
 
+            //if (checkBoxNOcrItalic.Checked)
+            //{
+            //    foreach (NOcrChar oc in _nocrChars)
+            //    {
+            //        if (Math.Abs(oc.WidthPercent - widthPercent) < 99)
+            //        {
+            //            bool ok = true;
+            //            foreach (NOcrPoint op in oc.LinesForeground)
+            //            {
+            //                foreach (Point point in NOcrPoint.GetPoints(MakePointItalic(op.Start, bmp.Height), MakePointItalic(op.End, bmp.Height)))
+            //                {
+            //                    if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+            //                    {
+            //                        Color c = nbmp.GetPixel(point.X, point.Y);
+            //                        if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+            //                        {
+            //                        }
+            //                        else
+            //                        {
+            //                            ok = false;
+            //                            break;
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //            foreach (NOcrPoint op in oc.LinesBackground)
+            //            {
+            //                foreach (Point point in NOcrPoint.GetPoints(MakePointItalic(op.Start, bmp.Height), MakePointItalic(op.End, bmp.Height)))
+            //                {
+            //                    if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+            //                    {
+            //                        Color c = nbmp.GetPixel(point.X, point.Y);
+            //                        if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+            //                        {
+            //                            ok = false;
+            //                            break;
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //            if (ok)
+            //            {
+            //                italic = true;
+            //                return oc.Text;
+            //            }
+            //        }
+            //    }
+
+
+            //    var unItalicedBmp = UnItalic(bmp, _unItalicFactor);
+            //    nbmp = new NikseBitmap(unItalicedBmp);
+            //    unItalicedBmp.Dispose();
+            //    nbmp.CropTop(5, Color.Transparent);
+            //    nbmp.CropTransparentSidesAndBottom(0, true);
+
+            //    //NikseBitmap nbmp = new NikseBitmap(bmp);
+            //   // nbmp = unItalicedBmp;
+            ////TODO:SOme cropping!!!!
+
+
+            //    foreach (NOcrChar oc in _nocrChars)
+            //    {
+            //        if (Math.Abs(oc.WidthPercent - widthPercent) < 99)
+            //        {
+            //            bool ok = true;
+            //            foreach (NOcrPoint op in oc.LinesForeground)
+            //            {
+            //                foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
+            //                {
+            //                    if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+            //                    {
+            //                        Color c = nbmp.GetPixel(point.X, point.Y);
+            //                        if (c.A > 100 && c.R > 90 && c.G > 90 && c.B > 90)
+            //                        {
+            //                        }
+            //                        else
+            //                        {
+            //                            ok = false;
+            //                            break;
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //            foreach (NOcrPoint op in oc.LinesBackground)
+            //            {
+            //                foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
+            //                {
+            //                    if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+            //                    {
+            //                        Color c = nbmp.GetPixel(point.X, point.Y);
+            //                        if (c.A > 140 && c.R > 120 && c.G > 120 && c.B > 120)
+            //                        {
+            //                            ok = false;
+            //                            break;
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //            if (ok)
+            //            {
+            //                italic = true;
+            //                return oc.Text;
+            //            }
+            //        }
+            //    }
+
+            //}
+
+
+            ////  crop top / bottom - do this before all?
+            ////nbmp.EraseColorTop(3);
+            ////nbmp.EraseColorBottom(3);
+            ////nbmp.CropTransparentSidesAndBottom(3);
+            ////foreach (NOcrChar oc in _nocrChars)
+            ////{
+            ////    if (Math.Abs(oc.Width - widthPercent) < 90)
+            ////    {
+            ////        bool ok = true;
+            ////        foreach (NOcrPoint op in oc.LinesForeground)
+            ////        {
+            ////            foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
+            ////            {
+            ////                if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+            ////                {
+            ////                    Color c = nbmp.GetPixel(point.X, point.Y);
+            ////                    if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+            ////                    {
+            ////                    }
+            ////                    else
+            ////                    {
+            ////                        ok = false;
+            ////                        break;
+            ////                    }
+            ////                }
+            ////            }
+            ////        }
+            ////        foreach (NOcrPoint op in oc.LinesBackground)
+            ////        {
+            ////            foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
+            ////            {
+            ////                if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+            ////                {
+            ////                    Color c = nbmp.GetPixel(point.X, point.Y);
+            ////                    if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+            ////                    {
+            ////                        ok = false;
+            ////                        break;
+            ////                    }
+            ////                }
+            ////            }
+            ////        }
+            ////        if (ok)
+            ////            return oc.Text;
+            ////    }
+            ////}
+
 
             return null;
         }
@@ -1433,7 +1605,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             secondBestGuess = null;
             bool italic;
-            var result = NOcrFindBestMatch(targetItem.Bitmap, out italic);
+            var result = NOcrFindBestMatch(targetItem.Bitmap, targetItem.Y, out italic);
             if (result == null)
             {
                 if (checkBoxNOcrCorrect.Checked)
@@ -2141,7 +2313,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     nbmp = new NikseBitmap(item.Bitmap);
                     nbmp.ReplaceNonWhiteWithTransparent();
-                    nbmp.CropTopTransparent(0);
+                    item.Y += nbmp.CropTopTransparent(0);
                     nbmp.CropTransparentSidesAndBottom(0, true);
                     nbmp.ReplaceTransparentWith(Color.Black);
                     item.Bitmap = nbmp.GetBitmap();

@@ -227,7 +227,7 @@
             // columnHeaderApply
             // 
             this.columnHeaderApply.Text = "Apply";
-            this.columnHeaderApply.Width = 45;
+            this.columnHeaderApply.Width = 50;
             // 
             // columnHeaderLine
             // 

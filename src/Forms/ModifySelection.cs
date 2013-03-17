@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonApply.Text = Configuration.Settings.Language.General.Apply;
             groupBoxRule.Text = Configuration.Settings.Language.ModifySelection.Rule;
+            groupBoxWhatToDo.Text = Configuration.Settings.Language.ModifySelection.DoWithMatches;
             checkBoxCaseSensitive.Text = Configuration.Settings.Language.ModifySelection.CaseSensitive;
             radioButtonNewSelection.Text = Configuration.Settings.Language.ModifySelection.MakeNewSelection;
             radioButtonAddToSelection.Text = Configuration.Settings.Language.ModifySelection.AddToCurrentSelection;
@@ -37,6 +38,16 @@ namespace Nikse.SubtitleEdit.Forms
 
             FixLargeFonts();
 
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ModifySelection.Contains)) //TODO: Remove in SE 3.4
+            {
+                comboBoxRule.Items.Clear();
+                comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.Contains);
+                comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.StartsWith);
+                comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.EndsWith);
+                comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.NoContains);
+                comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.RegEx);
+            }
+
             checkBoxCaseSensitive.Checked = Configuration.Settings.Tools.ModifySelectionCaseSensitive;
             textBox1.Text = Configuration.Settings.Tools.ModifySelectionText;
             if (Configuration.Settings.Tools.ModifySelectionRule == "Starts with")
@@ -47,6 +58,8 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxRule.SelectedIndex = 3;
             else if (Configuration.Settings.Tools.ModifySelectionRule == "RegEx")
                 comboBoxRule.SelectedIndex = 4;
+            else
+                comboBoxRule.SelectedIndex = 0;
             _loading = false;
             Preview();
         }
@@ -169,7 +182,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.ModifySelection.MatchingLinesX))
                 groupBoxPreview.Text = string.Format(Configuration.Settings.Language.ModifySelection.MatchingLinesX, listViewFixes.Items.Count);
             else
-                groupBoxPreview.Text = string.Format("Matching lines: {0}", listViewFixes.Items.Count);
+                groupBoxPreview.Text = string.Format("Matching lines: {0}", listViewFixes.Items.Count); //TODO: Remove in 3.4
         }
 
         private void ApplySelection()

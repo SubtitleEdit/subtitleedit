@@ -158,6 +158,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ScanFolder>Scan mappe...</ScanFolder>
     <ScanningFolder>Scanner {0} og undermapper for undertekster...</ScanningFolder>
     <Recursive>Medtag undermapper</Recursive>
+    <SetMinMsBetweenSubtitles>Indstil min. msek mellem undertekster</SetMinMsBetweenSubtitles>
   </BatchConvert>
   <Beamer>
     <Title>Undertekst fremviser</Title>
@@ -320,7 +321,10 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderWidth>Kantbredde</BorderWidth>
     <ImageFormat>Billed format</ImageFormat>
     <AntiAlias>Anti alias</AntiAlias>
-    <SideBySide3D>Side-by-side 3D</SideBySide3D>
+    <Text3D>3D</Text3D>
+    <SideBySide3D>Half-Side-by-side</SideBySide3D>
+    <HalfTopBottom3D>Half-Top/Bottom</HalfTopBottom3D>
+    <Depth>Dybde</Depth>
     <ExportAllLines>Eksporter alle linjer...</ExportAllLines>
     <XImagesSavedInY>{0} billeder gemt i {1}</XImagesSavedInY>
     <VideoResolution>Video str</VideoResolution>
@@ -333,6 +337,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveVobSubAs>Vælg VobSub filnavn</SaveVobSubAs>
     <SaveFabImageScriptAs>Vælg Blu-ray sup filnavn</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Vælg DVD Studio Pro STL filnavn</SaveDvdStudioProStlAs>
+    <SomeLinesWereTooLongX>Nogle linjer var for lange:
+{0}</SomeLinesWereTooLongX>
   </ExportPngXml>
   <ExportText>
     <Title>Eksport tekst</Title>
@@ -355,6 +361,14 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
     <TimeCodeSeperator>Tidskode skille-tegn</TimeCodeSeperator>
   </ExportText>
+  <ExtractDateTimeInfo>
+    <Title>Generer tid som tekst</Title>
+    <Description>Beskrivelse</Description>
+    <StartFrom>Start fra</StartFrom>
+    <DateTimeFormat>Dato/tid format</DateTimeFormat>
+    <Example>Eksempel</Example>
+    <GenerateSubtitle>&amp;Generer undertekst</GenerateSubtitle>
+  </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Find</Title>
     <Find>Find</Find>
@@ -583,6 +597,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportOcrFromDvd>Import/OCR undertekster fra VOB/IFO (dvd) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importer/OCR VobSub (sub/idx) undertekst...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importer/OCR Blu-ray sup fil...</ImportBluRaySupFile>
+        <ImportXSub>Importer/OCR xsub fra divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importer undertekster fra Matroska fil...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importer undertekst med manuel valgt tegnsæt...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importer tekst...</ImportText>
@@ -649,6 +664,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <WordsPerMinute>Tekst - ord i minuttet (WPM)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Dan ny tom oversættelse fra aktuelle undertekst</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Batch konverter...</BatchConvert>
+        <GenerateTimeAsText>Generer tid som tekst...</GenerateTimeAsText>
         <SplitSubtitle>Split undertekst...</SplitSubtitle>
         <AppendSubtitle>Tilføj/append undertekst...</AppendSubtitle>
         <JoinSubtitles>Flet undertekster...</JoinSubtitles>
@@ -1097,6 +1113,11 @@ Fortsæt?</SubtitleAppendPrompt>
     <SubtractFromCurrentSelection>Subtraher fra aktuelle markering</SubtractFromCurrentSelection>
     <IntersectWithCurrentSelection>Intersect med aktuelle markering</IntersectWithCurrentSelection>
     <MatchingLinesX>Matchende linjer: {0}</MatchingLinesX>
+    <Contains>Indeholder</Contains>
+    <StartsWith>Starter med</StartsWith>
+    <EndsWith>Ender med</EndsWith>
+    <NoContains>Indeholder ikke</NoContains>
+    <RegEx>Regulært udtryk</RegEx>
   </ModifySelection>
   <MultipleReplace>
     <Title>Multi søg og erstat</Title>

@@ -68,8 +68,8 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxExportImage = new System.Windows.Forms.GroupBox();
-            this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.timerPreview = new System.Windows.Forms.Timer(this.components);
+            this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxImageSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).BeginInit();
@@ -91,7 +91,7 @@
             this.buttonExport.Location = new System.Drawing.Point(517, 566);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(126, 21);
-            this.buttonExport.TabIndex = 5;
+            this.buttonExport.TabIndex = 6;
             this.buttonExport.Text = "Export all lines...";
             this.buttonExport.UseVisualStyleBackColor = true;
             this.buttonExport.Click += new System.EventHandler(this.ButtonExportClick);
@@ -115,7 +115,7 @@
             this.progressBar1.Location = new System.Drawing.Point(12, 566);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(499, 21);
-            this.progressBar1.TabIndex = 4;
+            this.progressBar1.TabIndex = 5;
             this.progressBar1.Visible = false;
             // 
             // groupBoxImageSettings
@@ -155,7 +155,7 @@
             this.groupBoxImageSettings.Location = new System.Drawing.Point(12, 218);
             this.groupBoxImageSettings.Name = "groupBoxImageSettings";
             this.groupBoxImageSettings.Size = new System.Drawing.Size(712, 161);
-            this.groupBoxImageSettings.TabIndex = 2;
+            this.groupBoxImageSettings.TabIndex = 3;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
             // 
@@ -165,7 +165,7 @@
             this.labelDepth.Location = new System.Drawing.Point(304, 137);
             this.labelDepth.Name = "labelDepth";
             this.labelDepth.Size = new System.Drawing.Size(36, 13);
-            this.labelDepth.TabIndex = 37;
+            this.labelDepth.TabIndex = 18;
             this.labelDepth.Text = "Depth";
             // 
             // label3D
@@ -174,7 +174,7 @@
             this.label3D.Location = new System.Drawing.Point(273, 113);
             this.label3D.Name = "label3D";
             this.label3D.Size = new System.Drawing.Size(21, 13);
-            this.label3D.TabIndex = 40;
+            this.label3D.TabIndex = 16;
             this.label3D.Text = "3D";
             // 
             // comboBox3D
@@ -184,7 +184,7 @@
             this.comboBox3D.Location = new System.Drawing.Point(298, 110);
             this.comboBox3D.Name = "comboBox3D";
             this.comboBox3D.Size = new System.Drawing.Size(121, 21);
-            this.comboBox3D.TabIndex = 39;
+            this.comboBox3D.TabIndex = 17;
             this.comboBox3D.SelectedIndexChanged += new System.EventHandler(this.comboBox3D_SelectedIndexChanged);
             // 
             // numericUpDownDepth3D
@@ -197,7 +197,7 @@
             -2147483648});
             this.numericUpDownDepth3D.Name = "numericUpDownDepth3D";
             this.numericUpDownDepth3D.Size = new System.Drawing.Size(47, 20);
-            this.numericUpDownDepth3D.TabIndex = 38;
+            this.numericUpDownDepth3D.TabIndex = 19;
             this.numericUpDownDepth3D.ValueChanged += new System.EventHandler(this.numericUpDownDepth3D_ValueChanged);
             // 
             // buttonCustomResolution
@@ -206,7 +206,7 @@
             this.buttonCustomResolution.Location = new System.Drawing.Point(224, 78);
             this.buttonCustomResolution.Name = "buttonCustomResolution";
             this.buttonCustomResolution.Size = new System.Drawing.Size(24, 21);
-            this.buttonCustomResolution.TabIndex = 3;
+            this.buttonCustomResolution.TabIndex = 6;
             this.buttonCustomResolution.Text = "...";
             this.buttonCustomResolution.UseVisualStyleBackColor = true;
             this.buttonCustomResolution.Click += new System.EventHandler(this.buttonCustomResolution_Click);
@@ -218,7 +218,7 @@
             this.comboBoxBottomMargin.Location = new System.Drawing.Point(100, 132);
             this.comboBoxBottomMargin.Name = "comboBoxBottomMargin";
             this.comboBoxBottomMargin.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxBottomMargin.TabIndex = 5;
+            this.comboBoxBottomMargin.TabIndex = 10;
             this.comboBoxBottomMargin.SelectedIndexChanged += new System.EventHandler(this.comboBoxBottomMargin_SelectedIndexChanged);
             // 
             // labelBottomMargin
@@ -227,7 +227,7 @@
             this.labelBottomMargin.Location = new System.Drawing.Point(10, 135);
             this.labelBottomMargin.Name = "labelBottomMargin";
             this.labelBottomMargin.Size = new System.Drawing.Size(74, 13);
-            this.labelBottomMargin.TabIndex = 36;
+            this.labelBottomMargin.TabIndex = 9;
             this.labelBottomMargin.Text = "Bottom margin";
             // 
             // labelFrameRate
@@ -247,7 +247,7 @@
             this.comboBoxFramerate.Location = new System.Drawing.Point(537, 134);
             this.comboBoxFramerate.Name = "comboBoxFramerate";
             this.comboBoxFramerate.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxFramerate.TabIndex = 16;
+            this.comboBoxFramerate.TabIndex = 25;
             // 
             // labelLanguage
             // 
@@ -274,7 +274,7 @@
             this.comboBoxLanguage.Location = new System.Drawing.Point(537, 105);
             this.comboBoxLanguage.Name = "comboBoxLanguage";
             this.comboBoxLanguage.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxLanguage.TabIndex = 15;
+            this.comboBoxLanguage.TabIndex = 24;
             this.comboBoxLanguage.Visible = false;
             // 
             // labelImageFormat
@@ -301,7 +301,7 @@
             this.comboBoxImageFormat.Location = new System.Drawing.Point(537, 78);
             this.comboBoxImageFormat.Name = "comboBoxImageFormat";
             this.comboBoxImageFormat.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxImageFormat.TabIndex = 14;
+            this.comboBoxImageFormat.TabIndex = 23;
             // 
             // checkBoxBold
             // 
@@ -309,7 +309,7 @@
             this.checkBoxBold.Location = new System.Drawing.Point(276, 50);
             this.checkBoxBold.Name = "checkBoxBold";
             this.checkBoxBold.Size = new System.Drawing.Size(47, 17);
-            this.checkBoxBold.TabIndex = 7;
+            this.checkBoxBold.TabIndex = 13;
             this.checkBoxBold.Text = "Bold";
             this.checkBoxBold.UseVisualStyleBackColor = true;
             this.checkBoxBold.CheckedChanged += new System.EventHandler(this.checkBoxBold_CheckedChanged);
@@ -320,7 +320,7 @@
             this.labelResolution.Location = new System.Drawing.Point(10, 81);
             this.labelResolution.Name = "labelResolution";
             this.labelResolution.Size = new System.Drawing.Size(51, 13);
-            this.labelResolution.TabIndex = 26;
+            this.labelResolution.TabIndex = 4;
             this.labelResolution.Text = "Video res";
             // 
             // comboBoxResolution
@@ -340,7 +340,7 @@
             this.comboBoxResolution.Location = new System.Drawing.Point(100, 78);
             this.comboBoxResolution.Name = "comboBoxResolution";
             this.comboBoxResolution.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxResolution.TabIndex = 2;
+            this.comboBoxResolution.TabIndex = 5;
             this.comboBoxResolution.SelectedIndexChanged += new System.EventHandler(this.comboBoxResolution_SelectedIndexChanged);
             // 
             // comboBoxHAlign
@@ -354,7 +354,7 @@
             this.comboBoxHAlign.Location = new System.Drawing.Point(100, 105);
             this.comboBoxHAlign.Name = "comboBoxHAlign";
             this.comboBoxHAlign.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxHAlign.TabIndex = 4;
+            this.comboBoxHAlign.TabIndex = 8;
             this.comboBoxHAlign.SelectedIndexChanged += new System.EventHandler(this.comboBoxHAlign_SelectedIndexChanged);
             // 
             // labelHorizontalAlign
@@ -363,7 +363,7 @@
             this.labelHorizontalAlign.Location = new System.Drawing.Point(10, 108);
             this.labelHorizontalAlign.Name = "labelHorizontalAlign";
             this.labelHorizontalAlign.Size = new System.Drawing.Size(30, 13);
-            this.labelHorizontalAlign.TabIndex = 22;
+            this.labelHorizontalAlign.TabIndex = 7;
             this.labelHorizontalAlign.Text = "Align";
             // 
             // checkBoxAntiAlias
@@ -374,7 +374,7 @@
             this.checkBoxAntiAlias.Location = new System.Drawing.Point(276, 71);
             this.checkBoxAntiAlias.Name = "checkBoxAntiAlias";
             this.checkBoxAntiAlias.Size = new System.Drawing.Size(66, 17);
-            this.checkBoxAntiAlias.TabIndex = 8;
+            this.checkBoxAntiAlias.TabIndex = 14;
             this.checkBoxAntiAlias.Text = "AntiAlias";
             this.checkBoxAntiAlias.UseVisualStyleBackColor = true;
             this.checkBoxAntiAlias.CheckedChanged += new System.EventHandler(this.checkBoxAntiAlias_CheckedChanged);
@@ -385,7 +385,7 @@
             this.labelSubtitleFontSize.Location = new System.Drawing.Point(10, 54);
             this.labelSubtitleFontSize.Name = "labelSubtitleFontSize";
             this.labelSubtitleFontSize.Size = new System.Drawing.Size(84, 13);
-            this.labelSubtitleFontSize.TabIndex = 20;
+            this.labelSubtitleFontSize.TabIndex = 2;
             this.labelSubtitleFontSize.Text = "Subtitle font size";
             // 
             // comboBoxSubtitleFont
@@ -395,7 +395,7 @@
             this.comboBoxSubtitleFont.Location = new System.Drawing.Point(100, 24);
             this.comboBoxSubtitleFont.Name = "comboBoxSubtitleFont";
             this.comboBoxSubtitleFont.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxSubtitleFont.TabIndex = 0;
+            this.comboBoxSubtitleFont.TabIndex = 1;
             this.comboBoxSubtitleFont.SelectedValueChanged += new System.EventHandler(this.comboBoxSubtitleFont_SelectedValueChanged);
             // 
             // comboBoxSubtitleFontSize
@@ -497,7 +497,7 @@
             this.comboBoxSubtitleFontSize.Location = new System.Drawing.Point(100, 51);
             this.comboBoxSubtitleFontSize.Name = "comboBoxSubtitleFontSize";
             this.comboBoxSubtitleFontSize.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxSubtitleFontSize.TabIndex = 1;
+            this.comboBoxSubtitleFontSize.TabIndex = 3;
             this.comboBoxSubtitleFontSize.SelectedIndexChanged += new System.EventHandler(this.comboBoxSubtitleFontSize_SelectedIndexChanged);
             // 
             // labelSubtitleFont
@@ -506,7 +506,7 @@
             this.labelSubtitleFont.Location = new System.Drawing.Point(10, 27);
             this.labelSubtitleFont.Name = "labelSubtitleFont";
             this.labelSubtitleFont.Size = new System.Drawing.Size(63, 13);
-            this.labelSubtitleFont.TabIndex = 19;
+            this.labelSubtitleFont.TabIndex = 0;
             this.labelSubtitleFont.Text = "Subtitle font";
             // 
             // labelBorderWidth
@@ -543,7 +543,7 @@
             this.comboBoxBorderWidth.Location = new System.Drawing.Point(537, 51);
             this.comboBoxBorderWidth.Name = "comboBoxBorderWidth";
             this.comboBoxBorderWidth.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxBorderWidth.TabIndex = 13;
+            this.comboBoxBorderWidth.TabIndex = 22;
             this.comboBoxBorderWidth.SelectedIndexChanged += new System.EventHandler(this.comboBoxBorderWidth_SelectedIndexChanged);
             // 
             // panelBorderColor
@@ -552,7 +552,7 @@
             this.panelBorderColor.Location = new System.Drawing.Point(664, 25);
             this.panelBorderColor.Name = "panelBorderColor";
             this.panelBorderColor.Size = new System.Drawing.Size(21, 20);
-            this.panelBorderColor.TabIndex = 12;
+            this.panelBorderColor.TabIndex = 21;
             this.panelBorderColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelBorderColor_MouseClick);
             // 
             // buttonBorderColor
@@ -560,7 +560,7 @@
             this.buttonBorderColor.Location = new System.Drawing.Point(537, 24);
             this.buttonBorderColor.Name = "buttonBorderColor";
             this.buttonBorderColor.Size = new System.Drawing.Size(121, 21);
-            this.buttonBorderColor.TabIndex = 11;
+            this.buttonBorderColor.TabIndex = 20;
             this.buttonBorderColor.Text = "Border color";
             this.buttonBorderColor.UseVisualStyleBackColor = true;
             this.buttonBorderColor.Click += new System.EventHandler(this.buttonBorderColor_Click);
@@ -571,7 +571,7 @@
             this.panelColor.Location = new System.Drawing.Point(403, 25);
             this.panelColor.Name = "panelColor";
             this.panelColor.Size = new System.Drawing.Size(21, 20);
-            this.panelColor.TabIndex = 7;
+            this.panelColor.TabIndex = 12;
             this.panelColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelColor_MouseClick);
             // 
             // buttonColor
@@ -579,7 +579,7 @@
             this.buttonColor.Location = new System.Drawing.Point(276, 24);
             this.buttonColor.Name = "buttonColor";
             this.buttonColor.Size = new System.Drawing.Size(121, 21);
-            this.buttonColor.TabIndex = 6;
+            this.buttonColor.TabIndex = 11;
             this.buttonColor.Text = "Color";
             this.buttonColor.UseVisualStyleBackColor = true;
             this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
@@ -592,7 +592,7 @@
             this.checkBoxSkipEmptyFrameAtStart.Location = new System.Drawing.Point(276, 92);
             this.checkBoxSkipEmptyFrameAtStart.Name = "checkBoxSkipEmptyFrameAtStart";
             this.checkBoxSkipEmptyFrameAtStart.Size = new System.Drawing.Size(147, 17);
-            this.checkBoxSkipEmptyFrameAtStart.TabIndex = 10;
+            this.checkBoxSkipEmptyFrameAtStart.TabIndex = 15;
             this.checkBoxSkipEmptyFrameAtStart.Text = "Skip empty frames at start";
             this.checkBoxSkipEmptyFrameAtStart.UseVisualStyleBackColor = true;
             // 
@@ -605,8 +605,13 @@
             this.groupBoxExportImage.Location = new System.Drawing.Point(13, 386);
             this.groupBoxExportImage.Name = "groupBoxExportImage";
             this.groupBoxExportImage.Size = new System.Drawing.Size(711, 174);
-            this.groupBoxExportImage.TabIndex = 3;
+            this.groupBoxExportImage.TabIndex = 1;
             this.groupBoxExportImage.TabStop = false;
+            // 
+            // timerPreview
+            // 
+            this.timerPreview.Interval = 500;
+            this.timerPreview.Tick += new System.EventHandler(this.timerPreview_Tick);
             // 
             // subtitleListView1
             // 
@@ -627,11 +632,6 @@
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             // 
-            // timerPreview
-            // 
-            this.timerPreview.Interval = 500;
-            this.timerPreview.Tick += new System.EventHandler(this.timerPreview_Tick);
-            // 
             // ExportPngXml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -648,6 +648,7 @@
             this.MinimumSize = new System.Drawing.Size(730, 630);
             this.Name = "ExportPngXml";
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ExportPngXml";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ExportPngXml_FormClosing);

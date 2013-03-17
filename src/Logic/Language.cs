@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.EffectTypewriter EffectTypewriter;
         public LanguageStructure.ExportPngXml ExportPngXml;
         public LanguageStructure.ExportText ExportText;
+        public LanguageStructure.ExtractDateTimeInfo ExtractDateTimeInfo;
         public LanguageStructure.FindDialog FindDialog;
         public LanguageStructure.FindSubtitleLine FindSubtitleLine;
         public LanguageStructure.FixCommonErrors FixCommonErrors;
@@ -504,6 +505,16 @@ namespace Nikse.SubtitleEdit.Logic
                 Milliseconds = "Milliseconds",
                 HHMMSSFF = "HH:MM:SS:FF",
                 TimeCodeSeperator = "Time code seperator",
+            };
+
+            ExtractDateTimeInfo = new LanguageStructure.ExtractDateTimeInfo 
+            {
+                Title = "Generate time as text",
+                Description = "",
+                StartFrom = "Start from",
+                DateTimeFormat  = "Date/time format",
+                Example = "Example",
+                GenerateSubtitle = "&Generate subtitle",
             };
 
             FindDialog = new LanguageStructure.FindDialog
@@ -1068,6 +1079,7 @@ namespace Nikse.SubtitleEdit.Logic
                         WordsPerMinute = "Text - words per minute (wpm)",
                         MakeNewEmptyTranslationFromCurrentSubtitle = "Make new empty translation from current subtitle",
                         BatchConvert = "Batch convert...",
+                        GenerateTimeAsText = "Generate time as text...",
                         SplitSubtitle = "Split subtitle...",
                         AppendSubtitle = "Append subtitle...",
                         JoinSubtitles = "Join subtitles...",
@@ -1314,6 +1326,11 @@ namespace Nikse.SubtitleEdit.Logic
                 SubtractFromCurrentSelection = "Subtract from current selection",
                 IntersectWithCurrentSelection = "Intersect with current selection",
                 MatchingLinesX = "Matching lines: {0}",
+                Contains = "Contains",
+                StartsWith = "Starts with",
+                EndsWith = "Ends with",
+                NoContains = "Not contains",
+                RegEx = "Regular expression",
             };
 
             MultipleReplace = new LanguageStructure.MultipleReplace
