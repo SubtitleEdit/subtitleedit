@@ -1477,6 +1477,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemShowOriginalInPreview.Text = _language.Menu.Edit.ShowOriginalTextInAudioAndVideoPreview;
             toolStripMenuItemMakeEmptyFromCurrent.Text = _language.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle;
             toolStripMenuItemBatchConvert.Text = _language.Menu.Tools.BatchConvert;
+            if (!string.IsNullOrEmpty(_language.Menu.Tools.GenerateTimeAsText)) //TODO: Fix in SE 3.4
+                generateDatetimeInfoFromVideoToolStripMenuItem.Text = _language.Menu.Tools.GenerateTimeAsText;
             splitToolStripMenuItem.Text = _language.Menu.Tools.SplitSubtitle;
             appendTextVisuallyToolStripMenuItem.Text = _language.Menu.Tools.AppendSubtitle;
             joinSubtitlesToolStripMenuItem.Text = _language.Menu.Tools.JoinSubtitles;

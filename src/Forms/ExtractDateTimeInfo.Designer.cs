@@ -37,7 +37,7 @@
             this.labelWriteFormat = new System.Windows.Forms.Label();
             this.labelVideoFileName = new System.Windows.Forms.Label();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelStartFrom = new System.Windows.Forms.Label();
             this.labelExample = new System.Windows.Forms.Label();
             this.textBoxExample = new System.Windows.Forms.TextBox();
             this.labelDuration = new System.Windows.Forms.Label();
@@ -67,7 +67,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(269, 269);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 53;
+            this.buttonCancel.TabIndex = 13;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -78,7 +78,7 @@
             this.buttonOK.Location = new System.Drawing.Point(96, 269);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(167, 21);
-            this.buttonOK.TabIndex = 52;
+            this.buttonOK.TabIndex = 12;
             this.buttonOK.Text = "&Generate subtitle";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -89,7 +89,7 @@
             this.labelDescription.Location = new System.Drawing.Point(13, 13);
             this.labelDescription.Name = "labelDescription";
             this.labelDescription.Size = new System.Drawing.Size(226, 13);
-            this.labelDescription.TabIndex = 54;
+            this.labelDescription.TabIndex = 0;
             this.labelDescription.Text = "Choose video file to extract date/time info from";
             // 
             // comboBoxDateTimeFormats
@@ -106,7 +106,7 @@
             this.comboBoxDateTimeFormats.Location = new System.Drawing.Point(12, 153);
             this.comboBoxDateTimeFormats.Name = "comboBoxDateTimeFormats";
             this.comboBoxDateTimeFormats.Size = new System.Drawing.Size(332, 21);
-            this.comboBoxDateTimeFormats.TabIndex = 55;
+            this.comboBoxDateTimeFormats.TabIndex = 9;
             this.comboBoxDateTimeFormats.SelectedIndexChanged += new System.EventHandler(this.comboBoxDateTimeFormats_SelectedIndexChanged);
             this.comboBoxDateTimeFormats.TextChanged += new System.EventHandler(this.comboBoxDateTimeFormats_TextChanged);
             // 
@@ -116,7 +116,7 @@
             this.labelWriteFormat.Location = new System.Drawing.Point(12, 137);
             this.labelWriteFormat.Name = "labelWriteFormat";
             this.labelWriteFormat.Size = new System.Drawing.Size(143, 13);
-            this.labelWriteFormat.TabIndex = 56;
+            this.labelWriteFormat.TabIndex = 8;
             this.labelWriteFormat.Text = "Date/time format write format";
             // 
             // labelVideoFileName
@@ -125,7 +125,7 @@
             this.labelVideoFileName.Location = new System.Drawing.Point(46, 34);
             this.labelVideoFileName.Name = "labelVideoFileName";
             this.labelVideoFileName.Size = new System.Drawing.Size(100, 13);
-            this.labelVideoFileName.TabIndex = 57;
+            this.labelVideoFileName.TabIndex = 2;
             this.labelVideoFileName.Text = "labelVideoFileName";
             // 
             // dateTimePicker1
@@ -135,16 +135,16 @@
             this.dateTimePicker1.Location = new System.Drawing.Point(12, 87);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(101, 20);
-            this.dateTimePicker1.TabIndex = 58;
+            this.dateTimePicker1.TabIndex = 4;
             // 
-            // label2
+            // labelStartFrom
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 71);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(52, 13);
-            this.label2.TabIndex = 59;
-            this.label2.Text = "Start from";
+            this.labelStartFrom.AutoSize = true;
+            this.labelStartFrom.Location = new System.Drawing.Point(13, 71);
+            this.labelStartFrom.Name = "labelStartFrom";
+            this.labelStartFrom.Size = new System.Drawing.Size(52, 13);
+            this.labelStartFrom.TabIndex = 3;
+            this.labelStartFrom.Text = "Start from";
             // 
             // labelExample
             // 
@@ -152,7 +152,7 @@
             this.labelExample.Location = new System.Drawing.Point(12, 188);
             this.labelExample.Name = "labelExample";
             this.labelExample.Size = new System.Drawing.Size(47, 13);
-            this.labelExample.TabIndex = 61;
+            this.labelExample.TabIndex = 10;
             this.labelExample.Text = "Example";
             // 
             // textBoxExample
@@ -164,7 +164,7 @@
             this.textBoxExample.Multiline = true;
             this.textBoxExample.Name = "textBoxExample";
             this.textBoxExample.Size = new System.Drawing.Size(332, 53);
-            this.textBoxExample.TabIndex = 62;
+            this.textBoxExample.TabIndex = 11;
             // 
             // labelDuration
             // 
@@ -172,7 +172,7 @@
             this.labelDuration.Location = new System.Drawing.Point(249, 70);
             this.labelDuration.Name = "labelDuration";
             this.labelDuration.Size = new System.Drawing.Size(47, 13);
-            this.labelDuration.TabIndex = 64;
+            this.labelDuration.TabIndex = 6;
             this.labelDuration.Text = "Duration";
             // 
             // timeUpDownDuration
@@ -183,7 +183,7 @@
             this.timeUpDownDuration.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownDuration.Name = "timeUpDownDuration";
             this.timeUpDownDuration.Size = new System.Drawing.Size(92, 24);
-            this.timeUpDownDuration.TabIndex = 65;
+            this.timeUpDownDuration.TabIndex = 7;
             // 
             // timeUpDownStartTime
             // 
@@ -193,7 +193,7 @@
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(92, 24);
-            this.timeUpDownStartTime.TabIndex = 63;
+            this.timeUpDownStartTime.TabIndex = 5;
             // 
             // ExtractDateTimeInfo
             // 
@@ -205,7 +205,7 @@
             this.Controls.Add(this.timeUpDownStartTime);
             this.Controls.Add(this.textBoxExample);
             this.Controls.Add(this.labelExample);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.labelStartFrom);
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.labelVideoFileName);
             this.Controls.Add(this.labelWriteFormat);
@@ -240,7 +240,7 @@
         private System.Windows.Forms.Label labelWriteFormat;
         private System.Windows.Forms.Label labelVideoFileName;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelStartFrom;
         private System.Windows.Forms.Label labelExample;
         private System.Windows.Forms.TextBox textBoxExample;
         private Controls.TimeUpDown timeUpDownStartTime;

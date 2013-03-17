@@ -4,14 +4,18 @@
 * NEW:
    * Added a few new subtitle formats
    * Added "return-from-fullscreen" button to fullscreen player - thx fox/Leszek
+   * Added Export to 3D Half-top/bottom - thx r0lZ
 * IMPROVED:
    * Fix overlapping display times now smarter
    * Updated Basque language file - thx Xabier Aramendi
+   * Updated French language file - thx JM GBT
    * Fix missing spaces now works better with italics - thx doc. Jackson
    * Added EBU alignment tags ({\an1}..{\an9})
-   * Added "auto balance lines" to batch converter - thx hacker
+   * Added "auto balance lines" to 'Batch convert' - thx hacker
+   * Added scan folder + some mkv support to 'Batch convert'
    * Export to image based formats: bold tag support - thx moob
    * Updated French ocr replace list - thx Bruno
+   * Fixed export to 3D Side-by-side to working 3D Half-side-by-side - thx r0lZ
 * FIXED:
    * After closing "SSA/ASS style designer", first style was applied
      to all lines - thx vicgol/Xabier/Mike
@@ -21,6 +25,7 @@
    * SSA/ASS - allow left margin up to 250 - thx vicgol
    * Allow key 'space' in list view to toggle play/pause of video - thx Jakov
    * Allow key 'space' in video fullscreen to toggle play/pause - thx fox
+   * Fixed bug in 'Fix uppercase ‘i’ inside lowercase word' - thx Kurt
 
 
 3.3.2 (23 February 2013)
