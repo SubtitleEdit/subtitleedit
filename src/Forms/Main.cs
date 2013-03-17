@@ -3614,10 +3614,10 @@ namespace Nikse.SubtitleEdit.Forms
                     int selectedIndex = -1;
                     if (SubtitleListview1.SelectedItems.Count > 0)
                         selectedIndex = SubtitleListview1.SelectedItems[0].Index;
-                    if (_findHelper.FindNext(_subtitle, _subtitleAlternate,  selectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
+                    if (_findHelper.FindNext(_subtitle, _subtitleAlternate, selectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex);
-                        ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex+1));
+                        ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
                         TextBox tb;
                         if (_findHelper.MatchInOriginal)
                             tb = textBoxListViewTextAlternate;
@@ -3670,7 +3670,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-
+            else
+            {
+                Find();
+            }
         }
 
         private void ToolStripButtonReplaceClick(object sender, EventArgs e)
