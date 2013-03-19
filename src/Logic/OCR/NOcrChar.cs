@@ -9,6 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         public int Width { get; set; }
         public int Height { get; set; }
         public int MarginTop { get; set; }
+        public bool Italic { get; set; }
         public List<NOcrPoint> LinesForeground { get; private set; }
         public List<NOcrPoint> LinesBackground { get; private set; }
         public string Id { get; set; }

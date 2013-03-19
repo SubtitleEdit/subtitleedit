@@ -2225,6 +2225,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textWriter.WriteAttributeString("Width", oc.Width.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteAttributeString("Height", oc.Height.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteAttributeString("MarginTop", oc.MarginTop.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteAttributeString("Italic", oc.Italic.ToString(CultureInfo.InvariantCulture));                    
                     foreach (NOcrPoint op in oc.LinesForeground)
                     {
                         textWriter.WriteStartElement("Point", "");
@@ -2269,6 +2270,7 @@ namespace Nikse.SubtitleEdit.Forms
                         oc.Width = Convert.ToInt32(node.Attributes["Width"].Value, CultureInfo.InvariantCulture);
                         oc.Height = Convert.ToInt32(node.Attributes["Height"].Value, CultureInfo.InvariantCulture);
                         oc.MarginTop = Convert.ToInt32(node.Attributes["MarginTop"].Value, CultureInfo.InvariantCulture);
+                        oc.Italic = Convert.ToBoolean(node.Attributes["Italic"].Value, CultureInfo.InvariantCulture);
                         foreach (XmlNode pointNode in node.SelectNodes("Point"))
                         {
                             var op = new NOcrPoint(DecodePoint(pointNode.Attributes["Start"].Value), DecodePoint(pointNode.Attributes["End"].Value));
@@ -2341,7 +2343,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     item = GetExpandedSelection(bitmap, expandSelectionList);
 
-                    _vobSubOcrNOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, expandSelectionList.Count > 1, null, _lastAdditions, this);
+                    _vobSubOcrNOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, expandSelectionList.Count > 1, null, _lastAdditions, this);
                     DialogResult result = _vobSubOcrNOcrCharacter.ShowDialog(this);
                     _manualOcrDialogPosition = _vobSubOcrNOcrCharacter.FormPosition;
                     if (result == DialogResult.OK && _vobSubOcrNOcrCharacter.ShrinkSelection)
@@ -2387,7 +2389,7 @@ namespace Nikse.SubtitleEdit.Forms
                     CompareMatch match = GetNOcrCompareMatch(item, bitmap, out bestGuess);
                     if (match == null)
                     {
-                        _vobSubOcrNOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, false, bestGuess, _lastAdditions, this);
+                        _vobSubOcrNOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, false, bestGuess, _lastAdditions, this);
                         DialogResult result = _vobSubOcrNOcrCharacter.ShowDialog(this);
                         _manualOcrDialogPosition = _vobSubOcrNOcrCharacter.FormPosition;
                         if (result == DialogResult.OK && _vobSubOcrNOcrCharacter.ExpandSelection)
