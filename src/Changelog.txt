@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.3.3 (x March 2013)
+3.3.3 (19th March 2013)
 * NEW:
    * Added a few new subtitle formats
    * Added "return-from-fullscreen" button to fullscreen player - thx fox/Leszek
@@ -16,6 +16,7 @@
    * Export to image based formats: bold tag support - thx moob
    * Updated French ocr replace list - thx Bruno
    * Fixed export to 3D Side-by-side to working 3D Half-side-by-side - thx r0lZ
+   * If no 'Find' has been made, F3 will show 'Find' window - thx fox :) 
 * FIXED:
    * After closing "SSA/ASS style designer", first style was applied
      to all lines - thx vicgol/Xabier/Mike

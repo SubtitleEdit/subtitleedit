@@ -149,10 +149,10 @@
             this.radioButtonNtsc.AutoSize = true;
             this.radioButtonNtsc.Location = new System.Drawing.Point(104, 18);
             this.radioButtonNtsc.Name = "radioButtonNtsc";
-            this.radioButtonNtsc.Size = new System.Drawing.Size(89, 17);
+            this.radioButtonNtsc.Size = new System.Drawing.Size(105, 17);
             this.radioButtonNtsc.TabIndex = 1;
             this.radioButtonNtsc.TabStop = true;
-            this.radioButtonNtsc.Text = "NTSC (30fps)";
+            this.radioButtonNtsc.Text = "NTSC (29.97fps)";
             this.radioButtonNtsc.UseVisualStyleBackColor = true;
             // 
             // radioButtonPal

@@ -54,6 +54,8 @@
             this.listBoxLinesForeground = new System.Windows.Forms.ListBox();
             this.contextMenuLinesForeground = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeForegroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkBoxItalic = new System.Windows.Forms.CheckBox();
+            this.labelItalicOn = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.groupBoxNewInput.SuspendLayout();
@@ -185,6 +187,7 @@
             this.groupBoxNewInput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxNewInput.Controls.Add(this.checkBoxItalic);
             this.groupBoxNewInput.Controls.Add(this.buttonZoomOut);
             this.groupBoxNewInput.Controls.Add(this.buttonZoomIn);
             this.groupBoxNewInput.Controls.Add(this.groupBox2);
@@ -319,11 +322,35 @@
             this.removeForegroundToolStripMenuItem.Text = "Remove";
             this.removeForegroundToolStripMenuItem.Click += new System.EventHandler(this.removeForegroundToolStripMenuItem_Click_1);
             // 
+            // checkBoxItalic
+            // 
+            this.checkBoxItalic.AutoSize = true;
+            this.checkBoxItalic.Location = new System.Drawing.Point(301, 49);
+            this.checkBoxItalic.Name = "checkBoxItalic";
+            this.checkBoxItalic.Size = new System.Drawing.Size(48, 17);
+            this.checkBoxItalic.TabIndex = 33;
+            this.checkBoxItalic.Text = "&Italic";
+            this.checkBoxItalic.UseVisualStyleBackColor = true;
+            this.checkBoxItalic.CheckedChanged += new System.EventHandler(this.checkBoxItalic_CheckedChanged);
+            // 
+            // labelItalicOn
+            // 
+            this.labelItalicOn.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.labelItalicOn.AutoSize = true;
+            this.labelItalicOn.Font = new System.Drawing.Font("Tahoma", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelItalicOn.ForeColor = System.Drawing.Color.Red;
+            this.labelItalicOn.Location = new System.Drawing.Point(211, 13);
+            this.labelItalicOn.Name = "labelItalicOn";
+            this.labelItalicOn.Size = new System.Drawing.Size(36, 13);
+            this.labelItalicOn.TabIndex = 34;
+            this.labelItalicOn.Text = "Italic";
+            // 
             // VobSubOcrNOcrCharacter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(648, 642);
+            this.Controls.Add(this.labelItalicOn);
             this.Controls.Add(this.groupBoxNewInput);
             this.Controls.Add(this.buttonShrinkSelection);
             this.Controls.Add(this.buttonExpandSelection);
@@ -378,6 +405,8 @@
         private System.Windows.Forms.ToolStripMenuItem removeBackToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuLinesForeground;
         private System.Windows.Forms.ToolStripMenuItem removeForegroundToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBoxItalic;
+        private System.Windows.Forms.Label labelItalicOn;
 
     }
 }

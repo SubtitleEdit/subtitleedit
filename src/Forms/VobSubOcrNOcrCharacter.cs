@@ -64,7 +64,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool ShrinkSelection { get; private set; }
 
-        internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool showShrink, VobSubOcr.CompareMatch bestGuess, List<VobSubOcr.ImageCompareAddition> additions, VobSubOcr vobSubForm)
+        public bool IsItalic
+        {
+            get
+            {
+                return checkBoxItalic.Checked;
+            }
+        }
+
+        internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, VobSubOcr.CompareMatch bestGuess, List<VobSubOcr.ImageCompareAddition> additions, VobSubOcr vobSubForm)
         {
             NikseBitmap nbmp = new NikseBitmap(vobSubImage);
             nbmp.ReplaceTransparentWith(Color.Black);
@@ -106,6 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             pictureBoxCharacter.Top = labelCharacters.Top + 16;
             SizePictureBox();
+            checkBoxItalic.Checked = italicChecked;
         }
 
         private void buttonExpandSelection_Click(object sender, EventArgs e)
@@ -181,10 +190,9 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
             _nocrChar.Text = textBoxCharacters.Text;
+            _nocrChar.Italic = checkBoxItalic.Checked;
             DialogResult = DialogResult.OK;
         }
-
-        public bool IsItalic { get; set; }
 
         private void pictureBoxCharacter_Paint(object sender, PaintEventArgs e)
         {
@@ -343,6 +351,24 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 e.SuppressKeyPress = true;
                 buttonOK_Click(null, null);
+            }
+        }
+
+        private void checkBoxItalic_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxCharacters.Focus();
+
+            if (checkBoxItalic.Checked)
+            {
+                labelCharactersAsText.Font = new System.Drawing.Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size, FontStyle.Italic);
+                textBoxCharacters.Font = new System.Drawing.Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size, FontStyle.Italic);
+                labelItalicOn.Visible = true;
+            }
+            else
+            {
+                labelCharactersAsText.Font = new System.Drawing.Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size);
+                textBoxCharacters.Font = new System.Drawing.Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size);
+                labelItalicOn.Visible = false;
             }
         }
 

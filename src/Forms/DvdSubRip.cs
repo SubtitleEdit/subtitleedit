@@ -19,34 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
         long _lastPresentationTimeStamp = 0;
         long _lastVobPresentationTimeStamp = 0;
         long _lastNavEndPts = 0;
-        long _accumulatedPresentationTimeStamp;
-        public TimeSpan LastPresentationTimeStamp
-        {
-            get
-            {
-                if (radioButtonPal.Checked)
-                {
-                    float ticksPerMillisecond = 90.000F;
-                    return TimeSpan.FromMilliseconds(Convert.ToDouble(_lastPresentationTimeStamp / ticksPerMillisecond));
-                }
-                else
-                {
-                    float ticksPerMillisecond = 90.090F;
-                    return TimeSpan.FromMilliseconds(Convert.ToDouble(_lastPresentationTimeStamp / ticksPerMillisecond));
-                }
-            }
-        }
-
-        public double FrameRate
-        {
-            get
-            {
-                if (radioButtonPal.Checked)
-                    return 25.0;
-                else
-                    return 30.0;
-            }
-        }
+        long _accumulatedPresentationTimeStamp;           
 
         public string SelectedLanguage
         {
