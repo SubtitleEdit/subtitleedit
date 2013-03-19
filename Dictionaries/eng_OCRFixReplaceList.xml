@@ -1,4 +1,4 @@
-﻿<OCRFixReplaceList>
+<OCRFixReplaceList>
   <WholeWords>
     <Word from="$COff$" to="scoffs" />
     <Word from="$ergei" to="Sergei" />
@@ -1522,6 +1522,13 @@
     <Word from="nightjust" to="night just" />
     <Word from="dayjourney" to="day journey" />
     <Word from="Ourjob" to="Our job" />
+    <Word from="IunCh" to="lunch" />
+    <Word from="nieCe" to="niece" />
+    <Word from="giVes" to="gives" />
+    <Word from="wantto" to="want to" />
+    <Word from="besttoday" to="best today" />
+    <Word from="NiCe" to="Nice" />
+    <Word from="oftravelling" to="of travelling" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
