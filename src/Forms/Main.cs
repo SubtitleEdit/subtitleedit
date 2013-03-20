@@ -379,7 +379,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 index++;
                             }
                         }
-                    }                
+                    }
                 }
                 else if (Configuration.Settings.General.StartLoadLastFile)
                 {

@@ -951,7 +951,7 @@ namespace Nikse.SubtitleEdit.Forms
             mbp.Depth3D = (int)numericUpDownDepth3D.Value;
             mbp.BottomMargin = comboBoxBottomMargin.SelectedIndex;
 
-            var bmp = GenerateImageFromTextWithStyle(mbp);          
+            var bmp = GenerateImageFromTextWithStyle(mbp);
             if (_exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
             {
                 var nbmp = new NikseBitmap(bmp);

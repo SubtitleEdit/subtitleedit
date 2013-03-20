@@ -507,7 +507,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TimeCodeSeperator = "Time code seperator",
             };
 
-            ExtractDateTimeInfo = new LanguageStructure.ExtractDateTimeInfo 
+            ExtractDateTimeInfo = new LanguageStructure.ExtractDateTimeInfo
             {
                 Title = "Generate time as text",
                 Description = "",

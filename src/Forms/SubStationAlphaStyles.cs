@@ -1231,7 +1231,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (saveFileDialogStyle.ShowDialog(this) == DialogResult.OK)
             {
                 if (System.IO.File.Exists(saveFileDialogStyle.FileName))
-                {                    
+                {
                     Encoding encoding = null;
                     var s = new Subtitle();
                     var format = s.LoadSubtitle(saveFileDialogStyle.FileName, out encoding, null);

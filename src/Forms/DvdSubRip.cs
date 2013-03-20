@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
         long _lastPresentationTimeStamp = 0;
         long _lastVobPresentationTimeStamp = 0;
         long _lastNavEndPts = 0;
-        long _accumulatedPresentationTimeStamp;           
+        long _accumulatedPresentationTimeStamp;
 
         public string SelectedLanguage
         {

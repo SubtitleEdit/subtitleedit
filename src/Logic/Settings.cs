@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public string ImportTextSplitting { get; set; }
         public bool ImportTextMergeShortLines { get; set; }
-        public string GenerateTimeCodePatterns { get; set; }        
+        public string GenerateTimeCodePatterns { get; set; }
 
         public ToolsSettings()
         {
@@ -2239,7 +2239,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
             textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
             textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
-            textWriter.WriteElementString("GenerateTimeCodePatterns", settings.Tools.GenerateTimeCodePatterns);            
+            textWriter.WriteElementString("GenerateTimeCodePatterns", settings.Tools.GenerateTimeCodePatterns);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");
