@@ -144,16 +144,21 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OverwriteExistingFiles>Nadpisz istniejące pliki</OverwriteExistingFiles>
     <Style>Styl...</Style>
     <ConvertOptions>Opcje konwersji</ConvertOptions>
-    <AutoBreakLongLines>Przełam automatycznie długie linie</AutoBreakLongLines>
-    <FixItalics>Popraw znaczniki kursywy</FixItalics>
     <RemoveFormatting>Usuń znaczniki formatujące</RemoveFormatting>
     <RemoveTextForHI>Usuń tekst dla niesłyszących</RemoveTextForHI>
+    <OverwriteOriginalFiles>Zastąpić oryginalne pliki (nowe rozszerzenie, jeśli format jest zmieniony)</OverwriteOriginalFiles>
     <ReDoCasing>Ustaw duże/małe litery</ReDoCasing>
     <Convert>Konwertuj</Convert>
     <NothingToConvert>Nie ma nic do konwersji!</NothingToConvert>
     <PleaseChooseOutputFolder>Proszę wybrać folder wyjściowy</PleaseChooseOutputFolder>
     <Converted>Przekonwerotwano</Converted>
     <ConvertedX>Przekonwertowano ({0})</ConvertedX>
+    <Settings>Ustawienia</Settings>
+    <AutoBalance>Automatyczny równoważenie linii</AutoBalance>
+    <ScanFolder>Skanuj folder...</ScanFolder>
+    <ScanningFolder>Przeskanowano {0} i podfolderów z plikami napisów...</ScanningFolder>
+    <Recursive>Uwzględnij podfoldery</Recursive>
+    <SetMinMsBetweenSubtitles>Ustaw min. milisekund między napisami</SetMinMsBetweenSubtitles>
   </BatchConvert>
   <Beamer>
     <Title>Projektor</Title>
@@ -197,6 +202,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Wybór języka</Title>
     <Language>Język</Language>
   </ChooseLanguage>
+  <ColumnPaste>
+    <Title>Wklej kolumnę</Title>
+    <ChooseColumn>Wybierz kolumnę</ChooseColumn>
+    <OverwriteShiftCellsDown>Nadpisz/Przesuń komórki w dół</OverwriteShiftCellsDown>
+    <Overwrite>Nadpisz</Overwrite>
+    <ShiftCellsDown>Przesuń komórki w dół</ShiftCellsDown>
+    <TimeCodesOnly>Tylko kody czasowe</TimeCodesOnly>
+    <TextOnly>Tylko tekst</TextOnly>
+    <OriginalTextOnly>Tylko oryginalny tekst</OriginalTextOnly>
+  </ColumnPaste>
   <CompareSubtitles>
     <Title>Porównanie napisów</Title>
     <PreviousDifference>&amp;Poprzednia różnica</PreviousDifference>
@@ -306,7 +321,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderWidth>Szerokość obramowania:</BorderWidth>
     <ImageFormat>Format obrazu</ImageFormat>
     <AntiAlias>Wygładzanie</AntiAlias>
-    <SideBySide3D>Side-by-side 3D</SideBySide3D>
+    <Text3D>3D</Text3D>
+    <SideBySide3D>Half-side-by-side</SideBySide3D>
+    <HalfTopBottom3D>Połowa-Góra/Dół</HalfTopBottom3D>
+    <Depth>Głębia</Depth>
     <ExportAllLines>Eksport wszystkich linii...</ExportAllLines>
     <XImagesSavedInY>Zapisano {0} obrazów w {1}</XImagesSavedInY>
     <VideoResolution>Rozdzielczość wideo</VideoResolution>
@@ -319,6 +337,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveVobSubAs>Wybierz nazwę pliku VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Wybierz nazwę pliku Blu-ray sup</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Wybierz nazwę pliku DVD Studio Pro STL</SaveDvdStudioProStlAs>
+    <SomeLinesWereTooLongX>Niektóre linie były zbyt długie:{0}</SomeLinesWereTooLongX>
   </ExportPngXml>
   <ExportText>
     <Title>Eksport tekstu</Title>
@@ -341,6 +360,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
     <TimeCodeSeperator>Separator kodów czasowych</TimeCodeSeperator>
   </ExportText>
+  <ExtractDateTimeInfo>
+    <Title>Generowanie czasu jako tekst</Title>
+    <Description>
+    </Description>
+    <StartFrom>Rozpocznij od</StartFrom>
+    <DateTimeFormat>Format daty/czasu</DateTimeFormat>
+    <Example>Przykład</Example>
+    <GenerateSubtitle>&amp;Generowanie napisów</GenerateSubtitle>
+  </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Znajdź</Title>
     <Find>Znajdź</Find>
@@ -526,12 +554,14 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
     <MergeShortLines>Połącz krótkie linie przed kontynuacją</MergeShortLines>
     <RemoveEmptyLines>Usuń puste linie</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Usuń linie bez liter</RemoveLinesWithoutLetters>
+    <GenerateTimeCodes>Generuj kody czasowe</GenerateTimeCodes>
     <GapBetweenSubtitles>Przerwa między napisami (w milisek.)</GapBetweenSubtitles>
     <Auto>Automatycznie</Auto>
     <Fixed>Popraw</Fixed>
     <Refresh>&amp;Odśwież</Refresh>
     <TextFiles>Pliki tekstowe</TextFiles>
     <PreviewLinesModifiedX>Podgląd - zmodyfikowanych wierszy: {0}</PreviewLinesModifiedX>
+    <TimeCodes>Kody czasowe</TimeCodes>
   </ImportText>
   <Interjections>
     <Title>Przerywniki</Title>
@@ -569,6 +599,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <ImportOcrFromDvd>Importuj/OCR napisy z VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importuj/OCR napisy z VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importuj/OCR napisy z BluRay (.sup)...</ImportBluRaySupFile>
+        <ImportXSub>Importuj/OCR xsub z divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importuj napisy z pliku Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importuj napisy z ręcznym wyborem kodowania...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importuj tekst...</ImportText>
@@ -605,6 +636,8 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <RightToLeftMode>Tryb od prawej do lewej (PDL)</RightToLeftMode>
         <ReverseRightToLeftStartEnd>Odwróć początek/koniec PDL (dla wybranych linii)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Pokaż oryginalny tekst w podglądzie audio/wideo</ShowOriginalTextInAudioAndVideoPreview>
+        <ModifySelection>Modyfikuj zaznaczone...</ModifySelection>
+        <InverseSelection>Odwróć zaznaczenie</InverseSelection>
       </Edit>
       <Tools>
         <Title>Narzędzia</Title>
@@ -617,6 +650,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <ChangeFrameRate>Zmień ilość klatek/sekundę...</ChangeFrameRate>
         <ChangeSpeedInPercent>Zmień prędkość (procentowo)...</ChangeSpeedInPercent>
         <MergeShortLines>Połącz krótkie linie...</MergeShortLines>
+        <MergeDuplicateText>Połącz linie z takim samym tekstem...</MergeDuplicateText>
         <SplitLongLines>Podziel długie linie...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Odstęp czasowy między liniami napisów...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sortuj linie wg</SortBy>
@@ -632,6 +666,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <WordsPerMinute>Tekst - słów na minutę (snm)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Utwórz pusty plik dla aktualnie tłumaczonych napisów</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Konwersja wielu plików równocześnie...</BatchConvert>
+        <GenerateTimeAsText>Generuj czas jako tekst...</GenerateTimeAsText>
         <SplitSubtitle>Podziel napisy...</SplitSubtitle>
         <AppendSubtitle>Połącz napisy...</AppendSubtitle>
         <JoinSubtitles>Dołącz napisy...</JoinSubtitles>
@@ -650,6 +685,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
       <SpellCheck>
         <Title>Pisownia</Title>
         <SpellCheck>&amp;Sprawdź pisownię...</SpellCheck>
+        <SpellCheckFromCurrentLine>Sprawdź pisownię od aktualnej linii...</SpellCheckFromCurrentLine>
         <FindDoubleWords>Znajdź zdublowane wyrazy</FindDoubleWords>
         <FindDoubleLines>Znajdź zdublowane linie</FindDoubleLines>
         <GetDictionaries>Pobierz słowniki...</GetDictionaries>
@@ -727,6 +763,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <ColumnInsertTextFromSubtitle>Wstaw teks z napisów...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Imoportuj tekst i przesuń komórki w dół</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Wklej ze schowka...</ColumnPasteFromClipboard>
+        <ColumnCopyOriginalTextToCurrent>Kopiuj tekst z oryginału do aktualnego</ColumnCopyOriginalTextToCurrent>
         <Split>Podziel</Split>
         <MergeSelectedLines>Połącz wybrane linie</MergeSelectedLines>
         <MergeSelectedLinesASDialogue>Połącz wybrane linie jako dialog</MergeSelectedLinesASDialogue>
@@ -749,6 +786,8 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <FixCommonErrorsInSelectedLines>Popraw pospolite błędy w wybranych liniach...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Zmień budowę wybranych linii...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Zapisz wybrane linie jako...</SaveSelectedLines>
+        <WebVTTSetNewVoice>Ustaw nowy głos...</WebVTTSetNewVoice>
+        <WebVTTRemoveVoices>Usuń głosy</WebVTTRemoveVoices>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -966,6 +1005,8 @@ Kontynuować?</SubtitleAppendPrompt>
     <VobSubFiles>Pliki napisów VobSub</VobSubFiles>
     <OpenBluRaySupFile>Otwórz napisy BluRay (.sup)...</OpenBluRaySupFile>
     <BluRaySupFiles>Pliki napisów BluRay (.sup)</BluRaySupFiles>
+    <OpenXSubFiles>Otwórz plik xsub...</OpenXSubFiles>
+    <XSubFiles>Pliki xsub</XSubFiles>
     <BeforeImportingVobSubFile>Przed importem napisów VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Przed importem napisów BluRay (.sup)</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Przed importem pliku BDN xml</BeforeImportingBdnXml>
@@ -1056,6 +1097,9 @@ Chcesz zapisać?</NegativeTimeWarning>
     <PleaseChoose>Znaleziono klika napisów - proszę wybrać</PleaseChoose>
     <TrackXLanguageYTypeZ>Ścieżka {0} - {1} - język: {2} - typ: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MergeDoubleLines>
+    <Title>Połącz linie z takim samym tekstem</Title>
+  </MergeDoubleLines>
   <MergedShortLines>
     <Title>Łączenie krótkich linii</Title>
     <MaximumCharacters>Maksymalna ilość znaków w akapicie:</MaximumCharacters>
@@ -1064,6 +1108,22 @@ Chcesz zapisać?</NegativeTimeWarning>
     <MergedText>Połączony tekst</MergedText>
     <OnlyMergeContinuationLines>Łączenie linii tylko z wielokropkiem</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <ModifySelection>
+    <Title>Modyfikacja zaznaczonych</Title>
+    <Rule>Zasady</Rule>
+    <CaseSensitive>Rozróżniaj wielkość liter</CaseSensitive>
+    <DoWithMatches>Co zrobić z dopasowaniami</DoWithMatches>
+    <MakeNewSelection>Zrób nowe zaznaczenie</MakeNewSelection>
+    <AddToCurrentSelection>Dodaj do aktualnego zaznaczenia</AddToCurrentSelection>
+    <SubtractFromCurrentSelection>Odejmij od aktualnego zaznaczenia</SubtractFromCurrentSelection>
+    <IntersectWithCurrentSelection>Wstaw do aktualnego zaznaczenia</IntersectWithCurrentSelection>
+    <MatchingLinesX>Pasujące linie: {0}</MatchingLinesX>
+    <Contains>Zawiera</Contains>
+    <StartsWith>Rozpoczyna się od</StartsWith>
+    <EndsWith>Kończy się na</EndsWith>
+    <NoContains>Nie zawiera</NoContains>
+    <RegEx>Wyrażenie regularne</RegEx>
+  </ModifySelection>
   <MultipleReplace>
     <Title>Wielokrotna zamiana</Title>
     <FindWhat>Znajdź:</FindWhat>
@@ -1256,8 +1316,6 @@ Chcesz zapisać?</NegativeTimeWarning>
     <ShowStopButton>Pokaż przycisk Stop</ShowStopButton>
     <ShowMuteButton>Pokaż przycisk wyciszenia</ShowMuteButton>
     <ShowFullscreenButton>Pokaż przycisk pełnego ekranu</ShowFullscreenButton>
-    <DefaultVolume>Domyślna głośność:</DefaultVolume>
-    <VolumeNotes>0 - bez dźwięku, 100 - najwyższa głośność</VolumeNotes>
     <PreviewFontSize>Rozmiar czcionki napisów dla podglądu:</PreviewFontSize>
     <MainWindowVideoControls>Główne okno panelu wideo</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Domyślny adres dla wyszukiwanego tekstu:</CustomSearchTextAndUrl>
@@ -1550,6 +1608,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <PlusShadow>+ Cień</PlusShadow>
     <OpaqueBox>Pole nieprzezroczyste (wykorzystuje kolor konturu)</OpaqueBox>
     <Import>Import...</Import>
+    <Export>Eksport...</Export>
     <Copy>Kopiuj</Copy>
     <CopyOfY>Kopiuj z {0}</CopyOfY>
     <CopyXOfY>Kopiuj {0} z {1}</CopyXOfY>
@@ -1557,7 +1616,11 @@ Chcesz zapisać?</NegativeTimeWarning>
     <Remove>Usuń</Remove>
     <RemoveAll>Usuń wszystko</RemoveAll>
     <ImportStyleFromFile>Importuj styl z pliku...</ImportStyleFromFile>
+    <ExportStyleToFile>Eksport stylu do pliku ... (doda styl, jeśli plik już istnieje)</ExportStyleToFile>
     <ChooseStyle>Wybierz styl do importu</ChooseStyle>
+    <StyleAlreadyExits>Styl już istnieje: {0}</StyleAlreadyExits>
+    <StyleXExportedToFileY>Styl '{0}' wyeksportowano do pliku '{1}'</StyleXExportedToFileY>
+    <StyleXImportedFromFileY>Styl '{0}' zaimportowano z pliku '{1}'</StyleXImportedFromFileY>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Punkty synchronizacji</Title>
@@ -1608,6 +1671,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <OcrMethod>Metody OCR</OcrMethod>
     <OcrViaModi>OCR za pomocą MS MODI. Wymagany MS Office</OcrViaModi>
     <OcrViaTesseract>OCR przy użyciu Tesseract</OcrViaTesseract>
+    <OcrViaNOCR>OCR za pomocą nOCR</OcrViaNOCR>
     <Language>Język</Language>
     <OcrViaImageCompare>OCR za pomocą porównania obrazów</OcrViaImageCompare>
     <ImageDatabase>Baza obrazów:</ImageDatabase>
@@ -1710,4 +1774,8 @@ Chcesz zapisać?</NegativeTimeWarning>
     <SplitLongLinesAt2>milisekundy</SplitLongLinesAt2>
     <Other>Inne</Other>
   </WaveFormGenerateTimeCodes>
+  <WebVttNewVoice>
+    <Title>Ustaw nowy głos - WebVTT</Title>
+    <VoiceName>Nazwa głosu</VoiceName>
+  </WebVttNewVoice>
 </Language>
