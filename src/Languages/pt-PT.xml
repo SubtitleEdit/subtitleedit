@@ -43,7 +43,7 @@ Ricardo Perdigão: mailto:ricardofonseca1977@gmail.com</TranslatedBy>
     <FrameRateX>Frames por segundo: {0:0.0###}</FrameRateX>
     <TotalFramesX>Total de frames: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Codificação de vídeo: {0}</VideoEncodingX>
-    <SingleLineLengths>Comprimento único de linha: </SingleLineLengths>
+    <SingleLineLengths>Comprimento da linha individual: </SingleLineLengths>
     <TotalLengthX>Comprimento total: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Comprimento total: {0} (dividir linha!)</TotalLengthXSplitLine>
     <SplitLine>Dividir Linha!</SplitLine>
@@ -149,6 +149,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertOptions>Opções de conversão</ConvertOptions>
     <RemoveFormatting>Remover etiquetas de formatação</RemoveFormatting>
     <RemoveTextForHI>Eliminar texto para Surdos</RemoveTextForHI>
+    <OverwriteOriginalFiles>Substituir os ficheiros originais (nova extensão se o formato for alterado)</OverwriteOriginalFiles>	
     <ReDoCasing>Refazer maiúsculas/minúsculas</ReDoCasing>
     <Convert>Converter</Convert>
     <NothingToConvert>Nada para converter!</NothingToConvert>
@@ -156,6 +157,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Converted>Convertido</Converted>
     <ConvertedX>Convertido ({0})</ConvertedX>
     <Settings>Configurações</Settings>
+    <AutoBalance>Igualar automaticamente as linhas</AutoBalance>
+    <ScanFolder>Examinar pasta...</ScanFolder>
+    <ScanningFolder>A examinar {0} e as sub-pastas por ficheiros de legendas...</ScanningFolder>
+    <Recursive>Incluir sub-pastas</Recursive>
+    <SetMinMsBetweenSubtitles>Definir mínimo em (ms) entre as legendas</SetMinMsBetweenSubtitles>	
   </BatchConvert>
   <Beamer>
     <Title>Vídeo projector</Title>
@@ -252,7 +258,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Languages>Idiomas</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25fps)</Pal>
-    <Ntsc>NTSC (23.976fps)</Ntsc>
+    <Ntsc>NTSC (29.97fps)</Ntsc>
     <StartRipping>Iniciar extracção</StartRipping>
     <Abort>Cancelar</Abort>
     <AbortedByUser>Cancelado pelo utilizador</AbortedByUser>
@@ -318,7 +324,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderWidth>Tamanho da borda</BorderWidth>
 	<ImageFormat>Formato de Imagem</ImageFormat>
     <AntiAlias>Anti-alias</AntiAlias>
-    <SideBySide3D>3D lado-a-lado</SideBySide3D>
+    <Text3D>3D</Text3D>	
+    <SideBySide3D>Lado-a-lado parcial</SideBySide3D>
+    <HalfTopBottom3D>Superior/inferior parcial</HalfTopBottom3D>	
+    <Depth>Profundidade</Depth>	
     <ExportAllLines>Exportar legenda...</ExportAllLines>
     <XImagesSavedInY>{0} imagens guardadas em {1}</XImagesSavedInY>
     <VideoResolution>Resolução vídeo</VideoResolution>
@@ -331,6 +340,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveVobSubAs>Escolha o nome do ficheiro VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Escolha o nome do ficheiro Blu-ray sup</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Escolha o nome do ficheiro DVD Studio Pro STL</SaveDvdStudioProStlAs>
+    <SomeLinesWereTooLongX>Linhas demasiado longas: {0}</SomeLinesWereTooLongX>	
   </ExportPngXml>
   <ExportText>
     <Title>Exportar texto</Title>
@@ -353,6 +363,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
     <TimeCodeSeperator>Separador código de tempo...</TimeCodeSeperator>
   </ExportText>
+  <ExtractDateTimeInfo>
+    <Title>Criar tempos como texto</Title>
+    <Description />
+    <StartFrom>Iniciar a partir de</StartFrom>
+    <DateTimeFormat>Formato Data/tempo</DateTimeFormat>
+    <Example>Exemplo</Example>
+    <GenerateSubtitle>&amp;Criar legenda</GenerateSubtitle>
+  </ExtractDateTimeInfo>  
   <FindDialog>
     <Title>Localizar</Title>
     <Find>Localizar</Find>
@@ -466,7 +484,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XUppercaseIsFoundInsideLowercaseWords>{0} maiúsculas 'i's encontradas palavras minúsculas</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Actualizar correcções disponíveis</RefreshFixes>
     <ApplyFixes>Aplicar correcções seleccionadas</ApplyFixes>
-    <AutoBreak>Quebra linha &amp;auto</AutoBreak>
+    <AutoBreak>Auto ajuste da &amp;linha</AutoBreak>
     <Unbreak>&amp;Combinar</Unbreak>
     <FixDoubleDash>Corrigir '--' -&gt; '...' </FixDoubleDash>
     <FixDoubleGreaterThan>Remover &gt;&gt; </FixDoubleGreaterThan>
@@ -536,12 +554,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MergeShortLines>Combinar linhas curtas continuadas</MergeShortLines>
     <RemoveEmptyLines>Remover linhas em branco</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Remover linhas sem letras</RemoveLinesWithoutLetters>
+    <GenerateTimeCodes>Gerar códigos de tempo</GenerateTimeCodes>	
     <GapBetweenSubtitles>Espaço entre legendas (milissegundos)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
     <Fixed>Corrigido</Fixed>
     <Refresh>&amp;Actualizar</Refresh>
     <TextFiles>Ficheiros de texto</TextFiles>
     <PreviewLinesModifiedX>Pré-visualizar - parágrafos modificados: {0}</PreviewLinesModifiedX>
+    <TimeCodes>Códigos de tempo</TimeCodes>	
   </ImportText>
   <Interjections>
     <Title>Interjeições</Title>
@@ -579,6 +599,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportOcrFromDvd>Importar legenda /OCR de VOB/IFO (DVD) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importar legenda /OCR VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importar legenda /OCR Blu-ray (sup)...</ImportBluRaySupFile>
+        <ImportXSub>Importar /OCR xsub de ficheiros divx/avi...</ImportXSub>		
         <ImportSubtitleFromMatroskaFile>Importar legenda de ficheiro Matroska (mkv)...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importar legenda seleccionando codificação manualmente...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importar texto simples...</ImportText>
@@ -633,18 +654,19 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SplitLongLines>Dividir linhas longas...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Duração mínima entre parágrafos...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>
-        <Number>Número</Number>
+        <Number>Ordem numérica</Number>
         <StartTime>Tempo inicial</StartTime>
         <EndTime>Tempo final</EndTime>
-        <Duration>Duração</Duration>
+        <Duration>Duração da exposição da linha</Duration>
         <TextAlphabetically>Texto - ordem alfabética</TextAlphabetically>
-        <TextSingleLineMaximumLength>Texto - comprimento máximo única linha</TextSingleLineMaximumLength>
+        <TextSingleLineMaximumLength>Texto - comprimento máximo da linha individual</TextSingleLineMaximumLength>
         <TextTotalLength>Texto - comprimento total</TextTotalLength>
         <TextNumberOfLines>Texto - número de linhas</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Texto - número de caracteres/seg</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Texto - palavras por minuto (ppm)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Fazer nova tradução a partir da legenda actual</MakeNewEmptyTranslationFromCurrentSubtitle>
 		<BatchConvert>Converter múltiplos ficheiros...</BatchConvert>
+        <GenerateTimeAsText>Criar tempos como texto...</GenerateTimeAsText>		
         <SplitSubtitle>Dividir legenda...</SplitSubtitle>
         <AppendSubtitle>Anexar legenda...</AppendSubtitle>
         <JoinSubtitles>Juntar legendas...</JoinSubtitles>
@@ -776,7 +798,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <UndoChangesInEditPanel>Anular alterações no painel de edição</UndoChangesInEditPanel>
       <Previous>&lt;Anterior</Previous>
       <Next>Próxima &gt;</Next>
-      <AutoBreak>Quebra linha &amp;auto</AutoBreak>
+      <AutoBreak>Auto ajuste da &amp;linha</AutoBreak>
       <Unbreak>Combinar</Unbreak>
     </Controls>
     <VideoControls>
@@ -1093,6 +1115,11 @@ Deseja continuar?</SubtitleAppendPrompt>
     <SubtractFromCurrentSelection>Extrair da selecção corrente</SubtractFromCurrentSelection>
     <IntersectWithCurrentSelection>Intersectar com a corrente selecção</IntersectWithCurrentSelection>
     <MatchingLinesX>Linhas com correspondência: {0}</MatchingLinesX>
+    <Contains>Contém</Contains>
+    <StartsWith>Começa com</StartsWith>
+    <EndsWith>Termina com</EndsWith>
+    <NoContains>Não Contém</NoContains>
+    <RegEx>Expressão regular</RegEx>	
   </ModifySelection>
   <MultipleReplace>
     <Title>Múltipla substituição</Title>
@@ -1578,6 +1605,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <PlusShadow>+ Sombra</PlusShadow>
     <OpaqueBox>Caixa opaca (contorno colorido)</OpaqueBox>
     <Import>Importar...</Import>
+    <Export>Exportar...</Export>	
     <Copy>Copiar</Copy>
     <CopyOfY>Cópia de {0}</CopyOfY>
     <CopyXOfY>Cópia {0} de {1}</CopyXOfY>
@@ -1585,7 +1613,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Remove>Remover</Remove>
     <RemoveAll>Remover tudo</RemoveAll>
     <ImportStyleFromFile>Importar estilo do ficheiro...</ImportStyleFromFile>
+    <ExportStyleToFile>Exportar estilo para ficheiro... (adiciona o estilo se já existir o ficheiro)</ExportStyleToFile>	
     <ChooseStyle>Escolher estilo para importar</ChooseStyle>
+    <StyleAlreadyExits>Estilo já existente: {0}</StyleAlreadyExits>
+    <StyleXExportedToFileY>Estilo '{0}' exportado para o ficheiro '{1}'</StyleXExportedToFileY>
+    <StyleXImportedFromFileY>Estilo '{0}' importado do ficheiro '{1}'</StyleXImportedFromFileY>	
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Ponto de sincronização</Title>
@@ -1638,6 +1670,7 @@ Manter as alterações?</KeepChangesMessage>
     <OcrMethod>Método OCR</OcrMethod>
     <OcrViaModi>OCR com o Microsoft Office Document Imaging (MODI). Necessita do MS Office</OcrViaModi>
     <OcrViaTesseract>OCR com Tesseract</OcrViaTesseract>
+    <OcrViaNOCR>OCR com o nOCR</OcrViaNOCR>	
     <Language>Idioma</Language>
     <OcrViaImageCompare>OCR por comparação de imagens</OcrViaImageCompare>
     <ImageDatabase>Base de dados de imagem</ImageDatabase>
