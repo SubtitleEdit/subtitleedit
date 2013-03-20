@@ -973,7 +973,7 @@
                     public string WordsPerMinute { get; set; }
                     public string MakeNewEmptyTranslationFromCurrentSubtitle { get; set; }
                     public string BatchConvert { get; set; }
-                    public string GenerateTimeAsText { get; set; }                    
+                    public string GenerateTimeAsText { get; set; }
                     public string SplitSubtitle { get; set; }
                     public string AppendSubtitle { get; set; }
                     public string JoinSubtitles { get; set; }

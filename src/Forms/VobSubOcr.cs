@@ -1308,7 +1308,7 @@ namespace Nikse.SubtitleEdit.Forms
                             return oc.Text;
                     }
                 }
-            
+
                 foreach (NOcrChar oc in _nocrChars)
                 {
                     if (Math.Abs(oc.WidthPercent - widthPercent) < 40 && nbmp.Width > 20 && nbmp.Height > 10 && Math.Abs(oc.MarginTop - topMargin) < 10)
@@ -2225,7 +2225,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textWriter.WriteAttributeString("Width", oc.Width.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteAttributeString("Height", oc.Height.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteAttributeString("MarginTop", oc.MarginTop.ToString(CultureInfo.InvariantCulture));
-                    textWriter.WriteAttributeString("Italic", oc.Italic.ToString(CultureInfo.InvariantCulture));                    
+                    textWriter.WriteAttributeString("Italic", oc.Italic.ToString(CultureInfo.InvariantCulture));
                     foreach (NOcrPoint op in oc.LinesForeground)
                     {
                         textWriter.WriteStartElement("Point", "");
