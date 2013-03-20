@@ -5,8 +5,7 @@
     <Version>3.3.3</Version>
     <TranslatedBy>Tradução (Português do Brasil): Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
@@ -144,16 +143,21 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <OverwriteExistingFiles>Substituir arquivos existentes</OverwriteExistingFiles>
     <Style>Estilo...</Style>
     <ConvertOptions>Opções de Conversão</ConvertOptions>
-    <AutoBreakLongLines>Auto dividir linhas longas</AutoBreakLongLines>
-    <FixItalics>Corrigir itálicos</FixItalics>
     <RemoveFormatting>Remover tags de formatação</RemoveFormatting>
     <RemoveTextForHI>Remover texto para surdos</RemoveTextForHI>
+    <OverwriteOriginalFiles>Substituir arquivos originais (nova extensão se o formato mudar)</OverwriteOriginalFiles>
     <ReDoCasing>Repetir processo</ReDoCasing>
     <Convert>Converter</Convert>
     <NothingToConvert>Nada para converter!</NothingToConvert>
     <PleaseChooseOutputFolder>Por fvaor, escolha a pasta de saída</PleaseChooseOutputFolder>
     <Converted>Convertido</Converted>
     <ConvertedX>Convertido ({0})</ConvertedX>
+    <Settings>Configurações</Settings>
+    <AutoBalance>Ajuste automático de linhas</AutoBalance>
+    <ScanFolder>Analisar pasta...</ScanFolder>
+    <ScanningFolder>Analisando {0} e subpastas por legendas...</ScanningFolder>
+    <Recursive>Incluir subpastas</Recursive>
+    <SetMinMsBetweenSubtitles>Definir milisegundos entre legendas</SetMinMsBetweenSubtitles>
   </BatchConvert>
   <Beamer>
     <Title>Projetor</Title>
@@ -197,6 +201,16 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Selecione o idioma</Title>
     <Language>Idioma</Language>
   </ChooseLanguage>
+  <ColumnPaste>
+    <Title>Colar na coluna</Title>
+    <ChooseColumn>Escolha a coluna</ChooseColumn>
+    <OverwriteShiftCellsDown>Substituir/Mover células para baixo</OverwriteShiftCellsDown>
+    <Overwrite>Substituir</Overwrite>
+    <ShiftCellsDown>Mover células para baixo</ShiftCellsDown>
+    <TimeCodesOnly>Somente códigos de tempo</TimeCodesOnly>
+    <TextOnly>Somente texto</TextOnly>
+    <OriginalTextOnly>Somente texto original</OriginalTextOnly>
+  </ColumnPaste>
   <CompareSubtitles>
     <Title>Comparar legendas</Title>
     <PreviousDifference>Diferença &amp;anterior</PreviousDifference>
@@ -306,7 +320,10 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderWidth>Tamanho da borda</BorderWidth>
     <ImageFormat>Formato de imagem</ImageFormat>
     <AntiAlias>Anti alias</AntiAlias>
+    <Text3D>3D</Text3D>
     <SideBySide3D>3D lado-a-lado</SideBySide3D>
+    <HalfTopBottom3D>Metade-Superior/Inferior</HalfTopBottom3D>
+    <Depth>Profundidade</Depth>
     <ExportAllLines>Exportar todas as linhas...</ExportAllLines>
     <XImagesSavedInY>{0} imagens salvas em {1}</XImagesSavedInY>
     <VideoResolution>Res. vídeo</VideoResolution>
@@ -319,6 +336,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveVobSubAs>Escolher nome arquivo VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Escolher nome arquivo Blu-ray SUP</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Escolher nome arquivo DVD Studio Pro STL</SaveDvdStudioProStlAs>
+    <SomeLinesWereTooLongX>Algumas linhas são muito longas: {0}</SomeLinesWereTooLongX>
   </ExportPngXml>
   <ExportText>
     <Title>Exportar texto</Title>
@@ -341,6 +359,15 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
     <TimeCodeSeperator>Separador código de tempo</TimeCodeSeperator>
   </ExportText>
+  <ExtractDateTimeInfo>
+    <Title>Gerar tempo como texto</Title>
+    <Description>
+    </Description>
+    <StartFrom>Iniciar de</StartFrom>
+    <DateTimeFormat>Formato data/tempo</DateTimeFormat>
+    <Example>Exemplo</Example>
+    <GenerateSubtitle>&amp;Gerar legenda</GenerateSubtitle>
+  </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Localizar</Title>
     <Find>Localizar</Find>
@@ -524,12 +551,14 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <MergeShortLines>Combinar linhas curtas com continuação</MergeShortLines>
     <RemoveEmptyLines>Remover linhas em branco</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Remover linhas sem letras</RemoveLinesWithoutLetters>
+    <GenerateTimeCodes>Gerar códigos de tempo</GenerateTimeCodes>
     <GapBetweenSubtitles>Espaço entre legendas (milisegundos)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
     <Fixed>Corrigido</Fixed>
     <Refresh>&amp;Atualizar</Refresh>
     <TextFiles>Arquivos de texto</TextFiles>
     <PreviewLinesModifiedX>Prévia - parágrafos modificados: {0}</PreviewLinesModifiedX>
+    <TimeCodes>Códigos de tempo</TimeCodes>
   </ImportText>
   <Interjections>
     <Title>Interjeições</Title>
@@ -567,6 +596,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportOcrFromDvd>Importar legenda /OCR de VOB/IFO (DVD) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importar legenda /OCR VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importar arquivo /OCR Blu-ray sup...</ImportBluRaySupFile>
+        <ImportXSub>Importar/OCR xsub de DivX/AVI...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importar legenda de arquivo Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importar legenda selecionando codificação manualmente...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importar texto simples...</ImportText>
@@ -603,6 +633,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <RightToLeftMode>Modo direita-para-esquerda</RightToLeftMode>
         <ReverseRightToLeftStartEnd>Reverter início/fim RTL (para linhas selecionadas)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Exibir texto original nas prévias de áudio/vídeo</ShowOriginalTextInAudioAndVideoPreview>
+        <ModifySelection>Modificar seleção...</ModifySelection>
+        <InverseSelection>Inverter seleção...</InverseSelection>
       </Edit>
       <Tools>
         <Title>Ferramentas</Title>
@@ -614,7 +646,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeCasing>Alterar maiúsculas...</ChangeCasing>
         <ChangeFrameRate>Alterar taxa de quadros...</ChangeFrameRate>
         <ChangeSpeedInPercent>Velocidade alterada (porcentagem)...</ChangeSpeedInPercent>
-        <MergeShortLines>Combinar linhas curtas...</MergeShortLines>
+        <MergeShortLines>Mesclar linhas curtas...</MergeShortLines>
+        <MergeDuplicateText>Mesclar linhas como o mesmo texto...</MergeDuplicateText>
         <SplitLongLines>Dividir linhas longas...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Duração mínima entre parágrafos...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>
@@ -630,6 +663,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <WordsPerMinute>Texto - palavras por minuto</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Fazer nova tradução a partir da legenda atual</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Conversão em lote...</BatchConvert>
+        <GenerateTimeAsText>Gerar tempo como texto...</GenerateTimeAsText>
         <SplitSubtitle>Dividir legenda...</SplitSubtitle>
         <AppendSubtitle>Anexar legenda...</AppendSubtitle>
         <JoinSubtitles>Juntar legendas...</JoinSubtitles>
@@ -648,6 +682,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
       <SpellCheck>
         <Title>Ortografia</Title>
         <SpellCheck>&amp;Ortografia...</SpellCheck>
+        <SpellCheckFromCurrentLine>Ortografia da linha atual...</SpellCheckFromCurrentLine>
         <FindDoubleWords>Localizar palavras duplicadas</FindDoubleWords>
         <FindDoubleLines>Localizar linhas duplas</FindDoubleLines>
         <GetDictionaries>Obter dicionários...</GetDictionaries>
@@ -725,6 +760,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnInsertTextFromSubtitle>Inserir texto da legenda...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Importar texto e deslocar células para baixo</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Colar da área de transferência...</ColumnPasteFromClipboard>
+        <ColumnCopyOriginalTextToCurrent>Copiar texto do original para o atual</ColumnCopyOriginalTextToCurrent>
         <Split>Dividir</Split>
         <MergeSelectedLines>Combinar linhas selecionadas</MergeSelectedLines>
         <MergeSelectedLinesASDialogue>Combinar linhas selecionadas como diálogo</MergeSelectedLinesASDialogue>
@@ -747,6 +783,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <FixCommonErrorsInSelectedLines>Corrigir problemas comuns das linhas selecionadas...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Alterar maiúsc. das linhas selecionadas...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Salvar linhas selecionadas como...</SaveSelectedLines>
+        <WebVTTSetNewVoice>Definir nova voz...</WebVTTSetNewVoice>
+        <WebVTTRemoveVoices>Remover vozes</WebVTTRemoveVoices>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -964,6 +1002,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <VobSubFiles>Arquivos de legenda VobSub</VobSubFiles>
     <OpenBluRaySupFile>Abrir arquivo Blu-ray .sup...</OpenBluRaySupFile>
     <BluRaySupFiles>Arquivo Blu-ray .sup</BluRaySupFiles>
+    <OpenXSubFiles>Abrir arquivo xsub...</OpenXSubFiles>
+    <XSubFiles>Arquivos xsub</XSubFiles>
     <BeforeImportingVobSubFile>Antes de importar legenda VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Antes de importar arquivo Blu-ray sup</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Antes de importar arquivo BDN xml</BeforeImportingBdnXml>
@@ -1051,6 +1091,9 @@ Deseja continuar?</SubtitleAppendPrompt>
     <PleaseChoose>Foi encontrada mais do que uma legenda - por favor, escolha uma</PleaseChoose>
     <TrackXLanguageYTypeZ>Faixa {0} - {1} - idioma: {2} - tipo: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MergeDoubleLines>
+    <Title>Mesclar linhas com o mesmo texto</Title>
+  </MergeDoubleLines>
   <MergedShortLines>
     <Title>Combinar linhas curtas</Title>
     <MaximumCharacters>Número máximo de caracteres em un parágrafo</MaximumCharacters>
@@ -1059,6 +1102,22 @@ Deseja continuar?</SubtitleAppendPrompt>
     <MergedText>Texto combinado</MergedText>
     <OnlyMergeContinuationLines>Combinar somente linhas que continuam</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <ModifySelection>
+    <Title>Modificar seleção</Title>
+    <Rule>Regra</Rule>
+    <CaseSensitive>Diferenciar maiúsculas de minúsculas</CaseSensitive>
+    <DoWithMatches>O que fazer com combinações</DoWithMatches>
+    <MakeNewSelection>Fazer nova seleção</MakeNewSelection>
+    <AddToCurrentSelection>Adicionar à seleção atual</AddToCurrentSelection>
+    <SubtractFromCurrentSelection>Remover de seleção atual</SubtractFromCurrentSelection>
+    <IntersectWithCurrentSelection>Cruzar com a seleção atual</IntersectWithCurrentSelection>
+    <MatchingLinesX>Linhas correspondentes</MatchingLinesX>
+    <Contains>Contém</Contains>
+    <StartsWith>Inicia com</StartsWith>
+    <EndsWith>Termina com</EndsWith>
+    <NoContains>Não contém</NoContains>
+    <RegEx>Expressão regular</RegEx>
+  </ModifySelection>
   <MultipleReplace>
     <Title>Múltipla substituição</Title>
     <FindWhat>Localizar</FindWhat>
@@ -1251,8 +1310,6 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <ShowStopButton>Mostrar botão parar</ShowStopButton>
     <ShowMuteButton>Exibir botão Mudo</ShowMuteButton>
     <ShowFullscreenButton>Exibir botão Tela Cheia</ShowFullscreenButton>
-    <DefaultVolume>Volume padrão</DefaultVolume>
-    <VolumeNotes>0 sem som, 100 volume máximo</VolumeNotes>
     <PreviewFontSize>Tamanho da fonte da legenda na prévia</PreviewFontSize>
     <MainWindowVideoControls>Controles de vídeo na janela principal</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Busca de texto e URL personalizada</CustomSearchTextAndUrl>
@@ -1543,6 +1600,8 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <PlusShadow>+ Sombra</PlusShadow>
     <OpaqueBox>Caixa opaca (usa cor de contorno)</OpaqueBox>
     <Import>Importar...</Import>
+    <Export>
+    </Export>
     <Copy>Cópia</Copy>
     <CopyOfY>Cópia de {0}</CopyOfY>
     <CopyXOfY>Cópia {0} de {1}</CopyXOfY>
@@ -1550,7 +1609,11 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <Remove>Remover</Remove>
     <RemoveAll>Remover tudo</RemoveAll>
     <ImportStyleFromFile>Importar estilo do arquivo...</ImportStyleFromFile>
+    <ExportStyleToFile>Exportar estilo para arquivo... (irá adicionar estilo caso o arquivo já exista)</ExportStyleToFile>
     <ChooseStyle>Escolher estilo para importar</ChooseStyle>
+    <StyleAlreadyExits>O estilo já existe: {0}</StyleAlreadyExits>
+    <StyleXExportedToFileY>Estilo '{0}' exportado para o arquivo '{1}'</StyleXExportedToFileY>
+    <StyleXImportedFromFileY>Estilo '{0}' importado do arquivo '{1}'</StyleXImportedFromFileY>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Ponto de sincronização</Title>
@@ -1603,6 +1666,7 @@ Manter as alterações?</KeepChangesMessage>
     <OcrMethod>Método OCR</OcrMethod>
     <OcrViaModi>OCR com o Microsoft Office Document Imaging (MODI). Necessita do MS Office</OcrViaModi>
     <OcrViaTesseract>OCR com Tesseract</OcrViaTesseract>
+    <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
     <Language>Idioma</Language>
     <OcrViaImageCompare>OCR por comparação de imagens</OcrViaImageCompare>
     <ImageDatabase>Base de dados de imagem</ImageDatabase>
@@ -1705,4 +1769,8 @@ Manter as alterações?</KeepChangesMessage>
     <SplitLongLinesAt2>milisegundos</SplitLongLinesAt2>
     <Other>Outro</Other>
   </WaveFormGenerateTimeCodes>
+  <WebVttNewVoice>
+    <Title>WebVTT - definir nova voz</Title>
+    <VoiceName>Nome da voz</VoiceName>
+  </WebVttNewVoice>
 </Language>
