@@ -233,13 +233,14 @@ namespace Nikse.SubtitleEdit.Forms
             progressBarRip.Maximum = 100;
             progressBarRip.Value = 0;
             int lba = 0;
-            while (position < fs.Length && !_abort)
+            long length = fs.Length;
+            while (position < length && !_abort)
             {
                 int bytesRead = 0;
 
                 // Reading and test for IO errors... and allow abort/retry/ignore
                 tryAgain = true;
-                while (tryAgain && position < fs.Length)
+                while (tryAgain && position < length)
                 {
                     tryAgain = false;
                     try
@@ -304,7 +305,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 position += 0x800;
 
-                progressBarRip.Value = (int)((position * 100) / fs.Length);
+                progressBarRip.Value = (int)((position * 100) / length);
                 Application.DoEvents();
                 lba++;
             }
