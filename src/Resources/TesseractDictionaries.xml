@@ -1,0 +1,151 @@
+<TesseractDictionaries>
+  <Dictionary>
+    <EnglishName>Arabic</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.ara.tar.gz</DownloadLink>
+    <Description>Arabic language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Basque</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.eus.tar.gz</DownloadLink>
+    <Description>Basque language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Bulgarian</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.bul.tar.gz</DownloadLink>
+    <Description>Bulgarian language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Catalan</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.cat.tar.gz</DownloadLink>
+    <Description>Catalan language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Chinese (Simplified)</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.chi_sim.tar.gz</DownloadLink>
+    <Description>Chinese (Simplified) language data for Tesseract 3.02</Description>
+  </Dictionary>  
+  <Dictionary>
+    <EnglishName>Czech</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.ces.tar.gz</DownloadLink>
+    <Description>Czech language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Danish</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.dan.tar.gz</DownloadLink>
+    <Description>Danish language data for Tesseract 3.02</Description>
+  </Dictionary>  <Dictionary>
+    <EnglishName>Dutch</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.nld.tar.gz</DownloadLink>
+    <Description>Dutch language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>English</EnglishName>
+    <DownloadLink>https://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.eng.tar.gz</DownloadLink>
+    <Description>English language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Finnish</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.fin.tar.gz</DownloadLink>
+    <Description>Finnish language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>French</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.fra.tar.gz</DownloadLink>
+    <Description>French language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>German</EnglishName>
+    <DownloadLink>https://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.deu.tar.gz</DownloadLink>
+    <Description>German language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Greek</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.ell.tar.gz</DownloadLink>
+    <Description>Greek language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Hungarian</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.hun.tar.gz</DownloadLink>
+    <Description>Hungarian language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Icelandic</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.isl.tar.gz</DownloadLink>
+    <Description>Icelandic language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Italian</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.ita.tar.gz</DownloadLink>
+    <Description>Italian language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Japanese</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.jpn.tar.gz</DownloadLink>
+    <Description>Japanese language data for Tesseract 3.02</Description>
+  </Dictionary>  
+  <Dictionary>
+    <EnglishName>Korean</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.kor.tar.gz</DownloadLink>
+    <Description>Korean language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Norwegian</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.nor.tar.gz</DownloadLink>
+    <Description>Norwegian language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Polish</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.pol.tar.gz</DownloadLink>
+    <Description>Polish language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Portuguese</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.por.tar.gz</DownloadLink>
+    <Description>Portuguese language data for Tesseract 3.02 </Description>
+  </Dictionary>  
+  <Dictionary>
+    <EnglishName>Romanian</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.ron.tar.gz</DownloadLink>
+    <Description>Romanian language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Russian</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.rus.tar.gz</DownloadLink>
+    <Description>Russian Language Data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Serbian (Latin)</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.srp.tar.gz</DownloadLink>
+    <Description>Serbian (Latin) language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Spanish</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.spa.tar.gz</DownloadLink>
+    <Description>Spanish language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Swedish</EnglishName>
+    <DownloadLink>https://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.swe.tar.gz</DownloadLink>
+    <Description>Swedish language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Thai</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.tha.tar.gz</DownloadLink>
+    <Description>Thai language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Turkish</EnglishName>
+    <DownloadLink>https://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.tur.tar.gz</DownloadLink>
+    <Description>Turkish language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Ukrainian</EnglishName>
+    <DownloadLink>https://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.ukr.tar.gz</DownloadLink>
+    <Description>Ukrainian language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Vietnamese</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.vie.tar.gz</DownloadLink>
+    <Description>Vietnamese Language Data for Tesseract 3.02</Description>
+  </Dictionary>
+</TesseractDictionaries>

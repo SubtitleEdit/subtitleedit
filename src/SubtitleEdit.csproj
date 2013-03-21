@@ -320,6 +320,12 @@
     <Compile Include="Forms\GetDictionaries.Designer.cs">
       <DependentUpon>GetDictionaries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\GetTesseractDictionaries.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GetTesseractDictionaries.Designer.cs">
+      <DependentUpon>GetTesseractDictionaries.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Interjections.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -926,6 +932,8 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle4.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeTranscript.cs" />
     <Compile Include="Logic\SubtitleFormats\ZeroG.cs" />
+    <Compile Include="Logic\TarHeader.cs" />
+    <Compile Include="Logic\TarReader.cs" />
     <Compile Include="Logic\TextDraw.cs" />
     <Compile Include="Logic\TimeCode.cs" />
     <Compile Include="Logic\TransportStream\AdaptationField.cs" />
@@ -1103,6 +1111,9 @@
     <EmbeddedResource Include="Forms\GetDictionaries.resx">
       <DependentUpon>GetDictionaries.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GetTesseractDictionaries.resx">
+      <DependentUpon>GetTesseractDictionaries.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Interjections.resx">
       <DependentUpon>Interjections.cs</DependentUpon>
@@ -1301,6 +1312,7 @@
     </Compile>
     <EmbeddedResource Include="Resources\OpenOfficeDictionaries.xml.zip" />
     <EmbeddedResource Include="Resources\HunspellDictionaries.xml.zip" />
+    <EmbeddedResource Include="Resources\TesseractDictionaries.xml.zip" />
     <None Include="Web References\MicrosoftTranslationService\GetTranslationsResponse.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
@@ -1524,6 +1536,9 @@
     <None Include="Resources\pictureBoxFS.Image.png" />
     <None Include="Resources\pictureBoxFSDown.Image.png" />
     <None Include="Resources\pictureBoxFSOver.Image.png" />
+    <Content Include="Resources\TesseractDictionaries.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Resources\HunspellDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>

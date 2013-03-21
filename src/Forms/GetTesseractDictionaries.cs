@@ -10,26 +10,25 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class GetDictionaries : Form
+    public partial class GetTesseractDictionaries : Form
     {
         List<string> _dictionaryDownloadLinks = new List<string>();
         List<string> _descriptions = new List<string>();
         string _xmlName = null;
 
-        public GetDictionaries()
+        public GetTesseractDictionaries()
         {
             InitializeComponent();
 
             Text = Configuration.Settings.Language.GetDictionaries.Title;
-            labelDescription1.Text = Configuration.Settings.Language.GetDictionaries.DescriptionLine1;
-            labelDescription2.Text = Configuration.Settings.Language.GetDictionaries.DescriptionLine2;
+//            labelDescription1.Text = Configuration.Settings.Language.GetDictionaries.DescriptionLine1;
             linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetDictionaries.OpenDictionariesFolder;
             labelChooseLanguageAndClickDownload.Text = Configuration.Settings.Language.GetDictionaries.ChooseLanguageAndClickDownload;
             buttonDownload.Text = Configuration.Settings.Language.GetDictionaries.Download;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
-            labelPleaseWait.Text = string.Empty;
+            labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
 
-            LoadDictionaryList("Nikse.SubtitleEdit.Resources.OpenOfficeDictionaries.xml.zip");
+            LoadDictionaryList("Nikse.SubtitleEdit.Resources.TesseractDictionaries.xml.zip");
             FixLargeFonts();
         }
 
@@ -56,7 +55,6 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
                 {
                     string englishName = node.SelectSingleNode("EnglishName").InnerText;
-                    string nativeName = node.SelectSingleNode("NativeName").InnerText;
                     string downloadLink = node.SelectSingleNode("DownloadLink").InnerText;
 
                     string description = string.Empty;
@@ -66,8 +64,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!string.IsNullOrEmpty(downloadLink))
                     {
                         string name = englishName;
-                        if (!string.IsNullOrEmpty(nativeName))
-                            name += " - " + nativeName;
 
                         comboBoxDictionaries.Items.Add(name);
                         _dictionaryDownloadLinks.Add(downloadLink);
@@ -92,34 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void FormGetDictionaries_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape)
-            {
-                DialogResult = DialogResult.Cancel;
-            }
-            else if (e.KeyCode == Keys.F1)
-            {
-                Utilities.ShowHelp("#spellcheck");
-                e.SuppressKeyPress = true;
-            }
-        }
-
-        private void LinkLabel3LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("http://nhunspell.sourceforge.net/");
-        }
-
-        private void LinkLabel4LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            string dictionaryFolder = Utilities.DictionaryFolder;
-            if (!Directory.Exists(dictionaryFolder))
-                Directory.CreateDirectory(dictionaryFolder);
-
-            System.Diagnostics.Process.Start(dictionaryFolder);
-        }
-
-        private void buttonDownload_Click(object sender, System.EventArgs e)
+        private void buttonDownload_Click(object sender, EventArgs e)
         {
             try
             {
@@ -151,57 +120,43 @@ namespace Nikse.SubtitleEdit.Forms
 
         void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
-            if (e.Error != null && _xmlName == "Nikse.SubtitleEdit.Resources.OpenOfficeDictionaries.xml.zip")
-            {
-                MessageBox.Show("Unable to connect to extensions.services.openoffice.org... Switching host - please re-try!");
-                LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.zip");
-                labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
-                buttonDownload.Enabled = true;
-                comboBoxDictionaries.Enabled = true;
-                Cursor = Cursors.Default;
-                return;
-            }
-            else if (e.Error != null)
+            if (e.Error != null)
             {
                 MessageBox.Show("Download failed!");
                 DialogResult = DialogResult.Cancel;
                 return;
             }
 
-            string dictionaryFolder = Utilities.DictionaryFolder;
+            string dictionaryFolder = Configuration.TesseractDataFolder;
             if (!Directory.Exists(dictionaryFolder))
                 Directory.CreateDirectory(dictionaryFolder);
 
             int index = comboBoxDictionaries.SelectedIndex;
 
             var ms = new MemoryStream(e.Result);
-
-            ZipExtractor zip = ZipExtractor.Open(ms);
-            List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
-
-            // Extract dic/aff files in dictionary folder
-            string path;
-            foreach (ZipExtractor.ZipFileEntry entry in dir)
+            var tempFileName = Path.GetTempFileName() + ".tar";
+            var fs = new FileStream(tempFileName, FileMode.Create);
+            using (var zip = new GZipStream(ms, CompressionMode.Decompress))
             {
-                if (entry.FilenameInZip.ToLower().EndsWith(".dic") || entry.FilenameInZip.ToLower().EndsWith(".aff"))
+                byte[] buffer = new byte[1024];
+                int nRead;
+                while ((nRead = zip.Read(buffer, 0, buffer.Length)) > 0)
                 {
-                    string fileName = Path.GetFileName(entry.FilenameInZip);
-
-                    // French fix
-                    if (fileName.StartsWith("fr-moderne"))
-                        fileName = fileName.Replace("fr-moderne", "fr_FR");
-
-                    // German fix
-                    if (fileName.StartsWith("de_DE_frami"))
-                        fileName = fileName.Replace("de_DE_frami", "de_DE");
-
-                    path = Path.Combine(dictionaryFolder, fileName);
-                    zip.ExtractFile(entry, path);
+                    fs.Write(buffer, 0, nRead);
                 }
             }
-            zip.Close();
+            fs.Close();
+
+            var tr = new TarReader(tempFileName);
+            foreach (TarHeader th in tr.Files)
+            {
+                string fn = Path.Combine(dictionaryFolder, Path.GetFileName(th.FileName.Trim()));
+                th.WriteData(fn);
+            }
             ms.Close();
+            tr.Close();
+            File.Delete(tempFileName);
+
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;
@@ -210,30 +165,26 @@ namespace Nikse.SubtitleEdit.Forms
             MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
         }
 
-        private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
+        private void linkLabelOpenDictionaryFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            int index = comboBoxDictionaries.SelectedIndex;
-            labelPleaseWait.Text = _descriptions[index];
+            string dictionaryFolder = Configuration.TesseractDataFolder;
+            if (!Directory.Exists(dictionaryFolder))
+                Directory.CreateDirectory(dictionaryFolder);
+
+            System.Diagnostics.Process.Start(dictionaryFolder);
         }
 
-        private void buttonOK_Click(object sender, EventArgs e)
+        private void GetTesseractDictionaries_KeyDown(object sender, KeyEventArgs e)
         {
-
-        }
-
-        private void labelPleaseWait_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void labelChooseLanguageAndClickDownload_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void labelDescription1_Click(object sender, EventArgs e)
-        {
-
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+            else if (e.KeyCode == Keys.F1)
+            {
+                Utilities.ShowHelp("#importvobsub");
+                e.SuppressKeyPress = true;
+            }
         }
 
     }
