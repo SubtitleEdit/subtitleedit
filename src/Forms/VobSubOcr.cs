@@ -278,6 +278,7 @@ namespace Nikse.SubtitleEdit.Forms
             clearToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubrip.Clear;
 
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
+            buttonGetTesseractDictionaries.Left = comboBoxTesseractLanguages.Left + comboBoxTesseractLanguages.Width + 5;
 
             Utilities.InitializeSubtitleFont(subtitleListView1);
             subtitleListView1.AutoSizeAllColumns(this);
@@ -3816,9 +3817,30 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxOcrMethod.Items.RemoveAt(2);
         }
 
+       
+
+    
+
         private void InitializeTesseract()
         {
-            string dir = Configuration.TesseractDataFolder;
+            if (!Directory.Exists(Configuration.TesseractFolder))
+            {
+                Directory.CreateDirectory(Configuration.TesseractFolder);
+                if (!Utilities.IsRunningOnLinux() && !Utilities.IsRunningOnMac())
+                {
+                    System.Diagnostics.Process process = new System.Diagnostics.Process();
+                    System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                    startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                    startInfo.FileName = "xcopy";
+                    startInfo.Arguments = "\"" + Path.Combine(Configuration.TesseractOriginalFolder, "*.*") + "\" \"" + Configuration.TesseractFolder + "\" /s";
+                    MessageBox.Show(startInfo.Arguments);
+                    process.StartInfo = startInfo;
+                    process.Start();
+                    process.WaitForExit();
+                }
+            }
+
+            string dir = Path.Combine(Configuration.TesseractFolder, "tessdata");
             if (Directory.Exists(dir))
             {
                 var list = new List<string>();
@@ -5035,6 +5057,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemClearGuesses_Click(object sender, EventArgs e)
         {
             listBoxLogSuggestions.Items.Clear();
+        }
+
+        private void buttonGetTesseractDictionaries_Click(object sender, EventArgs e)
+        {
+            var form = new GetTesseractDictionaries();
+            form.ShowDialog(this);
+            InitializeTesseract();
         }
 
     }

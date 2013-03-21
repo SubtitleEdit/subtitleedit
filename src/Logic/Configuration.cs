@@ -51,11 +51,19 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static string TesseractFolder
+        public static string TesseractOriginalFolder
         {
             get
             {
                 return BaseDirectory + "Tesseract" + Path.DirectorySeparatorChar;
+            }
+        }
+
+        public static string TesseractFolder
+        {
+            get
+            {
+                return DataDirectory + "Tesseract" + Path.DirectorySeparatorChar;
             }
         }
 
