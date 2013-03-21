@@ -41,6 +41,8 @@
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelXLinesSelected = new System.Windows.Forms.Label();
+            this.buttonInverseSelection = new System.Windows.Forms.Button();
+            this.buttonSelectAll = new System.Windows.Forms.Button();
             this.groupBoxNames.SuspendLayout();
             this.groupBoxLinesFound.SuspendLayout();
             this.SuspendLayout();
@@ -71,6 +73,8 @@
             // 
             this.groupBoxNames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxNames.Controls.Add(this.buttonInverseSelection);
+            this.groupBoxNames.Controls.Add(this.buttonSelectAll);
             this.groupBoxNames.Controls.Add(this.listViewNames);
             this.groupBoxNames.Location = new System.Drawing.Point(5, 9);
             this.groupBoxNames.Name = "groupBoxNames";
@@ -92,7 +96,7 @@
             this.listViewNames.Location = new System.Drawing.Point(6, 19);
             this.listViewNames.MultiSelect = false;
             this.listViewNames.Name = "listViewNames";
-            this.listViewNames.Size = new System.Drawing.Size(714, 243);
+            this.listViewNames.Size = new System.Drawing.Size(714, 216);
             this.listViewNames.TabIndex = 7;
             this.listViewNames.UseCompatibleStateImageBehavior = false;
             this.listViewNames.View = System.Windows.Forms.View.Details;
@@ -172,6 +176,30 @@
             this.labelXLinesSelected.TabIndex = 16;
             this.labelXLinesSelected.Text = "XLinesSelected";
             // 
+            // buttonInverseSelection
+            // 
+            this.buttonInverseSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonInverseSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonInverseSelection.Location = new System.Drawing.Point(88, 241);
+            this.buttonInverseSelection.Name = "buttonInverseSelection";
+            this.buttonInverseSelection.Size = new System.Drawing.Size(100, 21);
+            this.buttonInverseSelection.TabIndex = 9;
+            this.buttonInverseSelection.Text = "Inverse selection";
+            this.buttonInverseSelection.UseVisualStyleBackColor = true;
+            this.buttonInverseSelection.Click += new System.EventHandler(this.buttonInverseSelection_Click);
+            // 
+            // buttonSelectAll
+            // 
+            this.buttonSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonSelectAll.Location = new System.Drawing.Point(7, 241);
+            this.buttonSelectAll.Name = "buttonSelectAll";
+            this.buttonSelectAll.Size = new System.Drawing.Size(75, 21);
+            this.buttonSelectAll.TabIndex = 8;
+            this.buttonSelectAll.Text = "Select all";
+            this.buttonSelectAll.UseVisualStyleBackColor = true;
+            this.buttonSelectAll.Click += new System.EventHandler(this.buttonSelectAll_Click);
+            // 
             // ChangeCasingNames
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -186,6 +214,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(600, 480);
             this.Name = "ChangeCasingNames";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -215,5 +244,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.Label labelXLinesSelected;
+        private System.Windows.Forms.Button buttonInverseSelection;
+        private System.Windows.Forms.Button buttonSelectAll;
     }
 }

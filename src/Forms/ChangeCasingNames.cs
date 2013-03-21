@@ -26,6 +26,10 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
             listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Before;
             listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
+
+            buttonSelectAll.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
+            buttonInverseSelection.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;
+
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
@@ -261,6 +265,28 @@ namespace Nikse.SubtitleEdit.Forms
                 labelXLinesSelected.Text = string.Format(Configuration.Settings.Language.Main.XLinesSelected, listViewFixes.SelectedItems.Count);
             else
                 labelXLinesSelected.Text = string.Empty;
+        }
+
+        private void buttonSelectAll_Click(object sender, EventArgs e)
+        {
+            listViewNames.ItemChecked -= ListViewNamesItemChecked;
+            listViewNames.BeginUpdate();
+            foreach (ListViewItem item in listViewNames.Items)
+                item.Checked = true;
+            listViewNames.EndUpdate();
+            listViewNames.ItemChecked += ListViewNamesItemChecked;
+            GeneratePreview();
+        }
+
+        private void buttonInverseSelection_Click(object sender, EventArgs e)
+        {
+            listViewNames.ItemChecked -= ListViewNamesItemChecked;
+            listViewNames.BeginUpdate();
+            foreach (ListViewItem item in listViewNames.Items)
+                item.Checked = !item.Checked;
+            listViewNames.EndUpdate();
+            listViewNames.ItemChecked += ListViewNamesItemChecked;
+            GeneratePreview();
         }
     }
 }
