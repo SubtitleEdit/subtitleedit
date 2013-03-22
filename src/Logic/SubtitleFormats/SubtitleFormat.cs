@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new AvidCaption(),
                     new AvidDvd(),
                     new BelleNuitSubtitler(),
+                    new CaptionAssistant(),
                     new Captionate(),
                     new CaptionateMs(),
                     new CaraokeXml(),
