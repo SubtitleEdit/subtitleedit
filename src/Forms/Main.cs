@@ -12661,7 +12661,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadPlugins()
         {
-            string path = Path.Combine(Configuration.BaseDirectory, "Plugins");
+            string path = Path.Combine(Configuration.DataDirectory, "Plugins");
             if (!Directory.Exists(path))
                 return;
             string[] pluginFiles = Directory.GetFiles(path, "*.DLL");
