@@ -2443,7 +2443,7 @@
             this.toolStripButtonWaveFormPause.Name = "toolStripButtonWaveFormPause";
             this.toolStripButtonWaveFormPause.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonWaveFormPause.Text = "toolStripButton1";
-            this.toolStripButtonWaveFormPlay.Visible = false;
+            this.toolStripButtonWaveFormPause.Visible = false;
             this.toolStripButtonWaveFormPause.Click += new System.EventHandler(this.toolStripButtonWaveFormPause_Click);
             // 
             // toolStripButtonWaveFormPlay
@@ -2455,7 +2455,6 @@
             this.toolStripButtonWaveFormPlay.Name = "toolStripButtonWaveFormPlay";
             this.toolStripButtonWaveFormPlay.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonWaveFormPlay.Text = "toolStripButton1";
-            this.toolStripButtonWaveFormPlay.Visible = true;
             this.toolStripButtonWaveFormPlay.Click += new System.EventHandler(this.toolStripButtonWaveFormPlay_Click);
             // 
             // toolStripButtonLockCenter
