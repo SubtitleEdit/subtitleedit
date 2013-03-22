@@ -1,0 +1,161 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Xml;
+
+namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
+{
+    public class CaptionAssistant : SubtitleFormat
+    {
+        public override string Extension
+        {
+            get { return ".cac"; }
+        }
+
+        public override string Name
+        {
+            get { return "Caption Assistant"; }
+        }
+
+        public override bool IsTimeBased
+        {
+            get { return true; }
+        }
+
+        public override bool IsMine(List<string> lines, string fileName)
+        {
+            var subtitle = new Subtitle();
+            LoadSubtitle(subtitle, lines, fileName);
+            return subtitle.Paragraphs.Count > 0;
+        }
+
+        private string ToTimeCode(TimeCode time)
+        {
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+        }
+
+        private TimeCode DecodeTimeCode(string s)
+        {
+            var parts = s.Split(":;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string hour = parts[0];
+            string minutes = parts[1];
+            string seconds = parts[2];
+            string frames = parts[3];
+
+            int milliseconds = (int)Math.Round(((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames)));
+            if (milliseconds > 999)
+                milliseconds = 999;
+
+            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
+        }
+
+        public override string ToText(Subtitle subtitle, string title)
+        {
+            string xmlStructure =
+                "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
+                "<CaptionAssistant><CaptionData></CaptionData></CaptionAssistant>";
+
+            var xml = new XmlDocument();
+            xml.LoadXml(xmlStructure);
+
+            var cd = xml.DocumentElement.SelectSingleNode("CaptionData");
+            foreach (Paragraph p in subtitle.Paragraphs)
+            {
+                XmlNode paragraph = xml.CreateElement("CaptionDetail");
+
+                XmlAttribute start = xml.CreateAttribute("PositionIn");
+                start.InnerText = ToTimeCode(p.StartTime);
+                paragraph.Attributes.Append(start);
+
+                XmlAttribute end = xml.CreateAttribute("PositionOut");
+                end.InnerText = ToTimeCode(p.EndTime);
+                paragraph.Attributes.Append(end);
+
+                XmlAttribute text = xml.CreateAttribute("CaptionText");
+                text.InnerText = Utilities.RemoveHtmlTags(p.Text, true);
+                paragraph.Attributes.Append(text);
+
+                XmlAttribute align = xml.CreateAttribute("Align");
+                if (p.Text.StartsWith("{\\an1}") || p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an7}"))
+                    align.InnerText = "Left";
+                else if (p.Text.StartsWith("{\\an3}") || p.Text.StartsWith("{\\an6}") || p.Text.StartsWith("{\\an9}"))
+                    align.InnerText = "Right";
+                else
+                    align.InnerText = "Center";
+
+                paragraph.Attributes.Append(align);
+
+                XmlAttribute captionType = xml.CreateAttribute("CaptionType");
+                captionType.InnerText = "608CC1";
+                paragraph.Attributes.Append(captionType);
+
+                cd.AppendChild(paragraph);
+            }
+
+            return ToUtf8XmlString(xml);
+        }
+
+        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        {
+            _errorCount = 0;
+
+            var sb = new StringBuilder();
+            lines.ForEach(line => sb.AppendLine(line));
+
+            string allText = sb.ToString();
+            if (!allText.Contains("<CaptionAssistant>") || !allText.Contains("<CaptionData>"))
+                return;
+
+            var xml = new XmlDocument();
+            try
+            {
+                xml.LoadXml(allText);
+            }
+            catch (Exception exception)
+            {
+                System.Diagnostics.Debug.WriteLine(exception.Message);
+                _errorCount = 1;
+                return;
+            }
+
+            if (xml.DocumentElement == null)
+            {
+                _errorCount = 1;
+                return;
+            }
+
+            foreach (XmlNode node in xml.DocumentElement.SelectNodes("CaptionData/CaptionDetail"))
+            {
+                try
+                {
+                    if (node.Attributes != null)
+                    {
+                        string text = node.Attributes.GetNamedItem("CaptionText").InnerText.Trim();
+
+                        if (node.Attributes.GetNamedItem("Align") != null)
+                        {
+                            string align = node.Attributes.GetNamedItem("Align").InnerText.Trim();
+                            if (align.ToLower() == "left")
+                                text = "{\\an1}" + text;
+                            else if (align.ToLower() == "right")
+                                text = "{\\an3}" + text;
+                        }
+
+                        string start = node.Attributes.GetNamedItem("PositionIn").InnerText;
+                        string end = node.Attributes.GetNamedItem("PositionOut").InnerText;
+                        subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                    _errorCount++;
+                }
+            }
+            subtitle.Renumber(1);
+        }
+
+    }
+}
+
+
