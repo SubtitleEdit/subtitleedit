@@ -361,5 +361,18 @@ namespace Test
         }
 
         #endregion
+
+        #region Start with uppercase after paragraph
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void StartWithUppercaseAfterParagraphMusic1()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "♪ you like to move it...");
+            target.FixStartWithUppercaseLetterAfterParagraph();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "♪ You like to move it...");
+        }
+
+        #endregion
     }
 }
