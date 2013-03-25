@@ -178,6 +178,9 @@ namespace Nikse.SubtitleEdit.Logic
                                           s.EndsWith(".") ||
                                           s.EndsWith("!") ||
                                           s.EndsWith("?") ||
+                                          s.EndsWith(". ♪") ||
+                                          s.EndsWith("! ♪") ||
+                                          s.EndsWith("? ♪") ||
                                           s.EndsWith("]") ||
                                           s.EndsWith(")") ||
                                           s.EndsWith(":");

@@ -2263,6 +2263,26 @@ namespace Nikse.SubtitleEdit.Forms
                         pre = "<I>";
                         text = text.Substring(3);
                     }
+                    if (text.Length > 2 && text.StartsWith("♪"))
+                    {
+                        pre = pre + "♪";
+                        text = text.Substring(1);
+                    }
+                    if (text.Length > 2 && text.StartsWith(" "))
+                    {
+                        pre = pre + " ";
+                        text = text.Substring(1);
+                    }
+                    if (text.Length > 2 && text.StartsWith("♫"))
+                    {
+                        pre = pre + "♫";
+                        text = text.Substring(1);
+                    }
+                    if (text.Length > 2 && text.StartsWith(" "))
+                    {
+                        pre = pre + " ";
+                        text = text.Substring(1);
+                    }
 
                     string oldText = p.Text;
                     string firstLetter = text.Substring(0, 1);
@@ -2272,6 +2292,8 @@ namespace Nikse.SubtitleEdit.Forms
                         prevText = Utilities.RemoveHtmlTags(prev.Text);
 
                     bool isPrevEndOfLine = IsPrevoiusTextEndOfParagraph(prevText);
+                    if (prevText == " .")
+                        isPrevEndOfLine = true;                    
                     if (!text.StartsWith("www.") &&
                         (firstLetter != firstLetter.ToUpper() || IsTurkishLittleI(firstLetter)) &&
                         !"0123456789".Contains(firstLetter) &&
@@ -2321,6 +2343,26 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             pre = "<I>";
                             text = text.Substring(3);
+                        }
+                        if (text.Length > 2 && text.StartsWith("♪"))
+                        {
+                            pre = pre + "♪";
+                            text = text.Substring(1);
+                        }
+                        if (text.Length > 2 && text.StartsWith(" "))
+                        {
+                            pre = pre + " ";
+                            text = text.Substring(1);
+                        }
+                        if (text.Length > 2 && text.StartsWith("♫"))
+                        {
+                            pre = pre + "♫";
+                            text = text.Substring(1);
+                        }
+                        if (text.Length > 2 && text.StartsWith(" "))
+                        {
+                            pre = pre + " ";
+                            text = text.Substring(1);
                         }
 
                         string oldText = p.Text;
@@ -2429,6 +2471,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static bool IsPrevoiusTextEndOfParagraph(string prevText)
         {
+            if (string.IsNullOrEmpty(prevText) || prevText.Length < 3)
+                return true;
+
+            prevText = prevText.Replace("♪", string.Empty).Replace("♫", string.Empty).Trim();
             bool isPrevEndOfLine = prevText.Length > 1 &&
                                    !prevText.EndsWith("...") &&
                                    (prevText.EndsWith(".") ||
