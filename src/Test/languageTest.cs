@@ -44,29 +44,29 @@ namespace Test
 
         private List<string> _list; //Store the list of existing languages
 
-        [TestMethod]
-        public void TestAllLanguageTranslationsExists()
-        {
-            Language defaultlang = new Language(); //Load the English version
-            defaultlang.General.TranslatedBy = "Translated by ..."; // to avoid assertion
+        //[TestMethod]
+        //public void TestAllLanguageTranslationsExists()
+        //{
+        //    Language defaultlang = new Language(); //Load the English version
+        //    defaultlang.General.TranslatedBy = "Translated by ..."; // to avoid assertion
 
-            foreach (String cultureName in _list) //Loop over all language files
-            {
-                //Load language
-                var reader = new System.IO.StreamReader(Path.Combine(Configuration.BaseDirectory, "Languages") + Path.DirectorySeparatorChar + cultureName + ".xml");
-                Language lang = Language.Load(reader);
+        //    foreach (String cultureName in _list) //Loop over all language files
+        //    {
+        //        //Load language
+        //        var reader = new System.IO.StreamReader(Path.Combine(Configuration.BaseDirectory, "Languages") + Path.DirectorySeparatorChar + cultureName + ".xml");
+        //        Language lang = Language.Load(reader);
 
-                //Loop over all field in language
-                checkFields(cultureName, defaultlang, lang, defaultlang.GetType().GetFields());
+        //        //Loop over all field in language
+        //        checkFields(cultureName, defaultlang, lang, defaultlang.GetType().GetFields());
 
-                checkProperty(cultureName, defaultlang, lang, defaultlang.GetType().GetProperties());
+        //        checkProperty(cultureName, defaultlang, lang, defaultlang.GetType().GetProperties());
 
-                //If u want to save a kind of fixed lang file
-                //Disabled the assert fail function for it!
-              //  lang.Save("Languagesnew\\" + cultureName + ".xml");
-                reader.Close();
-            }
-        }
+        //        //If u want to save a kind of fixed lang file
+        //        //Disabled the assert fail function for it!
+        //      //  lang.Save("Languagesnew\\" + cultureName + ".xml");
+        //        reader.Close();
+        //    }
+        //}
 
         private void checkFields(string cultureName, object completeLang, object cultureLang, FieldInfo[] fields)
         {
@@ -118,6 +118,7 @@ namespace Test
                 }
             }
         }
+
     }
 
 }

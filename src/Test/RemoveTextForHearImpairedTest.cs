@@ -80,7 +80,7 @@ namespace Test
             target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
             string text = "Man over P.A.:\r\nGive back our homes.";
             string expected = "Give back our homes.";
-            string actual = target.RemoveColon(text);
+            string actual = target.RemoveColon(text, string.Empty);
             Assert.AreEqual(expected, actual);
         }
 
@@ -119,7 +119,7 @@ namespace Test
             target.checkBoxColonSeparateLine.Checked = false;
             string text = "- Aw, save it. Storm?\r\n- [Storm]\r\nWe're outta here.";
             string expected = "- Aw, save it. Storm?\r\n- We're outta here.";
-            string actual = target.RemoveTextFromHearImpaired(text);
+            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
             Assert.AreEqual(expected, actual);
         }
 
@@ -138,7 +138,7 @@ namespace Test
             target.checkBoxColonSeparateLine.Checked = false;
             string text = "[Chuckles,\r\nCoughing]\r\nBut we lived through it.";
             string expected = "But we lived through it.";
-            string actual = target.RemoveTextFromHearImpaired(text);
+            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
             Assert.AreEqual(expected, actual);
         }
 
@@ -156,7 +156,7 @@ namespace Test
             target.checkBoxColonSeparateLine.Checked = false;
             string text = "is the body of a mutant kid\r\non the 6:00 news.";
             string expected = "is the body of a mutant kid\r\non the 6:00 news.";
-            string actual = target.RemoveTextFromHearImpaired(text);
+            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
             Assert.AreEqual(expected, actual);
         }
 
@@ -177,7 +177,7 @@ namespace Test
             string text = "<i>NARRATOR:" + Environment.NewLine +
                           "Previously on NCIS</i>";
             string expected = "<i>Previously on NCIS</i>";
-            string actual = target.RemoveTextFromHearImpaired(text);
+            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
             Assert.AreEqual(expected, actual);
         }
 
@@ -197,7 +197,7 @@ namespace Test
             string text = "<b>NARRATOR:" + Environment.NewLine +
                           "Previously on NCIS</b>";
             string expected = "<b>Previously on NCIS</b>";
-            string actual = target.RemoveTextFromHearImpaired(text);
+            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
             Assert.AreEqual(expected, actual);
         }
 
@@ -217,7 +217,7 @@ namespace Test
             string text = "- JOHN: Hey." + Environment.NewLine +
                           "- ...hey.";
             string expected = "- Hey."+ Environment.NewLine +"- ...hey.";
-            string actual = target.RemoveTextFromHearImpaired(text);
+            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
             Assert.AreEqual(expected, actual);
         }
 
@@ -248,7 +248,7 @@ namespace Test
             target.checkBoxColonSeparateLine.Checked = false;
             string text = "[MAN]Where?![MAN]";
             string expected = "Where?!";
-            string actual = target.RemoveTextFromHearImpaired(text);
+            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
             Assert.AreEqual(expected, actual);
         }
 
@@ -265,7 +265,7 @@ namespace Test
             target.checkBoxColonSeparateLine.Checked = false;
             string text = "HECTOR: Hi." + Environment.NewLine + "-Oh, hey, Hector.";
             string expected = "- Hi." + Environment.NewLine + "- Oh, hey, Hector.";
-            string actual = target.RemoveTextFromHearImpaired(text);
+            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
             Assert.AreEqual(expected, actual);
         }
 
@@ -282,7 +282,7 @@ namespace Test
             target.checkBoxColonSeparateLine.Checked = false;
             string text = "<b>HECTOR: Hi.</b>";
             string expected = "<b>Hi.</b>";
-            string actual = target.RemoveTextFromHearImpaired(text);
+            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
             Assert.AreEqual(expected, actual);
         }
 
@@ -524,7 +524,7 @@ namespace Test
             target.checkBoxColonSeparateLine.Checked = true;
             string text = "HECTOR: Hi.";
             string expected = "HECTOR: Hi.";
-            string actual = target.RemoveColon(text);
+            string actual = target.RemoveColon(text, string.Empty);
             Assert.AreEqual(expected, actual);
         }
 
@@ -563,7 +563,22 @@ namespace Test
         }
 
 
-
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextBeforeColonSecondLine()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
+            target.checkBoxRemoveInterjections.Checked = false;
+            target.checkBoxRemoveTextBeforeColon.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
+            target.checkBoxColonSeparateLine.Checked = false;
+            string text = "- even if it was one week." + Environment.NewLine  + "CANNING: Objection.";
+            string expected = "- even if it was one week." + Environment.NewLine + "- Objection.";
+            string actual = target.RemoveColon(text, string.Empty);
+            Assert.AreEqual(expected, actual);
+        }
 
     }
 }
