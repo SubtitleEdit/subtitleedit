@@ -755,11 +755,18 @@ namespace Nikse.SubtitleEdit.Forms
                             sub.Header = _ssaStyle;
                         }
 
+                        int prevIndex = -1;
                         foreach (Paragraph p in sub.Paragraphs)
                         {
+                            string prevText = string.Empty;
+                            var prev = sub.GetParagraphOrDefault(prevIndex);
+                            if (prev != null)
+                                prevText = prev.Text;
+                            prevIndex++;
+
                             if (checkBoxRemoveTextForHI.Checked)
                             {
-                                p.Text = _removeForHI.RemoveTextFromHearImpaired(p.Text);
+                                p.Text = _removeForHI.RemoveTextFromHearImpaired(p.Text, prevText);
                             }
                             if (checkBoxRemoveFormatting.Checked)
                             {

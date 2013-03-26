@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.Collections.Generic;
-using System.Collections;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -229,9 +228,16 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             int count = 0;
+            int prevIndex = -1;
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
-                string newText = RemoveTextFromHearImpaired(p.Text);
+                string prevText = string.Empty;
+                var prev = _subtitle.GetParagraphOrDefault(prevIndex);
+                if (prev != null)
+                    prevText = prev.Text;
+                prevIndex++;
+
+                string newText = RemoveTextFromHearImpaired(p.Text, prevText);
                 bool hit = p.Text.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty);
                 if (hit)
                 {
@@ -285,7 +291,7 @@ namespace Nikse.SubtitleEdit.Forms
             return newText;
         }
 
-        private string RemoveColon(string text)
+        private string RemoveColon(string text, string prevText)
         {
             if (!checkBoxRemoveTextBeforeColon.Checked)
                 return text;
@@ -489,10 +495,22 @@ namespace Nikse.SubtitleEdit.Forms
                 if (st.Pre.Contains("-"))
                     newText = st.Pre.Replace("-", string.Empty) + st.StrippedText + st.Post;
             }
+            else if (Utilities.CountTagInText(newText, Environment.NewLine) == 1 && removedInFirstLine == false && removedInSecondLine == true)
+            {
+                string noTags = Utilities.RemoveHtmlTags(newText, true).Trim();
+                bool insertDash = noTags.StartsWith("-") && Utilities.CountTagInText(noTags, "-") == 1;
+                if (insertDash)
+                {
+                    if (newText.Contains(Environment.NewLine + "<i>"))
+                        newText = newText.Replace(Environment.NewLine + "<i>", Environment.NewLine + "<i>- ");
+                    else
+                        newText = newText.Replace(Environment.NewLine, Environment.NewLine + "- ");
+                }
+            }
             return newText;
         }
 
-        internal string RemoveTextFromHearImpaired(string text)
+        internal string RemoveTextFromHearImpaired(string text, string prevText)
         {
             if (checkBoxRemoveWhereContains.Checked && comboBoxRemoveIfTextContains.Text.Length > 0 && text.Contains(comboBoxRemoveIfTextContains.Text))
             {
@@ -500,7 +518,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             string oldText = text;
-            text = RemoveColon(text);
+            text = RemoveColon(text, prevText);
             string pre = " >-\"'‘`´♪¿¡.…—";
             string post = " -\"'`´♪.!?:…—";
             if (checkBoxRemoveTextBetweenCustomTags.Checked)
@@ -565,7 +583,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             text = st.Pre + sb.ToString().Trim() + st.Post;
             text = text.Replace("<i></i>", string.Empty).Trim();
-            text = RemoveColon(text);
+            text = RemoveColon(text, prevText);
             text = RemoveLineIfAllUppercase(text);
             text = RemoveHearImpairedtagsInsideLine(text);
             if (checkBoxRemoveInterjections.Checked)
@@ -926,7 +944,12 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
                 if (IsFixAllowed(p))
                 {
-                    string newText = RemoveTextFromHearImpaired(p.Text);
+                    string prevText = string.Empty;
+                    var prev = _subtitle.GetParagraphOrDefault(i - 1);
+                    if (prev != null)
+                        prevText = prev.Text;
+
+                    string newText = RemoveTextFromHearImpaired(p.Text, prevText);
                     if (string.IsNullOrEmpty(newText))
                     {
                         _subtitle.Paragraphs.RemoveAt(i);
