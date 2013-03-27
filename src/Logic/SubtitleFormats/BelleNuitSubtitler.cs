@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     {
         ///tc 00:00:35:09 00:00:38:05
         static readonly Regex RegexTimeCode = new Regex(@"^\/tc \d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);
+        static readonly Regex RegexFileNum = new Regex(@"^\/file\s+\d+$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -171,7 +172,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             node.InnerText = sb.ToString().Trim() + Environment.NewLine + Environment.NewLine;
             doc.DocumentElement.AppendChild(node);
 
-            return ToUtf8XmlString(doc);
+            return ToUtf8XmlString(doc).Replace("\r\n", "\n");
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -241,6 +242,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             _errorCount++;
                         }
                     }
+                }
+                else if (RegexFileNum.IsMatch(line))
+                {
+                    continue; // skip Belle-Nuit's numbering lines ("/file 0001")
                 }
                 else if (paragraph != null)
                 {
