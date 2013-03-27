@@ -13,6 +13,8 @@ namespace Nikse.SubtitleEdit.Forms
         Subtitle _subtitle;
         readonly LanguageStructure.RemoveTextFromHearImpaired _language;
         private List<string> _interjectionList;
+        private List<int> _warnings;
+        private int _warningIndex;
 
         public FormRemoveTextForHearImpaired()
         {
@@ -220,11 +222,20 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
         }
 
+        private void AddWarning()
+        { 
+            if (_warnings == null || _warningIndex < 0)
+                return;
+
+            _warnings.Add(_warningIndex);
+        }
+
         private void GeneratePreview()
         {
             if (_subtitle == null)
                 return;
 
+            _warnings = new List<int>();
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             int count = 0;
@@ -237,6 +248,7 @@ namespace Nikse.SubtitleEdit.Forms
                     prevText = prev.Text;
                 prevIndex++;
 
+                _warningIndex = prevIndex;
                 string newText = RemoveTextFromHearImpaired(p.Text, prevText);
                 bool hit = p.Text.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty);
                 if (hit)
@@ -324,7 +336,37 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         StripableText st = new StripableText(pre);
-                        if (Utilities.CountTagInText(s, ":") == 1)
+                        if (count == 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1 && removedInFirstLine && Utilities.CountTagInText(s, ":") == 1 &&
+                            !newText.EndsWith(".") && !newText.EndsWith("!") && !newText.EndsWith("?") && !newText.EndsWith(".</i>") && !newText.EndsWith("!</i>") && !newText.EndsWith("?</i>") &&
+                            s != s.ToUpper())
+                        {
+                            if (pre.Contains("<i>") && s.Contains("</i>"))
+                                newText = newText + Environment.NewLine + "<i>" + s;
+                            else if (pre.Contains("<b>") && s.Contains("</b>"))
+                                newText = newText + Environment.NewLine + "<b>" + s;
+                            else if (pre.Contains("[") && s.Contains("]"))
+                                newText = newText + Environment.NewLine + "[" + s;
+                            else if (pre.Contains("(") && s.EndsWith(")"))
+                                newText = newText + Environment.NewLine + "(" + s;
+                            else
+                                newText = newText + Environment.NewLine + s;
+                        }
+                        else if (count == 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1 && indexOfColon > 15 && s.Substring(0, indexOfColon).Contains(" ") && Utilities.CountTagInText(s, ":") == 1 &&
+                            !newText.EndsWith(".") && !newText.EndsWith("!") && !newText.EndsWith("?") && !newText.EndsWith(".</i>") && !newText.EndsWith("!</i>") && !newText.EndsWith("?</i>") &&
+                            s != s.ToUpper())
+                        {
+                            if (pre.Contains("<i>") && s.Contains("</i>"))
+                                newText = newText + Environment.NewLine + "<i>" + s;
+                            else if (pre.Contains("<b>") && s.Contains("</b>"))
+                                newText = newText + Environment.NewLine + "<b>" + s;
+                            else if (pre.Contains("[") && s.Contains("]"))
+                                newText = newText + Environment.NewLine + "[" + s;
+                            else if (pre.Contains("(") && s.EndsWith(")"))
+                                newText = newText + Environment.NewLine + "(" + s;
+                            else
+                                newText = newText + Environment.NewLine + s;
+                        }
+                        else if (Utilities.CountTagInText(s, ":") == 1)
                         {
                             bool remove = true;
                             if (indexOfColon > 0 && indexOfColon < s.Length - 1)
@@ -679,20 +721,38 @@ namespace Nikse.SubtitleEdit.Forms
             text = text.TrimEnd(" ()[]?{}".ToCharArray());
             text = text.TrimStart(" ()[]?{}".ToCharArray());
 
+            if (text.Trim().Replace("mr. ", string.Empty).Replace("mrs. ", string.Empty).Replace("dr. ", string.Empty).Contains(" "))
+                AddWarning();
+
             if (text == "sighing" ||
-                text == "laughs" ||
+                text == "cackles" ||
+                text == "cheers" ||
+                text == "chitters" ||
                 text == "chuckles" ||
+                text == "exclaims" ||
+                text == "gasps" ||
+                text == "grunts" ||
+                text == "groans" ||
+                text == "growls" ||
+                text == "explosion" ||
+                text == "laughs" ||
+                text == "noise" ||
+                text.StartsWith("engine ") ||
+                text == "roars" ||
                 text == "scoff" ||
+                text == "screeches" ||                
+                text == "shouts" ||
+                text == "shrieks" ||
+                text == "sigh" ||
                 text == "sighs" ||
+                text == "singing" ||
+                text == "snores" ||
+                text == "stutters" ||
+                text == "thuds" ||
+                text == "trumpets" ||
                 text == "whispers" ||
                 text == "whisper" ||
-                text == "grunts" ||
-                text == "explosion" ||
-                text == "noise" ||
-                text == "exclaims" ||
-                text.StartsWith("engine ") ||
-                text == "singing" ||
-                text == "stutters" ||
+                text == "whistles" ||
                 text.EndsWith("ing"))
                 return true;
             return false;
@@ -914,7 +974,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddToListView(Paragraph p, string newText)
         {
             var item = new ListViewItem(string.Empty) {Tag = p, Checked = true};
-
+            if (_warnings != null && _warnings.Contains(_warningIndex))
+            {
+                item.UseItemStyleForSubItems = true;
+                item.BackColor = Color.PeachPuff;
+            }
             var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString());
             item.SubItems.Add(subItem);
             subItem = new ListViewItem.ListViewSubItem(item, p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
