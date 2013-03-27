@@ -222,6 +222,15 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
         }
 
+        public void InitializeSettingsOnly()
+        {
+            comboBoxRemoveIfTextContains.Left = checkBoxRemoveWhereContains.Left + checkBoxRemoveWhereContains.Width;
+            groupBoxLinesFound.Visible = false;
+            int h = groupBoxRemoveTextConditions.Top + groupBoxRemoveTextConditions.Height + buttonOK.Height + 50;
+            MinimumSize = new System.Drawing.Size(MinimumSize.Width, h);
+            this.Height = h;
+        }
+
         private void AddWarning()
         { 
             if (_warnings == null || _warningIndex < 0)
