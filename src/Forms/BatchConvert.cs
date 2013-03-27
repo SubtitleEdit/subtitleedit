@@ -6,8 +6,8 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.BluRaySup;
+using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -1050,6 +1050,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             Configuration.Settings.Tools.BatchConvertFixCasing = checkBoxFixCasing.Checked;
             Configuration.Settings.Tools.BatchConvertFixCommonErrors = checkBoxFixCommonErrors.Checked;
+            Configuration.Settings.Tools.BatchConvertMultipleReplace = checkBoxMultipleReplace.Checked;
+            Configuration.Settings.Tools.BatchConvertAutoBalance = checkBoxAutoBalance.Checked;
             Configuration.Settings.Tools.BatchConvertRemoveFormatting = checkBoxRemoveFormatting.Checked;
             Configuration.Settings.Tools.BatchConvertRemoveTextForHI = checkBoxRemoveTextForHI.Checked;
             Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles = checkBoxSetMinimumDisplayTimeBetweenSubs.Checked;
@@ -1153,6 +1155,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
                 _abort = true;
+        }
+
+        private void buttonRemoveTextForHiSettings_Click(object sender, EventArgs e)
+        {
+            var form = new FormRemoveTextForHearImpaired();
+            form.InitializeSettingsOnly();
+            form.ShowDialog(this);
         }
 
     }

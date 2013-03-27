@@ -46,7 +46,6 @@
             this.groupBoxOffsetTimeCodes = new System.Windows.Forms.GroupBox();
             this.radioButtonShowLater = new System.Windows.Forms.RadioButton();
             this.radioButtonShowEarlier = new System.Windows.Forms.RadioButton();
-            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.labelHoursMinSecsMilliSecs = new System.Windows.Forms.Label();
             this.checkBoxFixCasing = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveTextForHI = new System.Windows.Forms.CheckBox();
@@ -80,6 +79,8 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.buttonRemoveTextForHiSettings = new System.Windows.Forms.Button();
+            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxChangeFrameRate.SuspendLayout();
             this.groupBoxOffsetTimeCodes.SuspendLayout();
@@ -116,6 +117,7 @@
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.buttonRemoveTextForHiSettings);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxSetMinimumDisplayTimeBetweenSubs);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxAutoBalance);
             this.groupBoxConvertOptions.Controls.Add(this.buttonMultipleReplaceSettings);
@@ -130,7 +132,7 @@
             this.groupBoxConvertOptions.Location = new System.Drawing.Point(494, 19);
             this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
             this.groupBoxConvertOptions.Size = new System.Drawing.Size(524, 193);
-            this.groupBoxConvertOptions.TabIndex = 10;
+            this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
             // 
@@ -140,7 +142,7 @@
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Location = new System.Drawing.Point(16, 169);
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Name = "checkBoxSetMinimumDisplayTimeBetweenSubs";
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Size = new System.Drawing.Size(190, 17);
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.TabIndex = 10;
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.TabIndex = 9;
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Text = "Set min. millisecs between subtitles";
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.UseVisualStyleBackColor = true;
             // 
@@ -150,7 +152,7 @@
             this.checkBoxAutoBalance.Location = new System.Drawing.Point(16, 145);
             this.checkBoxAutoBalance.Name = "checkBoxAutoBalance";
             this.checkBoxAutoBalance.Size = new System.Drawing.Size(113, 17);
-            this.checkBoxAutoBalance.TabIndex = 9;
+            this.checkBoxAutoBalance.TabIndex = 8;
             this.checkBoxAutoBalance.Text = "Auto balance lines";
             this.checkBoxAutoBalance.UseVisualStyleBackColor = true;
             // 
@@ -160,7 +162,7 @@
             this.buttonMultipleReplaceSettings.Location = new System.Drawing.Point(149, 119);
             this.buttonMultipleReplaceSettings.Name = "buttonMultipleReplaceSettings";
             this.buttonMultipleReplaceSettings.Size = new System.Drawing.Size(94, 21);
-            this.buttonMultipleReplaceSettings.TabIndex = 6;
+            this.buttonMultipleReplaceSettings.TabIndex = 7;
             this.buttonMultipleReplaceSettings.Text = "Settings...";
             this.buttonMultipleReplaceSettings.UseVisualStyleBackColor = true;
             this.buttonMultipleReplaceSettings.Click += new System.EventHandler(this.buttonMultipleReplaceSettings_Click);
@@ -171,7 +173,7 @@
             this.checkBoxMultipleReplace.Location = new System.Drawing.Point(16, 122);
             this.checkBoxMultipleReplace.Name = "checkBoxMultipleReplace";
             this.checkBoxMultipleReplace.Size = new System.Drawing.Size(100, 17);
-            this.checkBoxMultipleReplace.TabIndex = 5;
+            this.checkBoxMultipleReplace.TabIndex = 6;
             this.checkBoxMultipleReplace.Text = "Multiple replace";
             this.checkBoxMultipleReplace.UseVisualStyleBackColor = true;
             // 
@@ -181,17 +183,17 @@
             this.checkBoxFixCommonErrors.Location = new System.Drawing.Point(16, 97);
             this.checkBoxFixCommonErrors.Name = "checkBoxFixCommonErrors";
             this.checkBoxFixCommonErrors.Size = new System.Drawing.Size(111, 17);
-            this.checkBoxFixCommonErrors.TabIndex = 3;
+            this.checkBoxFixCommonErrors.TabIndex = 4;
             this.checkBoxFixCommonErrors.Text = "Fix common errors";
             this.checkBoxFixCommonErrors.UseVisualStyleBackColor = true;
             // 
             // buttonFixCommonErrorSettings
             // 
             this.buttonFixCommonErrorSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonFixCommonErrorSettings.Location = new System.Drawing.Point(149, 93);
+            this.buttonFixCommonErrorSettings.Location = new System.Drawing.Point(149, 94);
             this.buttonFixCommonErrorSettings.Name = "buttonFixCommonErrorSettings";
             this.buttonFixCommonErrorSettings.Size = new System.Drawing.Size(94, 21);
-            this.buttonFixCommonErrorSettings.TabIndex = 4;
+            this.buttonFixCommonErrorSettings.TabIndex = 5;
             this.buttonFixCommonErrorSettings.Text = "Settings...";
             this.buttonFixCommonErrorSettings.UseVisualStyleBackColor = true;
             this.buttonFixCommonErrorSettings.Click += new System.EventHandler(this.buttonFixCommonErrorSettings_Click);
@@ -205,7 +207,7 @@
             this.groupBoxChangeFrameRate.Location = new System.Drawing.Point(249, 12);
             this.groupBoxChangeFrameRate.Name = "groupBoxChangeFrameRate";
             this.groupBoxChangeFrameRate.Size = new System.Drawing.Size(270, 73);
-            this.groupBoxChangeFrameRate.TabIndex = 7;
+            this.groupBoxChangeFrameRate.TabIndex = 10;
             this.groupBoxChangeFrameRate.TabStop = false;
             this.groupBoxChangeFrameRate.Text = "Change frame rate";
             // 
@@ -252,7 +254,7 @@
             this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(249, 89);
             this.groupBoxOffsetTimeCodes.Name = "groupBoxOffsetTimeCodes";
             this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(270, 98);
-            this.groupBoxOffsetTimeCodes.TabIndex = 8;
+            this.groupBoxOffsetTimeCodes.TabIndex = 11;
             this.groupBoxOffsetTimeCodes.TabStop = false;
             this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
             // 
@@ -277,16 +279,6 @@
             this.radioButtonShowEarlier.TabIndex = 2;
             this.radioButtonShowEarlier.Text = "Show earlier";
             this.radioButtonShowEarlier.UseVisualStyleBackColor = true;
-            // 
-            // timeUpDownAdjust
-            // 
-            this.timeUpDownAdjust.AutoSize = true;
-            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 37);
-            this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownAdjust.Name = "timeUpDownAdjust";
-            this.timeUpDownAdjust.Size = new System.Drawing.Size(92, 24);
-            this.timeUpDownAdjust.TabIndex = 1;
             // 
             // labelHoursMinSecsMilliSecs
             // 
@@ -356,7 +348,7 @@
             this.checkBoxOverwriteOriginalFiles.Location = new System.Drawing.Point(9, 19);
             this.checkBoxOverwriteOriginalFiles.Name = "checkBoxOverwriteOriginalFiles";
             this.checkBoxOverwriteOriginalFiles.Size = new System.Drawing.Size(300, 17);
-            this.checkBoxOverwriteOriginalFiles.TabIndex = 11;
+            this.checkBoxOverwriteOriginalFiles.TabIndex = 0;
             this.checkBoxOverwriteOriginalFiles.Text = "Overwrite original files (new extension if format is changed)";
             this.checkBoxOverwriteOriginalFiles.UseVisualStyleBackColor = true;
             this.checkBoxOverwriteOriginalFiles.CheckedChanged += new System.EventHandler(this.checkBoxOverwriteOriginalFiles_CheckedChanged);
@@ -367,7 +359,7 @@
             this.linkLabelOpenOutputFolder.Location = new System.Drawing.Point(434, 74);
             this.linkLabelOpenOutputFolder.Name = "linkLabelOpenOutputFolder";
             this.linkLabelOpenOutputFolder.Size = new System.Drawing.Size(42, 13);
-            this.linkLabelOpenOutputFolder.TabIndex = 3;
+            this.linkLabelOpenOutputFolder.TabIndex = 4;
             this.linkLabelOpenOutputFolder.TabStop = true;
             this.linkLabelOpenOutputFolder.Text = "Open...";
             this.linkLabelOpenOutputFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelOpenOutputFolderLinkClicked);
@@ -377,7 +369,7 @@
             this.buttonStyles.Location = new System.Drawing.Point(311, 141);
             this.buttonStyles.Name = "buttonStyles";
             this.buttonStyles.Size = new System.Drawing.Size(116, 23);
-            this.buttonStyles.TabIndex = 7;
+            this.buttonStyles.TabIndex = 8;
             this.buttonStyles.Text = "Style...";
             this.buttonStyles.UseVisualStyleBackColor = true;
             this.buttonStyles.Visible = false;
@@ -389,7 +381,7 @@
             this.checkBoxOverwrite.Location = new System.Drawing.Point(13, 97);
             this.checkBoxOverwrite.Name = "checkBoxOverwrite";
             this.checkBoxOverwrite.Size = new System.Drawing.Size(130, 17);
-            this.checkBoxOverwrite.TabIndex = 4;
+            this.checkBoxOverwrite.TabIndex = 5;
             this.checkBoxOverwrite.Text = "Overwrite exsiting files";
             this.checkBoxOverwrite.UseVisualStyleBackColor = true;
             // 
@@ -400,7 +392,7 @@
             this.comboBoxSubtitleFormats.Location = new System.Drawing.Point(80, 143);
             this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
             this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(225, 21);
-            this.comboBoxSubtitleFormats.TabIndex = 6;
+            this.comboBoxSubtitleFormats.TabIndex = 7;
             this.comboBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.ComboBoxSubtitleFormatsSelectedIndexChanged);
             // 
             // labelEncoding
@@ -409,7 +401,7 @@
             this.labelEncoding.Location = new System.Drawing.Point(10, 178);
             this.labelEncoding.Name = "labelEncoding";
             this.labelEncoding.Size = new System.Drawing.Size(52, 13);
-            this.labelEncoding.TabIndex = 8;
+            this.labelEncoding.TabIndex = 9;
             this.labelEncoding.Text = "Encoding";
             // 
             // comboBoxEncoding
@@ -419,7 +411,7 @@
             this.comboBoxEncoding.Location = new System.Drawing.Point(80, 175);
             this.comboBoxEncoding.Name = "comboBoxEncoding";
             this.comboBoxEncoding.Size = new System.Drawing.Size(225, 21);
-            this.comboBoxEncoding.TabIndex = 9;
+            this.comboBoxEncoding.TabIndex = 10;
             // 
             // labelOutputFormat
             // 
@@ -427,7 +419,7 @@
             this.labelOutputFormat.Location = new System.Drawing.Point(10, 146);
             this.labelOutputFormat.Name = "labelOutputFormat";
             this.labelOutputFormat.Size = new System.Drawing.Size(39, 13);
-            this.labelOutputFormat.TabIndex = 5;
+            this.labelOutputFormat.TabIndex = 6;
             this.labelOutputFormat.Text = "Format";
             // 
             // labelChooseOutputFolder
@@ -436,7 +428,7 @@
             this.labelChooseOutputFolder.Location = new System.Drawing.Point(10, 55);
             this.labelChooseOutputFolder.Name = "labelChooseOutputFolder";
             this.labelChooseOutputFolder.Size = new System.Drawing.Size(105, 13);
-            this.labelChooseOutputFolder.TabIndex = 0;
+            this.labelChooseOutputFolder.TabIndex = 1;
             this.labelChooseOutputFolder.Text = "Choose output folder";
             // 
             // buttonChooseFolder
@@ -444,7 +436,7 @@
             this.buttonChooseFolder.Location = new System.Drawing.Point(402, 69);
             this.buttonChooseFolder.Name = "buttonChooseFolder";
             this.buttonChooseFolder.Size = new System.Drawing.Size(26, 23);
-            this.buttonChooseFolder.TabIndex = 2;
+            this.buttonChooseFolder.TabIndex = 3;
             this.buttonChooseFolder.Text = "...";
             this.buttonChooseFolder.UseVisualStyleBackColor = true;
             this.buttonChooseFolder.Click += new System.EventHandler(this.buttonChooseFolder_Click);
@@ -454,7 +446,7 @@
             this.textBoxOutputFolder.Location = new System.Drawing.Point(11, 71);
             this.textBoxOutputFolder.Name = "textBoxOutputFolder";
             this.textBoxOutputFolder.Size = new System.Drawing.Size(385, 20);
-            this.textBoxOutputFolder.TabIndex = 1;
+            this.textBoxOutputFolder.TabIndex = 2;
             // 
             // groupBoxInput
             // 
@@ -475,13 +467,14 @@
             // 
             // checkBoxScanFolderRecursive
             // 
+            this.checkBoxScanFolderRecursive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxScanFolderRecursive.AutoSize = true;
             this.checkBoxScanFolderRecursive.Checked = true;
             this.checkBoxScanFolderRecursive.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxScanFolderRecursive.Location = new System.Drawing.Point(788, 16);
             this.checkBoxScanFolderRecursive.Name = "checkBoxScanFolderRecursive";
             this.checkBoxScanFolderRecursive.Size = new System.Drawing.Size(74, 17);
-            this.checkBoxScanFolderRecursive.TabIndex = 9;
+            this.checkBoxScanFolderRecursive.TabIndex = 0;
             this.checkBoxScanFolderRecursive.Text = "Recursive";
             this.checkBoxScanFolderRecursive.UseVisualStyleBackColor = true;
             // 
@@ -491,7 +484,7 @@
             this.buttonSearchFolder.Location = new System.Drawing.Point(868, 12);
             this.buttonSearchFolder.Name = "buttonSearchFolder";
             this.buttonSearchFolder.Size = new System.Drawing.Size(116, 23);
-            this.buttonSearchFolder.TabIndex = 8;
+            this.buttonSearchFolder.TabIndex = 1;
             this.buttonSearchFolder.Text = "Search folder...";
             this.buttonSearchFolder.UseVisualStyleBackColor = true;
             this.buttonSearchFolder.Click += new System.EventHandler(this.buttonSearchFolder_Click);
@@ -502,7 +495,7 @@
             this.buttonInputBrowse.Location = new System.Drawing.Point(989, 41);
             this.buttonInputBrowse.Name = "buttonInputBrowse";
             this.buttonInputBrowse.Size = new System.Drawing.Size(26, 23);
-            this.buttonInputBrowse.TabIndex = 2;
+            this.buttonInputBrowse.TabIndex = 3;
             this.buttonInputBrowse.Text = "...";
             this.buttonInputBrowse.UseVisualStyleBackColor = true;
             this.buttonInputBrowse.Click += new System.EventHandler(this.buttonInputBrowse_Click);
@@ -533,7 +526,7 @@
             this.listViewInputFiles.Location = new System.Drawing.Point(6, 41);
             this.listViewInputFiles.Name = "listViewInputFiles";
             this.listViewInputFiles.Size = new System.Drawing.Size(978, 249);
-            this.listViewInputFiles.TabIndex = 1;
+            this.listViewInputFiles.TabIndex = 2;
             this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
             this.listViewInputFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragDrop);
@@ -605,6 +598,27 @@
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
+            // 
+            // buttonRemoveTextForHiSettings
+            // 
+            this.buttonRemoveTextForHiSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonRemoveTextForHiSettings.Location = new System.Drawing.Point(149, 69);
+            this.buttonRemoveTextForHiSettings.Name = "buttonRemoveTextForHiSettings";
+            this.buttonRemoveTextForHiSettings.Size = new System.Drawing.Size(94, 21);
+            this.buttonRemoveTextForHiSettings.TabIndex = 3;
+            this.buttonRemoveTextForHiSettings.Text = "Settings...";
+            this.buttonRemoveTextForHiSettings.UseVisualStyleBackColor = true;
+            this.buttonRemoveTextForHiSettings.Click += new System.EventHandler(this.buttonRemoveTextForHiSettings_Click);
+            // 
+            // timeUpDownAdjust
+            // 
+            this.timeUpDownAdjust.AutoSize = true;
+            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 37);
+            this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownAdjust.Name = "timeUpDownAdjust";
+            this.timeUpDownAdjust.Size = new System.Drawing.Size(92, 24);
+            this.timeUpDownAdjust.TabIndex = 1;
             // 
             // BatchConvert
             // 
@@ -694,6 +708,7 @@
         private System.Windows.Forms.Button buttonSearchFolder;
         private System.Windows.Forms.CheckBox checkBoxSetMinimumDisplayTimeBetweenSubs;
         private System.Windows.Forms.CheckBox checkBoxScanFolderRecursive;
+        private System.Windows.Forms.Button buttonRemoveTextForHiSettings;
 
     }
 }
