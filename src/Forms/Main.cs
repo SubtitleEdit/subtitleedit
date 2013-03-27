@@ -14980,10 +14980,14 @@ namespace Nikse.SubtitleEdit.Forms
             SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds + 0.001);
             if (next != null)
             {
+                int addMilliseconds = Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                if (addMilliseconds < 1 || addMilliseconds > 500)
+                    addMilliseconds = 1;
+
                 var oldDuration = next.Duration.TotalMilliseconds;
                 if (next.StartTime.IsMaxTime || next.EndTime.IsMaxTime)
                     oldDuration = Utilities.GetOptimalDisplayMilliseconds(p.Text);
-                next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + 1;
+                next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + addMilliseconds;
                 next.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + oldDuration;
                 SubtitleListview1.SelectIndexAndEnsureVisible(index + 1);
             }
