@@ -15694,7 +15694,10 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                original.Text = string.Format("{0} {1} {0}", tag, original.Text.Replace(Environment.NewLine, " ♪" + Environment.NewLine + "♪ "));
+                                if (Configuration.Settings.Tools.MusicSymbolStyle.ToLower() == "single")
+                                    original.Text = string.Format("{0} {1}", tag, original.Text.Replace(Environment.NewLine, Environment.NewLine + tag +" "));
+                                else
+                                    original.Text = string.Format("{0} {1} {0}", tag, original.Text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "));
                             }
                             SubtitleListview1.SetAlternateText(i, original.Text);
                         }
@@ -15706,7 +15709,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        _subtitle.Paragraphs[i].Text = string.Format("{0} {1} {0}", tag, _subtitle.Paragraphs[i].Text.Replace(Environment.NewLine, " ♪" + Environment.NewLine + "♪ "));
+                        if (Configuration.Settings.Tools.MusicSymbolStyle.ToLower() == "single")
+                            _subtitle.Paragraphs[i].Text = string.Format("{0} {1}", tag, _subtitle.Paragraphs[i].Text.Replace(Environment.NewLine, Environment.NewLine + tag + " "));
+                        else
+                            _subtitle.Paragraphs[i].Text = string.Format("{0} {1} {0}", tag, _subtitle.Paragraphs[i].Text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "));
                     }
                     SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
                 }

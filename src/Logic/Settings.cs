@@ -122,6 +122,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string ImportTextSplitting { get; set; }
         public bool ImportTextMergeShortLines { get; set; }
         public string GenerateTimeCodePatterns { get; set; }
+        public string MusicSymbolStyle { get; set; }
 
         public ToolsSettings()
         {
@@ -157,6 +158,7 @@ namespace Nikse.SubtitleEdit.Logic
             ModifySelectionRule = "Contains";
             ModifySelectionText = string.Empty;
             GenerateTimeCodePatterns = "HH:mm:ss;yyyy-MM-dd;dddd dd MMMM yyyy <br>HH:mm:ss;dddd dd MMMM yyyy <br>hh:mm:ss tt;s";
+            MusicSymbolStyle = "Double"; // 'Double' or 'Single'
         }
     }
 
@@ -1386,6 +1388,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("GenerateTimeCodePatterns");
             if (subNode != null)
                 settings.Tools.GenerateTimeCodePatterns = subNode.InnerText;
+            subNode = node.SelectSingleNode("MusicSymbolStyle");
+            if (subNode != null)
+                settings.Tools.MusicSymbolStyle = subNode.InnerText;            
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -2240,6 +2245,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
             textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
             textWriter.WriteElementString("GenerateTimeCodePatterns", settings.Tools.GenerateTimeCodePatterns);
+            textWriter.WriteElementString("MusicSymbolStyle", settings.Tools.MusicSymbolStyle);            
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");
