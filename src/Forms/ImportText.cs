@@ -249,7 +249,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (line.Trim().Length == 0)
                 {
                     if (sb.Length > 0)
-                        SplitSingle(sb);
+                    {
+                        _subtitle.Paragraphs.Add(new Paragraph() { Text = Utilities.AutoBreakLine(sb.ToString()) });
+                    }                    
                     sb = new StringBuilder();
                 }
                 else if (!ContainsLetters(line))
