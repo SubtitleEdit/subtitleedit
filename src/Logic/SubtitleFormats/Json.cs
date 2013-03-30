@@ -107,7 +107,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return s;
         }
 
-
         public static string ReadTag(string s, string tag)
         {
             int startIndex = s.IndexOf("\"" + tag + "\"");
@@ -121,8 +120,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 res = Json.ConvertJsonSpecialCharacters(res);
                 res = res.Replace("\\\"", "@__1");
                 int endIndex = res.IndexOf("\"}");
+                int endAlternate = res.IndexOf("\",");
                 if (endIndex == -1)
-                    endIndex = res.IndexOf("\",");
+                    endIndex = endAlternate;
+                else if (endAlternate > 0 && endAlternate < endIndex)
+                    endIndex = endAlternate;
                 if (endIndex == -1)
                     return null;
                 if (res.Length > 1)
