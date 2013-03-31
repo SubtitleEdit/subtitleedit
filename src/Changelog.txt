@@ -1,5 +1,24 @@
 ﻿Subtitle Edit Changelog
 
+
+3.3.4 (x April 2013)
+* NEW:
+   * Added a few new subtitle formats
+   * Serbian language file (Latin) - thx Misa Forger
+* IMPROVED:
+   * Updated Polish language file - thx admas	
+   * Updated Portuguese language file - thx moob
+   * Updated Brazilian Portuguese translation - thx Igor Rückert
+   * Dvd ripping slightly faster now
+   * Improvements to change/fix casing regarding music symbols - thx dr. Jackson
+   * "Remove text for HI" colors suspious lines - thx Alice
+* FIXED:
+   * Fixed plugin loader so it also works with installer version - thx Quetsbeek
+   * Fix bug in "Remove text for HI" - thx Alice
+   * Improvements/fixes in "Batch convert" - thx menes
+   *  "Batch convert" would only adjust time if ms was non-zero - thx Arnaud
+
+
 3.3.3 (19th March 2013)
 * NEW:
    * Added a few new subtitle formats
@@ -16,7 +35,7 @@
    * Export to image based formats: bold tag support - thx moob
    * Updated French ocr replace list - thx Bruno
    * Fixed export to 3D Side-by-side to working 3D Half-side-by-side - thx r0lZ
-   * If no 'Find' has been made, F3 will show 'Find' window - thx fox :) 
+   * If no 'Find' has been made, F3 will show 'Find' window - thx fox
 * FIXED:
    * After closing "SSA/ASS style designer", first style was applied
      to all lines - thx vicgol/Xabier/Mike

@@ -684,11 +684,13 @@ namespace Nikse.SubtitleEdit.Forms
                 double prevOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(prev.Text);
                 double currentOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 bool canBeEqual = _format != null && (_format.GetType() == typeof(AdvancedSubStationAlpha) || _format.GetType() == typeof(SubStationAlpha));
+                if (!canBeEqual)
+                    canBeEqual = Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart;
 
-                if (prev != null && !prev.StartTime.IsMaxTime && !p.StartTime.IsMaxTime &&
-                    ((canBeEqual && p.StartTime.TotalMilliseconds <= prev.EndTime.TotalMilliseconds) || (!canBeEqual && p.StartTime.TotalMilliseconds <= prev.EndTime.TotalMilliseconds)))
+                double diff = prev.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds;
+                if (prev != null && !prev.StartTime.IsMaxTime && !p.StartTime.IsMaxTime && diff >= 0 && !(canBeEqual && diff == 0))
                 {
-                    double diff = prev.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds;
+                    
                     int diffHalf = (int)(diff / 2);
                     if (!Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart && p.StartTime.TotalMilliseconds == prev.EndTime.TotalMilliseconds &&
                         prev.Duration.TotalMilliseconds > 100)
@@ -712,7 +714,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
-                        prev.EndTime.TotalMilliseconds--;
+//                        prev.EndTime.TotalMilliseconds--;
                     }
                     else if (prevOptimalDisplayTime <= (p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds))
                     {

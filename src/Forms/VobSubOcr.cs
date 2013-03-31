@@ -310,6 +310,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxEmphasis1Transparent.Left = pictureBoxEmphasis1.Left + pictureBoxEmphasis1.Width + 3;
             pictureBoxEmphasis2.Left = checkBoxEmphasis1Transparent.Left + checkBoxEmphasis1Transparent.Width + 8;
             checkBoxEmphasis2Transparent.Left = pictureBoxEmphasis2.Left + pictureBoxEmphasis2.Width + 3;
+
+            buttonGetTesseractDictionaries.Visible = Configuration.Settings.General.ShowBetaStuff;
         }
 
         private void FixLargeFonts()
