@@ -792,7 +792,7 @@ namespace Nikse.SubtitleEdit.Forms
                             sub.ChangeFramerate(fromFrameRate, toFrameRate);
                         }
 
-                        if (timeUpDownAdjust.TimeCode.Milliseconds > 0.00001)
+                        if (timeUpDownAdjust.TimeCode.TotalMilliseconds > 0.00001)
                         {
                             var totalMilliseconds = timeUpDownAdjust.TimeCode.Milliseconds;
                             if (radioButtonShowEarlier.Checked)
