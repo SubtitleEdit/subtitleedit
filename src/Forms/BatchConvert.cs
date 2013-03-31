@@ -794,7 +794,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (timeUpDownAdjust.TimeCode.TotalMilliseconds > 0.00001)
                         {
-                            var totalMilliseconds = timeUpDownAdjust.TimeCode.Milliseconds;
+                            var totalMilliseconds = timeUpDownAdjust.TimeCode.TotalMilliseconds;
                             if (radioButtonShowEarlier.Checked)
                                 totalMilliseconds *= -1;
                             sub.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(totalMilliseconds));
