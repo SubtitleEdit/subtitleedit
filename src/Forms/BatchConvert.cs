@@ -1055,6 +1055,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertRemoveFormatting = checkBoxRemoveFormatting.Checked;
             Configuration.Settings.Tools.BatchConvertRemoveTextForHI = checkBoxRemoveTextForHI.Checked;
             Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles = checkBoxSetMinimumDisplayTimeBetweenSubs.Checked;
+            Configuration.Settings.Tools.BatchConvertOutputFolder = textBoxOutputFolder.Text;
         }
 
         private void buttonMultipleReplaceSettings_Click(object sender, EventArgs e)
