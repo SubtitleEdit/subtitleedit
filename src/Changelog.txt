@@ -6,7 +6,7 @@
    * Added a few new subtitle formats
    * Serbian language file (Latin) - thx Misa Forger
 * IMPROVED:
-   * Updated Polish language file - thx admas	
+   * Updated Polish language file - thx admas
    * Updated Portuguese language file - thx moob
    * Updated Brazilian Portuguese translation - thx Igor Rückert
    * Dvd ripping slightly faster now
@@ -16,7 +16,7 @@
    * Fixed plugin loader so it also works with installer version - thx Quetsbeek
    * Fix bug in "Remove text for HI" - thx Alice
    * Improvements/fixes in "Batch convert" - thx menes
-   *  "Batch convert" would only adjust time if ms was non-zero - thx Arnaud
+   * "Batch convert" would only adjust time if ms was non-zero - thx Arnaud
 
 
 3.3.3 (19th March 2013)
