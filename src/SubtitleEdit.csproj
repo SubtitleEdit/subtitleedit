@@ -1362,7 +1362,6 @@
     </Content>
     <Content Include="Languages\bg-BG.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\ca-ES.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1414,7 +1413,6 @@
     </Content>
     <Content Include="Languages\nl-NL.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\pl-PL.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1433,7 +1431,6 @@
     </Content>
     <Content Include="Languages\tr-TR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\ro-RO.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
