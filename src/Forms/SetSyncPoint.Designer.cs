@@ -252,10 +252,11 @@
             // 
             // buttonFindTextEnd
             // 
+            this.buttonFindTextEnd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonFindTextEnd.Location = new System.Drawing.Point(469, 560);
             this.buttonFindTextEnd.Name = "buttonFindTextEnd";
             this.buttonFindTextEnd.Size = new System.Drawing.Size(106, 21);
-            this.buttonFindTextEnd.TabIndex = 32;
+            this.buttonFindTextEnd.TabIndex = 25;
             this.buttonFindTextEnd.Text = "Find text...";
             this.buttonFindTextEnd.UseVisualStyleBackColor = true;
             this.buttonFindTextEnd.Click += new System.EventHandler(this.ButtonFindTextEndClick);
