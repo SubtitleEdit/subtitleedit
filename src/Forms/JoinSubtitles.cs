@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -11,6 +12,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         List<string> _fileNamesToJoin = new List<string>();
         public Subtitle JoinedSubtitle { get; set; }
+        public Logic.SubtitleFormats.SubtitleFormat JoinedFormat { get; private set; }
 
         public JoinSubtitles()
         {
@@ -30,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = Configuration.Settings.Language.JoinSubtitles.Title;
             groupBoxPreview.Text = Configuration.Settings.Language.JoinSubtitles.Information;
             buttonJoin.Text = Configuration.Settings.Language.JoinSubtitles.Join;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;            
 
             FixLargeFonts();
         }
@@ -87,6 +89,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SortAndLoad()
         {
+            JoinedFormat = new Logic.SubtitleFormats.SubRip(); // default subtitle format
+            string header = null;
+            SubtitleFormat lastFormat = null;
             List<Subtitle> subtitles = new List<Subtitle>();
             for (int k = 0; k < _fileNamesToJoin.Count; k++)
             {
@@ -103,6 +108,16 @@ namespace Nikse.SubtitleEdit.Forms
                         MessageBox.Show("Unkown subtitle format: " + fileName);
                         return;
                     }
+                    else
+                    {
+                        if (sub.Header != null)
+                            header = sub.Header;
+
+                        if (lastFormat == null || (lastFormat != null && lastFormat.FriendlyName == format.FriendlyName))
+                            lastFormat = format;
+                        else
+                            lastFormat = new Logic.SubtitleFormats.SubRip(); // default subtitle format
+                    }
                     subtitles.Add(sub);
                 }
                 catch (Exception exception)
@@ -113,6 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
             }
+            JoinedFormat = lastFormat; 
 
             for (int outer = 0; outer < subtitles.Count; outer++)
             {
@@ -155,6 +171,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             JoinedSubtitle = new Subtitle();
+            if (JoinedFormat.FriendlyName != new SubRip().FriendlyName)
+                JoinedSubtitle.Header = header;
             foreach (Subtitle sub in subtitles)
             {
                 foreach (Paragraph p in sub.Paragraphs)

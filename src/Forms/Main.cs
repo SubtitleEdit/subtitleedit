@@ -15908,6 +15908,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     ResetSubtitle();
                     _subtitle = joinSubtitles.JoinedSubtitle;
+                    SetCurrentFormat(joinSubtitles.JoinedFormat);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
