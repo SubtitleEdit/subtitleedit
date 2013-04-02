@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -155,6 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
                         noOfLines = (int) (_subtitle.Paragraphs.Count - ((numericUpDownParts.Value-1) * partSize));
 
                     Subtitle temp = new Subtitle();
+                    temp.Header = _subtitle.Header;
                     int size = 0;
                     for (int number = 0; number < noOfLines; number++)
                     {
