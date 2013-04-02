@@ -18,6 +18,7 @@
    * Improvements/fixes in "Batch convert" - thx menes
    * "Batch convert" would only adjust time if ms was non-zero - thx Arnaud
    * Fixed resize bug in "Set sync point" - thx gege
+   * Join/Split (advanced) now keep original subtitle format/style - thx Frisbee
 
 
 3.3.3 (19th March 2013)
