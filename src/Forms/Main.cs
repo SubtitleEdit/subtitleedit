@@ -4537,10 +4537,8 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 if (subtitleToAppend != null && subtitleToAppend.Paragraphs.Count > 1)
                                 {
-                                    VisualSync visualSync = new VisualSync();
-
+                                    var visualSync = new VisualSync();
                                     visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, subtitleToAppend, _fileName, _language.AppendViaVisualSyncTitle, CurrentFrameRate);
-
                                     visualSync.ShowDialog(this);
                                     if (visualSync.OKPressed)
                                     {
@@ -4555,6 +4553,27 @@ namespace Nikse.SubtitleEdit.Forms
                                                     p.CalculateFrameNumbersFromTimeCodes(fr);
                                                 _subtitle.Paragraphs.Add(new Paragraph(p));
                                             }
+                                            if (format.GetType() == typeof(AdvancedSubStationAlpha) && GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha))
+                                            {
+                                                List<string> currentStyles = new List<string>();
+                                                if (_subtitle.Header != null)
+                                                    currentStyles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+                                                foreach (string styleName in AdvancedSubStationAlpha.GetStylesFromHeader(subtitleToAppend.Header))
+                                                {
+                                                    bool alreadyExists = false;
+                                                    foreach (string currentStyleName in currentStyles)
+                                                    {
+                                                        if (currentStyleName.ToLower().Trim() == styleName.ToLower().Trim())
+                                                            alreadyExists = true;
+                                                    }
+                                                    if (!alreadyExists)
+                                                    {
+                                                        var newStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitleToAppend.Header);
+                                                        _subtitle.Header = AdvancedSubStationAlpha.AddSsaStyle(newStyle, _subtitle.Header);
+                                                    }
+                                                }
+                                            }
+
                                             _subtitle.Renumber(1);
 
                                             ShowSource();
