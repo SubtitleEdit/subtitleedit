@@ -22,6 +22,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
+        public static string DefaultHeader
+        {
+            get
+            {
+                SubtitleFormat format = new AdvancedSubStationAlpha();
+                var sub = new Subtitle();
+                string text = format.ToText(sub, string.Empty);
+                string[] lineArray = text.Replace(Environment.NewLine, "\n").Split('\n');
+                var lines = new List<string>();
+                foreach (string line in lineArray)
+                    lines.Add(line);
+                format.LoadSubtitle(sub, lines, string.Empty);
+                return sub.Header;
+                
+            }
+        }        
+
         public override string Extension
         {
             get { return ".ass"; }
@@ -1135,6 +1152,36 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     }
                 }
             }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Add new style to ASS header
+        /// </summary>
+        /// <returns>Header with new style</returns>
+        public static string AddSsaStyle(SsaStyle style, string header)
+        {
+            if (string.IsNullOrEmpty(header))
+                header = DefaultHeader;
+
+            var sb = new StringBuilder();
+            bool stylesStarted = false;
+            bool styleAdded = false;
+            string styleFormat = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
+            foreach (string line in header.Replace(Environment.NewLine, "\n").Split('\n'))
+            {
+                if (line.ToLower() == "[V4+ Styles]".ToLower() || line.ToLower() == "[V4 Styles]".ToLower())
+                    stylesStarted = true;
+                if (line.ToLower().StartsWith("format:"))
+                    styleFormat = line;
+                if (!line.StartsWith("Style: " + style.Name + ",")) // overwrite existing style
+                    sb.AppendLine(line);
+                if (!styleAdded && stylesStarted && line.ToLower().Trim().StartsWith("style:"))
+                {
+                    sb.AppendLine(style.ToRawAss(styleFormat));
+                    styleAdded = true;
+                }
+            }            
             return sb.ToString();
         }
 

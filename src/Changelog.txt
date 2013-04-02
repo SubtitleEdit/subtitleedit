@@ -17,6 +17,7 @@
    * Fix bug in "Remove text for HI" - thx Alice
    * Improvements/fixes in "Batch convert" - thx menes
    * "Batch convert" would only adjust time if ms was non-zero - thx Arnaud
+   * Fixed resize bug in "Set sync point" - thx gege
 
 
 3.3.3 (19th March 2013)
