@@ -222,7 +222,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (node.Attributes["end"] != null)
                     {
                         string end = node.Attributes["end"].InnerText;
-                        subtitle.Paragraphs.Add(new Paragraph(TimedText10.GetTimeCode(start, false), TimedText10.GetTimeCode(end, false), text));
+                        double dBegin, dEnd;
+                        if (!start.Contains(":") && Utilities.CountTagInText(start, ".") == 1 && !start.Contains(":") && Utilities.CountTagInText(start, ".") == 1 &&
+                            double.TryParse(start, out dBegin) && double.TryParse(end, out dEnd))
+                        {
+                            subtitle.Paragraphs.Add(new Paragraph(text, dBegin * 1000.0, dEnd * 1000.0));
+                        }
+                        else
+                        {
+                            subtitle.Paragraphs.Add(new Paragraph(TimedText10.GetTimeCode(start, false), TimedText10.GetTimeCode(end, false), text));
+                        }                        
                     }
                     else if (node.Attributes["dur"] != null)
                     {
