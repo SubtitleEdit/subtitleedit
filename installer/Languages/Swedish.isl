@@ -1,4 +1,4 @@
-;*** Inno Setup version 5.5.0+ Swedish messages ***
+; *** Inno Setup version 5.5.3+ Swedish messages ***
 ;
 ; To download user-contributed translations of this file, go to:
 ;   http://www.jrsoftware.org/files/istrans/
@@ -7,14 +7,12 @@
 ; messages that didn't have them already, because on those messages Inno
 ; Setup adds the periods automatically (appending a period would result in
 ; two periods being displayed).
+;
+; Translated by christer_1@hotmail.com (Christer Toivonen)
+;
 
-;
-; Translated by a.chaillat@cartadis.com (Kare L.)
-; Translated by stefan@bodingh.se
-; Translated by hans.ericson@bredband.net
-;
 [LangOptions]
-; The following three entries are very important. Be sure to read and 
+; The following three entries are very important. Be sure to read and
 ; understand the '[LangOptions] section' topic in the help file.
 LanguageName=Svenska
 LanguageID=$041D
@@ -166,7 +164,6 @@ WizardSelectComponents=Välj komponenter
 SelectComponentsDesc=Vilka komponenter skall installeras?
 SelectComponentsLabel2=Välj de komponenter som du vill ska installeras; avmarkera de komponenter som du inte vill ha. Klicka sedan på Nästa när du är klar att  fortsätta.
 FullInstallation=Fullständig installation
-
 ; if possible don't translate 'Compact' as 'Minimal' (I mean 'Minimal' in your language)
 CompactInstallation=Kompakt installation
 CustomInstallation=Anpassad installation
@@ -213,6 +210,7 @@ ApplicationsFound=Följande program använder filer som måste uppdateras av Setup.
 ApplicationsFound2=Följande program använder filer som måste uppdateras av Setup. Vi rekommenderar att du låter Setup automatiskt stänga dessa program. Efter installationen kommer Setup att försöka starta programmen igen.
 CloseApplications=&Stäng programmen automatiskt
 DontCloseApplications=&Stäng inte programmen
+ErrorCloseApplications=Installationsprogrammet kunde inte stänga alla program. Innan installationen fortsätter rekommenderar vi att du stänger alla program som använder filer som Setup behöver uppdatera.
 
 ; *** "Installing" wizard page
 WizardInstalling=Installerar
