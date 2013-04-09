@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.3.4 (x April 2013)
+3.3.4 (9th April 2013)
 * NEW:
    * Added a few new subtitle formats
    * Serbian language file (Latin) - thx Misa Forger
@@ -9,6 +9,7 @@
    * Updated Polish language file - thx admas
    * Updated Portuguese language file - thx moob
    * Updated Brazilian Portuguese translation - thx Igor Rückert
+   * Updated Italian translation - thx Johnny B. Goode
    * Dvd ripping slightly faster now
    * Improvements to change/fix casing regarding music symbols - thx dr. Jackson
    * "Remove text for HI" colors suspious lines - thx Alice
