@@ -1,4 +1,1 @@
-We use the proper LanguageCodePage 1252 in "Swedish.isl"
-  compared to the unofficial one.
-The rest of the files should be identical to the ones found in the following page:
 http://www.jrsoftware.org/files/istrans/
