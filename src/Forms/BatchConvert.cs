@@ -635,6 +635,18 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
+                        if (format != null && format.GetType() == typeof(MicroDvd))
+                        {
+                            if (sub != null && sub.Paragraphs.Count > 0 && sub.Paragraphs[0].Duration.TotalMilliseconds < 1001)
+                            {
+                                if (sub.Paragraphs[0].Text.StartsWith("29.") || sub.Paragraphs[0].Text.StartsWith("23.") ||
+                                    sub.Paragraphs[0].Text.StartsWith("29,") || sub.Paragraphs[0].Text.StartsWith("23,") ||
+                                    sub.Paragraphs[0].Text == "24" || sub.Paragraphs[0].Text == "25" ||
+                                    sub.Paragraphs[0].Text == "30" || sub.Paragraphs[0].Text == "60")
+                                    sub.Paragraphs.RemoveAt(0);
+                            }
+                        }
+
                     }
 
                     List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> bluRaySubtitles = new List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData>();
