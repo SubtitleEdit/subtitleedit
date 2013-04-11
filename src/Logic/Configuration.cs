@@ -99,6 +99,14 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static string PluginsDirectory
+        {
+            get
+            {
+                return Path.Combine(Configuration.DataDirectory, "Plugins");
+            }
+        }
+
         public static string DataDirectory
         {
             get

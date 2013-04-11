@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowInstalledPlugins()
         {
-            string path = Path.Combine(Configuration.BaseDirectory, "Plugins");
+            string path = Configuration.PluginsDirectory;
             if (!Directory.Exists(path))
                 return;
 
@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            string pluginsFolder = Path.Combine(Configuration.DataDirectory, "Plugins");
+            string pluginsFolder = Configuration.PluginsDirectory;
             if (!Directory.Exists(pluginsFolder))
                 Directory.CreateDirectory(pluginsFolder);
 
@@ -254,7 +254,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelOpenDictionaryFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string pluginsFolder = Path.Combine(Configuration.DataDirectory, "Plugins");
+            string pluginsFolder = Configuration.PluginsDirectory;
             if (!Directory.Exists(pluginsFolder))
                 Directory.CreateDirectory(pluginsFolder);
 
