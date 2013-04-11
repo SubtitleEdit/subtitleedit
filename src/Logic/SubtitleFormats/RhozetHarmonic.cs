@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private string ToTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
         private TimeCode DecodeTimeCode(string s)
@@ -63,9 +63,59 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
 
+
+            XmlNode paragraph = xml.CreateElement("Data");
+
+            XmlAttribute charSize = xml.CreateAttribute("CharSize");
+            charSize.InnerText = Utilities.RemoveHtmlTags("0.2");
+            paragraph.Attributes.Append(charSize);
+
+            XmlAttribute posX = xml.CreateAttribute("PosX");
+            posX.InnerText = "0.5";
+            paragraph.Attributes.Append(posX);
+
+            XmlAttribute posY = xml.CreateAttribute("PosY");
+            posY.InnerText = "0.75";
+            paragraph.Attributes.Append(posY);
+
+            XmlAttribute colorR = xml.CreateAttribute("ColorR");
+            colorR.InnerText = "245";
+            paragraph.Attributes.Append(colorR);
+
+            XmlAttribute colorG = xml.CreateAttribute("ColorG");
+            colorG.InnerText = "245";
+            paragraph.Attributes.Append(colorG);
+
+            XmlAttribute colorB = xml.CreateAttribute("ColorB");
+            colorB.InnerText = "245";
+            paragraph.Attributes.Append(colorB);
+
+            XmlAttribute transparency = xml.CreateAttribute("Transparency");
+            transparency.InnerText = "0.0";
+            paragraph.Attributes.Append(transparency);
+
+            XmlAttribute shadowSize = xml.CreateAttribute("ShadowSize");
+            shadowSize.InnerText = "0.5";
+            paragraph.Attributes.Append(shadowSize);
+
+            XmlAttribute bkgEnable = xml.CreateAttribute("BkgEnable");
+            bkgEnable.InnerText = "1";
+            paragraph.Attributes.Append(bkgEnable);
+
+            XmlAttribute bkgExtraWidth = xml.CreateAttribute("BkgExtraWidth");
+            bkgExtraWidth.InnerText = "0.02";
+            paragraph.Attributes.Append(bkgExtraWidth);
+
+            XmlAttribute bkgExtraHeight = xml.CreateAttribute("BkgExtraHeight");
+            bkgExtraHeight.InnerText = "0.02";
+            paragraph.Attributes.Append(bkgExtraHeight);
+
+            xml.DocumentElement.AppendChild(paragraph);
+
+
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                XmlNode paragraph = xml.CreateElement("Data");
+                paragraph = xml.CreateElement("Data");
 
                 XmlAttribute start = xml.CreateAttribute("StartTimecode");
                 start.InnerText = ToTimeCode(p.StartTime);
@@ -79,54 +129,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text.InnerText = Utilities.RemoveHtmlTags(p.Text);
                 paragraph.Attributes.Append(text);
 
-                XmlAttribute charSize = xml.CreateAttribute("CharSize");
-                charSize.InnerText = Utilities.RemoveHtmlTags("0.2");
-                paragraph.Attributes.Append(charSize);
-
-                XmlAttribute posX = xml.CreateAttribute("PosX");
-                posX.InnerText = "0.5";
-                paragraph.Attributes.Append(posX);
-
-                XmlAttribute posY = xml.CreateAttribute("PosY");
-                posY.InnerText = "0.75";
-                paragraph.Attributes.Append(posY);
-
-                XmlAttribute colorR = xml.CreateAttribute("ColorR");
-                colorR.InnerText = "245";
-                paragraph.Attributes.Append(colorR);
-
-                XmlAttribute colorG = xml.CreateAttribute("ColorG");
-                colorG.InnerText = "245";
-                paragraph.Attributes.Append(colorG);
-
-                XmlAttribute colorB = xml.CreateAttribute("ColorB");
-                colorB.InnerText = "245";
-                paragraph.Attributes.Append(colorB);
-
-                XmlAttribute transparency = xml.CreateAttribute("Transparency");
-                transparency.InnerText = "0.0";
-                paragraph.Attributes.Append(transparency);
-
-                XmlAttribute shadowSize = xml.CreateAttribute("ShadowSize");
-                shadowSize.InnerText = "0.5";
-                paragraph.Attributes.Append(shadowSize);
-
-                XmlAttribute bkgEnable = xml.CreateAttribute("BkgEnable");
-                bkgEnable.InnerText = "1";
-                paragraph.Attributes.Append(bkgEnable);
-
-                XmlAttribute bkgExtraWidth = xml.CreateAttribute("BkgExtraWidth");
-                bkgExtraWidth.InnerText = "0.02";
-                paragraph.Attributes.Append(bkgExtraWidth);
-
-                XmlAttribute bkgExtraHeight = xml.CreateAttribute("BkgExtraHeight");
-                bkgExtraHeight.InnerText = "0.02";
-                paragraph.Attributes.Append(bkgExtraHeight);
-
                 xml.DocumentElement.AppendChild(paragraph);
             }
 
-            return ToUtf8XmlString(xml);
+            string s = "<?xml version=\"1.0\"?>" + Environment.NewLine + ToUtf8XmlString(xml, true).Replace("\"", "__@____").Replace("'", "&apos;").Replace("__@____", "'").Replace(" />", "/>");
+            while (s.Contains(Environment.NewLine + " "))
+            s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+            return s;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
