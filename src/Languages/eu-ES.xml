@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="Euskara">
   <General>
     <Title>Subtitle Edit</Title>
@@ -146,6 +146,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertOptions>Bihurketa aukerak</ConvertOptions>
     <RemoveFormatting>Kendu heuskarri etiketak</RemoveFormatting>
     <RemoveTextForHI>Kendu GA idazkia</RemoveTextForHI>
+    <OverwriteOriginalFiles>Gainidatzi jatorrizko agiriak (luzapen berria heuskarria aldatzen bada)</OverwriteOriginalFiles>
     <ReDoCasing>Berregin xehe-larriak</ReDoCasing>
     <Convert>&amp;Bihurtu</Convert>
     <NothingToConvert>Ez dago ezer bihurtzeko!</NothingToConvert>
@@ -153,6 +154,11 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Converted>Bihurtuta</Converted>
     <ConvertedX>({0}) bihurtuta</ConvertedX>
     <Settings>Ezarpenak</Settings>
+    <AutoBalance>Berez orekatu lerroak</AutoBalance>
+    <ScanFolder>Agiritegi mihaketa...</ScanFolder>
+    <ScanningFolder>Mihatzen {0} eta azpiagiritegiak azpidatzi agirien bila...</ScanningFolder>
+    <Recursive>Barneratu azpi agiritegiak</Recursive>
+    <SetMinMsBetweenSubtitles>Ezarri gutx. segmil azpidatzi artean</SetMinMsBetweenSubtitles>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -315,7 +321,10 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderWidth>Hertz zabalera:</BorderWidth>
     <ImageFormat>Irudi heuskarria</ImageFormat>
     <AntiAlias>Hertz lausopena</AntiAlias>
-    <SideBySide3D>Aldez-alde 3D</SideBySide3D>
+    <Text3D>3D</Text3D>
+    <SideBySide3D>Aldez-alde</SideBySide3D>
+    <HalfTopBottom3D>Goitik/Behera</HalfTopBottom3D>
+    <Depth>Sakonera</Depth>
     <ExportAllLines>&amp;Esportatu lerro denak...</ExportAllLines>
     <XImagesSavedInY>{0} irudi gordeta hemen {1}</XImagesSavedInY>
     <VideoResolution>Bideo bereizm.:</VideoResolution>
@@ -328,6 +337,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveVobSubAs>Hautatu VobSub agiri izena</SaveVobSubAs>
     <SaveFabImageScriptAs>Hautatu Blu-ray Studio Pro STL Agiri izena</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Hautatu DVD Studio Pro STL agiri izena</SaveDvdStudioProStlAs>
+    <SomeLinesWereTooLongX>Zenbait lerro luzeegiak dira: {0}</SomeLinesWereTooLongX>
   </ExportPngXml>
   <ExportText>
     <Title>Esportatu idatzia</Title>
@@ -350,6 +360,15 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <HHMMSSFF>OO:MM:SS:FF</HHMMSSFF>
     <TimeCodeSeperator>Denb. kode banant.:</TimeCodeSeperator>
   </ExportText>
+  <ExtractDateTimeInfo>
+    <Title>Sortu denbora idazki bezala</Title>
+    <Description>
+    </Description>
+    <StartFrom>Hasi hemendik</StartFrom>
+    <DateTimeFormat>Egun/Ordu heuskarria</DateTimeFormat>
+    <Example>Adibidea</Example>
+    <GenerateSubtitle>&amp;Sortu azpidatzia</GenerateSubtitle>
+  </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Bilatu</Title>
     <Find>Bilatu</Find>
@@ -533,12 +552,14 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <MergeShortLines>Batu jarraipena duten lerro laburrak</MergeShortLines>
     <RemoveEmptyLines>Kendu hutsik dauden lerroak</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Kendu hizki gabeko lerroak</RemoveLinesWithoutLetters>
+    <GenerateTimeCodes>Sortu denbora kodeak</GenerateTimeCodes>
     <GapBetweenSubtitles>Azpidatzi arteko tartea (segundumilaen)</GapBetweenSubtitles>
     <Auto>Berez</Auto>
     <Fixed>Zuzenduta</Fixed>
     <Refresh>&amp;Berritu</Refresh>
     <TextFiles>Idatzi agiriak</TextFiles>
     <PreviewLinesModifiedX>Aurreikuspena - esaldi aldatuak: {0}</PreviewLinesModifiedX>
+    <TimeCodes>Denbora kodeak</TimeCodes>
   </ImportText>
   <Interjections>
     <Title>Hasperen-hitzak</Title>
@@ -576,6 +597,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportOcrFromDvd>Inportatu/OCR azpidatzia vob/i&amp;fo (dvd)-tik...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Inportatu/OCR VobSub (sub/id&amp;x) azpidatzia...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Inportatu/OCR Blu-ra&amp;y azpidatzi agiria...</ImportBluRaySupFile>
+        <ImportXSub>Inportatu/OCR xsub divx&amp;/avi-tik...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Inportatu azpidatzia &amp;Matroska agiritik...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Inportatu azpidatzia esk&amp;uzko kodeaketa hautapenarekin...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Inportatu idatzi laua&amp;...</ImportText>
@@ -642,6 +664,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <WordsPerMinute>Idatzia - hitz minutuko (hm-ko)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Egin itzul&amp;pen huts berri bat uneko azpidatzitik</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>&amp;Multzo bihurketa</BatchConvert>
+        <GenerateTimeAsText>Sortu denbora idazki bezala</GenerateTimeAsText>
         <SplitSubtitle>Ba&amp;nandu azpidatzia...</SplitSubtitle>
         <AppendSubtitle>Erant&amp;si azpidatzia...</AppendSubtitle>
         <JoinSubtitles>Ba&amp;tu azpidatziak...</JoinSubtitles>
@@ -1088,6 +1111,11 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SubtractFromCurrentSelection>Kendu oraingo hautapenetik</SubtractFromCurrentSelection>
     <IntersectWithCurrentSelection>Gurutzatu oraingo hautapenarekin</IntersectWithCurrentSelection>
     <MatchingLinesX>Bat datozen lerroak: {0}</MatchingLinesX>
+    <Contains>Du</Contains>
+    <StartsWith>Hasten da</StartsWith>
+    <EndsWith>Amaitzen da</EndsWith>
+    <NoContains>Ez du</NoContains>
+    <RegEx>Esaera arrunta</RegEx>
   </ModifySelection>
   <MultipleReplace>
     <Title>Ordezte anitza</Title>
@@ -1279,8 +1307,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <ShowStopButton>Erakutsi gelditu botoia</ShowStopButton>
     <ShowMuteButton>Erakutsi mututu botoia</ShowMuteButton>
     <ShowFullscreenButton>Erakutsi ikusleiho-osoa botoia</ShowFullscreenButton>
-    <DefaultVolume>Berezko bolumena:</DefaultVolume>
-    <VolumeNotes>0 soinu gabe, 100 bolumen handienean</VolumeNotes>
     <PreviewFontSize>Azpidatzi aurreikuspen hizki neurria:</PreviewFontSize>
     <MainWindowVideoControls>Leiho nagusiko bideo aginteak</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Norbererarako idatzi eta url bilaketa:</CustomSearchTextAndUrl>
@@ -1571,6 +1597,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <PlusShadow>+ Itzala</PlusShadow>
     <OpaqueBox>Kutxa argikaitza (inguru margoa erabiliz)</OpaqueBox>
     <Import>Inportatu</Import>
+    <Export>Esportatu</Export>
     <Copy>Kopiatu</Copy>
     <CopyOfY>Kopiatu {0}</CopyOfY>
     <CopyXOfY>Kopiatu {0} --&gt; {1}</CopyXOfY>
@@ -1578,7 +1605,11 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <Remove>Kendu</Remove>
     <RemoveAll>Kendu denak</RemoveAll>
     <ImportStyleFromFile>Inportatu estiloa agiritik...</ImportStyleFromFile>
+    <ExportStyleToFile>Esportatu estiloa agirira... (estiloa gehituko du agiria jadanik badago)</ExportStyleToFile>
     <ChooseStyle>Hautatu inportatzeko estiloa </ChooseStyle>
+    <StyleAlreadyExits>Estiloa jadanik badago: {0}</StyleAlreadyExits>
+    <StyleXExportedToFileY>'{0}' estiloa '{1}' agirira esportaturik</StyleXExportedToFileY>
+    <StyleXImportedFromFileY>'{0}' estiloa '{1}' agiritik inportaturik</StyleXImportedFromFileY>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Aldiberetze gunea</Title>
@@ -1630,6 +1661,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <OcrMethod>OCR metodoa</OcrMethod>
     <OcrViaModi>OCR Microsoft Office Document Imaging (MODI) bidez. Beharrezkoa da MS Office</OcrViaModi>
     <OcrViaTesseract>OCR Tesseract bidez</OcrViaTesseract>
+    <OcrViaNOCR>OCR  nOCR bidez</OcrViaNOCR>
     <Language>Hizkuntza</Language>
     <OcrViaImageCompare>OCR irudi alderaketa bidez</OcrViaImageCompare>
     <ImageDatabase>Irudi databasea</ImageDatabase>
