@@ -69,6 +69,8 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                 }
                 else if (name == "stts") // sample table time to sample map
                 {
+                    //https://developer.apple.com/library/mac/#documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-SW1
+
                     buffer = new byte[size - 4];
                     fs.Read(buffer, 0, buffer.Length);
                     int version = buffer[0];
@@ -80,11 +82,14 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                         {
                             uint sampleCount = GetUInt(8 + i * 8);
                             uint sampleDelta = GetUInt(12 + i * 8);
-                            totalTime += (double)(sampleDelta / (double)timeScale);
-                            if (StartTimeCodes.Count > 0)
-                                EndTimeCodes[EndTimeCodes.Count - 1] = totalTime - 0.001;
-                            StartTimeCodes.Add(totalTime);
-                            EndTimeCodes.Add(totalTime + 2.5);
+                            for (int j = 0; j < sampleCount; j++)
+                            {
+                                totalTime += (double)(sampleDelta / (double)timeScale);
+                                if (StartTimeCodes.Count > 0)
+                                    EndTimeCodes[EndTimeCodes.Count - 1] = totalTime - 0.001;
+                                StartTimeCodes.Add(totalTime);
+                                EndTimeCodes.Add(totalTime + 2.5);
+                            }
                         }
                     }
                     else
