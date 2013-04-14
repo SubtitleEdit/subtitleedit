@@ -1336,6 +1336,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string res = sb.ToString().Replace("<i></i>", string.Empty).Replace("</i><i>", string.Empty);
             res = res.Replace("♪♪", "♪");
             res = res.Replace("  ", " ").Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
+            if (res.Contains("<i>") && !res.Contains("</i>"))
+                res += "</i>";
             return Utilities.FixInvalidItalicTags(res);
         }
 
