@@ -388,10 +388,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (node != null)
                     ss.CurrentDCinemaMovieTitle = node.InnerText;
 
+                node = xml.DocumentElement.SelectSingleNode("LoadFont");
+                if (node != null)
+                {
+                    if (node.Attributes["URI"] != null)
+                        ss.CurrentDCinemaFontUri = node.Attributes["URI"].InnerText;
+                }
+
                 node = xml.DocumentElement.SelectSingleNode("Font");
                 if (node != null)
                 {
-                    ss.CurrentDCinemaFontUri = node.InnerText;
                     if (node.Attributes["ID"] != null)
                         ss.CurrentDCinemaFontId = node.Attributes["ID"].InnerText;
                     if (node.Attributes["Size"] != null)
