@@ -96,49 +96,128 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 bool italicOn = false;
                 bool boldOn = false;
                 bool underlineOn = false;
-                StringBuilder lineSb = new StringBuilder();
+                var lineSb = new StringBuilder();
                 foreach (string line in parts)
                 {
                     if (count > 0)
                         lineSb.Append("|");
 
-                    if (line.StartsWith("<i>") || italicOn)
+                    var pre = new StringBuilder();
+                    string s = line;
+                    for (int i = 0; i < 5; i++)
                     {
-                        italicOn = true;
-                        boldOn = false;
-                        underlineOn = false;
-                        lineSb.Append("{y:i}"); // italic single line
+
+                        if (s.StartsWith("<i>") || italicOn)
+                        {
+                            italicOn = true;
+                            boldOn = false;
+                            underlineOn = false;
+                            pre.Append("{y:i}"); // italic single line
+                            s = s.Remove(0, 3);
+                        }
+                        else if (s.StartsWith("<b>") || boldOn)
+                        {
+                            italicOn = false;
+                            boldOn = true;
+                            underlineOn = false;
+                            pre.Append("{y:b}"); // bold single line
+                            s = s.Remove(0, 3);
+                        }
+                        else if (s.StartsWith("<u>") || underlineOn)
+                        {
+                            italicOn = false;
+                            boldOn = true;
+                            underlineOn = false;
+                            pre.Append("{y:u}"); // underline single line
+                            s = s.Remove(0, 3);
+                        }
+
+                        if (s.Contains("</i>"))
+                            italicOn = false;
+
+                        if (s.Contains("</b>"))
+                            boldOn = false;
+
+                        if (s.Contains("</u>"))
+                            underlineOn = false;
+
+                        if (s.StartsWith("<font "))
+                        {
+                            int start = s.IndexOf("<font ");
+                            int end = s.IndexOf(">", start);
+                            if (end > start)
+                            {
+                                string tag = s.Substring(start, end - start);
+                                if (tag.Contains(" color="))
+                                {
+                                    int colorStart = tag.IndexOf(" color=");
+                                    int colorEnd = tag.IndexOf("\"", colorStart + " color=".Length + 1);
+                                    if (colorEnd > 0)
+                                    {
+                                        string color = tag.Substring(colorStart, colorEnd - colorStart);
+                                        color = color.Remove(0, " color=".Length);
+                                        color = color.Trim('"');
+                                        color = color.Trim('\'');
+                                        color = color.TrimStart('#');
+                                        if (color.Length == 6)
+                                        {
+                                            if (s.Contains(Environment.NewLine) && s.Contains("</font>" + Environment.NewLine))
+                                                pre.Append("{c:$" + color.Substring(4, 2) + color.Substring(2, 2) + color.Substring(0, 2) + "}");
+                                            else
+                                                pre.Append("{C:$" + color.Substring(4, 2) + color.Substring(2, 2) + color.Substring(0, 2) + "}");
+                                        }
+                                    }
+                                }
+                                if (tag.Contains(" face="))
+                                {
+                                    int colorStart = tag.IndexOf(" face=");
+                                    int colorEnd = tag.IndexOf("\"", colorStart + " face=".Length + 1);
+                                    if (colorEnd > 0)
+                                    {
+                                        string fontName = tag.Substring(colorStart, colorEnd - colorStart);
+                                        fontName = fontName.Remove(0, " face=".Length).Trim();
+                                        fontName = fontName.Trim('"');
+                                        fontName = fontName.Trim('\'');
+                                        if (fontName.Length > 0)
+                                        {
+                                            if (s.Contains(Environment.NewLine) && s.Contains("</font>" + Environment.NewLine))
+                                                pre.Append("{f:" + fontName + "}");
+                                            else
+                                                pre.Append("{F:" + fontName + "}");
+                                        }
+                                    }
+                                }
+                                if (tag.Contains(" size="))
+                                {
+                                    int colorStart = tag.IndexOf(" size=");
+                                    int colorEnd = tag.IndexOf("\"", colorStart + " size=".Length + 1);
+                                    if (colorEnd > 0)
+                                    {
+                                        string fontSize = tag.Substring(colorStart, colorEnd - colorStart);
+                                        fontSize = fontSize.Remove(0, " size=".Length).Trim();
+                                        fontSize = fontSize.Trim('"');
+                                        fontSize = fontSize.Trim('\'');
+                                        if (fontSize.Length > 0)
+                                        {
+                                            if (s.Contains(Environment.NewLine) && s.Contains("</font>" + Environment.NewLine))
+                                                pre.Append("{s:" + fontSize + "}");
+                                            else
+                                                pre.Append("{S:" + fontSize + "}");
+                                        }
+                                    }
+                                }
+                                s = s.Remove(0, end + 1);
+                            }
+                        }
                     }
-                    else if (line.StartsWith("<b>") || boldOn)
-                    {
-                        italicOn = false;
-                        boldOn = true;
-                        underlineOn = false;
-                        lineSb.Append("{y:b}"); // bold single line
-                    }
-                    else if (line.StartsWith("<u>") || underlineOn)
-                    {
-                        italicOn = false;
-                        boldOn = true;
-                        underlineOn = false;
-                        lineSb.Append("{y:u}"); // underline single line
-                    }
 
-                    if (line.Contains("</i>"))
-                        italicOn = false;
 
-                    if (line.Contains("</b>"))
-                        boldOn = false;
-
-                    if (line.Contains("</u>"))
-                        underlineOn = false;
-
-                    lineSb.Append(Utilities.RemoveHtmlTags(line));
+                    lineSb.Append(Utilities.RemoveHtmlTags(pre + line));
                     count++;
                 }
                 string text = lineSb.ToString();
                 int noOfLines = Utilities.CountTagInText(text,"|") +1;
-                if (noOfLines > 1 && Utilities.CountTagInText(text, "{y:i}") == noOfLines)
+                if (Utilities.CountTagInText(text, "{y:i}") == noOfLines)
                     text = "{Y:i}" + text.Replace("{y:i}", string.Empty);
                 else if (noOfLines > 1 && Utilities.CountTagInText(text, "{y:b}") == noOfLines)
                     text = "{Y:b}" + text.Replace("{y:b}", string.Empty);
@@ -176,44 +255,241 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             string post = string.Empty;
                             string[] parts = text.Split("|".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                             int count = 0;
-                            StringBuilder lineSb = new StringBuilder();
+                            var lineSb = new StringBuilder();
+                            
                             foreach (string s2 in parts)
                             {
+                                
                                 if (count > 0)
                                     lineSb.AppendLine();
 
                                 s = s2.Trim();
-                                if (s.StartsWith("{Y:i}"))
+                                var pre = new StringBuilder();
+                                for (int i = 0; i < 5; i++)
                                 {
-                                    s = "<i>" + s.Replace("{Y:i}", string.Empty);
-                                    post += "</i>";
+                                    if (s.StartsWith("{Y:i}"))
+                                    {
+                                        s = s.Remove(0, 5);
+                                        pre.Append("<i>");
+                                        post += "</i>";
+                                    }
+                                    else if (s.StartsWith("{Y:b}"))
+                                    {
+                                        s = s.Remove(0, 5);
+                                        pre.Append("<b>");
+                                        post += "</b>";
+                                    }
+                                    else if (s.StartsWith("{Y:u}"))
+                                    {
+                                        s = s.Remove(0, 5);
+                                        pre.Append("<u>");
+                                        post += "</u>";
+                                    }
+                                    else if (s.StartsWith("{y:i}"))
+                                    {
+                                        if (parts.Length > 1)
+                                        {
+                                            s = s.Remove(0, 5) + "</i>";
+                                            pre.Append("<i>");
+                                        }
+                                        else
+                                        {
+                                            s = s.Remove(0, 5);
+                                            pre.Append("<i>");
+                                            post += "</i>";
+                                        }
+                                    }
+                                    else if (s.StartsWith("{y:b}"))
+                                    {
+                                        if (parts.Length > 1)
+                                        {
+
+                                            s = s.Remove(0, 5) + "</b>";
+                                            pre.Append("<b>");
+                                        }
+                                        else
+                                        {
+                                            s = s.Remove(0, 5);
+                                            pre.Append("<b>");
+                                            post += "</b>";
+                                        }
+                                    }
+                                    else if (s.StartsWith("{y:u}"))
+                                    {
+                                        if (parts.Length > 1)
+                                        {
+                                            s = s.Remove(0, 5) + "</u>";
+                                            pre.Append("<u>");
+                                        }
+                                        else
+                                        {
+                                            s = s.Remove(0, 5);
+                                            pre.Append("<u>");
+                                            post += "</u>";
+                                        }
+                                    }
+                                    else if (s.StartsWith("{y:b,u}") || s.StartsWith("{y:u,b}"))
+                                    {
+                                        if (parts.Length > 1)
+                                        {
+
+                                            s = s.Remove(0, 7) + "</u></b>";
+                                            pre.Append("<b><u>");
+                                        }
+                                        else
+                                        {
+                                            s = s.Remove(0, 5);
+                                            pre.Append("<b><u>");
+                                            post += "</u></b>";
+                                        }
+                                    }
+                                    else if (s.StartsWith("{y:b,i}") || s.StartsWith("{y:i,b}"))
+                                    {
+                                        if (parts.Length > 1)
+                                        {
+
+                                            s = s.Remove(0, 7) + "</i></b>";
+                                            pre.Append("<b><i>");
+                                        }
+                                        else
+                                        {
+                                            s = s.Remove(0, 5);
+                                            pre.Append("<b><i>");
+                                            post += "</i></b>";
+                                        }
+                                    }
+                                    else if (s.StartsWith("{y:i,u}") || s.StartsWith("{y:u,i}"))
+                                    {
+                                        if (parts.Length > 1)
+                                        {
+
+                                            s = s.Remove(0, 7) + "</i></u>";
+                                            pre.Append("<u><i>");
+                                        }
+                                        else
+                                        {
+                                            s = s.Remove(0, 5);
+                                            pre.Append("<u><i>");
+                                            post += "</i></u>";
+                                        }
+                                    }
+                                    else if (s.StartsWith("{Y:b,u}") || s.StartsWith("{Y:u,b}"))
+                                    {
+                                        s = s.Remove(0, 5);
+                                        pre.Append("<b><u>");
+                                        post += "</u></b>";
+                                    }
+                                    else if (s.StartsWith("{Y:b,i}") || s.StartsWith("{Y:i,b}"))
+                                    {
+                                        s = s.Remove(0, 5);
+                                        pre.Append("<b><i>");
+                                        post += "</i></b>";
+                                    }
+                                    else if (s.StartsWith("{Y:i,u}") || s.StartsWith("{Y:u,i}"))
+                                    {
+                                        s = s.Remove(0, 5);
+                                        pre.Append("<i><u>");
+                                        post += "</u></i>";
+                                    }
+                                    else if (s.Contains("{c:$"))
+                                    {
+                                        int start = s.IndexOf("{c:$");
+                                        int end = s.IndexOf("}", start);
+                                        if (end > start)
+                                        {
+                                            string tag = s.Substring(start, end - start);
+                                            tag = tag.Remove(0, 4);
+                                            if (tag.Length == 6)
+                                            {
+                                                pre.Append("<font color=\"#" + tag.Substring(4, 2) + tag.Substring(2, 2) + tag.Substring(0, 2) + "\">");
+                                                s = s.Remove(start, end - start + 1) + "</font>";
+                                            }
+                                        }
+                                    }
+                                    else if (s.Contains("{C:$")) // uppercase=all lines
+                                    {
+                                        int start = s.IndexOf("{C:$");
+                                        int end = s.IndexOf("}", start);
+                                        if (end > start)
+                                        {
+                                            string tag = s.Substring(start, end - start);
+                                            tag = tag.Remove(0, 4);
+                                            if (tag.Length == 6)
+                                            {
+                                                pre.Append("<font color=\"#" + tag.Substring(4, 2) + tag.Substring(2, 2) + tag.Substring(0, 2) + "\">");
+                                                s = s.Remove(start, end - start + 1);
+                                                post += "</font>";
+                                            }
+                                        }
+                                    }
+                                    else if (s.Contains("{f:"))
+                                    {
+                                        int start = s.IndexOf("{f:");
+                                        int end = s.IndexOf("}", start);
+                                        if (end > start)
+                                        {
+                                            string tag = s.Substring(start, end - start);
+                                            tag = tag.Remove(0, 3).Trim();
+                                            if (tag.Length > 0)
+                                            {
+                                                pre.Append( "<font face=\"" + tag + "\">");
+                                                s = s.Remove(start, end - start + 1) + "</font>";
+                                            }
+                                        }
+                                    }
+                                    else if (s.Contains("{F:")) // uppercase=all lines
+                                    {
+                                        int start = s.IndexOf("{F:");
+                                        int end = s.IndexOf("}", start);
+                                        if (end > start)
+                                        {
+                                            string tag = s.Substring(start, end - start);
+                                            tag = tag.Remove(0, 3).Trim();
+                                            if (tag.Length > 0)
+                                            {
+                                                pre.Append("<font face=\"" + tag + "\">");
+                                                s = s.Remove(start, end - start + 1);
+                                                post += "</font>";
+                                            }
+                                        }
+                                    }
+                                    else if (s.Contains("{s:"))
+                                    {
+                                        int start = s.IndexOf("{s:");
+                                        int end = s.IndexOf("}", start);
+                                        if (end > start)
+                                        {
+                                            string tag = s.Substring(start, end - start);
+                                            tag = tag.Remove(0, 3).Trim();
+                                            if (tag.Length > 0)
+                                            {
+                                                pre.Append("<font size=\"" + tag + "\">");
+                                                s = s.Remove(start, end - start + 1) + "</font>";
+                                            }
+                                        }
+                                    }
+                                    else if (s.Contains("{S:")) // uppercase=all lines
+                                    {
+                                        int start = s.IndexOf("{S:");
+                                        int end = s.IndexOf("}", start);
+                                        if (end > start)
+                                        {
+                                            string tag = s.Substring(start, end - start);
+                                            tag = tag.Remove(0, 3).Trim();
+                                            if (tag.Length > 0)
+                                            {
+                                                pre.Append("<font size=\"" + tag + "\">");
+                                                s = s.Remove(start, end - start + 1);
+                                                post += "</font>";
+                                            }
+                                        }
+                                    }
                                 }
-                                else if (s.StartsWith("{Y:b}"))
-                                {
-                                    s = "<b>" + s.Replace("{Y:b}", string.Empty);
-                                    post += "</b>";
-                                }
-                                else if (s.StartsWith("{Y:u}"))
-                                {
-                                    s = "<u>" + s.Replace("{Y:u}", string.Empty);
-                                    post += "</u>";
-                                }
-                                else if (s.StartsWith("{y:i}"))
-                                {
-                                    s = "<i>" + s.Replace("{y:i}", string.Empty) + "</i>";
-                                }
-                                else if (s.StartsWith("{y:b}"))
-                                {
-                                    s = "<b>" + s.Replace("{y:b}", string.Empty) + "</b>";
-                                }
-                                else if (s.StartsWith("{y:u}"))
-                                {
-                                    s = "<u>" + s.Replace("{y:u}", string.Empty) + "</u>";
-                                }
+
                                 s = s.Replace("{Y:i}", string.Empty).Replace("{y:i}", string.Empty);
                                 s = s.Replace("{Y:b}", string.Empty).Replace("{y:b}", string.Empty);
                                 s = s.Replace("{Y:u}", string.Empty).Replace("{y:u}", string.Empty);
-                                lineSb.Append(s);
+                                lineSb.Append(pre + s);
                                 count++;
                             }
                             text = lineSb.ToString() + post;
@@ -235,10 +511,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
 
-            int i = 0;
+            int j = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                Paragraph previous = subtitle.GetParagraphOrDefault(i - 1);
+                Paragraph previous = subtitle.GetParagraphOrDefault(j - 1);
                 if (p.StartFrame == 0 && previous != null)
                 {
                     p.StartFrame = previous.EndFrame + 1;
@@ -247,7 +523,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     p.EndFrame = p.StartFrame;
                 }
-                i++;
+                j++;
             }
 
             subtitle.Renumber(1);
