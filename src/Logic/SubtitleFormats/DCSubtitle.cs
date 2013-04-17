@@ -355,8 +355,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     no++;
                 }
             }
-
-            return ToUtf8XmlString(xml).Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\"");
+            string s = ToUtf8XmlString(xml).Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\"");
+            while (s.Contains("</Font> ") || s.Contains(" <Font ") || s.Contains(Environment.NewLine + "<Font ") || s.Contains("</Font>" + Environment.NewLine))
+            {
+                s = s.Replace("</Font> ", "</Font>");
+                s = s.Replace(" <Font ", "<Font ");
+                s = s.Replace(Environment.NewLine + "<Font ", "<Font ");
+                s = s.Replace("</Font>" + Environment.NewLine, "</Font>");
+            }
+            return s;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
