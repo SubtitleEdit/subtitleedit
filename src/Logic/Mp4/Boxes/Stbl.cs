@@ -176,12 +176,12 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                             text = text.Remove(0, 2);
                         if (text.StartsWith("-N"))
                             text = text.Remove(0, 2);
-                        if (text.StartsWith("-"))
+                        if (text.StartsWith("-") && !text.Contains(Environment.NewLine + "-"))
                             text = text.Remove(0, 1);
                     }
 
                     Texts.Add(text.Replace("\n", Environment.NewLine));
-                }
+                 }
             }
         }
 
