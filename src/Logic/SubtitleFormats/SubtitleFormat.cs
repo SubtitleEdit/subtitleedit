@@ -49,6 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new FinalCutProXml(),
                     new FinalCutProXXml(),
                     new FinalCutProTestXml(),
+                    new FinalCutProTest2Xml(),
                     new FlashXml(),
                     new Footage(),
                     new GpacTtxt(),
@@ -165,6 +166,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new UnknownSubtitle49(),
                     new UnknownSubtitle50(),
                     new UnknownSubtitle51(),
+                    new UnknownSubtitle52(),
                 };
             }
         }

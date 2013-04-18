@@ -9561,6 +9561,17 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeAutoDuration();
                 e.SuppressKeyPress = true;
             }
+            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.X)
+            {
+                if (!string.IsNullOrEmpty(_videoFileName))
+                {                    
+                    e.SuppressKeyPress = true;
+                    var form = new HardSubExtract(_videoFileName);
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    { 
+                    }
+                }
+            }
 
             // TABS - MUST BE LAST
             else if (tabControlButtons.SelectedTab == tabPageAdjust)

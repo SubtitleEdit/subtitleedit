@@ -112,6 +112,41 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public void MakeOneColorRemoverOthers(Color c, int maxDif)
+        {
+            byte[] buffer = new byte[4];
+            buffer[0] = c.B;
+            buffer[1] = c.G;
+            buffer[2] = c.R;
+            buffer[3] = c.A;
+
+            byte[] bufferTransparent = new byte[4];
+            bufferTransparent[0] = 0;
+            bufferTransparent[1] = 0;
+            bufferTransparent[2] = 0;
+            bufferTransparent[3] = 0;
+            for (int i = 0; i < _bitmapData.Length; i += 4)
+            {
+                if (_bitmapData[i+3] > 20)
+                {
+                    if (Math.Abs(buffer[0] - _bitmapData[i]) < maxDif &&
+                        Math.Abs(buffer[1] - _bitmapData[i + 1]) < maxDif &&
+                        Math.Abs(buffer[2] - _bitmapData[i + 2]) < maxDif)
+                    {
+                    }
+                    else
+                    {
+                        Buffer.BlockCopy(bufferTransparent, 0, _bitmapData, i, 4);
+                    }
+                }
+                else
+                {
+                    Buffer.BlockCopy(bufferTransparent, 0, _bitmapData, i, 4);
+                }
+            }
+        }
+
+
         /// <summary>
         /// Convert a x-color image to four colors, for e.g. dvd sub pictures.
         /// Colors CAN be in any order but should not...

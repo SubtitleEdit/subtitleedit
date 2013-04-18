@@ -210,8 +210,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             string pluginsFolder = Configuration.PluginsDirectory;
             if (!Directory.Exists(pluginsFolder))
-                Directory.CreateDirectory(pluginsFolder);
-
+            {
+                try
+                {
+                    Directory.CreateDirectory(pluginsFolder);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show("Unable to create plugin folder " + pluginsFolder + ": " + exception.Message);
+                    return;
+                }
+            }
             var ms = new MemoryStream(e.Result);
 
             ZipExtractor zip = ZipExtractor.Open(ms);
@@ -256,8 +265,17 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string pluginsFolder = Configuration.PluginsDirectory;
             if (!Directory.Exists(pluginsFolder))
-                Directory.CreateDirectory(pluginsFolder);
-
+            {
+                try
+                {
+                    Directory.CreateDirectory(pluginsFolder);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show("Unable to create plugin folder " + pluginsFolder + ": " + exception.Message);
+                    return;
+                }
+            }
             System.Diagnostics.Process.Start(pluginsFolder);
         }
 
