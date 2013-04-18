@@ -326,6 +326,12 @@
     <Compile Include="Forms\GetTesseractDictionaries.Designer.cs">
       <DependentUpon>GetTesseractDictionaries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\HardSubExtract.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\HardSubExtract.Designer.cs">
+      <DependentUpon>HardSubExtract.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Interjections.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -788,6 +794,7 @@
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
+    <Compile Include="Logic\SubtitleFormats\FinalCutProTest2Xml.cs" />
     <Compile Include="Logic\SubtitleFormats\JsonType4.cs" />
     <Compile Include="Logic\SubtitleFormats\DCinemaSmpte.cs" />
     <Compile Include="Logic\SubtitleFormats\DCSubtitle.cs" />
@@ -897,6 +904,7 @@
     <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle50.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle51.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle52.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle6.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle7.cs" />
     <Compile Include="Logic\SubtitleFormats\DigiBeta.cs" />
@@ -1116,6 +1124,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GetTesseractDictionaries.resx">
       <DependentUpon>GetTesseractDictionaries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\HardSubExtract.resx">
+      <DependentUpon>HardSubExtract.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Interjections.resx">
       <DependentUpon>Interjections.cs</DependentUpon>
