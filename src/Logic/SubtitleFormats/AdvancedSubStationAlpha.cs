@@ -35,9 +35,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     lines.Add(line);
                 format.LoadSubtitle(sub, lines, string.Empty);
                 return sub.Header;
-                
+
             }
-        }        
+        }
 
         public override string Extension
         {
@@ -1181,7 +1181,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     sb.AppendLine(style.ToRawAss(styleFormat));
                     styleAdded = true;
                 }
-            }            
+            }
             return sb.ToString();
         }
 

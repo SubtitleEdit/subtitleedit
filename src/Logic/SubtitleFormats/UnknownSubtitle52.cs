@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     public class UnknownSubtitle52 : SubtitleFormat
     {
-        //#00001	10:00:02.00 10:00:04.13	00:00:02.13	#F CC00000D0	#C 
+        //#00001    10:00:02.00 10:00:04.13 00:00:02.13 #F CC00000D0    #C
         static readonly Regex RegexTimeCodes = new Regex(@"^\#\d\d\d\d\d\t\d\d:\d\d:\d\d\.\d\d\t\d\d:\d\d:\d\d\.\d\d\t\d\d:\d\d:\d\d\.\d\d\t.*$", RegexOptions.Compiled);
 
         public override string Extension
@@ -42,21 +42,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             const string timeFormat = "{0:00}:{1:00}:{2:00}.{3:00}";
             var sb = new StringBuilder();
             string header = @"FILE_INFO_BEGIN
-VIDEOFILE: 
+VIDEOFILE:
 ORIG_TITLE: [TITLE]
-PGM_TITLE: 
+PGM_TITLE:
 EP_TITLE: 03
-PROD: 
+PROD:
 TRANSL: SDI Media
 CLIENT: FIC-HD
-COMMENT: 
+COMMENT:
 TAPE#: TN10179565
-CRE_DATE: 
-REP_DATE: 
-TR_DATE: 
-PROG_LEN: 
+CRE_DATE:
+REP_DATE:
+TR_DATE:
+PROG_LEN:
 SOM: 09:59:35:00
-TRA_FONT: 
+TRA_FONT:
 LANG_CO: English
 LIST_FONT: Arial Unicode MS 450
 TV_SYS: 625/50

@@ -3819,9 +3819,9 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxOcrMethod.Items.RemoveAt(2);
         }
 
-       
 
-    
+
+
 
         private void InitializeTesseract()
         {

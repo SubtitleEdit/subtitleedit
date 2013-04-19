@@ -1390,7 +1390,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.GenerateTimeCodePatterns = subNode.InnerText;
             subNode = node.SelectSingleNode("MusicSymbolStyle");
             if (subNode != null)
-                settings.Tools.MusicSymbolStyle = subNode.InnerText;            
+                settings.Tools.MusicSymbolStyle = subNode.InnerText;
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -2245,7 +2245,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
             textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
             textWriter.WriteElementString("GenerateTimeCodePatterns", settings.Tools.GenerateTimeCodePatterns);
-            textWriter.WriteElementString("MusicSymbolStyle", settings.Tools.MusicSymbolStyle);            
+            textWriter.WriteElementString("MusicSymbolStyle", settings.Tools.MusicSymbolStyle);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");

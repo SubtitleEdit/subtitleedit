@@ -256,10 +256,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             string[] parts = text.Split("|".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                             int count = 0;
                             var lineSb = new StringBuilder();
-                            
+
                             foreach (string s2 in parts)
                             {
-                                
+
                                 if (count > 0)
                                     lineSb.AppendLine();
 

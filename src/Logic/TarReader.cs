@@ -2,7 +2,7 @@
 using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic
-{    
+{
     public class TarReader
     {
 
@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Logic
             stream.Position = 0;
             while (pos + 512 < length)
             {
-                
+
                 stream.Seek(pos, SeekOrigin.Begin);
                 var th = new TarHeader(stream);
                 if (th.FileSizeInBytes > 0)

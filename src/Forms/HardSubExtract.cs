@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms
                 File.Delete(fileName);
             }
             catch
-            { 
+            {
             }
             return bmp;
         }
@@ -81,6 +81,6 @@ namespace Nikse.SubtitleEdit.Forms
             nbmp.MakeOneColorRemoverOthers(Color.White, 50);
             pictureBox2.Image = nbmp.GetBitmap();
         }
-      
+
     }
 }
