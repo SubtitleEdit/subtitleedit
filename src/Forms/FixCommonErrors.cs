@@ -690,7 +690,7 @@ namespace Nikse.SubtitleEdit.Forms
                 double diff = prev.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds;
                 if (prev != null && !prev.StartTime.IsMaxTime && !p.StartTime.IsMaxTime && diff >= 0 && !(canBeEqual && diff == 0))
                 {
-                    
+
                     int diffHalf = (int)(diff / 2);
                     if (!Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart && p.StartTime.TotalMilliseconds == prev.EndTime.TotalMilliseconds &&
                         prev.Duration.TotalMilliseconds > 100)
@@ -2295,7 +2295,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     bool isPrevEndOfLine = IsPrevoiusTextEndOfParagraph(prevText);
                     if (prevText == " .")
-                        isPrevEndOfLine = true;                    
+                        isPrevEndOfLine = true;
                     if (!text.StartsWith("www.") &&
                         (firstLetter != firstLetter.ToUpper() || IsTurkishLittleI(firstLetter)) &&
                         !"0123456789".Contains(firstLetter) &&

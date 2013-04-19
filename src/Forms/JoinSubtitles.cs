@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = Configuration.Settings.Language.JoinSubtitles.Title;
             groupBoxPreview.Text = Configuration.Settings.Language.JoinSubtitles.Information;
             buttonJoin.Text = Configuration.Settings.Language.JoinSubtitles.Join;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;            
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             FixLargeFonts();
         }
@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
             }
-            JoinedFormat = lastFormat; 
+            JoinedFormat = lastFormat;
 
             for (int outer = 0; outer < subtitles.Count; outer++)
             {

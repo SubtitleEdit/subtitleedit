@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void AddWarning()
-        { 
+        {
             if (_warnings == null || _warningIndex < 0)
                 return;
 
@@ -749,7 +749,7 @@ namespace Nikse.SubtitleEdit.Forms
                 text.StartsWith("engine ") ||
                 text == "roars" ||
                 text == "scoff" ||
-                text == "screeches" ||                
+                text == "screeches" ||
                 text == "shouts" ||
                 text == "shrieks" ||
                 text == "sigh" ||

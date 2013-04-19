@@ -9564,11 +9564,11 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.X)
             {
                 if (!string.IsNullOrEmpty(_videoFileName))
-                {                    
+                {
                     e.SuppressKeyPress = true;
                     var form = new HardSubExtract(_videoFileName);
                     if (form.ShowDialog(this) == DialogResult.OK)
-                    { 
+                    {
                     }
                 }
             }
