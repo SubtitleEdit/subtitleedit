@@ -951,6 +951,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static Settings CustomDeserialize(string fileName)
         {
             var doc = new XmlDocument();
+            doc.PreserveWhitespace = true;
             doc.Load(fileName);
 
             Settings settings = new Settings();
