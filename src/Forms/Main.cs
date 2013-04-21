@@ -9615,17 +9615,6 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeAutoDuration();
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.X)
-            {
-                if (!string.IsNullOrEmpty(_videoFileName))
-                {
-                    e.SuppressKeyPress = true;
-                    var form = new HardSubExtract(_videoFileName);
-                    if (form.ShowDialog(this) == DialogResult.OK)
-                    {
-                    }
-                }
-            }
 
             // TABS - MUST BE LAST
             else if (tabControlButtons.SelectedTab == tabPageAdjust)
@@ -12527,6 +12516,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemModifySelection.Visible = true;
                 toolStripMenuItemInverseSelection.Visible = true;
                 toolStripMenuItemSpellCheckFromCurrentLine.Visible = true;
+                toolStripMenuItemImportOcrHardSub.Visible = true;
             }
             else
             {
@@ -12537,6 +12527,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemModifySelection.Visible = false;
                 toolStripMenuItemInverseSelection.Visible = false;
                 toolStripMenuItemSpellCheckFromCurrentLine.Visible = false;
+                toolStripMenuItemImportOcrHardSub.Visible = false;
             }
 
             if (Configuration.Settings.General.StartRememberPositionAndSize &&
@@ -17006,6 +16997,20 @@ namespace Nikse.SubtitleEdit.Forms
                         MessageBox.Show("Not a valid xsub file!");
                     }
                 }
+            }
+        }
+
+        private void toolStripMenuItemImportOcrHardSub_Click(object sender, EventArgs e)
+        {
+            var form = new HardSubExtract(_videoFileName);
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines); //TODO: Fix text
+                _subtitle = form.SubtitleFromOcr;
+                _subtitleAlternate = new Subtitle();
+                _subtitleAlternateFileName = null;
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                SubtitleListview1.SelectIndexAndEnsureVisible(0);
             }
         }
 
