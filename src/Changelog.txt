@@ -1,6 +1,21 @@
 ﻿Subtitle Edit Changelog
 
 
+3.3.5 (xth May 2013)
+* NEW:
+   * Added a few new subtitle formats
+* IMPROVED:
+   * Updated Basque language file - thx Xabier Aramendi
+   * Support for color, size and font name in MicroDVD - thx SimlyTheBOSS
+   * Start OCR if srt file contains only image file names 
+* FIXED:
+   * Blu-ray sup image decoding no longer skips color 0 - thx matidio
+   * Some output changes for Rhozet Marmonic - thx Itai
+   * Installer version can now list installed plugins 
+   * Fixed bug in format DCinema interop regaring LoadFont URI - thx Radoslav
+   * Can now save " " (space) in multiple replace settings - thx dandomina
+
+
 3.3.4 (9th April 2013)
 * NEW:
    * Added a few new subtitle formats

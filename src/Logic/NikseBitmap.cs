@@ -29,6 +29,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         public NikseBitmap(Bitmap inputBitmap)
         {
+            if (inputBitmap == null)
+                return;
+
             Width = inputBitmap.Width;
             Height = inputBitmap.Height;
 
@@ -112,27 +115,38 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public void MakeOneColorRemoverOthers(Color c, int maxDif)
+        public int MakeOneColorRemoverOthers(Color c1, Color c2, int maxDif)
         {
-            byte[] buffer = new byte[4];
-            buffer[0] = c.B;
-            buffer[1] = c.G;
-            buffer[2] = c.R;
-            buffer[3] = c.A;
+            byte[] buffer1 = new byte[4];
+            buffer1[0] = c1.B;
+            buffer1[1] = c1.G;
+            buffer1[2] = c1.R;
+            buffer1[3] = c1.A;
+
+            byte[] buffer2 = new byte[4];
+            buffer2[0] = c2.B;
+            buffer2[1] = c2.G;
+            buffer2[2] = c2.R;
+            buffer2[3] = c2.A;
 
             byte[] bufferTransparent = new byte[4];
             bufferTransparent[0] = 0;
             bufferTransparent[1] = 0;
             bufferTransparent[2] = 0;
             bufferTransparent[3] = 0;
+            int count = 0;
             for (int i = 0; i < _bitmapData.Length; i += 4)
             {
                 if (_bitmapData[i+3] > 20)
                 {
-                    if (Math.Abs(buffer[0] - _bitmapData[i]) < maxDif &&
-                        Math.Abs(buffer[1] - _bitmapData[i + 1]) < maxDif &&
-                        Math.Abs(buffer[2] - _bitmapData[i + 2]) < maxDif)
+                    if ((Math.Abs(buffer1[0] - _bitmapData[i]) < maxDif &&
+                        Math.Abs(buffer1[1] - _bitmapData[i + 1]) < maxDif &&
+                        Math.Abs(buffer1[2] - _bitmapData[i + 2]) < maxDif) ||
+                        (Math.Abs(buffer2[0] - _bitmapData[i]) < maxDif &&
+                        Math.Abs(buffer2[1] - _bitmapData[i + 1]) < maxDif &&
+                        Math.Abs(buffer2[2] - _bitmapData[i + 2]) < maxDif))
                     {
+                        count++;
                     }
                     else
                     {
@@ -144,6 +158,7 @@ namespace Nikse.SubtitleEdit.Logic
                     Buffer.BlockCopy(bufferTransparent, 0, _bitmapData, i, 4);
                 }
             }
+            return count;
         }
 
 
@@ -758,5 +773,27 @@ namespace Nikse.SubtitleEdit.Logic
             return bitmap;
         }
 
+
+        internal int RemoveAloneColors()
+        {
+            int count = 0;
+            byte[] bufferTransparent = new byte[4];
+            bufferTransparent[0] = 0;
+            bufferTransparent[1] = 0;
+            bufferTransparent[2] = 0;
+            bufferTransparent[3] = 0;
+            for (int i = 4; i < _bitmapData.Length-4; i += 4)
+            {
+                if ((_bitmapData[i + 3]  > 250 && _bitmapData[i + 3 + 4] > 250) || (_bitmapData[i - 1] > 250 && _bitmapData[i + 3] > 250))
+                {
+                    count++;
+                }
+                else
+                {
+                    Buffer.BlockCopy(bufferTransparent, 0, _bitmapData, i, 4);
+                }
+            }
+            return count;
+        }
     }
 }
