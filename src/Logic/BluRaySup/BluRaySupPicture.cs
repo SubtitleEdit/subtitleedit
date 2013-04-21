@@ -100,7 +100,9 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// </summary>
         public int FramesPerSecondType { get; set; }
 
-        /** list of (list of) palette info - there are up to 8 palettes per epoch, each can be updated several times */
+        /// <summary>
+        /// List of (list of) palette info - there are up to 8 palettes per epoch, each can be updated several times
+        /// </summary>
         public List<List<PaletteInfo>> Palettes;
 
         private static readonly byte[] PacketHeader =
@@ -160,46 +162,11 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             0x00,                   // 1 : window id (0..1)
             0x00, 0x00, 0x00, 0x00, // 2 : x-ofs, y-ofs
             0x00, 0x00, 0x00, 0x00  // 6 : width, height
-        };
-
-        public BluRaySupPicture(BluRaySupPicture subPicture)
-        {
-            Width = subPicture.Width;
-            Height = subPicture.Height;
-            StartTime = subPicture.StartTime;
-            EndTime = subPicture.EndTime;
-            IsForced = subPicture.IsForced;
-            CompositionNumber = subPicture.CompositionNumber;
-
-            ObjectId = subPicture.ObjectId;
-            ImageObjects = new List<ImageObject>();
-            foreach (ImageObject io in subPicture.ImageObjects)
-                ImageObjects.Add(io);
-            WindowWidth = subPicture.WindowWidth;
-            WindowHeight = subPicture.WindowHeight;
-            WindowXOffset = subPicture.WindowXOffset;
-            WindowYOffset = subPicture.WindowYOffset;
-            FramesPerSecondType = subPicture.FramesPerSecondType;
-            Palettes = new List<List<PaletteInfo>>();
-            foreach (List<PaletteInfo> palette in subPicture.Palettes)
-            {
-                var p = new List<PaletteInfo>();
-                foreach (PaletteInfo pi in palette)
-                {
-                    p.Add(new PaletteInfo(pi));
-                }
-                Palettes.Add(p);
-            }
-        }
+        };       
 
         public BluRaySupPicture()
         {
-        }
-
-        public ImageObject GetImageObject(int index)
-        {
-            return ImageObjects[index];
-        }
+        }      
 
         internal ImageObject ObjectIdImage
         {
@@ -217,181 +184,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 System.Diagnostics.Debug.WriteLine("Invalid Blu-ray SupPicture index - BluRaySupPictures.cs: internal ImageObject ObjectIdImage");
                 return ImageObjects[ImageObjects.Count - 1];
             }
-        }
-
-        /// <summary>
-        /// decode palette from the input stream
-        /// </summary>
-        /// <returns>Palette object</returns>
-        public BluRaySupPalette DecodePalette(BluRaySupPalette defaultPalette)
-        {
-            BluRaySupPicture pic = this;
-            bool fadeOut = false;
-            if (pic.Palettes.Count == 0 || pic.ObjectIdImage.PaletteId >= pic.Palettes.Count)
-            {
-                System.Diagnostics.Debug.Print("Palette not found in objectID=" + pic.ObjectId + " PaletteId=" + pic.ObjectIdImage.PaletteId + "!");
-                if (defaultPalette == null)
-                    return new BluRaySupPalette(256, Core.UsesBt601());
-                else
-                    return new BluRaySupPalette(defaultPalette);
-            }
-            List<PaletteInfo> pl = pic.Palettes[pic.ObjectIdImage.PaletteId];
-            var palette = new BluRaySupPalette(256, Core.UsesBt601());
-            // by definition, index 0xff is always completely transparent
-            // also all entries must be fully transparent after initialization
-
-            for (int j = 0; j < pl.Count; j++)
-            {
-                PaletteInfo p = pl[j];
-                int index = 0;
-
-                for (int i = 0; i < p.PaletteSize; i++)
-                {
-                    // each palette entry consists of 5 bytes
-                    int palIndex = p.PaletteBuffer[index];
-                    int y = p.PaletteBuffer[++index];
-                    int cr, cb;
-                    if (Core.GetSwapCrCb())
-                    {
-                        cb = p.PaletteBuffer[++index];
-                        cr = p.PaletteBuffer[++index];
-                    }
-                    else
-                    {
-                        cr = p.PaletteBuffer[++index];
-                        cb = p.PaletteBuffer[++index];
-                    }
-                    int alpha = p.PaletteBuffer[++index];
-
-                    int alphaOld = palette.GetAlpha(palIndex);
-                    // avoid fading out
-                    if (alpha >= alphaOld || alpha == 0)
-                    {
-                        if (alpha < Core.GetAlphaCrop())
-                        {// to not mess with scaling algorithms, make transparent color black
-                            y = 16;
-                            cr = 128;
-                            cb = 128;
-                        }
-                        palette.SetAlpha(palIndex, alpha);
-                    }
-                    else
-                    {
-                        fadeOut = true;
-                    }
-
-                    palette.SetYCbCr(palIndex, y, cb, cr);
-                    index++;
-                }
-            }
-            if (fadeOut)
-                System.Diagnostics.Debug.Print("fade out detected -> patched palette\n");
-            return palette;
-        }
-
-        /// <summary>
-        /// Decode caption from the input stream
-        /// </summary>
-        /// <returns>bitmap of the decoded caption</returns>
-        public Bitmap DecodeImage(BluRaySupPalette defaultPalette)
-        {
-            if (ObjectIdImage == null)
-                return new Bitmap(1, 1);
-
-            int w = ObjectIdImage.Width;
-            int h = ObjectIdImage.Height;
-
-            if (w > Width || h > Height)
-                throw new Exception("Subpicture too large: " + w + "x" + h);
-
-            //Bitmap bm = new Bitmap(w, h);
-            var bm = new FastBitmap(new Bitmap(w, h));
-            bm.LockImage();
-            BluRaySupPalette pal = DecodePalette(defaultPalette);
-
-            int index = 0;
-            int ofs = 0;
-            int xpos = 0;
-
-            // just for multi-packet support, copy all of the image data in one common buffer
-            byte[] buf = new byte[ObjectIdImage.BufferSize];
-            foreach (ImageObjectFragment fragment in ObjectIdImage.Fragments)
-            {
-                Buffer.BlockCopy(fragment.ImageBuffer, 0, buf, index, fragment.ImagePacketSize);
-                index += fragment.ImagePacketSize;
-            }
-
-            index = 0;
-            do
-            {
-                int b = buf[index++] & 0xff;
-                if (b == 0 && index < buf.Length)
-                {
-                    b = buf[index++] & 0xff;
-                    if (b == 0)
-                    {
-                        // next line
-                        ofs = (ofs / w) * w;
-                        if (xpos < w)
-                            ofs += w;
-                        xpos = 0;
-                    }
-                    else
-                    {
-                        int size;
-                        if ((b & 0xC0) == 0x40)
-                        {
-                            // 00 4x xx -> xxx zeroes
-                            size = ((b - 0x40) << 8) + (buf[index++] & 0xff);
-                            for (int i = 0; i < size; i++)
-                                PutPixel(bm, ofs++, 0, pal);
-                            xpos += size;
-                        }
-                        else if ((b & 0xC0) == 0x80)
-                        {
-                            // 00 8x yy -> x times value y
-                            size = (b - 0x80);
-                            b = buf[index++] & 0xff;
-                            for (int i = 0; i < size; i++)
-                                PutPixel(bm, ofs++, b, pal);
-                            xpos += size;
-                        }
-                        else if ((b & 0xC0) != 0)
-                        {
-                            // 00 cx yy zz -> xyy times value z
-                            size = ((b - 0xC0) << 8) + (buf[index++] & 0xff);
-                            b = buf[index++] & 0xff;
-                            for (int i = 0; i < size; i++)
-                                PutPixel(bm, ofs++, b, pal);
-                            xpos += size;
-                        }
-                        else
-                        {
-                            // 00 xx -> xx times 0
-                            for (int i = 0; i < b; i++)
-                                PutPixel(bm, ofs++, 0, pal);
-                            xpos += b;
-                        }
-                    }
-                }
-                else
-                {
-                    PutPixel(bm, ofs++, b, pal);
-                    xpos++;
-                }
-            } while (index < buf.Length);
-
-            bm.UnlockImage();
-            return bm.GetBitmap();
-        }
-
-        private static void PutPixel(FastBitmap bmp, int index, int color, BluRaySupPalette palette)
-        {
-            int x = index % bmp.Width;
-            int y = index / bmp.Width;
-            if (color >= 0 && x < bmp.Width && y < bmp.Height)
-                bmp.SetPixel(x, y, Color.FromArgb(palette.GetArgb(color)));
-        }
+        }      
 
         /// <summary>
         /// Create RLE buffer from bitmap
