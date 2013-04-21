@@ -156,6 +156,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             /// <returns>bitmap of the decoded caption</returns>
             public static Bitmap DecodeImage(PcsObject pcs, IList<OdsData> data, List<PaletteInfo> palettes)
             {
+                long ticks = DateTime.Now.Ticks;
+
                 if (pcs == null || data == null || data.Count == 0)
                     return new Bitmap(1, 1);
 
@@ -195,8 +197,9 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                                 {
                                     // 00 4x xx -> xxx zeroes
                                     size = ((b - 0x40) << 8) + (buf[index++] & 0xff);
+                                    Color c = Color.FromArgb(pal.GetArgb(0));
                                     for (int i = 0; i < size; i++)
-                                        PutPixel(bm, ofs++, 0, pal);
+                                        PutPixel(bm, ofs++, c);
                                     xpos += size;
                                 }
                             }
@@ -207,8 +210,9 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                                     // 00 8x yy -> x times value y
                                     size = (b - 0x80);
                                     b = buf[index++] & 0xff;
+                                    Color c = Color.FromArgb(pal.GetArgb(b));
                                     for (int i = 0; i < size; i++)
-                                        PutPixel(bm, ofs++, b, pal);
+                                        PutPixel(bm, ofs++, c);
                                     xpos += size;
                                 }
                             }
@@ -219,16 +223,18 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                                     // 00 cx yy zz -> xyy times value z
                                     size = ((b - 0xC0) << 8) + (buf[index++] & 0xff);
                                     b = buf[index++] & 0xff;
+                                    Color c = Color.FromArgb(pal.GetArgb(b));
                                     for (int i = 0; i < size; i++)
-                                        PutPixel(bm, ofs++, b, pal);
+                                        PutPixel(bm, ofs++, c);
                                     xpos += size;
                                 }
                             }
                             else
                             {
                                 // 00 xx -> xx times 0
+                                Color c = Color.FromArgb(pal.GetArgb(0));
                                 for (int i = 0; i < b; i++)
-                                    PutPixel(bm, ofs++, 0, pal);
+                                    PutPixel(bm, ofs++, c);
                                 xpos += b;
                             }
                         }
@@ -248,8 +254,19 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             {
                 int x = index % bmp.Width;
                 int y = index / bmp.Width;
-                if (color > 0 && x < bmp.Width && y < bmp.Height)
+                if (x < bmp.Width && y < bmp.Height)
                     bmp.SetPixel(x, y, Color.FromArgb(palette.GetArgb(color)));
+            }
+
+            private static void PutPixel(FastBitmap bmp, int index, Color color)
+            {
+                if (color.A > 0)
+                {
+                    int x = index % bmp.Width;
+                    int y = index / bmp.Width;
+                    if (x < bmp.Width && y < bmp.Height)
+                        bmp.SetPixel(x, y, color);
+                }
             }
 
         }
