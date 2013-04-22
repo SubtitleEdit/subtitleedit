@@ -8,12 +8,14 @@
    * Updated Basque language file - thx Xabier Aramendi
    * Support for color, size and font name in MicroDVD - thx SimlyTheBOSS
    * Start OCR if srt file contains only image file names 
+   * Added Turkish letters to PAC import/export - thx aydngur
 * FIXED:
    * Blu-ray sup image decoding no longer skips color 0 - thx matidio
    * Some output changes for Rhozet Marmonic - thx Itai
    * Installer version can now list installed plugins 
    * Fixed bug in format DCinema interop regaring LoadFont URI - thx Radoslav
    * Can now save " " (space) in multiple replace settings - thx dandomina
+   * Italian language now active again (broken in 3.3.4)
 
 
 3.3.4 (9th April 2013)
