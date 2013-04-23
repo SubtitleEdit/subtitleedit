@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                MessageBox.Show("Could not find extracted wave file! This feature requires VLC media player 1.1.x or newer." + Environment.NewLine
+                MessageBox.Show("Could not find extracted wave file! This feature requires VLC media player 1.1.x or newer (32-bit)." + Environment.NewLine
                                 + Environment.NewLine +
                                 "Command line: " + vlcPath + " " + parameters);
 
