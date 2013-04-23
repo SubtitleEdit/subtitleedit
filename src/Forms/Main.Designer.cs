@@ -364,6 +364,7 @@
             this.splitContainerListViewAndText = new System.Windows.Forms.SplitContainer();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxEdit = new System.Windows.Forms.GroupBox();
+            this.labelSingleLine = new System.Windows.Forms.Label();
             this.labelAlternateSingleLine = new System.Windows.Forms.Label();
             this.labelDurationWarning = new System.Windows.Forms.Label();
             this.labelStartTimeWarning = new System.Windows.Forms.Label();
@@ -395,7 +396,6 @@
             this.toolStripMenuItemInsertUnicodeSymbol = new System.Windows.Forms.ToolStripMenuItem();
             this.superscriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.subscriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.labelSingleLine = new System.Windows.Forms.Label();
             this.buttonAutoBreak = new System.Windows.Forms.Button();
             this.labelTextLineLengths = new System.Windows.Forms.Label();
             this.labelTextLineTotal = new System.Windows.Forms.Label();
@@ -1994,7 +1994,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 804);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 782);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
@@ -3551,6 +3551,7 @@
             // 
             // groupBoxEdit
             // 
+            this.groupBoxEdit.Controls.Add(this.labelSingleLine);
             this.groupBoxEdit.Controls.Add(this.labelAlternateSingleLine);
             this.groupBoxEdit.Controls.Add(this.labelDurationWarning);
             this.groupBoxEdit.Controls.Add(this.labelStartTimeWarning);
@@ -3561,7 +3562,6 @@
             this.groupBoxEdit.Controls.Add(this.labelAlternateText);
             this.groupBoxEdit.Controls.Add(this.labelText);
             this.groupBoxEdit.Controls.Add(this.textBoxListViewTextAlternate);
-            this.groupBoxEdit.Controls.Add(this.labelSingleLine);
             this.groupBoxEdit.Controls.Add(this.buttonAutoBreak);
             this.groupBoxEdit.Controls.Add(this.labelTextLineLengths);
             this.groupBoxEdit.Controls.Add(this.labelTextLineTotal);
@@ -3581,6 +3581,16 @@
             this.groupBoxEdit.Size = new System.Drawing.Size(724, 113);
             this.groupBoxEdit.TabIndex = 1;
             this.groupBoxEdit.TabStop = false;
+            // 
+            // labelSingleLine
+            // 
+            this.labelSingleLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelSingleLine.AutoSize = true;
+            this.labelSingleLine.Location = new System.Drawing.Point(346, 86);
+            this.labelSingleLine.Name = "labelSingleLine";
+            this.labelSingleLine.Size = new System.Drawing.Size(76, 13);
+            this.labelSingleLine.TabIndex = 32;
+            this.labelSingleLine.Text = "labelSingleLine";
             // 
             // labelAlternateSingleLine
             // 
@@ -3857,16 +3867,6 @@
             this.subscriptToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.subscriptToolStripMenuItem.Text = "Subscript";
             this.subscriptToolStripMenuItem.Click += new System.EventHandler(this.SubscriptToolStripMenuItemClick);
-            // 
-            // labelSingleLine
-            // 
-            this.labelSingleLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelSingleLine.AutoSize = true;
-            this.labelSingleLine.Location = new System.Drawing.Point(346, 86);
-            this.labelSingleLine.Name = "labelSingleLine";
-            this.labelSingleLine.Size = new System.Drawing.Size(76, 13);
-            this.labelSingleLine.TabIndex = 32;
-            this.labelSingleLine.Text = "labelSingleLine";
             // 
             // buttonAutoBreak
             // 

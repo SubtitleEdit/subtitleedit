@@ -6030,8 +6030,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             bool textBoxHasFocus = textBox.Focused;
             string text = paragraph.Text;
-            lineLengths.Text = _languageGeneral.SingleLineLengths;
-            singleLine.Left = lineLengths.Left + lineLengths.Width - 6;
+            lineLengths.Text = _languageGeneral.SingleLineLengths.Trim();
+            singleLine.Left = lineLengths.Left + lineLengths.Width - 3;
             Utilities.GetLineLengths(singleLine, text);
 
             buttonSplitLine.Visible = false;
