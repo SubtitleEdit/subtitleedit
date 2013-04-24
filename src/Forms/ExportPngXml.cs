@@ -1020,7 +1020,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (parameter.AlignRight)
                     lefts.Add(bmp.Width - (TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15));
                 else
-                    lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8+15) / 2);
+                    lefts.Add((float)(bmp.Width - TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) +15) / 2);
             }
 
             if (parameter.AntiAlias)
