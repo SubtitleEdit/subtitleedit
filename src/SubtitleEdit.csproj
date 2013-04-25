@@ -794,6 +794,7 @@
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
+    <Compile Include="Logic\SubtitleFormats\Csv2.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProTest2Xml.cs" />
     <Compile Include="Logic\SubtitleFormats\JsonType4.cs" />
     <Compile Include="Logic\SubtitleFormats\DCinemaSmpte.cs" />

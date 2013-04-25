@@ -11,6 +11,7 @@
    * Added Turkish letters to PAC import/export - thx aydngur
 * FIXED:
    * Blu-ray sup image decoding no longer skips color 0 - thx matidio
+   * Better center alignment of second line in image export - thx George
    * Some output changes for Rhozet Marmonic - thx Itai
    * Installer version can now list installed plugins 
    * Fixed bug in format DCinema interop regaring LoadFont URI - thx Radoslav
