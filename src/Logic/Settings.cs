@@ -682,7 +682,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainAdjustSetEndNextStartAndGoToNext { get; set; }
         public string MainAdjustStartDownEndUpAndGoToNext { get; set; }
         public string MainAdjustSetStart { get; set; }
-        public string MainAdjustSetStartOnly { get; set; }
+        public string MainAdjustSetStartKeepDuration { get; set; }
         public string MainAdjustSetEnd { get; set; }
         public string MainAdjustSelected100MsForward { get; set; }
         public string MainAdjustSelected100MsBack { get; set; }
@@ -765,7 +765,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustSetEndNextStartAndGoToNext = string.Empty;
             MainAdjustStartDownEndUpAndGoToNext = string.Empty;
             MainAdjustSetStart = string.Empty;
-            MainAdjustSetStartOnly = string.Empty;
+            MainAdjustSetStartKeepDuration = string.Empty;
             MainAdjustSetEnd = string.Empty;
             MainAdjustSelected100MsForward = string.Empty;
             MainAdjustSelected100MsBack = string.Empty;
@@ -1943,9 +1943,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainAdjustSetStart");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustSetStart = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainAdjustSetStartOnly");
+                subNode = node.SelectSingleNode("MainAdjustSetStartKeepDuration");
                 if (subNode != null)
-                    settings.Shortcuts.MainAdjustSetStartOnly = subNode.InnerText;
+                    settings.Shortcuts.MainAdjustSetStartKeepDuration = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainAdjustSetEnd");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustSetEnd = subNode.InnerText;
@@ -2450,7 +2450,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainAdjustSetEndNextStartAndGoToNext", settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
             textWriter.WriteElementString("MainAdjustStartDownEndUpAndGoToNext", settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);
             textWriter.WriteElementString("MainAdjustSetStart", settings.Shortcuts.MainAdjustSetStart);
-            textWriter.WriteElementString("MainAdjustSetStartOnly", settings.Shortcuts.MainAdjustSetStartOnly);
+            textWriter.WriteElementString("MainAdjustSetStartKeepDuration", settings.Shortcuts.MainAdjustSetStartKeepDuration);
             textWriter.WriteElementString("MainAdjustSetEnd", settings.Shortcuts.MainAdjustSetEnd);
             textWriter.WriteElementString("MainAdjustSelected100MsForward", settings.Shortcuts.MainAdjustSelected100MsForward);
             textWriter.WriteElementString("MainAdjustSelected100MsBack", settings.Shortcuts.MainAdjustSelected100MsBack);

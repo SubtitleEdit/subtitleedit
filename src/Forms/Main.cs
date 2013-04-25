@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainAdjustSetEndNextStartAndGoToNext = Keys.None;
         Keys _mainAdjustStartDownEndUpAndGoToNext = Keys.None;
         Keys _mainAdjustSetStart = Keys.None;
-        Keys _mainAdjustSetStartOnly = Keys.None;
+        Keys _mainAdjustSetStartKeepDuration = Keys.None;
         Keys _mainAdjustSetEnd = Keys.None;
         Keys _mainAdjustSelected100MsForward = Keys.None;
         Keys _mainAdjustSelected100MsBack = Keys.None;
@@ -9656,7 +9656,12 @@ namespace Nikse.SubtitleEdit.Forms
                         buttonSetStartTime_Click(null, null);
                         e.SuppressKeyPress = true;
                     }
-                    else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F11) || _mainAdjustSetStartOnly == e.KeyData)
+                    else if (_mainAdjustSetStartKeepDuration == e.KeyData)
+                    {
+                        SetStartTime(true);
+                        e.SuppressKeyPress = true;
+                    }
+                    else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F11)
                     {
                         SetStartTime(false);
                         e.SuppressKeyPress = true;
@@ -12649,7 +12654,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAdjustSetEndNextStartAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
             _mainAdjustStartDownEndUpAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);
             _mainAdjustSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStart);
-            _mainAdjustSetStartOnly = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartOnly);
+            _mainAdjustSetStartKeepDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration);
             _mainAdjustSetEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEnd);
             _mainAdjustSelected100MsForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward);
             _mainAdjustSelected100MsBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack);

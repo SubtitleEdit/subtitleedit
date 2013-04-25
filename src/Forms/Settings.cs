@@ -595,7 +595,8 @@ namespace Nikse.SubtitleEdit.Forms
             adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetEndNextStartAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustStartDownEndUpAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetStartTime + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStart));
-            adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetStartTimeOnly + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStartOnly));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.AdjustSetStartTimeKeepDuration))
+                adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetStartTimeKeepDuration + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetEndTime + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEnd));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSelected100MsForward + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSelected100MsBack + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack));
@@ -1254,8 +1255,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.VideoControls.SetStartTime.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSetStart = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.AdjustSetStartTimeOnly != null && text == Configuration.Settings.Language.Settings.AdjustSetStartTimeOnly.Replace("&", string.Empty))
-                        Configuration.Settings.Shortcuts.MainAdjustSetStartOnly = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.AdjustSetStartTimeKeepDuration != null && text == Configuration.Settings.Language.Settings.AdjustSetStartTimeKeepDuration.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.VideoControls.SetEndTime.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSetEnd = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Settings.AdjustSelected100MsForward != null && text == Configuration.Settings.Language.Settings.AdjustSelected100MsForward.Replace("&", string.Empty))

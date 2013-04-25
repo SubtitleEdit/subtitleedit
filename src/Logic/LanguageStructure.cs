@@ -1525,7 +1525,7 @@
             public string AdjustStartDownEndUpAndGoToNext { get; set; }
             public string AdjustSelected100MsForward { get; set; }
             public string AdjustSelected100MsBack { get; set; }
-            public string AdjustSetStartTimeOnly { get; set; }
+            public string AdjustSetStartTimeKeepDuration { get; set; }
             public string MainCreateStartDownEndUp { get; set; }
             public string MergeDialogue { get; set; }
             public string GoToNext { get; set; }

@@ -153,6 +153,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GetText(Bitmap bmp)
         {
+            if (bmp == null)
+                return;
+
             if (numericUpDownPixelsBottom.Value < bmp.Height)
             {
                 int h = Convert.ToInt32(numericUpDownPixelsBottom.Value);
@@ -180,7 +183,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!isSameImage)
                 {
                     string name = Path.Combine(_folderName, _subtitle.Paragraphs.Count.ToString() + ".png");
-                    nbmp.GetBitmap().Save(name, System.Drawing.Imaging.ImageFormat.Png);
+                    Bitmap newBitmap = nbmp.GetBitmap();
+                    newBitmap.Save(name, System.Drawing.Imaging.ImageFormat.Png);
+                    newBitmap.Dispose();
                     _subtitle.Paragraphs.Add(new Paragraph(name, startMilliseconds, startMilliseconds + 100));
                     labelStatus.Text = string.Format("{0} possible subtitles found", _subtitle.Paragraphs.Count);
                 }
@@ -206,11 +211,14 @@ namespace Nikse.SubtitleEdit.Forms
             while (!_abort && startMilliseconds < durationInMilliseconds)
             {
                 Bitmap bmp = GetSnapShot(startMilliseconds);
-                GetText(bmp);
-                bmp.Dispose();
+                if (bmp != null)
+                {
+                    GetText(bmp);
+                    bmp.Dispose();
+                }
                 startMilliseconds += Convert.ToInt32(numericUpDownInterval.Value);
             }
-            if (!_abort)
+            //if (!_abort)
                 GoOcr();
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
