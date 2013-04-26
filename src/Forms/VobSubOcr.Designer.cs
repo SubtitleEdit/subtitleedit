@@ -417,7 +417,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxTesseractMusicOn.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxTesseractMusicOn.Location = new System.Drawing.Point(99, 101);
             this.checkBoxTesseractMusicOn.Name = "checkBoxTesseractMusicOn";
-            this.checkBoxTesseractMusicOn.Size = new System.Drawing.Size(93, 17);
+            this.checkBoxTesseractMusicOn.Size = new System.Drawing.Size(94, 17);
             this.checkBoxTesseractMusicOn.TabIndex = 4;
             this.checkBoxTesseractMusicOn.Text = "Music symbols";
             this.checkBoxTesseractMusicOn.UseVisualStyleBackColor = true;
@@ -429,7 +429,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxTesseractItalicsOn.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxTesseractItalicsOn.Location = new System.Drawing.Point(22, 101);
             this.checkBoxTesseractItalicsOn.Name = "checkBoxTesseractItalicsOn";
-            this.checkBoxTesseractItalicsOn.Size = new System.Drawing.Size(54, 17);
+            this.checkBoxTesseractItalicsOn.Size = new System.Drawing.Size(53, 17);
             this.checkBoxTesseractItalicsOn.TabIndex = 3;
             this.checkBoxTesseractItalicsOn.Text = "Italics";
             this.checkBoxTesseractItalicsOn.UseVisualStyleBackColor = true;
@@ -442,7 +442,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxUseModiInTesseractForUnknownWords.Enabled = false;
             this.checkBoxUseModiInTesseractForUnknownWords.Location = new System.Drawing.Point(22, 74);
             this.checkBoxUseModiInTesseractForUnknownWords.Name = "checkBoxUseModiInTesseractForUnknownWords";
-            this.checkBoxUseModiInTesseractForUnknownWords.Size = new System.Drawing.Size(167, 17);
+            this.checkBoxUseModiInTesseractForUnknownWords.Size = new System.Drawing.Size(165, 17);
             this.checkBoxUseModiInTesseractForUnknownWords.TabIndex = 2;
             this.checkBoxUseModiInTesseractForUnknownWords.Text = "Try MODI for unknown words";
             this.checkBoxUseModiInTesseractForUnknownWords.UseVisualStyleBackColor = true;
@@ -851,6 +851,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // listBoxLogSuggestions
             // 
+            this.listBoxLogSuggestions.ContextMenuStrip = this.contextMenuStripGuessesUsed;
             this.listBoxLogSuggestions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBoxLogSuggestions.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxLogSuggestions.FormattingEnabled = true;
@@ -1252,12 +1253,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripGuessesUsed.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemClearGuesses});
             this.contextMenuStripGuessesUsed.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripGuessesUsed.Size = new System.Drawing.Size(102, 26);
+            this.contextMenuStripGuessesUsed.Size = new System.Drawing.Size(153, 48);
             // 
             // toolStripMenuItemClearGuesses
             // 
             this.toolStripMenuItemClearGuesses.Name = "toolStripMenuItemClearGuesses";
-            this.toolStripMenuItemClearGuesses.Size = new System.Drawing.Size(101, 22);
+            this.toolStripMenuItemClearGuesses.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItemClearGuesses.Text = "Clear";
             this.toolStripMenuItemClearGuesses.Click += new System.EventHandler(this.toolStripMenuItemClearGuesses_Click);
             // 
