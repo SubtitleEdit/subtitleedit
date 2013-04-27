@@ -23,7 +23,7 @@
     <EnglishName>Chinese (Simplified)</EnglishName>
     <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.chi_sim.tar.gz</DownloadLink>
     <Description>Chinese (Simplified) language data for Tesseract 3.02</Description>
-  </Dictionary>  
+  </Dictionary>
   <Dictionary>
     <EnglishName>Czech</EnglishName>
     <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.ces.tar.gz</DownloadLink>
@@ -82,7 +82,7 @@
     <EnglishName>Japanese</EnglishName>
     <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.jpn.tar.gz</DownloadLink>
     <Description>Japanese language data for Tesseract 3.02</Description>
-  </Dictionary>  
+  </Dictionary>
   <Dictionary>
     <EnglishName>Korean</EnglishName>
     <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.kor.tar.gz</DownloadLink>
@@ -102,7 +102,7 @@
     <EnglishName>Portuguese</EnglishName>
     <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.por.tar.gz</DownloadLink>
     <Description>Portuguese language data for Tesseract 3.02 </Description>
-  </Dictionary>  
+  </Dictionary>
   <Dictionary>
     <EnglishName>Romanian</EnglishName>
     <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.ron.tar.gz</DownloadLink>

@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             "Ş", // 0xe653
             "ş", // 0xe673
-            "ç", // 0xe663 
+            "ç", // 0xe663
             "ı", // 0x7b
             "ö", // 0xe56f
             "ü",

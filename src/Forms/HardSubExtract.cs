@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
             }
             return bmp;
-        }        
+        }
 
         private void pictureBoxBackground_Click(object sender, EventArgs e)
         {
@@ -129,11 +129,11 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void pictureBox2_Paint(object sender, PaintEventArgs e)
-        {            
+        {
             Bitmap bmp = pictureBox2.Image as Bitmap;
             if (bmp != null)
             {
-                Pen p = new Pen(Brushes.Red);                
+                Pen p = new Pen(Brushes.Red);
                 int value = Convert.ToInt32(numericUpDownPixelsBottom.Value);
                 if (value > bmp.Height)
                     value = bmp.Height - 2;
@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int h = Convert.ToInt32(numericUpDownPixelsBottom.Value);
                 bmp = CopyBitmapSection(bmp, new Rectangle(0, bmp.Height - h, bmp.Width, h));
-            }            
+            }
 
             NikseBitmap nbmp = new NikseBitmap(bmp);
             int diff = Convert.ToInt32(numericUpDownFont1Diff.Value);
@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void GoOcr()
-        { 
+        {
             var formSubOcr = new VobSubOcr();
             formSubOcr.Initialize(_subtitle, Configuration.Settings.VobSubOcr, false);
             if (formSubOcr.ShowDialog(this) == DialogResult.OK)
@@ -257,7 +257,7 @@ namespace Nikse.SubtitleEdit.Forms
                     System.IO.Directory.Delete(_folderName);
             }
             catch
-            { 
+            {
             }
         }
 
@@ -267,11 +267,11 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void TimerRefreshProgressbarTick(object sender, EventArgs e)
-        {        
+        {
             if (mediaPlayer != null)
             {
                 mediaPlayer.RefreshProgressBar();
-            }        
+            }
         }
 
         private void numericUpDownPixelsBottom_ValueChanged(object sender, EventArgs e)
