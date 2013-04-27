@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             _vobSubForm = vobSubForm;
             _additions = additions;
             _nocrChar = new NOcrChar();
-            _nocrChar.MarginTop = character.Y;
+            _nocrChar.MarginTop = character.Y - character.ParentY;
             _imageWidth = character.Bitmap.Width;
             _imageHeight = character.Bitmap.Height;
             _drawLineOn = false;
