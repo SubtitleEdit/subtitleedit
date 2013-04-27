@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             const string format = "\"{1}\"{0}{2}{0}{3}{0}{4}{0}{5}{0}\"{6}\"{0}\"{7}\"";
             var sb = new StringBuilder();
-            
+
             sb.AppendLine(string.Format(format, Seperator, "Track name", "Timecode In", "Timecode Out", "Description", "Length", "Character", "Dialogue"));
             foreach (Paragraph p in subtitle.Paragraphs)
             {

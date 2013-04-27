@@ -162,11 +162,11 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             0x00,                   // 1 : window id (0..1)
             0x00, 0x00, 0x00, 0x00, // 2 : x-ofs, y-ofs
             0x00, 0x00, 0x00, 0x00  // 6 : width, height
-        };       
+        };
 
         public BluRaySupPicture()
         {
-        }      
+        }
 
         internal ImageObject ObjectIdImage
         {
@@ -184,7 +184,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 System.Diagnostics.Debug.WriteLine("Invalid Blu-ray SupPicture index - BluRaySupPictures.cs: internal ImageObject ObjectIdImage");
                 return ImageObjects[ImageObjects.Count - 1];
             }
-        }      
+        }
 
         /// <summary>
         /// Create RLE buffer from bitmap
