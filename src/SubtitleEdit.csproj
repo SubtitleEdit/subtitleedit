@@ -15,7 +15,6 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <ApplicationIcon>Icons\SE.ico</ApplicationIcon>
     <ManifestCertificateThumbprint>DCCE7922B5E425ADB221E06DC2FB405664CF8F63</ManifestCertificateThumbprint>
-    <GenerateManifests>false</GenerateManifests>
     <SignManifests>false</SignManifests>
     <SccProjectName>Svn</SccProjectName>
     <SccLocalPath>Svn</SccLocalPath>
@@ -60,20 +59,6 @@
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <TargetZone>LocalIntranet</TargetZone>
-  </PropertyGroup>
-  <PropertyGroup />
-  <PropertyGroup>
-    <ApplicationManifest>Properties\Manifest.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Interop.QuartzTypeLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
