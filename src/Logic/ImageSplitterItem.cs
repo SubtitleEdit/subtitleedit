@@ -6,6 +6,7 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public int X { get; set; }
         public int Y { get; set; }
+        public int ParentY { get; set; }
         public Bitmap Bitmap { get; set; }
         public string SpecialCharacter { get; set; }
 

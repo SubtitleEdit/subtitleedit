@@ -477,6 +477,7 @@ namespace Nikse.SubtitleEdit.Logic
                 var line = new List<ImageSplitterItem>();
                 foreach (ImageSplitterItem item in SplitHorizontal(b, xOrMorePixelsMakesSpace))
                 {
+                    item.ParentY = item.Y;
                     line.Add(item);
                 }
                 if (rightToLeft)
