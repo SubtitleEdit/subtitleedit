@@ -593,6 +593,12 @@
     <Compile Include="Forms\VobSubNOcrCharacterInspect.Designer.cs">
       <DependentUpon>VobSubNOcrCharacterInspect.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\VobSubNOcrEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VobSubNOcrEdit.Designer.cs">
+      <DependentUpon>VobSubNOcrEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\VobSubOcr.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1251,6 +1257,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VobSubNOcrCharacterInspect.resx">
       <DependentUpon>VobSubNOcrCharacterInspect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VobSubNOcrEdit.resx">
+      <DependentUpon>VobSubNOcrEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VobSubOcr.resx">
       <DependentUpon>VobSubOcr.cs</DependentUpon>

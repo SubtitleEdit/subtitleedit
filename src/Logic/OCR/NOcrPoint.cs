@@ -55,6 +55,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return GetPoints(Start, End);
         }
 
+        public List<Point> ScaledGetPoints(NOcrChar nOcrChar, int width, int height)
+        {
+            return GetPoints(GetScaledStart(nOcrChar, width, height), GetScaledEnd(nOcrChar, width, height));
+        }
+
         public static List<Point> GetPoints(Point start, Point end)
         {
             var list = new List<Point>();
@@ -90,7 +95,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
             return list;
         }
-
 
         internal Point GetScaledStart(NOcrChar ocrChar, int width, int height)
         {

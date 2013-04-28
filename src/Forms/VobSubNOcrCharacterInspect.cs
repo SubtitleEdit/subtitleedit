@@ -102,6 +102,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _nocrChar = null;
                 pictureBoxCharacter.Invalidate();
+                groupBoxCurrentCompareImage.Enabled = false;
+                buttonEditDB.Enabled = true;
+                buttonAddBetterMatch.Enabled = true;
             }
             else
             {
@@ -109,6 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxItalic.Checked = match.Italic;
                 _nocrChar = match.NOcrCharacter;
                 pictureBoxCharacter.Invalidate();
+                groupBoxCurrentCompareImage.Enabled = true;
             }
         }
 
@@ -204,6 +208,17 @@ namespace Nikse.SubtitleEdit.Forms
                 _vobSubOcr.SaveNOcr(Path.Combine(Configuration.DictionariesFolder, "nOCR_eng.xml"));
                 DialogResult = DialogResult.OK;
             }
+        }
+
+        private void buttonOK_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+        }
+
+        private void buttonEditDB_Click(object sender, EventArgs e)
+        {
+            var form = new VobSubNOcrEdit(_nocrChars, pictureBoxInspectItem.Image as Bitmap);
+            form.ShowDialog(this);
         }
     }
 }

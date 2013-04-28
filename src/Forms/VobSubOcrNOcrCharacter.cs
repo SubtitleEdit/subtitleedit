@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
         bool _startDone;
         Point _start;
         Point _end;
-        double _zoomFactor = 1.0;
+        double _zoomFactor = 3.0;
         int _imageWidth;
         int _imageHeight;
         int _mx;
@@ -74,6 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, VobSubOcr.CompareMatch bestGuess, List<VobSubOcr.ImageCompareAddition> additions, VobSubOcr vobSubForm)
         {
+            labelItalicOn.Visible = false;
             NikseBitmap nbmp = new NikseBitmap(vobSubImage);
             nbmp.ReplaceTransparentWith(Color.Black);
             vobSubImage = nbmp.GetBitmap();
@@ -134,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
             NikseBitmap nbmp = new NikseBitmap(pictureBoxCharacter.Image as Bitmap);
             foreach (NOcrPoint op in _nocrChar.LinesForeground)
             {
-                foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
+                foreach (Point point in op.ScaledGetPoints(_nocrChar, nbmp.Width, nbmp.Height))
                 {
                     if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                     {

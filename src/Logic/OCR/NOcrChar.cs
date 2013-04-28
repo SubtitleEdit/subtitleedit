@@ -39,5 +39,14 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         {
             return Text;
         }
+
+        public bool IsSensitive
+        {
+            get
+            {
+                return Text == "." || Text == "," || Text == "'" || Text == "-" || Text == "\"";
+            }
+        }
+
     }
 }

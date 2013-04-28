@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class VobSubNOcrCharacterInspect
+    partial class VobSubNOcrEdit
     {
         /// <summary>
         /// Required designer variable.
@@ -28,11 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.buttonOK = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
-            this.groupBoxInspectItems = new System.Windows.Forms.GroupBox();
-            this.pictureBoxInspectItem = new System.Windows.Forms.PictureBox();
-            this.listBoxInspectItems = new System.Windows.Forms.ListBox();
+            this.labelImageCompareFiles = new System.Windows.Forms.Label();
+            this.labelChooseCharacters = new System.Windows.Forms.Label();
+            this.listBoxFileNames = new System.Windows.Forms.ListBox();
+            this.comboBoxTexts = new System.Windows.Forms.ComboBox();
             this.groupBoxCurrentCompareImage = new System.Windows.Forms.GroupBox();
             this.buttonZoomOut = new System.Windows.Forms.Button();
             this.buttonZoomIn = new System.Windows.Forms.Button();
@@ -44,76 +43,56 @@
             this.buttonDelete = new System.Windows.Forms.Button();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.textBoxText = new System.Windows.Forms.TextBox();
-            this.buttonEditDB = new System.Windows.Forms.Button();
-            this.groupBoxInspectItems.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).BeginInit();
+            this.buttonMakeItalic = new System.Windows.Forms.Button();
             this.groupBoxCurrentCompareImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
             this.SuspendLayout();
             // 
-            // buttonOK
+            // labelImageCompareFiles
             // 
-            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(658, 413);
-            this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 8;
-            this.buttonOK.Text = "&OK";
-            this.buttonOK.UseVisualStyleBackColor = true;
-            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            this.labelImageCompareFiles.AutoSize = true;
+            this.labelImageCompareFiles.Location = new System.Drawing.Point(12, 55);
+            this.labelImageCompareFiles.Name = "labelImageCompareFiles";
+            this.labelImageCompareFiles.Size = new System.Drawing.Size(76, 13);
+            this.labelImageCompareFiles.TabIndex = 6;
+            this.labelImageCompareFiles.Text = "Compare items";
             // 
-            // buttonCancel
+            // labelChooseCharacters
             // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(739, 413);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 9;
-            this.buttonCancel.Text = "C&ancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.labelChooseCharacters.AutoSize = true;
+            this.labelChooseCharacters.Location = new System.Drawing.Point(12, 9);
+            this.labelChooseCharacters.Name = "labelChooseCharacters";
+            this.labelChooseCharacters.Size = new System.Drawing.Size(102, 13);
+            this.labelChooseCharacters.TabIndex = 4;
+            this.labelChooseCharacters.Text = "Choose character(s)";
             // 
-            // groupBoxInspectItems
+            // listBoxFileNames
             // 
-            this.groupBoxInspectItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.listBoxFileNames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBoxInspectItems.Controls.Add(this.pictureBoxInspectItem);
-            this.groupBoxInspectItems.Controls.Add(this.listBoxInspectItems);
-            this.groupBoxInspectItems.Location = new System.Drawing.Point(12, 12);
-            this.groupBoxInspectItems.Name = "groupBoxInspectItems";
-            this.groupBoxInspectItems.Size = new System.Drawing.Size(425, 395);
-            this.groupBoxInspectItems.TabIndex = 15;
-            this.groupBoxInspectItems.TabStop = false;
-            this.groupBoxInspectItems.Text = "Inspect items";
+            this.listBoxFileNames.FormattingEnabled = true;
+            this.listBoxFileNames.Location = new System.Drawing.Point(12, 72);
+            this.listBoxFileNames.Name = "listBoxFileNames";
+            this.listBoxFileNames.Size = new System.Drawing.Size(240, 316);
+            this.listBoxFileNames.TabIndex = 7;
+            this.listBoxFileNames.SelectedIndexChanged += new System.EventHandler(this.listBoxFileNames_SelectedIndexChanged);
             // 
-            // pictureBoxInspectItem
+            // comboBoxTexts
             // 
-            this.pictureBoxInspectItem.BackColor = System.Drawing.Color.Red;
-            this.pictureBoxInspectItem.Location = new System.Drawing.Point(252, 114);
-            this.pictureBoxInspectItem.Name = "pictureBoxInspectItem";
-            this.pictureBoxInspectItem.Size = new System.Drawing.Size(52, 52);
-            this.pictureBoxInspectItem.TabIndex = 23;
-            this.pictureBoxInspectItem.TabStop = false;
-            // 
-            // listBoxInspectItems
-            // 
-            this.listBoxInspectItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.listBoxInspectItems.FormattingEnabled = true;
-            this.listBoxInspectItems.Location = new System.Drawing.Point(6, 19);
-            this.listBoxInspectItems.Name = "listBoxInspectItems";
-            this.listBoxInspectItems.Size = new System.Drawing.Size(240, 368);
-            this.listBoxInspectItems.TabIndex = 12;
-            this.listBoxInspectItems.SelectedIndexChanged += new System.EventHandler(this.listBoxInspectItems_SelectedIndexChanged);
+            this.comboBoxTexts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTexts.FormattingEnabled = true;
+            this.comboBoxTexts.Location = new System.Drawing.Point(12, 26);
+            this.comboBoxTexts.Name = "comboBoxTexts";
+            this.comboBoxTexts.Size = new System.Drawing.Size(240, 21);
+            this.comboBoxTexts.TabIndex = 5;
+            this.comboBoxTexts.SelectedIndexChanged += new System.EventHandler(this.comboBoxTexts_SelectedIndexChanged);
             // 
             // groupBoxCurrentCompareImage
             // 
             this.groupBoxCurrentCompareImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxCurrentCompareImage.Controls.Add(this.buttonEditDB);
+            this.groupBoxCurrentCompareImage.Controls.Add(this.buttonMakeItalic);
             this.groupBoxCurrentCompareImage.Controls.Add(this.buttonZoomOut);
             this.groupBoxCurrentCompareImage.Controls.Add(this.buttonZoomIn);
             this.groupBoxCurrentCompareImage.Controls.Add(this.labelCharacters);
@@ -124,16 +103,16 @@
             this.groupBoxCurrentCompareImage.Controls.Add(this.buttonDelete);
             this.groupBoxCurrentCompareImage.Controls.Add(this.buttonUpdate);
             this.groupBoxCurrentCompareImage.Controls.Add(this.textBoxText);
-            this.groupBoxCurrentCompareImage.Location = new System.Drawing.Point(443, 12);
+            this.groupBoxCurrentCompareImage.Location = new System.Drawing.Point(258, 12);
             this.groupBoxCurrentCompareImage.Name = "groupBoxCurrentCompareImage";
-            this.groupBoxCurrentCompareImage.Size = new System.Drawing.Size(371, 395);
-            this.groupBoxCurrentCompareImage.TabIndex = 14;
+            this.groupBoxCurrentCompareImage.Size = new System.Drawing.Size(442, 377);
+            this.groupBoxCurrentCompareImage.TabIndex = 15;
             this.groupBoxCurrentCompareImage.TabStop = false;
             this.groupBoxCurrentCompareImage.Text = "Current compare image";
             // 
             // buttonZoomOut
             // 
-            this.buttonZoomOut.Location = new System.Drawing.Point(89, 174);
+            this.buttonZoomOut.Location = new System.Drawing.Point(89, 149);
             this.buttonZoomOut.Name = "buttonZoomOut";
             this.buttonZoomOut.Size = new System.Drawing.Size(25, 23);
             this.buttonZoomOut.TabIndex = 36;
@@ -143,7 +122,7 @@
             // 
             // buttonZoomIn
             // 
-            this.buttonZoomIn.Location = new System.Drawing.Point(120, 174);
+            this.buttonZoomIn.Location = new System.Drawing.Point(120, 149);
             this.buttonZoomIn.Name = "buttonZoomIn";
             this.buttonZoomIn.Size = new System.Drawing.Size(25, 23);
             this.buttonZoomIn.TabIndex = 35;
@@ -154,7 +133,7 @@
             // labelCharacters
             // 
             this.labelCharacters.AutoSize = true;
-            this.labelCharacters.Location = new System.Drawing.Point(19, 185);
+            this.labelCharacters.Location = new System.Drawing.Point(19, 160);
             this.labelCharacters.Name = "labelCharacters";
             this.labelCharacters.Size = new System.Drawing.Size(64, 13);
             this.labelCharacters.TabIndex = 34;
@@ -162,7 +141,7 @@
             // 
             // pictureBoxCharacter
             // 
-            this.pictureBoxCharacter.Location = new System.Drawing.Point(17, 206);
+            this.pictureBoxCharacter.Location = new System.Drawing.Point(17, 181);
             this.pictureBoxCharacter.Name = "pictureBoxCharacter";
             this.pictureBoxCharacter.Size = new System.Drawing.Size(99, 47);
             this.pictureBoxCharacter.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -177,9 +156,8 @@
             this.buttonAddBetterMatch.Name = "buttonAddBetterMatch";
             this.buttonAddBetterMatch.Size = new System.Drawing.Size(140, 21);
             this.buttonAddBetterMatch.TabIndex = 28;
-            this.buttonAddBetterMatch.Text = "Add better match...";
+            this.buttonAddBetterMatch.Text = "Add better match";
             this.buttonAddBetterMatch.UseVisualStyleBackColor = true;
-            this.buttonAddBetterMatch.Click += new System.EventHandler(this.buttonAddBetterMatch_Click);
             // 
             // checkBoxItalic
             // 
@@ -209,7 +187,6 @@
             this.buttonDelete.TabIndex = 4;
             this.buttonDelete.Text = "Delete ";
             this.buttonDelete.UseVisualStyleBackColor = true;
-            this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
             // 
             // buttonUpdate
             // 
@@ -220,7 +197,6 @@
             this.buttonUpdate.TabIndex = 3;
             this.buttonUpdate.Text = "Update";
             this.buttonUpdate.UseVisualStyleBackColor = true;
-            this.buttonUpdate.Click += new System.EventHandler(this.buttonUpdate_Click);
             // 
             // textBoxText
             // 
@@ -229,59 +205,59 @@
             this.textBoxText.Size = new System.Drawing.Size(100, 20);
             this.textBoxText.TabIndex = 1;
             // 
-            // buttonEditDB
+            // buttonMakeItalic
             // 
-            this.buttonEditDB.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonEditDB.Location = new System.Drawing.Point(120, 125);
-            this.buttonEditDB.Name = "buttonEditDB";
-            this.buttonEditDB.Size = new System.Drawing.Size(140, 21);
-            this.buttonEditDB.TabIndex = 37;
-            this.buttonEditDB.Text = "Check other...";
-            this.buttonEditDB.UseVisualStyleBackColor = true;
-            this.buttonEditDB.Click += new System.EventHandler(this.buttonEditDB_Click);
+            this.buttonMakeItalic.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonMakeItalic.Location = new System.Drawing.Point(151, 149);
+            this.buttonMakeItalic.Name = "buttonMakeItalic";
+            this.buttonMakeItalic.Size = new System.Drawing.Size(109, 23);
+            this.buttonMakeItalic.TabIndex = 37;
+            this.buttonMakeItalic.Text = "Make italic";
+            this.buttonMakeItalic.UseVisualStyleBackColor = true;
+            this.buttonMakeItalic.Click += new System.EventHandler(this.buttonMakeItalic_Click);
             // 
-            // VobSubNOcrCharacterInspect
+            // VobSubNOcrEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(826, 446);
-            this.Controls.Add(this.groupBoxInspectItems);
+            this.ClientSize = new System.Drawing.Size(712, 426);
             this.Controls.Add(this.groupBoxCurrentCompareImage);
-            this.Controls.Add(this.buttonOK);
-            this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.labelImageCompareFiles);
+            this.Controls.Add(this.labelChooseCharacters);
+            this.Controls.Add(this.listBoxFileNames);
+            this.Controls.Add(this.comboBoxTexts);
             this.KeyPreview = true;
-            this.Name = "VobSubNOcrCharacterInspect";
+            this.Name = "VobSubNOcrEdit";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.Text = "VobSubNOcrCharacterInspect";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubNOcrCharacterInspect_KeyDown);
-            this.groupBoxInspectItems.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).EndInit();
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "VobSubNOcrEdit";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubNOcrEdit_KeyDown);
             this.groupBoxCurrentCompareImage.ResumeLayout(false);
             this.groupBoxCurrentCompareImage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.GroupBox groupBoxInspectItems;
-        private System.Windows.Forms.PictureBox pictureBoxInspectItem;
-        private System.Windows.Forms.ListBox listBoxInspectItems;
+        private System.Windows.Forms.Label labelImageCompareFiles;
+        private System.Windows.Forms.Label labelChooseCharacters;
+        private System.Windows.Forms.ListBox listBoxFileNames;
+        private System.Windows.Forms.ComboBox comboBoxTexts;
         private System.Windows.Forms.GroupBox groupBoxCurrentCompareImage;
+        private System.Windows.Forms.Button buttonZoomOut;
+        private System.Windows.Forms.Button buttonZoomIn;
+        private System.Windows.Forms.Label labelCharacters;
+        private System.Windows.Forms.PictureBox pictureBoxCharacter;
         private System.Windows.Forms.Button buttonAddBetterMatch;
         private System.Windows.Forms.CheckBox checkBoxItalic;
         private System.Windows.Forms.Label labelTextAssociatedWithImage;
         private System.Windows.Forms.Button buttonDelete;
         private System.Windows.Forms.Button buttonUpdate;
         private System.Windows.Forms.TextBox textBoxText;
-        private System.Windows.Forms.Button buttonZoomOut;
-        private System.Windows.Forms.Button buttonZoomIn;
-        private System.Windows.Forms.Label labelCharacters;
-        private System.Windows.Forms.PictureBox pictureBoxCharacter;
-        private System.Windows.Forms.Button buttonEditDB;
+        private System.Windows.Forms.Button buttonMakeItalic;
     }
 }
