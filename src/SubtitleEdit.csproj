@@ -1363,6 +1363,7 @@
   <ItemGroup>
     <Content Include="DLLs\Voikkox86.dll" />
     <Content Include="DLLs\Voikkox64.dll" />
+    <None Include="Icons\Donate.png" />
     <Content Include="Languages\ar-EG.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1501,7 +1502,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Icons\connect.png" />
-    <None Include="Icons\Donate.gif" />
     <Content Include="Icons\Find.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
