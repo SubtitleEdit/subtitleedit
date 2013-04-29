@@ -161,6 +161,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         List<NOcrChar> _nocrChars = null;
         VobSubOcrNOcrCharacter _vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter();
+        int _nocrLastLowercaseHeight = -1;
+        int _nocrLastUppercaseHeight = -1;
 
         Keys _italicShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
         Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
@@ -1705,6 +1707,24 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     return new CompareMatch("*", false, 0, null);
             }
+
+            // Fix uppercase/lowercase issues (not I/l)
+            if (result.Text == "e")
+                _nocrLastLowercaseHeight = targetItem.Bitmap.Height;
+            if (result.Text == "E" || result.Text == "H" || result.Text == "R")
+                _nocrLastUppercaseHeight = targetItem.Bitmap.Height;
+
+            if (result.Text == "V" || result.Text == "W" || result.Text == "U" || result.Text == "S" || result.Text == "Z" || result.Text == "O" || result.Text == "X")
+            {
+                if (_nocrLastLowercaseHeight > 3 && targetItem.Bitmap.Height - _nocrLastLowercaseHeight < 2)
+                    result.Text = result.Text.ToLower();
+            }
+            else if (result.Text == "v" || result.Text == "w" || result.Text == "u" || result.Text == "s" || result.Text == "z" || result.Text == "o" || result.Text == "x")
+            {
+                if (_nocrLastUppercaseHeight > 3 && _nocrLastUppercaseHeight - targetItem.Bitmap.Height < 2)
+                    result.Text = result.Text.ToUpper();
+            }          
+             
             return new CompareMatch(result.Text, result.Italic, 0, null, result);
         }
 
@@ -2547,7 +2567,45 @@ namespace Nikse.SubtitleEdit.Forms
                 start++;
                 start = line.IndexOf("l", start);
             }
+            if (line.StartsWith("l"))
+                line = line.Remove(0, 1).Insert(0, "I");
+            if (line.StartsWith("<i>l"))
+                line = line.Remove(3, 1).Insert(3, "I");
+            line = line.Replace(". l", ". I");
+            line = line.Replace("? l", "? I");
+            line = line.Replace("! l", "! I");
+            line = line.Replace(": l", ": I");
+            line = line.Replace("." + Environment.NewLine + "l", "." + Environment.NewLine + "I");
+            line = line.Replace("?" + Environment.NewLine + "l", "?" + Environment.NewLine + "I");
+            line = line.Replace("!" + Environment.NewLine + "l", "!" + Environment.NewLine + "I");
+            line = line.Replace("." + Environment.NewLine + "- l", "." + Environment.NewLine + "- I");
+            line = line.Replace("?" + Environment.NewLine + "- l", "?" + Environment.NewLine + "- I");
+            line = line.Replace("!" + Environment.NewLine + "- l", "!" + Environment.NewLine + "- I");
+            line = line.Replace("II", "ll");
 
+            // fix O => 0
+            if (line.Contains("O"))
+            {
+                line = line.Replace("1O", "10");
+                line = line.Replace("2O", "20");
+                line = line.Replace("3O", "30");
+                line = line.Replace("4O", "40");
+                line = line.Replace("5O", "50");
+                line = line.Replace("6O", "60");
+                line = line.Replace("7O", "70");
+                line = line.Replace("8O", "80");
+                line = line.Replace("9O", "90");
+                line = line.Replace("O1", "01");
+                line = line.Replace("O2", "02");
+                line = line.Replace("O3", "03");
+                line = line.Replace("O4", "04");
+                line = line.Replace("O5", "05");
+                line = line.Replace("O6", "06");
+                line = line.Replace("O7", "07");
+                line = line.Replace("O8", "08");
+                line = line.Replace("O9", "09");
+            }
+            
 
             if (checkBoxAutoFixCommonErrors.Checked)
                 line = OcrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list

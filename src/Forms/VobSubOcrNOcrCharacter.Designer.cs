@@ -287,6 +287,7 @@
             this.listBoxlinesBackground.Name = "listBoxlinesBackground";
             this.listBoxlinesBackground.Size = new System.Drawing.Size(151, 95);
             this.listBoxlinesBackground.TabIndex = 19;
+            this.listBoxlinesBackground.SelectedIndexChanged += new System.EventHandler(this.listBoxlinesBackground_SelectedIndexChanged);
             // 
             // contextMenuStripLinesBackground
             // 
@@ -319,6 +320,7 @@
             this.listBoxLinesForeground.Name = "listBoxLinesForeground";
             this.listBoxLinesForeground.Size = new System.Drawing.Size(151, 108);
             this.listBoxLinesForeground.TabIndex = 17;
+            this.listBoxLinesForeground.SelectedIndexChanged += new System.EventHandler(this.listBoxLinesForeground_SelectedIndexChanged);
             // 
             // contextMenuLinesForeground
             // 
