@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
             FixLargeFonts();
+            labelItalicOn.Visible = false;
         }
 
         private void FixLargeFonts()
@@ -73,7 +74,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, VobSubOcr.CompareMatch bestGuess, List<VobSubOcr.ImageCompareAddition> additions, VobSubOcr vobSubForm)
         {
-            labelItalicOn.Visible = false;
             NikseBitmap nbmp = new NikseBitmap(vobSubImage);
             nbmp.ReplaceTransparentWith(Color.Black);
             vobSubImage = nbmp.GetBitmap();
@@ -199,17 +199,33 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void pictureBoxCharacter_Paint(object sender, PaintEventArgs e)
         {
+            NOcrPoint selectedPoint = null;
+            if (listBoxLinesForeground.Focused && listBoxLinesForeground.SelectedIndex >= 0)
+            {
+                selectedPoint = (NOcrPoint)listBoxLinesForeground.Items[listBoxLinesForeground.SelectedIndex];
+            }
+            else if (listBoxlinesBackground.Focused && listBoxlinesBackground.SelectedIndex >= 0)
+            {
+                selectedPoint = (NOcrPoint)listBoxlinesBackground.Items[listBoxlinesBackground.SelectedIndex];
+            }
+
             var foreground = new Pen(new SolidBrush(Color.Green));
             var background = new Pen(new SolidBrush(Color.Red));
+            var selPenF = new Pen(new SolidBrush(Color.Green), 3);
+            var selPenB = new Pen(new SolidBrush(Color.Red), 3);
             if (pictureBoxCharacter.Image != null)
             {
                 foreach (NOcrPoint op in _nocrChar.LinesForeground)
                 {
                     e.Graphics.DrawLine(foreground, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
+                    if (op == selectedPoint)
+                        e.Graphics.DrawLine(selPenF, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
                 }
                 foreach (NOcrPoint op in _nocrChar.LinesBackground)
                 {
                     e.Graphics.DrawLine(background, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
+                    if (op == selectedPoint)
+                        e.Graphics.DrawLine(selPenB, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
                 }
             }
 
@@ -223,6 +239,10 @@ namespace Nikse.SubtitleEdit.Forms
                     e.Graphics.DrawLine(p, new Point((int)Math.Round(_start.X * _zoomFactor), (int)Math.Round(_start.Y * _zoomFactor)), new Point(_mx, _my));
                 }
             }
+            foreground.Dispose();
+            background.Dispose();
+            selPenF.Dispose();
+            selPenB.Dispose();
         }
 
         private void SizePictureBox()
@@ -426,6 +446,16 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxCharacters.Font = new System.Drawing.Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size);
                 labelItalicOn.Visible = false;
             }
+        }
+
+        private void listBoxLinesForeground_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pictureBoxCharacter.Invalidate();
+        }
+
+        private void listBoxlinesBackground_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pictureBoxCharacter.Invalidate();
         }
 
     }
