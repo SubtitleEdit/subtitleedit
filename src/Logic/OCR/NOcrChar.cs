@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Logic.OCR
 {
@@ -30,7 +31,24 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             Text = string.Empty;
         }
 
-        public NOcrChar(string text) : this()
+        public NOcrChar(NOcrChar old)
+        {
+            Id = Guid.NewGuid().ToString();
+            LinesForeground = new List<NOcrPoint>();
+            LinesBackground = new List<NOcrPoint>();
+            Text = old.Text;
+            Width = old.Width;
+            Height = old.Height;
+            MarginTop = old.MarginTop;
+            Italic = old.Italic;
+            foreach (NOcrPoint p in old.LinesForeground)
+                LinesForeground.Add(new NOcrPoint(new Point(p.Start.X, p.Start.Y), new Point(p.End.X, p.End.Y)));
+            foreach (NOcrPoint p in old.LinesBackground)
+                LinesBackground.Add(new NOcrPoint(new Point(p.Start.X, p.Start.Y), new Point(p.End.X, p.End.Y)));
+        }
+
+        public NOcrChar(string text)
+            : this()
         {
             Text = text;
         }
