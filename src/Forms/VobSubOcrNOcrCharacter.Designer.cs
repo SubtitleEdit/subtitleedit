@@ -41,6 +41,7 @@
             this.labelSubtitleImage = new System.Windows.Forms.Label();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.groupBoxNewInput = new System.Windows.Forms.GroupBox();
+            this.checkBoxItalic = new System.Windows.Forms.CheckBox();
             this.buttonZoomOut = new System.Windows.Forms.Button();
             this.buttonZoomIn = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -54,7 +55,6 @@
             this.listBoxLinesForeground = new System.Windows.Forms.ListBox();
             this.contextMenuLinesForeground = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeForegroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkBoxItalic = new System.Windows.Forms.CheckBox();
             this.labelItalicOn = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
@@ -111,6 +111,7 @@
             // 
             // pictureBoxCharacter
             // 
+            this.pictureBoxCharacter.Cursor = System.Windows.Forms.Cursors.Cross;
             this.pictureBoxCharacter.Location = new System.Drawing.Point(183, 109);
             this.pictureBoxCharacter.Name = "pictureBoxCharacter";
             this.pictureBoxCharacter.Size = new System.Drawing.Size(99, 47);
@@ -204,6 +205,17 @@
             this.groupBoxNewInput.Size = new System.Drawing.Size(600, 360);
             this.groupBoxNewInput.TabIndex = 33;
             this.groupBoxNewInput.TabStop = false;
+            // 
+            // checkBoxItalic
+            // 
+            this.checkBoxItalic.AutoSize = true;
+            this.checkBoxItalic.Location = new System.Drawing.Point(301, 49);
+            this.checkBoxItalic.Name = "checkBoxItalic";
+            this.checkBoxItalic.Size = new System.Drawing.Size(48, 17);
+            this.checkBoxItalic.TabIndex = 33;
+            this.checkBoxItalic.Text = "&Italic";
+            this.checkBoxItalic.UseVisualStyleBackColor = true;
+            this.checkBoxItalic.CheckedChanged += new System.EventHandler(this.checkBoxItalic_CheckedChanged);
             // 
             // buttonZoomOut
             // 
@@ -321,17 +333,6 @@
             this.removeForegroundToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.removeForegroundToolStripMenuItem.Text = "Remove";
             this.removeForegroundToolStripMenuItem.Click += new System.EventHandler(this.removeForegroundToolStripMenuItem_Click_1);
-            // 
-            // checkBoxItalic
-            // 
-            this.checkBoxItalic.AutoSize = true;
-            this.checkBoxItalic.Location = new System.Drawing.Point(301, 49);
-            this.checkBoxItalic.Name = "checkBoxItalic";
-            this.checkBoxItalic.Size = new System.Drawing.Size(48, 17);
-            this.checkBoxItalic.TabIndex = 33;
-            this.checkBoxItalic.Text = "&Italic";
-            this.checkBoxItalic.UseVisualStyleBackColor = true;
-            this.checkBoxItalic.CheckedChanged += new System.EventHandler(this.checkBoxItalic_CheckedChanged);
             // 
             // labelItalicOn
             // 

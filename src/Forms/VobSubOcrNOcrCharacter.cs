@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.OCR;
@@ -26,6 +23,8 @@ namespace Nikse.SubtitleEdit.Forms
         int _mx;
         int _my;
         bool _warningNoNotForegroundLinesShown = false;
+        List<NOcrChar> _history = new List<NOcrChar>();
+        int _historyIndex = -1;
 
         public VobSubOcrNOcrCharacter()
         {
@@ -116,6 +115,9 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxCharacter.Top = labelCharacters.Top + 16;
             SizePictureBox();
             checkBoxItalic.Checked = italicChecked;
+
+            _history = new List<NOcrChar>();
+            _historyIndex = -1;
         }
 
         private void buttonExpandSelection_Click(object sender, EventArgs e)
@@ -280,6 +282,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _drawLineOn = false;
                     pictureBoxCharacter.Invalidate();
                     ShowOcrPoints();
+                    AddHistoryItem(_nocrChar);
 
                     if ((ModifierKeys & Keys.Control) == Keys.Control)
                     {
@@ -306,6 +309,47 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void AddHistoryItem(NOcrChar nocrChar)
+        {
+            if (_historyIndex > 0 && _historyIndex < _history.Count - 1)
+            {
+                while (_history.Count > _historyIndex + 1)
+                    _history.RemoveAt(_history.Count - 1);
+                _historyIndex = _history.Count-1;
+            }
+            _history.Add(new NOcrChar(nocrChar));
+            _historyIndex++;
+        }
+
+        private void Redo()
+        {
+            if (_history.Count > 0 && _historyIndex < _history.Count - 1)
+            {
+                _historyIndex++;
+                _nocrChar = new NOcrChar(_history[_historyIndex]);
+                ShowOcrPoints();
+            }
+        }
+
+        private void Undo()
+        {
+            if (_history.Count > 0 && _historyIndex > 0)
+            {
+                _historyIndex--;
+                _nocrChar = new NOcrChar(_history[_historyIndex]);
+                ShowOcrPoints();
+            }
+            else if (_historyIndex == 0)
+            {
+                var c = new NOcrChar(_nocrChar);
+                c.LinesForeground.Clear();
+                c.LinesBackground.Clear();
+                _nocrChar = c;
+                _historyIndex--;
+                ShowOcrPoints();
+            }
+        }
+
         private void pictureBoxCharacter_MouseMove(object sender, MouseEventArgs e)
         {
             if (_drawLineOn)
@@ -320,11 +364,22 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
             {
+                e.SuppressKeyPress = true;
                 _drawLineOn = false;
                 _startDone = false;
                 pictureBoxCharacter.Invalidate();
             }
-        }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z) 
+            {
+                e.SuppressKeyPress = true;
+                Undo();
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Y) 
+            {
+                e.SuppressKeyPress = true;
+                Redo();
+            }
+        }       
 
         private void removeForegroundToolStripMenuItem_Click(object sender, EventArgs e)
         {

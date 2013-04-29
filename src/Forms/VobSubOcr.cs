@@ -1705,7 +1705,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     return new CompareMatch("*", false, 0, null);
             }
-            return new CompareMatch(result.Text, false, 0, null, result);
+            return new CompareMatch(result.Text, result.Italic, 0, null, result);
         }
 
         private CompareMatch GetCompareMatch(ImageSplitterItem targetItem, Bitmap parentBitmap, out CompareMatch secondBestGuess)
@@ -2236,7 +2236,6 @@ namespace Nikse.SubtitleEdit.Forms
                     index++;
                 if (shrinkSelection && expandSelectionList.Count < 2)
                 {
-                    //index--;
                     shrinkSelection = false;
                     expandSelectionList = new List<ImageSplitterItem>();
                 }
