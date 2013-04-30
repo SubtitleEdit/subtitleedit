@@ -33,6 +33,7 @@
             this.listBoxFileNames = new System.Windows.Forms.ListBox();
             this.comboBoxTexts = new System.Windows.Forms.ComboBox();
             this.groupBoxCurrentCompareImage = new System.Windows.Forms.GroupBox();
+            this.buttonMakeItalic = new System.Windows.Forms.Button();
             this.buttonZoomOut = new System.Windows.Forms.Button();
             this.buttonZoomIn = new System.Windows.Forms.Button();
             this.labelCharacters = new System.Windows.Forms.Label();
@@ -43,7 +44,7 @@
             this.buttonDelete = new System.Windows.Forms.Button();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.textBoxText = new System.Windows.Forms.TextBox();
-            this.buttonMakeItalic = new System.Windows.Forms.Button();
+            this.labelInfo = new System.Windows.Forms.Label();
             this.groupBoxCurrentCompareImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
             this.SuspendLayout();
@@ -110,6 +111,17 @@
             this.groupBoxCurrentCompareImage.TabStop = false;
             this.groupBoxCurrentCompareImage.Text = "Current compare image";
             // 
+            // buttonMakeItalic
+            // 
+            this.buttonMakeItalic.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonMakeItalic.Location = new System.Drawing.Point(151, 149);
+            this.buttonMakeItalic.Name = "buttonMakeItalic";
+            this.buttonMakeItalic.Size = new System.Drawing.Size(109, 23);
+            this.buttonMakeItalic.TabIndex = 37;
+            this.buttonMakeItalic.Text = "Make italic";
+            this.buttonMakeItalic.UseVisualStyleBackColor = true;
+            this.buttonMakeItalic.Click += new System.EventHandler(this.buttonMakeItalic_Click);
+            // 
             // buttonZoomOut
             // 
             this.buttonZoomOut.Location = new System.Drawing.Point(89, 149);
@@ -158,6 +170,7 @@
             this.buttonAddBetterMatch.TabIndex = 28;
             this.buttonAddBetterMatch.Text = "Add better match";
             this.buttonAddBetterMatch.UseVisualStyleBackColor = true;
+            this.buttonAddBetterMatch.Click += new System.EventHandler(this.buttonAddBetterMatch_Click);
             // 
             // checkBoxItalic
             // 
@@ -205,22 +218,21 @@
             this.textBoxText.Size = new System.Drawing.Size(100, 20);
             this.textBoxText.TabIndex = 1;
             // 
-            // buttonMakeItalic
+            // labelInfo
             // 
-            this.buttonMakeItalic.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonMakeItalic.Location = new System.Drawing.Point(151, 149);
-            this.buttonMakeItalic.Name = "buttonMakeItalic";
-            this.buttonMakeItalic.Size = new System.Drawing.Size(109, 23);
-            this.buttonMakeItalic.TabIndex = 37;
-            this.buttonMakeItalic.Text = "Make italic";
-            this.buttonMakeItalic.UseVisualStyleBackColor = true;
-            this.buttonMakeItalic.Click += new System.EventHandler(this.buttonMakeItalic_Click);
+            this.labelInfo.AutoSize = true;
+            this.labelInfo.Location = new System.Drawing.Point(12, 404);
+            this.labelInfo.Name = "labelInfo";
+            this.labelInfo.Size = new System.Drawing.Size(47, 13);
+            this.labelInfo.TabIndex = 16;
+            this.labelInfo.Text = "labelInfo";
             // 
             // VobSubNOcrEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(712, 426);
+            this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.groupBoxCurrentCompareImage);
             this.Controls.Add(this.labelImageCompareFiles);
             this.Controls.Add(this.labelChooseCharacters);
@@ -259,5 +271,6 @@
         private System.Windows.Forms.Button buttonUpdate;
         private System.Windows.Forms.TextBox textBoxText;
         private System.Windows.Forms.Button buttonMakeItalic;
+        private System.Windows.Forms.Label labelInfo;
     }
 }
