@@ -217,13 +217,19 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (NOcrPoint op in _nocrChar.LinesForeground)
                 {
-                    e.Graphics.DrawLine(foreground, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
+                    Point start = op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
+                    Point end = op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
+                    if (start.X == end.X && start.Y == end.Y)
+                        end.X++;
+                    e.Graphics.DrawLine(foreground, start, end);
                     if (op == selectedPoint)
-                        e.Graphics.DrawLine(selPenF, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
+                        e.Graphics.DrawLine(selPenF, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));                    
                 }
                 foreach (NOcrPoint op in _nocrChar.LinesBackground)
                 {
-                    e.Graphics.DrawLine(background, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
+                    Point start = op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
+                    Point end = op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
+                    e.Graphics.DrawLine(background, start, end);
                     if (op == selectedPoint)
                         e.Graphics.DrawLine(selPenB, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
                 }
@@ -353,11 +359,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Undo()
         {
+            _drawLineOn = false;
+            _startDone = false;
             if (_history.Count > 0 && _historyIndex > 0)
             {
                 _historyIndex--;
                 _nocrChar = new NOcrChar(_history[_historyIndex]);
-                ShowOcrPoints();
             }
             else if (_historyIndex == 0)
             {
@@ -366,8 +373,8 @@ namespace Nikse.SubtitleEdit.Forms
                 c.LinesBackground.Clear();
                 _nocrChar = c;
                 _historyIndex--;
-                ShowOcrPoints();
             }
+            ShowOcrPoints();
         }
 
         private void pictureBoxCharacter_MouseMove(object sender, MouseEventArgs e)
