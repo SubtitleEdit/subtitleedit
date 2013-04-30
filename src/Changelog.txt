@@ -17,6 +17,7 @@
    * Fixed bug in format DCinema interop regaring LoadFont URI - thx Radoslav
    * Can now save " " (space) in multiple replace settings - thx dandomina
    * Italian language now active again (broken in 3.3.4)
+   * Clear suggestions in OCR now actually works
 
 
 3.3.4 (9th April 2013)

@@ -40,6 +40,8 @@ namespace Nikse.SubtitleEdit.Forms
                 pictureBoxCharacter.Image = bitmap;
                 SizePictureBox();                
             }
+
+            labelInfo.Text = string.Format("{0} elements in database", nocrChars.Count);
         }
 
         private void VobSubNOcrEdit_KeyDown(object sender, KeyEventArgs e)
@@ -225,6 +227,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 groupBoxCurrentCompareImage.BackColor = Control.DefaultBackColor;
             }
+
+        }
+
+        private void buttonAddBetterMatch_Click(object sender, EventArgs e)
+        {
 
         }
 

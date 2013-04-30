@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         public List<NOcrPoint> LinesForeground { get; private set; }
         public List<NOcrPoint> LinesBackground { get; private set; }
         public string Id { get; set; }
+        public int ExpandCount { get; set; }
 
         public Double WidthPercent
         {

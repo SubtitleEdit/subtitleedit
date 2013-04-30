@@ -567,6 +567,10 @@ namespace Nikse.SubtitleEdit.Logic
         public int DefaultMillisecondsForUnknownDurations { get; set; }
         public bool PromptForUnknownWords { get; set; }
         public double ItalicFactor { get; set; }
+        public bool LineOcrDraw { get; set; }
+        public bool LineOcrAdvancedItalic { get; set; }
+        public string LineOcrLastLanguages { get; set; }
+        public string LineOcrLastSpellcheck { get; set; }
 
         public VobSubOcrSettings()
         {
@@ -582,6 +586,7 @@ namespace Nikse.SubtitleEdit.Logic
             DefaultMillisecondsForUnknownDurations = 5000;
             PromptForUnknownWords = true;
             ItalicFactor = 0.2;
+
         }
     }
 
@@ -1707,6 +1712,18 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ItalicFactor");
             if (subNode != null)
                 settings.VobSubOcr.ItalicFactor = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            subNode = node.SelectSingleNode("LineOcrDraw");
+            if (subNode != null)
+                settings.VobSubOcr.LineOcrDraw = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("LineOcrAdvancedItalic");
+            if (subNode != null)
+                settings.VobSubOcr.LineOcrAdvancedItalic = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("LineOcrLastLanguages");
+            if (subNode != null)
+                settings.VobSubOcr.LineOcrLastLanguages = subNode.InnerText;
+            subNode = node.SelectSingleNode("LineOcrLastSpellcheck");
+            if (subNode != null)
+                settings.VobSubOcr.LineOcrLastSpellcheck = subNode.InnerText;            
 
             foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
             {
@@ -2364,6 +2381,10 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString());
             textWriter.WriteElementString("PromptForUnknownWords", settings.VobSubOcr.PromptForUnknownWords.ToString());
             textWriter.WriteElementString("ItalicFactor", settings.VobSubOcr.ItalicFactor.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("LineOcrDraw", settings.VobSubOcr.LineOcrDraw.ToString());
+            textWriter.WriteElementString("LineOcrAdvancedItalic", settings.VobSubOcr.LineOcrAdvancedItalic.ToString());
+            textWriter.WriteElementString("LineOcrLastLanguages", settings.VobSubOcr.LineOcrLastLanguages);
+            textWriter.WriteElementString("LineOcrLastSpellcheck", settings.VobSubOcr.LineOcrLastSpellcheck);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("MultipleSearchAndReplaceList", "");

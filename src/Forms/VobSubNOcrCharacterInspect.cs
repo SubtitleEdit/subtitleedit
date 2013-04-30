@@ -190,6 +190,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonAddBetterMatch_Click(object sender, EventArgs e)
         {
+            var expandSelectionList = new List<ImageSplitterItem>();
             if (listBoxInspectItems.SelectedIndex < 0)
                 return;
 
@@ -200,8 +201,23 @@ namespace Nikse.SubtitleEdit.Forms
             var match = _matchList[listBoxInspectItems.SelectedIndex];
 
             var vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter();
-            vobSubOcrNOcrCharacter.Initialize(_bitmap, img, new Point(0,0), false, false, null, null, _vobSubOcr);
+            vobSubOcrNOcrCharacter.Initialize(_bitmap, img, new Point(0, 0), false, expandSelectionList.Count > 1, null, null, _vobSubOcr);
             DialogResult result = vobSubOcrNOcrCharacter.ShowDialog(this);
+            while (result == DialogResult.OK && (vobSubOcrNOcrCharacter.ShrinkSelection || vobSubOcrNOcrCharacter.ExpandSelection))
+            {
+                result = vobSubOcrNOcrCharacter.ShowDialog(this);
+            //if (result == DialogResult.OK && _vobSubOcrNOcrCharacter.ShrinkSelection)
+            //{
+            //    shrinkSelection = true;
+            //    index--;
+            //    if (expandSelectionList.Count > 0)
+            //        expandSelectionList.RemoveAt(expandSelectionList.Count - 1);
+            //}
+            //else if (result == DialogResult.OK && _vobSubOcrNOcrCharacter.ExpandSelection)
+            //{
+            //    expandSelection = true;
+            //}
+            }
             if (result == DialogResult.OK)
             {
                 _nocrChars.Add(vobSubOcrNOcrCharacter.NOcrChar);
