@@ -10408,7 +10408,7 @@ namespace Nikse.SubtitleEdit.Forms
                 compareForm.Initialize(_subtitle, _fileName, _subtitleAlternate, _subtitleAlternateFileName);
             else
                 compareForm.Initialize(_subtitle, _fileName, Configuration.Settings.Language.General.CurrentSubtitle);
-            compareForm.Show();
+            compareForm.Show(this);
         }
 
         private void ToolStripMenuItemAutoBreakLinesClick(object sender, EventArgs e)

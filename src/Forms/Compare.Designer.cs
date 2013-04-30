@@ -200,6 +200,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView2.Size = new System.Drawing.Size(478, 430);
             this.subtitleListView2.TabIndex = 9;
             this.subtitleListView2.UseCompatibleStateImageBehavior = false;
+            this.subtitleListView2.UseSyntaxColoring = true;
             this.subtitleListView2.View = System.Windows.Forms.View.Details;
             this.subtitleListView2.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView2SelectedIndexChanged);
             this.subtitleListView2.Enter += new System.EventHandler(this.SubtitleListView2Enter);
@@ -219,6 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.Size = new System.Drawing.Size(476, 430);
             this.subtitleListView1.TabIndex = 7;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
+            this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
             // 
@@ -246,7 +248,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.MinimumSize = new System.Drawing.Size(800, 400);
             this.Name = "Compare";
             this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Compare subtitles";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Compare_FormClosing);

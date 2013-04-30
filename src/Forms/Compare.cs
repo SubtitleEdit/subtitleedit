@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = string.Empty;
             _subtitle1 = subtitle1;
             labelSubtitle1.Text = subtitleFileName1;
-            if (!string.IsNullOrEmpty(title))
+            if (string.IsNullOrEmpty(subtitleFileName1))
                 labelSubtitle1.Text = title;
             subtitleListView1.Fill(subtitle1);
 
