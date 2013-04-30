@@ -5,10 +5,10 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    public class UnknownSubtitle34 : SubtitleFormat
+    public class UnknownSubtitle53 : SubtitleFormat
     {
 
-        static Regex regexTimeCodes = new Regex(@"^\d\d\:\d\d\:\d\d\t[^ ]+", RegexOptions.Compiled);
+        static Regex regexTimeCodes = new Regex(@"^\d\d\:\d\d\:\d\d\:\d\d [^ ]+", RegexOptions.Compiled);
         public override string Extension
         {
             get { return ".txt"; }
@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Unknown 34"; }
+            get { return "Unknown 53"; }
         }
 
         public override bool IsTimeBased
@@ -33,32 +33,24 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            //08:55:05  >>> WELCOME BACK.
-            //08:59:49  """OFF THE RECORD"" STARTS RIGHT NOW."
-            //08:59:51  ON THE PANEL THIS WEEK WE HAVE EMILY LAWLER AND ZACH
-            //08:59:54  "GORCHOW, ALONG WITH RON DZWONKOWSKI."
-            //    HERE IS THE RUNDOWN.
-            //    A POSSIBLE REDO OF THE EM LAW IF VOTERS REJECT IT.
-            //09:00:03  AND MIKE DUGAN AND LATER GENE CLEM IS DISCUSSING THIS
+            //10:56:54:12 FEATURING BRIAN LORENTE AND THE 
+            //10:56:59:18 USUAL SUSPECTS.
+            //10:57:15:18 \M 
+            //10:57:20:07 >> HOW WE DOING TONIGHT, 
+            //10:57:27:17 MICHIGAN?
 
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string[] lines = Utilities.RemoveHtmlTags(p.Text).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (lines.Length > 0)
-                {
-                    sb.AppendLine(EncodeTimeCode(p.StartTime) + "\t" + lines[0]);
-                    for (int i = 1; i < lines.Length; i++)
-                        sb.AppendLine("\t" + lines[i]);
-                }
+                string text = Utilities.RemoveHtmlTags(p.Text).Replace("♪", "\\M");
+                sb.AppendLine(EncodeTimeCode(p.StartTime) + " " + text);
             }
             return sb.ToString().Trim();
         }
 
         private string EncodeTimeCode(TimeCode timeCode)
         {
-            int seconds = (int)(timeCode.Seconds + timeCode.Milliseconds / 1000 + 0.5);
-            return string.Format("{0:00}:{1:00}:{2:00}", timeCode.Hours, timeCode.Minutes, seconds);
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -75,14 +67,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     try
                     {
-                        string[] arr = s.Substring(0, 8).Split(':');
-                        if (arr.Length == 3)
+                        string[] arr = s.Substring(0, 11).Split(':');
+                        if (arr.Length == 4)
                         {
                             int hours = int.Parse(arr[0]);
                             int minutes = int.Parse(arr[1]);
                             int seconds = int.Parse(arr[2]);
-                            p.StartTime = new TimeCode(hours, minutes, seconds, 0);
-                            string text = s.Remove(0, 8).Trim();
+                            int frames = int.Parse(arr[3]);
+                            p.StartTime = new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
+                            string text = s.Remove(0, 11).Trim();
                             p.Text = text;
                             if (text.Length > 1 && Utilities.IsInteger(text.Substring(0, 2)))
                                 _errorCount++;
@@ -93,16 +86,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         _errorCount++;
                     }
                 }
-                else if (line.StartsWith("\t") && p != null)
-                {
-                    if (p.Text.Length > 1000)
-                    {
-                        _errorCount += 100;
-                        return;
-                    }
-                    p.Text = (p.Text + Environment.NewLine + s).Trim();
-                }
-                else if (s.Length > 0 && !Utilities.IsInteger(s))
+                else if (s.Length > 0)
                 {
                     _errorCount++;
                 }
@@ -113,6 +97,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int index = 1;
             foreach (Paragraph paragraph in subtitle.Paragraphs)
             {
+                paragraph.Text = paragraph.Text.Replace("\\M", "♪");
+
                 Paragraph next = subtitle.GetParagraphOrDefault(index);
                 if (next != null)
                 {
@@ -124,7 +110,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 index++;
             }
-
             subtitle.RemoveEmptyLines();
         }
 

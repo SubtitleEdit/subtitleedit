@@ -903,6 +903,7 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle50.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle51.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle52.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle53.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle6.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle7.cs" />
     <Compile Include="Logic\SubtitleFormats\DigiBeta.cs" />
