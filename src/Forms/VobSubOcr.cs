@@ -1206,21 +1206,23 @@ namespace Nikse.SubtitleEdit.Forms
                 return _vobSubMergedPackist.Count;
         }
 
-        private void ShowSubtitleImage(int index)
+        private Bitmap ShowSubtitleImage(int index)
         {
             int numberOfImages = GetSubtitleCount();
-
+            Bitmap bmp;
             if (index < numberOfImages)
             {
                 groupBoxSubtitleImage.Text = string.Format(Configuration.Settings.Language.VobSubOcr.SubtitleImageXofY, index + 1, numberOfImages);
-                pictureBoxSubtitleImage.Image = GetSubtitleBitmap(index);
-                pictureBoxSubtitleImage.Refresh();
+                bmp = GetSubtitleBitmap(index);
             }
             else
             {
                 groupBoxSubtitleImage.Text = Configuration.Settings.Language.VobSubOcr.SubtitleImage;
-                pictureBoxSubtitleImage.Image = new Bitmap(1, 1);
+                bmp = new Bitmap(1, 1);
             }
+            pictureBoxSubtitleImage.Image = bmp;
+            pictureBoxSubtitleImage.Invalidate();
+            return bmp;
         }
 
         private static Point MakePointItalic(Point p, int height, int moveLeftPixels, double unItalicFactor)
@@ -3212,6 +3214,7 @@ namespace Nikse.SubtitleEdit.Forms
         static void NOcrThreadDoWork(object sender, DoWorkEventArgs e)
         {
             var p = (NOcrThreadParameter)e.Argument;
+            e.Result = p;
 
             Bitmap bitmap = p.Picture;
             var nbmp = new NikseBitmap(bitmap);
@@ -3260,9 +3263,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 index++;
             }
-
             p.Result = GetStringWithItalicTags(matches);;
-            e.Result = p;
         }
 
         void NOcrThreadRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -3305,9 +3306,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonStartOcrClick(object sender, EventArgs e)
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
             Configuration.Settings.VobSubOcr.RightToLeft = checkBoxRightToLeft.Checked;
             _lastLine = null;
             buttonOK.Enabled = false;
@@ -3339,20 +3337,19 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _nocrThreads = new List<BackgroundWorker>();
                 _nocrThreadResults = new string[_subtitle.Paragraphs.Count];
-                int noOfThreads = 4;
+                int noOfThreads = 2;
                 if (noOfThreads >= max)
                     noOfThreads = max-1;
                 int start = 0;
-                for (int i = 0; i < 1; i++)
+                for (int i = 0; i < noOfThreads; i++)
                 {
                     var bw = new BackgroundWorker();
                     var p = new NOcrThreadParameter(GetSubtitleBitmap(start + i), i, _nocrChars, bw, noOfThreads, _unItalicFactor, checkBoxNOcrItalic.Checked, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked);
                     bw.DoWork += NOcrThreadDoWork;
                     bw.RunWorkerCompleted += NOcrThreadRunWorkerCompleted;
-                   // bw.WorkerSupportsCancellation = true;
                     bw.RunWorkerAsync(p);
                 }
-                System.Threading.Thread.Sleep(1000);
+                Application.DoEvents();
             }
 
             progressBar1.Maximum = max;
@@ -3360,7 +3357,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = true;
             for (int i = (int)numericUpDownStartNumber.Value - 1; i < max; i++)
             {
-                ShowSubtitleImage(i);
+                var bmp = ShowSubtitleImage(i);
 
                 var startTime = new TimeCode(TimeSpan.FromMilliseconds(GetSubtitleStartTimeMilliseconds(i)));
                 var endTime = new TimeCode(TimeSpan.FromMilliseconds(GetSubtitleEndTimeMilliseconds(i)));
@@ -3378,13 +3375,13 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(i);
                 string text;
                 if (comboBoxOcrMethod.SelectedIndex == 0)
-                    text = OcrViaTesseract(GetSubtitleBitmap(i), i);
+                    text = OcrViaTesseract(bmp, i);
                 else if (comboBoxOcrMethod.SelectedIndex == 1)
-                    text = SplitAndOcrBitmapNormal(GetSubtitleBitmap(i), i);
+                    text = SplitAndOcrBitmapNormal(bmp, i);
                 else if (comboBoxOcrMethod.SelectedIndex == 2)
                     text = CallModi(i);
                 else
-                    text = OcrViaNOCR(GetSubtitleBitmap(i), i);
+                    text = OcrViaNOCR(bmp, i);
 
                 _lastLine = text;
 
@@ -3413,8 +3410,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     textBoxCurrentText.Text = text;
                     SetButtonsEnabledAfterOcrDone();
-                    sw.Stop();
-                    MessageBox.Show(sw.ElapsedMilliseconds.ToString());
                     return;
                 }
 
@@ -3433,8 +3428,6 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetText(i, text);
             }
             SetButtonsEnabledAfterOcrDone();
-            sw.Stop();
-            MessageBox.Show(sw.ElapsedMilliseconds.ToString());
         }
 
         private Bitmap ResizeBitmap(Bitmap b, int width, int height)
