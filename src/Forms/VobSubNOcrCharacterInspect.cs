@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
         private VobSubOcr _vobSubOcr;
         private Bitmap _bitmap;
         private double _zoomFactor = 3.0;
+        private double _unItalicFactor;
 
         public VobSubNOcrCharacterInspect()
         {
@@ -29,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
         }
 
-        internal void Initialize(Bitmap bitmap, int pixelsIsSpace, bool rightToLeft, List<NOcrChar> nocrChars, VobSubOcr vobSubOcr)
+        internal void Initialize(Bitmap bitmap, int pixelsIsSpace, bool rightToLeft, List<NOcrChar> nocrChars, VobSubOcr vobSubOcr, double unItalicFactor)
         {
             _bitmap = bitmap;
             NikseBitmap nbmp = new NikseBitmap(bitmap);
@@ -38,6 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             _nocrChars = nocrChars;
             _matchList = new List<VobSubOcr.CompareMatch>();
             _vobSubOcr = vobSubOcr;
+            _unItalicFactor = unItalicFactor;
 
             _imageList = ImageSplitter.SplitBitmapToLetters(bitmap, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom);
             int index = 0;
@@ -60,7 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     //get nocr matches
                     Nikse.SubtitleEdit.Forms.VobSubOcr.CompareMatch bestGuess;
-                    Nikse.SubtitleEdit.Forms.VobSubOcr.CompareMatch match = vobSubOcr.GetNOcrCompareMatch(item, bitmap, out bestGuess);
+                    Nikse.SubtitleEdit.Forms.VobSubOcr.CompareMatch match = vobSubOcr.GetNOcrCompareMatch(item, bitmap, out bestGuess, _nocrChars, _unItalicFactor, false, false);
                     if (match == null)
                     {
                         listBoxInspectItems.Items.Add("?");
