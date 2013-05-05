@@ -528,6 +528,51 @@ namespace Nikse.SubtitleEdit.Forms
             buttonExport.Enabled = true;
         }
 
+        private void SetResolution(string xAndY)
+        {
+            if (string.IsNullOrEmpty(xAndY))
+                return;
+
+            xAndY = xAndY.ToLower();
+            string[] parts = xAndY.Split('x');
+            if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+            {
+                if (xAndY == "1920x1080")
+                {
+                    comboBoxResolution.SelectedIndex = 0;
+                }
+                else if (xAndY == "1440x1080")
+                {
+                    comboBoxResolution.SelectedIndex = 2;
+                }
+                else if (xAndY == "960x720")
+                {
+                    comboBoxResolution.SelectedIndex = 3;
+                }
+                else if (xAndY == "848x480")
+                {
+                    comboBoxResolution.SelectedIndex = 4;
+                }
+                else if (xAndY == "720x576")
+                {
+                    comboBoxResolution.SelectedIndex = 5;
+                }
+                else if (xAndY == "720x480")
+                {
+                    comboBoxResolution.SelectedIndex = 6;
+                }
+                else if (xAndY == "640x352")
+                {
+                    comboBoxResolution.SelectedIndex = 7;
+                }
+                else
+                {
+                    comboBoxResolution.Items[8] = xAndY;
+                    comboBoxResolution.SelectedIndex = 8;
+                }
+            }
+        }
+
         private void GetResolution(ref int width, ref int height)
         {
             if (comboBoxResolution.SelectedIndex == 1)
@@ -579,8 +624,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private int WriteParagraph(int width, StringBuilder sb, int border, int height, int imagesSavedCount,
-                                   VobSubWriter vobSubWriter, FileStream binarySubtitleFile, MakeBitmapParameter param,
-                                   int i)
+                                   VobSubWriter vobSubWriter, FileStream binarySubtitleFile, MakeBitmapParameter param, int i)
         {
             if (param.Bitmap != null)
             {
@@ -1365,8 +1409,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleFontName = Configuration.Settings.Tools.ExportBluRayFontName;
             if (_exportType == "VOBSUB" && Configuration.Settings.Tools.ExportVobSubFontSize > 0)
                 _subtitleFontSize = Configuration.Settings.Tools.ExportVobSubFontSize;
-            else if (_exportType == "BLURAYSUP" && Configuration.Settings.Tools.ExportBluRaybFontSize > 0)
-                _subtitleFontSize = Configuration.Settings.Tools.ExportBluRaybFontSize;
+            else if (_exportType == "BLURAYSUP" && Configuration.Settings.Tools.ExportBluRayFontSize > 0)
+                _subtitleFontSize = Configuration.Settings.Tools.ExportBluRayFontSize;            
 
             if (_exportType == "VOBSUB")
             {
@@ -1449,12 +1493,17 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxBorderWidth.SelectedIndex = 2;
             comboBoxHAlign.SelectedIndex = 1;
             comboBoxResolution.SelectedIndex = 0;
+            if (_exportType == "BLURAYSUP" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
+                SetResolution(Configuration.Settings.Tools.ExportBluRayVideoResolution);
 
             if (exportType == "VOBSUB")
             {
 
                 comboBoxBorderWidth.SelectedIndex = 3;
-                comboBoxResolution.SelectedIndex = 5;
+                if (_exportType == "VOBSUB" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubVideoResolution))
+                    SetResolution(Configuration.Settings.Tools.ExportVobSubVideoResolution);
+                else
+                    comboBoxResolution.SelectedIndex = 5;
                 labelLanguage.Visible = true;
                 comboBoxLanguage.Visible = true;
                 comboBoxLanguage.Items.Clear();
@@ -1723,15 +1772,22 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ExportPngXml_FormClosing(object sender, FormClosingEventArgs e)
         {
+            int width = 1920;
+            int height = 1080;
+            GetResolution(ref width, ref height);
+            string res = string.Format("{0}x{1}", width, height);
+
             if (_exportType == "VOBSUB")
             {
                 Configuration.Settings.Tools.ExportVobSubFontName = _subtitleFontName;
                 Configuration.Settings.Tools.ExportVobSubFontSize = (int)_subtitleFontSize;
+                Configuration.Settings.Tools.ExportVobSubVideoResolution = res;
             }
             else if (_exportType == "BLURAYSUP")
             {
                 Configuration.Settings.Tools.ExportBluRayFontName = _subtitleFontName;
-                Configuration.Settings.Tools.ExportBluRaybFontSize = (int)_subtitleFontSize;
+                Configuration.Settings.Tools.ExportBluRayFontSize = (int)_subtitleFontSize;
+                Configuration.Settings.Tools.ExportBluRayVideoResolution = res;
             }
         }
 

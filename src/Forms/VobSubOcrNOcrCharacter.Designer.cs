@@ -111,6 +111,7 @@
             // 
             // pictureBoxCharacter
             // 
+            this.pictureBoxCharacter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxCharacter.Cursor = System.Windows.Forms.Cursors.Cross;
             this.pictureBoxCharacter.Location = new System.Drawing.Point(183, 109);
             this.pictureBoxCharacter.Name = "pictureBoxCharacter";
@@ -327,12 +328,12 @@
             this.contextMenuLinesForeground.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.removeForegroundToolStripMenuItem});
             this.contextMenuLinesForeground.Name = "contextMenuStripLines";
-            this.contextMenuLinesForeground.Size = new System.Drawing.Size(153, 48);
+            this.contextMenuLinesForeground.Size = new System.Drawing.Size(118, 26);
             // 
             // removeForegroundToolStripMenuItem
             // 
             this.removeForegroundToolStripMenuItem.Name = "removeForegroundToolStripMenuItem";
-            this.removeForegroundToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeForegroundToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.removeForegroundToolStripMenuItem.Text = "Remove";
             this.removeForegroundToolStripMenuItem.Click += new System.EventHandler(this.removeForegroundToolStripMenuItem_Click_1);
             // 

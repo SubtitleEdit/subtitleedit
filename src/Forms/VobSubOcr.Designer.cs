@@ -59,6 +59,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
             this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
             this.groupBoxNOCR = new System.Windows.Forms.GroupBox();
+            this.buttonLineOcrEditLanguage = new System.Windows.Forms.Button();
+            this.buttonLineOcrNewLanguage = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.comboBoxNOcrLanguage = new System.Windows.Forms.ComboBox();
             this.checkBoxNOcrItalic = new System.Windows.Forms.CheckBox();
             this.checkBoxNOcrCorrect = new System.Windows.Forms.CheckBox();
             this.checkBoxRightToLeftNOCR = new System.Windows.Forms.CheckBox();
@@ -184,7 +188,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 298);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 276);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
@@ -396,6 +400,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxNOCR
             // 
+            this.groupBoxNOCR.Controls.Add(this.buttonLineOcrEditLanguage);
+            this.groupBoxNOCR.Controls.Add(this.buttonLineOcrNewLanguage);
+            this.groupBoxNOCR.Controls.Add(this.label2);
+            this.groupBoxNOCR.Controls.Add(this.comboBoxNOcrLanguage);
             this.groupBoxNOCR.Controls.Add(this.checkBoxNOcrItalic);
             this.groupBoxNOCR.Controls.Add(this.checkBoxNOcrCorrect);
             this.groupBoxNOCR.Controls.Add(this.checkBoxRightToLeftNOCR);
@@ -408,20 +416,59 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxNOCR.TabStop = false;
             this.groupBoxNOCR.Text = "nOCR";
             // 
+            // buttonLineOcrEditLanguage
+            // 
+            this.buttonLineOcrEditLanguage.Location = new System.Drawing.Point(210, 97);
+            this.buttonLineOcrEditLanguage.Name = "buttonLineOcrEditLanguage";
+            this.buttonLineOcrEditLanguage.Size = new System.Drawing.Size(68, 21);
+            this.buttonLineOcrEditLanguage.TabIndex = 41;
+            this.buttonLineOcrEditLanguage.Text = "Edit";
+            this.buttonLineOcrEditLanguage.UseVisualStyleBackColor = true;
+            this.buttonLineOcrEditLanguage.Click += new System.EventHandler(this.buttonLineOcrEditLanguage_Click);
+            // 
+            // buttonLineOcrNewLanguage
+            // 
+            this.buttonLineOcrNewLanguage.Location = new System.Drawing.Point(283, 97);
+            this.buttonLineOcrNewLanguage.Name = "buttonLineOcrNewLanguage";
+            this.buttonLineOcrNewLanguage.Size = new System.Drawing.Size(68, 21);
+            this.buttonLineOcrNewLanguage.TabIndex = 40;
+            this.buttonLineOcrNewLanguage.Text = "New";
+            this.buttonLineOcrNewLanguage.UseVisualStyleBackColor = true;
+            this.buttonLineOcrNewLanguage.Click += new System.EventHandler(this.buttonLineOcrNewLanguage_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(11, 101);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(54, 13);
+            this.label2.TabIndex = 35;
+            this.label2.Text = "Language";
+            // 
+            // comboBoxNOcrLanguage
+            // 
+            this.comboBoxNOcrLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxNOcrLanguage.FormattingEnabled = true;
+            this.comboBoxNOcrLanguage.Location = new System.Drawing.Point(74, 97);
+            this.comboBoxNOcrLanguage.Name = "comboBoxNOcrLanguage";
+            this.comboBoxNOcrLanguage.Size = new System.Drawing.Size(130, 21);
+            this.comboBoxNOcrLanguage.TabIndex = 34;
+            this.comboBoxNOcrLanguage.SelectedIndexChanged += new System.EventHandler(this.comboBoxNOcrLanguage_SelectedIndexChanged);
+            // 
             // checkBoxNOcrItalic
             // 
             this.checkBoxNOcrItalic.AutoSize = true;
-            this.checkBoxNOcrItalic.Location = new System.Drawing.Point(16, 81);
+            this.checkBoxNOcrItalic.Location = new System.Drawing.Point(15, 42);
             this.checkBoxNOcrItalic.Name = "checkBoxNOcrItalic";
-            this.checkBoxNOcrItalic.Size = new System.Drawing.Size(49, 17);
+            this.checkBoxNOcrItalic.Size = new System.Drawing.Size(92, 17);
             this.checkBoxNOcrItalic.TabIndex = 8;
-            this.checkBoxNOcrItalic.Text = "Italic";
+            this.checkBoxNOcrItalic.Text = "Contains italic";
             this.checkBoxNOcrItalic.UseVisualStyleBackColor = true;
             // 
             // checkBoxNOcrCorrect
             // 
             this.checkBoxNOcrCorrect.AutoSize = true;
-            this.checkBoxNOcrCorrect.Location = new System.Drawing.Point(16, 58);
+            this.checkBoxNOcrCorrect.Location = new System.Drawing.Point(235, 17);
             this.checkBoxNOcrCorrect.Name = "checkBoxNOcrCorrect";
             this.checkBoxNOcrCorrect.Size = new System.Drawing.Size(116, 17);
             this.checkBoxNOcrCorrect.TabIndex = 7;
@@ -431,7 +478,7 @@ namespace Nikse.SubtitleEdit.Forms
             // checkBoxRightToLeftNOCR
             // 
             this.checkBoxRightToLeftNOCR.AutoSize = true;
-            this.checkBoxRightToLeftNOCR.Location = new System.Drawing.Point(16, 105);
+            this.checkBoxRightToLeftNOCR.Location = new System.Drawing.Point(235, 40);
             this.checkBoxRightToLeftNOCR.Name = "checkBoxRightToLeftNOCR";
             this.checkBoxRightToLeftNOCR.Size = new System.Drawing.Size(83, 17);
             this.checkBoxRightToLeftNOCR.TabIndex = 6;
@@ -440,7 +487,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownNumberOfPixelsIsSpaceNOCR
             // 
-            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Location = new System.Drawing.Point(122, 22);
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Location = new System.Drawing.Point(122, 17);
             this.numericUpDownNumberOfPixelsIsSpaceNOCR.Maximum = new decimal(new int[] {
             50,
             0,
@@ -455,7 +502,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.numericUpDownNumberOfPixelsIsSpaceNOCR.Size = new System.Drawing.Size(50, 21);
             this.numericUpDownNumberOfPixelsIsSpaceNOCR.TabIndex = 5;
             this.numericUpDownNumberOfPixelsIsSpaceNOCR.Value = new decimal(new int[] {
-            1,
+            12,
             0,
             0,
             0});
@@ -463,7 +510,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelNumberOfPixelsIsSpaceNOCR
             // 
             this.labelNumberOfPixelsIsSpaceNOCR.AutoSize = true;
-            this.labelNumberOfPixelsIsSpaceNOCR.Location = new System.Drawing.Point(12, 25);
+            this.labelNumberOfPixelsIsSpaceNOCR.Location = new System.Drawing.Point(12, 20);
             this.labelNumberOfPixelsIsSpaceNOCR.Name = "labelNumberOfPixelsIsSpaceNOCR";
             this.labelNumberOfPixelsIsSpaceNOCR.Size = new System.Drawing.Size(104, 13);
             this.labelNumberOfPixelsIsSpaceNOCR.TabIndex = 4;
@@ -876,12 +923,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripGuessesUsed.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemClearGuesses});
             this.contextMenuStripGuessesUsed.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripGuessesUsed.Size = new System.Drawing.Size(153, 48);
+            this.contextMenuStripGuessesUsed.Size = new System.Drawing.Size(102, 26);
             // 
             // toolStripMenuItemClearGuesses
             // 
             this.toolStripMenuItemClearGuesses.Name = "toolStripMenuItemClearGuesses";
-            this.toolStripMenuItemClearGuesses.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemClearGuesses.Size = new System.Drawing.Size(101, 22);
             this.toolStripMenuItemClearGuesses.Text = "Clear";
             this.toolStripMenuItemClearGuesses.Click += new System.EventHandler(this.toolStripMenuItemClearGuesses_Click);
             // 
@@ -1443,5 +1490,9 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxNOcrItalic;
         private System.Windows.Forms.Button buttonGetTesseractDictionaries;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInspectNOcrMatches;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox comboBoxNOcrLanguage;
+        private System.Windows.Forms.Button buttonLineOcrEditLanguage;
+        private System.Windows.Forms.Button buttonLineOcrNewLanguage;
     }
 }

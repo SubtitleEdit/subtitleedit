@@ -116,8 +116,10 @@ namespace Nikse.SubtitleEdit.Logic
         public bool ModifySelectionCaseSensitive { get; set; }
         public string ExportVobSubFontName { get; set; }
         public int ExportVobSubFontSize { get; set; }
+        public string ExportVobSubVideoResolution { get; set; }
         public string ExportBluRayFontName { get; set; }
-        public int ExportBluRaybFontSize { get; set; }
+        public int ExportBluRayFontSize { get; set; }
+        public string ExportBluRayVideoResolution { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public string ImportTextSplitting { get; set; }
         public bool ImportTextMergeShortLines { get; set; }
@@ -571,6 +573,9 @@ namespace Nikse.SubtitleEdit.Logic
         public bool LineOcrAdvancedItalic { get; set; }
         public string LineOcrLastLanguages { get; set; }
         public string LineOcrLastSpellcheck { get; set; }
+        public int LineOcrXOrMorePixelsMakesSpace { get; set; }
+        public int LineOcrMinLineHeight { get; set; }
+        public int LineOcrMaxLineHeight { get; set; }
 
         public VobSubOcrSettings()
         {
@@ -1376,12 +1381,18 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportVobSubFontSize");
             if (subNode != null)
                 settings.Tools.ExportVobSubFontSize = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportVobSubVideoResolution");
+            if (subNode != null)
+                settings.Tools.ExportVobSubVideoResolution = subNode.InnerText;
             subNode = node.SelectSingleNode("ExportBluRayFontName");
             if (subNode != null)
                 settings.Tools.ExportBluRayFontName = subNode.InnerText;
-            subNode = node.SelectSingleNode("ExportBluRaybFontSize");
+            subNode = node.SelectSingleNode("ExportBluRayFontSize");
             if (subNode != null)
-                settings.Tools.ExportBluRaybFontSize = Convert.ToInt32(subNode.InnerText);
+                settings.Tools.ExportBluRayFontSize = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportBluRayVideoResolution");
+            if (subNode != null)
+                settings.Tools.ExportBluRayVideoResolution = subNode.InnerText;
             subNode = node.SelectSingleNode("FixCommonErrorsFixOverlapAllowEqualEndStart");
             if (subNode != null)
                 settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart = Convert.ToBoolean(subNode.InnerText);
@@ -1723,7 +1734,16 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.VobSubOcr.LineOcrLastLanguages = subNode.InnerText;
             subNode = node.SelectSingleNode("LineOcrLastSpellcheck");
             if (subNode != null)
-                settings.VobSubOcr.LineOcrLastSpellcheck = subNode.InnerText;            
+                settings.VobSubOcr.LineOcrLastSpellcheck = subNode.InnerText;
+            subNode = node.SelectSingleNode("LineOcrXOrMorePixelsMakesSpace");
+            if (subNode != null)
+                settings.VobSubOcr.LineOcrXOrMorePixelsMakesSpace = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("LineOcrMinLineHeight");
+            if (subNode != null)
+                settings.VobSubOcr.LineOcrMinLineHeight = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("LineOcrMaxLineHeight");
+            if (subNode != null)
+                settings.VobSubOcr.LineOcrMaxLineHeight = Convert.ToInt32(subNode.InnerText);
 
             foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
             {
@@ -2257,8 +2277,10 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ModifySelectionCaseSensitive", settings.Tools.ModifySelectionCaseSensitive.ToString());
             textWriter.WriteElementString("ExportVobSubFontName", settings.Tools.ExportVobSubFontName);
             textWriter.WriteElementString("ExportVobSubFontSize", settings.Tools.ExportVobSubFontSize.ToString());
+            textWriter.WriteElementString("ExportVobSubVideoResolution", settings.Tools.ExportVobSubVideoResolution);
             textWriter.WriteElementString("ExportBluRayFontName", settings.Tools.ExportBluRayFontName);
-            textWriter.WriteElementString("ExportBluRaybFontSize", settings.Tools.ExportBluRaybFontSize.ToString());
+            textWriter.WriteElementString("ExportBluRayFontSize", settings.Tools.ExportBluRayFontSize.ToString());
+            textWriter.WriteElementString("ExportBluRayVideoResolution", settings.Tools.ExportBluRayVideoResolution);
             textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
             textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
             textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
@@ -2385,6 +2407,9 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("LineOcrAdvancedItalic", settings.VobSubOcr.LineOcrAdvancedItalic.ToString());
             textWriter.WriteElementString("LineOcrLastLanguages", settings.VobSubOcr.LineOcrLastLanguages);
             textWriter.WriteElementString("LineOcrLastSpellcheck", settings.VobSubOcr.LineOcrLastSpellcheck);
+            textWriter.WriteElementString("LineOcrXOrMorePixelsMakesSpace", settings.VobSubOcr.LineOcrXOrMorePixelsMakesSpace.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("LineOcrMinLineHeight", settings.VobSubOcr.LineOcrMinLineHeight.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("LineOcrMaxLineHeight", settings.VobSubOcr.LineOcrMaxLineHeight.ToString(CultureInfo.InvariantCulture));           
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("MultipleSearchAndReplaceList", "");

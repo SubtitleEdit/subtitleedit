@@ -12,8 +12,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private List<NOcrChar> _nocrChars;
         private NOcrChar _nocrChar = null;
-        private double _zoomFactor = 3.0;
-        private Bitmap bitmap;        
+        private double _zoomFactor = 5.0;
+        bool _drawLineOn;
+        bool _startDone;
+        Point _start;
+        Point _end;
+        int _mx;
+        int _my;
+        private Bitmap bitmap;
+        List<NOcrChar> _history = new List<NOcrChar>();
+        int _historyIndex = -1;
 
         public VobSubNOcrEdit(List<NOcrChar> nocrChars, Bitmap bitmap)
         {
@@ -22,6 +30,21 @@ namespace Nikse.SubtitleEdit.Forms
             this._nocrChars = nocrChars;
             this.bitmap = bitmap;
 
+            FillComboBox();
+
+            if (bitmap != null)
+            {
+                pictureBoxCharacter.Image = bitmap;
+                SizePictureBox();                
+            }
+
+            labelInfo.Text = string.Format("{0} elements in database", nocrChars.Count);
+
+            //buttonMakeItalic.Visible = false;
+        }
+
+        private void FillComboBox()
+        {
             List<string> list = new List<string>();
             foreach (NOcrChar c in _nocrChars)
             {
@@ -34,21 +57,26 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxTexts.Items.Add(s);
             }
-
-            if (bitmap != null)
-            {
-                pictureBoxCharacter.Image = bitmap;
-                SizePictureBox();                
-            }
-
-            labelInfo.Text = string.Format("{0} elements in database", nocrChars.Count);
         }
 
         private void VobSubNOcrEdit_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
             {
-                DialogResult = DialogResult.Cancel;
+                e.SuppressKeyPress = true;
+                _drawLineOn = false;
+                _startDone = false;
+                pictureBoxCharacter.Invalidate();
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z)
+            {
+                e.SuppressKeyPress = true;
+                Undo();
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Y)
+            {
+                e.SuppressKeyPress = true;
+                Redo();
             }
         }
 
@@ -80,6 +108,21 @@ namespace Nikse.SubtitleEdit.Forms
                 _zoomFactor--;
                 SizePictureBox();
             }
+        }
+
+        private void ShowOcrPoints()
+        {
+            listBoxLinesForeground.Items.Clear();
+            foreach (NOcrPoint op in _nocrChar.LinesForeground)
+            {
+                listBoxLinesForeground.Items.Add(op);
+            }
+            listBoxlinesBackground.Items.Clear();
+            foreach (NOcrPoint op in _nocrChar.LinesBackground)
+            {
+                listBoxlinesBackground.Items.Add(op);
+            }
+            pictureBoxCharacter.Invalidate();
         }
 
         private bool IsMatch()
@@ -130,6 +173,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 pictureBoxCharacter.Invalidate();
                 groupBoxCurrentCompareImage.Enabled = false;
+                listBoxLinesForeground.Items.Clear();
+                listBoxlinesBackground.Items.Clear();
             }
             else
             {
@@ -149,7 +194,17 @@ namespace Nikse.SubtitleEdit.Forms
                         groupBoxCurrentCompareImage.BackColor = Control.DefaultBackColor;
                     }
                 }
+                _drawLineOn = false;
+                _history = new List<NOcrChar>();
+                _historyIndex = -1;
                 
+                bitmap = new Bitmap(_nocrChar.Width, _nocrChar.Height);
+                NikseBitmap nbmp = new NikseBitmap(bitmap);
+                nbmp.Fill(Color.White);
+                bitmap = nbmp.GetBitmap();
+                pictureBoxCharacter.Image = bitmap;
+                SizePictureBox();
+                ShowOcrPoints();
             }
         }
 
@@ -176,21 +231,56 @@ namespace Nikse.SubtitleEdit.Forms
             if (_nocrChar == null)
                 return;
 
+            NOcrPoint selectedPoint = null;
+            if (listBoxLinesForeground.Focused && listBoxLinesForeground.SelectedIndex >= 0)
+            {
+                selectedPoint = (NOcrPoint)listBoxLinesForeground.Items[listBoxLinesForeground.SelectedIndex];
+            }
+            else if (listBoxlinesBackground.Focused && listBoxlinesBackground.SelectedIndex >= 0)
+            {
+                selectedPoint = (NOcrPoint)listBoxlinesBackground.Items[listBoxlinesBackground.SelectedIndex];
+            }
+
             var foreground = new Pen(new SolidBrush(Color.Green));
             var background = new Pen(new SolidBrush(Color.Red));
+            var selPenF = new Pen(new SolidBrush(Color.Green), 3);
+            var selPenB = new Pen(new SolidBrush(Color.Red), 3);
             if (pictureBoxCharacter.Image != null)
             {
                 foreach (NOcrPoint op in _nocrChar.LinesForeground)
                 {
-                    e.Graphics.DrawLine(foreground, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
+                    Point start = op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
+                    Point end = op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
+                    if (start.X == end.X && start.Y == end.Y)
+                        end.X++;
+                    e.Graphics.DrawLine(foreground, start, end);
+                    if (op == selectedPoint)
+                        e.Graphics.DrawLine(selPenF, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
                 }
                 foreach (NOcrPoint op in _nocrChar.LinesBackground)
                 {
-                    e.Graphics.DrawLine(background, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
+                    Point start = op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
+                    Point end = op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
+                    e.Graphics.DrawLine(background, start, end);
+                    if (op == selectedPoint)
+                        e.Graphics.DrawLine(selPenB, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
                 }
-
-               
             }
+
+            if (_drawLineOn)
+            {
+                if (_startDone)
+                {
+                    var p = foreground;
+                    if (radioButtonCold.Checked)
+                        p = background;
+                    e.Graphics.DrawLine(p, new Point((int)Math.Round(_start.X * _zoomFactor), (int)Math.Round(_start.Y * _zoomFactor)), new Point(_mx, _my));
+                }
+            }
+            foreground.Dispose();
+            background.Dispose();
+            selPenF.Dispose();
+            selPenB.Dispose();
         }
 
         private Point MakePointItalic(Point p, int height)
@@ -230,9 +320,146 @@ namespace Nikse.SubtitleEdit.Forms
 
         }
 
-        private void buttonAddBetterMatch_Click(object sender, EventArgs e)
+        private void buttonDelete_Click(object sender, EventArgs e)
         {
+            if (listBoxFileNames.Items.Count == 0 || _nocrChar == null)
+                return;
 
+            _nocrChars.Remove(_nocrChar);
+            FillComboBox();
+            if (comboBoxTexts.Items.Count > 0)
+                comboBoxTexts.SelectedIndex = 0;
+        }      
+
+        private void buttonOK_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+        }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+        }
+
+        private void AddHistoryItem(NOcrChar nocrChar)
+        {
+            if (_historyIndex > 0 && _historyIndex < _history.Count - 1)
+            {
+                while (_history.Count > _historyIndex + 1)
+                    _history.RemoveAt(_history.Count - 1);
+                _historyIndex = _history.Count - 1;
+            }
+            _history.Add(new NOcrChar(nocrChar));
+            _historyIndex++;
+        }
+
+        private void Redo()
+        {
+            if (_history.Count > 0 && _historyIndex < _history.Count - 1)
+            {
+                _historyIndex++;
+                _nocrChar = new NOcrChar(_history[_historyIndex]);
+                ShowOcrPoints();
+            }
+        }
+
+        private void Undo()
+        {
+            _drawLineOn = false;
+            _startDone = false;
+            if (_history.Count > 0 && _historyIndex > 0)
+            {
+                _historyIndex--;
+                _nocrChar = new NOcrChar(_history[_historyIndex]);
+            }
+            else if (_historyIndex == 0)
+            {
+                var c = new NOcrChar(_nocrChar);
+                c.LinesForeground.Clear();
+                c.LinesBackground.Clear();
+                _nocrChar = c;
+                _historyIndex--;
+            }
+            ShowOcrPoints();
+        }
+
+        private void pictureBoxCharacter_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (_drawLineOn)
+            {
+                if (_startDone)
+                {
+                    _end = new Point((int)Math.Round(e.Location.X / _zoomFactor), (int)Math.Round(e.Location.Y / _zoomFactor));
+                    _nocrChar.Width = pictureBoxCharacter.Image.Width;
+                    _nocrChar.Height = pictureBoxCharacter.Image.Height;
+                    if (radioButtonHot.Checked)
+                        _nocrChar.LinesForeground.Add(new NOcrPoint(_start, _end));
+                    else
+                        _nocrChar.LinesBackground.Add(new NOcrPoint(_start, _end));
+                    _drawLineOn = false;
+                    pictureBoxCharacter.Invalidate();
+                    ShowOcrPoints();
+                    AddHistoryItem(_nocrChar);
+
+                    if ((ModifierKeys & Keys.Control) == Keys.Control)
+                    {
+                        _start = new Point((int)Math.Round(e.Location.X / _zoomFactor), (int)Math.Round(e.Location.Y / _zoomFactor));
+                        _startDone = true;
+                        _drawLineOn = true;
+                        pictureBoxCharacter.Invalidate();
+                    }
+                }
+                else
+                {
+                    _start = new Point((int)Math.Round(e.Location.X / _zoomFactor), (int)Math.Round(e.Location.Y / _zoomFactor));
+                    _startDone = true;
+                    pictureBoxCharacter.Invalidate();
+                }
+            }
+            else
+            {
+                _startDone = false;
+                _drawLineOn = true;
+                _start = new Point((int)Math.Round(e.Location.X / _zoomFactor), (int)Math.Round(e.Location.Y / _zoomFactor));
+                _startDone = true;
+                pictureBoxCharacter.Invalidate();
+            }
+        }
+
+        private void pictureBoxCharacter_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_drawLineOn)
+            {
+                _mx = e.X;
+                _my = e.Y;
+                pictureBoxCharacter.Invalidate();
+            }
+        }
+
+        private void listBoxLinesForeground_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pictureBoxCharacter.Invalidate();
+        }
+
+        private void listBoxlinesBackground_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pictureBoxCharacter.Invalidate();
+        }
+
+        private void checkBoxItalic_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_nocrChar != null)
+            {
+                _nocrChar.Italic = checkBoxItalic.Checked;
+            }
+        }
+
+        private void textBoxText_TextChanged(object sender, EventArgs e)
+        {
+            if (_nocrChar != null)
+            {
+                _nocrChar.Text = textBoxText.Text;
+            }
         }
 
     }
