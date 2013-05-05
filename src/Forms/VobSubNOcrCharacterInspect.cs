@@ -174,7 +174,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _nocrChar.Text = textBoxText.Text;
                 _nocrChar.Italic = checkBoxItalic.Checked;
-                _vobSubOcr.SaveNOcr(Path.Combine(Configuration.DictionariesFolder, "nOCR_eng.xml"));
+                _vobSubOcr.SaveNOcrWithCurrentLanguage();
                 MessageBox.Show("nOCR saved!");
             }
         }
@@ -185,7 +185,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_nocrChar != null)
             {
                 _nocrChars.Remove(_nocrChar);
-                _vobSubOcr.SaveNOcr(Path.Combine(Configuration.DictionariesFolder, "nOCR_eng.xml"));
+                _vobSubOcr.SaveNOcrWithCurrentLanguage();
                 MessageBox.Show("nOCR saved!");
             }
         }
@@ -223,7 +223,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (result == DialogResult.OK)
             {
                 _nocrChars.Add(vobSubOcrNOcrCharacter.NOcrChar);
-                _vobSubOcr.SaveNOcr(Path.Combine(Configuration.DictionariesFolder, "nOCR_eng.xml"));
+                _vobSubOcr.SaveNOcrWithCurrentLanguage();
                 DialogResult = DialogResult.OK;
             }
         }

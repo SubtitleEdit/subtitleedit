@@ -33,19 +33,27 @@
             this.listBoxFileNames = new System.Windows.Forms.ListBox();
             this.comboBoxTexts = new System.Windows.Forms.ComboBox();
             this.groupBoxCurrentCompareImage = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.radioButtonCold = new System.Windows.Forms.RadioButton();
+            this.radioButtonHot = new System.Windows.Forms.RadioButton();
+            this.label2 = new System.Windows.Forms.Label();
+            this.listBoxlinesBackground = new System.Windows.Forms.ListBox();
+            this.labelLines = new System.Windows.Forms.Label();
+            this.listBoxLinesForeground = new System.Windows.Forms.ListBox();
             this.buttonMakeItalic = new System.Windows.Forms.Button();
             this.buttonZoomOut = new System.Windows.Forms.Button();
             this.buttonZoomIn = new System.Windows.Forms.Button();
             this.labelCharacters = new System.Windows.Forms.Label();
             this.pictureBoxCharacter = new System.Windows.Forms.PictureBox();
-            this.buttonAddBetterMatch = new System.Windows.Forms.Button();
             this.checkBoxItalic = new System.Windows.Forms.CheckBox();
             this.labelTextAssociatedWithImage = new System.Windows.Forms.Label();
             this.buttonDelete = new System.Windows.Forms.Button();
-            this.buttonUpdate = new System.Windows.Forms.Button();
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.labelInfo = new System.Windows.Forms.Label();
+            this.buttonOK = new System.Windows.Forms.Button();
+            this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxCurrentCompareImage.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
             this.SuspendLayout();
             // 
@@ -74,7 +82,7 @@
             this.listBoxFileNames.FormattingEnabled = true;
             this.listBoxFileNames.Location = new System.Drawing.Point(12, 72);
             this.listBoxFileNames.Name = "listBoxFileNames";
-            this.listBoxFileNames.Size = new System.Drawing.Size(240, 316);
+            this.listBoxFileNames.Size = new System.Drawing.Size(240, 355);
             this.listBoxFileNames.TabIndex = 7;
             this.listBoxFileNames.SelectedIndexChanged += new System.EventHandler(this.listBoxFileNames_SelectedIndexChanged);
             // 
@@ -93,38 +101,110 @@
             this.groupBoxCurrentCompareImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxCurrentCompareImage.Controls.Add(this.groupBox2);
+            this.groupBoxCurrentCompareImage.Controls.Add(this.label2);
+            this.groupBoxCurrentCompareImage.Controls.Add(this.listBoxlinesBackground);
+            this.groupBoxCurrentCompareImage.Controls.Add(this.labelLines);
+            this.groupBoxCurrentCompareImage.Controls.Add(this.listBoxLinesForeground);
             this.groupBoxCurrentCompareImage.Controls.Add(this.buttonMakeItalic);
             this.groupBoxCurrentCompareImage.Controls.Add(this.buttonZoomOut);
             this.groupBoxCurrentCompareImage.Controls.Add(this.buttonZoomIn);
             this.groupBoxCurrentCompareImage.Controls.Add(this.labelCharacters);
             this.groupBoxCurrentCompareImage.Controls.Add(this.pictureBoxCharacter);
-            this.groupBoxCurrentCompareImage.Controls.Add(this.buttonAddBetterMatch);
             this.groupBoxCurrentCompareImage.Controls.Add(this.checkBoxItalic);
             this.groupBoxCurrentCompareImage.Controls.Add(this.labelTextAssociatedWithImage);
             this.groupBoxCurrentCompareImage.Controls.Add(this.buttonDelete);
-            this.groupBoxCurrentCompareImage.Controls.Add(this.buttonUpdate);
             this.groupBoxCurrentCompareImage.Controls.Add(this.textBoxText);
             this.groupBoxCurrentCompareImage.Location = new System.Drawing.Point(258, 12);
             this.groupBoxCurrentCompareImage.Name = "groupBoxCurrentCompareImage";
-            this.groupBoxCurrentCompareImage.Size = new System.Drawing.Size(442, 377);
+            this.groupBoxCurrentCompareImage.Size = new System.Drawing.Size(442, 415);
             this.groupBoxCurrentCompareImage.TabIndex = 15;
             this.groupBoxCurrentCompareImage.TabStop = false;
             this.groupBoxCurrentCompareImage.Text = "Current compare image";
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.radioButtonCold);
+            this.groupBox2.Controls.Add(this.radioButtonHot);
+            this.groupBox2.Location = new System.Drawing.Point(6, 89);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(157, 61);
+            this.groupBox2.TabIndex = 42;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "New lines are";
+            // 
+            // radioButtonCold
+            // 
+            this.radioButtonCold.AutoSize = true;
+            this.radioButtonCold.Location = new System.Drawing.Point(6, 40);
+            this.radioButtonCold.Name = "radioButtonCold";
+            this.radioButtonCold.Size = new System.Drawing.Size(102, 17);
+            this.radioButtonCold.TabIndex = 1;
+            this.radioButtonCold.Text = "NOT foreground";
+            this.radioButtonCold.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonHot
+            // 
+            this.radioButtonHot.AutoSize = true;
+            this.radioButtonHot.Checked = true;
+            this.radioButtonHot.Location = new System.Drawing.Point(6, 17);
+            this.radioButtonHot.Name = "radioButtonHot";
+            this.radioButtonHot.Size = new System.Drawing.Size(79, 17);
+            this.radioButtonHot.TabIndex = 0;
+            this.radioButtonHot.TabStop = true;
+            this.radioButtonHot.Text = "Foreground";
+            this.radioButtonHot.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(9, 285);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(110, 13);
+            this.label2.TabIndex = 41;
+            this.label2.Text = "Lines - not foreground";
+            // 
+            // listBoxlinesBackground
+            // 
+            this.listBoxlinesBackground.FormattingEnabled = true;
+            this.listBoxlinesBackground.Location = new System.Drawing.Point(12, 301);
+            this.listBoxlinesBackground.Name = "listBoxlinesBackground";
+            this.listBoxlinesBackground.Size = new System.Drawing.Size(151, 95);
+            this.listBoxlinesBackground.TabIndex = 40;
+            this.listBoxlinesBackground.SelectedIndexChanged += new System.EventHandler(this.listBoxlinesBackground_SelectedIndexChanged);
+            // 
+            // labelLines
+            // 
+            this.labelLines.AutoSize = true;
+            this.labelLines.Location = new System.Drawing.Point(9, 163);
+            this.labelLines.Name = "labelLines";
+            this.labelLines.Size = new System.Drawing.Size(92, 13);
+            this.labelLines.TabIndex = 39;
+            this.labelLines.Text = "Lines - foreground";
+            // 
+            // listBoxLinesForeground
+            // 
+            this.listBoxLinesForeground.FormattingEnabled = true;
+            this.listBoxLinesForeground.Location = new System.Drawing.Point(12, 179);
+            this.listBoxLinesForeground.Name = "listBoxLinesForeground";
+            this.listBoxLinesForeground.Size = new System.Drawing.Size(151, 95);
+            this.listBoxLinesForeground.TabIndex = 38;
+            this.listBoxLinesForeground.SelectedIndexChanged += new System.EventHandler(this.listBoxLinesForeground_SelectedIndexChanged);
+            // 
             // buttonMakeItalic
             // 
             this.buttonMakeItalic.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonMakeItalic.Location = new System.Drawing.Point(151, 149);
+            this.buttonMakeItalic.Location = new System.Drawing.Point(299, 19);
             this.buttonMakeItalic.Name = "buttonMakeItalic";
-            this.buttonMakeItalic.Size = new System.Drawing.Size(109, 23);
+            this.buttonMakeItalic.Size = new System.Drawing.Size(137, 23);
             this.buttonMakeItalic.TabIndex = 37;
-            this.buttonMakeItalic.Text = "Make italic";
+            this.buttonMakeItalic.Text = "Make italic (DEV TEST)";
             this.buttonMakeItalic.UseVisualStyleBackColor = true;
             this.buttonMakeItalic.Click += new System.EventHandler(this.buttonMakeItalic_Click);
             // 
             // buttonZoomOut
             // 
-            this.buttonZoomOut.Location = new System.Drawing.Point(89, 149);
+            this.buttonZoomOut.Location = new System.Drawing.Point(269, 110);
             this.buttonZoomOut.Name = "buttonZoomOut";
             this.buttonZoomOut.Size = new System.Drawing.Size(25, 23);
             this.buttonZoomOut.TabIndex = 36;
@@ -134,7 +214,7 @@
             // 
             // buttonZoomIn
             // 
-            this.buttonZoomIn.Location = new System.Drawing.Point(120, 149);
+            this.buttonZoomIn.Location = new System.Drawing.Point(300, 110);
             this.buttonZoomIn.Name = "buttonZoomIn";
             this.buttonZoomIn.Size = new System.Drawing.Size(25, 23);
             this.buttonZoomIn.TabIndex = 35;
@@ -145,7 +225,7 @@
             // labelCharacters
             // 
             this.labelCharacters.AutoSize = true;
-            this.labelCharacters.Location = new System.Drawing.Point(19, 160);
+            this.labelCharacters.Location = new System.Drawing.Point(199, 121);
             this.labelCharacters.Name = "labelCharacters";
             this.labelCharacters.Size = new System.Drawing.Size(64, 13);
             this.labelCharacters.TabIndex = 34;
@@ -153,24 +233,16 @@
             // 
             // pictureBoxCharacter
             // 
-            this.pictureBoxCharacter.Location = new System.Drawing.Point(17, 181);
+            this.pictureBoxCharacter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxCharacter.Location = new System.Drawing.Point(197, 142);
             this.pictureBoxCharacter.Name = "pictureBoxCharacter";
             this.pictureBoxCharacter.Size = new System.Drawing.Size(99, 47);
             this.pictureBoxCharacter.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBoxCharacter.TabIndex = 33;
             this.pictureBoxCharacter.TabStop = false;
             this.pictureBoxCharacter.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBoxCharacter_Paint);
-            // 
-            // buttonAddBetterMatch
-            // 
-            this.buttonAddBetterMatch.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAddBetterMatch.Location = new System.Drawing.Point(120, 98);
-            this.buttonAddBetterMatch.Name = "buttonAddBetterMatch";
-            this.buttonAddBetterMatch.Size = new System.Drawing.Size(140, 21);
-            this.buttonAddBetterMatch.TabIndex = 28;
-            this.buttonAddBetterMatch.Text = "Add better match";
-            this.buttonAddBetterMatch.UseVisualStyleBackColor = true;
-            this.buttonAddBetterMatch.Click += new System.EventHandler(this.buttonAddBetterMatch_Click);
+            this.pictureBoxCharacter.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBoxCharacter_MouseClick);
+            this.pictureBoxCharacter.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBoxCharacter_MouseMove);
             // 
             // checkBoxItalic
             // 
@@ -181,6 +253,7 @@
             this.checkBoxItalic.TabIndex = 2;
             this.checkBoxItalic.Text = "Is &italic";
             this.checkBoxItalic.UseVisualStyleBackColor = true;
+            this.checkBoxItalic.CheckedChanged += new System.EventHandler(this.checkBoxItalic_CheckedChanged);
             // 
             // labelTextAssociatedWithImage
             // 
@@ -194,44 +267,62 @@
             // buttonDelete
             // 
             this.buttonDelete.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonDelete.Location = new System.Drawing.Point(120, 62);
+            this.buttonDelete.Location = new System.Drawing.Point(107, 35);
             this.buttonDelete.Name = "buttonDelete";
             this.buttonDelete.Size = new System.Drawing.Size(140, 21);
             this.buttonDelete.TabIndex = 4;
-            this.buttonDelete.Text = "Delete ";
+            this.buttonDelete.Text = "Delete character";
             this.buttonDelete.UseVisualStyleBackColor = true;
-            // 
-            // buttonUpdate
-            // 
-            this.buttonUpdate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonUpdate.Location = new System.Drawing.Point(120, 35);
-            this.buttonUpdate.Name = "buttonUpdate";
-            this.buttonUpdate.Size = new System.Drawing.Size(140, 21);
-            this.buttonUpdate.TabIndex = 3;
-            this.buttonUpdate.Text = "Update";
-            this.buttonUpdate.UseVisualStyleBackColor = true;
+            this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
             // 
             // textBoxText
             // 
             this.textBoxText.Location = new System.Drawing.Point(14, 35);
             this.textBoxText.Name = "textBoxText";
-            this.textBoxText.Size = new System.Drawing.Size(100, 20);
+            this.textBoxText.Size = new System.Drawing.Size(87, 20);
             this.textBoxText.TabIndex = 1;
+            this.textBoxText.TextChanged += new System.EventHandler(this.textBoxText_TextChanged);
             // 
             // labelInfo
             // 
+            this.labelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelInfo.AutoSize = true;
-            this.labelInfo.Location = new System.Drawing.Point(12, 404);
+            this.labelInfo.Location = new System.Drawing.Point(12, 446);
             this.labelInfo.Name = "labelInfo";
             this.labelInfo.Size = new System.Drawing.Size(47, 13);
             this.labelInfo.TabIndex = 16;
             this.labelInfo.Text = "labelInfo";
             // 
+            // buttonOK
+            // 
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOK.Location = new System.Drawing.Point(543, 437);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.TabIndex = 17;
+            this.buttonOK.Text = "&OK";
+            this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            // 
+            // buttonCancel
+            // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCancel.Location = new System.Drawing.Point(625, 437);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.TabIndex = 18;
+            this.buttonCancel.Text = "C&ancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
             // VobSubNOcrEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(712, 426);
+            this.ClientSize = new System.Drawing.Size(712, 468);
+            this.Controls.Add(this.buttonOK);
+            this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.groupBoxCurrentCompareImage);
             this.Controls.Add(this.labelImageCompareFiles);
@@ -247,6 +338,8 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubNOcrEdit_KeyDown);
             this.groupBoxCurrentCompareImage.ResumeLayout(false);
             this.groupBoxCurrentCompareImage.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -264,13 +357,20 @@
         private System.Windows.Forms.Button buttonZoomIn;
         private System.Windows.Forms.Label labelCharacters;
         private System.Windows.Forms.PictureBox pictureBoxCharacter;
-        private System.Windows.Forms.Button buttonAddBetterMatch;
         private System.Windows.Forms.CheckBox checkBoxItalic;
         private System.Windows.Forms.Label labelTextAssociatedWithImage;
         private System.Windows.Forms.Button buttonDelete;
-        private System.Windows.Forms.Button buttonUpdate;
         private System.Windows.Forms.TextBox textBoxText;
         private System.Windows.Forms.Button buttonMakeItalic;
         private System.Windows.Forms.Label labelInfo;
+        private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton radioButtonCold;
+        private System.Windows.Forms.RadioButton radioButtonHot;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ListBox listBoxlinesBackground;
+        private System.Windows.Forms.Label labelLines;
+        private System.Windows.Forms.ListBox listBoxLinesForeground;
     }
 }

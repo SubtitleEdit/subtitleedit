@@ -184,6 +184,56 @@ namespace Nikse.SubtitleEdit.Logic
             return parts;
         }
 
+        public static List<ImageSplitterItem> SplitVertical(Bitmap bmp, int lineMinHeight)
+        { // split into lines
+            int startY = 0;
+            int size = 0;
+            var parts = new List<ImageSplitterItem>();
+            for (int y = 0; y < bmp.Height; y++)
+            {
+                bool allTransparent = true;
+                for (int x = 0; x < bmp.Width; x++)
+                {
+                    Color c = bmp.GetPixel(x, y);
+                    if (c.A != 0)
+                    {
+                        allTransparent = false;
+                        break;
+                    }
+                }
+                if (allTransparent)
+                {
+                    if (size > 2 && size <= lineMinHeight)
+                    {
+                        size++; // at least 5 pixels, like top of 'i'
+                    }
+                    else
+                    {
+                        if (size > 2)
+                        {
+                            Bitmap part = Copy(bmp, new Rectangle(0, startY, bmp.Width, size + 1));
+                            //                            part.Save("c:\\line_0_to_width.bmp");
+                            parts.Add(new ImageSplitterItem(0, startY, part));
+                            //                            bmp.Save("c:\\original.bmp");
+                        }
+                        size = 0;
+                        startY = y;
+                    }
+                }
+                else
+                {
+                    size++;
+                }
+
+            }
+            if (size > 2)
+            {
+                Bitmap part = Copy(bmp, new Rectangle(0, startY, bmp.Width, size + 1));
+                parts.Add(new ImageSplitterItem(0, startY, part));
+            }
+            return parts;
+        }
+
         public static int IsBitmapsAlike(Bitmap bmp1, Bitmap bmp2)
         {
             int different = 0;
@@ -463,8 +513,36 @@ namespace Nikse.SubtitleEdit.Logic
             var list = new List<ImageSplitterItem>();
 
             // split into seperate lines
-            List<ImageSplitterItem> verticalBitmaps = SplitVertical(bmp);
+            List<ImageSplitterItem> verticalBitmaps = SplitVertical(bmp, xOrMorePixelsMakesSpace);
 
+            if (!topToBottom)
+                verticalBitmaps.Reverse();
+
+            // split into letters
+            int lineCount = 0;
+            foreach (ImageSplitterItem b in verticalBitmaps)
+            {
+                if (lineCount > 0)
+                    list.Add(new ImageSplitterItem(Environment.NewLine));
+                var line = new List<ImageSplitterItem>();
+                foreach (ImageSplitterItem item in SplitHorizontal(b, xOrMorePixelsMakesSpace))
+                {
+                    item.ParentY = item.Y;
+                    line.Add(item);
+                }
+                if (rightToLeft)
+                    line.Reverse();
+                foreach (ImageSplitterItem item in line)
+                    list.Add(item);
+                lineCount++;
+            }
+
+            return list;
+        }
+
+        public static List<ImageSplitterItem> SplitBitmapToLetters(List<ImageSplitterItem> verticalBitmaps, int xOrMorePixelsMakesSpace, bool rightToLeft, bool topToBottom)
+        {
+            var list = new List<ImageSplitterItem>();
             if (!topToBottom)
                 verticalBitmaps.Reverse();
 
