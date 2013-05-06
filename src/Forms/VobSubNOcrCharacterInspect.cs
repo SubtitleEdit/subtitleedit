@@ -16,6 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         private NOcrChar _nocrChar = null;
         private VobSubOcr _vobSubOcr;
         private Bitmap _bitmap;
+        private Bitmap _bitmap2;
         private double _zoomFactor = 3.0;
         private double _unItalicFactor;
 
@@ -36,6 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             NikseBitmap nbmp = new NikseBitmap(bitmap);
             nbmp.ReplaceNonWhiteWithTransparent();
             bitmap = nbmp.GetBitmap();
+            _bitmap2 = bitmap;
             _nocrChars = nocrChars;
             _matchList = new List<VobSubOcr.CompareMatch>();
             _vobSubOcr = vobSubOcr;
@@ -104,7 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _nocrChar = null;
                 pictureBoxCharacter.Invalidate();
-                groupBoxCurrentCompareImage.Enabled = false;
+          //      groupBoxCurrentCompareImage.Enabled = false;
                 buttonEditDB.Enabled = true;
                 buttonAddBetterMatch.Enabled = true;
             }
@@ -114,7 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxItalic.Checked = match.Italic;
                 _nocrChar = match.NOcrCharacter;
                 pictureBoxCharacter.Invalidate();
-                groupBoxCurrentCompareImage.Enabled = true;
+            //    groupBoxCurrentCompareImage.Enabled = true;
             }
         }
 
@@ -196,32 +198,61 @@ namespace Nikse.SubtitleEdit.Forms
             if (listBoxInspectItems.SelectedIndex < 0)
                 return;
 
-            var img = _imageList[listBoxInspectItems.SelectedIndex];
+            int index  = listBoxInspectItems.SelectedIndex;
+            var img = _imageList[index];
             if (img.Bitmap == null)
                 return;
-            
-            var match = _matchList[listBoxInspectItems.SelectedIndex];
+
+            var match = _matchList[index];
 
             var vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter();
             vobSubOcrNOcrCharacter.Initialize(_bitmap, img, new Point(0, 0), false, expandSelectionList.Count > 1, null, null, _vobSubOcr);
             DialogResult result = vobSubOcrNOcrCharacter.ShowDialog(this);
+            bool expandSelection = false;
+            bool shrinkSelection = false;
+            if (result == DialogResult.OK && vobSubOcrNOcrCharacter.ExpandSelection)
+            {
+                expandSelection = true;
+                expandSelectionList.Add(img);
+            }
             while (result == DialogResult.OK && (vobSubOcrNOcrCharacter.ShrinkSelection || vobSubOcrNOcrCharacter.ExpandSelection))
             {
+                if (expandSelection || shrinkSelection)
+                {
+                    expandSelection = false;
+                    if (shrinkSelection && index > 0)
+                    {
+                        shrinkSelection = false;
+                    }
+                    else if (index + 1 < _imageList.Count && _imageList[index + 1].Bitmap != null) // only allow expand to EndOfLine or space
+                    {
+                        index++;
+                        expandSelectionList.Add(_imageList[index]);
+                    }
+                    img = VobSubOcr.GetExpandedSelection(_bitmap, expandSelectionList, false); // true
+                }
+
+                vobSubOcrNOcrCharacter.Initialize(_bitmap2, img, new Point(0, 0), false, expandSelectionList.Count > 1, null, null, _vobSubOcr);
                 result = vobSubOcrNOcrCharacter.ShowDialog(this);
-            //if (result == DialogResult.OK && _vobSubOcrNOcrCharacter.ShrinkSelection)
-            //{
-            //    shrinkSelection = true;
-            //    index--;
-            //    if (expandSelectionList.Count > 0)
-            //        expandSelectionList.RemoveAt(expandSelectionList.Count - 1);
-            //}
-            //else if (result == DialogResult.OK && _vobSubOcrNOcrCharacter.ExpandSelection)
-            //{
-            //    expandSelection = true;
-            //}
+
+                if (result == DialogResult.OK && vobSubOcrNOcrCharacter.ShrinkSelection)
+                {
+                    shrinkSelection = true;
+                    index--;
+                    if (expandSelectionList.Count > 0)
+                        expandSelectionList.RemoveAt(expandSelectionList.Count - 1);
+                }
+                else if (result == DialogResult.OK && vobSubOcrNOcrCharacter.ExpandSelection)
+                {
+                    expandSelection = true;
+                    index++;
+                    expandSelectionList.Add(_imageList[index]);
+                }
             }
             if (result == DialogResult.OK)
             {
+                if (expandSelectionList.Count > 1)
+                    vobSubOcrNOcrCharacter.NOcrChar.ExpandCount = expandSelectionList.Count;
                 _nocrChars.Add(vobSubOcrNOcrCharacter.NOcrChar);
                 _vobSubOcr.SaveNOcrWithCurrentLanguage();
                 DialogResult = DialogResult.OK;
