@@ -276,7 +276,14 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
             }
-            System.Diagnostics.Process.Start(pluginsFolder);
+            try
+            {
+                System.Diagnostics.Process.Start(pluginsFolder);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Cannot open folder: " + pluginsFolder + Environment.NewLine + Environment.NewLine + exception.Source + ":" + exception.Message);
+            }
         }
 
         private void PluginsGet_KeyDown(object sender, KeyEventArgs e)

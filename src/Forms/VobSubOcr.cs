@@ -5790,6 +5790,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (subtitleListView1.SelectedItems.Count != 1)
                 return;
 
+            if (_nocrChars == null)
+                LoadNOcrWithCurrentLanguage();
+
             Cursor = Cursors.WaitCursor;
             Bitmap bitmap = GetSubtitleBitmap(subtitleListView1.SelectedItems[0].Index);
             bool oldPrompt = checkBoxPromptForUnknownWords.Checked;
@@ -5797,12 +5800,16 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxPromptForUnknownWords.Checked = oldPrompt;
             Cursor = Cursors.Default;
             var inspect = new VobSubNOcrCharacterInspect();
+            bool oldCorrect = checkBoxNOcrCorrect.Checked;
+            checkBoxNOcrCorrect.Checked = false;
             inspect.Initialize(bitmap, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, _nocrChars, this, _unItalicFactor);
             if (inspect.ShowDialog(this) == DialogResult.OK)
             {
                 Cursor = Cursors.WaitCursor;
+                SaveNOcrWithCurrentLanguage();
                 Cursor = Cursors.Default;
             }
+            checkBoxNOcrCorrect.Checked = oldCorrect;
         }
 
         private void buttonLineOcrEditLanguage_Click(object sender, EventArgs e)
