@@ -261,7 +261,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonZoomIn_Click(object sender, EventArgs e)
         {
-            if (_zoomFactor < 10)
+            if (_zoomFactor < 20)
             {
                 _zoomFactor++;
                 SizePictureBox();

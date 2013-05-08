@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.labelImageCompareFiles = new System.Windows.Forms.Label();
             this.labelChooseCharacters = new System.Windows.Forms.Label();
             this.listBoxFileNames = new System.Windows.Forms.ListBox();
@@ -38,8 +39,12 @@
             this.radioButtonHot = new System.Windows.Forms.RadioButton();
             this.label2 = new System.Windows.Forms.Label();
             this.listBoxlinesBackground = new System.Windows.Forms.ListBox();
+            this.contextMenuStripLinesBackground = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.removeBackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelLines = new System.Windows.Forms.Label();
             this.listBoxLinesForeground = new System.Windows.Forms.ListBox();
+            this.contextMenuLinesForeground = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.removeForegroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonMakeItalic = new System.Windows.Forms.Button();
             this.buttonZoomOut = new System.Windows.Forms.Button();
             this.buttonZoomIn = new System.Windows.Forms.Button();
@@ -52,8 +57,12 @@
             this.labelInfo = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.buttonImport = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBoxCurrentCompareImage.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.contextMenuStripLinesBackground.SuspendLayout();
+            this.contextMenuLinesForeground.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
             this.SuspendLayout();
             // 
@@ -166,12 +175,27 @@
             // 
             // listBoxlinesBackground
             // 
+            this.listBoxlinesBackground.ContextMenuStrip = this.contextMenuStripLinesBackground;
             this.listBoxlinesBackground.FormattingEnabled = true;
             this.listBoxlinesBackground.Location = new System.Drawing.Point(12, 301);
             this.listBoxlinesBackground.Name = "listBoxlinesBackground";
             this.listBoxlinesBackground.Size = new System.Drawing.Size(151, 95);
             this.listBoxlinesBackground.TabIndex = 40;
             this.listBoxlinesBackground.SelectedIndexChanged += new System.EventHandler(this.listBoxlinesBackground_SelectedIndexChanged);
+            // 
+            // contextMenuStripLinesBackground
+            // 
+            this.contextMenuStripLinesBackground.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.removeBackToolStripMenuItem});
+            this.contextMenuStripLinesBackground.Name = "contextMenuStripLines";
+            this.contextMenuStripLinesBackground.Size = new System.Drawing.Size(153, 48);
+            // 
+            // removeBackToolStripMenuItem
+            // 
+            this.removeBackToolStripMenuItem.Name = "removeBackToolStripMenuItem";
+            this.removeBackToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeBackToolStripMenuItem.Text = "Remove";
+            this.removeBackToolStripMenuItem.Click += new System.EventHandler(this.removeBackToolStripMenuItem_Click);
             // 
             // labelLines
             // 
@@ -184,12 +208,27 @@
             // 
             // listBoxLinesForeground
             // 
+            this.listBoxLinesForeground.ContextMenuStrip = this.contextMenuLinesForeground;
             this.listBoxLinesForeground.FormattingEnabled = true;
             this.listBoxLinesForeground.Location = new System.Drawing.Point(12, 179);
             this.listBoxLinesForeground.Name = "listBoxLinesForeground";
             this.listBoxLinesForeground.Size = new System.Drawing.Size(151, 95);
             this.listBoxLinesForeground.TabIndex = 38;
             this.listBoxLinesForeground.SelectedIndexChanged += new System.EventHandler(this.listBoxLinesForeground_SelectedIndexChanged);
+            // 
+            // contextMenuLinesForeground
+            // 
+            this.contextMenuLinesForeground.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.removeForegroundToolStripMenuItem});
+            this.contextMenuLinesForeground.Name = "contextMenuStripLines";
+            this.contextMenuLinesForeground.Size = new System.Drawing.Size(118, 26);
+            // 
+            // removeForegroundToolStripMenuItem
+            // 
+            this.removeForegroundToolStripMenuItem.Name = "removeForegroundToolStripMenuItem";
+            this.removeForegroundToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeForegroundToolStripMenuItem.Text = "Remove";
+            this.removeForegroundToolStripMenuItem.Click += new System.EventHandler(this.removeForegroundToolStripMenuItem_Click);
             // 
             // buttonMakeItalic
             // 
@@ -316,11 +355,27 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
+            // buttonImport
+            // 
+            this.buttonImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonImport.Location = new System.Drawing.Point(146, 433);
+            this.buttonImport.Name = "buttonImport";
+            this.buttonImport.Size = new System.Drawing.Size(106, 21);
+            this.buttonImport.TabIndex = 19;
+            this.buttonImport.Text = "&Import";
+            this.buttonImport.UseVisualStyleBackColor = true;
+            this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // VobSubNOcrEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(712, 468);
+            this.Controls.Add(this.buttonImport);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.labelInfo);
@@ -340,6 +395,8 @@
             this.groupBoxCurrentCompareImage.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.contextMenuStripLinesBackground.ResumeLayout(false);
+            this.contextMenuLinesForeground.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -372,5 +429,11 @@
         private System.Windows.Forms.ListBox listBoxlinesBackground;
         private System.Windows.Forms.Label labelLines;
         private System.Windows.Forms.ListBox listBoxLinesForeground;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripLinesBackground;
+        private System.Windows.Forms.ToolStripMenuItem removeBackToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuLinesForeground;
+        private System.Windows.Forms.ToolStripMenuItem removeForegroundToolStripMenuItem;
+        private System.Windows.Forms.Button buttonImport;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
