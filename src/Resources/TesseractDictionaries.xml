@@ -89,6 +89,11 @@
     <Description>Korean language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Lithuanian</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.lit.tar.gz</DownloadLink>
+    <Description>Lithuanian language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Norwegian</EnglishName>
     <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.nor.tar.gz</DownloadLink>
     <Description>Norwegian language data for Tesseract 3.02</Description>
