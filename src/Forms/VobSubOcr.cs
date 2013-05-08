@@ -198,6 +198,7 @@ namespace Nikse.SubtitleEdit.Forms
         int _nocrLastLowercaseHeight = -1;
         int _nocrLastUppercaseHeight = -1;
         List<BackgroundWorker> _nocrThreads = null;
+        bool _nocrThreadsStop = false;
         string[] _nocrThreadResults = null;
 
         Keys _italicShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
@@ -1246,49 +1247,102 @@ namespace Nikse.SubtitleEdit.Forms
         { 
             var nbmp = new NikseBitmap(parentBitmap);
             int w = targetItem.Bitmap.Width;
+            int index = 0;
             foreach (NOcrChar oc in nOcrChars)
             {
-                if (oc.ExpandCount > 1 && oc.Width > w && targetItem.X + oc.Width < nbmp.Width)
-                {
-                    bool ok = true;
-                    foreach (NOcrPoint op in oc.LinesForeground)
+                    if (oc.ExpandCount > 1 && oc.Width > w && targetItem.X + oc.Width < nbmp.Width)
                     {
-                        foreach (Point point in op.ScaledGetPoints(oc, oc.Width, oc.Height))
+                        bool ok = true;
+                        index = 0;
+                        while (index < oc.LinesForeground.Count && ok)
                         {
-                            Point p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
-                            if (p.X >= 0 && p.Y >= 0 && p.X < nbmp.Width && p.Y < nbmp.Height)
+                            NOcrPoint op = oc.LinesForeground[index];                        
+                            foreach (Point point in op.GetPoints(oc.Width, oc.Height))
                             {
-                                Color c = nbmp.GetPixel(p.X, p.Y);
-                                if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                Point p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                                if (p.X >= 0 && p.Y >= 0 && p.X < nbmp.Width && p.Y < nbmp.Height)
                                 {
-                                }
-                                else
-                                {
-                                    ok = false;
-                                    break;
+                                    Color c = nbmp.GetPixel(p.X, p.Y);
+                                    if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                    {
+                                    }
+                                    else
+                                    {
+                                        ok = false;
+                                        break;
+                                    }
                                 }
                             }
+                            index++;
                         }
-                    }
-                    foreach (NOcrPoint op in oc.LinesBackground)
-                    {
-                        foreach (Point point in op.ScaledGetPoints(oc, oc.Width, oc.Height))
+                        index = 0;
+                        while (index < oc.LinesBackground.Count && ok)
                         {
-                            Point p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
-                            if (p.X >= 0 && p.Y >= 0 && p.X < nbmp.Width && p.Y < nbmp.Height)
+                            NOcrPoint op = oc.LinesBackground[index];                                                
+                            foreach (Point point in op.GetPoints(oc.Width, oc.Height))
                             {
-                                Color c = nbmp.GetPixel(p.X, p.Y);
-                                if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                Point p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                                if (p.X >= 0 && p.Y >= 0 && p.X < nbmp.Width && p.Y < nbmp.Height)
                                 {
-                                    ok = false;
-                                    break;
+                                    Color c = nbmp.GetPixel(p.X, p.Y);
+                                    if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                    {
+                                        ok = false;
+                                        break;
+                                    }
                                 }
                             }
+                            index++;                        
                         }
-                    }
-                    if (ok)
-                        return oc;
-                }                
+                        if (ok)
+                            return oc;
+
+
+                        ok = true;
+                        index = 0;
+                        while (index < oc.LinesForeground.Count && ok)
+                        {
+                            NOcrPoint op = oc.LinesForeground[index];
+                            foreach (Point point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
+                            {
+                                Point p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                                if (p.X >= 0 && p.Y >= 0 && p.X < nbmp.Width && p.Y < nbmp.Height)
+                                {
+                                    Color c = nbmp.GetPixel(p.X, p.Y);
+                                    if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                    {
+                                    }
+                                    else
+                                    {
+                                        ok = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            index++;
+                        }
+                        index = 0;
+                        while (index < oc.LinesBackground.Count && ok)
+                        {
+                            NOcrPoint op = oc.LinesBackground[index];
+                            foreach (Point point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
+                            {
+                                Point p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                                if (p.X >= 0 && p.Y >= 0 && p.X < nbmp.Width && p.Y < nbmp.Height)
+                                {
+                                    Color c = nbmp.GetPixel(p.X, p.Y);
+                                    if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                    {
+                                        ok = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            index++;
+                        }
+                        if (ok)
+                            return oc;                    
+                }
             }
             return null;
         }
@@ -1297,14 +1351,17 @@ namespace Nikse.SubtitleEdit.Forms
         {
             italic = false;
             var nbmp = new NikseBitmap(targetItem.Bitmap);
+            int index = 0;
             foreach (NOcrChar oc in nOcrChars)
             {
                 if (Math.Abs(oc.Width - nbmp.Width) < 3 && Math.Abs(oc.Height - nbmp.Height) < 3 && Math.Abs(oc.MarginTop - topMargin) < 3)
                 { // only very accurate matches
                     
                     bool ok = true;
-                    foreach (NOcrPoint op in oc.LinesForeground)
+                    index = 0;
+                    while (index < oc.LinesForeground.Count && ok)
                     {
+                        NOcrPoint op = oc.LinesForeground[index];
                         foreach (Point point in op.ScaledGetPoints(oc, nbmp.Width, nbmp.Height))
                         {
                             if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
@@ -1320,9 +1377,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
+                        index++;
                     }
-                    foreach (NOcrPoint op in oc.LinesBackground)
+                    index = 0;
+                    while (index < oc.LinesBackground.Count && ok)
                     {
+                        NOcrPoint op = oc.LinesBackground[index];
                         foreach (Point point in op.ScaledGetPoints(oc, nbmp.Width, nbmp.Height))
                         {
                             if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
@@ -1335,9 +1395,10 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
+                        index++;
                     }
                     if (ok)
-                        return oc;
+                        return oc; 
                 }
             }
 
@@ -1349,8 +1410,10 @@ namespace Nikse.SubtitleEdit.Forms
                 { // only very accurate matches - but not for margin top
 
                     bool ok = true;
-                    foreach (NOcrPoint op in oc.LinesForeground)
+                    index = 0;
+                    while (index < oc.LinesForeground.Count && ok)
                     {
+                        NOcrPoint op = oc.LinesForeground[index];
                         foreach (Point point in op.ScaledGetPoints(oc, nbmp.Width, nbmp.Height))
                         {
                             if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
@@ -1366,9 +1429,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
+                        index++;
                     }
-                    foreach (NOcrPoint op in oc.LinesBackground)
+                    index = 0;
+                    while (index < oc.LinesBackground.Count && ok)
                     {
+                        NOcrPoint op = oc.LinesBackground[index];
                         foreach (Point point in op.ScaledGetPoints(oc, nbmp.Width, nbmp.Height))
                         {
                             if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
@@ -1381,6 +1447,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
+                        index++;
                     }
                     if (ok)
                         return oc;
@@ -1396,8 +1463,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (Math.Abs(oc.WidthPercent - widthPercent) < 15 && oc.Width > 12 && oc.Height > 19 && nbmp.Width > 19 && nbmp.Height > 12 && Math.Abs(oc.MarginTop - topMargin) < nbmp.Height / 4)
                     {
                         bool ok = true;
-                        foreach (NOcrPoint op in oc.LinesForeground)
+                        index = 0;
+                        while (index < oc.LinesForeground.Count && ok)
                         {
+                            NOcrPoint op = oc.LinesForeground[index];
                             foreach (Point point in op.ScaledGetPoints(oc, nbmp.Width, nbmp.Height))
                             {
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
@@ -1413,9 +1482,12 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                 }
                             }
+                            index++;
                         }
-                        foreach (NOcrPoint op in oc.LinesBackground)
+                        index = 0;
+                        while (index < oc.LinesBackground.Count && ok)
                         {
+                            NOcrPoint op = oc.LinesBackground[index];
                             foreach (Point point in op.ScaledGetPoints(oc, nbmp.Width, nbmp.Height))
                             {
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
@@ -1428,6 +1500,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                 }
                             }
+                            index++;
                         }
                         if (ok)
                             return oc;
@@ -1445,8 +1518,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (Math.Abs(oc.WidthPercent - widthPercent) < 20 && oc.Width > 12 && oc.Height > 19 && nbmp.Width > 19 && nbmp.Height > 12 && Math.Abs(oc.MarginTop - topMargin) < 15)
                     {
                         bool ok = true;
-                        foreach (NOcrPoint op in oc.LinesForeground)
+                        index = 0;
+                        while (index < oc.LinesForeground.Count && ok)
                         {
+                            NOcrPoint op = oc.LinesForeground[index];
                             foreach (Point point in op.ScaledGetPoints(oc, nbmp.Width, nbmp.Height - yLower))
                             {
                                 if (point.X >= 0 && point.Y + yLower >= 0 && point.X < nbmp.Width && point.Y + yLower < nbmp.Height)
@@ -1462,9 +1537,12 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                 }
                             }
+                            index++;
                         }
-                        foreach (NOcrPoint op in oc.LinesBackground)
+                        index = 0;
+                        while (index < oc.LinesBackground.Count && ok)
                         {
+                            NOcrPoint op = oc.LinesBackground[index];
                             foreach (Point point in op.ScaledGetPoints(oc, nbmp.Width, nbmp.Height - yLower))
                             {
                                 if (point.X >= 0 && point.Y + yLower >= 0 && point.X < nbmp.Width && point.Y + yLower < nbmp.Height)
@@ -1477,6 +1555,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                 }
                             }
+                            index++;
                         }
                         if (ok)
                             return oc;
@@ -1689,8 +1768,10 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             bool ok = true;
                             var o = MakeItalicNOcrChar(oc, movePixelsLeft, unItalicFactor);
-                            foreach (NOcrPoint op in o.LinesForeground)
+                            index = 0;
+                            while (index < o.LinesForeground.Count && ok)
                             {
+                                NOcrPoint op = o.LinesForeground[index];
                                 foreach (Point p in op.ScaledGetPoints(o, nbmp.Width, nbmp.Height))
                                 {
                                     if (p.X >= 2 && p.Y >= 2 && p.X < nbmp.Width && p.Y < nbmp.Height)
@@ -1706,9 +1787,13 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                     }
                                 }
+                                index++;
                             }
-                            foreach (NOcrPoint op in o.LinesBackground)
+
+                            index = 0;
+                            while (index < o.LinesBackground.Count && ok)
                             {
+                                NOcrPoint op = o.LinesBackground[index];
                                 foreach (Point p in op.ScaledGetPoints(o, nbmp.Width, nbmp.Height))
                                 {
                                     if (p.X >= 0 && p.Y >= 0 && p.X < nbmp.Width && p.Y < nbmp.Height)
@@ -1721,6 +1806,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                     }
                                 }
+                                index++;
                             }
                             if (ok)
                             {
@@ -1738,9 +1824,11 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             bool ok = true;
                             var o = MakeItalicNOcrChar(oc, movePixelsLeft, unItalicFactor);
-                            foreach (NOcrPoint op in o.LinesForeground)
+                            index = 0;
+                            while (index < o.LinesForeground.Count && ok)
                             {
-                                foreach (Point p in op.ScaledGetPoints(o, nbmp.Width-4, nbmp.Height))
+                                NOcrPoint op = o.LinesForeground[index];
+                                foreach (Point p in op.ScaledGetPoints(o, nbmp.Width - 4, nbmp.Height))
                                 {
                                     if (p.X >= 2 && p.Y >= 2 && p.X < nbmp.Width && p.Y < nbmp.Height)
                                     {
@@ -1755,9 +1843,12 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                     }
                                 }
+                                index++;
                             }
-                            foreach (NOcrPoint op in o.LinesBackground)
+                            index = 0;
+                            while (index < o.LinesBackground.Count && ok)
                             {
+                                NOcrPoint op = o.LinesBackground[index];
                                 foreach (Point p in op.ScaledGetPoints(o, nbmp.Width-4, nbmp.Height))
                                 {
                                     if (p.X >= 0 && p.Y >= 0 && p.X < nbmp.Width && p.Y < nbmp.Height)
@@ -1770,6 +1861,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                     }
                                 }
+                                index++;
                             }
                             if (ok)
                             {
@@ -1787,8 +1879,10 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             bool ok = true;
                             var o = MakeItalicNOcrChar(oc, movePixelsLeft, unItalicFactor);
-                            foreach (NOcrPoint op in o.LinesForeground)
+                            index = 0;
+                            while (index < o.LinesForeground.Count && ok)
                             {
+                                NOcrPoint op = o.LinesForeground[index];
                                 foreach (Point p in op.ScaledGetPoints(o, nbmp.Width - 6, nbmp.Height))
                                 {
                                     if (p.X >= 2 && p.Y >= 2 && p.X < nbmp.Width && p.Y < nbmp.Height)
@@ -1804,9 +1898,12 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                     }
                                 }
+                                index++;
                             }
-                            foreach (NOcrPoint op in o.LinesBackground)
+                            index = 0;
+                            while (index < o.LinesBackground.Count && ok)
                             {
+                                NOcrPoint op = o.LinesBackground[index];
                                 foreach (Point p in op.ScaledGetPoints(o, nbmp.Width - 6, nbmp.Height))
                                 {
                                     if (p.X >= 0 && p.Y >= 0 && p.X < nbmp.Width && p.Y < nbmp.Height)
@@ -1819,6 +1916,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                     }
                                 }
+                                index++;
                             }
                             if (ok)
                             {
@@ -1852,9 +1950,8 @@ namespace Nikse.SubtitleEdit.Forms
             return c;
         }
 
-        internal CompareMatch GetNOcrCompareMatch(ImageSplitterItem targetItem, Bitmap parentBitmap, out CompareMatch secondBestGuess, List<NOcrChar> nOcrChars, double unItalicFactor, bool tryItalicScaling, bool deepSeek)
+        internal CompareMatch GetNOcrCompareMatch(ImageSplitterItem targetItem, Bitmap parentBitmap, List<NOcrChar> nOcrChars, double unItalicFactor, bool tryItalicScaling, bool deepSeek)
         {
-            secondBestGuess = null;
             bool italic;
             var expandedResult = NOcrFindExpandedMatch(parentBitmap, targetItem, targetItem.Y - targetItem.ParentY, nOcrChars);
             if (expandedResult != null)
@@ -1872,7 +1969,12 @@ namespace Nikse.SubtitleEdit.Forms
             // Fix uppercase/lowercase issues (not I/l)
             if (result.Text == "e")
                 _nocrLastLowercaseHeight = targetItem.Bitmap.Height;
-            if (result.Text == "E" || result.Text == "H" || result.Text == "R")
+            else if (_nocrLastLowercaseHeight == -1 && result.Text == "a")
+                _nocrLastLowercaseHeight = targetItem.Bitmap.Height;
+
+            if (result.Text == "E" || result.Text == "H" || result.Text == "R" || result.Text == "D" || result.Text == "T")
+                _nocrLastUppercaseHeight = targetItem.Bitmap.Height;
+            else if (_nocrLastUppercaseHeight == -1 && result.Text == "M")
                 _nocrLastUppercaseHeight = targetItem.Bitmap.Height;
 
             if (result.Text == "V" || result.Text == "W" || result.Text == "U" || result.Text == "S" || result.Text == "Z" || result.Text == "O" || result.Text == "X" || result.Text == "Ø")
@@ -1906,7 +2008,12 @@ namespace Nikse.SubtitleEdit.Forms
             // Fix uppercase/lowercase issues (not I/l)
             if (result.Text == "e")
                 p.NOcrLastLowercaseHeight = targetItem.Bitmap.Height;
-            if (result.Text == "E" || result.Text == "H" || result.Text == "R")
+            else if (p.NOcrLastLowercaseHeight == -1 && result.Text == "a")
+                p.NOcrLastLowercaseHeight = targetItem.Bitmap.Height;
+
+            if (result.Text == "E" || result.Text == "H" || result.Text == "R" || result.Text == "D" || result.Text == "T")
+                p.NOcrLastUppercaseHeight = targetItem.Bitmap.Height;
+            else if (p.NOcrLastUppercaseHeight == -1 && result.Text == "M")
                 p.NOcrLastUppercaseHeight = targetItem.Bitmap.Height;
 
             if (result.Text == "V" || result.Text == "W" || result.Text == "U" || result.Text == "S" || result.Text == "Z" || result.Text == "O" || result.Text == "X" || result.Text == "Ø")
@@ -2471,7 +2578,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
                 if (checkBoxAutoFixCommonErrors.Checked)
-                    line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                    line = _ocrFixEngine.FixOcrErrors(line, listViewIndex, _lastLine, true, checkBoxGuessUnknownWords.Checked);
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
@@ -2568,8 +2675,26 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadNOcr(string fileName, bool clear)
         {
-            if (clear || _nocrChars == null) 
+            if (clear || _nocrChars == null)
                 _nocrChars = new List<NOcrChar>();
+
+            if (File.Exists(fileName))
+            {
+                try
+                {
+                    foreach (NOcrChar c in LoadNOcr(fileName))
+                        _nocrChars.Add(c);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                }
+            }
+        }
+
+        public static List<NOcrChar> LoadNOcr(string fileName)
+        {
+            var nocrChars = new List<NOcrChar>();
             if (File.Exists(fileName))
             {
                 try
@@ -2595,7 +2720,7 @@ namespace Nikse.SubtitleEdit.Forms
                             else
                                 oc.LinesBackground.Add(op);
                         }
-                        _nocrChars.Add(oc);
+                        nocrChars.Add(oc);
                     }
                 }
                 catch (Exception exception)
@@ -2603,12 +2728,36 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(exception.Message);
                 }
             }
+            return nocrChars;
         }
 
-        private Point DecodePoint(string text)
+        private static Point DecodePoint(string text)
         {
             var arr = text.Split(',');
             return new Point(Convert.ToInt32(arr[0], CultureInfo.InvariantCulture), Convert.ToInt32(arr[1], CultureInfo.InvariantCulture));
+        }
+
+        private void NOCRIntialize(Bitmap bitmap)
+        { 
+            var matches = new List<CompareMatch>();
+            List<ImageSplitterItem> list = ImageSplitter.SplitBitmapToLetters(bitmap, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom);
+
+            foreach (ImageSplitterItem item in list)
+            {
+                if (item.Bitmap != null)
+                {
+                    var old = item.Bitmap;
+                    var nbmp = new NikseBitmap(item.Bitmap);
+                    nbmp.ReplaceNonWhiteWithTransparent();
+                    item.Y += nbmp.CropTopTransparent(0);
+                    nbmp.CropTransparentSidesAndBottom(0, true);
+                    nbmp.ReplaceTransparentWith(Color.Black);
+                    item.Bitmap = nbmp.GetBitmap();
+                    old.Dispose();
+
+                    GetNOcrCompareMatch(item, bitmap, _nocrChars, _unItalicFactor, false, false);
+                }
+            }                
         }
 
         private string OcrViaNOCR(Bitmap bitmap, int listViewIndex)
@@ -2720,11 +2869,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        CompareMatch bestGuess;
-                        CompareMatch match = GetNOcrCompareMatch(item, bitmap, out bestGuess, _nocrChars, _unItalicFactor, checkBoxNOcrItalic.Checked, !checkBoxNOcrCorrect.Checked);
+                        CompareMatch match = GetNOcrCompareMatch(item, bitmap, _nocrChars, _unItalicFactor, checkBoxNOcrItalic.Checked, !checkBoxNOcrCorrect.Checked);
                         if (match == null)
                         {
-                            _vobSubOcrNOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, false, bestGuess, _lastAdditions, this);
+                            _vobSubOcrNOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, false, null, _lastAdditions, this);
                             DialogResult result = _vobSubOcrNOcrCharacter.ShowDialog(this);
                             _manualOcrDialogPosition = _vobSubOcrNOcrCharacter.FormPosition;
                             if (result == DialogResult.OK && _vobSubOcrNOcrCharacter.ExpandSelection)
@@ -3415,7 +3563,7 @@ namespace Nikse.SubtitleEdit.Forms
         void NOcrThreadRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             var p = (NOcrThreadParameter)e.Result;
-            if (!e.Cancelled)
+            if (!_nocrThreadsStop)
             {
                 if (string.IsNullOrEmpty(_nocrThreadResults[p.Index]))
                     _nocrThreadResults[p.Index] = p.Result;                
@@ -3476,29 +3624,43 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_tesseractAsyncIndex >= 0 && _tesseractAsyncIndex < max)
                     _tesseractThread.RunWorkerAsync(GetSubtitleBitmap(_tesseractAsyncIndex));
             }
-            else if (comboBoxOcrMethod.SelectedIndex == 3 && _nocrThreads == null)
+            else if (comboBoxOcrMethod.SelectedIndex == 3)
             {
                 if (_nocrChars == null)
                     LoadNOcrWithCurrentLanguage();
 
+                _nocrThreadsStop = false;
                 _nocrThreads = new List<BackgroundWorker>();
                 _nocrThreadResults = new string[_subtitle.Paragraphs.Count];
                 int noOfThreads = Environment.ProcessorCount - 1;
                 if (noOfThreads >= max)
                     noOfThreads = max-1;
-                int start = 0;
-                for (int i = 0; i < noOfThreads; i++)
+                int start = (int)numericUpDownStartNumber.Value + 5;
+                if (noOfThreads >= 1 && max > 5)
                 {
-                    var bw = new BackgroundWorker();
-                    var p = new NOcrThreadParameter(GetSubtitleBitmap(start + i), i, _nocrChars, bw, noOfThreads, _unItalicFactor, checkBoxNOcrItalic.Checked, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked);
-                    bw.DoWork += NOcrThreadDoWork;
-                    bw.RunWorkerCompleted += NOcrThreadRunWorkerCompleted;
-                    bw.RunWorkerAsync(p);
+                    // finder letter size (uppercase/lowercase)
+                    int testIndex = 0;
+                    while (testIndex < 6 && (_nocrLastLowercaseHeight == -1 || _nocrLastUppercaseHeight == -1))
+                    {
+                        NOCRIntialize(GetSubtitleBitmap(testIndex));
+                        testIndex++;
+                    }
+
+                    for (int i = 0; i < noOfThreads; i++)
+                    {
+                        if (start + i < max)
+                        {
+                            var bw = new BackgroundWorker();
+                            var p = new NOcrThreadParameter(GetSubtitleBitmap(start + i), start +  i, _nocrChars, bw, noOfThreads, _unItalicFactor, checkBoxNOcrItalic.Checked, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked);
+                            p.NOcrLastLowercaseHeight = _nocrLastLowercaseHeight;
+                            p.NOcrLastUppercaseHeight = _nocrLastUppercaseHeight;
+                            bw.DoWork += NOcrThreadDoWork;
+                            bw.RunWorkerCompleted += NOcrThreadRunWorkerCompleted;
+                            bw.RunWorkerAsync(p);
+                        }
+                    }
                 }
-                Application.DoEvents();
-                System.Threading.Thread.Sleep(500);
-                Application.DoEvents();
-            }
+            }            
 
             progressBar1.Maximum = max;
             progressBar1.Value = 0;
@@ -3558,6 +3720,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     textBoxCurrentText.Text = text;
                     SetButtonsEnabledAfterOcrDone();
+                    _nocrThreadsStop = true;
                     return;
                 }
 
@@ -5814,12 +5977,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonLineOcrEditLanguage_Click(object sender, EventArgs e)
         {
-            var bmp = new Bitmap(50, 50);
-            NikseBitmap nbmp = new NikseBitmap(bmp);
-            nbmp.Fill(Color.White);
-            var bmp2 = nbmp.GetBitmap();
-            bmp.Dispose();
-
             if (_nocrChars == null)
             {
                 if (string.IsNullOrEmpty(GetNOcrLanguageFileName()))
@@ -5830,7 +5987,7 @@ namespace Nikse.SubtitleEdit.Forms
                 LoadNOcrWithCurrentLanguage();
             }
 
-            var form = new VobSubNOcrEdit(_nocrChars, bmp2);
+            var form = new VobSubNOcrEdit(_nocrChars, null);
             if (form.ShowDialog(this) == DialogResult.OK)
             {
                 SaveNOcrWithCurrentLanguage();
@@ -5839,7 +5996,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 LoadNOcrWithCurrentLanguage();
             }
-            bmp2.Dispose();
         }
 
         private void buttonLineOcrNewLanguage_Click(object sender, EventArgs e)

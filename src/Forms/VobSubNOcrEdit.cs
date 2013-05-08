@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
         Point _end;
         int _mx;
         int _my;
-        private Bitmap bitmap;
+        private Bitmap _bitmap;
         List<NOcrChar> _history = new List<NOcrChar>();
         int _historyIndex = -1;
 
@@ -27,8 +27,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
-            this._nocrChars = nocrChars;
-            this.bitmap = bitmap;
+            _nocrChars = nocrChars;
+            _bitmap = bitmap;
 
             FillComboBox();
 
@@ -39,8 +39,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             labelInfo.Text = string.Format("{0} elements in database", nocrChars.Count);
-
-            //buttonMakeItalic.Visible = false;
         }
 
         private void FillComboBox()
@@ -94,7 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonZoomIn_Click(object sender, EventArgs e)
         {
-            if (_zoomFactor < 10)
+            if (_zoomFactor < 20)
             {
                 _zoomFactor++;
                 SizePictureBox();
@@ -197,14 +195,17 @@ namespace Nikse.SubtitleEdit.Forms
                 _drawLineOn = false;
                 _history = new List<NOcrChar>();
                 _historyIndex = -1;
-                
-                bitmap = new Bitmap(_nocrChar.Width, _nocrChar.Height);
-                NikseBitmap nbmp = new NikseBitmap(bitmap);
-                nbmp.Fill(Color.White);
-                bitmap = nbmp.GetBitmap();
-                pictureBoxCharacter.Image = bitmap;
-                SizePictureBox();
-                ShowOcrPoints();
+
+                if (_bitmap == null)
+                {
+                    var bitmap = new Bitmap(_nocrChar.Width, _nocrChar.Height);
+                    NikseBitmap nbmp = new NikseBitmap(bitmap);
+                    nbmp.Fill(Color.White);
+                    bitmap = nbmp.GetBitmap();
+                    pictureBoxCharacter.Image = bitmap;
+                    SizePictureBox();
+                    ShowOcrPoints();
+                }
             }
         }
 
@@ -459,6 +460,84 @@ namespace Nikse.SubtitleEdit.Forms
             if (_nocrChar != null)
             {
                 _nocrChar.Text = textBoxText.Text;
+            }
+        }
+
+        private void removeForegroundToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listBoxLinesForeground.SelectedItems.Count == 1)
+            {
+                var op = listBoxLinesForeground.Items[listBoxLinesForeground.SelectedIndex] as NOcrPoint;
+                _nocrChar.LinesForeground.Remove(op);
+            }
+            ShowOcrPoints();
+        }
+
+        private void removeBackToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listBoxlinesBackground.SelectedItems.Count == 1)
+            {
+                var op = listBoxlinesBackground.Items[listBoxlinesBackground.SelectedIndex] as NOcrPoint;
+                _nocrChar.LinesBackground.Remove(op);
+            }
+            ShowOcrPoints();
+        }
+
+        private void buttonImport_Click(object sender, EventArgs e)
+        {
+            int importedCount = 0;
+            int notImportedCount = 0;
+            openFileDialog1.Filter = "nOCR files|nOCR_*.xml";
+            openFileDialog1.InitialDirectory = Configuration.DataDirectory;
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                foreach (NOcrChar newChar in VobSubOcr.LoadNOcr(openFileDialog1.FileName))
+                {
+                    bool found = false;
+                    foreach (NOcrChar oldChar in _nocrChars)
+                    {
+                        if (oldChar.Text == newChar.Text &&
+                            oldChar.Width == newChar.Width &&
+                            oldChar.Height == newChar.Height &&
+                            oldChar.MarginTop == newChar.MarginTop &&
+                            oldChar.ExpandCount == newChar.ExpandCount &&
+                            oldChar.LinesForeground.Count == newChar.LinesForeground.Count &&
+                            oldChar.LinesBackground.Count == newChar.LinesBackground.Count)
+                        {
+                            found = true;
+                            for (int i = 0; i < oldChar.LinesForeground.Count; i++)
+                            {
+                                if (oldChar.LinesForeground[i].Start.X != newChar.LinesForeground[i].Start.X ||
+                                    oldChar.LinesForeground[i].Start.Y != newChar.LinesForeground[i].Start.Y ||
+                                    oldChar.LinesForeground[i].End.X != newChar.LinesForeground[i].End.X ||
+                                    oldChar.LinesForeground[i].End.Y != newChar.LinesForeground[i].End.Y)
+                                {
+                                    found = false;
+                                }
+                            }
+                            for (int i = 0; i < oldChar.LinesBackground.Count; i++)
+                            {
+                                if (oldChar.LinesBackground[i].Start.X != newChar.LinesBackground[i].Start.X ||
+                                    oldChar.LinesBackground[i].Start.Y != newChar.LinesBackground[i].Start.Y ||
+                                    oldChar.LinesBackground[i].End.X != newChar.LinesBackground[i].End.X ||
+                                    oldChar.LinesBackground[i].End.Y != newChar.LinesBackground[i].End.Y)
+                                {
+                                    found = false;
+                                }
+                            }
+                        }
+                    }
+                    if (!found)
+                    {
+                        _nocrChars.Add(newChar);
+                        importedCount++;
+                    }
+                    else
+                    {
+                        notImportedCount++;
+                    }
+                }
+                MessageBox.Show(string.Format("Number of characters imported: {0}\r\nNumber of characters not imported (already present): {1}", importedCount, notImportedCount));
             }
         }
 

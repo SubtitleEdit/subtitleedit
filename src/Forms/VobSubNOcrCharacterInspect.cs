@@ -63,8 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
                     item.Bitmap = nbmp.GetBitmap();
 
                     //get nocr matches
-                    Nikse.SubtitleEdit.Forms.VobSubOcr.CompareMatch bestGuess;
-                    Nikse.SubtitleEdit.Forms.VobSubOcr.CompareMatch match = vobSubOcr.GetNOcrCompareMatch(item, bitmap, out bestGuess, _nocrChars, _unItalicFactor, false, false);
+                    Nikse.SubtitleEdit.Forms.VobSubOcr.CompareMatch match = vobSubOcr.GetNOcrCompareMatch(item, bitmap, _nocrChars, _unItalicFactor, false, false);
                     if (match == null)
                     {
                         listBoxInspectItems.Items.Add("?");
@@ -154,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonZoomIn_Click(object sender, EventArgs e)
         {
-            if (_zoomFactor < 10)
+            if (_zoomFactor < 20)
             {
                 _zoomFactor++;
                 SizePictureBox();
