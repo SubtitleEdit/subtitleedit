@@ -289,14 +289,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRightToLeft.Left = numericUpDownPixelsIsSpace.Left;
             groupBoxOCRControls.Text = string.Empty;
 
-            comboBoxDictionaries.SelectedIndexChanged -= comboBoxDictionaries_SelectedIndexChanged;
-            comboBoxDictionaries.Items.Clear();
-            comboBoxDictionaries.Items.Add(Configuration.Settings.Language.General.None);
-            foreach (string name in Utilities.GetDictionaryLanguages())
-            {
-                comboBoxDictionaries.Items.Add(name);
-            }
-            comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
+            FillSpellCheckDictionaries();
 
             comboBoxOcrMethod.Items.Clear();
             comboBoxOcrMethod.Items.Add(language.OcrViaTesseract);
@@ -375,6 +368,18 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxEmphasis2Transparent.Left = pictureBoxEmphasis2.Left + pictureBoxEmphasis2.Width + 3;
 
             buttonGetTesseractDictionaries.Visible = Configuration.Settings.General.ShowBetaStuff;
+        }
+
+        private void FillSpellCheckDictionaries()
+        {
+            comboBoxDictionaries.SelectedIndexChanged -= comboBoxDictionaries_SelectedIndexChanged;
+            comboBoxDictionaries.Items.Clear();
+            comboBoxDictionaries.Items.Add(Configuration.Settings.Language.General.None);
+            foreach (string name in Utilities.GetDictionaryLanguages())
+            {
+                comboBoxDictionaries.Items.Add(name);
+            }
+            comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
         }
 
         private void FixLargeFonts()
@@ -1372,8 +1377,18 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                                 else
                                 {
-                                    ok = false;
-                                    break;
+                                    Point p = new Point(point.X - 1, point.Y);
+                                    if (p.X < 0)
+                                        p.X = 1;
+                                    c = nbmp.GetPixel(p.X, p.Y);
+                                    if (nbmp.Width > 20 && c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                    {                                        
+                                    }
+                                    else
+                                    {
+                                        ok = false;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -1390,8 +1405,15 @@ namespace Nikse.SubtitleEdit.Forms
                                 Color c = nbmp.GetPixel(point.X, point.Y);
                                 if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
                                 {
-                                    ok = false;
-                                    break;
+                                    Point p = new Point(point.X, point.Y);
+                                    if (oc.Width > 19 && point.X > 0)
+                                        p.X = p.X - 1;
+                                    c = nbmp.GetPixel(p.X, p.Y);
+                                    if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                    {
+                                        ok = false;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -1497,6 +1519,74 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         ok = false;
                                         break;
+                                    }
+                                }
+                            }
+                            index++;
+                        }
+                        if (ok)
+                            return oc;
+                    }
+                }
+            }
+
+            // matches 2 or 3 pixels to the left 
+            foreach (NOcrChar oc in nOcrChars)
+            {
+                if (!oc.IsSensitive)
+                {
+                    if (Math.Abs(oc.WidthPercent - widthPercent) < 15 && oc.Width > 14 && oc.Height > 19 && nbmp.Width > 20 && nbmp.Height > 14 && Math.Abs(oc.MarginTop - topMargin) < nbmp.Height / 4)
+                    {
+                        bool ok = true;
+                        index = 0;
+                        while (index < oc.LinesForeground.Count && ok)
+                        {
+                            NOcrPoint op = oc.LinesForeground[index];
+                            foreach (Point point in op.ScaledGetPoints(oc, nbmp.Width, nbmp.Height))
+                            {
+                                Point p = new Point(point.X - 2, point.Y);
+                                Point p1 = new Point(point.X - 1, point.Y);
+                                if (p.X >= 0 && p.Y >= 0 && p.X < nbmp.Width && p.Y < nbmp.Height && p1.X >= 0)
+                                {
+                                    Color c = nbmp.GetPixel(p.X, p.Y);
+                                    if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                    {
+                                    }
+                                    else
+                                    {
+                                        c = nbmp.GetPixel(p1.X, p1.Y);
+                                        if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            ok = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            index++;
+                        }
+                        index = 0;
+                        while (index < oc.LinesBackground.Count && ok)
+                        {
+                            NOcrPoint op = oc.LinesBackground[index];
+                            foreach (Point point in op.ScaledGetPoints(oc, nbmp.Width, nbmp.Height))
+                            {
+                                Point p = new Point(point.X - 2, point.Y);
+                                Point p1 = new Point(point.X - 1, point.Y);
+                                if (p.X >= 0 && p.Y >= 0 && p.X < nbmp.Width && point.Y < nbmp.Height && p1.X >= 0)
+                                {
+                                    Color c = nbmp.GetPixel(p.X, p.Y);
+                                    if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                    {
+                                        c = nbmp.GetPixel(p1.X, p1.Y);
+                                        if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                                        {
+                                            ok = false;
+                                            break;
+                                        }
                                     }
                                 }
                             }
@@ -1977,12 +2067,12 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_nocrLastUppercaseHeight == -1 && result.Text == "M")
                 _nocrLastUppercaseHeight = targetItem.Bitmap.Height;
 
-            if (result.Text == "V" || result.Text == "W" || result.Text == "U" || result.Text == "S" || result.Text == "Z" || result.Text == "O" || result.Text == "X" || result.Text == "Ø")
+            if (result.Text == "V" || result.Text == "W" || result.Text == "U" || result.Text == "S" || result.Text == "Z" || result.Text == "O" || result.Text == "X" || result.Text == "Ø" || result.Text == "C")
             {
                 if (_nocrLastLowercaseHeight > 3 && targetItem.Bitmap.Height - _nocrLastLowercaseHeight < 2)
                     result.Text = result.Text.ToLower();
             }
-            else if (result.Text == "v" || result.Text == "w" || result.Text == "u" || result.Text == "s" || result.Text == "z" || result.Text == "o" || result.Text == "x" || result.Text == "ø")
+            else if (result.Text == "v" || result.Text == "w" || result.Text == "u" || result.Text == "s" || result.Text == "z" || result.Text == "o" || result.Text == "x" || result.Text == "ø" || result.Text == "c")
             {
                 if (_nocrLastUppercaseHeight > 3 && _nocrLastUppercaseHeight - targetItem.Bitmap.Height < 2)
                     result.Text = result.Text.ToUpper();
@@ -2016,12 +2106,12 @@ namespace Nikse.SubtitleEdit.Forms
             else if (p.NOcrLastUppercaseHeight == -1 && result.Text == "M")
                 p.NOcrLastUppercaseHeight = targetItem.Bitmap.Height;
 
-            if (result.Text == "V" || result.Text == "W" || result.Text == "U" || result.Text == "S" || result.Text == "Z" || result.Text == "O" || result.Text == "X" || result.Text == "Ø")
+            if (result.Text == "V" || result.Text == "W" || result.Text == "U" || result.Text == "S" || result.Text == "Z" || result.Text == "O" || result.Text == "X" || result.Text == "Ø" || result.Text == "C")
             {
                 if (p.NOcrLastLowercaseHeight > 3 && targetItem.Bitmap.Height - p.NOcrLastLowercaseHeight < 2)
                     result.Text = result.Text.ToLower();
             }
-            else if (result.Text == "v" || result.Text == "w" || result.Text == "u" || result.Text == "s" || result.Text == "z" || result.Text == "o" || result.Text == "x" || result.Text == "ø")
+            else if (result.Text == "v" || result.Text == "w" || result.Text == "u" || result.Text == "s" || result.Text == "z" || result.Text == "o" || result.Text == "x" || result.Text == "ø" || result.Text == "c")
             {
                 if (p.NOcrLastUppercaseHeight > 3 && p.NOcrLastUppercaseHeight - targetItem.Bitmap.Height < 2)
                     result.Text = result.Text.ToUpper();
@@ -3020,7 +3110,6 @@ namespace Nikse.SubtitleEdit.Forms
                 line = line.Replace("." + Environment.NewLine + "-l", "." + Environment.NewLine + "-I");
                 line = line.Replace("?" + Environment.NewLine + "-l", "?" + Environment.NewLine + "-I");
                 line = line.Replace("!" + Environment.NewLine + "-l", "!" + Environment.NewLine + "-I");
-                line = line.Replace("II", "ll");
                 line = line.Replace(" lq", " Iq");
                 line = line.Replace(" lw", " Iw");
                 line = line.Replace(" lr", " Ir");
@@ -3041,6 +3130,10 @@ namespace Nikse.SubtitleEdit.Forms
                 line = line.Replace(" lb", " Ib");
                 line = line.Replace(" ln", " In");
                 line = line.Replace(" lm", " Im");
+            }
+            if (line.Contains("I"))
+            {
+                line = line.Replace("II", "ll");
             }
 
             // fix periods with space between
@@ -4889,7 +4982,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
                 comboBoxDictionaries.Left = labelDictionaryLoaded.Left + labelDictionaryLoaded.Width;
-                comboBoxDictionaries.Width = groupBoxOcrAutoFix.Width - (comboBoxDictionaries.Left + 5);
+                comboBoxDictionaries.Width = groupBoxOcrAutoFix.Width - (comboBoxDictionaries.Left + 10 + buttonSpellCheckDownload.Width);
             }
             else
             {
@@ -6025,6 +6118,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _nocrChars = null;
             _nocrThreads = null;
+        }
+
+        private void buttonSpellCheckDownload_Click(object sender, EventArgs e)
+        {
+            new GetDictionaries().ShowDialog(this);
+            FillSpellCheckDictionaries();
+            if (comboBoxDictionaries.Items.Count > 0)
+                comboBoxDictionaries.SelectedIndex = 0;
         }
 
     }

@@ -408,6 +408,12 @@
     <Description>Latviešu valodas pareizrakstības pārbaudes modulis</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Lithuanian</EnglishName>
+    <NativeName>Lietuvių</NativeName>
+    <DownloadLink>http://ftp.akl.lt/ispell-lt/openoffice-spellcheck-lt-1.3.oxt</DownloadLink>
+    <Description>Lietuvių kalbos rašybos tikrinimo žodynas</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Lower Sorbian</EnglishName>
     <NativeName>dolnoserbšćina</NativeName>
     <DownloadLink>http://extensions.services.openoffice.org/e-files/3045/8/lower_sorbian_spelling_dictionary-1.4.2.oxt</DownloadLink>

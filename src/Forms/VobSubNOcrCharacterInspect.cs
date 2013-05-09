@@ -102,20 +102,46 @@ namespace Nikse.SubtitleEdit.Forms
 
             var match = _matchList[listBoxInspectItems.SelectedIndex];
             if (match == null)
-            {
+            { // spaces+new lines
                 _nocrChar = null;
                 pictureBoxCharacter.Invalidate();
-          //      groupBoxCurrentCompareImage.Enabled = false;
+
+                buttonUpdate.Enabled = false;
+                buttonDelete.Enabled = false;
+                buttonEditDB.Enabled = false;
+                buttonAddBetterMatch.Enabled = false;
+                textBoxText.Text = string.Empty;
+                textBoxText.Enabled = false;
+                checkBoxItalic.Checked = false;
+                checkBoxItalic.Enabled = false;
+            }
+            else if (match.NOcrCharacter == null)
+            { // no match found
+                buttonUpdate.Enabled = false;
+                buttonDelete.Enabled = false;
+                textBoxText.Text = string.Empty;
+                checkBoxItalic.Checked = match.Italic;
+                _nocrChar = null;
+                pictureBoxCharacter.Invalidate();
+
                 buttonEditDB.Enabled = true;
                 buttonAddBetterMatch.Enabled = true;
+                textBoxText.Enabled = false;
+                checkBoxItalic.Enabled = false;
             }
             else
             {
+                buttonUpdate.Enabled = true;
+                buttonDelete.Enabled = true;
                 textBoxText.Text = match.Text;
                 checkBoxItalic.Checked = match.Italic;
                 _nocrChar = match.NOcrCharacter;
                 pictureBoxCharacter.Invalidate();
-            //    groupBoxCurrentCompareImage.Enabled = true;
+
+                buttonEditDB.Enabled = true;
+                buttonAddBetterMatch.Enabled = true;
+                textBoxText.Enabled = true;
+                checkBoxItalic.Enabled = true;
             }
         }
 
