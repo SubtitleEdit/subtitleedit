@@ -258,11 +258,12 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoTransparentBackground.Text = language.AutoTransparentBackground;
             checkBoxAutoTransparentBackground.Left = groupBoxSubtitleImage.Width - checkBoxAutoTransparentBackground.Width - 2;
             checkBoxPromptForUnknownWords.Text = language.PromptForUnknownWords;
-            checkBoxPromptForUnknownWords.Checked = Configuration.Settings.VobSubOcr.PromptForUnknownWords;
+            checkBoxPromptForUnknownWords.Checked = Configuration.Settings.VobSubOcr.PromptForUnknownWords;           
 
             groupBoxOcrAutoFix.Text = language.OcrAutoCorrectionSpellchecking;
             checkBoxGuessUnknownWords.Text = language.TryToGuessUnkownWords;
             checkBoxAutoBreakLines.Text = language.AutoBreakSubtitleIfMoreThanTwoLines;
+            checkBoxAutoBreakLines.Checked = Configuration.Settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines;           
             tabControlLogs.TabPages[0].Text = language.AllFixes;
             tabControlLogs.TabPages[1].Text = language.GuessesUsed;
             tabControlLogs.TabPages[2].Text = language.UnknownWords;
@@ -5770,6 +5771,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VobSubOcr.ItalicFactor = _unItalicFactor;
             Configuration.Settings.VobSubOcr.UseModiInTesseractForUnknownWords = checkBoxUseModiInTesseractForUnknownWords.Checked;
             Configuration.Settings.VobSubOcr.PromptForUnknownWords = checkBoxPromptForUnknownWords.Checked;
+            Configuration.Settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines = checkBoxAutoBreakLines.Checked;
             Configuration.Settings.VobSubOcr.LineOcrDraw = checkBoxNOcrCorrect.Checked;
             Configuration.Settings.VobSubOcr.LineOcrAdvancedItalic = checkBoxNOcrItalic.Checked;
             if (comboBoxOcrMethod.SelectedIndex == 3) // line ocr

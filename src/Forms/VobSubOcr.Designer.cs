@@ -92,6 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonStop = new System.Windows.Forms.Button();
             this.buttonStartOcr = new System.Windows.Forms.Button();
             this.groupBoxOcrAutoFix = new System.Windows.Forms.GroupBox();
+            this.buttonSpellCheckDownload = new System.Windows.Forms.Button();
             this.labelFixesMade = new System.Windows.Forms.Label();
             this.comboBoxDictionaries = new System.Windows.Forms.ComboBox();
             this.checkBoxGuessUnknownWords = new System.Windows.Forms.CheckBox();
@@ -136,7 +137,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.splitContainerBottom = new System.Windows.Forms.SplitContainer();
-            this.buttonSpellCheckDownload = new System.Windows.Forms.Button();
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.contextMenuStripListview.SuspendLayout();
@@ -461,7 +461,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxNOcrItalic.AutoSize = true;
             this.checkBoxNOcrItalic.Location = new System.Drawing.Point(15, 42);
             this.checkBoxNOcrItalic.Name = "checkBoxNOcrItalic";
-            this.checkBoxNOcrItalic.Size = new System.Drawing.Size(92, 17);
+            this.checkBoxNOcrItalic.Size = new System.Drawing.Size(91, 17);
             this.checkBoxNOcrItalic.TabIndex = 8;
             this.checkBoxNOcrItalic.Text = "Contains italic";
             this.checkBoxNOcrItalic.UseVisualStyleBackColor = true;
@@ -471,7 +471,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxNOcrCorrect.AutoSize = true;
             this.checkBoxNOcrCorrect.Location = new System.Drawing.Point(235, 17);
             this.checkBoxNOcrCorrect.Name = "checkBoxNOcrCorrect";
-            this.checkBoxNOcrCorrect.Size = new System.Drawing.Size(116, 17);
+            this.checkBoxNOcrCorrect.Size = new System.Drawing.Size(113, 17);
             this.checkBoxNOcrCorrect.TabIndex = 7;
             this.checkBoxNOcrCorrect.Text = "Draw missing texts";
             this.checkBoxNOcrCorrect.UseVisualStyleBackColor = true;
@@ -481,7 +481,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxRightToLeftNOCR.AutoSize = true;
             this.checkBoxRightToLeftNOCR.Location = new System.Drawing.Point(235, 40);
             this.checkBoxRightToLeftNOCR.Name = "checkBoxRightToLeftNOCR";
-            this.checkBoxRightToLeftNOCR.Size = new System.Drawing.Size(83, 17);
+            this.checkBoxRightToLeftNOCR.Size = new System.Drawing.Size(80, 17);
             this.checkBoxRightToLeftNOCR.TabIndex = 6;
             this.checkBoxRightToLeftNOCR.Text = "Right to left";
             this.checkBoxRightToLeftNOCR.UseVisualStyleBackColor = true;
@@ -538,7 +538,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxRightToLeft.AutoSize = true;
             this.checkBoxRightToLeft.Location = new System.Drawing.Point(173, 100);
             this.checkBoxRightToLeft.Name = "checkBoxRightToLeft";
-            this.checkBoxRightToLeft.Size = new System.Drawing.Size(83, 17);
+            this.checkBoxRightToLeft.Size = new System.Drawing.Size(80, 17);
             this.checkBoxRightToLeft.TabIndex = 6;
             this.checkBoxRightToLeft.Text = "Right to left";
             this.checkBoxRightToLeft.UseVisualStyleBackColor = true;
@@ -645,7 +645,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxTesseractMusicOn.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxTesseractMusicOn.Location = new System.Drawing.Point(99, 101);
             this.checkBoxTesseractMusicOn.Name = "checkBoxTesseractMusicOn";
-            this.checkBoxTesseractMusicOn.Size = new System.Drawing.Size(93, 17);
+            this.checkBoxTesseractMusicOn.Size = new System.Drawing.Size(94, 17);
             this.checkBoxTesseractMusicOn.TabIndex = 4;
             this.checkBoxTesseractMusicOn.Text = "Music symbols";
             this.checkBoxTesseractMusicOn.UseVisualStyleBackColor = true;
@@ -657,7 +657,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxTesseractItalicsOn.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxTesseractItalicsOn.Location = new System.Drawing.Point(22, 101);
             this.checkBoxTesseractItalicsOn.Name = "checkBoxTesseractItalicsOn";
-            this.checkBoxTesseractItalicsOn.Size = new System.Drawing.Size(54, 17);
+            this.checkBoxTesseractItalicsOn.Size = new System.Drawing.Size(53, 17);
             this.checkBoxTesseractItalicsOn.TabIndex = 3;
             this.checkBoxTesseractItalicsOn.Text = "Italics";
             this.checkBoxTesseractItalicsOn.UseVisualStyleBackColor = true;
@@ -670,7 +670,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxUseModiInTesseractForUnknownWords.Enabled = false;
             this.checkBoxUseModiInTesseractForUnknownWords.Location = new System.Drawing.Point(22, 74);
             this.checkBoxUseModiInTesseractForUnknownWords.Name = "checkBoxUseModiInTesseractForUnknownWords";
-            this.checkBoxUseModiInTesseractForUnknownWords.Size = new System.Drawing.Size(167, 17);
+            this.checkBoxUseModiInTesseractForUnknownWords.Size = new System.Drawing.Size(165, 17);
             this.checkBoxUseModiInTesseractForUnknownWords.TabIndex = 2;
             this.checkBoxUseModiInTesseractForUnknownWords.Text = "Try MODI for unknown words";
             this.checkBoxUseModiInTesseractForUnknownWords.UseVisualStyleBackColor = true;
@@ -811,6 +811,17 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOcrAutoFix.TabStop = false;
             this.groupBoxOcrAutoFix.Text = "OCR auto correction / spellchecking";
             // 
+            // buttonSpellCheckDownload
+            // 
+            this.buttonSpellCheckDownload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSpellCheckDownload.Location = new System.Drawing.Point(367, 19);
+            this.buttonSpellCheckDownload.Name = "buttonSpellCheckDownload";
+            this.buttonSpellCheckDownload.Size = new System.Drawing.Size(28, 21);
+            this.buttonSpellCheckDownload.TabIndex = 42;
+            this.buttonSpellCheckDownload.Text = "...";
+            this.buttonSpellCheckDownload.UseVisualStyleBackColor = true;
+            this.buttonSpellCheckDownload.Click += new System.EventHandler(this.buttonSpellCheckDownload_Click);
+            // 
             // labelFixesMade
             // 
             this.labelFixesMade.AutoSize = true;
@@ -839,7 +850,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxGuessUnknownWords.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxGuessUnknownWords.Location = new System.Drawing.Point(11, 91);
             this.checkBoxGuessUnknownWords.Name = "checkBoxGuessUnknownWords";
-            this.checkBoxGuessUnknownWords.Size = new System.Drawing.Size(164, 17);
+            this.checkBoxGuessUnknownWords.Size = new System.Drawing.Size(162, 17);
             this.checkBoxGuessUnknownWords.TabIndex = 5;
             this.checkBoxGuessUnknownWords.Text = "Try to guess unknown words";
             this.checkBoxGuessUnknownWords.UseVisualStyleBackColor = true;
@@ -1032,7 +1043,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxPromptForUnknownWords.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxPromptForUnknownWords.Location = new System.Drawing.Point(11, 69);
             this.checkBoxPromptForUnknownWords.Name = "checkBoxPromptForUnknownWords";
-            this.checkBoxPromptForUnknownWords.Size = new System.Drawing.Size(255, 17);
+            this.checkBoxPromptForUnknownWords.Size = new System.Drawing.Size(246, 17);
             this.checkBoxPromptForUnknownWords.TabIndex = 4;
             this.checkBoxPromptForUnknownWords.Text = "Prompt for unknown words (requires dictionary)";
             this.checkBoxPromptForUnknownWords.UseVisualStyleBackColor = true;
@@ -1044,7 +1055,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxAutoBreakLines.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxAutoBreakLines.Location = new System.Drawing.Point(11, 113);
             this.checkBoxAutoBreakLines.Name = "checkBoxAutoBreakLines";
-            this.checkBoxAutoBreakLines.Size = new System.Drawing.Size(208, 17);
+            this.checkBoxAutoBreakLines.Size = new System.Drawing.Size(200, 17);
             this.checkBoxAutoBreakLines.TabIndex = 6;
             this.checkBoxAutoBreakLines.Text = "Auto break subtitle, if line number > 2";
             this.checkBoxAutoBreakLines.UseVisualStyleBackColor = true;
@@ -1065,7 +1076,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxAutoFixCommonErrors.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxAutoFixCommonErrors.Location = new System.Drawing.Point(11, 47);
             this.checkBoxAutoFixCommonErrors.Name = "checkBoxAutoFixCommonErrors";
-            this.checkBoxAutoFixCommonErrors.Size = new System.Drawing.Size(139, 17);
+            this.checkBoxAutoFixCommonErrors.Size = new System.Drawing.Size(137, 17);
             this.checkBoxAutoFixCommonErrors.TabIndex = 2;
             this.checkBoxAutoFixCommonErrors.Text = "Fix common OCR errors";
             this.checkBoxAutoFixCommonErrors.UseVisualStyleBackColor = true;
@@ -1097,7 +1108,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxBackgroundTransparent.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxBackgroundTransparent.Location = new System.Drawing.Point(144, 19);
             this.checkBoxBackgroundTransparent.Name = "checkBoxBackgroundTransparent";
-            this.checkBoxBackgroundTransparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxBackgroundTransparent.Size = new System.Drawing.Size(83, 17);
             this.checkBoxBackgroundTransparent.TabIndex = 8;
             this.checkBoxBackgroundTransparent.Text = "Transparent";
             this.checkBoxBackgroundTransparent.UseVisualStyleBackColor = true;
@@ -1118,7 +1129,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxEmphasis2Transparent.AutoSize = true;
             this.checkBoxEmphasis2Transparent.Location = new System.Drawing.Point(507, 19);
             this.checkBoxEmphasis2Transparent.Name = "checkBoxEmphasis2Transparent";
-            this.checkBoxEmphasis2Transparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxEmphasis2Transparent.Size = new System.Drawing.Size(83, 17);
             this.checkBoxEmphasis2Transparent.TabIndex = 6;
             this.checkBoxEmphasis2Transparent.Text = "Transparent";
             this.checkBoxEmphasis2Transparent.UseVisualStyleBackColor = true;
@@ -1129,7 +1140,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxEmphasis1Transparent.AutoSize = true;
             this.checkBoxEmphasis1Transparent.Location = new System.Drawing.Point(387, 19);
             this.checkBoxEmphasis1Transparent.Name = "checkBoxEmphasis1Transparent";
-            this.checkBoxEmphasis1Transparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxEmphasis1Transparent.Size = new System.Drawing.Size(83, 17);
             this.checkBoxEmphasis1Transparent.TabIndex = 5;
             this.checkBoxEmphasis1Transparent.Text = "Transparent";
             this.checkBoxEmphasis1Transparent.UseVisualStyleBackColor = true;
@@ -1140,7 +1151,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxPatternTransparent.AutoSize = true;
             this.checkBoxPatternTransparent.Location = new System.Drawing.Point(266, 19);
             this.checkBoxPatternTransparent.Name = "checkBoxPatternTransparent";
-            this.checkBoxPatternTransparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxPatternTransparent.Size = new System.Drawing.Size(83, 17);
             this.checkBoxPatternTransparent.TabIndex = 4;
             this.checkBoxPatternTransparent.Text = "Transparent";
             this.checkBoxPatternTransparent.UseVisualStyleBackColor = true;
@@ -1208,9 +1219,9 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.checkBoxAutoTransparentBackground.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxAutoTransparentBackground.AutoSize = true;
-            this.checkBoxAutoTransparentBackground.Location = new System.Drawing.Point(481, 170);
+            this.checkBoxAutoTransparentBackground.Location = new System.Drawing.Point(485, 170);
             this.checkBoxAutoTransparentBackground.Name = "checkBoxAutoTransparentBackground";
-            this.checkBoxAutoTransparentBackground.Size = new System.Drawing.Size(168, 17);
+            this.checkBoxAutoTransparentBackground.Size = new System.Drawing.Size(164, 17);
             this.checkBoxAutoTransparentBackground.TabIndex = 36;
             this.checkBoxAutoTransparentBackground.Text = "Auto transparent background";
             this.checkBoxAutoTransparentBackground.UseVisualStyleBackColor = true;
@@ -1282,17 +1293,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom.Size = new System.Drawing.Size(1062, 333);
             this.splitContainerBottom.SplitterDistance = 658;
             this.splitContainerBottom.TabIndex = 39;
-            // 
-            // buttonSpellCheckDownload
-            // 
-            this.buttonSpellCheckDownload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSpellCheckDownload.Location = new System.Drawing.Point(367, 19);
-            this.buttonSpellCheckDownload.Name = "buttonSpellCheckDownload";
-            this.buttonSpellCheckDownload.Size = new System.Drawing.Size(28, 21);
-            this.buttonSpellCheckDownload.TabIndex = 42;
-            this.buttonSpellCheckDownload.Text = "...";
-            this.buttonSpellCheckDownload.UseVisualStyleBackColor = true;
-            this.buttonSpellCheckDownload.Click += new System.EventHandler(this.buttonSpellCheckDownload_Click);
             // 
             // textBoxCurrentText
             // 

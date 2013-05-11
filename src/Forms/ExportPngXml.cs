@@ -984,8 +984,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-
-
             int width = 0;
             int height = 0;
             GetResolution(ref width, ref height);
