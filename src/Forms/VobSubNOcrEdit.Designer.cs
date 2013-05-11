@@ -45,7 +45,6 @@
             this.listBoxLinesForeground = new System.Windows.Forms.ListBox();
             this.contextMenuLinesForeground = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeForegroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.buttonMakeItalic = new System.Windows.Forms.Button();
             this.buttonZoomOut = new System.Windows.Forms.Button();
             this.buttonZoomIn = new System.Windows.Forms.Button();
             this.labelCharacters = new System.Windows.Forms.Label();
@@ -59,6 +58,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonImport = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.labelNOcrCharInfo = new System.Windows.Forms.Label();
             this.groupBoxCurrentCompareImage.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.contextMenuStripLinesBackground.SuspendLayout();
@@ -110,12 +110,12 @@
             this.groupBoxCurrentCompareImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxCurrentCompareImage.Controls.Add(this.labelNOcrCharInfo);
             this.groupBoxCurrentCompareImage.Controls.Add(this.groupBox2);
             this.groupBoxCurrentCompareImage.Controls.Add(this.label2);
             this.groupBoxCurrentCompareImage.Controls.Add(this.listBoxlinesBackground);
             this.groupBoxCurrentCompareImage.Controls.Add(this.labelLines);
             this.groupBoxCurrentCompareImage.Controls.Add(this.listBoxLinesForeground);
-            this.groupBoxCurrentCompareImage.Controls.Add(this.buttonMakeItalic);
             this.groupBoxCurrentCompareImage.Controls.Add(this.buttonZoomOut);
             this.groupBoxCurrentCompareImage.Controls.Add(this.buttonZoomIn);
             this.groupBoxCurrentCompareImage.Controls.Add(this.labelCharacters);
@@ -229,17 +229,6 @@
             this.removeForegroundToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.removeForegroundToolStripMenuItem.Text = "Remove";
             this.removeForegroundToolStripMenuItem.Click += new System.EventHandler(this.removeForegroundToolStripMenuItem_Click);
-            // 
-            // buttonMakeItalic
-            // 
-            this.buttonMakeItalic.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonMakeItalic.Location = new System.Drawing.Point(299, 19);
-            this.buttonMakeItalic.Name = "buttonMakeItalic";
-            this.buttonMakeItalic.Size = new System.Drawing.Size(137, 23);
-            this.buttonMakeItalic.TabIndex = 37;
-            this.buttonMakeItalic.Text = "Make italic (DEV TEST)";
-            this.buttonMakeItalic.UseVisualStyleBackColor = true;
-            this.buttonMakeItalic.Click += new System.EventHandler(this.buttonMakeItalic_Click);
             // 
             // buttonZoomOut
             // 
@@ -370,6 +359,16 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // labelNOcrCharInfo
+            // 
+            this.labelNOcrCharInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelNOcrCharInfo.AutoSize = true;
+            this.labelNOcrCharInfo.Location = new System.Drawing.Point(104, 59);
+            this.labelNOcrCharInfo.Name = "labelNOcrCharInfo";
+            this.labelNOcrCharInfo.Size = new System.Drawing.Size(94, 13);
+            this.labelNOcrCharInfo.TabIndex = 43;
+            this.labelNOcrCharInfo.Text = "labelNOcrCharInfo";
+            // 
             // VobSubNOcrEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -418,7 +417,6 @@
         private System.Windows.Forms.Label labelTextAssociatedWithImage;
         private System.Windows.Forms.Button buttonDelete;
         private System.Windows.Forms.TextBox textBoxText;
-        private System.Windows.Forms.Button buttonMakeItalic;
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
@@ -435,5 +433,6 @@
         private System.Windows.Forms.ToolStripMenuItem removeForegroundToolStripMenuItem;
         private System.Windows.Forms.Button buttonImport;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Label labelNOcrCharInfo;
     }
 }

@@ -39,6 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             labelInfo.Text = string.Format("{0} elements in database", nocrChars.Count);
+            labelNOcrCharInfo.Text = string.Empty;
         }
 
         private void FillComboBox()
@@ -163,6 +164,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listBoxFileNames_SelectedIndexChanged(object sender, EventArgs e)
         {
+            labelNOcrCharInfo.Text = string.Empty;
             if (listBoxFileNames.SelectedIndex < 0)
                 return;
 
@@ -180,6 +182,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxItalic.Checked = _nocrChar.Italic;
                 pictureBoxCharacter.Invalidate();
                 groupBoxCurrentCompareImage.Enabled = true;
+                labelNOcrCharInfo.Text = string.Format("Size: {0}x{1}, margin top: {2} ", _nocrChar.Width, _nocrChar.Height, _nocrChar.MarginTop);
 
                 if (pictureBoxCharacter.Image != null)
                 {
@@ -282,43 +285,6 @@ namespace Nikse.SubtitleEdit.Forms
             background.Dispose();
             selPenF.Dispose();
             selPenB.Dispose();
-        }
-
-        private Point MakePointItalic(Point p, int height)
-        {
-            int _italicMoveRight = 2;
-            double _unItalicFactor = 0.2;            
-            return new Point((int)Math.Round(p.X + (height - p.Y) * _unItalicFactor - _italicMoveRight), p.Y);
-        }
-
-        private void buttonMakeItalic_Click(object sender, EventArgs e)
-        {
-            var c = new NOcrChar();
-
-            foreach (NOcrPoint op in _nocrChar.LinesForeground)
-            {
-                c.LinesForeground.Add(new NOcrPoint(MakePointItalic(op.Start, _nocrChar.Height), MakePointItalic(op.End, _nocrChar.Height)));
-            }
-            foreach (NOcrPoint op in _nocrChar.LinesBackground)
-            {
-                c.LinesBackground.Add(new NOcrPoint(MakePointItalic(op.Start, _nocrChar.Height), MakePointItalic(op.End, _nocrChar.Height)));
-            }
-            c.Text = _nocrChar.Text;
-            c.Width = _nocrChar.Width;
-            c.Height = _nocrChar.Height;
-            c.MarginTop = _nocrChar.MarginTop;
-            _nocrChar = c;
-            pictureBoxCharacter.Invalidate();
-
-            if (IsMatch())
-            {
-                groupBoxCurrentCompareImage.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                groupBoxCurrentCompareImage.BackColor = Control.DefaultBackColor;
-            }
-
         }
 
         private void buttonDelete_Click(object sender, EventArgs e)
@@ -489,6 +455,8 @@ namespace Nikse.SubtitleEdit.Forms
             int notImportedCount = 0;
             openFileDialog1.Filter = "nOCR files|nOCR_*.xml";
             openFileDialog1.InitialDirectory = Configuration.DataDirectory;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Title = "Import existing nOCR database into current";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 foreach (NOcrChar newChar in VobSubOcr.LoadNOcr(openFileDialog1.FileName))
