@@ -139,6 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom = new System.Windows.Forms.SplitContainer();
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.groupBoxNOCR.SuspendLayout();
@@ -1331,6 +1332,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
             // 
+            // timerHideStatus
+            // 
+            this.timerHideStatus.Interval = 2000;
+            this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
+            // 
             // VobSubOcr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1508,5 +1514,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonLineOcrEditLanguage;
         private System.Windows.Forms.Button buttonLineOcrNewLanguage;
         private System.Windows.Forms.Button buttonSpellCheckDownload;
+        private System.Windows.Forms.Timer timerHideStatus;
     }
 }
