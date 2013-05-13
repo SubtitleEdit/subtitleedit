@@ -1369,6 +1369,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                                         //line = line.Remove(match.Index, match.Value.Length).Insert(match.Index, guess);
                                         line = replacedLine;
                                         wordsNotFound--;
+                                        if (log && UnknownWordsFound.Count > 0)
+                                            UnknownWordsFound.RemoveAt(UnknownWordsFound.Count - 1);
                                         correct = true;
                                         break;
                                     }

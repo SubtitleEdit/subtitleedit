@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic
             buffer[3] = 0;
             for (int i = 0; i < _bitmapData.Length; i += 4)
             {
-                if (_bitmapData[i + 2] < 160 || _bitmapData[i + 1] < 160 || _bitmapData[i] < 160)
+                if (_bitmapData[i + 2] + _bitmapData[i + 1] + _bitmapData[i] < 300)
                     Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
             }
         }
