@@ -568,7 +568,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool TopToBottom { get; set; }
         public int DefaultMillisecondsForUnknownDurations { get; set; }
         public bool PromptForUnknownWords { get; set; }
-        public bool AutoBreakSubtitleIfMoreThanTwoLines { get; set; }        
+        public bool AutoBreakSubtitleIfMoreThanTwoLines { get; set; }
         public double ItalicFactor { get; set; }
         public bool LineOcrDraw { get; set; }
         public bool LineOcrAdvancedItalic { get; set; }
@@ -1724,7 +1724,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.VobSubOcr.PromptForUnknownWords = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("AutoBreakSubtitleIfMoreThanTwoLines");
             if (subNode != null)
-                settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines = Convert.ToBoolean(subNode.InnerText);           
+                settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ItalicFactor");
             if (subNode != null)
                 settings.VobSubOcr.ItalicFactor = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
@@ -2407,7 +2407,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("TopToBottom", settings.VobSubOcr.TopToBottom.ToString());
             textWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString());
             textWriter.WriteElementString("PromptForUnknownWords", settings.VobSubOcr.PromptForUnknownWords.ToString());
-            textWriter.WriteElementString("AutoBreakSubtitleIfMoreThanTwoLines", settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines.ToString());            
+            textWriter.WriteElementString("AutoBreakSubtitleIfMoreThanTwoLines", settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines.ToString());
             textWriter.WriteElementString("ItalicFactor", settings.VobSubOcr.ItalicFactor.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("LineOcrDraw", settings.VobSubOcr.LineOcrDraw.ToString());
             textWriter.WriteElementString("LineOcrAdvancedItalic", settings.VobSubOcr.LineOcrAdvancedItalic.ToString());
@@ -2415,7 +2415,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("LineOcrLastSpellcheck", settings.VobSubOcr.LineOcrLastSpellcheck);
             textWriter.WriteElementString("LineOcrXOrMorePixelsMakesSpace", settings.VobSubOcr.LineOcrXOrMorePixelsMakesSpace.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("LineOcrMinLineHeight", settings.VobSubOcr.LineOcrMinLineHeight.ToString(CultureInfo.InvariantCulture));
-            textWriter.WriteElementString("LineOcrMaxLineHeight", settings.VobSubOcr.LineOcrMaxLineHeight.ToString(CultureInfo.InvariantCulture));           
+            textWriter.WriteElementString("LineOcrMaxLineHeight", settings.VobSubOcr.LineOcrMaxLineHeight.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("MultipleSearchAndReplaceList", "");

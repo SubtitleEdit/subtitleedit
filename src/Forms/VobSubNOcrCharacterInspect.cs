@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         listBoxInspectItems.Items.Add(match.Text);
                         _matchList.Add(match);
-                    }                    
+                    }
                 }
                 index++;
             }
@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonUpdate_Click(object sender, EventArgs e)        
+        private void buttonUpdate_Click(object sender, EventArgs e)
         {
             if (_nocrChar != null)
             {
@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonDelete_Click(object sender, EventArgs e)
         {
-            
+
             if (_nocrChar != null)
             {
                 _nocrChars.Remove(_nocrChar);
