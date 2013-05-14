@@ -223,7 +223,7 @@ namespace Nikse.SubtitleEdit.Forms
                         end.X++;
                     e.Graphics.DrawLine(foreground, start, end);
                     if (op == selectedPoint)
-                        e.Graphics.DrawLine(selPenF, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));                    
+                        e.Graphics.DrawLine(selPenF, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
                 }
                 foreach (NOcrPoint op in _nocrChar.LinesBackground)
                 {
@@ -396,17 +396,17 @@ namespace Nikse.SubtitleEdit.Forms
                 _startDone = false;
                 pictureBoxCharacter.Invalidate();
             }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z) 
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z)
             {
                 e.SuppressKeyPress = true;
                 Undo();
             }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Y) 
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Y)
             {
                 e.SuppressKeyPress = true;
                 Redo();
             }
-        }       
+        }
 
         private void removeForegroundToolStripMenuItem_Click(object sender, EventArgs e)
         {

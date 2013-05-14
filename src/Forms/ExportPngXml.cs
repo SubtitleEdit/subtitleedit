@@ -1408,7 +1408,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_exportType == "VOBSUB" && Configuration.Settings.Tools.ExportVobSubFontSize > 0)
                 _subtitleFontSize = Configuration.Settings.Tools.ExportVobSubFontSize;
             else if (_exportType == "BLURAYSUP" && Configuration.Settings.Tools.ExportBluRayFontSize > 0)
-                _subtitleFontSize = Configuration.Settings.Tools.ExportBluRayFontSize;            
+                _subtitleFontSize = Configuration.Settings.Tools.ExportBluRayFontSize;
 
             if (_exportType == "VOBSUB")
             {

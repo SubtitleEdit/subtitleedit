@@ -33,10 +33,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            //10:56:54:12 FEATURING BRIAN LORENTE AND THE 
+            //10:56:54:12 FEATURING BRIAN LORENTE AND THE
             //10:56:59:18 USUAL SUSPECTS.
-            //10:57:15:18 \M 
-            //10:57:20:07 >> HOW WE DOING TONIGHT, 
+            //10:57:15:18 \M
+            //10:57:20:07 >> HOW WE DOING TONIGHT,
             //10:57:27:17 MICHIGAN?
 
             var sb = new StringBuilder();

@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (bitmap != null)
             {
                 pictureBoxCharacter.Image = bitmap;
-                SizePictureBox();                
+                SizePictureBox();
             }
 
             labelInfo.Text = string.Format("{0} elements in database", nocrChars.Count);
@@ -296,7 +296,7 @@ namespace Nikse.SubtitleEdit.Forms
             FillComboBox();
             if (comboBoxTexts.Items.Count > 0)
                 comboBoxTexts.SelectedIndex = 0;
-        }      
+        }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
