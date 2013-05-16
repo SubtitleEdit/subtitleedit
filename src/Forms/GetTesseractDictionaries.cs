@@ -20,14 +20,16 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
-            Text = Configuration.Settings.Language.GetDictionaries.Title;
-//            labelDescription1.Text = Configuration.Settings.Language.GetDictionaries.DescriptionLine1;
-            linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetDictionaries.OpenDictionariesFolder;
-            labelChooseLanguageAndClickDownload.Text = Configuration.Settings.Language.GetDictionaries.ChooseLanguageAndClickDownload;
-            buttonDownload.Text = Configuration.Settings.Language.GetDictionaries.Download;
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.GetTesseractDictionaries.Title))
+            {
+                Text = Configuration.Settings.Language.GetTesseractDictionaries.Title;
+                labelDescription1.Text = Configuration.Settings.Language.GetTesseractDictionaries.DescriptionLine1;
+                linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetTesseractDictionaries.OpenDictionariesFolder;
+                labelChooseLanguageAndClickDownload.Text = Configuration.Settings.Language.GetTesseractDictionaries.ChooseLanguageAndClickDownload;
+                buttonDownload.Text = Configuration.Settings.Language.GetTesseractDictionaries.Download;
+            }
+            labelPleaseWait.Text = string.Empty;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
-            labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
-
             LoadDictionaryList("Nikse.SubtitleEdit.Resources.TesseractDictionaries.xml.zip");
             FixLargeFonts();
         }
@@ -122,7 +124,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.Error != null)
             {
-                MessageBox.Show("Download failed!");
+                MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed);
                 DialogResult = DialogResult.Cancel;
                 return;
             }
