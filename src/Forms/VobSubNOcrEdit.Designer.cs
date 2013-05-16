@@ -34,6 +34,7 @@
             this.listBoxFileNames = new System.Windows.Forms.ListBox();
             this.comboBoxTexts = new System.Windows.Forms.ComboBox();
             this.groupBoxCurrentCompareImage = new System.Windows.Forms.GroupBox();
+            this.labelNOcrCharInfo = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.radioButtonCold = new System.Windows.Forms.RadioButton();
             this.radioButtonHot = new System.Windows.Forms.RadioButton();
@@ -58,7 +59,6 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonImport = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.labelNOcrCharInfo = new System.Windows.Forms.Label();
             this.groupBoxCurrentCompareImage.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.contextMenuStripLinesBackground.SuspendLayout();
@@ -130,6 +130,15 @@
             this.groupBoxCurrentCompareImage.TabIndex = 15;
             this.groupBoxCurrentCompareImage.TabStop = false;
             this.groupBoxCurrentCompareImage.Text = "Current compare image";
+            // 
+            // labelNOcrCharInfo
+            // 
+            this.labelNOcrCharInfo.AutoSize = true;
+            this.labelNOcrCharInfo.Location = new System.Drawing.Point(104, 59);
+            this.labelNOcrCharInfo.Name = "labelNOcrCharInfo";
+            this.labelNOcrCharInfo.Size = new System.Drawing.Size(94, 13);
+            this.labelNOcrCharInfo.TabIndex = 43;
+            this.labelNOcrCharInfo.Text = "labelNOcrCharInfo";
             // 
             // groupBox2
             // 
@@ -358,16 +367,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // labelNOcrCharInfo
-            // 
-            this.labelNOcrCharInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelNOcrCharInfo.AutoSize = true;
-            this.labelNOcrCharInfo.Location = new System.Drawing.Point(104, 59);
-            this.labelNOcrCharInfo.Name = "labelNOcrCharInfo";
-            this.labelNOcrCharInfo.Size = new System.Drawing.Size(94, 13);
-            this.labelNOcrCharInfo.TabIndex = 43;
-            this.labelNOcrCharInfo.Text = "labelNOcrCharInfo";
             // 
             // VobSubNOcrEdit
             // 

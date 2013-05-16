@@ -1,0 +1,1702 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="繁體中文">
+  <General>
+    <Title>Subtitle Edit</Title>
+    <Version>3.3.5</Version>
+    <TranslatedBy>翻譯: BAWAN</TranslatedBy>
+    <CultureName>zh-CHT</CultureName>
+    <HelpFile>
+    </HelpFile>
+    <OK>確定(&amp;O)</OK>
+    <Cancel>取消(&amp;A)</Cancel>
+    <Apply>套用</Apply>
+    <None>無</None>
+    <All>全部</All>
+    <Preview>預覽</Preview>
+    <SubtitleFiles>字幕檔案</SubtitleFiles>
+    <AllFiles>所有檔案</AllFiles>
+    <VideoFiles>視訊檔案</VideoFiles>
+    <OpenSubtitle>開啟舊檔字幕...</OpenSubtitle>
+    <OpenVideoFile>開啟舊檔視訊檔案...</OpenVideoFile>
+    <OpenVideoFileTitle>開啟舊檔視訊檔案...</OpenVideoFileTitle>
+    <NoVideoLoaded>未加載視訊</NoVideoLoaded>
+    <VideoInformation>視訊訊息</VideoInformation>
+    <PositionX>位置/時長: {0}</PositionX>
+    <StartTime>起始時間</StartTime>
+    <EndTime>結束時間</EndTime>
+    <Duration>時長</Duration>
+    <NumberSymbol>編號</NumberSymbol>
+    <Number>編號</Number>
+    <Text>文字</Text>
+    <HourMinutesSecondsMilliseconds>時:分:秒:毫秒</HourMinutesSecondsMilliseconds>
+    <Bold>粗體</Bold>
+    <Italic>斜體</Italic>
+    <Underline>下劃線</Underline>
+    <Visible>可見</Visible>
+    <FrameRate>畫面率</FrameRate>
+    <Name>名稱</Name>
+    <FileNameXAndSize>檔名稱: {0} ({1})</FileNameXAndSize>
+    <ResolutionX>解析度: {0}</ResolutionX>
+    <FrameRateX>畫面率: {0:0.0###}</FrameRateX>
+    <TotalFramesX>總畫面數: {0:#,##0.##}</TotalFramesX>
+    <VideoEncodingX>視訊編碼: {0}</VideoEncodingX>
+    <SingleLineLengths>單行長度: </SingleLineLengths>
+    <TotalLengthX>總長度: {0}</TotalLengthX>
+    <TotalLengthXSplitLine>總長度: {0} (分割行！)</TotalLengthXSplitLine>
+    <SplitLine>分割行</SplitLine>
+    <NotAvailable>N/A</NotAvailable>
+    <OverlapPreviousLineX>重疊上一行 ({0:#,##0.###})</OverlapPreviousLineX>
+    <OverlapX>重疊 ({0:#,##0.###})</OverlapX>
+    <OverlapNextX>重疊下一行 ({0:#,##0.###})</OverlapNextX>
+    <Negative>負值</Negative>
+    <RegularExpressionIsNotValid>正則表達式無效！</RegularExpressionIsNotValid>
+    <SubtitleSaved>字幕已儲存</SubtitleSaved>
+    <CurrentSubtitle>現用的字幕</CurrentSubtitle>
+    <OriginalText>原始文字</OriginalText>
+    <OpenOriginalSubtitleFile>開啟舊檔原始字幕檔案...</OpenOriginalSubtitleFile>
+    <PleaseWait>請稍候...</PleaseWait>
+    <SessionKey>會話密鑰</SessionKey>
+    <UserName>使用者名</UserName>
+    <UserNameAlreadyInUse>使用者名已被使用</UserNameAlreadyInUse>
+    <WebServiceUrl>Web 服務網址</WebServiceUrl>
+    <IP>IP</IP>
+    <VideoWindowTitle>視訊 - {0}</VideoWindowTitle>
+    <AudioWindowTitle>音訊 - {0}</AudioWindowTitle>
+    <ControlsWindowTitle>控制 - {0}</ControlsWindowTitle>
+    <Advanced>進階</Advanced>
+    <Style>型態</Style>
+    <Class>等級</Class>
+    <GeneralText>一般</GeneralText>
+    <LineNumber>行號</LineNumber>
+    <Before>之前</Before>
+    <After>之後</After>
+    <Size>大小</Size>
+  </General>
+  <About>
+    <Title>關於 Subtitle Edit</Title>
+    <AboutText1>Subtitle Edit 是遵照「GNU 公共授權協定」的免費軟體，
+您可以自由分發、修改和使用。
+
+C# 原始碼可從 http://code.google.com/p/subtitleedit 獲得。
+
+訪問 www.nikse.dk 以獲得最新版本。
+
+非常歡迎您提出建議，信件: mailto:nikse.dk@gmail.com</AboutText1>
+  </About>
+  <AddToNames>
+    <Title>新增到 名稱/其它 清單</Title>
+    <Description>新增到 名稱/其它 清單 (區分大小寫)</Description>
+  </AddToNames>
+  <AddToOcrReplaceList>
+    <Title>新增到 OCR 置換清單</Title>
+    <Description>加入一對到 OCR 置換清單</Description>
+  </AddToOcrReplaceList>
+  <AddToUserDictionary>
+    <Title>新增到使用者詞典</Title>
+    <Description>加入單詞到使用者詞典</Description>
+  </AddToUserDictionary>
+  <AddWaveForm>
+    <Title>生成波形資料</Title>
+    <SourceVideoFile>來源視訊檔案:</SourceVideoFile>
+    <GenerateWaveFormData>生成波形資料</GenerateWaveFormData>
+    <PleaseWait>這可能需要幾分鐘 - 請稍候</PleaseWait>
+    <VlcMediaPlayerNotFoundTitle>找不到 VLC 媒體播放器</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>Subtitle Edit 需要 VLC 媒體播放器 1.1.x 或更新版本來提取音訊資料。</VlcMediaPlayerNotFound>
+    <GoToVlcMediaPlayerHomePage>您要訪問 VLC 媒體播放器的首頁嗎？</GoToVlcMediaPlayerHomePage>
+    <GeneratingPeakFile>正在生成峰值檔案...</GeneratingPeakFile>
+    <GeneratingSpectrogram>正在生成頻譜圖...</GeneratingSpectrogram>
+    <ExtractingSeconds>正在提取音訊檔案: {0:0.0} 秒</ExtractingSeconds>
+    <ExtractingMinutes>正在提取音訊檔案: {0}.{1:00} 分</ExtractingMinutes>
+  </AddWaveForm>
+  <AdjustDisplayDuration>
+    <Title>調整時長</Title>
+    <AdjustVia>調整</AdjustVia>
+    <Seconds>秒數</Seconds>
+    <Percent>百分比</Percent>
+    <Recalculate>重新計算</Recalculate>
+    <AddSeconds>增加秒數</AddSeconds>
+    <SetAsPercent>設定為時長百分比</SetAsPercent>
+    <Note>說明: 顯示時間不會重疊下一個文字的起始時間</Note>
+    <PleaseSelectAValueFromTheDropDownList>請從下拉清單中選取一個數值</PleaseSelectAValueFromTheDropDownList>
+    <PleaseChoose>- 請選取 -</PleaseChoose>
+  </AdjustDisplayDuration>
+  <ApplyDurationLimits>
+    <Title>套用時長限制</Title>
+    <FixesAvailable>可用修復: {0}</FixesAvailable>
+    <UnableToFix>無法修復 {0}</UnableToFix>
+  </ApplyDurationLimits>
+  <AutoBreakUnbreakLines>
+    <TitleAutoBreak>自動平衡所選行</TitleAutoBreak>
+    <TitleUnbreak>移除所選行的換行符</TitleUnbreak>
+    <LinesFoundX>找到行數: {0}</LinesFoundX>
+    <OnlyBreakLinesLongerThan>僅中斷超過下列長度的行</OnlyBreakLinesLongerThan>
+    <OnlyUnbreakLinesLongerThan>僅不中斷超過下列長度的行</OnlyUnbreakLinesLongerThan>
+  </AutoBreakUnbreakLines>
+  <BatchConvert>
+    <Title>批次轉換</Title>
+    <Input>輸入</Input>
+    <InputDescription>輸入檔案 (瀏覽或拖放)</InputDescription>
+    <Status>狀態</Status>
+    <Output>輸出</Output>
+    <ChooseOutputFolder>選取輸出資料夾</ChooseOutputFolder>
+    <OverwriteExistingFiles>覆蓋已有檔案</OverwriteExistingFiles>
+    <Style>型態...</Style>
+    <ConvertOptions>轉換選項</ConvertOptions>
+    <AutoBreakLongLines>自動中斷長行</AutoBreakLongLines>
+    <FixItalics>修復斜體</FixItalics>
+    <RemoveFormatting>移除格式化標籤</RemoveFormatting>
+    <RemoveTextForHI>移除 HI 文字</RemoveTextForHI>
+    <ReDoCasing>重做外殼</ReDoCasing>
+    <Convert>轉換</Convert>
+    <NothingToConvert>沒有什麼可轉換的！</NothingToConvert>
+    <PleaseChooseOutputFolder>請選取輸出資料夾</PleaseChooseOutputFolder>
+    <Converted>已轉換</Converted>
+    <ConvertedX>已轉換 ({0})</ConvertedX>
+  </BatchConvert>
+  <Beamer>
+    <Title>投影儀</Title>
+  </Beamer>
+  <ChangeCasing>
+    <Title>大小寫轉換</Title>
+    <ChangeCasingTo>大小寫轉換為</ChangeCasingTo>
+    <NormalCasing>標準大小寫。句首字母大寫。</NormalCasing>
+    <FixNamesCasing>修復名稱大小寫 (依據 Dictionaries\NamesEtc.xml)</FixNamesCasing>
+    <FixOnlyNamesCasing>僅修復名稱大小寫 (依據 Dictionaries\NamesEtc.xml)</FixOnlyNamesCasing>
+    <OnlyChangeAllUppercaseLines>僅變更全部大寫的行</OnlyChangeAllUppercaseLines>
+    <AllUppercase>全部大寫</AllUppercase>
+    <AllLowercase>全部小寫</AllLowercase>
+  </ChangeCasing>
+  <ChangeCasingNames>
+    <Title>大小寫轉換 - 名稱</Title>
+    <NamesFoundInSubtitleX>在字幕中找到名稱: {0}</NamesFoundInSubtitleX>
+    <Enabled>啟用</Enabled>
+    <Name>名稱</Name>
+    <LinesFoundX>找到行: {0}</LinesFoundX>
+  </ChangeCasingNames>
+  <ChangeFrameRate>
+    <Title>變更畫面率</Title>
+    <ConvertFrameRateOfSubtitle>轉換字幕畫面率</ConvertFrameRateOfSubtitle>
+    <FromFrameRate>從畫面率</FromFrameRate>
+    <ToFrameRate>到畫面率</ToFrameRate>
+    <FrameRateNotCorrect>畫面率不正確</FrameRateNotCorrect>
+    <FrameRateNotChanged>畫面率相同－沒有什麼可轉換</FrameRateNotChanged>
+  </ChangeFrameRate>
+  <ChangeSpeedInPercent>
+    <Title>調整速度百分比</Title>
+    <Info>調整字幕速度百分比</Info>
+  </ChangeSpeedInPercent>
+  <ChooseEncoding>
+    <Title>選取編碼模式</Title>
+    <CodePage>字碼頁</CodePage>
+    <DisplayName>顯示名稱</DisplayName>
+    <PleaseSelectAnEncoding>請選取一種編碼模式</PleaseSelectAnEncoding>
+  </ChooseEncoding>
+  <ChooseLanguage>
+    <Title>選取語系</Title>
+    <Language>語系</Language>
+  </ChooseLanguage>
+  <CompareSubtitles>
+    <Title>比較字幕</Title>
+    <PreviousDifference>上一個差異(&amp;P)</PreviousDifference>
+    <NextDifference>下一個差異(&amp;N)</NextDifference>
+    <SubtitlesNotAlike>字幕沒有相似之處</SubtitlesNotAlike>
+    <XNumberOfDifference>差異數量: {0}</XNumberOfDifference>
+    <ShowOnlyDifferences>僅顯示差異</ShowOnlyDifferences>
+    <OnlyLookForDifferencesInText>僅尋找差異文字</OnlyLookForDifferencesInText>
+    <CannotCompareWithImageBasedSubtitles>無法比較基於圖像的字幕</CannotCompareWithImageBasedSubtitles>
+  </CompareSubtitles>
+  <DCinemaProperties>
+    <Title>數字電影效能 (協同)</Title>
+    <TitleSmpte>數字電影效能 (美國影視協會)</TitleSmpte>
+    <SubtitleId>字幕 ID</SubtitleId>
+    <GenerateId>年代 ID</GenerateId>
+    <MovieTitle>電影標題</MovieTitle>
+    <ReelNumber>碟號</ReelNumber>
+    <Language>語系</Language>
+    <IssueDate>發行日期</IssueDate>
+    <EditRate>編輯速度</EditRate>
+    <Font>字型</Font>
+    <FontId>ID</FontId>
+    <FontUri>URI</FontUri>
+    <FontColor>彩色</FontColor>
+    <FontEffect>特效</FontEffect>
+    <FontEffectColor>特性彩色</FontEffectColor>
+    <FontSize>大小</FontSize>
+    <ChooseColor>選取彩色...</ChooseColor>
+  </DCinemaProperties>
+  <DvdSubrip>
+    <Title>從 DVD 提取字幕</Title>
+    <DvdGroupTitle>DVD 檔案/訊息</DvdGroupTitle>
+    <IfoFile>IFO 檔案</IfoFile>
+    <IfoFiles>IFO 檔案</IfoFiles>
+    <VobFiles>VOB 檔案</VobFiles>
+    <Add>加入...</Add>
+    <Remove>移除</Remove>
+    <Clear>清除</Clear>
+    <MoveUp>上移</MoveUp>
+    <MoveDown>下移</MoveDown>
+    <Languages>語系</Languages>
+    <PalNtsc>PAL/NTSC</PalNtsc>
+    <Pal>PAL (25fps)</Pal>
+    <Ntsc>NTSC (23.976fps)</Ntsc>
+    <StartRipping>開始提取</StartRipping>
+    <Abort>中止</Abort>
+    <AbortedByUser>使用者中止</AbortedByUser>
+    <ReadingSubtitleData>正在讀取字幕資料...</ReadingSubtitleData>
+    <RippingVobFileXofYZ>正在提取 VOB 檔案 {1}/{2}: {0}</RippingVobFileXofYZ>
+    <WrongIfoType>IFO 類型是 '{0}' 而不是 'DVDVIDEO-VTS'。{1}請嘗試其它檔案而不是 {2}</WrongIfoType>
+  </DvdSubrip>
+  <DvdSubRipChooseLanguage>
+    <Title>選取語系</Title>
+    <ChooseLanguageStreamId>選取語系 (流 ID)</ChooseLanguageStreamId>
+    <UnknownLanguage>不詳語系</UnknownLanguage>
+    <SubtitleImageXofYAndWidthXHeight>字幕圖像 {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImage>字幕圖像</SubtitleImage>
+  </DvdSubRipChooseLanguage>
+  <EbuSaveOtpions>
+    <Title>EBU 儲存選項</Title>
+    <GeneralSubtitleInformation>一般字幕訊息</GeneralSubtitleInformation>
+    <CodePageNumber>字碼頁編號</CodePageNumber>
+    <DiskFormatCode>磁碟格式代碼</DiskFormatCode>
+    <CharacterCodeTable>字元表</CharacterCodeTable>
+    <LanguageCode>語系代碼</LanguageCode>
+    <OriginalProgramTitle>原始程式標題</OriginalProgramTitle>
+    <OriginalEpisodeTitle>原始劇集標題</OriginalEpisodeTitle>
+    <TranslatedProgramTitle>翻譯程式標題</TranslatedProgramTitle>
+    <TranslatedEpisodeTitle>翻譯劇集標題</TranslatedEpisodeTitle>
+    <TranslatorsName>譯者名稱</TranslatorsName>
+    <SubtitleListReferenceCode>字幕清單參考代碼</SubtitleListReferenceCode>
+    <CountryOfOrigin>原產國</CountryOfOrigin>
+    <RevisionNumber>校訂編號</RevisionNumber>
+    <MaxNoOfDisplayableChars>每行最多字元數</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>最多行數</MaxNumberOfDisplayableRows>
+    <DiskSequenceNumber>磁碟序列編號</DiskSequenceNumber>
+    <TotalNumberOfDisks>磁碟總數</TotalNumberOfDisks>
+    <Import>匯入...</Import>
+    <TextAndTimingInformation>文字和計時訊息</TextAndTimingInformation>
+    <JustificationCode>調整代碼</JustificationCode>
+    <Errors>錯誤</Errors>
+    <ErrorsX>錯誤: {0}</ErrorsX>
+    <MaxLengthError>行 {0} 超出了最大長度 ({1}) by {2}: {3}</MaxLengthError>
+    <TextUnchangedPresentation>未改變的演示</TextUnchangedPresentation>
+    <TextLeftJustifiedText>靠齊左的文字</TextLeftJustifiedText>
+    <TextCentredText>齊中的文字</TextCentredText>
+    <TextRightJustifiedText>靠齊右的文字</TextRightJustifiedText>
+  </EbuSaveOtpions>
+  <EffectKaraoke>
+    <Title>卡拉 OK 效果</Title>
+    <ChooseColor>選取彩色:</ChooseColor>
+    <TotalMilliseconds>總毫秒數:</TotalMilliseconds>
+    <EndDelayInMilliseconds>末尾延時(毫秒):</EndDelayInMilliseconds>
+  </EffectKaraoke>
+  <EffectTypewriter>
+    <Title>打字機效果</Title>
+    <TotalMilliseconds>總毫秒數:</TotalMilliseconds>
+    <EndDelayInMillisecs>末尾延時(毫秒):</EndDelayInMillisecs>
+  </EffectTypewriter>
+  <ExportPngXml>
+    <Title>匯出 BDN XML/PNG</Title>
+    <ImageSettings>圖像設定</ImageSettings>
+    <FontFamily>字型家族</FontFamily>
+    <FontSize>字型大小</FontSize>
+    <FontColor>字型彩色</FontColor>
+    <BorderColor>邊緣彩色</BorderColor>
+    <BorderWidth>邊緣寬度</BorderWidth>
+    <ImageFormat>圖像格式</ImageFormat>
+    <AntiAlias>反鋸齒</AntiAlias>
+    <SideBySide3D>並排 3D</SideBySide3D>
+    <ExportAllLines>匯出所有行...</ExportAllLines>
+    <XImagesSavedInY>{0} 個圖像被儲存在 {1}</XImagesSavedInY>
+    <VideoResolution>視訊解析度</VideoResolution>
+    <Align>對齊</Align>
+    <Left>左</Left>
+    <Right>右</Right>
+    <Center>中</Center>
+    <BottomMargin>底邊距</BottomMargin>
+    <SaveBluRraySupAs>選取藍光 sup 檔名</SaveBluRraySupAs>
+    <SaveVobSubAs>選取 VobSub 檔名</SaveVobSubAs>
+    <SaveFabImageScriptAs>選取藍光 sup 檔名</SaveFabImageScriptAs>
+    <SaveDvdStudioProStlAs>選取 DVD Studio Pro STL 檔名</SaveDvdStudioProStlAs>
+  </ExportPngXml>
+  <ExportText>
+    <Title>匯出文字</Title>
+    <Preview>預覽</Preview>
+    <ExportOptions>匯出選項</ExportOptions>
+    <FormatText>格式文字</FormatText>
+    <None>無</None>
+    <MergeAllLines>合併所有行</MergeAllLines>
+    <UnbreakLines>不中斷行</UnbreakLines>
+    <RemoveStyling>移除型態</RemoveStyling>
+    <ShowLineNumbers>顯示行號</ShowLineNumbers>
+    <AddNewLineAfterLineNumber>在行號後加入新行</AddNewLineAfterLineNumber>
+    <ShowTimeCode>顯示時間碼</ShowTimeCode>
+    <AddNewLineAfterTimeCode>在時間碼後加入新行</AddNewLineAfterTimeCode>
+    <AddNewLineAfterTexts>在文字後加入新行</AddNewLineAfterTexts>
+    <AddNewLineBetweenSubtitles>在字幕間加入新行</AddNewLineBetweenSubtitles>
+    <TimeCodeFormat>時間碼格式</TimeCodeFormat>
+    <Srt>.srt</Srt>
+    <Milliseconds>毫秒</Milliseconds>
+    <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
+    <TimeCodeSeperator>時間碼分隔設定</TimeCodeSeperator>
+  </ExportText>
+  <FindDialog>
+    <Title>尋找</Title>
+    <Find>尋找</Find>
+    <Normal>標準</Normal>
+    <CaseSensitive>區分大小寫</CaseSensitive>
+    <RegularExpression>正則表達式</RegularExpression>
+  </FindDialog>
+  <FindSubtitleLine>
+    <Title>尋找字幕行</Title>
+    <Find>尋找(&amp;F)</Find>
+    <FindNext>尋找下一個(&amp;N)</FindNext>
+  </FindSubtitleLine>
+  <FixCommonErrors>
+    <Title>修復一般錯誤</Title>
+    <Step1>步驟 1/2 - 選取修復哪些錯誤</Step1>
+    <WhatToFix>修復內容</WhatToFix>
+    <Example>示例</Example>
+    <SelectAll>全部選取</SelectAll>
+    <InverseSelection>反向選取</InverseSelection>
+    <Back>&lt; 返回(&amp;B)</Back>
+    <Next>下一步(&amp;N) &gt;</Next>
+    <Step2>步驟 2/2 - 驗證修復</Step2>
+    <Fixes>修復</Fixes>
+    <Log>記錄</Log>
+    <Function>動作</Function>
+    <RemovedEmptyLine>移除空行</RemovedEmptyLine>
+    <RemovedEmptyLineAtTop>移除頂部空行</RemovedEmptyLineAtTop>
+    <RemovedEmptyLineAtBottom>移除底部空行</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLinesUnsedLineBreaks>移除 空行/無用換行符</RemovedEmptyLinesUnsedLineBreaks>
+    <EmptyLinesRemovedX>已移除空行: {0}</EmptyLinesRemovedX>
+    <FixOverlappingDisplayTimes>修復重疊的顯示時間</FixOverlappingDisplayTimes>
+    <FixShortDisplayTimes>修正過短的顯示時間</FixShortDisplayTimes>
+    <FixLongDisplayTimes>修正過長的顯示時間</FixLongDisplayTimes>
+    <FixInvalidItalicTags>修復無效的斜體標籤</FixInvalidItalicTags>
+    <RemoveUnneededSpaces>移除不需要的空格</RemoveUnneededSpaces>
+    <RemoveUnneededPeriods>移除不需要的句號</RemoveUnneededPeriods>
+    <FixMissingSpaces>修復丟失的空格</FixMissingSpaces>
+    <BreakLongLines>中斷長行</BreakLongLines>
+    <RemoveLineBreaks>移除只有一個句子的短文字中的換行符</RemoveLineBreaks>
+    <RemoveLineBreaksAll>移除除對話外所有短文字中的換行符</RemoveLineBreaksAll>
+    <FixUppercaseIInsindeLowercaseWords>修復小寫單詞中的 'i' 為大寫 (OCR 錯誤)</FixUppercaseIInsindeLowercaseWords>
+    <FixDoubleApostrophes>修復兩個單引號字元 ('') 為一個雙引號 (")</FixDoubleApostrophes>
+    <AddPeriods>在下一行以大寫字母開頭的行後面加入句號</AddPeriods>
+    <StartWithUppercaseLetterAfterParagraph>段落後以大寫字母開頭</StartWithUppercaseLetterAfterParagraph>
+    <StartWithUppercaseLetterAfterPeriodInsideParagraph>段落中的句號後以大寫字母開頭</StartWithUppercaseLetterAfterPeriodInsideParagraph>
+    <StartWithUppercaseLetterAfterColon>冒號/分號 後以大寫字母開頭</StartWithUppercaseLetterAfterColon>
+    <FixLowercaseIToUppercaseI>單獨的小寫 'i' 修復為 'I' (英語)</FixLowercaseIToUppercaseI>
+    <FixCommonOcrErrors>修復 OCR 一般錯誤 (使用 OCR 置換清單)</FixCommonOcrErrors>
+    <CommonOcrErrorsFixed>已修復 OCR 一般錯誤 (使用了 OcrReplaceList 檔案): {0}</CommonOcrErrorsFixed>
+    <RemoveSpaceBetweenNumber>移除數字間空格</RemoveSpaceBetweenNumber>
+    <FixDialogsOnOneLine>修復一行上的對話</FixDialogsOnOneLine>
+    <RemoveSpaceBetweenNumbersFixed>移除數字間空格已修復: {0}</RemoveSpaceBetweenNumbersFixed>
+    <FixTurkishAnsi>修復土耳其語 ANSI (冰島) 字母為 Unicode</FixTurkishAnsi>
+    <FixDanishLetterI>修復丹麥語字母 'i'</FixDanishLetterI>
+    <FixSpanishInvertedQuestionAndExclamationMarks>修復西班牙語反問號和感歎號</FixSpanishInvertedQuestionAndExclamationMarks>
+    <AddMissingQuote>加入丟失的引號 (")</AddMissingQuote>
+    <AddMissingQuotes>加入丟失的引號 (")</AddMissingQuotes>
+    <FixHyphens>修復以破折號開頭的行 (移除破折號)</FixHyphens>
+    <FixHyphensAdd>僅用一個破折號修復一對行 (加入破折號)</FixHyphensAdd>
+    <FixHyphen>修復以破折號開頭的行</FixHyphen>
+    <XHyphensFixed>已修復破折號: {0}</XHyphensFixed>
+    <AddMissingQuotesExample>"How are you?  -&gt; "How are you?"</AddMissingQuotesExample>
+    <XMissingQuotesAdded>已加入丟失的引號: {0}</XMissingQuotesAdded>
+    <Fix3PlusLines>修復超過兩行的字幕</Fix3PlusLines>
+    <Fix3PlusLine>修復超過兩行的字幕</Fix3PlusLine>
+    <X3PlusLinesFixed>已修復超過兩行的字幕: {0}</X3PlusLinesFixed>
+    <Analysing>正在分析...</Analysing>
+    <NothingToFix>沒有什麼要修復 :)</NothingToFix>
+    <FixesFoundX>已找到修復: {0}</FixesFoundX>
+    <XFixesApplied>已套用修復: {0}</XFixesApplied>
+    <NothingToFixBut>沒有什麼需要修復，但有幾個問題可以改進 - 詳見記錄</NothingToFixBut>
+    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>「單獨的小寫 'i' 修復為 'I' (英語)」已選中但現用的加載的字幕似乎不是英語。</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
+    <Continue>繼續</Continue>
+    <ContinueAnyway>仍要繼續嗎？</ContinueAnyway>
+    <UncheckedFixLowercaseIToUppercaseI>已取消選中「單獨的小寫 'i' 修復為 'I' (英語)」</UncheckedFixLowercaseIToUppercaseI>
+    <XIsChangedToUppercase>{0} 個 'i' 已變更為大寫</XIsChangedToUppercase>
+    <FixFirstLetterToUppercaseAfterParagraph>修復段落後的首字母為大寫</FixFirstLetterToUppercaseAfterParagraph>
+    <MergeShortLine>合併短行 (單個句子)</MergeShortLine>
+    <MergeShortLineAll>合併短行 (除對話外所有)</MergeShortLineAll>
+    <XLineBreaksAdded>{0} 個換行符已加入</XLineBreaksAdded>
+    <BreakLongLine>中斷長行</BreakLongLine>
+    <FixLongDisplayTime>修復過長的顯示時間</FixLongDisplayTime>
+    <FixInvalidItalicTag>修復無效的斜體</FixInvalidItalicTag>
+    <FixShortDisplayTime>修復過短的顯示時間</FixShortDisplayTime>
+    <FixOverlappingDisplayTime>修復重疊的顯示時間</FixOverlappingDisplayTime>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
+    <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
+    <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
+    <StartTimeLaterThanEndTime>文字編號 {0}: 起始時間晚於結束時間: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>無法修復文字編號 {0}: 起始時間晚於結束時間: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <XFixedToYZ>{0} 被修復為: {1}{2}</XFixedToYZ>
+    <UnableToFixTextXY>無法修復文字編號 {0}: {1}</UnableToFixTextXY>
+    <XOverlappingTimestampsFixed>{0} 個重疊時間已修復</XOverlappingTimestampsFixed>
+    <XDisplayTimesProlonged>{0} 個顯示時間已延長</XDisplayTimesProlonged>
+    <XInvalidHtmlTagsFixed>{0} 個無效 html 標籤已修復</XInvalidHtmlTagsFixed>
+    <XDisplayTimesShortned>{0} 個顯示時間已縮短</XDisplayTimesShortned>
+    <XLinesUnbreaked>{0} 行已取消中斷</XLinesUnbreaked>
+    <UnneededSpace>不需要的空格</UnneededSpace>
+    <XUnneededSpacesRemoved>{0} 個不需要的空格已移除</XUnneededSpacesRemoved>
+    <UnneededPeriod>不需要的句號</UnneededPeriod>
+    <XUnneededPeriodsRemoved>{0} 個不需要的句號已移除</XUnneededPeriodsRemoved>
+    <FixMissingSpace>修復丟失的空格</FixMissingSpace>
+    <XMissingSpacesAdded>{0} 個丟失的空格已加入</XMissingSpacesAdded>
+    <FixUppercaseIInsideLowercaseWord>修復小寫單詞中的大寫 'i'</FixUppercaseIInsideLowercaseWord>
+    <XPeriodsAdded>{0} 個句號已加入</XPeriodsAdded>
+    <FixMissingPeriodAtEndOfLine>加入行行尾丟失的句號</FixMissingPeriodAtEndOfLine>
+    <XDoubleApostrophesFixed>{0} 個雙引號已修復</XDoubleApostrophesFixed>
+    <XUppercaseIsFoundInsideLowercaseWords>{0} 個小寫單詞中的大寫 'i' 已找到</XUppercaseIsFoundInsideLowercaseWords>
+    <RefreshFixes>重整可用的修復</RefreshFixes>
+    <ApplyFixes>套用選取的修復</ApplyFixes>
+    <AutoBreak>自動換行(&amp;B)</AutoBreak>
+    <Unbreak>取消換行(&amp;U)</Unbreak>
+    <FixDoubleDash>修復 '-- '為 '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>移除 '&gt;&gt;'</FixDoubleGreaterThan>
+    <FixEllipsesStart>移除開頭的 '...'</FixEllipsesStart>
+    <FixMissingOpenBracket>修復行內丟失的 '['</FixMissingOpenBracket>
+    <FixMusicNotation>用自己喜歡的符號置換音符 (如 aTa)</FixMusicNotation>
+    <FixDoubleDashs>修復 '--'為 '...'</FixDoubleDashs>
+    <FixDoubleGreaterThans>移除開頭的 '&gt;&gt;'</FixDoubleGreaterThans>
+    <FixEllipsesStarts>移除開頭的 '...'</FixEllipsesStarts>
+    <FixMissingOpenBrackets>修復丟失的 '['</FixMissingOpenBrackets>
+    <FixMusicNotations>用 '*' 置換 'aTa'</FixMusicNotations>
+    <XFixDoubleDash>{0} 個 '--' 已修復</XFixDoubleDash>
+    <XFixDoubleGreaterThan>{0} 個 '&gt;&gt; 已移除'</XFixDoubleGreaterThan>
+    <XFixEllipsesStart>{0} 個開頭的 '...' 已移除</XFixEllipsesStart>
+    <XFixMissingOpenBracket>{0} 個行內丟失的 '[' 已修復</XFixMissingOpenBracket>
+    <XFixMusicNotation>{0} 個行內丟失的音符已修復</XFixMusicNotation>
+    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'aTa sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <NumberOfImportantLogMessages>{0} 條重要的記錄訊息！</NumberOfImportantLogMessages>
+    <FixedOkXY>完成 - {0}: {1}</FixedOkXY>
+  </FixCommonErrors>
+  <GetDictionaries>
+    <Title>需要詞典？</Title>
+    <DescriptionLine1>Subtitle Edit 的拼字檢查基於 NHunspell 引擎，它</DescriptionLine1>
+    <DescriptionLine2>使用的是 Open Office 的拼字檢查詞典。</DescriptionLine2>
+    <GetDictionariesHere>到此處取得詞典:</GetDictionariesHere>
+    <OpenOpenOfficeWiki>Open Office 維基詞典清單</OpenOpenOfficeWiki>
+    <GetAllDictionaries>取得所有字典</GetAllDictionaries>
+    <ChooseLanguageAndClickDownload>選取您的語系並點擊「下載」</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>開啟舊檔 'Dictionaries' 資料夾</OpenDictionariesFolder>
+    <Download>下載</Download>
+    <XDownloaded>{0} 已下載並安裝</XDownloaded>
+  </GetDictionaries>
+  <GoogleTranslate>
+    <Title>谷歌翻譯</Title>
+    <From>自:</From>
+    <To>至:</To>
+    <Translate>翻譯</Translate>
+    <PleaseWait>這可能需要一段時間，請稍候...</PleaseWait>
+    <PoweredByGoogleTranslate>由谷歌翻譯提供</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>由微軟翻譯提供</PoweredByMicrosoftTranslate>
+  </GoogleTranslate>
+  <GoogleOrMicrosoftTranslate>
+    <Title>谷歌 與 微軟 翻譯</Title>
+    <From>自:</From>
+    <To>至:</To>
+    <Translate>翻譯</Translate>
+    <SourceText>來源文字</SourceText>
+    <GoogleTranslate>谷歌翻譯</GoogleTranslate>
+    <MicrosoftTranslate>微軟翻譯</MicrosoftTranslate>
+  </GoogleOrMicrosoftTranslate>
+  <GoToLine>
+    <Title>轉到字幕編號</Title>
+    <XIsNotAValidNumber>{0} 個不是有效數字</XIsNotAValidNumber>
+  </GoToLine>
+  <ImportText>
+    <Title>匯入純文字</Title>
+    <OpenTextFile>開啟舊檔文字檔案...</OpenTextFile>
+    <ImportOptions>匯入選項</ImportOptions>
+    <Splitting>分割</Splitting>
+    <AutoSplitText>自動分割文字</AutoSplitText>
+    <OneLineIsOneSubtitle>一行是一個字幕</OneLineIsOneSubtitle>
+    <SplitAtBlankLines>在空行處分割</SplitAtBlankLines>
+    <MergeShortLines>用延長符合併短行</MergeShortLines>
+    <RemoveEmptyLines>移除空行</RemoveEmptyLines>
+    <RemoveLinesWithoutLetters>移除無字母的行</RemoveLinesWithoutLetters>
+    <GapBetweenSubtitles>字幕間隔 (毫秒)</GapBetweenSubtitles>
+    <Auto>自動</Auto>
+    <Fixed>固定</Fixed>
+    <Refresh>重整(&amp;R)</Refresh>
+    <TextFiles>文字檔案</TextFiles>
+    <PreviewLinesModifiedX>預覽 - 已修改段落: {0}</PreviewLinesModifiedX>
+  </ImportText>
+  <Interjections>
+    <Title>感歎詞</Title>
+  </Interjections>
+  <JoinSubtitles>
+    <Title>合併字幕</Title>
+    <Information>加入字幕以合併 (支援拖放)</Information>
+    <NumberOfLines>行數</NumberOfLines>
+    <StartTime>起始時間</StartTime>
+    <EndTime>結束時間</EndTime>
+    <FileName>檔名</FileName>
+    <Join>合併</Join>
+    <TotalNumberOfLinesX>總行數: {0:#,###,###}</TotalNumberOfLinesX>
+  </JoinSubtitles>
+  <Main>
+    <Menu>
+      <File>
+        <Title>檔案(&amp;F)</Title>
+        <New>開新檔案(&amp;N)</New>
+        <Open>開啟舊檔(&amp;O)</Open>
+        <OpenKeepVideo>開啟舊檔 (保留視訊)</OpenKeepVideo>
+        <Reopen>重新開啟舊檔(&amp;R)</Reopen>
+        <Save>儲存(&amp;S)</Save>
+        <SaveAs>另存新檔(&amp;A)...</SaveAs>
+        <RestoreAutoBackup>復原自動備份...</RestoreAutoBackup>
+        <AdvancedSubStationAlphaProperties>進階 Sub Station Alpha 特性...</AdvancedSubStationAlphaProperties>
+        <SubStationAlphaProperties>Sub Station Alpha 特性...</SubStationAlphaProperties>
+        <OpenOriginal>開啟舊檔原始字幕 (翻譯模式)...</OpenOriginal>
+        <SaveOriginal>儲存原始字幕</SaveOriginal>
+        <CloseOriginal>關閉原始字幕</CloseOriginal>
+        <OpenContainingFolder>開啟舊檔所在資料夾</OpenContainingFolder>
+        <Compare>比較(&amp;C)...</Compare>
+        <Statistics>統計(&amp;C)...</Statistics>
+        <Plugins>外掛程式(&amp;P)...</Plugins>
+        <ImportOcrFromDvd>從 DVD 匯入/OCR 字幕...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>匯入/OCR VobSub 字幕...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>匯入/OCR 藍光字幕...</ImportBluRaySupFile>
+        <ImportSubtitleFromMatroskaFile>從 Matroska 檔案匯入字幕...</ImportSubtitleFromMatroskaFile>
+        <ImportSubtitleWithManualChosenEncoding>手動選取編碼模式匯入字幕...</ImportSubtitleWithManualChosenEncoding>
+        <ImportText>匯入純文字...</ImportText>
+        <ImportTimecodes>匯入時間碼...</ImportTimecodes>
+        <Export>匯出</Export>
+        <ExportBdnXml>BDN xml/png...</ExportBdnXml>
+        <ExportBluRaySup>藍光 sup...</ExportBluRaySup>
+        <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
+        <ExportCavena890>Cavena 890...</ExportCavena890>
+        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportPac>PAC (熒屏電子學)...</ExportPac>
+        <ExportPlainText>純文字...</ExportPlainText>
+        <ExportAdobeEncoreFabImageScript>Adobe Encore FAB 圖像腳本...</ExportAdobeEncoreFabImageScript>
+        <ExportKoreanAtsFilePair>Korean ATS 檔案對...</ExportKoreanAtsFilePair>
+        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
+        <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
+        <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
+        <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
+        <ExportUltech130>Ultech 標題...</ExportUltech130>
+        <Exit>離開(&amp;X)</Exit>
+      </File>
+      <Edit>
+        <Title>編輯(&amp;E)</Title>
+        <Undo>復原</Undo>
+        <Redo>重做</Redo>
+        <ShowUndoHistory>顯示歷史記錄 (用於復原)</ShowUndoHistory>
+        <InsertUnicodeSymbol>插入 Unicode 符號</InsertUnicodeSymbol>
+        <Find>尋找(&amp;F)</Find>
+        <FindNext>尋找下一個(&amp;N)</FindNext>
+        <Replace>置換(&amp;R)</Replace>
+        <MultipleReplace>多重置換(&amp;M)...</MultipleReplace>
+        <GoToSubtitleNumber>轉到字幕編號(&amp;G)...</GoToSubtitleNumber>
+        <RightToLeftMode>從右向左閱讀模式</RightToLeftMode>
+        <ReverseRightToLeftStartEnd>反轉 RTL 開始/結束 (所選行)</ReverseRightToLeftStartEnd>
+        <ShowOriginalTextInAudioAndVideoPreview>在 音訊/視訊 預覽中顯示原始文字</ShowOriginalTextInAudioAndVideoPreview>
+      </Edit>
+      <Tools>
+        <Title>工具(&amp;T)</Title>
+        <AdjustDisplayDuration>調整時長(&amp;A)...</AdjustDisplayDuration>
+        <ApplyDurationLimits>套用時長限制...</ApplyDurationLimits>
+        <FixCommonErrors>修復一般錯誤(&amp;F)...</FixCommonErrors>
+        <StartNumberingFrom>編號起始位置...</StartNumberingFrom>
+        <RemoveTextForHearingImpaired>移除妨礙聽覺的文字...</RemoveTextForHearingImpaired>
+        <ChangeCasing>大小寫轉換...</ChangeCasing>
+        <ChangeFrameRate>變更畫面率...</ChangeFrameRate>
+        <ChangeSpeedInPercent>變更速度 (百分比)...</ChangeSpeedInPercent>
+        <MergeShortLines>合併短行...</MergeShortLines>
+        <SplitLongLines>分割長行...</SplitLongLines>
+        <MinimumDisplayTimeBetweenParagraphs>段落間最小顯示時間...</MinimumDisplayTimeBetweenParagraphs>
+        <SortBy>排序模式</SortBy>
+        <Number>編號</Number>
+        <StartTime>開始時間</StartTime>
+        <EndTime>結束時間</EndTime>
+        <Duration>時長</Duration>
+        <TextAlphabetically>文字 - 按字母順序</TextAlphabetically>
+        <TextSingleLineMaximumLength>文字 - 單行最大長度</TextSingleLineMaximumLength>
+        <TextTotalLength>文字 - 總長度</TextTotalLength>
+        <TextNumberOfLines>文字 - 行數</TextNumberOfLines>
+        <TextNumberOfCharactersPerSeconds>文字 - 字元數/秒</TextNumberOfCharactersPerSeconds>
+        <WordsPerMinute>文字 - 字數/秒 (wpm)</WordsPerMinute>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>從現用的字幕生成新的空白翻譯</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <BatchConvert>批次轉換...</BatchConvert>
+        <SplitSubtitle>分割字幕...</SplitSubtitle>
+        <AppendSubtitle>追加字幕...</AppendSubtitle>
+        <JoinSubtitles>合併字幕</JoinSubtitles>
+      </Tools>
+      <Video>
+        <Title>視訊(&amp;V)</Title>
+        <OpenVideo>開啟舊檔視訊檔案...</OpenVideo>
+        <ChooseAudioTrack>選取音軌...</ChooseAudioTrack>
+        <CloseVideo>關閉視訊檔案</CloseVideo>
+        <ShowHideVideo>顯示/隱藏 視訊</ShowHideVideo>
+        <ShowHideWaveForm>顯示/隱藏 波形</ShowHideWaveForm>
+        <ShowHideWaveformAndSpectrogram>顯示/隱藏 波形和頻譜圖</ShowHideWaveformAndSpectrogram>
+        <UnDockVideoControls>取消停靠視訊控件</UnDockVideoControls>
+        <ReDockVideoControls>重新停靠視訊控件</ReDockVideoControls>
+      </Video>
+      <SpellCheck>
+        <Title>拼字檢查(&amp;S)</Title>
+        <SpellCheck>拼字檢查(&amp;S)...</SpellCheck>
+        <FindDoubleWords>尋找雙字</FindDoubleWords>
+        <FindDoubleLines>尋找雙行</FindDoubleLines>
+        <GetDictionaries>取得字典...</GetDictionaries>
+        <AddToNamesEtcList>加入單詞到 名稱/其它 清單</AddToNamesEtcList>
+      </SpellCheck>
+      <Synchronization>
+        <Title>同步(&amp;Y)</Title>
+        <AdjustAllTimes>提前/推後 顯示...</AdjustAllTimes>
+        <VisualSync>視覺同步(&amp;V)...</VisualSync>
+        <PointSync>點同步(&amp;P)...</PointSync>
+        <PointSyncViaOtherSubtitle>通過其它字幕進行點同步...</PointSyncViaOtherSubtitle>
+      </Synchronization>
+      <AutoTranslate>
+        <Title>自動翻譯(&amp;A)</Title>
+        <TranslatePoweredByGoogle>翻譯 (由谷歌提供)...</TranslatePoweredByGoogle>
+        <TranslatePoweredByMicrosoft>翻譯 (由微軟提供)...</TranslatePoweredByMicrosoft>
+        <TranslateFromSwedishToDanish>瑞典語翻譯為丹麥語...</TranslateFromSwedishToDanish>
+      </AutoTranslate>
+      <Options>
+        <Title>選項(&amp;O)</Title>
+        <Settings>設定(&amp;S)...</Settings>
+        <ChooseLanguage>選取語系(&amp;C)...</ChooseLanguage>
+      </Options>
+      <Networking>
+        <Title>網路(&amp;N)</Title>
+        <StartNewSession>開始新會話</StartNewSession>
+        <JoinSession>加入會話</JoinSession>
+        <ShowSessionInfoAndLog>顯示會話訊息和記錄</ShowSessionInfoAndLog>
+        <Chat>聊天</Chat>
+        <LeaveSession>離開會話</LeaveSession>
+      </Networking>
+      <Help>
+        <Title>說明(&amp;H)</Title>
+        <Help>說明(&amp;H)</Help>
+        <About>關於(&amp;A)...</About>
+      </Help>
+      <ToolBar>
+        <New>開新檔案</New>
+        <Open>開啟舊檔</Open>
+        <Save>儲存</Save>
+        <SaveAs>另存新檔</SaveAs>
+        <Find>尋找</Find>
+        <Replace>置換</Replace>
+        <VisualSync>視覺同步</VisualSync>
+        <SpellCheck>拼字檢查</SpellCheck>
+        <Settings>設定</Settings>
+        <Help>說明</Help>
+        <ShowHideWaveForm>顯示/隱藏 音訊</ShowHideWaveForm>
+        <ShowHideVideo>顯示/隱藏 視訊</ShowHideVideo>
+      </ToolBar>
+      <ContextMenu>
+        <AdvancedSubStationAlphaSetStyle>進階 Sub Station Alpha - 設定型態</AdvancedSubStationAlphaSetStyle>
+        <SubStationAlphaSetStyle>Sub Station Alpha - 設定型態</SubStationAlphaSetStyle>
+        <SubStationAlphaStyles>Sub Station Alpha 型態...</SubStationAlphaStyles>
+        <AdvancedSubStationAlphaStyles>進階 Sub Station Alpha 型態...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetStyle>時間文字 - 設定型態</TimedTextSetStyle>
+        <TimedTextStyles>時間文字型態...</TimedTextStyles>
+        <SamiSetStyle>Sami - 設定等級</SamiSetStyle>
+        <Cut>剪下</Cut>
+        <Copy>複製</Copy>
+        <Paste>貼上</Paste>
+        <Delete>移除</Delete>
+        <SplitLineAtCursorPosition>在游標處分割行</SplitLineAtCursorPosition>
+        <AutoDurationCurrentLine>自動設定時長 (現用的行)</AutoDurationCurrentLine>
+        <SelectAll>全部選取</SelectAll>
+        <InsertFirstLine>插入行</InsertFirstLine>
+        <InsertBefore>之前插入</InsertBefore>
+        <InsertAfter>之後插入</InsertAfter>
+        <InsertSubtitleAfter>之後插入字幕...</InsertSubtitleAfter>
+        <CopyToClipboard>複製為文字</CopyToClipboard>
+        <Column>列</Column>
+        <ColumnDeleteText>移除文字</ColumnDeleteText>
+        <ColumnDeleteTextAndShiftCellsUp>移除文字並將單元格上移</ColumnDeleteTextAndShiftCellsUp>
+        <ColumnInsertEmptyTextAndShiftCellsDown>插入空白文字並將單元格下移</ColumnInsertEmptyTextAndShiftCellsDown>
+        <ColumnInsertTextFromSubtitle>從字幕插入文字...</ColumnInsertTextFromSubtitle>
+        <ColumnImportTextAndShiftCellsDown>匯入文字並將單元格下移</ColumnImportTextAndShiftCellsDown>
+        <ColumnPasteFromClipboard>貼上...</ColumnPasteFromClipboard>
+        <Split>分割</Split>
+        <MergeSelectedLines>合併所選行</MergeSelectedLines>
+        <MergeSelectedLinesASDialogue>合併所選行為對話</MergeSelectedLinesASDialogue>
+        <MergeWithLineBefore>與前行合併</MergeWithLineBefore>
+        <MergeWithLineAfter>與後行合併</MergeWithLineAfter>
+        <Normal>標準</Normal>
+        <Underline>下劃線</Underline>
+        <Color>彩色...</Color>
+        <FontName>字型名稱...</FontName>
+        <Alignment>排序...</Alignment>
+        <AutoBalanceSelectedLines>自動平衡所選行...</AutoBalanceSelectedLines>
+        <RemoveLineBreaksFromSelectedLines>移除所選行的換行符...</RemoveLineBreaksFromSelectedLines>
+        <TypewriterEffect>打字機效果...</TypewriterEffect>
+        <KaraokeEffect>卡拉 OK 效果...</KaraokeEffect>
+        <ShowSelectedLinesEarlierLater>提前/推後 顯示所選行...</ShowSelectedLinesEarlierLater>
+        <VisualSyncSelectedLines>視覺同步所選行...</VisualSyncSelectedLines>
+        <GoogleAndMicrosoftTranslateSelectedLine>谷歌/微軟 翻譯所選行...</GoogleAndMicrosoftTranslateSelectedLine>
+        <GoogleTranslateSelectedLines>谷歌翻譯所選行...</GoogleTranslateSelectedLines>
+        <AdjustDisplayDurationForSelectedLines>調整所選行時長...</AdjustDisplayDurationForSelectedLines>
+        <FixCommonErrorsInSelectedLines>修復所選行一般錯誤...</FixCommonErrorsInSelectedLines>
+        <ChangeCasingForSelectedLines>變更所選行大小寫...</ChangeCasingForSelectedLines>
+        <SaveSelectedLines>所選行另存新檔...</SaveSelectedLines>
+      </ContextMenu>
+    </Menu>
+    <Controls>
+      <SubtitleFormat>格式</SubtitleFormat>
+      <FileEncoding>編碼模式</FileEncoding>
+      <ListView>清單檢視</ListView>
+      <SourceView>來源檢視</SourceView>
+      <UndoChangesInEditPanel>復原編輯框內變更</UndoChangesInEditPanel>
+      <Previous>&lt; 上一行</Previous>
+      <Next>下一行 &gt;</Next>
+      <AutoBreak>自動換行</AutoBreak>
+      <Unbreak>取消換行</Unbreak>
+    </Controls>
+    <VideoControls>
+      <Translate>翻譯</Translate>
+      <Create>建立</Create>
+      <Adjust>調整</Adjust>
+      <SelectCurrentElementWhilePlaying>選取現用的播放時刻的字幕</SelectCurrentElementWhilePlaying>
+      <AutoRepeat>自動重複</AutoRepeat>
+      <AutoRepeatOn>自動重複於</AutoRepeatOn>
+      <AutoRepeatCount>重複次數(次)</AutoRepeatCount>
+      <AutoContinue>自動繼續</AutoContinue>
+      <AutoContinueOn>自動繼續於</AutoContinueOn>
+      <DelayInSeconds>延時(秒)</DelayInSeconds>
+      <OriginalText>原始文字</OriginalText>
+      <Previous>&lt;上一行(&amp;V)</Previous>
+      <Stop>停止(&amp;S)</Stop>
+      <PlayCurrent>播放現用的(&amp;P)</PlayCurrent>
+      <Next>下一行(&amp;N)&gt;</Next>
+      <Playing>正在播放...</Playing>
+      <RepeatingLastTime>正在重複... 最後一次</RepeatingLastTime>
+      <RepeatingXTimesLeft>正在重複... {0} 次剩餘</RepeatingXTimesLeft>
+      <AutoContinueInOneSecond>1 秒後自動繼續</AutoContinueInOneSecond>
+      <AutoContinueInXSeconds>{0} 秒後自動繼續</AutoContinueInXSeconds>
+      <StillTypingAutoContinueStopped>仍然輸入... 自動繼續已停止</StillTypingAutoContinueStopped>
+      <InsertNewSubtitleAtVideoPosition>在視訊位置插入新字幕(&amp;I)</InsertNewSubtitleAtVideoPosition>
+      <Auto>自動</Auto>
+      <PlayFromJustBeforeText>從文字前播放(&amp;T)</PlayFromJustBeforeText>
+      <Pause>暫停</Pause>
+      <GoToSubtitlePositionAndPause>轉到字幕位置並暫停</GoToSubtitlePositionAndPause>
+      <SetStartTime>設為起始時間(&amp;S)</SetStartTime>
+      <SetEndTimeAndGoToNext>設為結束時間並轉到下一行(&amp;E)</SetEndTimeAndGoToNext>
+      <AdjustedViaEndTime>通過結束時間調整 {0}</AdjustedViaEndTime>
+      <SetEndTime>設為結束時間(&amp;N)</SetEndTime>
+      <SetstartTimeAndOffsetOfRest>設為起始時間並偏移其餘(&amp;R)</SetstartTimeAndOffsetOfRest>
+      <SearchTextOnline>在網上搜尋文字</SearchTextOnline>
+      <GoogleTranslate>谷歌翻譯</GoogleTranslate>
+      <GoogleIt>谷歌翻譯該行</GoogleIt>
+      <SecondsBackShort>&lt;&lt;</SecondsBackShort>
+      <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
+      <VideoPosition>視訊位置:</VideoPosition>
+      <TranslateTip>提示: 使用 &lt;Alt + up/down&gt; 以轉到 上一行/下一行</TranslateTip>
+      <CreateTip>提示: 使用 &lt;Ctrl + left/right&gt; 鍵</CreateTip>
+      <AdjustTip>提示: 使用 &lt;Alt + up/down&gt; 以轉到 上一行/下一行</AdjustTip>
+      <BeforeChangingTimeInWaveFormX>變更波形內的時間之前: {0}</BeforeChangingTimeInWaveFormX>
+      <NewTextInsertAtX>已在 {0} 處插入新文字</NewTextInsertAtX>
+      <Center>齊中</Center>
+      <PlayRate>播放速度</PlayRate>
+      <Slow>慢</Slow>
+      <Normal>標準</Normal>
+      <Fast>快</Fast>
+      <VeryFast>很快</VeryFast>
+    </VideoControls>
+    <SaveChangesToUntitled>儲存變更到未命名檔案嗎？</SaveChangesToUntitled>
+    <SaveChangesToX>儲存變更到 "{0}" 嗎？</SaveChangesToX>
+    <SaveChangesToUntitledOriginal>儲存變更到未命名原始檔案嗎？</SaveChangesToUntitledOriginal>
+    <SaveChangesToOriginalX>儲存變更到原始 "{0}" 嗎？</SaveChangesToOriginalX>
+    <SaveSubtitleAs>字幕另存新檔...</SaveSubtitleAs>
+    <SaveOriginalSubtitleAs>原始字幕另存新檔...</SaveOriginalSubtitleAs>
+    <NoSubtitleLoaded>尚未加載字幕</NoSubtitleLoaded>
+    <VisualSyncSelectedLines>視覺同步 - 所選行</VisualSyncSelectedLines>
+    <VisualSyncTitle>視覺同步</VisualSyncTitle>
+    <BeforeVisualSync>視覺同步之前</BeforeVisualSync>
+    <VisualSyncPerformedOnSelectedLines>已對所選行執行視覺同步</VisualSyncPerformedOnSelectedLines>
+    <VisualSyncPerformed>視覺同步已執行</VisualSyncPerformed>
+    <ImportThisVobSubSubtitle>匯入這個 VobSub 字幕嗎？</ImportThisVobSubSubtitle>
+    <FileXIsLargerThan10Mb>檔案大於 10MB: {0}</FileXIsLargerThan10Mb>
+    <ContinueAnyway>仍要繼續嗎？</ContinueAnyway>
+    <BeforeLoadOf>加載 "{0}" 之前</BeforeLoadOf>
+    <LoadedSubtitleX>已加載字幕 "{0}"</LoadedSubtitleX>
+    <LoadedEmptyOrShort>已加載空白或很短的字幕 "{0}"</LoadedEmptyOrShort>
+    <FileIsEmptyOrShort>檔案是空的或是太短！</FileIsEmptyOrShort>
+    <FileNotFound>檔案找不到: {0}</FileNotFound>
+    <SavedSubtitleX>字幕 "{0}" 已儲存</SavedSubtitleX>
+    <SavedOriginalSubtitleX>原始字幕 "{0}" 已儲存</SavedOriginalSubtitleX>
+    <FileOnDiskModified>磁碟上的檔案已修改</FileOnDiskModified>
+    <OverwriteModifiedFile>您要用現用的檔案覆蓋檔案 "{0}" (修改於 {1}{2}{3}) 嗎？ (現用的檔案是從 {4} {5} 處的磁碟加載的)</OverwriteModifiedFile>
+    <UnableToSaveSubtitleX>無法儲存字幕檔案 "{0}"</UnableToSaveSubtitleX>
+    <BeforeNew>開新檔案之前</BeforeNew>
+    <New>開新檔案</New>
+    <BeforeConvertingToX>轉換為 {0} 之前</BeforeConvertingToX>
+    <ConvertedToX>轉換為 {0}</ConvertedToX>
+    <BeforeShowEarlier>提前顯示之前</BeforeShowEarlier>
+    <BeforeShowLater>推後顯示之前</BeforeShowLater>
+    <LineNumberX>行號: {0:#,##0.##}</LineNumberX>
+    <OpenVideoFile>開啟舊檔視訊檔案...</OpenVideoFile>
+    <NewFrameRateUsedToCalculateTimeCodes>新畫面率 ({0}) 用於計算 起始/結束 時間碼</NewFrameRateUsedToCalculateTimeCodes>
+    <NewFrameRateUsedToCalculateFrameNumbers>新畫面率 ({0}) 用於計算 起始/結束 畫面號</NewFrameRateUsedToCalculateFrameNumbers>
+    <FindContinue>搜尋的項目找不到。
+您要從文件開頭開始再搜尋一次嗎？</FindContinue>
+    <FindContinueTitle>繼續尋找？</FindContinueTitle>
+    <ReplaceContinueNotFound>搜尋的項目找不到。您要繼續從文件的開頭搜尋和置換嗎？</ReplaceContinueNotFound>
+    <ReplaceXContinue>搜尋的項目已被置換了 {0} 次。您要繼續從文件的開頭搜尋和置換嗎？</ReplaceXContinue>
+    <ReplaceContinueTitle>繼續置換？</ReplaceContinueTitle>
+    <SearchingForXFromLineY>正在搜尋 '{0}' 從行 {1}...</SearchingForXFromLineY>
+    <XFoundAtLineNumberY>'{0}' 已找到在行號 {1}</XFoundAtLineNumberY>
+    <XNotFound>'{0}' 找不到</XNotFound>
+    <BeforeReplace>置換之前: {0}</BeforeReplace>
+    <MatchFoundX>已找到符合: {0}</MatchFoundX>
+    <NoMatchFoundX>找不到符合: {0}</NoMatchFoundX>
+    <FoundNothingToReplace>找不到什麼可置換的</FoundNothingToReplace>
+    <ReplaceCountX>置換數量: {0}</ReplaceCountX>
+    <NoXFoundAtLineY>找到符合在行 {0}: {1}</NoXFoundAtLineY>
+    <OneReplacementMade>已進行一次置換。</OneReplacementMade>
+    <BeforeChangesMadeInSourceView>在來源視窗中進行變更之前</BeforeChangesMadeInSourceView>
+    <UnableToParseSourceView>無法解析來源視窗文字！</UnableToParseSourceView>
+    <GoToLineNumberX>轉到行號 {0}</GoToLineNumberX>
+    <CreateAdjustChangesApplied>已套用 建立/調整 行變更</CreateAdjustChangesApplied>
+    <SelectedLines>所選行</SelectedLines>
+    <BeforeDisplayTimeAdjustment>顯示時間調整之前</BeforeDisplayTimeAdjustment>
+    <DisplayTimeAdjustedX>已調整顯示時間: {0}</DisplayTimeAdjustedX>
+    <DisplayTimesAdjustedX>已調整顯示時間: {0}</DisplayTimesAdjustedX>
+    <StarTimeAdjustedX>已調整開始時間: {0}</StarTimeAdjustedX>
+    <BeforeCommonErrorFixes>修復一般錯誤之前</BeforeCommonErrorFixes>
+    <CommonErrorsFixedInSelectedLines>已修復所選行內的一般錯誤</CommonErrorsFixedInSelectedLines>
+    <CommonErrorsFixed>一般錯誤已修復</CommonErrorsFixed>
+    <BeforeRenumbering>重新編號之前</BeforeRenumbering>
+    <RenumberedStartingFromX>重新編號起始位置: {0}</RenumberedStartingFromX>
+    <BeforeRemovalOfTextingForHearingImpaired>移除妨礙聽覺的文字之前</BeforeRemovalOfTextingForHearingImpaired>
+    <TextingForHearingImpairedRemovedOneLine>已移除妨礙聽覺的文字: 1 行</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>已移除妨礙聽覺的文字: {0} 行</TextingForHearingImpairedRemovedXLines>
+    <SubtitleSplitted>字幕已分割</SubtitleSplitted>
+    <SubtitleAppendPrompt>這將追加一個已有的字幕到現用的加載的字幕中，它應當
+已與視訊檔案同步。
+
+您要繼續嗎？</SubtitleAppendPrompt>
+    <SubtitleAppendPromptTitle>追加字幕</SubtitleAppendPromptTitle>
+    <OpenSubtitleToAppend>開啟舊檔字幕以追加...</OpenSubtitleToAppend>
+    <AppendViaVisualSyncTitle>視覺同步 - 追加第二部分字幕</AppendViaVisualSyncTitle>
+    <AppendSynchronizedSubtitlePrompt>追加此已同步的字幕嗎？</AppendSynchronizedSubtitlePrompt>
+    <BeforeAppend>追加之前</BeforeAppend>
+    <SubtitleAppendedX>已追加字幕: {0}</SubtitleAppendedX>
+    <SubtitleNotAppended>未追加字幕！</SubtitleNotAppended>
+    <GoogleTranslate>谷歌翻譯</GoogleTranslate>
+    <MicrosoftTranslate>微軟翻譯</MicrosoftTranslate>
+    <BeforeGoogleTranslation>谷歌翻譯之前</BeforeGoogleTranslation>
+    <SelectedLinesTranslated>所選行已翻譯</SelectedLinesTranslated>
+    <SubtitleTranslated>字幕已翻譯</SubtitleTranslated>
+    <TranslateSwedishToDanish>將現用的加載的瑞典語字幕翻譯為丹麥語</TranslateSwedishToDanish>
+    <TranslateSwedishToDanishWarning>將現用的加載的「瑞典語」字幕翻譯為丹麥語嗎？(您確認是瑞典語？)</TranslateSwedishToDanishWarning>
+    <TranslatingViaNikseDkMt>通過 www.nikse.dk/mt 翻譯...</TranslatingViaNikseDkMt>
+    <BeforeSwedishToDanishTranslation>瑞典語翻譯為丹麥語之前</BeforeSwedishToDanishTranslation>
+    <TranslationFromSwedishToDanishComplete>瑞典語翻譯為丹麥語完成</TranslationFromSwedishToDanishComplete>
+    <TranslationFromSwedishToDanishFailed>瑞典語翻譯為丹麥語失敗</TranslationFromSwedishToDanishFailed>
+    <BeforeUndo>復原之前</BeforeUndo>
+    <UndoPerformed>已執行復原</UndoPerformed>
+    <RedoPerformed>已執行重做</RedoPerformed>
+    <NothingToUndo>沒什麼可復原</NothingToUndo>
+    <InvalidLanguageNameX>無效的語系名稱: {0}</InvalidLanguageNameX>
+    <UnableToChangeLanguage>無法變更語系！</UnableToChangeLanguage>
+    <NumberOfCorrectedWords>已修正單詞數量: {0}</NumberOfCorrectedWords>
+    <NumberOfSkippedWords>已略過單詞數量: {0}</NumberOfSkippedWords>
+    <NumberOfCorrectWords>正確單詞數量: {0}</NumberOfCorrectWords>
+    <NumberOfWordsAddedToDictionary>已新增到詞典的單詞數量: {0}</NumberOfWordsAddedToDictionary>
+    <NumberOfNameHits>名稱命中數量: {0}</NumberOfNameHits>
+    <SpellCheck>拼字檢查</SpellCheck>
+    <BeforeSpellCheck>拼字檢查之前</BeforeSpellCheck>
+    <SpellCheckChangedXToY>拼字檢查: '{0}' 已改為 '{1}'</SpellCheckChangedXToY>
+    <BeforeAddingTagX>加入 &lt;{0}&gt; 標籤之前</BeforeAddingTagX>
+    <TagXAdded>&lt;{0}&gt; 標籤已移除</TagXAdded>
+    <LineXOfY>行 {0}/{1}</LineXOfY>
+    <XLinesSavedAsY>{0} 行已另存新檔 {1}</XLinesSavedAsY>
+    <XLinesDeleted>{0} 行已移除</XLinesDeleted>
+    <BeforeDeletingXLines>移除 {0} 行之前</BeforeDeletingXLines>
+    <DeleteXLinesPrompt>移除 {0} 行嗎？</DeleteXLinesPrompt>
+    <OneLineDeleted>行已移除</OneLineDeleted>
+    <BeforeDeletingOneLine>移除一行之前</BeforeDeletingOneLine>
+    <DeleteOneLinePrompt>移除一行？</DeleteOneLinePrompt>
+    <BeforeInsertLine>插入行之前</BeforeInsertLine>
+    <LineInserted>行已插入</LineInserted>
+    <BeforeLineUpdatedInListView>更新清單檢視中的行之前</BeforeLineUpdatedInListView>
+    <BeforeSettingFontToNormal>將字型設為一般之前</BeforeSettingFontToNormal>
+    <BeforeSplitLine>分割行之前</BeforeSplitLine>
+    <LineSplitted>行已分割</LineSplitted>
+    <BeforeMergeLines>合併行之前</BeforeMergeLines>
+    <LinesMerged>行已合併</LinesMerged>
+    <BeforeSettingColor>設定彩色之前</BeforeSettingColor>
+    <BeforeSettingFontName>設定字型名稱之前</BeforeSettingFontName>
+    <BeforeTypeWriterEffect>打字機效果之前</BeforeTypeWriterEffect>
+    <BeforeKaraokeEffect>卡拉 OK 效果之前</BeforeKaraokeEffect>
+    <BeforeImportingDvdSubtitle>從 DVD 匯入字幕之前</BeforeImportingDvdSubtitle>
+    <OpenMatroskaFile>開啟舊檔 Matroska 檔案...</OpenMatroskaFile>
+    <MatroskaFiles>Matroska 檔案 (*.mkv)</MatroskaFiles>
+    <NoSubtitlesFound>沒有找到字幕</NoSubtitlesFound>
+    <NotAValidMatroskaFileX>這不是有效的 Matroska 檔案: {0}</NotAValidMatroskaFileX>
+    <ParsingMatroskaFile>正在解析 Matroska 檔案。請稍候...</ParsingMatroskaFile>
+    <BeforeImportFromMatroskaFile>從 Matroska 檔案匯入字幕之前</BeforeImportFromMatroskaFile>
+    <SubtitleImportedFromMatroskaFile>字幕已從 Matroska 檔案匯入</SubtitleImportedFromMatroskaFile>
+    <DropFileXNotAccepted>拖放的檔案 '{0}' 未被接受 - 檔案太大</DropFileXNotAccepted>
+    <DropOnlyOneFile>您只能放一個檔案</DropOnlyOneFile>
+    <BeforeCreateAdjustLines>建立/調整 行之前</BeforeCreateAdjustLines>
+    <OpenAnsiSubtitle>開啟舊檔字幕...</OpenAnsiSubtitle>
+    <BeforeChangeCasing>大小寫轉換之前</BeforeChangeCasing>
+    <CasingCompleteMessageNoNames>已大小寫轉換的行數: {0}/{1}</CasingCompleteMessageNoNames>
+    <CasingCompleteMessageOnlyNames>已變更名稱大小寫的行數: {0}/{1}</CasingCompleteMessageOnlyNames>
+    <CasingCompleteMessage>已大小寫轉換的行數: {0}/{1}，已大小寫轉換的名稱: {2}</CasingCompleteMessage>
+    <BeforeChangeFrameRate>變更畫面率之前</BeforeChangeFrameRate>
+    <BeforeAdjustSpeedInPercent>調整速度百分比之前</BeforeAdjustSpeedInPercent>
+    <FrameRateChangedFromXToY>畫面率已從 {0} 變更為 {1}</FrameRateChangedFromXToY>
+    <IdxFileNotFoundWarning>{0} 找不到！仍要匯入 VobSub 檔案嗎？</IdxFileNotFoundWarning>
+    <InvalidVobSubHeader>頭部不是有效的 VobSub 檔案: {0}</InvalidVobSubHeader>
+    <OpenVobSubFile>開啟舊檔 VobSub 字幕...</OpenVobSubFile>
+    <VobSubFiles>VobSub 字幕 (*.sub;*.idx)</VobSubFiles>
+    <OpenBluRaySupFile>開啟舊檔藍光字幕...</OpenBluRaySupFile>
+    <BluRaySupFiles>藍光字幕 (*.sup)</BluRaySupFiles>
+    <BeforeImportingVobSubFile>匯入 VobSub 字幕之前</BeforeImportingVobSubFile>
+    <BeforeImportingBluRaySupFile>匯入藍光字幕之前</BeforeImportingBluRaySupFile>
+    <BeforeImportingBdnXml>匯入 BDN xml 檔案之前</BeforeImportingBdnXml>
+    <BeforeShowSelectedLinesEarlierLater>提前/推後 顯示所選行之前</BeforeShowSelectedLinesEarlierLater>
+    <ShowAllLinesXSecondsLinesEarlier>顯示所有行 {0:0.0##} 秒提前</ShowAllLinesXSecondsLinesEarlier>
+    <ShowAllLinesXSecondsLinesLater>顯示所有行 {0:0.0##} 秒滯後</ShowAllLinesXSecondsLinesLater>
+    <ShowSelectedLinesXSecondsLinesEarlier>顯示所選行 {0:0.0##} 秒提前</ShowSelectedLinesXSecondsLinesEarlier>
+    <ShowSelectedLinesXSecondsLinesLater>顯示所選行 {0:0.0##} 秒滯後</ShowSelectedLinesXSecondsLinesLater>
+    <ShowSelectionAndForwardXSecondsLinesEarlier>顯示所選及以前行 {0:0.0##} 秒提前</ShowSelectionAndForwardXSecondsLinesEarlier>
+    <ShowSelectionAndForwardXSecondsLinesLater>顯示所選及以前行 {0:0.0##} 秒滯後</ShowSelectionAndForwardXSecondsLinesLater>
+    <ShowSelectedLinesEarlierLaterPerformed>已對所選行執行 提前/推後 顯示</ShowSelectedLinesEarlierLaterPerformed>
+    <DoubleWordsViaRegEx>雙詞使用正則表達式 {0}</DoubleWordsViaRegEx>
+    <BeforeSortX>排序之前: {0}</BeforeSortX>
+    <SortedByX>排序模式: {0}</SortedByX>
+    <BeforeAutoBalanceSelectedLines>自動平衡所選行之前</BeforeAutoBalanceSelectedLines>
+    <NumberOfLinesAutoBalancedX>自動平衡行數: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeRemoveLineBreaksInSelectedLines>從所選行移除換行符之前</BeforeRemoveLineBreaksInSelectedLines>
+    <NumberOfWithRemovedLineBreakX>已移除換行符的行數: {0}</NumberOfWithRemovedLineBreakX>
+    <BeforeMultipleReplace>多重置換之前</BeforeMultipleReplace>
+    <NumberOfLinesReplacedX>已置換文字的行數: {0}</NumberOfLinesReplacedX>
+    <NameXAddedToNamesEtcList>名稱 '{0}' 已被新增到 名稱/其它 清單</NameXAddedToNamesEtcList>
+    <NameXNotAddedToNamesEtcList>名稱 '{0}' 未被新增到 名稱/其它 清單</NameXNotAddedToNamesEtcList>
+    <WordXAddedToUserDic>單詞 '{0}' 已被新增到使用者詞典</WordXAddedToUserDic>
+    <WordXNotAddedToUserDic>名稱 '{0}' 未被新增到使用者詞典</WordXNotAddedToUserDic>
+    <OcrReplacePairXAdded>OCR 置換清單對 '{0} -&gt; {1}' 已被新增到 OCR 置換清單</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>OCR 置換清單對 '{0} -&gt; {1}' 未被新增到 OCR 置換清單</OcrReplacePairXNotAdded>
+    <XLinesSelected>已選取 {0} 行</XLinesSelected>
+    <UnicodeMusicSymbolsAnsiWarning>字幕含有 Unicode 音符，使用 ANSI 檔案編碼儲存會丟失這些音符。繼續儲存嗎？</UnicodeMusicSymbolsAnsiWarning>
+    <NegativeTimeWarning>字幕含有負值時間碼。繼續儲存嗎？</NegativeTimeWarning>
+    <BeforeMergeShortLines>合併短行之前</BeforeMergeShortLines>
+    <BeforeSplitLongLines>分割長行之前</BeforeSplitLongLines>
+    <MergedShortLinesX>已合併行數: {0}</MergedShortLinesX>
+    <BeforeSetMinimumDisplayTimeBetweenParagraphs>設定段間最小顯示時間之前</BeforeSetMinimumDisplayTimeBetweenParagraphs>
+    <XMinimumDisplayTimeBetweenParagraphsChanged>已變更段間最小顯示時間的行數: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
+    <BeforeImportText>匯入純文字之前</BeforeImportText>
+    <TextImported>文字已匯入</TextImported>
+    <BeforePointSynchronization>點同步之前</BeforePointSynchronization>
+    <PointSynchronizationDone>點同步完成</PointSynchronizationDone>
+    <BeforeTimeCodeImport>匯入時間碼之前</BeforeTimeCodeImport>
+    <TimeCodeImportedFromXY>時間碼匯入自 {0}: {1}</TimeCodeImportedFromXY>
+    <BeforeInsertSubtitleAtVideoPosition>在視訊位置插入字幕之前</BeforeInsertSubtitleAtVideoPosition>
+    <BeforeSetStartTimeAndOffsetTheRest>設定起始時間並偏移其餘之前</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndAndVideoPosition>在視訊位置設定結束時間並自動計算起始時間之前</BeforeSetEndAndVideoPosition>
+    <ContinueWithCurrentSpellCheck>繼續現用的的拼字檢查嗎？</ContinueWithCurrentSpellCheck>
+    <CharactersPerSecond>字元/秒: {0:0.00}</CharactersPerSecond>
+    <GetFrameRateFromVideoFile>從視訊檔案取得畫面率</GetFrameRateFromVideoFile>
+    <NetworkMessage>新訊息: {0} ({1}): {2}</NetworkMessage>
+    <NetworkUpdate>已更新行: {0} ({1}) 索引 = {2}，文字 = {3}</NetworkUpdate>
+    <NetworkInsert>已插入行: {0} ({1}) 索引 = {2}，文字 = {3}</NetworkInsert>
+    <NetworkDelete>已移除行: {0} ({1}) 索引 = {2}</NetworkDelete>
+    <NetworkNewUser>新使用者: {0} ({1})</NetworkNewUser>
+    <NetworkByeUser>再見 {0} ({1})</NetworkByeUser>
+    <NetworkUnableToConnectToServer>無法連線到伺服器: {0}</NetworkUnableToConnectToServer>
+    <UserAndAction>使用者/動作</UserAndAction>
+    <NetworkMode>網路模式</NetworkMode>
+    <XStartedSessionYAtZ>{0}: 已開始會話 {1} 在 {2}</XStartedSessionYAtZ>
+    <SpellChekingViaWordXLineYOfX>使用 MS Word 進行拼字檢查 {0} - 行 {1}/{2}</SpellChekingViaWordXLineYOfX>
+    <UnableToStartWord>無法啟動 MS Word</UnableToStartWord>
+    <SpellCheckAbortedXCorrections>拼字檢查已中止。修正了 {0} 個錯誤。</SpellCheckAbortedXCorrections>
+    <SpellCheckCompletedXCorrections>拼字檢查已完成。修正了 {0} 個錯誤。</SpellCheckCompletedXCorrections>
+    <OpenOtherSubtitle>開啟舊檔其它字幕</OpenOtherSubtitle>
+    <BeforeToggleDialogueDashes>開關對話前的破折號</BeforeToggleDialogueDashes>
+    <ExportPlainTextAs>匯出為純文字檔案</ExportPlainTextAs>
+    <TextFiles>文字檔案</TextFiles>
+    <SubtitleExported>字幕已匯出</SubtitleExported>
+    <LineNumberXErrorReadingFromSourceLineY>行 {0} - 出錯於讀取: {1}</LineNumberXErrorReadingFromSourceLineY>
+    <LineNumberXErrorReadingTimeCodeFromSourceLineY>行 {0} - 出錯於讀取時間碼: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>行 {0} - 需要字幕號: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <BeforeGuessingTimeCodes>猜測時間碼之前</BeforeGuessingTimeCodes>
+    <BeforeAutoDuration>為所選行自動設定時長之前</BeforeAutoDuration>
+    <BeforeColumnPaste>列貼上之前</BeforeColumnPaste>
+    <BeforeColumnDelete>列移除之前</BeforeColumnDelete>
+    <BeforeColumnImportText>列匯入文字之前</BeforeColumnImportText>
+    <BeforeColumnShiftCellsDown>列下移單元格之前</BeforeColumnShiftCellsDown>
+    <ErrorLoadingPluginXErrorY>加載外掛程式時出錯: {0}: {1}</ErrorLoadingPluginXErrorY>
+    <BeforeRunningPluginXVersionY>運行外掛程式前: {0}: {1}</BeforeRunningPluginXVersionY>
+    <UnableToReadPluginResult>無法從外掛程式讀取字幕結果！</UnableToReadPluginResult>
+    <UnableToCreateBackupDirectory>無法建立備份目錄 {0}: {1}</UnableToCreateBackupDirectory>
+    <BeforeDisplaySubtitleJoin>合併字幕之前</BeforeDisplaySubtitleJoin>
+    <SubtitlesJoined>字幕已合併</SubtitlesJoined>
+    <StatusLog>狀態記錄</StatusLog>
+  </Main>
+  <MatroskaSubtitleChooser>
+    <Title>從 Matroska 檔案選取字幕</Title>
+    <PleaseChoose>找到多個字幕 - 請選取</PleaseChoose>
+    <TrackXLanguageYTypeZ>曲目 {0}-{1} - 語系: {2} - 類型: {3}</TrackXLanguageYTypeZ>
+  </MatroskaSubtitleChooser>
+  <MergedShortLines>
+    <Title>合併短行</Title>
+    <MaximumCharacters>一段中最多字元數</MaximumCharacters>
+    <MaximumMillisecondsBetween>兩行間最多毫秒數</MaximumMillisecondsBetween>
+    <NumberOfMergesX>合併數量: {0}</NumberOfMergesX>
+    <MergedText>合併文字</MergedText>
+    <OnlyMergeContinuationLines>僅合併連續行</OnlyMergeContinuationLines>
+  </MergedShortLines>
+  <MultipleReplace>
+    <Title>多重置換</Title>
+    <FindWhat>尋找內容</FindWhat>
+    <ReplaceWith>置換</ReplaceWith>
+    <Normal>標準</Normal>
+    <CaseSensitive>區分大小寫</CaseSensitive>
+    <RegularExpression>正則表達式</RegularExpression>
+    <LinesFoundX>找到行數: {0}</LinesFoundX>
+    <Delete>移除</Delete>
+    <Add>加入</Add>
+    <Update>更新(&amp;U)</Update>
+    <Enabled>啟用</Enabled>
+    <SearchType>搜尋類型</SearchType>
+    <RemoveAll>全部移除</RemoveAll>
+    <Import>匯入...</Import>
+    <Export>匯出...</Export>
+    <ImportRulesTitle>匯入置換規則自...</ImportRulesTitle>
+    <ExportRulesTitle>匯出置換規則到...</ExportRulesTitle>
+    <Rules>到處規則</Rules>
+  </MultipleReplace>
+  <NetworkChat>
+    <Title>聊天</Title>
+    <Send>傳送到</Send>
+  </NetworkChat>
+  <NetworkJoin>
+    <Title>加入網路會話</Title>
+    <Information>加入現有會話，以便可以多人編輯同一個字幕檔案(協同)。</Information>
+    <Join>加入</Join>
+  </NetworkJoin>
+  <NetworkLogAndInfo>
+    <Title>網路會話訊息和記錄</Title>
+    <Log>記錄:</Log>
+  </NetworkLogAndInfo>
+  <NetworkStart>
+    <Title>開始網路會話</Title>
+    <ConnectionTo>正在連線到 {0}...</ConnectionTo>
+    <Information>開始新會話，以便可以多人編輯同一字幕檔案(協同)。</Information>
+    <Start>開始</Start>
+  </NetworkStart>
+  <PluginsGet>
+    <Title>外掛程式</Title>
+    <InstalledPlugins>已安裝外掛程式</InstalledPlugins>
+    <GetPlugins>取得外掛程式</GetPlugins>
+    <Description>描述</Description>
+    <Version>版本</Version>
+    <Date>日期</Date>
+    <Type>類型</Type>
+    <OpenPluginsFolder>開啟舊檔 'Plugins' 資料夾</OpenPluginsFolder>
+    <GetPluginsInfo1>「字幕編輯」外掛程式必須已下載到 'Plugins' 資料夾</GetPluginsInfo1>
+    <GetPluginsInfo2>選取外掛程式並點擊「下載」</GetPluginsInfo2>
+    <PluginXDownloaded>外掛程式 {0} 已下載</PluginXDownloaded>
+    <Download>下載(&amp;D)</Download>
+    <Remove>移除(&amp;R)</Remove>
+    <UnableToDownloadPluginListX>無法下載外掛程式清單: {0}</UnableToDownloadPluginListX>
+    <NewVersionOfSubtitleEditRequired>需要新版 Subtitle Edit！</NewVersionOfSubtitleEditRequired>
+    <UpdateAvailable>[有新版可用！]</UpdateAvailable>
+  </PluginsGet>
+  <RemoveTextFromHearImpaired>
+    <Title>移除妨礙聽覺的文字</Title>
+    <RemoveTextConditions>移除文字條件</RemoveTextConditions>
+    <RemoveTextBetween>移除文字條件</RemoveTextBetween>
+    <SquareBrackets>'[' 和 ']'</SquareBrackets>
+    <Brackets>'{' 和 '}'</Brackets>
+    <Parentheses>'(' 和 )'</Parentheses>
+    <QuestionMarks>'?' 和 '?'</QuestionMarks>
+    <And>和</And>
+    <RemoveTextBeforeColon>移除冒號前的文字</RemoveTextBeforeColon>
+    <OnlyIfTextIsUppercase>僅當文字是大寫時</OnlyIfTextIsUppercase>
+    <OnlyIfInSeparateLine>僅當在單獨行內</OnlyIfInSeparateLine>
+    <LinesFoundX>找到行數: {0}</LinesFoundX>
+    <RemoveTextIfContains>移除文字，如果它包括:</RemoveTextIfContains>
+    <RemoveTextIfAllUppercase>如果大寫就移除行</RemoveTextIfAllUppercase>
+    <RemoveInterjections>移除感歎詞</RemoveInterjections>
+    <EditInterjections>編輯...</EditInterjections>
+  </RemoveTextFromHearImpaired>
+  <ReplaceDialog>
+    <Title>置換</Title>
+    <FindWhat>尋找內容:</FindWhat>
+    <Normal>標準</Normal>
+    <CaseSensitive>區分大小寫</CaseSensitive>
+    <RegularExpression>正則表達式</RegularExpression>
+    <ReplaceWith>置換</ReplaceWith>
+    <Find>尋找(&amp;F)</Find>
+    <Replace>置換(&amp;R)</Replace>
+    <ReplaceAll>全部置換(&amp;A)</ReplaceAll>
+  </ReplaceDialog>
+  <RestoreAutoBackup>
+    <Title>復原自動備份</Title>
+    <Information>開啟舊檔自動儲存的備份</Information>
+    <DateAndTime>日期及時間</DateAndTime>
+    <FileName>檔名</FileName>
+    <Extension>副檔案名</Extension>
+    <NoBackedUpFilesFound>找不到備份檔案！</NoBackedUpFilesFound>
+  </RestoreAutoBackup>
+  <SeekSilence>
+    <Title>搜尋靜音</Title>
+    <SearchDirection>搜尋方向</SearchDirection>
+    <Forward>向前</Forward>
+    <Back>向後</Back>
+    <LengthInSeconds>靜音必須至少 (秒)</LengthInSeconds>
+    <MaxVolume>音量必須低於</MaxVolume>
+  </SeekSilence>
+  <SetMinimumDisplayTimeBetweenParagraphs>
+    <Title>設定段落間最小顯示時間</Title>
+    <PreviewLinesModifiedX>預覽 - 已修改段落: {0}</PreviewLinesModifiedX>
+    <ShowOnlyModifiedLines>僅顯示已修改的行</ShowOnlyModifiedLines>
+    <MinimumMillisecondsBetweenParagraphs>行間最小毫秒數</MinimumMillisecondsBetweenParagraphs>
+  </SetMinimumDisplayTimeBetweenParagraphs>
+  <SetSyncPoint>
+    <Title>為行 {0} 設定同步點</Title>
+    <SyncPointTimeCode>同步點時間碼</SyncPointTimeCode>
+    <ThreeSecondsBack>&lt;&lt; 3 秒</ThreeSecondsBack>
+    <HalfASecondBack>&lt;&lt; ½ 秒</HalfASecondBack>
+    <HalfASecondForward>½ 秒 &gt;&gt;</HalfASecondForward>
+    <ThreeSecondsForward>3 秒 &gt;&gt;</ThreeSecondsForward>
+  </SetSyncPoint>
+  <Settings>
+    <Title>設定</Title>
+    <General>一般</General>
+    <Toolbar>工具列</Toolbar>
+    <VideoPlayer>視訊播放器</VideoPlayer>
+    <WaveformAndSpectrogram>波形/頻譜圖</WaveformAndSpectrogram>
+    <Tools>工具</Tools>
+    <WordLists>詞彙表</WordLists>
+    <SsaStyle>SSA 型態</SsaStyle>
+    <Proxy>代理</Proxy>
+    <ShowToolBarButtons>顯示工具列按鈕</ShowToolBarButtons>
+    <New>開新檔案</New>
+    <Open>開啟舊檔</Open>
+    <Save>儲存</Save>
+    <SaveAs>另存新檔</SaveAs>
+    <Find>尋找</Find>
+    <Replace>置換</Replace>
+    <VisualSync>視覺同步</VisualSync>
+    <SpellCheck>拼字檢查</SpellCheck>
+    <SettingsName>設定</SettingsName>
+    <Help>說明</Help>
+    <ShowFrameRate>在工具列顯示畫面率</ShowFrameRate>
+    <DefaultFrameRate>預設畫面率</DefaultFrameRate>
+    <DefaultFileEncoding>預設檔案編碼</DefaultFileEncoding>
+    <AutoDetectAnsiEncoding>自動檢驗 ANSI 編碼</AutoDetectAnsiEncoding>
+    <SubtitleLineMaximumLength>單行最大長度</SubtitleLineMaximumLength>
+    <MaximumCharactersPerSecond>每秒最多字元</MaximumCharactersPerSecond>
+    <AutoWrapWhileTyping>打字時自動換行</AutoWrapWhileTyping>
+    <DurationMinimumMilliseconds>最小時長，毫秒</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>最大時長，毫秒</DurationMaximumMilliseconds>
+    <SubtitleFont>字幕字型</SubtitleFont>
+    <SubtitleFontSize>字幕字型大小</SubtitleFontSize>
+    <SubtitleBold>粗體</SubtitleBold>
+    <SubtitleCenter>齊中</SubtitleCenter>
+    <SubtitleFontColor>字幕字型彩色</SubtitleFontColor>
+    <SubtitleBackgroundColor>字幕背景彩色</SubtitleBackgroundColor>
+    <SpellChecker>拼字檢查</SpellChecker>
+    <RememberRecentFiles>記住最近的檔案 (用於重新開啟舊檔)</RememberRecentFiles>
+    <StartWithLastFileLoaded>以上次加載的檔案開始</StartWithLastFileLoaded>
+    <RememberSelectedLine>記住所選行</RememberSelectedLine>
+    <RememberPositionAndSize>記住主視窗的位置和大小</RememberPositionAndSize>
+    <StartInSourceView>在來源檢視中開始</StartInSourceView>
+    <RemoveBlankLinesWhenOpening>開啟舊檔字幕時移除空行</RemoveBlankLinesWhenOpening>
+    <ShowLineBreaksAs>清單檢視中的換行符顯示為</ShowLineBreaksAs>
+    <MainListViewDoubleClickAction>按兩下主視窗中的行時，清單檢視將</MainListViewDoubleClickAction>
+    <MainListViewNothing>無</MainListViewNothing>
+    <MainListViewVideoGoToPositionAndPause>轉到視訊位置並暫停</MainListViewVideoGoToPositionAndPause>
+    <MainListViewVideoGoToPositionAndPlay>轉到視訊位置並播放</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewEditText>轉到編輯文字方塊</MainListViewEditText>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>轉到視訊位置 - 1 秒並暫停</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>轉到視訊位置 - 0.5 秒並暫停</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>轉到視訊位置 - 1 秒並播放</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewEditTextAndPause>轉到編輯文字方塊，暫停於視訊位置</MainListViewEditTextAndPause>
+    <AutoBackup>自動備份</AutoBackup>
+    <AutoBackupEveryMinute>每隔 1 分鐘</AutoBackupEveryMinute>
+    <AutoBackupEveryFiveMinutes>每隔 5 分鐘</AutoBackupEveryFiveMinutes>
+    <AutoBackupEveryFifteenMinutes>每隔 15 分鐘</AutoBackupEveryFifteenMinutes>
+    <AllowEditOfOriginalSubtitle>容許編輯原始字幕</AllowEditOfOriginalSubtitle>
+    <PromptDeleteLines>移除行時提示</PromptDeleteLines>
+    <TimeCodeMode>時間碼模式</TimeCodeMode>
+    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
+    <VideoEngine>視訊引擎</VideoEngine>
+    <DirectShow>DirectShow</DirectShow>
+    <DirectShowDescription>quartz.dll 在 System32 資料夾中</DirectShowDescription>
+    <ManagedDirectX>Managed DirectX</ManagedDirectX>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed 代碼來自 DirectX</ManagedDirectXDescription>
+    <MPlayer>MPlayer</MPlayer>
+    <MPlayerDescription>MPlayer2/MPlayer</MPlayerDescription>
+    <VlcMediaPlayer>VLC 媒體播放器</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll 來自 VLC 媒體播放器 1.1.0 或更新</VlcMediaPlayerDescription>
+    <ShowStopButton>顯示「停止」按鈕</ShowStopButton>
+    <ShowMuteButton>顯示靜音按鈕</ShowMuteButton>
+    <ShowFullscreenButton>顯示全螢幕幕按鈕</ShowFullscreenButton>
+    <DefaultVolume>預設音量</DefaultVolume>
+    <VolumeNotes>0 表示沒有音效，100 表示最高音量</VolumeNotes>
+    <PreviewFontSize>字幕預覽字型大小</PreviewFontSize>
+    <MainWindowVideoControls>主視窗視訊控制</MainWindowVideoControls>
+    <CustomSearchTextAndUrl>自訂搜尋文字和網址</CustomSearchTextAndUrl>
+    <WaveFormAppearance>波形外觀</WaveFormAppearance>
+    <WaveFormGridColor>網格彩色</WaveFormGridColor>
+    <WaveFormShowGridLines>顯示格線</WaveFormShowGridLines>
+    <ReverseMouseWheelScrollDirection>反轉滑鼠卷動方向</ReverseMouseWheelScrollDirection>
+    <WaveFormColor>彩色</WaveFormColor>
+    <WaveFormSelectedColor>選取彩色</WaveFormSelectedColor>
+    <WaveFormBackgroundColor>背景彩色</WaveFormBackgroundColor>
+    <WaveFormTextColor>文字彩色</WaveFormTextColor>
+    <WaveformAndSpectrogramsFolderEmpty>清理 'Spectrograms' 和 'Waveforms' 資料夾</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderInfo>'Waveforms' 和 'Spectrograms' 資料夾含有 {0} 個檔案 ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
+    <Spectrogram>頻譜圖</Spectrogram>
+    <GenerateSpectrogram>生成頻譜圖</GenerateSpectrogram>
+    <SpectrogramAppearance>頻譜圖外觀</SpectrogramAppearance>
+    <SpectrogramOneColorGradient>單色梯度</SpectrogramOneColorGradient>
+    <SpectrogramClassic>經典</SpectrogramClassic>
+    <SubStationAlphaStyle>字幕區 Alpha 型態</SubStationAlphaStyle>
+    <ChooseFont>選取字型</ChooseFont>
+    <ChooseColor>選取彩色</ChooseColor>
+    <Example>示例</Example>
+    <Testing123>正在測試 123...</Testing123>
+    <Language>語系</Language>
+    <NamesIgnoreLists>名稱/忽略清單 (區分大小寫)</NamesIgnoreLists>
+    <AddNameEtc>加入名稱</AddNameEtc>
+    <AddWord>加入單詞</AddWord>
+    <Remove>移除</Remove>
+    <AddPair>加入一對</AddPair>
+    <UserWordList>使用者詞彙表</UserWordList>
+    <OcrFixList>OCR 修復清單</OcrFixList>
+    <Location>位置</Location>
+    <UseOnlineNamesEtc>使用網上的 名稱/其它 XML 檔案</UseOnlineNamesEtc>
+    <WordAddedX>已加入單詞: {0}</WordAddedX>
+    <WordAlreadyExists>單詞已經存在！</WordAlreadyExists>
+    <WordNotFound>單詞找不到</WordNotFound>
+    <RemoveX>移除 "{0}" 嗎？</RemoveX>
+    <CannotUpdateNamesEtcOnline>無法線上更新 NamesEtc.xml！</CannotUpdateNamesEtcOnline>
+    <ProxyServerSettings>代理伺服器設定</ProxyServerSettings>
+    <ProxyAddress>代理伺服器位址</ProxyAddress>
+    <ProxyAuthentication>認證</ProxyAuthentication>
+    <ProxyUserName>使用者名</ProxyUserName>
+    <ProxyPassword>密碼</ProxyPassword>
+    <ProxyDomain>功能變數</ProxyDomain>
+    <PlayXSecondsAndBack>播放 X 秒後返回，X 為</PlayXSecondsAndBack>
+    <StartSceneIndex>起始場景段落為</StartSceneIndex>
+    <EndSceneIndex>末尾場景段落為</EndSceneIndex>
+    <FirstPlusX>開頭 + {0}</FirstPlusX>
+    <LastMinusX>最後 - {0}</LastMinusX>
+    <FixCommonerrors>修復一般錯誤</FixCommonerrors>
+    <MergeLinesShorterThan>合併小於此長度的行</MergeLinesShorterThan>
+    <MusicSymbol>音符</MusicSymbol>
+    <MusicSymbolsToReplace>置換音符 (用空格分隔)</MusicSymbolsToReplace>
+    <FixCommonOcrErrorsUseHardcodedRules>修復 OCR 一般錯誤 - 同時使用硬編碼規則</FixCommonOcrErrorsUseHardcodedRules>
+    <Shortcuts>快捷鍵</Shortcuts>
+    <Shortcut>快捷鍵</Shortcut>
+    <Control>Ctrl</Control>
+    <Alt>Alt</Alt>
+    <Shift>Shift</Shift>
+    <Key>鍵</Key>
+    <TextBox>文字方塊</TextBox>
+    <UpdateShortcut>更新</UpdateShortcut>
+    <ShortcutIsNotValid>快捷鍵無效: {0}</ShortcutIsNotValid>
+    <ToggleDockUndockOfVideoControls>切換 停靠/不停靠 視訊控件</ToggleDockUndockOfVideoControls>
+    <CreateSetEndAddNewAndGoToNew>設定終點，加入新點並轉到新點</CreateSetEndAddNewAndGoToNew>
+    <AdjustViaEndAutoStartAndGoToNext>通過結束位置調整並轉到下一個</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>調整設定時長起點及轉到下個文字</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetEndNextStartAndGoToNext>設定終點及下個起點並轉到下一個</AdjustSetEndNextStartAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>向下方向鍵=設定起點，向上方向鍵=設定終點，並轉到下一個</AdjustStartDownEndUpAndGoToNext>
+    <AdjustSelected100MsForward>所選行前移 100ms</AdjustSelected100MsForward>
+    <AdjustSelected100MsBack>所選行後移 100ms</AdjustSelected100MsBack>
+    <AdjustSetStartTimeOnly>設定開始時間，保留結束時間</AdjustSetStartTimeOnly>
+    <MainCreateStartDownEndUp>用向下方向鍵建立新的開始時間，用向上方向鍵設定結束時間</MainCreateStartDownEndUp>
+    <MergeDialogue>合併對話 (插入破折號)</MergeDialogue>
+    <GoToNext>轉到下一行</GoToNext>
+    <GoToPrevious>轉到上一行</GoToPrevious>
+    <ToggleFocus>在清單檢視和文字視窗之間切換焦點</ToggleFocus>
+    <ToggleDialogueDashes>開關對話前的破折號</ToggleDialogueDashes>
+    <Alignment>排序 (所選行)</Alignment>
+    <CopyTextOnly>僅複製文字 (所選行)</CopyTextOnly>
+    <AutoDurationSelectedLines>自動時長 (所選行)</AutoDurationSelectedLines>
+    <ReverseStartAndEndingForRTL>反轉 RTL 開始/結束</ReverseStartAndEndingForRTL>
+    <VerticalZoom>豎向縮放</VerticalZoom>
+    <WaveformSeekSilenceForward>向前搜尋靜音</WaveformSeekSilenceForward>
+    <WaveformSeekSilenceBack>向後搜尋靜音</WaveformSeekSilenceBack>
+    <WaveformAddTextHere>加入文字到此處 (用於新選)</WaveformAddTextHere>
+    <GoBack100Milliseconds>向前 100 毫秒</GoBack100Milliseconds>
+    <GoForward100Milliseconds>向後 100 毫秒</GoForward100Milliseconds>
+    <GoBack500Milliseconds>向前 500 毫秒</GoBack500Milliseconds>
+    <GoForward500Milliseconds>向後 500 毫秒</GoForward500Milliseconds>
+    <TogglePlayPause>切換 播放/暫停</TogglePlayPause>
+    <Pause>暫停</Pause>
+    <Fullscreen>全螢幕幕</Fullscreen>
+    <CustomSearch1>翻譯、自訂搜尋 1</CustomSearch1>
+    <CustomSearch2>翻譯、自訂搜尋 2</CustomSearch2>
+    <CustomSearch3>翻譯、自訂搜尋 3</CustomSearch3>
+    <CustomSearch4>翻譯、自訂搜尋 4</CustomSearch4>
+    <CustomSearch5>翻譯、自訂搜尋 5</CustomSearch5>
+    <CustomSearch6>翻譯、自訂搜尋 6</CustomSearch6>
+    <SyntaxColoring>語法塗色</SyntaxColoring>
+    <ListViewSyntaxColoring>清單檢視語法塗色</ListViewSyntaxColoring>
+    <SyntaxColorDurationIfTooSmall>若時長太短則塗色</SyntaxColorDurationIfTooSmall>
+    <SyntaxColorDurationIfTooLarge>若時長太長則塗色</SyntaxColorDurationIfTooLarge>
+    <SyntaxColorTextIfTooLong>若文字太長則塗色</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextMoreThanXLines>文字塗色若行數大於:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorOverlap>時間碼重疊塗色</SyntaxColorOverlap>
+    <SyntaxErrorColor>錯誤彩色</SyntaxErrorColor>
+    <GoToFirstSelectedLine>轉到首個所選行</GoToFirstSelectedLine>
+    <MergeSelectedLines>合併所選行</MergeSelectedLines>
+    <ToggleTranslationMode>切換翻譯模式</ToggleTranslationMode>
+    <SwitchOriginalAndTranslation>切換原文和翻譯</SwitchOriginalAndTranslation>
+    <MergeOriginalAndTranslation>合併原文和翻譯</MergeOriginalAndTranslation>
+    <ShortcutIsAlreadyDefinedX>快捷鍵已經定義: 
+{0}
+</ShortcutIsAlreadyDefinedX>
+    <ToggleTranslationAndOriginalInPreviews>在 視訊/音訊 預覽中切換翻譯和原文</ToggleTranslationAndOriginalInPreviews>
+    <ListViewColumnDelete>列，移除文字</ListViewColumnDelete>
+    <ListViewColumnInsert>列，插入文字</ListViewColumnInsert>
+    <ListViewColumnPaste>列，貼上</ListViewColumnPaste>
+    <ShowBeamer>啟動字幕全螢幕幕投影儀</ShowBeamer>
+  </Settings>
+  <ShowEarlierLater>
+    <Title>提前/推後 顯示所選行</Title>
+    <TitleAll>提前/推後 顯示所有行</TitleAll>
+    <ShowEarlier>提前顯示</ShowEarlier>
+    <ShowLater>推後顯示</ShowLater>
+    <TotalAdjustmentX>調整總數: {0}</TotalAdjustmentX>
+    <AllLines>所有行</AllLines>
+    <SelectedLinesOnly>僅所選行</SelectedLinesOnly>
+    <SelectedLinesAndForward>所選行及以前</SelectedLinesAndForward>
+  </ShowEarlierLater>
+  <ShowHistory>
+    <Title>歷史 (用於復原)</Title>
+    <SelectRollbackPoint>選取 時間/描述 以進行返回</SelectRollbackPoint>
+    <Time>時間</Time>
+    <Description>描述</Description>
+    <CompareHistoryItems>比較歷史項目</CompareHistoryItems>
+    <CompareWithCurrent>與目前比較</CompareWithCurrent>
+    <Rollback>返回</Rollback>
+  </ShowHistory>
+  <SpellCheck>
+    <Title>拼字檢查</Title>
+    <FullText>全文</FullText>
+    <WordNotFound>單詞找不到</WordNotFound>
+    <Language>語系</Language>
+    <Change>變更</Change>
+    <ChangeAll>全部變更</ChangeAll>
+    <SkipOnce>略過一個(&amp;O)</SkipOnce>
+    <SkipAll>全部略過(&amp;S)</SkipAll>
+    <AddToUserDictionary>新增到使用者詞典</AddToUserDictionary>
+    <AddToNamesAndIgnoreList>新增到 名稱/其它 清單 (區分大小寫)</AddToNamesAndIgnoreList>
+    <AddToOcrReplaceList>加入行對到 OCR 置換清單</AddToOcrReplaceList>
+    <Abort>中止</Abort>
+    <Use>使用</Use>
+    <UseAlways>總是使用(&amp;U)</UseAlways>
+    <Suggestions>建議</Suggestions>
+    <SpellCheckProgress>拼字檢查 [{0}] - {1}</SpellCheckProgress>
+    <EditWholeText>編輯整個文字</EditWholeText>
+    <EditWordOnly>僅編輯單詞</EditWordOnly>
+    <AddXToNamesEtc>加入 '{0}' 到 名稱/其它 清單</AddXToNamesEtc>
+    <AutoFixNames>自動修復僅大小寫不同處的名稱</AutoFixNames>
+    <ImageText>圖片文字</ImageText>
+    <SpellCheckCompleted>拼字檢查完成。</SpellCheckCompleted>
+    <SpellCheckAborted>拼字檢查中止</SpellCheckAborted>
+  </SpellCheck>
+  <Split>
+    <Title>分割</Title>
+    <SplitOptions>分割選項</SplitOptions>
+    <Lines>行</Lines>
+    <Characters>字元</Characters>
+    <NumberOfEqualParts>相等部分的數量</NumberOfEqualParts>
+    <SubtitleInfo>字幕訊息</SubtitleInfo>
+    <NumberOfLinesX>行數: {0:#,###}</NumberOfLinesX>
+    <NumberOfCharactersX>字元數: {0:#,###,###}</NumberOfCharactersX>
+    <Output>輸出</Output>
+    <FileName>檔名</FileName>
+    <OutputFolder>輸出資料夾</OutputFolder>
+    <DoSplit>分割</DoSplit>
+    <Basic>基本</Basic>
+  </Split>
+  <SplitLongLines>
+    <Title>分割長行</Title>
+    <SingleLineMaximumLength>單行最大長度</SingleLineMaximumLength>
+    <LineMaximumLength>行最大長度</LineMaximumLength>
+    <LineContinuationBeginEndStrings>行延續部分的 開頭/末尾 字串</LineContinuationBeginEndStrings>
+    <NumberOfSplits>分割數量: {0}</NumberOfSplits>
+    <LongestSingleLineIsXAtY>最長單行的長度是 {0} 在行 {1}</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>最長總行的長度是 {0} 在行 {1}</LongestLineIsXAtY>
+  </SplitLongLines>
+  <SplitSubtitle>
+    <Title>分割字幕</Title>
+    <Description1>輸入視訊第一部分的長度，或瀏覽</Description1>
+    <Description2>並從該視訊檔案取得長度:</Description2>
+    <Split>分割(&amp;S)</Split>
+    <Done>完成(&amp;D)</Done>
+    <NothingToSplit>沒有什麼要分割！</NothingToSplit>
+    <SavePartOneAs>第 1 部分另存新檔...</SavePartOneAs>
+    <SavePartTwoAs>第 2 部分另存新檔...</SavePartTwoAs>
+    <Part1>第 1 部分</Part1>
+    <Part2>第 2 部分</Part2>
+    <UnableToSaveFileX>無法儲存 {0}</UnableToSaveFileX>
+    <OverwriteExistingFiles>覆蓋現有檔案嗎？</OverwriteExistingFiles>
+    <FolderNotFoundX>找不到資料夾: {0}</FolderNotFoundX>
+    <Untitled>未命名</Untitled>
+  </SplitSubtitle>
+  <StartNumberingFrom>
+    <Title>編號起始位置...</Title>
+    <StartFromNumber>編號起始位置:</StartFromNumber>
+    <PleaseEnterAValidNumber>請輸入一個數字</PleaseEnterAValidNumber>
+  </StartNumberingFrom>
+  <Statistics>
+    <Title>統計</Title>
+    <TitleWithFileName>統計 - {0}</TitleWithFileName>
+    <GeneralStatistics>一般統計</GeneralStatistics>
+    <MostUsed>最多使用...</MostUsed>
+    <MostUsedLines>最多使用行</MostUsedLines>
+    <MostUsedWords>最多使用單詞</MostUsedWords>
+    <NothingFound>什麼都沒有找到</NothingFound>
+    <NumberOfLinesX>字幕行數: {0:#,###}</NumberOfLinesX>
+    <LengthInFormatXinCharactersY>作為 {0} 的字元數: {1:#,###,##0}</LengthInFormatXinCharactersY>
+    <NumberOfCharactersInTextOnly>僅文字中的字元數: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalCharsPerSecond>每秒總字元數: {0:0.0} 秒</TotalCharsPerSecond>
+    <NumberOfItalicTags>斜體標籤數: {0}</NumberOfItalicTags>
+    <NumberOfBoldTags>粗體標籤數: {0}</NumberOfBoldTags>
+    <NumberOfUnderlineTags>下劃線標籤數: {0}</NumberOfUnderlineTags>
+    <NumberOfFontTags>字型標籤數: {0}</NumberOfFontTags>
+    <NumberOfAlignmentTags>排序標籤數: {0}</NumberOfAlignmentTags>
+    <LineLengthMinimum>字幕長度 - 最小: {0}</LineLengthMinimum>
+    <LineLengthMaximum>字幕長度 - 最大: {0}</LineLengthMaximum>
+    <LineLengthAvarage>字幕長度 - 平均: {0}</LineLengthAvarage>
+    <LinesPerSubtitleAvarage>字幕、行數 - 平均: {0:0.0}</LinesPerSubtitleAvarage>
+    <SingleLineLengthMinimum>單行長度 - 最小: {0}</SingleLineLengthMinimum>
+    <SingleLineLengthMaximum>單行長度 - 最大: {0}</SingleLineLengthMaximum>
+    <SingleLineLengthAvarage>單行長度 - 平均: {0}</SingleLineLengthAvarage>
+    <DurationMinimum>時長 - 最小: {0:0.000} 秒</DurationMinimum>
+    <DurationMaximum>時長 - 最大: {0:0.000} 秒</DurationMaximum>
+    <DurationAvarage>時長 - 平均: {0:0.000} 秒</DurationAvarage>
+  </Statistics>
+  <SubStationAlphaProperties>
+    <Title>進階 Sub Station Alpha 特性</Title>
+    <TitleSubstationAlpha>Sub Station Alpha 特性</TitleSubstationAlpha>
+    <Script>腳本</Script>
+    <ScriptTitle>標題</ScriptTitle>
+    <OriginalScript>原始腳本</OriginalScript>
+    <Translation>翻譯</Translation>
+    <Editing>編輯</Editing>
+    <Timing>計時</Timing>
+    <SyncPoint>同步點</SyncPoint>
+    <UpdatedBy>更新人</UpdatedBy>
+    <UpdateDetails>更新詳情</UpdateDetails>
+    <Resolution>解析度</Resolution>
+    <VideoResolution>視訊解析度</VideoResolution>
+    <Options>選項</Options>
+    <WrapStyle>翻捲型態</WrapStyle>
+    <Collision>衝突</Collision>
+    <ScaleBorderAndShadow>縮放邊框和陰影</ScaleBorderAndShadow>
+  </SubStationAlphaProperties>
+  <SubStationAlphaStyles>
+    <Title>進階 Sub Station Alpha 型態</Title>
+    <TitleSubstationAlpha>Sub Station Alpha 型態</TitleSubstationAlpha>
+    <Styles>型態</Styles>
+    <Properties>屬性</Properties>
+    <Name>名稱</Name>
+    <Font>字型</Font>
+    <FontName>字型名稱</FontName>
+    <FontSize>字型大小</FontSize>
+    <UseCount>已用</UseCount>
+    <Primary>主要</Primary>
+    <Secondary>次要</Secondary>
+    <Tertiary>第三</Tertiary>
+    <Outline>輪廓</Outline>
+    <Shadow>陰影</Shadow>
+    <Back>返回</Back>
+    <Alignment>排序</Alignment>
+    <TopLeft>上/左</TopLeft>
+    <TopCenter>上/中</TopCenter>
+    <TopRight>上/右</TopRight>
+    <MiddleLeft>中/左</MiddleLeft>
+    <MiddleCenter>中/中</MiddleCenter>
+    <MiddleRight>中/右</MiddleRight>
+    <BottomLeft>下/左</BottomLeft>
+    <BottomCenter>下/中</BottomCenter>
+    <BottomRight>下/右</BottomRight>
+    <Colors>彩色</Colors>
+    <Margins>邊界</Margins>
+    <MarginLeft>邊界/左</MarginLeft>
+    <MarginRight>邊界/右</MarginRight>
+    <MarginVertical>邊界/豎向</MarginVertical>
+    <Border>邊框</Border>
+    <PlusShadow>+ 陰影</PlusShadow>
+    <OpaqueBox>不透明框 (使用輪廓彩色)</OpaqueBox>
+    <Import>匯入...</Import>
+    <Copy>複製</Copy>
+    <CopyOfY>複製 {0}</CopyOfY>
+    <CopyXOfY>複製 {0}/{1}</CopyXOfY>
+    <New>開新檔案</New>
+    <Remove>移除</Remove>
+    <RemoveAll>全部移除</RemoveAll>
+    <ImportStyleFromFile>從檔案匯入型態...</ImportStyleFromFile>
+    <ChooseStyle>選取型態以匯入</ChooseStyle>
+  </SubStationAlphaStyles>
+  <PointSync>
+    <Title>點同步</Title>
+    <TitleViaOtherSubtitle>通過其它字幕進行點同步</TitleViaOtherSubtitle>
+    <SyncHelp>至少要設定兩個同步點才能進行粗略同步</SyncHelp>
+    <SetSyncPoint>設定同步點</SetSyncPoint>
+    <RemoveSyncPoint>移除同步點</RemoveSyncPoint>
+    <SyncPointsX>同步點: {0}</SyncPointsX>
+    <Info>一個同步點可調整位置，兩個以上同步點可調整位置和速度</Info>
+    <ApplySync>套用</ApplySync>
+  </PointSync>
+  <UnknownSubtitle>
+    <Title>不明的字幕類型</Title>
+    <Message>如果您要修復這個問題請傳送到電子信件到 mailto:niksedk@gmail.com，並請附上該字幕的副本。</Message>
+  </UnknownSubtitle>
+  <VisualSync>
+    <Title>視覺同步</Title>
+    <StartScene>起始場景</StartScene>
+    <EndScene>末尾場景</EndScene>
+    <Synchronize>同步</Synchronize>
+    <HalfASecondBack>&lt; ½ 秒</HalfASecondBack>
+    <ThreeSecondsBack>&lt; 3 秒</ThreeSecondsBack>
+    <PlayXSecondsAndBack>播放 {0} 秒後返回</PlayXSecondsAndBack>
+    <FindText>尋找文字</FindText>
+    <GoToSubPosition>轉到字幕位置</GoToSubPosition>
+    <KeepChangesTitle>保留變更嗎？</KeepChangesTitle>
+    <KeepChangesMessage>「視覺同步」中的字幕已被變更。保留變更嗎？</KeepChangesMessage>
+    <SynchronizationDone>同步完成！</SynchronizationDone>
+    <StartSceneMustComeBeforeEndScene>起始場景必須在末尾場景之前！</StartSceneMustComeBeforeEndScene>
+    <Tip>提示: 使用 &lt;Ctrl + ←/→&gt; 鍵來 向前/向後 搬移 100 毫秒</Tip>
+  </VisualSync>
+  <VobSubEditCharacters>
+    <Title>編輯「圖像比較資料庫」</Title>
+    <ChooseCharacter>選取字元</ChooseCharacter>
+    <ImageCompareFiles>圖像比較檔案</ImageCompareFiles>
+    <CurrentCompareImage>現用的比較圖像</CurrentCompareImage>
+    <TextAssociatedWithImage>文字與圖像關聯</TextAssociatedWithImage>
+    <IsItalic>斜體(&amp;I)</IsItalic>
+    <Update>更新(&amp;U)</Update>
+    <Delete>移除(&amp;D)</Delete>
+    <ImageDoubleSize>圖像雙倍大小</ImageDoubleSize>
+    <ImageFileNotFound>圖像檔案找不到</ImageFileNotFound>
+    <Image>圖像</Image>
+  </VobSubEditCharacters>
+  <VobSubOcr>
+    <Title>匯入/OCR VobSub 字幕 (sub/idx)</Title>
+    <TitleBluRay>匯入/OCR 藍光字幕 (sup) </TitleBluRay>
+    <OcrMethod>OCR 模式</OcrMethod>
+    <OcrViaModi>使用 MS Office 文件圖像(MODI) OCR，需要 MS Office</OcrViaModi>
+    <OcrViaTesseract>使用 TesserAct OCR</OcrViaTesseract>
+    <Language>語系</Language>
+    <OcrViaImageCompare>使用圖像比較 OCR</OcrViaImageCompare>
+    <ImageDatabase>圖像資料庫</ImageDatabase>
+    <NoOfPixelsIsSpace>空格像素數量</NoOfPixelsIsSpace>
+    <New>開新檔案</New>
+    <Edit>編輯</Edit>
+    <StartOcr>開始 OCR</StartOcr>
+    <Stop>停止</Stop>
+    <StartOcrFrom>從下列字幕編號開始 OCR:</StartOcrFrom>
+    <LoadingVobSubImages>正在加載 VobSub 圖像...</LoadingVobSubImages>
+    <SubtitleImage>字幕圖像</SubtitleImage>
+    <SubtitleText>字幕文字</SubtitleText>
+    <UnableToCreateCharacterDatabaseFolder>無法建立「字元資料庫資料夾」: {0}</UnableToCreateCharacterDatabaseFolder>
+    <SubtitleImageXofY>字幕圖像 {0}/{1}</SubtitleImageXofY>
+    <ImagePalette>圖像調色板</ImagePalette>
+    <UseCustomColors>使用自訂彩色</UseCustomColors>
+    <Transparent>透明</Transparent>
+    <PromptForUnknownWords>提示不詳詞</PromptForUnknownWords>
+    <TryToGuessUnkownWords>嘗試猜測不詳詞</TryToGuessUnkownWords>
+    <AutoBreakSubtitleIfMoreThanTwoLines>如果超過兩行自動中斷</AutoBreakSubtitleIfMoreThanTwoLines>
+    <AllFixes>全部修復</AllFixes>
+    <GuessesUsed>已用猜測</GuessesUsed>
+    <UnknownWords>不詳詞</UnknownWords>
+    <OcrAutoCorrectionSpellchecking>OCR 自動修正/拼字檢查</OcrAutoCorrectionSpellchecking>
+    <FixOcrErrors>修正 OCR 錯誤</FixOcrErrors>
+    <ImportTextWithMatchingTimeCodes>通過符合時間碼匯入文字...</ImportTextWithMatchingTimeCodes>
+    <SaveSubtitleImageAs>字幕圖像另存新檔...</SaveSubtitleImageAs>
+    <SaveAllSubtitleImagesAsBdnXml>儲存所有圖像 (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
+    <SaveAllSubtitleImagesWithHtml>用 html 索引儲存所有圖像...</SaveAllSubtitleImagesWithHtml>
+    <XImagesSavedInY>{0} 個圖像儲存在 {1}</XImagesSavedInY>
+    <TryModiForUnknownWords>為不詳詞嘗試 MS MODI OCR</TryModiForUnknownWords>
+    <DictionaryX>字典: {0}</DictionaryX>
+    <RightToLeft>從右到左</RightToLeft>
+    <ShowOnlyForcedSubtitles>僅顯示強制字幕</ShowOnlyForcedSubtitles>
+    <UseTimeCodesFromIdx>從 .idx 檔案使用時間碼</UseTimeCodesFromIdx>
+    <NoMatch>&lt;不符合&gt;</NoMatch>
+    <AutoTransparentBackground>自動透明背景</AutoTransparentBackground>
+    <InspectCompareMatchesForCurrentImage>為現用的圖像檢查比較符合數...</InspectCompareMatchesForCurrentImage>
+    <EditLastAdditions>編輯上個圖像比較附加...</EditLastAdditions>
+  </VobSubOcr>
+  <VobSubOcrCharacter>
+    <Title>VobSub - 手動圖像到文字</Title>
+    <ShrinkSelection>收縮所選</ShrinkSelection>
+    <ExpandSelection>展開所選</ExpandSelection>
+    <SubtitleImage>字幕圖像</SubtitleImage>
+    <Characters>字元</Characters>
+    <CharactersAsText>字元為文字</CharactersAsText>
+    <Italic>斜體(&amp;I)</Italic>
+    <Abort>中止(&amp;A)</Abort>
+    <Skip>略過(&amp;S)</Skip>
+    <Nordic>日耳曼</Nordic>
+    <Spanish>西班牙</Spanish>
+    <German>德國</German>
+    <AutoSubmitOnFirstChar>自動送出首個字元(&amp;F)</AutoSubmitOnFirstChar>
+    <EditLastX>編輯上個: {0}</EditLastX>
+  </VobSubOcrCharacter>
+  <VobSubOcrCharacterInspect>
+    <Title>為現用的圖像檢查比較符合數</Title>
+    <InspectItems>檢查項目</InspectItems>
+    <AddBetterMatch>加入最佳符合</AddBetterMatch>
+  </VobSubOcrCharacterInspect>
+  <VobSubOcrNewFolder>
+    <Title>開新檔案資料夾</Title>
+    <Message>新字元資料庫資料夾名稱</Message>
+  </VobSubOcrNewFolder>
+  <WaveForm>
+    <ClickToAddWaveForm>點擊以加入波形</ClickToAddWaveForm>
+    <ClickToAddWaveformAndSpectrogram>點擊以加入 波形/頻譜圖</ClickToAddWaveformAndSpectrogram>
+    <Seconds>秒</Seconds>
+    <ZoomIn>拉近</ZoomIn>
+    <ZoomOut>拉遠</ZoomOut>
+    <AddParagraphHere>加入文字到此處</AddParagraphHere>
+    <AddParagraphHereAndPasteText>從剪貼簿加入文字到此處</AddParagraphHereAndPasteText>
+    <DeleteParagraph>移除文字</DeleteParagraph>
+    <Split>分割</Split>
+    <SplitAtCursor>在游標處分割</SplitAtCursor>
+    <MergeWithPrevious>與上一行合併</MergeWithPrevious>
+    <MergeWithNext>與下一行合併</MergeWithNext>
+    <PlaySelection>播放所選</PlaySelection>
+    <ShowWaveformAndSpectrogram>儲存波形和頻譜圖</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>僅顯示波形</ShowWaveformOnly>
+    <ShowSpectrogramOnly>僅顯示頻譜圖</ShowSpectrogramOnly>
+    <GuessTimeCodes>猜測時間碼...</GuessTimeCodes>
+    <SeekSilence>搜尋靜音...</SeekSilence>
+  </WaveForm>
+  <WaveFormGenerateTimeCodes>
+    <Title>猜測時間碼</Title>
+    <StartFrom>開始於</StartFrom>
+    <CurrentVideoPosition>現用的視訊位置</CurrentVideoPosition>
+    <Beginning>開頭</Beginning>
+    <DeleteLines>移除行</DeleteLines>
+    <FromCurrentVideoPosition>從現用的視訊位置</FromCurrentVideoPosition>
+    <DetectOptions>檢驗選項</DetectOptions>
+    <ScanBlocksOfMs>掃瞄毫秒塊</ScanBlocksOfMs>
+    <BlockAverageVolMin1>塊平均音量必須高於</BlockAverageVolMin1>
+    <BlockAverageVolMin2>總平均音量的 %</BlockAverageVolMin2>
+    <BlockAverageVolMax1>塊平均音量必須低於</BlockAverageVolMax1>
+    <BlockAverageVolMax2>最大音量的 %</BlockAverageVolMax2>
+    <SplitLongLinesAt1>在此處分割過長字幕</SplitLongLinesAt1>
+    <SplitLongLinesAt2>毫秒</SplitLongLinesAt2>
+    <Other>其它</Other>
+  </WaveFormGenerateTimeCodes>
+</Language>

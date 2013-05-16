@@ -1552,6 +1552,9 @@
     <None Include="Resources\pictureBoxFS.Image.png" />
     <None Include="Resources\pictureBoxFSDown.Image.png" />
     <None Include="Resources\pictureBoxFSOver.Image.png" />
+    <Content Include="Languages\zh-tw.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\TesseractDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>

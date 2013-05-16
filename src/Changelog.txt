@@ -3,12 +3,16 @@
 
 3.3.5 (xth May 2013)
 * NEW:
+   * Added Chinese Traditional - thx BAWAN
    * Added a few new subtitle formats
 * IMPROVED:
    * Updated Basque language file - thx Xabier Aramendi
+   * Updated Dutch language file - thx Quetsbeek
    * Support for color, size and font name in MicroDVD - thx SimlyTheBOSS
    * Start OCR if srt file contains only image file names
    * Added Turkish letters to PAC import/export - thx aydngur
+   * Updated NHunspell to 1.1.1.0 - thx tmaierhofer
+   * Compare now show filename of current subtitle (if available)
 * FIXED:
    * Blu-ray sup image decoding no longer skips color 0 - thx matidio
    * Better center alignment of second line in image export - thx George
@@ -18,6 +22,7 @@
    * Can now save " " (space) in multiple replace settings - thx dandomina
    * Italian language now active again (broken in 3.3.4)
    * Clear suggestions in OCR now actually works
+   * OCR via image compage: Fixed correct index for guesses - thx Erik
 
 
 3.3.4 (9th April 2013)
