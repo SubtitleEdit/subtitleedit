@@ -43,6 +43,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.FindSubtitleLine FindSubtitleLine;
         public LanguageStructure.FixCommonErrors FixCommonErrors;
         public LanguageStructure.GetDictionaries GetDictionaries;
+        public LanguageStructure.GetTesseractDictionaries GetTesseractDictionaries;
         public LanguageStructure.GoogleTranslate GoogleTranslate;
         public LanguageStructure.GoogleOrMicrosoftTranslate GoogleOrMicrosoftTranslate;
         public LanguageStructure.GoToLine GoToLine;
@@ -669,6 +670,18 @@ namespace Nikse.SubtitleEdit.Logic
                 GetDictionariesHere = "Get dictionaries here:",
                 OpenOpenOfficeWiki = "Open Office Wiki Dictionaries list",
                 GetAllDictionaries = "Get all dictionaries",
+                OpenDictionariesFolder = "Open 'Dictionaries' folder",
+                Download = "Download",
+                ChooseLanguageAndClickDownload = "Choose your language and click download",
+                XDownloaded = "{0} has been downloaded and installed",
+            };
+
+            GetTesseractDictionaries = new LanguageStructure.GetTesseractDictionaries
+            {
+                Title = "Need dictionaries?",
+                DescriptionLine1 = "Get Tesseract OCR dictionaries from the web",
+                DownloadFailed = "Download failed!",
+                GetDictionariesHere = "Get dictionaries here:",
                 OpenDictionariesFolder = "Open 'Dictionaries' folder",
                 Download = "Download",
                 ChooseLanguageAndClickDownload = "Choose your language and click download",

@@ -575,6 +575,20 @@
             public string XDownloaded { get; set; }
         }
 
+        public class GetTesseractDictionaries
+        {
+            public string Title { get; set; }
+            public string DescriptionLine1 { get; set; }
+            public string DownloadFailed { get; set; }
+            public string GetDictionariesHere { get; set; }
+            public string OpenOpenOfficeWiki { get; set; }
+            public string GetAllDictionaries { get; set; }
+            public string ChooseLanguageAndClickDownload { get; set; }
+            public string OpenDictionariesFolder { get; set; }
+            public string Download { get; set; }
+            public string XDownloaded { get; set; }
+        }
+
         public class GoogleTranslate
         {
             public string Title { get; set; }
