@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                     {
                         Color c = nbmp.GetPixel(point.X, point.Y);
-                        if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                        if (c.A > 150 && c.R + c.G + c.B > VobSubOcr.NocrMinColor)
                         {
                         }
                         else
@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                     {
                         Color c = nbmp.GetPixel(point.X, point.Y);
-                        if (c.A > 150 && c.R > 100 && c.G > 100 && c.B > 100)
+                        if (c.A > 150 && c.R + c.G + c.B > VobSubOcr.NocrMinColor)
                         {
                             return false;
                         }
