@@ -111,35 +111,37 @@ DisableProgramGroupPage=auto
 
 
 [Languages]
-Name: en;  MessagesFile: compiler:Default.isl
+Name: en;   MessagesFile: compiler:Default.isl
 #ifdef localize
-Name: ar;  MessagesFile: Languages\Arabic.isl
-Name: bg;  MessagesFile: Languages\Bulgarian.isl
-Name: br;  MessagesFile: compiler:Languages\BrazilianPortuguese.isl
-Name: ca;  MessagesFile: compiler:Languages\Catalan.isl
-Name: cs;  MessagesFile: compiler:Languages\Czech.isl
-Name: de;  MessagesFile: compiler:Languages\German.isl
-Name: dk;  MessagesFile: compiler:Languages\Danish.isl
-Name: el;  MessagesFile: compiler:Languages\Greek.isl
-Name: es;  MessagesFile: compiler:Languages\Spanish.isl
-Name: eu;  MessagesFile: Languages\Basque.isl
-Name: fa;  MessagesFile: Languages\Farsi.isl
-Name: fi;  MessagesFile: compiler:Languages\Finnish.isl
-Name: fr;  MessagesFile: compiler:Languages\French.isl
-Name: hr;  MessagesFile: Languages\Croatian.isl
-Name: hu;  MessagesFile: compiler:Languages\Hungarian.isl
-Name: it;  MessagesFile: compiler:Languages\Italian.isl
-Name: ja;  MessagesFile: compiler:Languages\Japanese.isl
-Name: kr;  MessagesFile: Languages\Korean.isl
-Name: nl;  MessagesFile: compiler:Languages\Dutch.isl
-Name: pl;  MessagesFile: compiler:Languages\Polish.isl
-Name: pt;  MessagesFile: compiler:Languages\Portuguese.isl
-Name: ro;  MessagesFile: Languages\Romanian.isl
-Name: ru;  MessagesFile: compiler:Languages\Russian.isl
-Name: srC; MessagesFile: compiler:Languages\SerbianCyrillic.isl
-Name: srL; MessagesFile: compiler:Languages\SerbianLatin.isl
-Name: sv;  MessagesFile: Languages\Swedish.isl
-Name: tr;  MessagesFile: Languages\Turkish.isl
+Name: ar;   MessagesFile: Languages\Arabic.isl
+Name: bg;   MessagesFile: Languages\Bulgarian.isl
+Name: br;   MessagesFile: compiler:Languages\BrazilianPortuguese.isl
+Name: ca;   MessagesFile: compiler:Languages\Catalan.isl
+Name: cs;   MessagesFile: compiler:Languages\Czech.isl
+Name: de;   MessagesFile: compiler:Languages\German.isl
+Name: dk;   MessagesFile: compiler:Languages\Danish.isl
+Name: el;   MessagesFile: compiler:Languages\Greek.isl
+Name: es;   MessagesFile: compiler:Languages\Spanish.isl
+Name: eu;   MessagesFile: Languages\Basque.isl
+Name: fa;   MessagesFile: Languages\Farsi.isl
+Name: fi;   MessagesFile: compiler:Languages\Finnish.isl
+Name: fr;   MessagesFile: compiler:Languages\French.isl
+Name: hr;   MessagesFile: Languages\Croatian.isl
+Name: hu;   MessagesFile: compiler:Languages\Hungarian.isl
+Name: it;   MessagesFile: compiler:Languages\Italian.isl
+Name: ja;   MessagesFile: compiler:Languages\Japanese.isl
+Name: kr;   MessagesFile: Languages\Korean.isl
+Name: nl;   MessagesFile: compiler:Languages\Dutch.isl
+Name: pl;   MessagesFile: compiler:Languages\Polish.isl
+Name: pt;   MessagesFile: compiler:Languages\Portuguese.isl
+Name: ro;   MessagesFile: Languages\Romanian.isl
+Name: ru;   MessagesFile: compiler:Languages\Russian.isl
+Name: srC;  MessagesFile: compiler:Languages\SerbianCyrillic.isl
+Name: srL;  MessagesFile: compiler:Languages\SerbianLatin.isl
+Name: sv;   MessagesFile: Languages\Swedish.isl
+Name: tr;   MessagesFile: Languages\Turkish.isl
+Name: zh;   MessagesFile: Languages\ChineseSimplified.isl
+Name: zhTW; MessagesFile: Languages\ChineseTraditional.isl
 #endif
 
 ; Include the installer's custom messages
@@ -240,6 +242,7 @@ Source: {#bindir}\Languages\sr-Latn-RS.xml;        DestDir: {app}\Languages;    
 Source: {#bindir}\Languages\sv-SE.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\tr-TR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\zh-CHS.xml;            DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\zh-tw.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 #endif
 
 Source: {#bindir}\NHunspell.dll;                   DestDir: {app};                                    Flags: ignoreversion; Components: main
