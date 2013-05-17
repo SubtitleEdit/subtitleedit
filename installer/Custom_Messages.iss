@@ -554,4 +554,40 @@ tr.tsk_ResetSettings=Reset Subtitle Edit's settings
 tr.types_custom=Custom installation
 tr.types_default=Default installation
 
+; Chinese Simplified
+zh.comp_translations=Translations
+zh.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+zh.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+zh.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
+zh.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+zh.msg_OptimizingPerformance=Optimizing performance...
+zh.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+zh.run_VisitWebsite=Visit Subtitle Edit's Website
+zh.sm_com_Changelog=Subtitle Edit's Changelog
+zh.tsk_AllUsers=For all users
+zh.tsk_CurrentUser=For the current user only
+zh.tsk_Other=Other:
+zh.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+zh.tsk_ResetSettings=Reset Subtitle Edit's settings
+zh.types_custom=Custom installation
+zh.types_default=Default installationen
+
+; Chinese Traditional
+zhTW.comp_translations=Translations
+zhTW.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+zhTW.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+zhTW.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
+zhTW.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+zhTW.msg_OptimizingPerformance=Optimizing performance...
+zhTW.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+zhTW.run_VisitWebsite=Visit Subtitle Edit's Website
+zhTW.sm_com_Changelog=Subtitle Edit's Changelog
+zhTW.tsk_AllUsers=For all users
+zhTW.tsk_CurrentUser=For the current user only
+zhTW.tsk_Other=Other:
+zhTW.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+zhTW.tsk_ResetSettings=Reset Subtitle Edit's settings
+zhTW.types_custom=Custom installation
+zhTW.types_default=Default installation
+
 #endif
