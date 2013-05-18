@@ -206,6 +206,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         public string TimedText10TimeCodeFormat { get; set; }
 
+        public int FcpFontSize { get; set; }
+
+
         public SubtitleSettings()
         {
             SsaFontName = "Arial";
@@ -220,6 +223,8 @@ namespace Nikse.SubtitleEdit.Logic
             SamiDisplayTwoClassesAsTwoSubtitles = true;
 
             TimedText10TimeCodeFormat = "Default";
+
+            FcpFontSize = 18;
         }
 
         public void InitializeDCinameSettings(bool smpte)
@@ -1442,6 +1447,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("TimedText10TimeCodeFormat");
                 if (subNode != null)
                     settings.SubtitleSettings.TimedText10TimeCodeFormat = subNode.InnerText;
+                subNode = node.SelectSingleNode("FcpFontSize");
+                if (subNode != null)
+                    settings.SubtitleSettings.FcpFontSize = Convert.ToInt32(subNode.InnerText);
             }
 
             settings.Proxy = new Nikse.SubtitleEdit.Logic.ProxySettings();
@@ -2303,6 +2311,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("DCinemaFadeUpDownTime", settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString());
             textWriter.WriteElementString("SamiDisplayTwoClassesAsTwoSubtitles", settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles.ToString());
             textWriter.WriteElementString("TimedText10TimeCodeFormat", settings.SubtitleSettings.TimedText10TimeCodeFormat);
+            textWriter.WriteElementString("FcpFontSize", settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Proxy", "");
