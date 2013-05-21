@@ -839,7 +839,15 @@ namespace Nikse.SubtitleEdit.Forms
                                     format = nciCaption;
                                 }
                             }
-
+                            if (format == null)
+                            {
+                                var tsb4 = new TSB4();
+                                if (tsb4.IsMine(null, fileName))
+                                {
+                                    tsb4.LoadSubtitle(_subtitle, null, fileName);
+                                    format = tsb4;
+                                }
+                            }
                             if (format == null)
                             {
                                 var avidStl = new AvidStl();
@@ -2268,6 +2276,21 @@ namespace Nikse.SubtitleEdit.Forms
                         _oldSubtitleFormat = nciCaption;
                         SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+                if (format == null)
+                {
+                    var tsb4 = new TSB4();
+                    if (tsb4.IsMine(null, fileName))
+                    {
+                        tsb4.LoadSubtitle(this._subtitle, null, fileName);
+                        _oldSubtitleFormat = tsb4;
+                        this.SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        this.SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
                         justConverted = true;
                         format = GetCurrentSubtitleFormat();
@@ -17017,6 +17040,13 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 SubtitleListview1.SelectIndexAndEnsureVisible(0);
             }
+        }
+
+        private void toolStripMenuItemExportFcpIImage_Click(object sender, EventArgs e)
+        {
+            var exportBdnXmlPng = new ExportPngXml();
+            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "FCP", _fileName, _videoInfo);
+            exportBdnXmlPng.ShowDialog(this);
         }
 
     }

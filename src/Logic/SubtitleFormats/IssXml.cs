@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(sb.ToString());
+                xml.LoadXml(sb.ToString().Trim());
 
                 XmlNode use2997DropFrame = xml.DocumentElement.SelectSingleNode("TrackList/Track/FcpProperty");
                 if (use2997DropFrame != null && use2997DropFrame.Attributes["Use2997DropFrame"] != null && use2997DropFrame.Attributes["Use2997DropFrame"].InnerText == "1")

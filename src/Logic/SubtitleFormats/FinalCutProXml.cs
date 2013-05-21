@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Globalization;
 using System.Text;
 using System.Xml;
 
@@ -247,7 +247,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 <name>Size</name>
                 <valuemin>0</valuemin>
                 <valuemax>200</valuemax>
-                <value>18</value>
+                <value>[FONTSIZE]</value>
               </parameter>
               <parameter>
                 <parameterid>track</parameterid>
@@ -422,7 +422,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     fontStyle = "4"; //4==bold/italic
                 else if (s.StartsWith("<i>") && s.EndsWith("</i>"))
                     fontStyle = "3"; //3==italic
-                generatorItem.InnerXml = xmlTrackStructure.Replace("[NUMBER]", number.ToString()).Replace("[FONTSTYLE]", fontStyle);
+                generatorItem.InnerXml = xmlTrackStructure.Replace("[NUMBER]", number.ToString()).Replace("[FONTSTYLE]", fontStyle).Replace("[FONTSIZE]", Configuration.Settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture)).Replace("[NUMBER]", number.ToString(CultureInfo.InvariantCulture));
 
                 double frameRate = Configuration.Settings.General.CurrentFrameRate;
                 XmlNode start = generatorItem.SelectSingleNode("generatoritem/start");
@@ -455,7 +455,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(sb.ToString());
+                xml.LoadXml(sb.ToString().Trim());
 
                 XmlDocument header = new XmlDocument();
                 header.LoadXml(sb.ToString());

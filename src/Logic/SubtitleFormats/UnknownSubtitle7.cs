@@ -128,6 +128,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
                     }
+                    else
+                    {
+                        _errorCount++;
+                    }
                 }
             }
             subtitle.Renumber(1);

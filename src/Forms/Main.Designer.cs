@@ -105,6 +105,7 @@
             this.toolStripMenuItemCavena890 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportCheetahCap = new System.Windows.Forms.ToolStripMenuItem();
             this.eBUSTLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportFcpIImage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImagePerFrame = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemTextTimeCodePair = new System.Windows.Forms.ToolStripMenuItem();
             this.pACScreenElectronicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1073,6 +1074,7 @@
             this.toolStripMenuItemCavena890,
             this.toolStripMenuItemExportCheetahCap,
             this.eBUSTLToolStripMenuItem,
+            this.toolStripMenuItemExportFcpIImage,
             this.toolStripMenuItemImagePerFrame,
             this.toolStripMenuItemTextTimeCodePair,
             this.pACScreenElectronicsToolStripMenuItem,
@@ -1153,6 +1155,13 @@
             this.eBUSTLToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.eBUSTLToolStripMenuItem.Text = "EBU STL...";
             this.eBUSTLToolStripMenuItem.Click += new System.EventHandler(this.EBustlToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemExportFcpIImage
+            // 
+            this.toolStripMenuItemExportFcpIImage.Name = "toolStripMenuItemExportFcpIImage";
+            this.toolStripMenuItemExportFcpIImage.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemExportFcpIImage.Text = "Final Cut Pro + image...";
+            this.toolStripMenuItemExportFcpIImage.Click += new System.EventHandler(this.toolStripMenuItemExportFcpIImage_Click);
             // 
             // toolStripMenuItemImagePerFrame
             // 
@@ -4590,6 +4599,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckFromCurrentLine;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportXSub;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportOcrHardSub;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportFcpIImage;
     }
 }
 

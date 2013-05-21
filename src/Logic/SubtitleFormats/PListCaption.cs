@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             XmlDocument xml = new XmlDocument();
-            xml.LoadXml(sb.ToString());
+            xml.LoadXml(sb.ToString().Trim());
             string lastKey = string.Empty;
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("array/dict"))
             {
