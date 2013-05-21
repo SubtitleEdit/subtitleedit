@@ -425,6 +425,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool UseTimeFormatHHMMSSFF { get; set; }
         public int ClearStatusBarAfterSeconds { get; set; }
         public bool ShowBetaStuff { get; set; }
+        public string Company { get; set; }
 
         public GeneralSettings()
         {
@@ -1252,7 +1253,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ShowBetaStuff");
             if (subNode != null)
                 settings.General.ShowBetaStuff = Convert.ToBoolean(subNode.InnerText.Trim());
-
+            subNode = node.SelectSingleNode("Company");
+            if (subNode != null)
+                settings.General.Company = subNode.InnerText;
 
             settings.Tools = new ToolsSettings();
             node = doc.DocumentElement.SelectSingleNode("Tools");
@@ -2241,6 +2244,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("UseTimeFormatHHMMSSFF", settings.General.UseTimeFormatHHMMSSFF.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ClearStatusBarAfterSeconds", settings.General.ClearStatusBarAfterSeconds.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
+            textWriter.WriteElementString("Company", settings.General.Company);
 
 
             textWriter.WriteEndElement();

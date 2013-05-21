@@ -43,6 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
             public bool Saved { get; set; }
             public ContentAlignment Alignment { get; set; }
             public Color BackgroundColor { get; set; }
+            public string SavDialogFileName { get; set; }
             public string Error { get; set; }
 
             public MakeBitmapParameter()
@@ -239,6 +240,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     Type3D = comboBox3D.SelectedIndex,
                                     Depth3D = (int)numericUpDownDepth3D.Value,
                                     BackgroundColor = Color.Transparent,
+                                    SavDialogFileName = saveFileDialog1.FileName,
                                 };
             if (index < _subtitle.Paragraphs.Count)
             {
@@ -315,6 +317,13 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "DVD Studio Pro STL|*.stl";
             }
+            else if (_exportType == "FCP")
+            {
+                saveFileDialog1.Title = "Save FCP XML as..."; //TODO: Configuration.Settings.Language.ExportPngXml.SaveFcpAs;
+                saveFileDialog1.DefaultExt = "*.xml";
+                saveFileDialog1.AddExtension = true;
+                saveFileDialog1.Filter = "Xml files|*.xml";
+            }
 
             if (_exportType == "BLURAYSUP" &&  saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "VOBSUB" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
@@ -322,7 +331,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _exportType == "FAB" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "IMAGE/FRAME" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "STL" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "SPUMUX" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
+                _exportType == "SPUMUX" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == "FCP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 int width = 1920;
                 int height = 1080;
@@ -486,6 +496,76 @@ namespace Nikse.SubtitleEdit.Forms
                                "</subpictures>";
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "spu.xml"), s);
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
+                }
+                else if (_exportType == "FCP")
+                {
+                    int duration = 0;
+                    if (_subtitle.Paragraphs.Count > 0)
+                        duration = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * 25.0);
+                    var doc = new XmlDocument();
+                    string s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+"<!DOCTYPE xmeml[]>" + Environment.NewLine +
+"<xmeml version=\"4\">" + Environment.NewLine +
+"  <sequence id=\"Sequence 1\">" + Environment.NewLine +
+@"    <updatebehavior>add</updatebehavior>
+    <name>Sequence 1</name>
+    <duration>" + duration.ToString(CultureInfo.InvariantCulture) + @"</duration>
+    <rate>
+      <ntsc>FALSE</ntsc>
+      <timebase>25</timebase>
+    </rate>
+    <timecode>
+      <rate>
+        <ntsc>FALSE</ntsc>
+        <timebase>25</timebase>
+      </rate>
+      <string>10:00:00:00</string>
+      <frame>900000</frame>
+      <source>source</source>
+      <displayformat>NDF</displayformat>
+    </timecode>
+    <in>0</in>
+    <out>36066</out>
+    <media>
+      <video>
+        <track>
+          <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+        </track>
+        <track>
+" + sb.ToString() + 
+@"   <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+        </track>
+      </video>
+      <audio>
+        <track>
+          <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+          <outputchannelindex>1</outputchannelindex>
+        </track>
+        <track>
+          <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+          <outputchannelindex>2</outputchannelindex>
+        </track>
+        <track>
+          <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+          <outputchannelindex>3</outputchannelindex>
+        </track>
+        <track>
+          <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+          <outputchannelindex>4</outputchannelindex>
+        </track>
+      </audio>
+    </media>
+    <ismasterclip>FALSE</ismasterclip>
+  </sequence>
+</xmeml>";
+                    File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, saveFileDialog1.FileName), s);
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
                 }
                 else
                 {
@@ -705,9 +785,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 break;
                             }
                         }
-
-
-
                         imagesSavedCount++;
 
                         const string paragraphWriteFormat = "\t\t<spu start=\"{0}\" end=\"{1}\" image=\"{2}\"  />";
@@ -717,6 +794,84 @@ namespace Nikse.SubtitleEdit.Forms
                         string startTime = string.Format(timeFormat, param.P.StartTime.Hours, param.P.StartTime.Minutes, param.P.StartTime.Seconds, (int)Math.Round(param.P.StartTime.Milliseconds / factor));
                         string endTime = string.Format(timeFormat, param.P.EndTime.Hours, param.P.EndTime.Minutes, param.P.EndTime.Seconds, (int)Math.Round(param.P.EndTime.Milliseconds / factor));
                         sb.AppendLine(string.Format(paragraphWriteFormat, startTime, endTime, fileName));
+
+                        param.Saved = true;
+                    }
+                }
+                else if (_exportType == "FCP")
+                {
+                    if (!param.Saved)
+                    {
+                        
+                        string numberString = string.Format(param.SavDialogFileName+ "{0:0000}", i);
+                        string fileName = numberString + "." + comboBoxImageFormat.Text.ToLower();
+
+                        string template = " <clipitem id=\"" + fileName + "\">" + Environment.NewLine +
+@"            <name>" + fileName + @"</name>
+            <duration>[DURATION]</duration>
+            <rate>
+              <ntsc>FALSE</ntsc>
+              <timebase>25</timebase>
+            </rate>
+            <in>[IN]</in>
+            <out>[OUT]</out>
+            <start>[START]</start>
+            <end>[END]</end>
+            <pixelaspectratio>PAL-601</pixelaspectratio>
+            <stillframe>TRUE</stillframe>
+            <anamorphic>FALSE</anamorphic>
+            <alphatype>straight</alphatype>
+            <masterclipid>" + fileName + @"1</masterclipid>" + Environment.NewLine +
+"           <file id=\"" + numberString + "\">" + @"
+              <name>" + fileName + @"</name>
+              <pathurl>file://localhost/" + fileName + @"</pathurl>
+              <rate>
+                <timebase>25</timebase>
+              </rate>
+              <duration>2</duration>
+              <width>720</width>
+              <height>576</height>
+              <media>
+                <video>
+                  <duration>2</duration>
+                  <stillframe>TRUE</stillframe>
+                  <samplecharacteristics>
+                    <width>720</width>
+                    <height>576</height>
+                  </samplecharacteristics>
+                </video>
+              </media>
+            </file>
+            <sourcetrack>
+              <mediatype>video</mediatype>
+            </sourcetrack>
+            <fielddominance>none</fielddominance>
+          </clipitem>";
+
+                        fileName = Path.Combine(folderBrowserDialog1.SelectedPath, fileName);
+
+                        foreach (var encoder in ImageCodecInfo.GetImageEncoders())
+                        {
+                            if (encoder.FormatID == ImageFormat.Png.Guid)
+                            {
+                                EncoderParameters parameters = new EncoderParameters();
+                                parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
+                                param.Bitmap.Save(fileName, encoder, parameters);
+                                break;
+                            }
+                        }
+                        imagesSavedCount++;
+
+                        int duration = (int)Math.Round(param.P.Duration.TotalSeconds * 25.0);
+                        int start = (int)Math.Round(param.P.StartTime.TotalSeconds * 25.0);
+                        int end = (int)Math.Round(param.P.EndTime.TotalSeconds * 25.0);
+
+                        template = template.Replace("[DURATION]", duration.ToString(CultureInfo.InvariantCulture));
+                        template = template.Replace("[IN]", start.ToString(CultureInfo.InvariantCulture));
+                        template = template.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
+                        template = template.Replace("[START]", start.ToString(CultureInfo.InvariantCulture));
+                        template = template.Replace("[END]", end.ToString(CultureInfo.InvariantCulture));
+                        sb.AppendLine(template);
 
                         param.Saved = true;
                     }
@@ -1398,6 +1553,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = "Image per frame";
             else if (exportType == "STL")
                 Text = "DVD Studio Pro STL";
+            else if (exportType == "FCP")
+                Text = "Final Cut Pro";
             else
                 Text = Configuration.Settings.Language.ExportPngXml.Title;
 
@@ -1514,8 +1671,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 comboBoxLanguage.SelectedIndex = 25;
             }
-            comboBoxImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL";
-            labelImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL";
+            comboBoxImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP";
+            labelImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP";
             labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME";
             comboBoxFramerate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME";
             if (exportType == "BDNXML")

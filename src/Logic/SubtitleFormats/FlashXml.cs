@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             StringBuilder sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             XmlDocument xml = new XmlDocument();
-            xml.LoadXml(sb.ToString());
+            xml.LoadXml(sb.ToString().Trim());
 
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("div/p"))
             {

@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(sb.ToString());
+                xml.LoadXml(sb.ToString().Trim());
 
                 foreach (XmlNode node in xml.SelectNodes("fcpxml/project/sequence/spine/clip"))
                 {

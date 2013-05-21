@@ -169,6 +169,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new UnknownSubtitle51(),
                     new UnknownSubtitle52(),
                     new UnknownSubtitle53(),
+                    new UnknownSubtitle54(),
                 };
             }
         }

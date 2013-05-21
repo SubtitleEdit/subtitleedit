@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(sb.ToString());
+                xml.LoadXml(sb.ToString().Trim());
 
                 XmlDocument header = new XmlDocument();
                 header.LoadXml(sb.ToString());

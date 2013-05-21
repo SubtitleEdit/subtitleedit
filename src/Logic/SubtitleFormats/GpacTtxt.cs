@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(sb.ToString());
+                xml.LoadXml(sb.ToString().Trim());
 
                 foreach (XmlNode node in xml.DocumentElement.SelectNodes("TextSample"))
                 {
