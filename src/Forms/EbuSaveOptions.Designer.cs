@@ -617,6 +617,7 @@
             this.Controls.Add(this.buttonCancel);
             this.MinimumSize = new System.Drawing.Size(648, 462);
             this.Name = "EbuSaveOptions";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "EbuSaveOptions";

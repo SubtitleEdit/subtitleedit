@@ -3168,18 +3168,35 @@ namespace Nikse.SubtitleEdit.Forms
                         styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
                     else if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
                         styles = Sami.GetStylesFromHeader(_subtitle.Header);
+                    else if (format.GetType() == typeof(Csv2))
+                        styles = GetCsv2Styles();
                     foreach (Paragraph p in _subtitle.Paragraphs)
                     {
                         if (string.IsNullOrEmpty(p.Extra) && styles.Count > 0)
-                            p.Extra = styles[0];
+                            p.Extra = styles[0];                        
                     }
                     if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
                         SubtitleListview1.ShowExtraColumn(Configuration.Settings.Language.General.Class);
+                    else if (format.GetType() == typeof(Csv2))
+                        SubtitleListview1.ShowExtraColumn("Character"); //TODO: Put in language xml file
                     else
                         SubtitleListview1.ShowExtraColumn(Configuration.Settings.Language.General.Style);
                     SubtitleListview1.DisplayExtraFromExtra = true;
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 }
+            }
+        }
+
+        private List<string> GetCsv2Styles()
+        {
+            if (!string.IsNullOrEmpty(Configuration.Settings.SubtitleSettings.Csv2CharacterListFile) && File.Exists(Configuration.Settings.SubtitleSettings.Csv2CharacterListFile))
+            {
+                return Csv2Properties.LoadCsv2Characters(Configuration.Settings.SubtitleSettings.Csv2CharacterListFile);
+            }
+            else
+            {
+                return new List<string>();
+                //return Csv2.GetStylesFromHeader(_subtitle);
             }
         }
 
@@ -5361,6 +5378,19 @@ namespace Nikse.SubtitleEdit.Forms
                         toolStripMenuItemWebVTT.DropDownItems.Add(_language.Menu.ContextMenu.WebVTTRemoveVoices, null, WebVTTRemoveVoices);
                 }
             }
+            else if ((formatType == typeof(Csv2) && SubtitleListview1.SelectedItems.Count > 0))
+            {
+                toolStripMenuItemWebVTT.Visible = false;
+                var styles = GetCsv2Styles();
+                setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
+                foreach (string style in styles)
+                {
+                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, csv2_Click);
+                }
+                setStylesForSelectedLinesToolStripMenuItem.Visible = styles.Count > 1;
+                toolStripMenuItemAssStyles.Visible = false;
+                setStylesForSelectedLinesToolStripMenuItem.Text = "Set character"; //TODO: Set language _language.Menu.ContextMenu.TimedTextStyles;
+            }
             else
             {
                 setStylesForSelectedLinesToolStripMenuItem.Visible = false;
@@ -5455,6 +5485,17 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (int index in SubtitleListview1.SelectedIndices)
             {
                 _subtitle.Paragraphs[index].Extra = style;
+                SubtitleListview1.SetExtraText(index, style, SubtitleListview1.ForeColor);
+            }
+        }
+
+        void csv2_Click(object sender, EventArgs e)
+        {
+            string style = (sender as ToolStripItem).Text;
+            foreach (int index in SubtitleListview1.SelectedIndices)
+            {
+                _subtitle.Paragraphs[index].Extra = style;
+                _subtitle.Paragraphs[index].Actor = style;
                 SubtitleListview1.SetExtraText(index, style, SubtitleListview1.ForeColor);
             }
         }
@@ -12263,6 +12304,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripMenuItemTTProperties.Visible = false;
             }
+
+            toolStripMenuItemCsv2Properties.Visible = format.GetType() == typeof(Csv2);
+
             toolStripSeparator20.Visible = subtitleLoaded;
 
             toolStripMenuItemImportXSub.Visible = !string.IsNullOrEmpty(_language.OpenXSubFiles) && !string.IsNullOrEmpty(_language.XSubFiles) && !string.IsNullOrEmpty(_language.Menu.File.ImportXSub); //TODO: remove in 3.4
@@ -17047,6 +17091,15 @@ namespace Nikse.SubtitleEdit.Forms
             var exportBdnXmlPng = new ExportPngXml();
             exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "FCP", _fileName, _videoInfo);
             exportBdnXmlPng.ShowDialog(this);
+        }
+
+        private void toolStripMenuItemCsv2Properties_Click(object sender, EventArgs e)
+        {
+            var form = new Csv2Properties();
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                Configuration.Settings.SubtitleSettings.Csv2CharacterListFile = form.CharacterListFile;
+            }
         }
 
     }

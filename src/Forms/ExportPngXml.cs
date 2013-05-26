@@ -802,12 +802,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!param.Saved)
                     {
-                        
-                        string numberString = string.Format(param.SavDialogFileName+ "{0:0000}", i);
-                        string fileName = numberString + "." + comboBoxImageFormat.Text.ToLower();
 
-                        string template = " <clipitem id=\"" + fileName + "\">" + Environment.NewLine +
-@"            <name>" + fileName + @"</name>
+                        string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(param.SavDialogFileName)) + "{0:0000}", i);
+                        string fileName = numberString + "." + comboBoxImageFormat.Text.ToLower();
+                        string fileNameNoPath = Path.GetFileName(fileName);
+                        string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
+
+                        string template = " <clipitem id=\"" + fileNameNoPath + "\">" + Environment.NewLine +
+@"            <name>" + fileNameNoPath + @"</name>
             <duration>[DURATION]</duration>
             <rate>
               <ntsc>FALSE</ntsc>
@@ -821,10 +823,10 @@ namespace Nikse.SubtitleEdit.Forms
             <stillframe>TRUE</stillframe>
             <anamorphic>FALSE</anamorphic>
             <alphatype>straight</alphatype>
-            <masterclipid>" + fileName + @"1</masterclipid>" + Environment.NewLine +
-"           <file id=\"" + numberString + "\">" + @"
-              <name>" + fileName + @"</name>
-              <pathurl>file://localhost/" + fileName + @"</pathurl>
+            <masterclipid>" + fileNameNoPath + @"1</masterclipid>" + Environment.NewLine +
+"           <file id=\"" + fileNameNoExt + "\">" + @"
+              <name>" + fileNameNoPath + @"</name>
+              <pathurl>file://localhost/" + fileNameNoPath + @"</pathurl>
               <rate>
                 <timebase>25</timebase>
               </rate>
@@ -848,7 +850,7 @@ namespace Nikse.SubtitleEdit.Forms
             <fielddominance>none</fielddominance>
           </clipitem>";
 
-                        fileName = Path.Combine(folderBrowserDialog1.SelectedPath, fileName);
+                        fileName = Path.Combine(Path.GetDirectoryName(param.SavDialogFileName), fileName);
 
                         foreach (var encoder in ImageCodecInfo.GetImageEncoders())
                         {

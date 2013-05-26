@@ -208,6 +208,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public int FcpFontSize { get; set; }
 
+        public string Csv2CharacterListFile { get; set; }
 
         public SubtitleSettings()
         {
@@ -1453,6 +1454,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("FcpFontSize");
                 if (subNode != null)
                     settings.SubtitleSettings.FcpFontSize = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("Csv2CharacterListFile");
+                if (subNode != null)
+                    settings.SubtitleSettings.Csv2CharacterListFile = subNode.InnerText;
             }
 
             settings.Proxy = new Nikse.SubtitleEdit.Logic.ProxySettings();
@@ -2316,6 +2320,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SamiDisplayTwoClassesAsTwoSubtitles", settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles.ToString());
             textWriter.WriteElementString("TimedText10TimeCodeFormat", settings.SubtitleSettings.TimedText10TimeCodeFormat);
             textWriter.WriteElementString("FcpFontSize", settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("Csv2CharacterListFile", settings.SubtitleSettings.Csv2CharacterListFile);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Proxy", "");

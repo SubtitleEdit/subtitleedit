@@ -64,9 +64,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (parts.Length == 4)
                     try
                     {
-                        int start = Convert.ToInt32(FixQuotes(parts[1]));
-                        int end = Convert.ToInt32(FixQuotes(parts[2]));
-                        string text = FixQuotes(parts[3]);
+                        int start = Convert.ToInt32(Utilities.FixQuotes(parts[1]));
+                        int end = Convert.ToInt32(Utilities.FixQuotes(parts[2]));
+                        string text = Utilities.FixQuotes(parts[3]);
 
                         subtitle.Paragraphs.Add(new Paragraph(text, start, end));
                     }
@@ -82,19 +82,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             subtitle.Renumber(1);
         }
-
-        private static string FixQuotes(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return text;
-
-            if (text.StartsWith("\"") && text.Length > 1)
-                text = text.Substring(1);
-
-            if (text.EndsWith("\"") && text.Length > 1)
-                text = text.Substring(0, text.Length-1);
-
-            return text.Replace("\"\"", "\"");
-        }
+        
     }
 }

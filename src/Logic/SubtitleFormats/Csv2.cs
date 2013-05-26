@@ -8,8 +8,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class Csv2 : SubtitleFormat
     {
         private const string Seperator = ";";
-        // \"[^""]*\";\d\d:\d\d:\d\d:\d\d;\d\d:\d\d:\d\d:\d\d;[^""]*;[^""]*;\"[^""]*\"
-        static readonly Regex CsvLine = new Regex(@"^\""[^""]*\""" + Seperator + @"\d\d:\d\d:\d\d:\d\d" + Seperator + @"\d\d:\d\d:\d\d:\d\d" + Seperator + @"[^;]*" + Seperator + @"[^;]*" + Seperator + @"[^;]*" + Seperator + @"\""[^""]*\""$", RegexOptions.Compiled);
+        private const string NewLineSeperator = "   ";
+        static readonly Regex CsvLine = new Regex(@"^\""[^""]*\""" + Seperator + @"\d\d:\d\d:\d\d:\d\d" + Seperator + @"\d\d:\d\d:\d\d:\d\d" + Seperator + @"[^;]*" + Seperator + @"[^;]*" + Seperator + @"[^;]*" + Seperator + @"\"".*\""$", RegexOptions.Compiled);
+        static readonly Regex CsvLineEmpty = new Regex(@"^\""[^""]*\""" + Seperator + @"\d\d:\d\d:\d\d:\d\d" + Seperator + @"\d\d:\d\d:\d\d:\d\d" + Seperator + @"[^;]*" + Seperator + @"[^;]*" + Seperator + @"[^;]*" + Seperator + "$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -32,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int failed = 0;
             foreach (string line in lines)
             {
-                if (CsvLine.IsMatch(line))
+                if (CsvLine.IsMatch(line) || CsvLineEmpty.IsMatch(line))
                     fine++;
                 else
                     failed++;
@@ -46,13 +47,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             const string format = "\"{1}\"{0}{2}{0}{3}{0}{4}{0}{5}{0}\"{6}\"{0}\"{7}\"";
             var sb = new StringBuilder();
 
-            sb.AppendLine(string.Format(format, Seperator, "Track name", "Timecode In", "Timecode Out", "Description", "Length", "Character", "Dialogue"));
+            sb.AppendLine(string.Format(format, Seperator, "Track name", "\"Timecode In\"", "\"Timecode Out\"", "\"Description\"", "\"Length\"", "Character", "Dialogue"));
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string actor = string.Empty;
                 if (p.Actor != null)
                     actor = p.Actor;
-                sb.AppendLine(string.Format(format, Seperator, title, EncodeTime(p.StartTime), EncodeTime(p.EndTime), "", "1", actor, p.Text.Replace(Environment.NewLine, "\n")));
+                sb.AppendLine(string.Format(format, Seperator, title, EncodeTime(p.StartTime), EncodeTime(p.EndTime), "", "1", actor, p.Text.Replace(Environment.NewLine, NewLineSeperator).Trim()));
             }
             return sb.ToString().Trim();
         }
@@ -68,19 +69,27 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             foreach (string line in lines)
             {
-                if (CsvLine.IsMatch(line))
+                if (CsvLine.IsMatch(line) || CsvLineEmpty.IsMatch(line))
                 {
                     string[] parts = line.Split(Seperator.ToCharArray(),  StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 6)
                     try
                     {
-                        TimeCode start = DecodeTime(FixQuotes(parts[1]));
-                        TimeCode end = DecodeTime(FixQuotes(parts[2]));
-                        string text = FixQuotes(parts[5]);
+                        TimeCode start = DecodeTime(Utilities.FixQuotes(parts[1]));
+                        TimeCode end = DecodeTime(Utilities.FixQuotes(parts[2]));
+                        string text = Utilities.FixQuotes(parts[5]);
+                        if (text.Contains(NewLineSeperator))
+                            text = text.Replace(NewLineSeperator, Environment.NewLine);
+                        else
+                            text = Utilities.AutoBreakLine(text);
+                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                         var p = new Paragraph(start, end, text);
-                        string actor = FixQuotes(parts[4]);
+                        string actor = Utilities.FixQuotes(parts[4]);
                         if (actor.Trim().Length > 0)
                             p.Actor = actor;
+                        p.Extra = p.Actor;
 
                         subtitle.Paragraphs.Add(p);
                     }
@@ -109,18 +118,24 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
         }
 
-        private static string FixQuotes(string text)
+        public override bool HasStyleSupport
         {
-            if (string.IsNullOrEmpty(text))
-                return text;
-
-            if (text.StartsWith("\"") && text.Length > 1)
-                text = text.Substring(1);
-
-            if (text.EndsWith("\"") && text.Length > 1)
-                text = text.Substring(0, text.Length-1);
-
-            return text.Replace("\"\"", "\"");
+            get { return true; }
         }
+
+        public static List<string> GetStylesFromHeader(Subtitle subtitle)
+        {
+            var list = new List<string>();
+            foreach (Paragraph p in subtitle.Paragraphs)
+            {
+                if (!string.IsNullOrEmpty(p.Actor))
+                {
+                    if (list.IndexOf(p.Actor) < 0)
+                        list.Add(p.Actor);
+                }
+            }
+            return list;
+        }
+
     }
 }
