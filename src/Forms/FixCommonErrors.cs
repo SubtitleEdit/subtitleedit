@@ -63,8 +63,8 @@ namespace Nikse.SubtitleEdit.Forms
         static readonly Regex UrlNet = new Regex(@"\w\.net\b", RegexOptions.Compiled);
         static readonly Regex UrlOrg = new Regex(@"\w\.org\b", RegexOptions.Compiled);
 
-        static readonly Regex ReAfterLowercaseLetter = new Regex(@"[a-zæøåäöé]I", RegexOptions.Compiled);
-        static readonly Regex ReBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöé]", RegexOptions.Compiled);
+        static readonly Regex ReAfterLowercaseLetter = new Regex(@"[a-zæøåäöéùáàìéóúñüéíóúñü]I", RegexOptions.Compiled);
+        static readonly Regex ReBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöéùàìéóúñüéíóúñü]", RegexOptions.Compiled);
 
         static readonly Regex RemoveSpaceBetweenNumbersRegEx = new Regex(@"\d \d", RegexOptions.Compiled);
 
