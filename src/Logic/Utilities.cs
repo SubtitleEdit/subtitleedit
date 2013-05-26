@@ -3066,5 +3066,19 @@ namespace Nikse.SubtitleEdit.Logic
             return sb.ToString();
         }
 
+        public static string FixQuotes(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            if (text.StartsWith("\"") && text.Length > 1)
+                text = text.Substring(1);
+
+            if (text.EndsWith("\"") && text.Length >= 1)
+                text = text.Substring(0, text.Length - 1);
+
+            return text.Replace("\"\"", "\"");
+        }
+
     }
 }

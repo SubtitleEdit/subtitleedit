@@ -2,6 +2,7 @@
 using System.Xml;
 using System.IO;
 using System.Text;
+using System.Security.Cryptography;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -15,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             get
             {
-                return new List<SubtitleFormat>
+                var list = new List<SubtitleFormat>
                 {
                     new SubRip(),
                     new AbcIViewer(),
@@ -35,7 +36,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new CaptionateMs(),
                     new CaraokeXml(),
                     new Csv(),
-                    new Csv2(),
                     new DCSubtitle(),
                     new DCinemaSmpte(),
                     new DigiBeta(),
@@ -171,7 +171,26 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new UnknownSubtitle53(),
                     new UnknownSubtitle54(),
                 };
+
+                if (!string.IsNullOrEmpty(Configuration.Settings.General.Company) && CalculateMD5Hash(Configuration.Settings.General.Company) == "9CD4708C3D8E18AB193EF36E086AD39D")
+                    list.Insert(1, new Csv2());
+            
+                return list;
             }
+        }
+
+        private static string CalculateMD5Hash(string input)
+        {
+            MD5 md5 = System.Security.Cryptography.MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+            byte[] hash = md5.ComputeHash(inputBytes);
+
+            var sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+            return sb.ToString();
         }
 
         protected int _errorCount;
