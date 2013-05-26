@@ -92,7 +92,14 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (File.Exists(_replaceListXmlFileName))
             {
                 var doc = new XmlDocument();
-                doc.Load(_replaceListXmlFileName);
+                try
+                {
+                    doc.Load(_replaceListXmlFileName);
+                }
+                catch (Exception exception)
+                { 
+                    MessageBox.Show("Unable to load " + _replaceListXmlFileName + ": " + exception.Message + Environment.NewLine);
+                }
 
                 _wordReplaceList = LoadReplaceList(doc, "WholeWords");
                 _partialWordReplaceListAlways = LoadReplaceList(doc, "PartialWordsAlways");
