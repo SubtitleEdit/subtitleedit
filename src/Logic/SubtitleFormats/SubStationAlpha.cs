@@ -76,7 +76,9 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             if (isValidAssHeader)
             {
                 sb.AppendLine(subtitle.Header.Trim());
-                sb.AppendLine("Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text");
+                string formatLine = "Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
+                if (!subtitle.Header.Contains(formatLine))
+                    sb.AppendLine(formatLine);
                 styles = AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header);
             }
             else if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]"))
@@ -454,9 +456,9 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             if (!string.IsNullOrEmpty(style))
                                 p.Extra = style;
                             if (!string.IsNullOrEmpty(effect))
-                                p.Extra = effect;
+                                p.Effect = effect;
                             if (!string.IsNullOrEmpty(layer))
-                                p.Extra = layer;
+                                p.Layer = layer;
                             if (!string.IsNullOrEmpty(name))
                                 p.Actor = name;
                             p.IsComment = s.StartsWith("comment:");
