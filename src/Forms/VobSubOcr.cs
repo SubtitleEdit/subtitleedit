@@ -3724,6 +3724,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_nocrChars == null)
                     LoadNOcrWithCurrentLanguage();
 
+                if (_nocrChars == null)
+                {
+                    MessageBox.Show("Fatal - No NOCR dictionary loaded!");
+                    SetButtonsEnabledAfterOcrDone();
+                    return;
+                }
+
                 _nocrThreadsStop = false;
                 _nocrThreads = new List<BackgroundWorker>();
                 _nocrThreadResults = new string[_subtitle.Paragraphs.Count];
@@ -3839,9 +3846,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void LoadNOcrWithCurrentLanguage()
         {
             string fileName = GetNOcrLanguageFileName();
-            LoadNOcr(fileName, true);
-            fileName = fileName.Insert(fileName.Length - 4, "_User");
-            LoadNOcr(fileName, false);
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                LoadNOcr(fileName, true);
+                fileName = fileName.Insert(fileName.Length - 4, "_User");
+                LoadNOcr(fileName, false);
+            }
         }
 
         internal void SaveNOcrWithCurrentLanguage()
