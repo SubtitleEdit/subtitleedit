@@ -23,6 +23,8 @@
    * Italian language now active again (broken in 3.3.4)
    * Clear suggestions in OCR now actually works
    * OCR via image compage: Fixed correct index for guesses - thx Erik
+   * Fixed a bug in SSA format - thx Dave
+   * Fixed bug in "Fix uppercase I in lowercase words" - thx Alberto
 
 
 3.3.4 (9th April 2013)
