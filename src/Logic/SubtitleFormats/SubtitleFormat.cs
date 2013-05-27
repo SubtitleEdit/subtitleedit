@@ -173,7 +173,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 };
 
                 if (!string.IsNullOrEmpty(Configuration.Settings.General.Company) && CalculateMD5Hash(Configuration.Settings.General.Company) == "9CD4708C3D8E18AB193EF36E086AD39D")
-                    list.Insert(1, new Csv2());
+                    list.Insert(1, new Nuendo());
             
                 return list;
             }

@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    public class Csv2 : SubtitleFormat
+    public class Nuendo : SubtitleFormat
     {
         private const string Seperator = ";";
         private const string NewLineSeperator = "   ";
@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Csv2"; }
+            get { return "Nuendo"; }
         }
 
         public override bool IsTimeBased

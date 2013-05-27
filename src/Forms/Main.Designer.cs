@@ -72,7 +72,7 @@
             this.toolStripMenuItemRestoreAutoBackup = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemDCinemaProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemTTProperties = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemCsv2Properties = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemNuendoProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSubStationAlpha = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
             this.openOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -821,7 +821,7 @@
             this.toolStripMenuItemRestoreAutoBackup,
             this.toolStripMenuItemDCinemaProperties,
             this.toolStripMenuItemTTProperties,
-            this.toolStripMenuItemCsv2Properties,
+            this.toolStripMenuItemNuendoProperties,
             this.toolStripMenuItemSubStationAlpha,
             this.toolStripSeparator20,
             this.openOriginalToolStripMenuItem,
@@ -917,12 +917,12 @@
             this.toolStripMenuItemTTProperties.Text = "Timed Text properties...";
             this.toolStripMenuItemTTProperties.Click += new System.EventHandler(this.toolStripMenuItemTTPropertiesClick);
             // 
-            // toolStripMenuItemCsv2Properties
+            // toolStripMenuItemNuendoProperties
             // 
-            this.toolStripMenuItemCsv2Properties.Name = "toolStripMenuItemCsv2Properties";
-            this.toolStripMenuItemCsv2Properties.Size = new System.Drawing.Size(337, 22);
-            this.toolStripMenuItemCsv2Properties.Text = "Csv2 properties...";
-            this.toolStripMenuItemCsv2Properties.Click += new System.EventHandler(this.toolStripMenuItemCsv2Properties_Click);
+            this.toolStripMenuItemNuendoProperties.Name = "toolStripMenuItemNuendoProperties";
+            this.toolStripMenuItemNuendoProperties.Size = new System.Drawing.Size(337, 22);
+            this.toolStripMenuItemNuendoProperties.Text = "Nuendo properties...";
+            this.toolStripMenuItemNuendoProperties.Click += new System.EventHandler(this.ToolStripMenuItemNuendoPropertiesClick);
             // 
             // toolStripMenuItemSubStationAlpha
             // 
@@ -4609,7 +4609,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportXSub;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportOcrHardSub;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportFcpIImage;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCsv2Properties;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemNuendoProperties;
     }
 }
 

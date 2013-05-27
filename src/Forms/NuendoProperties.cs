@@ -5,16 +5,16 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class Csv2Properties : Form
+    public partial class NuendoProperties : Form
     {
 
         public string CharacterListFile { get; set; }
         
-        public Csv2Properties()
+        public NuendoProperties()
         {
             InitializeComponent();
             labelStatus.Text = string.Empty;
-            textBoxCharacterFile.Text = Configuration.Settings.SubtitleSettings.Csv2CharacterListFile;
+            textBoxCharacterFile.Text = Configuration.Settings.SubtitleSettings.NuendoCharacterListFile;
         }
 
         private void ButtonChooseCharacter_Click(object sender, EventArgs e)
@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxCharacterFile.Text = openFileDialog1.FileName;
 
-                int count = LoadCsv2Characters(openFileDialog1.FileName).Count;
+                int count = LoadCharacters(openFileDialog1.FileName).Count;
                 if (count == 0)
                 {
                     labelStatus.Text = "No characters found!";
@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
-        public static List<string> LoadCsv2Characters(string fileName)
+        public static List<string> LoadCharacters(string fileName)
         {
             int lineNumber = 0;
             const string Seperator = ";";

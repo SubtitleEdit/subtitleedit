@@ -221,11 +221,11 @@
     <Compile Include="Forms\AdjustDisplayDuration.Designer.cs">
       <DependentUpon>AdjustDisplayDuration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Csv2Properties.cs">
+    <Compile Include="Forms\NuendoProperties.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Csv2Properties.Designer.cs">
-      <DependentUpon>Csv2Properties.cs</DependentUpon>
+    <Compile Include="Forms\NuendoProperties.Designer.cs">
+      <DependentUpon>NuendoProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\DCinemaPropertiesInterop.cs">
       <SubType>Form</SubType>
@@ -799,7 +799,7 @@
     <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
     <Compile Include="Logic\SubtitleFormats\TSB4.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle54.cs" />
-    <Compile Include="Logic\SubtitleFormats\Csv2.cs" />
+    <Compile Include="Logic\SubtitleFormats\Nuendo.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProTest2Xml.cs" />
     <Compile Include="Logic\SubtitleFormats\JsonType4.cs" />
     <Compile Include="Logic\SubtitleFormats\DCinemaSmpte.cs" />
@@ -1081,8 +1081,8 @@
     <EmbeddedResource Include="Forms\ChooseStyle.resx">
       <DependentUpon>ChooseStyle.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Csv2Properties.resx">
-      <DependentUpon>Csv2Properties.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\NuendoProperties.resx">
+      <DependentUpon>NuendoProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DCinemaPropertiesInterop.resx">
       <DependentUpon>DCinemaPropertiesInterop.cs</DependentUpon>
