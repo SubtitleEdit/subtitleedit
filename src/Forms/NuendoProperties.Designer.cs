@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class Csv2Properties
+    partial class NuendoProperties
     {
         /// <summary>
         /// Required designer variable.
@@ -99,7 +99,7 @@
             this.labelStatus.TabIndex = 8;
             this.labelStatus.Text = "labelStatus";
             // 
-            // Csv2Properties
+            // NuendoProperties
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -114,11 +114,11 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Csv2Properties";
+            this.Name = "NuendoProperties";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Csv2Properties";
+            this.Text = "Nuendo properties";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Csv2Properties_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
