@@ -106,6 +106,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new TranscriberXml(),
                     new Tmx14(),
                     new TurboTitler(),
+                    new UniversalSubtitleFormat(),
                     new UTSubtitleXml(),
                     new Utx(),
                     new UtxFrames(),
