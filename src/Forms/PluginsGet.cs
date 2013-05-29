@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 foreach (XmlNode node in _pluginDoc.DocumentElement.SelectNodes("Plugin"))
                 {
-                    ListViewItem item = new ListViewItem(node.SelectSingleNode("Name").InnerText);
+                    ListViewItem item = new ListViewItem(node.SelectSingleNode("Name").InnerText.Trim('.'));
                     item.SubItems.Add(node.SelectSingleNode("Description").InnerText);
                     item.SubItems.Add(node.SelectSingleNode("Version").InnerText);
                     item.SubItems.Add(node.SelectSingleNode("Date").InnerText);
@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     foreach (ListViewItem installed in listViewInstalledPlugins.Items)
                     {
-                        if (installed.Text == node.SelectSingleNode("Name").InnerText &&
+                        if (installed.Text.TrimEnd('.') == node.SelectSingleNode("Name").InnerText.TrimEnd('.') &&
                             installed.SubItems[2].Text.Replace(",", ".") != node.SelectSingleNode("Version").InnerText.Replace(",", "."))
                         {
                             item.BackColor = Color.LightGreen;
@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     try
                     {
-                        ListViewItem item = new ListViewItem(name);
+                        ListViewItem item = new ListViewItem(name.Trim('.'));
                         item.Tag = pluginFileName;
                         item.SubItems.Add(description);
                         item.SubItems.Add(version.ToString());

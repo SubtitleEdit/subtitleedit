@@ -12871,7 +12871,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         ToolStripMenuItem item = new ToolStripMenuItem();
                         item.Name = "Plugin" + toolsPluginCount.ToString();
-                        item.Text = name;
+                        item.Text = text;
                         item.Tag = pluginFileName;
 
                         if (!string.IsNullOrEmpty(shortcut))
