@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     {
         public override string Extension
         {
-            get { return ".xml"; }
+            get { return ".usf"; }
         }
 
         public override string Name
