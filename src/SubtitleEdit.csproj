@@ -1464,6 +1464,7 @@
     </Content>
     <Content Include="Languages\ro-RO.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\ru-RU.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -10,6 +10,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class Lrc : SubtitleFormat
     {
+        static Regex _timeCode = new Regex(@"^\[\d+:\d\d\.\d\d\].*$", RegexOptions.Compiled); 
+                
         public override string Extension
         {
             get { return ".lrc"; }
@@ -70,12 +72,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         { //[01:05.99]I've been walking in the same way as I do
-            var regex = new Regex(@"^\[\d+:\d\d\.\d\d\].*$", RegexOptions.Compiled); 
             _errorCount = 0;
             var header = new StringBuilder();
             foreach (string line in lines)
             {
-                if (regex.Match(line).Success)
+                if (_timeCode.Match(line).Success)
                 {
                     string s = line;
                     s = line.Substring(1, 8);
@@ -148,6 +149,37 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             subtitle.Header = header.ToString();
 
+            int max = subtitle.Paragraphs.Count;
+            for (int i = 0; i < max; i++)
+            {
+                Paragraph p = subtitle.Paragraphs[i];
+                while (_timeCode.Match(p.Text).Success)
+                {
+                    string s = p.Text.Substring(1,8);
+                    p.Text = p.Text.Remove(0, 10).Trim();
+                    string[] parts = s.Split(":.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    try
+                    {
+                        int minutes = int.Parse(parts[0]);
+                        int seconds = int.Parse(parts[1]);
+                        int milliseconds = int.Parse(parts[2]) * 10;
+                        string text = GetTextAfterTimeCodes(p.Text);
+                        var start = new TimeCode(0, minutes, seconds, milliseconds);
+                        double duration = Utilities.GetOptimalDisplayMilliseconds(text);
+                        var end = new TimeCode(TimeSpan.FromMilliseconds(start.TotalMilliseconds + duration));
+
+                        var newParagraph = new Paragraph(start, end, text);
+                        subtitle.Paragraphs.Add(newParagraph);
+                    }
+                    catch 
+                    {
+                        _errorCount++;
+                    }
+                }
+            }
+
+            subtitle.Sort(Enums.SubtitleSortCriteria.StartTime);
+
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -160,5 +192,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
         }
+
+        private string GetTextAfterTimeCodes(string s)
+        {
+            while (_timeCode.IsMatch(s))
+                s = s.Remove(0, 10).Trim();
+            return s;
+        }
+
     }
 }
