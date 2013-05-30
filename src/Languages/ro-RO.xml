@@ -1263,7 +1263,7 @@ pot edita in acelasi fisier subtitrare (colaborare)</Information>
     <WaveFormBackgroundColor>Culoare spate</WaveFormBackgroundColor>
     <WaveFormTextColor>Culoarea textului</WaveFormTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Goleste directoarele "Forma Audio" si "Spectograma"</WaveformAndSpectrogramsFolderEmpty>
-    <WaveformAndSpectrogramsFolderInfo>Directoarele "Forma Audio" si "Spectograma"contin {0} fisiere ({1:0.00} MB}</WaveformAndSpectrogramsFolderInfo>
+    <WaveformAndSpectrogramsFolderInfo>Directoarele "Forma Audio" si "Spectograma"contin {0} fisiere ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spectograma</Spectrogram>
     <GenerateSpectrogram>Generaţi spectrograma</GenerateSpectrogram>
     <SpectrogramAppearance>Aspectul spectrogramei</SpectrogramAppearance>
