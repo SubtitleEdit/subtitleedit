@@ -149,6 +149,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             richTextBoxParagraph.Text = paragraph;
 
+            FillSpellCheckDictionaries(languageName);
+            ShowActiveWordWithColor(word);
+            _action = SpellCheckAction.Skip;
+            DialogResult = DialogResult.None;
+        }
+
+        private void FillSpellCheckDictionaries(string languageName)
+        {
             comboBoxDictionaries.SelectedIndexChanged -= ComboBoxDictionariesSelectedIndexChanged;
             comboBoxDictionaries.Items.Clear();
             foreach (string name in Utilities.GetDictionaryLanguages())
@@ -158,9 +166,6 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
             }
             comboBoxDictionaries.SelectedIndexChanged += ComboBoxDictionariesSelectedIndexChanged;
-            ShowActiveWordWithColor(word);
-            _action = SpellCheckAction.Skip;
-            DialogResult = DialogResult.None;
         }
 
         private void ShowActiveWordWithColor(string word)
@@ -980,6 +985,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             labelActionInfo.Text = string.Empty;
             _currentAction = null;
+        }
+
+        private void buttonSpellCheckDownload_Click(object sender, EventArgs e)
+        {
+            new GetDictionaries().ShowDialog(this);
+            FillSpellCheckDictionaries(Utilities.AutoDetectLanguageName(null, _subtitle));
+            if (comboBoxDictionaries.Items.Count > 0 && comboBoxDictionaries.SelectedIndex == -1)
+                comboBoxDictionaries.SelectedIndex = 0;
+            ComboBoxDictionariesSelectedIndexChanged(null, null);
         }
 
     }
