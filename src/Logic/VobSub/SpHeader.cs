@@ -31,6 +31,3 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
     }
 }
-
-
-

@@ -52,9 +52,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "      <fontstyle face=\"Arial\" size=\"24\" color=\"#FFFFFF\" back-color=\"#AAAAAA\" />" +
                 Environment.NewLine +
                 "      <position alignment=\"BottomCenter\" vertical-margin=\"20%\" relative-to=\"Window\" />" +
-                @"    </style> 
+                @"    </style>
   </styles>
- 
+
   <subtitles>
   </subtitles>
 </USFSubtitles>";

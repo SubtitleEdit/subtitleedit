@@ -10,8 +10,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class Lrc : SubtitleFormat
     {
-        static Regex _timeCode = new Regex(@"^\[\d+:\d\d\.\d\d\].*$", RegexOptions.Compiled); 
-                
+        static Regex _timeCode = new Regex(@"^\[\d+:\d\d\.\d\d\].*$", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".lrc"; }
@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             if (!string.IsNullOrEmpty(subtitle.Header) && (subtitle.Header.Contains("[ar:") || subtitle.Header.Contains("[ti:")))
                 sb.Append(subtitle.Header);
-                
+
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string text = Utilities.RemoveHtmlTags(p.Text);
@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             var p = new Paragraph(start, end, text);
                             subtitle.Paragraphs.Add(p);
                         }
-                        catch 
+                        catch
                         {
                             _errorCount++;
                         }
@@ -171,7 +171,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         var newParagraph = new Paragraph(start, end, text);
                         subtitle.Paragraphs.Add(newParagraph);
                     }
-                    catch 
+                    catch
                     {
                         _errorCount++;
                     }

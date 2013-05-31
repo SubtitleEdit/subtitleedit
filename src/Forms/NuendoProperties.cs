@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
 
         public string CharacterListFile { get; set; }
-        
+
         public NuendoProperties()
         {
             InitializeComponent();
