@@ -533,7 +533,7 @@ namespace Nikse.SubtitleEdit.Forms
           <locked>FALSE</locked>
         </track>
         <track>
-" + sb.ToString() + 
+" + sb.ToString() +
 @"   <enabled>TRUE</enabled>
           <locked>FALSE</locked>
         </track>

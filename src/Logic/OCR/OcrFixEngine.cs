@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     doc.Load(_replaceListXmlFileName);
                 }
                 catch (Exception exception)
-                { 
+                {
                     MessageBox.Show("Unable to load " + _replaceListXmlFileName + ": " + exception.Message + Environment.NewLine);
                 }
 

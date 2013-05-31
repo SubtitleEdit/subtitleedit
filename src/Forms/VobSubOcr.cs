@@ -4739,7 +4739,6 @@ namespace Nikse.SubtitleEdit.Forms
 
 
 
-
         private void InitializeTesseract()
         {
             if (!Directory.Exists(Configuration.TesseractFolder))

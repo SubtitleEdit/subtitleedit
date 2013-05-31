@@ -3173,7 +3173,7 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (Paragraph p in _subtitle.Paragraphs)
                     {
                         if (string.IsNullOrEmpty(p.Extra) && styles.Count > 0)
-                            p.Extra = styles[0];                        
+                            p.Extra = styles[0];
                     }
                     if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
                         SubtitleListview1.ShowExtraColumn(Configuration.Settings.Language.General.Class);
