@@ -425,8 +425,9 @@ namespace Nikse.SubtitleEdit.Logic
         public string VlcLocation { get; set; }
         public bool UseTimeFormatHHMMSSFF { get; set; }
         public int ClearStatusBarAfterSeconds { get; set; }
-        public bool ShowBetaStuff { get; set; }
         public string Company { get; set; }
+        public bool MoveVideo100Or500MsPlaySmallSample { get; set; }
+        public bool ShowBetaStuff { get; set; }
 
         public GeneralSettings()
         {
@@ -500,6 +501,7 @@ namespace Nikse.SubtitleEdit.Logic
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
             UseTimeFormatHHMMSSFF = false;
             ClearStatusBarAfterSeconds = 10;
+            MoveVideo100Or500MsPlaySmallSample = false;
             ShowBetaStuff = false;
         }
 
@@ -1251,12 +1253,15 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ClearStatusBarAfterSeconds");
             if (subNode != null)
                 settings.General.ClearStatusBarAfterSeconds = Convert.ToInt32(subNode.InnerText.Trim());
-            subNode = node.SelectSingleNode("ShowBetaStuff");
-            if (subNode != null)
-                settings.General.ShowBetaStuff = Convert.ToBoolean(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("Company");
             if (subNode != null)
                 settings.General.Company = subNode.InnerText;
+            subNode = node.SelectSingleNode("ShowBetaStuff");
+            if (subNode != null)
+                settings.General.ShowBetaStuff = Convert.ToBoolean(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("MoveVideo100Or500MsPlaySmallSample");
+            if (subNode != null)
+                settings.General.MoveVideo100Or500MsPlaySmallSample = Convert.ToBoolean(subNode.InnerText.Trim());
 
             settings.Tools = new ToolsSettings();
             node = doc.DocumentElement.SelectSingleNode("Tools");
@@ -2247,8 +2252,9 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
             textWriter.WriteElementString("UseTimeFormatHHMMSSFF", settings.General.UseTimeFormatHHMMSSFF.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ClearStatusBarAfterSeconds", settings.General.ClearStatusBarAfterSeconds.ToString(CultureInfo.InvariantCulture));
-            textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
             textWriter.WriteElementString("Company", settings.General.Company);
+            textWriter.WriteElementString("MoveVideo100Or500MsPlaySmallSample", settings.General.MoveVideo100Or500MsPlaySmallSample.ToString());
+            textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
 
 
             textWriter.WriteEndElement();
