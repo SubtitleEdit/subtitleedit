@@ -9648,22 +9648,71 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video100MsLeft)
             {
-                mediaPlayer.CurrentPosition -= 0.1;
+                if (mediaPlayer.IsPaused && Configuration.Settings.General.MoveVideo100Or500MsPlaySmallSample)
+                {
+                    double p = mediaPlayer.CurrentPosition - 0.1;
+                    mediaPlayer.CurrentPosition = p;
+                    mediaPlayer.Play();
+                    System.Threading.Thread.Sleep(99);
+                    mediaPlayer.Stop();
+                    mediaPlayer.CurrentPosition = p;
+                }
+                else
+                {
+                    mediaPlayer.CurrentPosition -= 0.1;
+                }
                 e.SuppressKeyPress = true;
             }
             else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video100MsRight)
             {
-                mediaPlayer.CurrentPosition += 0.1;
+                if (mediaPlayer.IsPaused && Configuration.Settings.General.MoveVideo100Or500MsPlaySmallSample)
+                {
+                    double p = mediaPlayer.CurrentPosition + 0.1;
+                    mediaPlayer.CurrentPosition = p;
+                    mediaPlayer.Play();
+                    System.Threading.Thread.Sleep(99);
+                    mediaPlayer.Stop();
+                    mediaPlayer.CurrentPosition = p;
+                }
+                else
+                {
+                    mediaPlayer.CurrentPosition += 0.1;
+                }
                 e.SuppressKeyPress = true;
             }
             else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video500MsLeft)
             {
-                mediaPlayer.CurrentPosition -= 0.5;
+                if (mediaPlayer.IsPaused && Configuration.Settings.General.MoveVideo100Or500MsPlaySmallSample)
+                {
+                    double p = mediaPlayer.CurrentPosition - 0.5;
+                    mediaPlayer.CurrentPosition = p;
+                    mediaPlayer.Play();
+                    System.Threading.Thread.Sleep(99);
+                    mediaPlayer.Stop();
+                    mediaPlayer.CurrentPosition = p;
+                }
+                else
+                {
+                    mediaPlayer.CurrentPosition -= 0.5;
+                }
                 e.SuppressKeyPress = true;
+
             }
             else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video500MsRight)
             {
-                mediaPlayer.CurrentPosition += 0.5;
+                if (mediaPlayer.IsPaused && Configuration.Settings.General.MoveVideo100Or500MsPlaySmallSample)
+                {
+                    double p = mediaPlayer.CurrentPosition + 0.5;
+                    mediaPlayer.CurrentPosition = p;
+                    mediaPlayer.Play();
+                    System.Threading.Thread.Sleep(99);
+                    mediaPlayer.Stop();
+                    mediaPlayer.CurrentPosition = p;
+                }
+                else
+                {
+                    mediaPlayer.CurrentPosition += 0.5;
+                }
                 e.SuppressKeyPress = true;
             }
             else if (_mainToolsBeamer == e.KeyData)
