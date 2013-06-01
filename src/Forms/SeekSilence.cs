@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms
             SecondsDuration = (double)numericUpDownSeconds.Value;
             VolumeBelow = (int)numericUpDownVolume.Value;
             Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds = SecondsDuration;
-            numericUpDownVolume.Value = VolumeBelow;
+            Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume = VolumeBelow;
             DialogResult = DialogResult.OK;
         }
 

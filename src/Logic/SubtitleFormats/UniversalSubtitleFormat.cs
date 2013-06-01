@@ -36,14 +36,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<USFSubtitles version=\"1.0\">" + Environment.NewLine +
                 @"<metadata>
-    <title>The Universal Subtitle Format sample</title>
+    <title>Universal Subtitle Format</title>
     <author>
       <name>SubtitleEdit</name>
       <email>nikse.dk@gmail.com</email>
       <url>http://www.nikse.dk/</url>
-    </author>" +
-                "<language code=\"eng\">English</language>" + Environment.NewLine +
-                @"<date>2002-11-08</date>
+    </author>" + Environment.NewLine +
+"   <language code=\"eng\">English</language>" + Environment.NewLine +
+@"  <date>[DATE]</date>
     <comment>This is a USF file</comment>
   </metadata>
   <styles>
@@ -58,9 +58,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
   <subtitles>
   </subtitles>
 </USFSubtitles>";
+            xmlStructure = xmlStructure.Replace("[DATE]", DateTime.Now.ToString("yyyy-MM-dd"));
 
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
+            xml.DocumentElement.SelectSingleNode("metadata/title").InnerText = title;
             var subtitlesNode = xml.DocumentElement.SelectSingleNode("subtitles");
 
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -69,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 XmlAttribute start = xml.CreateAttribute("start");
                 start.InnerText = p.StartTime.ToString().Replace(",", ".");
-                paragraph.Attributes.Append(start);
+                paragraph.Attributes.Prepend(start);
 
                 XmlAttribute stop = xml.CreateAttribute("stop");
                 stop.InnerText = p.EndTime.ToString().Replace(",", ".");
@@ -78,6 +80,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlNode text = xml.CreateElement("text");
                 text.InnerText = Utilities.RemoveHtmlTags(p.Text);
                 paragraph.AppendChild(text);
+
+                XmlAttribute style = xml.CreateAttribute("style");
+                style.InnerText = "Default";
+                text.Attributes.Append(style);
 
                 subtitlesNode.AppendChild(paragraph);
             }
