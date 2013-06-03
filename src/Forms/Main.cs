@@ -659,7 +659,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!string.IsNullOrEmpty(inputFolder))
                     inputDirectory = inputFolder;
 
-                if (pattern.Contains(","))
+                if (pattern.Contains(",") && !File.Exists(pattern))
                 {
                     files = pattern.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     for (int k = 0; k < files.Length; k++)
