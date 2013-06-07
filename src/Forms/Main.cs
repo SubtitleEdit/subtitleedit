@@ -9186,8 +9186,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 bool waveFormEnabled = timerWaveForm.Enabled;
                 timerWaveForm.Stop();
-                bool videoTimerEnabled = videoTimer.Enabled;
-                videoTimer.Stop();
                 timer1.Stop();
 
                 _showEarlierOrLater = new ShowEarlierLater();
@@ -9201,7 +9199,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _showEarlierOrLater.Show(this);
 
                 timerWaveForm.Enabled = waveFormEnabled;
-                videoTimer.Enabled = videoTimerEnabled;
                 timer1.Start();
 
                 RefreshSelectedParagraph();
@@ -11358,16 +11355,12 @@ namespace Nikse.SubtitleEdit.Forms
             GoBackSeconds(-60);
         }
 
-        private void videoTimer_Tick(object sender, EventArgs e)
+        private void ShowSubtitleTimerTick(object sender, EventArgs e)
         {
+            ShowSubtitleTimer.Stop();
             if (mediaPlayer != null)
-            {
-                if (!mediaPlayer.IsPaused)
-                {
-                    mediaPlayer.RefreshProgressBar();
-                    ShowSubtitle();
-                }
-            }
+                ShowSubtitle();
+            ShowSubtitleTimer.Start();
         }
 
         private void videoModeHiddenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -12171,10 +12164,10 @@ namespace Nikse.SubtitleEdit.Forms
                     timeUpDownVideoPosition.Enabled = true;
                     timeUpDownVideoPositionAdjust.Enabled = true;
                 }
+                int index = ShowSubtitle();
                 timeUpDownVideoPosition.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(mediaPlayer.CurrentPosition * 1000.0));
                 timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(mediaPlayer.CurrentPosition * 1000.0));
                 mediaPlayer.RefreshProgressBar();
-                int index = ShowSubtitle();
                 if (index != -1 && checkBoxSyncListViewWithVideoWhilePlaying.Checked)
                 {
                     if ((DateTime.Now.Ticks - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
@@ -16553,6 +16546,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripMenuItemSaveSelectedLinesClick(object sender, EventArgs e)
         {
             var newSub = new Subtitle(_subtitle);
+            newSub.Header = _subtitle.Header;
             newSub.Paragraphs.Clear();
             foreach (int index in SubtitleListview1.SelectedIndices)
                 newSub.Paragraphs.Add(_subtitle.Paragraphs[index]);
