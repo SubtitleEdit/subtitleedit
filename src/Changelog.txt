@@ -1,10 +1,10 @@
 ﻿Subtitle Edit Changelog
 
 
-3.3.5 (xth May 2013)
+3.3.5 (xth June 2013)
 * NEW:
    * Added Chinese Traditional - thx BAWAN
-   * Added a few new subtitle formats
+   * Added some new subtitle formats
 * IMPROVED:
    * Updated Basque language file - thx Xabier Aramendi
    * Updated Dutch language file - thx Quetsbeek
@@ -16,6 +16,8 @@
 * FIXED:
    * Blu-ray sup image decoding no longer skips color 0 - thx matidio
    * Better center alignment of second line in image export - thx George
+   * Subtitle timing in preview is now much more precise - thx Betsy25
+   * Split of subtitle now keep styles - thx Kyousuke
    * Some output changes for Rhozet Marmonic - thx Itai
    * Installer version can now list installed plugins
    * Fixed bug in format DCinema interop regaring LoadFont URI - thx Radoslav
