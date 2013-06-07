@@ -176,6 +176,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int nextLimit = partSize;
                 int currentSize = 0;
                 Subtitle temp = new Subtitle();
+                temp.Header = _subtitle.Header;
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
                     Paragraph p = _subtitle.Paragraphs[i];
@@ -189,6 +190,7 @@ namespace Nikse.SubtitleEdit.Forms
                         listViewParts.Items.Add(lvi);
                         currentSize = size;
                         temp = new Subtitle();
+                        temp.Header = _subtitle.Header;
                         temp.Paragraphs.Add(new Paragraph(p));
                     }
                     else
