@@ -338,7 +338,7 @@
             this.buttonAdjustGoToPosAndPause = new System.Windows.Forms.Button();
             this.buttonAdjustPlayBefore = new System.Windows.Forms.Button();
             this.timeUpDownVideoPositionAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.videoTimer = new System.Windows.Forms.Timer(this.components);
+            this.ShowSubtitleTimer = new System.Windows.Forms.Timer(this.components);
             this.timerAutoDuration = new System.Windows.Forms.Timer(this.components);
             this.timerAutoContinue = new System.Windows.Forms.Timer(this.components);
             this.timerStillTyping = new System.Windows.Forms.Timer(this.components);
@@ -2342,7 +2342,6 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 250;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // fontDialog1
@@ -3312,10 +3311,11 @@
             this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(92, 25);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
             // 
-            // videoTimer
+            // ShowSubtitleTimer
             // 
-            this.videoTimer.Interval = 50;
-            this.videoTimer.Tick += new System.EventHandler(this.videoTimer_Tick);
+            this.ShowSubtitleTimer.Enabled = true;
+            this.ShowSubtitleTimer.Interval = 5;
+            this.ShowSubtitleTimer.Tick += new System.EventHandler(this.ShowSubtitleTimerTick);
             // 
             // timerAutoDuration
             // 
@@ -4352,7 +4352,7 @@
         private System.Windows.Forms.Button buttonSetStartTime;
         private System.Windows.Forms.Button buttonInsertNewText;
         private System.Windows.Forms.Button buttonSecBack1;
-        private System.Windows.Forms.Timer videoTimer;
+        private System.Windows.Forms.Timer ShowSubtitleTimer;
         private System.Windows.Forms.Timer timerAutoDuration;
         private System.Windows.Forms.Label labelAutoDuration;
         private System.Windows.Forms.Timer timerAutoContinue;
