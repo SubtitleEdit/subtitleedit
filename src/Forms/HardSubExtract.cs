@@ -4,11 +4,61 @@ using System.IO;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public partial class HardSubExtract : Form
     {
+
+        public class MyFrameBuffer
+        {
+            int size; // = 640 * 480 * 3 * 10; // 921600
+            public MyFrameBuffer(int bufferSize)
+            {
+                size = bufferSize;
+            }
+
+            IntPtr myMemory = IntPtr.Zero;
+
+            public IntPtr AllocateUnmanaged()
+            {
+                if (myMemory == IntPtr.Zero)
+                    myMemory = Marshal.AllocHGlobal(size);
+                return myMemory;
+            }
+
+            public void FreeUnmanaged()
+            {
+                if (myMemory != IntPtr.Zero)
+                    System.Runtime.InteropServices.Marshal.FreeHGlobal(myMemory);
+            }
+
+            public byte[] GetSafeCopy()
+            {
+                byte[] safeCopy = new byte[size];
+                Marshal.Copy(myMemory, safeCopy, 0, size);
+                return safeCopy;
+            }
+
+        }
+
+        public class CallbackContext
+        {
+            public MyFrameBuffer framebuf;
+            public System.Threading.Mutex mutex;
+
+            public CallbackContext(int size)
+            { 
+                framebuf = new MyFrameBuffer(size);
+                mutex = new System.Threading.Mutex();
+            }
+
+        }
+
+
+
         private string _videoFileName;
         private LibVlc11xDynamic _libVlc;
         private VideoInfo _videoInfo;
@@ -20,6 +70,34 @@ namespace Nikse.SubtitleEdit.Forms
         NikseBitmap _lastImage;
         double _lastImagePixelPercent;
         bool _abort = false;
+        int frameCount = 1;
+        byte[] buf;
+        private static bool _done = false;
+
+
+        List<long> sceneChangeFrames = new List<long>();
+
+        // Callback instances
+        private Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic.LockCallbackDelegate m_cb_lock;// = new Core.Interops.Signatures.LibVlc.MediaPlayer.Video.LockCallbackDelegate(CB_Lock);
+        private Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic.UnlockCallbackDelegate m_cb_unlock;// = new Core.Interops.Signatures.LibVlc.MediaPlayer.Video.UnlockCallbackDelegate(CB_Unlock);
+        private Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic.DisplayCallbackDelegate m_cb_display;// = new Core.Interops.Signatures.LibVlc.MediaPlayer.Video.DisplayCallbackDelegate(CB_Display);
+
+        // Context ("opaque")
+        private CallbackContext m_cb_ctx;
+
+        // frame counter
+        private long frameCounter = 0;
+
+
+        int currentBestDiff = 0;
+        int maxDiffARGB = 25;
+        private const int lineChecksWidth = 50;
+        private const int lineChecksHeight = 25;
+        int maxDiffPixels = lineChecksWidth * lineChecksHeight / 4;
+        double factorWidth;
+        double factorHeight;
+
+
 
         public HardSubExtract(string videoFileName)
         {
@@ -277,6 +355,226 @@ namespace Nikse.SubtitleEdit.Forms
         private void numericUpDownPixelsBottom_ValueChanged(object sender, EventArgs e)
         {
             pictureBox2.Invalidate();
+        }
+
+//static void* lock(void* userData, void** p_pixels) {
+//    char* buffer = (char* )userData;
+//    *p_pixels = buffer;
+//    cout << "lock no: " << frameCount << endl;
+//    return NULL;
+//}
+
+//static void unlock(void* userData, void* picture, void *const * p_pixels) {
+//    cout << "unlock no: " << frameCount++ << endl;
+//}
+
+//    libvlc_instance_t* vlcInstance=libvlc_new(0, NULL);
+//    libvlc_media_t* media = libvlc_media_new_path(vlcInstance, fname.c_str());
+//    libvlc_media_player_t* mediaPlayer = libvlc_media_player_new_from_media(media);
+//    libvlc_media_release(media);
+
+//    int wd = 2096, ht = 1132;
+//    buf = new char[wd*ht*4];
+//    libvlc_video_set_callbacks(mediaPlayer, lock, unlock, NULL, buf);
+//    libvlc_video_set_format(mediaPlayer, "RV32", wd, ht, 4*wd);
+
+//    libvlc_media_player_play (mediaPlayer);
+
+        void OnpLock(IntPtr opaque, ref IntPtr plane)
+        {
+            //PixelData* px = (PixelData*)opaque;
+            //*plane = px->pPixelData;
+            //return null;
+        }
+
+        void OnpUnlock(IntPtr opaque, IntPtr picture, ref IntPtr plane)
+        {
+            frameCount++;
+        }
+
+        unsafe void OnpDisplay(void* opaque, void* picture)
+        {
+            //lock (m_lock)
+            //{
+            //    try
+            //    {
+            //        PixelData* px = (PixelData*)opaque;
+            //        MemoryHeap.CopyMemory(m_pBuffer, px->pPixelData, px->size);
+
+            //        m_frameRate++;
+            //        if (m_callback != null)
+            //        {
+            //            using (Bitmap frame = GetBitmap())
+            //            {
+            //                m_callback(frame);
+            //            }
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        if (m_excHandler != null)
+            //        {
+            //            m_excHandler(ex);
+            //        }
+            //        else
+            //        {
+            //            throw ex;
+            //        }
+            //    }
+            //}
+        }
+
+        public void VlcLock(IntPtr opaque, ref IntPtr planes)
+        {
+            m_cb_ctx.mutex.WaitOne();
+        //    log("CB_Lock");
+            planes = m_cb_ctx.framebuf.AllocateUnmanaged();
+        }
+
+        public void VlcUnlock(IntPtr opaque, IntPtr picture, ref IntPtr planes)
+        {
+            //    log("CB_Unlock");
+            m_cb_ctx.mutex.ReleaseMutex();
+        //    labelStatus.Text = frameCounter.ToString();
+            _done = true;
+        }
+
+        public void VlcDisplay(IntPtr opaque, IntPtr picture)
+        {
+            _done = true;
+            return;
+            //log("CB_Display");
+           // frameCounter++;
+            int w = _videoInfo.Width;
+            int h = _videoInfo.Height;
+
+            byte[] frame = m_cb_ctx.framebuf.GetSafeCopy(); // get copy of the frame data
+            Bitmap bmp = new Bitmap(w, h);
+            // convert to bmp
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    int pos = (y * w + x) * 3;
+                    Color color = Color.FromArgb(frame[pos], frame[pos + 1], frame[pos + 2]);
+                    bmp.SetPixel(x, y, color);
+                }
+            }
+            bmp.Save(@"D:\Download\callbacks\frame" + frameCounter.ToString() + ".bmp");
+        }
+
+        public IntPtr GetIntPtrOfObject(object o)
+        {
+            // extract the IntPtr "pointing" the context object
+            // http://msdn.microsoft.com/en-us/library/system.runtime.interopservices.gchandle.tointptr.aspx
+
+            GCHandle handle = GCHandle.Alloc(o);
+            IntPtr opaque = GCHandle.ToIntPtr(handle);
+            //handle.Free();    // TODO: ok?
+            return opaque;
+        }
+
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            m_cb_lock = new Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic.LockCallbackDelegate(VlcLock);
+            m_cb_unlock = new Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic.UnlockCallbackDelegate(VlcUnlock);
+            m_cb_display = new Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic.DisplayCallbackDelegate(VlcDisplay);
+
+            uint w = (uint)_videoInfo.Width;
+            uint h = (uint)_videoInfo.Height;
+
+            m_cb_ctx = new CallbackContext(_videoInfo.Width * _videoInfo.Height * 3 * 10);
+            IntPtr opaque = GetIntPtrOfObject(m_cb_ctx);
+            string videoFile = _videoFileName; // @"D:\Download\a.mkv";
+            frameCounter = 0;
+            //            _libVlc = new LibVlc11xDynamic();
+            //            _libVlc.InitializeAndStartFrameGrabbing(videoFile, w, h, m_cb_lock, m_cb_unlock, m_cb_display, opaque);
+            _libVlc.Play();
+            _libVlc.Pause();
+            _libVlc.CurrentPosition = 0;
+            Application.DoEvents();
+            long ticks = DateTime.Now.Ticks;
+            Bitmap prev = null;
+            Bitmap current = null;
+            int numberOfFrames = (int)_videoInfo.TotalFrames;
+            for (int i = 0; i < numberOfFrames; i++)
+            {
+                _done = false;
+                _libVlc.GetNextFrame();
+                
+                //int vlcState = _libVlc.VlcState;
+                //while (vlcState != 0 && vlcState != 4)
+                //{
+                //    Application.DoEvents();
+                //    vlcState = _libVlc.VlcState;
+                //}
+                //while (!_done)
+                //{
+                //    Application.DoEvents();
+                //}
+                frameCounter++;
+                string fileName = @"D:\Download\callbacks\frame" + frameCounter.ToString() + ".png";
+
+                _libVlc.TakeSnapshot(fileName, (uint)_videoInfo.Width, (uint)_videoInfo.Height);
+                Application.DoEvents();
+                if (File.Exists(fileName))
+                {
+                    current = new Bitmap(fileName);
+                    if (prev != null)
+                    {
+                        CheckForSceneChanges(prev, current, frameCounter);
+                        prev.Dispose();
+                    }
+                    prev = current;
+                }
+            }
+            MessageBox.Show((DateTime.Now.Ticks - ticks).ToString());
+        }
+
+        private void CheckForSceneChanges(Bitmap prev, Bitmap current, long frameNumber)
+        {
+            int diff = 0;
+            factorWidth = prev.Width / lineChecksWidth;
+            factorHeight = prev.Height / lineChecksHeight;            
+            for (int yCounter = 0; yCounter < lineChecksHeight; yCounter++)
+            {
+                int y = (int)Math.Round(yCounter * factorHeight);                
+                for (int xCounter = 0; xCounter < lineChecksWidth; xCounter++)
+                {
+                    int x = (int)Math.Round(xCounter * factorWidth);
+                    Color prevColor = prev.GetPixel(x, y);
+                    Color curColor = current.GetPixel(x, y);
+                    if (Math.Abs(prevColor.A - curColor.A) > maxDiffARGB ||
+                        Math.Abs(prevColor.R - curColor.R) > maxDiffARGB ||
+                        Math.Abs(prevColor.G - curColor.G) > maxDiffARGB ||
+                        Math.Abs(prevColor.B - curColor.B) > maxDiffARGB)
+                    {
+                        diff++;
+                        //if (diff > maxDiffPixels)
+                        //{
+                        //    sceneChangeFrames.Add(frameNumber);
+                        //    labelStatus.Text = frameNumber.ToString() + " " + _libVlc.CurrentPosition.ToString() + "   " + diff.ToString();
+                        //    labelStatus.Refresh();
+                        //    Application.DoEvents();
+                        //    return;
+                        //}
+                    }                        
+                }
+            }
+            if (diff > maxDiffPixels)
+            {
+              sceneChangeFrames.Add(frameNumber);
+            }
+            if (diff > currentBestDiff)
+                currentBestDiff = diff;
+            labelStatus.Text = frameNumber.ToString() + " " + _libVlc.CurrentPosition.ToString() + "   " + diff.ToString() + "  all time best diff:" + currentBestDiff;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(frameCounter.ToString());
+            _libVlc.Stop();
         }
 
     }

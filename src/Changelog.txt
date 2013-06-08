@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.3.5 (xth June 2013)
+3.3.5 (8th June 2013)
 * NEW:
    * Added Chinese Traditional - thx BAWAN
    * Added some new subtitle formats
@@ -13,6 +13,7 @@
    * Added Turkish letters to PAC import/export - thx aydngur
    * Updated NHunspell to 1.1.1.0 - thx tmaierhofer
    * Compare now show filename of current subtitle (if available)
+   * Can now download dictionaries directly from spell check + ocr windows
 * FIXED:
    * Blu-ray sup image decoding no longer skips color 0 - thx matidio
    * Better center alignment of second line in image export - thx George

@@ -369,7 +369,7 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxEmphasis2.Left = checkBoxEmphasis1Transparent.Left + checkBoxEmphasis1Transparent.Width + 8;
             checkBoxEmphasis2Transparent.Left = pictureBoxEmphasis2.Left + pictureBoxEmphasis2.Width + 3;
 
-            buttonGetTesseractDictionaries.Visible = Configuration.Settings.General.ShowBetaStuff;
+            buttonGetTesseractDictionaries.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.GetTesseractDictionaries.Title);
         }
 
         private void FillSpellCheckDictionaries()
