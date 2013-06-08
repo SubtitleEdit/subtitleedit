@@ -146,6 +146,53 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private delegate int libvlc_media_player_set_rate(IntPtr mediaPlayer, float rate);
         libvlc_media_player_set_rate _libvlc_media_player_set_rate;
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int libvlc_media_player_next_frame(IntPtr mediaPlayer);
+        libvlc_media_player_next_frame _libvlc_media_player_next_frame;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void libvlc_video_set_callbacks(IntPtr playerInstance, LockCallbackDelegate @lock, UnlockCallbackDelegate unlock, DisplayCallbackDelegate display, IntPtr opaque);
+        libvlc_video_set_callbacks _libvlc_video_set_callbacks;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int libvlc_video_set_format(IntPtr mediaPlayer, string chroma, UInt32 width, UInt32 height, UInt32 pitch);
+        libvlc_video_set_format _libvlc_video_set_format;
+
+
+
+        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        //public unsafe delegate void* LockEventHandler(void* opaque, void** plane);
+
+        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        //public unsafe delegate void UnlockEventHandler(void* opaque, void* picture, void** plane);
+
+
+        /// <summary>
+        /// Callback prototype to allocate and lock a picture buffer. Whenever a new video frame needs to be decoded, the lock callback is invoked. Depending on the video chroma, one or three pixel planes of adequate dimensions must be returned via the second parameter. Those planes must be aligned on 32-bytes boundaries.
+        /// </summary>
+        /// <param name="opaque">Private pointer as passed to SetCallbacks()</param>
+        /// <param name="planes">Planes start address of the pixel planes (LibVLC allocates the array of void pointers, this callback must initialize the array)</param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void LockCallbackDelegate(IntPtr opaque, ref IntPtr planes);
+
+        /// <summary>
+        /// Callback prototype to unlock a picture buffer. When the video frame decoding is complete, the unlock callback is invoked. This callback might not be needed at all. It is only an indication that the application can now read the pixel values if it needs to.
+        /// </summary>
+        /// <param name="opaque">Private pointer as passed to SetCallbacks()</param>
+        /// <param name="picture">Private pointer returned from the LockCallback callback</param>
+        /// <param name="planes">Pixel planes as defined by the @ref libvlc_video_lock_cb callback (this parameter is only for convenience)</param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void UnlockCallbackDelegate(IntPtr opaque, IntPtr picture, ref IntPtr planes);
+
+        /// <summary>
+        /// Callback prototype to display a picture. When the video frame needs to be shown, as determined by the media playback clock, the display callback is invoked.
+        /// </summary>
+        /// <param name="opaque">Private pointer as passed to SetCallbacks()</param>
+        /// <param name="picture">Private pointer returned from the LockCallback callback</param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void DisplayCallbackDelegate(IntPtr opaque, IntPtr picture);
+
+
         private object GetDllType(Type type, string name)
         {
             IntPtr address = GetProcAddress(_libVlcDLL, name);
@@ -188,6 +235,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _libvlc_media_list_player_release = (libvlc_media_list_player_release)GetDllType(typeof(libvlc_media_list_player_release), "libvlc_media_list_player_release");
             _libvlc_media_player_get_rate = (libvlc_media_player_get_rate)GetDllType(typeof(libvlc_media_player_get_rate), "libvlc_media_player_get_rate");
             _libvlc_media_player_set_rate = (libvlc_media_player_set_rate)GetDllType(typeof(libvlc_media_player_set_rate), "libvlc_media_player_set_rate");
+            _libvlc_media_player_next_frame = (libvlc_media_player_next_frame)GetDllType(typeof(libvlc_media_player_next_frame), "libvlc_media_player_next_frame");
+            _libvlc_video_set_callbacks = (libvlc_video_set_callbacks)GetDllType(typeof(libvlc_video_set_callbacks), "libvlc_video_set_callbacks");
+            _libvlc_video_set_format = (libvlc_video_set_format)GetDllType(typeof(libvlc_video_set_format), "libvlc_video_set_format");
         }
 
         private bool IsAllMethodsLoaded()
@@ -290,6 +340,20 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     _libvlc_media_player_set_rate(_mediaPlayer, (float)value);
             }
         }
+
+        public void GetNextFrame()
+        {
+            _libvlc_media_player_next_frame(_mediaPlayer);
+        }
+
+        public int VlcState
+        {
+            get
+            {
+                return _libvlc_media_player_get_state(_mediaPlayer);
+            }
+        }
+
 
         public override void Play()
         {
@@ -481,6 +545,37 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 return path;
 
             return null;
+        }
+
+        public bool InitializeAndStartFrameGrabbing(string videoFileName, 
+                                                    UInt32 width, UInt32 height, 
+                                                    LockCallbackDelegate @lock, 
+                                                    UnlockCallbackDelegate unlock, 
+                                                    DisplayCallbackDelegate display,
+                                                    IntPtr opaque)
+        {
+            string dllFile = GetVlcPath("libvlc.dll");
+            if (!File.Exists(dllFile) || string.IsNullOrEmpty(videoFileName))
+                return false;
+
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(dllFile));
+            _libVlcDLL = LoadLibrary(dllFile);
+            LoadLibVlcDynamic();
+            string[] initParameters = new string[] { "--no-skip-frames" }; 
+            _libVlc = _libvlc_new(initParameters.Length, initParameters);
+            IntPtr media = _libvlc_media_new_path(_libVlc, Encoding.UTF8.GetBytes(videoFileName + "\0"));
+            _mediaPlayer = _libvlc_media_player_new_from_media(media);
+            _libvlc_media_release(media);
+
+            _libvlc_video_set_format(_mediaPlayer, "RV24", width, height, 3 * width);
+//            _libvlc_video_set_format(_mediaPlayer,"RV32", width, height, 4 * width);
+
+            //_libvlc_video_set_callbacks(_mediaPlayer, @lock, unlock, display, opaque);
+            _libvlc_video_set_callbacks(_mediaPlayer, @lock, unlock, display, opaque);
+            _libvlc_audio_set_volume(_mediaPlayer, 0);
+            _libvlc_media_player_set_rate(_mediaPlayer, 9f);
+            //_libvlc_media_player_play(_mediaPlayer);
+            return true;
         }
 
         public override void Initialize(System.Windows.Forms.Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)

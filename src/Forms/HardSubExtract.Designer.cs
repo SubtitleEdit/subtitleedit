@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.numericUpDownFont2Diff = new System.Windows.Forms.NumericUpDown();
@@ -55,6 +56,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.timerRefreshProgressbar = new System.Windows.Forms.Timer(this.components);
             this.mediaPlayer = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
+            this.button2 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFont2Diff)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFont1Diff)).BeginInit();
@@ -68,6 +70,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.button2);
+            this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.numericUpDownFont2Diff);
@@ -85,6 +89,16 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Detection options";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(183, 182);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 28;
+            this.button1.Text = "Test";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label7
             // 
@@ -369,6 +383,16 @@
             this.mediaPlayer.VideoWidth = 0;
             this.mediaPlayer.Volume = 0D;
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(264, 182);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 29;
+            this.button2.Text = "Test";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // HardSubExtract
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -436,5 +460,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Timer timerRefreshProgressbar;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }
