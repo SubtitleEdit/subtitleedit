@@ -1294,6 +1294,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormSettings_KeyDown(object sender, KeyEventArgs e)
         {
+            if (comboBoxShortcutKey.Focused)
+                return;
+
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
             else if (e.KeyCode == Keys.F1)
@@ -2262,6 +2265,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.KeyCode == Keys.Tab ||
                 e.KeyCode == Keys.Down ||
                 e.KeyCode == Keys.Up ||
+                e.KeyCode == Keys.Enter ||
                 e.KeyCode == Keys.None)
                 return;
 
@@ -2272,7 +2276,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     comboBoxShortcutKey.SelectedIndex = i;
                     e.SuppressKeyPress = true;
-                    break;
+                    return;
                 }
                 i++;
             }

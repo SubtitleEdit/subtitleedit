@@ -511,7 +511,7 @@ namespace Nikse.SubtitleEdit.Logic
             ExtractDateTimeInfo = new LanguageStructure.ExtractDateTimeInfo
             {
                 Title = "Generate time as text",
-                Description = "",
+                OpenVideoFile = "Choose video file to extract date/time info from",
                 StartFrom = "Start from",
                 DateTimeFormat  = "Date/time format",
                 Example = "Example",

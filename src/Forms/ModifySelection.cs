@@ -139,22 +139,22 @@ namespace Nikse.SubtitleEdit.Forms
                         Paragraph p = _subtitle.Paragraphs[i];
                         if (comboBoxRule.SelectedIndex == 0) // Contains
                         {
-                            if (checkBoxCaseSensitive.Checked && p.Text.Contains(textBox1.Text) || p.Text.ToLower().Contains(textBox1.Text.ToLower()))
+                            if (checkBoxCaseSensitive.Checked && p.Text.Contains(textBox1.Text) || !checkBoxCaseSensitive.Checked && p.Text.ToLower().Contains(textBox1.Text.ToLower()))
                                 AddToListView(p, i);
                         }
                         else if (comboBoxRule.SelectedIndex == 1) // Starts with
                         {
-                            if (checkBoxCaseSensitive.Checked && p.Text.StartsWith(textBox1.Text) || p.Text.ToLower().StartsWith(textBox1.Text.ToLower()))
+                            if (checkBoxCaseSensitive.Checked && p.Text.StartsWith(textBox1.Text) || !checkBoxCaseSensitive.Checked && p.Text.ToLower().StartsWith(textBox1.Text.ToLower()))
                                 AddToListView(p, i);
                         }
                         else if (comboBoxRule.SelectedIndex == 2) // Ends with
                         {
-                            if (checkBoxCaseSensitive.Checked && p.Text.EndsWith(textBox1.Text) || p.Text.ToLower().EndsWith(textBox1.Text.ToLower()))
+                            if (checkBoxCaseSensitive.Checked && p.Text.EndsWith(textBox1.Text) || !checkBoxCaseSensitive.Checked && p.Text.ToLower().EndsWith(textBox1.Text.ToLower()))
                                 AddToListView(p, i);
                         }
                         else if (comboBoxRule.SelectedIndex == 3) // Not contains
                         {
-                            if (checkBoxCaseSensitive.Checked && !p.Text.Contains(textBox1.Text) || !p.Text.ToLower().Contains(textBox1.Text.ToLower()))
+                            if (checkBoxCaseSensitive.Checked && !p.Text.Contains(textBox1.Text) || !checkBoxCaseSensitive.Checked && !p.Text.ToLower().Contains(textBox1.Text.ToLower()))
                                 AddToListView(p, i);
                         }
                         else if (comboBoxRule.SelectedIndex == 4) // RegEx
