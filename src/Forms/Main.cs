@@ -11359,7 +11359,24 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ShowSubtitleTimer.Stop();
             if (mediaPlayer != null)
-                ShowSubtitle();
+            {
+                int index = ShowSubtitle();
+                if (index != -1 && checkBoxSyncListViewWithVideoWhilePlaying.Checked)
+                {
+                    if ((DateTime.Now.Ticks - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+                    {
+                        if (_endSeconds <= 0 || !checkBoxAutoRepeatOn.Checked)
+                        {
+                            if (!timerAutoDuration.Enabled && !mediaPlayer.IsPaused)
+                            {
+                                SubtitleListview1.BeginUpdate();
+                                SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                                SubtitleListview1.EndUpdate();
+                            }
+                        }
+                    }
+                }
+            }
             ShowSubtitleTimer.Start();
         }
 
@@ -12168,21 +12185,6 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownVideoPosition.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(mediaPlayer.CurrentPosition * 1000.0));
                 timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(mediaPlayer.CurrentPosition * 1000.0));
                 mediaPlayer.RefreshProgressBar();
-                if (index != -1 && checkBoxSyncListViewWithVideoWhilePlaying.Checked)
-                {
-                    if ((DateTime.Now.Ticks - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
-                    {
-                        if (_endSeconds <= 0 || !checkBoxAutoRepeatOn.Checked)
-                        {
-                            if (!timerAutoDuration.Enabled && !mediaPlayer.IsPaused)
-                            {
-                                SubtitleListview1.BeginUpdate();
-                                SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
-                                SubtitleListview1.EndUpdate();
-                            }
-                        }
-                    }
-                }
 
                 trackBarWaveFormPosition.ValueChanged -= trackBarWaveFormPosition_ValueChanged;
                 int value = (int)mediaPlayer.CurrentPosition;
