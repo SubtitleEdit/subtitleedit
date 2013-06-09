@@ -260,10 +260,10 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxRule);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(700, 400);
             this.Name = "ModifySelection";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

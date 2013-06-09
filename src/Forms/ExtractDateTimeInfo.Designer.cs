@@ -32,7 +32,7 @@
             this.buttonOpenVideo = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.labelDescription = new System.Windows.Forms.Label();
+            this.labelChooseVideoFile = new System.Windows.Forms.Label();
             this.comboBoxDateTimeFormats = new System.Windows.Forms.ComboBox();
             this.labelWriteFormat = new System.Windows.Forms.Label();
             this.labelVideoFileName = new System.Windows.Forms.Label();
@@ -64,7 +64,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(269, 269);
+            this.buttonCancel.Location = new System.Drawing.Point(303, 269);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 13;
@@ -75,7 +75,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(96, 269);
+            this.buttonOK.Location = new System.Drawing.Point(130, 269);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(167, 21);
             this.buttonOK.TabIndex = 12;
@@ -83,14 +83,14 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // labelDescription
+            // labelChooseVideoFile
             // 
-            this.labelDescription.AutoSize = true;
-            this.labelDescription.Location = new System.Drawing.Point(13, 13);
-            this.labelDescription.Name = "labelDescription";
-            this.labelDescription.Size = new System.Drawing.Size(226, 13);
-            this.labelDescription.TabIndex = 0;
-            this.labelDescription.Text = "Choose video file to extract date/time info from";
+            this.labelChooseVideoFile.AutoSize = true;
+            this.labelChooseVideoFile.Location = new System.Drawing.Point(13, 13);
+            this.labelChooseVideoFile.Name = "labelChooseVideoFile";
+            this.labelChooseVideoFile.Size = new System.Drawing.Size(226, 13);
+            this.labelChooseVideoFile.TabIndex = 0;
+            this.labelChooseVideoFile.Text = "Choose video file to extract date/time info from";
             // 
             // comboBoxDateTimeFormats
             // 
@@ -105,7 +105,7 @@
             "HH:mm:ss"});
             this.comboBoxDateTimeFormats.Location = new System.Drawing.Point(12, 153);
             this.comboBoxDateTimeFormats.Name = "comboBoxDateTimeFormats";
-            this.comboBoxDateTimeFormats.Size = new System.Drawing.Size(332, 21);
+            this.comboBoxDateTimeFormats.Size = new System.Drawing.Size(366, 21);
             this.comboBoxDateTimeFormats.TabIndex = 9;
             this.comboBoxDateTimeFormats.SelectedIndexChanged += new System.EventHandler(this.comboBoxDateTimeFormats_SelectedIndexChanged);
             this.comboBoxDateTimeFormats.TextChanged += new System.EventHandler(this.comboBoxDateTimeFormats_TextChanged);
@@ -122,7 +122,7 @@
             // labelVideoFileName
             // 
             this.labelVideoFileName.AutoSize = true;
-            this.labelVideoFileName.Location = new System.Drawing.Point(46, 34);
+            this.labelVideoFileName.Location = new System.Drawing.Point(44, 34);
             this.labelVideoFileName.Name = "labelVideoFileName";
             this.labelVideoFileName.Size = new System.Drawing.Size(100, 13);
             this.labelVideoFileName.TabIndex = 2;
@@ -163,7 +163,7 @@
             this.textBoxExample.Location = new System.Drawing.Point(12, 204);
             this.textBoxExample.Multiline = true;
             this.textBoxExample.Name = "textBoxExample";
-            this.textBoxExample.Size = new System.Drawing.Size(332, 53);
+            this.textBoxExample.Size = new System.Drawing.Size(366, 53);
             this.textBoxExample.TabIndex = 11;
             // 
             // labelDuration
@@ -199,7 +199,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(356, 302);
+            this.ClientSize = new System.Drawing.Size(390, 302);
             this.Controls.Add(this.timeUpDownDuration);
             this.Controls.Add(this.labelDuration);
             this.Controls.Add(this.timeUpDownStartTime);
@@ -210,7 +210,7 @@
             this.Controls.Add(this.labelVideoFileName);
             this.Controls.Add(this.labelWriteFormat);
             this.Controls.Add(this.comboBoxDateTimeFormats);
-            this.Controls.Add(this.labelDescription);
+            this.Controls.Add(this.labelChooseVideoFile);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonOpenVideo);
@@ -235,7 +235,7 @@
         private System.Windows.Forms.Button buttonOpenVideo;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.Label labelDescription;
+        private System.Windows.Forms.Label labelChooseVideoFile;
         private System.Windows.Forms.ComboBox comboBoxDateTimeFormats;
         private System.Windows.Forms.Label labelWriteFormat;
         private System.Windows.Forms.Label labelVideoFileName;

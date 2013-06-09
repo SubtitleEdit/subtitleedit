@@ -1520,7 +1520,7 @@
             this.checkBoxVideoPlayerShowFullscreenButton.AutoSize = true;
             this.checkBoxVideoPlayerShowFullscreenButton.Location = new System.Drawing.Point(9, 65);
             this.checkBoxVideoPlayerShowFullscreenButton.Name = "checkBoxVideoPlayerShowFullscreenButton";
-            this.checkBoxVideoPlayerShowFullscreenButton.Size = new System.Drawing.Size(136, 17);
+            this.checkBoxVideoPlayerShowFullscreenButton.Size = new System.Drawing.Size(134, 17);
             this.checkBoxVideoPlayerShowFullscreenButton.TabIndex = 12;
             this.checkBoxVideoPlayerShowFullscreenButton.Text = "Show fullscreen button";
             this.checkBoxVideoPlayerShowFullscreenButton.UseVisualStyleBackColor = true;
@@ -1530,7 +1530,7 @@
             this.checkBoxVideoPlayerShowMuteButton.AutoSize = true;
             this.checkBoxVideoPlayerShowMuteButton.Location = new System.Drawing.Point(9, 42);
             this.checkBoxVideoPlayerShowMuteButton.Name = "checkBoxVideoPlayerShowMuteButton";
-            this.checkBoxVideoPlayerShowMuteButton.Size = new System.Drawing.Size(114, 17);
+            this.checkBoxVideoPlayerShowMuteButton.Size = new System.Drawing.Size(112, 17);
             this.checkBoxVideoPlayerShowMuteButton.TabIndex = 11;
             this.checkBoxVideoPlayerShowMuteButton.Text = "Show mute button";
             this.checkBoxVideoPlayerShowMuteButton.UseVisualStyleBackColor = true;
@@ -1572,7 +1572,7 @@
             this.checkBoxVideoPlayerShowStopButton.AutoSize = true;
             this.checkBoxVideoPlayerShowStopButton.Location = new System.Drawing.Point(9, 19);
             this.checkBoxVideoPlayerShowStopButton.Name = "checkBoxVideoPlayerShowStopButton";
-            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(111, 17);
+            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(109, 17);
             this.checkBoxVideoPlayerShowStopButton.TabIndex = 10;
             this.checkBoxVideoPlayerShowStopButton.Text = "Show stop button";
             this.checkBoxVideoPlayerShowStopButton.UseVisualStyleBackColor = true;

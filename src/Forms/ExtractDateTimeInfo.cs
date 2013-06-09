@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(l.Title)) // Remove in SE 3.4
             {
                 Text = l.Title;
-                labelDescription.Text = l.Description;
+                labelChooseVideoFile.Text = l.OpenVideoFile;
                 labelStartFrom.Text = l.StartFrom;
                 labelDuration.Text = Configuration.Settings.Language.General.Duration;
                 labelExample.Text = l.Example;

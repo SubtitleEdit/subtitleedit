@@ -410,7 +410,7 @@
         public class ExtractDateTimeInfo
         {
             public string Title { get; set; }
-            public string Description { get; set; }
+            public string OpenVideoFile { get; set; }
             public string StartFrom { get; set; }
             public string DateTimeFormat { get; set; }
             public string Example { get; set; }
