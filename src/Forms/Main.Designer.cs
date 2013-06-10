@@ -420,6 +420,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItemDost = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1077,6 +1078,7 @@
             this.toolStripMenuItemAvidStl,
             this.toolStripMenuItemExportPngXml,
             this.bluraySupToolStripMenuItem,
+            this.toolStripMenuItemDost,
             this.DvdStudioProStl,
             this.toolStripMenuItemExportCapMakerPlus,
             this.toolStripMenuItemExportCaptionInc,
@@ -4140,6 +4142,13 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
+            // toolStripMenuItemDost
+            // 
+            this.toolStripMenuItemDost.Name = "toolStripMenuItemDost";
+            this.toolStripMenuItemDost.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemDost.Text = "DOST...";
+            this.toolStripMenuItemDost.Click += new System.EventHandler(this.toolStripMenuItemDost_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4610,6 +4619,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportOcrHardSub;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportFcpIImage;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemNuendoProperties;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDost;
     }
 }
 

@@ -324,15 +324,23 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Xml files|*.xml";
             }
+            else if (_exportType == "DOST")
+            {
+                saveFileDialog1.Title = "Save DOST XML as..."; //TODO: Configuration.Settings.Language.ExportPngXml.SaveDostAs;
+                saveFileDialog1.DefaultExt = "*.dost";
+                saveFileDialog1.AddExtension = true;
+                saveFileDialog1.Filter = "Dost files|*.dost";
+            }
 
-            if (_exportType == "BLURAYSUP" &&  saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
+            if (_exportType == "BLURAYSUP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "VOBSUB" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "BDNXML" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "FAB" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "IMAGE/FRAME" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "STL" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "SPUMUX" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "FCP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+                _exportType == "FCP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == "DOST" && saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 int width = 1920;
                 int height = 1080;
@@ -488,10 +496,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (_exportType == "SPUMUX")
                 {
-                    XmlDocument doc = new XmlDocument();
                     string s = "<subpictures>" + Environment.NewLine +
                                "\t<stream>" + Environment.NewLine +
-                               sb.ToString() +
+                               sb +
                                "\t</stream>" + Environment.NewLine +
                                "</subpictures>";
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "spu.xml"), s);
@@ -502,7 +509,6 @@ namespace Nikse.SubtitleEdit.Forms
                     int duration = 0;
                     if (_subtitle.Paragraphs.Count > 0)
                         duration = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * 25.0);
-                    var doc = new XmlDocument();
                     string s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
 "<!DOCTYPE xmeml[]>" + Environment.NewLine +
 "<xmeml version=\"4\">" + Environment.NewLine +
@@ -533,7 +539,7 @@ namespace Nikse.SubtitleEdit.Forms
           <locked>FALSE</locked>
         </track>
         <track>
-" + sb.ToString() +
+" + sb +
 @"   <enabled>TRUE</enabled>
           <locked>FALSE</locked>
         </track>
@@ -567,6 +573,32 @@ namespace Nikse.SubtitleEdit.Forms
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, saveFileDialog1.FileName), s);
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
                 }
+                else if (_exportType == "DOST")
+                {
+                    string header = @"$FORMAT=480
+$VERSION=1.2
+$ULEAD=TRUE
+$DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
+                    "NO\tINTIME\t\tOUTTIME\t\tXPOS\tYPOS\tFILENAME\tFADEIN\tFADEOUT";
+                   
+                    string dropValue = "30000";
+                    if (comboBoxFramerate.Items[comboBoxFramerate.SelectedIndex].ToString() == "23.98")
+                        dropValue = "23976";
+                    else if (comboBoxFramerate.Items[comboBoxFramerate.SelectedIndex].ToString() == "24")
+                        dropValue = "24000";
+                    else if (comboBoxFramerate.Items[comboBoxFramerate.SelectedIndex].ToString() == "25")
+                        dropValue = "25000";
+                    else if (comboBoxFramerate.Items[comboBoxFramerate.SelectedIndex].ToString() == "29.97")
+                        dropValue = "29970";
+                    else if (comboBoxFramerate.Items[comboBoxFramerate.SelectedIndex].ToString() == "30")
+                        dropValue = "30000";
+                    else if (comboBoxFramerate.Items[comboBoxFramerate.SelectedIndex].ToString() == "59.94")
+                        dropValue = "59940";
+                    header = header.Replace("[DROPVALUE]", dropValue);
+
+                    File.WriteAllText(saveFileDialog1.FileName, header + Environment.NewLine + sb);
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
+                }
                 else
                 {
                     string videoFormat = "1080p";
@@ -594,7 +626,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 "<Name Title=\"subtitle_exp\" Content=\"\"/>" + Environment.NewLine +
                                 "<Language Code=\"eng\"/>" + Environment.NewLine +
                                 "<Format VideoFormat=\""+videoFormat + "\" FrameRate=\""+  FrameRate.ToString(CultureInfo.InvariantCulture) +  "\" DropFrame=\"False\"/>" + Environment.NewLine +
-                                "<Events Type=\"Graphic\" FirstEventInTC=\"" + BdnXmlTimeCode(first.StartTime) + "\" LastEventOutTC=\"" + BdnXmlTimeCode(last.EndTime) + "\" NumberofEvents=\"" + imagesSavedCount.ToString() + "\"/>" + Environment.NewLine +
+                                "<Events Type=\"Graphic\" FirstEventInTC=\"" + BdnXmlTimeCode(first.StartTime) + "\" LastEventOutTC=\"" + BdnXmlTimeCode(last.EndTime) + "\" NumberofEvents=\"" + imagesSavedCount.ToString(CultureInfo.InvariantCulture) + "\"/>" + Environment.NewLine +
                                 "</Description>" + Environment.NewLine +
                                 "<Events>" + Environment.NewLine +
                                 "</Events>" + Environment.NewLine +
@@ -878,6 +910,45 @@ namespace Nikse.SubtitleEdit.Forms
                         param.Saved = true;
                     }
                 }
+                else if (_exportType == "DOST")
+                {
+                    if (!param.Saved)
+                    {
+                        string numberString = string.Format("{0:0000}", i);
+                        string fileName = Path.Combine(Path.GetDirectoryName(saveFileDialog1.FileName), Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)) + "_" + numberString + ".png";
+
+                        foreach (var encoder in ImageCodecInfo.GetImageEncoders())
+                        {
+                            if (encoder.FormatID == ImageFormat.Png.Guid)
+                            {
+                                var parameters = new EncoderParameters();
+                                parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
+                                param.Bitmap.Save(fileName, encoder, parameters);
+                                break;
+                            }
+                        }
+                        imagesSavedCount++;
+
+                        const string paragraphWriteFormat = "{0}\t{1}\t{2}\t{4}\t{5}\t{3}\t0\t0";
+
+                        int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
+                        int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
+                        if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
+                            left = param.BottomMargin;
+                        else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
+                            left = param.ScreenWidth - param.Bitmap.Width - param.BottomMargin;
+                        if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
+                            top = param.BottomMargin;
+                        if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
+                            top = param.ScreenHeight - (param.Bitmap.Height / 2);
+
+                        string startTime = BdnXmlTimeCode(param.P.StartTime);
+                        string endTime = BdnXmlTimeCode(param.P.EndTime);
+                        sb.AppendLine(string.Format(paragraphWriteFormat, numberString, startTime, endTime, Path.GetFileName(fileName), left, top));
+
+                        param.Saved = true;
+                    }
+                }
                 else if (_exportType == "IMAGE/FRAME")
                 {
                     if (!param.Saved)
@@ -979,8 +1050,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 break;
                         }
 
-                        sb.AppendLine("  <Graphic Width=\"" + param.Bitmap.Width.ToString() + "\" Height=\"" +
-                                      param.Bitmap.Height.ToString() + "\" X=\"" + x.ToString() + "\" Y=\"" + y.ToString() +
+                        sb.AppendLine("  <Graphic Width=\"" + param.Bitmap.Width.ToString(CultureInfo.InvariantCulture) + "\" Height=\"" +
+                                      param.Bitmap.Height.ToString(CultureInfo.InvariantCulture) + "\" X=\"" + x.ToString(CultureInfo.InvariantCulture) + "\" Y=\"" + y.ToString(CultureInfo.InvariantCulture) +
                                       "\">" + numberString + ".png</Graphic>");
                         sb.AppendLine("</Event>");
                         param.Saved = true;
@@ -1014,8 +1085,8 @@ namespace Nikse.SubtitleEdit.Forms
         private string FormatFabTime(TimeCode time, MakeBitmapParameter param)
         {
             if (param.Bitmap.Width == 720 && param.Bitmap.Width == 480) // NTSC
-                return string.Format("{0:00};{1:00};{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds));
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+                return string.Format("{0:00};{1:00};{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
         private void SetupImageParameters()
@@ -1219,7 +1290,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (parameter.AlignRight)
                     lefts.Add(bmp.Width - (TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15));
                 else
-                    lefts.Add((float)(bmp.Width - TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) +15) / 2);
+                    lefts.Add((bmp.Width - TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) +15) / 2);
             }
 
             if (parameter.AntiAlias)
@@ -1269,7 +1340,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 addLeft = list[k].X;
                         }
                     }
-                    if (addLeft == 0)
+                    if (addLeft < 0.01)
                         addLeft = left + 2;
                     left = addLeft;
 
@@ -1306,7 +1377,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                     else
                                     {
-                                        c = System.Drawing.ColorTranslator.FromHtml(fontColor);
+                                        c = ColorTranslator.FromHtml(fontColor);
                                     }
                                 }
                                 catch
@@ -1347,7 +1418,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     addLeft = list[k].X;
                             }
                         }
-                        if (addLeft == 0)
+                        if (addLeft < 0.01)
                             addLeft = left + 2;
                         left = addLeft;
 
@@ -1365,7 +1436,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (sb.Length > 0)
                     {
-                        lastText.Append(sb.ToString());
+                        lastText.Append(sb);
                         TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     isItalic = true;
@@ -1379,7 +1450,7 @@ namespace Nikse.SubtitleEdit.Forms
                         sb = new StringBuilder();
                         sb.Append(" " + t);
                     }
-                    lastText.Append(sb.ToString());
+                    lastText.Append(sb);
                     TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     isItalic = false;
                     i += 3;
@@ -1388,7 +1459,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (sb.Length > 0)
                     {
-                        lastText.Append(sb.ToString());
+                        lastText.Append(sb);
                         TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     isBold = true;
@@ -1402,14 +1473,14 @@ namespace Nikse.SubtitleEdit.Forms
                         sb = new StringBuilder();
                         sb.Append(" " + t);
                     }
-                    lastText.Append(sb.ToString());
+                    lastText.Append(sb);
                     TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     isBold = false;
                     i += 3;
                 }
                 else if (text.Substring(i).StartsWith(Environment.NewLine))
                 {
-                    lastText.Append(sb.ToString());
+                    lastText.Append(sb);
                     TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
                     top += lineHeight;
@@ -1448,7 +1519,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (nbmp.Width > parameter.ScreenWidth)
             {
-                parameter.Error = "#" + parameter.P.Number.ToString() + ": " + nbmp.Width.ToString() + " > " + parameter.ScreenWidth.ToString();
+                parameter.Error = "#" + parameter.P.Number.ToString(CultureInfo.InvariantCulture) + ": " + nbmp.Width.ToString(CultureInfo.InvariantCulture) + " > " + parameter.ScreenWidth.ToString(CultureInfo.InvariantCulture);
             }
 
             if (parameter.Type3D == 1) // Half-side-by-side 3D
@@ -1557,16 +1628,18 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = "DVD Studio Pro STL";
             else if (exportType == "FCP")
                 Text = "Final Cut Pro";
+            else if (exportType == "DOST")
+                Text = "DOST";
             else
                 Text = Configuration.Settings.Language.ExportPngXml.Title;
 
             if (_exportType == "VOBSUB" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubFontName))
                 _subtitleFontName = Configuration.Settings.Tools.ExportVobSubFontName;
-            else if (_exportType == "BLURAYSUP" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayFontName))
+            else if ((_exportType == "BLURAYSUP" || _exportType == "DOST") && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayFontName))
                 _subtitleFontName = Configuration.Settings.Tools.ExportBluRayFontName;
             if (_exportType == "VOBSUB" && Configuration.Settings.Tools.ExportVobSubFontSize > 0)
                 _subtitleFontSize = Configuration.Settings.Tools.ExportVobSubFontSize;
-            else if (_exportType == "BLURAYSUP" && Configuration.Settings.Tools.ExportBluRayFontSize > 0)
+            else if ((_exportType == "BLURAYSUP" || _exportType == "DOST") && Configuration.Settings.Tools.ExportBluRayFontSize > 0)
                 _subtitleFontSize = Configuration.Settings.Tools.ExportBluRayFontSize;
 
             if (_exportType == "VOBSUB")
@@ -1575,18 +1648,18 @@ namespace Nikse.SubtitleEdit.Forms
                 int i = 0;
                 foreach (string item in comboBoxSubtitleFontSize.Items)
                 {
-                    if (item == Convert.ToInt32(_subtitleFontSize).ToString())
+                    if (item == Convert.ToInt32(_subtitleFontSize).ToString(CultureInfo.InvariantCulture))
                         comboBoxSubtitleFontSize.SelectedIndex = i;
                     i++;
                 }
             }
-            else if (_exportType == "BLURAYSUP")
+            else if (_exportType == "BLURAYSUP" || _exportType == "DOST")
             {
                 comboBoxSubtitleFontSize.SelectedIndex = 16;
                 int i = 0;
                 foreach (string item in comboBoxSubtitleFontSize.Items)
                 {
-                    if (item == Convert.ToInt32(_subtitleFontSize).ToString())
+                    if (item == Convert.ToInt32(_subtitleFontSize).ToString(CultureInfo.InvariantCulture))
                         comboBoxSubtitleFontSize.SelectedIndex = i;
                     i++;
                 }
@@ -1650,12 +1723,11 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxBorderWidth.SelectedIndex = 2;
             comboBoxHAlign.SelectedIndex = 1;
             comboBoxResolution.SelectedIndex = 0;
-            if (_exportType == "BLURAYSUP" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
+            if ((_exportType == "BLURAYSUP" || _exportType == "DOST") && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
                 SetResolution(Configuration.Settings.Tools.ExportBluRayVideoResolution);
 
             if (exportType == "VOBSUB")
             {
-
                 comboBoxBorderWidth.SelectedIndex = 3;
                 if (_exportType == "VOBSUB" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubVideoResolution))
                     SetResolution(Configuration.Settings.Tools.ExportVobSubVideoResolution);
@@ -1675,8 +1747,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             comboBoxImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP";
             labelImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP";
-            labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME";
-            comboBoxFramerate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME";
+            labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
+            comboBoxFramerate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
             if (exportType == "BDNXML")
             {
                 labelFrameRate.Top = labelLanguage.Top;
@@ -1687,6 +1759,18 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxFramerate.Items.Add("29.97");
                 comboBoxFramerate.Items.Add("30");
                 comboBoxFramerate.Items.Add("50");
+                comboBoxFramerate.Items.Add("59.94");
+                comboBoxFramerate.SelectedIndex = 2;
+            }
+            else if (exportType == "DOST")
+            {
+                labelFrameRate.Top = labelLanguage.Top;
+                comboBoxFramerate.Top = comboBoxLanguage.Top;
+                comboBoxFramerate.Items.Add("23.98");
+                comboBoxFramerate.Items.Add("24");
+                comboBoxFramerate.Items.Add("25");
+                comboBoxFramerate.Items.Add("29.97");
+                comboBoxFramerate.Items.Add("30");
                 comboBoxFramerate.Items.Add("59.94");
                 comboBoxFramerate.SelectedIndex = 2;
             }

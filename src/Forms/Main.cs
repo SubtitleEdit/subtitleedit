@@ -17158,5 +17158,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void toolStripMenuItemDost_Click(object sender, EventArgs e)
+        {
+            var exportBdnXmlPng = new ExportPngXml();
+            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "DOST", _fileName, _videoInfo);
+            exportBdnXmlPng.ShowDialog(this);
+        }
+
     }
 }
