@@ -2344,6 +2344,21 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (format == null || format.Name == new Dost().Name)
+                {
+                    var dost = new Dost();
+                    string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                    var list = new List<string>();
+                    foreach (string l in arr)
+                        list.Add(l);
+                    if (dost.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
+                            ImportAndOcrDost(fileName, dost, list);
+                        return;
+                    }
+                }
+
                 if (format == null || format.Name == new SubRip().Name)
                 {
                     if (_subtitle.Paragraphs.Count > 1)
@@ -2663,6 +2678,40 @@ namespace Nikse.SubtitleEdit.Forms
             var formSubOcr = new VobSubOcr();
             _formPositionsAndSizes.SetPositionAndSize(formSubOcr);
             formSubOcr.Initialize(sub, Configuration.Settings.VobSubOcr, true);
+            if (formSubOcr.ShowDialog(this) == DialogResult.OK)
+            {
+                MakeHistoryForUndo(_language.BeforeImportingBdnXml);
+                FileNew();
+                _subtitle.Paragraphs.Clear();
+                SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                _subtitle.WasLoadedWithFrameNumbers = false;
+                _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
+                {
+                    _subtitle.Paragraphs.Add(p);
+                }
+
+                ShowSource();
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                _subtitleListViewIndex = -1;
+                SubtitleListview1.FirstVisibleIndex = -1;
+                SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
+                _fileName = Path.ChangeExtension(formSubOcr.FileName, ".srt");
+                SetTitle();
+                _converted = true;
+            }
+            _formPositionsAndSizes.SavePositionAndSize(formSubOcr);
+        }
+
+        private void ImportAndOcrDost(string fileName, SubtitleFormat format, List<string> list)
+        {
+            var sub = new Subtitle();
+            format.LoadSubtitle(sub, list, fileName);
+            sub.FileName = fileName;
+            var formSubOcr = new VobSubOcr();
+            _formPositionsAndSizes.SetPositionAndSize(formSubOcr);
+            formSubOcr.Initialize(sub, Configuration.Settings.VobSubOcr, false);
             if (formSubOcr.ShowDialog(this) == DialogResult.OK)
             {
                 MakeHistoryForUndo(_language.BeforeImportingBdnXml);
