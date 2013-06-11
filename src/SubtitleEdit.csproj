@@ -797,6 +797,7 @@
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
+    <Compile Include="Logic\SubtitleFormats\Dost.cs" />
     <Compile Include="Logic\SubtitleFormats\Lrc.cs" />
     <Compile Include="Logic\SubtitleFormats\TSB4.cs" />
     <Compile Include="Logic\SubtitleFormats\UniversalSubtitleFormat.cs" />
@@ -923,6 +924,7 @@
     <Compile Include="Logic\SubtitleFormats\UTSubtitleXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Utx.cs" />
     <Compile Include="Logic\SubtitleFormats\UtxFrames.cs" />
+    <Compile Include="Logic\SubtitleFormats\VocapiaSplit.cs" />
     <Compile Include="Logic\SubtitleFormats\WebVTT.cs" />
     <Compile Include="Logic\SubtitleFormats\Wsb.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeAnnotations.cs" />

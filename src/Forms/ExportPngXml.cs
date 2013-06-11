@@ -734,6 +734,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 height = 1080;
             }
         }
+      
 
         private int WriteParagraph(int width, StringBuilder sb, int border, int height, int imagesSavedCount,
                                    VobSubWriter vobSubWriter, FileStream binarySubtitleFile, MakeBitmapParameter param, int i)
@@ -811,9 +812,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         {
                             if (encoder.FormatID == ImageFormat.Png.Guid)
                             {
-                                EncoderParameters parameters = new EncoderParameters();
+                                var parameters = new EncoderParameters();
                                 parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
-                                param.Bitmap.Save(fileName, encoder, parameters);
+
+                                var nbmp = new NikseBitmap(param.Bitmap);
+                                var b = nbmp.ConverTo8BitsPerPixel();
+                                b.Save(fileName, encoder, parameters);
+                                b.Dispose();
+
                                 break;
                             }
                         }
@@ -888,9 +894,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         {
                             if (encoder.FormatID == ImageFormat.Png.Guid)
                             {
-                                EncoderParameters parameters = new EncoderParameters();
+                                var parameters = new EncoderParameters();
                                 parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
-                                param.Bitmap.Save(fileName, encoder, parameters);
+
+                                var nbmp = new NikseBitmap(param.Bitmap);
+                                var b = nbmp.ConverTo8BitsPerPixel();
+                                b.Save(fileName, encoder, parameters);
+                                b.Dispose();
+
                                 break;
                             }
                         }
@@ -921,9 +932,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         {
                             if (encoder.FormatID == ImageFormat.Png.Guid)
                             {
-                                var parameters = new EncoderParameters();
+                                var parameters = new EncoderParameters(1);
                                 parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
-                                param.Bitmap.Save(fileName, encoder, parameters);
+
+                                var nbmp = new NikseBitmap(param.Bitmap);
+                                var b = nbmp.ConverTo8BitsPerPixel();
+                                b.Save(fileName, encoder, parameters);
+                                b.Dispose();
+
                                 break;
                             }
                         }

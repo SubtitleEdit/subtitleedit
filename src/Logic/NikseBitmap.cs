@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using Nikse.SubtitleEdit.Logic.VobSub;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -795,5 +797,92 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return count;
         }
+
+        private static int FindBestMatch(Color color, List<Color> palette, out int maxDiff)
+        {
+            int smallestDiff = 1000;
+            int smallestDiffIndex = -1;
+            int i = 0;
+            foreach (var pc in palette)
+            {
+                int diff = Math.Abs(pc.A - color.A) + Math.Abs(pc.R - color.R) + Math.Abs(pc.G - color.G) + Math.Abs(pc.B - color.B);
+                if (diff < smallestDiff)
+                {
+                    smallestDiff = diff;
+                    smallestDiffIndex = i;
+                    if (smallestDiff < 4)
+                    {
+                        maxDiff = smallestDiff;
+                        return smallestDiffIndex;
+                    }
+                }
+                i++;
+            }
+            maxDiff = smallestDiff;
+            return smallestDiffIndex;
+        }
+
+        public Bitmap ConverTo8BitsPerPixel()
+        {
+            Bitmap newBitmap = new Bitmap(Width, Height, PixelFormat.Format8bppIndexed);
+            List<Color> palette = new List<Color>();
+            palette.Add(Color.Transparent);
+            ColorPalette bPalette = newBitmap.Palette;
+            var entries = bPalette.Entries;
+            for (int i=0; i<newBitmap.Palette.Entries.Length; i++)
+                entries[i] = Color.Transparent;
+
+            BitmapData data = newBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
+            byte[] bytes = new byte[data.Height * data.Stride];
+            Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
+
+            for (int y=0; y<Height; y++)
+            {
+                for (int x=0; x<Width; x++)
+                {
+                    Color c = GetPixel(x, y);
+                    if (c.A < 5)
+                    {
+                        bytes[y * data.Stride + x] = 0;
+                    }
+                    else
+                    {
+                        int maxDiff;
+                        int index = FindBestMatch(c, palette, out maxDiff);
+
+                        if (index == -1 && palette.Count < 255)
+                        {
+                            index = palette.Count;
+                            entries[index] = c;
+                            palette.Add(c);
+                            bytes[y * data.Stride + x] = (byte)index;
+                        }
+                        else if (palette.Count < 200 && maxDiff > 5)
+                        {
+                            index = palette.Count;
+                            entries[index] = c;
+                            palette.Add(c);
+                            bytes[y * data.Stride + x] = (byte)index;
+                        }
+                        else if (palette.Count < 255 && maxDiff > 15)
+                        {
+                            index = palette.Count;
+                            entries[index] = c;
+                            palette.Add(c);
+                            bytes[y * data.Stride + x] = (byte)index;
+                        }
+                        else if (index >= 0)
+                        {
+                            bytes[y * data.Stride + x] = (byte)index;
+                        }
+                    }
+                }
+            }
+            Marshal.Copy(bytes, 0, data.Scan0, bytes.Length);
+            newBitmap.UnlockBits(data);
+            newBitmap.Palette = bPalette;
+            return newBitmap;
+        }
+
     }
 }
