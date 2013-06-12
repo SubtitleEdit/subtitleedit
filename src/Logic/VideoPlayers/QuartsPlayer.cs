@@ -66,7 +66,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override double CurrentPosition
         {
-            get { return _mediaPosition.CurrentPosition; }
+            get 
+            {
+                try
+                {
+                    return _mediaPosition.CurrentPosition;
+                }
+                catch
+                {
+                    return 0;
+                }
+            }
             set
             {
                 if (value >= 0 && value <= Duration)
