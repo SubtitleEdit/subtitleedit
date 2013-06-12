@@ -84,6 +84,13 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = true;
             double seconds = 0;
             buttonCancel.Visible = true;
+            try
+            {
+                process.PriorityClass = ProcessPriorityClass.BelowNormal;
+            }
+            catch
+            { 
+            }
             while (!process.HasExited)
             {
                 Application.DoEvents();

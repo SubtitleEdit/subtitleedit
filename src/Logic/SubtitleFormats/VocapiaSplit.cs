@@ -34,12 +34,29 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<AudioDoc name=\"title\">" + Environment.NewLine +
+                "<SpeakerList/>" + Environment.NewLine +
                 "<SegmentList/>" + Environment.NewLine +
                 "</AudioDoc>";
 
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
             xml.DocumentElement.Attributes["name"].InnerText = title;
+
+            if (subtitle.Header != null && subtitle.Header.Contains("<SpeakerList"))
+            {
+                var header = new XmlDocument();
+                try
+                {
+                    header.LoadXml(subtitle.Header);
+                    var speakerListNode = header.DocumentElement.SelectSingleNode("SpeakerList");
+                    if (speakerListNode != null)
+                        xml.DocumentElement.SelectSingleNode("SpeakerList").InnerXml = speakerListNode.InnerXml;
+                }
+                catch
+                { 
+                }
+            }
+
             XmlNode reel = xml.DocumentElement.SelectSingleNode("SegmentList");
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -52,6 +69,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlAttribute end = xml.CreateAttribute("etime");
                 end.InnerText = ToTimeCode(p.EndTime.TotalMilliseconds);
                 paragraph.Attributes.Append(end);
+
+                if (p.Actor != null)
+                {
+                    XmlAttribute spkid = xml.CreateAttribute("spkid");
+                    spkid.InnerText = p.Actor;
+                    paragraph.Attributes.Append(spkid);
+                }
 
                 paragraph.InnerText = Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, "<s/>"));
 
@@ -97,7 +121,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string text = node.InnerText;
                     text = text.Replace("<s/>", Environment.NewLine);
                     text = text.Replace("  ", " ");
-                    subtitle.Paragraphs.Add(new Paragraph(text, ParseTimeCode(start), ParseTimeCode(end)));
+                    var p = new Paragraph(text, ParseTimeCode(start), ParseTimeCode(end));
+                    var spkIdAttr = node.Attributes["spkid"];
+                    if (spkIdAttr != null)
+                    {
+                        p.Extra = spkIdAttr.InnerText;
+                        p.Actor = p.Extra;
+                    }
+                    subtitle.Paragraphs.Add(p);
                 }
                 catch (Exception ex)
                 {
@@ -106,11 +137,32 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
             subtitle.Renumber(1);
+            if (subtitle.Paragraphs.Count > 0)
+                subtitle.Header = xmlString;
         }
 
         private double ParseTimeCode(string s)
         {
             return Convert.ToDouble(s) * 1000.0;
+        }
+
+        public override bool HasStyleSupport
+        {
+            get { return true; }
+        }
+
+        public static List<string> GetStylesFromHeader(Subtitle subtitle)
+        {
+            var list = new List<string>();
+            foreach (Paragraph p in subtitle.Paragraphs)
+            {
+                if (!string.IsNullOrEmpty(p.Actor))
+                {
+                    if (list.IndexOf(p.Actor) < 0)
+                        list.Add(p.Actor);
+                }
+            }
+            return list;
         }
 
     }

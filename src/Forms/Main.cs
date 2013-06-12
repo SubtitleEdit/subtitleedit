@@ -13277,7 +13277,9 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                 }
 
-                AddWareForm addWaveForm = new AddWareForm();
+                if (mediaPlayer != null)
+                    mediaPlayer.Pause();
+                var addWaveForm = new AddWareForm();
                 string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
                 string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
                 addWaveForm.Initialize(_videoFileName, spectrogramFolder);
