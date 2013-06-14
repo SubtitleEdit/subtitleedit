@@ -5,7 +5,8 @@
     <Version>3.3.6</Version>
     <TranslatedBy>Tradução (Português do Brasil): Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
-    <HelpFile />
+    <HelpFile>
+    </HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
@@ -518,6 +519,16 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Download>Baixar</Download>
     <XDownloaded>{0} foi baixado e instalado.</XDownloaded>
   </GetDictionaries>
+  <GetTesseractDictionaries>
+    <Title>Necessita de dicionários?</Title>
+    <DescriptionLine1>Obtenha dicionários OCR Tesseract pela web</DescriptionLine1>
+    <DownloadFailed>Falha no download!</DownloadFailed>
+    <GetDictionariesHere>Obtenha dicionários aqui:</GetDictionariesHere>
+    <ChooseLanguageAndClickDownload>Escolha o idioma e clique em 'Baixar'</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>Abrir pasta de 'Dicionários'</OpenDictionariesFolder>
+    <Download>Baixar</Download>
+    <XDownloaded>{0} foi baixado e instalado</XDownloaded>
+  </GetTesseractDictionaries>
   <GoogleTranslate>
     <Title>Google Tradutor</Title>
     <From>De:</From>
@@ -1381,7 +1392,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <AdjustStartDownEndUpAndGoToNext>Seta abaixo=início inicial, Seta acima=definir final e seguir adiante</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Mover linhas selecionadas 100 ms adiante</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Mover linhas selecionadas 100 ms atrás</AdjustSelected100MsBack>
-    <AdjustSetStartTimeOnly>Definir tempo inicial, manter tempo final</AdjustSetStartTimeOnly>
+    <AdjustSetStartTimeKeepDuration>Definir tempo inicial, manter duração</AdjustSetStartTimeKeepDuration>
     <MainCreateStartDownEndUp>Criar novo (seta abaixo), definir tempo final (seta acima)</MainCreateStartDownEndUp>
     <MergeDialogue>Combinar diálogo (inserir traços)</MergeDialogue>
     <GoToNext>Ir para próxima linha</GoToNext>
@@ -1600,8 +1611,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <PlusShadow>+ Sombra</PlusShadow>
     <OpaqueBox>Caixa opaca (usa cor de contorno)</OpaqueBox>
     <Import>Importar...</Import>
-    <Export>
-    </Export>
+    <Export>Exportar...</Export>
     <Copy>Cópia</Copy>
     <CopyOfY>Cópia de {0}</CopyOfY>
     <CopyXOfY>Cópia {0} de {1}</CopyXOfY>
