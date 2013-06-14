@@ -1476,6 +1476,7 @@
     </Content>
     <Content Include="Languages\zh-CHS.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <None Include="Resources\pictureBoxNoFSOver.Image.png" />
     <None Include="Resources\pictureBoxNoFSDown.Image.png" />
@@ -1570,6 +1571,7 @@
     <None Include="Resources\pictureBoxFSOver.Image.png" />
     <Content Include="Languages\zh-tw.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\TesseractDictionaries.xml">
       <SubType>Designer</SubType>

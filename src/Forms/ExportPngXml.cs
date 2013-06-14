@@ -373,6 +373,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var mp = MakeMakeBitmapParameter(i, width, height);
                         mp.Bitmap = _vobSubOcr.GetSubtitleBitmap(i);
+
+                        if (_exportType == "BLURAYSUP")
+                        {
+                            var brSub = new Logic.BluRaySup.BluRaySupPicture
+                            {
+                                StartTime = (long)mp.P.StartTime.TotalMilliseconds,
+                                EndTime = (long)mp.P.EndTime.TotalMilliseconds,
+                                Width = mp.ScreenWidth,
+                                Height = mp.ScreenHeight
+                            };
+                            mp.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, mp.Bitmap, mp.FramesPerSeconds, mp.BottomMargin, mp.Alignment);
+                        }
+
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, mp, i);
                         i++;
                         progressBar1.Refresh();

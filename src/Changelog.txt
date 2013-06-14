@@ -1,6 +1,18 @@
 ﻿Subtitle Edit Changelog
 
 
+3.3.6 (xth June 2013)
+* NEW:
+   * Export to DOST format (image based) - thx Andreas
+* IMPROVED:
+   * Updated Brazilian Portuguese translation - thx Igor Rückert
+   * Waveform generator - pauses video before starting + run wave 
+     generation at below normal priority - thx fox
+* FIXED:
+   * "Select current subtitle while playing" now works again
+   * SPUMUX + FCP image export now uses 8bpp png images
+
+
 3.3.5 (8th June 2013)
 * NEW:
    * Added Chinese Traditional - thx BAWAN
