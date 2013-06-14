@@ -6146,5 +6146,12 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = string.Empty;
         }
 
+        private void dOSTToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var exportBdnXmlPng = new ExportPngXml();
+            exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "DOST", FileName, this);
+            exportBdnXmlPng.ShowDialog(this);
+        }
+
     }
 }

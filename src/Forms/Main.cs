@@ -262,6 +262,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxSyncListViewWithVideoWhilePlaying.Checked = Configuration.Settings.General.SyncListViewWithVideoWhilePlaying;
 
                 SetFormatToSubRip();
+
                 if (Configuration.Settings.General.DefaultSubtitleFormat != "SubRip")
                     SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
 
@@ -3217,7 +3218,7 @@ namespace Nikse.SubtitleEdit.Forms
                         styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
                     else if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
                         styles = Sami.GetStylesFromHeader(_subtitle.Header);
-                    else if (format.GetType() == typeof(Nuendo))
+                    else if (format.Name == "Nuendo")
                         styles = GetNuendoStyles();
                     foreach (Paragraph p in _subtitle.Paragraphs)
                     {
@@ -3226,7 +3227,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
                         SubtitleListview1.ShowExtraColumn(Configuration.Settings.Language.General.Class);
-                    else if (format.GetType() == typeof(Nuendo))
+                    else if (format.Name == "Nuendo")
                         SubtitleListview1.ShowExtraColumn("Character"); //TODO: Put in language xml file
                     else
                         SubtitleListview1.ShowExtraColumn(Configuration.Settings.Language.General.Style);
@@ -5352,7 +5353,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ContextMenuStripListviewOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var formatType = GetCurrentSubtitleFormat().GetType();
+            var format = GetCurrentSubtitleFormat();
+            var formatType = format.GetType();
             if ((formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha)) && SubtitleListview1.SelectedItems.Count > 0)
             {
                 toolStripMenuItemWebVTT.Visible = false;
@@ -5426,7 +5428,7 @@ namespace Nikse.SubtitleEdit.Forms
                         toolStripMenuItemWebVTT.DropDownItems.Add(_language.Menu.ContextMenu.WebVTTRemoveVoices, null, WebVTTRemoveVoices);
                 }
             }
-            else if ((formatType == typeof(Nuendo) && SubtitleListview1.SelectedItems.Count > 0))
+            else if ((format.Name == "Nuendo" && SubtitleListview1.SelectedItems.Count > 0))
             {
                 toolStripMenuItemWebVTT.Visible = false;
                 var styles = GetNuendoStyles();
@@ -12863,6 +12865,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (assembly != null)
             {
                 Type pluginType = assembly.GetType("Nikse.SubtitleEdit.PluginLogic." + objectName);
+                if (pluginType == null)
+                    return null;
                 object pluginObject = Activator.CreateInstance(pluginType);
 
                 // IPlugin
@@ -13031,8 +13035,7 @@ namespace Nikse.SubtitleEdit.Forms
                             toolStripMenuItemSpellCheckMain.DropDownItems.Add(item);
                             syncPluginCount++;
                         }
-                    }
-
+                    }                    
                 }
                 catch (Exception exception)
                 {

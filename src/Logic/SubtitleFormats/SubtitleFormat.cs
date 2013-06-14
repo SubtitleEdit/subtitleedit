@@ -175,8 +175,37 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new UnknownSubtitle54(),
                 };
 
-                if (!string.IsNullOrEmpty(Configuration.Settings.General.Company) && CalculateMD5Hash(Configuration.Settings.General.Company) == "9CD4708C3D8E18AB193EF36E086AD39D")
-                    list.Insert(1, new Nuendo());
+                string path = Configuration.PluginsDirectory;
+                if (Directory.Exists(path))
+                {
+                    string[] pluginFiles = Directory.GetFiles(path, "*.DLL");
+                    foreach (string pluginFileName in pluginFiles)
+                    {
+                        try
+                        {
+                            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(System.IO.File.ReadAllBytes(pluginFileName));
+                            string objectName = Path.GetFileNameWithoutExtension(pluginFileName);
+                            if (assembly != null)
+                            {
+                                foreach (var exportedType in assembly.GetExportedTypes())
+                                {
+                                    try
+                                    {
+                                        object pluginObject = System.Activator.CreateInstance(exportedType);
+                                        if (pluginObject is SubtitleFormat)
+                                            list.Insert(1, pluginObject as SubtitleFormat);
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
 
                 return list;
             }
