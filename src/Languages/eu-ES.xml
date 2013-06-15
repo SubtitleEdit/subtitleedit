@@ -255,7 +255,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Languages>Hizkuntzak</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25fseg)</Pal>
-    <Ntsc>NTSC (23.976fseg)</Ntsc>
+    <Ntsc>NTSC (23.97fseg)</Ntsc>
     <StartRipping>Hasi grabaketa</StartRipping>
     <Abort>Utzi</Abort>
     <AbortedByUser>Erabiltzaileak utzita</AbortedByUser>
@@ -519,6 +519,16 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Download>&amp;Jeitsi</Download>
     <XDownloaded>{0} jeitsita eta ezarrita</XDownloaded>
   </GetDictionaries>
+  <GetTesseractDictionaries>
+    <Title>Hiztegiak behar dituzu?</Title>
+    <DescriptionLine1>Lortu Tesseract  OCR hiztegiak web-etik</DescriptionLine1>
+    <DownloadFailed>Jeisketa hutsegitea!</DownloadFailed>
+    <GetDictionariesHere>Lortu hiztegiak hemen:</GetDictionariesHere>
+    <ChooseLanguageAndClickDownload>Hautatu zure hizkuntza eta hautatu jeitsi</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>Ireki 'Hiztegi' agiritegia</OpenDictionariesFolder>
+    <Download>Jeitsi</Download>
+    <XDownloaded>{0} jeitsi eta ezarri da</XDownloaded>
+  </GetTesseractDictionaries>
   <GoogleTranslate>
     <Title>Google itzulpena</Title>
     <From>Hemendik:</From>
@@ -548,7 +558,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Splitting>Banantzen</Splitting>
     <AutoSplitText>Berez banantze idatzia</AutoSplitText>
     <OneLineIsOneSubtitle>Lerro bat azpidatzi bat da</OneLineIsOneSubtitle>
-    <SplitAtBlankLines>Banadu lerro hutsetan</SplitAtBlankLines>
+    <SplitAtBlankLines>Banandu lerro hutsetan</SplitAtBlankLines>
     <MergeShortLines>Batu jarraipena duten lerro laburrak</MergeShortLines>
     <RemoveEmptyLines>Kendu hutsik dauden lerroak</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Kendu hizki gabeko lerroak</RemoveLinesWithoutLetters>
@@ -1378,7 +1388,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <AdjustStartDownEndUpAndGoToNext>Behera tekla: ezarri hasiera - Gora tekla: ezarri amaiera eta joan hurrengora</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Mugitu hautaturiko lerroa 100 sm aurrera</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Mugitu hautaturiko lerroa 100 sm atzera</AdjustSelected100MsBack>
-    <AdjustSetStartTimeOnly>Ezarri hasiera denbora bakarrik</AdjustSetStartTimeOnly>
+    <AdjustSetStartTimeKeepDuration>Ezarri hasiera denbora, heutsi iraupenari</AdjustSetStartTimeKeepDuration>
     <MainCreateStartDownEndUp>Sortu berria behera-tekla, ezarri amaiera denbora gora-tekla</MainCreateStartDownEndUp>
     <MergeDialogue>Batu elkarrizketa (txertatu marratxoak)</MergeDialogue>
     <GoToNext>Joan hurrengo lerrora</GoToNext>
