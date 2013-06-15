@@ -797,6 +797,8 @@
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle56.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle55.cs" />
     <Compile Include="Logic\SubtitleFormats\Dost.cs" />
     <Compile Include="Logic\SubtitleFormats\Lrc.cs" />
     <Compile Include="Logic\SubtitleFormats\TSB4.cs" />
