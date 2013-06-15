@@ -2330,7 +2330,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (fileName.ToLower().EndsWith(".dost")) 
+                if (fileName.ToLower().EndsWith(".dost"))
                 {
                     var dost = new Dost();
                     string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
@@ -13035,7 +13035,7 @@ namespace Nikse.SubtitleEdit.Forms
                             toolStripMenuItemSpellCheckMain.DropDownItems.Add(item);
                             syncPluginCount++;
                         }
-                    }                    
+                    }
                 }
                 catch (Exception exception)
                 {

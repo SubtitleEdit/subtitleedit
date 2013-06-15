@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             public System.Threading.Mutex mutex;
 
             public CallbackContext(int size)
-            { 
+            {
                 framebuf = new MyFrameBuffer(size);
                 mutex = new System.Threading.Mutex();
             }
@@ -502,7 +502,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _done = false;
                 _libVlc.GetNextFrame();
-                
+
                 //int vlcState = _libVlc.VlcState;
                 //while (vlcState != 0 && vlcState != 4)
                 //{
@@ -536,10 +536,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             int diff = 0;
             factorWidth = prev.Width / lineChecksWidth;
-            factorHeight = prev.Height / lineChecksHeight;            
+            factorHeight = prev.Height / lineChecksHeight;
             for (int yCounter = 0; yCounter < lineChecksHeight; yCounter++)
             {
-                int y = (int)Math.Round(yCounter * factorHeight);                
+                int y = (int)Math.Round(yCounter * factorHeight);
                 for (int xCounter = 0; xCounter < lineChecksWidth; xCounter++)
                 {
                     int x = (int)Math.Round(xCounter * factorWidth);
@@ -559,7 +559,7 @@ namespace Nikse.SubtitleEdit.Forms
                         //    Application.DoEvents();
                         //    return;
                         //}
-                    }                        
+                    }
                 }
             }
             if (diff > maxDiffPixels)

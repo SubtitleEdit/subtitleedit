@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class UnknownSubtitle56 : SubtitleFormat
     {
-        //0001	01:00:37:22	01:00:39:11
+        //0001  01:00:37:22 01:00:39:11
         static Regex regexTimeCodes1 = new Regex(@"^\d\d\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         return;
                     }
                     while (p.Text.Contains(Environment.NewLine + " "))
-                        p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);                 
+                        p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);
                 }
             }
             if (p != null && p.EndTime.TotalMilliseconds > 0)

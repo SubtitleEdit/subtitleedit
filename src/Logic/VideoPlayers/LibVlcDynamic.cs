@@ -547,10 +547,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             return null;
         }
 
-        public bool InitializeAndStartFrameGrabbing(string videoFileName, 
-                                                    UInt32 width, UInt32 height, 
-                                                    LockCallbackDelegate @lock, 
-                                                    UnlockCallbackDelegate unlock, 
+        public bool InitializeAndStartFrameGrabbing(string videoFileName,
+                                                    UInt32 width, UInt32 height,
+                                                    LockCallbackDelegate @lock,
+                                                    UnlockCallbackDelegate unlock,
                                                     DisplayCallbackDelegate display,
                                                     IntPtr opaque)
         {
@@ -561,7 +561,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Directory.SetCurrentDirectory(Path.GetDirectoryName(dllFile));
             _libVlcDLL = LoadLibrary(dllFile);
             LoadLibVlcDynamic();
-            string[] initParameters = new string[] { "--no-skip-frames" }; 
+            string[] initParameters = new string[] { "--no-skip-frames" };
             _libVlc = _libvlc_new(initParameters.Length, initParameters);
             IntPtr media = _libvlc_media_new_path(_libVlc, Encoding.UTF8.GetBytes(videoFileName + "\0"));
             _mediaPlayer = _libvlc_media_player_new_from_media(media);

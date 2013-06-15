@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override double CurrentPosition
         {
-            get 
+            get
             {
                 try
                 {

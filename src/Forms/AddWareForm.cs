@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
                 process.PriorityClass = ProcessPriorityClass.BelowNormal;
             }
             catch
-            { 
+            {
             }
             while (!process.HasExited)
             {

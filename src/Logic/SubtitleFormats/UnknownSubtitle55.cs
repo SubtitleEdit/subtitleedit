@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             string format = "{0}:  {1}  {2}   [{3}]";
-            var sb = new StringBuilder();          
+            var sb = new StringBuilder();
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                             p.StartTime = DecodeTimeCode(parts[1]);
                             p.EndTime = DecodeTimeCode(parts[2]);
-                            expectStartTime = false;                            
+                            expectStartTime = false;
                         }
                         catch (Exception exception)
                         {
@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
                 else if (line.Trim().Length > 0 && !expectStartTime)
-                {                    
+                {
                     p.Text = (p.Text + Environment.NewLine + line).Trim();
                     if (p.Text.Length > 500)
                     {
