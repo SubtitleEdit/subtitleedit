@@ -2544,7 +2544,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string SplitAndOcrBitmapNormal(Bitmap bitmap, int listViewIndex)
         {
             if (_ocrFixEngine == null)
-                LoadOcrFixEngine();
+                LoadOcrFixEngine(null);
 
             var matches = new List<CompareMatch>();
             List<ImageSplitterItem> list = ImageSplitter.SplitBitmapToLetters(bitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom);
@@ -2855,7 +2855,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string OcrViaNOCR(Bitmap bitmap, int listViewIndex)
         {
             if (_ocrFixEngine == null)
-                LoadOcrFixEngine();
+                comboBoxDictionaries_SelectedIndexChanged(null, null);
 
             string line = string.Empty;
             if (_nocrThreadResults != null)
@@ -4049,7 +4049,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return string.Empty;
 
             if (_ocrFixEngine == null)
-                LoadOcrFixEngine();
+                comboBoxDictionaries_SelectedIndexChanged(null, null);
 
             int badWords = 0;
             string textWithOutFixes;
@@ -4966,14 +4966,18 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Configuration.Settings.VobSubOcr.TesseractLastLanguage = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
             _ocrFixEngine = null;
-            LoadOcrFixEngine();
+            LoadOcrFixEngine(null);
         }
 
-        private void LoadOcrFixEngine()
+        private void LoadOcrFixEngine(string threeLetterISOLanguageName)
         {
-            if (comboBoxTesseractLanguages.SelectedItem != null)
+            if (string.IsNullOrEmpty(threeLetterISOLanguageName) && comboBoxTesseractLanguages.SelectedItem != null)
+            {
                 _languageId = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
-            _ocrFixEngine = new OcrFixEngine(_languageId, this);
+                threeLetterISOLanguageName = _languageId;
+            }
+
+            _ocrFixEngine = new OcrFixEngine(threeLetterISOLanguageName, this);
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
                 string loadedDictionaryName = _ocrFixEngine.SpellCheckDictionaryName;
@@ -5367,8 +5371,17 @@ namespace Nikse.SubtitleEdit.Forms
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
         {
             Configuration.Settings.General.SpellCheckLanguage = LanguageString;
-            if (_ocrFixEngine != null && LanguageString != null)
-                _ocrFixEngine.SpellCheckDictionaryName = LanguageString;
+            string threeLetterISOLanguageName = string.Empty;
+            try
+            {
+                _ocrFixEngine = null;
+                var ci = new CultureInfo(LanguageString.Replace("_", "-"));
+                threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
+            }
+            catch
+            { 
+            }
+            LoadOcrFixEngine(threeLetterISOLanguageName);
         }
 
         internal void Initialize(Subtitle bdnSubtitle, VobSubOcrSettings vobSubOcrSettings, bool isSon)
@@ -5910,14 +5923,14 @@ namespace Nikse.SubtitleEdit.Forms
                 if (text.Contains(":"))
                 {
                     if (_ocrFixEngine == null)
-                        LoadOcrFixEngine();
+                        comboBoxDictionaries_SelectedIndexChanged(null, null);
 
                     text = text.Substring(text.IndexOf(":") + 1).Trim();
                     var form = new AddToNamesList();
                     form.Initialize(_subtitle, comboBoxDictionaries.Text, text);
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
-                        LoadOcrFixEngine();
+                        comboBoxDictionaries_SelectedIndexChanged(null, null);
                         ShowStatus(string.Format(Configuration.Settings.Language.Main.NameXAddedToNamesEtcList, form.NewName));
                     }
                     else if (!string.IsNullOrEmpty(form.NewName))
@@ -5940,7 +5953,7 @@ namespace Nikse.SubtitleEdit.Forms
                     form.Initialize(_subtitle, comboBoxDictionaries.Text, text);
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
-                        LoadOcrFixEngine();
+                        comboBoxDictionaries_SelectedIndexChanged(null, null);
                         ShowStatus(string.Format(Configuration.Settings.Language.Main.WordXAddedToUserDic, form.NewWord));
                     }
                     else if (!string.IsNullOrEmpty(form.NewWord))
@@ -5963,7 +5976,7 @@ namespace Nikse.SubtitleEdit.Forms
                     form.Initialize(_subtitle, _languageId, comboBoxDictionaries.Text, text);
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
-                        LoadOcrFixEngine();
+                        comboBoxDictionaries_SelectedIndexChanged(null, null);
                         ShowStatus(string.Format(Configuration.Settings.Language.Main.OcrReplacePairXAdded, form.NewSource, form.NewTarget));
                     }
                     else
