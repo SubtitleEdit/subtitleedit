@@ -307,6 +307,236 @@
     <Word from="Tilykke" to="Tillykke" />
     <Word from="kørerjer" to="kører jer" />
     <Word from="gøfjeg" to="gør jeg" />
+    <Word from="Selvflgelig" to="Selvfølgelig" />
+    <Word from="fdder" to="fadder" />
+    <Word from="bnfaldt" to="bønfaldt" />
+    <Word from="t\/ehovedede" to="tvehovedede" />
+    <Word from="EIler" to="Eller" />
+    <Word from="ringerjeg" to="ringer jeg" />
+    <Word from="blevvæk" to="blev væk" />
+    <Word from="stárjeg" to="står jeg" />
+    <Word from="varforbi" to="var forbi" />
+    <Word from="harfortalt" to="har fortalt" />
+    <Word from="iflere" to="i flere" />
+    <Word from="tørjeg" to="tør jeg" />
+    <Word from="kunnejeg" to="kunne jeg" />
+    <Word from="má" to="må" />
+    <Word from="hartænkt" to="har tænkt" />
+    <Word from="Fárjeg" to="Får jeg" />
+    <Word from="afdelingervar" to="afdelinger var" />
+    <Word from="0rd" to="ord" />
+    <Word from="pástá" to="påstå" />
+    <Word from="gráharet" to="gråharet" />
+    <Word from="varforbløffende" to="var forbløffende" />
+    <Word from="holdtjeg" to="holdt jeg" />
+    <Word from="hængerjo" to="hænger jo" />
+    <Word from="fikjeg" to="fik jeg" />
+    <Word from="fár" to="får" />
+    <Word from="Hvorforfølerjeg" to="Hvorfor føler jeg" />
+    <Word from="harfeber" to="har feber" />
+    <Word from="ándssvagt" to="åndssvagt" />
+    <Word from="0g" to="Og" />
+    <Word from="vartre" to="var tre" />
+    <Word from="abner" to="åbner" />
+    <Word from="garjeg" to="går jeg" />
+    <Word from="sertil" to="ser til" />
+    <Word from="hvorfin" to="hvor fin" />
+    <Word from="harfri" to="har fri" />
+    <Word from="forstarjeg" to="forstår jeg" />
+    <Word from="Sä" to="Så" />
+    <Word from="hvorfint" to="hvor fint" />
+    <Word from="mærkerjeg" to="mærker jeg" />
+    <Word from="ogsa" to="også" />
+    <Word from="nárjeg" to="når jeg" />
+    <Word from="Jasá" to="Jaså" />
+    <Word from="bándoptager" to="båndoptager" />
+    <Word from="bedárende" to="bedårende" />
+    <Word from="sá" to="så" />
+    <Word from="nár" to="når" />
+    <Word from="kunnejo" to="kunne jo" />
+    <Word from="Brammertil" to="Brammer til" />
+    <Word from="serjeg" to="ser jeg" />
+    <Word from="gikjeg" to="gik jeg" />
+    <Word from="udholderjeg" to="udholder jeg" />
+    <Word from="máneder" to="måneder" />
+    <Word from="vartræt" to="var træt" />
+    <Word from="dárligt" to="dårligt" />
+    <Word from="klaretjer" to="klaret jer" />
+    <Word from="pavirkelig" to="påvirkelig" />
+    <Word from="spekulererjeg" to="spekulerer jeg" />
+    <Word from="forsøgerjeg" to="forsøger jeg" />
+    <Word from="huskerjeg" to="husker jeg" />
+    <Word from="ifavnen" to="i favnen" />
+    <Word from="skullejo" to="skulle jo" />
+    <Word from="vartung" to="var tung" />
+    <Word from="varfuldstændig" to="var fuldstændig" />
+    <Word from="Paskedag" to="Påskedag" />
+    <Word from="turi" to="tur i" />
+    <Word from="spillerschumanns" to="spiller Schumanns" />
+    <Word from="forstárjeg" to="forstår jeg" />
+    <Word from="istedet" to="i stedet" />
+    <Word from="nárfrem" to="når frem" />
+    <Word from="habertrods" to="håber trods" />
+    <Word from="forførste" to="for første" />
+    <Word from="varto" to="var to" />
+    <Word from="overtil" to="over til" />
+    <Word from="forfem" to="for fem" />
+    <Word from="holdtjo" to="holdt jo" />
+    <Word from="passerjo" to="passer jo" />
+    <Word from="ellerto" to="eller to" />
+    <Word from="hartrods" to="har trods" />
+    <Word from="harfuldstændig" to="har fuldstændig" />
+    <Word from="gårjeg" to="går jeg" />
+    <Word from="giderjeg" to="gider jeg" />
+    <Word from="forjer" to="for jer" />
+    <Word from="erindrerjeg" to="erindrer jeg" />
+    <Word from="tænkerjeg" to="tænker jeg" />
+    <Word from="GAEt" to="GÅET" />
+    <Word from="hørerjo" to="hører jo" />
+    <Word from="forladerjeg" to="forlader jeg" />
+    <Word from="kosterjo" to="koster jo" />
+    <Word from="fortællerjeg" to="fortæller jeg" />
+    <Word from="Forstyrrerjeg" to="Forstyrrer jeg" />
+    <Word from="tjekkerjeg" to="tjekker jeg" />
+    <Word from="erjurist" to="er jurist" />
+    <Word from="tlLBUD" to="TILBUD" />
+    <Word from="serjo" to="se rjo" />
+    <Word from="bederjeg" to="beder jeg" />
+    <Word from="bilderjeg" to="bilder jeg" />
+    <Word from="ULVEtlME" to="ULVETlME" />
+    <Word from="skærerjo" to="skærer jo" />
+    <Word from="afjer" to="af jer" />
+    <Word from="ordnerjeg" to="ordner jeg" />
+    <Word from="giverjeg" to="giver jeg" />
+    <Word from="rejservi" to="rejser vi" />
+    <Word from="fangerjeg" to="fanger jeg" />
+    <Word from="erjaloux" to="er jaloux" />
+    <Word from="glemmerjeg" to="glemmer jeg" />
+    <Word from="Behøverjeg" to="Behøver jeg" />
+    <Word from="harvi" to="har vi" />
+    <Word from="ertyndere" to="er tyndere" />
+    <Word from="fårtordenvejr" to="får tordenvejr" />
+    <Word from="varfærdig" to="var færdig" />
+    <Word from="hørerfor" to="hører for" />
+    <Word from="varvel" to="var vel" />
+    <Word from="erforbi" to="er forbi" />
+    <Word from="AIle" to="Alle" />
+    <Word from="læserjo" to="læser jo" />
+    <Word from="Edgarer" to="Edgar er" />
+    <Word from="hartaget" to="har taget" />
+    <Word from="derer" to="der er" />
+    <Word from="stikkerfrem" to="stikker frem" />
+    <Word from="haraldrig" to="har aldrig" />
+    <Word from="ellerfar" to="eller far" />
+    <Word from="erat" to="er at" />
+    <Word from="turtil" to="tur til" />
+    <Word from="erfærdig" to="er færdig" />
+    <Word from="følerjeg" to="føler jeg" />
+    <Word from="jerfra" to="jer fra" />
+    <Word from="eralt" to="er alt" />
+    <Word from="harfaktisk" to="har faktisk" />
+    <Word from="harfundet" to="har fundet" />
+    <Word from="harvendt" to="har vendt" />
+    <Word from="Kunstneraf" to="Kunstner af" />
+    <Word from="ervel" to="er vel" />
+    <Word from="ståransigt" to="står ansigt" />
+    <Word from="Erjeg" to="Er jeg" />
+    <Word from="venterjeg" to="venter jeg" />
+    <Word from="Hvorvar" to="Hvor var" />
+    <Word from="varfint" to="var fint" />
+    <Word from="ervarmt" to="er varmt" />
+    <Word from="gårfint" to="går fint" />
+    <Word from="flyverforbi" to="flyver forbi" />
+    <Word from="Dervar" to="Der var" />
+    <Word from="dervar" to="der var" />
+    <Word from="meneråndeligt" to="mener åndeligt" />
+    <Word from="forat" to="for at" />
+    <Word from="herovertil" to="herover til" />
+    <Word from="soverfor" to="sover for" />
+    <Word from="begyndtejeg" to="begyndte jeg" />
+    <Word from="vendertilbage" to="vender tilbage" />
+    <Word from="erforfærdelig" to="er forfærdelig" />
+    <Word from="gøraltid" to="gør altid" />
+    <Word from="ertilbage" to="er tilbage" />
+    <Word from="harværet" to="har været" />
+    <Word from="bagoverellertil" to="bagover eller til" />
+    <Word from="hertaler" to="her taler" />
+    <Word from="vågnerjeg" to="vågner jeg" />
+    <Word from="vartomt" to="var tomt" />
+    <Word from="gårfrem" to="går frem" />
+    <Word from="talertil" to="taler til" />
+    <Word from="ertryg" to="er tryg" />
+    <Word from="ansigtervendes" to="ansigter vendes" />
+    <Word from="hervirkeligt" to="her virkeligt" />
+    <Word from="herer" to="her er" />
+    <Word from="drømmerjo" to="drømmer jo" />
+    <Word from="erfuldkommen" to="er fuldkommen" />
+    <Word from="hveren" to="hver en" />
+    <Word from="erfej" to="er fej" />
+    <Word from="datterforgæves" to="datter forgæves" />
+    <Word from="forsøgerjo" to="forsøger jo" />
+    <Word from="ertom" to="er tom" />
+    <Word from="vareftermiddag" to="var eftermiddag" />
+    <Word from="vartom" to="var tom" />
+    <Word from="angerellerforventninger" to="anger eller forventninger" />
+    <Word from="kørtejeg" to="kørte jeg" />
+    <Word from="Hvorforfortæller" to="Hvorfor fortæller" />
+    <Word from="gårtil" to="går til" />
+    <Word from="ringerefter" to="ringer efter" />
+    <Word from="søgertilflugt" to="søger tilflugt" />
+    <Word from="ertvunget" to="er tvunget" />
+    <Word from="megetjeg" to="meget jeg" />
+    <Word from="varikke" to="var ikke" />
+    <Word from="Derermange" to="Der e rmange" />
+    <Word from="dervilhindre" to="der vil hindre" />
+    <Word from="erså" to="er så" />
+    <Word from="DetforstårLeggodt" to="Det forstår jeg godt" />
+    <Word from="ergodt" to="er godt" />
+    <Word from="vorventen" to="vor venten" />
+    <Word from="tagerfejl" to="tager fejl" />
+    <Word from="ellerer" to="eller er" />
+    <Word from="laverjeg" to="laver jeg" />
+    <Word from="0mgang" to="omgang" />
+    <Word from="afstár" to="afstår" />
+    <Word from="pá" to="på" />
+    <Word from="rejserjeg" to="rejser jeg" />
+    <Word from="ellertage" to="eller tage" />
+    <Word from="takkerjeg" to="takker jeg" />
+    <Word from="ertilfældigvis" to="er tilfældigvis" />
+    <Word from="fremstar" to="fremstår" />
+    <Word from="ertæt" to="er tæt" />
+    <Word from="ijeres" to="i jeres" />
+    <Word from="Sagdejeg" to="Sagde jeg" />
+    <Word from="overi" to="over i" />
+    <Word from="plukkerjordbær" to="plukker jordbær" />
+    <Word from="klarerjeg" to="klarer jeg" />
+    <Word from="jerfire" to="jer fire" />
+    <Word from="tábeligste" to="tåbeligste" />
+    <Word from="sigertvillingerne" to="siger tvillingerne" />
+    <Word from="erfaktisk" to="er faktisk" />
+    <Word from="gár" to="går" />
+    <Word from="harvasket" to="har vasket" />
+    <Word from="harplukketjordbærtil" to="har plukket jordbær til" />
+    <Word from="plukketjordbær" to="plukket jordbær" />
+    <Word from="klaverfirehændigt" to="klaver firehændigt" />
+    <Word from="erjævnaldrende" to="er jævnaldrende" />
+    <Word from="tierjeg" to="tier jeg" />
+    <Word from="Hvorerden" to="Hvor er den" />
+    <Word from="0veraltjeg" to="overalt jeg" />
+    <Word from="gårpå" to="går på" />
+    <Word from="finderjeg" to="finder jeg" />
+    <Word from="serhans" to="ser hans" />
+    <Word from="tiderbliver" to="tider bliver" />
+    <Word from="ellertrist" to="eller trist" />
+    <Word from="forstårjeres" to="forstår jeres" />
+    <Word from="Hvorsjælen" to="Hvor sjælen" />
+    <Word from="finderro" to="finder ro" />
+    <Word from="sidderjeg" to="sidder jeg" />
+    <Word from="tagerjo" to="tager jo" />
+    <Word from="efterjeres" to="efter jeres" />
+    <Word from="10O" to="100" />
+    <Word from="besluttedejeg" to="besluttede jeg" />
+    <Word from="varsket" to="var sket" />
   </WholeWords>
   <PartialWordsAlways>
     <WordPart from="¤" to="o" />

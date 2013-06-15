@@ -1,14 +1,24 @@
 <ignore_words>
+  <name>Aquarium</name>
+  <name>Armfeldt</name>
   <name>Asgård</name>
+  <name>Bäckström</name>
+  <name>Bahnhofstrasse</name>
   <name>Bartok</name>
+  <name>Brahms</name>
   <name>Cartier</name>
+  <name>Chopin</name>
+  <name>Chopins</name>
   <name>Danmark</name>
+  <name>Devaney</name>
   <name>Diagonalstræde</name>
+  <name>Egerman</name>
   <name>England</name>
   <name>Falconberg</name>
   <name>Frankrig</name>
   <name>Fulton</name>
   <name>Fultons</name>
+  <name>Geographic</name>
   <name>Gerimax</name>
   <name>Guangdong</name>
   <name>Guarneri</name>
@@ -18,17 +28,22 @@
   <name>Juliard</name>
   <name>Karlsson</name>
   <name>København</name>
+  <name>Kretzinsky</name>
+  <name>Leningrad</name>
   <name>Lyman</name>
   <name>Lymans</name>
   <name>Magnoliavej</name>
   <name>Mandelbaum</name>
   <name>Mandelbaums</name>
   <name>McClellan</name>
+  <name>Monterey</name>
   <name>Nadjim</name>
   <name>Østrig</name>
   <name>Petterson</name>
   <name>Pransky</name>
   <name>Primulavænget</name>
+  <name>Puttanesca</name>
+  <name>Schumanns</name>
   <name>Sheng</name>
   <name>Silverton</name>
   <name>Slytherins</name>
@@ -37,7 +52,9 @@
   <name>Tianjins</name>
   <name>Tinsley</name>
   <name>Trinity</name>
+  <name>Ullman</name>
   <name>Uzés</name>
+  <name>Waldstein</name>
   <name>Waterman</name>
   <name>Yardley</name>
 </ignore_words>
