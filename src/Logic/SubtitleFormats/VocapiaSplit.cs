@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         xml.DocumentElement.SelectSingleNode("SpeakerList").InnerXml = speakerListNode.InnerXml;
                 }
                 catch
-                { 
+                {
                 }
             }
 

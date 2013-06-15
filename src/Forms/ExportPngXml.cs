@@ -593,7 +593,7 @@ $VERSION=1.2
 $ULEAD=TRUE
 $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     "NO\tINTIME\t\tOUTTIME\t\tXPOS\tYPOS\tFILENAME\tFADEIN\tFADEOUT";
-                   
+
                     string dropValue = "30000";
                     if (comboBoxFramerate.Items[comboBoxFramerate.SelectedIndex].ToString() == "23.98")
                         dropValue = "23976";
@@ -747,7 +747,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 height = 1080;
             }
         }
-      
+
 
         private int WriteParagraph(int width, StringBuilder sb, int border, int height, int imagesSavedCount,
                                    VobSubWriter vobSubWriter, FileStream binarySubtitleFile, MakeBitmapParameter param, int i)

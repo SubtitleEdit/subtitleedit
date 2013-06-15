@@ -885,7 +885,7 @@ namespace Nikse.SubtitleEdit.Logic
                         Encoding romanianEncoding = Encoding.GetEncoding(1250); // Romanian
                         if (GetCount(romanianEncoding.GetString(buffer), "să", "şi", "văzut", "regulă", "găsit", "viaţă") > 99)
                             return romanianEncoding;
-                        
+
                         Encoding koreanEncoding = Encoding.GetEncoding(949); // Korean
                         if (GetCount(koreanEncoding.GetString(buffer), "그리고", "아니야", "하지만", "말이야", "그들은", "우리가") > 5)
                             return koreanEncoding;

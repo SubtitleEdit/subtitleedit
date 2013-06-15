@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!sb.ToString().Contains(Environment.NewLine + "NO\tINTIME"))
                 return false;
             if (!sb.ToString().Contains("$FORMAT"))
-                return false; 
+                return false;
 
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            //0001	01:25:59:21	01:26:00:20	0	0	BK02-total_0001.png	0	0
+            //0001  01:25:59:21 01:26:00:20 0   0   BK02-total_0001.png 0   0
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
