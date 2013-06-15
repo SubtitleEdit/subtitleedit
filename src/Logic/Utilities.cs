@@ -885,7 +885,7 @@ namespace Nikse.SubtitleEdit.Logic
                         Encoding romanianEncoding = Encoding.GetEncoding(1250); // Romanian
                         if (GetCount(romanianEncoding.GetString(buffer), "să", "şi", "văzut", "regulă", "găsit", "viaţă") > 99)
                             return romanianEncoding;
-
+                        
                         Encoding koreanEncoding = Encoding.GetEncoding(949); // Korean
                         if (GetCount(koreanEncoding.GetString(buffer), "그리고", "아니야", "하지만", "말이야", "그들은", "우리가") > 5)
                             return koreanEncoding;
@@ -1223,6 +1223,19 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (GetCount(text, "אולי", "אולי", "אולי", "אולי", "טוב", "טוב") > 10)
                     return "he";
+
+                int countRo = GetCount(text, "sînt", "aici", "Sînt", "domnule", "pentru", "Vreau") +
+                                   GetCount(text, "trãiascã", "niciodatã", "înseamnã", "vorbesti", "oamenii", "Asteaptã") +
+                                   GetCount(text, "fãcut", "Fãrã", "spune", "decât", "pentru", "vreau");
+                if (countRo > count)
+                    return "ro"; // Romanian
+
+                count = GetCount(text, "daca", "pentru", "acum", "soare", "trebuie", "Trebuie") +
+                        GetCount(text, "nevoie", "decat", "echilibrul", "vorbesti", "oamenii", "zeului") +
+                        GetCount(text, "vrea", "atunci", "Poate", "Acum", "memoria", "soarele");
+                if (countRo > count)
+                    return "ro"; // Romanian
+
                 return "ar"; // Arabic
             }
 
@@ -1269,6 +1282,12 @@ namespace Nikse.SubtitleEdit.Logic
             count = GetCount(text, "sînt", "aici", "Sînt", "domnule", "pentru", "Vreau") +
                     GetCount(text, "trãiascã", "niciodatã", "înseamnã", "vorbesti", "oamenii", "Asteaptã") +
                     GetCount(text, "fãcut", "Fãrã", "spune", "decât", "pentru", "vreau");
+            if (count > bestCount)
+                return "ro"; // Romanian
+
+            count = GetCount(text, "daca", "pentru", "acum", "soare", "trebuie", "Trebuie") +
+                    GetCount(text, "nevoie", "decat", "echilibrul", "vorbesti", "oamenii", "zeului") +
+                    GetCount(text, "vrea", "atunci", "Poate", "Acum", "memoria", "soarele");
             if (count > bestCount)
                 return "ro"; // Romanian
 
@@ -1441,9 +1460,22 @@ namespace Nikse.SubtitleEdit.Logic
                             languageName = shortName;
                         break;
                     case "ro_RO":
-                        count = GetCount(text, "sunt", "fost", "Bine", "Haide", "Trebuie", "trebuie");
+                        count = GetCount(text, "sînt", "aici", "Sînt", "domnule", "pentru", "Vreau") +
+                                GetCount(text, "trãiascã", "niciodatã", "înseamnã", "vorbesti", "oamenii", "Asteaptã") +
+                                GetCount(text, "fãcut", "Fãrã", "spune", "decât", "pentru", "vreau");
                         if (count > bestCount)
+                        {
                             languageName = shortName;
+                        }
+                        else
+                        {
+                            count = GetCount(text, "daca", "pentru", "acum", "soare", "trebuie", "Trebuie") +
+                                    GetCount(text, "nevoie", "decat", "echilibrul", "vorbesti", "oamenii", "zeului") +
+                                    GetCount(text, "vrea", "atunci", "Poate", "Acum", "memoria", "soarele");
+
+                            if (count > bestCount)
+                                languageName = shortName;
+                        }
                         break;
                     case "hr_HR": // Croatia
                         count = GetCount(text, "sam", "öto", "äto", "ovo", "vas", "što");
