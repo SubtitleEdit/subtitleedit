@@ -2330,6 +2330,21 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (fileName.ToLower().EndsWith(".dost")) 
+                {
+                    var dost = new Dost();
+                    string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                    var list = new List<string>();
+                    foreach (string l in arr)
+                        list.Add(l);
+                    if (dost.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
+                            ImportAndOcrDost(fileName, dost, list);
+                        return;
+                    }
+                }
+
                 if (format == null || format.Name == new Scenarist().Name)
                 {
                     var son = new Son();
@@ -2341,21 +2356,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (ContinueNewOrExit())
                             ImportAndOcrSon(fileName, son, list);
-                        return;
-                    }
-                }
-
-                if (format == null || format.Name == new Dost().Name)
-                {
-                    var dost = new Dost();
-                    string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
-                    var list = new List<string>();
-                    foreach (string l in arr)
-                        list.Add(l);
-                    if (dost.IsMine(list, fileName))
-                    {
-                        if (ContinueNewOrExit())
-                            ImportAndOcrDost(fileName, dost, list);
                         return;
                     }
                 }

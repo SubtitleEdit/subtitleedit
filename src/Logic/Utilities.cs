@@ -1592,6 +1592,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, new SonicScenaristBitmaps().Extension);
             AddExtension(sb, ".mks");
             AddExtension(sb, ".sup");
+            AddExtension(sb, ".dost");
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
             {

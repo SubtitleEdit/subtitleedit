@@ -22,7 +22,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new AbcIViewer(),
                     new AdobeEncore(),
                     new AdobeEncoreLineTabNewLine(),
-                    new Dost(),
                     new AdobeEncoreTabs(),
                     new AdobeEncoreWithLineNumbers(),
                     new AdobeEncoreWithLineNumbersNtsc(),
@@ -173,6 +172,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new UnknownSubtitle52(),
                     new UnknownSubtitle53(),
                     new UnknownSubtitle54(),
+                    new UnknownSubtitle55(),
+                    new UnknownSubtitle56(),
                 };
 
                 string path = Configuration.PluginsDirectory;
