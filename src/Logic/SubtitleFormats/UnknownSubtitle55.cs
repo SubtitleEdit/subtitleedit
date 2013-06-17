@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Paragraphs.Clear();
             foreach (string line in rtBox.Text.Replace("\r", "").Split('\n'))
             {
-                string s = line.Trim();
+                string s = line.Trim().Replace("*", string.Empty);
                 var match = regexTimeCodes.Match(s);
                 if (match.Success)
                 {
