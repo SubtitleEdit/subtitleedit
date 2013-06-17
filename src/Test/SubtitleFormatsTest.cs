@@ -329,7 +329,6 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
         #endregion
 
-
         #region Sub Station Alpha (.ssa)
 
         private List<string> GetSsaLines(string lineOneText)
@@ -370,7 +369,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
 
         #endregion
 
-
         #region DCinema smpte (.xml)
 
         [TestMethod()]
@@ -396,7 +394,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         #endregion
-
 
         #region DCinema interop (.xml)
 
@@ -424,10 +421,161 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
 
         #endregion
 
+        #region MicroDVD
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void MicroDvdItalic()
+        {
+            var target = new MicroDvd_Accessor();
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("<i>Italic</i>", 0, 0));
+            string text = target.ToText(subtitle, "title");
+            Assert.IsTrue(text == "{0}{0}{Y:i}Italic" || text == "{0}{0}{y:i}Italic");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void MicroDvdBold()
+        {
+            var target = new MicroDvd_Accessor();
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("<b>Bold</b>", 0, 0));
+            string text = target.ToText(subtitle, "title");
+            Assert.IsTrue(text == "{0}{0}{Y:b}Bold" || text == "{0}{0}{y:b}Bold");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void MicroDvdUnderline()
+        {
+            var target = new MicroDvd_Accessor();
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("<u>Underline</u>", 0, 0));
+            string text = target.ToText(subtitle, "title");
+            Assert.IsTrue(text == "{0}{0}{Y:u}Underline" || text == "{0}{0}{y:u}Underline");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void MicroDvdUnderlineItalic()
+        {
+            var target = new MicroDvd_Accessor();
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("<u><i>Underline Italic</i></u>", 0, 0));
+            string text = target.ToText(subtitle, "title");
+            Assert.IsTrue(text == "{0}{0}{Y:u}{Y:i}Underline Italic" || text == "{0}{0}{y:u}{y:i}Underline Italic");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void MicroDvdItalicUnderline()
+        {
+            var target = new MicroDvd_Accessor();
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("<i><u>Underline Italic</u></i>", 0, 0));
+            string text = target.ToText(subtitle, "title");
+            Assert.IsTrue(text == "{0}{0}{Y:i}{Y:u}Underline Italic" || text == "{0}{0}{y:i}{y:u}Underline Italic");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void MicroDvdReadBoldItalic()
+        {
+            var target = new MicroDvd_Accessor();
+            var subtitle = new Subtitle();
+            List<string> list = new List<string>();
+            list.Add("{0}{0}{y:i,b}Hello!");
+            target.LoadSubtitle(subtitle, list, null);
+            string text = subtitle.Paragraphs[0].Text;
+            Assert.IsTrue(text == "<i><b>Hello!</b></i>");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void MicroDvdReadFont()
+        {
+            var target = new MicroDvd_Accessor();
+            var subtitle = new Subtitle();
+            List<string> list = new List<string>();
+            list.Add("{0}{0}{C:$FF0000}Blue");
+            target.LoadSubtitle(subtitle, list, null);
+            string text = subtitle.Paragraphs[0].Text;
+            Assert.IsTrue(text == "<font color=\"#0000FF\">Blue</font>" || text == "<font color=\"blue\">Blue</font>");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void MicroDvdReadAdvanced()
+        {
+            var target = new MicroDvd_Accessor();
+            var subtitle = new Subtitle();
+            List<string> list = new List<string>();
+            list.Add("{0}{25}{c:$0000ff}{y:b,u}{f:DeJaVuSans}{s:12}Hello!");
+            target.LoadSubtitle(subtitle, list, null);
+            string text = subtitle.Paragraphs[0].Text;
+            Assert.IsTrue(text == "<font color=\"#ff0000\"><b><u><font face=\"DeJaVuSans\"><font size=\"12\">Hello!</font></font></u></b></font>");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void MicroDvdReadBoldFirstLineOnly()
+        {
+            var target = new MicroDvd_Accessor();
+            var subtitle = new Subtitle();
+            List<string> list = new List<string>();
+            list.Add("{0}{0}{y:i}Hello!|Hello!");
+            target.LoadSubtitle(subtitle, list, null);
+            string text = subtitle.Paragraphs[0].Text;
+            Assert.IsTrue(text == "<i>Hello!</i>" + Environment.NewLine + "Hello!");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void MicroDvdReadBoldSecondLineOnly()
+        {
+            var target = new MicroDvd_Accessor();
+            var subtitle = new Subtitle();
+            List<string> list = new List<string>();
+            list.Add("{0}{0}Hello!|{y:i}Hello!");
+            target.LoadSubtitle(subtitle, list, null);
+            string text = subtitle.Paragraphs[0].Text;
+            Assert.IsTrue(text == "Hello!" + Environment.NewLine + "<i>Hello!</i>");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void MicroDvdReadItalicBothLines()
+        {
+            var target = new MicroDvd_Accessor();
+            var subtitle = new Subtitle();
+            List<string> list = new List<string>();
+            list.Add("{0}{0}{Y:i}Hello!|Hello!");
+            target.LoadSubtitle(subtitle, list, null);
+            string text = subtitle.Paragraphs[0].Text;
+            Assert.IsTrue(text == "<i>Hello!" + Environment.NewLine + "Hello!</i>" ||
+                          text == "<i>Hello!</i>" + Environment.NewLine + "<i>Hello!</i>");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void MicroDvdReadBoldBothLinesItalicFirst()
+        {
+            var target = new MicroDvd_Accessor();
+            var subtitle = new Subtitle();
+            List<string> list = new List<string>();
+            list.Add("{0}{0}{Y:b}{y:i}Hello!|Hello!");
+            target.LoadSubtitle(subtitle, list, null);
+            string text = subtitle.Paragraphs[0].Text;
+            Assert.IsTrue(text == "<b><i>Hello!</i>" + Environment.NewLine + "Hello!</b>" ||
+                          text == "<b><i>Hello!</i></b>" + Environment.NewLine + "<b>Hello!</b>");
+        }
+
+        #endregion
 
         #region Scenerist SCC
 
-         [TestMethod()]
+        [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
         public void CheckTimeCodes()
         {
@@ -502,12 +650,12 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
 
         #endregion
 
-         #region All subtitle formats
+        #region All subtitle formats
 
-         [TestMethod()]
-         [DeploymentItem("SubtitleEdit.exe")]
-         public void LineCount()
-         {
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void LineCount()
+        {
              var target = new SubStationAlpha_Accessor();
              var subtitle = new Subtitle();
              subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
