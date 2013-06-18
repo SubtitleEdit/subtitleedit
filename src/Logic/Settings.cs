@@ -120,6 +120,10 @@ namespace Nikse.SubtitleEdit.Logic
         public string ExportBluRayFontName { get; set; }
         public int ExportBluRayFontSize { get; set; }
         public string ExportBluRayVideoResolution { get; set; }
+        public Color ExportFontColor { get; set; }
+        public Color ExportBorderColor { get; set; }
+        public int ExportBottomMargin { get; set; }
+        public int ExportBluRayBottomMargin { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public string ImportTextSplitting { get; set; }
         public bool ImportTextMergeShortLines { get; set; }
@@ -161,6 +165,10 @@ namespace Nikse.SubtitleEdit.Logic
             ModifySelectionText = string.Empty;
             GenerateTimeCodePatterns = "HH:mm:ss;yyyy-MM-dd;dddd dd MMMM yyyy <br>HH:mm:ss;dddd dd MMMM yyyy <br>hh:mm:ss tt;s";
             MusicSymbolStyle = "Double"; // 'Double' or 'Single'
+            ExportFontColor = Color.White;
+            ExportBorderColor = Color.Black;
+            ExportBottomMargin = 15;
+            ExportBluRayBottomMargin = 20;
         }
     }
 
@@ -1409,6 +1417,18 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportBluRayVideoResolution");
             if (subNode != null)
                 settings.Tools.ExportBluRayVideoResolution = subNode.InnerText;
+            subNode = node.SelectSingleNode("ExportFontColor");
+            if (subNode != null)
+                settings.Tools.ExportFontColor = Color.FromArgb(int.Parse(subNode.InnerText));
+            subNode = node.SelectSingleNode("ExportBorderColor");
+            if (subNode != null)
+                settings.Tools.ExportBorderColor = Color.FromArgb(int.Parse(subNode.InnerText));
+            subNode = node.SelectSingleNode("ExportBottomMargin");
+            if (subNode != null)
+                settings.Tools.ExportBottomMargin = int.Parse(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportBluRayBottomMargin");
+            if (subNode != null)
+                settings.Tools.ExportBluRayBottomMargin = int.Parse(subNode.InnerText);
             subNode = node.SelectSingleNode("FixCommonErrorsFixOverlapAllowEqualEndStart");
             if (subNode != null)
                 settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart = Convert.ToBoolean(subNode.InnerText);
@@ -2308,6 +2328,10 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ExportBluRayFontName", settings.Tools.ExportBluRayFontName);
             textWriter.WriteElementString("ExportBluRayFontSize", settings.Tools.ExportBluRayFontSize.ToString());
             textWriter.WriteElementString("ExportBluRayVideoResolution", settings.Tools.ExportBluRayVideoResolution);
+            textWriter.WriteElementString("ExportFontColor", settings.Tools.ExportFontColor.ToArgb().ToString());
+            textWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString());
+            textWriter.WriteElementString("ExportBottomMargin", settings.Tools.ExportBottomMargin.ToString());
+            textWriter.WriteElementString("ExportBluRayBottomMargin", settings.Tools.ExportBluRayBottomMargin.ToString());
             textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
             textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
             textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());

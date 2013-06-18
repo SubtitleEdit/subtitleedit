@@ -69,6 +69,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
             comboBoxImageFormat.SelectedIndex = 4;
+            _subtitleColor = Configuration.Settings.Tools.ExportFontColor;
+            _borderColor = Configuration.Settings.Tools.ExportBorderColor;
         }
 
         private double FrameRate
@@ -1833,9 +1835,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             for (int i=0; i<1000; i++)
                 comboBoxBottomMargin.Items.Add(i);
-            comboBoxBottomMargin.SelectedIndex = 15;
+            comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBottomMargin;
             if (exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME")
-                comboBoxBottomMargin.SelectedIndex = 20;
+                comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBluRayBottomMargin;
             if (_exportType == "BLURAYSUP" || _exportType == "VOBSUB" || _exportType == "IMAGE/FRAME")
             {
                 comboBoxBottomMargin.Visible = true;
@@ -2059,6 +2061,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportBluRayFontSize = (int)_subtitleFontSize;
                 Configuration.Settings.Tools.ExportBluRayVideoResolution = res;
             }
+            Configuration.Settings.Tools.ExportFontColor = _subtitleColor;
+            Configuration.Settings.Tools.ExportBorderColor = _borderColor;
+            if (_exportType == "BLURAYSUP" || _exportType == "DOST")
+                Configuration.Settings.Tools.ExportBluRayBottomMargin = comboBoxBottomMargin.SelectedIndex;
+            else
+                Configuration.Settings.Tools.ExportBottomMargin = comboBoxBottomMargin.SelectedIndex;
         }
 
         private void numericUpDownDepth3D_ValueChanged(object sender, EventArgs e)
