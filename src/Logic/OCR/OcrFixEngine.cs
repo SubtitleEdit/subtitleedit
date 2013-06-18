@@ -22,6 +22,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         Dictionary<string, string> _wholeLineReplaceList;
         Dictionary<string, string> _partialWordReplaceListAlways;
         Dictionary<string, string> _partialWordReplaceList;
+        Dictionary<string, string> _regExList;
+
         string _replaceListXmlFileName;
         string _userWordListXmlFileName;
         string _fiveLetterWordListLanguageName;
@@ -87,6 +89,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             _wholeLineReplaceList = new Dictionary<string, string>();
             _partialWordReplaceListAlways = new Dictionary<string, string>();
             _partialWordReplaceList = new Dictionary<string, string>();
+            _regExList = new Dictionary<string, string>();
 
             _replaceListXmlFileName = Utilities.DictionaryFolder + languageId + "_OCRFixReplaceList.xml";
             if (File.Exists(_replaceListXmlFileName))
@@ -108,6 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 _beginLineReplaceList = LoadReplaceList(doc, "BeginLines");
                 _endLineReplaceList = LoadReplaceList(doc, "EndLines");
                 _wholeLineReplaceList = LoadReplaceList(doc, "WholeLines");
+                _regExList = LoadRegExList(doc, "RegularExpressions");
             }
         }
 
@@ -274,7 +278,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 LoadSpellingDictionariesViaDictionaryFileName(ci.ThreeLetterISOLanguageName, ci, _spellCheckDictionaryName, false);
             }
         }
-
+        
         internal static Dictionary<string, string> LoadReplaceList(XmlDocument doc, string name)
         {
             var list = new Dictionary<string, string>();
@@ -289,6 +293,29 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         {
                             string to = item.Attributes["to"].InnerText;
                             string from = item.Attributes["from"].InnerText;
+                            if (!list.ContainsKey(from))
+                                list.Add(from, to);
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+
+        internal static Dictionary<string, string> LoadRegExList(XmlDocument doc, string name)
+        {
+            var list = new Dictionary<string, string>();
+            if (doc.DocumentElement != null)
+            {
+                XmlNode node = doc.DocumentElement.SelectSingleNode(name);
+                if (node != null)
+                {
+                    foreach (XmlNode item in node.ChildNodes)
+                    {
+                        if (item.Attributes != null && item.Attributes["replaceWith"] != null && item.Attributes["find"] != null)
+                        {
+                            string to = item.Attributes["replaceWith"].InnerText;
+                            string from = item.Attributes["find"].InnerText;
                             if (!list.ContainsKey(from))
                                 list.Add(from, to);
                         }
@@ -1201,6 +1228,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 if (newText.Contains(from))
                     newText = ReplaceWord(newText, from, _partialLineReplaceList[from]);
             }
+
+            foreach (string findWhat in _regExList.Keys)
+            {
+                newText = Regex.Replace(newText, findWhat, _regExList[findWhat], RegexOptions.Multiline);
+            }            
+
             return newText;
         }
 
