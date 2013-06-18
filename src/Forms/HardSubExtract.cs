@@ -71,8 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
         double _lastImagePixelPercent;
         bool _abort = false;
         int frameCount = 1;
-        byte[] buf;
-        private static bool _done = false;
+//        private bool _done;
 
 
         List<long> sceneChangeFrames = new List<long>();
@@ -436,31 +435,31 @@ namespace Nikse.SubtitleEdit.Forms
             //    log("CB_Unlock");
             m_cb_ctx.mutex.ReleaseMutex();
         //    labelStatus.Text = frameCounter.ToString();
-            _done = true;
+//            _done = true;
         }
 
         public void VlcDisplay(IntPtr opaque, IntPtr picture)
         {
-            _done = true;
+//            _done = true;
             return;
             //log("CB_Display");
-           // frameCounter++;
-            int w = _videoInfo.Width;
-            int h = _videoInfo.Height;
+            //frameCounter++;
+            //int w = _videoInfo.Width;
+            //int h = _videoInfo.Height;
 
-            byte[] frame = m_cb_ctx.framebuf.GetSafeCopy(); // get copy of the frame data
-            Bitmap bmp = new Bitmap(w, h);
+            //byte[] frame = m_cb_ctx.framebuf.GetSafeCopy(); // get copy of the frame data
+            //Bitmap bmp = new Bitmap(w, h);
             // convert to bmp
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    int pos = (y * w + x) * 3;
-                    Color color = Color.FromArgb(frame[pos], frame[pos + 1], frame[pos + 2]);
-                    bmp.SetPixel(x, y, color);
-                }
-            }
-            bmp.Save(@"D:\Download\callbacks\frame" + frameCounter.ToString() + ".bmp");
+            //for (int y = 0; y < h; y++)
+            //{
+            //    for (int x = 0; x < w; x++)
+            //    {
+            //        int pos = (y * w + x) * 3;
+            //        Color color = Color.FromArgb(frame[pos], frame[pos + 1], frame[pos + 2]);
+            //        bmp.SetPixel(x, y, color);
+            //    }
+            //}
+            //bmp.Save(@"D:\Download\callbacks\frame" + frameCounter.ToString() + ".bmp");
         }
 
         public IntPtr GetIntPtrOfObject(object o)
@@ -500,7 +499,7 @@ namespace Nikse.SubtitleEdit.Forms
             int numberOfFrames = (int)_videoInfo.TotalFrames;
             for (int i = 0; i < numberOfFrames; i++)
             {
-                _done = false;
+                //_done = false;
                 _libVlc.GetNextFrame();
 
                 //int vlcState = _libVlc.VlcState;
