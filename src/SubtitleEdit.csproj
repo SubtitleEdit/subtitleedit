@@ -1421,6 +1421,7 @@
     <Content Include="Languages\es-ES.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\es-MX.xml" />
     <Content Include="Languages\eu-ES.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
