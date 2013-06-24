@@ -1273,7 +1273,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             count = GetCount(text, "그리고", "아니야", "하지만", "말이야", "그들은", "우리가");
             if (count > 10 || count > bestCount)
-                return "th"; // Korean
+                return "ko"; // Korean
 
             count = GetCount(text, "että", "kuin", "minä", "mitään", "Mutta", "siitä") + GetCount(text, "täällä", "poika", "Kiitos", "enää", "vielä", "tässä");
             if (count > bestCount)
