@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     public class Pac : SubtitleFormat
     {
-        public static TimeCode PacNullTime = new TimeCode(7, 35, 0, 0);
+        public static TimeCode PacNullTime = new TimeCode(655, 35, 00, 0);
 
         /// <summary>
         /// Contains Swedish, Danish, German, Spanish, and French letters
@@ -251,26 +251,26 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xa5, // ו
             0xa6, // ז
             0xa7, // ח
-            0xa8, // ץ
+            0xa8, // ט 
             0xa9, // י
-            0xaa, // ף
-            0xab, // מ
+            0xaa, // ך
+            0xab, // כ
             0xac, // ל
             0xad, // ם
             0xae, // מ
             0xaf, // ן
             0xb0, // נ
             0xb1, // ס
-            0xb3, // ך
             0xb2, // ע
+            0xb3, // ף
             0xb4, // פ
-            0xb5, // ט
+            0xb5, // ץ
             0xb6, // צ
             0xb7, // ק
             0xb8, // ר
             0xb9, // ש
-            0xba, // י
-
+            0xba, // ת
+            44, // ،
         };
 
         static readonly List<string> HebrewLetters = new List<string>
@@ -283,10 +283,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "ו", // 0xa5
             "ז", // 0xa6
             "ח", // 0xa7
-            "ץ", // 0xa8
+            "ט", // 0xa8
             "י", // 0xa9
-            "ף", // 0xaa
-            "מ", // 0xab
+            "ך", // 0xaa
+            "כ", // 0xab
             "ל", // 0xac
             "ם", // 0xad
             "מ", // 0xae
@@ -294,14 +294,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "נ", // 0xb0
             "ס", // 0xb1
             "ע", // 0xb2
-            "ך", // 0xb3
+            "ף", // 0xb3
             "פ", // 0xb4
-            "ט", // 0xb5
+            "ץ", // 0xb5
             "צ", // 0xb6
             "ק", // 0xb7
             "ר", // 0xb8
             "ש", // 0xb9
-            "י", // 0xba
+            "ת", // 0xba
+            "،", // 44
         };
 
 
@@ -696,8 +697,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private void WriteParagraph(FileStream fs, Paragraph p, int number, bool isLast)
         {
-            WriteTimeCode(fs, p.StartTime, p.StartTime.TotalMilliseconds == 0 &&  p.Extra != null && p.Extra.Contains("(STARTFFFF0000)"));
-            WriteTimeCode(fs, p.EndTime, p.EndTime.TotalMilliseconds == 0 && p.Extra != null && p.Extra.Contains("(ENDFFFF0000)"));
+            WriteTimeCode(fs, p.StartTime);
+            WriteTimeCode(fs, p.EndTime);
 
             if (_codePage == -1)
                 GetCodePage(null, 0, 0);
@@ -797,17 +798,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private void WriteTimeCode(FileStream fs, TimeCode timeCode, bool nullTimeCode)
+        private void WriteTimeCode(FileStream fs, TimeCode timeCode)
         {
-            if (nullTimeCode)
-            {
-                fs.WriteByte(0xff);
-                fs.WriteByte(0xff);
-                fs.WriteByte(0);
-                fs.WriteByte(0);
-                return;
-            }
-
             // write four bytes time code
             string highPart = string.Format("{0:00}", timeCode.Hours) + string.Format("{0:00}", timeCode.Minutes);
             byte frames = (byte)MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds);
@@ -869,7 +861,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         buffer[19] == 0 &&
                         buffer[20] == 0 &&
                         //buffer[21] < 10 && // start from number
-                        buffer[22] == 0 &&
+                        //buffer[22] == 0 &&
                         buffer[23] == 0x60 &&
                         fileName.ToLower().EndsWith(".pac"))
                         return true;
@@ -935,18 +927,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 timeStartIndex += 3;
                 p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
-                if (p.StartTime.TotalMilliseconds == 0)
-                {
-                    p.StartTime.TotalMilliseconds = 0;
-                    p.Extra = "(STARTFFFF0000)";
-                }
-
                 p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
-                if (p.StartTime.TotalMilliseconds == 0 && p.EndTime.Hours == PacNullTime.Hours && p.EndTime.Minutes == Pac.PacNullTime.Minutes)
-                {
-                    p.EndTime.TotalMilliseconds = 0;
-                    p.Extra = "(ENDFFFF0000)";
-                }
             }
             else
             {
@@ -1334,8 +1315,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static string GetHebrewString(byte[] buffer, ref int index)
         {
-            byte b = buffer[index];
-            if (b >= 0x20 && b < 0x70)
+            byte b = buffer[index];            
+            if (b >= 0x20 && b < 0x70 && b!= 44)
                 return Encoding.ASCII.GetString(buffer, index, 1);
 
             int idx = HebrewCodes.IndexOf(b);
