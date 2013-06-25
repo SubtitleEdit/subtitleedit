@@ -8,6 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class AdobeEncore : SubtitleFormat
     {
         static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d ", RegexOptions.Compiled);
+        private int _maxMsDiv10 = 0;
 
         public override string Extension
         {
@@ -28,19 +29,32 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var subtitle = new Subtitle();
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
             if (sb.ToString().Contains("#INPOINT OUTPOINT PATH"))
                 return false; // Pinnacle Impression
 
             LoadSubtitle(subtitle, lines, fileName);
+
+            bool containsNewLine = false;
+            foreach (Paragraph p in subtitle.Paragraphs)
+            {
+                if (p.Text.Contains(Environment.NewLine))
+                    containsNewLine = true;
+            }
+            if (sb.ToString().Contains("//") && !containsNewLine)
+                return false; // "Dvd Subtitle System" format
+
+            if (_maxMsDiv10 > 90 && !containsNewLine)
+                return false; // "Dvd Subtitle System" format (frame rate should not go higher than 90...)
+
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -63,22 +77,30 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //00:03:15:22 00:03:23:10 This is line one.
             //This is line two.
             Paragraph p = null;
+            _maxMsDiv10 = 0;
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
                 if (regexTimeCodes.IsMatch(line))
                 {
-                    string temp = line.Substring(0, regexTimeCodes.Match(line).Length);
-                    string start = temp.Substring(0, 11);
-                    string end = temp.Substring(12, 11);
-
-                    string[] startParts = start.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    string[] endParts = end.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    if (startParts.Length == 4 && endParts.Length == 4)
+                    try
                     {
-                        string text = line.Remove(0, regexTimeCodes.Match(line).Length-1).Trim();
-                        p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
-                        subtitle.Paragraphs.Add(p);
+                        string temp = line.Substring(0, regexTimeCodes.Match(line).Length);
+                        string start = temp.Substring(0, 11);
+                        string end = temp.Substring(12, 11);
+
+                        string[] startParts = start.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        if (startParts.Length == 4 && endParts.Length == 4)
+                        {
+                            string text = line.Remove(0, regexTimeCodes.Match(line).Length - 1).Trim();
+                            p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
+                            subtitle.Paragraphs.Add(p);
+                        }
+                    }
+                    catch
+                    {
+                        _errorCount += 10;
                     }
                 }
                 else if (line.Trim().Length == 0)
@@ -103,10 +125,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string hour = parts[0];
             string minutes = parts[1];
             string seconds = parts[2];
-            string frames = parts[3];
+            int frames = int.Parse(parts[3]);
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
+            if (frames > _maxMsDiv10)
+                _maxMsDiv10 = frames;
+
+            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(frames));
         }
 
     }
