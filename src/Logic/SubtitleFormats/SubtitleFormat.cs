@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 using System.IO;
-using System.Text;
 using System.Security.Cryptography;
+using System.Text;
+using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public abstract class SubtitleFormat
     {
+
+        private static IList<SubtitleFormat> _allSubtitleFormats = null;
 
         /// <summary>
         /// Formats supported by Subtitle Edit
@@ -16,7 +18,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             get
             {
-                var list = new List<SubtitleFormat>
+                if (_allSubtitleFormats != null)
+                    return _allSubtitleFormats;
+
+                _allSubtitleFormats = new List<SubtitleFormat>
                 {
                     new SubRip(),
                     new AbcIViewer(),
@@ -42,6 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new DvdStudioPro(),
                     new DvdStudioProSpace(),
                     new DvdSubtitle(),
+                    new DvdSubtitleSystem(),
                     new Eeg708(),
                     new F4Text(),
                     new F4Rtf(),
@@ -197,7 +203,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     {
                                         object pluginObject = System.Activator.CreateInstance(exportedType);
                                         if (pluginObject is SubtitleFormat)
-                                            list.Insert(1, pluginObject as SubtitleFormat);
+                                            _allSubtitleFormats.Insert(1, pluginObject as SubtitleFormat);
                                     }
                                     catch
                                     {
@@ -211,7 +217,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
 
-                return list;
+                return _allSubtitleFormats;
             }
         }
 
