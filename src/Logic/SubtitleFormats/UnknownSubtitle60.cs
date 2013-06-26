@@ -5,15 +5,20 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    public class UnknownSubtitle54 : SubtitleFormat
+    public class UnknownSubtitle60 : SubtitleFormat
     {
-        //10:00:31:01
-        //10:00:33:02
-        //This is the king's royal court.
+        //01:00:31:14
+        //THE PRIME MINISTER
+        //Thank you.
 
-        //10:00:33:19
-        //10:00:35:00
-        //This is the place,
+        //01:00:32:06
+        //STIG
+        //But first we'll go to our foreign guest, welcome to the programme. It’s a great pleasure having you here. Let me start with a standard question; is this your first time in Sweden?
+
+        //01:00:44:16
+        //FEMALE ARTIST
+        //No, I was here once many years ago, and I was introduced to your ”surströmming” – is that..?
+
         static Regex regexTimeCodes1 = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
@@ -23,7 +28,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Unknown 54"; }
+            get { return "Unknown 60"; }
         }
 
         public override bool IsTimeBased
@@ -64,6 +69,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             bool expectStartTime = true;
+            bool expectActor = false;
             var p = new Paragraph();
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
@@ -72,65 +78,60 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var match = regexTimeCodes1.Match(s);
                 if (match.Success && s.Length == 11)
                 {
+                    if (p != null && p.StartTime.TotalMilliseconds > 0)
+                        subtitle.Paragraphs.Add(p);
+
+                    p = new Paragraph();
                     string[] parts = s.Split(':');
                     if (parts.Length == 4)
                     {
                         try
                         {
-                            if (expectStartTime)
-                            {
-                                p.StartTime = DecodeTimeCode(parts);
-                                expectStartTime = false;
-                            }
-                            else
-                            {
-                                if (p.StartTime.TotalMilliseconds < 0.01)
-                                    _errorCount++;
-                                if (!string.IsNullOrEmpty(p.Text))
-                                    _errorCount++;
-
-                                p.EndTime = DecodeTimeCode(parts);
-                            }
+                            p.StartTime = DecodeTimeCode(parts);
+                            expectActor = true;
+                            expectStartTime = false;
                         }
                         catch (Exception exception)
                         {
                             _errorCount++;
                             System.Diagnostics.Debug.WriteLine(exception.Message);
+                            expectStartTime = true;
                         }
                     }
                 }
-                else if (line.Trim().Length == 0)
+                else if (line.Trim().Length > 0 && expectActor)
                 {
-                    if (p != null)
-                    {
-                        if (p.StartTime.TotalMilliseconds == 0 && p.EndTime.TotalMilliseconds == 0)
-                            _errorCount++;
-                        else
-                            subtitle.Paragraphs.Add(p);
-                        p = new Paragraph();
-                    }
+                    if (line == line.ToUpper())
+                        p.Actor = line;
+                    else
+                        _errorCount++;
+                    expectActor = false;
                 }
-                else if (line.Trim().Length > 0 && p != null)
+                else if (line.Trim().Length > 0 && !expectActor && !expectStartTime)
                 {
-                    expectStartTime = true;
                     p.Text = (p.Text + Environment.NewLine + line).Trim();
-                    if (p.Text.Length > 500)
+                    if (p.Text.Length > 5000)
                     {
-                        _errorCount+=10;
+                        _errorCount += 10;
                         return;
                     }
                 }
             }
-            if (p != null && p.EndTime.TotalMilliseconds > 0)
+            if (p != null && p.StartTime.TotalMilliseconds > 0)
                 subtitle.Paragraphs.Add(p);
 
             bool allNullEndTime = true;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                if (subtitle.Paragraphs[i].EndTime.TotalMilliseconds != 0)
+                p = subtitle.Paragraphs[i];
+                if (p.EndTime.TotalMilliseconds != 0)
                     allNullEndTime = false;
+
+                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
+                if (i < subtitle.Paragraphs.Count - 2 &&p.EndTime.TotalMilliseconds >= subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
+                    p.EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
             }
-            if (allNullEndTime)
+            if (!allNullEndTime)
                 subtitle.Paragraphs.Clear();
 
             subtitle.RemoveEmptyLines();
