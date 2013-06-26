@@ -64,7 +64,10 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                     uint numberOfSampleSizes = GetUInt(8);
                     for (int i = 0; i < numberOfSampleSizes; i++)
                     {
-                        uint sampleSize = GetUInt(12 + i * 4);
+                        if (12 + i * 4 + 4 < buffer.Length)
+                        {
+                            uint sampleSize = GetUInt(12 + i * 4);
+                        }
                     }
                 }
                 else if (name == "stts") // sample table time to sample map
@@ -115,9 +118,12 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                     uint numberOfSampleTimes = GetUInt(4);
                     for (int i = 0; i < numberOfSampleTimes; i++)
                     {
-                        uint firstChunk = GetUInt(8 + i * 12);
-                        uint samplesPerChunk = GetUInt(12 + i * 12);
-                        uint sampleDescriptionIndex = GetUInt(16 + i * 12);
+                        if (16 + i * 12 + 4 < buffer.Length)
+                        {
+                            uint firstChunk = GetUInt(8 + i * 12);
+                            uint samplesPerChunk = GetUInt(12 + i * 12);
+                            uint sampleDescriptionIndex = GetUInt(16 + i * 12);
+                        }
                     }
                 }
 
