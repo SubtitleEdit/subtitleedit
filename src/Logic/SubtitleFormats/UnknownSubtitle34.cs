@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line.Trim();
-                if (regexTimeCodes.Match(s).Success)
+                if (regexTimeCodes.Match(s).Success && !UnknownSubtitle59.RegexTimeCodes.IsMatch(s))
                 {
                     if (p != null && !string.IsNullOrEmpty(p.Text))
                         subtitle.Paragraphs.Add(p);

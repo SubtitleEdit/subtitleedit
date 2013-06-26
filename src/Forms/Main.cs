@@ -12719,6 +12719,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             mediaPlayer.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
             LoadPlugins();
+            tabControlSubtitle.Invalidate();
         }
 
         void  _timerDoSyntaxColoring_Tick(object sender, EventArgs e)

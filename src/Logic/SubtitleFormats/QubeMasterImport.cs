@@ -126,6 +126,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (p != null && p.EndTime.TotalMilliseconds > 0)
                 subtitle.Paragraphs.Add(p);
 
+            bool allNullEndTime = true;
+            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            {
+                if (subtitle.Paragraphs[i].EndTime.TotalMilliseconds != 0)
+                    allNullEndTime = false;
+            }
+            if (allNullEndTime)
+                subtitle.Paragraphs.Clear();
+
             subtitle.RemoveEmptyLines();
             subtitle.Renumber(1);
         }

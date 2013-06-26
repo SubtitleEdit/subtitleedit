@@ -1,6 +1,24 @@
 ﻿Subtitle Edit Changelog
 
 
+3.3.7 (xth June 2013)
+* NEW:
+   * Added Spanish (Mexico) language file - thx paconaranjo
+   * Added a few new subtitle formats
+* IMPROVED:
+   * Updated Basque langauge file - thx Xabier Aramendi
+   * Added 'regular expression' option to ocr_replace_list - thx Pakito
+   * Waveform generator - pauses video before starting - thx fox
+   * Export to Blu-ray settings now saved - thx Minh
+   * Do not load plugins + subtitle formats when opening sub - thx Orr
+* FIXED:
+   * Fixed crash/bugs in MicroDvd format - thx klm  	
+   * Fixed annoying crash when loading a subtitle from 'source view'
+   * OCR - Change ocr fix language when changing spell check dictionary 
+   * Fixed Hebrew in PAC files - thx Yaniv
+   * Fixed minor language detection bug regarding Korean - thx Hoyt :) 
+	
+
 3.3.6 (15th June 2013)
 * NEW:
    * Export to DOST format (image based) - thx Andreas
