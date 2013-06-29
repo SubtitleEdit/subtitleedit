@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (list[i].X > width)
                     width = list[i].X;
             }
-            int max = 45;
+            int max = 50;
             if (max > list.Length)
                 max = list.Length;
             for (int i = 0; i < max; i++)
@@ -111,10 +111,8 @@ namespace Nikse.SubtitleEdit.Logic
                 if (list[i].Y > height)
                     height = list[i].Y;
             }
-            int max = 85;
-            if (max > list.Length)
-                max = list.Length;
-            for (int i = 0; i < max; i++)
+
+            for (int i = 0; i < list.Length; i++)
             {
                 if (list[i].Y > height)
                     height = list[i].Y;

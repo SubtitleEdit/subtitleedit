@@ -1042,16 +1042,16 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                       BdnXmlTimeCode(param.P.EndTime) + "\" Forced=\"False\">");
 
                         int x = (width - param.Bitmap.Width) / 2;
-                        int y = height - (param.Bitmap.Height + border);
+                        int y = height - (param.Bitmap.Height + param.BottomMargin);
                         switch (param.Alignment)
                         {
                             case ContentAlignment.BottomLeft:
                                 x = border;
-                                y = height - (param.Bitmap.Height + border);
+                                y = height - (param.Bitmap.Height + param.BottomMargin);
                                 break;
                             case ContentAlignment.BottomRight:
                                 x = height - param.Bitmap.Width - border;
-                                y = height - (param.Bitmap.Height + border);
+                                y = height - (param.Bitmap.Height + param.BottomMargin);
                                 break;
                             case ContentAlignment.MiddleCenter:
                                 x = (width - param.Bitmap.Width) / 2;
@@ -1312,6 +1312,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             g = Graphics.FromImage(bmp);
             if (parameter.BackgroundColor != Color.Transparent)
                 g.FillRectangle(new SolidBrush(parameter.BackgroundColor), 0, 0, bmp.Width, bmp.Height);
+
+            // align lines with gjpqy a bit lower
+            var lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            if (lines[lines.Length - 1].Contains("g") || lines[lines.Length - 1].Contains("j") || lines[lines.Length - 1].Contains("p") || lines[lines.Length - 1].Contains("q") || lines[lines.Length - 1].Contains("y"))
+            {
+                string textNoBelow = lines[lines.Length - 1].Replace("g", "a").Replace("j", "a").Replace("p", "a").Replace("q", "a").Replace("y", "a");
+                int removeFromBottomMargin = (int)Math.Round((TextDraw.MeasureTextHeight(font, lines[lines.Length - 1], parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold)));
+                parameter.BottomMargin -= removeFromBottomMargin;
+                if (parameter.BottomMargin < 0)
+                    parameter.BottomMargin = 0;
+            }
 
             var lefts = new List<float>();
             foreach (string line in Utilities.RemoveHtmlFontTag(text.Replace("<i>", string.Empty).Replace("</i>", string.Empty)).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
