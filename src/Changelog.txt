@@ -16,7 +16,8 @@
    * Fixed annoying crash when loading a subtitle from 'source view'
    * OCR - Change ocr fix language when changing spell check dictionary 
    * Fixed Hebrew in PAC files - thx Yaniv
-   * Fixed minor language detection bug regarding Korean - thx Hoyt :) 
+   * Fixed minor language detection bug regarding Korean - thx Hoyt
+   * Fixed baseline horizontal alignment in Export to Blu-ray sup - thx THXTEX
 	
 
 3.3.6 (15th June 2013)
