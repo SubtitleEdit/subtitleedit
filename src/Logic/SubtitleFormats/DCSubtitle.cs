@@ -323,7 +323,28 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                             i++;
                         }
-                        if (isItalic)
+                        if (fontNo > 0)
+                        {
+                            if (txt.Length > 0)
+                            {
+                                XmlNode fontNode = xml.CreateElement("Font");
+
+                                XmlAttribute fontColor = xml.CreateAttribute("Color");
+                                fontColor.InnerText = fontColors.Peek();
+                                fontNode.Attributes.Append(fontColor);
+
+                                if (isItalic)
+                                {
+                                    XmlAttribute italic = xml.CreateAttribute("Italic");
+                                    italic.InnerText = "yes";
+                                    fontNode.Attributes.Append(italic);
+                                }
+
+                                fontNode.InnerText = Utilities.RemoveHtmlTags(txt.ToString());
+                                html.Append(fontNode.OuterXml);
+                            }
+                        }
+                        else if (isItalic)
                         {
                             if (txt.Length > 0)
                             {
