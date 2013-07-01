@@ -70,6 +70,7 @@ ST 0 EB 3.10
 //CRULIC R1
 //pour Bobi
 //@
+            _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);

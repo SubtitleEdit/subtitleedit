@@ -51,6 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
+            _errorCount = 0;
             subtitle.Paragraphs.Clear();
             var text = new StringBuilder();
             for (int i=0; i<lines.Count; i++)

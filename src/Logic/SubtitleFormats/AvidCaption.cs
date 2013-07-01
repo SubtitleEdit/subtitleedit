@@ -63,6 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //This is line two.
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
+            _errorCount = 0;
             bool beginFound = false;
             bool endFound = false;
             foreach (string line in lines)

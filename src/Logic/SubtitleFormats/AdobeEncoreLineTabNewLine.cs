@@ -73,6 +73,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //                                              - Yes, professor.
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
+            _errorCount = 0;
             foreach (string line in lines)
             {
                 string s = line;

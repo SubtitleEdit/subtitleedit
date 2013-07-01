@@ -74,6 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //Three...
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
+            _errorCount = 0;
             var regexTimeCodes = new Regex(@"^#\d+ \d\d;\d\d;\d\d;\d\d \d\d;\d\d;\d\d;\d\d", RegexOptions.Compiled);
             foreach (string l2 in lines)
             {

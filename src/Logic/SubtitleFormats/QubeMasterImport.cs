@@ -71,6 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             bool expectStartTime = true;
             var p = new Paragraph();
             subtitle.Paragraphs.Clear();
+            _errorCount = 0;
             foreach (string line in lines)
             {
                 string s = line.Trim();

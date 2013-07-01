@@ -87,6 +87,7 @@ $TapeOffset         =   FALSE
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             //00:01:54:19,00:01:56:17,We should be thankful|they accepted our offer.
+            _errorCount = 0;
             subtitle.Paragraphs.Clear();
             var regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d, \d\d:\d\d:\d\d:\d\d,.+", RegexOptions.Compiled);
             foreach (string line in lines)

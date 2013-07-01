@@ -63,6 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //a cerca de 65 km a norte
             //de Nova Iorque.
 
+            _errorCount = 0;
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             bool italic = false;

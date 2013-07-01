@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             //00:03:15.22 00:03:23.10 This is line one.//This is line two.
+            _errorCount = 0;
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)

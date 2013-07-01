@@ -68,6 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
+            _errorCount = 0;
             bool expectStartTime = true;
             bool expectActor = false;
             var p = new Paragraph();

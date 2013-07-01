@@ -57,6 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
+            _errorCount = 0;
             foreach (string line in lines)
             {
                 if (regexTimeCodes.IsMatch(line))

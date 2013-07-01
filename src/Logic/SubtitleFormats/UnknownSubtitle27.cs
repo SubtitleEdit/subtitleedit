@@ -66,6 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //  00:18:02:  (斉藤)失礼な大人って！  (悠子)何言ってんのあんた？
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
+            _errorCount = 0;
             foreach (string line in lines)
             {
                 string s = line.Trim();
