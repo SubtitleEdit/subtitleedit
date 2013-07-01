@@ -988,6 +988,7 @@
                     public string MakeNewEmptyTranslationFromCurrentSubtitle { get; set; }
                     public string BatchConvert { get; set; }
                     public string GenerateTimeAsText { get; set; }
+                    public string MeasurementConverter { get; set; }
                     public string SplitSubtitle { get; set; }
                     public string AppendSubtitle { get; set; }
                     public string JoinSubtitles { get; set; }
@@ -1218,6 +1219,24 @@
             public string Title { get; set; }
             public string PleaseChoose { get; set; }
             public string TrackXLanguageYTypeZ { get; set; }
+        }
+
+        public class MeasurementConverter
+        {
+            public string Title { get; set; }
+            public string ConvertFrom { get; set; }
+            public string ConvertTo { get; set; }
+            public string CopyToClipboard { get; set; }
+            public string Celsius { get; set; }
+            public string Fahrenheit { get; set; }
+            public string Miles { get; set; }
+            public string Kilometers { get; set; }
+            public string Meters { get; set; }
+            public string Yards { get; set; }
+            public string Feet { get; set; }
+            public string Inches { get; set; }
+            public string Pounds { get; set; }
+            public string Kilos { get; set; }
         }
 
         public class MergeDoubleLines

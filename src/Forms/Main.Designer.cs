@@ -413,6 +413,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItemMeasurementConverter = new System.Windows.Forms.ToolStripMenuItem();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.textBoxListViewTextAlternate = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
@@ -1418,6 +1419,7 @@
             this.toolStripMenuItemMakeEmptyFromCurrent,
             this.toolStripMenuItemBatchConvert,
             this.generateDatetimeInfoFromVideoToolStripMenuItem,
+            this.toolStripMenuItemMeasurementConverter,
             this.toolStripSeparator3,
             this.splitToolStripMenuItem,
             this.appendTextVisuallyToolStripMenuItem,
@@ -3993,6 +3995,13 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
+            // toolStripMenuItemMeasurementConverter
+            // 
+            this.toolStripMenuItemMeasurementConverter.Name = "toolStripMenuItemMeasurementConverter";
+            this.toolStripMenuItemMeasurementConverter.Size = new System.Drawing.Size(346, 22);
+            this.toolStripMenuItemMeasurementConverter.Text = "Measurement converter...";
+            this.toolStripMenuItemMeasurementConverter.Click += new System.EventHandler(this.toolStripMenuItemMeasurementConverter_Click);
+            // 
             // SubtitleListview1
             // 
             this.SubtitleListview1.AllowDrop = true;
@@ -4620,6 +4629,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportFcpIImage;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemNuendoProperties;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDost;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMeasurementConverter;
     }
 }
 
