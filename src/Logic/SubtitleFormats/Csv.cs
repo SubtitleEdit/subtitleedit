@@ -55,7 +55,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-
+            bool continuation = false;
+            Paragraph p = null;
             foreach (string line in lines)
             {
                 if (csvLine.IsMatch(line))
@@ -67,8 +68,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         int start = Convert.ToInt32(Utilities.FixQuotes(parts[1]));
                         int end = Convert.ToInt32(Utilities.FixQuotes(parts[2]));
                         string text = Utilities.FixQuotes(parts[3]);
-
-                        subtitle.Paragraphs.Add(new Paragraph(text, start, end));
+                        p = new Paragraph(text, start, end);
+                        subtitle.Paragraphs.Add(p);
+                        continuation = text.StartsWith("\"") && !text.EndsWith("\"");
                     }
                     catch
                     {
@@ -77,7 +79,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else
                 {
-                    _errorCount++;
+                    if (continuation)
+                    {
+                        if (p != null && p.Text.Length < 300)
+                            p.Text = (p.Text + Environment.NewLine + line.TrimEnd('"')).Trim();
+                        continuation = !line.Trim().EndsWith("\"");
+                    }
+                    else
+                    {
+                        _errorCount++;
+                    }
                 }
             }
             subtitle.Renumber(1);
