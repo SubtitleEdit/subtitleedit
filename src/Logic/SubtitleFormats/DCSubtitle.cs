@@ -342,6 +342,26 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                                 fontNode.InnerText = Utilities.RemoveHtmlTags(txt.ToString());
                                 html.Append(fontNode.OuterXml);
+                            } 
+                            else if (html.Length > 0 && html.ToString().StartsWith("<Font "))
+                            {
+                                XmlDocument temp = new XmlDocument();
+                                temp.LoadXml("<root>" + html.ToString() + "</root>");
+                                XmlNode fontNode = xml.CreateElement("Font");
+                                fontNode.InnerXml = temp.DocumentElement.SelectSingleNode("Font").InnerXml;
+                                foreach (XmlAttribute a in temp.DocumentElement.SelectSingleNode("Font").Attributes)
+                                { 
+                                    XmlAttribute newA = xml.CreateAttribute(a.Name);
+                                    newA.InnerText = a.InnerText;
+                                    fontNode.Attributes.Append(newA);
+                                }
+
+                                XmlAttribute fontColor = xml.CreateAttribute("Color");
+                                fontColor.InnerText = fontColors.Peek();
+                                fontNode.Attributes.Append(fontColor);
+
+                                html = new StringBuilder();
+                                html.Append(fontNode.OuterXml);
                             }
                         }
                         else if (isItalic)
