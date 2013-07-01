@@ -7,10 +7,10 @@
    * Added a few new subtitle formats
 * IMPROVED:
    * Updated Basque langauge file - thx Xabier Aramendi
-   * Added 'regular expression' option to ocr_replace_list - thx Pakito
+   * Added 'regular expression' option to ocr_replace_list - thx paconaranjo
    * Waveform generator - pauses video before starting - thx fox
    * Export to Blu-ray settings now saved - thx Minh
-   * Do not load plugins + subtitle formats when opening sub - thx Orr
+   * Do not load plugins + subtitle formats when opening a sub - thx Orr
 * FIXED:
    * Fixed crash/bugs in MicroDvd format - thx klm  	
    * Fixed annoying crash when loading a subtitle from 'source view'
@@ -19,6 +19,7 @@
    * Fixed minor language detection bug regarding Korean - thx Hoyt
    * Fixed baseline horizontal alignment in Export to Blu-ray sup - thx THXTEX
    * Fixed multi line color tags when outputting DCinema - thx lillian
+   * Fixed 'line-breaks' in csv formats
 	
 
 3.3.6 (15th June 2013)
