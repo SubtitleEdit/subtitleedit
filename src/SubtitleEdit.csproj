@@ -221,6 +221,12 @@
     <Compile Include="Forms\AdjustDisplayDuration.Designer.cs">
       <DependentUpon>AdjustDisplayDuration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\MeasurementConverter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MeasurementConverter.Designer.cs">
+      <DependentUpon>MeasurementConverter.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\NuendoProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1093,6 +1099,9 @@
     <EmbeddedResource Include="Forms\ChooseStyle.resx">
       <DependentUpon>ChooseStyle.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MeasurementConverter.resx">
+      <DependentUpon>MeasurementConverter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\NuendoProperties.resx">
       <DependentUpon>NuendoProperties.cs</DependentUpon>
     </EmbeddedResource>
@@ -1426,6 +1435,7 @@
     </Content>
     <Content Include="Languages\es-MX.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\eu-ES.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

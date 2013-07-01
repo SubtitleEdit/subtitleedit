@@ -18,6 +18,7 @@
    * Fixed Hebrew in PAC files - thx Yaniv
    * Fixed minor language detection bug regarding Korean - thx Hoyt
    * Fixed baseline horizontal alignment in Export to Blu-ray sup - thx THXTEX
+   * Fixed multi line color tags when outputting DCinema - thx lillian
 	
 
 3.3.6 (15th June 2013)

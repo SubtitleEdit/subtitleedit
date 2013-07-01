@@ -52,6 +52,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.JoinSubtitles JoinSubtitles;
         public LanguageStructure.Main Main;
         public LanguageStructure.MatroskaSubtitleChooser MatroskaSubtitleChooser;
+        public LanguageStructure.MeasurementConverter MeasurementConverter;
         public LanguageStructure.MergeDoubleLines MergeDoubleLines;
         public LanguageStructure.MergeShortLines MergedShortLines;
         public LanguageStructure.ModifySelection ModifySelection;
@@ -1093,6 +1094,7 @@ namespace Nikse.SubtitleEdit.Logic
                         MakeNewEmptyTranslationFromCurrentSubtitle = "Make new empty translation from current subtitle",
                         BatchConvert = "Batch convert...",
                         GenerateTimeAsText = "Generate time as text...",
+                        MeasurementConverter = "Measurement converter...",
                         SplitSubtitle = "Split subtitle...",
                         AppendSubtitle = "Append subtitle...",
                         JoinSubtitles = "Join subtitles...",
@@ -1311,6 +1313,24 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Choose subtitle from Matroska file",
                 PleaseChoose = "More than one subtitle found - please choose",
                 TrackXLanguageYTypeZ = "Track {0} - {1} - language: {2} - type: {3}",
+            };
+
+            MeasurementConverter = new LanguageStructure.MeasurementConverter
+            {
+                Title = "Measurement converter",
+                ConvertFrom = "Convert from",
+                ConvertTo = "Convert to",
+                CopyToClipboard = "Copy to clipboard",
+                Celsius = "Celsius",
+                Fahrenheit = "Fahrenheit",
+                Miles = "Miles",
+                Kilometers = "Kilometers",
+                Meters = "Meters",
+                Yards = "Yards",
+                Feet = "Feet",
+                Inches = "Inches",
+                Pounds = "Pounds",
+                Kilos = "Kilos",
             };
 
             MergeDoubleLines = new LanguageStructure.MergeDoubleLines

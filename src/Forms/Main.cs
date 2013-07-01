@@ -1488,6 +1488,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemBatchConvert.Text = _language.Menu.Tools.BatchConvert;
             if (!string.IsNullOrEmpty(_language.Menu.Tools.GenerateTimeAsText)) //TODO: Fix in SE 3.4
                 generateDatetimeInfoFromVideoToolStripMenuItem.Text = _language.Menu.Tools.GenerateTimeAsText;
+            if (!string.IsNullOrEmpty(_language.Menu.Tools.MeasurementConverter)) //TODO: Fix in SE 3.4
+                toolStripMenuItemMeasurementConverter.Text = _language.Menu.Tools.MeasurementConverter;
             splitToolStripMenuItem.Text = _language.Menu.Tools.SplitSubtitle;
             appendTextVisuallyToolStripMenuItem.Text = _language.Menu.Tools.AppendSubtitle;
             joinSubtitlesToolStripMenuItem.Text = _language.Menu.Tools.JoinSubtitles;
@@ -17218,6 +17220,14 @@ namespace Nikse.SubtitleEdit.Forms
             var exportBdnXmlPng = new ExportPngXml();
             exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "DOST", _fileName, _videoInfo);
             exportBdnXmlPng.ShowDialog(this);
+        }
+
+        private void toolStripMenuItemMeasurementConverter_Click(object sender, EventArgs e)
+        {
+            var form = new MeasurementConverter();
+            _formPositionsAndSizes.SetPositionAndSize(form);
+            form.Show(this);
+//            _formPositionsAndSizes.SavePositionAndSize(form);
         }
 
     }
