@@ -65,6 +65,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
+            _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);

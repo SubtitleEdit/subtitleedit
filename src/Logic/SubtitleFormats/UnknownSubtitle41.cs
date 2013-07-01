@@ -53,6 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //Comment elle s’appelait ?
             //924.6/
 
+            _errorCount = 0;
             Paragraph p = null;
             bool textOn = false;
             var sb = new StringBuilder();

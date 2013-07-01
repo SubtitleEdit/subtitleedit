@@ -50,6 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //0001  01:25:59:21 01:26:00:20 0   0   BK02-total_0001.png 0   0
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
+            _errorCount = 0;
             foreach (string line in lines)
             {
                 string s = line;

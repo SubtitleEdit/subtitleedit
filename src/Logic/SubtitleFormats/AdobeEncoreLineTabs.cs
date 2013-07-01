@@ -68,6 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //0002       00:01:48:22       00:01:52:17       - I need those samples, fast!//- Yes, professor.
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
+            _errorCount = 0;
             foreach (string line in lines)
             {
                 string s = line.Replace("       ", "\t");

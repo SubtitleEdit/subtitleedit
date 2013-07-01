@@ -78,6 +78,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //This is line two.
             Paragraph p = null;
             _maxMsDiv10 = 0;
+            _errorCount = 0;
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
@@ -113,6 +114,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         p.Text = line;
                     else
                         p.Text = p.Text + Environment.NewLine + line;
+                }
+                else
+                {
+                    _errorCount++;
                 }
             }
 

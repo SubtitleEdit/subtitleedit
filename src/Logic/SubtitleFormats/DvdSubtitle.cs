@@ -70,6 +70,7 @@ LICENSE=
 //{T 00:03:14:27
 //Some text
 //}
+            _errorCount = 0;
             bool textOn = false;
             string text = string.Empty;
             TimeSpan start = TimeSpan.FromMilliseconds(0);
