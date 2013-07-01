@@ -119,94 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (comboBoxTo.Items.Count > 0)
                 comboBoxTo.SelectedIndex = 0;
-            numericUpDown1_ValueChanged(null, null);
-        }
-
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
-            if (comboBoxFrom.SelectedIndex == -1 || comboBoxTo.SelectedIndex == -1)
-                return;
-
-            string text = comboBoxFrom.SelectedItem.ToString();
-            string textTo = comboBoxTo.SelectedItem.ToString();
-            var l = Configuration.Settings.Language.MeasurementConverter;
-            if (text == l.Fahrenheit)
-            {
-                ShowResult((numericUpDown1.Value - 32) * 5 / 9);                               
-            }
-            else if (text == l.Celsius)
-            {
-                ShowResult(Convert.ToDouble(numericUpDown1.Value) * 1.80 + 32);
-            }
-
-            else if (text == l.Miles)
-            {
-                if (textTo == l.Kilometers)
-                {
-                    ShowResult(Convert.ToDouble(numericUpDown1.Value) * 0.621371192);
-                } 
-                
-
-                //comboBoxTo.Items.Add(l.Kilometers);
-                //comboBoxTo.Items.Add(l.Meters);
-                //comboBoxTo.Items.Add(l.Yards);
-                //comboBoxTo.Items.Add(l.Feet);
-                //comboBoxTo.Items.Add(l.Inches);
-            }
-            else if (text == l.Kilometers)
-            {
-                if (textTo == l.Miles)
-                {
-                    ShowResult(Convert.ToDouble(numericUpDown1.Value) / 0.621371192);
-                }
-
-                //comboBoxTo.Items.Add(l.Miles);
-                //comboBoxTo.Items.Add(l.Meters);
-                //comboBoxTo.Items.Add(l.Yards);
-                //comboBoxTo.Items.Add(l.Feet);
-                //comboBoxTo.Items.Add(l.Inches);
-            }
-            else if (text == l.Meters)
-            {
-                //comboBoxTo.Items.Add(l.Miles);
-                //comboBoxTo.Items.Add(l.Kilometers);
-                //comboBoxTo.Items.Add(l.Yards);
-                //comboBoxTo.Items.Add(l.Feet);
-                //comboBoxTo.Items.Add(l.Inches);
-            }
-            else if (text == l.Yards)
-            {
-                //comboBoxTo.Items.Add(l.Miles);
-                //comboBoxTo.Items.Add(l.Kilometers);
-                //comboBoxTo.Items.Add(l.Meters);
-                //comboBoxTo.Items.Add(l.Feet);
-                //comboBoxTo.Items.Add(l.Inches);
-            }
-            else if (text == l.Feet)
-            {
-                //comboBoxTo.Items.Add(l.Miles);
-                //comboBoxTo.Items.Add(l.Kilometers);
-                //comboBoxTo.Items.Add(l.Meters);
-                //comboBoxTo.Items.Add(l.Yards);
-                //comboBoxTo.Items.Add(l.Inches);
-            }
-            else if (text == l.Inches)
-            {
-                //comboBoxTo.Items.Add(l.Miles);
-                //comboBoxTo.Items.Add(l.Kilometers);
-                //comboBoxTo.Items.Add(l.Meters);
-                //comboBoxTo.Items.Add(l.Yards);
-                //comboBoxTo.Items.Add(l.Feet);
-            }
-
-            else if (text == l.Pounds)
-            {
-                ShowResult(Convert.ToDouble(numericUpDown1.Value) * 0.45359237);
-            }
-            else if (text == l.Kilos)
-            {
-                 ShowResult(Convert.ToDouble(numericUpDown1.Value) / 0.45359237);
-            }
+            textBoxInput_TextChanged(null, null);
         }
 
         private void ShowResult(double d)
@@ -214,14 +127,9 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxResult.Text = string.Format("{0:0.##}", d);
         }
 
-        private void ShowResult(decimal d)
+        private void comboBoxTo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            textBoxResult.Text = string.Format("{0:0.##}", d);
-        }
-
-        private void numericUpDown1_KeyUp(object sender, KeyEventArgs e)
-        {
-            numericUpDown1_ValueChanged(null, null);
+            textBoxInput_TextChanged(null, null);
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -240,6 +148,181 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.KeyCode == Keys.Escape)
                 this.Close();
         }
+
+        private void textBoxInput_TextChanged(object sender, EventArgs e)
+        {
+            if (comboBoxFrom.SelectedIndex == -1 || comboBoxTo.SelectedIndex == -1)
+                return;
+
+            double d;
+            if (!double.TryParse(textBoxInput.Text, out d))
+                return;
+
+            string text = comboBoxFrom.SelectedItem.ToString();
+            string textTo = comboBoxTo.SelectedItem.ToString();
+            var l = Configuration.Settings.Language.MeasurementConverter;
+            if (text == l.Fahrenheit)
+            {
+                ShowResult((d - 32) * 5 / 9);
+            }
+            else if (text == l.Celsius)
+            {
+                ShowResult(Convert.ToDouble(d) * 1.80 + 32);
+            }
+
+            else if (text == l.Miles)
+            {
+                if (textTo == l.Kilometers)
+                {
+                    ShowResult(Convert.ToDouble(d) / 0.621371192);
+                }
+                else if (textTo == l.Meters)
+                {
+                    ShowResult(Convert.ToDouble(d) / 0.000621371192);
+                }
+                else if (textTo == l.Yards)
+                {
+                    ShowResult(Convert.ToDouble(d) * 1760);
+                }
+                else if (textTo == l.Feet)
+                {
+                    ShowResult(Convert.ToDouble(d) * 5280);
+                }
+                else if (textTo == l.Inches)
+                {
+                    ShowResult(Convert.ToDouble(d) * 63360);
+                }
+            }
+            else if (text == l.Kilometers)
+            {
+                if (textTo == l.Miles)
+                {
+                    ShowResult(Convert.ToDouble(d) * 0.621371192);
+                }
+                else if (textTo == l.Yards)
+                {
+                    ShowResult(Convert.ToDouble(d) * 1093.61);
+                }
+                else if (textTo == l.Meters)
+                {
+                    ShowResult(Convert.ToDouble(d) * 1000.0);
+                }
+                else if (textTo == l.Feet)
+                {
+                    ShowResult(Convert.ToDouble(d) / 0.0003048);
+                }
+                else if (textTo == l.Inches)
+                {
+                    ShowResult(Convert.ToDouble(d) * 39370.0787);
+                }
+            }
+            else if (text == l.Meters)
+            {
+                if (textTo == l.Miles)
+                {
+                    ShowResult(Convert.ToDouble(d) * 0.000621371192);
+                }
+                else if (textTo == l.Kilometers)
+                {
+                    ShowResult(Convert.ToDouble(d) / 1000.0);
+                }
+                else if (textTo == l.Yards)
+                {
+                    ShowResult(Convert.ToDouble(d) * 1.0936133);
+                }
+                else if (textTo == l.Feet)
+                {
+                    ShowResult(Convert.ToDouble(d) * 3.28084);
+                }
+                else if (textTo == l.Inches)
+                {
+                    ShowResult(Convert.ToDouble(d) * 39.3700787);
+                }
+            }
+            else if (text == l.Yards)
+            {
+                if (textTo == l.Kilometers)
+                {
+                    ShowResult(Convert.ToDouble(d) * 0.0009144);
+                }
+                else if (textTo == l.Miles)
+                {
+                    ShowResult(Convert.ToDouble(d) * 0.000568181818);
+                }
+                else if (textTo == l.Meters)
+                {
+                    ShowResult(Convert.ToDouble(d) * 0.9144);
+                }
+                else if (textTo == l.Feet)
+                {
+                    ShowResult(Convert.ToDouble(d) * 3);
+                }
+                else if (textTo == l.Inches)
+                {
+                    ShowResult(Convert.ToDouble(d) * 36);
+                }
+            }
+            else if (text == l.Feet)
+            {
+                if (textTo == l.Kilometers)
+                {
+                    ShowResult(Convert.ToDouble(d) * 0.0003048);
+                }
+                else if (textTo == l.Miles)
+                {
+                    ShowResult(Convert.ToDouble(d) / 5280);
+                }
+                else if (textTo == l.Meters)
+                {
+                    ShowResult(Convert.ToDouble(d) * 0.3048);
+                }
+                else if (textTo == l.Yards)
+                {
+                    ShowResult(Convert.ToDouble(d) / 3);
+                }
+                else if (textTo == l.Inches)
+                {
+                    ShowResult(Convert.ToDouble(d) * 12);
+                }                
+            }
+            else if (text == l.Inches)
+            {
+                if (textTo == l.Kilometers)
+                {
+                    ShowResult(Convert.ToDouble(d) / 39370.0787);
+                }
+                else if (textTo == l.Miles)
+                {
+                    ShowResult(Convert.ToDouble(d) / 63360);
+                }
+                else if (textTo == l.Meters)
+                {
+                    ShowResult(Convert.ToDouble(d) * 0.0254);
+                }
+                else if (textTo == l.Yards)
+                {
+                    ShowResult(Convert.ToDouble(d) * 0.0277777778);
+                }
+                else if (textTo == l.Feet)
+                {
+                    ShowResult(Convert.ToDouble(d) * 0.0833333333);
+                }                
+            }
+
+            else if (text == l.Pounds)
+            {
+                ShowResult(Convert.ToDouble(d) * 0.45359237);
+            }
+            else if (text == l.Kilos)
+            {
+                ShowResult(Convert.ToDouble(d) / 0.45359237);
+            }
+        }
+
+        private void textBoxInput_KeyUp(object sender, KeyEventArgs e)
+        {
+            textBoxInput_TextChanged(null, null);
+        }        
 
     }
 }

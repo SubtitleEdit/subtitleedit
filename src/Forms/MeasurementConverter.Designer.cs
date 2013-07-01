@@ -33,10 +33,9 @@
             this.labelConvertFrom = new System.Windows.Forms.Label();
             this.comboBoxTo = new System.Windows.Forms.ComboBox();
             this.labelConvertTo = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.textBoxResult = new System.Windows.Forms.TextBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            this.textBoxInput = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -78,6 +77,7 @@
             this.comboBoxTo.Name = "comboBoxTo";
             this.comboBoxTo.Size = new System.Drawing.Size(182, 21);
             this.comboBoxTo.TabIndex = 5;
+            this.comboBoxTo.SelectedIndexChanged += new System.EventHandler(this.comboBoxTo_SelectedIndexChanged);
             // 
             // labelConvertTo
             // 
@@ -87,21 +87,6 @@
             this.labelConvertTo.Size = new System.Drawing.Size(56, 13);
             this.labelConvertTo.TabIndex = 6;
             this.labelConvertTo.Text = "Convert to";
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.DecimalPlaces = 2;
-            this.numericUpDown1.Location = new System.Drawing.Point(25, 71);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
-            10000000,
-            0,
-            0,
-            0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(179, 20);
-            this.numericUpDown1.TabIndex = 7;
-            this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
-            this.numericUpDown1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.numericUpDown1_KeyUp);
             // 
             // textBoxResult
             // 
@@ -122,14 +107,23 @@
             this.linkLabel1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
+            // textBoxInput
+            // 
+            this.textBoxInput.Location = new System.Drawing.Point(25, 69);
+            this.textBoxInput.Name = "textBoxInput";
+            this.textBoxInput.Size = new System.Drawing.Size(179, 20);
+            this.textBoxInput.TabIndex = 10;
+            this.textBoxInput.TextChanged += new System.EventHandler(this.textBoxInput_TextChanged);
+            this.textBoxInput.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxInput_KeyUp);
+            // 
             // MeasurementConverter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(410, 178);
+            this.Controls.Add(this.textBoxInput);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.textBoxResult);
-            this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.labelConvertTo);
             this.Controls.Add(this.comboBoxTo);
             this.Controls.Add(this.labelConvertFrom);
@@ -144,7 +138,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Measurement converter";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MeasurementConverter_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -157,8 +150,8 @@
         private System.Windows.Forms.Label labelConvertFrom;
         private System.Windows.Forms.ComboBox comboBoxTo;
         private System.Windows.Forms.Label labelConvertTo;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.TextBox textBoxResult;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.TextBox textBoxInput;
     }
 }
