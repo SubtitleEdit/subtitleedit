@@ -9,7 +9,7 @@ Contactos:
 moob: mailto:moob@live.com.pt
 Ricardo Perdigão: mailto:ricardofonseca1977@gmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
-    <HelpFile />
+    <HelpFile></HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
@@ -365,7 +365,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Criar tempos como texto</Title>
-    <Description />
+	<OpenVideoFile>Escolher o ficheiro de vídeo para extrair informações de data / hora</OpenVideoFile>
     <StartFrom>Iniciar a partir de</StartFrom>
     <DateTimeFormat>Formato Data/tempo</DateTimeFormat>
     <Example>Exemplo</Example>
@@ -521,6 +521,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Download>Download</Download>
     <XDownloaded>{0} foi feito download e instalado</XDownloaded>
   </GetDictionaries>
+    <GetTesseractDictionaries>
+    <Title>Precisa de dicionários?</Title>
+    <DescriptionLine1>Obter Tesseract OCR dicionários da web</DescriptionLine1>
+    <DownloadFailed>O download falhou!</DownloadFailed>
+    <GetDictionariesHere>Obter dicionários aqui:</GetDictionariesHere>
+    <ChooseLanguageAndClickDownload>Escolha o seu idioma e clique em download</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>Abrir a pasta 'Dicionários'</OpenDictionariesFolder>
+    <Download>Download</Download>
+    <XDownloaded>{0} downloads feitos e instalados</XDownloaded>
+  </GetTesseractDictionaries>
   <GoogleTranslate>
     <Title>Tradutor do Google</Title>
     <From>De:</From>
@@ -540,7 +550,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MicrosoftTranslate>Tradutor da Microsoft</MicrosoftTranslate>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
-    <Title>Ir para legenda número</Title>
+    <Title>Ir para linha número</Title>
     <XIsNotAValidNumber>{0} não é um número válido</XIsNotAValidNumber>
   </GoToLine>
   <ImportText>
@@ -632,7 +642,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindNext>Localizar &amp;seguinte</FindNext>
         <Replace>&amp;Substituir</Replace>
         <MultipleReplace>&amp;Substituição múltipla...</MultipleReplace>
-        <GoToSubtitleNumber>&amp;Ir para legenda número...</GoToSubtitleNumber>
+        <GoToSubtitleNumber>&amp;Ir para linha número...</GoToSubtitleNumber>
         <RightToLeftMode>Modo Direita-para-esquerda</RightToLeftMode>
         <ReverseRightToLeftStartEnd>Reverter RTL inicio/fim (para linhas seleccionadas)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Mostrar o texto original na pré-visualização de áudio/vídeo</ShowOriginalTextInAudioAndVideoPreview>
@@ -666,7 +676,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <WordsPerMinute>Texto - palavras por minuto (ppm)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Fazer nova tradução a partir da legenda actual</MakeNewEmptyTranslationFromCurrentSubtitle>
 		<BatchConvert>Converter múltiplos ficheiros...</BatchConvert>
-        <GenerateTimeAsText>Criar tempos como texto...</GenerateTimeAsText>		
+        <GenerateTimeAsText>Criar tempos como texto...</GenerateTimeAsText>
+        <MeasurementConverter>Conversão de unidades...</MeasurementConverter>		
         <SplitSubtitle>Dividir legenda...</SplitSubtitle>
         <AppendSubtitle>Anexar legenda...</AppendSubtitle>
         <JoinSubtitles>Juntar legendas...</JoinSubtitles>
@@ -1094,6 +1105,22 @@ Deseja continuar?</SubtitleAppendPrompt>
     <PleaseChoose>Encontrada mais do que uma legenda - por favor, escolha uma</PleaseChoose>
     <TrackXLanguageYTypeZ>Faixa {0} - {1} - idioma: {2} - tipo: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+    <MeasurementConverter>
+    <Title>Conversão de unidades</Title>
+    <ConvertFrom>Converter de</ConvertFrom>
+    <ConvertTo>Converter para</ConvertTo>
+    <CopyToClipboard>Copiar para a Área de Transferência</CopyToClipboard>
+    <Celsius>Celsius</Celsius>
+    <Fahrenheit>Graus centígrados</Fahrenheit>
+    <Miles>Milhas</Miles>
+    <Kilometers>Quilómetros</Kilometers>
+    <Meters>Metros</Meters>
+    <Yards>Jardas</Yards>
+    <Feet>Pés</Feet>
+    <Inches>Polegadas</Inches>
+    <Pounds>Libra</Pounds>
+    <Kilos>Quilogramas</Kilos>
+  </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Combinar linhas com o mesmo texto</Title>
   </MergeDoubleLines>  
@@ -1384,7 +1411,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AdjustStartDownEndUpAndGoToNext>Tecla para baixo=definir início, tecla para cima=definir final e ir para o seguinte</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Adiantar as linhas seleccionadas 100 ms</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Atrasar as linhas seleccionadas 100 ms</AdjustSelected100MsBack>
-    <AdjustSetStartTimeOnly>Definir o tempo inicial, manter o tempo final</AdjustSetStartTimeOnly>
+	<AdjustSetStartTimeKeepDuration>Definir a hora de início, manter a duração</AdjustSetStartTimeKeepDuration>
     <MainCreateStartDownEndUp>Criar novo na tecla para baixo, definir tempo final na tecla para cima</MainCreateStartDownEndUp>
     <MergeDialogue>Combinar diálogos (inserir hífens)</MergeDialogue>
     <GoToNext>Ir para a linha seguinte</GoToNext>

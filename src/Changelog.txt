@@ -1,11 +1,12 @@
 ﻿Subtitle Edit Changelog
 
 
-3.3.7 (xth June 2013)
+3.3.7 (xth July 2013)
 * NEW:
    * Added Spanish (Mexico) language file - thx paconaranjo
    * Added a few new subtitle formats
 * IMPROVED:
+   * Updated Portuguese language file - thx moob
    * Updated Basque langauge file - thx Xabier Aramendi
    * Added 'regular expression' option to ocr_replace_list - thx paconaranjo
    * Waveform generator - pauses video before starting - thx fox
