@@ -7,6 +7,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class MeasurementConverter : Form
     {
+        Color _defaultBackColor = Color.White;
         public MeasurementConverter()
         {
             InitializeComponent();
@@ -17,6 +18,9 @@ namespace Nikse.SubtitleEdit.Forms
             labelConvertTo.Text = l.ConvertTo;
             linkLabel1.Text = l.CopyToClipboard;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
+
+            _defaultBackColor = textBoxInput.BackColor;
+            textBoxInput.Text = "1";            
 
             comboBoxFrom.Items.Add(l.Fahrenheit);
             comboBoxFrom.Items.Add(l.Celsius);
@@ -156,7 +160,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             double d;
             if (!double.TryParse(textBoxInput.Text, out d))
+            {
+                textBoxInput.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 return;
+            }
+            textBoxInput.BackColor = _defaultBackColor;
 
             string text = comboBoxFrom.SelectedItem.ToString();
             string textTo = comboBoxTo.SelectedItem.ToString();
@@ -323,6 +331,17 @@ namespace Nikse.SubtitleEdit.Forms
         {
             textBoxInput_TextChanged(null, null);
         }
+
+        private void textBoxInput_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.IsDigit(e.KeyChar))
+                return;
+
+            if (e.KeyChar == Convert.ToChar(Keys.Back) || (e.KeyChar == '.') || (e.KeyChar == ',') || (e.KeyChar == '-'))
+                return;
+
+            e.Handled = true;
+        }        
 
     }
 }
