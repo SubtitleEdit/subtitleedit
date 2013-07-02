@@ -333,6 +333,7 @@ namespace Nikse.SubtitleEdit.Controls
                 List<Paragraph> selectedParagraphs = new List<Paragraph>();
                 if (_selectedIndices != null)
                 {
+                    var n = _wavePeaks.Header.SampleRate * _zoomFactor;
                     try
                     {
                         foreach (int index in _selectedIndices)
@@ -342,8 +343,8 @@ namespace Nikse.SubtitleEdit.Controls
                             {
                                 p = new Paragraph(p);
                                 // not really frames... just using them as position markers for better performance
-                                p.StartFrame = (int)(p.StartTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor);
-                                p.EndFrame = (int)(p.EndTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor);
+                                p.StartFrame = (int)(p.StartTime.TotalSeconds * n);
+                                p.EndFrame = (int)(p.EndTime.TotalSeconds * n);
                                 selectedParagraphs.Add(p);
                             }
                         }
@@ -458,9 +459,11 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 // mark paragraphs
-                DrawParagraph(_currentParagraph, e, begin);
+                var textBrush = new SolidBrush(TextColor);
+                DrawParagraph(_currentParagraph, e, begin, textBrush);
                 foreach (Paragraph p in _previousAndNextParagraphs)
-                    DrawParagraph(p, e, begin);
+                    DrawParagraph(p, e, begin, textBrush);
+                textBrush.Dispose();
 
                 // current selection
                 if (NewSelectionParagraph != null)
@@ -476,12 +479,14 @@ namespace Nikse.SubtitleEdit.Controls
 
                         if (currentRegionWidth > 40)
                         {
-                            SolidBrush textBrush = new SolidBrush(Color.Turquoise);
+                            SolidBrush tBrush = new SolidBrush(Color.Turquoise);
                             graphics.DrawString(string.Format("{0:0.###} {1}",((double)currentRegionWidth / _wavePeaks.Header.SampleRate / _zoomFactor),
                                                                 Configuration.Settings.Language.WaveForm.Seconds),
-                                                  Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
+                                                  Font, tBrush, new PointF(currentRegionLeft + 3, Height - 32));
+                            tBrush.Dispose();
                         }
                     }
+                    brush.Dispose();
                 }
                 pen.Dispose();
                 penNormal.Dispose();
@@ -543,7 +548,8 @@ namespace Nikse.SubtitleEdit.Controls
             Font textFont = new Font(Font.FontFamily, 7);
             while (position < Width)
             {
-                if (_zoomFactor * _wavePeaks.Header.SampleRate > 38 || (int)Math.Round(StartPositionSeconds + seconds) % 5 == 0)
+                var n = _zoomFactor * _wavePeaks.Header.SampleRate;
+                if (n > 38 || (int)Math.Round(StartPositionSeconds + seconds) % 5 == 0)
                 {
                     e.Graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 10);
                     e.Graphics.DrawString(GetDisplayTime(StartPositionSeconds + seconds), textFont, textBrush, new PointF(position + 2, imageHeight - 13));
@@ -552,13 +558,14 @@ namespace Nikse.SubtitleEdit.Controls
                 seconds += 0.5;
                 position = SecondsToXPosition(seconds);
 
-                if (_zoomFactor * _wavePeaks.Header.SampleRate > 64)
+                if (n > 64)
                     e.Graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 5);
 
                 seconds += 0.5;
                 position = SecondsToXPosition(seconds);
             }
             pen.Dispose();
+            textBrush.Dispose();
             textBrush.Dispose();
         }
 
@@ -572,7 +579,7 @@ namespace Nikse.SubtitleEdit.Controls
             return string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
         }
 
-        private void DrawParagraph(Paragraph paragraph, PaintEventArgs e, int begin)
+        private void DrawParagraph(Paragraph paragraph, PaintEventArgs e, int begin, SolidBrush textBrush)
         {
             if (paragraph != null)
             {
@@ -585,37 +592,38 @@ namespace Nikse.SubtitleEdit.Controls
                 Pen pen = new Pen(new SolidBrush(Color.FromArgb(128, 150, 150, 150)));
                 pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
                 e.Graphics.DrawLine(pen, currentRegionLeft, 0, currentRegionLeft, e.Graphics.VisibleClipBounds.Height);
+                pen.Dispose();
                 pen = new Pen(new SolidBrush(Color.FromArgb(135, 0, 100, 0)));
                 pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
                 e.Graphics.DrawLine(pen, currentRegionRight, 0, currentRegionRight, e.Graphics.VisibleClipBounds.Height);
-
-                var textBrush = new SolidBrush(TextColor);
-
+               
+                var n = _zoomFactor * _wavePeaks.Header.SampleRate;
                 if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                 {
-                    if (_zoomFactor * _wavePeaks.Header.SampleRate > 80)
+                    if (n > 80)
                     {
                         e.Graphics.DrawString(paragraph.Text.Replace(Environment.NewLine, "  "), Font, textBrush, new PointF(currentRegionLeft + 3, 10));
                         e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortStringHHMMSSFF() + " --> " + paragraph.EndTime.ToShortStringHHMMSSFF(), Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
                     }
-                    else if (_zoomFactor * _wavePeaks.Header.SampleRate > 51)
+                    else if (n > 51)
                         e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortStringHHMMSSFF(), Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
-                    else if (_zoomFactor * _wavePeaks.Header.SampleRate > 25)
+                    else if (n > 25)
                         e.Graphics.DrawString("#" + paragraph.Number, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
                 }
                 else
                 {
-                    if (_zoomFactor * _wavePeaks.Header.SampleRate > 80)
+                    if (n > 80)
                     {
                         e.Graphics.DrawString(paragraph.Text.Replace(Environment.NewLine, "  "), Font, textBrush, new PointF(currentRegionLeft + 3, 10));
                         e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortString() + " --> " + paragraph.EndTime.ToShortString(), Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
                     }
-                    else if (_zoomFactor * _wavePeaks.Header.SampleRate > 51)
+                    else if (n > 51)
                         e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortString(), Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
-                    else if (_zoomFactor * _wavePeaks.Header.SampleRate > 25)
+                    else if (n > 25)
                         e.Graphics.DrawString("#" + paragraph.Number, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
                 }
-
+                brush.Dispose();
+                pen.Dispose();
             }
         }
 
