@@ -36,9 +36,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            //00:06:12	Would you like to see any particular style?	00:06:13
+            //00:06:12  Would you like to see any particular style? 00:06:13
             //
-            //00:35:46	I made coffee. Would you like some?				00:35:47
+            //00:35:46  I made coffee. Would you like some?             00:35:47
             //Yes.
             //
 

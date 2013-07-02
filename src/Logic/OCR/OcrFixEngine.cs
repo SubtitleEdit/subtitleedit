@@ -278,7 +278,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 LoadSpellingDictionariesViaDictionaryFileName(ci.ThreeLetterISOLanguageName, ci, _spellCheckDictionaryName, false);
             }
         }
-        
+
         internal static Dictionary<string, string> LoadReplaceList(XmlDocument doc, string name)
         {
             var list = new Dictionary<string, string>();
@@ -1232,7 +1232,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             foreach (string findWhat in _regExList.Keys)
             {
                 newText = Regex.Replace(newText, findWhat, _regExList[findWhat], RegexOptions.Multiline);
-            }            
+            }
 
             return newText;
         }

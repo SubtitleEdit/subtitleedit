@@ -13,15 +13,15 @@
    * Export to Blu-ray settings now saved - thx Minh
    * Do not load plugins + subtitle formats when opening a sub - thx Orr
 * FIXED:
-   * Fixed crash/bugs in MicroDvd format - thx klm  	
+   * Fixed crash/bugs in MicroDvd format - thx klm
    * Fixed annoying crash when loading a subtitle from 'source view'
-   * OCR - Change ocr fix language when changing spell check dictionary 
+   * OCR - Change ocr fix language when changing spell check dictionary
    * Fixed Hebrew in PAC files - thx Yaniv
    * Fixed minor language detection bug regarding Korean - thx Hoyt
    * Fixed baseline horizontal alignment in Export to Blu-ray sup - thx THXTEX
    * Fixed multi line color tags when outputting DCinema - thx lillian
    * Fixed 'line-breaks' in csv formats
-	
+
 
 3.3.6 (15th June 2013)
 * NEW:
