@@ -21,6 +21,7 @@
    * Fixed baseline horizontal alignment in Export to Blu-ray sup - thx THXTEX
    * Fixed multi line color tags when outputting DCinema - thx lillian
    * Fixed 'line-breaks' in csv formats
+   * Fixed slow loading of regular expressions in "Multiple replace" - thx TeDDy
 
 
 3.3.6 (15th June 2013)
