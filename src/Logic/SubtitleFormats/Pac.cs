@@ -251,7 +251,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xa5, // ו
             0xa6, // ז
             0xa7, // ח
-            0xa8, // ט 
+            0xa8, // ט
             0xa9, // י
             0xaa, // ך
             0xab, // כ
@@ -1315,7 +1315,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static string GetHebrewString(byte[] buffer, ref int index)
         {
-            byte b = buffer[index];            
+            byte b = buffer[index];
             if (b >= 0x20 && b < 0x70 && b!= 44)
                 return Encoding.ASCII.GetString(buffer, index, 1);
 

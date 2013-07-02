@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             italicOn = true;
                             boldOn = false;
                             underlineOn = false;
-                            if (pre.ToString() != "{y:i}") 
+                            if (pre.ToString() != "{y:i}")
                                 pre.Append("{y:i}"); // italic single line
                             s = s.Remove(0, 3);
                         }

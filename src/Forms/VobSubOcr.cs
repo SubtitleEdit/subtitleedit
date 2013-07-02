@@ -5379,7 +5379,7 @@ namespace Nikse.SubtitleEdit.Forms
                 threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
             }
             catch
-            { 
+            {
             }
             LoadOcrFixEngine(threeLetterISOLanguageName);
         }

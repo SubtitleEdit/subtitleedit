@@ -283,7 +283,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (textTo == l.Inches)
                 {
                     ShowResult(Convert.ToDouble(d) * 12);
-                }                
+                }
             }
             else if (text == l.Inches)
             {
@@ -306,7 +306,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (textTo == l.Feet)
                 {
                     ShowResult(Convert.ToDouble(d) * 0.0833333333);
-                }                
+                }
             }
 
             else if (text == l.Pounds)
@@ -322,7 +322,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBoxInput_KeyUp(object sender, KeyEventArgs e)
         {
             textBoxInput_TextChanged(null, null);
-        }        
+        }
 
     }
 }

@@ -342,7 +342,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                                 fontNode.InnerText = Utilities.RemoveHtmlTags(txt.ToString());
                                 html.Append(fontNode.OuterXml);
-                            } 
+                            }
                             else if (html.Length > 0 && html.ToString().StartsWith("<Font "))
                             {
                                 XmlDocument temp = new XmlDocument();
@@ -350,7 +350,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 XmlNode fontNode = xml.CreateElement("Font");
                                 fontNode.InnerXml = temp.DocumentElement.SelectSingleNode("Font").InnerXml;
                                 foreach (XmlAttribute a in temp.DocumentElement.SelectSingleNode("Font").Attributes)
-                                { 
+                                {
                                     XmlAttribute newA = xml.CreateAttribute(a.Name);
                                     newA.InnerText = a.InnerText;
                                     fontNode.Attributes.Append(newA);

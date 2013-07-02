@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            //0:01:37.89,0:01:40.52,NTP You...|Line2!            
+            //0:01:37.89,0:01:40.52,NTP You...|Line2!
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
