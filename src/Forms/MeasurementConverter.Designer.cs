@@ -114,6 +114,7 @@
             this.textBoxInput.Size = new System.Drawing.Size(179, 20);
             this.textBoxInput.TabIndex = 10;
             this.textBoxInput.TextChanged += new System.EventHandler(this.textBoxInput_TextChanged);
+            this.textBoxInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxInput_KeyPress);
             this.textBoxInput.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxInput_KeyUp);
             // 
             // MeasurementConverter

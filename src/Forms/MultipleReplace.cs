@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
         public const string SearchTypeNormal = "Normal";
         public const string SearchTypeCaseSensitive = "CaseSensitive";
         public const string SearchTypeRegularExpression = "RegularExpression";
-
+        Dictionary<string, Regex> _compiledRegExList = new Dictionary<string, Regex>();
         Subtitle _subtitle;
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
@@ -161,7 +161,18 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (searchType == Configuration.Settings.Language.MultipleReplace.RegularExpression)
                         {
-                            string result = Regex.Replace(newText, findWhat, replaceWith, RegexOptions.Multiline);
+                            Regex r;
+                            if (_compiledRegExList.ContainsKey(findWhat))
+                            {
+                                r = _compiledRegExList[findWhat];
+                            }
+                            else
+                            {
+                                r = new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline);
+                                _compiledRegExList.Add(findWhat, r);
+                            }                            
+
+                            string result = r.Replace(newText, replaceWith);
                             if (result != newText)
                             {
                                 hit = true;
@@ -509,6 +520,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonRemoveAll_Click(object sender, EventArgs e)
         {
             listViewReplaceList.Items.Clear();
+        }
+
+        private void MultipleReplace_Shown(object sender, EventArgs e)
+        {
+            listViewReplaceList.ItemChecked +=ListViewReplaceListItemChecked;
+            GeneratePreview();
         }
 
 

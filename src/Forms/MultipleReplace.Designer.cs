@@ -38,6 +38,8 @@
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxReplaces = new System.Windows.Forms.GroupBox();
+            this.radioButtonRegEx = new System.Windows.Forms.RadioButton();
+            this.radioButtonCaseSensitive = new System.Windows.Forms.RadioButton();
             this.buttonRemoveAll = new System.Windows.Forms.Button();
             this.buttonExport = new System.Windows.Forms.Button();
             this.buttonImport = new System.Windows.Forms.Button();
@@ -47,9 +49,6 @@
             this.buttonAdd = new System.Windows.Forms.Button();
             this.labelFindWhat = new System.Windows.Forms.Label();
             this.labelReplaceWith = new System.Windows.Forms.Label();
-            this.radioButtonRegEx = new System.Windows.Forms.RadioButton();
-            this.radioButtonCaseSensitive = new System.Windows.Forms.RadioButton();
-            this.radioButtonNormal = new System.Windows.Forms.RadioButton();
             this.listViewReplaceList = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -59,6 +58,7 @@
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.radioButtonNormal = new System.Windows.Forms.RadioButton();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -175,6 +175,28 @@
             this.groupBoxReplaces.TabIndex = 0;
             this.groupBoxReplaces.TabStop = false;
             // 
+            // radioButtonRegEx
+            // 
+            this.radioButtonRegEx.AutoSize = true;
+            this.radioButtonRegEx.Location = new System.Drawing.Point(286, 62);
+            this.radioButtonRegEx.Name = "radioButtonRegEx";
+            this.radioButtonRegEx.Size = new System.Drawing.Size(56, 17);
+            this.radioButtonRegEx.TabIndex = 6;
+            this.radioButtonRegEx.Text = "RegEx";
+            this.radioButtonRegEx.UseVisualStyleBackColor = true;
+            this.radioButtonRegEx.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
+            // 
+            // radioButtonCaseSensitive
+            // 
+            this.radioButtonCaseSensitive.AutoSize = true;
+            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(146, 62);
+            this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
+            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(94, 17);
+            this.radioButtonCaseSensitive.TabIndex = 5;
+            this.radioButtonCaseSensitive.Text = "Case sensitive";
+            this.radioButtonCaseSensitive.UseVisualStyleBackColor = true;
+            this.radioButtonCaseSensitive.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
+            // 
             // buttonRemoveAll
             // 
             this.buttonRemoveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -261,41 +283,6 @@
             this.labelReplaceWith.TabIndex = 21;
             this.labelReplaceWith.Text = "Replace with:";
             // 
-            // radioButtonRegEx
-            // 
-            this.radioButtonRegEx.AutoSize = true;
-            this.radioButtonRegEx.Location = new System.Drawing.Point(286, 62);
-            this.radioButtonRegEx.Name = "radioButtonRegEx";
-            this.radioButtonRegEx.Size = new System.Drawing.Size(56, 17);
-            this.radioButtonRegEx.TabIndex = 6;
-            this.radioButtonRegEx.Text = "RegEx";
-            this.radioButtonRegEx.UseVisualStyleBackColor = true;
-            this.radioButtonRegEx.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
-            // 
-            // radioButtonCaseSensitive
-            // 
-            this.radioButtonCaseSensitive.AutoSize = true;
-            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(146, 62);
-            this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
-            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(94, 17);
-            this.radioButtonCaseSensitive.TabIndex = 5;
-            this.radioButtonCaseSensitive.Text = "Case sensitive";
-            this.radioButtonCaseSensitive.UseVisualStyleBackColor = true;
-            this.radioButtonCaseSensitive.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
-            // 
-            // radioButtonNormal
-            // 
-            this.radioButtonNormal.AutoSize = true;
-            this.radioButtonNormal.Checked = true;
-            this.radioButtonNormal.Location = new System.Drawing.Point(22, 62);
-            this.radioButtonNormal.Name = "radioButtonNormal";
-            this.radioButtonNormal.Size = new System.Drawing.Size(58, 17);
-            this.radioButtonNormal.TabIndex = 4;
-            this.radioButtonNormal.TabStop = true;
-            this.radioButtonNormal.Text = "Normal";
-            this.radioButtonNormal.UseVisualStyleBackColor = true;
-            this.radioButtonNormal.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
-            // 
             // listViewReplaceList
             // 
             this.listViewReplaceList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -316,7 +303,6 @@
             this.listViewReplaceList.TabIndex = 4;
             this.listViewReplaceList.UseCompatibleStateImageBehavior = false;
             this.listViewReplaceList.View = System.Windows.Forms.View.Details;
-            this.listViewReplaceList.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.ListViewReplaceListItemChecked);
             this.listViewReplaceList.SelectedIndexChanged += new System.EventHandler(this.ListViewReplaceListSelectedIndexChanged);
             this.listViewReplaceList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListViewReplaceListKeyDown);
             // 
@@ -347,29 +333,42 @@
             this.moveUpToolStripMenuItem,
             this.moveDownToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(138, 70);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.DeleteToolStripMenuItemClick);
             // 
             // moveUpToolStripMenuItem
             // 
             this.moveUpToolStripMenuItem.Name = "moveUpToolStripMenuItem";
-            this.moveUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.moveUpToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.moveUpToolStripMenuItem.Text = "Move up";
             this.moveUpToolStripMenuItem.Click += new System.EventHandler(this.moveUpToolStripMenuItem_Click);
             // 
             // moveDownToolStripMenuItem
             // 
             this.moveDownToolStripMenuItem.Name = "moveDownToolStripMenuItem";
-            this.moveDownToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.moveDownToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.moveDownToolStripMenuItem.Text = "Move down";
             this.moveDownToolStripMenuItem.Click += new System.EventHandler(this.moveDownToolStripMenuItem_Click);
+            // 
+            // radioButtonNormal
+            // 
+            this.radioButtonNormal.AutoSize = true;
+            this.radioButtonNormal.Checked = true;
+            this.radioButtonNormal.Location = new System.Drawing.Point(22, 62);
+            this.radioButtonNormal.Name = "radioButtonNormal";
+            this.radioButtonNormal.Size = new System.Drawing.Size(58, 17);
+            this.radioButtonNormal.TabIndex = 4;
+            this.radioButtonNormal.TabStop = true;
+            this.radioButtonNormal.Text = "Normal";
+            this.radioButtonNormal.UseVisualStyleBackColor = true;
+            this.radioButtonNormal.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
             // 
             // buttonOK
             // 
@@ -432,6 +431,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Multiple replace";
+            this.Shown += new System.EventHandler(this.MultipleReplace_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MultipleReplace_KeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);
             this.groupBoxReplaces.ResumeLayout(false);
