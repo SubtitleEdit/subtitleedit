@@ -14839,6 +14839,17 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemSetAudioTrack.Visible = true;
                 }
             }
+
+            if (mediaPlayer.VideoPlayer != null && audioVisualizer != null && audioVisualizer.WavePeaks != null && audioVisualizer.WavePeaks.AllSamples.Count > 0)
+            {
+                toolStripMenuItemImportSceneChanges.Visible = true;
+                toolStripMenuItemRemoveSceneChanges.Visible = audioVisualizer.SceneChanges.Count > 0;
+            }
+            else
+            {
+                toolStripMenuItemImportSceneChanges.Visible = false;
+                toolStripMenuItemRemoveSceneChanges.Visible = false;
+            }
         }
 
         private void ChooseAudioTrack(object sender, EventArgs e)
@@ -17230,6 +17241,24 @@ namespace Nikse.SubtitleEdit.Forms
             _formPositionsAndSizes.SetPositionAndSize(form);
             form.Show(this);
 //            _formPositionsAndSizes.SavePositionAndSize(form);
+        }
+
+        private void toolStripMenuItemImportSceneChanges_Click(object sender, EventArgs e)
+        {
+            var form = new ImportSceneChanges(_videoInfo, _videoFileName);
+            _formPositionsAndSizes.SetPositionAndSize(form);
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                audioVisualizer.SceneChanges = form.SceneChangesInSeconds;
+                ShowStatus(string.Format(Configuration.Settings.Language.Main.XSceneChangesImported, form.SceneChangesInSeconds.Count));
+            }
+            _formPositionsAndSizes.SavePositionAndSize(form);
+        }
+
+        private void toolStripMenuItemRemoveSceneChanges_Click(object sender, EventArgs e)
+        {
+            if (audioVisualizer != null && audioVisualizer.SceneChanges != null)
+                audioVisualizer.SceneChanges = new List<double>();
         }
 
     }
