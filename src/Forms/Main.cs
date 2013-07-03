@@ -12697,6 +12697,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemInverseSelection.Visible = true;
                 toolStripMenuItemSpellCheckFromCurrentLine.Visible = true;
                 toolStripMenuItemImportOcrHardSub.Visible = true;
+                toolStripMenuItemMeasurementConverter.Visible = true;
             }
             else
             {
@@ -12708,6 +12709,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemInverseSelection.Visible = false;
                 toolStripMenuItemSpellCheckFromCurrentLine.Visible = false;
                 toolStripMenuItemImportOcrHardSub.Visible = false;
+                toolStripMenuItemMeasurementConverter.Visible = false;
             }
 
             if (Configuration.Settings.General.StartRememberPositionAndSize &&
