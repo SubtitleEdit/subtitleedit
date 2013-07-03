@@ -143,16 +143,21 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OverwriteExistingFiles>Přepsat stávající soubory</OverwriteExistingFiles>
     <Style>Styl...</Style>
     <ConvertOptions>Volby převodu</ConvertOptions>
-    <AutoBreakLongLines>Automaticky zalomit dlouhé řádky</AutoBreakLongLines>
-    <FixItalics>Opravit kurzívu</FixItalics>
     <RemoveFormatting>Odebrat tagy formátování</RemoveFormatting>
     <RemoveTextForHI>Odebrat text pro sluchově postižené</RemoveTextForHI>
-    <ReDoCasing>Předělat velikost písmen</ReDoCasing>
+    <OverwriteOriginalFiles>Přepsat původní soubory (nová přípona při změně formátu)</OverwriteOriginalFiles>
+    <ReDoCasing>Znovu velikost písmen</ReDoCasing>
     <Convert>Převést</Convert>
     <NothingToConvert>Není co převést!</NothingToConvert>
     <PleaseChooseOutputFolder>Vyberte výstupní složku</PleaseChooseOutputFolder>
     <Converted>Převedeno</Converted>
     <ConvertedX>Převedeno ({0})</ConvertedX>
+    <Settings>Nastavení</Settings>
+    <AutoBalance>Automaticky vyvážit řádky</AutoBalance>
+    <ScanFolder>Prohledat složku...</ScanFolder>
+    <ScanningFolder>Prohledávání {0} a podsložek pro soubory titulků...</ScanningFolder>
+    <Recursive>Včetně podsložek</Recursive>
+    <SetMinMsBetweenSubtitles>Nastavit min. milisekund mezi titulky</SetMinMsBetweenSubtitles>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -249,7 +254,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Languages>Jazyky</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25 fps)</Pal>
-    <Ntsc>NTSC (23,976 fps)</Ntsc>
+    <Ntsc>NTSC (29,97 fps)</Ntsc>
     <StartRipping>Spustit vytažení</StartRipping>
     <Abort>Přerušit</Abort>
     <AbortedByUser>Přerušeno uživatelem</AbortedByUser>
@@ -315,7 +320,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderWidth>Šířka okraje</BorderWidth>
     <ImageFormat>Formát obrázku</ImageFormat>
     <AntiAlias>Vyhlazování</AntiAlias>
-    <SideBySide3D>3D vedle sebe</SideBySide3D>
+    <Text3D>3D</Text3D>
+    <SideBySide3D>Poloviční vedle sebe</SideBySide3D>
+    <HalfTopBottom3D>Poloviční nad sebou</HalfTopBottom3D>
+    <Depth>Hloubka</Depth>
     <ExportAllLines>Exportovat všechny řádky...</ExportAllLines>
     <XImagesSavedInY>{0} obrázků uloženo do {1}</XImagesSavedInY>
     <VideoResolution>Rozlišení videa</VideoResolution>
@@ -328,6 +336,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveVobSubAs>Vyberte název souboru VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Vyberte název souboru Blu-ray sup</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Vyberte název souboru DVD Studio Pro STL</SaveDvdStudioProStlAs>
+    <SomeLinesWereTooLongX>Některé řádky byly příliš dlouhé:
+{0}</SomeLinesWereTooLongX>
   </ExportPngXml>
   <ExportText>
     <Title>Exportovat text</Title>
@@ -350,6 +360,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
     <TimeCodeSeperator>Oddělovač časového kódu</TimeCodeSeperator>
   </ExportText>
+  <ExtractDateTimeInfo>
+    <Title>Generovat čas jako text</Title>
+    <Description />
+    <StartFrom>Začít od</StartFrom>
+    <DateTimeFormat>Formát data a času</DateTimeFormat>
+    <Example>Příklad</Example>
+    <GenerateSubtitle>&amp;Generovat titulek</GenerateSubtitle>
+  </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Najít</Title>
     <Find>Najít</Find>
@@ -368,7 +386,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WhatToFix>Co opravit</WhatToFix>
     <Example>Příklad</Example>
     <SelectAll>Vybrat vše</SelectAll>
-    <InverseSelection>Obrátit výběr</InverseSelection>
+    <InverseSelection>Invertovat výběr</InverseSelection>
     <Back>&lt; &amp;Zpět</Back>
     <Next>&amp;Další &gt;</Next>
     <Step2>Krok 2/2 - Ověřit opravy</Step2>
@@ -500,6 +518,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Download>Stáhnout</Download>
     <XDownloaded>{0} bylo staženo a nainstalováno</XDownloaded>
   </GetDictionaries>
+  <GetTesseractDictionaries>
+    <Title>Potřebujete slovníky?</Title>
+    <DescriptionLine1>Získat OCR slovníky Tesseract z internetu</DescriptionLine1>
+    <DownloadFailed>Stahování selhalo!</DownloadFailed>
+    <GetDictionariesHere>Získat slovníky zde:</GetDictionariesHere>
+    <ChooseLanguageAndClickDownload>Vyberte jazyk a klepněte na Stáhnout</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>Otevřít složku 'Dictionaries'</OpenDictionariesFolder>
+    <Download>Stáhnout</Download>
+    <XDownloaded>{0} byla stažena a nainstalována</XDownloaded>
+  </GetTesseractDictionaries>
   <GoogleTranslate>
     <Title>Google překladač</Title>
     <From>Z:</From>
@@ -533,12 +561,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MergeShortLines>Sloučit krátké řádky s pokračováním</MergeShortLines>
     <RemoveEmptyLines>Odebrat prázdné řádky</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Odebrat řádky bez písmen</RemoveLinesWithoutLetters>
+    <GenerateTimeCodes>Generovat časové kódy</GenerateTimeCodes>
     <GapBetweenSubtitles>Mezera mezi titulky (milisekundy)</GapBetweenSubtitles>
     <Auto>Automaticky</Auto>
     <Fixed>Opraveno</Fixed>
     <Refresh>&amp;Obnovit</Refresh>
     <TextFiles>Textové soubory</TextFiles>
     <PreviewLinesModifiedX>Náhled - upraveno odstavců: {0}</PreviewLinesModifiedX>
+    <TimeCodes>Časové kódy</TimeCodes>
   </ImportText>
   <Interjections>
     <Title>Citoslovce</Title>
@@ -576,6 +606,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportOcrFromDvd>Importovat/OCR titulky z vob/ifo (DVD) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importovat/OCR titulky VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importovat/OCR soubor Blu-ray .sup...</ImportBluRaySupFile>
+        <ImportXSub>Importovat/OCR xsub z divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importovat titlky ze souboru Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importovat titulky s ručně vybraným kódováním...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importovat prostý text...</ImportText>
@@ -612,6 +643,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RightToLeftMode>Režim zprava doleva</RightToLeftMode>
         <ReverseRightToLeftStartEnd>Obrátit začátek a konec zprava doleva (pro vybrané řádky)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Zobrazit původní text v náhledech audia a videa</ShowOriginalTextInAudioAndVideoPreview>
+        <ModifySelection>Změnit výběr...</ModifySelection>
+        <InverseSelection>Invertovat výběr</InverseSelection>
       </Edit>
       <Tools>
         <Title>Nástroje</Title>
@@ -640,6 +673,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <WordsPerMinute>Textu - slov za minutu (szm)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Vytvořit nový prázdný překlad z aktuálních titulků</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Hromadný převod...</BatchConvert>
+        <GenerateTimeAsText>Generovat čas jako text...</GenerateTimeAsText>
+        <MeasurementConverter>Převodník jednotek...</MeasurementConverter>
         <SplitSubtitle>Rozdělit titulky...</SplitSubtitle>
         <AppendSubtitle>Připojit titulky...</AppendSubtitle>
         <JoinSubtitles>Spojit titulky...</JoinSubtitles>
@@ -658,6 +693,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SpellCheck>
         <Title>Kontrola pravopisu</Title>
         <SpellCheck>&amp;Kontrola pravopisu...</SpellCheck>
+        <SpellCheckFromCurrentLine>Kontrola pravopisu od aktuálního řádku...</SpellCheckFromCurrentLine>
         <FindDoubleWords>Najít opakování slov</FindDoubleWords>
         <FindDoubleLines>Najít opakování řádků</FindDoubleLines>
         <GetDictionaries>Získat slovníky...</GetDictionaries>
@@ -758,6 +794,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FixCommonErrorsInSelectedLines>Opravit běžné chyby ve vybraných řádcích...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Změnit velikost písmen pro vybrané řádky...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Uložit vybrané řádky jako...</SaveSelectedLines>
+        <WebVTTSetNewVoice>Nastavit nový hlas...</WebVTTSetNewVoice>
+        <WebVTTRemoveVoices>Odebrat hlasy</WebVTTRemoveVoices>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -975,6 +1013,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <VobSubFiles>Soubor titulků VobSub</VobSubFiles>
     <OpenBluRaySupFile>Otevřít soubor Blu-ray sup...</OpenBluRaySupFile>
     <BluRaySupFiles>Soubory Blu-ray sup</BluRaySupFiles>
+    <OpenXSubFiles>Otevřít soubor xsub...</OpenXSubFiles>
+    <XSubFiles>Soubory xsub</XSubFiles>
     <BeforeImportingVobSubFile>Před importováním titulků VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Před importováním souboru Blu-ray sup</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Před importováním souboru BDN xml</BeforeImportingBdnXml>
@@ -1062,6 +1102,22 @@ Pokračovat?</SubtitleAppendPrompt>
     <PleaseChoose>Nalezeny více než jedny titulky - vyberte</PleaseChoose>
     <TrackXLanguageYTypeZ>Stopa {0} - {1} - jazyk: {2} - typ: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MeasurementConverter>
+    <Title>Převodník jednotek</Title>
+    <ConvertFrom>Převést z</ConvertFrom>
+    <ConvertTo>Převést na</ConvertTo>
+    <CopyToClipboard>Kopírovat do schránky</CopyToClipboard>
+    <Celsius>Stupně Celsia</Celsius>
+    <Fahrenheit>Stupně Fahrenheita</Fahrenheit>
+    <Miles>Míle</Miles>
+    <Kilometers>Kilometry</Kilometers>
+    <Meters>Metry</Meters>
+    <Yards>Yardy</Yards>
+    <Feet>Stopy</Feet>
+    <Inches>Palce</Inches>
+    <Pounds>Libry</Pounds>
+    <Kilos>Kilogramy</Kilos>
+  </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Sloučit řádky se stejným textem</Title>
   </MergeDoubleLines>
@@ -1073,6 +1129,22 @@ Pokračovat?</SubtitleAppendPrompt>
     <MergedText>Sloučený text</MergedText>
     <OnlyMergeContinuationLines>Sloučit pouze navazující řádky</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <ModifySelection>
+    <Title>Změnit výběr</Title>
+    <Rule>Pravidlo</Rule>
+    <CaseSensitive>Rozlišovat velikost písmen</CaseSensitive>
+    <DoWithMatches>Co dělat se shodami</DoWithMatches>
+    <MakeNewSelection>Vytvořit nový výběr</MakeNewSelection>
+    <AddToCurrentSelection>Přidat do aktuálního výběru</AddToCurrentSelection>
+    <SubtractFromCurrentSelection>Odečíst od aktuálního výběru</SubtractFromCurrentSelection>
+    <IntersectWithCurrentSelection>Průnik s aktuálním výběrem</IntersectWithCurrentSelection>
+    <MatchingLinesX>Shodné řádky: {0}</MatchingLinesX>
+    <Contains>Obsahuje</Contains>
+    <StartsWith>Začíná</StartsWith>
+    <EndsWith>Končí</EndsWith>
+    <NoContains>Neobsahuje</NoContains>
+    <RegEx>Regulární výraz</RegEx>
+  </ModifySelection>
   <MultipleReplace>
     <Title>Hromadné nahrazení</Title>
     <FindWhat>Najít</FindWhat>
@@ -1265,8 +1337,6 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ShowStopButton>Zobrazit tlačítko zastavení</ShowStopButton>
     <ShowMuteButton>Zobrazit tlačítko ztlumení</ShowMuteButton>
     <ShowFullscreenButton>Zobrazit tlačítko na celou obrazovku</ShowFullscreenButton>
-    <DefaultVolume>Výchozí hlasitost</DefaultVolume>
-    <VolumeNotes>0 znamená žádný zvuk, 100 znamená nejvyšší hlasitost</VolumeNotes>
     <PreviewFontSize>Velikost písma náhledu titulků</PreviewFontSize>
     <MainWindowVideoControls>Ovládání videa v hlavním okně</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Vlastní text hledání a adresa</CustomSearchTextAndUrl>
@@ -1338,7 +1408,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AdjustStartDownEndUpAndGoToNext>Šipka dolů = nastavit začátek, šipka nahoru = nastavit konec a přejít na další</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Posunout vybrané řádky o 100 ms vpřed</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Posunout vybrané řádky o 100 ms zpět</AdjustSelected100MsBack>
-    <AdjustSetStartTimeOnly>Nastavit čas začátku, ponechat čas konce</AdjustSetStartTimeOnly>
+    <AdjustSetStartTimeKeepDuration>Nastavit čas začátku, ponechat trvání</AdjustSetStartTimeKeepDuration>
     <MainCreateStartDownEndUp>Vytvořit nový šipkou dolů, nastavit čas konce šipkou nahoru</MainCreateStartDownEndUp>
     <MergeDialogue>Sloučit dialog (vložit pomlčky)</MergeDialogue>
     <GoToNext>Přejít na další řádek</GoToNext>
@@ -1559,14 +1629,19 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <PlusShadow>+ Stín</PlusShadow>
     <OpaqueBox>Neprůhledné pole (používá barvu obrysu)</OpaqueBox>
     <Import>Importovat...</Import>
-    <Copy>Copírovat</Copy>
-    <CopyOfY>Copie z {0}</CopyOfY>
-    <CopyXOfY>Copie {0} z {1}</CopyXOfY>
+    <Export>Exportovat...</Export>
+    <Copy>Kopírovat</Copy>
+    <CopyOfY>Kopie z {0}</CopyOfY>
+    <CopyXOfY>Kopie {0} z {1}</CopyXOfY>
     <New>Nový</New>
     <Remove>Odebrat</Remove>
     <RemoveAll>Odebrat vše</RemoveAll>
     <ImportStyleFromFile>Importovat styl ze souboru...</ImportStyleFromFile>
+    <ExportStyleToFile>Exportovat styl do souboru... (přidá styl, pokud soubor již existuje)</ExportStyleToFile>
     <ChooseStyle>Vyberte styl k importu</ChooseStyle>
+    <StyleAlreadyExits>Styl již existuje: {0}</StyleAlreadyExits>
+    <StyleXExportedToFileY>Styl '{0}' exportován do souboru '{1}'</StyleXExportedToFileY>
+    <StyleXImportedFromFileY>Styl '{0}' importován ze souboru '{1}'</StyleXImportedFromFileY>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Bodová synchronizace</Title>
@@ -1619,6 +1694,7 @@ Zachovat změny?</KeepChangesMessage>
     <OcrMethod>Metoda OCR</OcrMethod>
     <OcrViaModi>OCR pomocí Microsoft Office Document Imaging (MODI). Requires MS Office</OcrViaModi>
     <OcrViaTesseract>OCR pomocí Tesseract</OcrViaTesseract>
+    <OcrViaNOCR>OCR pomocí nOCR</OcrViaNOCR>
     <Language>Jazyk</Language>
     <OcrViaImageCompare>OCR pomocí porovnání snímků</OcrViaImageCompare>
     <ImageDatabase>Databáze snímků</ImageDatabase>
@@ -1721,4 +1797,8 @@ Zachovat změny?</KeepChangesMessage>
     <SplitLongLinesAt2>milisekundách</SplitLongLinesAt2>
     <Other>Další</Other>
   </WaveFormGenerateTimeCodes>
+  <WebVttNewVoice>
+    <Title>WebVTT - nastavit nový hlas</Title>
+    <VoiceName>Název hlasu</VoiceName>
+  </WebVttNewVoice>
 </Language>
