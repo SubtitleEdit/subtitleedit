@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string text = Utilities.FixQuotes(parts[3]);
                         p = new Paragraph(text, start, end);
                         subtitle.Paragraphs.Add(p);
-                        continuation = text.StartsWith("\"") && !text.EndsWith("\"");
+                        continuation = parts[3].StartsWith("\"") && !parts[3].EndsWith("\"");
                     }
                     catch
                     {
