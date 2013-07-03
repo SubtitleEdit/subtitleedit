@@ -73,15 +73,17 @@
   </General>
   <About>
     <Title>Over Subtitle Edit</Title>
-    <AboutText1>Subtitle Edit is vrije software onder de GNU Public License.  
+    <AboutText1>
+      Subtitle Edit is vrije software onder de GNU Public License.
 
-U mag het verspreiden, wijzigen en vrij gebruiken. 
-C# broncode is beschikbaar op http://code.google.com/p/subtitleedit   
-    
-Bezoek www.nikse.dk voor de nieuwste versie.  
-Suggesties zijn van harte welkom
-    
-E-mail: mailto:nikse.dk@gmail.com</AboutText1>
+      U mag het verspreiden, wijzigen en vrij gebruiken.
+      C# broncode is beschikbaar op http://code.google.com/p/subtitleedit
+
+      Bezoek www.nikse.dk voor de nieuwste versie.
+      Suggesties zijn van harte welkom
+
+      E-mail: mailto:nikse.dk@gmail.com
+    </AboutText1>
   </About>
   <AddToNames>
     <Title>Toevoegen aan namen/etc lijst</Title>
@@ -360,8 +362,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Genereer tijd als tekst</Title>
-    <Description>
-    </Description>
+    <OpenVideoFile>Kies videobestand om datum/tijd uit te halen.</OpenVideoFile>
     <StartFrom>Start vanaf</StartFrom>
     <DateTimeFormat>Datum/tijd formaat</DateTimeFormat>
     <Example>Voorbeeld</Example>
@@ -517,6 +518,16 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Download>Download</Download>
     <XDownloaded>{0} is gedownload en geïnstalleerd</XDownloaded>
   </GetDictionaries>
+  <GetTesseractDictionaries>
+    <Title>Woordenboek nodig?</Title>
+    <DescriptionLine1>Haal Tesseract woordenboeken vanuit het Web.</DescriptionLine1>
+    <DownloadFailed>Download mislukt.</DownloadFailed>
+    <GetDictionariesHere>Haal woordenboeken hier:</GetDictionariesHere>
+    <ChooseLanguageAndClickDownload>Kies je taal en klik download.</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>Open 'woordenboeken' map.</OpenDictionariesFolder>
+    <Download>Download</Download>
+    <XDownloaded>{0} is gedownload en geïnstalleerd</XDownloaded>
+  </GetTesseractDictionaries>
   <GoogleTranslate>
     <Title>Google vertalen</Title>
     <From>Van:</From>
