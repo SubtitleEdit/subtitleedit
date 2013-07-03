@@ -85,6 +85,23 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        private List<double> _sceneChanges = new List<double>();
+        /// <summary>
+        /// Scene changes (seconds)
+        /// </summary>
+        public List<double> SceneChanges
+        {
+            get
+            {
+                return _sceneChanges;
+            }
+            set
+            {
+                _sceneChanges = value;
+            }
+        }
+
+
         public bool IsSpectrogramAvailable
         {
             get
@@ -443,6 +460,27 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
                 DrawTimeLine(StartPositionSeconds, e, imageHeight);
+
+                // scene changes
+                if (_sceneChanges != null)
+                {
+                    int startIndex = 0;
+                    for (int i = startIndex; i < _sceneChanges.Count; i++)
+                    {
+                        var d = _sceneChanges[i];
+                        if (d > StartPositionSeconds && d < StartPositionSeconds + 20)
+                        {
+                            int pos = SecondsToXPosition(d) - begin;
+                            if (pos > 0 && pos < Width)
+                            {
+                                using (var p = new Pen(Color.AntiqueWhite))
+                                {
+                                    graphics.DrawLine(p, pos, 0, pos, Height);
+                                }
+                            }
+                        }
+                    }
+                }
 
                 // current video position
                 if (_currentVideoPositionSeconds > 0)

@@ -617,6 +617,18 @@
             public string XIsNotAValidNumber { get; set; }
         }
 
+        public class ImportSceneChanges
+        {
+            public string Title { get; set; }
+            public string OpenTextFile { get; set; }
+            public string ImportOptions { get; set; }
+            public string TextFiles { get; set; }
+            public string TimeCodes { get; set; }
+            public string Frames { get; set; }
+            public string Seconds { get; set; }
+            public string Milliseconds { get; set; }
+        }
+
         public class ImportText
         {
             public string Title { get; set; }
@@ -637,7 +649,7 @@
             public string TextFiles { get; set; }
             public string PreviewLinesModifiedX { get; set; }
             public string TimeCodes { get; set; }
-        }
+        }      
 
         public class Interjections
         {
@@ -892,7 +904,7 @@
             public string BeforeDisplaySubtitleJoin { get; set; }
             public string SubtitlesJoined { get; set; }
             public string StatusLog { get; set; }
-
+            public string XSceneChangesImported { get; set; }
 
             public class MainMenu
             {
@@ -999,6 +1011,8 @@
                     public string OpenVideo { get; set; }
                     public string ChooseAudioTrack { get; set; }
                     public string CloseVideo { get; set; }
+                    public string ImportSceneChanges { get; set; }
+                    public string RemoveSceneChanges { get; set; }
                     public string ShowHideVideo { get; set; }
                     public string ShowHideWaveForm { get; set; }
                     public string ShowHideWaveformAndSpectrogram { get; set; }

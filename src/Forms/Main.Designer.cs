@@ -33,24 +33,11 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSelected = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusNetworking = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButtonFileNew = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonFileOpen = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonSaveAs = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparatorFindReplace = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonFind = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonReplace = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonVisualSync = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonSpellCheck = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparatorHelp = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonToggleWaveForm = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonToggleVideo = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelSubtitleFormat = new System.Windows.Forms.ToolStripLabel();
             this.comboBoxSubtitleFormats = new System.Windows.Forms.ToolStripComboBox();
@@ -60,7 +47,6 @@
             this.toolStripSeparatorFrameRate = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelFrameRate = new System.Windows.Forms.ToolStripLabel();
             this.toolStripComboBoxFrameRate = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripButtonGetFrameRate = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -163,6 +149,7 @@
             this.toolStripMenuItemMakeEmptyFromCurrent = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemBatchConvert = new System.Windows.Forms.ToolStripMenuItem();
             this.generateDatetimeInfoFromVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemMeasurementConverter = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.splitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.appendTextVisuallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -266,18 +253,8 @@
             this.trackBarWaveFormPosition = new System.Windows.Forms.TrackBar();
             this.panelWaveFormControls = new System.Windows.Forms.Panel();
             this.toolStripWaveControls = new System.Windows.Forms.ToolStrip();
-            this.toolStripButtonWaveFormZoomOut = new System.Windows.Forms.ToolStripButton();
             this.toolStripComboBoxWaveForm = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripButtonWaveFormZoomIn = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonWaveFormPause = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonWaveFormPlay = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonLockCenter = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSplitButtonPlayRate = new System.Windows.Forms.ToolStripSplitButton();
-            this.toolStripMenuItemPlayRateSlow = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemPlayRateNormal = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemPlayRateFast = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemPlayRateVeryFast = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControlButtons = new System.Windows.Forms.TabControl();
             this.tabPageTranslate = new System.Windows.Forms.TabPage();
             this.labelTranslateTip = new System.Windows.Forms.Label();
@@ -413,7 +390,32 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemMeasurementConverter = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripButtonWaveFormZoomOut = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonWaveFormZoomIn = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonWaveFormPause = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonWaveFormPlay = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonLockCenter = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSplitButtonPlayRate = new System.Windows.Forms.ToolStripSplitButton();
+            this.toolStripMenuItemPlayRateSlow = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemPlayRateNormal = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemPlayRateFast = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemPlayRateVeryFast = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripButtonFileNew = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonFileOpen = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonSaveAs = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonFind = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonReplace = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonVisualSync = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonSpellCheck = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonToggleWaveForm = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonToggleVideo = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonGetFrameRate = new System.Windows.Forms.ToolStripButton();
+            this.toolStripStatusNetworking = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripMenuItemRemoveSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.textBoxListViewTextAlternate = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
@@ -491,17 +493,6 @@
             this.toolStripSelected.Text = "toolStripSelected";
             this.toolStripSelected.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // toolStripStatusNetworking
-            // 
-            this.toolStripStatusNetworking.Image = global::Nikse.SubtitleEdit.Properties.Resources.connect;
-            this.toolStripStatusNetworking.Name = "toolStripStatusNetworking";
-            this.toolStripStatusNetworking.Padding = new System.Windows.Forms.Padding(50, 0, 0, 0);
-            this.toolStripStatusNetworking.Size = new System.Drawing.Size(217, 16);
-            this.toolStripStatusNetworking.Text = "toolStripStatusNetworking";
-            this.toolStripStatusNetworking.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolStripStatusNetworking.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
-            this.toolStripStatusNetworking.Click += new System.EventHandler(this.toolStripStatusNetworking_Click);
-            // 
             // toolStrip1
             // 
             this.toolStrip1.AutoSize = false;
@@ -540,176 +531,25 @@
             this.toolStrip1.TabIndex = 5;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripButtonFileNew
-            // 
-            this.toolStripButtonFileNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonFileNew.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripButtonFileNew.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFileNew.Image")));
-            this.toolStripButtonFileNew.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonFileNew.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.toolStripButtonFileNew.Name = "toolStripButtonFileNew";
-            this.toolStripButtonFileNew.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonFileNew.Text = "New";
-            this.toolStripButtonFileNew.ToolTipText = "New";
-            this.toolStripButtonFileNew.Click += new System.EventHandler(this.ToolStripButtonFileNewClick);
-            // 
-            // toolStripButtonFileOpen
-            // 
-            this.toolStripButtonFileOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonFileOpen.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripButtonFileOpen.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFileOpen.Image")));
-            this.toolStripButtonFileOpen.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonFileOpen.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.toolStripButtonFileOpen.Name = "toolStripButtonFileOpen";
-            this.toolStripButtonFileOpen.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonFileOpen.Text = "toolStripButtonOpen";
-            this.toolStripButtonFileOpen.ToolTipText = "Open";
-            this.toolStripButtonFileOpen.Click += new System.EventHandler(this.ToolStripButtonFileOpenClick);
-            // 
-            // toolStripButtonSave
-            // 
-            this.toolStripButtonSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonSave.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripButtonSave.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSave.Image")));
-            this.toolStripButtonSave.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonSave.Name = "toolStripButtonSave";
-            this.toolStripButtonSave.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonSave.Text = "toolStripButtonSave";
-            this.toolStripButtonSave.ToolTipText = "Save";
-            this.toolStripButtonSave.Click += new System.EventHandler(this.ToolStripButtonSaveClick);
-            // 
-            // toolStripButtonSaveAs
-            // 
-            this.toolStripButtonSaveAs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonSaveAs.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripButtonSaveAs.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSaveAs.Image")));
-            this.toolStripButtonSaveAs.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonSaveAs.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonSaveAs.Name = "toolStripButtonSaveAs";
-            this.toolStripButtonSaveAs.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonSaveAs.Text = "toolStripButtonSaveAs";
-            this.toolStripButtonSaveAs.ToolTipText = "Save as";
-            this.toolStripButtonSaveAs.Click += new System.EventHandler(this.ToolStripButtonSaveAsClick);
-            // 
             // toolStripSeparatorFindReplace
             // 
             this.toolStripSeparatorFindReplace.Name = "toolStripSeparatorFindReplace";
             this.toolStripSeparatorFindReplace.Size = new System.Drawing.Size(6, 40);
-            // 
-            // toolStripButtonFind
-            // 
-            this.toolStripButtonFind.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonFind.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripButtonFind.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFind.Image")));
-            this.toolStripButtonFind.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonFind.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonFind.Name = "toolStripButtonFind";
-            this.toolStripButtonFind.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonFind.Text = "Find";
-            this.toolStripButtonFind.Click += new System.EventHandler(this.ToolStripButtonFindClick);
-            // 
-            // toolStripButtonReplace
-            // 
-            this.toolStripButtonReplace.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonReplace.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripButtonReplace.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonReplace.Image")));
-            this.toolStripButtonReplace.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonReplace.ImageTransparentColor = System.Drawing.Color.White;
-            this.toolStripButtonReplace.Name = "toolStripButtonReplace";
-            this.toolStripButtonReplace.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonReplace.Text = "Replace";
-            this.toolStripButtonReplace.ToolTipText = "Replace";
-            this.toolStripButtonReplace.Click += new System.EventHandler(this.ToolStripButtonReplaceClick);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(6, 40);
             // 
-            // toolStripButtonVisualSync
-            // 
-            this.toolStripButtonVisualSync.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonVisualSync.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripButtonVisualSync.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonVisualSync.Image")));
-            this.toolStripButtonVisualSync.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonVisualSync.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonVisualSync.Name = "toolStripButtonVisualSync";
-            this.toolStripButtonVisualSync.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonVisualSync.Text = "Visual sync";
-            this.toolStripButtonVisualSync.Click += new System.EventHandler(this.ToolStripButtonVisualSyncClick);
-            // 
-            // toolStripButtonSpellCheck
-            // 
-            this.toolStripButtonSpellCheck.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonSpellCheck.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.toolStripButtonSpellCheck.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSpellCheck.Image")));
-            this.toolStripButtonSpellCheck.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonSpellCheck.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonSpellCheck.Name = "toolStripButtonSpellCheck";
-            this.toolStripButtonSpellCheck.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonSpellCheck.Text = "Spell check";
-            this.toolStripButtonSpellCheck.Click += new System.EventHandler(this.ToolStripButtonSpellCheckClick);
-            // 
-            // toolStripButtonSettings
-            // 
-            this.toolStripButtonSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonSettings.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.toolStripButtonSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSettings.Image")));
-            this.toolStripButtonSettings.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonSettings.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.toolStripButtonSettings.Name = "toolStripButtonSettings";
-            this.toolStripButtonSettings.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonSettings.Text = "Settings";
-            this.toolStripButtonSettings.Click += new System.EventHandler(this.ToolStripButtonSettingsClick);
-            // 
             // toolStripSeparatorHelp
             // 
             this.toolStripSeparatorHelp.Name = "toolStripSeparatorHelp";
             this.toolStripSeparatorHelp.Size = new System.Drawing.Size(6, 40);
             // 
-            // toolStripButtonHelp
-            // 
-            this.toolStripButtonHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonHelp.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.toolStripButtonHelp.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonHelp.Image")));
-            this.toolStripButtonHelp.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.toolStripButtonHelp.Name = "toolStripButtonHelp";
-            this.toolStripButtonHelp.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonHelp.Text = "Help";
-            this.toolStripButtonHelp.Click += new System.EventHandler(this.ToolStripButtonHelpClick);
-            // 
             // toolStripSeparator13
             // 
             this.toolStripSeparator13.Name = "toolStripSeparator13";
             this.toolStripSeparator13.Size = new System.Drawing.Size(6, 40);
-            // 
-            // toolStripButtonToggleWaveForm
-            // 
-            this.toolStripButtonToggleWaveForm.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonToggleWaveForm.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.toolStripButtonToggleWaveForm.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleWaveForm.Image")));
-            this.toolStripButtonToggleWaveForm.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonToggleWaveForm.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonToggleWaveForm.Name = "toolStripButtonToggleWaveForm";
-            this.toolStripButtonToggleWaveForm.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonToggleWaveForm.Text = "Show/hide wave form";
-            this.toolStripButtonToggleWaveForm.Click += new System.EventHandler(this.toolStripButtonToggleWaveForm_Click);
-            // 
-            // toolStripButtonToggleVideo
-            // 
-            this.toolStripButtonToggleVideo.Checked = true;
-            this.toolStripButtonToggleVideo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripButtonToggleVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonToggleVideo.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.toolStripButtonToggleVideo.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleVideo.Image")));
-            this.toolStripButtonToggleVideo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonToggleVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonToggleVideo.Name = "toolStripButtonToggleVideo";
-            this.toolStripButtonToggleVideo.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonToggleVideo.Text = "Show/hide video";
-            this.toolStripButtonToggleVideo.Click += new System.EventHandler(this.toolStripButtonToggleVideo_Click);
             // 
             // toolStripSeparator6
             // 
@@ -779,17 +619,6 @@
             this.toolStripComboBoxFrameRate.Name = "toolStripComboBoxFrameRate";
             this.toolStripComboBoxFrameRate.Size = new System.Drawing.Size(75, 23);
             this.toolStripComboBoxFrameRate.TextChanged += new System.EventHandler(this.ToolStripComboBoxFrameRateTextChanged);
-            // 
-            // toolStripButtonGetFrameRate
-            // 
-            this.toolStripButtonGetFrameRate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonGetFrameRate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonGetFrameRate.Image")));
-            this.toolStripButtonGetFrameRate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonGetFrameRate.Name = "toolStripButtonGetFrameRate";
-            this.toolStripButtonGetFrameRate.Size = new System.Drawing.Size(23, 18);
-            this.toolStripButtonGetFrameRate.Text = "...";
-            this.toolStripButtonGetFrameRate.ToolTipText = "Get frame rate from video file";
-            this.toolStripButtonGetFrameRate.Click += new System.EventHandler(this.ButtonGetFrameRateClick);
             // 
             // menuStrip1
             // 
@@ -1620,6 +1449,13 @@
             this.generateDatetimeInfoFromVideoToolStripMenuItem.Text = "Generate date/time info from video...";
             this.generateDatetimeInfoFromVideoToolStripMenuItem.Click += new System.EventHandler(this.generateDatetimeInfoFromVideoToolStripMenuItem_Click);
             // 
+            // toolStripMenuItemMeasurementConverter
+            // 
+            this.toolStripMenuItemMeasurementConverter.Name = "toolStripMenuItemMeasurementConverter";
+            this.toolStripMenuItemMeasurementConverter.Size = new System.Drawing.Size(346, 22);
+            this.toolStripMenuItemMeasurementConverter.Text = "Measurement converter...";
+            this.toolStripMenuItemMeasurementConverter.Click += new System.EventHandler(this.toolStripMenuItemMeasurementConverter_Click);
+            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
@@ -1652,6 +1488,8 @@
             this.openVideoToolStripMenuItem,
             this.toolStripMenuItemSetAudioTrack,
             this.closeVideoToolStripMenuItem,
+            this.toolStripMenuItemImportSceneChanges,
+            this.toolStripMenuItemRemoveSceneChanges,
             this.toolStripSeparator5,
             this.showhideWaveFormToolStripMenuItem,
             this.showhideVideoToolStripMenuItem,
@@ -1667,58 +1505,58 @@
             // openVideoToolStripMenuItem
             // 
             this.openVideoToolStripMenuItem.Name = "openVideoToolStripMenuItem";
-            this.openVideoToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.openVideoToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.openVideoToolStripMenuItem.Text = "Open video...";
             this.openVideoToolStripMenuItem.Click += new System.EventHandler(this.buttonOpenVideo_Click);
             // 
             // toolStripMenuItemSetAudioTrack
             // 
             this.toolStripMenuItemSetAudioTrack.Name = "toolStripMenuItemSetAudioTrack";
-            this.toolStripMenuItemSetAudioTrack.Size = new System.Drawing.Size(199, 22);
+            this.toolStripMenuItemSetAudioTrack.Size = new System.Drawing.Size(208, 22);
             this.toolStripMenuItemSetAudioTrack.Text = "Choose audio track";
             // 
             // closeVideoToolStripMenuItem
             // 
             this.closeVideoToolStripMenuItem.Name = "closeVideoToolStripMenuItem";
-            this.closeVideoToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.closeVideoToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.closeVideoToolStripMenuItem.Text = "Close video";
             this.closeVideoToolStripMenuItem.Click += new System.EventHandler(this.CloseVideoToolStripMenuItemClick);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(196, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(205, 6);
             // 
             // showhideWaveFormToolStripMenuItem
             // 
             this.showhideWaveFormToolStripMenuItem.Name = "showhideWaveFormToolStripMenuItem";
-            this.showhideWaveFormToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.showhideWaveFormToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.showhideWaveFormToolStripMenuItem.Text = "Show/hide wave form";
             this.showhideWaveFormToolStripMenuItem.Click += new System.EventHandler(this.ShowhideWaveFormToolStripMenuItemClick);
             // 
             // showhideVideoToolStripMenuItem
             // 
             this.showhideVideoToolStripMenuItem.Name = "showhideVideoToolStripMenuItem";
-            this.showhideVideoToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.showhideVideoToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.showhideVideoToolStripMenuItem.Text = "Show/hide video";
             this.showhideVideoToolStripMenuItem.Click += new System.EventHandler(this.toolStripButtonToggleVideo_Click);
             // 
             // toolStripSeparator19
             // 
             this.toolStripSeparator19.Name = "toolStripSeparator19";
-            this.toolStripSeparator19.Size = new System.Drawing.Size(196, 6);
+            this.toolStripSeparator19.Size = new System.Drawing.Size(205, 6);
             // 
             // undockVideoControlsToolStripMenuItem
             // 
             this.undockVideoControlsToolStripMenuItem.Name = "undockVideoControlsToolStripMenuItem";
-            this.undockVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.undockVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.undockVideoControlsToolStripMenuItem.Text = "Un-dock video controls";
             this.undockVideoControlsToolStripMenuItem.Click += new System.EventHandler(this.UndockVideoControlsToolStripMenuItemClick);
             // 
             // redockVideoControlsToolStripMenuItem
             // 
             this.redockVideoControlsToolStripMenuItem.Name = "redockVideoControlsToolStripMenuItem";
-            this.redockVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.redockVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.redockVideoControlsToolStripMenuItem.Text = "Re-dock video controls";
             this.redockVideoControlsToolStripMenuItem.Visible = false;
             this.redockVideoControlsToolStripMenuItem.Click += new System.EventHandler(this.RedockVideoControlsToolStripMenuItemClick);
@@ -2439,16 +2277,6 @@
             this.toolStripWaveControls.TabIndex = 0;
             this.toolStripWaveControls.Text = "toolStrip2";
             // 
-            // toolStripButtonWaveFormZoomOut
-            // 
-            this.toolStripButtonWaveFormZoomOut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonWaveFormZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormZoomOut.Image")));
-            this.toolStripButtonWaveFormZoomOut.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonWaveFormZoomOut.Name = "toolStripButtonWaveFormZoomOut";
-            this.toolStripButtonWaveFormZoomOut.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonWaveFormZoomOut.Text = "toolStripButton3";
-            this.toolStripButtonWaveFormZoomOut.Click += new System.EventHandler(this.toolStripButtonWaveFormZoomOut_Click);
-            // 
             // toolStripComboBoxWaveForm
             // 
             this.toolStripComboBoxWaveForm.AutoSize = false;
@@ -2456,97 +2284,10 @@
             this.toolStripComboBoxWaveForm.Name = "toolStripComboBoxWaveForm";
             this.toolStripComboBoxWaveForm.Size = new System.Drawing.Size(62, 23);
             // 
-            // toolStripButtonWaveFormZoomIn
-            // 
-            this.toolStripButtonWaveFormZoomIn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonWaveFormZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormZoomIn.Image")));
-            this.toolStripButtonWaveFormZoomIn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonWaveFormZoomIn.Name = "toolStripButtonWaveFormZoomIn";
-            this.toolStripButtonWaveFormZoomIn.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonWaveFormZoomIn.Text = "toolStripButton1";
-            this.toolStripButtonWaveFormZoomIn.Click += new System.EventHandler(this.toolStripButtonWaveFormZoomIn_Click);
-            // 
             // toolStripSeparator16
             // 
             this.toolStripSeparator16.Name = "toolStripSeparator16";
             this.toolStripSeparator16.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripButtonWaveFormPause
-            // 
-            this.toolStripButtonWaveFormPause.AutoToolTip = false;
-            this.toolStripButtonWaveFormPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonWaveFormPause.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormPause.Image")));
-            this.toolStripButtonWaveFormPause.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonWaveFormPause.Name = "toolStripButtonWaveFormPause";
-            this.toolStripButtonWaveFormPause.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonWaveFormPause.Text = "toolStripButton1";
-            this.toolStripButtonWaveFormPause.Visible = false;
-            this.toolStripButtonWaveFormPause.Click += new System.EventHandler(this.toolStripButtonWaveFormPause_Click);
-            // 
-            // toolStripButtonWaveFormPlay
-            // 
-            this.toolStripButtonWaveFormPlay.AutoToolTip = false;
-            this.toolStripButtonWaveFormPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonWaveFormPlay.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormPlay.Image")));
-            this.toolStripButtonWaveFormPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonWaveFormPlay.Name = "toolStripButtonWaveFormPlay";
-            this.toolStripButtonWaveFormPlay.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonWaveFormPlay.Text = "toolStripButton1";
-            this.toolStripButtonWaveFormPlay.Click += new System.EventHandler(this.toolStripButtonWaveFormPlay_Click);
-            // 
-            // toolStripButtonLockCenter
-            // 
-            this.toolStripButtonLockCenter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonLockCenter.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLockCenter.Image")));
-            this.toolStripButtonLockCenter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonLockCenter.Name = "toolStripButtonLockCenter";
-            this.toolStripButtonLockCenter.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonLockCenter.Text = "Center";
-            this.toolStripButtonLockCenter.Click += new System.EventHandler(this.toolStripButtonLockCenter_Click);
-            // 
-            // toolStripSplitButtonPlayRate
-            // 
-            this.toolStripSplitButtonPlayRate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripSplitButtonPlayRate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemPlayRateSlow,
-            this.toolStripMenuItemPlayRateNormal,
-            this.toolStripMenuItemPlayRateFast,
-            this.toolStripMenuItemPlayRateVeryFast});
-            this.toolStripSplitButtonPlayRate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButtonPlayRate.Image")));
-            this.toolStripSplitButtonPlayRate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripSplitButtonPlayRate.Name = "toolStripSplitButtonPlayRate";
-            this.toolStripSplitButtonPlayRate.Size = new System.Drawing.Size(32, 22);
-            this.toolStripSplitButtonPlayRate.Text = "Play rate (speed)";
-            // 
-            // toolStripMenuItemPlayRateSlow
-            // 
-            this.toolStripMenuItemPlayRateSlow.Name = "toolStripMenuItemPlayRateSlow";
-            this.toolStripMenuItemPlayRateSlow.Size = new System.Drawing.Size(148, 22);
-            this.toolStripMenuItemPlayRateSlow.Text = "Slow";
-            this.toolStripMenuItemPlayRateSlow.Click += new System.EventHandler(this.ToolStripMenuItemPlayRateSlowClick);
-            // 
-            // toolStripMenuItemPlayRateNormal
-            // 
-            this.toolStripMenuItemPlayRateNormal.Checked = true;
-            this.toolStripMenuItemPlayRateNormal.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripMenuItemPlayRateNormal.Name = "toolStripMenuItemPlayRateNormal";
-            this.toolStripMenuItemPlayRateNormal.Size = new System.Drawing.Size(148, 22);
-            this.toolStripMenuItemPlayRateNormal.Text = "Normal speed";
-            this.toolStripMenuItemPlayRateNormal.Click += new System.EventHandler(this.ToolStripMenuItemPlayRateNormalClick);
-            // 
-            // toolStripMenuItemPlayRateFast
-            // 
-            this.toolStripMenuItemPlayRateFast.Name = "toolStripMenuItemPlayRateFast";
-            this.toolStripMenuItemPlayRateFast.Size = new System.Drawing.Size(148, 22);
-            this.toolStripMenuItemPlayRateFast.Text = "Fast ";
-            this.toolStripMenuItemPlayRateFast.Click += new System.EventHandler(this.ToolStripMenuItemPlayRateFastClick);
-            // 
-            // toolStripMenuItemPlayRateVeryFast
-            // 
-            this.toolStripMenuItemPlayRateVeryFast.Name = "toolStripMenuItemPlayRateVeryFast";
-            this.toolStripMenuItemPlayRateVeryFast.Size = new System.Drawing.Size(148, 22);
-            this.toolStripMenuItemPlayRateVeryFast.Text = "Very fast";
-            this.toolStripMenuItemPlayRateVeryFast.Click += new System.EventHandler(this.VeryFastToolStripMenuItemClick);
             // 
             // tabControlButtons
             // 
@@ -3995,12 +3736,289 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // toolStripMenuItemMeasurementConverter
+            // toolStripMenuItemImportSceneChanges
             // 
-            this.toolStripMenuItemMeasurementConverter.Name = "toolStripMenuItemMeasurementConverter";
-            this.toolStripMenuItemMeasurementConverter.Size = new System.Drawing.Size(346, 22);
-            this.toolStripMenuItemMeasurementConverter.Text = "Measurement converter...";
-            this.toolStripMenuItemMeasurementConverter.Click += new System.EventHandler(this.toolStripMenuItemMeasurementConverter_Click);
+            this.toolStripMenuItemImportSceneChanges.Name = "toolStripMenuItemImportSceneChanges";
+            this.toolStripMenuItemImportSceneChanges.Size = new System.Drawing.Size(208, 22);
+            this.toolStripMenuItemImportSceneChanges.Text = "Import scene changes...";
+            this.toolStripMenuItemImportSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemImportSceneChanges_Click);
+            // 
+            // toolStripButtonWaveFormZoomOut
+            // 
+            this.toolStripButtonWaveFormZoomOut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonWaveFormZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormZoomOut.Image")));
+            this.toolStripButtonWaveFormZoomOut.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonWaveFormZoomOut.Name = "toolStripButtonWaveFormZoomOut";
+            this.toolStripButtonWaveFormZoomOut.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveFormZoomOut.Text = "toolStripButton3";
+            this.toolStripButtonWaveFormZoomOut.Click += new System.EventHandler(this.toolStripButtonWaveFormZoomOut_Click);
+            // 
+            // toolStripButtonWaveFormZoomIn
+            // 
+            this.toolStripButtonWaveFormZoomIn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonWaveFormZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormZoomIn.Image")));
+            this.toolStripButtonWaveFormZoomIn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonWaveFormZoomIn.Name = "toolStripButtonWaveFormZoomIn";
+            this.toolStripButtonWaveFormZoomIn.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveFormZoomIn.Text = "toolStripButton1";
+            this.toolStripButtonWaveFormZoomIn.Click += new System.EventHandler(this.toolStripButtonWaveFormZoomIn_Click);
+            // 
+            // toolStripButtonWaveFormPause
+            // 
+            this.toolStripButtonWaveFormPause.AutoToolTip = false;
+            this.toolStripButtonWaveFormPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonWaveFormPause.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormPause.Image")));
+            this.toolStripButtonWaveFormPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonWaveFormPause.Name = "toolStripButtonWaveFormPause";
+            this.toolStripButtonWaveFormPause.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveFormPause.Text = "toolStripButton1";
+            this.toolStripButtonWaveFormPause.Visible = false;
+            this.toolStripButtonWaveFormPause.Click += new System.EventHandler(this.toolStripButtonWaveFormPause_Click);
+            // 
+            // toolStripButtonWaveFormPlay
+            // 
+            this.toolStripButtonWaveFormPlay.AutoToolTip = false;
+            this.toolStripButtonWaveFormPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonWaveFormPlay.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormPlay.Image")));
+            this.toolStripButtonWaveFormPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonWaveFormPlay.Name = "toolStripButtonWaveFormPlay";
+            this.toolStripButtonWaveFormPlay.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveFormPlay.Text = "toolStripButton1";
+            this.toolStripButtonWaveFormPlay.Click += new System.EventHandler(this.toolStripButtonWaveFormPlay_Click);
+            // 
+            // toolStripButtonLockCenter
+            // 
+            this.toolStripButtonLockCenter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonLockCenter.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLockCenter.Image")));
+            this.toolStripButtonLockCenter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonLockCenter.Name = "toolStripButtonLockCenter";
+            this.toolStripButtonLockCenter.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonLockCenter.Text = "Center";
+            this.toolStripButtonLockCenter.Click += new System.EventHandler(this.toolStripButtonLockCenter_Click);
+            // 
+            // toolStripSplitButtonPlayRate
+            // 
+            this.toolStripSplitButtonPlayRate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripSplitButtonPlayRate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemPlayRateSlow,
+            this.toolStripMenuItemPlayRateNormal,
+            this.toolStripMenuItemPlayRateFast,
+            this.toolStripMenuItemPlayRateVeryFast});
+            this.toolStripSplitButtonPlayRate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButtonPlayRate.Image")));
+            this.toolStripSplitButtonPlayRate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripSplitButtonPlayRate.Name = "toolStripSplitButtonPlayRate";
+            this.toolStripSplitButtonPlayRate.Size = new System.Drawing.Size(32, 22);
+            this.toolStripSplitButtonPlayRate.Text = "Play rate (speed)";
+            // 
+            // toolStripMenuItemPlayRateSlow
+            // 
+            this.toolStripMenuItemPlayRateSlow.Name = "toolStripMenuItemPlayRateSlow";
+            this.toolStripMenuItemPlayRateSlow.Size = new System.Drawing.Size(148, 22);
+            this.toolStripMenuItemPlayRateSlow.Text = "Slow";
+            this.toolStripMenuItemPlayRateSlow.Click += new System.EventHandler(this.ToolStripMenuItemPlayRateSlowClick);
+            // 
+            // toolStripMenuItemPlayRateNormal
+            // 
+            this.toolStripMenuItemPlayRateNormal.Checked = true;
+            this.toolStripMenuItemPlayRateNormal.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripMenuItemPlayRateNormal.Name = "toolStripMenuItemPlayRateNormal";
+            this.toolStripMenuItemPlayRateNormal.Size = new System.Drawing.Size(148, 22);
+            this.toolStripMenuItemPlayRateNormal.Text = "Normal speed";
+            this.toolStripMenuItemPlayRateNormal.Click += new System.EventHandler(this.ToolStripMenuItemPlayRateNormalClick);
+            // 
+            // toolStripMenuItemPlayRateFast
+            // 
+            this.toolStripMenuItemPlayRateFast.Name = "toolStripMenuItemPlayRateFast";
+            this.toolStripMenuItemPlayRateFast.Size = new System.Drawing.Size(148, 22);
+            this.toolStripMenuItemPlayRateFast.Text = "Fast ";
+            this.toolStripMenuItemPlayRateFast.Click += new System.EventHandler(this.ToolStripMenuItemPlayRateFastClick);
+            // 
+            // toolStripMenuItemPlayRateVeryFast
+            // 
+            this.toolStripMenuItemPlayRateVeryFast.Name = "toolStripMenuItemPlayRateVeryFast";
+            this.toolStripMenuItemPlayRateVeryFast.Size = new System.Drawing.Size(148, 22);
+            this.toolStripMenuItemPlayRateVeryFast.Text = "Very fast";
+            this.toolStripMenuItemPlayRateVeryFast.Click += new System.EventHandler(this.VeryFastToolStripMenuItemClick);
+            // 
+            // toolStripButtonFileNew
+            // 
+            this.toolStripButtonFileNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonFileNew.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonFileNew.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFileNew.Image")));
+            this.toolStripButtonFileNew.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonFileNew.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.toolStripButtonFileNew.Name = "toolStripButtonFileNew";
+            this.toolStripButtonFileNew.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonFileNew.Text = "New";
+            this.toolStripButtonFileNew.ToolTipText = "New";
+            this.toolStripButtonFileNew.Click += new System.EventHandler(this.ToolStripButtonFileNewClick);
+            // 
+            // toolStripButtonFileOpen
+            // 
+            this.toolStripButtonFileOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonFileOpen.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonFileOpen.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFileOpen.Image")));
+            this.toolStripButtonFileOpen.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonFileOpen.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.toolStripButtonFileOpen.Name = "toolStripButtonFileOpen";
+            this.toolStripButtonFileOpen.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonFileOpen.Text = "toolStripButtonOpen";
+            this.toolStripButtonFileOpen.ToolTipText = "Open";
+            this.toolStripButtonFileOpen.Click += new System.EventHandler(this.ToolStripButtonFileOpenClick);
+            // 
+            // toolStripButtonSave
+            // 
+            this.toolStripButtonSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonSave.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonSave.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSave.Image")));
+            this.toolStripButtonSave.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonSave.Name = "toolStripButtonSave";
+            this.toolStripButtonSave.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonSave.Text = "toolStripButtonSave";
+            this.toolStripButtonSave.ToolTipText = "Save";
+            this.toolStripButtonSave.Click += new System.EventHandler(this.ToolStripButtonSaveClick);
+            // 
+            // toolStripButtonSaveAs
+            // 
+            this.toolStripButtonSaveAs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonSaveAs.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonSaveAs.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSaveAs.Image")));
+            this.toolStripButtonSaveAs.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonSaveAs.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonSaveAs.Name = "toolStripButtonSaveAs";
+            this.toolStripButtonSaveAs.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonSaveAs.Text = "toolStripButtonSaveAs";
+            this.toolStripButtonSaveAs.ToolTipText = "Save as";
+            this.toolStripButtonSaveAs.Click += new System.EventHandler(this.ToolStripButtonSaveAsClick);
+            // 
+            // toolStripButtonFind
+            // 
+            this.toolStripButtonFind.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonFind.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonFind.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFind.Image")));
+            this.toolStripButtonFind.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonFind.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonFind.Name = "toolStripButtonFind";
+            this.toolStripButtonFind.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonFind.Text = "Find";
+            this.toolStripButtonFind.Click += new System.EventHandler(this.ToolStripButtonFindClick);
+            // 
+            // toolStripButtonReplace
+            // 
+            this.toolStripButtonReplace.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonReplace.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonReplace.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonReplace.Image")));
+            this.toolStripButtonReplace.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonReplace.ImageTransparentColor = System.Drawing.Color.White;
+            this.toolStripButtonReplace.Name = "toolStripButtonReplace";
+            this.toolStripButtonReplace.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonReplace.Text = "Replace";
+            this.toolStripButtonReplace.ToolTipText = "Replace";
+            this.toolStripButtonReplace.Click += new System.EventHandler(this.ToolStripButtonReplaceClick);
+            // 
+            // toolStripButtonVisualSync
+            // 
+            this.toolStripButtonVisualSync.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonVisualSync.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonVisualSync.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonVisualSync.Image")));
+            this.toolStripButtonVisualSync.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonVisualSync.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonVisualSync.Name = "toolStripButtonVisualSync";
+            this.toolStripButtonVisualSync.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonVisualSync.Text = "Visual sync";
+            this.toolStripButtonVisualSync.Click += new System.EventHandler(this.ToolStripButtonVisualSyncClick);
+            // 
+            // toolStripButtonSpellCheck
+            // 
+            this.toolStripButtonSpellCheck.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonSpellCheck.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.toolStripButtonSpellCheck.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSpellCheck.Image")));
+            this.toolStripButtonSpellCheck.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonSpellCheck.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonSpellCheck.Name = "toolStripButtonSpellCheck";
+            this.toolStripButtonSpellCheck.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonSpellCheck.Text = "Spell check";
+            this.toolStripButtonSpellCheck.Click += new System.EventHandler(this.ToolStripButtonSpellCheckClick);
+            // 
+            // toolStripButtonSettings
+            // 
+            this.toolStripButtonSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonSettings.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.toolStripButtonSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSettings.Image")));
+            this.toolStripButtonSettings.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonSettings.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.toolStripButtonSettings.Name = "toolStripButtonSettings";
+            this.toolStripButtonSettings.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonSettings.Text = "Settings";
+            this.toolStripButtonSettings.Click += new System.EventHandler(this.ToolStripButtonSettingsClick);
+            // 
+            // toolStripButtonHelp
+            // 
+            this.toolStripButtonHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonHelp.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.toolStripButtonHelp.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonHelp.Image")));
+            this.toolStripButtonHelp.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.toolStripButtonHelp.Name = "toolStripButtonHelp";
+            this.toolStripButtonHelp.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonHelp.Text = "Help";
+            this.toolStripButtonHelp.Click += new System.EventHandler(this.ToolStripButtonHelpClick);
+            // 
+            // toolStripButtonToggleWaveForm
+            // 
+            this.toolStripButtonToggleWaveForm.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonToggleWaveForm.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.toolStripButtonToggleWaveForm.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleWaveForm.Image")));
+            this.toolStripButtonToggleWaveForm.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonToggleWaveForm.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonToggleWaveForm.Name = "toolStripButtonToggleWaveForm";
+            this.toolStripButtonToggleWaveForm.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonToggleWaveForm.Text = "Show/hide wave form";
+            this.toolStripButtonToggleWaveForm.Click += new System.EventHandler(this.toolStripButtonToggleWaveForm_Click);
+            // 
+            // toolStripButtonToggleVideo
+            // 
+            this.toolStripButtonToggleVideo.Checked = true;
+            this.toolStripButtonToggleVideo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripButtonToggleVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonToggleVideo.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.toolStripButtonToggleVideo.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleVideo.Image")));
+            this.toolStripButtonToggleVideo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonToggleVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonToggleVideo.Name = "toolStripButtonToggleVideo";
+            this.toolStripButtonToggleVideo.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonToggleVideo.Text = "Show/hide video";
+            this.toolStripButtonToggleVideo.Click += new System.EventHandler(this.toolStripButtonToggleVideo_Click);
+            // 
+            // toolStripButtonGetFrameRate
+            // 
+            this.toolStripButtonGetFrameRate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonGetFrameRate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonGetFrameRate.Image")));
+            this.toolStripButtonGetFrameRate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGetFrameRate.Name = "toolStripButtonGetFrameRate";
+            this.toolStripButtonGetFrameRate.Size = new System.Drawing.Size(23, 18);
+            this.toolStripButtonGetFrameRate.Text = "...";
+            this.toolStripButtonGetFrameRate.ToolTipText = "Get frame rate from video file";
+            this.toolStripButtonGetFrameRate.Click += new System.EventHandler(this.ButtonGetFrameRateClick);
+            // 
+            // toolStripStatusNetworking
+            // 
+            this.toolStripStatusNetworking.Image = global::Nikse.SubtitleEdit.Properties.Resources.connect;
+            this.toolStripStatusNetworking.Name = "toolStripStatusNetworking";
+            this.toolStripStatusNetworking.Padding = new System.Windows.Forms.Padding(50, 0, 0, 0);
+            this.toolStripStatusNetworking.Size = new System.Drawing.Size(217, 16);
+            this.toolStripStatusNetworking.Text = "toolStripStatusNetworking";
+            this.toolStripStatusNetworking.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolStripStatusNetworking.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
+            this.toolStripStatusNetworking.Click += new System.EventHandler(this.toolStripStatusNetworking_Click);
+            // 
+            // toolStripMenuItemRemoveSceneChanges
+            // 
+            this.toolStripMenuItemRemoveSceneChanges.Name = "toolStripMenuItemRemoveSceneChanges";
+            this.toolStripMenuItemRemoveSceneChanges.Size = new System.Drawing.Size(208, 22);
+            this.toolStripMenuItemRemoveSceneChanges.Text = "Remove scene changes";
+            this.toolStripMenuItemRemoveSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemRemoveSceneChanges_Click);
             // 
             // SubtitleListview1
             // 
@@ -4123,6 +4141,7 @@
             this.audioVisualizer.Margin = new System.Windows.Forms.Padding(0);
             this.audioVisualizer.Name = "audioVisualizer";
             this.audioVisualizer.NewSelectionParagraph = null;
+            this.audioVisualizer.SceneChanges = ((System.Collections.Generic.List<double>)(resources.GetObject("audioVisualizer.SceneChanges")));
             this.audioVisualizer.SelectedColor = System.Drawing.Color.Red;
             this.audioVisualizer.ShowSpectrogram = false;
             this.audioVisualizer.ShowWaveform = true;
@@ -4630,6 +4649,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemNuendoProperties;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDost;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMeasurementConverter;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportSceneChanges;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRemoveSceneChanges;
     }
 }
 

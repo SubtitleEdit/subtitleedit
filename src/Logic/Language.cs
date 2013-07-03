@@ -47,6 +47,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.GoogleTranslate GoogleTranslate;
         public LanguageStructure.GoogleOrMicrosoftTranslate GoogleOrMicrosoftTranslate;
         public LanguageStructure.GoToLine GoToLine;
+        public LanguageStructure.ImportSceneChanges ImportSceneChanges;
         public LanguageStructure.ImportText ImportText;
         public LanguageStructure.Interjections Interjections;
         public LanguageStructure.JoinSubtitles JoinSubtitles;
@@ -717,6 +718,18 @@ namespace Nikse.SubtitleEdit.Logic
                 XIsNotAValidNumber = "{0} is not a valid number",
             };
 
+            ImportSceneChanges = new LanguageStructure.ImportSceneChanges
+            {
+                Title = "Import scene changes",
+                OpenTextFile = "Open text file...",
+                ImportOptions = "Import options",
+                TextFiles = "Text files",
+                TimeCodes = "Time codes",
+                Frames = "Frames",
+                Seconds = "Seconds",
+                Milliseconds = "Milliseconds",
+            };
+
             ImportText = new LanguageStructure.ImportText
             {
                 Title = "Import plain text",
@@ -997,6 +1010,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BeforeDisplaySubtitleJoin = "Before join of subtitles",
                 SubtitlesJoined = "Subtitles joined",
                 StatusLog = "Status log",
+                XSceneChangesImported = "{0} scene changes imported",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -1106,6 +1120,8 @@ namespace Nikse.SubtitleEdit.Logic
                         OpenVideo = "Open video file...",
                         ChooseAudioTrack = "Choose audio track",
                         CloseVideo = "Close video file",
+                        ImportSceneChanges = "Import scene changes...",
+                        RemoveSceneChanges = "Remove scene changes",
                         ShowHideVideo = "Show/hide video",
                         ShowHideWaveForm = "Show/hide waveform",
                         ShowHideWaveformAndSpectrogram = "Show/hide waveform and spectrogram",

@@ -221,6 +221,12 @@
     <Compile Include="Forms\AdjustDisplayDuration.Designer.cs">
       <DependentUpon>AdjustDisplayDuration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ImportSceneChanges.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ImportSceneChanges.Designer.cs">
+      <DependentUpon>ImportSceneChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MeasurementConverter.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1098,6 +1104,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ChooseStyle.resx">
       <DependentUpon>ChooseStyle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ImportSceneChanges.resx">
+      <DependentUpon>ImportSceneChanges.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MeasurementConverter.resx">
       <DependentUpon>MeasurementConverter.cs</DependentUpon>
