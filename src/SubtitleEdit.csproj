@@ -809,6 +809,7 @@
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle61.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle60.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle59.cs" />
     <Compile Include="Logic\SubtitleFormats\DvdSubtitleSystem.cs" />
@@ -1426,6 +1427,7 @@
     </Content>
     <Content Include="Languages\cs-CZ.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\da-DK.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
