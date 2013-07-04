@@ -1095,6 +1095,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private void GetCodePage( byte[] buffer, int index, int endDelimiter)
         {
+            if (BatchMode)
+            {
+                _codePage = -2;
+                return;
+            }                
+
             byte[] previewBuffer = null;
 
             if (buffer != null)

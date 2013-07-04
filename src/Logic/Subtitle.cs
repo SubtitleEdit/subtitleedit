@@ -107,6 +107,11 @@ namespace Nikse.SubtitleEdit.Logic
 
         public SubtitleFormat LoadSubtitle(string fileName, out Encoding encoding, Encoding useThisEncoding)
         {
+            return LoadSubtitle(fileName, out encoding, useThisEncoding, false);
+        }
+
+        public SubtitleFormat LoadSubtitle(string fileName, out Encoding encoding, Encoding useThisEncoding, bool batchMode)
+        {
             FileName = fileName;
 
             _paragraphs = new List<Paragraph>();
@@ -149,6 +154,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (subtitleFormat.IsMine(lines, fileName))
                 {
                     Header = null;
+                    subtitleFormat.BatchMode = batchMode;
                     subtitleFormat.LoadSubtitle(this, lines, fileName);
                     _format = subtitleFormat;
                     _wasLoadedWithFrameNumbers = _format.IsFrameBased;

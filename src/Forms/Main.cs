@@ -757,7 +757,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var fi = new FileInfo(fileName);
                         if (fi.Length < 1024 * 1024 && !done) // max 1 mb
                         {
-                            format = sub.LoadSubtitle(fileName, out encoding, null);
+                            format = sub.LoadSubtitle(fileName, out encoding, null, true);
 
                             if (format == null)
                             {
@@ -773,6 +773,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 var pac = new Pac();
                                 if (pac.IsMine(null, fileName))
                                 {
+                                    pac.BatchMode = true;
                                     pac.LoadSubtitle(sub, null, fileName);
                                     format = pac;
                                 }
@@ -931,12 +932,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower() || sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.Replace(" ", string.Empty).ToLower())
                 {
                     targetFormatFound = true;
+                    sf.BatchMode = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, sf.Extension, outputFolder, overwrite);
                     Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
                     if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
                         sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
                     else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
-                        sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
+                        sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);                    
                     File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
                     if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
                     {

@@ -185,6 +185,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new UnknownSubtitle58(),
                     new UnknownSubtitle59(),
                     new UnknownSubtitle60(),
+                    new UnknownSubtitle61(),
                 };
 
                 string path = Configuration.PluginsDirectory;
@@ -331,6 +332,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return false;
             }
         }
+
+        public bool BatchMode { get; set; }
 
         public static string ToUtf8XmlString(XmlDocument xml, bool omitXmlDeclaration)
         {
