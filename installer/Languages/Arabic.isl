@@ -1,6 +1,7 @@
-; *** Inno Setup version  5.5.0+ Arabic messages ***
+; *** Inno Setup version 5.5.3+ Arabic messages ***
 ;
-; Translated by Awadh Al-Ghaamdi (awadh_al_ghaamdi@hotmail.com)
+; Translated by Ahmad Alani (Ahmadalani75@hotmail.com)
+; To download user-contributed translations of this file, go to:
 ;   http://www.jrsoftware.org/files/istrans/
 ;
 ; Note: When translating this text, do not add periods (.) to the end of
@@ -13,7 +14,7 @@
 ; understand the '[LangOptions] section' topic in the help file.
 LanguageName=Arabic
 LanguageID=$0401
-LanguageCodePage=1256
+LanguageCodePage=1265
 ; If the language you are translating to requires special font faces or
 ; sizes, uncomment any of the following entries and change them accordingly.
 ;DialogFontName=MS Shell Dlg
@@ -69,8 +70,8 @@ ErrorTooManyFilesInDir=áÇ íãßä ÅäÔÇÁ ãáİ İí ÇáãÌáÏ "%1"%náÃäå íÍÊæì ÚÏÏ ßÈíÑ ãä 
 
 ; *** Setup common messages
 ExitSetupTitle=ÅäåÇÁ ÚãáíÉ ÇáÊËÈíÊ
-ExitSetupMessage=ÚãáíÉ ÇáÊËÈíÊ áã ÊßÊãá. ÅĞÇ ÎÑÌÊ ÇáÂä İÇä ÇáÈÑäÇãÌ áä íÊã ÊËÈíÊå.%n%níãßäß ÊÔÛíá ÈÑäÇãÌ ÇáÊËÈíÊ áÇÍŞÇ áÇÓÊßãÇá ÇáÚãáíÉ.%n%nåá ÊÑíÏ ÇáÎÑæÌ¿
-AboutSetupMenuItem=&Íæá ÈÑäÇãÌ ÇáÊËÈíÊ...
+ExitSetupMessage=.ÚãáíÉ ÇáÊËÈíÊ áã ÊßÊãá. ÅĞÇ ÎÑÌÊ ÇáÂä İÇä ÇáÈÑäÇãÌ áä íÊã ÊËÈíÊå%n%níãßäß ÊÔÛíá ÈÑäÇãÌ ÇáÊËÈíÊ áÇÍŞÇ .áÃÓÊßãÇá ÇáÚãáíÉ%n%nåá ÊÑíÏ ÇáÎÑæÌ ¿
+AboutSetupMenuItem=...&Íæá ÈÑäÇãÌ ÇáÊËÈíÊ
 AboutSetupTitle=Íæá ÈÑäÇãÌ ÇáÊËÈíÊ
 AboutSetupMessage=%1 ÅÕÏÇÑ %2%n%3%n%n%1 ÇáãæŞÚ Úáì ÇáÅäÊÑäÊ:%n%4
 AboutSetupNote=
@@ -96,7 +97,7 @@ SelectLanguageTitle=ÍÏÏ áÛÉ ÇáÊËÈíÊ
 SelectLanguageLabel=ÍÏÏ ÇááÛÉ ÇáãÓÊÎÏãÉ ÃËäÇÁ ÇáÊËÈíÊ:
 
 ; *** Common wizard text
-ClickNext=ÇÖÛØ ÇáÊÇáí ááãæÇÕáÉ ¡ Ãæ ÅáÛÇÁ ÇáÃãÑ ááÎÑæÌ%n%nÊÑÌãÉ ÇáÃÓÊÇĞ ÚæÖ ÇáÛÇãÏí
+ClickNext=ÇÖÛØ ÇáÊÇáí ááãæÇÕáÉ ¡ Ãæ ÅáÛÇÁ ÇáÃãÑ ááÎÑæÌ%n%nÊÑÌãÉ : ÃÍÜãÜÏ ÇáÜÚÜÇäÜÜí
 BeveledLabel=
 BrowseDialogTitle=ÊÕİÍ Úä ãÌáÏ
 BrowseDialogLabel=ÍÏÏ ãÌáÏÇ ãÇ İí ÇáŞÇÆãÉ ÊÍÊ , Ëã ÅÖÛØ ÍÓäÇ
@@ -207,6 +208,7 @@ ApplicationsFound=ÇáÊØÈíŞÇÊ ÇáÊÇáíÉ ÊÓÊÎÏã ãáİÇÊ ÈÍÇÌÉ Åáì ÊÍÏíËåÇ ÈæÇÓØÉ ÈÑäÇãÌ
 ApplicationsFound2=ÇáÊØÈíŞÇÊ ÇáÊÇáíÉ ÊÓÊÎÏã ãáİÇÊ ÈÍÇÌÉ Åáì ÊÍÏíËåÇ ÈæÇÓØÉ ÈÑäÇãÌ ÇáÊËÈíÊ. íÓÊÍÓä ÇáÓãÇÍ áÈÑäÇãÌ ÇáÊËÈíÊ ÈÅÛáÇŞ åĞå ÇáÊØÈíŞÇÊ ÊáŞÇÆíÇ æ ÈÚÏ ÇßÊãÇá ÚãáíÉ ÇáÊËÈíÊ¡ ÓíÍÇæá ÈÑäÇãÌ ÇáÊËÈíÊ ÅÚÇÏÉ ÊÔÛíá ÇáÊØÈíŞÇÊ
 CloseApplications=Å&ÛáÇŞ ÇáÊØÈíŞÇÊ ÊáŞÇÆíÇ
 DontCloseApplications=&ÛÏã ÅÛáÇŞ ÇáÊØÈíŞÇÊ
+ErrorCloseApplications=áã íÊãßä ÇáÅÚÏÇÏ ÊáŞÇÆíÇğ ÈÅÛáÇŞ ßÇİÉ ÇáÊØÈíŞÇÊ. ãä ÇáãÓÊÍÓä Ãä ÊŞæã ÈÅÛáÇŞ ßÇİÉ ÇáÊØÈíŞÇÊ ÇáÊí ÊÓÊÎÏã .ÇáãáİÇÊ ÇáÊí ÊÍÊÇÌ Åáì ÊÍÏíË ÈæÇÓØÉ ÇáÅÚÏÇÏ ŞÈá ÇáãÊÇÈÚÉ
 
 ; *** "Installing" wizard page
 WizardInstalling=ÊÊã ÚãáíÉ ÇáÊËÈíÊ
