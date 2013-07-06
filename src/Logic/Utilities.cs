@@ -209,12 +209,12 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static int ShowSubtitle(List<Paragraph> paragraphs, VideoPlayerContainer videoPlayerContainer)
         {
-            int index = 0;
             if (videoPlayerContainer.VideoPlayer != null)
             {
                 double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * 1000.0) + 5;
-                foreach (Paragraph p in paragraphs)
+                for (int i=0; i<paragraphs.Count; i++)
                 {
+                    var p = paragraphs[i];
                     if (p.StartTime.TotalMilliseconds <= positionInMilliseconds &&
                         p.EndTime.TotalMilliseconds > positionInMilliseconds)
                     {
@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Logic
                             if (videoPlayerContainer.LastParagraph != p)
                             {
                                 videoPlayerContainer.SetSubtitleText(text, p);
-                                return index;
+                                return i;
                             }
                             else if (videoPlayerContainer.SubtitleText != text)
                             {
@@ -234,7 +234,6 @@ namespace Nikse.SubtitleEdit.Logic
                             return -1;
                         }
                     }
-                    index++;
                 }
             }
             if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
