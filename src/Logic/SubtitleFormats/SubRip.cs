@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
+            Errors = null;
             return subtitle.Paragraphs.Count > _errorCount;
         }
 

@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
+            Errors = null;
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
@@ -356,6 +357,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            Errors = null;
             bool eventsStarted = false;
             subtitle.Paragraphs.Clear();
             string[] format = "Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text".Split(',');

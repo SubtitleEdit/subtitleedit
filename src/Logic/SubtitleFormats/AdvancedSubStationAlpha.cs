@@ -74,6 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             LoadSubtitle(subtitle, lines, fileName);
+            Errors = null;
             if (subtitle.Paragraphs.Count > _errorCount)
             {
                 if (!string.IsNullOrEmpty(subtitle.Header))
@@ -629,6 +630,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            Errors = null;
             bool eventsStarted = false;
             bool fontsStarted = false;
             bool graphicsStarted = false;

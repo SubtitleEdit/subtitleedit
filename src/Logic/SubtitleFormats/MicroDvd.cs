@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
             }
-
+            Errors = null;
             return trimmedLines.Count > errors;
         }
 
@@ -279,6 +279,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
             _errors = new StringBuilder();
+            Errors = null;
             _lineNumber = 0;
 
             foreach (string line in lines)
