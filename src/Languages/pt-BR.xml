@@ -362,8 +362,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Gerar tempo como texto</Title>
-    <Description>
-    </Description>
+    <OpenVideoFile>Escolha o arquivo de vídeo do qual extrair informações de data/hora</OpenVideoFile>
     <StartFrom>Iniciar de</StartFrom>
     <DateTimeFormat>Formato data/tempo</DateTimeFormat>
     <Example>Exemplo</Example>
@@ -551,6 +550,16 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Ir para legenda número</Title>
     <XIsNotAValidNumber>{0} não é um número válido</XIsNotAValidNumber>
   </GoToLine>
+  <ImportSceneChanges>
+    <Title>Importar alterações de cena</Title>
+    <OpenTextFile>Abrir arquivo de texto...</OpenTextFile>
+    <ImportOptions>Opções de importação</ImportOptions>
+    <TextFiles>Arquivos de texto</TextFiles>
+    <TimeCodes>Códigos de tempo</TimeCodes>
+    <Frames>Quadros</Frames>
+    <Seconds>Segundos</Seconds>
+    <Milliseconds>Milisegundos</Milliseconds>
+  </ImportSceneChanges>
   <ImportText>
     <Title>Importar texto simples</Title>
     <OpenTextFile>Abrir arquivo de texto...</OpenTextFile>
@@ -675,6 +684,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Fazer nova tradução a partir da legenda atual</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Conversão em lote...</BatchConvert>
         <GenerateTimeAsText>Gerar tempo como texto...</GenerateTimeAsText>
+        <MeasurementConverter>Conversor de medidas...</MeasurementConverter>
         <SplitSubtitle>Dividir legenda...</SplitSubtitle>
         <AppendSubtitle>Anexar legenda...</AppendSubtitle>
         <JoinSubtitles>Juntar legendas...</JoinSubtitles>
@@ -684,6 +694,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <OpenVideo>Abrir arquivo de vídeo...</OpenVideo>
         <ChooseAudioTrack>Selecione a faixa de áudio</ChooseAudioTrack>
         <CloseVideo>Fechar arquivo de vídeo</CloseVideo>
+        <ImportSceneChanges>Importar alterações de cena...</ImportSceneChanges>
+        <RemoveSceneChanges>Remover alterações de cena</RemoveSceneChanges>
         <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
         <ShowHideWaveForm>Mostrar/ocultar forma de onda</ShowHideWaveForm>
         <ShowHideWaveformAndSpectrogram>Mostrar/ocultar forma de onda e espectrograma</ShowHideWaveformAndSpectrogram>
@@ -1096,12 +1108,29 @@ Deseja continuar?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Antes de juntar legendas</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Legendas juntadas</SubtitlesJoined>
     <StatusLog>Log de status</StatusLog>
+    <XSceneChangesImported>{0} alterações de cena importadas</XSceneChangesImported>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Selecionar legenda a partir do arquivo Matroska</Title>
     <PleaseChoose>Foi encontrada mais do que uma legenda - por favor, escolha uma</PleaseChoose>
     <TrackXLanguageYTypeZ>Faixa {0} - {1} - idioma: {2} - tipo: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MeasurementConverter>
+    <Title>Conversor de medidas</Title>
+    <ConvertFrom>Converter de</ConvertFrom>
+    <ConvertTo>Converter para</ConvertTo>
+    <CopyToClipboard>Copiar para área de transferência</CopyToClipboard>
+    <Celsius>Celsius</Celsius>
+    <Fahrenheit>Fahrenheit</Fahrenheit>
+    <Miles>Milhas</Miles>
+    <Kilometers>Quilômetros</Kilometers>
+    <Meters>Metros</Meters>
+    <Yards>Jardas</Yards>
+    <Feet>Pés</Feet>
+    <Inches>Polegadas</Inches>
+    <Pounds>Libras</Pounds>
+    <Kilos>Quilos</Kilos>
+  </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Mesclar linhas com o mesmo texto</Title>
   </MergeDoubleLines>
