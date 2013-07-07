@@ -237,8 +237,8 @@
     <Word from="AII" to="All" />
   </WholeWords>
   <PartialLines>
-    <LinePart from=" I' to=" l'" />
-    <LinePart from=" |' to=" l'" />
+    <LinePart from=" I'" to=" l'" />
+    <LinePart from=" |'" to=" l'" />
   </PartialLines>
   <BeginLines />
   <EndLines />
