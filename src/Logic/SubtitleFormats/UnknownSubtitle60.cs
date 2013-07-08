@@ -55,6 +55,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 sb.AppendLine(EncodeTimeCode(p.StartTime));
                 sb.AppendLine(EncodeTimeCode(p.EndTime));
+                if (!string.IsNullOrEmpty(p.Actor))
+                    sb.AppendLine(p.Actor.ToUpper());
+                else
+                    sb.AppendLine("UNKNOWN ACTOR");
                 sb.AppendLine(Utilities.RemoveHtmlTags(p.Text));
                 sb.AppendLine();
             }
