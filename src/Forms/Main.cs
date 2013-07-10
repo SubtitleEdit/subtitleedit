@@ -6318,10 +6318,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (textBoxListViewText.Text.Length > 0)
+                if (textBoxListViewText.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength || Control.ModifierKeys == Keys.Control)
                     textBoxListViewText.Text = Utilities.AutoBreakLine(textBoxListViewText.Text);
-                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && textBoxListViewTextAlternate.Text.Length > 0)
-                    textBoxListViewTextAlternate.Text = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text);
+                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                {
+                    if (textBoxListViewTextAlternate.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength || Control.ModifierKeys == Keys.Control)
+                        textBoxListViewTextAlternate.Text = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text);
+                }
             }
 
         }
