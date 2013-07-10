@@ -839,7 +839,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (curIdx > 0)
                         _wholeParagraphMinMilliseconds = _subtitle.Paragraphs[curIdx - 1].EndTime.TotalMilliseconds;
-                    if (curIdx < _subtitle.Paragraphs.Count - 2)
+                    if (curIdx < _subtitle.Paragraphs.Count - 1)
                         _wholeParagraphMaxMilliseconds = _subtitle.Paragraphs[curIdx + 1].StartTime.TotalMilliseconds;
                 }
             }
