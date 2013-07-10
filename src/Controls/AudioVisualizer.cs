@@ -767,6 +767,13 @@ namespace Nikse.SubtitleEdit.Controls
                                 Paragraph paragraph = new Paragraph();
                                 paragraph.StartTime = new TimeCode(TimeSpan.FromSeconds(currentRegionLeft));
                                 paragraph.EndTime = new TimeCode(TimeSpan.FromSeconds(currentRegionRight));
+                                if (PreventOverlap)
+                                {
+                                    if (paragraph.StartTime.TotalMilliseconds <= _wholeParagraphMinMilliseconds)
+                                        paragraph.StartTime.TotalMilliseconds = _wholeParagraphMinMilliseconds + 1;
+                                    if (paragraph.EndTime.TotalMilliseconds >= _wholeParagraphMaxMilliseconds)
+                                        paragraph.EndTime.TotalMilliseconds = _wholeParagraphMaxMilliseconds - 1;
+                                }
                                 OnNewSelectionRightClicked.Invoke(paragraph);
                                 NewSelectionParagraph = paragraph;
                                 RightClickedParagraph = null;
