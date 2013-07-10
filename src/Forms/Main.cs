@@ -445,6 +445,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.BackgroundColor = Configuration.Settings.VideoControls.WaveFormBackgroundColor;
                 audioVisualizer.TextColor = Configuration.Settings.VideoControls.WaveFormTextColor;
                 audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
+                audioVisualizer.AllowOverlap = Configuration.Settings.VideoControls.WaveFormAllowOverlap;
 
                 for (double zoomCounter = AudioVisualizer.ZoomMininum; zoomCounter <= AudioVisualizer.ZoomMaxinum + (0.001); zoomCounter += 0.1)
                 {
@@ -3347,6 +3348,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.BackgroundColor = Configuration.Settings.VideoControls.WaveFormBackgroundColor;
             audioVisualizer.TextColor =  Configuration.Settings.VideoControls.WaveFormTextColor;
             audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
+            audioVisualizer.AllowOverlap = Configuration.Settings.VideoControls.WaveFormAllowOverlap;
 
             string newSyntaxColoring = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall.ToString() +
                            Configuration.Settings.Tools.ListViewSyntaxColorDurationBig.ToString() +
@@ -17261,6 +17263,26 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (audioVisualizer != null && audioVisualizer.SceneChanges != null)
                 audioVisualizer.SceneChanges = new List<double>();
+        }
+
+        private void toolStripMenuItemDurationBridgeGaps_Click(object sender, EventArgs e)
+        {
+            var form = new DurationsBridgeGaps(_subtitle);
+            _formPositionsAndSizes.SetPositionAndSize(form);
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                int index = FirstSelectedIndex;
+                if (index < 0)
+                    index = 0;
+                MakeHistoryForUndo("Before bridge small gaps"); //TODO: Fix text in SE 3.4
+                _subtitle.Paragraphs.Clear();
+                foreach (Paragraph p in form.FixedSubtitle.Paragraphs)
+                    _subtitle.Paragraphs.Add(p);
+                
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                SubtitleListview1.SelectIndexAndEnsureVisible(index);
+            }
+            _formPositionsAndSizes.SavePositionAndSize(form);
         }
 
     }

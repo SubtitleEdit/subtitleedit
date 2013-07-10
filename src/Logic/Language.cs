@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.ColumnPaste ColumnPaste;
         public LanguageStructure.CompareSubtitles CompareSubtitles;
         public LanguageStructure.DCinemaProperties DCinemaProperties;
+        public LanguageStructure.DurationsBridgeGaps DurationsBridgeGaps;        
         public LanguageStructure.DvdSubRip DvdSubrip;
         public LanguageStructure.DvdSubRipChooseLanguage DvdSubRipChooseLanguage;
         public LanguageStructure.EbuSaveOtpions EbuSaveOtpions;
@@ -375,6 +376,12 @@ namespace Nikse.SubtitleEdit.Logic
                 FontEffectColor = "Effect color",
                 FontSize = "Size",
                 ChooseColor = "Choose color...",
+            };
+
+            DurationsBridgeGaps = new LanguageStructure.DurationsBridgeGaps
+            {
+                Title = "Bridge small gaps in durations",
+                GapsBridgedX = "Number of small gaps bridged: {0}",
             };
 
             DvdSubrip = new LanguageStructure.DvdSubRip

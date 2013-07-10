@@ -129,6 +129,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool ImportTextMergeShortLines { get; set; }
         public string GenerateTimeCodePatterns { get; set; }
         public string MusicSymbolStyle { get; set; }
+        public int BridgeGapMilliseconds { get; set; }
 
         public ToolsSettings()
         {
@@ -169,6 +170,7 @@ namespace Nikse.SubtitleEdit.Logic
             ExportBorderColor = Color.Black;
             ExportBottomMargin = 15;
             ExportBluRayBottomMargin = 20;
+            BridgeGapMilliseconds = 100;
         }
     }
 
@@ -532,6 +534,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string CustomSearchUrl6 { get; set; }
         public string LastActiveTab { get; set; }
         public bool WaveFormDrawGrid { get; set; }
+        public bool WaveFormAllowOverlap { get; set; }
         public Color WaveFormGridColor { get; set; }
         public Color WaveFormColor { get; set; }
         public Color WaveFormSelectedColor { get; set; }
@@ -555,6 +558,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             LastActiveTab = "Translate";
             WaveFormDrawGrid = true;
+            WaveFormAllowOverlap = false;
             WaveFormGridColor = Color.FromArgb(255, 20, 20, 18);
             WaveFormColor = Color.GreenYellow;
             WaveFormSelectedColor = Color.Red;
@@ -1444,6 +1448,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("MusicSymbolStyle");
             if (subNode != null)
                 settings.Tools.MusicSymbolStyle = subNode.InnerText;
+            subNode = node.SelectSingleNode("BridgeGapMilliseconds");
+            if (subNode != null)
+                settings.Tools.BridgeGapMilliseconds = Convert.ToInt32(subNode.InnerText);
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -1663,6 +1670,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("WaveFormDrawGrid");
             if (subNode != null)
                 settings.VideoControls.WaveFormDrawGrid = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("WaveFormAllowOverlap");
+            if (subNode != null)
+                settings.VideoControls.WaveFormAllowOverlap = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("WaveFormGridColor");
             if (subNode != null)
                 settings.VideoControls.WaveFormGridColor = Color.FromArgb(int.Parse(subNode.InnerText));
@@ -2337,6 +2347,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
             textWriter.WriteElementString("GenerateTimeCodePatterns", settings.Tools.GenerateTimeCodePatterns);
             textWriter.WriteElementString("MusicSymbolStyle", settings.Tools.MusicSymbolStyle);
+            textWriter.WriteElementString("BridgeGapMilliseconds", settings.Tools.BridgeGapMilliseconds.ToString());
+            
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");
@@ -2419,6 +2431,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("CustomSearchUrl6", settings.VideoControls.CustomSearchUrl6);
             textWriter.WriteElementString("LastActiveTab", settings.VideoControls.LastActiveTab);
             textWriter.WriteElementString("WaveFormDrawGrid", settings.VideoControls.WaveFormDrawGrid.ToString());
+            textWriter.WriteElementString("WaveFormAllowOverlap", settings.VideoControls.WaveFormAllowOverlap.ToString());
             textWriter.WriteElementString("WaveFormGridColor", settings.VideoControls.WaveFormGridColor.ToArgb().ToString());
             textWriter.WriteElementString("WaveFormColor", settings.VideoControls.WaveFormColor.ToArgb().ToString());
             textWriter.WriteElementString("WaveFormSelectedColor", settings.VideoControls.WaveFormSelectedColor.ToArgb().ToString());

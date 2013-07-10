@@ -60,7 +60,7 @@
             this.groupBoxLinesFound.Size = new System.Drawing.Size(750, 200);
             this.groupBoxLinesFound.TabIndex = 4;
             this.groupBoxLinesFound.TabStop = false;
-            this.groupBoxLinesFound.Text = "Lines that will be splittet";
+            this.groupBoxLinesFound.Text = "Lines that will be split";
             // 
             // listViewFixes
             // 
