@@ -63,7 +63,6 @@ namespace Test
         //
         #endregion
 
-
         /// <summary>
         ///A test for RemoveColon
         ///</summary>
@@ -71,7 +70,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest()
         {
-            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            var target = new FormRemoveTextForHearImpaired_Accessor();
             target.checkBoxRemoveIfAllUppercase.Checked = false;
             target.checkBoxRemoveTextBeforeColon.Checked = true;
             target.checkBoxOnlyIfInSeparateLine.Checked = false;

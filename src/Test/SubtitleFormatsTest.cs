@@ -78,7 +78,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void SrtCoordinates()
         {
-            var target = new SubRip_Accessor();
+            var target = new SubRip();
             var subtitle = new Subtitle();
             string text =
 @"1
@@ -94,7 +94,7 @@ Let us have some! Let us have some!";
         [DeploymentItem("SubtitleEdit.exe")]
         public void SrtNoLineNumbers()
         {
-            var target = new SubRip_Accessor();
+            var target = new SubRip();
             var subtitle = new Subtitle();
             string text =
 @"00:00:03,000 --> 00:00:08,000
@@ -113,7 +113,7 @@ Line 2.";
         [DeploymentItem("SubtitleEdit.exe")]
         public void SrtDotsInsteadOfCommas()
         {
-            var target = new SubRip_Accessor();
+            var target = new SubRip();
             var subtitle = new Subtitle();
             string text =
 @"2
@@ -129,7 +129,7 @@ Dots instead of commas";
         [DeploymentItem("SubtitleEdit.exe")]
         public void SrtTwoLiner()
         {
-            var target = new SubRip_Accessor();
+            var target = new SubRip();
             var subtitle = new Subtitle();
             string text =
 @"2
@@ -145,7 +145,7 @@ Line 2";
         [DeploymentItem("SubtitleEdit.exe")]
         public void SrtThreeLiner()
         {
-            var target = new SubRip_Accessor();
+            var target = new SubRip();
             var subtitle = new Subtitle();
             string text =
 @"2
@@ -200,7 +200,7 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleItalic()
         {
-            var target = new AdvancedSubStationAlpha_Accessor();
+            var target = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetAssLines(@"{\i1}Italic{\i0}"), null);
             string actual = subtitle.Paragraphs[0].Text;
@@ -212,7 +212,7 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleBold()
         {
-            var target = new AdvancedSubStationAlpha_Accessor();
+            var target = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetAssLines(@"{\b1}Bold{\b0}"), null);
             string actual = subtitle.Paragraphs[0].Text;
@@ -224,7 +224,7 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleUnderline()
         {
-            var target = new AdvancedSubStationAlpha_Accessor();
+            var target = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetAssLines(@"{\u1}Underline{\u0}"), null);
             string actual = subtitle.Paragraphs[0].Text;
@@ -236,7 +236,7 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleFontSize()
         {
-            var target = new AdvancedSubStationAlpha_Accessor();
+            var target = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetAssLines(@"{\fs28}Font"), null);
             string actual = subtitle.Paragraphs[0].Text;
@@ -248,7 +248,7 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleFontName()
         {
-            var target = new AdvancedSubStationAlpha_Accessor();
+            var target = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetAssLines(@"{\fnArial}Font"), null);
             string actual = subtitle.Paragraphs[0].Text;
@@ -260,7 +260,7 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleFontColor1()
         {
-            var target = new AdvancedSubStationAlpha_Accessor();
+            var target = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetAssLines(@"{\c&HFF&}Font"), null);
             string actual = subtitle.Paragraphs[0].Text;
@@ -272,7 +272,7 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleFontColor2()
         {
-            var target = new AdvancedSubStationAlpha_Accessor();
+            var target = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetAssLines(@"{\c&HFF00&}Font"), null);
             string actual = subtitle.Paragraphs[0].Text;
@@ -284,7 +284,7 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleFontColor3()
         {
-            var target = new AdvancedSubStationAlpha_Accessor();
+            var target = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetAssLines(@"{\c&HFF0000&}Font"), null);
             string actual = subtitle.Paragraphs[0].Text;
@@ -296,7 +296,7 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleFontColor4()
         {
-            var target = new AdvancedSubStationAlpha_Accessor();
+            var target = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetAssLines(@"{\c&HFFFFFF&}Font"), null);
             string actual = subtitle.Paragraphs[0].Text;
@@ -308,7 +308,7 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleFontColorAndItalic()
         {
-            var target = new AdvancedSubStationAlpha_Accessor();
+            var target = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetAssLines(@"{\1c&HFFFF00&\i1}CYAN{\i0}"), null);
             string actual = subtitle.Paragraphs[0].Text;
@@ -320,7 +320,7 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         [DeploymentItem("SubtitleEdit.exe")]
         public void AssFontNameAndSize()
         {
-            var target = new AdvancedSubStationAlpha_Accessor();
+            var target = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetAssLines(@"{\fnViner Hand ITC\fs28}Testing"), null);
             string actual = subtitle.Paragraphs[0].Text;
@@ -359,7 +359,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void SsaSimpleFontColorAndItalic()
         {
-            var target = new SubStationAlpha_Accessor();
+            var target = new SubStationAlpha();
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetSsaLines(@"{\c&HFFFF00&\i1}CYAN{\i0}"), null);
             string actual = subtitle.Paragraphs[0].Text;
@@ -375,7 +375,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void DcinemaSmpteItalic()
         {
-            var target = new DCinemaSmpte_Accessor();
+            var target = new DCinemaSmpte();
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("<i>Italic</i>", 1000, 5000));
             string text = target.ToText(subtitle, "title");
@@ -386,7 +386,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void DcinemaSmpteColorAndItalic()
         {
-            var target = new DCinemaSmpte_Accessor();
+            var target = new DCinemaSmpte();
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("<font color=\"#ff0000\"><i>Red</i></font>", 1000, 5000));
             string text = target.ToText(subtitle, "title");
@@ -401,7 +401,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void DcinemaInteropItalic()
         {
-            var target = new DCSubtitle_Accessor();
+            var target = new DCSubtitle();
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("<i>Italic</i>", 1000, 5000));
             string text = target.ToText(subtitle, "title");
@@ -412,7 +412,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void DcinemaInteropColorAndItalic()
         {
-            var target = new DCSubtitle_Accessor();
+            var target = new DCSubtitle();
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("<font color=\"#ff0000\"><i>Red</i></font>", 1000, 5000));
             string text = target.ToText(subtitle, "title");
@@ -427,7 +427,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdItalic()
         {
-            var target = new MicroDvd_Accessor();
+            var target = new MicroDvd();
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("<i>Italic</i>", 0, 0));
             string text = target.ToText(subtitle, "title");
@@ -438,7 +438,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdBold()
         {
-            var target = new MicroDvd_Accessor();
+            var target = new MicroDvd();
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("<b>Bold</b>", 0, 0));
             string text = target.ToText(subtitle, "title");
@@ -449,7 +449,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdUnderline()
         {
-            var target = new MicroDvd_Accessor();
+            var target = new MicroDvd();
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("<u>Underline</u>", 0, 0));
             string text = target.ToText(subtitle, "title");
@@ -460,7 +460,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdUnderlineItalic()
         {
-            var target = new MicroDvd_Accessor();
+            var target = new MicroDvd();
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("<u><i>Underline Italic</i></u>", 0, 0));
             string text = target.ToText(subtitle, "title");
@@ -471,7 +471,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdItalicUnderline()
         {
-            var target = new MicroDvd_Accessor();
+            var target = new MicroDvd();
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("<i><u>Underline Italic</u></i>", 0, 0));
             string text = target.ToText(subtitle, "title");
@@ -482,7 +482,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdReadBoldItalic()
         {
-            var target = new MicroDvd_Accessor();
+            var target = new MicroDvd();
             var subtitle = new Subtitle();
             List<string> list = new List<string>();
             list.Add("{0}{0}{y:i,b}Hello!");
@@ -495,7 +495,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdReadFont()
         {
-            var target = new MicroDvd_Accessor();
+            var target = new MicroDvd();
             var subtitle = new Subtitle();
             List<string> list = new List<string>();
             list.Add("{0}{0}{C:$FF0000}Blue");
@@ -508,7 +508,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdReadAdvanced()
         {
-            var target = new MicroDvd_Accessor();
+            var target = new MicroDvd();
             var subtitle = new Subtitle();
             List<string> list = new List<string>();
             list.Add("{0}{25}{c:$0000ff}{y:b,u}{f:DeJaVuSans}{s:12}Hello!");
@@ -521,7 +521,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdReadBoldFirstLineOnly()
         {
-            var target = new MicroDvd_Accessor();
+            var target = new MicroDvd();
             var subtitle = new Subtitle();
             List<string> list = new List<string>();
             list.Add("{0}{0}{y:i}Hello!|Hello!");
@@ -534,7 +534,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdReadBoldSecondLineOnly()
         {
-            var target = new MicroDvd_Accessor();
+            var target = new MicroDvd();
             var subtitle = new Subtitle();
             List<string> list = new List<string>();
             list.Add("{0}{0}Hello!|{y:i}Hello!");
@@ -547,7 +547,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdReadItalicBothLines()
         {
-            var target = new MicroDvd_Accessor();
+            var target = new MicroDvd();
             var subtitle = new Subtitle();
             List<string> list = new List<string>();
             list.Add("{0}{0}{Y:i}Hello!|Hello!");
@@ -561,7 +561,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdReadBoldBothLinesItalicFirst()
         {
-            var target = new MicroDvd_Accessor();
+            var target = new MicroDvd();
             var subtitle = new Subtitle();
             List<string> list = new List<string>();
             list.Add("{0}{0}{Y:b}{y:i}Hello!|Hello!");
@@ -579,7 +579,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void CheckTimeCodes()
         {
-            var target = new ScenaristClosedCaptions_Accessor();
+            var target = new ScenaristClosedCaptions();
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("Line1", 1000, 5000));
             subtitle.Paragraphs.Add(new Paragraph("Line2", 6000, 8000));
@@ -656,7 +656,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void LineCount()
         {
-             var target = new SubStationAlpha_Accessor();
+             var target = new SubStationAlpha();
              var subtitle = new Subtitle();
              subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
              subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
@@ -681,7 +681,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
          [DeploymentItem("SubtitleEdit.exe")]
          public void LineContent()
          {
-             var target = new SubStationAlpha_Accessor();
+             var target = new SubStationAlpha();
              var subtitle = new Subtitle();
              subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
              subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
@@ -709,7 +709,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
 //         [DeploymentItem("SubtitleEdit.exe")]
 //         public void FormatReload()
 //         {
-//             var target = new SubStationAlpha_Accessor();
+//             var target = new SubStationAlpha();
 //             var subtitle = new Subtitle();
 //             subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
 //             subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
