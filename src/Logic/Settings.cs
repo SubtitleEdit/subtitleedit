@@ -2348,7 +2348,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("GenerateTimeCodePatterns", settings.Tools.GenerateTimeCodePatterns);
             textWriter.WriteElementString("MusicSymbolStyle", settings.Tools.MusicSymbolStyle);
             textWriter.WriteElementString("BridgeGapMilliseconds", settings.Tools.BridgeGapMilliseconds.ToString());
-            
+
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");

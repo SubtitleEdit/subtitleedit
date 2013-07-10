@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.OK;
 
             _defaultBackColor = textBoxInput.BackColor;
-            textBoxInput.Text = "1";            
+            textBoxInput.Text = "1";
 
             comboBoxFrom.Items.Add(l.Fahrenheit);
             comboBoxFrom.Items.Add(l.Celsius);
@@ -341,7 +341,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             e.Handled = true;
-        }        
+        }
 
     }
 }

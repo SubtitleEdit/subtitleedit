@@ -638,7 +638,7 @@ namespace Nikse.SubtitleEdit.Controls
                 pen = new Pen(new SolidBrush(Color.FromArgb(135, 0, 100, 0)));
                 pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
                 e.Graphics.DrawLine(pen, currentRegionRight, 0, currentRegionRight, e.Graphics.VisibleClipBounds.Height);
-               
+
                 var n = _zoomFactor * _wavePeaks.Header.SampleRate;
                 if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                 {
@@ -736,13 +736,13 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else if (!AllowNewSelection)
                     {
-                        Cursor = Cursors.Default;                       
+                        Cursor = Cursors.Default;
                     }
                     if (p == null)
                         SetMinMaxViaSeconds(seconds);
                     NewSelectionParagraph = null;
                     _mouseMoveStartX = e.X;
-                    _mouseMoveEndX = e.X;                    
+                    _mouseMoveEndX = e.X;
                 }
                 _mouseDown = true;
             }
@@ -907,7 +907,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (Control.ModifierKeys == Keys.Shift)
                     return AllowOverlap;
-                return !AllowOverlap; 
+                return !AllowOverlap;
             }
         }
 

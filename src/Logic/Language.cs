@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.ColumnPaste ColumnPaste;
         public LanguageStructure.CompareSubtitles CompareSubtitles;
         public LanguageStructure.DCinemaProperties DCinemaProperties;
-        public LanguageStructure.DurationsBridgeGaps DurationsBridgeGaps;        
+        public LanguageStructure.DurationsBridgeGaps DurationsBridgeGaps;
         public LanguageStructure.DvdSubRip DvdSubrip;
         public LanguageStructure.DvdSubRipChooseLanguage DvdSubRipChooseLanguage;
         public LanguageStructure.EbuSaveOtpions EbuSaveOtpions;

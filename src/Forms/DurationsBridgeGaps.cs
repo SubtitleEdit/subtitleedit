@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
-        }       
+        }
 
         private void GeneratePreview()
         {
@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetBackgroundColor(index, Color.Green);
             SubtitleListview1.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.DurationsBridgeGaps.GapsBridgedX, count);
-        }             
+        }
 
         private void numericUpDownMaxMs_ValueChanged(object sender, EventArgs e)
         {

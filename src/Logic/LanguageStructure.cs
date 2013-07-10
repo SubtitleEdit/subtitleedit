@@ -655,7 +655,7 @@
             public string TextFiles { get; set; }
             public string PreviewLinesModifiedX { get; set; }
             public string TimeCodes { get; set; }
-        }      
+        }
 
         public class Interjections
         {

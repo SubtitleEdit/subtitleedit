@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }         
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

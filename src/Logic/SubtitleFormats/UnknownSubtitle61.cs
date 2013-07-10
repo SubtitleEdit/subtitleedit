@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         _errorCount += 10;
                         return;
-                    }                    
+                    }
                 }
                 else if (line.Trim().Length == 0)
                 {
