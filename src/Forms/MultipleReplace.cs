@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 r = new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline);
                                 _compiledRegExList.Add(findWhat, r);
-                            }                            
+                            }
 
                             string result = r.Replace(newText, replaceWith);
                             if (result != newText)

@@ -939,7 +939,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
                         sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
                     else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
-                        sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);                    
+                        sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
                     File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
                     if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
                     {
@@ -17281,7 +17281,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle.Paragraphs.Clear();
                 foreach (Paragraph p in form.FixedSubtitle.Paragraphs)
                     _subtitle.Paragraphs.Add(p);
-                
+
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 SubtitleListview1.SelectIndexAndEnsureVisible(index);
             }

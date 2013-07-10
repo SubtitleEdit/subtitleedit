@@ -1099,7 +1099,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 _codePage = -2;
                 return;
-            }                
+            }
 
             byte[] previewBuffer = null;
 
