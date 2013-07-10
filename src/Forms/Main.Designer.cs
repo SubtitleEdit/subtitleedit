@@ -33,11 +33,24 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSelected = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusNetworking = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButtonFileNew = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonFileOpen = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonSaveAs = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparatorFindReplace = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonFind = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonReplace = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonVisualSync = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonSpellCheck = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparatorHelp = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonToggleWaveForm = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonToggleVideo = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelSubtitleFormat = new System.Windows.Forms.ToolStripLabel();
             this.comboBoxSubtitleFormats = new System.Windows.Forms.ToolStripComboBox();
@@ -47,6 +60,7 @@
             this.toolStripSeparatorFrameRate = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelFrameRate = new System.Windows.Forms.ToolStripLabel();
             this.toolStripComboBoxFrameRate = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripButtonGetFrameRate = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -158,6 +172,8 @@
             this.openVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSetAudioTrack = new System.Windows.Forms.ToolStripMenuItem();
             this.closeVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemRemoveSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.showhideWaveFormToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showhideVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -253,8 +269,19 @@
             this.trackBarWaveFormPosition = new System.Windows.Forms.TrackBar();
             this.panelWaveFormControls = new System.Windows.Forms.Panel();
             this.toolStripWaveControls = new System.Windows.Forms.ToolStrip();
+            this.toolStripButtonWaveFormZoomOut = new System.Windows.Forms.ToolStripButton();
             this.toolStripComboBoxWaveForm = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripButtonWaveFormZoomIn = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonWaveFormPause = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonWaveFormPlay = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonLockCenter = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSplitButtonPlayRate = new System.Windows.Forms.ToolStripSplitButton();
+            this.toolStripMenuItemPlayRateSlow = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemPlayRateNormal = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemPlayRateFast = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemPlayRateVeryFast = new System.Windows.Forms.ToolStripMenuItem();
+            this.audioVisualizer = new Nikse.SubtitleEdit.Controls.AudioVisualizer();
             this.tabControlButtons = new System.Windows.Forms.TabControl();
             this.tabPageTranslate = new System.Windows.Forms.TabPage();
             this.labelTranslateTip = new System.Windows.Forms.Label();
@@ -277,6 +304,7 @@
             this.buttonPlayCurrent = new System.Windows.Forms.Button();
             this.buttonPlayNext = new System.Windows.Forms.Button();
             this.tabPageCreate = new System.Windows.Forms.TabPage();
+            this.timeUpDownVideoPosition = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.buttonGotoSub = new System.Windows.Forms.Button();
             this.buttonBeforeText = new System.Windows.Forms.Button();
             this.buttonSetEnd = new System.Windows.Forms.Button();
@@ -313,6 +341,7 @@
             this.labelVideoPosition2 = new System.Windows.Forms.Label();
             this.buttonAdjustGoToPosAndPause = new System.Windows.Forms.Button();
             this.buttonAdjustPlayBefore = new System.Windows.Forms.Button();
+            this.timeUpDownVideoPositionAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.ShowSubtitleTimer = new System.Windows.Forms.Timer(this.components);
             this.timerAutoDuration = new System.Windows.Forms.Timer(this.components);
             this.timerAutoContinue = new System.Windows.Forms.Timer(this.components);
@@ -339,6 +368,7 @@
             this.tabControlSubtitle = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainerListViewAndText = new System.Windows.Forms.SplitContainer();
+            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxEdit = new System.Windows.Forms.GroupBox();
             this.labelSingleLine = new System.Windows.Forms.Label();
             this.labelAlternateSingleLine = new System.Windows.Forms.Label();
@@ -350,6 +380,7 @@
             this.labelTextAlternateLineLengths = new System.Windows.Forms.Label();
             this.labelAlternateText = new System.Windows.Forms.Label();
             this.labelText = new System.Windows.Forms.Label();
+            this.textBoxListViewTextAlternate = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.contextMenuStripTextBoxListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemWebVttVoice = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorWebVTT = new System.Windows.Forms.ToolStripSeparator();
@@ -376,54 +407,24 @@
             this.labelTextLineTotal = new System.Windows.Forms.Label();
             this.labelCharactersPerSecond = new System.Windows.Forms.Label();
             this.buttonUnBreak = new System.Windows.Forms.Button();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
             this.buttonPrevious = new System.Windows.Forms.Button();
             this.buttonNext = new System.Windows.Forms.Button();
             this.labelStartTime = new System.Windows.Forms.Label();
+            this.textBoxListViewText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.labelDuration = new System.Windows.Forms.Label();
             this.labelAutoDuration = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBoxSource = new System.Windows.Forms.TextBox();
             this.panelVideoPlayer = new System.Windows.Forms.Panel();
+            this.mediaPlayer = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.contextMenuStripEmpty = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.insertLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemImportSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripButtonWaveFormZoomOut = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonWaveFormZoomIn = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonWaveFormPause = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonWaveFormPlay = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonLockCenter = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSplitButtonPlayRate = new System.Windows.Forms.ToolStripSplitButton();
-            this.toolStripMenuItemPlayRateSlow = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemPlayRateNormal = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemPlayRateFast = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemPlayRateVeryFast = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripButtonFileNew = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonFileOpen = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonSaveAs = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonFind = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonReplace = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonVisualSync = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonSpellCheck = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonToggleWaveForm = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonToggleVideo = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonGetFrameRate = new System.Windows.Forms.ToolStripButton();
-            this.toolStripStatusNetworking = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripMenuItemRemoveSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
-            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.textBoxListViewTextAlternate = new Nikse.SubtitleEdit.Controls.SETextBox();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.textBoxListViewText = new Nikse.SubtitleEdit.Controls.SETextBox();
-            this.mediaPlayer = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
-            this.audioVisualizer = new Nikse.SubtitleEdit.Controls.AudioVisualizer();
-            this.timeUpDownVideoPosition = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.timeUpDownVideoPositionAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.toolStripMenuItemDurationBridgeGaps = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -493,6 +494,17 @@
             this.toolStripSelected.Text = "toolStripSelected";
             this.toolStripSelected.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // toolStripStatusNetworking
+            // 
+            this.toolStripStatusNetworking.Image = global::Nikse.SubtitleEdit.Properties.Resources.connect;
+            this.toolStripStatusNetworking.Name = "toolStripStatusNetworking";
+            this.toolStripStatusNetworking.Padding = new System.Windows.Forms.Padding(50, 0, 0, 0);
+            this.toolStripStatusNetworking.Size = new System.Drawing.Size(217, 16);
+            this.toolStripStatusNetworking.Text = "toolStripStatusNetworking";
+            this.toolStripStatusNetworking.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolStripStatusNetworking.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
+            this.toolStripStatusNetworking.Click += new System.EventHandler(this.toolStripStatusNetworking_Click);
+            // 
             // toolStrip1
             // 
             this.toolStrip1.AutoSize = false;
@@ -531,25 +543,176 @@
             this.toolStrip1.TabIndex = 5;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // toolStripButtonFileNew
+            // 
+            this.toolStripButtonFileNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonFileNew.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonFileNew.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFileNew.Image")));
+            this.toolStripButtonFileNew.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonFileNew.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.toolStripButtonFileNew.Name = "toolStripButtonFileNew";
+            this.toolStripButtonFileNew.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonFileNew.Text = "New";
+            this.toolStripButtonFileNew.ToolTipText = "New";
+            this.toolStripButtonFileNew.Click += new System.EventHandler(this.ToolStripButtonFileNewClick);
+            // 
+            // toolStripButtonFileOpen
+            // 
+            this.toolStripButtonFileOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonFileOpen.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonFileOpen.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFileOpen.Image")));
+            this.toolStripButtonFileOpen.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonFileOpen.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.toolStripButtonFileOpen.Name = "toolStripButtonFileOpen";
+            this.toolStripButtonFileOpen.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonFileOpen.Text = "toolStripButtonOpen";
+            this.toolStripButtonFileOpen.ToolTipText = "Open";
+            this.toolStripButtonFileOpen.Click += new System.EventHandler(this.ToolStripButtonFileOpenClick);
+            // 
+            // toolStripButtonSave
+            // 
+            this.toolStripButtonSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonSave.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonSave.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSave.Image")));
+            this.toolStripButtonSave.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonSave.Name = "toolStripButtonSave";
+            this.toolStripButtonSave.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonSave.Text = "toolStripButtonSave";
+            this.toolStripButtonSave.ToolTipText = "Save";
+            this.toolStripButtonSave.Click += new System.EventHandler(this.ToolStripButtonSaveClick);
+            // 
+            // toolStripButtonSaveAs
+            // 
+            this.toolStripButtonSaveAs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonSaveAs.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonSaveAs.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSaveAs.Image")));
+            this.toolStripButtonSaveAs.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonSaveAs.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonSaveAs.Name = "toolStripButtonSaveAs";
+            this.toolStripButtonSaveAs.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonSaveAs.Text = "toolStripButtonSaveAs";
+            this.toolStripButtonSaveAs.ToolTipText = "Save as";
+            this.toolStripButtonSaveAs.Click += new System.EventHandler(this.ToolStripButtonSaveAsClick);
+            // 
             // toolStripSeparatorFindReplace
             // 
             this.toolStripSeparatorFindReplace.Name = "toolStripSeparatorFindReplace";
             this.toolStripSeparatorFindReplace.Size = new System.Drawing.Size(6, 40);
+            // 
+            // toolStripButtonFind
+            // 
+            this.toolStripButtonFind.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonFind.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonFind.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFind.Image")));
+            this.toolStripButtonFind.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonFind.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonFind.Name = "toolStripButtonFind";
+            this.toolStripButtonFind.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonFind.Text = "Find";
+            this.toolStripButtonFind.Click += new System.EventHandler(this.ToolStripButtonFindClick);
+            // 
+            // toolStripButtonReplace
+            // 
+            this.toolStripButtonReplace.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonReplace.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonReplace.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonReplace.Image")));
+            this.toolStripButtonReplace.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonReplace.ImageTransparentColor = System.Drawing.Color.White;
+            this.toolStripButtonReplace.Name = "toolStripButtonReplace";
+            this.toolStripButtonReplace.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonReplace.Text = "Replace";
+            this.toolStripButtonReplace.ToolTipText = "Replace";
+            this.toolStripButtonReplace.Click += new System.EventHandler(this.ToolStripButtonReplaceClick);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(6, 40);
             // 
+            // toolStripButtonVisualSync
+            // 
+            this.toolStripButtonVisualSync.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonVisualSync.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonVisualSync.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonVisualSync.Image")));
+            this.toolStripButtonVisualSync.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonVisualSync.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonVisualSync.Name = "toolStripButtonVisualSync";
+            this.toolStripButtonVisualSync.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonVisualSync.Text = "Visual sync";
+            this.toolStripButtonVisualSync.Click += new System.EventHandler(this.ToolStripButtonVisualSyncClick);
+            // 
+            // toolStripButtonSpellCheck
+            // 
+            this.toolStripButtonSpellCheck.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonSpellCheck.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.toolStripButtonSpellCheck.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSpellCheck.Image")));
+            this.toolStripButtonSpellCheck.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonSpellCheck.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonSpellCheck.Name = "toolStripButtonSpellCheck";
+            this.toolStripButtonSpellCheck.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonSpellCheck.Text = "Spell check";
+            this.toolStripButtonSpellCheck.Click += new System.EventHandler(this.ToolStripButtonSpellCheckClick);
+            // 
+            // toolStripButtonSettings
+            // 
+            this.toolStripButtonSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonSettings.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.toolStripButtonSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSettings.Image")));
+            this.toolStripButtonSettings.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonSettings.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.toolStripButtonSettings.Name = "toolStripButtonSettings";
+            this.toolStripButtonSettings.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonSettings.Text = "Settings";
+            this.toolStripButtonSettings.Click += new System.EventHandler(this.ToolStripButtonSettingsClick);
+            // 
             // toolStripSeparatorHelp
             // 
             this.toolStripSeparatorHelp.Name = "toolStripSeparatorHelp";
             this.toolStripSeparatorHelp.Size = new System.Drawing.Size(6, 40);
             // 
+            // toolStripButtonHelp
+            // 
+            this.toolStripButtonHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonHelp.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.toolStripButtonHelp.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonHelp.Image")));
+            this.toolStripButtonHelp.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.toolStripButtonHelp.Name = "toolStripButtonHelp";
+            this.toolStripButtonHelp.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonHelp.Text = "Help";
+            this.toolStripButtonHelp.Click += new System.EventHandler(this.ToolStripButtonHelpClick);
+            // 
             // toolStripSeparator13
             // 
             this.toolStripSeparator13.Name = "toolStripSeparator13";
             this.toolStripSeparator13.Size = new System.Drawing.Size(6, 40);
+            // 
+            // toolStripButtonToggleWaveForm
+            // 
+            this.toolStripButtonToggleWaveForm.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonToggleWaveForm.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.toolStripButtonToggleWaveForm.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleWaveForm.Image")));
+            this.toolStripButtonToggleWaveForm.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonToggleWaveForm.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonToggleWaveForm.Name = "toolStripButtonToggleWaveForm";
+            this.toolStripButtonToggleWaveForm.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonToggleWaveForm.Text = "Show/hide wave form";
+            this.toolStripButtonToggleWaveForm.Click += new System.EventHandler(this.toolStripButtonToggleWaveForm_Click);
+            // 
+            // toolStripButtonToggleVideo
+            // 
+            this.toolStripButtonToggleVideo.Checked = true;
+            this.toolStripButtonToggleVideo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripButtonToggleVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonToggleVideo.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.toolStripButtonToggleVideo.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleVideo.Image")));
+            this.toolStripButtonToggleVideo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonToggleVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonToggleVideo.Name = "toolStripButtonToggleVideo";
+            this.toolStripButtonToggleVideo.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonToggleVideo.Text = "Show/hide video";
+            this.toolStripButtonToggleVideo.Click += new System.EventHandler(this.toolStripButtonToggleVideo_Click);
             // 
             // toolStripSeparator6
             // 
@@ -619,6 +782,17 @@
             this.toolStripComboBoxFrameRate.Name = "toolStripComboBoxFrameRate";
             this.toolStripComboBoxFrameRate.Size = new System.Drawing.Size(75, 23);
             this.toolStripComboBoxFrameRate.TextChanged += new System.EventHandler(this.ToolStripComboBoxFrameRateTextChanged);
+            // 
+            // toolStripButtonGetFrameRate
+            // 
+            this.toolStripButtonGetFrameRate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonGetFrameRate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonGetFrameRate.Image")));
+            this.toolStripButtonGetFrameRate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGetFrameRate.Name = "toolStripButtonGetFrameRate";
+            this.toolStripButtonGetFrameRate.Size = new System.Drawing.Size(23, 18);
+            this.toolStripButtonGetFrameRate.Text = "...";
+            this.toolStripButtonGetFrameRate.ToolTipText = "Get frame rate from video file";
+            this.toolStripButtonGetFrameRate.Click += new System.EventHandler(this.ButtonGetFrameRateClick);
             // 
             // menuStrip1
             // 
@@ -1235,6 +1409,7 @@
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.adjustDisplayTimeToolStripMenuItem,
             this.toolStripMenuItemApplyDurationLimits,
+            this.toolStripMenuItemDurationBridgeGaps,
             this.fixToolStripMenuItem,
             this.startNumberingFromToolStripMenuItem,
             this.removeTextForHearImparedToolStripMenuItem,
@@ -1521,6 +1696,20 @@
             this.closeVideoToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.closeVideoToolStripMenuItem.Text = "Close video";
             this.closeVideoToolStripMenuItem.Click += new System.EventHandler(this.CloseVideoToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemImportSceneChanges
+            // 
+            this.toolStripMenuItemImportSceneChanges.Name = "toolStripMenuItemImportSceneChanges";
+            this.toolStripMenuItemImportSceneChanges.Size = new System.Drawing.Size(208, 22);
+            this.toolStripMenuItemImportSceneChanges.Text = "Import scene changes...";
+            this.toolStripMenuItemImportSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemImportSceneChanges_Click);
+            // 
+            // toolStripMenuItemRemoveSceneChanges
+            // 
+            this.toolStripMenuItemRemoveSceneChanges.Name = "toolStripMenuItemRemoveSceneChanges";
+            this.toolStripMenuItemRemoveSceneChanges.Size = new System.Drawing.Size(208, 22);
+            this.toolStripMenuItemRemoveSceneChanges.Text = "Remove scene changes";
+            this.toolStripMenuItemRemoveSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemRemoveSceneChanges_Click);
             // 
             // toolStripSeparator5
             // 
@@ -2277,6 +2466,16 @@
             this.toolStripWaveControls.TabIndex = 0;
             this.toolStripWaveControls.Text = "toolStrip2";
             // 
+            // toolStripButtonWaveFormZoomOut
+            // 
+            this.toolStripButtonWaveFormZoomOut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonWaveFormZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormZoomOut.Image")));
+            this.toolStripButtonWaveFormZoomOut.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonWaveFormZoomOut.Name = "toolStripButtonWaveFormZoomOut";
+            this.toolStripButtonWaveFormZoomOut.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveFormZoomOut.Text = "toolStripButton3";
+            this.toolStripButtonWaveFormZoomOut.Click += new System.EventHandler(this.toolStripButtonWaveFormZoomOut_Click);
+            // 
             // toolStripComboBoxWaveForm
             // 
             this.toolStripComboBoxWaveForm.AutoSize = false;
@@ -2284,10 +2483,130 @@
             this.toolStripComboBoxWaveForm.Name = "toolStripComboBoxWaveForm";
             this.toolStripComboBoxWaveForm.Size = new System.Drawing.Size(62, 23);
             // 
+            // toolStripButtonWaveFormZoomIn
+            // 
+            this.toolStripButtonWaveFormZoomIn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonWaveFormZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormZoomIn.Image")));
+            this.toolStripButtonWaveFormZoomIn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonWaveFormZoomIn.Name = "toolStripButtonWaveFormZoomIn";
+            this.toolStripButtonWaveFormZoomIn.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveFormZoomIn.Text = "toolStripButton1";
+            this.toolStripButtonWaveFormZoomIn.Click += new System.EventHandler(this.toolStripButtonWaveFormZoomIn_Click);
+            // 
             // toolStripSeparator16
             // 
             this.toolStripSeparator16.Name = "toolStripSeparator16";
             this.toolStripSeparator16.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonWaveFormPause
+            // 
+            this.toolStripButtonWaveFormPause.AutoToolTip = false;
+            this.toolStripButtonWaveFormPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonWaveFormPause.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormPause.Image")));
+            this.toolStripButtonWaveFormPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonWaveFormPause.Name = "toolStripButtonWaveFormPause";
+            this.toolStripButtonWaveFormPause.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveFormPause.Text = "toolStripButton1";
+            this.toolStripButtonWaveFormPause.Visible = false;
+            this.toolStripButtonWaveFormPause.Click += new System.EventHandler(this.toolStripButtonWaveFormPause_Click);
+            // 
+            // toolStripButtonWaveFormPlay
+            // 
+            this.toolStripButtonWaveFormPlay.AutoToolTip = false;
+            this.toolStripButtonWaveFormPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonWaveFormPlay.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormPlay.Image")));
+            this.toolStripButtonWaveFormPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonWaveFormPlay.Name = "toolStripButtonWaveFormPlay";
+            this.toolStripButtonWaveFormPlay.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveFormPlay.Text = "toolStripButton1";
+            this.toolStripButtonWaveFormPlay.Click += new System.EventHandler(this.toolStripButtonWaveFormPlay_Click);
+            // 
+            // toolStripButtonLockCenter
+            // 
+            this.toolStripButtonLockCenter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonLockCenter.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLockCenter.Image")));
+            this.toolStripButtonLockCenter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonLockCenter.Name = "toolStripButtonLockCenter";
+            this.toolStripButtonLockCenter.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonLockCenter.Text = "Center";
+            this.toolStripButtonLockCenter.Click += new System.EventHandler(this.toolStripButtonLockCenter_Click);
+            // 
+            // toolStripSplitButtonPlayRate
+            // 
+            this.toolStripSplitButtonPlayRate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripSplitButtonPlayRate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemPlayRateSlow,
+            this.toolStripMenuItemPlayRateNormal,
+            this.toolStripMenuItemPlayRateFast,
+            this.toolStripMenuItemPlayRateVeryFast});
+            this.toolStripSplitButtonPlayRate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButtonPlayRate.Image")));
+            this.toolStripSplitButtonPlayRate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripSplitButtonPlayRate.Name = "toolStripSplitButtonPlayRate";
+            this.toolStripSplitButtonPlayRate.Size = new System.Drawing.Size(32, 22);
+            this.toolStripSplitButtonPlayRate.Text = "Play rate (speed)";
+            // 
+            // toolStripMenuItemPlayRateSlow
+            // 
+            this.toolStripMenuItemPlayRateSlow.Name = "toolStripMenuItemPlayRateSlow";
+            this.toolStripMenuItemPlayRateSlow.Size = new System.Drawing.Size(148, 22);
+            this.toolStripMenuItemPlayRateSlow.Text = "Slow";
+            this.toolStripMenuItemPlayRateSlow.Click += new System.EventHandler(this.ToolStripMenuItemPlayRateSlowClick);
+            // 
+            // toolStripMenuItemPlayRateNormal
+            // 
+            this.toolStripMenuItemPlayRateNormal.Checked = true;
+            this.toolStripMenuItemPlayRateNormal.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripMenuItemPlayRateNormal.Name = "toolStripMenuItemPlayRateNormal";
+            this.toolStripMenuItemPlayRateNormal.Size = new System.Drawing.Size(148, 22);
+            this.toolStripMenuItemPlayRateNormal.Text = "Normal speed";
+            this.toolStripMenuItemPlayRateNormal.Click += new System.EventHandler(this.ToolStripMenuItemPlayRateNormalClick);
+            // 
+            // toolStripMenuItemPlayRateFast
+            // 
+            this.toolStripMenuItemPlayRateFast.Name = "toolStripMenuItemPlayRateFast";
+            this.toolStripMenuItemPlayRateFast.Size = new System.Drawing.Size(148, 22);
+            this.toolStripMenuItemPlayRateFast.Text = "Fast ";
+            this.toolStripMenuItemPlayRateFast.Click += new System.EventHandler(this.ToolStripMenuItemPlayRateFastClick);
+            // 
+            // toolStripMenuItemPlayRateVeryFast
+            // 
+            this.toolStripMenuItemPlayRateVeryFast.Name = "toolStripMenuItemPlayRateVeryFast";
+            this.toolStripMenuItemPlayRateVeryFast.Size = new System.Drawing.Size(148, 22);
+            this.toolStripMenuItemPlayRateVeryFast.Text = "Very fast";
+            this.toolStripMenuItemPlayRateVeryFast.Click += new System.EventHandler(this.VeryFastToolStripMenuItemClick);
+            // 
+            // audioVisualizer
+            // 
+            this.audioVisualizer.AllowDrop = true;
+            this.audioVisualizer.AllowNewSelection = true;
+            this.audioVisualizer.AllowOverlap = false;
+            this.audioVisualizer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.audioVisualizer.BackColor = System.Drawing.Color.Black;
+            this.audioVisualizer.BackgroundColor = System.Drawing.Color.Black;
+            this.audioVisualizer.Color = System.Drawing.Color.GreenYellow;
+            this.audioVisualizer.DrawGridLines = true;
+            this.audioVisualizer.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
+            this.audioVisualizer.Location = new System.Drawing.Point(472, 32);
+            this.audioVisualizer.Margin = new System.Windows.Forms.Padding(0);
+            this.audioVisualizer.Name = "audioVisualizer";
+            this.audioVisualizer.NewSelectionParagraph = null;
+            this.audioVisualizer.SceneChanges = ((System.Collections.Generic.List<double>)(resources.GetObject("audioVisualizer.SceneChanges")));
+            this.audioVisualizer.SelectedColor = System.Drawing.Color.Red;
+            this.audioVisualizer.ShowSpectrogram = false;
+            this.audioVisualizer.ShowWaveform = true;
+            this.audioVisualizer.Size = new System.Drawing.Size(499, 229);
+            this.audioVisualizer.StartPositionSeconds = 0D;
+            this.audioVisualizer.TabIndex = 6;
+            this.audioVisualizer.TextColor = System.Drawing.Color.Gray;
+            this.audioVisualizer.VerticalZoomPercent = 1D;
+            this.audioVisualizer.WaveFormNotLoadedText = "Click to add wave form";
+            this.audioVisualizer.WavePeaks = null;
+            this.audioVisualizer.ZoomFactor = 1D;
+            this.audioVisualizer.Click += new System.EventHandler(this.AudioWaveForm_Click);
+            this.audioVisualizer.DragDrop += new System.Windows.Forms.DragEventHandler(this.AudioWaveFormDragDrop);
+            this.audioVisualizer.DragEnter += new System.Windows.Forms.DragEventHandler(this.AudioWaveFormDragEnter);
             // 
             // tabControlButtons
             // 
@@ -2577,6 +2896,16 @@
             this.tabPageCreate.TabIndex = 1;
             this.tabPageCreate.Text = "Create";
             this.tabPageCreate.UseVisualStyleBackColor = true;
+            // 
+            // timeUpDownVideoPosition
+            // 
+            this.timeUpDownVideoPosition.AutoSize = true;
+            this.timeUpDownVideoPosition.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownVideoPosition.Location = new System.Drawing.Point(96, 191);
+            this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
+            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(92, 25);
+            this.timeUpDownVideoPosition.TabIndex = 12;
             // 
             // buttonGotoSub
             // 
@@ -3012,6 +3341,16 @@
             this.buttonAdjustPlayBefore.UseVisualStyleBackColor = true;
             this.buttonAdjustPlayBefore.Click += new System.EventHandler(this.buttonBeforeText_Click);
             // 
+            // timeUpDownVideoPositionAdjust
+            // 
+            this.timeUpDownVideoPositionAdjust.AutoSize = true;
+            this.timeUpDownVideoPositionAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownVideoPositionAdjust.Location = new System.Drawing.Point(96, 213);
+            this.timeUpDownVideoPositionAdjust.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
+            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(92, 25);
+            this.timeUpDownVideoPositionAdjust.TabIndex = 13;
+            // 
             // ShowSubtitleTimer
             // 
             this.ShowSubtitleTimer.Enabled = true;
@@ -3243,6 +3582,31 @@
             this.splitContainerListViewAndText.SplitterDistance = 94;
             this.splitContainerListViewAndText.TabIndex = 2;
             // 
+            // SubtitleListview1
+            // 
+            this.SubtitleListview1.AllowDrop = true;
+            this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripListview;
+            this.SubtitleListview1.DisplayExtraFromExtra = false;
+            this.SubtitleListview1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SubtitleListview1.FullRowSelect = true;
+            this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HideSelection = false;
+            this.SubtitleListview1.Location = new System.Drawing.Point(0, 0);
+            this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.OwnerDraw = true;
+            this.SubtitleListview1.Size = new System.Drawing.Size(724, 94);
+            this.SubtitleListview1.TabIndex = 0;
+            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
+            this.SubtitleListview1.UseSyntaxColoring = true;
+            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
+            this.SubtitleListview1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListview1_SelectedIndexChanged);
+            this.SubtitleListview1.DragDrop += new System.Windows.Forms.DragEventHandler(this.SubtitleListview1_DragDrop);
+            this.SubtitleListview1.DragEnter += new System.Windows.Forms.DragEventHandler(this.SubtitleListview1_DragEnter);
+            this.SubtitleListview1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubtitleListview1KeyDown);
+            this.SubtitleListview1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListview1_MouseDoubleClick);
+            // 
             // groupBoxEdit
             // 
             this.groupBoxEdit.Controls.Add(this.labelSingleLine);
@@ -3377,6 +3741,28 @@
             this.labelText.Size = new System.Drawing.Size(29, 13);
             this.labelText.TabIndex = 5;
             this.labelText.Text = "Text";
+            // 
+            // textBoxListViewTextAlternate
+            // 
+            this.textBoxListViewTextAlternate.AllowDrop = true;
+            this.textBoxListViewTextAlternate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxListViewTextAlternate.ContextMenuStrip = this.contextMenuStripTextBoxListView;
+            this.textBoxListViewTextAlternate.Enabled = false;
+            this.textBoxListViewTextAlternate.HideSelection = false;
+            this.textBoxListViewTextAlternate.Location = new System.Drawing.Point(946, 28);
+            this.textBoxListViewTextAlternate.Multiline = true;
+            this.textBoxListViewTextAlternate.Name = "textBoxListViewTextAlternate";
+            this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(0, 55);
+            this.textBoxListViewTextAlternate.TabIndex = 33;
+            this.textBoxListViewTextAlternate.Visible = false;
+            this.textBoxListViewTextAlternate.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextAlternateMouseClick);
+            this.textBoxListViewTextAlternate.TextChanged += new System.EventHandler(this.textBoxListViewTextAlternate_TextChanged);
+            this.textBoxListViewTextAlternate.Enter += new System.EventHandler(this.TextBoxListViewTextAlternateEnter);
+            this.textBoxListViewTextAlternate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextAlternateKeyDown);
+            this.textBoxListViewTextAlternate.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextAlternateKeyUp);
+            this.textBoxListViewTextAlternate.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextAlternateMouseMove);
             // 
             // contextMenuStripTextBoxListView
             // 
@@ -3592,6 +3978,16 @@
             this.buttonUnBreak.UseVisualStyleBackColor = true;
             this.buttonUnBreak.Click += new System.EventHandler(this.ButtonUnBreakClick);
             // 
+            // timeUpDownStartTime
+            // 
+            this.timeUpDownStartTime.AutoSize = true;
+            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(9, 26);
+            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(92, 25);
+            this.timeUpDownStartTime.TabIndex = 0;
+            // 
             // numericUpDownDuration
             // 
             this.numericUpDownDuration.DecimalPlaces = 3;
@@ -3644,6 +4040,28 @@
             this.labelStartTime.Size = new System.Drawing.Size(54, 13);
             this.labelStartTime.TabIndex = 3;
             this.labelStartTime.Text = "Start time";
+            // 
+            // textBoxListViewText
+            // 
+            this.textBoxListViewText.AllowDrop = true;
+            this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxListViewText.ContextMenuStrip = this.contextMenuStripTextBoxListView;
+            this.textBoxListViewText.Enabled = false;
+            this.textBoxListViewText.HideSelection = false;
+            this.textBoxListViewText.Location = new System.Drawing.Point(236, 28);
+            this.textBoxListViewText.Multiline = true;
+            this.textBoxListViewText.Name = "textBoxListViewText";
+            this.textBoxListViewText.Size = new System.Drawing.Size(362, 55);
+            this.textBoxListViewText.TabIndex = 5;
+            this.textBoxListViewText.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextMouseClick);
+            this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
+            this.textBoxListViewText.Enter += new System.EventHandler(this.TextBoxListViewTextEnter);
+            this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
+            this.textBoxListViewText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxListViewText_KeyUp);
+            this.textBoxListViewText.Leave += new System.EventHandler(this.textBoxListViewText_Leave);
+            this.textBoxListViewText.MouseMove += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewText_MouseMove);
             // 
             // labelDuration
             // 
@@ -3705,6 +4123,32 @@
             this.panelVideoPlayer.Size = new System.Drawing.Size(220, 241);
             this.panelVideoPlayer.TabIndex = 5;
             // 
+            // mediaPlayer
+            // 
+            this.mediaPlayer.AllowDrop = true;
+            this.mediaPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mediaPlayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
+            this.mediaPlayer.CurrentPosition = 0D;
+            this.mediaPlayer.FontSizeFactor = 1F;
+            this.mediaPlayer.Location = new System.Drawing.Point(0, 0);
+            this.mediaPlayer.Margin = new System.Windows.Forms.Padding(0);
+            this.mediaPlayer.Name = "mediaPlayer";
+            this.mediaPlayer.ShowFullscreenButton = true;
+            this.mediaPlayer.ShowMuteButton = true;
+            this.mediaPlayer.ShowStopButton = true;
+            this.mediaPlayer.Size = new System.Drawing.Size(219, 241);
+            this.mediaPlayer.SubtitleText = "";
+            this.mediaPlayer.TabIndex = 5;
+            this.mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.mediaPlayer.VideoHeight = 0;
+            this.mediaPlayer.VideoPlayer = null;
+            this.mediaPlayer.VideoWidth = 0;
+            this.mediaPlayer.Volume = 0D;
+            this.mediaPlayer.DragDrop += new System.Windows.Forms.DragEventHandler(this.mediaPlayer_DragDrop);
+            this.mediaPlayer.DragEnter += new System.Windows.Forms.DragEventHandler(this.mediaPlayer_DragEnter);
+            // 
             // contextMenuStripEmpty
             // 
             this.contextMenuStripEmpty.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -3736,446 +4180,12 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // toolStripMenuItemImportSceneChanges
-            // 
-            this.toolStripMenuItemImportSceneChanges.Name = "toolStripMenuItemImportSceneChanges";
-            this.toolStripMenuItemImportSceneChanges.Size = new System.Drawing.Size(208, 22);
-            this.toolStripMenuItemImportSceneChanges.Text = "Import scene changes...";
-            this.toolStripMenuItemImportSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemImportSceneChanges_Click);
-            // 
-            // toolStripButtonWaveFormZoomOut
-            // 
-            this.toolStripButtonWaveFormZoomOut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonWaveFormZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormZoomOut.Image")));
-            this.toolStripButtonWaveFormZoomOut.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonWaveFormZoomOut.Name = "toolStripButtonWaveFormZoomOut";
-            this.toolStripButtonWaveFormZoomOut.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonWaveFormZoomOut.Text = "toolStripButton3";
-            this.toolStripButtonWaveFormZoomOut.Click += new System.EventHandler(this.toolStripButtonWaveFormZoomOut_Click);
-            // 
-            // toolStripButtonWaveFormZoomIn
-            // 
-            this.toolStripButtonWaveFormZoomIn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonWaveFormZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormZoomIn.Image")));
-            this.toolStripButtonWaveFormZoomIn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonWaveFormZoomIn.Name = "toolStripButtonWaveFormZoomIn";
-            this.toolStripButtonWaveFormZoomIn.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonWaveFormZoomIn.Text = "toolStripButton1";
-            this.toolStripButtonWaveFormZoomIn.Click += new System.EventHandler(this.toolStripButtonWaveFormZoomIn_Click);
-            // 
-            // toolStripButtonWaveFormPause
-            // 
-            this.toolStripButtonWaveFormPause.AutoToolTip = false;
-            this.toolStripButtonWaveFormPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonWaveFormPause.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormPause.Image")));
-            this.toolStripButtonWaveFormPause.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonWaveFormPause.Name = "toolStripButtonWaveFormPause";
-            this.toolStripButtonWaveFormPause.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonWaveFormPause.Text = "toolStripButton1";
-            this.toolStripButtonWaveFormPause.Visible = false;
-            this.toolStripButtonWaveFormPause.Click += new System.EventHandler(this.toolStripButtonWaveFormPause_Click);
-            // 
-            // toolStripButtonWaveFormPlay
-            // 
-            this.toolStripButtonWaveFormPlay.AutoToolTip = false;
-            this.toolStripButtonWaveFormPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonWaveFormPlay.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormPlay.Image")));
-            this.toolStripButtonWaveFormPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonWaveFormPlay.Name = "toolStripButtonWaveFormPlay";
-            this.toolStripButtonWaveFormPlay.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonWaveFormPlay.Text = "toolStripButton1";
-            this.toolStripButtonWaveFormPlay.Click += new System.EventHandler(this.toolStripButtonWaveFormPlay_Click);
-            // 
-            // toolStripButtonLockCenter
-            // 
-            this.toolStripButtonLockCenter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonLockCenter.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLockCenter.Image")));
-            this.toolStripButtonLockCenter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonLockCenter.Name = "toolStripButtonLockCenter";
-            this.toolStripButtonLockCenter.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonLockCenter.Text = "Center";
-            this.toolStripButtonLockCenter.Click += new System.EventHandler(this.toolStripButtonLockCenter_Click);
-            // 
-            // toolStripSplitButtonPlayRate
-            // 
-            this.toolStripSplitButtonPlayRate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripSplitButtonPlayRate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemPlayRateSlow,
-            this.toolStripMenuItemPlayRateNormal,
-            this.toolStripMenuItemPlayRateFast,
-            this.toolStripMenuItemPlayRateVeryFast});
-            this.toolStripSplitButtonPlayRate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButtonPlayRate.Image")));
-            this.toolStripSplitButtonPlayRate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripSplitButtonPlayRate.Name = "toolStripSplitButtonPlayRate";
-            this.toolStripSplitButtonPlayRate.Size = new System.Drawing.Size(32, 22);
-            this.toolStripSplitButtonPlayRate.Text = "Play rate (speed)";
-            // 
-            // toolStripMenuItemPlayRateSlow
-            // 
-            this.toolStripMenuItemPlayRateSlow.Name = "toolStripMenuItemPlayRateSlow";
-            this.toolStripMenuItemPlayRateSlow.Size = new System.Drawing.Size(148, 22);
-            this.toolStripMenuItemPlayRateSlow.Text = "Slow";
-            this.toolStripMenuItemPlayRateSlow.Click += new System.EventHandler(this.ToolStripMenuItemPlayRateSlowClick);
-            // 
-            // toolStripMenuItemPlayRateNormal
-            // 
-            this.toolStripMenuItemPlayRateNormal.Checked = true;
-            this.toolStripMenuItemPlayRateNormal.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripMenuItemPlayRateNormal.Name = "toolStripMenuItemPlayRateNormal";
-            this.toolStripMenuItemPlayRateNormal.Size = new System.Drawing.Size(148, 22);
-            this.toolStripMenuItemPlayRateNormal.Text = "Normal speed";
-            this.toolStripMenuItemPlayRateNormal.Click += new System.EventHandler(this.ToolStripMenuItemPlayRateNormalClick);
-            // 
-            // toolStripMenuItemPlayRateFast
-            // 
-            this.toolStripMenuItemPlayRateFast.Name = "toolStripMenuItemPlayRateFast";
-            this.toolStripMenuItemPlayRateFast.Size = new System.Drawing.Size(148, 22);
-            this.toolStripMenuItemPlayRateFast.Text = "Fast ";
-            this.toolStripMenuItemPlayRateFast.Click += new System.EventHandler(this.ToolStripMenuItemPlayRateFastClick);
-            // 
-            // toolStripMenuItemPlayRateVeryFast
-            // 
-            this.toolStripMenuItemPlayRateVeryFast.Name = "toolStripMenuItemPlayRateVeryFast";
-            this.toolStripMenuItemPlayRateVeryFast.Size = new System.Drawing.Size(148, 22);
-            this.toolStripMenuItemPlayRateVeryFast.Text = "Very fast";
-            this.toolStripMenuItemPlayRateVeryFast.Click += new System.EventHandler(this.VeryFastToolStripMenuItemClick);
-            // 
-            // toolStripButtonFileNew
-            // 
-            this.toolStripButtonFileNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonFileNew.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripButtonFileNew.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFileNew.Image")));
-            this.toolStripButtonFileNew.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonFileNew.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.toolStripButtonFileNew.Name = "toolStripButtonFileNew";
-            this.toolStripButtonFileNew.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonFileNew.Text = "New";
-            this.toolStripButtonFileNew.ToolTipText = "New";
-            this.toolStripButtonFileNew.Click += new System.EventHandler(this.ToolStripButtonFileNewClick);
-            // 
-            // toolStripButtonFileOpen
-            // 
-            this.toolStripButtonFileOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonFileOpen.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripButtonFileOpen.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFileOpen.Image")));
-            this.toolStripButtonFileOpen.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonFileOpen.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.toolStripButtonFileOpen.Name = "toolStripButtonFileOpen";
-            this.toolStripButtonFileOpen.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonFileOpen.Text = "toolStripButtonOpen";
-            this.toolStripButtonFileOpen.ToolTipText = "Open";
-            this.toolStripButtonFileOpen.Click += new System.EventHandler(this.ToolStripButtonFileOpenClick);
-            // 
-            // toolStripButtonSave
-            // 
-            this.toolStripButtonSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonSave.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripButtonSave.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSave.Image")));
-            this.toolStripButtonSave.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonSave.Name = "toolStripButtonSave";
-            this.toolStripButtonSave.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonSave.Text = "toolStripButtonSave";
-            this.toolStripButtonSave.ToolTipText = "Save";
-            this.toolStripButtonSave.Click += new System.EventHandler(this.ToolStripButtonSaveClick);
-            // 
-            // toolStripButtonSaveAs
-            // 
-            this.toolStripButtonSaveAs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonSaveAs.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripButtonSaveAs.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSaveAs.Image")));
-            this.toolStripButtonSaveAs.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonSaveAs.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonSaveAs.Name = "toolStripButtonSaveAs";
-            this.toolStripButtonSaveAs.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonSaveAs.Text = "toolStripButtonSaveAs";
-            this.toolStripButtonSaveAs.ToolTipText = "Save as";
-            this.toolStripButtonSaveAs.Click += new System.EventHandler(this.ToolStripButtonSaveAsClick);
-            // 
-            // toolStripButtonFind
-            // 
-            this.toolStripButtonFind.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonFind.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripButtonFind.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFind.Image")));
-            this.toolStripButtonFind.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonFind.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonFind.Name = "toolStripButtonFind";
-            this.toolStripButtonFind.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonFind.Text = "Find";
-            this.toolStripButtonFind.Click += new System.EventHandler(this.ToolStripButtonFindClick);
-            // 
-            // toolStripButtonReplace
-            // 
-            this.toolStripButtonReplace.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonReplace.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripButtonReplace.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonReplace.Image")));
-            this.toolStripButtonReplace.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonReplace.ImageTransparentColor = System.Drawing.Color.White;
-            this.toolStripButtonReplace.Name = "toolStripButtonReplace";
-            this.toolStripButtonReplace.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonReplace.Text = "Replace";
-            this.toolStripButtonReplace.ToolTipText = "Replace";
-            this.toolStripButtonReplace.Click += new System.EventHandler(this.ToolStripButtonReplaceClick);
-            // 
-            // toolStripButtonVisualSync
-            // 
-            this.toolStripButtonVisualSync.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonVisualSync.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripButtonVisualSync.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonVisualSync.Image")));
-            this.toolStripButtonVisualSync.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonVisualSync.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonVisualSync.Name = "toolStripButtonVisualSync";
-            this.toolStripButtonVisualSync.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonVisualSync.Text = "Visual sync";
-            this.toolStripButtonVisualSync.Click += new System.EventHandler(this.ToolStripButtonVisualSyncClick);
-            // 
-            // toolStripButtonSpellCheck
-            // 
-            this.toolStripButtonSpellCheck.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonSpellCheck.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.toolStripButtonSpellCheck.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSpellCheck.Image")));
-            this.toolStripButtonSpellCheck.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonSpellCheck.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonSpellCheck.Name = "toolStripButtonSpellCheck";
-            this.toolStripButtonSpellCheck.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonSpellCheck.Text = "Spell check";
-            this.toolStripButtonSpellCheck.Click += new System.EventHandler(this.ToolStripButtonSpellCheckClick);
-            // 
-            // toolStripButtonSettings
-            // 
-            this.toolStripButtonSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonSettings.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.toolStripButtonSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSettings.Image")));
-            this.toolStripButtonSettings.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonSettings.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.toolStripButtonSettings.Name = "toolStripButtonSettings";
-            this.toolStripButtonSettings.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonSettings.Text = "Settings";
-            this.toolStripButtonSettings.Click += new System.EventHandler(this.ToolStripButtonSettingsClick);
-            // 
-            // toolStripButtonHelp
-            // 
-            this.toolStripButtonHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonHelp.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.toolStripButtonHelp.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonHelp.Image")));
-            this.toolStripButtonHelp.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.toolStripButtonHelp.Name = "toolStripButtonHelp";
-            this.toolStripButtonHelp.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonHelp.Text = "Help";
-            this.toolStripButtonHelp.Click += new System.EventHandler(this.ToolStripButtonHelpClick);
-            // 
-            // toolStripButtonToggleWaveForm
-            // 
-            this.toolStripButtonToggleWaveForm.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonToggleWaveForm.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.toolStripButtonToggleWaveForm.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleWaveForm.Image")));
-            this.toolStripButtonToggleWaveForm.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonToggleWaveForm.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonToggleWaveForm.Name = "toolStripButtonToggleWaveForm";
-            this.toolStripButtonToggleWaveForm.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonToggleWaveForm.Text = "Show/hide wave form";
-            this.toolStripButtonToggleWaveForm.Click += new System.EventHandler(this.toolStripButtonToggleWaveForm_Click);
-            // 
-            // toolStripButtonToggleVideo
-            // 
-            this.toolStripButtonToggleVideo.Checked = true;
-            this.toolStripButtonToggleVideo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripButtonToggleVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonToggleVideo.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.toolStripButtonToggleVideo.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleVideo.Image")));
-            this.toolStripButtonToggleVideo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonToggleVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonToggleVideo.Name = "toolStripButtonToggleVideo";
-            this.toolStripButtonToggleVideo.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonToggleVideo.Text = "Show/hide video";
-            this.toolStripButtonToggleVideo.Click += new System.EventHandler(this.toolStripButtonToggleVideo_Click);
-            // 
-            // toolStripButtonGetFrameRate
-            // 
-            this.toolStripButtonGetFrameRate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonGetFrameRate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonGetFrameRate.Image")));
-            this.toolStripButtonGetFrameRate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonGetFrameRate.Name = "toolStripButtonGetFrameRate";
-            this.toolStripButtonGetFrameRate.Size = new System.Drawing.Size(23, 18);
-            this.toolStripButtonGetFrameRate.Text = "...";
-            this.toolStripButtonGetFrameRate.ToolTipText = "Get frame rate from video file";
-            this.toolStripButtonGetFrameRate.Click += new System.EventHandler(this.ButtonGetFrameRateClick);
-            // 
-            // toolStripStatusNetworking
-            // 
-            this.toolStripStatusNetworking.Image = global::Nikse.SubtitleEdit.Properties.Resources.connect;
-            this.toolStripStatusNetworking.Name = "toolStripStatusNetworking";
-            this.toolStripStatusNetworking.Padding = new System.Windows.Forms.Padding(50, 0, 0, 0);
-            this.toolStripStatusNetworking.Size = new System.Drawing.Size(217, 16);
-            this.toolStripStatusNetworking.Text = "toolStripStatusNetworking";
-            this.toolStripStatusNetworking.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolStripStatusNetworking.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
-            this.toolStripStatusNetworking.Click += new System.EventHandler(this.toolStripStatusNetworking_Click);
-            // 
-            // toolStripMenuItemRemoveSceneChanges
-            // 
-            this.toolStripMenuItemRemoveSceneChanges.Name = "toolStripMenuItemRemoveSceneChanges";
-            this.toolStripMenuItemRemoveSceneChanges.Size = new System.Drawing.Size(208, 22);
-            this.toolStripMenuItemRemoveSceneChanges.Text = "Remove scene changes";
-            this.toolStripMenuItemRemoveSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemRemoveSceneChanges_Click);
-            // 
-            // SubtitleListview1
-            // 
-            this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripListview;
-            this.SubtitleListview1.DisplayExtraFromExtra = false;
-            this.SubtitleListview1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SubtitleListview1.FirstVisibleIndex = -1;
-            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SubtitleListview1.FullRowSelect = true;
-            this.SubtitleListview1.GridLines = true;
-            this.SubtitleListview1.HideSelection = false;
-            this.SubtitleListview1.Location = new System.Drawing.Point(0, 0);
-            this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(724, 94);
-            this.SubtitleListview1.TabIndex = 0;
-            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
-            this.SubtitleListview1.UseSyntaxColoring = true;
-            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
-            this.SubtitleListview1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListview1_SelectedIndexChanged);
-            this.SubtitleListview1.DragDrop += new System.Windows.Forms.DragEventHandler(this.SubtitleListview1_DragDrop);
-            this.SubtitleListview1.DragEnter += new System.Windows.Forms.DragEventHandler(this.SubtitleListview1_DragEnter);
-            this.SubtitleListview1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubtitleListview1KeyDown);
-            this.SubtitleListview1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListview1_MouseDoubleClick);
-            // 
-            // textBoxListViewTextAlternate
-            // 
-            this.textBoxListViewTextAlternate.AllowDrop = true;
-            this.textBoxListViewTextAlternate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxListViewTextAlternate.ContextMenuStrip = this.contextMenuStripTextBoxListView;
-            this.textBoxListViewTextAlternate.Enabled = false;
-            this.textBoxListViewTextAlternate.HideSelection = false;
-            this.textBoxListViewTextAlternate.Location = new System.Drawing.Point(946, 28);
-            this.textBoxListViewTextAlternate.Multiline = true;
-            this.textBoxListViewTextAlternate.Name = "textBoxListViewTextAlternate";
-            this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(0, 55);
-            this.textBoxListViewTextAlternate.TabIndex = 33;
-            this.textBoxListViewTextAlternate.Visible = false;
-            this.textBoxListViewTextAlternate.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextAlternateMouseClick);
-            this.textBoxListViewTextAlternate.TextChanged += new System.EventHandler(this.textBoxListViewTextAlternate_TextChanged);
-            this.textBoxListViewTextAlternate.Enter += new System.EventHandler(this.TextBoxListViewTextAlternateEnter);
-            this.textBoxListViewTextAlternate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextAlternateKeyDown);
-            this.textBoxListViewTextAlternate.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextAlternateKeyUp);
-            this.textBoxListViewTextAlternate.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextAlternateMouseMove);
-            // 
-            // timeUpDownStartTime
-            // 
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(9, 26);
-            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(92, 25);
-            this.timeUpDownStartTime.TabIndex = 0;
-            // 
-            // textBoxListViewText
-            // 
-            this.textBoxListViewText.AllowDrop = true;
-            this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxListViewText.ContextMenuStrip = this.contextMenuStripTextBoxListView;
-            this.textBoxListViewText.Enabled = false;
-            this.textBoxListViewText.HideSelection = false;
-            this.textBoxListViewText.Location = new System.Drawing.Point(236, 28);
-            this.textBoxListViewText.Multiline = true;
-            this.textBoxListViewText.Name = "textBoxListViewText";
-            this.textBoxListViewText.Size = new System.Drawing.Size(362, 55);
-            this.textBoxListViewText.TabIndex = 5;
-            this.textBoxListViewText.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextMouseClick);
-            this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
-            this.textBoxListViewText.Enter += new System.EventHandler(this.TextBoxListViewTextEnter);
-            this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
-            this.textBoxListViewText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxListViewText_KeyUp);
-            this.textBoxListViewText.Leave += new System.EventHandler(this.textBoxListViewText_Leave);
-            this.textBoxListViewText.MouseMove += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewText_MouseMove);
-            // 
-            // mediaPlayer
-            // 
-            this.mediaPlayer.AllowDrop = true;
-            this.mediaPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.mediaPlayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
-            this.mediaPlayer.CurrentPosition = 0D;
-            this.mediaPlayer.FontSizeFactor = 1F;
-            this.mediaPlayer.Location = new System.Drawing.Point(0, 0);
-            this.mediaPlayer.Margin = new System.Windows.Forms.Padding(0);
-            this.mediaPlayer.Name = "mediaPlayer";
-            this.mediaPlayer.ShowFullscreenButton = true;
-            this.mediaPlayer.ShowMuteButton = true;
-            this.mediaPlayer.ShowStopButton = true;
-            this.mediaPlayer.Size = new System.Drawing.Size(219, 241);
-            this.mediaPlayer.SubtitleText = "";
-            this.mediaPlayer.TabIndex = 5;
-            this.mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.mediaPlayer.VideoHeight = 0;
-            this.mediaPlayer.VideoPlayer = null;
-            this.mediaPlayer.VideoWidth = 0;
-            this.mediaPlayer.Volume = 0D;
-            this.mediaPlayer.DragDrop += new System.Windows.Forms.DragEventHandler(this.mediaPlayer_DragDrop);
-            this.mediaPlayer.DragEnter += new System.Windows.Forms.DragEventHandler(this.mediaPlayer_DragEnter);
-            // 
-            // audioVisualizer
-            // 
-            this.audioVisualizer.AllowDrop = true;
-            this.audioVisualizer.AllowNewSelection = true;
-            this.audioVisualizer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.audioVisualizer.BackColor = System.Drawing.Color.Black;
-            this.audioVisualizer.BackgroundColor = System.Drawing.Color.Black;
-            this.audioVisualizer.Color = System.Drawing.Color.GreenYellow;
-            this.audioVisualizer.DrawGridLines = true;
-            this.audioVisualizer.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
-            this.audioVisualizer.Location = new System.Drawing.Point(472, 32);
-            this.audioVisualizer.Margin = new System.Windows.Forms.Padding(0);
-            this.audioVisualizer.Name = "audioVisualizer";
-            this.audioVisualizer.NewSelectionParagraph = null;
-            this.audioVisualizer.SceneChanges = ((System.Collections.Generic.List<double>)(resources.GetObject("audioVisualizer.SceneChanges")));
-            this.audioVisualizer.SelectedColor = System.Drawing.Color.Red;
-            this.audioVisualizer.ShowSpectrogram = false;
-            this.audioVisualizer.ShowWaveform = true;
-            this.audioVisualizer.Size = new System.Drawing.Size(499, 229);
-            this.audioVisualizer.StartPositionSeconds = 0D;
-            this.audioVisualizer.TabIndex = 6;
-            this.audioVisualizer.TextColor = System.Drawing.Color.Gray;
-            this.audioVisualizer.VerticalZoomPercent = 1D;
-            this.audioVisualizer.WaveFormNotLoadedText = "Click to add wave form";
-            this.audioVisualizer.WavePeaks = null;
-            this.audioVisualizer.ZoomFactor = 1D;
-            this.audioVisualizer.Click += new System.EventHandler(this.AudioWaveForm_Click);
-            this.audioVisualizer.DragDrop += new System.Windows.Forms.DragEventHandler(this.AudioWaveFormDragDrop);
-            this.audioVisualizer.DragEnter += new System.Windows.Forms.DragEventHandler(this.AudioWaveFormDragEnter);
-            // 
-            // timeUpDownVideoPosition
-            // 
-            this.timeUpDownVideoPosition.AutoSize = true;
-            this.timeUpDownVideoPosition.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownVideoPosition.Location = new System.Drawing.Point(96, 191);
-            this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
-            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(92, 25);
-            this.timeUpDownVideoPosition.TabIndex = 12;
-            // 
-            // timeUpDownVideoPositionAdjust
-            // 
-            this.timeUpDownVideoPositionAdjust.AutoSize = true;
-            this.timeUpDownVideoPositionAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownVideoPositionAdjust.Location = new System.Drawing.Point(96, 213);
-            this.timeUpDownVideoPositionAdjust.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
-            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(92, 25);
-            this.timeUpDownVideoPositionAdjust.TabIndex = 13;
+            // toolStripMenuItemDurationBridgeGaps
+            // 
+            this.toolStripMenuItemDurationBridgeGaps.Name = "toolStripMenuItemDurationBridgeGaps";
+            this.toolStripMenuItemDurationBridgeGaps.Size = new System.Drawing.Size(346, 22);
+            this.toolStripMenuItemDurationBridgeGaps.Text = "Bridge gaps in durations...";
+            this.toolStripMenuItemDurationBridgeGaps.Click += new System.EventHandler(this.toolStripMenuItemDurationBridgeGaps_Click);
             // 
             // Main
             // 
@@ -4651,6 +4661,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMeasurementConverter;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportSceneChanges;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRemoveSceneChanges;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDurationBridgeGaps;
     }
 }
 

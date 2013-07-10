@@ -274,6 +274,12 @@
             public string ChooseColor { get; set; }
         }
 
+        public class DurationsBridgeGaps
+        {
+            public string Title { get; set; }
+            public string GapsBridgedX { get; set; }
+        }
+
         public class DvdSubRip
         {
             public string Title { get; set; }
