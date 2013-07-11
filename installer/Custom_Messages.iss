@@ -196,22 +196,22 @@ el.types_default=Προεπιλεγμένη εγκατάσταση
 
 
 ; Spanish
-es.comp_translations=Translations
-es.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-es.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-es.msg_AskToDownNET=Subtitle Edit requiere .NET Framework 2.0. Por favor, descargue e instale .NET Framework y ejecute de nuevo la instalación.%n%n¿Desea descargar .NET Framework 2.0 ahora?
-es.msg_DeleteSettings=¿Desea eliminar también la configuración de Subtitle Edit y cualquier otro cambio que se haya podido realizar en los diccionarios?%n%nSi piensa reinstalar más adelante Subtitle Edit no tiene por qué eliminarlos.
-es.msg_OptimizingPerformance=Optimizing performance...
-es.msg_SetupIsRunningWarning=¡La instalación de Subtitle Edit está ya en marcha!
-es.run_VisitWebsite=Visite la página web de Subtitle Edit
-es.sm_com_Changelog=Registro de cambios de Subtitle Edit
+es.comp_translations=Traducciones
+es.msg_AppIsRunning=El programa de instalacion ha detectado que Subtitle Edit se esta ejecutando actualmente.%n%nPor favor, cierra todas las instancias actuales, haz clic en Aceptar para continuar o en Cancelar para salir.
+es.msg_AppIsRunningUninstall=El desinstalador ha detectado que Subtitle Edit se esta ejecutando actualmente.%n%nPor favor, cierra todas las instancias actuales, haz clic en Aceptar para continuar o en Cancelar para salir.
+es.msg_AskToDownNET=Subtitle Edit requiere .NET Framework 2.0. Por favor, descarga e instala .NET Framework y ejecuta la instalacion de nuevo.%n%n?Quieres descargar el .NET Framework 2.0 ahora?
+es.msg_DeleteSettings=?Deseas tambien eliminar la configuracion de Subtitle Edit y los cambios personalizados realizados en los diccionarios?%n%nSi planeas reinstalar Subtitle Edit no tienes que eliminarlos.
+es.msg_OptimizingPerformance=Optimizando el rendimiento...
+es.msg_SetupIsRunningWarning=?La instalacion de Subtitle Edit esta en curso!
+es.run_VisitWebsite=Visita la pagina Web de Subtitle Edit
+es.sm_com_Changelog=Historial de Subtitle Edit
 es.tsk_AllUsers=Para todos los usuarios
-es.tsk_CurrentUser=Sólo para el usuario actual
+es.tsk_CurrentUser=Para el usuario actual
 es.tsk_Other=Otro:
-es.tsk_ResetDictionaries=Restaura los Diccionarios y elimina cualquier nombre personalizado
-es.tsk_ResetSettings=Restaura la configuración de Subtitle Edit
-es.types_custom=Custom installation
-es.types_default=Default installation
+es.tsk_ResetDictionaries=Reestablecer Diccionarios y borrar nombres personalizados
+es.tsk_ResetSettings=Reestablecer ajustes de Subtitle Edit
+es.types_custom=Instalacion personalizada
+es.types_default=Instalacion predefinida
 
 
 ; Basque
