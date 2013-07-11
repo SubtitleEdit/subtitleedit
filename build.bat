@@ -13,8 +13,8 @@ IF /I "%~1" == "-help"  GOTO SHOWHELP
 IF /I "%~1" == "--help" GOTO SHOWHELP
 IF /I "%~1" == "/?"     GOTO SHOWHELP
 
-IF NOT DEFINED VS100COMNTOOLS (
-  ECHO Visual Studio 2010 wasn't found
+IF NOT DEFINED VS110COMNTOOLS (
+  ECHO Visual Studio 2012 wasn't found
   GOTO EndWithError
 )
 
@@ -42,7 +42,7 @@ IF "%~1" == "" (
 :START
 PUSHD "src"
 
-CALL "%VS100COMNTOOLS%vsvars32.bat" x86
+CALL "%VS110COMNTOOLS%vsvars32.bat" x86
 TITLE %BUILDTYPE%ing SubtitleEdit - Release^|Any CPU...
 
 "%WINDIR%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" SubtitleEdit.sln^
