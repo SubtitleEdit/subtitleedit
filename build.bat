@@ -45,9 +45,8 @@ PUSHD "src"
 CALL "%VS110COMNTOOLS%vsvars32.bat" x86
 TITLE %BUILDTYPE%ing SubtitleEdit - Release^|Any CPU...
 
-"%WINDIR%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" SubtitleEdit.sln^
- /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="Any CPU" /maxcpucount^
- /consoleloggerparameters:DisableMPLogging;Summary;Verbosity=minimal
+"MSBuild.exe" SubtitleEdit.sln /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="Any CPU"^
+ /maxcpucount /consoleloggerparameters:DisableMPLogging;Summary;Verbosity=minimal
 IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
 ECHO.
