@@ -924,7 +924,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.CustomSearchUrl6 = textBoxCustomSearchUrl6.Text;
 
             int maxLength = (int)numericUpDownSubtitleLineMaximumLength.Value;
-            if (maxLength > 10 && maxLength < 1000)
+            if (maxLength > 9 && maxLength < 1000)
                 gs.SubtitleLineMaximumLength = maxLength;
             else if (maxLength > 999)
                 gs.SubtitleLineMaximumLength = 999;
