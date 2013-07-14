@@ -6293,7 +6293,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (int index in SubtitleListview1.SelectedIndices)
                 {
                     Paragraph p = _subtitle.GetParagraphOrDefault(index);
-                    if (p.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                    if (p != null)
                     {
                         p.Text = Utilities.AutoBreakLine(p.Text);
                         SubtitleListview1.SetText(index, p.Text);
@@ -6304,11 +6304,8 @@ namespace Nikse.SubtitleEdit.Forms
                         var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
                         if (original != null)
                         {
-                            if (original.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                            {
-                                original.Text = Utilities.AutoBreakLine(p.Text);
-                                SubtitleListview1.SetAlternateText(index, original.Text);
-                            }
+                            original.Text = Utilities.AutoBreakLine(p.Text);
+                            SubtitleListview1.SetAlternateText(index, original.Text);
                         }
                     }
                     SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
@@ -6318,15 +6315,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (textBoxListViewText.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength || Control.ModifierKeys == Keys.Control)
-                    textBoxListViewText.Text = Utilities.AutoBreakLine(textBoxListViewText.Text);
+                textBoxListViewText.Text = Utilities.AutoBreakLine(textBoxListViewText.Text);
                 if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
-                {
-                    if (textBoxListViewTextAlternate.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength || Control.ModifierKeys == Keys.Control)
-                        textBoxListViewTextAlternate.Text = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text);
-                }
+                    textBoxListViewTextAlternate.Text = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text);
             }
-
         }
 
         private void FixVerticalScrollBars(TextBox tb)
