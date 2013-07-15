@@ -2,105 +2,43 @@
   <Dictionary>
     <EnglishName>Afrikaans</EnglishName>
     <NativeName>Afrikaans</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1109/0/dict-af.oxt</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1109/0/dict-af.oxt?r=http%3A%2F%2Fextensions.services.openoffice.org%2Fen%2Fproject%2Fafrikaans-spell-checker&amp;ts=1373917891&amp;use_mirror=kent</DownloadLink>
     <Description>Afrikaans spell checker</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Akan</EnglishName>
-    <NativeName>Akan</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1750/0/ak-GH.oxt</DownloadLink>
-    <Description>Akan spelling dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Albanian</EnglishName>
-    <NativeName>Shqip</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3393/1/dict-sq.oxt</DownloadLink>
-    <Description>Albanian Spellchecker Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Arabic</EnglishName>
     <NativeName>عربي</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1635/0/dict-ar.oxt</DownloadLink>
-    <Description>Arabic Ayaspell spell checker</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Armenian </EnglishName>
-    <NativeName>Հայերեն</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/4011/0/hy_AM-0.20.0.oxt</DownloadLink>
-    <Description>Armenian Spellchecker (Eastern)</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Armenian (western)</EnglishName>
-    <NativeName>Հայերէն (արեւմտեան)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/4268/0/HySpellChecker.oxt</DownloadLink>
-    <Description>Western Armenian Spell Checker</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Assamese</EnglishName>
-    <NativeName> অসমীয়া</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2318/4/as_IN.oxt</DownloadLink>
-    <Description>Assamese dictionary/spell-checker</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Asturian</EnglishName>
-    <NativeName>Asturianu</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3932/0/asturianu.oxt</DownloadLink>
-    <Description>Asturian spellchecker dictionary for OpenOffice.org</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/arabic-spell-checker/releases/3.2/dict_ar-3.2.oxt</DownloadLink>
+    <Description>Arabic spell checker 3.2</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Basque</EnglishName>
     <NativeName>Euskara</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1383/1/xuxen_iii_OOo3.oxt</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1383/2/xuxen_4_ooo3.oxt?r=http%3A%2F%2Fextensions.services.openoffice.org%2Fen%2Fproject%2Fxuxen-basque-spell-checking-dictionary&amp;ts=1373918067&amp;use_mirror=freefr</DownloadLink>
     <Description>Xuxen: Basque spell checking dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Belarusian</EnglishName>
     <NativeName>Беларуская мова</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2402/3/dict-be-classic.oxt</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/4611/15/dict-be-0.56.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fbelarusian-spell-checking-dictionary-recent-official-orthography&amp;ts=1373918638&amp;use_mirror=kent</DownloadLink>
     <Description>Belarusian dictionary(spelling, hyphenation) - classic orthography</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Belarusian</EnglishName>
-    <NativeName>Беларуская мова</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2412/1/dict-be-official.oxt</DownloadLink>
-    <Description>Belarusian dictionary(spelling, hyphenation) - official orthography</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Bengali</EnglishName>
-    <NativeName>বাংলা</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2350/5/dict-bn.oxt</DownloadLink>
-    <Description>Bengali Spellchecker Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Bengali Hyphenation Dictionary</EnglishName>
-    <NativeName>
-    </NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2745/2/hyph_bn_1.2.oxt</DownloadLink>
-    <Description>Bengali(India)  Hyphenation Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Breton</EnglishName>
     <NativeName>Brezhoneg</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2207/3/dict-br_0.3.oxt</DownloadLink>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/an-drouizig-breton-spellchecker/releases/0.11/dict-br-0.11.oxt</DownloadLink>
     <Description>An Drouizig Breton Spellchecker</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Bulgarian</EnglishName>
     <NativeName>Български</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/744/6/dictionaries-bg.oxt</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/744/8/dictionaries-bg.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fbulgarian-dictionaries-%25D0%25B1%25D1%258A%25D0%25BB%25D0%25B3%25D0%25B0%25D1%2580%25D1%2581%25D0%25BA%25D0%25B8-%25D1%2580%25D0%25B5%25D1%2587%25D0%25BD%25D0%25B8%25D1%2586%25D0%25B8&amp;ts=1373918714&amp;use_mirror=switch</DownloadLink>
     <Description>Bulgarian Dictionaries</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Cambodian</EnglishName>
-    <NativeName>
-    </NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1009/1/km_spellchecker_OOo30_V_1.0.2.oxt</DownloadLink>
-    <Description>Khmer Language Spelling Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Catalan</EnglishName>
     <NativeName>català</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1205/2/catalan.oxt</DownloadLink>
+    <DownloadLink>http://www.softcatala.org/diccionaris/actualitzacions/OOo/catalan.oxt</DownloadLink>
     <Description>Spelling dictionary for Catalan language</Description>
   </Dictionary>
   <Dictionary>
@@ -116,45 +54,27 @@
     <Description>Spelling dictionary for Catalan (Valencian version)</Description>
   </Dictionary>
   <Dictionary>
-    <EnglishName>Catalan</EnglishName>
-    <NativeName>català</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2010/7/hyph-ca.oxt</DownloadLink>
-    <Description>Catalan hyphenation patterns for OpenOffice.org / Diccionari català de partició de mots per a OpenOffice.org</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Chuvash</EnglishName>
-    <NativeName>Чăваш</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3638/0/dict-cv.oxt</DownloadLink>
-    <Description>Chuvash Spell Checker</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Coptic</EnglishName>
-    <NativeName>ⲙⲉⲧⲛⲣⲉⲙⲛⲭⲏⲙⲓ</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/793/1/dictionaries-cop.oxt</DownloadLink>
-    <Description>Coptic (Bohairic) Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
     <EnglishName>Croatian</EnglishName>
     <NativeName>Hrvatski</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1052/2/dict-hr.oxt</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1052/2/dict-hr.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fcroatian-dictionary-and-hyphenation-patterns&amp;ts=1373918817&amp;use_mirror=surfnet</DownloadLink>
     <Description>Croatian dictionary and hyphenation patterns</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Czech</EnglishName>
     <NativeName>Čeština</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1078/0/dict-cs-2.0.oxt</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1078/0/dict-cs-2.0.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fczech-dictionary-pack-%25C4%258Desk%25C3%25A9-slovn%25C3%25ADky&amp;ts=1373918869&amp;use_mirror=freefr</DownloadLink>
     <Description>Czech dictionary pack / České slovníky</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Danish</EnglishName>
     <NativeName>Dansk</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1429/6/dict-da-current.oxt</DownloadLink>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/stavekontrolden-danish-dictionary/pscreleasefolder.2011-09-30.0280139318/2.1/dict-da-2.1.oxt</DownloadLink>
     <Description>Danish spellcheck and hyphenation dictionaries</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Dutch</EnglishName>
     <NativeName>Nederlands</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1456/6/nl-dict-v2.00g.oxt</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1456/6/nl-dict-v2.00g.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fdutch-spelling-and-hyphenation-dictionary&amp;ts=1373918951&amp;use_mirror=garr</DownloadLink>
     <Description>Dutch spelling and hyphenation Dictionary</Description>
   </Dictionary>
   <Dictionary>
@@ -164,327 +84,118 @@
     <Description>All English dictionaries (AU, CA, GB, US, ZA)</Description>
   </Dictionary>
   <Dictionary>
-    <EnglishName>English (US)</EnglishName>
-    <NativeName>English (US)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1470/1/en_US.oxt</DownloadLink>
-    <Description>US English Spell Checking Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Esperanto</EnglishName>
-    <NativeName>Esperanto</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1242/5/esperantilo.oxt</DownloadLink>
-    <Description>Esperantilo - spell check dictionary and grammar checker for Esperanto language</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Esperanto</EnglishName>
-    <NativeName>Esperanto</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3377/1/1.0-dev.oxt</DownloadLink>
-    <Description>Esperanto-literumilo de E@I</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Estonian</EnglishName>
-    <NativeName>Eesti keel</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1328/0/dict-et.oxt</DownloadLink>
-    <Description>Estonian spellchecking and hyphenation</Description>
-  </Dictionary>
-  <Dictionary>
     <EnglishName>French</EnglishName>
     <NativeName>Français</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/ext/3554/6/ooo-dictionnaire-fr-moderne-v4.5.oxt</DownloadLink>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/dictionnaires-francais/releases/4.11/lo-oo-ressources-linguistiques-fr-v4-11.oxt</DownloadLink>
     <Description>Dictionnaires français - Orthographe «Moderne»</Description>
   </Dictionary>
   <Dictionary>
-    <EnglishName>Frisian</EnglishName>
-    <NativeName>Frysk</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1512/1/dict-fy_NL.oxt</DownloadLink>
-    <Description>Frisian Spellcheck</Description>
-  </Dictionary>
-  <Dictionary>
     <EnglishName>German (Austria)</EnglishName>
     <NativeName>Deutsch (Österreich)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1697/4/dict-de_AT-frami_2010-05-25.oxt</DownloadLink>
-    <Description>German (de-AT frami) dictionaries</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>German (Austria)</EnglishName>
-    <NativeName>Deutsch (Österreich)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1714/2/dict-de_AT-igerman98_2010-05-25.oxt</DownloadLink>
-    <Description>German (de-AT igerman98) dictionaries</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/german-de-at-frami-dictionaries/pscreleasefolder.2011-11-05.7614737245/2012.06.17/dict-de_at-frami_2012-06-17.oxt</DownloadLink>
+    <Description>German (de-AT frami) dictionaries 2012.06.17</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>German (Germany)</EnglishName>
-    <NativeName>Deutsch (Deutschland)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1050/4/dict-de_DE-igerman98_2011-06-21.oxt</DownloadLink>
+    <NativeName>German (de-DE frami) dictionaries - [de] Deutsche (de-DE frami) Rechtschreibung</NativeName>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/german-de-de-frami-dictionaries/releases/2012.06.17/dict-de_de-frami_2012-06-17.oxt</DownloadLink>
     <Description>German (de-DE igerman98) dictionaries</Description>
   </Dictionary>
   <Dictionary>
-    <EnglishName>German (Germany)</EnglishName>
-    <NativeName>Deutsch (Deutschland)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1057/3/dict-de_DE-OLDSPELL_2010-05-25.oxt</DownloadLink>
-    <Description>German (de-DE) old spelling dictionaries</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>German (Germany)</EnglishName>
-    <NativeName>Deutsch (Deutschland)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1075/7/dict-de_DE-frami_2010-05-25.oxt</DownloadLink>
-    <Description>German (de-DE frami) dictionaries</Description>
-  </Dictionary>
-  <Dictionary>
     <EnglishName>German (Switzerland)</EnglishName>
-    <NativeName>Deutsch (Schweiz)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1699/4/dict-de_CH-frami_2010-05-25.oxt</DownloadLink>
+    <NativeName>German (de-CH frami) dictionaries 2012.06.17</NativeName>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/german-de-ch-frami-dictionaries/pscreleasefolder.2011-11-05.5296069116/2012.06.17/dict-de_ch-frami_2012-06-17.oxt</DownloadLink>
     <Description>German (de-CH frami) dictionaries</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>German (Switzerland)</EnglishName>
-    <NativeName>Deutsch (Schweiz)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1712/2/dict-de_CH-igerman98_2010-05-25.oxt</DownloadLink>
-    <Description>German (de-CH igerman98) dictionaries</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Greek</EnglishName>
     <NativeName>Ελληνικά</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1411/2/el_gr_v110.oxt</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1060/0/dictionaries-gr.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fgreek-dictionary-thesaurus-hyphenation&amp;ts=1373919085&amp;use_mirror=switch</DownloadLink>
     <Description>Hellenic (Greek) Dictionary (Spell Check and Hyphenation)</Description>
   </Dictionary>
   <Dictionary>
-    <EnglishName>Gujarati</EnglishName>
-    <NativeName>ગુજરાતી</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2361/1/dict-gu.oxt</DownloadLink>
-    <Description>Gujarati Spellchecker Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Gujarati</EnglishName>
-    <NativeName>
-    </NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2792/1/hyph_gu_1.1.oxt</DownloadLink>
-    <Description>Gujarati Hyphenation Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Haitian Creole</EnglishName>
-    <NativeName>Kreyòl Ayisyen</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3247/3/hunspell-ht-0.06.oxt</DownloadLink>
-    <Description>Korektè Òtograf Kreyòl (KÒK)   </Description>
-  </Dictionary>
-  <Dictionary>
     <EnglishName>Hebrew</EnglishName>
-    <NativeName>עברית</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1155/1/he-IL-dict.oxt</DownloadLink>
+    <NativeName>Hebrew (he) spell check dictionary 2012-08-15</NativeName>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/hebrew-he-spell-check-dictionary/releases/2012-08-15/dict-he-2012-08-15.oxt</DownloadLink>
     <Description>HebSpellOO</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Hindi</EnglishName>
     <NativeName>हिंदी</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2367/1/dict-hi.oxt</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/2367/1/dict-hi.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fhindi-spellchecker-dictionary&amp;ts=1373919139&amp;use_mirror=kent</DownloadLink>
     <Description>Hindi Spellchecker Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Hindi Hyphenation Dictionary</EnglishName>
-    <NativeName>
-    </NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2747/2/hyph_hi_1.2.oxt</DownloadLink>
-    <Description>Hindi Hyphenation Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Hungarian</EnglishName>
     <NativeName>Magyar</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1283/8/dict-hu.oxt</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1283/9/dict-hu.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fhungarian-dictionary-pack&amp;ts=1373919203&amp;use_mirror=kent</DownloadLink>
     <Description>Hungarian Dictionary Pack</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Icelandic</EnglishName>
     <NativeName>íslenska</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2171/0/hyph_is-1.0.oxt</DownloadLink>
-    <Description>Icelandic hyphenation dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Icelandic</EnglishName>
-    <NativeName>íslenska</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2829/1/Icelandic-dict-2009-08-23.oxt</DownloadLink>
-    <Description>Icelandic spelling dictionary</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/hunspell-is-the-icelandic-spelling-dictionary-project/releases/2013.05.11/hunspell-is-2013-05-11.oxt</DownloadLink>
+    <Description>Icelandic spelling dictionary &amp; thesaurus 2013.05.11</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Indonesian</EnglishName>
     <NativeName>Indonesia</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3455/0/id.oxt</DownloadLink>
-    <Description>Indonesian dictionary - Kamus Indonesia</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Interlingua</EnglishName>
-    <NativeName>Interlingua</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2215/1/dict-ia-20090329.oxt</DownloadLink>
-    <Description>Interlingua - Dictionario orthographic</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/indonesian-dictionary-kamus-indonesia-by-benitius/releases/1.0/id.oxt</DownloadLink>
+    <Description>Indonesian dictionary - Kamus Indonesia 1.0</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Irish</EnglishName>
     <NativeName>Gaeilge</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1028/1/focloiri-gaeilge-4.5.oxt</DownloadLink>
-    <Description>Irish language spell checker, thesaurus, and hyphenation patterns</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/irish-language-spell-checker-thesaurus-and-hyphenation-patterns/pscreleasefolder.2012-11-26.4040334441/4.5/focloiri-gaeilge-4.5.oxt</DownloadLink>
+    <Description>Irish language spell checker, thesaurus, and hyphenation patterns 4.5</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Italian</EnglishName>
     <NativeName>Italiano</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1064/0/dict-it-IT_and_Latin_2010-08-23.oxt</DownloadLink>
-    <Description>Italian and Latin spelling dictionaries</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/italian-and-latin-spelling-dictionaries/pscreleasefolder.2011-11-05.8867113212/2013.03.31/dict-it-it_and_latin_2013-03-31.oxt</DownloadLink>
+    <Description>Italian and Latin spelling dictionaries 2013.03.31</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Italian</EnglishName>
     <NativeName>Italiano</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1204/1/dict-it.oxt</DownloadLink>
-    <Description>Italian dictionary, thesaurus, hyphenation patterns</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Italian</EnglishName>
-    <NativeName>Italiano</NativeName>
-    <DownloadLink>http://prdownloads.sf.net/linguistico/Dizionari.IT_20081129.oxt</DownloadLink>
-    <Description>Italian dictionaries (spell checker, thesaurus and hyphenation)</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Kannada </EnglishName>
-    <NativeName>ಕನ್ನಡ</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2628/1/kannada.oxt</DownloadLink>
-    <Description>Kannada dictionary and spellchecker</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Kannada Hyphenation Dictionary</EnglishName>
-    <NativeName>
-    </NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2743/2/hyph_kn_1.2.oxt</DownloadLink>
-    <Description>Kannada Hyphenation Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Kazakh</EnglishName>
-    <NativeName>Қазақ</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1172/12/dict-kk.oxt</DownloadLink>
-    <Description>Kazakh Spelling Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Khmer</EnglishName>
-    <NativeName>ខ្មែរ</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2250/2/SBBIC-spellingchecker-OOo.1.3.oxt</DownloadLink>
-    <Description>Khmer Spelling Dictionary (SBBIC Version)</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Kikuyu</EnglishName>
-    <NativeName>Gĩkũyũ</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3849/0/kik_KE.oxt</DownloadLink>
-    <Description>Gĩkũyũ Spelling Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Kinyarwanda</EnglishName>
-    <NativeName>
-    </NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2059/1/rw.oxt</DownloadLink>
-    <Description>Kinyarwanda spelling dictionary</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/italian-dictionary-thesaurus-hyphenation-patterns/releases/3.3.3/dict-it.oxt</DownloadLink>
+    <Description>Italian dictionary, thesaurus, hyphenation patterns 3.3.3</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Korean</EnglishName>
     <NativeName>한글</NativeName>
-    <DownloadLink>http://spellcheck-ko.googlecode.com/files/ko-aff-dic-0.5.5.zip</DownloadLink>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/korean-spellchecker/releases/0.5.6/korean_spell-checker-0-5-6_ooo.oxt</DownloadLink>
+    <Description>Korean spellchecker 0.5.6</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Korean</EnglishName>
+    <NativeName>한글</NativeName>
+    <DownloadLink>https://spellcheck-ko.googlecode.com/files/ko-aff-dic-0.5.6.zip</DownloadLink>
     <Description>Korean spellchecker</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Kurdish</EnglishName>
-    <NativeName>Kurdî</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1023/11/rastnivis.oxt</DownloadLink>
-    <Description>Rastnivîs Kurdish Spellchecker</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Kurdish</EnglishName>
-    <NativeName>Kurdî</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2445/12/kitandin.oxt</DownloadLink>
-    <Description>Kîtandin Kurdish Hyphenation Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Latin</EnglishName>
     <NativeName>Latina</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1141/1/dict-la_2010-08-23.oxt</DownloadLink>
-    <Description>Latin spelling and hyphenation dictionaries</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/latin-spelling-and-hyphenation-dictionaries/pscreleasefolder.2011-11-05.0070960452/2013.03.31/dict-la_2013-03-31.oxt</DownloadLink>
+    <Description>Latin spelling and hyphenation dictionaries 2013.03.31</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Latvian</EnglishName>
     <NativeName>Latviešu</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1357/14/lv_LV-0.9.1.oxt</DownloadLink>
-    <Description>Latviešu valodas pareizrakstības pārbaudes modulis</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/latviesu-valodas-pareizrakstibas-parbaudes-modulis/releases/0.9.6/lv_lv-0-9-6.oxt</DownloadLink>
+    <Description>Latviešu valodas pareizrakstības pārbaudes modulis 0.9.6</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Lithuanian</EnglishName>
     <NativeName>Lietuvių</NativeName>
-    <DownloadLink>http://ftp.akl.lt/ispell-lt/openoffice-spellcheck-lt-1.3.oxt</DownloadLink>
-    <Description>Lietuvių kalbos rašybos tikrinimo žodynas</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/lithuanian-spellcheck-and-hyphenation-dictionaries/releases/1.3/openoffice-spellcheck-lt-1.3.oxt</DownloadLink>
+    <Description>Lithuanian spellcheck and hyphenation dictionaries 1.3</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Lower Sorbian</EnglishName>
     <NativeName>dolnoserbšćina</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3045/8/lower_sorbian_spelling_dictionary-1.4.2.oxt</DownloadLink>
-    <Description>Pšawopisny słownik dolnoserbšćiny</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Macedonian</EnglishName>
-    <NativeName>Македонски</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3403/0/dict-mk.oxt</DownloadLink>
-    <Description>Macedonian Spellchecker Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Malayalam Hyphenation Dictionary</EnglishName>
-    <NativeName>മലയാളം ഹൈഫനേഷന്‍ നിയമങ്ങള്‍</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2739/4/hyph_ml_1.3.oxt</DownloadLink>
-    <Description>Malayalam Hyphenation Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Malayalam Spellchek Dictionary</EnglishName>
-    <NativeName>മലയാളം അക്ഷരത്തെറ്റ് പരിശോധന</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2741/3/ml_IN_dict-1-1.oxt</DownloadLink>
-    <Description>Malayalam Spellchecker Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Maori</EnglishName>
-    <NativeName>Māori</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/820/5/papakupu-mi_NZ-0.5.20080630.oxt</DownloadLink>
-    <Description>Te Papakupu Māori</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Marathi</EnglishName>
-    <NativeName>मराठी</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2369/9/dict_mr.oxt</DownloadLink>
-    <Description>Marathi Spellchecker and Hyphnation Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Marathi Hyphenation Dictionary</EnglishName>
-    <NativeName>Marathi</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2773/5/hyph_mr_1.2.oxt</DownloadLink>
-    <Description>Marathi Hyphenation Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Mongolian</EnglishName>
-    <NativeName>Монгол</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1408/0/dict-mn_0.06-5.oxt</DownloadLink>
-    <Description>Mongolian spell checking dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Ndebele, South</EnglishName>
-    <NativeName>isiNdebele</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3141/0/dict-nr_ZA-2009.10.30.oxt</DownloadLink>
-    <Description>Ndebele (South) spell checker</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Nepali</EnglishName>
-    <NativeName>नेपाली</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2363/0/dict-ne.oxt</DownloadLink>
-    <Description>Nepali Spellchecker Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Nicaragua</EnglishName>
-    <NativeName>
-    </NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1454/0/Diccionarios-Nicaragua.oxt</DownloadLink>
-    <Description>Diccionario para Nicaragua</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Northern Sotho</EnglishName>
-    <NativeName>Sesotho sa Leboa, Sepedi</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3139/1/dict-ns_ZA-2009.12.01.oxt</DownloadLink>
-    <Description>Northern Sotho spell checker</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/lower-sorbian-dictionary/releases/1.4.6/lower_sorbian_spelling_dictionary-1.4.6.oxt</DownloadLink>
+    <Description>Lower Sorbian dictionary 1.4.6</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Norwegian</EnglishName>
@@ -493,59 +204,16 @@
     <Description>Norwegian dictionaries (spell checker, thesaurus and hyphenation)</Description>
   </Dictionary>
   <Dictionary>
-    <EnglishName>Occitan</EnglishName>
-    <NativeName>Occitan</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1559/2/oc_fr.oxt</DownloadLink>
-    <Description>Spellchecker occitan lengadocian </Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Occitan</EnglishName>
-    <NativeName>Occitan</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1856/1/gsc_FR.oxt</DownloadLink>
-    <Description>Spellchecker occitan gascon </Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Panjabi</EnglishName>
-    <NativeName>
-    </NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2790/1/hyph_pa_1.1.oxt</DownloadLink>
-    <Description>Panjabi Hyphenation Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Panjabi</EnglishName>
-    <NativeName>ਪੰਜਾਬੀ</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3227/0/Punjabi_dict.oxt</DownloadLink>
-    <Description>Punjabi Spellchecker Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Persian</EnglishName>
-    <NativeName>فارسی</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2359/1/dict-fa.oxt</DownloadLink>
-    <Description>Persian Spellchecker Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Polish</EnglishName>
-    <NativeName>polski</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/806/4/pl-dict.oxt</DownloadLink>
-    <Description>Polish Dictionary Pack</Description>
+    <EnglishName>Norwegian</EnglishName>
+    <NativeName>Norsk</NativeName>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/norsk-stavekontroll-bokmal-og-nynorsk/pscreleasefolder.2012-01-18.6118770436/2.0.10/dictionary-no-no-1.0.oxt</DownloadLink>
+    <Description>Norsk stavekontroll (bokmål og nynorsk) 2.0.10</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Portuguese (Brazilian)</EnglishName>
     <NativeName>Português (do Brasil)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1375/7/Vero_pt_BR_V207AOC.oxt</DownloadLink>
-    <Description>Vero - Brazilian Portuguese Spellchecking Dictionary &amp;amp; Hyphenator</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Portuguese (European)</EnglishName>
-    <NativeName>Português (Europeu)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1196/5/oo3x-pt-PT.oxt</DownloadLink>
-    <Description>European Portuguese Dictionaries</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Quichua</EnglishName>
-    <NativeName>Kichwa</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2121/6/qu_EC.oxt</DownloadLink>
-    <Description>Kichwa (Ecuador) spellchecker</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/vero-verificador-ortografico-e-hifenizador-em-portugues-do-brasil/pscreleasefolder.2012-01-04.1563120832/2.1/vero_pt_br_v210aoc.oxt</DownloadLink>
+    <Description>VERO - VERificador Ortográfico e hifenizador em Português do Brasil 2.1</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Romanian</EnglishName>
@@ -554,293 +222,93 @@
     <Description>Romanian Dictionaries</Description>
   </Dictionary>
   <Dictionary>
-    <EnglishName>Romanian</EnglishName>
-    <NativeName>română</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1114/11/dict-ro-classic.1.3.oxt</DownloadLink>
-    <Description>Classic Romanian Dictionary Pack  (spell checker, hyphenation, thesaurus)</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Romanian</EnglishName>
-    <NativeName>română</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1392/6/dict-ro.1.3.oxt</DownloadLink>
-    <Description>Romanian Dictionary Pack (spell checker, hyphenation, thesaurus)</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Romanian</EnglishName>
-    <NativeName>Romana</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3671/1/dict-ro.1.3-cedilla.oxt</DownloadLink>
-    <Description>Romanian Dictionary Pack (spell checker, hyphenation, thesaurus) - Cedilla Version</Description>
-  </Dictionary>
-  <Dictionary>
     <EnglishName>Russian</EnglishName>
     <NativeName>Русский</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/936/9/dict_ru_RU-0.6.oxt</DownloadLink>
-    <Description>Russian Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Russian</EnglishName>
-    <NativeName>Русский</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1763/1/dict_ru-RU.oxt</DownloadLink>
-    <Description>Russian dictionary and hyphenation</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Russian</EnglishName>
-    <NativeName>Русский</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2558/0/dict_ru_RU_yo-0.1.oxt</DownloadLink>
-    <Description>Russian Dictionary (Ё)</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Russian</EnglishName>
-    <NativeName>Русский</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3117/6/dict_ru_RU_hyph-0.6.3.oxt</DownloadLink>
-    <Description>Russian dictionary and hyphenation v0.6</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Russian</EnglishName>
-    <NativeName>Русский</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3852/5/ru_RU-medicine-0.4.4.oxt</DownloadLink>
-    <Description>Проверка орфографии медицинских терминов для русского языка</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Russian</EnglishName>
-    <NativeName>Русский</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/4119/0/dict_ru_RU-rk-0.4.1.oxt</DownloadLink>
-    <Description>Russian (R-K) spellchecker dictionary  without yo(ё) letter </Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Russian spelling, hyphenation, thesaurus</EnglishName>
-    <NativeName>Русский орф. словарь, переносы, тезаурус</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3233/2/dict_ru_RU-0.3.6.oxt</DownloadLink>
-    <Description>Словари для русского языка - Dictionaries for Russian</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Sardinian (GSC)</EnglishName>
-    <NativeName>Sardu (GSC)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3332/1/Ditzionariu_SC_GSC-1.1_b1.oxt</DownloadLink>
-    <Description>Ditzionariu Sardu (GSC)</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Sardinian (LSC and GSC)</EnglishName>
-    <NativeName>Sardu (LSC e GSC)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3345/4/Ditzionariu_SC_GSC+LSC-1.1_b1.oxt</DownloadLink>
-    <Description>Ditzionariu Sardu (LSC e GSC)</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Sardinian (LSC)</EnglishName>
-    <NativeName>Sardu (LSC)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3338/1/Ditzionariu_SC_LSC-1.1_b1.oxt</DownloadLink>
-    <Description>Ditzionariu Sardu (LSC)</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/russian-spellcheck-dictionary.-based-on-works-of-aot-group/pscreleasefolder.2011-09-06.6209385965/0.2.9/dict_ru_ru-aot-0-2-9.oxt</DownloadLink>
+    <Description>Russian spellcheck dictionary. Based on works of AOT group. 0.2.9</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Serbian</EnglishName>
     <NativeName>српски</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1572/5/dict-sr.oxt</DownloadLink>
-    <Description>Serbian (Cyrillic and Latin) spellcheck and hyphenation</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Sinhala</EnglishName>
-    <NativeName>සිංහල </NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3811/0/si_LK.oxt</DownloadLink>
-    <Description>Sinhala Ubiquitous Spell Checker</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Sinhalese</EnglishName>
-    <NativeName>සිංහල </NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3467/2/SinhalaSpellChecker-0.0.2.oxt</DownloadLink>
-    <Description>Sinhala Spell Checker</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/serbian-cyrillic-and-latin-spelling-and-hyphenation/releases/2013.07.15/dict-sr.oxt</DownloadLink>
+    <Description>Serbian (Cyrillic and Latin) Spelling and Hyphenation 2013.07.15</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Slovak</EnglishName>
     <NativeName>slovenčina</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1143/8/dict-sk.oxt</DownloadLink>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/slovenian-dictionary-pack/releases/2012.01.04/pack-sl.oxt</DownloadLink>
     <Description>Slovak dictionary package / Slovenské slovníky</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Slovenian</EnglishName>
-    <NativeName>slovenščina</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1260/22/OdprtiTezaver.oxt</DownloadLink>
-    <Description>OdprtiTezaver - Slovenian Thesaurus</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Slovenian</EnglishName>
-    <NativeName>slovensko</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1341/0/dictionaries-sl.oxt</DownloadLink>
-    <Description>Slovenian dictionaries (spell checker, hyphenation, thesaurus) for OpenOffice 3.x</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Slovenian</EnglishName>
-    <NativeName>slovenščina</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3280/2/pack-sl.oxt</DownloadLink>
-    <Description>Slovenian dictionary package / Slovenski paket slovarjev</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Slovenian</EnglishName>
-    <NativeName>slovenščina</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3663/2/dict-sl.oxt</DownloadLink>
-    <Description>Slovenian spelling dictionary and hyphenation patterns</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Sorbian, Upper</EnglishName>
-    <NativeName>Hornjoserbsce</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3257/5/dict_hsb_DE_Xhosa_0.2.20091114.0.oxt</DownloadLink>
-    <Description>Pruwowanje prawopisa za hornjoserbšćinu - Obersorbische Rechtschreibprüfung</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Southern Sotho</EnglishName>
-    <NativeName>Sesotho</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3138/0/dict-st_ZA-2009.10.30.oxt</DownloadLink>
-    <Description>Southern Sotho spell checker</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish</EnglishName>
     <NativeName>Español</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2979/3/es_ES.oxt</DownloadLink>
-    <Description>Spanish - Español</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/diccionario-espanol/releases/1.0/spanish-dictionary.oxt</DownloadLink>
+    <Description>Spanish dictionary 1.0</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish</EnglishName>
     <NativeName>Spanish</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3622/0/dicc-es_CR-0.4.oxt</DownloadLink>
-    <Description>Costa Rica spelling, hyphenation and thesaurus dictionaries</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.6/es_any.oxt</DownloadLink>
+    <Description>Spanish dictionaries 0.6</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish (Argentina)</EnglishName>
     <NativeName>Español (Argentina)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1503/3/Diccionarios-Argentina_1.oxt</DownloadLink>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.6/es_ar.oxt</DownloadLink>
     <Description>Diccionario Español - Argentina (Sinónimos y Separación Silábica)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish (Mexico)</EnglishName>
-    <NativeName>Español (de México)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1289/3/diccionario-es-mx-1.1.0.oxt</DownloadLink>
-    <Description>Diccionarios para México</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Spanish (Mexico)</EnglishName>
     <NativeName>Español (México)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3196/0/es_MX.oxt</DownloadLink>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.6/es_mx.oxt</DownloadLink>
     <Description>Diccionario de corrección ortográfica en español (México)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish (Venezuela)</EnglishName>
     <NativeName>Español (Venezuela)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1526/2/dict-es_VE.oxt</DownloadLink>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.6/es_ve.oxt</DownloadLink>
     <Description>Diccionarios en Español para Venezuela</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Swahili</EnglishName>
     <NativeName>Kiswahili</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2232/0/dicts.sw.oxt</DownloadLink>
-    <Description>Swahili Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Swati</EnglishName>
-    <NativeName>SiSwati</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3137/0/dict-ss_ZA-2009.10.30.oxt</DownloadLink>
-    <Description>Swati spell checker</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/swahili-dictionary/releases/2013.03.12/swahilidictionary-2013-03.12</DownloadLink>
+    <Description>Swahili Dictionary 2013.03.12</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Swedish</EnglishName>
     <NativeName>Svenska</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1080/8/ooo_swedish_dict_1.44.oxt</DownloadLink>
-    <Description>Swedish spelling dictionary</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/swedish-hyphenation/releases/1.11/hyph_sv.oxt</DownloadLink>
+    <Description>Swedish hyphenation 1.11</Description>
   </Dictionary>
   <Dictionary>
-    <EnglishName>Swedish (Finland)</EnglishName>
-    <NativeName>Svenska (Finland)</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3592/1/ooo_swedish_finland_dict_1.42.oxt</DownloadLink>
-    <Description>Swedish spelling dictionary for Finland</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Tagalog</EnglishName>
-    <NativeName>Tagalog</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2638/1/dict-tl.oxt</DownloadLink>
-    <Description>Tagalog Spellchecker Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Tamil</EnglishName>
-    <NativeName>தமிழ்</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2640/2/dict-ta.oxt</DownloadLink>
-    <Description>Tamil Spellchecker dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Tamil</EnglishName>
-    <NativeName>
-    </NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2786/1/hyph_ta_1.1.oxt</DownloadLink>
-    <Description>Tamil Hyphenation Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Telugu</EnglishName>
-    <NativeName>
-    </NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2788/1/hyph_te_1.1.oxt</DownloadLink>
-    <Description>Telugu Hyphenation Dictionary</Description>
+    <EnglishName>Swedish</EnglishName>
+    <NativeName>Svenska</NativeName>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/swedish-thesaurus-based-on-synlex/releases/1.3/swedishthesaurus.oxt</DownloadLink>
+    <Description>Swedish thesaurus based on Synlex 1.3</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Thai</EnglishName>
     <NativeName>ภาษาไทย</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2365/0/dict-th.oxt</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/2365/0/dict-th.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fthai-spellchecker-dictionary&amp;ts=1373919459&amp;use_mirror=netcologne</DownloadLink>
     <Description>Thai Spellchecker Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Tsonga</EnglishName>
-    <NativeName>Xitsonga</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3135/0/dict-ts_ZA-2009.10.30.oxt</DownloadLink>
-    <Description>Tsonga spell checker</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Tswana</EnglishName>
-    <NativeName>Setswana</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3136/0/dict-tn_ZA-2009.10.30.oxt</DownloadLink>
-    <Description>Tswana spell checker</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Ukrainian</EnglishName>
     <NativeName>Українська</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/975/2/dict-uk_UA-1.6.0.oxt</DownloadLink>
-    <Description>Ukrainian Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Urdu</EnglishName>
-    <NativeName>اردو</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/2536/1/dict-ur.oxt</DownloadLink>
-    <Description>Urdu Spellchecker Dictionary</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/ukrainian-spelling-dictionary-and-thesaurus/releases/1.6.7/dict-uk_ua-1-6-7.oxt</DownloadLink>
+    <Description>Ukrainian spelling dictionary and thesaurus 1.6.7</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Valencian</EnglishName>
     <NativeName>valencià</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1395/0/dict_valencian_llit.oxt</DownloadLink>
-    <Description>Valencian Spellchecker Dictionary (LlenguaiTecnologia)</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Valencian</EnglishName>
-    <NativeName>valencià</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/1396/1/dict_valencian_racv.oxt</DownloadLink>
-    <Description>Valencian Spellchecker Dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Venda</EnglishName>
-    <NativeName>Tshivenḓa</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3134/0/dict-ve_ZA-2009.10.30.oxt</DownloadLink>
-    <Description>Venda spell checker</Description>
+    <DownloadLink>http://www.softcatala.org/diccionaris/actualitzacions/OOo/avl.oxt</DownloadLink>
+    <Description>Valencian Catalan Spellcheck Dictionary 2.5.0</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Vietnamese</EnglishName>
     <NativeName>Tiếng Việt</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/917/2/vi_spellchecker_OOo3.oxt</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/917/3/vi_spellchecker_ooo3.oxt?r=http%3A%2F%2Fextensions.services.openoffice.org%2Fen%2Fproject%2Fvietnamese-spellchecker&amp;ts=1373917708&amp;use_mirror=kent</DownloadLink>
     <Description>Vietnamese SpellChecker</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Xhosa</EnglishName>
-    <NativeName>isiXhosa</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3133/0/dict-xh_ZA-2009.10.30.oxt</DownloadLink>
-    <Description>Xhosa spell checker</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Zulu</EnglishName>
-    <NativeName>isiZulu</NativeName>
-    <DownloadLink>http://extensions.services.openoffice.org/e-files/3132/3/dict-zu_ZA-2010.01.26.oxt</DownloadLink>
-    <Description>Zulu spell checker</Description>
   </Dictionary>
 </OpenOfficeDictionaries>

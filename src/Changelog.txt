@@ -11,6 +11,8 @@
    * Updated Dutch language file - thx Herman
    * Updated Czech language file - thx Trottel
    * Updated Brazilian Portuguese translation - thx Igor Rückert
+   * Moving subtitles in waveform will not allow overlap (unless 
+     you hold down the shift key) - thx Leon
    * Added 'regular expression' option to ocr_replace_list - thx paconaranjo
    * Waveform generator - pauses video before starting - thx fox
    * Export to Blu-ray settings now saved - thx Minh
@@ -25,6 +27,7 @@
    * Fixed baseline horizontal alignment in Export to Blu-ray sup - thx THXTEX
    * Fixed multi line color tags when outputting DCinema - thx lillian
    * Fixed 'line-breaks' in csv formats
+   * Fixed dead spell check download links (no more openoffice links)
 
 
 3.3.6 (15th June 2013)
