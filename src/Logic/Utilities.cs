@@ -219,7 +219,7 @@ namespace Nikse.SubtitleEdit.Logic
                         p.EndTime.TotalMilliseconds > positionInMilliseconds)
                     {
                         string text = p.Text.Replace("|", Environment.NewLine);
-                        bool isInfo = p == paragraphs[0] && p.StartTime.TotalMilliseconds == 0 && positionInMilliseconds > 3000;
+                        bool isInfo = p == paragraphs[0] && ((p.StartTime.TotalMilliseconds == 0 && p.Duration.TotalMilliseconds == 0) || p.StartTime.TotalMilliseconds == Pac.PacNullTime.TotalMilliseconds);
                         if (!isInfo)
                         {
                             if (videoPlayerContainer.LastParagraph != p)
