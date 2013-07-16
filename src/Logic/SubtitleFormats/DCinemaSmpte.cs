@@ -119,6 +119,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
+            xml.PreserveWhitespace = true;
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("dcst", xml.DocumentElement.NamespaceURI);
 
