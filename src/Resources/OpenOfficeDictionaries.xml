@@ -162,6 +162,12 @@
     <Description>Italian dictionary, thesaurus, hyphenation patterns 3.3.3</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Khmer</EnglishName>
+    <NativeName>Khmer</NativeName>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/5067/2/dict-km.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fkhmer-spelling-dictionary&amp;ts=1373998173&amp;use_mirror=netcologne</DownloadLink>
+    <Description>Khmer spelling dictionary 2011.05.11</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Korean</EnglishName>
     <NativeName>한글</NativeName>
     <DownloadLink>http://extensions.libreoffice.org/extension-center/korean-spellchecker/releases/0.5.6/korean_spell-checker-0-5-6_ooo.oxt</DownloadLink>

@@ -112,6 +112,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
+            xml.PreserveWhitespace = true;
 
             var ss = Configuration.Settings.SubtitleSettings;
             string loadedFontId = "Font1";
@@ -397,10 +398,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
             string s = ToUtf8XmlString(xml).Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\"");
-            while (s.Contains("</Font> ") || s.Contains(" <Font ") || s.Contains(Environment.NewLine + "<Font ") || s.Contains("</Font>" + Environment.NewLine))
+            while (s.Contains("</Font>  ") || s.Contains("  <Font ") || s.Contains(Environment.NewLine + "<Font ") || s.Contains("</Font>" + Environment.NewLine))
             {
-                s = s.Replace("</Font> ", "</Font>");
-                s = s.Replace(" <Font ", "<Font ");
+                s = s.Replace("</Font>  ", "</Font> ");
+                s = s.Replace("  <Font ", " <Font ");
                 s = s.Replace(Environment.NewLine + "<Font ", "<Font ");
                 s = s.Replace("</Font>" + Environment.NewLine, "</Font>");
             }
