@@ -84,6 +84,12 @@
     <Description>All English dictionaries (AU, CA, GB, US, ZA)</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Farsi (Persian)</EnglishName>
+    <NativeName>Persian/Farsi</NativeName>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/2359/1/dict-fa.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fpersian-spellchecker-dictionary&amp;ts=1374091518&amp;use_mirror=garr</DownloadLink>
+    <Description>Farsi</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>French</EnglishName>
     <NativeName>Français</NativeName>
     <DownloadLink>http://extensions.libreoffice.org/extension-center/dictionnaires-francais/releases/4.11/lo-oo-ressources-linguistiques-fr-v4-11.oxt</DownloadLink>
@@ -204,6 +210,18 @@
     <Description>Lower Sorbian dictionary 1.4.6</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Malay</EnglishName>
+    <NativeName>Malay</NativeName>
+    <DownloadLink>http://ftp.sunet.se/pub/Office/OpenOffice.org/contrib/dictionaries/ms_MY.zip</DownloadLink>
+    <Description>Malay Spellchecker v0.1 - 07/10/04</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Macedonian</EnglishName>
+    <NativeName>Macedonian</NativeName>
+    <DownloadLink>http://ftp.sunet.se/pub/Office/OpenOffice.org/contrib/dictionaries/mk_MK.zip</DownloadLink>
+    <Description>Macedonian dictionary was created by Taras Bendik</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Norwegian</EnglishName>
     <NativeName>Norsk</NativeName>
     <DownloadLink>http://svn.skolelinux.org/websvn/filedetails.php?repname=skolelinux&amp;path=%2Ftrunk%2Fi18n%2Fopenoffice%2Futils%2Fdictionary-no-NO-1.0.oxt</DownloadLink>
@@ -220,6 +238,12 @@
     <NativeName>Português (do Brasil)</NativeName>
     <DownloadLink>http://extensions.libreoffice.org/extension-center/vero-verificador-ortografico-e-hifenizador-em-portugues-do-brasil/pscreleasefolder.2012-01-04.1563120832/2.1/vero_pt_br_v210aoc.oxt</DownloadLink>
     <Description>VERO - VERificador Ortográfico e hifenizador em Português do Brasil 2.1</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Portuguese (Portugal)</EnglishName>
+    <NativeName>Português</NativeName>
+    <DownloadLink>http://ftp.sunet.se/pub/Office/OpenOffice.org/contrib/dictionaries/pt_PT.zip</DownloadLink>
+    <Description>Versão 20.5.2002</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Romanian</EnglishName>

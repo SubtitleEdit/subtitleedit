@@ -3633,7 +3633,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.Title = _language.OpenVideoFile;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetVideoFileFilter();
+            openFileDialog1.Filter = Utilities.GetVideoFileFilter(false);
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 _videoFileName = openFileDialog1.FileName;
@@ -12002,7 +12002,8 @@ namespace Nikse.SubtitleEdit.Forms
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
             openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetVideoFileFilter();
+            openFileDialog1.Filter = Utilities.GetVideoFileFilter(true);
+            
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -13192,7 +13193,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string fileName = files[0];
                 string ext = Path.GetExtension(fileName).ToLower();
-                if (Utilities.GetVideoFileFilter().Contains(ext))
+                if (Utilities.GetVideoFileFilter(true).Contains(ext))
                 {
                     OpenVideo(fileName);
                 }

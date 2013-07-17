@@ -19,6 +19,7 @@
             public string SubtitleFiles { get; set; }
             public string AllFiles { get; set; }
             public string VideoFiles { get; set; }
+            public string AudioFiles { get; set; }
             public string OpenSubtitle { get; set; }
             public string OpenVideoFile { get; set; }
             public string OpenVideoFileTitle { get; set; }
