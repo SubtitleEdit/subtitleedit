@@ -113,6 +113,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SubtitleFiles = "Subtitle files",
                 AllFiles = "All files",
                 VideoFiles = "Video files",
+                AudioFiles = "Audio files",
                 OpenSubtitle = "Open subtitle...",
                 OpenVideoFile = "Open video file...",
                 OpenVideoFileTitle = "Open video file...",

@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Logic
             return new List<string> { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".m2ts" };
         }
 
-        public static string GetVideoFileFilter()
+        public static string GetVideoFileFilter(bool includeAudioFiles)
         {
             var sb = new StringBuilder();
             sb.Append(Configuration.Settings.Language.General.VideoFiles + "|");
@@ -172,6 +172,8 @@ namespace Nikse.SubtitleEdit.Logic
                 sb.Append("*" + extension);
                 i++;
             }
+            if (includeAudioFiles && !string.IsNullOrEmpty(Configuration.Settings.Language.General.AudioFiles))
+                sb.Append("|" + Configuration.Settings.Language.General.AudioFiles + "|*.mp3;*.wav;*.wma;*.ogg;*.mpa;*.ape;*.aiff;*.flac;*.aac");
             sb.Append("|" + Configuration.Settings.Language.General.AllFiles + "|*.*");
             return sb.ToString();
         }
