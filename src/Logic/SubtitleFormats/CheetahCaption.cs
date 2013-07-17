@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             if (buffer[i + 0] == 0xEA &&
                                 buffer[i + 1] == 0x22 &&
-                                buffer[i + 2] < 3)
+                                buffer[i + 2] <= 3)
                                 return true;
                         }
                     }
