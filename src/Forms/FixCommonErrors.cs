@@ -4563,24 +4563,24 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewFixes.SelectedItems.Count > 0)
             {
                 var p = (Paragraph)listViewFixes.SelectedItems[0].Tag;
-                int index = _originalSubtitle.GetIndex(p);
-                if (index >= 0)
-                {
-                    for (int i = 0; i < index; i++)
-                    {
-                        if (_deleteIndices.Contains(i))
-                            index++;
-                    }
 
-                    if (index >= 0 && index < subtitleListView1.Items.Count)
+                int index = -1;
+                foreach (ListViewItem lvi in subtitleListView1.Items)
+                {
+                    Paragraph p2 = lvi.Tag as Paragraph;
+                    if (p.ID == p2.ID)
                     {
+                        index = lvi.Index;
                         if (index - 1 > 0)
                             subtitleListView1.EnsureVisible(index - 1);
                         if (index + 1 < subtitleListView1.Items.Count)
                             subtitleListView1.EnsureVisible(index + 1);
+                        subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
                         subtitleListView1.SelectNone();
+                        subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
                         subtitleListView1.Items[index].Selected = true;
                         subtitleListView1.EnsureVisible(index);
+                        return;
                     }
                 }
             }
