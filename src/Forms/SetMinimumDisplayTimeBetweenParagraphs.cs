@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -25,6 +26,30 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             SubtitleListview1.InitializeTimeStampColumWidths(this);
             FixLargeFonts();
+
+            groupBoxFrameInfo.Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.FrameInfo;
+            comboBoxFrameRate.Items.Add((23.976).ToString());
+            comboBoxFrameRate.Items.Add((24.0).ToString());
+            comboBoxFrameRate.Items.Add((25.0).ToString());
+            comboBoxFrameRate.Items.Add((29.97).ToString());
+            comboBoxFrameRate.Items.Add((30.0).ToString());
+            comboBoxFrameRate.Items.Add((59.94).ToString());
+            if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 23.976) < 0.1)
+                comboBoxFrameRate.SelectedIndex = 0;
+            else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 24) < 0.1)
+                comboBoxFrameRate.SelectedIndex = 1;
+            else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 25) < 0.1)
+                comboBoxFrameRate.SelectedIndex = 2;
+            else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 29.97) < 0.01)
+                comboBoxFrameRate.SelectedIndex = 3;
+            else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 30) < 0.1)
+                comboBoxFrameRate.SelectedIndex = 4;
+            else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 59.94) < 0.1)
+                comboBoxFrameRate.SelectedIndex = 5;
+            else
+                comboBoxFrameRate.SelectedIndex = 3;
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.OneFrameXisYMilliseconds))
+                groupBoxFrameInfo.Visible = false;
         }
 
         private void FixLargeFonts()
@@ -127,6 +152,22 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
             numericUpDownMinMillisecondsBetweenLines.ValueChanged += numericUpDownMinMillisecondsBetweenLines_ValueChanged;
             Configuration.Settings.General.MininumMillisecondsBetweenLines = (int)numericUpDownMinMillisecondsBetweenLines.Value;
+        }
+
+        private void comboBoxFrameRate_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.OneFrameXisYMilliseconds))
+                return;
+
+            double frameRate = 25.0;
+            string s = comboBoxFrameRate.SelectedItem.ToString();
+            s = s.Replace(",", ".").Trim();
+            double d;
+            if (double.TryParse(s, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                frameRate = d;
+
+            long ms = (long)Math.Round(1000 / frameRate);
+            labelOneFrameIsXMS.Text = string.Format(Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.OneFrameXisYMilliseconds, frameRate, ms);
         }
 
     }
