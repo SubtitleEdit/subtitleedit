@@ -361,7 +361,7 @@ namespace Nikse.SubtitleEdit.Controls
             int i = 0;
             foreach (Paragraph paragraph in paragraphs)
             {
-                Add(paragraph, i.ToString(CultureInfo.InvariantCulture));
+                Add(paragraph);
                 if (DisplayExtraFromExtra && IsExtraColumnVisible && Items[i].SubItems.Count > ColumnIndexExtra)
                     Items[i].SubItems[ColumnIndexExtra].Text = paragraph.Extra;
                 SyntaxColorLine(paragraphs, i, paragraph);
@@ -385,7 +385,7 @@ namespace Nikse.SubtitleEdit.Controls
             int i = 0;
             foreach (Paragraph paragraph in paragraphs)
             {
-                Add(paragraph, i.ToString(CultureInfo.InvariantCulture));
+                Add(paragraph);
                 Paragraph alternate = Utilities.GetOriginalParagraph(i, paragraph, paragraphsAlternate);
                 if (alternate != null)
                     SetAlternateText(i, alternate.Text);
@@ -492,9 +492,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private void Add(Paragraph paragraph, string tag)
+        private void Add(Paragraph paragraph)
         {
-            var item = new ListViewItem(paragraph.Number.ToString()) {Tag = tag};
+            var item = new ListViewItem(paragraph.Number.ToString()) {Tag = paragraph };
             ListViewItem.ListViewSubItem subItem;
 
             if (Configuration.Settings != null  && Configuration.Settings.General.UseTimeFormatHHMMSSFF)

@@ -402,6 +402,10 @@ namespace Nikse.SubtitleEdit.Logic
 
             for (int i = 0; i < _paragraphs.Count; i++)
             {
+                if (p.ID == _paragraphs[i].ID)
+                    return i;
+                if (i < _paragraphs.Count -1 && p.ID == _paragraphs[i + 1].ID)
+                    return i+1;
                 if (p.StartTime.TotalMilliseconds == _paragraphs[i].StartTime.TotalMilliseconds &&
                     p.EndTime.TotalMilliseconds == _paragraphs[i].EndTime.TotalMilliseconds)
                     return i;
