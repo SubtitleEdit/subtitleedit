@@ -2593,7 +2593,28 @@ namespace Nikse.SubtitleEdit.Forms
                         MessageBox.Show(_language.FileIsEmptyOrShort);
                     }
                     else
+                    {
+                       string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                       var sb = new StringBuilder();
+                       foreach (string l in arr)
+                            sb.AppendLine(l);                        
+                        string xmlAsString = sb.ToString().Trim();
+                        if (xmlAsString.Contains("http://www.w3.org/ns/ttml") && xmlAsString.Contains("<?xml version="))
+                        {
+                            var xml = new System.Xml.XmlDocument();
+                            try
+                            {
+                                xml.LoadXml(xmlAsString);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Timed text is not valid: " + ex.Message);
+                                return;
+                            }
+                        }
                         ShowUnknownSubtitle();
+                        return;
+                    }
                 }
 
                 if (!videoFileLoaded && mediaPlayer.VideoPlayer != null)

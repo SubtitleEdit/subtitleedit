@@ -590,8 +590,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _libVlcDLL = LoadLibrary(dllFile);
                 LoadLibVlcDynamic();
             }
-            else
+            else if (!Directory.Exists(videoFileName))
+            {
                 return;
+            }
 
             OnVideoLoaded = onVideoLoaded;
             OnVideoEnded = onVideoEnded;

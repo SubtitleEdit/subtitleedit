@@ -38,17 +38,18 @@
             this.labelTitle.AutoSize = true;
             this.labelTitle.Location = new System.Drawing.Point(15, 25);
             this.labelTitle.Name = "labelTitle";
-            this.labelTitle.Size = new System.Drawing.Size(114, 13);
+            this.labelTitle.Size = new System.Drawing.Size(145, 17);
             this.labelTitle.TabIndex = 0;
             this.labelTitle.Text = "Unknown subtitle type";
             // 
             // buttonOK
             // 
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(262, 115);
+            this.buttonOK.Location = new System.Drawing.Point(324, 134);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(100, 27);
             this.buttonOK.TabIndex = 8;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -62,7 +63,7 @@
             this.richTextBoxMessage.Name = "richTextBoxMessage";
             this.richTextBoxMessage.ReadOnly = true;
             this.richTextBoxMessage.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.richTextBoxMessage.Size = new System.Drawing.Size(319, 47);
+            this.richTextBoxMessage.Size = new System.Drawing.Size(406, 47);
             this.richTextBoxMessage.TabIndex = 41;
             this.richTextBoxMessage.TabStop = false;
             this.richTextBoxMessage.Text = "If you want this fixed please send an email to mailto:niksedk@gmail.com and inclu" +
@@ -70,9 +71,9 @@
             // 
             // UnknownSubtitle
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(349, 148);
+            this.ClientSize = new System.Drawing.Size(436, 173);
             this.Controls.Add(this.richTextBoxMessage);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.labelTitle);
