@@ -2570,7 +2570,7 @@ namespace Nikse.SubtitleEdit.Logic
                             sb.Append("Â");
                             break;
                         case "aring":
-                            sb.Append("å ");
+                            sb.Append("å");
                             break;
                         case "Aring":
                             sb.Append("Å");
