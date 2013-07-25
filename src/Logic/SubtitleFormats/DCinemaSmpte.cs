@@ -134,7 +134,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             xml.DocumentElement.SelectSingleNode("dcst:ReelNumber", nsmgr).InnerText = ss.CurrentDCinemaReelNumber;
             xml.DocumentElement.SelectSingleNode("dcst:IssueDate", nsmgr).InnerText = ss.CurrentDCinemaIssueDate;
             xml.DocumentElement.SelectSingleNode("dcst:Language", nsmgr).InnerText = ss.CurrentDCinemaLanguage;
+            if (ss.CurrentDCinemaEditRate == null && ss.CurrentDCinemaTimeCodeRate == null)
+            {
+                if (Configuration.Settings.General.CurrentFrameRate == 24)
+                {
+                    ss.CurrentDCinemaEditRate = "1 24";
+                    ss.CurrentDCinemaTimeCodeRate = "24";
+                }
+                else
+                {
+                    ss.CurrentDCinemaEditRate = "1 25";
+                    ss.CurrentDCinemaTimeCodeRate = "25";
+                }
+            }
             xml.DocumentElement.SelectSingleNode("dcst:EditRate", nsmgr).InnerText = ss.CurrentDCinemaEditRate;
+            xml.DocumentElement.SelectSingleNode("dcst:TimeCodeRate", nsmgr).InnerText = ss.CurrentDCinemaTimeCodeRate;
             xml.DocumentElement.SelectSingleNode("dcst:LoadFont", nsmgr).InnerText = ss.CurrentDCinemaFontUri;
             int fontSize = ss.CurrentDCinemaFontSize;
             string loadedFontId = "Font1";
@@ -435,6 +449,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (node != null)
                     ss.CurrentDCinemaEditRate = node.InnerText;
 
+                node = xml.DocumentElement.SelectSingleNode("TimeCodeRate");
+                if (node != null)
+                    ss.CurrentDCinemaTimeCodeRate = node.InnerText;
+
                 node = xml.DocumentElement.SelectSingleNode("Language");
                 if (node != null)
                     ss.CurrentDCinemaLanguage = node.InnerText;
@@ -693,5 +711,3 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
-
