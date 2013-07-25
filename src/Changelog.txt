@@ -27,7 +27,9 @@
    * Fixed baseline horizontal alignment in Export to Blu-ray sup - thx THXTEX
    * Fixed multi line color tags when outputting DCinema - thx lillian
    * Fixed 'line-breaks' in csv formats
-   * Fixed dead spell check download links (no more openoffice links)
+   * Fixed dead spell check download links (no more OpenOffice links)
+   * Some fixes for DCinema smtp - thx Andrew
+   * Fixed bug regarding decoding &aring; to å - thx Jesper
 
 
 3.3.6 (15th June 2013)
