@@ -26,6 +26,10 @@ namespace Nikse.SubtitleEdit.Forms
             labelMovieTitle.Text = l.MovieTitle;
             labelReelNumber.Text = l.ReelNumber;
             labelLanguage.Text = l.Language;
+            labelIssueDate.Text = l.IssueDate;
+            labelEditRate.Text = l.EditRate;
+            if (!string.IsNullOrEmpty(l.TimeCodeRate)) //TODO: Remove in SE 3.4
+                labelTimeCodeRate.Text = l.TimeCodeRate;
             groupBoxFont.Text = l.Font;
             labelFontId.Text = l.FontId;
             labelFontUri.Text = l.FontUri;
@@ -59,6 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxLanguage.Text = ss.CurrentDCinemaLanguage;
                 textBoxFontID.Text = ss.CurrentDCinemaFontId;
                 textBoxEditRate.Text = ss.CurrentDCinemaEditRate;
+                comboBoxTimeCodeRate.Text = ss.CurrentDCinemaTimeCodeRate;
                 textBoxFontUri.Text = ss.CurrentDCinemaFontUri;
                 textBoxIssueDate.Text = ss.CurrentDCinemaIssueDate;
                 panelFontColor.BackColor = ss.CurrentDCinemaFontColor;
@@ -133,6 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
             ss.CurrentDCinemaMovieTitle = textBoxMovieTitle.Text;
             ss.CurrentDCinemaReelNumber = numericUpDownReelNumber.Value.ToString();
             ss.CurrentDCinemaEditRate = textBoxEditRate.Text;
+            ss.CurrentDCinemaTimeCodeRate = comboBoxTimeCodeRate.Text;
             if (comboBoxLanguage.SelectedItem != null)
                 ss.CurrentDCinemaLanguage = comboBoxLanguage.SelectedItem.ToString();
             else
