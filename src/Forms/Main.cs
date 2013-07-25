@@ -1499,6 +1499,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemVideo.Text = _language.Menu.Video.Title;
             openVideoToolStripMenuItem.Text = _language.Menu.Video.OpenVideo;
+            if (!string.IsNullOrEmpty(_language.Menu.Video.OpenDvd))
+                toolStripMenuItemOpenDvd.Text = _language.Menu.Video.OpenDvd; //TODO: Remove in SE 3.4
             toolStripMenuItemSetAudioTrack.Text = _language.Menu.Video.ChooseAudioTrack;
             closeVideoToolStripMenuItem.Text = _language.Menu.Video.CloseVideo;
 
@@ -17298,6 +17300,42 @@ namespace Nikse.SubtitleEdit.Forms
 
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 SubtitleListview1.SelectIndexAndEnsureVisible(index);
+            }
+            _formPositionsAndSizes.SavePositionAndSize(form);
+        }
+
+        private void toolStripMenuItemOpenDvd_Click(object sender, EventArgs e)
+        {
+            var form = new OpenVideoDvd();
+            _formPositionsAndSizes.SetPositionAndSize(form);
+            if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.DvdPath))
+            {
+                VideoFileName = form.DvdPath;
+                if (mediaPlayer.VideoPlayer != null)
+                {
+                    mediaPlayer.Pause();
+                    mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+                }
+                _endSeconds = -1;
+
+                _videoInfo = new VideoInfo();
+                _videoInfo.Width = 720;
+                _videoInfo.Height = 576;
+                _videoInfo.FramesPerSecond = 25;
+                _videoInfo.VideoCodec = "MPEG2";
+                toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", _videoInfo.FramesPerSecond);
+
+                string oldVideoPlayer = Configuration.Settings.General.VideoPlayer;
+                Configuration.Settings.General.VideoPlayer = "VLC";
+                Utilities.InitializeVideoPlayerAndContainer(VideoFileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
+                mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
+                mediaPlayer.OnButtonClicked -= MediaPlayer_OnButtonClicked;
+                mediaPlayer.OnButtonClicked += MediaPlayer_OnButtonClicked;
+                mediaPlayer.Volume = 0;
+                labelVideoInfo.Text = "DVD" + " " + _videoInfo.Width + "x" + _videoInfo.Height + " " + _videoInfo.VideoCodec.Trim();
+                if (_videoInfo.FramesPerSecond > 0)
+                    labelVideoInfo.Text = labelVideoInfo.Text + " " + string.Format("{0:0.0##}", _videoInfo.FramesPerSecond);
+                Configuration.Settings.General.VideoPlayer = oldVideoPlayer;
             }
             _formPositionsAndSizes.SavePositionAndSize(form);
         }
