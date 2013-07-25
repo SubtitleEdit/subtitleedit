@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                if (!string.IsNullOrEmpty(p.Text))
+                if (p.Text != null)
                 {
                     XmlNode subNode = xml.CreateElement("dcst:Subtitle", "dcst");
 
@@ -415,7 +415,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         subNode.AppendChild(textNode);
                         vPos -= vPosFactor;
                     }
+                    if (subNode.InnerXml == string.Empty)
+                    { // Empty text is just one space
+                        XmlNode textNode = xml.CreateElement("dcst:Text", "dcst");
+                        textNode.InnerXml = " ";
+                        subNode.AppendChild(textNode);
 
+                        XmlAttribute vPosition = xml.CreateAttribute("VPosition");
+                        vPosition.InnerText = vPos.ToString();
+                        textNode.Attributes.Append(vPosition);
+
+                        XmlAttribute vAlign = xml.CreateAttribute("VAlign");
+                        vAlign.InnerText = "bottom";
+                        textNode.Attributes.Append(vAlign);
+                    }
                     mainListFont.AppendChild(subNode);
                     no++;
                 }
