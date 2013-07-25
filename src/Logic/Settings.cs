@@ -193,6 +193,7 @@ namespace Nikse.SubtitleEdit.Logic
         public double SsaFontSize { get; set; }
         public int SsaFontColorArgb { get; set; }
         public string DCinemaFontFile { get; set; }
+        public string DCinemaLoadFontResource { get; set; }        
         public int DCinemaFontSize { get; set; }
         public int DCinemaBottomMargin { get; set; }
         public int DCinemaFadeUpDownTime { get; set; }
@@ -203,6 +204,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string CurrentDCinemaIssueDate { get; set; }
         public string CurrentDCinemaLanguage { get; set; }
         public string CurrentDCinemaEditRate { get; set; }
+        public string CurrentDCinemaTimeCodeRate { get; set; }        
         public string CurrentDCinemaFontId { get; set; }
         public string CurrentDCinemaFontUri { get; set; }
         public Color CurrentDCinemaFontColor { get; set; }
@@ -227,6 +229,7 @@ namespace Nikse.SubtitleEdit.Logic
             SsaFontColorArgb = System.Drawing.Color.FromArgb(255, 255, 255).ToArgb();
 
             DCinemaFontFile = "Arial.ttf";
+            DCinemaLoadFontResource = "urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391";
             DCinemaFontSize = 42;
             DCinemaBottomMargin = 8;
             DCinemaFadeUpDownTime = 5;
@@ -244,6 +247,8 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 CurrentDCinemaSubtitleId = "urn:uuid:" + Guid.NewGuid().ToString();
                 CurrentDCinemaLanguage = "en";
+                CurrentDCinemaFontUri = DCinemaLoadFontResource;
+                CurrentDCinemaFontId = "theFontId";
             }
             else
             {
@@ -251,12 +256,12 @@ namespace Nikse.SubtitleEdit.Logic
                 hex = hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
                 CurrentDCinemaSubtitleId = hex;
                 CurrentDCinemaLanguage = "English";
+                CurrentDCinemaFontUri = DCinemaFontFile;
+                CurrentDCinemaFontId = "Arial";
             }
             CurrentDCinemaIssueDate = DateTime.Now.ToString("s") + ".000-00:00";
             CurrentDCinemaMovieTitle = "title";
-            CurrentDCinemaReelNumber = "1";
-            CurrentDCinemaFontId = "Arial";
-            CurrentDCinemaFontUri = DCinemaFontFile;
+            CurrentDCinemaReelNumber = "1";            
             CurrentDCinemaFontColor = Color.White;
             CurrentDCinemaFontEffect = "border";
             CurrentDCinemaFontEffectColor = Color.Black;

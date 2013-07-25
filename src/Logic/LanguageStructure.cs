@@ -265,6 +265,7 @@
             public string Language { get; set; }
             public string IssueDate { get; set; }
             public string EditRate { get; set; }
+            public string TimeCodeRate { get; set; }
             public string Font { get; set; }
             public string FontId { get; set; }
             public string FontUri { get; set; }
@@ -1016,6 +1017,7 @@
                 {
                     public string Title { get; set; }
                     public string OpenVideo { get; set; }
+                    public string OpenDvd { get; set; }
                     public string ChooseAudioTrack { get; set; }
                     public string CloseVideo { get; set; }
                     public string ImportSceneChanges { get; set; }
@@ -1340,6 +1342,16 @@
             public string ConnectionTo { get; set; }
             public string Information { get; set; }
             public string Start { get; set; }
+        }
+
+        public class OpenVideoDvd
+        {
+            public string Title { get; set; }
+            public string OpenDvdFrom { get; set; }
+            public string Disc { get; set; }
+            public string Folder { get; set; }
+            public string ChooseDrive { get; set; }
+            public string ChooseFolder { get; set; }
         }
 
         public class PluginsGet

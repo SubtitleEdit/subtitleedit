@@ -63,6 +63,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.NetworkJoin NetworkJoin;
         public LanguageStructure.NetworkLogAndInfo NetworkLogAndInfo;
         public LanguageStructure.NetworkStart NetworkStart;
+        public LanguageStructure.OpenVideoDvd OpenVideoDvd;
         public LanguageStructure.PluginsGet PluginsGet;
         public LanguageStructure.RemoveTextFromHearImpaired RemoveTextFromHearImpaired;
         public LanguageStructure.ReplaceDialog ReplaceDialog;
@@ -369,6 +370,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Language = "Language",
                 IssueDate = "Issue date",
                 EditRate = "Edit rate",
+                TimeCodeRate = "Time code rate",
                 Font = "Font",
                 FontId = "ID",
                 FontUri = "URI",
@@ -1126,6 +1128,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         Title = "Video",
                         OpenVideo = "Open video file...",
+                        OpenDvd = "Open DVD...",
                         ChooseAudioTrack = "Choose audio track",
                         CloseVideo = "Close video file",
                         ImportSceneChanges = "Import scene changes...",
@@ -1439,6 +1442,16 @@ can edit in same subtitle file (collaboration)",
                 Information = @"Start new session where multiple persons
 can edit in same subtitle file (collaboration)",
                 Start = "Start",
+            };
+
+            OpenVideoDvd = new LanguageStructure.OpenVideoDvd
+            {
+                Title = "Open DVD via VLC",
+                OpenDvdFrom = "Open DVD from...",
+                Disc = "Disc",
+                Folder = "Folder",
+                ChooseDrive = "Choose drive",
+                ChooseFolder = "Choose folder",
             };
 
             PluginsGet = new LanguageStructure.PluginsGet
