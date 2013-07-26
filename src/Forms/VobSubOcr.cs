@@ -711,6 +711,23 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadImageCompareBitmaps()
         {
+            if (_compareBitmaps != null)            
+            {
+                foreach (CompareItem item in _compareBitmaps)
+                {
+                    if (item.Bitmap != null)
+                    {
+                        try
+                        {
+                            item.Bitmap.Dispose();
+                        }
+                        catch
+                        { 
+                        }
+                    }
+                }
+            }
+
             _compareBitmaps = new List<CompareItem>();
             string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
             if (!File.Exists(path + "CompareDescription.xml"))
