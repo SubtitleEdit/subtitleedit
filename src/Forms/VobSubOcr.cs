@@ -711,22 +711,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadImageCompareBitmaps()
         {
-            if (_compareBitmaps != null)            
-            {
-                foreach (CompareItem item in _compareBitmaps)
-                {
-                    if (item.Bitmap != null)
-                    {
-                        try
-                        {
-                            item.Bitmap.Dispose();
-                        }
-                        catch
-                        { 
-                        }
-                    }
-                }
-            }
+            DisposeImageCompareBitmaps();
 
             _compareBitmaps = new List<CompareItem>();
             string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
@@ -766,6 +751,26 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     catch
                     {
+                    }
+                }
+            }
+        }
+
+        private void DisposeImageCompareBitmaps()
+        {
+            if (_compareBitmaps != null)
+            {
+                foreach (CompareItem item in _compareBitmaps)
+                {
+                    if (item.Bitmap != null)
+                    {
+                        try
+                        {
+                            item.Bitmap.Dispose();
+                        }
+                        catch
+                        {
+                        }
                     }
                 }
             }
@@ -5798,6 +5803,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
         {
+            DisposeImageCompareBitmaps();
+
             if (_tesseractThread != null)
                 _tesseractThread.CancelAsync();
             _tesseractAsyncIndex = 10000;
