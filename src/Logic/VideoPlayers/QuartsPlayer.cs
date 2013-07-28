@@ -61,7 +61,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override double Duration
         {
-            get { return _mediaPosition.Duration; }
+            get 
+            {
+                try
+                {
+                    return _mediaPosition.Duration;
+                }
+                catch
+                {
+                    return 0;
+                }
+            }
         }
 
         public override double CurrentPosition
@@ -236,7 +246,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (_isPaused == false && _quartzFilgraphManager != null && CurrentPosition >= Duration)
             {
                 _isPaused = true;
-                if (OnVideoEnded != null)
+                if (OnVideoEnded != null && _quartzFilgraphManager != null)
                     OnVideoEnded.Invoke(_quartzFilgraphManager, new EventArgs());
             }
         }
