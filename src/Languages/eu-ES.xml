@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Euskara">
   <General>
     <Title>Subtitle Edit</Title>
@@ -15,6 +15,7 @@
     <SubtitleFiles>Azpidatzi agiriak</SubtitleFiles>
     <AllFiles>Agiri guztiak</AllFiles>
     <VideoFiles>Bideo agiriak</VideoFiles>
+    <AudioFiles>Audio agiriak</AudioFiles>
     <OpenSubtitle>Ireki azpidatzia...</OpenSubtitle>
     <OpenVideoFile>Ireki bideoa</OpenVideoFile>
     <OpenVideoFileTitle>Ireki bideo agiria...</OpenVideoFileTitle>
@@ -232,6 +233,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Language>Hizkuntza</Language>
     <IssueDate>Akats eguna</IssueDate>
     <EditRate>Editatu frame neurria</EditRate>
+    <TimeCodeRate>Denbora kode neurria</TimeCodeRate>
     <Font>Hizkia</Font>
     <FontId>ID-a</FontId>
     <FontUri>URI-a</FontUri>
@@ -241,6 +243,10 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <FontSize>Neurria</FontSize>
     <ChooseColor>Hatutatu margoa</ChooseColor>
   </DCinemaProperties>
+  <DurationsBridgeGaps>
+    <Title>Zubitu iraupen hutsarte txikiak</Title>
+    <GapsBridgedX>Zubitutako hutsarte txiki zenbatekoa: {0}</GapsBridgedX>
+  </DurationsBridgeGaps>
   <DvdSubrip>
     <Title>Grabatu ifo/vob azpidatziak (dvd)-tik</Title>
     <DvdGroupTitle>DVD agiri/argibideak</DvdGroupTitle>
@@ -362,8 +368,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Sortu denbora idazki bezala</Title>
-    <Description>
-    </Description>
+    <OpenVideoFile>Hautatu bideo agiria egun/denbora argibideak ateratzeko</OpenVideoFile>
     <StartFrom>Hasi hemendik</StartFrom>
     <DateTimeFormat>Egun/Ordu heuskarria</DateTimeFormat>
     <Example>Adibidea</Example>
@@ -540,8 +545,8 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft itzulpena</Title>
-    <From>Hau:</From>
-    <To>Ra:</To>
+    <From>Hemendik:</From>
+    <To>Hona:</To>
     <Translate>&amp;Itzuli</Translate>
     <SourceText>Iturburu idatzia</SourceText>
     <GoogleTranslate>Google itzulpena</GoogleTranslate>
@@ -551,6 +556,16 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Joan azpidatzi zenbakira</Title>
     <XIsNotAValidNumber>{0} Ez da baliozko zenbakia</XIsNotAValidNumber>
   </GoToLine>
+  <ImportSceneChanges>
+    <Title>Inportatu agerraldi aldaketak</Title>
+    <OpenTextFile>Inportatu idazki agiria...</OpenTextFile>
+    <ImportOptions>Inportatu aukerak</ImportOptions>
+    <TextFiles>Idazki agiriak</TextFiles>
+    <TimeCodes>Denbora kodeak</TimeCodes>
+    <Frames>Frame</Frames>
+    <Seconds>Segundu</Seconds>
+    <Milliseconds>Segundumilaen</Milliseconds>
+  </ImportSceneChanges>
   <ImportText>
     <Title>Inportatu idatzi laua</Title>
     <OpenTextFile>&amp;Ireki idatzi agiria...</OpenTextFile>
@@ -675,6 +690,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Egin itzul&amp;pen huts berri bat uneko azpidatzitik</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>&amp;Multzo bihurketa</BatchConvert>
         <GenerateTimeAsText>Sortu denbora idazki bezala</GenerateTimeAsText>
+        <MeasurementConverter>Neurriketa bihurtzailea...</MeasurementConverter>
         <SplitSubtitle>Ba&amp;nandu azpidatzia...</SplitSubtitle>
         <AppendSubtitle>Erant&amp;si azpidatzia...</AppendSubtitle>
         <JoinSubtitles>Ba&amp;tu azpidatziak...</JoinSubtitles>
@@ -682,8 +698,11 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
       <Video>
         <Title>&amp;Bideoa</Title>
         <OpenVideo>&amp;Ireki bideo agiria...</OpenVideo>
+        <OpenDvd>Ireki DVD-a...</OpenDvd>
         <ChooseAudioTrack>Hautatu audio bidea</ChooseAudioTrack>
         <CloseVideo>It&amp;xi bideo agiria</CloseVideo>
+        <ImportSceneChanges>Inportatu agerraldi aldaketak...</ImportSceneChanges>
+        <RemoveSceneChanges>Kendu agerraldi aldaketak</RemoveSceneChanges>
         <ShowHideVideo>E&amp;rakutsi/ezkutatu bideoa</ShowHideVideo>
         <ShowHideWaveForm>&amp;Erakutsi/ezkutatu uhinera</ShowHideWaveForm>
         <ShowHideWaveformAndSpectrogram>&amp;Erakutsi/ezkutatu uhinera eta argilitzaera</ShowHideWaveformAndSpectrogram>
@@ -742,7 +761,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <Settings>Ezarpenak</Settings>
         <Help>Laguntza</Help>
         <ShowHideWaveForm>Erakutsi/ezkutatu uhinera</ShowHideWaveForm>
-        <ShowHideVideo>Erakutsi/ezkutatu &amp;bideoa</ShowHideVideo>
+        <ShowHideVideo>Erakutsi/ezkutatu bideoa</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
         <AdvancedSubStationAlphaSetStyle>Advanced &amp;Sub Station Alpha - Ezarri estiloa</AdvancedSubStationAlphaSetStyle>
@@ -1094,12 +1113,29 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Azpidatziak batu aurretik</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Azpidatziak batuta</SubtitlesJoined>
     <StatusLog>Egoera oharra</StatusLog>
+    <XSceneChangesImported>{0} agerraldi aldaketa inportaturik</XSceneChangesImported>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Hautatu azpidatzia Matroska agiritik</Title>
     <PleaseChoose>Azpidatzi bat baino gehiago aurkitu da - mesedez hautatu</PleaseChoose>
     <TrackXLanguageYTypeZ>Bidea {0} - {1} - Hizkuntza: {2} - Mota: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MeasurementConverter>
+    <Title>Neurriketa bihurtzailea</Title>
+    <ConvertFrom>Bihurtu hemendik</ConvertFrom>
+    <ConvertTo>Bihurtu hona</ConvertTo>
+    <CopyToClipboard>Kopiatu gakora</CopyToClipboard>
+    <Celsius>Celsius</Celsius>
+    <Fahrenheit>Fahrenheit</Fahrenheit>
+    <Miles>Milia</Miles>
+    <Kilometers>Kilometro</Kilometers>
+    <Meters>Metor</Meters>
+    <Yards>Yarda</Yards>
+    <Feet>Ohin</Feet>
+    <Inches>Hatzbete</Inches>
+    <Pounds>Libera</Pounds>
+    <Kilos>Kilo</Kilos>
+  </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Batu idazki bera duten lerroak</Title>
   </MergeDoubleLines>
@@ -1166,6 +1202,14 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <Information>Hasi jende anitzek azpidatzi bera editatu dezakeen saio berrira (elkarlana)</Information>
     <Start>Hasi</Start>
   </NetworkStart>
+  <OpenVideoDvd>
+    <Title>Ireki DVD-a VLC-rekin</Title>
+    <OpenDvdFrom>Ireki DVD-a hemendik...</OpenDvdFrom>
+    <Disc>Diska</Disc>
+    <Folder>Agiritegia</Folder>
+    <ChooseDrive>Hautatu gidagailua</ChooseDrive>
+    <ChooseFolder>Hautatu agiritegia</ChooseFolder>
+  </OpenVideoDvd>
   <PluginsGet>
     <Title>Pluginak</Title>
     <InstalledPlugins>Ezarritako pluginak</InstalledPlugins>
@@ -1234,6 +1278,9 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <PreviewLinesModifiedX>Aurreikuspena - esaldi aldatuak: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>&amp;Erakutsi aldatutako lerroak bakarrik</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Lerroen arteko segundumilaen gutxiengoa</MinimumMillisecondsBetweenParagraphs>
+    <FrameInfo>
+    </FrameInfo>
+    <OneFrameXisYMilliseconds>Bat frame {0:0.00} fs-ko dira {1} segundumilaen</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Ezarri Albiberetze gunea lerro honi {0}</Title>
