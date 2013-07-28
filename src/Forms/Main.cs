@@ -13559,10 +13559,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripComboBoxWaveForm_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ComboBoxZoomItem item = toolStripComboBoxWaveForm.SelectedItem as ComboBoxZoomItem;
-            if (item != null)
+            try
             {
-                audioVisualizer.ZoomFactor = item.ZoomFactor;
+                ComboBoxZoomItem item = toolStripComboBoxWaveForm.SelectedItem as ComboBoxZoomItem;
+                if (item != null)
+                    audioVisualizer.ZoomFactor = item.ZoomFactor;
+            }
+            catch
+            { 
             }
         }
 
