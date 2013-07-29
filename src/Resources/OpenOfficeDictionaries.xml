@@ -308,14 +308,8 @@
   <Dictionary>
     <EnglishName>Swedish</EnglishName>
     <NativeName>Svenska</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/swedish-hyphenation/releases/1.11/hyph_sv.oxt</DownloadLink>
-    <Description>Swedish hyphenation 1.11</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Swedish</EnglishName>
-    <NativeName>Svenska</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/swedish-thesaurus-based-on-synlex/releases/1.3/swedishthesaurus.oxt</DownloadLink>
-    <Description>Swedish thesaurus based on Synlex 1.3</Description>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/5959/1/dict-sv.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fswedish-dictionaries-apache-openoffice&amp;ts=1375123584&amp;use_mirror=heanet</DownloadLink>
+    <Description>Swedish 2.16</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Thai</EnglishName>
