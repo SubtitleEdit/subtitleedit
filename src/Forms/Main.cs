@@ -433,7 +433,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.OnTimeChanged += AudioWaveForm_OnTimeChanged; // start and/or end position of paragraph changed
                 audioVisualizer.OnNewSelectionRightClicked += AudioWaveForm_OnNewSelectionRightClicked;
                 audioVisualizer.OnParagraphRightClicked += AudioWaveForm_OnParagraphRightClicked;
-                audioVisualizer.OnNonParagraphRightClicked += new AudioVisualizer.PositionChangedEventHandler(AudioWaveForm_OnNonParagraphRightClicked);
+                audioVisualizer.OnNonParagraphRightClicked += AudioWaveForm_OnNonParagraphRightClicked;
                 audioVisualizer.OnSingleClick += AudioWaveForm_OnSingleClick;
                 audioVisualizer.OnPause += AudioWaveForm_OnPause;
                 audioVisualizer.OnTimeChangedAndOffsetRest += AudioWaveForm_OnTimeChangedAndOffsetRest;
@@ -1050,7 +1050,7 @@ namespace Nikse.SubtitleEdit.Forms
             return outputFileName;
         }
 
-        void AudioWaveForm_OnNonParagraphRightClicked(double seconds, Paragraph paragraph)
+        void AudioWaveForm_OnNonParagraphRightClicked(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
             addParagraphHereToolStripMenuItem.Visible = false;
             addParagraphAndPasteToolStripMenuItem.Visible = false;
@@ -1064,19 +1064,19 @@ namespace Nikse.SubtitleEdit.Forms
             contextMenuStripWaveForm.Show(MousePosition.X, MousePosition.Y);
         }
 
-        void AudioWaveForm_OnDoubleClickNonParagraph(double seconds, Paragraph paragraph)
+        void AudioWaveForm_OnDoubleClickNonParagraph(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
             if (mediaPlayer.VideoPlayer != null)
             {
                 _endSeconds = -1;
-                if (paragraph == null)
+                if (e.Paragraph == null)
                 {
                     if (Configuration.Settings.VideoControls.WaveFormDoubleClickOnNonParagraphAction == "PlayPause")
                         mediaPlayer.TogglePlayPause();
                 }
                 else
                 {
-                    SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(paragraph));
+                    SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(e.Paragraph));
                 }
             }
         }
@@ -1086,20 +1086,20 @@ namespace Nikse.SubtitleEdit.Forms
             SelectZoomTextInComboBox();
         }
 
-        void AudioWaveForm_OnTimeChangedAndOffsetRest(double seconds, Paragraph paragraph)
+        void AudioWaveForm_OnTimeChangedAndOffsetRest(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
             if (mediaPlayer.VideoPlayer == null)
                 return;
 
-            int index = _subtitle.Paragraphs.IndexOf(paragraph);
+            int index = _subtitle.Paragraphs.IndexOf(e.Paragraph);
             if (index < 0)
             {
                 if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable)
                 {
-                    index = _subtitleAlternate.GetIndex(paragraph);
+                    index = _subtitleAlternate.GetIndex(e.Paragraph);
                     if (index >= 0)
                     {
-                        var current = Utilities.GetOriginalParagraph(index, paragraph, _subtitle.Paragraphs);
+                        var current = Utilities.GetOriginalParagraph(index, e.Paragraph, _subtitle.Paragraphs);
                         if (current != null)
                         {
                             index = _subtitle.Paragraphs.IndexOf(current);
@@ -1108,13 +1108,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
                 {
-                    index = _subtitle.GetIndex(paragraph);
+                    index = _subtitle.GetIndex(e.Paragraph);
                 }
             }
             if (index >= 0)
             {
                 SubtitleListview1.SelectIndexAndEnsureVisible(index);
-                mediaPlayer.CurrentPosition = seconds;
+                mediaPlayer.CurrentPosition = e.Seconds;
                 ButtonSetStartAndOffsetRestClick(null, null);
             }
             audioVisualizer.Invalidate();
@@ -1127,25 +1127,25 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.Pause();
         }
 
-        void AudioWaveForm_OnSingleClick(double seconds, Paragraph paragraph)
+        void AudioWaveForm_OnSingleClick(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
             timerWaveForm.Stop();
             _endSeconds = -1;
             if (mediaPlayer.VideoPlayer != null)
                 mediaPlayer.Pause();
 
-            mediaPlayer.CurrentPosition = seconds;
+            mediaPlayer.CurrentPosition = e.Seconds;
 
             int index = -1;
             if (SubtitleListview1.SelectedItems.Count > 0)
                 index = SubtitleListview1.SelectedItems[0].Index;
-            SetWaveFormPosition(audioVisualizer.StartPositionSeconds, seconds, index);
+            SetWaveFormPosition(audioVisualizer.StartPositionSeconds, e.Seconds, index);
             timerWaveForm.Start();
         }
 
-        void AudioWaveForm_OnParagraphRightClicked(double seconds, Paragraph paragraph)
+        void AudioWaveForm_OnParagraphRightClicked(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
-            SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(paragraph));
+            SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(e.Paragraph));
 
             addParagraphHereToolStripMenuItem.Visible = false;
             addParagraphAndPasteToolStripMenuItem.Visible = false;
@@ -1157,13 +1157,13 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemWaveFormPlaySelection.Visible = true;
             toolStripSeparator24.Visible = true;
 
-            _audioWaveFormRightClickSeconds = seconds;
+            _audioWaveFormRightClickSeconds = e.Seconds;
             contextMenuStripWaveForm.Show(MousePosition.X, MousePosition.Y);
         }
 
-        void AudioWaveForm_OnNewSelectionRightClicked(Paragraph paragraph)
+        void AudioWaveForm_OnNewSelectionRightClicked(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
-            SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(paragraph));
+            SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(e.Paragraph));
 
             addParagraphHereToolStripMenuItem.Visible = true;
             addParagraphAndPasteToolStripMenuItem.Visible = Clipboard.ContainsText();
@@ -1176,8 +1176,10 @@ namespace Nikse.SubtitleEdit.Forms
             contextMenuStripWaveForm.Show(MousePosition.X, MousePosition.Y);
         }
 
-        void AudioWaveForm_OnTimeChanged(double seconds, Paragraph paragraph, Paragraph beforeParagraph)
+        void AudioWaveForm_OnTimeChanged(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
+            var paragraph = e.Paragraph;
+            var beforeParagraph = e.BeforeParagraph;
             if (beforeParagraph == null)
                 beforeParagraph = paragraph;
 
@@ -1285,11 +1287,11 @@ namespace Nikse.SubtitleEdit.Forms
             _makeHistoryPaused = false;
         }
 
-        void AudioWaveForm_OnPositionSelected(double seconds, Paragraph paragraph)
+        void AudioWaveForm_OnPositionSelected(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
-            mediaPlayer.CurrentPosition = seconds;
-            if (paragraph != null)
-                SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(paragraph));
+            mediaPlayer.CurrentPosition = e.Seconds;
+            if (e.Paragraph != null)
+                SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(e.Paragraph));
         }
 
         private void VideoPositionChanged(object sender, EventArgs e)

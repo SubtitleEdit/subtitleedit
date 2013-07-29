@@ -94,7 +94,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 file.Close();
-                file.Dispose();
             }
             catch
             {

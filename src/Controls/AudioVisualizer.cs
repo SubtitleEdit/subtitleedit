@@ -18,6 +18,28 @@ namespace Nikse.SubtitleEdit.Controls
             End
         }
 
+        public class ParagraphEventArgs : EventArgs
+        {
+            public Paragraph Paragraph { get; private set; }
+            public double Seconds { get; private set; }
+            public Paragraph BeforeParagraph { get; set; }
+            public ParagraphEventArgs(Paragraph p)
+            {
+                Paragraph = p;
+            }
+            public ParagraphEventArgs(double seconds, Paragraph p)
+            {
+                Seconds = seconds;
+                Paragraph = p;
+            }
+            public ParagraphEventArgs(double seconds, Paragraph p, Paragraph b)
+            {
+                Seconds = seconds;
+                Paragraph = p;
+                BeforeParagraph = b;
+            }
+        }
+
         private const int ClosenessForBorderSelection = 14;
         private const int MininumSelectionMilliseconds = 100;
 
@@ -45,21 +67,17 @@ namespace Nikse.SubtitleEdit.Controls
         private double _totalDuration = 0;
         private const int SpectrogramBitmapWidth = 1024;
 
-        public delegate void ParagraphChangedHandler(Paragraph paragraph);
-        public event ParagraphChangedHandler OnNewSelectionRightClicked;
-        public event PositionChangedEventHandler OnParagraphRightClicked;
-        public event PositionChangedEventHandler OnNonParagraphRightClicked;
+        public delegate void ParagraphEventHandler(object sender, ParagraphEventArgs e);
+        public event ParagraphEventHandler OnNewSelectionRightClicked;
+        public event ParagraphEventHandler OnParagraphRightClicked;
+        public event ParagraphEventHandler OnNonParagraphRightClicked;
+        public event ParagraphEventHandler OnPositionSelected;
 
-        public delegate void PositionChangedEventHandler(double seconds, Paragraph paragraph);
-        public event PositionChangedEventHandler OnPositionSelected;
+        public event ParagraphEventHandler OnTimeChanged;
+        public event ParagraphEventHandler OnTimeChangedAndOffsetRest;
 
-        public delegate void TimeChangedEventHandler(double seconds, Paragraph paragraph);
-        public delegate void TimeChangedWithHistoryEventHandler(double seconds, Paragraph paragraph, Paragraph beforeParagraph);
-        public event TimeChangedWithHistoryEventHandler OnTimeChanged;
-        public event TimeChangedEventHandler OnTimeChangedAndOffsetRest;
-
-        public event TimeChangedEventHandler OnSingleClick;
-        public event TimeChangedEventHandler OnDoubleClickNonParagraph;
+        public event ParagraphEventHandler OnSingleClick;
+        public event ParagraphEventHandler OnDoubleClickNonParagraph;
         public event EventHandler OnPause;
         public event EventHandler OnZoomedChanged;
 
@@ -396,8 +414,7 @@ namespace Nikse.SubtitleEdit.Controls
                 int maxHeight = (int)(Math.Max(Math.Abs(_wavePeaks.DataMinValue), Math.Abs(_wavePeaks.DataMaxValue)) + 0.5);
                 maxHeight = (int)(maxHeight * VerticalZoomPercent);
                 if (maxHeight < 0)
-                    maxHeight = 1000;
-                var pen = new Pen(Color);
+                    maxHeight = 1000;                
 
                 DrawBackground(graphics);
                 int x = 0;
@@ -412,6 +429,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 var penNormal = new Pen(Color);
                 var penSelected = new Pen(SelectedColor); // selected paragraph
+                var pen = penNormal;
                 int lastCurrentEnd = -1;
 
                 if (ShowWaveform)
@@ -530,7 +548,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     brush.Dispose();
                 }
-                pen.Dispose();
+                pen = null;
                 penNormal.Dispose();
                 penSelected.Dispose();
             }
@@ -607,7 +625,6 @@ namespace Nikse.SubtitleEdit.Controls
                 position = SecondsToXPosition(seconds);
             }
             pen.Dispose();
-            textBrush.Dispose();
             textBrush.Dispose();
         }
 
@@ -774,7 +791,7 @@ namespace Nikse.SubtitleEdit.Controls
                                     if (paragraph.EndTime.TotalMilliseconds >= _wholeParagraphMaxMilliseconds)
                                         paragraph.EndTime.TotalMilliseconds = _wholeParagraphMaxMilliseconds - 1;
                                 }
-                                OnNewSelectionRightClicked.Invoke(paragraph);
+                                OnNewSelectionRightClicked.Invoke(this, new ParagraphEventArgs(paragraph));
                                 NewSelectionParagraph = paragraph;
                                 RightClickedParagraph = null;
                                 _noClear = true;
@@ -791,7 +808,7 @@ namespace Nikse.SubtitleEdit.Controls
                             if (OnParagraphRightClicked != null)
                             {
                                 NewSelectionParagraph = null;
-                                OnParagraphRightClicked.Invoke(seconds, p);
+                                OnParagraphRightClicked.Invoke(this, new ParagraphEventArgs(seconds, p));
                             }
                         }
                         else
@@ -1009,7 +1026,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 else
                                 {
                                     if (OnTimeChanged != null)
-                                        OnTimeChanged.Invoke(seconds, _mouseDownParagraph, _oldParagraph);
+                                        OnTimeChanged.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph));
                                 }
                             }
                         }
@@ -1035,7 +1052,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 else
                                 {
                                     if (OnTimeChanged != null)
-                                        OnTimeChanged.Invoke(seconds, _mouseDownParagraph, _oldParagraph);
+                                        OnTimeChanged.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph));
                                 }
                             }
                         }
@@ -1058,7 +1075,7 @@ namespace Nikse.SubtitleEdit.Controls
                             }
 
                             if (OnTimeChanged != null)
-                                OnTimeChanged.Invoke(seconds, _mouseDownParagraph, _oldParagraph);
+                                OnTimeChanged.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph));
                         }
                     }
                     else
@@ -1227,7 +1244,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 if (OnDoubleClickNonParagraph != null)
-                    OnDoubleClickNonParagraph.Invoke(seconds, p);
+                    OnDoubleClickNonParagraph.Invoke(this, new ParagraphEventArgs(seconds, p));
             }
         }
 
@@ -1259,7 +1276,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 _mouseDownParagraph = _selectedParagraph;
                                 _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
                                 if (OnTimeChanged != null)
-                                    OnTimeChanged.Invoke(seconds, _mouseDownParagraph, _oldParagraph);
+                                    OnTimeChanged.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph));
                             }
                         }
                         return;
@@ -1276,7 +1293,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 _mouseDownParagraph = _selectedParagraph;
                                 _mouseDownParagraph.EndTime.TotalMilliseconds = milliseconds;
                                 if (OnTimeChanged != null)
-                                    OnTimeChanged.Invoke(seconds, _mouseDownParagraph, _oldParagraph);
+                                    OnTimeChanged.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph));
                             }
                         }
                         return;
@@ -1289,7 +1306,7 @@ namespace Nikse.SubtitleEdit.Controls
                             _oldParagraph = new Paragraph(_selectedParagraph);
                             _mouseDownParagraph = _selectedParagraph;
                             if (OnTimeChangedAndOffsetRest != null)
-                                OnTimeChangedAndOffsetRest.Invoke(seconds, _mouseDownParagraph);
+                                OnTimeChangedAndOffsetRest.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph));
                         }
                         return;
                     }
@@ -1305,7 +1322,7 @@ namespace Nikse.SubtitleEdit.Controls
                             _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
                             _mouseDownParagraph.EndTime.TotalMilliseconds = _mouseDownParagraph.StartTime.TotalMilliseconds + durationMilliseconds;
                             if (OnTimeChanged != null)
-                                OnTimeChanged.Invoke(seconds, _mouseDownParagraph, _oldParagraph);
+                                OnTimeChanged.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph));
                         }
                         return;
                     }
