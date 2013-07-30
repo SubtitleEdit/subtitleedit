@@ -5350,7 +5350,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = oldSubtitle.GetParagraphOrDefault(i);
-                if (p != null && p.Text != string.Empty)
+                if (p != null && p.Text.Length > 0)
                 {
                     _subtitle.Paragraphs[i].Text = p.Text;
                 }

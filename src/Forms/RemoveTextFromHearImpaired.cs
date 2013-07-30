@@ -397,7 +397,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (remove)
                             {
                                 string content = s.Substring(indexOfColon + 1).Trim();
-                                if (content != string.Empty)
+                                if (content.Length > 0)
                                 {
                                     if (pre.Contains("<i>") && content.Contains("</i>"))
                                         newText = newText + Environment.NewLine + "<i>" + content;

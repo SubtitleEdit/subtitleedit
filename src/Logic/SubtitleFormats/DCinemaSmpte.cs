@@ -149,11 +149,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             xml.DocumentElement.SelectSingleNode("dcst:EditRate", nsmgr).InnerText = ss.CurrentDCinemaEditRate;
             xml.DocumentElement.SelectSingleNode("dcst:TimeCodeRate", nsmgr).InnerText = ss.CurrentDCinemaTimeCodeRate;
+            if (string.IsNullOrEmpty(ss.CurrentDCinemaStartTime))
+                ss.CurrentDCinemaStartTime = "00:00:00:00";
+            xml.DocumentElement.SelectSingleNode("dcst:StartTime", nsmgr).InnerText = ss.CurrentDCinemaStartTime;
             xml.DocumentElement.SelectSingleNode("dcst:LoadFont", nsmgr).InnerText = ss.CurrentDCinemaFontUri;
             int fontSize = ss.CurrentDCinemaFontSize;
             string loadedFontId = "Font1";
             if (!string.IsNullOrEmpty(ss.CurrentDCinemaFontId))
                 loadedFontId = ss.CurrentDCinemaFontId;
+            xml.DocumentElement.SelectSingleNode("dcst:LoadFont", nsmgr).Attributes["ID"].Value = loadedFontId;
             xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Size"].Value = fontSize.ToString();
             xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Color"].Value = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontColor).TrimStart('#').ToUpper();
             xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["ID"].Value = loadedFontId;
@@ -415,7 +419,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         subNode.AppendChild(textNode);
                         vPos -= vPosFactor;
                     }
-                    if (subNode.InnerXml == string.Empty)
+                    if (subNode.InnerXml.Length == 0)
                     { // Empty text is just one space
                         XmlNode textNode = xml.CreateElement("dcst:Text", "dcst");
                         textNode.InnerXml = " ";
@@ -465,6 +469,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 node = xml.DocumentElement.SelectSingleNode("TimeCodeRate");
                 if (node != null)
                     ss.CurrentDCinemaTimeCodeRate = node.InnerText;
+
+                node = xml.DocumentElement.SelectSingleNode("StartTime");
+                if (node != null)
+                    ss.CurrentDCinemaStartTime = node.InnerText;
 
                 node = xml.DocumentElement.SelectSingleNode("Language");
                 if (node != null)
@@ -518,7 +526,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     string vPosition = innerNode.Attributes["VPosition"].InnerText;
                                     if (vPosition != lastVPosition)
                                     {
-                                        if (pText.Length > 0 && lastVPosition != string.Empty)
+                                        if (pText.Length > 0 && lastVPosition.Length > 0)
                                             pText.AppendLine();
                                         lastVPosition = vPosition;
                                     }

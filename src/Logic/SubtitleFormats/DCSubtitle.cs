@@ -480,7 +480,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     string vPosition = innerNode.Attributes["VPosition"].InnerText;
                                     if (vPosition != lastVPosition)
                                     {
-                                        if (pText.Length > 0 && lastVPosition != string.Empty)
+                                        if (pText.Length > 0 && lastVPosition.Length > 0)
                                             pText.AppendLine();
                                         lastVPosition = vPosition;
                                     }
