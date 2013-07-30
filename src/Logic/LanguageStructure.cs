@@ -266,6 +266,7 @@
             public string IssueDate { get; set; }
             public string EditRate { get; set; }
             public string TimeCodeRate { get; set; }
+            public string StartTime { get; set; }
             public string Font { get; set; }
             public string FontId { get; set; }
             public string FontUri { get; set; }
@@ -274,6 +275,7 @@
             public string FontEffectColor { get; set; }
             public string FontSize { get; set; }
             public string ChooseColor { get; set; }
+            public string Generate { get; set; }
         }
 
         public class DurationsBridgeGaps

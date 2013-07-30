@@ -2598,24 +2598,43 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                       string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
-                       var sb = new StringBuilder();
-                       foreach (string l in arr)
-                            sb.AppendLine(l);                        
-                        string xmlAsString = sb.ToString().Trim();
-                        if (xmlAsString.Contains("http://www.w3.org/ns/ttml") && xmlAsString.Contains("<?xml version="))
+                        if (!string.IsNullOrEmpty(fileName) && fileName.ToLower().EndsWith(".xml"))
                         {
-                            var xml = new System.Xml.XmlDocument();
-                            try
+                            string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                            var sb = new StringBuilder();
+                            foreach (string l in arr)
+                                sb.AppendLine(l);
+                            string xmlAsString = sb.ToString().Trim();
+                            if (xmlAsString.Contains("http://www.w3.org/ns/ttml") && xmlAsString.Contains("<?xml version="))
                             {
-                                xml.LoadXml(xmlAsString);
+                                var xml = new System.Xml.XmlDocument();
+                                try
+                                {
+                                    xml.LoadXml(xmlAsString);
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show("Timed text is not valid: " + ex.Message);
+                                    return;
+                                }
                             }
-                            catch (Exception ex)
+
+                            if (xmlAsString.Contains("http://www.w3.org/") &&
+                                xmlAsString.Contains("/ttaf1"))
                             {
-                                MessageBox.Show("Timed text is not valid: " + ex.Message);
-                                return;
+                                var xml = new System.Xml.XmlDocument();
+                                try
+                                {
+                                    xml.LoadXml(xmlAsString);
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show("Timed text is not valid: " + ex.Message);
+                                    return;
+                                }
                             }
                         }
+
                         ShowUnknownSubtitle();
                         return;
                     }

@@ -371,6 +371,7 @@ namespace Nikse.SubtitleEdit.Logic
                 IssueDate = "Issue date",
                 EditRate = "Edit rate",
                 TimeCodeRate = "Time code rate",
+                StartTime = "Start time",
                 Font = "Font",
                 FontId = "ID",
                 FontUri = "URI",
@@ -379,6 +380,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FontEffectColor = "Effect color",
                 FontSize = "Size",
                 ChooseColor = "Choose color...",
+                Generate = "Generate",
             };
 
             DurationsBridgeGaps = new LanguageStructure.DurationsBridgeGaps

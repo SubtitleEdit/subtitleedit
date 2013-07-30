@@ -204,7 +204,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string CurrentDCinemaIssueDate { get; set; }
         public string CurrentDCinemaLanguage { get; set; }
         public string CurrentDCinemaEditRate { get; set; }
-        public string CurrentDCinemaTimeCodeRate { get; set; }        
+        public string CurrentDCinemaTimeCodeRate { get; set; }
+        public string CurrentDCinemaStartTime { get; set; }
         public string CurrentDCinemaFontId { get; set; }
         public string CurrentDCinemaFontUri { get; set; }
         public Color CurrentDCinemaFontColor { get; set; }

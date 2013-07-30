@@ -143,17 +143,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
 
                     TimeCode startCode = new TimeCode(TimeSpan.FromSeconds(startSeconds));
-                    if (start != string.Empty)
+                    if (start.Length > 0)
                     {
                         startCode = GetTimeCode(start);
                     }
 
                     TimeCode endCode;
-                    if (end != string.Empty)
+                    if (end.Length > 0)
                     {
                         endCode = GetTimeCode(end);
                     }
-                    else if (dur != string.Empty)
+                    else if (dur.Length > 0)
                     {
                         endCode = new TimeCode(TimeSpan.FromMilliseconds(GetTimeCode(dur).TotalMilliseconds + startCode.TotalMilliseconds));
                     }

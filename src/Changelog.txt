@@ -11,6 +11,7 @@
    * Updated Dutch language file - thx Herman
    * Updated Czech language file - thx Trottel
    * Updated Brazilian Portuguese translation - thx Igor Rückert
+   * Updated German translation - thx Siegwarth
    * Moving subtitles in waveform will not allow overlap (unless 
      you hold down the shift key) - thx Leon
    * Added 'regular expression' option to ocr_replace_list - thx paconaranjo
@@ -18,6 +19,7 @@
    * Export to Blu-ray settings now saved - thx Minh
    * Do not load plugins + subtitle formats when opening a sub - thx Orr
    * Fixed slow loading of regular expressions in "Multiple replace" - thx TeDDy
+   * When opening an invalid Timed Text file an improved error will now be shown
 * FIXED:
    * Fixed crash/bugs in MicroDvd format - thx klm
    * Fixed annoying crash when loading a subtitle from 'source view'

@@ -30,6 +30,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelEditRate.Text = l.EditRate;
             if (!string.IsNullOrEmpty(l.TimeCodeRate)) //TODO: Remove in SE 3.4
                 labelTimeCodeRate.Text = l.TimeCodeRate;
+            if (!string.IsNullOrEmpty(l.StartTime)) //TODO: Remove in SE 3.4
+                labelStartTime.Text = l.StartTime;
             groupBoxFont.Text = l.Font;
             labelFontId.Text = l.FontId;
             labelFontUri.Text = l.FontUri;
@@ -39,6 +41,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelEffectColor.Text = l.FontEffectColor;
             buttonFontEffectColor.Text = l.ChooseColor;
             labelFontSize.Text = l.FontSize;
+            buttonGenerateID.Text = l.Generate;
+            buttonGenFontUri.Text = l.Generate;
 
             this._subtitle = _subtitle;
             this._videoFileName = _videoFileName;
@@ -64,6 +68,12 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxFontID.Text = ss.CurrentDCinemaFontId;
                 textBoxEditRate.Text = ss.CurrentDCinemaEditRate;
                 comboBoxTimeCodeRate.Text = ss.CurrentDCinemaTimeCodeRate;
+
+                timeUpDownStartTime.Mode = SubtitleEdit.Controls.TimeUpDown.TimeMode.HHMMSSFF;
+                if (string.IsNullOrEmpty(ss.CurrentDCinemaStartTime))
+                    ss.CurrentDCinemaStartTime = "00:00:00:00";
+                timeUpDownStartTime.MaskedTextBox.Text = ss.CurrentDCinemaStartTime;
+
                 textBoxFontUri.Text = ss.CurrentDCinemaFontUri;
                 textBoxIssueDate.Text = ss.CurrentDCinemaIssueDate;
                 panelFontColor.BackColor = ss.CurrentDCinemaFontColor;
@@ -139,6 +149,7 @@ namespace Nikse.SubtitleEdit.Forms
             ss.CurrentDCinemaReelNumber = numericUpDownReelNumber.Value.ToString();
             ss.CurrentDCinemaEditRate = textBoxEditRate.Text;
             ss.CurrentDCinemaTimeCodeRate = comboBoxTimeCodeRate.Text;
+            ss.CurrentDCinemaStartTime = timeUpDownStartTime.TimeCode.ToHHMMSSFF();
             if (comboBoxLanguage.SelectedItem != null)
                 ss.CurrentDCinemaLanguage = comboBoxLanguage.SelectedItem.ToString();
             else
@@ -163,6 +174,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonCancel_Click_1(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string hex = Guid.NewGuid().ToString().Replace("-", string.Empty);
+            textBoxFontUri.Text = "urn:uuid:" + hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
         }
 
     }

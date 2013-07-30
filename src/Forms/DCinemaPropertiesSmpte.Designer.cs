@@ -65,6 +65,9 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.labelStartTime = new System.Windows.Forms.Label();
+            this.buttonGenFontUri = new System.Windows.Forms.Button();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).BeginInit();
             this.groupBoxFont.SuspendLayout();
@@ -77,6 +80,8 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.timeUpDownStartTime);
+            this.groupBox1.Controls.Add(this.labelStartTime);
             this.groupBox1.Controls.Add(this.comboBoxTimeCodeRate);
             this.groupBox1.Controls.Add(this.labelTimeCodeRate);
             this.groupBox1.Controls.Add(this.textBoxEditRate);
@@ -98,7 +103,7 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(777, 542);
+            this.groupBox1.Size = new System.Drawing.Size(777, 557);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             // 
@@ -114,7 +119,7 @@
             this.comboBoxTimeCodeRate.Margin = new System.Windows.Forms.Padding(4);
             this.comboBoxTimeCodeRate.Name = "comboBoxTimeCodeRate";
             this.comboBoxTimeCodeRate.Size = new System.Drawing.Size(148, 24);
-            this.comboBoxTimeCodeRate.TabIndex = 38;
+            this.comboBoxTimeCodeRate.TabIndex = 7;
             // 
             // labelTimeCodeRate
             // 
@@ -132,7 +137,7 @@
             this.textBoxEditRate.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxEditRate.Name = "textBoxEditRate";
             this.textBoxEditRate.Size = new System.Drawing.Size(148, 22);
-            this.textBoxEditRate.TabIndex = 7;
+            this.textBoxEditRate.TabIndex = 6;
             this.textBoxEditRate.Text = "1 24";
             // 
             // labelEditRate
@@ -152,7 +157,7 @@
             this.buttonToday.Margin = new System.Windows.Forms.Padding(4);
             this.buttonToday.Name = "buttonToday";
             this.buttonToday.Size = new System.Drawing.Size(133, 26);
-            this.buttonToday.TabIndex = 6;
+            this.buttonToday.TabIndex = 5;
             this.buttonToday.Text = "Now";
             this.buttonToday.UseVisualStyleBackColor = true;
             this.buttonToday.Click += new System.EventHandler(this.buttonToday_Click);
@@ -163,7 +168,7 @@
             this.textBoxIssueDate.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxIssueDate.Name = "textBoxIssueDate";
             this.textBoxIssueDate.Size = new System.Drawing.Size(364, 22);
-            this.textBoxIssueDate.TabIndex = 5;
+            this.textBoxIssueDate.TabIndex = 4;
             this.textBoxIssueDate.Text = "2005-07-14T21:52:02.000-00:00";
             // 
             // labelIssueDate
@@ -183,7 +188,7 @@
             this.comboBoxLanguage.Margin = new System.Windows.Forms.Padding(4);
             this.comboBoxLanguage.Name = "comboBoxLanguage";
             this.comboBoxLanguage.Size = new System.Drawing.Size(148, 24);
-            this.comboBoxLanguage.TabIndex = 4;
+            this.comboBoxLanguage.TabIndex = 3;
             // 
             // labelLanguage
             // 
@@ -223,7 +228,7 @@
             0});
             this.numericUpDownReelNumber.Name = "numericUpDownReelNumber";
             this.numericUpDownReelNumber.Size = new System.Drawing.Size(149, 22);
-            this.numericUpDownReelNumber.TabIndex = 3;
+            this.numericUpDownReelNumber.TabIndex = 2;
             this.numericUpDownReelNumber.Value = new decimal(new int[] {
             1,
             0,
@@ -235,6 +240,7 @@
             this.groupBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFont.Controls.Add(this.buttonGenFontUri);
             this.groupBoxFont.Controls.Add(this.numericUpDownTopBottomMargin);
             this.groupBoxFont.Controls.Add(this.label2);
             this.groupBoxFont.Controls.Add(this.panelFontEffectColor);
@@ -251,12 +257,12 @@
             this.groupBoxFont.Controls.Add(this.labelFontId);
             this.groupBoxFont.Controls.Add(this.textBoxFontUri);
             this.groupBoxFont.Controls.Add(this.labelFontUri);
-            this.groupBoxFont.Location = new System.Drawing.Point(8, 269);
+            this.groupBoxFont.Location = new System.Drawing.Point(8, 292);
             this.groupBoxFont.Margin = new System.Windows.Forms.Padding(4);
             this.groupBoxFont.Name = "groupBoxFont";
             this.groupBoxFont.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBoxFont.Size = new System.Drawing.Size(761, 262);
-            this.groupBoxFont.TabIndex = 8;
+            this.groupBoxFont.Size = new System.Drawing.Size(761, 254);
+            this.groupBoxFont.TabIndex = 9;
             this.groupBoxFont.TabStop = false;
             this.groupBoxFont.Text = "Font";
             // 
@@ -276,7 +282,7 @@
             0});
             this.numericUpDownTopBottomMargin.Name = "numericUpDownTopBottomMargin";
             this.numericUpDownTopBottomMargin.Size = new System.Drawing.Size(149, 22);
-            this.numericUpDownTopBottomMargin.TabIndex = 29;
+            this.numericUpDownTopBottomMargin.TabIndex = 9;
             this.numericUpDownTopBottomMargin.Value = new decimal(new int[] {
             1,
             0,
@@ -300,7 +306,7 @@
             this.panelFontEffectColor.Margin = new System.Windows.Forms.Padding(4);
             this.panelFontEffectColor.Name = "panelFontEffectColor";
             this.panelFontEffectColor.Size = new System.Drawing.Size(27, 24);
-            this.panelFontEffectColor.TabIndex = 6;
+            this.panelFontEffectColor.TabIndex = 7;
             this.panelFontEffectColor.Click += new System.EventHandler(this.buttonFontEffectColor_Click);
             // 
             // buttonFontEffectColor
@@ -309,7 +315,7 @@
             this.buttonFontEffectColor.Margin = new System.Windows.Forms.Padding(4);
             this.buttonFontEffectColor.Name = "buttonFontEffectColor";
             this.buttonFontEffectColor.Size = new System.Drawing.Size(149, 26);
-            this.buttonFontEffectColor.TabIndex = 4;
+            this.buttonFontEffectColor.TabIndex = 6;
             this.buttonFontEffectColor.Text = "Choose color";
             this.buttonFontEffectColor.UseVisualStyleBackColor = true;
             this.buttonFontEffectColor.Click += new System.EventHandler(this.buttonFontEffectColor_Click);
@@ -321,7 +327,7 @@
             this.panelFontColor.Margin = new System.Windows.Forms.Padding(4);
             this.panelFontColor.Name = "panelFontColor";
             this.panelFontColor.Size = new System.Drawing.Size(27, 24);
-            this.panelFontColor.TabIndex = 3;
+            this.panelFontColor.TabIndex = 4;
             this.panelFontColor.Click += new System.EventHandler(this.buttonFontColor_Click);
             // 
             // buttonFontColor
@@ -330,7 +336,7 @@
             this.buttonFontColor.Margin = new System.Windows.Forms.Padding(4);
             this.buttonFontColor.Name = "buttonFontColor";
             this.buttonFontColor.Size = new System.Drawing.Size(149, 26);
-            this.buttonFontColor.TabIndex = 2;
+            this.buttonFontColor.TabIndex = 3;
             this.buttonFontColor.Text = "Choose color";
             this.buttonFontColor.UseVisualStyleBackColor = true;
             this.buttonFontColor.Click += new System.EventHandler(this.buttonFontColor_Click);
@@ -356,7 +362,7 @@
             0});
             this.numericUpDownFontSize.Name = "numericUpDownFontSize";
             this.numericUpDownFontSize.Size = new System.Drawing.Size(149, 22);
-            this.numericUpDownFontSize.TabIndex = 5;
+            this.numericUpDownFontSize.TabIndex = 8;
             // 
             // labelFontSize
             // 
@@ -380,7 +386,7 @@
             this.comboBoxFontEffect.Margin = new System.Windows.Forms.Padding(4);
             this.comboBoxFontEffect.Name = "comboBoxFontEffect";
             this.comboBoxFontEffect.Size = new System.Drawing.Size(148, 24);
-            this.comboBoxFontEffect.TabIndex = 3;
+            this.comboBoxFontEffect.TabIndex = 5;
             // 
             // labelEffect
             // 
@@ -492,7 +498,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(695, 564);
+            this.buttonCancel.Location = new System.Drawing.Point(695, 579);
             this.buttonCancel.Margin = new System.Windows.Forms.Padding(4);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(100, 26);
@@ -505,7 +511,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(587, 564);
+            this.buttonOK.Location = new System.Drawing.Point(587, 579);
             this.buttonOK.Margin = new System.Windows.Forms.Padding(4);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(100, 26);
@@ -514,11 +520,44 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click_1);
             // 
+            // labelStartTime
+            // 
+            this.labelStartTime.AutoSize = true;
+            this.labelStartTime.Location = new System.Drawing.Point(21, 263);
+            this.labelStartTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelStartTime.Name = "labelStartTime";
+            this.labelStartTime.Size = new System.Drawing.Size(68, 17);
+            this.labelStartTime.TabIndex = 39;
+            this.labelStartTime.Text = "Start time";
+            // 
+            // buttonGenFontUri
+            // 
+            this.buttonGenFontUri.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonGenFontUri.Location = new System.Drawing.Point(605, 50);
+            this.buttonGenFontUri.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonGenFontUri.Name = "buttonGenFontUri";
+            this.buttonGenFontUri.Size = new System.Drawing.Size(133, 26);
+            this.buttonGenFontUri.TabIndex = 2;
+            this.buttonGenFontUri.Text = "Generate";
+            this.buttonGenFontUri.UseVisualStyleBackColor = true;
+            this.buttonGenFontUri.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // timeUpDownStartTime
+            // 
+            this.timeUpDownStartTime.AutoSize = true;
+            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(241, 263);
+            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.timeUpDownStartTime.Mode = Nikse.SubtitleEdit.Controls.TimeUpDown.TimeMode.HHMMSSMS;
+            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(123, 27);
+            this.timeUpDownStartTime.TabIndex = 8;
+            // 
             // DCinemaPropertiesSmpte
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(809, 605);
+            this.ClientSize = new System.Drawing.Size(809, 620);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBox1);
@@ -582,5 +621,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox comboBoxTimeCodeRate;
         private System.Windows.Forms.Label labelTimeCodeRate;
+        private Controls.TimeUpDown timeUpDownStartTime;
+        private System.Windows.Forms.Label labelStartTime;
+        private System.Windows.Forms.Button buttonGenFontUri;
     }
 }
