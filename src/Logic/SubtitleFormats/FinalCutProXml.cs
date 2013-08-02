@@ -59,19 +59,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (Configuration.Settings.General.CurrentFrameRate < 25)
                 return "FALSE";
             return "TRUE";
-            //if (Configuration.Settings.General.CurrentFrameRate < 29)
-            //    return "FALSE";
-            //if (Configuration.Settings.General.CurrentFrameRate < 29)
-            //    return "FALSE";
-            //if (Configuration.Settings.General.CurrentFrameRate < 30)
-            //    return "TRUE"; // ntsc 29.97
-            //if (Configuration.Settings.General.CurrentFrameRate < 40)
-            //    return "TRUE";
-            //if (Configuration.Settings.General.CurrentFrameRate < 40)
-            //    return "TRUE";
-            //if (Configuration.Settings.General.CurrentFrameRate < 60)
-            //    return "TRUE"; // ntsc 59.94
-            //return "FALSE";
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -194,7 +181,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
               <parameter>
                 <parameterid>font</parameterid>
                 <name>Font</name>
-                <value>Lucida Grande</value>
+                <value>[FONTNAME]</value>
               </parameter>
               <parameter>
                 <parameterid>style</parameterid>
@@ -422,7 +409,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     fontStyle = "4"; //4==bold/italic
                 else if (s.StartsWith("<i>") && s.EndsWith("</i>"))
                     fontStyle = "3"; //3==italic
-                generatorItem.InnerXml = xmlTrackStructure.Replace("[NUMBER]", number.ToString()).Replace("[FONTSTYLE]", fontStyle).Replace("[FONTSIZE]", Configuration.Settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture)).Replace("[NUMBER]", number.ToString(CultureInfo.InvariantCulture));
+                generatorItem.InnerXml = xmlTrackStructure.Replace("[NUMBER]", number.ToString()).Replace("[FONTSTYLE]", fontStyle).
+                    Replace("[FONTSIZE]", Configuration.Settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture)).
+                    Replace("[FONTNAME]", Configuration.Settings.SubtitleSettings.FcpFontName).
+                    Replace("[NUMBER]", number.ToString(CultureInfo.InvariantCulture));
 
                 double frameRate = Configuration.Settings.General.CurrentFrameRate;
                 XmlNode start = generatorItem.SelectSingleNode("generatoritem/start");

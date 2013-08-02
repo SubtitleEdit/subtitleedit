@@ -227,6 +227,12 @@
     <Compile Include="Forms\DurationsBridgeGaps.Designer.cs">
       <DependentUpon>DurationsBridgeGaps.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FcpProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FcpProperties.Designer.cs">
+      <DependentUpon>FcpProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ImportSceneChanges.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1126,6 +1132,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DurationsBridgeGaps.resx">
       <DependentUpon>DurationsBridgeGaps.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FcpProperties.resx">
+      <DependentUpon>FcpProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImportSceneChanges.resx">
       <DependentUpon>ImportSceneChanges.cs</DependentUpon>

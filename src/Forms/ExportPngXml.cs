@@ -540,8 +540,8 @@ namespace Nikse.SubtitleEdit.Forms
         <ntsc>FALSE</ntsc>
         <timebase>25</timebase>
       </rate>
-      <string>10:00:00:00</string>
-      <frame>900000</frame>
+      <string>00:00:00:00</string>
+      <frame>0</frame>
       <source>source</source>
       <displayformat>NDF</displayformat>
     </timecode>
@@ -859,8 +859,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(param.SavDialogFileName)) + "{0:0000}", i);
                         string fileName = numberString + "." + comboBoxImageFormat.Text.ToLower();
                         string fileNameNoPath = Path.GetFileName(fileName);
-                        string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
-
+                        string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);                        
                         string template = " <clipitem id=\"" + fileNameNoPath + "\">" + Environment.NewLine +
 @"            <name>" + fileNameNoPath + @"</name>
             <duration>[DURATION]</duration>
@@ -883,12 +882,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
               <rate>
                 <timebase>25</timebase>
               </rate>
-              <duration>2</duration>
-              <width>720</width>
-              <height>576</height>
+              <duration>[DURATION]</duration>
+              <width>" + param.ScreenWidth.ToString() + @"</width>
+              <height>" + param.ScreenHeight.ToString() + @"</height>
               <media>
                 <video>
-                  <duration>2</duration>
+                  <duration>[DURATION]</duration>
                   <stillframe>TRUE</stillframe>
                   <samplecharacteristics>
                     <width>720</width>
