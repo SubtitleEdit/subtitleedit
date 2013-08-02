@@ -23,7 +23,14 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(SubtitleListview1);
+            SubtitleListview1.ShowExtraColumn(Configuration.Settings.Language.DurationsBridgeGaps.GapToNext);
+            SubtitleListview1.DisplayExtraFromExtra = true;
             SubtitleListview1.AutoSizeAllColumns(this);
+
+            labelBridgePart1.Text = Configuration.Settings.Language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart1;
+            numericUpDownMaxMs.Left = labelBridgePart1.Left + labelBridgePart1.Width + 4;
+            labelMilliseconds.Text = Configuration.Settings.Language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2;
+            labelMilliseconds.Left = numericUpDownMaxMs.Left + numericUpDownMaxMs.Width + 4;
 
             _subtitle = subtitle;
             try
@@ -72,18 +79,41 @@ namespace Nikse.SubtitleEdit.Forms
 
             for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
             {
+                
                 Paragraph cur = _fixedSubtitle.Paragraphs[i];
                 Paragraph next = _fixedSubtitle.Paragraphs[i + 1];
+                string before = null;
                 if (Math.Abs(cur.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds) < (double)numericUpDownMaxMs.Value)
                 {
-                    cur.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds-1;
+                    before = string.Format("{0:0.000}", (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds - 1) / 1000.0);
+                    if (radioButtonDivideEven.Checked && next.StartTime.TotalMilliseconds > cur.EndTime.TotalMilliseconds)
+                    {
+                        double half = (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / 2.0;
+                        next.StartTime.TotalMilliseconds -= half;
+                    }
+                    cur.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
                     fixedIndexes.Add(i);
                     fixedIndexes.Add(i+1);
                     count++;
                 }
+                var msToNext = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds -1;
+                if (msToNext < 2000)
+                {
+                    if (!string.IsNullOrEmpty(before))
+                        cur.Extra = string.Format("{0} => {1:0.000}", before, msToNext / 1000.0);
+                    else
+                        cur.Extra = string.Format("{0:0.000}", msToNext / 1000.0);
+                }
             }
 
             SubtitleListview1.Fill(_fixedSubtitle);
+            for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
+            {
+                Paragraph cur = _fixedSubtitle.Paragraphs[i];
+                SubtitleListview1.SetExtraText(i, cur.Extra, SubtitleListview1.ForeColor);
+                SubtitleListview1.SetBackgroundColor(i, SubtitleListview1.BackColor);
+            }
+
             foreach (var index in fixedIndexes)
                 SubtitleListview1.SetBackgroundColor(index, Color.Green);
             SubtitleListview1.EndUpdate();
