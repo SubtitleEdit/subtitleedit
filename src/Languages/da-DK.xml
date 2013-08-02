@@ -674,6 +674,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Værktøj</Title>
         <AdjustDisplayDuration>&amp;Juster visningstider...</AdjustDisplayDuration>
         <ApplyDurationLimits>Overhold visnings-grænser...</ApplyDurationLimits>
+        <DurationsBridgeGap>Lap huller i varigheder...</DurationsBridgeGap>
         <FixCommonErrors>&amp;Ret almindelige fejl...</FixCommonErrors>
         <StartNumberingFrom>Begynd nummerering fra...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Fjern tekst for hørehæmmede...</RemoveTextForHearingImpaired>
