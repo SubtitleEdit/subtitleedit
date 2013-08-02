@@ -1449,6 +1449,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolsToolStripMenuItem.Text = _language.Menu.Tools.Title;
             adjustDisplayTimeToolStripMenuItem.Text = _language.Menu.Tools.AdjustDisplayDuration;
             toolStripMenuItemApplyDurationLimits.Text = _language.Menu.Tools.ApplyDurationLimits;
+            toolStripMenuItemDurationBridgeGaps.Text = _language.Menu.Tools.DurationsBridgeGap;
+            toolStripMenuItemDurationBridgeGaps.Visible = !string.IsNullOrEmpty(_language.Menu.Tools.DurationsBridgeGap); //TODO: Remove in SE 3.4
             fixToolStripMenuItem.Text = _language.Menu.Tools.FixCommonErrors;
             startNumberingFromToolStripMenuItem.Text = _language.Menu.Tools.StartNumberingFrom;
             removeTextForHearImparedToolStripMenuItem.Text = _language.Menu.Tools.RemoveTextForHearingImpaired;
@@ -11473,6 +11475,15 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            if (_changeSubtitleToString != _subtitle.ToText(new SubRip()).Trim())
+            {
+                if (!Text.EndsWith("*"))
+                    Text = Text.TrimEnd() + " *";
+            }
+            else
+            {
+                Text = Text.TrimEnd('*').TrimEnd();
+            }
             ShowSubtitleTimer.Start();
         }
 
@@ -12291,7 +12302,7 @@ namespace Nikse.SubtitleEdit.Forms
                     value = trackBarWaveFormPosition.Minimum;
                 trackBarWaveFormPosition.Value = value;
                 trackBarWaveFormPosition.ValueChanged += trackBarWaveFormPosition_ValueChanged;
-            }
+            }         
         }
 
         private void StopAutoDuration()
