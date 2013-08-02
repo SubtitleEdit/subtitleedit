@@ -1101,6 +1101,7 @@ namespace Nikse.SubtitleEdit.Logic
                         Title = "Tools",
                         AdjustDisplayDuration = "&Adjust durations...",
                         ApplyDurationLimits = "Apply duration limits...",
+                        DurationsBridgeGap = "Bridge gap in durations...",
                         FixCommonErrors = "&Fix common errors...",
                         StartNumberingFrom = "Start numbering from...",
                         RemoveTextForHearingImpaired = "Remove text for hearing impaired...",

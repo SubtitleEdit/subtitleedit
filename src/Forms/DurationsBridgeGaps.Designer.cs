@@ -52,12 +52,13 @@
             // 
             // groupBoxLinesFound
             // 
-            this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLinesFound.Controls.Add(this.SubtitleListview1);
             this.groupBoxLinesFound.Location = new System.Drawing.Point(15, 65);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
-            this.groupBoxLinesFound.Size = new System.Drawing.Size(832, 490);
+            this.groupBoxLinesFound.Size = new System.Drawing.Size(832, 484);
             this.groupBoxLinesFound.TabIndex = 53;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines that will be bridged";
@@ -75,7 +76,7 @@
             this.SubtitleListview1.Location = new System.Drawing.Point(3, 16);
             this.SubtitleListview1.Name = "SubtitleListview1";
             this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(826, 471);
+            this.SubtitleListview1.Size = new System.Drawing.Size(826, 465);
             this.SubtitleListview1.TabIndex = 54;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.UseSyntaxColoring = true;
@@ -122,7 +123,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(691, 591);
+            this.buttonOK.Location = new System.Drawing.Point(691, 555);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 55;
@@ -135,7 +136,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(772, 591);
+            this.buttonCancel.Location = new System.Drawing.Point(772, 555);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 56;
@@ -145,11 +146,12 @@
             // 
             // radioButtonProlongEndTime
             // 
+            this.radioButtonProlongEndTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.radioButtonProlongEndTime.AutoSize = true;
             this.radioButtonProlongEndTime.Checked = true;
             this.radioButtonProlongEndTime.Location = new System.Drawing.Point(586, 17);
             this.radioButtonProlongEndTime.Name = "radioButtonProlongEndTime";
-            this.radioButtonProlongEndTime.Size = new System.Drawing.Size(169, 17);
+            this.radioButtonProlongEndTime.Size = new System.Drawing.Size(171, 17);
             this.radioButtonProlongEndTime.TabIndex = 61;
             this.radioButtonProlongEndTime.TabStop = true;
             this.radioButtonProlongEndTime.Text = "Previous text takes all gap time";
@@ -158,6 +160,7 @@
             // 
             // radioButtonDivideEven
             // 
+            this.radioButtonDivideEven.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.radioButtonDivideEven.AutoSize = true;
             this.radioButtonDivideEven.Location = new System.Drawing.Point(586, 40);
             this.radioButtonDivideEven.Name = "radioButtonDivideEven";
@@ -171,7 +174,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(859, 624);
+            this.ClientSize = new System.Drawing.Size(859, 588);
             this.Controls.Add(this.radioButtonDivideEven);
             this.Controls.Add(this.radioButtonProlongEndTime);
             this.Controls.Add(this.labelMilliseconds);
@@ -181,6 +184,7 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.KeyPreview = true;
+            this.MinimumSize = new System.Drawing.Size(850, 400);
             this.Name = "DurationsBridgeGaps";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
