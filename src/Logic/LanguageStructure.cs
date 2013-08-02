@@ -282,6 +282,9 @@
         {
             public string Title { get; set; }
             public string GapsBridgedX { get; set; }
+            public string GapToNext { get; set; }
+            public string BridgeGapsSmallerThanXPart1 { get; set; }
+            public string BridgeGapsSmallerThanXPart2 { get; set; }
         }
 
         public class DvdSubRip
