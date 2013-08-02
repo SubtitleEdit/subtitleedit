@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.3.7 (2nd August 2013)
+3.3.7 (3rd August 2013)
 * NEW:
    * Added Spanish (Mexico) language file - thx paconaranjo
    * Added a few new subtitle formats

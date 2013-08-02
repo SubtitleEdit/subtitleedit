@@ -16,6 +16,7 @@
     <SubtitleFiles>Undertekst filer</SubtitleFiles>
     <AllFiles>Alle filer</AllFiles>
     <VideoFiles>Video filer</VideoFiles>
+    <AudioFiles>Lydfiler</AudioFiles>
     <OpenSubtitle>Åbn undertekst...</OpenSubtitle>
     <OpenVideoFile>Åbn video fil...</OpenVideoFile>
     <OpenVideoFileTitle>Åbn video fil...</OpenVideoFileTitle>
@@ -232,6 +233,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Language>Sprog</Language>
     <IssueDate>Udgivelsesdato</IssueDate>
     <EditRate>Edit frame rate</EditRate>
+    <TimeCodeRate>Tidskode rate</TimeCodeRate>
+    <StartTime>Start tid</StartTime>
     <Font>Font</Font>
     <FontId>ID</FontId>
     <FontUri>URI</FontUri>
@@ -240,7 +243,17 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffectColor>Effekt farve</FontEffectColor>
     <FontSize>Str.</FontSize>
     <ChooseColor>Vælg farve...</ChooseColor>
+    <Generate>Generer</Generate>
   </DCinemaProperties>
+  <DurationsBridgeGaps>
+    <Title>Lap små huller i varigheder</Title>
+    <GapsBridgedX>antal små huller lukket: {0}</GapsBridgedX>
+    <GapToNext>Gap til næste</GapToNext>
+    <BridgeGapsSmallerThanXPart1>Lap huller mindre end</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart2>millisekunder</BridgeGapsSmallerThanXPart2>
+    <ProlongEndTime>Forrige tekst tager alle tiden</ProlongEndTime>
+    <DivideEven>Tid deles</DivideEven>
+  </DurationsBridgeGaps>
   <DvdSubrip>
     <Title>Rip undertekster fra ifo/vobs (dvd)</Title>
     <DvdGroupTitle>DVD-filer/info</DvdGroupTitle>
@@ -363,7 +376,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Generer tid som tekst</Title>
-    <Description>Beskrivelse</Description>
+    <OpenVideoFile>Vælg videofil til at udtrække dato/tid info fra</OpenVideoFile>
     <StartFrom>Start fra</StartFrom>
     <DateTimeFormat>Dato/tid format</DateTimeFormat>
     <Example>Eksempel</Example>
@@ -519,6 +532,16 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Download>Download</Download>
     <XDownloaded>{0} hentet</XDownloaded>
   </GetDictionaries>
+  <GetTesseractDictionaries>
+    <Title>Mangler ordbøger?</Title>
+    <DescriptionLine1>Hent Tesseract OCR ordbøger fra internettet</DescriptionLine1>
+    <DownloadFailed>Download mislykkedes!</DownloadFailed>
+    <GetDictionariesHere>Hent ordbøger her:</GetDictionariesHere>
+    <ChooseLanguageAndClickDownload>Vælg dit sprog og klik på Download</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>Åbn 'Ordbøger' folder</OpenDictionariesFolder>
+    <Download>Hent</Download>
+    <XDownloaded>{0} er blevet hentet og installeret</XDownloaded>
+  </GetTesseractDictionaries>
   <GoogleTranslate>
     <Title>Google oversættelse</Title>
     <From>Fra:</From>
@@ -541,6 +564,16 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Gå til linjenummer</Title>
     <XIsNotAValidNumber>{0} er ikke et gyldigt tal</XIsNotAValidNumber>
   </GoToLine>
+  <ImportSceneChanges>
+    <Title>Importer sceneskift</Title>
+    <OpenTextFile>Åbn tekst fil...</OpenTextFile>
+    <ImportOptions>Importindstillinger</ImportOptions>
+    <TextFiles>Tekstfiler</TextFiles>
+    <TimeCodes>Tidskoder</TimeCodes>
+    <Frames>Rammer</Frames>
+    <Seconds>Sekunder</Seconds>
+    <Milliseconds>Millisekunder</Milliseconds>
+  </ImportSceneChanges>
   <ImportText>
     <Title>Importer tekst</Title>
     <OpenTextFile>Åbn tekst fil...</OpenTextFile>
@@ -665,6 +698,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Dan ny tom oversættelse fra aktuelle undertekst</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Batch konverter...</BatchConvert>
         <GenerateTimeAsText>Generer tid som tekst...</GenerateTimeAsText>
+        <MeasurementConverter>Enhedskonverter...</MeasurementConverter>
         <SplitSubtitle>Split undertekst...</SplitSubtitle>
         <AppendSubtitle>Tilføj/append undertekst...</AppendSubtitle>
         <JoinSubtitles>Flet undertekster...</JoinSubtitles>
@@ -672,8 +706,11 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
       <Video>
         <Title>Video</Title>
         <OpenVideo>Åbn video fil...</OpenVideo>
-        <ChooseAudioTrack>Vælg lyd spor</ChooseAudioTrack>
+        <OpenDvd>Åbn DVD...</OpenDvd>
+        <ChooseAudioTrack>Vælg lydspor</ChooseAudioTrack>
         <CloseVideo>Luk videofil</CloseVideo>
+        <ImportSceneChanges>Importer sceneskift...</ImportSceneChanges>
+        <RemoveSceneChanges>Fjern sceneskift</RemoveSceneChanges>
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
         <ShowHideWaveForm>Vis/skjul lyd kurve</ShowHideWaveForm>
         <ShowHideWaveformAndSpectrogram>Vis/skjul bølgeform og spektrogram</ShowHideWaveformAndSpectrogram>
@@ -1086,12 +1123,29 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Før flet af undertekster</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Undertekster flettet</SubtitlesJoined>
     <StatusLog>Status beskeder</StatusLog>
+    <XSceneChangesImported>{0} sceneskift importeret</XSceneChangesImported>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
     <PleaseChoose>Mere end en undertekst fundet - så vælg</PleaseChoose>
     <TrackXLanguageYTypeZ>Spor {0} - {1} - sprog: {2} - type: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MeasurementConverter>
+    <Title>Enhedskonverter</Title>
+    <ConvertFrom>konverter fra</ConvertFrom>
+    <ConvertTo>Konverter til</ConvertTo>
+    <CopyToClipboard>Kopier til udklipsholder</CopyToClipboard>
+    <Celsius>Celsius</Celsius>
+    <Fahrenheit>Fahrenheit</Fahrenheit>
+    <Miles>Miles</Miles>
+    <Kilometers>Kilometer</Kilometers>
+    <Meters>Meter</Meters>
+    <Yards>Yards</Yards>
+    <Feet>Feet</Feet>
+    <Inches>Tommer</Inches>
+    <Pounds>Pund</Pounds>
+    <Kilos>Kilo</Kilos>
+  </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Flet linjer med samme tekst</Title>
   </MergeDoubleLines>
@@ -1160,6 +1214,14 @@ Fortsæt?</SubtitleAppendPrompt>
  kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Start>Start</Start>
   </NetworkStart>
+  <OpenVideoDvd>
+    <Title>Åbn DVD via VLC</Title>
+    <OpenDvdFrom>Åbn DVD fra...</OpenDvdFrom>
+    <Disc>Disc</Disc>
+    <Folder>Mappe</Folder>
+    <ChooseDrive>Vælg drev</ChooseDrive>
+    <ChooseFolder>Vælg mappe</ChooseFolder>
+  </OpenVideoDvd>
   <PluginsGet>
     <Title>Plugins</Title>
     <InstalledPlugins>Installerede plugins</InstalledPlugins>
@@ -1228,6 +1290,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <PreviewLinesModifiedX>Resultat - antal linier rettet: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Vis kun rettede linier</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum millisekunder mellem linjerne</MinimumMillisecondsBetweenParagraphs>
+    <FrameInfo>Frame info</FrameInfo>
+    <OneFrameXisYMilliseconds>En frame ved {0:0.00} fps er {1} milliseconds</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Set synkroniserings punkt for linje {0}</Title>
@@ -1382,7 +1446,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <AdjustStartDownEndUpAndGoToNext>Tast ned = set start, tast op = sæt slut og gå til næste</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Flyt valgte linjer 100 ms frem</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Flyt valgte linjer 100 ms tilbage</AdjustSelected100MsBack>
-    <AdjustSetStartTimeOnly>Sæt starttid, behold sluttid</AdjustSetStartTimeOnly>
+    <AdjustSetStartTimeKeepDuration>Sæt starttid, behold varighed</AdjustSetStartTimeKeepDuration>
     <MainCreateStartDownEndUp>Opret ny på tast-ned, sæt sluttid ved tast-op</MainCreateStartDownEndUp>
     <MergeDialogue>Flet dialog (indsæt tankestreger)</MergeDialogue>
     <GoToNext>Gå til næste linje</GoToNext>
