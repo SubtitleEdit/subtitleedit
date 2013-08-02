@@ -12458,6 +12458,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             toolStripMenuItemNuendoProperties.Visible = format.GetType() == typeof(Nuendo);
+            toolStripMenuItemFcpProperties.Visible = format.GetType() == typeof(FinalCutProXml);
 
             toolStripSeparator20.Visible = subtitleLoaded;
 
@@ -17270,10 +17271,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripMenuItemNuendoPropertiesClick(object sender, EventArgs e)
         {
             var form = new NuendoProperties();
+            _formPositionsAndSizes.SetPositionAndSize(form);
             if (form.ShowDialog(this) == DialogResult.OK)
             {
                 Configuration.Settings.SubtitleSettings.NuendoCharacterListFile = form.CharacterListFile;
             }
+            _formPositionsAndSizes.SavePositionAndSize(form);
         }
 
         private void toolStripMenuItemDost_Click(object sender, EventArgs e)
@@ -17361,6 +17364,18 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_videoInfo.FramesPerSecond > 0)
                     labelVideoInfo.Text = labelVideoInfo.Text + " " + string.Format("{0:0.0##}", _videoInfo.FramesPerSecond);
                 Configuration.Settings.General.VideoPlayer = oldVideoPlayer;
+            }
+            _formPositionsAndSizes.SavePositionAndSize(form);
+        }
+
+        private void toolStripMenuItemFcpProperties_Click(object sender, EventArgs e)
+        {
+            var form = new FcpProperties();
+            _formPositionsAndSizes.SetPositionAndSize(form);
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                Configuration.Settings.SubtitleSettings.FcpFontSize = form.FcpFontSize;
+                Configuration.Settings.SubtitleSettings.FcpFontName = form.FcpFontName;
             }
             _formPositionsAndSizes.SavePositionAndSize(form);
         }

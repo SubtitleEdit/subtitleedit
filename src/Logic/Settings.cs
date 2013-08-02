@@ -220,6 +220,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string TimedText10TimeCodeFormat { get; set; }
 
         public int FcpFontSize { get; set; }
+        public string FcpFontName { get; set; }
 
         public string NuendoCharacterListFile { get; set; }
 
@@ -240,6 +241,7 @@ namespace Nikse.SubtitleEdit.Logic
             TimedText10TimeCodeFormat = "Default";
 
             FcpFontSize = 18;
+            FcpFontName = "Lucida Grande";
         }
 
         public void InitializeDCinameSettings(bool smpte)
@@ -1492,6 +1494,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("FcpFontSize");
                 if (subNode != null)
                     settings.SubtitleSettings.FcpFontSize = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("FcpFontName");
+                if (subNode != null)
+                    settings.SubtitleSettings.FcpFontName = subNode.InnerText;
                 subNode = node.SelectSingleNode("NuendoCharacterListFile");
                 if (subNode != null)
                     settings.SubtitleSettings.NuendoCharacterListFile = subNode.InnerText;
@@ -2368,6 +2373,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SamiDisplayTwoClassesAsTwoSubtitles", settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles.ToString());
             textWriter.WriteElementString("TimedText10TimeCodeFormat", settings.SubtitleSettings.TimedText10TimeCodeFormat);
             textWriter.WriteElementString("FcpFontSize", settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("FcpFontName", settings.SubtitleSettings.FcpFontName);
             textWriter.WriteElementString("NuendoCharacterListFile", settings.SubtitleSettings.NuendoCharacterListFile);
             textWriter.WriteEndElement();
 
