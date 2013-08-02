@@ -30,20 +30,21 @@
         {
             this.labelMilliseconds = new System.Windows.Forms.Label();
             this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
-            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.numericUpDownMaxMs = new System.Windows.Forms.NumericUpDown();
-            this.labelMaxMs = new System.Windows.Forms.Label();
+            this.labelBridgePart1 = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.radioButtonProlongEndTime = new System.Windows.Forms.RadioButton();
+            this.radioButtonDivideEven = new System.Windows.Forms.RadioButton();
+            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxLinesFound.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMs)).BeginInit();
             this.SuspendLayout();
             // 
             // labelMilliseconds
             // 
-            this.labelMilliseconds.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelMilliseconds.AutoSize = true;
-            this.labelMilliseconds.Location = new System.Drawing.Point(210, 22);
+            this.labelMilliseconds.Location = new System.Drawing.Point(196, 22);
             this.labelMilliseconds.Name = "labelMilliseconds";
             this.labelMilliseconds.Size = new System.Drawing.Size(63, 13);
             this.labelMilliseconds.TabIndex = 60;
@@ -56,32 +57,18 @@
             this.groupBoxLinesFound.Controls.Add(this.SubtitleListview1);
             this.groupBoxLinesFound.Location = new System.Drawing.Point(15, 65);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
-            this.groupBoxLinesFound.Size = new System.Drawing.Size(650, 490);
+            this.groupBoxLinesFound.Size = new System.Drawing.Size(832, 490);
             this.groupBoxLinesFound.TabIndex = 53;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines that will be bridged";
             // 
-            // SubtitleListview1
-            // 
-            this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.DisplayExtraFromExtra = false;
-            this.SubtitleListview1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SubtitleListview1.FirstVisibleIndex = -1;
-            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SubtitleListview1.FullRowSelect = true;
-            this.SubtitleListview1.GridLines = true;
-            this.SubtitleListview1.HideSelection = false;
-            this.SubtitleListview1.Location = new System.Drawing.Point(3, 16);
-            this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(644, 471);
-            this.SubtitleListview1.TabIndex = 54;
-            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
-            this.SubtitleListview1.UseSyntaxColoring = true;
-            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
-            // 
             // numericUpDownMaxMs
             // 
+            this.numericUpDownMaxMs.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
             this.numericUpDownMaxMs.Location = new System.Drawing.Point(140, 20);
             this.numericUpDownMaxMs.Maximum = new decimal(new int[] {
             2000,
@@ -103,20 +90,20 @@
             0});
             this.numericUpDownMaxMs.ValueChanged += new System.EventHandler(this.numericUpDownMaxMs_ValueChanged);
             // 
-            // labelMaxMs
+            // labelBridgePart1
             // 
-            this.labelMaxMs.AutoSize = true;
-            this.labelMaxMs.Location = new System.Drawing.Point(12, 22);
-            this.labelMaxMs.Name = "labelMaxMs";
-            this.labelMaxMs.Size = new System.Drawing.Size(122, 13);
-            this.labelMaxMs.TabIndex = 57;
-            this.labelMaxMs.Text = "Bridge gaps smaller than";
+            this.labelBridgePart1.AutoSize = true;
+            this.labelBridgePart1.Location = new System.Drawing.Point(12, 22);
+            this.labelBridgePart1.Name = "labelBridgePart1";
+            this.labelBridgePart1.Size = new System.Drawing.Size(122, 13);
+            this.labelBridgePart1.TabIndex = 57;
+            this.labelBridgePart1.Text = "Bridge gaps smaller than";
             // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(509, 591);
+            this.buttonOK.Location = new System.Drawing.Point(691, 591);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 55;
@@ -129,7 +116,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(590, 591);
+            this.buttonCancel.Location = new System.Drawing.Point(772, 591);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 56;
@@ -137,15 +124,60 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
+            // radioButtonProlongEndTime
+            // 
+            this.radioButtonProlongEndTime.AutoSize = true;
+            this.radioButtonProlongEndTime.Checked = true;
+            this.radioButtonProlongEndTime.Location = new System.Drawing.Point(586, 17);
+            this.radioButtonProlongEndTime.Name = "radioButtonProlongEndTime";
+            this.radioButtonProlongEndTime.Size = new System.Drawing.Size(169, 17);
+            this.radioButtonProlongEndTime.TabIndex = 61;
+            this.radioButtonProlongEndTime.TabStop = true;
+            this.radioButtonProlongEndTime.Text = "Prevous text takes all gap time";
+            this.radioButtonProlongEndTime.UseVisualStyleBackColor = true;
+            this.radioButtonProlongEndTime.CheckedChanged += new System.EventHandler(this.numericUpDownMaxMs_ValueChanged);
+            // 
+            // radioButtonDivideEven
+            // 
+            this.radioButtonDivideEven.AutoSize = true;
+            this.radioButtonDivideEven.Location = new System.Drawing.Point(586, 40);
+            this.radioButtonDivideEven.Name = "radioButtonDivideEven";
+            this.radioButtonDivideEven.Size = new System.Drawing.Size(130, 17);
+            this.radioButtonDivideEven.TabIndex = 62;
+            this.radioButtonDivideEven.Text = "Texts divides gap time";
+            this.radioButtonDivideEven.UseVisualStyleBackColor = true;
+            this.radioButtonDivideEven.CheckedChanged += new System.EventHandler(this.numericUpDownMaxMs_ValueChanged);
+            // 
+            // SubtitleListview1
+            // 
+            this.SubtitleListview1.AllowDrop = true;
+            this.SubtitleListview1.DisplayExtraFromExtra = false;
+            this.SubtitleListview1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SubtitleListview1.FullRowSelect = true;
+            this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HideSelection = false;
+            this.SubtitleListview1.Location = new System.Drawing.Point(3, 16);
+            this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.OwnerDraw = true;
+            this.SubtitleListview1.Size = new System.Drawing.Size(826, 471);
+            this.SubtitleListview1.TabIndex = 54;
+            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
+            this.SubtitleListview1.UseSyntaxColoring = true;
+            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
+            // 
             // DurationsBridgeGaps
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(677, 624);
+            this.ClientSize = new System.Drawing.Size(859, 624);
+            this.Controls.Add(this.radioButtonDivideEven);
+            this.Controls.Add(this.radioButtonProlongEndTime);
             this.Controls.Add(this.labelMilliseconds);
             this.Controls.Add(this.groupBoxLinesFound);
             this.Controls.Add(this.numericUpDownMaxMs);
-            this.Controls.Add(this.labelMaxMs);
+            this.Controls.Add(this.labelBridgePart1);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.KeyPreview = true;
@@ -165,9 +197,11 @@
         private System.Windows.Forms.Label labelMilliseconds;
         private System.Windows.Forms.GroupBox groupBoxLinesFound;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxMs;
-        private System.Windows.Forms.Label labelMaxMs;
+        private System.Windows.Forms.Label labelBridgePart1;
         private Controls.SubtitleListView SubtitleListview1;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.RadioButton radioButtonProlongEndTime;
+        private System.Windows.Forms.RadioButton radioButtonDivideEven;
     }
 }
