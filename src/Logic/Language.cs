@@ -387,6 +387,9 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Bridge small gaps in durations",
                 GapsBridgedX = "Number of small gaps bridged: {0}",
+                GapToNext = "Gap to next",
+                BridgeGapsSmallerThanXPart1 = "Bridge gaps smaller than",
+                BridgeGapsSmallerThanXPart2 = "milliseconds",
             };
 
             DvdSubrip = new LanguageStructure.DvdSubRip
