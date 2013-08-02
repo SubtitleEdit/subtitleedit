@@ -152,7 +152,7 @@
             this.radioButtonProlongEndTime.Size = new System.Drawing.Size(169, 17);
             this.radioButtonProlongEndTime.TabIndex = 61;
             this.radioButtonProlongEndTime.TabStop = true;
-            this.radioButtonProlongEndTime.Text = "Prevous text takes all gap time";
+            this.radioButtonProlongEndTime.Text = "Previous text takes all gap time";
             this.radioButtonProlongEndTime.UseVisualStyleBackColor = true;
             this.radioButtonProlongEndTime.CheckedChanged += new System.EventHandler(this.numericUpDownMaxMs_ValueChanged);
             // 
