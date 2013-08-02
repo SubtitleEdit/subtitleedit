@@ -11478,11 +11478,12 @@ namespace Nikse.SubtitleEdit.Forms
             if (_changeSubtitleToString != _subtitle.ToText(new SubRip()).Trim())
             {
                 if (!Text.EndsWith("*"))
-                    Text = Text.TrimEnd() + " *";
+                    Text = Text.TrimEnd() + "*";
             }
             else
             {
-                Text = Text.TrimEnd('*').TrimEnd();
+                if (Text.EndsWith("*"))
+                    Text = Text.TrimEnd('*').TrimEnd();
             }
             ShowSubtitleTimer.Start();
         }
