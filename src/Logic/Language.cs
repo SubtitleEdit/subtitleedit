@@ -390,6 +390,8 @@ namespace Nikse.SubtitleEdit.Logic
                 GapToNext = "Gap to next",
                 BridgeGapsSmallerThanXPart1 = "Bridge gaps smaller than",
                 BridgeGapsSmallerThanXPart2 = "milliseconds",
+                ProlongEndTime = "Prevous text takes all gap time",
+                DivideEven = "Texts divides gap time",
             };
 
             DvdSubrip = new LanguageStructure.DvdSubRip
