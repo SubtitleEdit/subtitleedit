@@ -20,6 +20,7 @@
    * Do not load plugins + subtitle formats when opening a sub - thx Orr
    * Fixed slow loading of regular expressions in "Multiple replace" - thx TeDDy
    * When opening an invalid Timed Text file an improved error will now be shown
+   * A '*' will now be shown in the title bar is a subtitle has been changed
 * FIXED:
    * Fixed crash/bugs in MicroDvd format - thx klm
    * Fixed annoying crash when loading a subtitle from 'source view'

@@ -1541,7 +1541,7 @@ can edit in same subtitle file (collaboration)",
                 PreviewLinesModifiedX = "Preview - paragraphs modified: {0}",
                 MinimumMillisecondsBetweenParagraphs = "Minimum milliseconds between lines",
                 ShowOnlyModifiedLines = "Show only modified lines",
-                FrameInfo = "",
+                FrameInfo = "Frame rate info",
                 OneFrameXisYMilliseconds = "One frame at {0:0.00} fps is {1} milliseconds",
             };
 

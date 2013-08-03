@@ -12755,6 +12755,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemSpellCheckFromCurrentLine.Visible = true;
                 toolStripMenuItemImportOcrHardSub.Visible = true;
                 toolStripMenuItemMeasurementConverter.Visible = true;
+                toolStripMenuItemOpenDvd.Visible = true;
             }
             else
             {
@@ -12767,6 +12768,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemSpellCheckFromCurrentLine.Visible = false;
                 toolStripMenuItemImportOcrHardSub.Visible = false;
                 toolStripMenuItemMeasurementConverter.Visible = false;
+                toolStripMenuItemOpenDvd.Visible = false;
             }
 
             if (Configuration.Settings.General.StartRememberPositionAndSize &&

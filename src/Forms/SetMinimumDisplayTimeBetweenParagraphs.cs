@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             double frameRate = 25.0;
-            string s = comboBoxFrameRate.SelectedItem.ToString();
+            string s = comboBoxFrameRate.Text;
             s = s.Replace(",", ".").Trim();
             double d;
             if (double.TryParse(s, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
@@ -168,6 +168,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             long ms = (long)Math.Round(1000 / frameRate);
             labelOneFrameIsXMS.Text = string.Format(Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.OneFrameXisYMilliseconds, frameRate, ms);
+        }
+
+        private void comboBoxFrameRate_KeyUp(object sender, KeyEventArgs e)
+        {
+            comboBoxFrameRate_SelectedIndexChanged(sender, e);
         }
 
     }
