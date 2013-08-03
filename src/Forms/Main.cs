@@ -11985,18 +11985,22 @@ namespace Nikse.SubtitleEdit.Forms
         private void timerAutoDuration_Tick(object sender, EventArgs e)
         {
             labelAutoDuration.Visible = !labelAutoDuration.Visible;
-
             double duration = Utilities.GetOptimalDisplayMilliseconds(textBoxListViewText.Text);
-
             SetDurationInSeconds(duration / 1000.0);
 
             // update _subtitle + listview
             if (SubtitleListview1.SelectedItems.Count > 0)
             {
-                int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
-                Paragraph currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
-                currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + duration;
-                SubtitleListview1.SetDuration(firstSelectedIndex, currentParagraph);
+                try
+                {
+                    int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                    Paragraph currentParagraph = _subtitle.Paragraphs[firstSelectedIndex];
+                    currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + duration;
+                    SubtitleListview1.SetDuration(firstSelectedIndex, currentParagraph);
+                }
+                catch
+                { 
+                }
             }
         }
 
