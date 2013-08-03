@@ -147,12 +147,6 @@ namespace Nikse.SubtitleEdit.Forms
                 Clipboard.SetText(textBoxResult.Text);
         }
 
-        private void MeasurementConverter_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape)
-                this.Close();
-        }
-
         private void textBoxInput_TextChanged(object sender, EventArgs e)
         {
             if (comboBoxFrom.SelectedIndex == -1 || comboBoxTo.SelectedIndex == -1)

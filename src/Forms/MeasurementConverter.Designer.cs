@@ -138,7 +138,6 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Measurement converter";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MeasurementConverter_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

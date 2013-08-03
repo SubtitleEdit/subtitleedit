@@ -81,7 +81,21 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (drive.DriveType == DriveType.CDRom || drive.DriveType == DriveType.Removable)
                 {
-                    comboBoxDrive.Items.Add(drive.ToString() + "  " + drive.VolumeLabel);
+                    if (drive.IsReady)
+                    {
+                        try
+                        {
+                            comboBoxDrive.Items.Add(drive.ToString() + "  " + drive.VolumeLabel);
+                        }
+                        catch
+                        {
+                            comboBoxDrive.Items.Add(drive.ToString());
+                        }
+                    }
+                    else
+                    {
+                        comboBoxDrive.Items.Add(drive.ToString());
+                    }
                 }
             }
             if (comboBoxDrive.Items.Count > 0)
@@ -89,6 +103,12 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 radioButtonFolder.Checked = true;
             PanelDrive.Enabled = true;
+        }
+
+        private void OpenVideoDvd_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                DialogResult = DialogResult.Cancel;
         }
         
     }
