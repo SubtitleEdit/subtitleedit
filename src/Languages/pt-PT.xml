@@ -11,7 +11,7 @@ Ricardo Perdigão: mailto:ricardofonseca1977@gmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
     <HelpFile></HelpFile>
     <OK>&amp;OK</OK>
-    <Cancel>C&amp;ancelar</Cancel>
+    <Cancel>C&amp;ancelar</Cancel>	
     <Apply>Aplicar</Apply>
     <None>Nenhum</None>
     <All>Todas</All>
@@ -19,6 +19,7 @@ Ricardo Perdigão: mailto:ricardofonseca1977@gmail.com</TranslatedBy>
     <SubtitleFiles>Ficheiros de legendas</SubtitleFiles>
     <AllFiles>Todos os ficheiros</AllFiles>
     <VideoFiles>Ficheiros de vídeo</VideoFiles>
+	<AudioFiles>Ficheiros de áudio</AudioFiles>
     <OpenSubtitle>Abrir legenda...</OpenSubtitle>
     <OpenVideoFile>Abrir ficheiro de vídeo...</OpenVideoFile>
     <OpenVideoFileTitle>Abrir ficheiro de vídeo...</OpenVideoFileTitle>
@@ -235,6 +236,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Language>Idioma</Language>
     <IssueDate>Data de emissão</IssueDate>
     <EditRate>Editar taxa</EditRate>
+    <TimeCodeRate>Taxa de códigos de tempo</TimeCodeRate>
+    <StartTime>Tempo de início</StartTime>	
     <Font>Tipo de letra</Font>
     <FontId>ID</FontId>
     <FontUri>URI</FontUri>
@@ -243,7 +246,17 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffectColor>Cor do efeito</FontEffectColor>
     <FontSize>Tamanho</FontSize>
     <ChooseColor>Seleccionar a cor...</ChooseColor>
+    <Generate>Gerar</Generate>	
   </DCinemaProperties>
+    <DurationsBridgeGaps>
+    <Title>Unir pequenas brechas entre durações</Title>
+    <GapsBridgedX>Número de pequenas brechas unidas: {0}</GapsBridgedX>
+	<GapToNext>Para a próxima brecha</GapToNext>
+    <BridgeGapsSmallerThanXPart1>Colmatar as brechas menores do que</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart2>milissegundos</BridgeGapsSmallerThanXPart2>
+    <ProlongEndTime>Texto anterior com todos os tempos da brecha</ProlongEndTime>
+    <DivideEven>Texto divide o tempo da brecha</DivideEven>	
+  </DurationsBridgeGaps>
   <DvdSubrip>
     <Title>Extrair legendas de IFO/VOBs (DVD)</Title>
     <DvdGroupTitle>Ficheiro DVD/info</DvdGroupTitle>
@@ -553,6 +566,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Ir para linha número</Title>
     <XIsNotAValidNumber>{0} não é um número válido</XIsNotAValidNumber>
   </GoToLine>
+    <ImportSceneChanges>
+    <Title>Importar mudanças de cena</Title>
+    <OpenTextFile>Abrir ficheiro de texto...</OpenTextFile>
+    <ImportOptions>Importar opções</ImportOptions>
+    <TextFiles>Ficheiros de texto</TextFiles>
+    <TimeCodes>Códigos de tempo</TimeCodes>
+    <Frames>Frames</Frames>
+    <Seconds>Segundos</Seconds>
+    <Milliseconds>Milissegundos</Milliseconds>
+  </ImportSceneChanges>
   <ImportText>
     <Title>Importar texto simples</Title>
     <OpenTextFile>Abrir ficheiro de texto...</OpenTextFile>
@@ -653,6 +676,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Ferramentas</Title>
         <AdjustDisplayDuration>&amp;Ajustar durações...</AdjustDisplayDuration>
         <ApplyDurationLimits>Aplicar limites de duração...</ApplyDurationLimits>
+        <DurationsBridgeGap>Unir as brechas entre as durações...</DurationsBridgeGap>		
         <FixCommonErrors>&amp;Corrigir erros comuns...</FixCommonErrors>
         <StartNumberingFrom>Iniciar numeração por...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Eliminar texto para surdos...</RemoveTextForHearingImpaired>
@@ -685,8 +709,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <Video>
         <Title>Vídeo</Title>
         <OpenVideo>Abrir ficheiro de vídeo...</OpenVideo>
+		<OpenDvd>Abrir DVD...</OpenDvd>
         <ChooseAudioTrack>Seleccione a faixa de áudio</ChooseAudioTrack>
         <CloseVideo>Fechar ficheiro de vídeo</CloseVideo>
+		<ImportSceneChanges>Importar mudanças de cena...</ImportSceneChanges>
+        <RemoveSceneChanges>Remover mudanças de cena</RemoveSceneChanges>
         <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
         <ShowHideWaveForm>Mostrar/ocultar forma de onda</ShowHideWaveForm>
         <ShowHideWaveformAndSpectrogram>Mostrar/ocultar forma de onda e espectrograma</ShowHideWaveformAndSpectrogram>
@@ -1099,6 +1126,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Antes de juntar legendas</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Legendas unidas</SubtitlesJoined>
     <StatusLog>Estado do registo</StatusLog>
+	<XSceneChangesImported>{0} mudanças de cena importados</XSceneChangesImported>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
@@ -1111,7 +1139,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ConvertTo>Converter para</ConvertTo>
     <CopyToClipboard>Copiar para a Área de Transferência</CopyToClipboard>
     <Celsius>Celsius</Celsius>
-    <Fahrenheit>Graus centígrados</Fahrenheit>
+    <Fahrenheit>Fahrenheit</Fahrenheit>
     <Miles>Milhas</Miles>
     <Kilometers>Quilómetros</Kilometers>
     <Meters>Metros</Meters>
@@ -1189,6 +1217,14 @@ possam editar o mesmo ficheiro de legenda (colaboração)</Information>
 editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Start>Início</Start>
   </NetworkStart>
+  <OpenVideoDvd>
+    <Title>Abrir DVD através VLC</Title>
+    <OpenDvdFrom>Abrir DVD apartir de...</OpenDvdFrom>
+    <Disc>Disco</Disc>
+    <Folder>Pasta</Folder>
+    <ChooseDrive>Escolher disco</ChooseDrive>
+    <ChooseFolder>Escolher pasta</ChooseFolder>	
+  </OpenVideoDvd>  
   <PluginsGet>
     <Title>Plugins</Title>
     <InstalledPlugins>Plugins instalados</InstalledPlugins>
@@ -1257,6 +1293,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <PreviewLinesModifiedX>Pré-visualizar - Parágrafos modificados: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Mostrar só linhas modificadas</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milissegundos mínimos entre linhas</MinimumMillisecondsBetweenParagraphs>
+    <FrameInfo />
+    <OneFrameXisYMilliseconds>Um fotograma de {0:0.00} fps é {1} milissegundos</OneFrameXisYMilliseconds>	
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Estabelecer ponto de sincronia para a linha {0}</Title>
