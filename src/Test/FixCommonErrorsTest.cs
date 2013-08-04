@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -37,12 +38,36 @@ namespace Test
         //
         //You can use the following additional attributes as you write your tests:
         //
+
+        /// <summary>
+        /// Copies the contents of input to output. Doesn't close either stream.
+        /// </summary>
+        public static void CopyStream(Stream input, Stream output)
+        {
+            byte[] buffer = new byte[8 * 1024];
+            int len;
+            while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                output.Write(buffer, 0, len);
+            }
+        }
+
         //Use ClassInitialize to run code before running the first test in the class
-        //[ClassInitialize()]
-        //public static void MyClassInitialize(TestContext testContext)
-        //{
-        //}
-        //
+        [ClassInitialize()]
+        public static void MyClassInitialize(TestContext testContext)
+        {
+            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
+            Stream strm = asm.GetManifestResourceStream("Test.Hunspellx86.dll");
+            if (strm != null)
+            {
+                var rdr = new StreamReader(strm);
+                using (Stream file = File.OpenWrite("Hunspellx86.dll"))
+                {
+                    CopyStream(strm, file);
+                }
+            }
+        }
+        
         //Use ClassCleanup to run code after all tests in a class have run
         //[ClassCleanup()]
         //public static void MyClassCleanup()
@@ -374,5 +399,29 @@ namespace Test
         }
 
         #endregion
+
+        #region Fix Spanish question- and exclamation-marks
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixSpanishNormalQuestion1()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "Cómo estás?");
+            target.FixSpanishInvertedQuestionAndExclamationMarks();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¿Cómo estás?");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixSpanishNormalExclamationMark1()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "Cómo estás!");
+            target.FixSpanishInvertedQuestionAndExclamationMarks();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¡Cómo estás!");
+        }
+
+        #endregion
+
     }
 }
