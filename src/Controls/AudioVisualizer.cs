@@ -414,7 +414,7 @@ namespace Nikse.SubtitleEdit.Controls
                 int maxHeight = (int)(Math.Max(Math.Abs(_wavePeaks.DataMinValue), Math.Abs(_wavePeaks.DataMaxValue)) + 0.5);
                 maxHeight = (int)(maxHeight * VerticalZoomPercent);
                 if (maxHeight < 0)
-                    maxHeight = 1000;                
+                    maxHeight = 1000;
 
                 DrawBackground(graphics);
                 int x = 0;

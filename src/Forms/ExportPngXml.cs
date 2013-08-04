@@ -859,7 +859,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(param.SavDialogFileName)) + "{0:0000}", i);
                         string fileName = numberString + "." + comboBoxImageFormat.Text.ToLower();
                         string fileNameNoPath = Path.GetFileName(fileName);
-                        string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);                        
+                        string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
                         string template = " <clipitem id=\"" + fileNameNoPath + "\">" + Environment.NewLine +
 @"            <name>" + fileNameNoPath + @"</name>
             <duration>[DURATION]</duration>

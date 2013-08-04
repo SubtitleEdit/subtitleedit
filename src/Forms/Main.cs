@@ -11999,7 +11999,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SetDuration(firstSelectedIndex, currentParagraph);
                 }
                 catch
-                { 
+                {
                 }
             }
         }
@@ -12063,7 +12063,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = Utilities.GetVideoFileFilter(true);
-            
+
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -12307,7 +12307,7 @@ namespace Nikse.SubtitleEdit.Forms
                     value = trackBarWaveFormPosition.Minimum;
                 trackBarWaveFormPosition.Value = value;
                 trackBarWaveFormPosition.ValueChanged += trackBarWaveFormPosition_ValueChanged;
-            }         
+            }
         }
 
         private void StopAutoDuration()
@@ -13606,7 +13606,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.ZoomFactor = item.ZoomFactor;
             }
             catch
-            { 
+            {
             }
         }
 

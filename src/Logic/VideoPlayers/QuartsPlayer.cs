@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override double Duration
         {
-            get 
+            get
             {
                 try
                 {

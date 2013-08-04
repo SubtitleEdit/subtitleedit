@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
             {
-                
+
                 Paragraph cur = _fixedSubtitle.Paragraphs[i];
                 Paragraph next = _fixedSubtitle.Paragraphs[i + 1];
                 string before = null;
