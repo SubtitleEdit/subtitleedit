@@ -14,22 +14,22 @@
    * Updated German translation - thx Siegwarth
    * Moving subtitles in waveform will not allow overlap (unless 
      you hold down the shift key) - thx Leon
-   * Added 'regular expression' option to ocr_replace_list - thx paconaranjo
+   * Added "regular expression" option to ocr_replace_list - thx paconaranjo
    * Waveform generator - pauses video before starting - thx fox
    * Export to Blu-ray settings now saved - thx Minh
    * Do not load plugins + subtitle formats when opening a sub - thx Orr
    * Fixed slow loading of regular expressions in "Multiple replace" - thx TeDDy
    * When opening an invalid Timed Text file an improved error will now be shown
-   * A '*' will now be shown in the title bar if a subtitle has been changed
+   * A "*" will now be shown in the title bar if a subtitle has been changed
 * FIXED:
    * Fixed crash/bugs in MicroDvd format - thx klm
-   * Fixed annoying crash when loading a subtitle from 'source view'
+   * Fixed annoying crash when loading a subtitle from "source view"
    * OCR - Change ocr fix language when changing spell check dictionary
    * Fixed Hebrew in PAC files - thx Yaniv
    * Fixed minor language detection bug regarding Korean - thx Hoyt
    * Fixed baseline horizontal alignment in Export to Blu-ray sup - thx THXTEX
    * Fixed multi line color tags when outputting DCinema - thx lillian
-   * Fixed 'line-breaks' in csv formats
+   * Fixed "line-breaks" in csv formats
    * Fixed dead spell check download links (no more OpenOffice links)
    * Some fixes for DCinema smtp - thx Andrew
    * Fixed bug regarding decoding &aring; to å - thx Jesper
@@ -320,7 +320,7 @@
  * IMPROVED:
    * Adjust mode improved a bit and also two new shortcuts - thx Deanna/Seamlik
    * Focus correct list view line after merging/deleting - thx Verteller
-   * Minor improvements to OCR (missing '.' with small fonts sometimes) - thx Bas
+   * Minor improvements to OCR (missing "." with small fonts sometimes) - thx Bas
  * FIXED:
    * Fix overlapping time codes (regression from 3.2.4) - thx menes
    * PAC line numbers beyond 255 is now written correctly
@@ -549,7 +549,7 @@
    * Missing line break in Sony DVD Architect w line numbers (thx Rosa)
    * A minor bug in Visual Sync, if end scene was after video length (thx tsieberg)
    * OCR Fix Engine: Lines after "..." will no longer be changed to start with uppercase
-   * Fixed bug in reading of SSA files (',' was removed) - thx Péter
+   * Fixed bug in reading of SSA files ("," was removed) - thx Péter
    * Fixed line breaking bug in mpl format - thx Przemek
    * Fixed shortcuts for adjust commands Ctrl+Space/Shift+Space/F9/F10
 
