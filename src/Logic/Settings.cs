@@ -193,7 +193,7 @@ namespace Nikse.SubtitleEdit.Logic
         public double SsaFontSize { get; set; }
         public int SsaFontColorArgb { get; set; }
         public string DCinemaFontFile { get; set; }
-        public string DCinemaLoadFontResource { get; set; }        
+        public string DCinemaLoadFontResource { get; set; }
         public int DCinemaFontSize { get; set; }
         public int DCinemaBottomMargin { get; set; }
         public int DCinemaFadeUpDownTime { get; set; }
@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             CurrentDCinemaIssueDate = DateTime.Now.ToString("s") + ".000-00:00";
             CurrentDCinemaMovieTitle = "title";
-            CurrentDCinemaReelNumber = "1";            
+            CurrentDCinemaReelNumber = "1";
             CurrentDCinemaFontColor = Color.White;
             CurrentDCinemaFontEffect = "border";
             CurrentDCinemaFontEffectColor = Color.Black;

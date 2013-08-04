@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownFontSize.Value = 18;
             }
-            
+
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

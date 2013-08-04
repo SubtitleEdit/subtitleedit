@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 //The 8.7 update will bring the British self-propelled guns, the map, called Severogorsk,
 
 //00:00:13,00:00:18
-//the soviet light tank MT-25 and the new German premium TD, the E25. 
+//the soviet light tank MT-25 and the new German premium TD, the E25.
 
 //00:00:18,00:00:22
 //We will tell you about this and lots of other things in our review.
