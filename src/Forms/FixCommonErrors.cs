@@ -4039,6 +4039,14 @@ namespace Nikse.SubtitleEdit.Forms
                 if (last != null && p.Text.Contains(mark) && !p.Text.Contains(inverseMark) && last.Text.Contains(inverseMark) && !last.Text.Contains(mark))
                     skip = true;
 
+                if (!skip && Utilities.CountTagInText(p.Text, mark) == Utilities.CountTagInText(p.Text, inverseMark) &&
+                    Utilities.RemoveHtmlTags(p.Text).TrimStart(inverseMark[0]).Contains(inverseMark) == false &&
+                    Utilities.RemoveHtmlTags(p.Text).TrimEnd(mark[0]).Contains(mark) == false)
+                {
+                    skip = true;
+                }
+
+
                 if (!skip)
                 {
                     int startIndex = 0;
@@ -4102,8 +4110,20 @@ namespace Nikse.SubtitleEdit.Forms
                                         part = part.Substring(speakerEnd + 1);
                                     }
 
-                                    StripableText st = new StripableText(part);
-                                    p.Text = p.Text.Remove(j, markIndex - j + 1).Insert(j, speaker + st.Pre + inverseMark + st.StrippedText + st.Post);
+                                    var st = new StripableText(part);
+                                    if (j == 0 && mark == "!" && st.Pre == "¿" && Utilities.CountTagInText(p.Text, mark) == 1 && Utilities.RemoveHtmlTags(p.Text).EndsWith(mark))
+                                    {
+                                        p.Text = inverseMark + p.Text;
+                                    }
+                                    else if (j == 0 && mark == "?" && st.Pre == "¡" && Utilities.CountTagInText(p.Text, mark) == 1 && Utilities.RemoveHtmlTags(p.Text).EndsWith(mark))
+                                    {
+                                        p.Text = inverseMark + p.Text;
+                                    }
+                                    else
+                                    {
+                                        p.Text = p.Text.Remove(j, markIndex - j + 1).Insert(j, speaker + st.Pre + inverseMark + st.StrippedText + st.Post);
+                                    }
+                                    
                                 }
                             }
                         }

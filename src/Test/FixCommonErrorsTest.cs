@@ -421,6 +421,36 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¡Cómo estás!");
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixSpanishExclamationMarkDouble()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "¡¡PARA!!");
+            target.FixSpanishInvertedQuestionAndExclamationMarks();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¡¡PARA!!");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixSpanishExclamationMarkTriple()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "¡¡¡PARA!!!");
+            target.FixSpanishInvertedQuestionAndExclamationMarks();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¡¡¡PARA!!!");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixSpanishExclamationMarkAndQuestionMark()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "¿Cómo estás?!");
+            target.FixSpanishInvertedQuestionAndExclamationMarks();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¡¿Cómo estás?!");
+        }
+
         #endregion
 
     }
