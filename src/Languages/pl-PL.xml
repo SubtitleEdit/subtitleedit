@@ -15,6 +15,7 @@
     <SubtitleFiles>Pliki napisów</SubtitleFiles>
     <AllFiles>Wszystkie pliki</AllFiles>
     <VideoFiles>Pliki wideo</VideoFiles>
+    <AudioFiles>Pliki audio</AudioFiles>
     <OpenSubtitle>Otwórz napisy...</OpenSubtitle>
     <OpenVideoFile>Otwórz plik wideo...</OpenVideoFile>
     <OpenVideoFileTitle>Otwórz plik wideo...</OpenVideoFileTitle>
@@ -232,6 +233,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Language>Język</Language>
     <IssueDate>Data wydania</IssueDate>
     <EditRate>Wskaźnik edycji</EditRate>
+    <TimeCodeRate>Tempo kodów czasowych</TimeCodeRate>
+    <StartTime>Czas startu</StartTime>
     <Font>Czcionka</Font>
     <FontId>ID</FontId>
     <FontUri>URI</FontUri>
@@ -240,7 +243,17 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffectColor>Kolor efektu</FontEffectColor>
     <FontSize>Rozmiar</FontSize>
     <ChooseColor>Wybierz kolor...</ChooseColor>
+    <Generate>Generuj</Generate>
   </DCinemaProperties>
+  <DurationsBridgeGaps>
+    <Title>Mostkowanie małych odstępów w czasach trwania</Title>
+    <GapsBridgedX>Ilość zmostkowanych małych odstępów: {0}</GapsBridgedX>
+    <GapToNext>Odstęp do następnego</GapToNext>
+    <BridgeGapsSmallerThanXPart1>Mostkuj odstępy mniejsze niż</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart2>milisekund</BridgeGapsSmallerThanXPart2>
+    <ProlongEndTime>Poprzedni tekst widoczny przez cały czas trwania odstępu</ProlongEndTime>
+    <DivideEven>Teksty rozdzielane są czasem trwania odstępu</DivideEven>
+  </DurationsBridgeGaps>
   <DvdSubrip>
     <Title>Przechwyt napisów z ifo/vob (dvd)</Title>
     <DvdGroupTitle>Pliki/info DVD</DvdGroupTitle>
@@ -362,8 +375,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Generowanie czasu jako tekst</Title>
-    <Description>
-    </Description>
+    <OpenVideoFile>Wybierz plik wideo do wyodrębnienia z niego daty/czasu</OpenVideoFile>
     <StartFrom>Rozpocznij od</StartFrom>
     <DateTimeFormat>Format daty/czasu</DateTimeFormat>
     <Example>Przykład</Example>
@@ -519,6 +531,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Download>Pobierz</Download>
     <XDownloaded>{0} został pobrany i zainstalowany</XDownloaded>
   </GetDictionaries>
+  <GetTesseractDictionaries>
+    <Title>Potrzebujesz słowników?</Title>
+    <DescriptionLine1>Pobierz z sieci słowniki OCR Tesseract</DescriptionLine1>
+    <DownloadFailed>Pobieranie nie powiodło się!</DownloadFailed>
+    <GetDictionariesHere>Tutaj pobierzesz słowniki:</GetDictionariesHere>
+    <ChooseLanguageAndClickDownload>Wybierz swój język i kliknij na pobieranie</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>Otwórz folder 'Dictionaries'</OpenDictionariesFolder>
+    <Download>Pobierz</Download>
+    <XDownloaded>{0} został pobrany i zainstalowany</XDownloaded>
+  </GetTesseractDictionaries>
   <GoogleTranslate>
     <Title>Tłumaczenie Google</Title>
     <From>z:</From>
@@ -543,6 +565,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 
 Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
   </GoToLine>
+  <ImportSceneChanges>
+    <Title>Import zmian w scenach</Title>
+    <OpenTextFile>Otwórz plik tekstowy...</OpenTextFile>
+    <ImportOptions>Opcje importu</ImportOptions>
+    <TextFiles>Plik tekstowy</TextFiles>
+    <TimeCodes>Kody czasowe</TimeCodes>
+    <Frames>Klatki</Frames>
+    <Seconds>Sekundy</Seconds>
+    <Milliseconds>Milisekundy</Milliseconds>
+  </ImportSceneChanges>
   <ImportText>
     <Title>Import tekstu</Title>
     <OpenTextFile>Otwórz plik tekstowy...</OpenTextFile>
@@ -643,6 +675,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <Title>Narzędzia</Title>
         <AdjustDisplayDuration>&amp;Dostosuj czasy wyświetlania...</AdjustDisplayDuration>
         <ApplyDurationLimits>Zastosuj limity czasu trwania...</ApplyDurationLimits>
+        <DurationsBridgeGap>Zmostkuj odstępy w czasach trwania...</DurationsBridgeGap>
         <FixCommonErrors>&amp;Popraw pospolite błędy...</FixCommonErrors>
         <StartNumberingFrom>Rozpocznij numerowanie od...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Usuń tekst dla niesłyszących...</RemoveTextForHearingImpaired>
@@ -667,6 +700,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Utwórz pusty plik dla aktualnie tłumaczonych napisów</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Konwersja wielu plików równocześnie...</BatchConvert>
         <GenerateTimeAsText>Generuj czas jako tekst...</GenerateTimeAsText>
+        <MeasurementConverter>Konwerter miar...</MeasurementConverter>
         <SplitSubtitle>Podziel napisy...</SplitSubtitle>
         <AppendSubtitle>Połącz napisy...</AppendSubtitle>
         <JoinSubtitles>Dołącz napisy...</JoinSubtitles>
@@ -674,8 +708,11 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
       <Video>
         <Title>Wideo</Title>
         <OpenVideo>Otwórz plik wideo...</OpenVideo>
+        <OpenDvd>Otwórz DVD...</OpenDvd>
         <ChooseAudioTrack>Wybierz ścieżkę audio</ChooseAudioTrack>
         <CloseVideo>Zamknij plik wideo</CloseVideo>
+        <ImportSceneChanges>Importuj zmiany w scenach...</ImportSceneChanges>
+        <RemoveSceneChanges>Usuń zmiany w scenach</RemoveSceneChanges>
         <ShowHideVideo>Pokaż/Ukryj wideo</ShowHideVideo>
         <ShowHideWaveForm>Pokaż/Ukryj próbkowanie audio</ShowHideWaveForm>
         <ShowHideWaveformAndSpectrogram>Pokaż/Ukryj próbkowanie audio i spektrogram</ShowHideWaveformAndSpectrogram>
@@ -1091,12 +1128,29 @@ Chcesz zapisać?</NegativeTimeWarning>
     <BeforeDisplaySubtitleJoin>Przed dołaczeniem napisów</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Dołączanie napisów</SubtitlesJoined>
     <StatusLog>Status Dziennika zdarzeń</StatusLog>
+    <XSceneChangesImported>Zaimportowano {0} zmian w scenach</XSceneChangesImported>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Wybór napisów z pliku Matroska</Title>
     <PleaseChoose>Znaleziono klika napisów - proszę wybrać</PleaseChoose>
     <TrackXLanguageYTypeZ>Ścieżka {0} - {1} - język: {2} - typ: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MeasurementConverter>
+    <Title>Konwerter miar</Title>
+    <ConvertFrom>Konwertuj z</ConvertFrom>
+    <ConvertTo>Konwertuj na</ConvertTo>
+    <CopyToClipboard>Kopiuj do schowka</CopyToClipboard>
+    <Celsius>Stopnie Celsjusza</Celsius>
+    <Fahrenheit>Stopnie Fahrenheita</Fahrenheit>
+    <Miles>Mile</Miles>
+    <Kilometers>Kilometry</Kilometers>
+    <Meters>Metry</Meters>
+    <Yards>Yardy</Yards>
+    <Feet>Stopy</Feet>
+    <Inches>Cale</Inches>
+    <Pounds>Funty</Pounds>
+    <Kilos>Kilogramy</Kilos>
+  </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Połącz linie z takim samym tekstem</Title>
   </MergeDoubleLines>
@@ -1165,6 +1219,14 @@ Chcesz zapisać?</NegativeTimeWarning>
  może edytować ten sam plik z napisami (współpracować)</Information>
     <Start>Start</Start>
   </NetworkStart>
+  <OpenVideoDvd>
+    <Title>Otwórz DVD za pomocą VLC</Title>
+    <OpenDvdFrom>Otwórz DVD z...</OpenDvdFrom>
+    <Disc>Dysk</Disc>
+    <Folder>Folder</Folder>
+    <ChooseDrive>Wybierz napęd</ChooseDrive>
+    <ChooseFolder>Wybierz folder</ChooseFolder>
+  </OpenVideoDvd>
   <PluginsGet>
     <Title>Wtyczki</Title>
     <InstalledPlugins>Zainstalowane wtyczki</InstalledPlugins>
@@ -1233,6 +1295,8 @@ Chcesz zapisać?</NegativeTimeWarning>
     <PreviewLinesModifiedX>Podgląd - zmodyfikowanych akapitów: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Pokaż tylko zmodyfikowane linie</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimalny odstęp między liniami napisów w milisekundach:</MinimumMillisecondsBetweenParagraphs>
+    <FrameInfo>Informacje o ilości klatek na sekundę</FrameInfo>
+    <OneFrameXisYMilliseconds>Jedna klatka z fps {0:0.00} ma {1} milisekund</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Ustaw punkt synchronizacji dla linii {0}</Title>
@@ -1387,7 +1451,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <AdjustStartDownEndUpAndGoToNext>Klawisz down=ustaw początek, klawisz up=ustaw koniec i przejdź do następnej</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Przesuń wybrane linie 100 ms do przodu</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Przesuń wybrane linie 100 ms do tyłu</AdjustSelected100MsBack>
-    <AdjustSetStartTimeOnly>Ustaw czas początkowy, zachowaj czas końcowy</AdjustSetStartTimeOnly>
+    <AdjustSetStartTimeKeepDuration>Ustaw czas startu, zachowaj czas trwania</AdjustSetStartTimeKeepDuration>
     <MainCreateStartDownEndUp>Klawisz-Down utwórz nowy, Klawisz Up ustaw czas zakończenia</MainCreateStartDownEndUp>
     <MergeDialogue>Połącz dialogi (wstaw myślniki)</MergeDialogue>
     <GoToNext>Przejdź do następnej linii</GoToNext>
