@@ -26,6 +26,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xe06f, // õ
             0xe161, // å
             0xe141, // Å
+
+            0x618a, // ā
+            0x418a, // Ā
+            0x458a, // Ē
+            0x658a, // ē
+            0x498a, // Ī
+            0x698a, // ī
+            0x4f8a, // Ō
+            0x6f8a, // ō
+            0x558a, // Ū
+            0x758a, // ū
+
             0x23, // £
             0x7c, // æ
             0x7d, // ø
@@ -138,6 +150,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "õ",
             "å",
             "Å",
+
+            "ā",
+            "Ā",
+            "Ē",
+            "ē",
+            "Ī",
+            "ī",
+            "Ō",
+            "ō",
+            "Ū",
+            "ū",
+
             "£",
             "æ",
             "ø",
