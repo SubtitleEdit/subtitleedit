@@ -62,6 +62,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         return 24.0;
                     if (DiskFormatCode.StartsWith("STL25"))
                         return 25.0;
+                    if (DiskFormatCode.StartsWith("STL29"))
+                        return 29.0;
                     return 30.0; // should be DiskFormatcode STL30.01
                 }
             }
@@ -407,10 +409,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public void Save(string fileName, Subtitle subtitle)
         {
-
             var header = new EbuGeneralSubtitleInformation();
             var saveOptions = new EbuSaveOptions();
-            if (subtitle.Header != null && subtitle.Header.Length > 1024 && (subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL30")))
+            if (subtitle.Header != null && subtitle.Header.Length > 1024 && (subtitle.Header.Contains("STL24") || subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL29") || subtitle.Header.Contains("STL30")))
             {
                 header = ReadHeader(Encoding.UTF8.GetBytes(subtitle.Header));
                 saveOptions.Initialize(header, 0, null, subtitle);
@@ -518,6 +519,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     EbuGeneralSubtitleInformation header = ReadHeader(buffer);
                     if (header.DiskFormatCode.StartsWith("STL24") ||
                         header.DiskFormatCode.StartsWith("STL25") ||
+                        header.DiskFormatCode.StartsWith("STL29") ||
                         header.DiskFormatCode.StartsWith("STL30"))
                     {
                         return Utilities.IsInteger(header.CodePageNumber) || fileName.ToLower().EndsWith("stl");
