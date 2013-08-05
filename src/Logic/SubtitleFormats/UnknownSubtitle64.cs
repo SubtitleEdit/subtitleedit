@@ -137,6 +137,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
                     }
+                    else
+                    {
+                        _errorCount++;
+                    }
                 }
             }
             if (paragraph != null && !string.IsNullOrEmpty(paragraph.Text))
