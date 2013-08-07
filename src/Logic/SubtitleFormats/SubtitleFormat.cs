@@ -121,6 +121,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new UleadSubtitleFormat(),
                     new VocapiaSplit(),
                     new WebVTT(),
+                    new WebVTTFileWithLineNumber(),
                     new YouTubeAnnotations(),
                     new YouTubeSbv(),
                     new YouTubeTranscript(),

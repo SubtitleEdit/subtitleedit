@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// <summary>
     /// http://www.whatwg.org/specs/web-apps/current-work/webvtt.html
     /// </summary>
-    public class WebVTT : SubtitleFormat
+    public class WebVTTFileWithLineNumber : SubtitleFormat
     {
 
         static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "WebVTT"; }
+            get { return "WebVTT File with#"; }
         }
 
         public override bool IsTimeBased
@@ -39,15 +39,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string timeCodeFormatNoHours = "{1:00}:{2:00}.{3:000}"; // mm:ss.cc
-            const string timeCodeFormatHours = "{0:00}:{1:00}:{2:00}.{3:000}"; // hh:mm:ss.cc
+            const string timeCodeFormatNoHours = "{1:00}:{2:00}.{3:000}"; // h:mm:ss.cc
+            const string timeCodeFormatHours = "{0}:{1:00}:{2:00}.{3:000}"; // h:mm:ss.cc
             const string paragraphWriteFormat = "{0} --> {1}{4}{2}{3}{4}";
 
             var sb = new StringBuilder();
-            sb.AppendLine("WEBVTT");
+            sb.AppendLine("WEBVTT FILE");
             sb.AppendLine();
+            int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
-            {                
+            {
                 string start = string.Format(timeCodeFormatNoHours, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds);
                 string end = string.Format(timeCodeFormatNoHours, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
 
@@ -58,9 +59,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
 
                 string style = string.Empty;
-                if (!string.IsNullOrEmpty(p.Extra) && subtitle.Header == "WEBVTT")
+                if (!string.IsNullOrEmpty(p.Extra) && subtitle.Header == "WEBVTT FILE")
                     style = p.Extra;
+                sb.AppendLine(count.ToString());
                 sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style, Environment.NewLine));
+                count++;
             }
             return sb.ToString().Trim();
         }
@@ -81,8 +84,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line;
-
-
                 if (RegexTimeCodesMiddle.IsMatch(s))
                 {
                     s = "00:" + s; // start is without hours, end is with hours
@@ -114,9 +115,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         p = null;
                     }
                 }
-                else if (subtitle.Paragraphs.Count == 0 && line.Trim() == "WEBVTT")
+                else if (subtitle.Paragraphs.Count == 0 && line.Trim() == "WEBVTT FILE")
                 {
-                    subtitle.Header = "WEBVTT";
+                    subtitle.Header = "WEBVTT FILE";
                 }
                 else if (p != null && line.Trim().Length > 0)
                 {
@@ -128,6 +129,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     textDone = true;
                 }
+            }
+            if (subtitle.Header == null && subtitle.Header != "WEBVTT FILE")
+            {
+                subtitle.Paragraphs.Clear();
+                _errorCount++;
             }
             if (p != null)
                 subtitle.Paragraphs.Add(p);
