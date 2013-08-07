@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Español">
   <General>
     <Title>Subtitle Edit</Title>
@@ -15,6 +15,7 @@
     <SubtitleFiles>Archivos de subtítulos</SubtitleFiles>
     <AllFiles>Todos los archivos</AllFiles>
     <VideoFiles>Archivos de video</VideoFiles>
+    <AudioFiles>Archivos de audio</AudioFiles>
     <OpenSubtitle>Abrir subtítulo...</OpenSubtitle>
     <OpenVideoFile>Abrir video...</OpenVideoFile>
     <OpenVideoFileTitle>Abrir video...</OpenVideoFileTitle>
@@ -143,16 +144,21 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OverwriteExistingFiles>Sobrescribir archivos existentes</OverwriteExistingFiles>
     <Style>Estilo...</Style>
     <ConvertOptions>Opciones de conversión</ConvertOptions>
-    <AutoBreakLongLines>Auto-separar líneas largas</AutoBreakLongLines>
-    <FixItalics>Reparar cursivas</FixItalics>
     <RemoveFormatting>Quitar las etiquetas de formato</RemoveFormatting>
     <RemoveTextForHI>Quitar texto para HI</RemoveTextForHI>
+    <OverwriteOriginalFiles>Sobrescribir los archivos originales (nueva extensión si se cambia el formato)</OverwriteOriginalFiles>
     <ReDoCasing>Rehacer</ReDoCasing>
     <Convert>Convertir</Convert>
     <NothingToConvert>¡Nada para convertir!</NothingToConvert>
     <PleaseChooseOutputFolder>Por favor, elija la carpeta de salida</PleaseChooseOutputFolder>
     <Converted>Convertido</Converted>
     <ConvertedX>Modificada ({0})</ConvertedX>
+    <Settings>Ajustes</Settings>
+    <AutoBalance>Balance de líneas automático</AutoBalance>
+    <ScanFolder>Explorar carpeta...</ScanFolder>
+    <ScanningFolder>Explorando {0} y subcarpetas para archivos de subtítulos...</ScanningFolder>
+    <Recursive>Incluir subcarpetas</Recursive>
+    <SetMinMsBetweenSubtitles>Fijar el min. de milisegundos entre subtítulos</SetMinMsBetweenSubtitles>
   </BatchConvert>
   <Beamer>
     <Title>Videoproyector</Title>
@@ -196,6 +202,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Seleccionar idioma</Title>
     <Language>Idioma</Language>
   </ChooseLanguage>
+  <ColumnPaste>
+    <Title>Pegar columna</Title>
+    <ChooseColumn>Elegir columna</ChooseColumn>
+    <OverwriteShiftCellsDown>Sobrescribir/Desplazar celdas hacia abajo</OverwriteShiftCellsDown>
+    <Overwrite>Sobrescribir</Overwrite>
+    <ShiftCellsDown>Desplazar celdas hacia abajo</ShiftCellsDown>
+    <TimeCodesOnly>Sólo códigos de tiempo</TimeCodesOnly>
+    <TextOnly>Sólo texto</TextOnly>
+    <OriginalTextOnly>Sólo texto original</OriginalTextOnly>
+  </ColumnPaste>
   <CompareSubtitles>
     <Title>Comparar subtítulos</Title>
     <PreviousDifference>Diferencia Previa</PreviousDifference>
@@ -204,7 +220,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XNumberOfDifference>Número de diferencias: {0}</XNumberOfDifference>
     <ShowOnlyDifferences>Mostrar solo diferencias</ShowOnlyDifferences>
     <OnlyLookForDifferencesInText>Buscar solo diferencias en el texto</OnlyLookForDifferencesInText>
-    <CannotCompareWithImageBasedSubtitles>No se pueden comparar con subtítulos basados ​​en imágenes</CannotCompareWithImageBasedSubtitles>
+    <CannotCompareWithImageBasedSubtitles>No se pueden comparar con subtítulos basados en imágenes</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>D-Cinema propiedades (interoperabilidad)</Title>
@@ -216,6 +232,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Language>Language</Language>
     <IssueDate>Issue date</IssueDate>
     <EditRate>Tasa Edit</EditRate>
+    <TimeCodeRate>Tasa de códigos de tiempo</TimeCodeRate>
+    <StartTime>Tiempo de inicio</StartTime>
     <Font>Font</Font>
     <FontId>ID</FontId>
     <FontUri>URI</FontUri>
@@ -224,7 +242,17 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffectColor>Color Efecto </FontEffectColor>
     <FontSize>Tamaño</FontSize>
     <ChooseColor>Elige el color...</ChooseColor>
+    <Generate>Generar</Generate>
   </DCinemaProperties>
+  <DurationsBridgeGaps>
+    <Title>Puentear pequeños intervalos en duraciones</Title>
+    <GapsBridgedX>Número de pequeños intervalos puenteados: {0}</GapsBridgedX>
+    <GapToNext>Intervalo al siguiente</GapToNext>
+    <BridgeGapsSmallerThanXPart1>Puentear intervalos más pequeños de</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart2>milisegundos</BridgeGapsSmallerThanXPart2>
+    <ProlongEndTime>El texto anterior lleva todo el intervalo de tiempo</ProlongEndTime>
+    <DivideEven>El texto divide el intervalo de tiempo</DivideEven>
+  </DurationsBridgeGaps>
   <DvdSubrip>
     <Title>Ripear subtítulos de ifo/vobs (dvd)</Title>
     <DvdGroupTitle>DVD archivos/info</DvdGroupTitle>
@@ -305,7 +333,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderWidth>Ancho de borde</BorderWidth>
     <ImageFormat>Formato de la imagen</ImageFormat>
     <AntiAlias>Anti alias</AntiAlias>
-    <SideBySide3D>Side-by-side 3D</SideBySide3D>
+    <Generate>Generar</Generate>
+    <Text3D>3D</Text3D>
+    <SideBySide3D>3D lado a lado</SideBySide3D>
+    <HalfTopBottom3D>3D arriba/abajo</HalfTopBottom3D>
+    <Depth>Profundidad</Depth>
     <ExportAllLines>Exportar todas las líneas...</ExportAllLines>
     <XImagesSavedInY>{0} imágenes guardadas en {1}</XImagesSavedInY>
     <VideoResolution>Video res</VideoResolution>
@@ -318,6 +350,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveVobSubAs>Elija el nombre del archivo VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Elige Blu-ray sup nombre de archivo</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Elige DVD Studio Pro nombre de archivo STL</SaveDvdStudioProStlAs>
+    <SomeLinesWereTooLongX>Algunas líneas son muy largas:
+{0}</SomeLinesWereTooLongX>
   </ExportPngXml>
   <ExportText>
     <Title>Exportar texto</Title>
@@ -340,6 +374,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <HHMMSSFF>HH: MM: SS: FF</HHMMSSFF>
     <TimeCodeSeperator>Código deTiempo separador</TimeCodeSeperator>
   </ExportText>
+  <ExtractDateTimeInfo>
+    <Title>Generar tiempo como texto</Title>
+    <OpenVideoFile>Elegir archivo de video para extraer información de  fecha/tiempo</OpenVideoFile>
+    <StartFrom>Empezar desde</StartFrom>
+    <DateTimeFormat>Formato de fecha/tiempo</DateTimeFormat>
+    <Example>Ejemplo</Example>
+    <GenerateSubtitle>&amp;Generar subtítulo</GenerateSubtitle>
+  </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Buscar</Title>
     <Find>Buscar</Find>
@@ -490,6 +532,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Download>Descarga</Download>
     <XDownloaded>{0} han sido descargados e instalados</XDownloaded>
   </GetDictionaries>
+  <GetTesseractDictionaries>
+    <Title>¿Necesitas diccionarios?</Title>
+    <DescriptionLine1>Obtener diccionarios Tesseract OCR desde internet</DescriptionLine1>
+    <DownloadFailed>¡Descarga fallida!</DownloadFailed>
+    <GetDictionariesHere>Obtén diccionarios aquí:</GetDictionariesHere>
+    <ChooseLanguageAndClickDownload>Elige el idioma y pulsa descargar</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>Abre la carpeta 'Dictionaries'</OpenDictionariesFolder>
+    <Download>Descargar</Download>
+    <XDownloaded>{0} se ha descargado e instalado</XDownloaded>
+  </GetTesseractDictionaries>
   <GoogleTranslate>
     <Title>Traductor Google</Title>
     <From>De:</From>
@@ -512,6 +564,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Ir al subtítulo número</Title>
     <XIsNotAValidNumber>{0} no es un número válido</XIsNotAValidNumber>
   </GoToLine>
+  <ImportSceneChanges>
+    <Title>Importar cambios de escena</Title>
+    <OpenTextFile>Abrir archivo de texto...</OpenTextFile>
+    <ImportOptions>Importar opciones</ImportOptions>
+    <TextFiles>Archivos de texto</TextFiles>
+    <TimeCodes>Códigos de tiempo</TimeCodes>
+    <Frames>Fotogramas</Frames>
+    <Seconds>Segundos</Seconds>
+    <Milliseconds>Milisegundos</Milliseconds>
+  </ImportSceneChanges>
   <ImportText>
     <Title>Importar texto plano</Title>
     <OpenTextFile>Abrir archivo de texto...</OpenTextFile>
@@ -523,12 +585,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MergeShortLines>Combinar líneas cortas que continúan</MergeShortLines>
     <RemoveEmptyLines>Eliminar líneas en blanco</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Eliminar líneas sin letras</RemoveLinesWithoutLetters>
+    <GenerateTimeCodes>Generar códigos de tiempo</GenerateTimeCodes>
     <GapBetweenSubtitles>Espacio entre subtítulos (milisegundos)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
     <Fixed>Corregido</Fixed>
     <Refresh>&amp;Renovar</Refresh>
     <TextFiles>Archivos de texto</TextFiles>
     <PreviewLinesModifiedX>Vista previa - párrafos modificados: {0}</PreviewLinesModifiedX>
+    <TimeCodes>Códigos de tiempo</TimeCodes>
   </ImportText>
   <Interjections>
     <Title>Interjecciones</Title>
@@ -566,6 +630,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportOcrFromDvd>Importar subtítulo /OCR de vob/ifo (dvd) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importar subtítulo /OCR VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importar archivo /OCR Blu-ray sup...</ImportBluRaySupFile>
+        <ImportXSub>Importar/OCR xsub desde divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importar subtítulo de archivo Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importar subtítulo codificado manualmente...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importar texto plano...</ImportText>
@@ -602,11 +667,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RightToLeftMode>Modo de derecha a izquierda</RightToLeftMode>
         <ReverseRightToLeftStartEnd>Invertir RTL inicio/fin (para las líneas seleccionadas)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Mostrar texto original en la previsualización de audio/vídeo</ShowOriginalTextInAudioAndVideoPreview>
+        <ModifySelection>Modificar selección...</ModifySelection>
+        <InverseSelection>Invertir selección</InverseSelection>
       </Edit>
       <Tools>
         <Title>Herramientas</Title>
         <AdjustDisplayDuration>Ajustar duraciones...</AdjustDisplayDuration>
         <ApplyDurationLimits>Aplicar límites de duración...</ApplyDurationLimits>
+        <DurationsBridgeGap>Puentear intervalos en duraciones...</DurationsBridgeGap>
         <FixCommonErrors>Corregir Errores Comunes...</FixCommonErrors>
         <StartNumberingFrom>Iniciar numeración desde...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Eliminar texto para sordos...</RemoveTextForHearingImpaired>
@@ -614,6 +682,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeFrameRate>Cambiar tasa de cuadros...</ChangeFrameRate>
         <ChangeSpeedInPercent>Cambiar velocidad (porcentaje)...</ChangeSpeedInPercent>
         <MergeShortLines>Combinar líneas cortas...</MergeShortLines>
+        <MergeDuplicateText>Fusionar líneas con el mismo texto...</MergeDuplicateText>
         <SplitLongLines>Dividir líneas largas...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Duración mínima entre párrafos...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>
@@ -629,6 +698,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <WordsPerMinute>Palabras por minuto (ppm)</WordsPerMinute>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Nueva traducción desde el principio del subtítulo actual</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Convertir lote...</BatchConvert>
+        <GenerateTimeAsText>Generar tiempo como texto...</GenerateTimeAsText>
+        <MeasurementConverter>Conversor de medidas...</MeasurementConverter>
         <SplitSubtitle>Dividir subtítulo...</SplitSubtitle>
         <AppendSubtitle>Anexar subtítulo...</AppendSubtitle>
         <JoinSubtitles>Unir subtítulos...</JoinSubtitles>
@@ -636,8 +707,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <Video>
         <Title>Video</Title>
         <OpenVideo>Abrir archivo de video...</OpenVideo>
+        <OpenDvd>Abrir DVD...</OpenDvd>
         <ChooseAudioTrack>Seleccionar pista de audio</ChooseAudioTrack>
         <CloseVideo>Cerrar archivo de video</CloseVideo>
+        <ImportSceneChanges>Importar cambios de escena...</ImportSceneChanges>
+        <RemoveSceneChanges>Eliminar cambios de escena</RemoveSceneChanges>
         <ShowHideVideo>Mostrar/ocultar video</ShowHideVideo>
         <ShowHideWaveForm>Mostrar/ocultar forma de onda</ShowHideWaveForm>
         <ShowHideWaveformAndSpectrogram>Mostrar/ocultar forma de onda y espectrograma</ShowHideWaveformAndSpectrogram>
@@ -647,6 +721,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SpellCheck>
         <Title>Ortografía</Title>
         <SpellCheck>Ortografía...</SpellCheck>
+        <SpellCheckFromCurrentLine>Revisar ortografía desde la línea actual...</SpellCheckFromCurrentLine>
         <FindDoubleWords>Buscar palabras dobles</FindDoubleWords>
         <FindDoubleLines>Buscar líneas dobles</FindDoubleLines>
         <GetDictionaries>Conseguir diccionarios...</GetDictionaries>
@@ -724,6 +799,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnInsertTextFromSubtitle>Insertar texto de subtítulo...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Importar texto y celdas hacia abajo</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Pegar desde el portapapeles...</ColumnPasteFromClipboard>
+        <ColumnCopyOriginalTextToCurrent>Copiar el texto del original al actual</ColumnCopyOriginalTextToCurrent>
         <Split>Dividir</Split>
         <MergeSelectedLines>Combinar líneas seleccionadas</MergeSelectedLines>
         <MergeSelectedLinesASDialogue>Combinar líneas seleccionadas como diálogo</MergeSelectedLinesASDialogue>
@@ -746,6 +822,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FixCommonErrorsInSelectedLines>Corregir problemas comunes en líneas seleccionadas...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Cambiar a mayúsculas líneas seleccionadas...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Guardar líneas seleccionadas como...</SaveSelectedLines>
+        <WebVTTSetNewVoice>Fijar nueva voz...</WebVTTSetNewVoice>
+        <WebVTTRemoveVoices>Quitar voces</WebVTTRemoveVoices>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -844,7 +922,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OpenVideoFile>Abrir archivo de vídeo...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Nueva tasa de cuadros ({0}) usada para calcular inicio/fin del código de tiempos</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Nueva tasa de cuadros ({0}) usada para calcular inicio/fin número de cuadro</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>La busqueda no ha dado resultados.
+    <FindContinue>La búsqueda no ha dado resultados.
 ¿Quiere reintentarlo desde el inicio del documento?</FindContinue>
     <FindContinueTitle>¿Continuar buscando?</FindContinueTitle>
     <ReplaceContinueNotFound>El elemento de búsqueda no fue encontrada.
@@ -963,6 +1041,8 @@ con el archivo de video, al subtítulo actual cargado.
     <VobSubFiles>Archivos de subtítulos VobSub</VobSubFiles>
     <OpenBluRaySupFile>Abrir archivos Blu-ray .sup...</OpenBluRaySupFile>
     <BluRaySupFiles>Archivos Blu-ray .sup</BluRaySupFiles>
+    <OpenXSubFiles>Abrir archivo xsub...</OpenXSubFiles>
+    <XSubFiles>Archivos xsub</XSubFiles>
     <BeforeImportingVobSubFile>Antes de importar los subtítulos VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Antes de importar archivo Blu-ray sup</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Antes de importar archivo BDN xml</BeforeImportingBdnXml>
@@ -1044,12 +1124,32 @@ con el archivo de video, al subtítulo actual cargado.
     <BeforeDisplaySubtitleJoin>Antes de unirse subtítulos</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Subtítulos unido</SubtitlesJoined>
     <StatusLog>Estatus de registro</StatusLog>
+    <XSceneChangesImported>{0} cambios de escena importados</XSceneChangesImported>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar subtítulos desde archivo Matroska</Title>
     <PleaseChoose>Se ha encontrado más de un subtítulo - Elija uno por favor.</PleaseChoose>
     <TrackXLanguageYTypeZ>Pista {0} - {1} - idioma: {2} - tipo: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MeasurementConverter>
+    <Title>Conversor de medidas</Title>
+    <ConvertFrom>Convertir desde</ConvertFrom>
+    <ConvertTo>Convertir a</ConvertTo>
+    <CopyToClipboard>Copiar al portapapeles</CopyToClipboard>
+    <Celsius>Celsius</Celsius>
+    <Fahrenheit>Fahrenheit</Fahrenheit>
+    <Miles>Millas</Miles>
+    <Kilometers>Kilómetros</Kilometers>
+    <Meters>Metros</Meters>
+    <Yards>Yardas</Yards>
+    <Feet>Pies</Feet>
+    <Inches>Pulgadas</Inches>
+    <Pounds>Libras</Pounds>
+    <Kilos>Kilos</Kilos>
+  </MeasurementConverter>
+  <MergeDoubleLines>
+    <Title>Fusionar líneas con el mismo texto</Title>
+  </MergeDoubleLines>
   <MergedShortLines>
     <Title>Combinar líneas cortas</Title>
     <MaximumCharacters>Número máximo de caracteres en un párrafo</MaximumCharacters>
@@ -1058,6 +1158,22 @@ con el archivo de video, al subtítulo actual cargado.
     <MergedText>Texto combinado</MergedText>
     <OnlyMergeContinuationLines>Combinar solo líneas que continúan</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <ModifySelection>
+    <Title>Modificar selección</Title>
+    <Rule>Regla</Rule>
+    <CaseSensitive>Sensible a mayúsculas</CaseSensitive>
+    <DoWithMatches>Qué hacer con las coincidencias</DoWithMatches>
+    <MakeNewSelection>Hacer nueva selección</MakeNewSelection>
+    <AddToCurrentSelection>Añadir a la selección actual</AddToCurrentSelection>
+    <SubtractFromCurrentSelection>Sustraer de la selección actual</SubtractFromCurrentSelection>
+    <IntersectWithCurrentSelection>Intersectar con la selección actual</IntersectWithCurrentSelection>
+    <MatchingLinesX>Líneas coincidentes: {0}</MatchingLinesX>
+    <Contains>Contienen</Contains>
+    <StartsWith>Empiezan con</StartsWith>
+    <EndsWith>Terminan con</EndsWith>
+    <NoContains>No contienen</NoContains>
+    <RegEx>Expresión regular</RegEx>
+  </ModifySelection>
   <MultipleReplace>
     <Title>Reemplazado múltiple</Title>
     <FindWhat>Buscar</FindWhat>
@@ -1099,6 +1215,14 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
 puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <Start>Inicio</Start>
   </NetworkStart>
+  <OpenVideoDvd>
+    <Title>Abrir DVD vía VLC</Title>
+    <OpenDvdFrom>Abrir DVD desde...</OpenDvdFrom>
+    <Disc>Disco</Disc>
+    <Folder>Carpeta</Folder>
+    <ChooseDrive>Elejir unidad</ChooseDrive>
+    <ChooseFolder>Elejir carpeta</ChooseFolder>
+  </OpenVideoDvd>
   <PluginsGet>
     <Title>Plugins</Title>
     <InstalledPlugins>Plugins Instalados </InstalledPlugins>
@@ -1167,6 +1291,9 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <PreviewLinesModifiedX>Vista previa - párrafos modificados: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Mostrar sólo las líneas modificadas</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milisegundos mínimos entre líneas</MinimumMillisecondsBetweenParagraphs>
+    <FrameInfo>
+    </FrameInfo>
+    <OneFrameXisYMilliseconds>Un fotograma a {0:0.00} fps son {1} milisegundos</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Establecer sincronización puntual para la línea {0}</Title>
@@ -1323,7 +1450,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <AdjustStartDownEndUpAndGoToNext>Tecla abajo=fijar inicio, Tecla arriba=fijar final e ir a la siguiente</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Mover las líneas seleccionadas 100 ms adelante</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Mover las líneas seleccionadas 100 ms atrás</AdjustSelected100MsBack>
-    <AdjustSetStartTimeOnly>Establecer hora de inicio, mantener hora de finalización</AdjustSetStartTimeOnly>
+    <AdjustSetStartTimeKeepDuration>Establecer hora de inicio, mantener hora de finalización</AdjustSetStartTimeKeepDuration>
     <MainCreateStartDownEndUp>Crear inicio con la tecla-abajo, ajustar final con la tecla-arriba</MainCreateStartDownEndUp>
     <MergeDialogue>Unir diálogo (guiones de inserción)</MergeDialogue>
     <GoToNext>Ir a la línea siguiente</GoToNext>
@@ -1542,6 +1669,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <PlusShadow>+ Sombra</PlusShadow>
     <OpaqueBox>Caja opaca (usa el color del contorno)</OpaqueBox>
     <Import>Importar...</Import>
+    <Export>Exportar...</Export>
     <Copy>Copiar</Copy>
     <CopyOfY>Copia de {0}</CopyOfY>
     <CopyXOfY>Copia {0} de {1}</CopyXOfY>
@@ -1549,7 +1677,11 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <Remove>Remover</Remove>
     <RemoveAll>Borrar todos</RemoveAll>
     <ImportStyleFromFile>Importar estilo desde el archivo...</ImportStyleFromFile>
+    <ExportStyleToFile>Exportar estilo al archivo... (añadirá el estilo si el archivo existe)</ExportStyleToFile>
     <ChooseStyle>Elija el estilo para importar</ChooseStyle>
+    <StyleAlreadyExits>El estilo ya existe: {0}</StyleAlreadyExits>
+    <StyleXExportedToFileY>Estilo '{0}' exportado al archivo '{1}'</StyleXExportedToFileY>
+    <StyleXImportedFromFileY>Estilo '{0}' importado desde el archivo '{1}'</StyleXImportedFromFileY>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Sincronización puntual</Title>
@@ -1602,6 +1734,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <OcrMethod>Método OCR</OcrMethod>
     <OcrViaModi>OCR con Microsoft Office Document Imaging (MODI). Necesita MS Office</OcrViaModi>
     <OcrViaTesseract>OCR con Tesseract</OcrViaTesseract>
+    <OcrViaNOCR>OCR con nOCR</OcrViaNOCR>
     <Language>Idioma</Language>
     <OcrViaImageCompare>OCR por comparación de imágenes</OcrViaImageCompare>
     <ImageDatabase>Base de datos de imagen</ImageDatabase>
@@ -1704,4 +1837,8 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <SplitLongLinesAt2>Milisegundos</SplitLongLinesAt2>
     <Other>Otro</Other>
   </WaveFormGenerateTimeCodes>
+  <WebVttNewVoice>
+    <Title>WebVTT - fijar nueva voz</Title>
+    <VoiceName>Nombre de la voz</VoiceName>
+  </WebVttNewVoice>
 </Language>
