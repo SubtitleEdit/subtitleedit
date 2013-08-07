@@ -124,6 +124,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                                          "v",
                                                          "w",
                                                          "x",
+                                                         "ç",
                                                          "y",
                                                          "z",
                                                          "",
@@ -327,6 +328,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                                              "76",    //  "v",
                                                              "f7",    //  "w",
                                                              "f8",    //  "x",
+                                                             "fb",    //  "ç",
                                                              "79",    //  "y",
                                                              "7a",    //  "z",
                                                              "fb",    //  "",
@@ -1338,6 +1340,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             res = res.Replace("  ", " ").Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
             if (res.Contains("<i>") && !res.Contains("</i>"))
                 res += "</i>";
+            res = res.Replace("aã", "ã");
+            res = res.Replace("oõ", "õ");
             return Utilities.FixInvalidItalicTags(res);
         }
 
