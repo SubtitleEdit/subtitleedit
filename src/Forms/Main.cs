@@ -13161,6 +13161,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             subtitleFormat.LoadSubtitle(s, lines, null);
                             newFormat = subtitleFormat;
+                            break;
                         }
                     }
 
