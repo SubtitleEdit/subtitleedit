@@ -53,11 +53,11 @@
             this.tabPageGetPlugins.SuspendLayout();
             this.SuspendLayout();
             // 
-            // labelChooseLanguageAndClickDownload
+            // labelClickDownload
             // 
             this.labelClickDownload.AutoSize = true;
             this.labelClickDownload.Location = new System.Drawing.Point(13, 45);
-            this.labelClickDownload.Name = "labelChooseLanguageAndClickDownload";
+            this.labelClickDownload.Name = "labelClickDownload";
             this.labelClickDownload.Size = new System.Drawing.Size(181, 13);
             this.labelClickDownload.TabIndex = 23;
             this.labelClickDownload.Text = "Choose plugin and click \"Download\"";
@@ -65,7 +65,7 @@
             // buttonDownload
             // 
             this.buttonDownload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDownload.Location = new System.Drawing.Point(516, 205);
+            this.buttonDownload.Location = new System.Drawing.Point(516, 305);
             this.buttonDownload.Name = "buttonDownload";
             this.buttonDownload.Size = new System.Drawing.Size(104, 25);
             this.buttonDownload.TabIndex = 22;
@@ -86,7 +86,7 @@
             // 
             this.linkLabelOpenPluginFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabelOpenPluginFolder.AutoSize = true;
-            this.linkLabelOpenPluginFolder.Location = new System.Drawing.Point(12, 285);
+            this.linkLabelOpenPluginFolder.Location = new System.Drawing.Point(12, 385);
             this.linkLabelOpenPluginFolder.Name = "linkLabelOpenPluginFolder";
             this.linkLabelOpenPluginFolder.Size = new System.Drawing.Size(106, 13);
             this.linkLabelOpenPluginFolder.TabIndex = 25;
@@ -98,7 +98,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(532, 280);
+            this.buttonOK.Location = new System.Drawing.Point(532, 380);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(104, 23);
             this.buttonOK.TabIndex = 26;
@@ -120,7 +120,7 @@
             this.listViewGetPlugins.Location = new System.Drawing.Point(16, 61);
             this.listViewGetPlugins.MultiSelect = false;
             this.listViewGetPlugins.Name = "listViewGetPlugins";
-            this.listViewGetPlugins.Size = new System.Drawing.Size(604, 138);
+            this.listViewGetPlugins.Size = new System.Drawing.Size(604, 238);
             this.listViewGetPlugins.TabIndex = 27;
             this.listViewGetPlugins.UseCompatibleStateImageBehavior = false;
             this.listViewGetPlugins.View = System.Windows.Forms.View.Details;
@@ -140,7 +140,7 @@
             this.columnHeaderVersion.Text = "Version";
             this.columnHeaderVersion.Width = 80;
             // 
-            // columnHeaderType
+            // columnHeaderDate
             // 
             this.columnHeaderDate.Text = "Date";
             this.columnHeaderDate.Width = 70;
@@ -155,7 +155,7 @@
             this.tabControlPlugins.Location = new System.Drawing.Point(12, 12);
             this.tabControlPlugins.Name = "tabControlPlugins";
             this.tabControlPlugins.SelectedIndex = 0;
-            this.tabControlPlugins.Size = new System.Drawing.Size(635, 262);
+            this.tabControlPlugins.Size = new System.Drawing.Size(635, 362);
             this.tabControlPlugins.TabIndex = 28;
             // 
             // tabPageInstalledPlugins
@@ -165,7 +165,7 @@
             this.tabPageInstalledPlugins.Location = new System.Drawing.Point(4, 22);
             this.tabPageInstalledPlugins.Name = "tabPageInstalledPlugins";
             this.tabPageInstalledPlugins.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInstalledPlugins.Size = new System.Drawing.Size(627, 236);
+            this.tabPageInstalledPlugins.Size = new System.Drawing.Size(627, 336);
             this.tabPageInstalledPlugins.TabIndex = 0;
             this.tabPageInstalledPlugins.Text = "Installed plugins";
             this.tabPageInstalledPlugins.UseVisualStyleBackColor = true;
@@ -173,7 +173,7 @@
             // buttonRemove
             // 
             this.buttonRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRemove.Location = new System.Drawing.Point(516, 205);
+            this.buttonRemove.Location = new System.Drawing.Point(516, 305);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(104, 25);
             this.buttonRemove.TabIndex = 29;
@@ -196,7 +196,7 @@
             this.listViewInstalledPlugins.Location = new System.Drawing.Point(6, 6);
             this.listViewInstalledPlugins.MultiSelect = false;
             this.listViewInstalledPlugins.Name = "listViewInstalledPlugins";
-            this.listViewInstalledPlugins.Size = new System.Drawing.Size(614, 193);
+            this.listViewInstalledPlugins.Size = new System.Drawing.Size(614, 293);
             this.listViewInstalledPlugins.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listViewInstalledPlugins.TabIndex = 28;
             this.listViewInstalledPlugins.UseCompatibleStateImageBehavior = false;
@@ -217,7 +217,7 @@
             this.columnHeaderInsVersion.Text = "Version";
             this.columnHeaderInsVersion.Width = 80;
             // 
-            // columnHeaderInsDate
+            // columnHeaderInsType
             // 
             this.columnHeaderInsType.Text = "Date";
             this.columnHeaderInsType.Width = 80;
@@ -232,7 +232,7 @@
             this.tabPageGetPlugins.Location = new System.Drawing.Point(4, 22);
             this.tabPageGetPlugins.Name = "tabPageGetPlugins";
             this.tabPageGetPlugins.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGetPlugins.Size = new System.Drawing.Size(627, 236);
+            this.tabPageGetPlugins.Size = new System.Drawing.Size(627, 336);
             this.tabPageGetPlugins.TabIndex = 1;
             this.tabPageGetPlugins.Text = "Get plugins";
             this.tabPageGetPlugins.UseVisualStyleBackColor = true;
@@ -250,7 +250,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(648, 312);
+            this.ClientSize = new System.Drawing.Size(648, 412);
             this.Controls.Add(this.tabControlPlugins);
             this.Controls.Add(this.linkLabelOpenPluginFolder);
             this.Controls.Add(this.buttonOK);
