@@ -1,6 +1,23 @@
 ﻿Subtitle Edit Changelog
 
 
+
+3.3.8 (x August 2013)
+* NEW:
+   * Added Hungarian language file - thx thx Zityi
+   * Added a few new subtitle formats
+* IMPROVED:
+   * Updated Spanish language file - thx pakitonaranjo
+   * Updated Polish language file - thx Admas
+   * Added support for the Māori language in PAC - thx Mark
+   * Allow ebu stl with 29 fps - thx Antonio
+   * Minor improvements to WebVTT + added WebVTT with line# - thx Benoît
+* FIXED:
+   * Fix common errors: Fixed two bugs regarding Spanish "¿¡ !?" - thx Mike
+   * Bug in getting result from plugin - thx Herman
+   * Fix in "Unknwown format 64" - thx Mark
+
+
 3.3.7 (3rd August 2013)
 * NEW:
    * Added Spanish (Mexico) language file - thx paconaranjo
