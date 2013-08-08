@@ -1,7 +1,6 @@
 ﻿Subtitle Edit Changelog
 
 
-
 3.3.8 (x August 2013)
 * NEW:
    * Added Hungarian language file - thx thx Zityi
@@ -16,6 +15,7 @@
    * Fix common errors: Fixed two bugs regarding Spanish "¿¡ !?" - thx Mike
    * Bug in getting result from plugin - thx Herman
    * Fix in "Unknwown format 64" - thx Mark
+   * Some fixes for SCC - thx Johan
 
 
 3.3.7 (3rd August 2013)
