@@ -612,6 +612,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private string ToSccText(string text)
         {
             text = FixMax4LinesAndMax32CharsPerLine(text);
+            text = text.Replace("ã", "aã");
+            text = text.Replace("õ", "oõ");
+
             var lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int italic = 0;
             var sb = new StringBuilder();
