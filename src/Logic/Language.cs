@@ -1103,7 +1103,7 @@ namespace Nikse.SubtitleEdit.Logic
                         ApplyDurationLimits = "Apply duration limits...",
                         DurationsBridgeGap = "Bridge gap in durations...",
                         FixCommonErrors = "&Fix common errors...",
-                        StartNumberingFrom = "Start numbering from...",
+                        StartNumberingFrom = "Renumber...",
                         RemoveTextForHearingImpaired = "Remove text for hearing impaired...",
                         ChangeCasing = "Change casing...",
                         ChangeFrameRate = "Change frame rate...",
@@ -1848,7 +1848,7 @@ can edit in same subtitle file (collaboration)",
 
             StartNumberingFrom = new LanguageStructure.StartNumberingFrom
             {
-                Title = "Start numbering from...",
+                Title = "Renumber",
                 StartFromNumber = "Start from number:",
                 PleaseEnterAValidNumber = "Ups, please enter a number",
             };
