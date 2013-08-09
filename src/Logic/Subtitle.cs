@@ -531,6 +531,14 @@ namespace Nikse.SubtitleEdit.Logic
                         return p1.WordsPerMinute.CompareTo(p2.WordsPerMinute);
                     });
                     break;
+                case SubtitleSortCriteria.Style:
+                    _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
+                    {
+                        if (p1.Extra == null)
+                            return 1;
+                        return p1.Extra.CompareTo(p2.Extra);
+                    });
+                    break;
                 default:
                     break;
             }

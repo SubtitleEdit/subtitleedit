@@ -73,6 +73,7 @@
             this.toolStripMenuItemDCinemaProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemTTProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemNuendoProperties = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemFcpProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSubStationAlpha = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
             this.openOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -426,7 +427,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemFcpProperties = new System.Windows.Forms.ToolStripMenuItem();
+            this.styleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -931,6 +932,13 @@
             this.toolStripMenuItemNuendoProperties.Size = new System.Drawing.Size(337, 22);
             this.toolStripMenuItemNuendoProperties.Text = "Nuendo properties...";
             this.toolStripMenuItemNuendoProperties.Click += new System.EventHandler(this.ToolStripMenuItemNuendoPropertiesClick);
+            // 
+            // toolStripMenuItemFcpProperties
+            // 
+            this.toolStripMenuItemFcpProperties.Name = "toolStripMenuItemFcpProperties";
+            this.toolStripMenuItemFcpProperties.Size = new System.Drawing.Size(337, 22);
+            this.toolStripMenuItemFcpProperties.Text = "Final Cut Pro properties...";
+            this.toolStripMenuItemFcpProperties.Click += new System.EventHandler(this.toolStripMenuItemFcpProperties_Click);
             // 
             // toolStripMenuItemSubStationAlpha
             // 
@@ -1533,7 +1541,8 @@
             this.sortTextTotalLengthToolStripMenuItem,
             this.sortTextNumberOfLinesToolStripMenuItem,
             this.textCharssecToolStripMenuItem,
-            this.textWordsPerMinutewpmToolStripMenuItem});
+            this.textWordsPerMinutewpmToolStripMenuItem,
+            this.styleToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(346, 22);
             this.toolStripMenuItem1.Text = "Sort by";
@@ -3599,7 +3608,7 @@
             this.splitContainerListViewAndText.Panel2.Controls.Add(this.groupBoxEdit);
             this.splitContainerListViewAndText.Panel2MinSize = 105;
             this.splitContainerListViewAndText.Size = new System.Drawing.Size(724, 211);
-            this.splitContainerListViewAndText.SplitterDistance = 93;
+            this.splitContainerListViewAndText.SplitterDistance = 92;
             this.splitContainerListViewAndText.TabIndex = 2;
             // 
             // SubtitleListview1
@@ -3616,7 +3625,7 @@
             this.SubtitleListview1.Location = new System.Drawing.Point(0, 0);
             this.SubtitleListview1.Name = "SubtitleListview1";
             this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(724, 93);
+            this.SubtitleListview1.Size = new System.Drawing.Size(724, 92);
             this.SubtitleListview1.TabIndex = 0;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.UseSyntaxColoring = true;
@@ -3656,7 +3665,7 @@
             this.groupBoxEdit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxEdit.Location = new System.Drawing.Point(0, 0);
             this.groupBoxEdit.Name = "groupBoxEdit";
-            this.groupBoxEdit.Size = new System.Drawing.Size(724, 114);
+            this.groupBoxEdit.Size = new System.Drawing.Size(724, 115);
             this.groupBoxEdit.TabIndex = 1;
             this.groupBoxEdit.TabStop = false;
             // 
@@ -3664,7 +3673,7 @@
             // 
             this.labelSingleLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelSingleLine.AutoSize = true;
-            this.labelSingleLine.Location = new System.Drawing.Point(346, 87);
+            this.labelSingleLine.Location = new System.Drawing.Point(346, 88);
             this.labelSingleLine.Name = "labelSingleLine";
             this.labelSingleLine.Size = new System.Drawing.Size(76, 13);
             this.labelSingleLine.TabIndex = 32;
@@ -3674,7 +3683,7 @@
             // 
             this.labelAlternateSingleLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelAlternateSingleLine.AutoSize = true;
-            this.labelAlternateSingleLine.Location = new System.Drawing.Point(839, 87);
+            this.labelAlternateSingleLine.Location = new System.Drawing.Point(839, 88);
             this.labelAlternateSingleLine.Name = "labelAlternateSingleLine";
             this.labelAlternateSingleLine.Size = new System.Drawing.Size(47, 13);
             this.labelAlternateSingleLine.TabIndex = 36;
@@ -3727,7 +3736,7 @@
             // 
             this.labelTextAlternateLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextAlternateLineTotal.AutoSize = true;
-            this.labelTextAlternateLineTotal.Location = new System.Drawing.Point(682, 94);
+            this.labelTextAlternateLineTotal.Location = new System.Drawing.Point(682, 95);
             this.labelTextAlternateLineTotal.Name = "labelTextAlternateLineTotal";
             this.labelTextAlternateLineTotal.Size = new System.Drawing.Size(36, 13);
             this.labelTextAlternateLineTotal.TabIndex = 37;
@@ -3737,7 +3746,7 @@
             // 
             this.labelTextAlternateLineLengths.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTextAlternateLineLengths.AutoSize = true;
-            this.labelTextAlternateLineLengths.Location = new System.Drawing.Point(786, 87);
+            this.labelTextAlternateLineLengths.Location = new System.Drawing.Point(786, 88);
             this.labelTextAlternateLineLengths.Name = "labelTextAlternateLineLengths";
             this.labelTextAlternateLineLengths.Size = new System.Drawing.Size(56, 13);
             this.labelTextAlternateLineLengths.TabIndex = 35;
@@ -3774,7 +3783,7 @@
             this.textBoxListViewTextAlternate.Location = new System.Drawing.Point(946, 28);
             this.textBoxListViewTextAlternate.Multiline = true;
             this.textBoxListViewTextAlternate.Name = "textBoxListViewTextAlternate";
-            this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(0, 56);
+            this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(0, 57);
             this.textBoxListViewTextAlternate.TabIndex = 33;
             this.textBoxListViewTextAlternate.Visible = false;
             this.textBoxListViewTextAlternate.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextAlternateMouseClick);
@@ -3961,7 +3970,7 @@
             // 
             this.labelTextLineLengths.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTextLineLengths.AutoSize = true;
-            this.labelTextLineLengths.Location = new System.Drawing.Point(239, 87);
+            this.labelTextLineLengths.Location = new System.Drawing.Point(239, 88);
             this.labelTextLineLengths.Name = "labelTextLineLengths";
             this.labelTextLineLengths.Size = new System.Drawing.Size(108, 13);
             this.labelTextLineLengths.TabIndex = 12;
@@ -3971,7 +3980,7 @@
             // 
             this.labelTextLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTextLineTotal.AutoSize = true;
-            this.labelTextLineTotal.Location = new System.Drawing.Point(1001, 87);
+            this.labelTextLineTotal.Location = new System.Drawing.Point(1001, 88);
             this.labelTextLineTotal.Name = "labelTextLineTotal";
             this.labelTextLineTotal.Size = new System.Drawing.Size(94, 13);
             this.labelTextLineTotal.TabIndex = 21;
@@ -4074,7 +4083,7 @@
             this.textBoxListViewText.Location = new System.Drawing.Point(236, 28);
             this.textBoxListViewText.Multiline = true;
             this.textBoxListViewText.Name = "textBoxListViewText";
-            this.textBoxListViewText.Size = new System.Drawing.Size(362, 56);
+            this.textBoxListViewText.Size = new System.Drawing.Size(362, 57);
             this.textBoxListViewText.TabIndex = 5;
             this.textBoxListViewText.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextMouseClick);
             this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
@@ -4108,7 +4117,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(730, 215);
+            this.tabPage2.Size = new System.Drawing.Size(730, 217);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Source view";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -4123,7 +4132,7 @@
             this.textBoxSource.Multiline = true;
             this.textBoxSource.Name = "textBoxSource";
             this.textBoxSource.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxSource.Size = new System.Drawing.Size(724, 209);
+            this.textBoxSource.Size = new System.Drawing.Size(724, 211);
             this.textBoxSource.TabIndex = 12;
             this.textBoxSource.WordWrap = false;
             this.textBoxSource.Click += new System.EventHandler(this.TextBoxSourceClick);
@@ -4201,12 +4210,12 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // toolStripMenuItemFcpProperties
+            // styleToolStripMenuItem
             // 
-            this.toolStripMenuItemFcpProperties.Name = "toolStripMenuItemFcpProperties";
-            this.toolStripMenuItemFcpProperties.Size = new System.Drawing.Size(337, 22);
-            this.toolStripMenuItemFcpProperties.Text = "Final Cut Pro properties...";
-            this.toolStripMenuItemFcpProperties.Click += new System.EventHandler(this.toolStripMenuItemFcpProperties_Click);
+            this.styleToolStripMenuItem.Name = "styleToolStripMenuItem";
+            this.styleToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
+            this.styleToolStripMenuItem.Text = "Style";
+            this.styleToolStripMenuItem.Click += new System.EventHandler(this.styleToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -4685,6 +4694,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDurationBridgeGaps;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenDvd;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFcpProperties;
+        private System.Windows.Forms.ToolStripMenuItem styleToolStripMenuItem;
     }
 }
 
