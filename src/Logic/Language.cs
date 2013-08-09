@@ -1123,6 +1123,7 @@ namespace Nikse.SubtitleEdit.Logic
                         TextNumberOfLines = "Text - number of lines",
                         TextNumberOfCharactersPerSeconds = "Text - number of chars/sec",
                         WordsPerMinute = "Text - words per minute (wpm)",
+                        Style = "Style",
                         MakeNewEmptyTranslationFromCurrentSubtitle = "Make new empty translation from current subtitle",
                         BatchConvert = "Batch convert...",
                         GenerateTimeAsText = "Generate time as text...",

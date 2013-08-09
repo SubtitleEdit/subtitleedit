@@ -1489,6 +1489,9 @@ namespace Nikse.SubtitleEdit.Forms
             sortTextNumberOfLinesToolStripMenuItem.Text = _language.Menu.Tools.TextNumberOfLines;
             textCharssecToolStripMenuItem.Text = _language.Menu.Tools.TextNumberOfCharactersPerSeconds;
             textWordsPerMinutewpmToolStripMenuItem.Text = _language.Menu.Tools.WordsPerMinute;
+            styleToolStripMenuItem.Text = _language.Menu.Tools.Style;
+            if (string.IsNullOrEmpty(styleToolStripMenuItem.Text))
+                styleToolStripMenuItem.Text = "Style"; //TODO: Fix in SE 3.4
 
             toolStripMenuItemShowOriginalInPreview.Text = _language.Menu.Edit.ShowOriginalTextInAudioAndVideoPreview;
             toolStripMenuItemMakeEmptyFromCurrent.Text = _language.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle;
@@ -15548,6 +15551,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemMakeEmptyFromCurrent.Visible = false;
                 toolStripMenuItemShowOriginalInPreview.Checked = false;
             }
+            styleToolStripMenuItem.Visible = GetCurrentSubtitleFormat().HasStyleSupport;
         }
 
         private void ContextMenuStripWaveFormOpening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -17397,6 +17401,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.SubtitleSettings.FcpFontName = form.FcpFontName;
             }
             _formPositionsAndSizes.SavePositionAndSize(form);
+        }
+
+        private void styleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SortSubtitle(SubtitleSortCriteria.Style, (sender as ToolStripItem).Text);
         }
 
     }

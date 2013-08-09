@@ -1013,6 +1013,7 @@
                     public string TextNumberOfLines { get; set; }
                     public string TextNumberOfCharactersPerSeconds { get; set; }
                     public string WordsPerMinute { get; set; }
+                    public string Style { get; set; }
                     public string MakeNewEmptyTranslationFromCurrentSubtitle { get; set; }
                     public string BatchConvert { get; set; }
                     public string GenerateTimeAsText { get; set; }
