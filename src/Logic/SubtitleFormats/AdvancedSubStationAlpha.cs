@@ -810,44 +810,100 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            foreach (Paragraph p in subtitle.Paragraphs)
-            {
-                int indexOfBegin = p.Text.IndexOf("{");
-                string pre = string.Empty;
-                while (indexOfBegin >= 0 && p.Text.IndexOf("}") > indexOfBegin)
+            if (newFormat != null && newFormat.Name == new SubStationAlpha().Name)
+            { 
+                foreach (Paragraph p in subtitle.Paragraphs)
                 {
-                    string s = p.Text.Substring(indexOfBegin);
-                    if (s.StartsWith("{\\an1}") ||
-                        s.StartsWith("{\\an2}") ||
-                        s.StartsWith("{\\an3}") ||
-                        s.StartsWith("{\\an4}") ||
-                        s.StartsWith("{\\an5}") ||
-                        s.StartsWith("{\\an6}") ||
-                        s.StartsWith("{\\an7}") ||
-                        s.StartsWith("{\\an8}") ||
-                        s.StartsWith("{\\an9}"))
+                    string s = p.Text;
+                    if (s.Contains("{") && s.Contains("}"))
                     {
-                        pre = s.Substring(0, 6);
-                    }
-                    else if (s.StartsWith("{\\an1\\") ||
-                        s.StartsWith("{\\an2\\") ||
-                        s.StartsWith("{\\an3\\") ||
-                        s.StartsWith("{\\an4\\") ||
-                        s.StartsWith("{\\an5\\") ||
-                        s.StartsWith("{\\an6\\") ||
-                        s.StartsWith("{\\an7\\") ||
-                        s.StartsWith("{\\an8\\") ||
-                        s.StartsWith("{\\an9\\"))
-                    {
-                        pre = s.Substring(0, 5) + "}";
-                    }
-                    int indexOfEnd = p.Text.IndexOf("}");
-                    p.Text = p.Text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
+                        s = s.Replace(@"\u0", string.Empty);
+                        s = s.Replace(@"\u1", string.Empty);
+                        s = s.Replace(@"\s0", string.Empty);
+                        s = s.Replace(@"\s1", string.Empty);
+                        s = s.Replace(@"\be0", string.Empty);
+                        s = s.Replace(@"\be1", string.Empty);
 
-                    indexOfBegin = p.Text.IndexOf("{");
+                        s = RemoveTag(s, "shad");
+                        s = RemoveTag(s, "fsc");
+                        s = RemoveTag(s, "fsp");
+                        s = RemoveTag(s, "fr");
+
+                        s = RemoveTag(s, "t(");
+                        s = RemoveTag(s, "move(");
+                        s = RemoveTag(s, "pos(");
+                        s = RemoveTag(s, "org(");
+                        s = RemoveTag(s, "fade(");
+                        s = RemoveTag(s, "fad(");
+                        s = RemoveTag(s, "clip(");
+                        s = RemoveTag(s, "pbo(");
+
+                        //TODO: Alignment tags
+
+                        s = s.Replace("{}", string.Empty);
+
+                        p.Text = s;
+
+                    }
                 }
-                p.Text = pre + p.Text;
             }
+            else
+            {
+                foreach (Paragraph p in subtitle.Paragraphs)
+                {
+                    int indexOfBegin = p.Text.IndexOf("{");
+                    string pre = string.Empty;
+                    while (indexOfBegin >= 0 && p.Text.IndexOf("}") > indexOfBegin)
+                    {
+                        string s = p.Text.Substring(indexOfBegin);
+                        if (s.StartsWith("{\\an1}") ||
+                            s.StartsWith("{\\an2}") ||
+                            s.StartsWith("{\\an3}") ||
+                            s.StartsWith("{\\an4}") ||
+                            s.StartsWith("{\\an5}") ||
+                            s.StartsWith("{\\an6}") ||
+                            s.StartsWith("{\\an7}") ||
+                            s.StartsWith("{\\an8}") ||
+                            s.StartsWith("{\\an9}"))
+                        {
+                            pre = s.Substring(0, 6);
+                        }
+                        else if (s.StartsWith("{\\an1\\") ||
+                            s.StartsWith("{\\an2\\") ||
+                            s.StartsWith("{\\an3\\") ||
+                            s.StartsWith("{\\an4\\") ||
+                            s.StartsWith("{\\an5\\") ||
+                            s.StartsWith("{\\an6\\") ||
+                            s.StartsWith("{\\an7\\") ||
+                            s.StartsWith("{\\an8\\") ||
+                            s.StartsWith("{\\an9\\"))
+                        {
+                            pre = s.Substring(0, 5) + "}";
+                        }
+                        int indexOfEnd = p.Text.IndexOf("}");
+                        p.Text = p.Text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
+
+                        indexOfBegin = p.Text.IndexOf("{");
+                    }
+                    p.Text = pre + p.Text;
+                }
+            }
+        }
+
+        private static string RemoveTag(string s, string tag)
+        {
+            int indexOfTag = s.IndexOf(@"\" + tag);
+            int endIndex1 = int.MaxValue;
+            int endIndex2 = int.MaxValue;
+            if (indexOfTag > 0)
+            {
+                endIndex1 = s.IndexOf("\\", indexOfTag + 1);
+                endIndex2 = s.IndexOf("}", indexOfTag + 1);
+                endIndex1 = Math.Min(endIndex1, endIndex2);
+                if (endIndex1 > 0)
+                    s = s.Remove(indexOfTag, endIndex1 - indexOfTag);
+            }
+            return s;
         }
 
         /// <summary>

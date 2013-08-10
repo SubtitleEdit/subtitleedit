@@ -493,72 +493,79 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            foreach (Paragraph p in subtitle.Paragraphs)
+            if (newFormat != null && newFormat.Name == new AdvancedSubStationAlpha().Name)
             {
-                int indexOfBegin = p.Text.IndexOf("{");
-                string pre = string.Empty;
-                while (indexOfBegin >= 0 && p.Text.IndexOf("}") > indexOfBegin)
+                // do we need any conversion?
+            }
+            else
+            {
+                foreach (Paragraph p in subtitle.Paragraphs)
                 {
-                    string s = p.Text.Substring(indexOfBegin);
-                    if (s.StartsWith("{\\an1}") ||
-                        s.StartsWith("{\\an2}") ||
-                        s.StartsWith("{\\an3}") ||
-                        s.StartsWith("{\\an4}") ||
-                        s.StartsWith("{\\an5}") ||
-                        s.StartsWith("{\\an6}") ||
-                        s.StartsWith("{\\an7}") ||
-                        s.StartsWith("{\\an8}") ||
-                        s.StartsWith("{\\an9}"))
+                    int indexOfBegin = p.Text.IndexOf("{");
+                    string pre = string.Empty;
+                    while (indexOfBegin >= 0 && p.Text.IndexOf("}") > indexOfBegin)
                     {
-                        pre = s.Substring(0, 6);
-                    }
-                    else if (s.StartsWith("{\\an1\\") ||
-                        s.StartsWith("{\\an2\\") ||
-                        s.StartsWith("{\\an3\\") ||
-                        s.StartsWith("{\\an4\\") ||
-                        s.StartsWith("{\\an5\\") ||
-                        s.StartsWith("{\\an6\\") ||
-                        s.StartsWith("{\\an7\\") ||
-                        s.StartsWith("{\\an8\\") ||
-                        s.StartsWith("{\\an9\\"))
-                    {
-                        pre = s.Substring(0, 5) + "}";
-                    }
-                    else if (s.StartsWith("{\\a1}") || s.StartsWith("{\\a1\\") ||
-                             s.StartsWith("{\\a3}") || s.StartsWith("{\\a3\\"))
-                    {
-                        pre = s.Substring(0, 4) + "}";
-                    }
-                    else if (s.StartsWith("{\\a9}") || s.StartsWith("{\\a9\\"))
-                    {
-                        pre = "{\\an4}";
-                    }
-                    else if (s.StartsWith("{\\a10}") || s.StartsWith("{\\a10\\"))
-                    {
-                        pre = "{\\an5}";
-                    }
-                    else if (s.StartsWith("{\\a11}") || s.StartsWith("{\\a11\\"))
-                    {
-                        pre = "{\\an6}";
-                    }
-                    else if (s.StartsWith("{\\a5}") || s.StartsWith("{\\a5\\"))
-                    {
-                        pre = "{\\an7}";
-                    }
-                    else if (s.StartsWith("{\\a6}") || s.StartsWith("{\\a6\\"))
-                    {
-                        pre = "{\\an8}";
-                    }
-                    else if (s.StartsWith("{\\a7}") || s.StartsWith("{\\a7\\"))
-                    {
-                        pre = "{\\an9}";
-                    }
-                    int indexOfEnd = p.Text.IndexOf("}");
-                    p.Text = p.Text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
+                        string s = p.Text.Substring(indexOfBegin);
+                        if (s.StartsWith("{\\an1}") ||
+                            s.StartsWith("{\\an2}") ||
+                            s.StartsWith("{\\an3}") ||
+                            s.StartsWith("{\\an4}") ||
+                            s.StartsWith("{\\an5}") ||
+                            s.StartsWith("{\\an6}") ||
+                            s.StartsWith("{\\an7}") ||
+                            s.StartsWith("{\\an8}") ||
+                            s.StartsWith("{\\an9}"))
+                        {
+                            pre = s.Substring(0, 6);
+                        }
+                        else if (s.StartsWith("{\\an1\\") ||
+                            s.StartsWith("{\\an2\\") ||
+                            s.StartsWith("{\\an3\\") ||
+                            s.StartsWith("{\\an4\\") ||
+                            s.StartsWith("{\\an5\\") ||
+                            s.StartsWith("{\\an6\\") ||
+                            s.StartsWith("{\\an7\\") ||
+                            s.StartsWith("{\\an8\\") ||
+                            s.StartsWith("{\\an9\\"))
+                        {
+                            pre = s.Substring(0, 5) + "}";
+                        }
+                        else if (s.StartsWith("{\\a1}") || s.StartsWith("{\\a1\\") ||
+                                 s.StartsWith("{\\a3}") || s.StartsWith("{\\a3\\"))
+                        {
+                            pre = s.Substring(0, 4) + "}";
+                        }
+                        else if (s.StartsWith("{\\a9}") || s.StartsWith("{\\a9\\"))
+                        {
+                            pre = "{\\an4}";
+                        }
+                        else if (s.StartsWith("{\\a10}") || s.StartsWith("{\\a10\\"))
+                        {
+                            pre = "{\\an5}";
+                        }
+                        else if (s.StartsWith("{\\a11}") || s.StartsWith("{\\a11\\"))
+                        {
+                            pre = "{\\an6}";
+                        }
+                        else if (s.StartsWith("{\\a5}") || s.StartsWith("{\\a5\\"))
+                        {
+                            pre = "{\\an7}";
+                        }
+                        else if (s.StartsWith("{\\a6}") || s.StartsWith("{\\a6\\"))
+                        {
+                            pre = "{\\an8}";
+                        }
+                        else if (s.StartsWith("{\\a7}") || s.StartsWith("{\\a7\\"))
+                        {
+                            pre = "{\\an9}";
+                        }
+                        int indexOfEnd = p.Text.IndexOf("}");
+                        p.Text = p.Text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
 
-                    indexOfBegin = p.Text.IndexOf("{");
+                        indexOfBegin = p.Text.IndexOf("{");
+                    }
+                    p.Text = pre + p.Text;
                 }
-                p.Text = pre + p.Text;
             }
         }
 
