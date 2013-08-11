@@ -696,6 +696,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <TextNumberOfLines>Tekst - antal linjer</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Tekst - antallet af tegn/sek</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Tekst - ord i minuttet (WPM)</WordsPerMinute>
+        <Style>Style</Style>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Dan ny tom oversættelse fra aktuelle undertekst</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Batch konverter...</BatchConvert>
         <GenerateTimeAsText>Generer tid som tekst...</GenerateTimeAsText>
@@ -1804,6 +1805,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <ZoomOut>Zoom ud</ZoomOut>
     <AddParagraphHere>Tilføj tekst her</AddParagraphHere>
     <AddParagraphHereAndPasteText>Tilføj tekst fra 'klippebord' her</AddParagraphHereAndPasteText>
+    <FocusTextBox>Gå til tekstboks</FocusTextBox>
     <DeleteParagraph>Slet tekst</DeleteParagraph>
     <Split>Split</Split>
     <SplitAtCursor>Split ved markør</SplitAtCursor>

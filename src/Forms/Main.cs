@@ -1055,6 +1055,7 @@ namespace Nikse.SubtitleEdit.Forms
             addParagraphHereToolStripMenuItem.Visible = false;
             addParagraphAndPasteToolStripMenuItem.Visible = false;
             deleteParagraphToolStripMenuItem.Visible = false;
+            toolStripMenuItemFocusTextbox.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.WaveForm.FocusTextBox); //TODO: Remove in 3.4
             splitToolStripMenuItem1.Visible = false;
             mergeWithPreviousToolStripMenuItem.Visible = false;
             mergeWithNextToolStripMenuItem.Visible = false;
@@ -1150,6 +1151,7 @@ namespace Nikse.SubtitleEdit.Forms
             addParagraphHereToolStripMenuItem.Visible = false;
             addParagraphAndPasteToolStripMenuItem.Visible = false;
             deleteParagraphToolStripMenuItem.Visible = true;
+            toolStripMenuItemFocusTextbox.Visible = true;
             splitToolStripMenuItem1.Visible = true;
             mergeWithPreviousToolStripMenuItem.Visible = true;
             mergeWithNextToolStripMenuItem.Visible = true;
@@ -1169,6 +1171,7 @@ namespace Nikse.SubtitleEdit.Forms
             addParagraphAndPasteToolStripMenuItem.Visible = Clipboard.ContainsText();
 
             deleteParagraphToolStripMenuItem.Visible = false;
+            toolStripMenuItemFocusTextbox.Visible = false;
             splitToolStripMenuItem1.Visible = false;
             mergeWithPreviousToolStripMenuItem.Visible = false;
             mergeWithNextToolStripMenuItem.Visible = false;
@@ -1713,6 +1716,8 @@ namespace Nikse.SubtitleEdit.Forms
             addParagraphHereToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.AddParagraphHere;
             addParagraphAndPasteToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.AddParagraphHereAndPasteText;
             deleteParagraphToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.DeleteParagraph;
+            toolStripMenuItemFocusTextbox.Text = Configuration.Settings.Language.WaveForm.FocusTextBox;
+            
             splitToolStripMenuItem1.Text = Configuration.Settings.Language.WaveForm.Split;
             mergeWithPreviousToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.MergeWithPrevious;
             mergeWithNextToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.MergeWithNext;
@@ -17406,6 +17411,17 @@ namespace Nikse.SubtitleEdit.Forms
         private void styleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SortSubtitle(SubtitleSortCriteria.Style, (sender as ToolStripItem).Text);
+        }
+
+        private void toolStripMenuItemFocusTextbox_Click(object sender, EventArgs e)
+        {
+            int index = _subtitle.GetIndex(audioVisualizer.RightClickedParagraph);
+            if (index >= 0)
+            {
+                SubtitleListview1.SelectIndexAndEnsureVisible(index);
+                textBoxListViewText.Focus();
+                textBoxListViewText.SelectAll();
+            }
         }
 
     }
