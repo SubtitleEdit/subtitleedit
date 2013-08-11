@@ -2512,13 +2512,16 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer)
                     {
-                        if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
+                        if (!Configuration.Settings.General.DisableVideoAutoLoading)
                         {
-                            OpenVideo(videoFileName);
-                        }
-                        else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveForm.Checked))
-                        {
-                            TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
+                            if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
+                            {
+                                OpenVideo(videoFileName);
+                            }
+                            else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveForm.Checked))
+                            {
+                                TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
+                            }
                         }
                     }
                     videoFileLoaded = _videoFileName != null;
