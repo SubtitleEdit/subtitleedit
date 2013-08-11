@@ -5,6 +5,7 @@
 * NEW:
    * Added Hungarian language file - thx thx Zityi
    * Added a few new subtitle formats
+   * Added Tools -> Sort by -> Style - thx Mike
 * IMPROVED:
    * Updated Spanish language file - thx pakitonaranjo
    * Updated Polish language file - thx Admas
@@ -16,6 +17,7 @@
    * Bug in getting result from plugin - thx Herman
    * Fix in "Unknwown format 64" - thx Mark
    * Some fixes for SCC - thx Johan
+   * Converting ssa <--> ass now keeps most inline styles - thx Mike
 
 
 3.3.7 (3rd August 2013)

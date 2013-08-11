@@ -1996,6 +1996,7 @@
             public string ZoomOut { get; set; }
             public string AddParagraphHere { get; set; }
             public string AddParagraphHereAndPasteText { get; set; }
+            public string FocusTextBox { get; set; }
             public string DeleteParagraph { get; set; }
             public string Split { get; set; }
             public string SplitAtCursor { get; set; }
