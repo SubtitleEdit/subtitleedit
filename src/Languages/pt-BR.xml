@@ -5,8 +5,7 @@
     <Version>3.3.8</Version>
     <TranslatedBy>Tradução (Português do Brasil): Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile></HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
@@ -16,6 +15,7 @@
     <SubtitleFiles>Arquivos de legenda</SubtitleFiles>
     <AllFiles>Todos os arquivos</AllFiles>
     <VideoFiles>Arquivos de vídeo</VideoFiles>
+    <AudioFiles>Arquivos de áudio</AudioFiles>
     <OpenSubtitle>Abrir legenda...</OpenSubtitle>
     <OpenVideoFile>Abrir arquivo de vídeo...</OpenVideoFile>
     <OpenVideoFileTitle>Abrir arquivo de vídeo...</OpenVideoFileTitle>
@@ -232,6 +232,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Language>Idioma</Language>
     <IssueDate>Data de lançamento</IssueDate>
     <EditRate>Editar classificação</EditRate>
+    <TimeCodeRate>Classificação do código de tempo</TimeCodeRate>
+    <StartTime>Início</StartTime>
     <Font>Fonte</Font>
     <FontId>ID</FontId>
     <FontUri>URI</FontUri>
@@ -240,7 +242,17 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffectColor>Cor do efeito</FontEffectColor>
     <FontSize>Tamanho</FontSize>
     <ChooseColor>Escolher cor...</ChooseColor>
+    <Generate>Gerar</Generate>
   </DCinemaProperties>
+  <DurationsBridgeGaps>
+    <Title>Ligar pequenos intervalos em durações</Title>
+    <GapsBridgedX>Número de pequenos intervalos interligados: {0}</GapsBridgedX>
+    <GapToNext>No próximo intervalo</GapToNext>
+    <BridgeGapsSmallerThanXPart1>Ligar intervalos menores que</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart2>milisegundos</BridgeGapsSmallerThanXPart2>
+    <ProlongEndTime>Texto anterior assume todo o intervalo</ProlongEndTime>
+    <DivideEven>Texto divide o intervalo</DivideEven>
+  </DurationsBridgeGaps>
   <DvdSubrip>
     <Title>Ripar legendas de IFO/VOBs (DVD)</Title>
     <DvdGroupTitle>Arquivos DVD/info</DvdGroupTitle>
@@ -660,6 +672,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Ferramentas</Title>
         <AdjustDisplayDuration>&amp;Ajustar durações...</AdjustDisplayDuration>
         <ApplyDurationLimits>Aplicar limites de duração...</ApplyDurationLimits>
+        <DurationsBridgeGap>Ligar intervalo em durações...</DurationsBridgeGap>
         <FixCommonErrors>&amp;Corrigir erros comuns...</FixCommonErrors>
         <StartNumberingFrom>Iniciar numeração por...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Eliminar texto para surdos...</RemoveTextForHearingImpaired>
@@ -681,6 +694,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <TextNumberOfLines>Texto - número de linhas</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Texto - número de caracteres/seg</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Texto - palavras por minuto</WordsPerMinute>
+        <Style>Estilo</Style>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Fazer nova tradução a partir da legenda atual</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Conversão em lote...</BatchConvert>
         <GenerateTimeAsText>Gerar tempo como texto...</GenerateTimeAsText>
@@ -692,6 +706,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
       <Video>
         <Title>Vídeo</Title>
         <OpenVideo>Abrir arquivo de vídeo...</OpenVideo>
+        <OpenDvd>Abrir DVD...</OpenDvd>
         <ChooseAudioTrack>Selecione a faixa de áudio</ChooseAudioTrack>
         <CloseVideo>Fechar arquivo de vídeo</CloseVideo>
         <ImportSceneChanges>Importar alterações de cena...</ImportSceneChanges>
@@ -1199,6 +1214,14 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
  podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <Start>Início</Start>
   </NetworkStart>
+  <OpenVideoDvd>
+    <Title>Abrir DVD pelo VLC...</Title>
+    <OpenDvdFrom>Abrir DVD por...</OpenDvdFrom>
+    <Disc>Disco</Disc>
+    <Folder>Pasta</Folder>
+    <ChooseDrive>Escolher unidade</ChooseDrive>
+    <ChooseFolder>Escolher pasta</ChooseFolder>
+  </OpenVideoDvd>
   <PluginsGet>
     <Title>Plugins</Title>
     <InstalledPlugins>Plugins instalados</InstalledPlugins>
@@ -1267,6 +1290,8 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <PreviewLinesModifiedX>Prévia - Parágrafos modificados: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Mostrar somente linhas modificadas</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milisegundos mínimos entre linhas</MinimumMillisecondsBetweenParagraphs>
+    <FrameInfo>Info da Taxa de quadros</FrameInfo>
+    <OneFrameXisYMilliseconds>Um quadro em {0:0.00} fps é {1} milisegundos</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Estabelecer ponto de sincronização para a linha {0}</Title>
@@ -1779,6 +1804,7 @@ Manter as alterações?</KeepChangesMessage>
     <ZoomOut>Zoom -</ZoomOut>
     <AddParagraphHere>Adicionar texto aqui</AddParagraphHere>
     <AddParagraphHereAndPasteText>Adicionar texto da área de transferência aqui</AddParagraphHereAndPasteText>
+    <FocusTextBox>Focar caixa de texto</FocusTextBox>
     <DeleteParagraph>Apagar texto</DeleteParagraph>
     <Split>Dividir</Split>
     <SplitAtCursor>Dividir no cursor</SplitAtCursor>
