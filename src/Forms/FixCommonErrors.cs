@@ -567,7 +567,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             p.Text = text.TrimStart(Environment.NewLine.ToCharArray());
                             emptyLinesRemoved++;
-                            AddFixToListView(p, fixAction1, p.Text, text);
+                            AddFixToListView(p, fixAction1, text, p.Text);
                         }
                     }
                     if (text.EndsWith(Environment.NewLine))
@@ -576,7 +576,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             p.Text = text.TrimEnd(Environment.NewLine.ToCharArray());
                             emptyLinesRemoved++;
-                            AddFixToListView(p, fixAction2, p.Text, text);
+                            AddFixToListView(p, fixAction2, text, p.Text);
                         }
                     }
                 }
