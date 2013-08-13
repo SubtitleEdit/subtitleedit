@@ -9,6 +9,7 @@
 * IMPROVED:
    * Updated Spanish language file - thx pakitonaranjo
    * Updated Polish language file - thx Admas
+   * Updated Brazilian Portuguese language file - thx Igor Rückert
    * Added support for the Māori language in PAC - thx Mark
    * Allow ebu stl with 29 fps - thx Antonio
    * Minor improvements to WebVTT + added WebVTT with line# - thx Benoît
@@ -18,6 +19,8 @@
    * Fix in "Unknwown format 64" - thx Mark
    * Some fixes for SCC - thx Johan
    * Converting ssa <--> ass now keeps most inline styles - thx Mike
+   * Fix common errors: In "Remove empty lines" at top (in paragraph) the 
+     before/after text was switched - thx Andreas
 
 
 3.3.7 (3rd August 2013)
