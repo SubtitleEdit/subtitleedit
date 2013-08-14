@@ -1011,6 +1011,7 @@
     <Compile Include="Logic\TransportStream\PacketizedElementaryStream.cs" />
     <Compile Include="Logic\TransportStream\ProgramAssociationTable.cs" />
     <Compile Include="Logic\TransportStream\TransportStreamParser.cs" />
+    <Compile Include="Logic\UknownFormatImporter.cs" />
     <Compile Include="Logic\Utilities.cs" />
     <Compile Include="Logic\VideoFormats\AviRiffData.cs" />
     <Compile Include="Logic\VideoFormats\Matroska.cs" />

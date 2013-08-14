@@ -2437,6 +2437,39 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
 
+                if (format == null && fi.Length < 200000)
+                { // Try to use a generic subtitle format parser (guessing subtitle format)
+                    try
+                    {
+                        Encoding enc = Utilities.GetEncodingFromFile(fileName);
+                        string s = File.ReadAllText(fileName, enc);
+
+                        // check for RTF file   
+                        if (fileName.ToLower().EndsWith(".rtf") && !s.Trim().StartsWith("{\\rtf"))
+                        {
+                            var rtBox = new System.Windows.Forms.RichTextBox();
+                            rtBox.Rtf = s;
+                            s = rtBox.Text;
+                        }
+                        var uknownFormatImporter = new UknownFormatImporter();
+                        uknownFormatImporter.UseFrames = true;
+                        var genericParseSubtitle = uknownFormatImporter.AutoGuessImport(s.Replace(Environment.NewLine, "\n").Split('\n'));
+                        if (genericParseSubtitle.Paragraphs.Count > 1)
+                        {
+                            SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                            SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                            encoding = GetCurrentEncoding();
+                            justConverted = true;
+                            format = GetCurrentSubtitleFormat();
+                            ShowStatus("Guessed subtitle format via generic subtitle parser!");
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+
+
                 _fileDateTime = File.GetLastWriteTime(fileName);
 
                 if (format != null && format.IsFrameBased)
@@ -2646,7 +2679,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     return;
                                 }
                             }
-                        }
+                        }                       
 
                         ShowUnknownSubtitle();
                         return;
