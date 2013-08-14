@@ -11334,6 +11334,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (fi.Length < 1000)
                     return;
 
+                ShowSubtitleTimer.Stop();
                 Cursor = Cursors.WaitCursor;
                 VideoFileName = fileName;
                 if (mediaPlayer.VideoPlayer != null)
@@ -11373,6 +11374,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.Default;
 
                 SetUndockedWindowsTitle();
+                ShowSubtitleTimer.Start();
             }
         }
 

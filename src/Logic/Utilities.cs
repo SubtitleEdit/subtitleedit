@@ -237,9 +237,9 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                     }
                 }
+                if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
+                    videoPlayerContainer.SetSubtitleText(string.Empty, null);
             }
-            if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
-                videoPlayerContainer.SetSubtitleText(string.Empty, null);
             return -1;
         }
 
