@@ -13,6 +13,7 @@
    * Added support for the Māori language in PAC - thx Mark
    * Allow ebu stl with 29 fps - thx Antonio
    * Minor improvements to WebVTT + added WebVTT with line# - thx Benoît
+   * Loading unknown subtitles now might work via generic parser
 * FIXED:
    * Fix common errors: Fixed two bugs regarding Spanish "¿¡ !?" - thx Mike
    * Bug in getting result from plugin - thx Herman
