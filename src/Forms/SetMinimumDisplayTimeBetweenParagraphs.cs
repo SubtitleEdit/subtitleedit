@@ -112,8 +112,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             SubtitleListview1.EndUpdate();
             FixCount = fixes.Count;
-
-            groupBoxLinesFound.Text = minumumMillisecondsBetweenLines.ToString();
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
