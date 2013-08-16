@@ -244,6 +244,17 @@ namespace Test
             target.FixInvalidItalicTags();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Awesome it is!");
         }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixItalicsLine1BadEnding()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "</i>What do i care.</i>");
+            target.FixInvalidItalicTags();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>What do i care.</i>");
+        }
+        
         #endregion
 
         #region Fix Missing Periods At End Of Line
@@ -450,6 +461,27 @@ namespace Test
             target.FixSpanishInvertedQuestionAndExclamationMarks();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¡¿Cómo estás?!");
         }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixSpanishExclamationMarkAndQuestionMarkManyTagsDoubleExcl()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "<i>Chanchita, ¡¿copias?! Chanchita!!</i>");
+            target.FixSpanishInvertedQuestionAndExclamationMarks();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>Chanchita, ¡¿copias?! ¡¡Chanchita!!</i>");
+        }
+
+        //[TestMethod]
+        //[DeploymentItem("SubtitleEdit.exe")]
+        //public void FixSpanishExclamationMarkAndQuestionMark()
+        //{
+        //    var target = new FixCommonErrors_Accessor();
+        //    InitializeFixCommonErrorsLine(target, "¡Cómo estás?");
+        //    target.FixSpanishInvertedQuestionAndExclamationMarks();
+        //    Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¡¿Cómo estás?!");
+        //}
+        
 
         #endregion
 

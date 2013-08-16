@@ -4121,7 +4121,19 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                     else
                                     {
-                                        p.Text = p.Text.Remove(j, markIndex - j + 1).Insert(j, speaker + st.Pre + inverseMark + st.StrippedText + st.Post);
+                                        string temp = inverseMark;
+                                        int addToIndex = 0;
+                                        while (p.Text.Length > markIndex + 1 && p.Text[markIndex + 1].ToString() == mark &&
+                                            Utilities.CountTagInText(p.Text, mark) > Utilities.CountTagInText(p.Text + temp, inverseMark))
+                                        {
+                                            temp += inverseMark;
+                                            st.Post += mark;
+                                            markIndex++;
+                                            addToIndex++;
+                                        }
+
+                                        p.Text = p.Text.Remove(j, markIndex - j + 1).Insert(j, speaker + st.Pre + temp + st.StrippedText + st.Post);
+                                        markIndex += addToIndex;
                                     }
                                     
                                 }

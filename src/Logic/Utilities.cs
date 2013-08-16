@@ -2372,6 +2372,12 @@ namespace Nikse.SubtitleEdit.Logic
                     text = text.Replace(endTag, string.Empty);
                 }
 
+                if (italicBeginTagCount == 0 && italicEndTagCount == 2 && text.StartsWith("</i>") && text.EndsWith("</i>"))
+                {
+                    int firstIndex = text.IndexOf(endTag);
+                    text = text.Remove(firstIndex, endTag.Length).Insert(firstIndex, "<i>");
+                }
+
                 text = text.Replace("<i></i>", string.Empty);
                 text = text.Replace("<i> </i>", string.Empty);
                 text = text.Replace("<i>  </i>", string.Empty);
