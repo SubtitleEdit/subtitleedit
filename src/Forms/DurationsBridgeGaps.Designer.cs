@@ -146,7 +146,6 @@
             // 
             // radioButtonProlongEndTime
             // 
-            this.radioButtonProlongEndTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.radioButtonProlongEndTime.AutoSize = true;
             this.radioButtonProlongEndTime.Checked = true;
             this.radioButtonProlongEndTime.Location = new System.Drawing.Point(586, 17);
@@ -160,7 +159,6 @@
             // 
             // radioButtonDivideEven
             // 
-            this.radioButtonDivideEven.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.radioButtonDivideEven.AutoSize = true;
             this.radioButtonDivideEven.Location = new System.Drawing.Point(586, 40);
             this.radioButtonDivideEven.Name = "radioButtonDivideEven";
