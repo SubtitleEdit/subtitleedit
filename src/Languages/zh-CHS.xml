@@ -3,10 +3,9 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.8</Version>
-    <TranslatedBy>翻译: FeiXJ</TranslatedBy>
+    <TranslatedBy>翻译: FeiXJ | Leon Cheung</TranslatedBy>
     <CultureName>zh-CHS</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <OK>确定(&amp;O)</OK>
     <Cancel>取消(&amp;A)</Cancel>
     <Apply>应用</Apply>
@@ -16,6 +15,7 @@
     <SubtitleFiles>字幕文件</SubtitleFiles>
     <AllFiles>所有文件</AllFiles>
     <VideoFiles>视频文件</VideoFiles>
+    <AudioFiles>音频文件</AudioFiles>
     <OpenSubtitle>打开字幕...</OpenSubtitle>
     <OpenVideoFile>打开视频文件...</OpenVideoFile>
     <OpenVideoFileTitle>打开视频文件...</OpenVideoFileTitle>
@@ -81,7 +81,8 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
 
 访问 www.nikse.dk 以获得最新版本。
 
-非常欢迎您提出建议，邮件: mailto:nikse.dk@gmail.com</AboutText1>
+非常欢迎您提出建议，
+邮件: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>添加到 名称/其它 列表</Title>
@@ -142,16 +143,21 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <OverwriteExistingFiles>覆盖已有文件</OverwriteExistingFiles>
     <Style>样式...</Style>
     <ConvertOptions>转换选项</ConvertOptions>
-    <AutoBreakLongLines>自动断开长行</AutoBreakLongLines>
-    <FixItalics>修复斜体</FixItalics>
     <RemoveFormatting>删除格式化标签</RemoveFormatting>
     <RemoveTextForHI>删除 HI 文本</RemoveTextForHI>
+    <OverwriteOriginalFiles>覆盖原始文件(若扩展名变更，则使用新的扩展名)</OverwriteOriginalFiles>
     <ReDoCasing>重做外壳</ReDoCasing>
     <Convert>转换</Convert>
     <NothingToConvert>没有什么可转换的！</NothingToConvert>
     <PleaseChooseOutputFolder>请选择输出文件夹</PleaseChooseOutputFolder>
     <Converted>已转换</Converted>
     <ConvertedX>已转换 ({0})</ConvertedX>
+    <Settings>设置</Settings>
+    <AutoBalance>自动均排各行</AutoBalance>
+    <ScanFolder>扫描文件夹...</ScanFolder>
+    <ScanningFolder>正在扫描 {0} 及其子文件夹中的字幕文件...</ScanningFolder>
+    <Recursive>包含子文件夹</Recursive>
+    <SetMinMsBetweenSubtitles>设定字幕间的最小毫秒数</SetMinMsBetweenSubtitles>
   </BatchConvert>
   <Beamer>
     <Title>投影仪</Title>
@@ -195,6 +201,16 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <Title>选择语言</Title>
     <Language>语言</Language>
   </ChooseLanguage>
+  <ColumnPaste>
+    <Title>粘贴列</Title>
+    <ChooseColumn>选择列</ChooseColumn>
+    <OverwriteShiftCellsDown>向下覆盖/平移单元格</OverwriteShiftCellsDown>
+    <Overwrite>覆盖</Overwrite>
+    <ShiftCellsDown>向下平移单元格</ShiftCellsDown>
+    <TimeCodesOnly>仅时间码</TimeCodesOnly>
+    <TextOnly>仅文本</TextOnly>
+    <OriginalTextOnly>仅原始文本</OriginalTextOnly>
+  </ColumnPaste>
   <CompareSubtitles>
     <Title>比较字幕</Title>
     <PreviousDifference>上一个差异(&amp;P)</PreviousDifference>
@@ -215,6 +231,8 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <Language>语言</Language>
     <IssueDate>发行日期</IssueDate>
     <EditRate>编辑速度</EditRate>
+    <TimeCodeRate>时间码率</TimeCodeRate>
+    <StartTime>开始时间</StartTime>
     <Font>字体</Font>
     <FontId>ID</FontId>
     <FontUri>URI</FontUri>
@@ -223,7 +241,17 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <FontEffectColor>特性颜色</FontEffectColor>
     <FontSize>大小</FontSize>
     <ChooseColor>选择颜色...</ChooseColor>
+    <Generate>生成</Generate>
   </DCinemaProperties>
+  <DurationsBridgeGaps>
+    <Title>桥接行间的小间隔</Title>
+    <GapsBridgedX>已桥接的小间隔数量: {0}</GapsBridgedX>
+    <GapToNext>与下一行的间隔时间</GapToNext>
+    <BridgeGapsSmallerThanXPart1>桥接的间隔时长小于 </BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart2>毫秒</BridgeGapsSmallerThanXPart2>
+    <ProlongEndTime>间隔时间分配给前一行</ProlongEndTime>
+    <DivideEven>间隔时间均分给前后两行</DivideEven>
+  </DurationsBridgeGaps>
   <DvdSubrip>
     <Title>从 DVD 提取字幕</Title>
     <DvdGroupTitle>DVD 文件/信息</DvdGroupTitle>
@@ -304,7 +332,10 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <BorderWidth>边缘宽度</BorderWidth>
     <ImageFormat>图像格式</ImageFormat>
     <AntiAlias>反锯齿</AntiAlias>
-    <SideBySide3D>并排 3D</SideBySide3D>
+    <Text3D>3D</Text3D>
+    <SideBySide3D>左右 3D 格式</SideBySide3D>
+    <HalfTopBottom3D>上下 3D 格式</HalfTopBottom3D>
+    <Depth>深度</Depth>
     <ExportAllLines>导出所有行...</ExportAllLines>
     <XImagesSavedInY>{0} 个图像被保存在 {1}</XImagesSavedInY>
     <VideoResolution>视频分辨率</VideoResolution>
@@ -317,6 +348,8 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <SaveVobSubAs>选择 VobSub 文件名</SaveVobSubAs>
     <SaveFabImageScriptAs>选择蓝光 sup 文件名</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>选择 DVD Studio Pro STL 文件名</SaveDvdStudioProStlAs>
+    <SomeLinesWereTooLongX>某些行过长:
+{0}</SomeLinesWereTooLongX>
   </ExportPngXml>
   <ExportText>
     <Title>导出文本</Title>
@@ -339,6 +372,14 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
     <TimeCodeSeperator>时间码分隔符</TimeCodeSeperator>
   </ExportText>
+  <ExtractDateTimeInfo>
+    <Title>将时间生成为文本</Title>
+    <OpenVideoFile>选择要从中提取日期/时间信息的视频文件</OpenVideoFile>
+    <StartFrom>始于</StartFrom>
+    <DateTimeFormat>日期/时间格式</DateTimeFormat>
+    <Example>范例</Example>
+    <GenerateSubtitle>生成字幕(&amp;G)</GenerateSubtitle>
+  </ExtractDateTimeInfo>
   <FindDialog>
     <Title>查找</Title>
     <Find>查找</Find>
@@ -459,7 +500,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <FixEllipsesStart>删除开头的 '...'</FixEllipsesStart>
     <FixMissingOpenBracket>修复行内丢失的 '['</FixMissingOpenBracket>
     <FixMusicNotation>用自己喜欢的符号替换音符 (如 âTª)</FixMusicNotation>
-    <FixDoubleDashs>修复 '--'为 '...'</FixDoubleDashs>
+    <FixDoubleDashs>将 '--' 修改为 '...'</FixDoubleDashs>
     <FixDoubleGreaterThans>删除开头的 '&gt;&gt;'</FixDoubleGreaterThans>
     <FixEllipsesStarts>删除开头的 '...'</FixEllipsesStarts>
     <FixMissingOpenBrackets>修复丢失的 '['</FixMissingOpenBrackets>
@@ -478,7 +519,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <FixedOkXY>完成 - {0}: {1}</FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
-    <Title>需要词典？</Title>
+    <Title>是否使用词典？</Title>
     <DescriptionLine1>Subtitle Edit 的拼写检查基于 NHunspell 引擎，它</DescriptionLine1>
     <DescriptionLine2>使用的是 Open Office 的拼写检查词典。</DescriptionLine2>
     <GetDictionariesHere>到此处获取词典:</GetDictionariesHere>
@@ -489,6 +530,16 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <Download>下载</Download>
     <XDownloaded>{0} 已下载并安装</XDownloaded>
   </GetDictionaries>
+  <GetTesseractDictionaries>
+    <Title>需要使用字典吗？</Title>
+    <DescriptionLine1>从网站获取 Tesseract OCR 字典</DescriptionLine1>
+    <DownloadFailed>下载失败！</DownloadFailed>
+    <GetDictionariesHere>从这里获取字典:</GetDictionariesHere>
+    <ChooseLanguageAndClickDownload>选择您的语言并点击下载</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>打开 '字典' 文件夹</OpenDictionariesFolder>
+    <Download>下载</Download>
+    <XDownloaded>已下载并安装了 {0} 个字典</XDownloaded>
+  </GetTesseractDictionaries>
   <GoogleTranslate>
     <Title>谷歌翻译</Title>
     <From>自:</From>
@@ -511,6 +562,16 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <Title>转到字幕编号</Title>
     <XIsNotAValidNumber>{0} 个不是有效数字</XIsNotAValidNumber>
   </GoToLine>
+  <ImportSceneChanges>
+    <Title>导入场景变更</Title>
+    <OpenTextFile>打开文本文件...</OpenTextFile>
+    <ImportOptions>导入选项</ImportOptions>
+    <TextFiles>文本文件</TextFiles>
+    <TimeCodes>时间码</TimeCodes>
+    <Frames>帧</Frames>
+    <Seconds>秒</Seconds>
+    <Milliseconds>毫秒</Milliseconds>
+  </ImportSceneChanges>
   <ImportText>
     <Title>导入纯文本</Title>
     <OpenTextFile>打开文本文件...</OpenTextFile>
@@ -522,12 +583,14 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <MergeShortLines>用延长符合并短行</MergeShortLines>
     <RemoveEmptyLines>删除空行</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>删除无字母的行</RemoveLinesWithoutLetters>
+    <GenerateTimeCodes>生成时间码</GenerateTimeCodes>
     <GapBetweenSubtitles>字幕间隔 (毫秒)</GapBetweenSubtitles>
     <Auto>自动</Auto>
     <Fixed>固定</Fixed>
     <Refresh>刷新(&amp;R)</Refresh>
     <TextFiles>文本文件</TextFiles>
     <PreviewLinesModifiedX>预览 - 已修改段落: {0}</PreviewLinesModifiedX>
+    <TimeCodes>时间码</TimeCodes>
   </ImportText>
   <Interjections>
     <Title>感叹词</Title>
@@ -565,8 +628,9 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <ImportOcrFromDvd>从 DVD 导入/OCR 字幕...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>导入/OCR VobSub 字幕...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>导入/OCR 蓝光字幕...</ImportBluRaySupFile>
+        <ImportXSub>从 divx/avi 导入 /OCR xsub...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>从 Matroska 文件导入字幕...</ImportSubtitleFromMatroskaFile>
-        <ImportSubtitleWithManualChosenEncoding>手工选择编码方式导入字幕...</ImportSubtitleWithManualChosenEncoding>
+        <ImportSubtitleWithManualChosenEncoding>手动选择编码方式导入字幕...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>导入纯文本...</ImportText>
         <ImportTimecodes>导入时间码...</ImportTimecodes>
         <Export>导出</Export>
@@ -601,11 +665,14 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <RightToLeftMode>从右向左阅读模式</RightToLeftMode>
         <ReverseRightToLeftStartEnd>反转 RTL 开始/结束 (所选行)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>在 音频/视频 预览中显示原始文本</ShowOriginalTextInAudioAndVideoPreview>
+        <ModifySelection>更改选择...</ModifySelection>
+        <InverseSelection>反选</InverseSelection>
       </Edit>
       <Tools>
         <Title>工具(&amp;T)</Title>
         <AdjustDisplayDuration>调整时长(&amp;A)...</AdjustDisplayDuration>
         <ApplyDurationLimits>应用时长限制...</ApplyDurationLimits>
+        <DurationsBridgeGap>桥接行间间隔...</DurationsBridgeGap>
         <FixCommonErrors>修复常规错误(&amp;F)...</FixCommonErrors>
         <StartNumberingFrom>编号起始位置...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>删除妨碍听觉的文本...</RemoveTextForHearingImpaired>
@@ -613,6 +680,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <ChangeFrameRate>更改帧率...</ChangeFrameRate>
         <ChangeSpeedInPercent>更改速度 (百分比)...</ChangeSpeedInPercent>
         <MergeShortLines>合并短行...</MergeShortLines>
+        <MergeDuplicateText>合并内容相同的行...</MergeDuplicateText>
         <SplitLongLines>分割长行...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>段落间最小显示时间...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>排序方式</SortBy>
@@ -626,8 +694,11 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <TextNumberOfLines>文字 - 行数</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>文字 - 字符数/秒</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>文字 - 字数/秒 (wpm)</WordsPerMinute>
+        <Style>样式</Style>
         <MakeNewEmptyTranslationFromCurrentSubtitle>从当前字幕生成新的空白翻译</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>批量转换...</BatchConvert>
+        <GenerateTimeAsText>将时间生成为文本...</GenerateTimeAsText>
+        <MeasurementConverter>度量转换器...</MeasurementConverter>
         <SplitSubtitle>分割字幕...</SplitSubtitle>
         <AppendSubtitle>追加字幕...</AppendSubtitle>
         <JoinSubtitles>合并字幕</JoinSubtitles>
@@ -635,8 +706,11 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
       <Video>
         <Title>视频(&amp;V)</Title>
         <OpenVideo>打开视频文件...</OpenVideo>
+        <OpenDvd>打开 DVD...</OpenDvd>
         <ChooseAudioTrack>选择音轨...</ChooseAudioTrack>
         <CloseVideo>关闭视频文件</CloseVideo>
+        <ImportSceneChanges>导入场景变更...</ImportSceneChanges>
+        <RemoveSceneChanges>移除场景变更</RemoveSceneChanges>
         <ShowHideVideo>显示/隐藏 视频</ShowHideVideo>
         <ShowHideWaveForm>显示/隐藏 波形</ShowHideWaveForm>
         <ShowHideWaveformAndSpectrogram>显示/隐藏 波形和频谱图</ShowHideWaveformAndSpectrogram>
@@ -646,6 +720,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
       <SpellCheck>
         <Title>拼写检查(&amp;S)</Title>
         <SpellCheck>拼写检查(&amp;S)...</SpellCheck>
+        <SpellCheckFromCurrentLine>当前行的拼写检查结果...</SpellCheckFromCurrentLine>
         <FindDoubleWords>查找双字</FindDoubleWords>
         <FindDoubleLines>查找双行</FindDoubleLines>
         <GetDictionaries>获取字典...</GetDictionaries>
@@ -723,6 +798,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <ColumnInsertTextFromSubtitle>从字幕插入文本...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>导入文本并将单元格下移</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>粘贴...</ColumnPasteFromClipboard>
+        <ColumnCopyOriginalTextToCurrent>从原始文本列复制到当前列</ColumnCopyOriginalTextToCurrent>
         <Split>分割</Split>
         <MergeSelectedLines>合并所选行</MergeSelectedLines>
         <MergeSelectedLinesASDialogue>合并所选行为对话</MergeSelectedLinesASDialogue>
@@ -745,6 +821,8 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <FixCommonErrorsInSelectedLines>修复所选行常规错误...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>更改所选行大小写...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>所选行另存为...</SaveSelectedLines>
+        <WebVTTSetNewVoice>设定新人声...</WebVTTSetNewVoice>
+        <WebVTTRemoveVoices>移除人声</WebVTTRemoveVoices>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -848,6 +926,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <FindContinueTitle>继续查找？</FindContinueTitle>
     <ReplaceContinueNotFound>搜索的项目未找到。您要继续从文档的开头搜索和替换吗？</ReplaceContinueNotFound>
     <ReplaceXContinue>搜索的项目已被替换了 {0} 次。您要继续从文档的开头搜索和替换吗？</ReplaceXContinue>
+
     <ReplaceContinueTitle>继续替换？</ReplaceContinueTitle>
     <SearchingForXFromLineY>正在搜索 '{0}' 从行 {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' 已找到在行号 {1}</XFoundAtLineNumberY>
@@ -960,6 +1039,8 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <VobSubFiles>VobSub 字幕 (*.sub;*.idx)</VobSubFiles>
     <OpenBluRaySupFile>打开蓝光字幕...</OpenBluRaySupFile>
     <BluRaySupFiles>蓝光字幕 (*.sup)</BluRaySupFiles>
+    <OpenXSubFiles>打开 xsub 文件...</OpenXSubFiles>
+    <XSubFiles>xsub 文件</XSubFiles>
     <BeforeImportingVobSubFile>导入 VobSub 字幕之前</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>导入蓝光字幕之前</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>导入 BDN xml 文件之前</BeforeImportingBdnXml>
@@ -1041,12 +1122,32 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <BeforeDisplaySubtitleJoin>合并字幕之前</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>字幕已合并</SubtitlesJoined>
     <StatusLog>状态记录</StatusLog>
+    <XSceneChangesImported>已导入 {0} 个场景变更</XSceneChangesImported>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件选择字幕</Title>
     <PleaseChoose>找到多个字幕 - 请选择</PleaseChoose>
     <TrackXLanguageYTypeZ>曲目 {0}-{1} - 语言: {2} - 类型: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MeasurementConverter>
+    <Title>度量转换器</Title>
+    <ConvertFrom>转换自</ConvertFrom>
+    <ConvertTo>转换到 to</ConvertTo>
+    <CopyToClipboard>复制到剪贴板</CopyToClipboard>
+    <Celsius>摄氏温度</Celsius>
+    <Fahrenheit>华氏温度</Fahrenheit>
+    <Miles>英里</Miles>
+    <Kilometers>千米</Kilometers>
+    <Meters>米</Meters>
+    <Yards>码</Yards>
+    <Feet>英尺</Feet>
+    <Inches>英寸</Inches>
+    <Pounds>英镑</Pounds>
+    <Kilos>千克</Kilos>
+  </MeasurementConverter>
+  <MergeDoubleLines>
+    <Title>合并相同文本的行</Title>
+  </MergeDoubleLines>
   <MergedShortLines>
     <Title>合并短行</Title>
     <MaximumCharacters>一段中最多字符数</MaximumCharacters>
@@ -1055,6 +1156,22 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <MergedText>合并文本</MergedText>
     <OnlyMergeContinuationLines>仅合并连续行</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <ModifySelection>
+    <Title>修改选择</Title>
+    <Rule>规则</Rule>
+    <CaseSensitive>区分大小写</CaseSensitive>
+    <DoWithMatches>匹配项的处理方式</DoWithMatches>
+    <MakeNewSelection>生成新的选择</MakeNewSelection>
+    <AddToCurrentSelection>添加到当前选集</AddToCurrentSelection>
+    <SubtractFromCurrentSelection>从当前选择中移除</SubtractFromCurrentSelection>
+    <IntersectWithCurrentSelection>与当前选择取交集</IntersectWithCurrentSelection>
+    <MatchingLinesX>匹配的行: {0}</MatchingLinesX>
+    <Contains>包含</Contains>
+    <StartsWith>始于</StartsWith>
+    <EndsWith>止于</EndsWith>
+    <NoContains>不包含</NoContains>
+    <RegEx>正则表达式</RegEx>
+  </ModifySelection>
   <MultipleReplace>
     <Title>多重替换</Title>
     <FindWhat>查找内容</FindWhat>
@@ -1081,7 +1198,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
   </NetworkChat>
   <NetworkJoin>
     <Title>加入网络会话</Title>
-    <Information>加入现有会话，以便可以多人编辑同一个字幕文件(协同)。</Information>
+    <Information>加入现有会话，以便可以多人编辑同一个字幕文件(协作模式)。</Information>
     <Join>加入</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1091,9 +1208,17 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
   <NetworkStart>
     <Title>开始网络会话</Title>
     <ConnectionTo>正在连接到 {0}...</ConnectionTo>
-    <Information>开始新会话，以便可以多人编辑同一字幕文件(协同)。</Information>
+    <Information>开始新会话，以便可以多人编辑同一字幕文件(协作模式)。</Information>
     <Start>开始</Start>
   </NetworkStart>
+  <OpenVideoDvd>
+    <Title>用 VLC 打开 DVD</Title>
+    <OpenDvdFrom>选择 DVD 源...</OpenDvdFrom>
+    <Disc>盘片</Disc>
+    <Folder>文件夹</Folder>
+    <ChooseDrive>选择驱动器</ChooseDrive>
+    <ChooseFolder>选择文件夹</ChooseFolder>
+  </OpenVideoDvd>
   <PluginsGet>
     <Title>插件</Title>
     <InstalledPlugins>已安装插件</InstalledPlugins>
@@ -1162,6 +1287,8 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <PreviewLinesModifiedX>预览 - 已修改段落: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>仅显示已修改的行</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>行间最小毫秒数</MinimumMillisecondsBetweenParagraphs>
+    <FrameInfo>帧速率信息</FrameInfo>
+    <OneFrameXisYMilliseconds>帧速率为{0:0.00} 帧/秒时，每帧时长为 {1} 毫秒</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>为行 {0} 设置同步点</Title>
@@ -1235,18 +1362,16 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>视频引擎</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
-    <DirectShowDescription>quartz.dll 在 System32 文件夹中</DirectShowDescription>
+    <DirectShowDescription>使用 System32 文件夹中的 quartz.dll</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed 代码来自 DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/MPlayer</MPlayerDescription>
     <VlcMediaPlayer>VLC 媒体播放器</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll 来自 VLC 媒体播放器 1.1.0 或更新</VlcMediaPlayerDescription>
+    <VlcMediaPlayerDescription>使用 VLC 媒体播放器 1.1.0 或更新版本的 libvlc.dll</VlcMediaPlayerDescription>
     <ShowStopButton>显示「停止」按钮</ShowStopButton>
     <ShowMuteButton>显示静音按钮</ShowMuteButton>
     <ShowFullscreenButton>显示全屏幕按钮</ShowFullscreenButton>
-    <DefaultVolume>默认音量</DefaultVolume>
-    <VolumeNotes>0 表示没有声音，100 表示最高音量</VolumeNotes>
     <PreviewFontSize>字幕预览字体大小</PreviewFontSize>
     <MainWindowVideoControls>主窗口视频控制</MainWindowVideoControls>
     <CustomSearchTextAndUrl>自定义搜索文本和网址</CustomSearchTextAndUrl>
@@ -1353,7 +1478,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <SyntaxColorTextIfTooLong>若文本太长则涂色</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanXLines>文本涂色若行数大于:</SyntaxColorTextMoreThanXLines>
     <SyntaxColorOverlap>时间码重叠涂色</SyntaxColorOverlap>
-    <SyntaxErrorColor>错误颜色</SyntaxErrorColor>
+    <SyntaxErrorColor>错误项颜色</SyntaxErrorColor>
     <GoToFirstSelectedLine>转到首个所选行</GoToFirstSelectedLine>
     <MergeSelectedLines>合并所选行</MergeSelectedLines>
     <ToggleTranslationMode>切换翻译模式</ToggleTranslationMode>
@@ -1433,8 +1558,8 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <LineMaximumLength>行最大长度</LineMaximumLength>
     <LineContinuationBeginEndStrings>行延续部分的 开头/末尾 字符串</LineContinuationBeginEndStrings>
     <NumberOfSplits>分割数量: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>最长单行的长度是 {0} 在行 {1}</LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>最长总行的长度是 {0} 在行 {1}</LongestLineIsXAtY>
+    <LongestSingleLineIsXAtY>单行最长长度为 {0} 在第 {1} 行</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>最长总行的长度是 {0} 在第 {1} 行</LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>分割字幕</Title>
@@ -1539,6 +1664,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <PlusShadow>+ 阴影</PlusShadow>
     <OpaqueBox>不透明框 (使用轮廓颜色)</OpaqueBox>
     <Import>导入...</Import>
+    <Export>导出...</Export>
     <Copy>复制</Copy>
     <CopyOfY>复制 {0}</CopyOfY>
     <CopyXOfY>复制 {0}/{1}</CopyXOfY>
@@ -1546,7 +1672,11 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <Remove>删除</Remove>
     <RemoveAll>全部删除</RemoveAll>
     <ImportStyleFromFile>从文件导入样式...</ImportStyleFromFile>
-    <ChooseStyle>选择样式以导入</ChooseStyle>
+    <ExportStyleToFile>将样式导出为文件... (若文件已存在，则新建样式)</ExportStyleToFile>
+    <ChooseStyle>选择要导入的样式</ChooseStyle>
+    <StyleAlreadyExits>样式已存在: {0}</StyleAlreadyExits>
+    <StyleXExportedToFileY>样式 '{0}' 导出到文件 '{1}'</StyleXExportedToFileY>
+    <StyleXImportedFromFileY>样式 '{0}' 从文件 '{1}' 导入</StyleXImportedFromFileY>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>点同步</Title>
@@ -1597,6 +1727,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <OcrMethod>OCR 方式</OcrMethod>
     <OcrViaModi>使用 MS Office 文档图像(MODI) OCR，需要 MS Office</OcrViaModi>
     <OcrViaTesseract>使用 TesserAct OCR</OcrViaTesseract>
+    <OcrViaNOCR>用 nOCR 执行 OCR</OcrViaNOCR>
     <Language>语言</Language>
     <OcrViaImageCompare>使用图像比较 OCR</OcrViaImageCompare>
     <ImageDatabase>图像数据库</ImageDatabase>
@@ -1670,6 +1801,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <ZoomOut>缩小</ZoomOut>
     <AddParagraphHere>添加文本到此处</AddParagraphHere>
     <AddParagraphHereAndPasteText>从剪贴板添加文本到此处</AddParagraphHereAndPasteText>
+    <FocusTextBox>聚焦到文本框</FocusTextBox>
     <DeleteParagraph>删除文本</DeleteParagraph>
     <Split>分割</Split>
     <SplitAtCursor>在光标处分割</SplitAtCursor>
@@ -1699,4 +1831,8 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <SplitLongLinesAt2>毫秒</SplitLongLinesAt2>
     <Other>其它</Other>
   </WaveFormGenerateTimeCodes>
+  <WebVttNewVoice>
+    <Title>WebVTT - 设定新人声</Title>
+    <VoiceName>人声名称</VoiceName>
+  </WebVttNewVoice>
 </Language>
