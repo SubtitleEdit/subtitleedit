@@ -25,6 +25,7 @@
    * Fix common errors: In "Remove empty lines" at top (in paragraph) the 
      before/after text was switched - thx Andreas
    * Fixed some language tags - thx Marco/Leon
+   * Fixed problem in 'Fix italic tags' - thx Mike
 
 
 3.3.7 (3rd August 2013)
