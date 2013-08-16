@@ -58,6 +58,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 get
                 {
+                    if (DiskFormatCode.StartsWith("STL23"))
+                        return 23.0;
                     if (DiskFormatCode.StartsWith("STL24"))
                         return 24.0;
                     if (DiskFormatCode.StartsWith("STL25"))
@@ -517,7 +519,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     byte[] buffer = File.ReadAllBytes(fileName);
                     EbuGeneralSubtitleInformation header = ReadHeader(buffer);
-                    if (header.DiskFormatCode.StartsWith("STL24") ||
+                    if (header.DiskFormatCode.StartsWith("STL23") || 
+                        header.DiskFormatCode.StartsWith("STL24") ||
                         header.DiskFormatCode.StartsWith("STL25") ||
                         header.DiskFormatCode.StartsWith("STL29") ||
                         header.DiskFormatCode.StartsWith("STL30"))
