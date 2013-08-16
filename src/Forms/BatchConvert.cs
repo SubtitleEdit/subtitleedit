@@ -170,6 +170,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveTextForHI.Checked = Configuration.Settings.Tools.BatchConvertRemoveTextForHI;
             checkBoxSetMinimumDisplayTimeBetweenSubs.Checked = Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles;
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.Settings)) //TODO: remove in 3.4
+                buttonRemoveTextForHiSettings.Text = Configuration.Settings.Language.BatchConvert.Settings;
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.Settings)) //TODO: remove in 3.4
                 buttonFixCommonErrorSettings.Text = Configuration.Settings.Language.BatchConvert.Settings;
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.Settings)) //TODO: remove in 3.4
                 buttonMultipleReplaceSettings.Text = Configuration.Settings.Language.BatchConvert.Settings;

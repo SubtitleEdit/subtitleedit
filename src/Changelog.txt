@@ -10,8 +10,10 @@
    * Updated Spanish language file - thx pakitonaranjo
    * Updated Polish language file - thx Admas
    * Updated Brazilian Portuguese language file - thx Igor Rückert
+   * Updated Italian language file - thx Marco
+   * Updated Simplified Chinese language file - thx Leon
    * Added support for the Māori language in PAC - thx Mark
-   * Allow ebu stl with 29 fps - thx Antonio
+   * Allow ebu stl with 23/29 fps - thx Raul/Antonio
    * Minor improvements to WebVTT + added WebVTT with line# - thx Benoît
    * Loading unknown subtitles now might work via generic parser
 * FIXED:
@@ -22,6 +24,7 @@
    * Converting ssa <--> ass now keeps most inline styles - thx Mike
    * Fix common errors: In "Remove empty lines" at top (in paragraph) the 
      before/after text was switched - thx Andreas
+   * Fixed some language tags - thx Marco/Leon
 
 
 3.3.7 (3rd August 2013)

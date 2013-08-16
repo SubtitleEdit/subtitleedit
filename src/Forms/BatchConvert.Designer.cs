@@ -32,6 +32,7 @@
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
+            this.buttonRemoveTextForHiSettings = new System.Windows.Forms.Button();
             this.checkBoxSetMinimumDisplayTimeBetweenSubs = new System.Windows.Forms.CheckBox();
             this.checkBoxAutoBalance = new System.Windows.Forms.CheckBox();
             this.buttonMultipleReplaceSettings = new System.Windows.Forms.Button();
@@ -46,6 +47,7 @@
             this.groupBoxOffsetTimeCodes = new System.Windows.Forms.GroupBox();
             this.radioButtonShowLater = new System.Windows.Forms.RadioButton();
             this.radioButtonShowEarlier = new System.Windows.Forms.RadioButton();
+            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.labelHoursMinSecsMilliSecs = new System.Windows.Forms.Label();
             this.checkBoxFixCasing = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveTextForHI = new System.Windows.Forms.CheckBox();
@@ -79,8 +81,6 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.buttonRemoveTextForHiSettings = new System.Windows.Forms.Button();
-            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxChangeFrameRate.SuspendLayout();
             this.groupBoxOffsetTimeCodes.SuspendLayout();
@@ -129,12 +129,23 @@
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxFixCasing);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxRemoveTextForHI);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxRemoveFormatting);
-            this.groupBoxConvertOptions.Location = new System.Drawing.Point(494, 19);
+            this.groupBoxConvertOptions.Location = new System.Drawing.Point(498, 19);
             this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
-            this.groupBoxConvertOptions.Size = new System.Drawing.Size(524, 193);
+            this.groupBoxConvertOptions.Size = new System.Drawing.Size(520, 193);
             this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
+            // 
+            // buttonRemoveTextForHiSettings
+            // 
+            this.buttonRemoveTextForHiSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonRemoveTextForHiSettings.Location = new System.Drawing.Point(170, 69);
+            this.buttonRemoveTextForHiSettings.Name = "buttonRemoveTextForHiSettings";
+            this.buttonRemoveTextForHiSettings.Size = new System.Drawing.Size(104, 21);
+            this.buttonRemoveTextForHiSettings.TabIndex = 3;
+            this.buttonRemoveTextForHiSettings.Text = "Settings...";
+            this.buttonRemoveTextForHiSettings.UseVisualStyleBackColor = true;
+            this.buttonRemoveTextForHiSettings.Click += new System.EventHandler(this.buttonRemoveTextForHiSettings_Click);
             // 
             // checkBoxSetMinimumDisplayTimeBetweenSubs
             // 
@@ -159,9 +170,9 @@
             // buttonMultipleReplaceSettings
             // 
             this.buttonMultipleReplaceSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonMultipleReplaceSettings.Location = new System.Drawing.Point(149, 119);
+            this.buttonMultipleReplaceSettings.Location = new System.Drawing.Point(170, 119);
             this.buttonMultipleReplaceSettings.Name = "buttonMultipleReplaceSettings";
-            this.buttonMultipleReplaceSettings.Size = new System.Drawing.Size(94, 21);
+            this.buttonMultipleReplaceSettings.Size = new System.Drawing.Size(104, 21);
             this.buttonMultipleReplaceSettings.TabIndex = 7;
             this.buttonMultipleReplaceSettings.Text = "Settings...";
             this.buttonMultipleReplaceSettings.UseVisualStyleBackColor = true;
@@ -190,9 +201,9 @@
             // buttonFixCommonErrorSettings
             // 
             this.buttonFixCommonErrorSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonFixCommonErrorSettings.Location = new System.Drawing.Point(149, 94);
+            this.buttonFixCommonErrorSettings.Location = new System.Drawing.Point(170, 94);
             this.buttonFixCommonErrorSettings.Name = "buttonFixCommonErrorSettings";
-            this.buttonFixCommonErrorSettings.Size = new System.Drawing.Size(94, 21);
+            this.buttonFixCommonErrorSettings.Size = new System.Drawing.Size(104, 21);
             this.buttonFixCommonErrorSettings.TabIndex = 5;
             this.buttonFixCommonErrorSettings.Text = "Settings...";
             this.buttonFixCommonErrorSettings.UseVisualStyleBackColor = true;
@@ -204,9 +215,9 @@
             this.groupBoxChangeFrameRate.Controls.Add(this.labelToFrameRate);
             this.groupBoxChangeFrameRate.Controls.Add(this.comboBoxFrameRateFrom);
             this.groupBoxChangeFrameRate.Controls.Add(this.labelFromFrameRate);
-            this.groupBoxChangeFrameRate.Location = new System.Drawing.Point(249, 12);
+            this.groupBoxChangeFrameRate.Location = new System.Drawing.Point(280, 12);
             this.groupBoxChangeFrameRate.Name = "groupBoxChangeFrameRate";
-            this.groupBoxChangeFrameRate.Size = new System.Drawing.Size(270, 73);
+            this.groupBoxChangeFrameRate.Size = new System.Drawing.Size(239, 73);
             this.groupBoxChangeFrameRate.TabIndex = 10;
             this.groupBoxChangeFrameRate.TabStop = false;
             this.groupBoxChangeFrameRate.Text = "Change frame rate";
@@ -251,9 +262,9 @@
             this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowEarlier);
             this.groupBoxOffsetTimeCodes.Controls.Add(this.timeUpDownAdjust);
             this.groupBoxOffsetTimeCodes.Controls.Add(this.labelHoursMinSecsMilliSecs);
-            this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(249, 89);
+            this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(280, 89);
             this.groupBoxOffsetTimeCodes.Name = "groupBoxOffsetTimeCodes";
-            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(270, 98);
+            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(239, 98);
             this.groupBoxOffsetTimeCodes.TabIndex = 11;
             this.groupBoxOffsetTimeCodes.TabStop = false;
             this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
@@ -279,6 +290,17 @@
             this.radioButtonShowEarlier.TabIndex = 2;
             this.radioButtonShowEarlier.Text = "Show earlier";
             this.radioButtonShowEarlier.UseVisualStyleBackColor = true;
+            // 
+            // timeUpDownAdjust
+            // 
+            this.timeUpDownAdjust.AutoSize = true;
+            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 37);
+            this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownAdjust.Mode = Nikse.SubtitleEdit.Controls.TimeUpDown.TimeMode.HHMMSSMS;
+            this.timeUpDownAdjust.Name = "timeUpDownAdjust";
+            this.timeUpDownAdjust.Size = new System.Drawing.Size(92, 24);
+            this.timeUpDownAdjust.TabIndex = 1;
             // 
             // labelHoursMinSecsMilliSecs
             // 
@@ -356,7 +378,7 @@
             // linkLabelOpenOutputFolder
             // 
             this.linkLabelOpenOutputFolder.AutoSize = true;
-            this.linkLabelOpenOutputFolder.Location = new System.Drawing.Point(434, 74);
+            this.linkLabelOpenOutputFolder.Location = new System.Drawing.Point(425, 74);
             this.linkLabelOpenOutputFolder.Name = "linkLabelOpenOutputFolder";
             this.linkLabelOpenOutputFolder.Size = new System.Drawing.Size(42, 13);
             this.linkLabelOpenOutputFolder.TabIndex = 4;
@@ -433,7 +455,7 @@
             // 
             // buttonChooseFolder
             // 
-            this.buttonChooseFolder.Location = new System.Drawing.Point(402, 69);
+            this.buttonChooseFolder.Location = new System.Drawing.Point(393, 69);
             this.buttonChooseFolder.Name = "buttonChooseFolder";
             this.buttonChooseFolder.Size = new System.Drawing.Size(26, 23);
             this.buttonChooseFolder.TabIndex = 3;
@@ -445,7 +467,7 @@
             // 
             this.textBoxOutputFolder.Location = new System.Drawing.Point(11, 71);
             this.textBoxOutputFolder.Name = "textBoxOutputFolder";
-            this.textBoxOutputFolder.Size = new System.Drawing.Size(385, 20);
+            this.textBoxOutputFolder.Size = new System.Drawing.Size(376, 20);
             this.textBoxOutputFolder.TabIndex = 2;
             // 
             // groupBoxInput
@@ -598,27 +620,6 @@
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
-            // 
-            // buttonRemoveTextForHiSettings
-            // 
-            this.buttonRemoveTextForHiSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemoveTextForHiSettings.Location = new System.Drawing.Point(149, 69);
-            this.buttonRemoveTextForHiSettings.Name = "buttonRemoveTextForHiSettings";
-            this.buttonRemoveTextForHiSettings.Size = new System.Drawing.Size(94, 21);
-            this.buttonRemoveTextForHiSettings.TabIndex = 3;
-            this.buttonRemoveTextForHiSettings.Text = "Settings...";
-            this.buttonRemoveTextForHiSettings.UseVisualStyleBackColor = true;
-            this.buttonRemoveTextForHiSettings.Click += new System.EventHandler(this.buttonRemoveTextForHiSettings_Click);
-            // 
-            // timeUpDownAdjust
-            // 
-            this.timeUpDownAdjust.AutoSize = true;
-            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 37);
-            this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownAdjust.Name = "timeUpDownAdjust";
-            this.timeUpDownAdjust.Size = new System.Drawing.Size(92, 24);
-            this.timeUpDownAdjust.TabIndex = 1;
             // 
             // BatchConvert
             // 
