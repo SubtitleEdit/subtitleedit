@@ -81,8 +81,11 @@ namespace Nikse.SubtitleEdit.Forms
             _onlyListFixes = true;
 
             _working = new Subtitle(_subtitle);
+            listViewFixes.BeginUpdate();
+            listViewFixes.Items.Clear();
             FixShortDisplayTimes();
             FixLongDisplayTimes();
+            listViewFixes.EndUpdate();
 
             groupBoxFixesAvailable.Text = string.Format(Configuration.Settings.Language.ApplyDurationLimits.FixesAvailable, _totalFixes);
             groupBoxUnfixable.Text = string.Format(Configuration.Settings.Language.ApplyDurationLimits.UnableToFix, _totalErrors);
@@ -141,6 +144,10 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
                             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text) + 0.6;
+                            if (p.Duration.TotalMilliseconds < (double)numericUpDownDurationMin.Value)
+                                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + (double)numericUpDownDurationMin.Value;
+                            if (next != null && p.EndTime.TotalMilliseconds >= next.StartTime.TotalMilliseconds)
+                                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
                             string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
                             _totalFixes++;
                             noOfShortDisplayTimes++;
