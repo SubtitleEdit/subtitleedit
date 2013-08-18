@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Controls
 {
     public partial class AudioVisualizer : UserControl
     {
-        private enum MouseDownParagraphType
+        public enum MouseDownParagraphType
         {
             None,
             Start,
@@ -23,6 +23,8 @@ namespace Nikse.SubtitleEdit.Controls
             public Paragraph Paragraph { get; private set; }
             public double Seconds { get; private set; }
             public Paragraph BeforeParagraph { get; set; }
+            public MouseDownParagraphType MouseDownParagraphType { get; set; }
+            public bool MovePreviousOrNext { get; set; }
             public ParagraphEventArgs(Paragraph p)
             {
                 Paragraph = p;
@@ -37,6 +39,21 @@ namespace Nikse.SubtitleEdit.Controls
                 Seconds = seconds;
                 Paragraph = p;
                 BeforeParagraph = b;
+            }
+            public ParagraphEventArgs(double seconds, Paragraph p, Paragraph b, MouseDownParagraphType mouseDownParagraphType)
+            {
+                Seconds = seconds;
+                Paragraph = p;
+                BeforeParagraph = b;
+                MouseDownParagraphType = mouseDownParagraphType;
+            }
+            public ParagraphEventArgs(double seconds, Paragraph p, Paragraph b, MouseDownParagraphType mouseDownParagraphType, bool movePreviousOrNext)
+            {
+                Seconds = seconds;
+                Paragraph = p;
+                BeforeParagraph = b;
+                MouseDownParagraphType = mouseDownParagraphType;
+                MovePreviousOrNext = movePreviousOrNext;
             }
         }
 
@@ -60,6 +77,7 @@ namespace Nikse.SubtitleEdit.Controls
         private Subtitle _subtitle;
         private ListView.SelectedIndexCollection _selectedIndices;
         private bool _noClear;
+        private double _gapAtStart = -1;
 
         private List<Bitmap> _spectrogramBitmaps = new List<Bitmap>();
         private string _spectrogramDirectory;
@@ -702,6 +720,7 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
 
             _mouseDownParagraphType = MouseDownParagraphType.None;
+            _gapAtStart = -1;
             if (e.Button == MouseButtons.Left)
             {
                 _buttonDownTimeTicks = DateTime.Now.Ticks;
@@ -760,6 +779,24 @@ namespace Nikse.SubtitleEdit.Controls
                     NewSelectionParagraph = null;
                     _mouseMoveStartX = e.X;
                     _mouseMoveEndX = e.X;
+                }
+                if (_mouseDownParagraphType == MouseDownParagraphType.Start)
+                {
+                    if (_subtitle != null && _mouseDownParagraph != null)
+                    {
+                        int curIdx = _subtitle.Paragraphs.IndexOf(_mouseDownParagraph);
+                        if (curIdx >= 0)
+                            _gapAtStart = _subtitle.Paragraphs[curIdx].StartTime.TotalMilliseconds - _subtitle.Paragraphs[curIdx - 1].EndTime.TotalMilliseconds;
+                    }
+                }
+                else if (_mouseDownParagraphType == MouseDownParagraphType.End)
+                {
+                    if (_subtitle != null && _mouseDownParagraph != null)
+                    {
+                        int curIdx = _subtitle.Paragraphs.IndexOf(_mouseDownParagraph);
+                        if (curIdx >= 0 && curIdx < _subtitle.Paragraphs.Count - 1)
+                            _gapAtStart = _subtitle.Paragraphs[curIdx + 1].StartTime.TotalMilliseconds - _subtitle.Paragraphs[curIdx].EndTime.TotalMilliseconds;
+                    }
                 }
                 _mouseDown = true;
             }
@@ -862,9 +899,46 @@ namespace Nikse.SubtitleEdit.Controls
                 if (curIdx >= 0)
                 {
                     if (curIdx > 0)
+                    {
                         _wholeParagraphMinMilliseconds = _subtitle.Paragraphs[curIdx - 1].EndTime.TotalMilliseconds;
+                    }
                     if (curIdx < _subtitle.Paragraphs.Count - 1)
+                    {
                         _wholeParagraphMaxMilliseconds = _subtitle.Paragraphs[curIdx + 1].StartTime.TotalMilliseconds;
+                    }
+                }
+            }
+        }
+
+        private void SetMinAndMaxMoveStart()
+        {
+            _wholeParagraphMinMilliseconds = 0;
+            _wholeParagraphMaxMilliseconds = double.MaxValue;
+            if (_subtitle != null && _mouseDownParagraph != null)
+            {
+                int curIdx = _subtitle.Paragraphs.IndexOf(_mouseDownParagraph);
+                if (curIdx >= 0)
+                {
+                    var gap = Math.Abs(_subtitle.Paragraphs[curIdx - 1].EndTime.TotalMilliseconds - _subtitle.Paragraphs[curIdx].StartTime.TotalMilliseconds);
+                    _wholeParagraphMinMilliseconds = _subtitle.Paragraphs[curIdx - 1].StartTime.TotalMilliseconds + gap + 200;
+                }
+            }
+        }
+
+        private void SetMinAndMaxMoveEnd()
+        {
+            _wholeParagraphMinMilliseconds = 0;
+            _wholeParagraphMaxMilliseconds = double.MaxValue;
+            if (_subtitle != null && _mouseDownParagraph != null)
+            {
+                int curIdx = _subtitle.Paragraphs.IndexOf(_mouseDownParagraph);
+                if (curIdx >= 0)
+                {
+                    if (curIdx < _subtitle.Paragraphs.Count - 1)
+                    {
+                        var gap = Math.Abs(_subtitle.Paragraphs[curIdx].EndTime.TotalMilliseconds - _subtitle.Paragraphs[curIdx+1].StartTime.TotalMilliseconds);
+                        _wholeParagraphMaxMilliseconds = _subtitle.Paragraphs[curIdx + 1].EndTime.TotalMilliseconds - gap -200;
+                    }
                 }
             }
         }
@@ -932,6 +1006,14 @@ namespace Nikse.SubtitleEdit.Controls
                 if (Control.ModifierKeys == Keys.Shift)
                     return AllowOverlap;
                 return !AllowOverlap;
+            }
+        }
+
+        private bool AllowMovePrevOrNext
+        {
+            get
+            { 
+                return _gapAtStart >= 0 && _gapAtStart < 500 && Control.ModifierKeys == Keys.Alt;
             }
         }
 
@@ -1008,6 +1090,10 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             if (_mouseDownParagraph.EndTime.TotalMilliseconds - milliseconds > MininumSelectionMilliseconds)
                             {
+                                if (AllowMovePrevOrNext)
+                                    SetMinAndMaxMoveStart();
+                                else
+                                    SetMinAndMax();
                                 _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
                                 if (PreventOverlap && _mouseDownParagraph.StartTime.TotalMilliseconds <= _wholeParagraphMinMilliseconds)
                                 {
@@ -1026,7 +1112,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 else
                                 {
                                     if (OnTimeChanged != null)
-                                        OnTimeChanged.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph));
+                                        OnTimeChanged.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph, _mouseDownParagraphType, AllowMovePrevOrNext));
                                 }
                             }
                         }
@@ -1034,6 +1120,10 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             if (milliseconds - _mouseDownParagraph.StartTime.TotalMilliseconds > MininumSelectionMilliseconds)
                             {
+                                if (AllowMovePrevOrNext)
+                                    SetMinAndMaxMoveEnd();
+                                else
+                                    SetMinAndMax();
                                 _mouseDownParagraph.EndTime.TotalMilliseconds = milliseconds;
                                 if (PreventOverlap && _mouseDownParagraph.EndTime.TotalMilliseconds >= _wholeParagraphMaxMilliseconds)
                                 {
@@ -1052,7 +1142,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 else
                                 {
                                     if (OnTimeChanged != null)
-                                        OnTimeChanged.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph));
+                                        OnTimeChanged.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph, _mouseDownParagraphType, AllowMovePrevOrNext));
                                 }
                             }
                         }
