@@ -6,6 +6,8 @@
    * Added Hungarian language file - thx thx Zityi
    * Added a few new subtitle formats
    * Added Tools -> Sort by -> Style - thx Mike
+   * When moving start/end in waveform and holding down ALT will now
+     move border if closest subtitle if less than 500 ms away - thx Leon
 * IMPROVED:
    * Updated Spanish language file - thx pakitonaranjo
    * Updated Polish language file - thx Admas
@@ -26,6 +28,7 @@
      before/after text was switched - thx Andreas
    * Fixed some language tags - thx Marco/Leon
    * Fixed problem in 'Fix italic tags' - thx Mike
+   * Fixed bug in 'Apply duration limits' - thx Mike
 
 
 3.3.7 (3rd August 2013)

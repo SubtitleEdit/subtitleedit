@@ -380,7 +380,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 index++;
                             }
                         }
-                    }
+                    }                    
                 }
                 else if (Configuration.Settings.General.StartLoadLastFile)
                 {
@@ -1180,7 +1180,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         void AudioWaveForm_OnTimeChanged(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
-        {
+        {            
             var paragraph = e.Paragraph;
             var beforeParagraph = e.BeforeParagraph;
             if (beforeParagraph == null)
@@ -1199,6 +1199,8 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + paragraph.Number + " " + paragraph.Text));
                 _subtitle.Paragraphs[index] = paragraph;
                 _makeHistoryPaused = true;
+
+                MovePrevNext(e, paragraph, beforeParagraph, index);
 
                 Paragraph original = null;
                 if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
@@ -1279,6 +1281,8 @@ namespace Nikse.SubtitleEdit.Forms
                         MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + paragraph.Number + " " + paragraph.Text));
                         _subtitle.Paragraphs[index] = paragraph;
                         _makeHistoryPaused = true;
+
+                        MovePrevNext(e, paragraph, beforeParagraph, index);
                     }
 
                     SubtitleListview1.SetStartTime(index, paragraph);
@@ -1288,6 +1292,35 @@ namespace Nikse.SubtitleEdit.Forms
             beforeParagraph.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
             beforeParagraph.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
             _makeHistoryPaused = false;
+        }
+
+        private void MovePrevNext(Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e, Paragraph paragraph, Paragraph beforeParagraph, int index)
+        {
+            if (e.MovePreviousOrNext)
+            {
+                if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.Start)
+                {
+                    var prev = _subtitle.GetParagraphOrDefault(index - 1);
+                    if (prev != null)
+                    {
+                        prev.EndTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + (e.Paragraph.StartTime.TotalMilliseconds - beforeParagraph.StartTime.TotalMilliseconds);
+                        SubtitleListview1.SetStartTime(index - 1, prev);
+                        SubtitleListview1.SetDuration(index - 1, prev);
+                        audioVisualizer.Invalidate();
+                    }
+                }
+                else if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.End)
+                {
+                    var next = _subtitle.GetParagraphOrDefault(index + 1);
+                    if (next != null)
+                    {
+                        next.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + (e.Paragraph.EndTime.TotalMilliseconds - beforeParagraph.EndTime.TotalMilliseconds);
+                        SubtitleListview1.SetStartTime(index + 1, next);
+                        SubtitleListview1.SetDuration(index + 1, next);
+                        audioVisualizer.Invalidate();
+                    }
+                }
+            }
         }
 
         void AudioWaveForm_OnPositionSelected(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
@@ -1513,6 +1546,9 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemOpenDvd.Text = _language.Menu.Video.OpenDvd; //TODO: Remove in SE 3.4
             toolStripMenuItemSetAudioTrack.Text = _language.Menu.Video.ChooseAudioTrack;
             closeVideoToolStripMenuItem.Text = _language.Menu.Video.CloseVideo;
+
+            if (!string.IsNullOrEmpty(_language.Menu.Video.ImportSceneChanges)) //TODO: Remove in SE 3.4
+                toolStripMenuItemImportSceneChanges.Text = _language.Menu.Video.ImportSceneChanges;
 
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
                 showhideWaveFormToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveformAndSpectrogram;
@@ -7683,7 +7719,30 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-                }
+                    else if (format.GetType() == typeof(SubStationAlpha) || format.GetType() == typeof(AdvancedSubStationAlpha))
+                    {
+                        Paragraph p = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
+                        if (p != null)
+                        {
+                            const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
+                            string startTC = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
+                            string endTC = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
+                            string tc = startTC + "," + endTC;
+                            int start = textBoxSource.Text.IndexOf(tc);
+                            if (start > 0)
+                            {
+                                int start2 = textBoxSource.Text.LastIndexOf("Dialogue:", start);
+                                if (start2 > 0)
+                                    start2 = (textBoxSource.Text + Environment.NewLine).IndexOf(Environment.NewLine, start2);
+                                if (start2 > 0)
+                                    start = start2;
+                                textBoxSource.SelectionStart = start;
+                                textBoxSource.SelectionLength = 0;
+                                textBoxSource.ScrollToCaret();
+                            }
+                        }
+                    }
+                }               
             }
             else
             {
@@ -7720,6 +7779,51 @@ namespace Nikse.SubtitleEdit.Forms
                                     break;
                                 }
                                 index++;
+                            }
+                        }
+                    }
+                    else if (format.GetType() == typeof(SubStationAlpha) || format.GetType() == typeof(AdvancedSubStationAlpha))
+                    {
+                        int pos = textBoxSource.SelectionStart;
+                        string s = textBoxSource.Text;
+                        if (pos > 0)
+                            pos--;
+                        while (pos > 0 && pos + 3 < s.Length && !s.Substring(pos, 3).StartsWith(Environment.NewLine))
+                            pos--;
+                        s = s.Substring(pos).Trim();
+                        int lastTimeCode = s.IndexOf("Dialogue:");
+
+
+                        if (lastTimeCode >= 0)
+                        {
+                            string tc = s.Substring(lastTimeCode).Trim();
+                            while (tc.Length > 0 && !Utilities.IsInteger(tc.Substring(0, 1)))
+                                tc = tc.Remove(0, 1);
+                            if (tc.Length > 12)
+                            {
+                                tc = tc.Substring(0, 13);
+                                string[] timeCode = tc.Split(":.,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                TimeCode realTC = new TimeCode(0, 0, 0, 0);
+                                try
+                                {
+                                    realTC = new TimeCode(int.Parse(timeCode[1]), int.Parse(timeCode[2]), int.Parse(timeCode[3]), int.Parse(timeCode[4]) * 10);
+                                }
+                                catch
+                                {
+                                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                                    return;
+                                }
+
+                                int index = 0;
+                                foreach (Paragraph p in _subtitle.Paragraphs)
+                                {
+                                    if (Math.Abs(realTC.TotalMilliseconds - p.StartTime.TotalMilliseconds) < 50)
+                                    {
+                                        SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                                        break;
+                                    }
+                                    index++;
+                                }
                             }
                         }
                     }
