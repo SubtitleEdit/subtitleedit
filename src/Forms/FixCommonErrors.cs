@@ -4165,6 +4165,22 @@ namespace Nikse.SubtitleEdit.Forms
                     p.Text = p.Text.Remove(p.Text.Length - 4, 4) + "..." + mark;
                 }
             }
+            else if (Utilities.CountTagInText(p.Text, inverseMark) == 1)
+            {
+                int idx = p.Text.IndexOf(inverseMark);
+                while (idx < p.Text.Length && !".!?".Contains(p.Text[idx].ToString()))
+                {
+                    idx++;
+                }
+                if (idx < p.Text.Length)
+                {
+                    p.Text = p.Text.Insert(idx, mark);
+                    if (p.Text.Contains("¡¿") && p.Text.Contains("!?"))
+                        p.Text.Replace("!?", "?!");
+                    if (p.Text.Contains("¿¡") && p.Text.Contains("?!"))
+                        p.Text.Replace("?!", "!?");
+                }
+            }
         }
 
         private bool IsSpanishAbbreviation(string text, int index)
