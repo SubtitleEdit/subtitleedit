@@ -130,35 +130,34 @@ namespace Nikse.SubtitleEdit.Forms
             Subtitle unfixables = new Subtitle();
             string fixAction = Configuration.Settings.Language.FixCommonErrors.FixShortDisplayTime;
             int noOfShortDisplayTimes = 0;
-            for (int i = 0; i < _working.Paragraphs.Count; i++)
+            for (int i = 0; i < _working.Paragraphs.Count; i++)            
             {
                 Paragraph p = _working.Paragraphs[i];
+                
                 double minDisplayTime = (double)numericUpDownDurationMin.Value;
+                var minCharSecMs = Utilities.GetOptimalDisplayMilliseconds(p.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
+                if (minCharSecMs > minDisplayTime)
+                    minDisplayTime = minCharSecMs;
+
                 double displayTime = p.Duration.TotalMilliseconds;
                 if (displayTime < minDisplayTime)
                 {
                     Paragraph next = _working.GetParagraphOrDefault(i + 1);
-                    if (next == null || (p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text) * 0.6) < next.StartTime.TotalMilliseconds)
+                    if (next == null || (p.StartTime.TotalMilliseconds + minDisplayTime < next.StartTime.TotalMilliseconds))
                     {
-                        if (AllowFix(p))
-                        {
-                            string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
-                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text) + 0.6;
-                            if (p.Duration.TotalMilliseconds < (double)numericUpDownDurationMin.Value)
-                                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + (double)numericUpDownDurationMin.Value;
-                            if (next != null && p.EndTime.TotalMilliseconds >= next.StartTime.TotalMilliseconds)
-                                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
-                            string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
-                            _totalFixes++;
-                            noOfShortDisplayTimes++;
-                            AddFixToListView(p, before, after);
-                        }
+                        string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
+                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + minDisplayTime;
+
+                        string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
+                        _totalFixes++;
+                        noOfShortDisplayTimes++;
+                        AddFixToListView(p, before, after);
                     }
                     else
                     {
                         unfixables.Paragraphs.Add(new Paragraph(p));
                         _totalErrors++;
-                    }
+                    }                    
                 }
             }
             subtitleListView1.Fill(unfixables);
