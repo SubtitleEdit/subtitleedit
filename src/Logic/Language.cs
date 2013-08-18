@@ -1124,13 +1124,15 @@ namespace Nikse.SubtitleEdit.Logic
                         TextNumberOfCharactersPerSeconds = "Text - number of chars/sec",
                         WordsPerMinute = "Text - words per minute (wpm)",
                         Style = "Style",
+                        Ascending = "Ascending",
+                        Descending = "Descending",
                         MakeNewEmptyTranslationFromCurrentSubtitle = "Make new empty translation from current subtitle",
                         BatchConvert = "Batch convert...",
                         GenerateTimeAsText = "Generate time as text...",
                         MeasurementConverter = "Measurement converter...",
                         SplitSubtitle = "Split subtitle...",
                         AppendSubtitle = "Append subtitle...",
-                        JoinSubtitles = "Join subtitles...",
+                        JoinSubtitles = "Join subtitles...",                        
                     },
 
                     Video = new LanguageStructure.Main.MainMenu.VideoMenu

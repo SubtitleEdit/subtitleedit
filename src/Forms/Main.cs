@@ -1519,6 +1519,18 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 sortDisplayTimeToolStripMenuItem.Text = _languageGeneral.Duration;
 
+            if (string.IsNullOrEmpty(_language.Menu.Tools.Duration))
+            {
+                toolStripSeparatorAscOrDesc.Visible = false;
+                descendingToolStripMenuItem.Visible = false;
+                AscendingToolStripMenuItem.Visible = false;
+            }
+            else
+            {
+                descendingToolStripMenuItem.Text = _language.Menu.Tools.Descending;
+                AscendingToolStripMenuItem.Text = _language.Menu.Tools.Ascending;
+            }
+            
             sortTextAlphabeticallytoolStripMenuItem.Text = _language.Menu.Tools.TextAlphabetically;
             sortTextMaxLineLengthToolStripMenuItem.Text = _language.Menu.Tools.TextSingleLineMaximumLength;
             sortTextTotalLengthToolStripMenuItem.Text = _language.Menu.Tools.TextTotalLength;
@@ -10673,6 +10685,8 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitleListViewIndex = -1;
             MakeHistoryForUndo(string.Format(_language.BeforeSortX, description));
             _subtitle.Sort(subtitleSortCriteria);
+            if (descendingToolStripMenuItem.Checked)
+                _subtitle.Paragraphs.Reverse();
             ShowSource();
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedParagraph);
@@ -17564,6 +17578,22 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.Focus();
                 textBoxListViewText.SelectAll();
             }
+        }
+
+        private void AscendingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            descendingToolStripMenuItem.Checked = false;
+            AscendingToolStripMenuItem.Checked = true;
+            toolsToolStripMenuItem.ShowDropDown();
+            toolStripMenuItem1.ShowDropDown();            
+        }
+
+        private void descendingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AscendingToolStripMenuItem.Checked = false;
+            descendingToolStripMenuItem.Checked = true;
+            toolsToolStripMenuItem.ShowDropDown();
+            toolStripMenuItem1.ShowDropDown();
         }
 
     }

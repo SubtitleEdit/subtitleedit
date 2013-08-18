@@ -472,16 +472,15 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>Chanchita, ¡¿copias?! ¡¡Chanchita!!</i>");
         }
 
-        //[TestMethod]
-        //[DeploymentItem("SubtitleEdit.exe")]
-        //public void FixSpanishExclamationMarkAndQuestionMark()
-        //{
-        //    var target = new FixCommonErrors_Accessor();
-        //    InitializeFixCommonErrorsLine(target, "¡Cómo estás?");
-        //    target.FixSpanishInvertedQuestionAndExclamationMarks();
-        //    Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¡¿Cómo estás?!");
-        //}
-        
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixSpanishExclamationMarkAndQuestionMarkOneOfEach()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "¡Cómo estás?");
+            target.FixSpanishInvertedQuestionAndExclamationMarks();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¿¡Cómo estás!?");
+        }        
 
         #endregion
 

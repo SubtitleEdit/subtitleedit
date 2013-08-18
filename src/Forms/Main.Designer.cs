@@ -421,6 +421,9 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.toolStripSeparatorAscOrDesc = new System.Windows.Forms.ToolStripSeparator();
+            this.AscendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.descendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.textBoxListViewTextAlternate = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
@@ -1543,7 +1546,10 @@
             this.sortTextNumberOfLinesToolStripMenuItem,
             this.textCharssecToolStripMenuItem,
             this.textWordsPerMinutewpmToolStripMenuItem,
-            this.styleToolStripMenuItem});
+            this.styleToolStripMenuItem,
+            this.toolStripSeparatorAscOrDesc,
+            this.AscendingToolStripMenuItem,
+            this.descendingToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(346, 22);
             this.toolStripMenuItem1.Text = "Sort by";
@@ -4065,6 +4071,27 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
+            // toolStripSeparatorAscOrDesc
+            // 
+            this.toolStripSeparatorAscOrDesc.Name = "toolStripSeparatorAscOrDesc";
+            this.toolStripSeparatorAscOrDesc.Size = new System.Drawing.Size(247, 6);
+            // 
+            // AscendingToolStripMenuItem
+            // 
+            this.AscendingToolStripMenuItem.Checked = true;
+            this.AscendingToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AscendingToolStripMenuItem.Name = "AscendingToolStripMenuItem";
+            this.AscendingToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
+            this.AscendingToolStripMenuItem.Text = "Ascending";
+            this.AscendingToolStripMenuItem.Click += new System.EventHandler(this.AscendingToolStripMenuItem_Click);
+            // 
+            // descendingToolStripMenuItem
+            // 
+            this.descendingToolStripMenuItem.Name = "descendingToolStripMenuItem";
+            this.descendingToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
+            this.descendingToolStripMenuItem.Text = "Descending";
+            this.descendingToolStripMenuItem.Click += new System.EventHandler(this.descendingToolStripMenuItem_Click);
+            // 
             // SubtitleListview1
             // 
             this.SubtitleListview1.AllowDrop = true;
@@ -4705,6 +4732,9 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFcpProperties;
         private System.Windows.Forms.ToolStripMenuItem styleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFocusTextbox;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorAscOrDesc;
+        private System.Windows.Forms.ToolStripMenuItem AscendingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem descendingToolStripMenuItem;
     }
 }
 
