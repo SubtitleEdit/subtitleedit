@@ -785,7 +785,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (_subtitle != null && _mouseDownParagraph != null)
                     {
                         int curIdx = _subtitle.Paragraphs.IndexOf(_mouseDownParagraph);
-                        if (curIdx >= 0)
+                        if (curIdx > 0)
                             _gapAtStart = _subtitle.Paragraphs[curIdx].StartTime.TotalMilliseconds - _subtitle.Paragraphs[curIdx - 1].EndTime.TotalMilliseconds;
                     }
                 }
