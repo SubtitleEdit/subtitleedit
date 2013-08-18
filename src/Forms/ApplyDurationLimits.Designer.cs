@@ -42,11 +42,15 @@
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxUnfixable = new System.Windows.Forms.GroupBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).BeginInit();
             this.groupBoxFixesAvailable.SuspendLayout();
             this.groupBoxUnfixable.SuspendLayout();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelMaxDuration
@@ -117,7 +121,7 @@
             // 
             this.labelNote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelNote.AutoSize = true;
-            this.labelNote.Location = new System.Drawing.Point(19, 548);
+            this.labelNote.Location = new System.Drawing.Point(19, 542);
             this.labelNote.Name = "labelNote";
             this.labelNote.Size = new System.Drawing.Size(265, 13);
             this.labelNote.TabIndex = 49;
@@ -128,7 +132,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(858, 544);
+            this.buttonCancel.Location = new System.Drawing.Point(874, 538);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 51;
@@ -139,7 +143,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(777, 544);
+            this.buttonOK.Location = new System.Drawing.Point(793, 538);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 50;
@@ -149,13 +153,11 @@
             // 
             // groupBoxFixesAvailable
             // 
-            this.groupBoxFixesAvailable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxFixesAvailable.Controls.Add(this.listViewFixes);
-            this.groupBoxFixesAvailable.Location = new System.Drawing.Point(16, 72);
+            this.groupBoxFixesAvailable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxFixesAvailable.Location = new System.Drawing.Point(0, 0);
             this.groupBoxFixesAvailable.Name = "groupBoxFixesAvailable";
-            this.groupBoxFixesAvailable.Size = new System.Drawing.Size(917, 308);
+            this.groupBoxFixesAvailable.Size = new System.Drawing.Size(931, 302);
             this.groupBoxFixesAvailable.TabIndex = 52;
             this.groupBoxFixesAvailable.TabStop = false;
             this.groupBoxFixesAvailable.Text = "Fixes available: {0}";
@@ -175,7 +177,7 @@
             this.listViewFixes.HideSelection = false;
             this.listViewFixes.Location = new System.Drawing.Point(6, 23);
             this.listViewFixes.Name = "listViewFixes";
-            this.listViewFixes.Size = new System.Drawing.Size(905, 279);
+            this.listViewFixes.Size = new System.Drawing.Size(919, 273);
             this.listViewFixes.TabIndex = 9;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
@@ -202,15 +204,36 @@
             // 
             // groupBoxUnfixable
             // 
-            this.groupBoxUnfixable.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxUnfixable.Controls.Add(this.subtitleListView1);
-            this.groupBoxUnfixable.Location = new System.Drawing.Point(16, 386);
+            this.groupBoxUnfixable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxUnfixable.Location = new System.Drawing.Point(0, 0);
             this.groupBoxUnfixable.Name = "groupBoxUnfixable";
-            this.groupBoxUnfixable.Size = new System.Drawing.Size(917, 152);
+            this.groupBoxUnfixable.Size = new System.Drawing.Size(931, 154);
             this.groupBoxUnfixable.TabIndex = 53;
             this.groupBoxUnfixable.TabStop = false;
             this.groupBoxUnfixable.Text = "Unable to fix min duration: {0}";
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Location = new System.Drawing.Point(16, 72);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.groupBoxFixesAvailable);
+            this.splitContainer1.Panel1MinSize = 100;
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.groupBoxUnfixable);
+            this.splitContainer1.Panel2MinSize = 100;
+            this.splitContainer1.Size = new System.Drawing.Size(931, 460);
+            this.splitContainer1.SplitterDistance = 302;
+            this.splitContainer1.TabIndex = 54;
             // 
             // subtitleListView1
             // 
@@ -226,7 +249,7 @@
             this.subtitleListView1.Location = new System.Drawing.Point(6, 19);
             this.subtitleListView1.Name = "subtitleListView1";
             this.subtitleListView1.OwnerDraw = true;
-            this.subtitleListView1.Size = new System.Drawing.Size(905, 127);
+            this.subtitleListView1.Size = new System.Drawing.Size(919, 129);
             this.subtitleListView1.TabIndex = 111;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.UseSyntaxColoring = true;
@@ -236,9 +259,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(945, 577);
-            this.Controls.Add(this.groupBoxUnfixable);
-            this.Controls.Add(this.groupBoxFixesAvailable);
+            this.ClientSize = new System.Drawing.Size(961, 571);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.labelNote);
@@ -260,6 +282,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).EndInit();
             this.groupBoxFixesAvailable.ResumeLayout(false);
             this.groupBoxUnfixable.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -282,5 +307,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.GroupBox groupBoxUnfixable;
         private Controls.SubtitleListView subtitleListView1;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }
