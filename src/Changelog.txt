@@ -29,6 +29,8 @@
    * Fixed some language tags - thx Marco/Leon
    * Fixed problem in 'Fix italic tags' - thx Mike
    * Fixed bug in 'Apply duration limits' - thx Mike
+   * When typing "&" SE would show "_" in the list view - thx XhmikosR
+   * Allow regex search in empty string - thx vmb
 
 
 3.3.7 (3rd August 2013)
