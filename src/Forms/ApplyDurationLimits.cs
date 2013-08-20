@@ -135,9 +135,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _working.Paragraphs[i];
                 
                 double minDisplayTime = (double)numericUpDownDurationMin.Value;
-                var minCharSecMs = Utilities.GetOptimalDisplayMilliseconds(p.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
-                if (minCharSecMs > minDisplayTime)
-                    minDisplayTime = minCharSecMs;
+                //var minCharSecMs = Utilities.GetOptimalDisplayMilliseconds(p.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
+                //if (minCharSecMs > minDisplayTime)
+                //    minDisplayTime = minCharSecMs;
 
                 double displayTime = p.Duration.TotalMilliseconds;
                 if (displayTime < minDisplayTime)
