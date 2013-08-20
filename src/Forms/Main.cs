@@ -10515,7 +10515,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
                     }
-                    else if (list.Count > 1 && list.Count < 500)
+                    else if (list.Count > 1 && list.Count < 2000)
                     {
                         MakeHistoryForUndo(_language.BeforeInsertLine);
                         _makeHistoryPaused = true;
