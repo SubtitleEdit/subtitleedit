@@ -254,64 +254,75 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 TextField = TextField.Replace("</U>", underlineOff);
 
                 //font tags
-                string[] lines = TextField.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                var sb = new StringBuilder();
-                string veryFirstColor = null;
-                foreach (string line in lines)
+                if (header.DisplayStandardCode == "0") // Open subtitling
                 {
-                    string firstColor = null;
-                    string s = line;
-                    int start = s.IndexOf("<font ");
-                    if (start >= 0)
+                    TextField = Utilities.RemoveHtmlTags(TextField, true);
+                }
+                else // teletext
+                {
+                    string[] lines = TextField.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    var sb = new StringBuilder();
+                    string veryFirstColor = null;
+                    foreach (string line in lines)
                     {
-                        int end = s.IndexOf(">", start);
-                        if (end > 0)
+                        string firstColor = null;
+                        string s = line;
+                        int start = s.IndexOf("<font ");
+                        if (start >= 0)
                         {
-                            string f = s.Substring(start, end - start);
-                            if (f.Contains(" color="))
+                            int end = s.IndexOf(">", start);
+                            if (end > 0)
                             {
-                                int colorStart = f.IndexOf(" color=");
-                                if (s.IndexOf("\"", colorStart + " color=".Length + 1) > 0)
+                                string f = s.Substring(start, end - start);
+                                if (f.Contains(" color="))
                                 {
-                                    int colorEnd = f.IndexOf("\"", colorStart + " color=".Length + 1);
-                                    if (colorStart > 1)
+                                    int colorStart = f.IndexOf(" color=");
+                                    if (s.IndexOf("\"", colorStart + " color=".Length + 1) > 0)
                                     {
-                                        string color = f.Substring(colorStart + 7, colorEnd - (colorStart + 7));
-                                        color = color.Trim('\'');
-                                        color = color.Trim('\"');
-                                        color = color.Trim('#');
+                                        int colorEnd = f.IndexOf("\"", colorStart + " color=".Length + 1);
+                                        if (colorStart > 1)
+                                        {
+                                            string color = f.Substring(colorStart + 7, colorEnd - (colorStart + 7));
+                                            color = color.Trim('\'');
+                                            color = color.Trim('\"');
+                                            color = color.Trim('#');
 
-                                        s = s.Remove(start, end - start + 1);
-                                        if (veryFirstColor == null)
-                                            veryFirstColor = GetNearestEbuColorCode(color, encoding);
-                                        if (firstColor == null)
-                                            firstColor = GetNearestEbuColorCode(color, encoding);
-                                        else
-                                            s = s.Insert(start, GetNearestEbuColorCode(color, encoding));
+                                            s = s.Remove(start, end - start + 1);
+                                            if (veryFirstColor == null)
+                                                veryFirstColor = GetNearestEbuColorCode(color, encoding);
+                                            if (firstColor == null)
+                                                firstColor = GetNearestEbuColorCode(color, encoding);
+                                            else
+                                                s = s.Insert(start, GetNearestEbuColorCode(color, encoding));
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    //byte colorByte = 0x07; // white
-                    byte colorByte = 255;
-                    if (!string.IsNullOrEmpty(veryFirstColor))
-                        colorByte = encoding.GetBytes(veryFirstColor)[0];
-                    if (!string.IsNullOrEmpty(firstColor))
-                        colorByte = encoding.GetBytes(firstColor)[0];
-                    string prefix = encoding.GetString(new byte[] { 0xd, colorByte, 0xb, 0xb });
+                        //byte colorByte = 0x07; // white
+                        byte colorByte = 255;
+                        if (!string.IsNullOrEmpty(veryFirstColor))
+                            colorByte = encoding.GetBytes(veryFirstColor)[0];
+                        if (!string.IsNullOrEmpty(firstColor))
+                            colorByte = encoding.GetBytes(firstColor)[0];
+                        string prefix = encoding.GetString(new byte[] { 0xd, colorByte, 0xb, 0xb });
 
-                    if (colorByte != 255)
-                        sb.Append(prefix);
-                    sb.AppendLine(s);
-                }
-                TextField = Utilities.RemoveHtmlTags(sb.ToString()).TrimEnd();
+                        if (colorByte != 255)
+                            sb.Append(prefix);
+                        sb.AppendLine(s);
+                    }
+                    TextField = Utilities.RemoveHtmlTags(sb.ToString()).TrimEnd();
+                }                
 
                 // newline
                 string newline = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a, 0x8a });
+                if (header.DisplayStandardCode == "0")
+                    newline = encoding.GetString(new byte[] { 0x85, 0x8A, 0x0D, 0x84, 0x80 });
                 TextField = TextField.Replace(Environment.NewLine, newline);
 
                 string endOfLine = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a });
+                if (header.DisplayStandardCode == "0")
+                    newline = string.Empty;
                 TextField += endOfLine;
 
                 // convert text to bytes
@@ -427,7 +438,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return;
 
             var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-            header.TotalNumberOfSubtitles = ((subtitle.Paragraphs.Count+1).ToString()).PadLeft(5, '0'); // seems to be 1 higher than actual number of subtitles
+            header.TotalNumberOfSubtitles = (subtitle.Paragraphs.Count.ToString()).PadLeft(5, '0'); // seems to be 1 higher than actual number of subtitles
             header.TotalNumberOfTextAndTimingInformationBlocks = header.TotalNumberOfSubtitles;
 
             string today = string.Format("{0:00}{1:00}{2:00}", DateTime.Now.Year.ToString().Remove(0, 2), DateTime.Now.Month, DateTime.Now.Day);

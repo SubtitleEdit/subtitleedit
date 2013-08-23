@@ -26,6 +26,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelCodePageNumber.Text = language.CodePageNumber;
             labelDiskFormatCode.Text = language.DiskFormatCode;
+            if (!string.IsNullOrEmpty(language.DisplayStandardCode)) //TODO: Fix in 3.4
+                labelDisplayStandardCode.Text = language.DisplayStandardCode;
             labelCharacterCodeTable.Text = language.CharacterCodeTable;
             labelLanguageCode.Text = language.LanguageCode;
             labelOriginalProgramTitle.Text = language.OriginalProgramTitle;
@@ -97,9 +99,10 @@ namespace Nikse.SubtitleEdit.Forms
                 string[] arr = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 foreach (string line in arr)
                 {
-                    if (line.Length > numericUpDownMaxCharacters.Value)
+                    string s = Utilities.RemoveHtmlTags(line);
+                    if (s.Length > numericUpDownMaxCharacters.Value)
                     {
-                        sb.AppendLine(string.Format(Configuration.Settings.Language.EbuSaveOtpions.MaxLengthError, i, numericUpDownMaxCharacters.Value, line.Length - numericUpDownMaxCharacters.Value, line));
+                        sb.AppendLine(string.Format(Configuration.Settings.Language.EbuSaveOtpions.MaxLengthError, i, numericUpDownMaxCharacters.Value, s.Length - numericUpDownMaxCharacters.Value, s));
                         errorCount++;
                     }
                 }
@@ -117,6 +120,15 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxDiscFormatCode.SelectedIndex = 1;
             else
                 comboBoxDiscFormatCode.SelectedIndex = 0;
+
+            if (header.DisplayStandardCode == "0")
+                comboBoxDisplayStandardCode.SelectedIndex = 0;
+            else if (header.DisplayStandardCode == "1")
+                comboBoxDisplayStandardCode.SelectedIndex = 1;
+            else if (header.DisplayStandardCode == "2")
+                comboBoxDisplayStandardCode.SelectedIndex = 2;
+            else 
+                comboBoxDisplayStandardCode.SelectedIndex = 3;
 
             comboBoxCharacterCodeTable.SelectedIndex = int.Parse(header.CharacterCodeTableNumber);
             textBoxLanguageCode.Text = header.LanguageCode;
@@ -159,6 +171,15 @@ namespace Nikse.SubtitleEdit.Forms
                 _header.DiskFormatCode = "STL30.01";
             else
                 _header.DiskFormatCode = "STL25.01";
+
+            if (comboBoxDisplayStandardCode.SelectedIndex == 0)
+                _header.DisplayStandardCode = "0";
+            else if (comboBoxDisplayStandardCode.SelectedIndex == 1)
+                _header.DisplayStandardCode = "1";
+            else if (comboBoxDisplayStandardCode.SelectedIndex == 2)
+                _header.DisplayStandardCode = "2";
+            else 
+                _header.DisplayStandardCode = " ";
 
             _header.CharacterCodeTableNumber = "0" + comboBoxCharacterCodeTable.SelectedIndex.ToString();
             _header.LanguageCode = textBoxLanguageCode.Text;
