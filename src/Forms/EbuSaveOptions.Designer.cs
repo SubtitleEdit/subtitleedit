@@ -79,6 +79,8 @@
             this.tabPageErrors = new System.Windows.Forms.TabPage();
             this.textBoxErrors = new System.Windows.Forms.TextBox();
             this.labelErrors = new System.Windows.Forms.Label();
+            this.comboBoxDisplayStandardCode = new System.Windows.Forms.ComboBox();
+            this.labelDisplayStandardCode = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPageHeader.SuspendLayout();
             this.contextMenuStripCodeTable.SuspendLayout();
@@ -136,6 +138,8 @@
             // 
             // tabPageHeader
             // 
+            this.tabPageHeader.Controls.Add(this.comboBoxDisplayStandardCode);
+            this.tabPageHeader.Controls.Add(this.labelDisplayStandardCode);
             this.tabPageHeader.Controls.Add(this.textBoxCountryOfOrigin);
             this.tabPageHeader.Controls.Add(this.labelCountryOfOrigin);
             this.tabPageHeader.Controls.Add(this.textBoxCodePageNumber);
@@ -179,7 +183,7 @@
             // 
             // textBoxCountryOfOrigin
             // 
-            this.textBoxCountryOfOrigin.Location = new System.Drawing.Point(147, 280);
+            this.textBoxCountryOfOrigin.Location = new System.Drawing.Point(147, 307);
             this.textBoxCountryOfOrigin.MaxLength = 3;
             this.textBoxCountryOfOrigin.Name = "textBoxCountryOfOrigin";
             this.textBoxCountryOfOrigin.Size = new System.Drawing.Size(219, 20);
@@ -188,7 +192,7 @@
             // labelCountryOfOrigin
             // 
             this.labelCountryOfOrigin.AutoSize = true;
-            this.labelCountryOfOrigin.Location = new System.Drawing.Point(6, 283);
+            this.labelCountryOfOrigin.Location = new System.Drawing.Point(6, 310);
             this.labelCountryOfOrigin.Name = "labelCountryOfOrigin";
             this.labelCountryOfOrigin.Size = new System.Drawing.Size(83, 13);
             this.labelCountryOfOrigin.TabIndex = 63;
@@ -302,7 +306,7 @@
             // 
             // textBoxLanguageCode
             // 
-            this.textBoxLanguageCode.Location = new System.Drawing.Point(147, 94);
+            this.textBoxLanguageCode.Location = new System.Drawing.Point(147, 121);
             this.textBoxLanguageCode.MaxLength = 32;
             this.textBoxLanguageCode.Name = "textBoxLanguageCode";
             this.textBoxLanguageCode.Size = new System.Drawing.Size(219, 20);
@@ -311,7 +315,7 @@
             // labelLanguageCode
             // 
             this.labelLanguageCode.AutoSize = true;
-            this.labelLanguageCode.Location = new System.Drawing.Point(6, 97);
+            this.labelLanguageCode.Location = new System.Drawing.Point(6, 124);
             this.labelLanguageCode.Name = "labelLanguageCode";
             this.labelLanguageCode.Size = new System.Drawing.Size(82, 13);
             this.labelLanguageCode.TabIndex = 54;
@@ -404,7 +408,7 @@
             // 
             // textBoxTranslatorsName
             // 
-            this.textBoxTranslatorsName.Location = new System.Drawing.Point(147, 224);
+            this.textBoxTranslatorsName.Location = new System.Drawing.Point(147, 251);
             this.textBoxTranslatorsName.MaxLength = 32;
             this.textBoxTranslatorsName.Name = "textBoxTranslatorsName";
             this.textBoxTranslatorsName.Size = new System.Drawing.Size(219, 20);
@@ -413,7 +417,7 @@
             // labelTranslatorsName
             // 
             this.labelTranslatorsName.AutoSize = true;
-            this.labelTranslatorsName.Location = new System.Drawing.Point(6, 227);
+            this.labelTranslatorsName.Location = new System.Drawing.Point(6, 254);
             this.labelTranslatorsName.Name = "labelTranslatorsName";
             this.labelTranslatorsName.Size = new System.Drawing.Size(90, 13);
             this.labelTranslatorsName.TabIndex = 45;
@@ -421,7 +425,7 @@
             // 
             // textBoxSubtitleListReferenceCode
             // 
-            this.textBoxSubtitleListReferenceCode.Location = new System.Drawing.Point(147, 254);
+            this.textBoxSubtitleListReferenceCode.Location = new System.Drawing.Point(147, 281);
             this.textBoxSubtitleListReferenceCode.MaxLength = 16;
             this.textBoxSubtitleListReferenceCode.Name = "textBoxSubtitleListReferenceCode";
             this.textBoxSubtitleListReferenceCode.Size = new System.Drawing.Size(219, 20);
@@ -430,7 +434,7 @@
             // labelSubtitleListReferenceCode
             // 
             this.labelSubtitleListReferenceCode.AutoSize = true;
-            this.labelSubtitleListReferenceCode.Location = new System.Drawing.Point(6, 257);
+            this.labelSubtitleListReferenceCode.Location = new System.Drawing.Point(6, 284);
             this.labelSubtitleListReferenceCode.Name = "labelSubtitleListReferenceCode";
             this.labelSubtitleListReferenceCode.Size = new System.Drawing.Size(132, 13);
             this.labelSubtitleListReferenceCode.TabIndex = 43;
@@ -446,7 +450,7 @@
             "Latin/Arabic",
             "Latin/Greek",
             "Latin/Hebrew"});
-            this.comboBoxCharacterCodeTable.Location = new System.Drawing.Point(147, 66);
+            this.comboBoxCharacterCodeTable.Location = new System.Drawing.Point(147, 93);
             this.comboBoxCharacterCodeTable.Name = "comboBoxCharacterCodeTable";
             this.comboBoxCharacterCodeTable.Size = new System.Drawing.Size(219, 21);
             this.comboBoxCharacterCodeTable.TabIndex = 2;
@@ -466,7 +470,7 @@
             // labelCharacterCodeTable
             // 
             this.labelCharacterCodeTable.AutoSize = true;
-            this.labelCharacterCodeTable.Location = new System.Drawing.Point(6, 69);
+            this.labelCharacterCodeTable.Location = new System.Drawing.Point(6, 96);
             this.labelCharacterCodeTable.Name = "labelCharacterCodeTable";
             this.labelCharacterCodeTable.Size = new System.Drawing.Size(106, 13);
             this.labelCharacterCodeTable.TabIndex = 40;
@@ -474,7 +478,7 @@
             // 
             // textBoxTranslatedProgramTitle
             // 
-            this.textBoxTranslatedProgramTitle.Location = new System.Drawing.Point(147, 172);
+            this.textBoxTranslatedProgramTitle.Location = new System.Drawing.Point(147, 199);
             this.textBoxTranslatedProgramTitle.MaxLength = 32;
             this.textBoxTranslatedProgramTitle.Name = "textBoxTranslatedProgramTitle";
             this.textBoxTranslatedProgramTitle.Size = new System.Drawing.Size(219, 20);
@@ -482,7 +486,7 @@
             // 
             // textBoxTranslatedEpisodeTitle
             // 
-            this.textBoxTranslatedEpisodeTitle.Location = new System.Drawing.Point(147, 198);
+            this.textBoxTranslatedEpisodeTitle.Location = new System.Drawing.Point(147, 225);
             this.textBoxTranslatedEpisodeTitle.MaxLength = 32;
             this.textBoxTranslatedEpisodeTitle.Name = "textBoxTranslatedEpisodeTitle";
             this.textBoxTranslatedEpisodeTitle.Size = new System.Drawing.Size(219, 20);
@@ -490,7 +494,7 @@
             // 
             // textBoxOriginalEpisodeTitle
             // 
-            this.textBoxOriginalEpisodeTitle.Location = new System.Drawing.Point(147, 146);
+            this.textBoxOriginalEpisodeTitle.Location = new System.Drawing.Point(147, 173);
             this.textBoxOriginalEpisodeTitle.MaxLength = 32;
             this.textBoxOriginalEpisodeTitle.Name = "textBoxOriginalEpisodeTitle";
             this.textBoxOriginalEpisodeTitle.Size = new System.Drawing.Size(219, 20);
@@ -499,7 +503,7 @@
             // labelTranslatedEpisodeTitle
             // 
             this.labelTranslatedEpisodeTitle.AutoSize = true;
-            this.labelTranslatedEpisodeTitle.Location = new System.Drawing.Point(6, 201);
+            this.labelTranslatedEpisodeTitle.Location = new System.Drawing.Point(6, 228);
             this.labelTranslatedEpisodeTitle.Name = "labelTranslatedEpisodeTitle";
             this.labelTranslatedEpisodeTitle.Size = new System.Drawing.Size(116, 13);
             this.labelTranslatedEpisodeTitle.TabIndex = 36;
@@ -508,7 +512,7 @@
             // labelTranslatedProgramTitle
             // 
             this.labelTranslatedProgramTitle.AutoSize = true;
-            this.labelTranslatedProgramTitle.Location = new System.Drawing.Point(6, 175);
+            this.labelTranslatedProgramTitle.Location = new System.Drawing.Point(6, 202);
             this.labelTranslatedProgramTitle.Name = "labelTranslatedProgramTitle";
             this.labelTranslatedProgramTitle.Size = new System.Drawing.Size(117, 13);
             this.labelTranslatedProgramTitle.TabIndex = 35;
@@ -517,7 +521,7 @@
             // labelOriginalEpisodeTitle
             // 
             this.labelOriginalEpisodeTitle.AutoSize = true;
-            this.labelOriginalEpisodeTitle.Location = new System.Drawing.Point(6, 149);
+            this.labelOriginalEpisodeTitle.Location = new System.Drawing.Point(6, 176);
             this.labelOriginalEpisodeTitle.Name = "labelOriginalEpisodeTitle";
             this.labelOriginalEpisodeTitle.Size = new System.Drawing.Size(101, 13);
             this.labelOriginalEpisodeTitle.TabIndex = 34;
@@ -525,7 +529,7 @@
             // 
             // textBoxOriginalProgramTitle
             // 
-            this.textBoxOriginalProgramTitle.Location = new System.Drawing.Point(147, 120);
+            this.textBoxOriginalProgramTitle.Location = new System.Drawing.Point(147, 147);
             this.textBoxOriginalProgramTitle.MaxLength = 32;
             this.textBoxOriginalProgramTitle.Name = "textBoxOriginalProgramTitle";
             this.textBoxOriginalProgramTitle.Size = new System.Drawing.Size(219, 20);
@@ -534,7 +538,7 @@
             // labelOriginalProgramTitle
             // 
             this.labelOriginalProgramTitle.AutoSize = true;
-            this.labelOriginalProgramTitle.Location = new System.Drawing.Point(6, 123);
+            this.labelOriginalProgramTitle.Location = new System.Drawing.Point(6, 150);
             this.labelOriginalProgramTitle.Name = "labelOriginalProgramTitle";
             this.labelOriginalProgramTitle.Size = new System.Drawing.Size(102, 13);
             this.labelOriginalProgramTitle.TabIndex = 32;
@@ -595,7 +599,7 @@
             this.textBoxErrors.Multiline = true;
             this.textBoxErrors.Name = "textBoxErrors";
             this.textBoxErrors.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxErrors.Size = new System.Drawing.Size(909, 344);
+            this.textBoxErrors.Size = new System.Drawing.Size(729, 364);
             this.textBoxErrors.TabIndex = 13;
             // 
             // labelErrors
@@ -606,6 +610,29 @@
             this.labelErrors.Size = new System.Drawing.Size(34, 13);
             this.labelErrors.TabIndex = 12;
             this.labelErrors.Text = "Errors";
+            // 
+            // comboBoxDisplayStandardCode
+            // 
+            this.comboBoxDisplayStandardCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDisplayStandardCode.FormattingEnabled = true;
+            this.comboBoxDisplayStandardCode.Items.AddRange(new object[] {
+            "0 Open subtitling",
+            "1 Level-1 teletext",
+            "2 Level-2 teletext",
+            "Undefined"});
+            this.comboBoxDisplayStandardCode.Location = new System.Drawing.Point(147, 66);
+            this.comboBoxDisplayStandardCode.Name = "comboBoxDisplayStandardCode";
+            this.comboBoxDisplayStandardCode.Size = new System.Drawing.Size(219, 21);
+            this.comboBoxDisplayStandardCode.TabIndex = 2;
+            // 
+            // labelDisplayStandardCode
+            // 
+            this.labelDisplayStandardCode.AutoSize = true;
+            this.labelDisplayStandardCode.Location = new System.Drawing.Point(6, 69);
+            this.labelDisplayStandardCode.Name = "labelDisplayStandardCode";
+            this.labelDisplayStandardCode.Size = new System.Drawing.Size(112, 13);
+            this.labelDisplayStandardCode.TabIndex = 65;
+            this.labelDisplayStandardCode.Text = "Display standard code";
             // 
             // EbuSaveOptions
             // 
@@ -690,5 +717,7 @@
         private System.Windows.Forms.ToolStripMenuItem nordicToolStripMenuItem;
         private System.Windows.Forms.TextBox textBoxCountryOfOrigin;
         private System.Windows.Forms.Label labelCountryOfOrigin;
+        private System.Windows.Forms.ComboBox comboBoxDisplayStandardCode;
+        private System.Windows.Forms.Label labelDisplayStandardCode;
     }
 }
