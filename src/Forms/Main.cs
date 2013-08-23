@@ -17602,7 +17602,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var form = new ExportCustomText( _subtitle, _subtitleAlternate, _fileName);
             _formPositionsAndSizes.SetPositionAndSize(form);
-            form.ShowDialog(this);
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                ShowStatus(form.LogMessage);
+            }
             _formPositionsAndSizes.SavePositionAndSize(form);
         }
 

@@ -18,6 +18,8 @@
    * Allow ebu stl with 23/29 fps - thx Raul/Antonio
    * Minor improvements to WebVTT + added WebVTT with line# - thx Benoît
    * Loading unknown subtitles now might work via generic parser
+   * Ctrl+v now allows import of up to 2000 lines (old limit was 500) - thx Leon
+   * EBU: Added 'Standard Display Code' ('Open subtitling' or 'Level 1/2 teletext')
 * FIXED:
    * Fix common errors: Fixed two bugs regarding Spanish "¿¡ !?" - thx Mike
    * Bug in getting result from plugin - thx Herman
@@ -28,9 +30,10 @@
      before/after text was switched - thx Andreas
    * Fixed some language tags - thx Marco/Leon
    * Fixed problem in 'Fix italic tags' - thx Mike
-   * Fixed bug in 'Apply duration limits' - thx Mike
+   * Fixed bugs in 'Apply duration limits' - thx Mike
    * When typing "&" SE would show "_" in the list view - thx XhmikosR
    * Allow regex search in empty string - thx vmb
+   * Fixed crash when loading sub from dvd - thx Cristiano
 
 
 3.3.7 (3rd August 2013)

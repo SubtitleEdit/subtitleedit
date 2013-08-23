@@ -481,7 +481,12 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Export custom text format",
                 Formats = "Formats",
+                New = "New",
+                Edit = "Edit",
+                Delete = "Delete",
                 SaveAs = "S&ave as...",
+                SaveSubtitleAs = "Save subtitle as...",
+                SubtitleExportedInCustomFormatToX = "Subtitle exported in custom format to: {0}",
             };
 
             ExportCustomTextFormat = new LanguageStructure.ExportCustomTextFormat
@@ -490,6 +495,8 @@ namespace Nikse.SubtitleEdit.Logic
                 Template = "Template",
                 Header = "Header",
                 TextLine = "Text line (paragraph)",
+                TimeCode = "Time code",
+                NewLine = "New line",
                 Footer = "Footer",                
             };
 
