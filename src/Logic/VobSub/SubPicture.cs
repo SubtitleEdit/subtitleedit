@@ -162,12 +162,19 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                         case (int)DisplayControlCommand.ChangeColorAndContrast: // 7
                             commandIndex++;
                             //int parameterAreaSize = (int)Helper.GetEndian(_data, commandIndex, 2);
-                            int parameterAreaSize = _data[commandIndex + 1]; // this should be enough??? (no larger than 255 bytes)
-                            if (colorLookUpTable != null)
+                            if (commandIndex + 1 < _data.Length)
                             {
-                                //TODO: set fourColors
+                                int parameterAreaSize = _data[commandIndex + 1]; // this should be enough??? (no larger than 255 bytes)
+                                if (colorLookUpTable != null)
+                                {
+                                    //TODO: set fourColors
+                                }
+                                commandIndex += parameterAreaSize;
                             }
-                            commandIndex += parameterAreaSize;
+                            else
+                            {
+                                commandIndex++;
+                            }
                             break;
                         case (int)DisplayControlCommand.End: // FF (255) - Stop looping of Display Control Commands
                             break;
