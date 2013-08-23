@@ -288,6 +288,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneralSubtitleInformation>General subtitle information</GeneralSubtitleInformation>
     <CodePageNumber>Code page number</CodePageNumber>
     <DiskFormatCode>Disk format code</DiskFormatCode>
+    <DisplayStandardCode>Display standard code</DisplayStandardCode>
     <CharacterCodeTable>Character table</CharacterCodeTable>
     <LanguageCode>Language code</LanguageCode>
     <OriginalProgramTitle>Original program title</OriginalProgramTitle>
@@ -324,6 +325,18 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <TotalMilliseconds>Total millisecs.:</TotalMilliseconds>
     <EndDelayInMillisecs>Slut forsinkelse i millisek.:</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportCustomText>
+    <Title>Eksporter bruger-defineret tekstformat</Title>
+    <Formats>Formater</Formats>
+    <SaveAs>Gem som...</SaveAs>
+  </ExportCustomText>
+  <ExportCustomTextFormat>
+    <Title>Brugerdefineret tekstformat skabelon</Title>
+    <Template>Skabelon</Template>
+    <Header>Header</Header>
+    <TextLine>Tekstlinje (afsnit)</TextLine>
+    <Footer>Footer</Footer>
+  </ExportCustomTextFormat>
   <ExportPngXml>
     <Title>Eksporter BDN XML/PNG</Title>
     <ImageSettings>Billedindstillinger</ImageSettings>
@@ -651,6 +664,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
         <ExportUltech130>Ultech caption...</ExportUltech130>
+        <ExportCustomTextFormat>Eksporter bruger-defineret tekstformat...</ExportCustomTextFormat>
         <Exit>&amp;Afslut</Exit>
       </File>
       <Edit>
@@ -697,6 +711,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <TextNumberOfCharactersPerSeconds>Tekst - antallet af tegn/sek</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Tekst - ord i minuttet (WPM)</WordsPerMinute>
         <Style>Style</Style>
+        <Ascending>Stigende</Ascending>
+        <Descending>Faldende</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Dan ny tom oversættelse fra aktuelle undertekst</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Batch konverter...</BatchConvert>
         <GenerateTimeAsText>Generer tid som tekst...</GenerateTimeAsText>
