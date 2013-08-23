@@ -328,6 +328,7 @@
             public string GeneralSubtitleInformation { get; set; }
             public string CodePageNumber { get; set; }
             public string DiskFormatCode { get; set; }
+            public string DisplayStandardCode { get; set; }
             public string CharacterCodeTable { get; set; }
             public string LanguageCode { get; set; }
             public string OriginalProgramTitle { get; set; }
@@ -368,6 +369,22 @@
             public string TotalMilliseconds { get; set; }
             public string EndDelayInMillisecs { get; set; }
         }
+
+        public class ExportCustomText
+        {
+            public string Title { get; set; }
+            public string Formats { get; set; }
+            public string SaveAs { get; set; }
+        }
+
+        public class ExportCustomTextFormat
+        {
+            public string Title { get; set; }
+            public string Template { get; set; }
+            public string Header { get; set; }
+            public string TextLine { get; set; }
+            public string Footer { get; set; }
+        }        
 
         public class ExportPngXml
         {
@@ -966,6 +983,7 @@
                     public string ExportCaptionsInc { get; set; }
                     public string ExportCheetahCap { get; set; }
                     public string ExportUltech130 { get; set; }
+                    public string ExportCustomTextFormat { get; set; }
                     public string Exit { get; set; }
                 }
                 public class EditMenu

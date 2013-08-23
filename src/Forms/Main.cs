@@ -1460,6 +1460,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemExportCaptionInc.Text = _language.Menu.File.ExportCaptionsInc;
             toolStripMenuItemExportCheetahCap.Text = _language.Menu.File.ExportCheetahCap;
             toolStripMenuItemExportUltech130.Text = _language.Menu.File.ExportUltech130;
+            if (!string.IsNullOrEmpty(_language.Menu.File.ExportCustomTextFormat))
+                exportCustomTextFormatToolStripMenuItem.Text = _language.Menu.File.ExportCustomTextFormat; //TODO: Fix in 3.4
             exitToolStripMenuItem.Text = _language.Menu.File.Exit;
 
             editToolStripMenuItem.Text = _language.Menu.Edit.Title;
@@ -17594,6 +17596,14 @@ namespace Nikse.SubtitleEdit.Forms
             descendingToolStripMenuItem.Checked = true;
             toolsToolStripMenuItem.ShowDropDown();
             toolStripMenuItem1.ShowDropDown();
+        }
+
+        private void exportCustomTextFormatToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new ExportCustomText( _subtitle, _subtitleAlternate, _fileName);
+            _formPositionsAndSizes.SetPositionAndSize(form);
+            form.ShowDialog(this);
+            _formPositionsAndSizes.SavePositionAndSize(form);
         }
 
     }

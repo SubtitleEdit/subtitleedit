@@ -37,6 +37,8 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.EbuSaveOtpions EbuSaveOtpions;
         public LanguageStructure.EffectKaraoke EffectKaraoke;
         public LanguageStructure.EffectTypewriter EffectTypewriter;
+        public LanguageStructure.ExportCustomText ExportCustomText;
+        public LanguageStructure.ExportCustomTextFormat ExportCustomTextFormat;
         public LanguageStructure.ExportPngXml ExportPngXml;
         public LanguageStructure.ExportText ExportText;
         public LanguageStructure.ExtractDateTimeInfo ExtractDateTimeInfo;
@@ -433,6 +435,7 @@ namespace Nikse.SubtitleEdit.Logic
                 GeneralSubtitleInformation = "General subtitle information",
                 CodePageNumber = "Code page number",
                 DiskFormatCode = "Disk format code",
+                DisplayStandardCode = "Display standard code",
                 CharacterCodeTable = "Character table",
                 LanguageCode = "Language code",
                 OriginalProgramTitle = "Original program title",
@@ -472,6 +475,22 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Typewriter effect",
                 TotalMilliseconds = "Total millisecs.:",
                 EndDelayInMillisecs = "End delay in millisecs.:"
+            };
+
+            ExportCustomText = new LanguageStructure.ExportCustomText
+            {
+                Title = "Export custom text format",
+                Formats = "Formats",
+                SaveAs = "S&ave as...",
+            };
+
+            ExportCustomTextFormat = new LanguageStructure.ExportCustomTextFormat
+            {
+                Title = "Custom text format template",
+                Template = "Template",
+                Header = "Header",
+                TextLine = "Text line (paragraph)",
+                Footer = "Footer",                
             };
 
             ExportPngXml = new LanguageStructure.ExportPngXml
@@ -1074,6 +1093,7 @@ namespace Nikse.SubtitleEdit.Logic
                         ExportCaptionsInc = "Captions Inc...",
                         ExportCheetahCap = "Cheetah CAP...",
                         ExportUltech130 = "Ultech caption...",
+                        ExportCustomTextFormat = "Export custom text format...",
                         Exit = "E&xit"
                     },
 

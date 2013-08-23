@@ -227,6 +227,18 @@
     <Compile Include="Forms\DurationsBridgeGaps.Designer.cs">
       <DependentUpon>DurationsBridgeGaps.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ExportCustomText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ExportCustomText.Designer.cs">
+      <DependentUpon>ExportCustomText.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ExportCustomTextFormat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ExportCustomTextFormat.Designer.cs">
+      <DependentUpon>ExportCustomTextFormat.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FcpProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1135,6 +1147,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DurationsBridgeGaps.resx">
       <DependentUpon>DurationsBridgeGaps.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ExportCustomText.resx">
+      <DependentUpon>ExportCustomText.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ExportCustomTextFormat.resx">
+      <DependentUpon>ExportCustomTextFormat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FcpProperties.resx">
       <DependentUpon>FcpProperties.cs</DependentUpon>
