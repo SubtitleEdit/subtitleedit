@@ -63,7 +63,7 @@
             this.listViewTemplates.Location = new System.Drawing.Point(6, 23);
             this.listViewTemplates.MultiSelect = false;
             this.listViewTemplates.Name = "listViewTemplates";
-            this.listViewTemplates.Size = new System.Drawing.Size(450, 178);
+            this.listViewTemplates.Size = new System.Drawing.Size(450, 280);
             this.listViewTemplates.TabIndex = 0;
             this.listViewTemplates.UseCompatibleStateImageBehavior = false;
             this.listViewTemplates.View = System.Windows.Forms.View.Details;
@@ -102,7 +102,7 @@
             this.groupBoxFormats.Controls.Add(this.listViewTemplates);
             this.groupBoxFormats.Location = new System.Drawing.Point(12, 12);
             this.groupBoxFormats.Name = "groupBoxFormats";
-            this.groupBoxFormats.Size = new System.Drawing.Size(462, 234);
+            this.groupBoxFormats.Size = new System.Drawing.Size(462, 336);
             this.groupBoxFormats.TabIndex = 0;
             this.groupBoxFormats.TabStop = false;
             this.groupBoxFormats.Text = "Formats";
@@ -111,7 +111,7 @@
             // 
             this.buttonEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonEdit.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonEdit.Location = new System.Drawing.Point(216, 207);
+            this.buttonEdit.Location = new System.Drawing.Point(216, 309);
             this.buttonEdit.Name = "buttonEdit";
             this.buttonEdit.Size = new System.Drawing.Size(117, 22);
             this.buttonEdit.TabIndex = 1;
@@ -123,7 +123,7 @@
             // 
             this.buttonNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonNew.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonNew.Location = new System.Drawing.Point(339, 206);
+            this.buttonNew.Location = new System.Drawing.Point(339, 308);
             this.buttonNew.Name = "buttonNew";
             this.buttonNew.Size = new System.Drawing.Size(117, 22);
             this.buttonNew.TabIndex = 2;
@@ -139,7 +139,7 @@
             this.textBoxPreview.Name = "textBoxPreview";
             this.textBoxPreview.ReadOnly = true;
             this.textBoxPreview.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxPreview.Size = new System.Drawing.Size(331, 214);
+            this.textBoxPreview.Size = new System.Drawing.Size(380, 316);
             this.textBoxPreview.TabIndex = 0;
             // 
             // groupBoxPreview
@@ -150,7 +150,7 @@
             this.groupBoxPreview.Controls.Add(this.textBoxPreview);
             this.groupBoxPreview.Location = new System.Drawing.Point(480, 13);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(337, 233);
+            this.groupBoxPreview.Size = new System.Drawing.Size(386, 335);
             this.groupBoxPreview.TabIndex = 1;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
@@ -159,7 +159,7 @@
             // 
             this.labelEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelEncoding.AutoSize = true;
-            this.labelEncoding.Location = new System.Drawing.Point(368, 283);
+            this.labelEncoding.Location = new System.Drawing.Point(417, 385);
             this.labelEncoding.Name = "labelEncoding";
             this.labelEncoding.Size = new System.Drawing.Size(52, 13);
             this.labelEncoding.TabIndex = 2;
@@ -170,7 +170,7 @@
             this.comboBoxEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxEncoding.FormattingEnabled = true;
-            this.comboBoxEncoding.Location = new System.Drawing.Point(426, 279);
+            this.comboBoxEncoding.Location = new System.Drawing.Point(475, 381);
             this.comboBoxEncoding.Name = "comboBoxEncoding";
             this.comboBoxEncoding.Size = new System.Drawing.Size(183, 21);
             this.comboBoxEncoding.TabIndex = 3;
@@ -179,7 +179,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(738, 278);
+            this.buttonCancel.Location = new System.Drawing.Point(787, 380);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 22);
             this.buttonCancel.TabIndex = 5;
@@ -191,7 +191,7 @@
             // 
             this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSave.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonSave.Location = new System.Drawing.Point(615, 278);
+            this.buttonSave.Location = new System.Drawing.Point(664, 380);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(117, 22);
             this.buttonSave.TabIndex = 4;
@@ -203,7 +203,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(825, 312);
+            this.ClientSize = new System.Drawing.Size(874, 414);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.labelEncoding);
@@ -219,6 +219,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Export custom text format";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExportCustomText_KeyDown);
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBoxFormats.ResumeLayout(false);
             this.groupBoxPreview.ResumeLayout(false);

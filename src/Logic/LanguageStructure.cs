@@ -374,7 +374,12 @@
         {
             public string Title { get; set; }
             public string Formats { get; set; }
+            public string New { get; set; }
+            public string Edit { get; set; }
+            public string Delete { get; set; }
             public string SaveAs { get; set; }
+            public string SaveSubtitleAs { get; set; }
+            public string SubtitleExportedInCustomFormatToX { get; set; }
         }
 
         public class ExportCustomTextFormat
@@ -383,6 +388,8 @@
             public string Template { get; set; }
             public string Header { get; set; }
             public string TextLine { get; set; }
+            public string TimeCode { get; set; }
+            public string NewLine { get; set; }
             public string Footer { get; set; }
         }        
 

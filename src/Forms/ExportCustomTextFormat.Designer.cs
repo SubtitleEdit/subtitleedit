@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.groupBoxTemplate = new System.Windows.Forms.GroupBox();
             this.textBoxName = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelName = new System.Windows.Forms.Label();
             this.comboBoxNewLine = new System.Windows.Forms.ComboBox();
             this.comboBoxTimeCode = new System.Windows.Forms.ComboBox();
             this.labelNewLine = new System.Windows.Forms.Label();
@@ -74,7 +74,7 @@
             this.groupBoxTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBoxTemplate.Controls.Add(this.textBoxName);
-            this.groupBoxTemplate.Controls.Add(this.label1);
+            this.groupBoxTemplate.Controls.Add(this.labelName);
             this.groupBoxTemplate.Controls.Add(this.comboBoxNewLine);
             this.groupBoxTemplate.Controls.Add(this.comboBoxTimeCode);
             this.groupBoxTemplate.Controls.Add(this.labelNewLine);
@@ -99,14 +99,14 @@
             this.textBoxName.Size = new System.Drawing.Size(275, 20);
             this.textBoxName.TabIndex = 1;
             // 
-            // label1
+            // labelName
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 33);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Name";
+            this.labelName.AutoSize = true;
+            this.labelName.Location = new System.Drawing.Point(8, 33);
+            this.labelName.Name = "labelName";
+            this.labelName.Size = new System.Drawing.Size(35, 13);
+            this.labelName.TabIndex = 0;
+            this.labelName.Text = "Name";
             // 
             // comboBoxNewLine
             // 
@@ -448,7 +448,7 @@
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.TextBox textBoxPreview;
         private System.Windows.Forms.TextBox textBoxName;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelName;
         private System.Windows.Forms.ToolStripMenuItem translationToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripHeader;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;

@@ -33,7 +33,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             var l = Configuration.Settings.Language.ExportCustomTextFormat;
             Text = l.Title;
+            labelName.Text = Configuration.Settings.Language.General.Name;
             groupBoxTemplate.Text = l.Template;
+            labelTimeCode.Text = l.TimeCode;
+            labelNewLine.Text = l.NewLine;
             labelHeader.Text = l.Header;
             labelTextLine.Text = l.TextLine;
             labelFooter.Text = l.Footer;

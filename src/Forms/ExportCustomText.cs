@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Forms
         Subtitle _subtitle;
         Subtitle _translated;
         string _title;
+        public string LogMessage { get; set; }
 
         public ExportCustomText(Subtitle subtitle, Subtitle original, string title)
         {
@@ -59,6 +60,11 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
             labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
+            columnHeader1.Text = Configuration.Settings.Language.General.Name;
+            columnHeader2.Text = Configuration.Settings.Language.General.Text;
+            buttonNew.Text = l.New;
+            buttonEdit.Text = l.Edit;
+            deleteToolStripMenuItem.Text = l.Delete;
         }
 
         private void ShowTemplates(List<string> templates)
@@ -142,7 +148,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.Title = "Save subtitle as...";
+            saveFileDialog1.Title = Configuration.Settings.Language.ExportCustomText.SaveSubtitleAs;
             if (!string.IsNullOrEmpty(_title))
                 saveFileDialog1.FileName = System.IO.Path.GetFileNameWithoutExtension(_title) + ".txt";
             saveFileDialog1.Filter = Configuration.Settings.Language.General.AllFiles + "|*.*";
@@ -151,6 +157,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     System.IO.File.WriteAllText(saveFileDialog1.FileName, GenerateText(_subtitle, _translated, _title), GetCurrentEncoding());
+                    LogMessage = string.Format(Configuration.Settings.Language.ExportCustomText.SubtitleExportedInCustomFormatToX, saveFileDialog1.FileName);
                     DialogResult = DialogResult.OK;
                 }
                 catch (Exception exception)
@@ -229,6 +236,12 @@ namespace Nikse.SubtitleEdit.Forms
             if (idx >= 0)
                 listViewTemplates.Items[idx].Selected = true;
             SaveTemplates();
+        }
+
+        private void ExportCustomText_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                DialogResult = DialogResult.Cancel;
         }
 
     }
