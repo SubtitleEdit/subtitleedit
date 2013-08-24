@@ -498,6 +498,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TimeCode = "Time code",
                 NewLine = "New line",
                 Footer = "Footer",                
+                DoNotModify = "[Do not modify]",
             };
 
             ExportPngXml = new LanguageStructure.ExportPngXml

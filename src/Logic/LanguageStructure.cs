@@ -391,6 +391,7 @@
             public string TimeCode { get; set; }
             public string NewLine { get; set; }
             public string Footer { get; set; }
+            public string DoNotModify { get; set; }
         }        
 
         public class ExportPngXml

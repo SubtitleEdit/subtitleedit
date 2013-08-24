@@ -9,11 +9,16 @@ namespace Nikse.SubtitleEdit.Forms
     {
 
         public string FormatOK { get; set; }
+        public const string EnglishDoNoModify = "[Do not modify]";
 
         public ExportCustomTextFormat(string format)
         {
             InitializeComponent();
-            comboBoxNewLine.Text = "[Do not modify]";
+            var l = Configuration.Settings.Language.ExportCustomTextFormat;
+            comboBoxNewLine.Items.Clear();
+            comboBoxNewLine.Items.Add(l.DoNotModify);
+            comboBoxNewLine.Items.Add("||");
+            comboBoxNewLine.Items.Add(" ");
 
             comboBoxTimeCode.Text = "hh:mm:ss,zzz";
             if (!string.IsNullOrEmpty(format))
@@ -25,13 +30,12 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxHeader.Text = arr[1];
                     textBoxParagraph.Text = arr[2];
                     comboBoxTimeCode.Text = arr[3];
-                    comboBoxNewLine.Text = arr[4];
+                    comboBoxNewLine.Text = arr[4].Replace(EnglishDoNoModify, l.DoNotModify);
                     textBoxFooter.Text = arr[5];
                 }
             }           
             GeneratePreview();
 
-            var l = Configuration.Settings.Language.ExportCustomTextFormat;
             Text = l.Title;
             labelName.Text = Configuration.Settings.Language.General.Name;
             groupBoxTemplate.Text = l.Template;
@@ -69,10 +73,11 @@ namespace Nikse.SubtitleEdit.Forms
             subtitle.Paragraphs.Add(p2);
             try
             {
+                string newLine = comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNoModify);
                 string template = GetParagraphTemplate(textBoxParagraph.Text);
                 textBoxPreview.Text = GetHeaderOrFooter("Demo", subtitle, textBoxHeader.Text) +
-                                      string.Format(template, start1, end1, GetText(p1.Text, comboBoxNewLine.Text), GetText("Linje 1a." + Environment.NewLine + "Line 1b.", comboBoxNewLine.Text), 1, p1.Duration) +
-                                      string.Format(template, start2, end2, GetText(p2.Text, comboBoxNewLine.Text), GetText("Linje 2a." + Environment.NewLine + "Line 2b.", comboBoxNewLine.Text), 2, p2.Duration) +
+                                      string.Format(template, start1, end1, GetText(p1.Text, newLine), GetText("Linje 1a." + Environment.NewLine + "Line 1b.", newLine), 1, p1.Duration) +
+                                      string.Format(template, start2, end2, GetText(p2.Text, newLine), GetText("Linje 2a." + Environment.NewLine + "Line 2b.", newLine), 2, p2.Duration) +
                                       GetHeaderOrFooter("Demo", subtitle, textBoxFooter.Text);            
             }
             catch (Exception ex)
@@ -96,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
         public static string GetText(string text, string newLine)
         {
             string template = newLine;
-            if (string.IsNullOrEmpty(newLine) || template == "[Do not modify]")
+            if (string.IsNullOrEmpty(newLine) || template == "[Do not modify]" || template == Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify)
                 return text;
             if (template == "[Only newline (hex char 0xd)]")
                 return text.Replace(Environment.NewLine, "\n");
@@ -161,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            FormatOK = textBoxName.Text+ "Æ" + textBoxHeader.Text + "Æ" + textBoxParagraph.Text + "Æ" +   comboBoxTimeCode.Text + "Æ" +  comboBoxNewLine.Text + "Æ" + textBoxFooter.Text;
+            FormatOK = textBoxName.Text+ "Æ" + textBoxHeader.Text + "Æ" + textBoxParagraph.Text + "Æ" +   comboBoxTimeCode.Text + "Æ" +  comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNoModify) + "Æ" + textBoxFooter.Text;
             DialogResult = DialogResult.OK;
         }
 
