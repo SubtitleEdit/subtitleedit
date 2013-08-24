@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxDisplayStandardCode.SelectedIndex = 1;
             else if (header.DisplayStandardCode == "2")
                 comboBoxDisplayStandardCode.SelectedIndex = 2;
-            else 
+            else
                 comboBoxDisplayStandardCode.SelectedIndex = 3;
 
             comboBoxCharacterCodeTable.SelectedIndex = int.Parse(header.CharacterCodeTableNumber);
@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _header.DisplayStandardCode = "1";
             else if (comboBoxDisplayStandardCode.SelectedIndex == 2)
                 _header.DisplayStandardCode = "2";
-            else 
+            else
                 _header.DisplayStandardCode = " ";
 
             _header.CharacterCodeTableNumber = "0" + comboBoxCharacterCodeTable.SelectedIndex.ToString();

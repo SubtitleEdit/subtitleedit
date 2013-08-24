@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (listViewTemplates.Items.Count > 0)
                 listViewTemplates.Items[0].Selected = true;
-        }       
+        }
 
         private void buttonNew_Click(object sender, EventArgs e)
         {
@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var form = new ExportCustomTextFormat("NewÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]Æ");
                 if (form.ShowDialog(this) == DialogResult.OK)
-                { 
+                {
                     _templates.Add(form.FormatOK);
                     ShowTemplates(_templates);
                     listViewTemplates.Items[listViewTemplates.Items.Count - 1].Selected = true;
@@ -202,13 +202,13 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     string paragraph = ExportCustomTextFormat.GetParagraph(template, start, end, text, translationText, i + 1, p.Duration);
-                    sb.Append(paragraph);            
+                    sb.Append(paragraph);
                 }
                 sb.Append(ExportCustomTextFormat.GetHeaderOrFooter(title, subtitle, arr[5]));
                 return sb.ToString();
             }
             catch (Exception exception)
-            { 
+            {
                 return exception.Message;
             }
         }

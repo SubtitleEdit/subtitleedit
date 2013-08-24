@@ -811,7 +811,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
             if (newFormat != null && newFormat.Name == new SubStationAlpha().Name)
-            { 
+            {
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
                     string s = p.Text;

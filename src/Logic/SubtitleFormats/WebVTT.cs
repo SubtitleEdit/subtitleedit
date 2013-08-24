@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb.AppendLine("WEBVTT");
             sb.AppendLine();
             foreach (Paragraph p in subtitle.Paragraphs)
-            {                
+            {
                 string start = string.Format(timeCodeFormatNoHours, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds);
                 string end = string.Format(timeCodeFormatNoHours, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
 

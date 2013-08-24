@@ -380,7 +380,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 index++;
                             }
                         }
-                    }                    
+                    }
                 }
                 else if (Configuration.Settings.General.StartLoadLastFile)
                 {
@@ -1180,7 +1180,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         void AudioWaveForm_OnTimeChanged(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
-        {            
+        {
             var paragraph = e.Paragraph;
             var beforeParagraph = e.BeforeParagraph;
             if (beforeParagraph == null)
@@ -1532,7 +1532,7 @@ namespace Nikse.SubtitleEdit.Forms
                 descendingToolStripMenuItem.Text = _language.Menu.Tools.Descending;
                 AscendingToolStripMenuItem.Text = _language.Menu.Tools.Ascending;
             }
-            
+
             sortTextAlphabeticallytoolStripMenuItem.Text = _language.Menu.Tools.TextAlphabetically;
             sortTextMaxLineLengthToolStripMenuItem.Text = _language.Menu.Tools.TextSingleLineMaximumLength;
             sortTextTotalLengthToolStripMenuItem.Text = _language.Menu.Tools.TextTotalLength;
@@ -1767,7 +1767,7 @@ namespace Nikse.SubtitleEdit.Forms
             addParagraphAndPasteToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.AddParagraphHereAndPasteText;
             deleteParagraphToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.DeleteParagraph;
             toolStripMenuItemFocusTextbox.Text = Configuration.Settings.Language.WaveForm.FocusTextBox;
-            
+
             splitToolStripMenuItem1.Text = Configuration.Settings.Language.WaveForm.Split;
             mergeWithPreviousToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.MergeWithPrevious;
             mergeWithNextToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.MergeWithNext;
@@ -2494,7 +2494,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Encoding enc = Utilities.GetEncodingFromFile(fileName);
                         string s = File.ReadAllText(fileName, enc);
 
-                        // check for RTF file   
+                        // check for RTF file
                         if (fileName.ToLower().EndsWith(".rtf") && !s.Trim().StartsWith("{\\rtf"))
                         {
                             var rtBox = new System.Windows.Forms.RichTextBox();
@@ -2729,7 +2729,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     return;
                                 }
                             }
-                        }                       
+                        }
 
                         ShowUnknownSubtitle();
                         return;
@@ -7756,7 +7756,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-                }               
+                }
             }
             else
             {
@@ -17587,7 +17587,7 @@ namespace Nikse.SubtitleEdit.Forms
             descendingToolStripMenuItem.Checked = false;
             AscendingToolStripMenuItem.Checked = true;
             toolsToolStripMenuItem.ShowDropDown();
-            toolStripMenuItem1.ShowDropDown();            
+            toolStripMenuItem1.ShowDropDown();
         }
 
         private void descendingToolStripMenuItem_Click(object sender, EventArgs e)

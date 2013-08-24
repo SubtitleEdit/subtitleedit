@@ -312,7 +312,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         sb.AppendLine(s);
                     }
                     TextField = Utilities.RemoveHtmlTags(sb.ToString()).TrimEnd();
-                }                
+                }
 
                 // newline
                 string newline = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a, 0x8a });
@@ -530,7 +530,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     byte[] buffer = File.ReadAllBytes(fileName);
                     EbuGeneralSubtitleInformation header = ReadHeader(buffer);
-                    if (header.DiskFormatCode.StartsWith("STL23") || 
+                    if (header.DiskFormatCode.StartsWith("STL23") ||
                         header.DiskFormatCode.StartsWith("STL24") ||
                         header.DiskFormatCode.StartsWith("STL25") ||
                         header.DiskFormatCode.StartsWith("STL29") ||

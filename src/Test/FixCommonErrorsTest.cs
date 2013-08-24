@@ -67,7 +67,7 @@ namespace Test
                 }
             }
         }
-        
+
         //Use ClassCleanup to run code after all tests in a class have run
         //[ClassCleanup()]
         //public static void MyClassCleanup()
@@ -254,7 +254,7 @@ namespace Test
             target.FixInvalidItalicTags();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>What do i care.</i>");
         }
-        
+
         #endregion
 
         #region Fix Missing Periods At End Of Line
@@ -480,7 +480,7 @@ namespace Test
             InitializeFixCommonErrorsLine(target, "¡Cómo estás?");
             target.FixSpanishInvertedQuestionAndExclamationMarks();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¿¡Cómo estás!?");
-        }        
+        }
 
         #endregion
 

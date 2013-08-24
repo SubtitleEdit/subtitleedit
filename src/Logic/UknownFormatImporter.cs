@@ -474,6 +474,6 @@ namespace Nikse.SubtitleEdit.Logic
                 return new TimeCode(0, 0, 0, 0);
             }
         }
-        
+
     }
 }
