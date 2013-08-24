@@ -350,7 +350,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(547, 412);
+            this.buttonCancel.Location = new System.Drawing.Point(617, 412);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 3;
@@ -362,7 +362,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(466, 412);
+            this.buttonOK.Location = new System.Drawing.Point(536, 412);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 2;
@@ -378,7 +378,7 @@
             this.groupBoxPreview.Controls.Add(this.textBoxPreview);
             this.groupBoxPreview.Location = new System.Drawing.Point(348, 12);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(281, 393);
+            this.groupBoxPreview.Size = new System.Drawing.Size(351, 393);
             this.groupBoxPreview.TabIndex = 1;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
@@ -390,14 +390,14 @@
             this.textBoxPreview.Multiline = true;
             this.textBoxPreview.Name = "textBoxPreview";
             this.textBoxPreview.ReadOnly = true;
-            this.textBoxPreview.Size = new System.Drawing.Size(275, 374);
+            this.textBoxPreview.Size = new System.Drawing.Size(345, 374);
             this.textBoxPreview.TabIndex = 0;
             // 
             // ExportCustomTextFormat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(634, 445);
+            this.ClientSize = new System.Drawing.Size(704, 445);
             this.Controls.Add(this.groupBoxPreview);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -405,7 +405,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(600, 400);
+            this.MinimumSize = new System.Drawing.Size(600, 450);
             this.Name = "ExportCustomTextFormat";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
