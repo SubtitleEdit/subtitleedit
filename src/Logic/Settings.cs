@@ -1469,7 +1469,7 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportCustomTemplates");
             if (subNode != null)
                 settings.Tools.ExportCustomTemplates = subNode.InnerText;
-            
+
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");

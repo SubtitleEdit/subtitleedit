@@ -130,10 +130,10 @@ namespace Nikse.SubtitleEdit.Forms
             Subtitle unfixables = new Subtitle();
             string fixAction = Configuration.Settings.Language.FixCommonErrors.FixShortDisplayTime;
             int noOfShortDisplayTimes = 0;
-            for (int i = 0; i < _working.Paragraphs.Count; i++)            
+            for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
                 Paragraph p = _working.Paragraphs[i];
-                
+
                 double minDisplayTime = (double)numericUpDownDurationMin.Value;
                 //var minCharSecMs = Utilities.GetOptimalDisplayMilliseconds(p.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
                 //if (minCharSecMs > minDisplayTime)
@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         unfixables.Paragraphs.Add(new Paragraph(p));
                         _totalErrors++;
-                    }                    
+                    }
                 }
             }
             subtitleListView1.Fill(unfixables);

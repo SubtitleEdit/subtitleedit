@@ -497,7 +497,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TextLine = "Text line (paragraph)",
                 TimeCode = "Time code",
                 NewLine = "New line",
-                Footer = "Footer",                
+                Footer = "Footer",
                 DoNotModify = "[Do not modify]",
             };
 
@@ -1160,7 +1160,7 @@ namespace Nikse.SubtitleEdit.Logic
                         MeasurementConverter = "Measurement converter...",
                         SplitSubtitle = "Split subtitle...",
                         AppendSubtitle = "Append subtitle...",
-                        JoinSubtitles = "Join subtitles...",                        
+                        JoinSubtitles = "Join subtitles...",
                     },
 
                     Video = new LanguageStructure.Main.MainMenu.VideoMenu

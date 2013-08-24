@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxNewLine.Text = arr[4].Replace(EnglishDoNoModify, l.DoNotModify);
                     textBoxFooter.Text = arr[5];
                 }
-            }           
+            }
             GeneratePreview();
 
             Text = l.Title;
@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxPreview.Text = GetHeaderOrFooter("Demo", subtitle, textBoxHeader.Text) +
                                       string.Format(template, start1, end1, GetText(p1.Text, newLine), GetText("Linje 1a." + Environment.NewLine + "Line 1b.", newLine), 1, p1.Duration) +
                                       string.Format(template, start2, end2, GetText(p2.Text, newLine), GetText("Linje 2a." + Environment.NewLine + "Line 2b.", newLine), 2, p2.Duration) +
-                                      GetHeaderOrFooter("Demo", subtitle, textBoxFooter.Text);            
+                                      GetHeaderOrFooter("Demo", subtitle, textBoxFooter.Text);
             }
             catch (Exception ex)
             {

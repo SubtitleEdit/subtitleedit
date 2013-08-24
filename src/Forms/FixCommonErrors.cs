@@ -4135,7 +4135,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         p.Text = p.Text.Remove(j, markIndex - j + 1).Insert(j, speaker + st.Pre + temp + st.StrippedText + st.Post);
                                         markIndex += addToIndex;
                                     }
-                                    
+
                                 }
                             }
                         }

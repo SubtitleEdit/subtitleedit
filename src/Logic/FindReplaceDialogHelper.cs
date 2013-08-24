@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Logic
         private int FindPositionInText(string text, int startIndex)
         {
             if (startIndex >= text.Length && !(FindType == FindType.RegEx && startIndex == 0))
-                return -1;            
+                return -1;
 
             switch (FindType)
             {

@@ -1012,7 +1012,7 @@ namespace Nikse.SubtitleEdit.Controls
         private bool AllowMovePrevOrNext
         {
             get
-            { 
+            {
                 return _gapAtStart >= 0 && _gapAtStart < 500 && Control.ModifierKeys == Keys.Alt;
             }
         }
