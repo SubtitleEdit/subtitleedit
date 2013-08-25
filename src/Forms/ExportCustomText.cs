@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    string paragraph = ExportCustomTextFormat.GetParagraph(template, start, end, text, translationText, i + 1, p.Duration);
+                    string paragraph = ExportCustomTextFormat.GetParagraph(template, start, end, text, translationText, i, p.Duration, arr[3]);
                     sb.Append(paragraph);
                 }
                 sb.Append(ExportCustomTextFormat.GetHeaderOrFooter(title, subtitle, arr[5]));
