@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
@@ -50,7 +49,7 @@ NOTE=
             Paragraph last = null;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{0} {1}\r\n{2}\r\n", MakeTimeCode(p.StartTime, last), p.Duration.TotalSeconds.ToString(CultureInfo.InstalledUICulture), p.Text));
+                sb.AppendLine(string.Format("{0} {1}\r\n{2}\r\n", MakeTimeCode(p.StartTime, last), string.Format("{0:0.0#}", (p.Duration.Seconds + p.Duration.Milliseconds / 1000.0)), p.Text));
                 last = p;
             }
             return sb.ToString().Trim().Replace(Environment.NewLine, "\n");
@@ -106,7 +105,14 @@ NOTE=
                 }
                 else if (s.Trim().Length > 0)
                 {
-                    _errorCount++;
+                    if (subtitle.Paragraphs.Count == 0 && (s.StartsWith("TITLE=") || s.StartsWith("TITLE=") || s.StartsWith("FILE=") || s.StartsWith("AUTHOR=") ||
+                                                            s.StartsWith("TYPE=VIDEO") || s.StartsWith("FORMAT=") || s.StartsWith("NOTE=")))
+                    {
+                    }
+                    else
+                    {
+                        _errorCount++;
+                    }
                 }
             }
             if (p != null)
@@ -117,5 +123,6 @@ NOTE=
 
             subtitle.Renumber(1);
         }
+
     }
 }

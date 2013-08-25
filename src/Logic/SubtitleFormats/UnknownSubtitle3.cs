@@ -40,10 +40,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 //155822||160350||Rob n'y connait rien en claviers. Il\~commence chaque chanson en D majeur||
 
             const string paragraphWriteFormat = "{0}||{1}||{2}||";
-
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
+                if (!subtitle.WasLoadedWithFrameNumbers)
+                    p.CalculateFrameNumbersFromTimeCodes(Configuration.Settings.General.CurrentFrameRate);
                 sb.AppendLine(string.Format(paragraphWriteFormat, p.StartFrame, p.EndFrame, p.Text.Replace(Environment.NewLine, "\\~")));
             }
             return sb.ToString().Trim();
@@ -51,6 +52,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
+            _errorCount = 0;
             foreach (string line in lines)
             {
                 ReadLine(subtitle, line);
