@@ -328,14 +328,22 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   <ExportCustomText>
     <Title>Eksporter bruger-defineret tekstformat</Title>
     <Formats>Formater</Formats>
+    <New>Ny</New>
+    <Edit>Ret</Edit>
+    <Delete>Slet</Delete>
     <SaveAs>Gem som...</SaveAs>
+    <SaveSubtitleAs>Gem undertekst som...</SaveSubtitleAs>
+    <SubtitleExportedInCustomFormatToX>Subtitle eksporteres i brugerdefinerede format til: {0}</SubtitleExportedInCustomFormatToX>
   </ExportCustomText>
   <ExportCustomTextFormat>
     <Title>Brugerdefineret tekstformat skabelon</Title>
     <Template>Skabelon</Template>
     <Header>Header</Header>
     <TextLine>Tekstlinje (afsnit)</TextLine>
+    <TimeCode>Tidskode</TimeCode>
+    <NewLine>Ny linje</NewLine>
     <Footer>Footer</Footer>
+    <DoNotModify>[Ret ikke]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportPngXml>
     <Title>Eksporter BDN XML/PNG</Title>
