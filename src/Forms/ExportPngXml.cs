@@ -45,6 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
             public Color BackgroundColor { get; set; }
             public string SavDialogFileName { get; set; }
             public string Error { get; set; }
+            public bool LineJoinRound { get; set; } 
 
             public MakeBitmapParameter()
             {
@@ -200,6 +201,11 @@ namespace Nikse.SubtitleEdit.Forms
         public static void DoWork(object data)
         {
             var parameter = (MakeBitmapParameter)data;
+
+            if (parameter.Type == "VOBSUB" || parameter.Type == "STL" || parameter.Type == "SPUMUX")
+            {
+                parameter.LineJoinRound = true;
+            }
             parameter.Bitmap = GenerateImageFromTextWithStyle(parameter);
             if (parameter.Type == "BLURAYSUP")
             {
@@ -211,10 +217,6 @@ namespace Nikse.SubtitleEdit.Forms
                                     Height = parameter.ScreenHeight
                                 };
                 parameter.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, parameter.Bitmap, parameter.FramesPerSeconds, parameter.BottomMargin, parameter.Alignment);
-            }
-            else if (parameter.Type == "VOBSUB")
-            {
-
             }
         }
 
@@ -1250,7 +1252,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.Type3D = comboBox3D.SelectedIndex;
             mbp.Depth3D = (int)numericUpDownDepth3D.Value;
             mbp.BottomMargin = comboBoxBottomMargin.SelectedIndex;
-
+            if (_exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
+            {
+                mbp.LineJoinRound = true;
+            }
             var bmp = GenerateImageFromTextWithStyle(mbp);
             if (_exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
             {
@@ -1336,8 +1341,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             if (parameter.AntiAlias)
             {
-                g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.CompositingQuality = CompositingQuality.HighQuality;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.SmoothingMode = SmoothingMode.HighQuality;
+                g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
             }
             var sf = new StringFormat();
             sf.Alignment = StringAlignment.Near;
@@ -1385,10 +1392,19 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         addLeft = left + 2;
                     left = addLeft;
 
+                    
 
                     if (parameter.BorderWidth > 0)
-                        g.DrawPath(new Pen(parameter.BorderColor, parameter.BorderWidth), path);
-                    g.FillPath(new SolidBrush(c), path);
+                    {
+                        var p1 = new Pen(parameter.BorderColor, parameter.BorderWidth);
+                        if (parameter.LineJoinRound)
+                            p1.LineJoin = LineJoin.Round;
+                        g.DrawPath(p1, path);
+                        p1.Dispose();
+                    }
+                    var p2 = new SolidBrush(c);
+                    g.FillPath(p2, path);
+                    p2.Dispose();
                     path.Reset();
                     path = new GraphicsPath();
                     sb = new StringBuilder();
@@ -1464,7 +1480,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         left = addLeft;
 
                         if (parameter.BorderWidth > 0)
-                            g.DrawPath(new Pen(parameter.BorderColor, parameter.BorderWidth), path);
+                        {
+                            var p1 = new Pen(parameter.BorderColor, parameter.BorderWidth);
+                            if (parameter.LineJoinRound)
+                                p1.LineJoin = LineJoin.Round;
+                            g.DrawPath(p1, path);
+                            p1.Dispose();
+                        }
                         g.FillPath(new SolidBrush(c), path);
                         path.Reset();
                         sb = new StringBuilder();
@@ -1544,7 +1566,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
             if (parameter.BorderWidth > 0)
-                g.DrawPath(new Pen(parameter.BorderColor, parameter.BorderWidth), path);
+            {
+                var p1 = new Pen(parameter.BorderColor, parameter.BorderWidth);
+                if (parameter.LineJoinRound)
+                    p1.LineJoin = LineJoin.Round;
+                g.DrawPath(p1, path);
+                p1.Dispose();
+            }
             g.FillPath(new SolidBrush(c), path);
             g.Dispose();
             var nbmp = new NikseBitmap(bmp);
