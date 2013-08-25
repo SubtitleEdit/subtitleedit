@@ -76,8 +76,8 @@ namespace Nikse.SubtitleEdit.Forms
                 string newLine = comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNoModify);
                 string template = GetParagraphTemplate(textBoxParagraph.Text);
                 textBoxPreview.Text = GetHeaderOrFooter("Demo", subtitle, textBoxHeader.Text) +
-                                      string.Format(template, start1, end1, GetText(p1.Text, newLine), GetText("Linje 1a." + Environment.NewLine + "Line 1b.", newLine), 1, p1.Duration) +
-                                      string.Format(template, start2, end2, GetText(p2.Text, newLine), GetText("Linje 2a." + Environment.NewLine + "Line 2b.", newLine), 2, p2.Duration) +
+                                      GetParagraph(template, start1, end1, GetText(p1.Text, newLine), GetText("Linje 1a." + Environment.NewLine + "Line 1b.", newLine), 0, p1.Duration, comboBoxTimeCode.Text) +
+                                      GetParagraph(template, start2, end2, GetText(p2.Text, newLine), GetText("Linje 2a." + Environment.NewLine + "Line 2b.", newLine), 1, p2.Duration, comboBoxTimeCode.Text) +
                                       GetHeaderOrFooter("Demo", subtitle, textBoxFooter.Text);
             }
             catch (Exception ex)
@@ -93,7 +93,8 @@ namespace Nikse.SubtitleEdit.Forms
             template = template.Replace("{text}", "{2}");
             template = template.Replace("{translation}", "{3}");
             template = template.Replace("{number}", "{4}");
-            template = template.Replace("{duration}", "{5}");
+            template = template.Replace("{number-1}", "{5}");
+            template = template.Replace("{duration}", "{6}");
             template = template.Replace("{tab}", "\t");
             return template;
         }
@@ -127,8 +128,8 @@ namespace Nikse.SubtitleEdit.Forms
             template = template.Replace("ss", string.Format("{0:00}", timeCode.Seconds));
             template = template.Replace("s", string.Format("{0}", timeCode.Seconds));
             template = template.Replace("zzz", string.Format("{0:000}", timeCode.Milliseconds));
-            template = template.Replace("zz", string.Format("{0:00}", timeCode.Milliseconds / 10));
-            template = template.Replace("z", string.Format("{0}", timeCode.Milliseconds / 10));
+            template = template.Replace("zz", string.Format("{0:00}", Math.Round(timeCode.Milliseconds / 10.0)));
+            template = template.Replace("z", string.Format("{0:0}", Math.Round(timeCode.Milliseconds / 100.0)));
             template = template.Replace("ff", string.Format("{0:00}", SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds)));
             template = template.Replace("f", string.Format("{0}", SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds)));
             return template;
@@ -203,12 +204,48 @@ namespace Nikse.SubtitleEdit.Forms
             return template;
         }
 
-        internal static string GetParagraph(string template, string start, string end, string text, string translation, int number, TimeCode duration)
+        internal static string GetParagraph(string template, string start, string end, string text, string translation, int number, TimeCode duration, string timeCodeTemplate)
         {
+            string d = duration.ToString();
+            if (timeCodeTemplate == "ff" || timeCodeTemplate == "f")
+                d = SubtitleFormat.MillisecondsToFrames(duration.TotalMilliseconds).ToString();
+            if (timeCodeTemplate == "zzz" || timeCodeTemplate == "zz" || timeCodeTemplate == "z")
+                d = duration.TotalMilliseconds.ToString();
+            if (timeCodeTemplate == "sss" || timeCodeTemplate == "zz" || timeCodeTemplate == "z")
+                d = duration.TotalMilliseconds.ToString();
+            else if (timeCodeTemplate.EndsWith("ss.ff"))
+                d = string.Format("{0:00}.{1:00}", duration.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds));
+            else if (timeCodeTemplate.EndsWith("ss:ff"))
+                d = string.Format("{0:00}:{1:00}", duration.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds));
+            else if (timeCodeTemplate.EndsWith("ss,ff"))
+                d = string.Format("{0:00},{1:00}", duration.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds));
+            else if (timeCodeTemplate.EndsWith("ss;ff"))
+                d = string.Format("{0:00};{1:00}", duration.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds));
+            else if (timeCodeTemplate.EndsWith("ss;ff"))
+                d = string.Format("{0:00};{1:00}", duration.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds));
+            else if (timeCodeTemplate.EndsWith("ss.zzz"))
+                d = string.Format("{0:00}.{1:000}", duration.Seconds, duration.Milliseconds);
+            else if (timeCodeTemplate.EndsWith("ss:zzz"))
+                d = string.Format("{0:00}:{1:000}", duration.Seconds, duration.Milliseconds);
+            else if (timeCodeTemplate.EndsWith("ss,zzz"))
+                d = string.Format("{0:00},{1:000}", duration.Seconds, duration.Milliseconds);
+            else if (timeCodeTemplate.EndsWith("ss;zzz"))
+                d = string.Format("{0:00};{1:000}", duration.Seconds, duration.Milliseconds);
+            else if (timeCodeTemplate.EndsWith("ss;zzz"))
+                d = string.Format("{0:00};{1:000}", duration.Seconds, duration.Milliseconds);
+            else if (timeCodeTemplate.EndsWith("ss.zz"))
+                d = string.Format("{0:00}.{1:00}", duration.Seconds, Math.Round(duration.Milliseconds / 10.0));
+            else if (timeCodeTemplate.EndsWith("ss:zz"))
+                d = string.Format("{0:00}:{1:00}", duration.Seconds, Math.Round(duration.Milliseconds / 10.0));
+            else if (timeCodeTemplate.EndsWith("ss,zz"))
+                d = string.Format("{0:00},{1:00}", duration.Seconds, Math.Round(duration.Milliseconds / 10.0));
+            else if (timeCodeTemplate.EndsWith("ss;zz"))
+                d = string.Format("{0:00};{1:00}", duration.Seconds, Math.Round(duration.Milliseconds / 10.0));
+
             string s = template;
             s = s.Replace("{{", "@@@@_@@@{");
             s = s.Replace("}}", "}@@@_@@@@");
-            s = string.Format(s, start, end, text, translation, number, duration);
+            s = string.Format(s, start, end, text, translation, number+1, number, d);
             s = s.Replace("@@@@_@@@", "{");
             s = s.Replace("@@@_@@@@", "}");
             return s;
