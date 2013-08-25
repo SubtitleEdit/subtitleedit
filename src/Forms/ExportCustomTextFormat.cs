@@ -112,15 +112,44 @@ namespace Nikse.SubtitleEdit.Forms
         public static string GetTimeCode(TimeCode timeCode, string template)
         {
             if (template.Trim() == "ss")
-                template = template.Replace("ss", string.Format("{0}", timeCode.TotalSeconds));
+                template = template.Replace("ss", string.Format("{0:00}", timeCode.TotalSeconds));
             if (template.Trim() == "s")
                 template = template.Replace("s", string.Format("{0}", timeCode.TotalSeconds));
             if (template.Trim() == "zzz")
-                template = template.Replace("zzz", string.Format("{0}", timeCode.TotalMilliseconds));
+                template = template.Replace("zzz", string.Format("{0:000}", timeCode.TotalMilliseconds));
             if (template.Trim() == "z")
                 template = template.Replace("z", string.Format("{0}", timeCode.TotalMilliseconds));
             if (template.Trim() == "ff")
                 template = template.Replace("ff", string.Format("{0}", SubtitleFormat.MillisecondsToFrames(timeCode.TotalMilliseconds)));
+
+            if (template.StartsWith("ssssssss"))
+                template = template.Replace("ssssssss", string.Format("{0:00000000}", timeCode.TotalSeconds));
+            if (template.StartsWith("sssssss"))
+                template = template.Replace("sssssss", string.Format("{0:0000000}", timeCode.TotalSeconds));
+            if (template.StartsWith("ssssss"))
+                template = template.Replace("ssssss", string.Format("{0:000000}", timeCode.TotalSeconds));
+            if (template.StartsWith("sssss"))
+                template = template.Replace("sssss", string.Format("{0:00000}", timeCode.TotalSeconds));
+            if (template.StartsWith("ssss"))
+                template = template.Replace("ssss", string.Format("{0:0000}", timeCode.TotalSeconds));
+            if (template.StartsWith("sss"))
+                template = template.Replace("sss", string.Format("{0:000}", timeCode.TotalSeconds));
+            if (template.StartsWith("ss"))
+                template = template.Replace("ss", string.Format("{0:00}", timeCode.TotalSeconds));
+
+            if (template.StartsWith("zzzzzzzz"))
+                template = template.Replace("zzzzzzzz", string.Format("{0:00000000}", timeCode.TotalMilliseconds));
+            if (template.StartsWith("zzzzzzz"))
+                template = template.Replace("zzzzzzz", string.Format("{0:0000000}", timeCode.TotalMilliseconds));
+            if (template.StartsWith("zzzzzz"))
+                template = template.Replace("zzzzzz", string.Format("{0:000000}", timeCode.TotalMilliseconds));
+            if (template.StartsWith("zzzzz"))
+                template = template.Replace("zzzzz", string.Format("{0:00000}", timeCode.TotalMilliseconds));
+            if (template.StartsWith("zzzz"))
+                template = template.Replace("zzzz", string.Format("{0:0000}", timeCode.TotalMilliseconds));
+            if (template.StartsWith("zzz"))
+                template = template.Replace("zzz", string.Format("{0:000}", timeCode.TotalMilliseconds));
+
             template = template.Replace("hh", string.Format("{0:00}", timeCode.Hours));
             template = template.Replace("h", string.Format("{0}", timeCode.Hours));
             template = template.Replace("mm", string.Format("{0:00}", timeCode.Minutes));
@@ -211,8 +240,8 @@ namespace Nikse.SubtitleEdit.Forms
                 d = SubtitleFormat.MillisecondsToFrames(duration.TotalMilliseconds).ToString();
             if (timeCodeTemplate == "zzz" || timeCodeTemplate == "zz" || timeCodeTemplate == "z")
                 d = duration.TotalMilliseconds.ToString();
-            if (timeCodeTemplate == "sss" || timeCodeTemplate == "zz" || timeCodeTemplate == "z")
-                d = duration.TotalMilliseconds.ToString();
+            if (timeCodeTemplate == "sss" || timeCodeTemplate == "ss" || timeCodeTemplate == "s")
+                d = duration.Seconds.ToString();
             else if (timeCodeTemplate.EndsWith("ss.ff"))
                 d = string.Format("{0:00}.{1:00}", duration.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds));
             else if (timeCodeTemplate.EndsWith("ss:ff"))
