@@ -2487,7 +2487,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
 
-                if (format == null && fi.Length < 200000)
+                if (format == null && fi.Length < 500000)
                 { // Try to use a generic subtitle format parser (guessing subtitle format)
                     try
                     {
@@ -2506,6 +2506,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var genericParseSubtitle = uknownFormatImporter.AutoGuessImport(s.Replace(Environment.NewLine, "\n").Split('\n'));
                         if (genericParseSubtitle.Paragraphs.Count > 1)
                         {
+                            _subtitle = genericParseSubtitle;
                             SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                             SetEncoding(Configuration.Settings.General.DefaultEncoding);
                             encoding = GetCurrentEncoding();
