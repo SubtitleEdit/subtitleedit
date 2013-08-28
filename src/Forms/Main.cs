@@ -9997,6 +9997,17 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeAutoDuration();
                 e.SuppressKeyPress = true;
             }
+            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.I) // watermak
+            {
+                var form = new ImportUnknownFormat(string.Empty);
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    _subtitle = form.ImportedSubitle;
+                    _fileName = null;
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                }
+                e.SuppressKeyPress = true;
+            }
 
             // TABS - MUST BE LAST
             else if (tabControlButtons.SelectedTab == tabPageAdjust)

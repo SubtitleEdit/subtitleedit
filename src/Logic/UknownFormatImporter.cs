@@ -87,7 +87,11 @@ namespace Nikse.SubtitleEdit.Logic
                     line = line.Trim();
                 }
                 if (p != null && line.Length > 1)
+                {
                     sb.AppendLine(line.Trim());
+                    if (sb.Length > 200)
+                        return new Subtitle();
+                }
             }
             if (p != null)
             {
@@ -334,6 +338,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     if (matches[0].Index < 9)
                         line = line.Remove(0, matches[0].Index);
+
                     line = line.Replace(matches[0].ToString(), string.Empty);
                     line = line.Replace(matches[1].ToString(), string.Empty);
                     line = line.Trim();
@@ -349,6 +354,37 @@ namespace Nikse.SubtitleEdit.Logic
                 p.Text = sb.ToString().Trim();
                 subtitle.Paragraphs.Add(p);
             }
+
+            // remove all equal headers
+            if (subtitle.Paragraphs.Count > 5)
+            {
+                string prefix = subtitle.Paragraphs[0].Text;
+                foreach (Paragraph paragraph in subtitle.Paragraphs)
+                {
+                    string text = paragraph.Text.Trim();
+                    var newPrefix = new StringBuilder();
+                    int i = 0;
+                    while (i < prefix.Length && i < text.Length && text[i] == prefix[i])
+                    {
+                        newPrefix.Append(text[i]);
+                        i++;
+                    }
+                    prefix = newPrefix.ToString();
+                }
+                if (prefix.Length > 3 && prefix[1] == ':' && prefix[2] == '\\')
+                    prefix = string.Empty;
+
+                if (prefix.Length > 0)
+                {
+                    foreach (Paragraph paragraph in subtitle.Paragraphs)
+                    {
+                        string text = paragraph.Text.Trim();
+                        if (text.StartsWith(prefix))
+                            paragraph.Text = text.Remove(0, prefix.Length);
+                    } 
+                }
+            }
+
             subtitle.Renumber(1);
             return subtitle;
         }

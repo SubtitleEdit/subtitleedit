@@ -251,6 +251,12 @@
     <Compile Include="Forms\ImportSceneChanges.Designer.cs">
       <DependentUpon>ImportSceneChanges.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ImportUnknownFormat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ImportUnknownFormat.Designer.cs">
+      <DependentUpon>ImportUnknownFormat.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MeasurementConverter.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1160,6 +1166,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImportSceneChanges.resx">
       <DependentUpon>ImportSceneChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ImportUnknownFormat.resx">
+      <DependentUpon>ImportUnknownFormat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MeasurementConverter.resx">
       <DependentUpon>MeasurementConverter.cs</DependentUpon>
