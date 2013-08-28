@@ -77,7 +77,7 @@
     <AboutText1>Subtitle Edit 是遵照「GNU 公共授权协议」的免费软件，
 您可以自由分发、修改和使用。
 
-C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
+C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
 
 访问 www.nikse.dk 以获得最新版本。
 
@@ -322,6 +322,26 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <TotalMilliseconds>总毫秒数:</TotalMilliseconds>
     <EndDelayInMillisecs>末尾延时(毫秒):</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportCustomText>
+    <Title>输出自定义文本格式</Title>
+    <Formats>格式</Formats>
+    <New>新建</New>
+    <Edit>编辑</Edit>
+    <Delete>删除</Delete>
+    <SaveAs>另存为(&amp;S)...</SaveAs>
+    <SaveSubtitleAs>将字幕另存为...</SaveSubtitleAs>
+    <SubtitleExportedInCustomFormatToX>将自定义格式字幕输出到: {0}</SubtitleExportedInCustomFormatToX>
+  </ExportCustomText>
+  <ExportCustomTextFormat>
+    <Title>自定义文本格式模板</Title>
+    <Template>模板</Template>
+    <Header>页眉</Header>
+    <TextLine>文本行 (句段)</TextLine>
+    <TimeCode>时间码</TimeCode>
+    <NewLine>换行符</NewLine>
+    <Footer>页脚</Footer>
+    <DoNotModify>[不改动]</DoNotModify>
+  </ExportCustomTextFormat>
   <ExportPngXml>
     <Title>导出 BDN XML/PNG</Title>
     <ImageSettings>图像设置</ImageSettings>
@@ -648,8 +668,9 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
-        <ExportUltech130>Ultech 标题...</ExportUltech130>
-        <Exit>退出(&amp;X)</Exit>
+        <ExportUltech130>Ultech 字幕...</ExportUltech130>
+        <ExportCustomTextFormat>导出自定义文本格式...</ExportCustomTextFormat>
+        <Exit>退出(&amp;E)</Exit>
       </File>
       <Edit>
         <Title>编辑(&amp;E)</Title>
@@ -695,6 +716,8 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <TextNumberOfCharactersPerSeconds>文字 - 字符数/秒</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>文字 - 字数/秒 (wpm)</WordsPerMinute>
         <Style>样式</Style>
+        <Ascending>升序</Ascending>
+        <Descending>降序</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>从当前字幕生成新的空白翻译</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>批量转换...</BatchConvert>
         <GenerateTimeAsText>将时间生成为文本...</GenerateTimeAsText>
@@ -1436,15 +1459,15 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <UpdateShortcut>更新</UpdateShortcut>
     <ShortcutIsNotValid>快捷键无效: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>切换 停靠/不停靠 视频控件</ToggleDockUndockOfVideoControls>
-    <CreateSetEndAddNewAndGoToNew>设置终点，添加新点并转到新点</CreateSetEndAddNewAndGoToNew>
+    <CreateSetEndAddNewAndGoToNew>设置终止时间，添加新行并转到新行</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>通过结束位置调整并转到下一个</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>调整设置时长起点及转到下个文本</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>设置终点及下个起点并转到下一个</AdjustSetEndNextStartAndGoToNext>
-    <AdjustStartDownEndUpAndGoToNext>向下方向键=设置起点，向上方向键=设置终点，并转到下一个</AdjustStartDownEndUpAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>按下按键设置起始时间，松开按键设置结束时间，并转到下一行</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>所选行前移 100ms</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>所选行后移 100ms</AdjustSelected100MsBack>
     <AdjustSetStartTimeOnly>设置开始时间，保留结束时间</AdjustSetStartTimeOnly>
-    <MainCreateStartDownEndUp>用向下方向键创建新的开始时间，用向上方向键设置结束时间</MainCreateStartDownEndUp>
+    <MainCreateStartDownEndUp>按下按键时创建新的开始时间，松开按键时设置结束时间</MainCreateStartDownEndUp>
     <MergeDialogue>合并对话 (插入破折号)</MergeDialogue>
     <GoToNext>转到下一行</GoToNext>
     <GoToPrevious>转到上一行</GoToPrevious>
