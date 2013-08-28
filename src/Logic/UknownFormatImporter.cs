@@ -271,9 +271,47 @@ namespace Nikse.SubtitleEdit.Logic
             Paragraph p = null;
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
+
+            bool isFirstLineNumber = false;
+
+            int count = -1;
             for (int idx = 0; idx < lines.Length; idx++)
             {
                 string line = lines[idx];
+                var matches = regexTimeCodes1.Matches(line);
+                if (matches.Count == 0)
+                    matches = regexTimeCodes2.Matches(line);
+                if (matches.Count == 2)
+                {
+                    string[] start = matches[0].ToString().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (Utilities.IsInteger(start[0]))
+                    {
+                        int i = int.Parse(start[0]);
+                        if (count == -1 && i < 2)
+                            count = i;
+                        if (count != i)
+                        {
+                            isFirstLineNumber = false;
+                            break;
+                        }
+                        count++;
+                    }
+                }
+                if (count > 2)
+                    isFirstLineNumber = true;
+            }
+            
+            for (int idx = 0; idx < lines.Length; idx++)
+            {
+                string line = lines[idx];
+
+                if (isFirstLineNumber)
+                {
+                    while (line.Length > 0 && "0123456789".Contains(line.Substring(0, 1)))
+                    {
+                        line = line.Remove(0, 1);
+                    }
+                }
 
                 var matches = regexTimeCodes1.Matches(line);
                 if (matches.Count == 0)
