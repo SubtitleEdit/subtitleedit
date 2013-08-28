@@ -226,6 +226,7 @@
             this.Controls.Add(this.groupBoxImportOptions);
             this.Controls.Add(this.groupBoxImportText);
             this.KeyPreview = true;
+            this.MinimumSize = new System.Drawing.Size(900, 600);
             this.Name = "ImportUnknownFormat";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

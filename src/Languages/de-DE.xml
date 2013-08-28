@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
@@ -74,8 +74,7 @@
   </General>
   <About>
     <Title>Über Subtitle Edit</Title>
-    <AboutText1>
-Subtitle Edit ist Freie Software unter der GNU Public License.
+    <AboutText1>Subtitle Edit ist Freie Software unter der GNU Public License.
 Sie dürfen Sie frei verbreiten, verändern und verwenden.
 
 Der C# Quelltext ist erhältlich unter http://code.google.com/p/subtitleedit
@@ -84,8 +83,7 @@ Besuchen Sie www.nikse.dk für die neueste Version.
 
 Vorschläge sind willkommen.
 
-E-Mail: mailto:nikse.dk@gmail.com
-    </AboutText1>
+E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Zur Namensliste hinzufügen</Title>
@@ -235,6 +233,7 @@ E-Mail: mailto:nikse.dk@gmail.com
     <IssueDate>Veröffentlicht</IssueDate>
     <EditRate>Bearbeitungsrate</EditRate>
     <TimeCodeRate>Zeitstempel Rate</TimeCodeRate>
+    <StartTime>Startzeit</StartTime>
     <Font>Schrift</Font>
     <FontId>ID</FontId>
     <FontUri>URI</FontUri>
@@ -243,10 +242,16 @@ E-Mail: mailto:nikse.dk@gmail.com
     <FontEffectColor>Effektfarbe</FontEffectColor>
     <FontSize>Größe</FontSize>
     <ChooseColor>Farbe wählen...</ChooseColor>
+    <Generate>Erstellen</Generate>
   </DCinemaProperties>
     <DurationsBridgeGaps>
     <Title>Kurze Zeitabstände überbrücken</Title>
     <GapsBridgedX>Zeitabstände überbrückt: {0}</GapsBridgedX>
+    <GapToNext>Nächster Zeitabstand</GapToNext>
+    <BridgeGapsSmallerThanXPart1>Überbrücke Abstände kleiner als</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart2>Millisekunden</BridgeGapsSmallerThanXPart2>
+    <ProlongEndTime>Vorheriger Text nutzt Abstandszeit</ProlongEndTime>
+    <DivideEven>Texte teilen Abstandszeit</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubrip>
     <Title>Untertitel aus IFO/VOB (DVD) extrahieren</Title>
@@ -282,6 +287,7 @@ E-Mail: mailto:nikse.dk@gmail.com
     <GeneralSubtitleInformation>Allgemeine Untertitel Info</GeneralSubtitleInformation>
     <CodePageNumber>Codepage Nummer</CodePageNumber>
     <DiskFormatCode>Diskformat Code</DiskFormatCode>
+    <DisplayStandardCode>Standard Code anzeigen</DisplayStandardCode>
     <CharacterCodeTable>Zeichentabelle</CharacterCodeTable>
     <LanguageCode>Sprachcode</LanguageCode>
     <OriginalProgramTitle>Original Programmtitel</OriginalProgramTitle>
@@ -318,6 +324,26 @@ E-Mail: mailto:nikse.dk@gmail.com
     <TotalMilliseconds>Gesamt Millisek.:</TotalMilliseconds>
     <EndDelayInMillisecs>Endverzögerung in Millisek.:</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportCustomText>
+    <Title>Benutzer Textformat exportieren</Title>
+    <Formats>Formate</Formats>
+    <New>Neu</New>
+    <Edit>Bearbeiten</Edit>
+    <Delete>Löschen</Delete>
+    <SaveAs>Speichern &amp;als...</SaveAs>
+    <SaveSubtitleAs>Untertitel speichern als...</SaveSubtitleAs>
+    <SubtitleExportedInCustomFormatToX>Untertitel im Benutzerformat exportiert nach: {0}</SubtitleExportedInCustomFormatToX>
+  </ExportCustomText>
+  <ExportCustomTextFormat>
+    <Title>Benutzer Textformat Vorlage</Title>
+    <Template>Vorlage</Template>
+    <Header>Kopfzeile</Header>
+    <TextLine>Textzeile (Absatz)</TextLine>
+    <TimeCode>Zeitstempel</TimeCode>
+    <NewLine>Neue Zeile</NewLine>
+    <Footer>Fußzeile</Footer>
+    <DoNotModify>[Nicht verändern]</DoNotModify>
+  </ExportCustomTextFormat>
   <ExportPngXml>
     <Title>BDN XML/PNG exportieren</Title>
     <ImageSettings>Bildeinstellungen</ImageSettings>
@@ -489,7 +515,7 @@ E-Mail: mailto:nikse.dk@gmail.com
     <RefreshFixes>Verfügbare Korrekturen aktualisieren</RefreshFixes>
     <ApplyFixes>Ausgewählte Korrekturen anwenden</ApplyFixes>
     <AutoBreak>&amp;Auto Umbruch</AutoBreak>
-    <Unbreak>Zeilen&amp;umbruch entfernen</Unbreak>
+    <Unbreak>&amp;Umbruch entfernen</Unbreak>
     <FixDoubleDash>Korrigiere '--' -&gt; '...' </FixDoubleDash>
     <FixDoubleGreaterThan>Entferne &gt;&gt; </FixDoubleGreaterThan>
     <FixEllipsesStart>Entferne '...' am Anfang</FixEllipsesStart>
@@ -644,6 +670,7 @@ E-Mail: mailto:nikse.dk@gmail.com
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
         <ExportUltech130>Ultech Untertitel...</ExportUltech130>
+        <ExportCustomTextFormat>Benutzer Textformat...</ExportCustomTextFormat>
         <Exit>&amp;Beenden</Exit>
       </File>
       <Edit>
@@ -667,6 +694,7 @@ E-Mail: mailto:nikse.dk@gmail.com
         <Title>Werkzeuge</Title>
         <AdjustDisplayDuration>&amp;Längen anpassen...</AdjustDisplayDuration>
         <ApplyDurationLimits>Längenbegrenzungen anwenden...</ApplyDurationLimits>
+        <DurationsBridgeGap>Abstände in Dauer Überbrücken...</DurationsBridgeGap>
         <FixCommonErrors>Häufige &amp;Fehler korrigieren...</FixCommonErrors>
         <StartNumberingFrom>Nummerierung beginnen bei...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Entferne Untertitel für Hörgeschädigte...</RemoveTextForHearingImpaired>
@@ -688,6 +716,9 @@ E-Mail: mailto:nikse.dk@gmail.com
         <TextNumberOfLines>Text - Zeilen</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Text - Zeichen/Sekunde</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Text - Wörter/Minute</WordsPerMinute>
+        <Style>Stil</Style>
+        <Ascending>Aufsteigend</Ascending>
+        <Descending>Absteigend</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Neue leere Übersetzung aus aktuellem Untertitel erstellen</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Stapelkonvertierung...</BatchConvert>
         <GenerateTimeAsText>Zeit als Text erstellen...</GenerateTimeAsText>
@@ -1797,6 +1828,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ZoomOut>Herauszoomen</ZoomOut>
     <AddParagraphHere>Text hier einfügen</AddParagraphHere>
     <AddParagraphHereAndPasteText>Text aus Zwischenablage hier einfügen</AddParagraphHereAndPasteText>
+    <FocusTextBox>Textfeld fokussieren</FocusTextBox>
     <DeleteParagraph>Text entfernen</DeleteParagraph>
     <Split>Trennen</Split>
     <SplitAtCursor>Beim Cursor trennen</SplitAtCursor>
