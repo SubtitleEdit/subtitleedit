@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             string format = "{1}{0}{2}{0}{3}{0}\"{4}\"";
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(string.Format(format, _seperator, "Number", "Start time in milliseconds", "End time in milliseconds", "Text"));
+            sb.AppendLine(string.Format(format, _seperator, "Number", "Start time (hh:mm:ss:ff)", "End time (hh:mm:ss:ff)", "Text"));
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.AppendLine(string.Format(format, _seperator, p.Number, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), p.Text.Replace(Environment.NewLine, "\n")));
