@@ -663,6 +663,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string GeneralMergeOriginalAndTranslation { get; set; }
         public string GeneralGoToNextSubtitle { get; set; }
         public string GeneralGoToPrevSubtitle { get; set; }
+        public string GeneralGoToStartOfCurrentSubtitle { get; set; }
+        public string GeneralGoToEndOfCurrentSubtitle { get; set; }
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
         public string MainFileOpenKeepVideo { get; set; }
@@ -758,6 +760,8 @@ namespace Nikse.SubtitleEdit.Logic
             GeneralMergeOriginalAndTranslation = "Control+Alt+Shift+M";
             GeneralGoToNextSubtitle = "Shift+Return";
             GeneralGoToPrevSubtitle = string.Empty;
+            GeneralGoToStartOfCurrentSubtitle = string.Empty;
+            GeneralGoToEndOfCurrentSubtitle = string.Empty;
             MainFileNew = "Control+N";
             MainFileOpen = "Control+O";
             MainFileSave = "Control+S";
@@ -1865,6 +1869,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("GeneralGoToPrevSubtitle");
                 if (subNode != null)
                     settings.Shortcuts.GeneralGoToPrevSubtitle = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralGoToEndOfCurrentSubtitle");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralGoToStartOfCurrentSubtitle");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainFileNew");
                 if (subNode != null)
                     settings.Shortcuts.MainFileNew = subNode.InnerText;
@@ -2524,6 +2534,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("GeneralMergeOriginalAndTranslation", settings.Shortcuts.GeneralMergeOriginalAndTranslation);
             textWriter.WriteElementString("GeneralGoToNextSubtitle", settings.Shortcuts.GeneralGoToNextSubtitle);
             textWriter.WriteElementString("GeneralGoToPrevSubtitle", settings.Shortcuts.GeneralGoToPrevSubtitle);
+            textWriter.WriteElementString("GeneralGoToEndOfCurrentSubtitle", settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle);
+            textWriter.WriteElementString("GeneralGoToStartOfCurrentSubtitle", settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
             textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
             textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
             textWriter.WriteElementString("MainFileOpenKeepVideo", settings.Shortcuts.MainFileOpenKeepVideo);

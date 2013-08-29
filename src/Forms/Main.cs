@@ -106,6 +106,8 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainGeneralMergeTranslationAndOriginal = Keys.None;
         Keys _mainGeneralGoToNextSubtitle = Keys.None;
         Keys _mainGeneralGoToPrevSubtitle = Keys.None;
+        Keys _mainGeneralGoToStartOfCurrentSubtitle = Keys.None;
+        Keys _mainGeneralGoToEndOfCurrentSubtitle = Keys.None;
         Keys _mainToolsAutoDuration = Keys.None;
         Keys _mainToolsBeamer = Keys.None;
         Keys _toggleVideoDockUndock = Keys.None;
@@ -9619,6 +9621,24 @@ namespace Nikse.SubtitleEdit.Forms
                     ButtonPreviousClick(null, null);
                 e.SuppressKeyPress = true;
             }
+            else if (_mainGeneralGoToStartOfCurrentSubtitle == e.KeyData)
+            {
+                if (SubtitleListview1.SelectedItems.Count == 1 && mediaPlayer.VideoPlayer != null)
+                {
+                    mediaPlayer.CurrentPosition = _subtitle.Paragraphs[SubtitleListview1.SelectedItems[0].Index].StartTime.TotalSeconds;
+                    e.SuppressKeyPress = true;
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainGeneralGoToEndOfCurrentSubtitle == e.KeyData)
+            {
+                if (SubtitleListview1.SelectedItems.Count == 1 && mediaPlayer.VideoPlayer != null)
+                {
+                    mediaPlayer.CurrentPosition = _subtitle.Paragraphs[SubtitleListview1.SelectedItems[0].Index].EndTime.TotalSeconds;
+                    e.SuppressKeyPress = true;
+                }
+                e.SuppressKeyPress = true;
+            }
             else if (_mainToggleFocus == e.KeyData && inListView)
             {
                 if (SubtitleListview1.Focused)
@@ -13002,6 +13022,8 @@ namespace Nikse.SubtitleEdit.Forms
             _mainGeneralMergeTranslationAndOriginal = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation);
             _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
             _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+            _mainGeneralGoToStartOfCurrentSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
+            _mainGeneralGoToEndOfCurrentSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle);
 
             newToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileNew);
             openToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
