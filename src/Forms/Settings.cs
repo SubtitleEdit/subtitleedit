@@ -492,6 +492,10 @@ namespace Nikse.SubtitleEdit.Forms
             generalNode.Nodes.Add(language.MergeOriginalAndTranslation + GetShortcutText(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation));
             generalNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToNext + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle));
             generalNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToPrevious + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoToCurrentSubtitleStart))
+                generalNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToCurrentSubtitleStart + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoToCurrentSubtitleEnd))
+                generalNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToCurrentSubtitleEnd + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle));
             treeViewShortcuts.Nodes.Add(generalNode);
 
             var fileNode = new TreeNode(Configuration.Settings.Language.Main.Menu.File.Title);
@@ -1015,6 +1019,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.GoToPrevious.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.GoToCurrentSubtitleStart.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.GoToCurrentSubtitleEnd.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle = GetShortcut(node.Text);
                 }
             }
 

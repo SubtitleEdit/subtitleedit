@@ -1635,6 +1635,8 @@
             public string MergeDialogue { get; set; }
             public string GoToNext { get; set; }
             public string GoToPrevious { get; set; }
+            public string GoToCurrentSubtitleStart { get; set; }
+            public string GoToCurrentSubtitleEnd { get; set; }
             public string ToggleFocus { get; set; }
             public string ToggleDialogueDashes { get; set; }
             public string Alignment { get; set; }
