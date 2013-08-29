@@ -1498,6 +1498,7 @@
     </Content>
     <Content Include="Languages\de-DE.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\el-GR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -53,7 +53,7 @@
             this.comboBoxResolution = new System.Windows.Forms.ComboBox();
             this.comboBoxHAlign = new System.Windows.Forms.ComboBox();
             this.labelHorizontalAlign = new System.Windows.Forms.Label();
-            this.checkBoxAntiAlias = new System.Windows.Forms.CheckBox();
+            this.checkBoxSimpleRender = new System.Windows.Forms.CheckBox();
             this.labelSubtitleFontSize = new System.Windows.Forms.Label();
             this.comboBoxSubtitleFont = new System.Windows.Forms.ComboBox();
             this.comboBoxSubtitleFontSize = new System.Windows.Forms.ComboBox();
@@ -140,7 +140,7 @@
             this.groupBoxImageSettings.Controls.Add(this.comboBoxResolution);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxHAlign);
             this.groupBoxImageSettings.Controls.Add(this.labelHorizontalAlign);
-            this.groupBoxImageSettings.Controls.Add(this.checkBoxAntiAlias);
+            this.groupBoxImageSettings.Controls.Add(this.checkBoxSimpleRender);
             this.groupBoxImageSettings.Controls.Add(this.labelSubtitleFontSize);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxSubtitleFont);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxSubtitleFontSize);
@@ -366,18 +366,16 @@
             this.labelHorizontalAlign.TabIndex = 7;
             this.labelHorizontalAlign.Text = "Align";
             // 
-            // checkBoxAntiAlias
+            // checkBoxSimpleRender
             // 
-            this.checkBoxAntiAlias.AutoSize = true;
-            this.checkBoxAntiAlias.Checked = true;
-            this.checkBoxAntiAlias.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxAntiAlias.Location = new System.Drawing.Point(276, 71);
-            this.checkBoxAntiAlias.Name = "checkBoxAntiAlias";
-            this.checkBoxAntiAlias.Size = new System.Drawing.Size(66, 17);
-            this.checkBoxAntiAlias.TabIndex = 14;
-            this.checkBoxAntiAlias.Text = "AntiAlias";
-            this.checkBoxAntiAlias.UseVisualStyleBackColor = true;
-            this.checkBoxAntiAlias.CheckedChanged += new System.EventHandler(this.checkBoxAntiAlias_CheckedChanged);
+            this.checkBoxSimpleRender.AutoSize = true;
+            this.checkBoxSimpleRender.Location = new System.Drawing.Point(276, 71);
+            this.checkBoxSimpleRender.Name = "checkBoxSimpleRender";
+            this.checkBoxSimpleRender.Size = new System.Drawing.Size(104, 17);
+            this.checkBoxSimpleRender.TabIndex = 14;
+            this.checkBoxSimpleRender.Text = "Simple rendering";
+            this.checkBoxSimpleRender.UseVisualStyleBackColor = true;
+            this.checkBoxSimpleRender.CheckedChanged += new System.EventHandler(this.checkBoxAntiAlias_CheckedChanged);
             // 
             // labelSubtitleFontSize
             // 
@@ -685,7 +683,7 @@
         private System.Windows.Forms.ComboBox comboBoxSubtitleFontSize;
         private System.Windows.Forms.Label labelSubtitleFont;
         private System.Windows.Forms.ColorDialog colorDialog1;
-        private System.Windows.Forms.CheckBox checkBoxAntiAlias;
+        private System.Windows.Forms.CheckBox checkBoxSimpleRender;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ComboBox comboBoxHAlign;
         private System.Windows.Forms.Label labelHorizontalAlign;

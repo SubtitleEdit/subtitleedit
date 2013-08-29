@@ -3120,5 +3120,45 @@ namespace Nikse.SubtitleEdit.Logic
             return text.Replace("\"\"", "\"");
         }
 
+        public static Color GetColorFromFontString(string text, Color defaultColor)
+        {
+            string s = text.TrimEnd();
+            int start = s.IndexOf("<font ");
+            if (start >= 0 && s.EndsWith("</font>"))
+            {
+                int end = s.IndexOf(">", start);
+                if (end > 0)
+                {
+                    string f = s.Substring(start, end - start);
+                    if (f.Contains(" color="))
+                    {
+                        int colorStart = f.IndexOf(" color=");
+                        if (s.IndexOf("\"", colorStart + " color=".Length + 1) > 0)
+                            end = s.IndexOf("\"", colorStart + " color=".Length + 1);
+                        s = s.Substring(colorStart, end - colorStart);
+                        s = s.Replace(" color=", string.Empty);
+                        s = s.Trim('\'').Trim('"').Trim('\'');
+                        try
+                        {
+                            if (s.StartsWith("rgb("))
+                            {
+                                var arr = s.Remove(0, 4).TrimEnd(')').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                            }
+                            else
+                            {
+                                return System.Drawing.ColorTranslator.FromHtml(s);
+                            }
+                        }
+                        catch
+                        {
+                            return defaultColor;
+                        }
+                    }
+                }
+            }
+            return defaultColor;
+        }
+
     }
 }

@@ -43,7 +43,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelSubtitleFont.Text = Configuration.Settings.Language.ExportPngXml.FontFamily;
             labelSubtitleFontSize.Text = Configuration.Settings.Language.ExportPngXml.FontSize;
             buttonColor.Text = Configuration.Settings.Language.ExportPngXml.FontColor;
-            checkBoxAntiAlias.Text = Configuration.Settings.Language.ExportPngXml.AntiAlias;
             buttonBorderColor.Text = Configuration.Settings.Language.ExportPngXml.BorderColor;
             labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderWidth;
 
@@ -109,11 +108,6 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void ComboBoxBorderWidthSelectedIndexChanged(object sender, EventArgs e)
-        {
-            ShowCurrent();
-        }
-
-        private void CheckBoxAntiAliasCheckedChanged(object sender, EventArgs e)
         {
             ShowCurrent();
         }
@@ -239,11 +233,10 @@ namespace Nikse.SubtitleEdit.Forms
                     lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8 + 15) / 2);
             }
 
-            if (checkBoxAntiAlias.Checked)
-            {
-                g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-            }
+            g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.CompositingQuality = CompositingQuality.HighQuality;
+
             var sf = new StringFormat();
             sf.Alignment = StringAlignment.Near;
             sf.LineAlignment = StringAlignment.Near;// draw the text to a path

@@ -32,7 +32,6 @@
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
             this.comboBoxHAlign = new System.Windows.Forms.ComboBox();
             this.labelHorizontalAlign = new System.Windows.Forms.Label();
-            this.checkBoxAntiAlias = new System.Windows.Forms.CheckBox();
             this.labelSubtitleFontSize = new System.Windows.Forms.Label();
             this.comboBoxSubtitleFont = new System.Windows.Forms.ComboBox();
             this.comboBoxSubtitleFontSize = new System.Windows.Forms.ComboBox();
@@ -57,7 +56,6 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxImageSettings.Controls.Add(this.comboBoxHAlign);
             this.groupBoxImageSettings.Controls.Add(this.labelHorizontalAlign);
-            this.groupBoxImageSettings.Controls.Add(this.checkBoxAntiAlias);
             this.groupBoxImageSettings.Controls.Add(this.labelSubtitleFontSize);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxSubtitleFont);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxSubtitleFontSize);
@@ -96,19 +94,6 @@
             this.labelHorizontalAlign.Size = new System.Drawing.Size(30, 13);
             this.labelHorizontalAlign.TabIndex = 24;
             this.labelHorizontalAlign.Text = "Align";
-            // 
-            // checkBoxAntiAlias
-            // 
-            this.checkBoxAntiAlias.AutoSize = true;
-            this.checkBoxAntiAlias.Checked = true;
-            this.checkBoxAntiAlias.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxAntiAlias.Location = new System.Drawing.Point(276, 55);
-            this.checkBoxAntiAlias.Name = "checkBoxAntiAlias";
-            this.checkBoxAntiAlias.Size = new System.Drawing.Size(66, 17);
-            this.checkBoxAntiAlias.TabIndex = 21;
-            this.checkBoxAntiAlias.Text = "AntiAlias";
-            this.checkBoxAntiAlias.UseVisualStyleBackColor = true;
-            this.checkBoxAntiAlias.CheckedChanged += new System.EventHandler(this.CheckBoxAntiAliasCheckedChanged);
             // 
             // labelSubtitleFontSize
             // 
@@ -336,7 +321,6 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBoxImageSettings;
-        private System.Windows.Forms.CheckBox checkBoxAntiAlias;
         private System.Windows.Forms.Label labelSubtitleFontSize;
         private System.Windows.Forms.ComboBox comboBoxSubtitleFont;
         private System.Windows.Forms.ComboBox comboBoxSubtitleFontSize;
