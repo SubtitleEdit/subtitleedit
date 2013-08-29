@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 foreach (XmlNode node in xml.DocumentElement.SelectNodes("TextSample"))
                 {
-                    if (last != null)
+                    if (last != null && last.EndTime.TotalMilliseconds < 1)
                         last.EndTime = GetTimeCode(node.Attributes["sampleTime"].Value);
 
                     var p = new Paragraph();
