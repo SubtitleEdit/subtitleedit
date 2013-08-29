@@ -505,7 +505,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Export BDN XML/PNG",
                 ImageSettings = "Image settings",
-                AntiAlias = "Anti alias",
+                SimpleRendering = "Simple rendering",
                 Text3D = "3D",
                 SideBySide3D = "Half-side-by-side",
                 HalfTopBottom3D = "Half-Top/Bottom",
