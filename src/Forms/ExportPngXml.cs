@@ -1284,6 +1284,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             text = text.Replace("<U>", string.Empty);
             text = text.Replace("</U>", string.Empty);
 
+            var bmp = new Bitmap(400, 200);
+            var g = Graphics.FromImage(bmp);
+            if (!parameter.SimpleRendering)
+                parameter.SubtitleFontSize = g.DpiY * parameter.SubtitleFontSize / 72;
             Font font;
             try
             {
@@ -1297,8 +1301,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 MessageBox.Show(exception.Message);
                 font = new Font(FontFamily.Families[0].Name, parameter.SubtitleFontSize);
             }
-            var bmp = new Bitmap(400, 200);
-            var g = Graphics.FromImage(bmp);
 
             SizeF textSize = g.MeasureString("Hj!", font);
             var lineHeight = (textSize.Height * 0.64f);
@@ -1832,6 +1834,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         comboBoxSubtitleFontSize.SelectedIndex = i;
                     i++;
                 }
+                checkBoxSimpleRender.Checked = true;
             }
             else if (_exportType == "BLURAYSUP" || _exportType == "DOST")
             {
@@ -2143,7 +2146,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void ExportPngXml_Shown(object sender, EventArgs e)
         {
-            _isLoading = false;
+            _isLoading = false;            
         }
 
         private void comboBoxHAlign_SelectedIndexChanged(object sender, EventArgs e)
