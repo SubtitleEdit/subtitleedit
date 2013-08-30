@@ -1317,15 +1317,19 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (parameter.BackgroundColor != Color.Transparent)
                 g.FillRectangle(new SolidBrush(parameter.BackgroundColor), 0, 0, bmp.Width, bmp.Height);
 
-            // align lines with gjpqy a bit lower
+            // align lines with gjpqy, a bit lower
             var lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            if (lines[lines.Length - 1].Contains("g") || lines[lines.Length - 1].Contains("j") || lines[lines.Length - 1].Contains("p") || lines[lines.Length - 1].Contains("q") || lines[lines.Length - 1].Contains("y"))
+            int baseLinePadding = 13;
+            if (parameter.SubtitleFontSize < 30)
+                baseLinePadding = 12;
+            if (parameter.SubtitleFontSize < 25)
+                baseLinePadding = 9;
+            if (lines[lines.Length - 1].Contains("g") || lines[lines.Length - 1].Contains("j") || lines[lines.Length - 1].Contains("p") || lines[lines.Length - 1].Contains("q") || lines[lines.Length - 1].Contains("y") || lines[lines.Length - 1].Contains(","))
             {
-                string textNoBelow = lines[lines.Length - 1].Replace("g", "a").Replace("j", "a").Replace("p", "a").Replace("q", "a").Replace("y", "a");
-                int removeFromBottomMargin = (int)Math.Round((TextDraw.MeasureTextHeight(font, lines[lines.Length - 1], parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold)));
-                parameter.BottomMargin -= removeFromBottomMargin;
-                if (parameter.BottomMargin < 0)
-                    parameter.BottomMargin = 0;
+                string textNoBelow = lines[lines.Length - 1].Replace("g", "a").Replace("j", "a").Replace("p", "a").Replace("q", "a").Replace("y", "a").Replace(",", "a");
+                baseLinePadding -= (int)Math.Round((TextDraw.MeasureTextHeight(font, lines[lines.Length - 1], parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold)));
+                if (baseLinePadding < 0)
+                    baseLinePadding = 0;
             }
 
             var lefts = new List<float>();
@@ -1494,7 +1498,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (addLeft < 0.01)
                             addLeft = left + 2;
                         left = addLeft;
-
 
 
                         if (parameter.BorderWidth > 0)
@@ -1681,15 +1684,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
 
-
-
             var nbmp = new NikseBitmap(bmp);
             if (parameter.BackgroundColor == Color.Transparent)
             {
-                nbmp.CropTransparentSidesAndBottom(2, true);
+                nbmp.CropTransparentSidesAndBottom(baseLinePadding, true);
+                nbmp.CropTransparentSidesAndBottom(2, false);
             }
             else
             {
+                nbmp.CropSidesAndBottom(baseLinePadding, parameter.BackgroundColor, true);
                 nbmp.CropSidesAndBottom(4, parameter.BackgroundColor, true);
                 nbmp.CropTop(4, parameter.BackgroundColor);
             }
@@ -2230,6 +2233,47 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             timerPreview.Stop();
             subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void saveImageAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count != 1)
+                return;
+
+            int selectedIndex = subtitleListView1.SelectedItems[0].Index;
+
+            saveFileDialog1.Title = Configuration.Settings.Language.VobSubOcr.SaveSubtitleImageAs;
+            saveFileDialog1.AddExtension = true;
+            saveFileDialog1.FileName = "Image" + selectedIndex;
+            saveFileDialog1.Filter = "PNG image|*.png|BMP image|*.bmp|GIF image|*.gif|TIFF image|*.tiff";
+            saveFileDialog1.FilterIndex = 0;
+
+            DialogResult result = saveFileDialog1.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                Bitmap bmp = pictureBox1.Image as Bitmap;
+                if (bmp == null)
+                {
+                    MessageBox.Show("No image!");
+                    return;
+                }
+
+                try
+                {
+                    if (saveFileDialog1.FilterIndex == 0)
+                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                    else if (saveFileDialog1.FilterIndex == 1)
+                        bmp.Save(saveFileDialog1.FileName);
+                    else if (saveFileDialog1.FilterIndex == 2)
+                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                    else
+                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                }
+            }
         }
 
     }
