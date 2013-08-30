@@ -62,7 +62,10 @@ namespace Nikse.SubtitleEdit.Logic
             buffer[2] = 255;
             for (int i = 0; i < _bitmapData.Length; i += 4)
             {
-                if (_bitmapData[i + 3] > 200 && _bitmapData[i + 2] > 220 && _bitmapData[i + 1] > 220 && _bitmapData[i] < 40)
+                if (_bitmapData[i + 3] > 200 && // Alpha
+                    _bitmapData[i + 2] > 199 && // Red
+                    _bitmapData[i + 1] > 190 && // Green
+                    _bitmapData[i] < 40) // Blue
                     Buffer.BlockCopy(buffer, 0, _bitmapData, i, 3);
             }
         }
@@ -70,10 +73,10 @@ namespace Nikse.SubtitleEdit.Logic
         public void ReplaceNonWhiteWithTransparent()
         {
             byte[] buffer = new byte[4];
-            buffer[0] = 0;
-            buffer[1] = 0;
-            buffer[2] = 0;
-            buffer[3] = 0;
+            buffer[0] = 0; // B
+            buffer[1] = 0; // G
+            buffer[2] = 0; // R
+            buffer[3] = 0; // A
             for (int i = 0; i < _bitmapData.Length; i += 4)
             {
                 if (_bitmapData[i + 2] + _bitmapData[i + 1] + _bitmapData[i] < 300)

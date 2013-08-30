@@ -43,6 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.bDNXMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bluraySupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vobSubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dOSTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorImageCompare = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemInspectNOcrMatches = new System.Windows.Forms.ToolStripMenuItem();
             this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -140,7 +141,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
-            this.dOSTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.GroupBoxTesseractMethod.SuspendLayout();
@@ -253,23 +253,30 @@ namespace Nikse.SubtitleEdit.Forms
             // bDNXMLToolStripMenuItem
             // 
             this.bDNXMLToolStripMenuItem.Name = "bDNXMLToolStripMenuItem";
-            this.bDNXMLToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.bDNXMLToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.bDNXMLToolStripMenuItem.Text = "BDN XML...";
             this.bDNXMLToolStripMenuItem.Click += new System.EventHandler(this.bDNXMLToolStripMenuItem_Click);
             // 
             // bluraySupToolStripMenuItem
             // 
             this.bluraySupToolStripMenuItem.Name = "bluraySupToolStripMenuItem";
-            this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.bluraySupToolStripMenuItem.Text = "Blu-ray sup...";
             this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.bluraySupToolStripMenuItem_Click);
             // 
             // vobSubToolStripMenuItem
             // 
             this.vobSubToolStripMenuItem.Name = "vobSubToolStripMenuItem";
-            this.vobSubToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.vobSubToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.vobSubToolStripMenuItem.Text = "VobSub...";
             this.vobSubToolStripMenuItem.Click += new System.EventHandler(this.vobSubToolStripMenuItem_Click);
+            // 
+            // dOSTToolStripMenuItem
+            // 
+            this.dOSTToolStripMenuItem.Name = "dOSTToolStripMenuItem";
+            this.dOSTToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.dOSTToolStripMenuItem.Text = "DOST...";
+            this.dOSTToolStripMenuItem.Click += new System.EventHandler(this.dOSTToolStripMenuItem_Click);
             // 
             // toolStripSeparatorImageCompare
             // 
@@ -1235,7 +1242,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.pictureBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBoxSubtitleImage.ContextMenuStrip = this.contextMenuStripListview;
+            this.pictureBoxSubtitleImage.ContextMenuStrip = this.contextMenuStripUnknownWords;
             this.pictureBoxSubtitleImage.Location = new System.Drawing.Point(13, 60);
             this.pictureBoxSubtitleImage.Name = "pictureBoxSubtitleImage";
             this.pictureBoxSubtitleImage.Size = new System.Drawing.Size(636, 127);
@@ -1338,13 +1345,6 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.timerHideStatus.Interval = 2000;
             this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
-            // 
-            // dOSTToolStripMenuItem
-            // 
-            this.dOSTToolStripMenuItem.Name = "dOSTToolStripMenuItem";
-            this.dOSTToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.dOSTToolStripMenuItem.Text = "DOST...";
-            this.dOSTToolStripMenuItem.Click += new System.EventHandler(this.dOSTToolStripMenuItem_Click);
             // 
             // VobSubOcr
             // 
