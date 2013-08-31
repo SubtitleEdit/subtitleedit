@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.3.8 (x August 2013)
+3.3.8 (x September 2013)
 * NEW:
    * Added Hungarian language file - thx thx Zityi
    * Added a few new subtitle formats
@@ -14,6 +14,7 @@
    * Updated Brazilian Portuguese language file - thx Igor Rückert
    * Updated Italian language file - thx Marco
    * Updated Simplified Chinese language file - thx Leon
+   * Updated German language file - thx Siegwarth
    * Added support for the Māori language in PAC - thx Mark
    * Allow ebu stl with 23/29 fps - thx Raul/Antonio
    * Minor improvements to WebVTT + added WebVTT with line# - thx Benoît
@@ -34,6 +35,10 @@
    * When typing "&" SE would show "_" in the list view - thx XhmikosR
    * Allow regex search in empty string - thx vmb
    * Fixed crash when loading sub from dvd - thx Cristiano
+   * Export to images now uses font size correctly
+   * Export to images can now render Arabic (use 'Simple rendering')
+   * Bug in reading end time code in format Gpac ttxt - thx noMnoMnoM 
+   * Better ocr of some yellow fonts - thx Albert
 
 
 3.3.7 (3rd August 2013)
