@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.3.8 (x September 2013)
+3.3.8 (1st of September 2013)
 * NEW:
    * Added Hungarian language file - thx thx Zityi
    * Added a few new subtitle formats
