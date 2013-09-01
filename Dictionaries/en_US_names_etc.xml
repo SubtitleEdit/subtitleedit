@@ -25,6 +25,7 @@
   <name>Attenborough</name>
   <name>Aziz</name>
   <name>Bakuretsu</name>
+  <name>Barakiel</name>
   <name>Beastie Boys</name>
   <name>Belvedere</name>
   <name>Benelli</name>
@@ -46,6 +47,7 @@
   <name>Byam</name>
   <name>C.O.</name>
   <name>C.T.</name>
+  <name>Cahill</name>
   <name>Callum</name>
   <name>Camaro</name>
   <name>Canadian</name>
@@ -56,6 +58,7 @@
   <name>CEOs</name>
   <name>Chambliss</name>
   <name>Chantal</name>
+  <name>Chantel</name>
   <name>Chevallier</name>
   <name>Chimichanga</name>
   <name>Christoffer</name>
@@ -77,6 +80,7 @@
   <name>Dingwall</name>
   <name>Distephano</name>
   <name>DJs</name>
+  <name>Dolan</name>
   <name>E.R.</name>
   <name>E.R.P.</name>
   <name>Ehsan</name>
@@ -87,6 +91,7 @@
   <name>Enya</name>
   <name>Eschnapur</name>
   <name>Falco</name>
+  <name>Falcone</name>
   <name>Federal Bureau of Investigation</name>
   <name>Fergie</name>
   <name>Fifi</name>
@@ -108,6 +113,7 @@
   <name>French Southern Territories</name>
   <name>Frida</name>
   <name>Furneaux</name>
+  <name>Gabor</name>
   <name>Galliard</name>
   <name>Garber</name>
   <name>Gediman</name>
@@ -154,6 +160,7 @@
   <name>Iwamoto</name>
   <name>Jabba the Hut</name>
   <name>Jarndyce</name>
+  <name>Jeb</name>
   <name>Jeppe</name>
   <name>Jewish</name>
   <name>Jimi Hendrix</name>
@@ -174,9 +181,11 @@
   <name>Keiko-chan</name>
   <name>Kendal</name>
   <name>Kirishima</name>
+  <name>Kitt's</name>
   <name>Kiyoshi</name>
   <name>Koenma</name>
   <name>Koenma-sama</name>
+  <name>Kralova</name>
   <name>Kreutz</name>
   <name>Kuchinashi</name>
   <name>Kurama</name>
@@ -208,6 +217,7 @@
   <name>Magdalen</name>
   <name>Makaichu</name>
   <name>Malina</name>
+  <name>Malloy</name>
   <name>Malou</name>
   <name>Malthe</name>
   <name>Manneken Pis</name>
@@ -253,11 +263,13 @@
   <name>Okubo</name>
   <name>Olsson</name>
   <name>Omni</name>
+  <name>O'Regan</name>
   <name>Oskar</name>
   <name>Petro</name>
   <name>Petronella</name>
   <name>Pettersson</name>
   <name>Phineas</name>
+  <name>Pinella</name>
   <name>Pont Neuf</name>
   <name>Pozarsky</name>
   <name>Praetorians</name>
@@ -268,6 +280,7 @@
   <name>Ralf</name>
   <name>Ramigani</name>
   <name>Rasmus</name>
+  <name>Regan</name>
   <name>Rei-gun</name>
   <name>Reihado</name>
   <name>Reikai</name>
@@ -280,6 +293,7 @@
   <name>Riom</name>
   <name>Rizzo</name>
   <name>Rochway</name>
+  <name>Roxane</name>
   <name>Rubell</name>
   <name>Russian</name>
   <name>Russians</name>
@@ -290,6 +304,8 @@
   <name>Sandberg</name>
   <name>Sanjay</name>
   <name>Sarayashiki</name>
+  <name>Sariel</name>
+  <name>Sarrazin</name>
   <name>Sayaka</name>
   <name>Schafer</name>
   <name>Schiller</name>
@@ -306,12 +322,15 @@
   <name>Signe</name>
   <name>Silverado</name>
   <name>Skarsgård</name>
+  <name>Skokie</name>
   <name>Skunk Anansie</name>
   <name>Smithers</name>
   <name>Snuffy</name>
   <name>Spectravision</name>
   <name>Sportpaleis</name>
   <name>Stancombe</name>
+  <name>Stanislaus</name>
+  <name>Stanny's</name>
   <name>Stefano</name>
   <name>Stellan</name>
   <name>Stentz</name>
@@ -324,6 +343,7 @@
   <name>Takenaka</name>
   <name>Tarukane-san</name>
   <name>Tatty Bogle</name>
+  <name>Tertullian</name>
   <name>Thuringer</name>
   <name>Tilman Riemenschneider</name>
   <name>Tofino</name>
@@ -347,11 +367,14 @@
   <name>Vriess</name>
   <name>Wasim</name>
   <name>Wazowski</name>
+  <name>Wes</name>
   <name>West Virginia</name>
   <name>Weyland</name>
   <name>Whedon</name>
   <name>Wickerman</name>
   <name>Willoughby</name>
+  <name>Witkowski</name>
+  <name>Witkowskis</name>
   <name>Wittenberg</name>
   <name>Wolfie</name>
   <name>Yamada</name>

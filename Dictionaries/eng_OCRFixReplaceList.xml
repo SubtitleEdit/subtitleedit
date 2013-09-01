@@ -1529,6 +1529,47 @@
     <Word from="besttoday" to="best today" />
     <Word from="NiCe" to="Nice" />
     <Word from="oftravelling" to="of travelling" />
+    <Word from="ALl" to="ALI" />
+    <Word from="afterparty" to="after-party" />
+    <Word from="welL" to="well." />
+    <Word from="theirjob" to="their job" />
+    <Word from="lfhe's" to="If he's" />
+    <Word from="babyjesus" to="baby Jesus" />
+    <Word from="shithousejohn" to="shithouse John" />
+    <Word from="jesus" to="Jesus" />
+    <Word from="withjesus" to="with Jesus" />
+    <Word from="Gojoin" to="Go join" />
+    <Word from="Adaughter" to="A daughter" />
+    <Word from="talkwith" to="talk with" />
+    <Word from="anyjournals" to="any journals" />
+    <Word from="L'mjewish" to="I'm Jewish" />
+    <Word from="arejust" to="are just" />
+    <Word from="soundjust" to="sound just" />
+    <Word from="ifl'm" to="if I'm" />
+    <Word from="askyou" to="ask you" />
+    <Word from="ordinarywoman" to="ordinary woman" />
+    <Word from="andjunkies" to="and junkies" />
+    <Word from="isjack" to="is Jack" />
+    <Word from="helpyou" to="help you" />
+    <Word from="thinkyou" to="think you" />
+    <Word from="Lordjesus" to="Lord Jesus" />
+    <Word from="injuvy" to="in juvy" />
+    <Word from="thejets" to="the jets" />
+    <Word from="ifGod" to="if God" />
+    <Word from="againstjewish" to="against Jewish" />
+    <Word from="ajunkie" to="a junkie" />
+    <Word from="dearjesus" to="dear Jesus" />
+    <Word from="hearyour" to="hear your" />
+    <Word from="takeyears" to="take years" />
+    <Word from="friendjean" to="friend Jean" />
+    <Word from="Fatherjohn" to="Father John" />
+    <Word from="youjean" to="you Jean" />
+    <Word from="hearyou" to="hear you" />
+    <Word from="Ifshe" to="If she" />
+    <Word from="didn'tjust" to="didn't just" />
+    <Word from="IfGod" to="If God" />
+    <Word from="notjudge" to="not judge" />
+    <Word from="andjudge" to="and judge" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -1854,4 +1895,7 @@
     <Line from="Hil‘ it!" to="Hit it!" />
     <Line from="&lt;i&gt;Hil‘ it!&lt;/i&gt;" to="&lt;i&gt;Hit it!&lt;/i&gt;" />
   </WholeLines>
+  <RegularExpressions>
+    <!--    <RegEx find="\bi\b" replaceWith="I" /> just an example - do not use this regex -->
+  </RegularExpressions>
 </OCRFixReplaceList>
