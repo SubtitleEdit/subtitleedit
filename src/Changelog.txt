@@ -3,7 +3,7 @@
 
 3.3.8 (1st of September 2013)
 * NEW:
-   * Added Hungarian language file - thx thx Zityi
+   * Added Hungarian language file - thx Zityi
    * Added a few new subtitle formats
    * Added Tools -> Sort by -> Style - thx Mike
    * When moving start/end in waveform and holding down ALT will now
