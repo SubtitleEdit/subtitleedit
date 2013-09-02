@@ -86,7 +86,7 @@
             // 
             this.linkLabelOpenPluginFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabelOpenPluginFolder.AutoSize = true;
-            this.linkLabelOpenPluginFolder.Location = new System.Drawing.Point(12, 385);
+            this.linkLabelOpenPluginFolder.Location = new System.Drawing.Point(12, 455);
             this.linkLabelOpenPluginFolder.Name = "linkLabelOpenPluginFolder";
             this.linkLabelOpenPluginFolder.Size = new System.Drawing.Size(106, 13);
             this.linkLabelOpenPluginFolder.TabIndex = 25;
@@ -98,7 +98,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(532, 380);
+            this.buttonOK.Location = new System.Drawing.Point(666, 450);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(104, 23);
             this.buttonOK.TabIndex = 26;
@@ -155,7 +155,7 @@
             this.tabControlPlugins.Location = new System.Drawing.Point(12, 12);
             this.tabControlPlugins.Name = "tabControlPlugins";
             this.tabControlPlugins.SelectedIndex = 0;
-            this.tabControlPlugins.Size = new System.Drawing.Size(635, 362);
+            this.tabControlPlugins.Size = new System.Drawing.Size(769, 432);
             this.tabControlPlugins.TabIndex = 28;
             // 
             // tabPageInstalledPlugins
@@ -165,7 +165,7 @@
             this.tabPageInstalledPlugins.Location = new System.Drawing.Point(4, 22);
             this.tabPageInstalledPlugins.Name = "tabPageInstalledPlugins";
             this.tabPageInstalledPlugins.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInstalledPlugins.Size = new System.Drawing.Size(627, 336);
+            this.tabPageInstalledPlugins.Size = new System.Drawing.Size(761, 406);
             this.tabPageInstalledPlugins.TabIndex = 0;
             this.tabPageInstalledPlugins.Text = "Installed plugins";
             this.tabPageInstalledPlugins.UseVisualStyleBackColor = true;
@@ -173,7 +173,7 @@
             // buttonRemove
             // 
             this.buttonRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRemove.Location = new System.Drawing.Point(516, 305);
+            this.buttonRemove.Location = new System.Drawing.Point(650, 375);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(104, 25);
             this.buttonRemove.TabIndex = 29;
@@ -196,7 +196,7 @@
             this.listViewInstalledPlugins.Location = new System.Drawing.Point(6, 6);
             this.listViewInstalledPlugins.MultiSelect = false;
             this.listViewInstalledPlugins.Name = "listViewInstalledPlugins";
-            this.listViewInstalledPlugins.Size = new System.Drawing.Size(614, 293);
+            this.listViewInstalledPlugins.Size = new System.Drawing.Size(748, 363);
             this.listViewInstalledPlugins.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listViewInstalledPlugins.TabIndex = 28;
             this.listViewInstalledPlugins.UseCompatibleStateImageBehavior = false;
@@ -210,7 +210,7 @@
             // columnHeaderInsDescription
             // 
             this.columnHeaderInsDescription.Text = "Description";
-            this.columnHeaderInsDescription.Width = 280;
+            this.columnHeaderInsDescription.Width = 420;
             // 
             // columnHeaderInsVersion
             // 
@@ -250,7 +250,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(648, 412);
+            this.ClientSize = new System.Drawing.Size(782, 482);
             this.Controls.Add(this.tabControlPlugins);
             this.Controls.Add(this.linkLabelOpenPluginFolder);
             this.Controls.Add(this.buttonOK);
