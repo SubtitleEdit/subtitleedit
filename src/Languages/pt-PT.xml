@@ -9,7 +9,7 @@ Contactos:
 moob: mailto:moob@live.com.pt
 Ricardo Perdigão: mailto:ricardofonseca1977@gmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile>Ajuda</HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>	
     <Apply>Aplicar</Apply>
@@ -291,6 +291,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneralSubtitleInformation>Informação geral da legenda</GeneralSubtitleInformation>
     <CodePageNumber>Número de código da página</CodePageNumber>
     <DiskFormatCode>Código do formato do disco</DiskFormatCode>
+    <DisplayStandardCode>Exibir o código padrão</DisplayStandardCode>	
     <CharacterCodeTable>Tabela de caracteres</CharacterCodeTable>
     <LanguageCode>Código do idioma</LanguageCode>
     <OriginalProgramTitle>Título original do programa</OriginalProgramTitle>
@@ -327,6 +328,26 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TotalMilliseconds>Total milisseg.:</TotalMilliseconds>
     <EndDelayInMillisecs>Atraso final em milisseg.:</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportCustomText>
+    <Title>Exportar formato de texto personalizado</Title>
+    <Formats>Formatos</Formats>
+    <New>Novo</New>
+    <Edit>Editar</Edit>
+    <Delete>Apagar</Delete>
+    <SaveAs>G&amp;uardar como...</SaveAs>
+    <SaveSubtitleAs>Guardar legenda como...</SaveSubtitleAs>
+    <SubtitleExportedInCustomFormatToX>Legenda exportada em formato personalizado para: {0}</SubtitleExportedInCustomFormatToX>
+  </ExportCustomText>
+  <ExportCustomTextFormat>
+    <Title>Modelo personalizado de formato de texto</Title>
+    <Template>Modelo</Template>
+    <Header>Cabeçalho</Header>
+    <TextLine>Linha de texto (paragrafo)</TextLine>
+    <TimeCode>Código de tempo</TimeCode>
+    <NewLine>Nova linha</NewLine>
+    <Footer>Rodapé</Footer>
+    <DoNotModify>[Não alterar]</DoNotModify>
+  </ExportCustomTextFormat>  
   <ExportPngXml>
     <Title>Exportar BDN XML/PNG</Title>
     <ImageSettings>Ajuste de imagem</ImageSettings>
@@ -336,7 +357,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderColor>Cor da borda</BorderColor>
     <BorderWidth>Tamanho da borda</BorderWidth>
 	<ImageFormat>Formato de Imagem</ImageFormat>
-    <AntiAlias>Anti-alias</AntiAlias>
+    <SimpleRendering>Renderização simples</SimpleRendering>
     <Text3D>3D</Text3D>	
     <SideBySide3D>Lado-a-lado parcial</SideBySide3D>
     <HalfTopBottom3D>Superior/inferior parcial</HalfTopBottom3D>	
@@ -529,20 +550,20 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GetDictionariesHere>Obtenha dicionários aqui:</GetDictionariesHere>
     <OpenOpenOfficeWiki>Lista de Dicionários do Open Office Wiki</OpenOpenOfficeWiki>
     <GetAllDictionaries>Obter todos os dicionários</GetAllDictionaries>
-    <ChooseLanguageAndClickDownload>Seleccione o idioma e clique em download</ChooseLanguageAndClickDownload>
+    <ChooseLanguageAndClickDownload>Seleccione o idioma e clique em transferir</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Abrir a pasta dos 'Dicionários'</OpenDictionariesFolder>
-    <Download>Download</Download>
-    <XDownloaded>{0} foi feito download e instalado</XDownloaded>
+    <Download>Transferir</Download>
+    <XDownloaded>{0} foi transferido e instalado</XDownloaded>
   </GetDictionaries>
     <GetTesseractDictionaries>
     <Title>Precisa de dicionários?</Title>
     <DescriptionLine1>Obter Tesseract OCR dicionários da web</DescriptionLine1>
-    <DownloadFailed>O download falhou!</DownloadFailed>
+    <DownloadFailed>A transferência falhou!</DownloadFailed>
     <GetDictionariesHere>Obter dicionários aqui:</GetDictionariesHere>
-    <ChooseLanguageAndClickDownload>Escolha o seu idioma e clique em download</ChooseLanguageAndClickDownload>
+    <ChooseLanguageAndClickDownload>Escolha o seu idioma e clique em transferir</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Abrir a pasta 'Dicionários'</OpenDictionariesFolder>
-    <Download>Download</Download>
-    <XDownloaded>{0} downloads feitos e instalados</XDownloaded>
+    <Download>Transferir</Download>
+    <XDownloaded>{0} transferidos e instalados</XDownloaded>
   </GetTesseractDictionaries>
   <GoogleTranslate>
     <Title>Tradutor do Google</Title>
@@ -652,7 +673,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Subtítulo Inc...</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
-        <ExportUltech130>Ultech subtítulo...</ExportUltech130>		
+        <ExportUltech130>Ultech subtítulo...</ExportUltech130>
+        <ExportCustomTextFormat>Exportar formato de texto personalizado...</ExportCustomTextFormat>		
         <Exit>S&amp;air</Exit>
       </File>
       <Edit>
@@ -676,9 +698,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Ferramentas</Title>
         <AdjustDisplayDuration>&amp;Ajustar durações...</AdjustDisplayDuration>
         <ApplyDurationLimits>Aplicar limites de duração...</ApplyDurationLimits>
-        <DurationsBridgeGap>Unir as brechas entre as durações...</DurationsBridgeGap>		
+        <DurationsBridgeGap>Unir as brechas nas durações...</DurationsBridgeGap>		
         <FixCommonErrors>&amp;Corrigir erros comuns...</FixCommonErrors>
-        <StartNumberingFrom>Iniciar numeração por...</StartNumberingFrom>
+        <StartNumberingFrom>Renumerar...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Eliminar texto para surdos...</RemoveTextForHearingImpaired>
         <ChangeCasing>Alterar maiúsculas...</ChangeCasing>
         <ChangeFrameRate>Alterar taxa de frames...</ChangeFrameRate>
@@ -698,6 +720,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TextNumberOfLines>Texto - número de linhas</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Texto - número de caracteres/seg</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Texto - palavras por minuto (ppm)</WordsPerMinute>
+        <Style>Estilo</Style>
+        <Ascending>Crescente</Ascending>
+        <Descending>Descendente</Descending>		
         <MakeNewEmptyTranslationFromCurrentSubtitle>Fazer nova tradução a partir da legenda actual</MakeNewEmptyTranslationFromCurrentSubtitle>
 		<BatchConvert>Converter múltiplos ficheiros...</BatchConvert>
         <GenerateTimeAsText>Criar tempos como texto...</GenerateTimeAsText>
@@ -1234,12 +1259,12 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Date>Data</Date>
     <Type>Tipo</Type>
     <OpenPluginsFolder>Abrir a pasta de plugins</OpenPluginsFolder>
-    <GetPluginsInfo1>Os plugins do Subtitle Edit devem ser descarregados para a pasta 'Plugins'</GetPluginsInfo1>
-    <GetPluginsInfo2>Seleccione o plugin e clique 'Download'</GetPluginsInfo2>
-    <PluginXDownloaded>Plugin {0} baixado</PluginXDownloaded>
-    <Download>&amp;Download</Download>
+    <GetPluginsInfo1>Os plugins do Subtitle Edit devem ser transferidos para a pasta 'Plugins'</GetPluginsInfo1>
+    <GetPluginsInfo2>Seleccione o plugin e clique "Transferir"</GetPluginsInfo2>
+    <PluginXDownloaded>Plugin {0} transferido</PluginXDownloaded>
+    <Download>&amp;Transferir</Download>
     <Remove>&amp;Remover</Remove>
-    <UnableToDownloadPluginListX>Impossível baixar a lista de plugins: {0}</UnableToDownloadPluginListX>
+    <UnableToDownloadPluginListX>Impossível de tansferir a lista de plugins: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>É necessário uma versão mais recente do Subtitle Edit</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Actualização disponível!]</UpdateAvailable>
   </PluginsGet>
@@ -1293,7 +1318,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <PreviewLinesModifiedX>Pré-visualizar - Parágrafos modificados: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Mostrar só linhas modificadas</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milissegundos mínimos entre linhas</MinimumMillisecondsBetweenParagraphs>
-    <FrameInfo />
+    <FrameInfo>Taxa de frames info</FrameInfo>
     <OneFrameXisYMilliseconds>Um fotograma de {0:0.00} fps é {1} milissegundos</OneFrameXisYMilliseconds>	
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
@@ -1454,6 +1479,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MergeDialogue>Combinar diálogos (inserir hífens)</MergeDialogue>
     <GoToNext>Ir para a linha seguinte</GoToNext>
     <GoToPrevious>Ir para a linha anterior</GoToPrevious>
+    <GoToCurrentSubtitleStart>Ir para o início da linha actual</GoToCurrentSubtitleStart>
+    <GoToCurrentSubtitleEnd>Ir para o final da linha actual</GoToCurrentSubtitleEnd>	
     <ToggleFocus>Alternar o realce entre a caixa de texto da legenda e a aba (Lista) na janela principal</ToggleFocus>
     <ToggleDialogueDashes>Alternar hífens de diálogo</ToggleDialogueDashes>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>
@@ -1490,9 +1517,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ToggleTranslationMode>Alternar o modo de tradução</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Mudar entre original e tradução</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Combinar orginal e traduzido</MergeOriginalAndTranslation>
-    <ShortcutIsAlreadyDefinedX>Atalho já definido: 
-{0}
-</ShortcutIsAlreadyDefinedX>
+    <ShortcutIsAlreadyDefinedX>Atalho já definido: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Alternar tradução e original na pré-visualização vídeo/áudio</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Coluna, eliminar texto</ListViewColumnDelete>
     <ListViewColumnInsert>Coluna, inserir texto</ListViewColumnInsert>
@@ -1584,7 +1609,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Untitled>Sem título</Untitled>
   </SplitSubtitle>
   <StartNumberingFrom>
-    <Title>Iniciar numeração a partir de...</Title>
+    <Title>Renumerar</Title>
     <StartFromNumber>Iniciar pelo número:</StartFromNumber>
     <PleaseEnterAValidNumber>Por favor, introduza um número</PleaseEnterAValidNumber>
   </StartNumberingFrom>
@@ -1809,6 +1834,7 @@ Manter as alterações?</KeepChangesMessage>
     <ZoomOut>Diminuir</ZoomOut>
     <AddParagraphHere>Adicionar texto aqui</AddParagraphHere>
     <AddParagraphHereAndPasteText>Adicionar texto da área de tranferência aqui</AddParagraphHereAndPasteText>
+    <FocusTextBox>Evidenciar a caixa de texto</FocusTextBox>	
     <DeleteParagraph>Eliminar texto</DeleteParagraph>
     <Split>Dividir</Split>
     <SplitAtCursor>Dividir na posição do cursor</SplitAtCursor>
