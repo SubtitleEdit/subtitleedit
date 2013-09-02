@@ -65,7 +65,7 @@
             // buttonDownload
             // 
             this.buttonDownload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDownload.Location = new System.Drawing.Point(516, 305);
+            this.buttonDownload.Location = new System.Drawing.Point(651, 375);
             this.buttonDownload.Name = "buttonDownload";
             this.buttonDownload.Size = new System.Drawing.Size(104, 25);
             this.buttonDownload.TabIndex = 22;
@@ -120,7 +120,7 @@
             this.listViewGetPlugins.Location = new System.Drawing.Point(16, 61);
             this.listViewGetPlugins.MultiSelect = false;
             this.listViewGetPlugins.Name = "listViewGetPlugins";
-            this.listViewGetPlugins.Size = new System.Drawing.Size(604, 238);
+            this.listViewGetPlugins.Size = new System.Drawing.Size(738, 308);
             this.listViewGetPlugins.TabIndex = 27;
             this.listViewGetPlugins.UseCompatibleStateImageBehavior = false;
             this.listViewGetPlugins.View = System.Windows.Forms.View.Details;
@@ -133,7 +133,7 @@
             // columnHeaderDescription
             // 
             this.columnHeaderDescription.Text = "Description";
-            this.columnHeaderDescription.Width = 280;
+            this.columnHeaderDescription.Width = 420;
             // 
             // columnHeaderVersion
             // 
@@ -232,7 +232,7 @@
             this.tabPageGetPlugins.Location = new System.Drawing.Point(4, 22);
             this.tabPageGetPlugins.Name = "tabPageGetPlugins";
             this.tabPageGetPlugins.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGetPlugins.Size = new System.Drawing.Size(627, 336);
+            this.tabPageGetPlugins.Size = new System.Drawing.Size(761, 406);
             this.tabPageGetPlugins.TabIndex = 1;
             this.tabPageGetPlugins.Text = "Get plugins";
             this.tabPageGetPlugins.UseVisualStyleBackColor = true;
