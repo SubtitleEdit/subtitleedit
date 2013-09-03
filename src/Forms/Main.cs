@@ -8955,7 +8955,7 @@ namespace Nikse.SubtitleEdit.Forms
                             subtitle.Paragraphs.Add(p);
                         }
                     }
-                }              
+                }
             }
             return subtitle;
         }

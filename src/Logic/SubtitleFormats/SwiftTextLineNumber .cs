@@ -46,14 +46,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            //SUBTITLE: 1	TIMEIN: 00:00:00:00	TIMEOUT: 00:00:04:00
+            //SUBTITLE: 1   TIMEIN: 00:00:00:00 TIMEOUT: 00:00:04:00
             //Voor de oorlog
 
-            //SUBTITLE: 2	TIMEIN: 00:00:05:12	TIMEOUT: 00:00:10:02
+            //SUBTITLE: 2   TIMEIN: 00:00:05:12 TIMEOUT: 00:00:10:02
             //Ik ben Marie Pinhas. Ik ben geboren
             //in Thessaloniki in Griekenland,
 
-            //SUBTITLE: 3	TIMEIN: 00:00:10:06	TIMEOUT: 00:00:15:17
+            //SUBTITLE: 3   TIMEIN: 00:00:10:06 TIMEOUT: 00:00:15:17
             //op 6 maart '31,
             //in een heel oude Griekse familie.
 
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (RegexTimeCodes.IsMatch(line))
             {
 
-                //SUBTITLE: 59	TIMEIN: 00:04:28:06	TIMEOUT: 00:04:32:12
+                //SUBTITLE: 59  TIMEIN: 00:04:28:06 TIMEOUT: 00:04:32:12
                 string s = line.Replace("SUBTITLE:", string.Empty).Replace("TIMEIN", string.Empty).Replace("TIMEOUT", string.Empty).Replace(" ", string.Empty).Replace("\t", string.Empty);
                 string[] parts = s.Split(':');
                 try

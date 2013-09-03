@@ -316,8 +316,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 // newline
                 string newline = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a, 0x8a });
-                
-                if (header.DisplayStandardCode == "0")  
+
+                if (header.DisplayStandardCode == "0")
                     newline = encoding.GetString(new byte[] { 0x8A }); //8Ah=CR/LF
                 //                    newline = encoding.GetString(new byte[] { 0x85, 0x8A, 0x0D, 0x84, 0x80 }); //85h=boxing off, 8Ah=CR/LF, 84h=boxing on, 80h, Italics on
 

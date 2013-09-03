@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Fill(ImportedSubitle);
             if (ImportedSubitle.Paragraphs.Count > 0)
                 SubtitleListview1.SelectIndexAndEnsureVisible(0);
-        }      
+        }
 
         void RefreshTimerTick(object sender, EventArgs e)
         {
@@ -70,13 +70,13 @@ namespace Nikse.SubtitleEdit.Forms
                 Encoding encoding = Utilities.GetEncodingFromFile(fileName);
                 textBoxText.Text = File.ReadAllText(fileName, encoding);
 
-                // check for RTF file   
+                // check for RTF file
                 if (fileName.ToLower().EndsWith(".rtf") && !textBoxText.Text.Trim().StartsWith("{\\rtf"))
                 {
                     var rtBox = new System.Windows.Forms.RichTextBox();
                     rtBox.Rtf = textBoxText.Text;
                     textBoxText.Text = rtBox.Text;
-                }                
+                }
             }
             catch (Exception ex)
             {
