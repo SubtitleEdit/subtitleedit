@@ -304,7 +304,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (count > 2)
                     isFirstLineNumber = true;
             }
-            
+
             for (int idx = 0; idx < lines.Length; idx++)
             {
                 string line = lines[idx];
@@ -381,7 +381,7 @@ namespace Nikse.SubtitleEdit.Logic
                         string text = paragraph.Text.Trim();
                         if (text.StartsWith(prefix))
                             paragraph.Text = text.Remove(0, prefix.Length);
-                    } 
+                    }
                 }
             }
 

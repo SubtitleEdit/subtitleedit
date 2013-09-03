@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
             public Color BackgroundColor { get; set; }
             public string SavDialogFileName { get; set; }
             public string Error { get; set; }
-            public bool LineJoinRound { get; set; } 
+            public bool LineJoinRound { get; set; }
 
             public MakeBitmapParameter()
             {
@@ -1383,7 +1383,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
 
                 bmp = new Bitmap(parameter.ScreenWidth, parameter.ScreenHeight / 3);
-                
+
                 Graphics surface = Graphics.FromImage(bmp);
                 surface.CompositingQuality = CompositingQuality.HighQuality;
                 surface.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -2146,7 +2146,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void ExportPngXml_Shown(object sender, EventArgs e)
         {
-            _isLoading = false;            
+            _isLoading = false;
         }
 
         private void comboBoxHAlign_SelectedIndexChanged(object sender, EventArgs e)
