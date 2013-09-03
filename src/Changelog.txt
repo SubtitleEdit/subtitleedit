@@ -1,13 +1,13 @@
 ﻿Subtitle Edit Changelog
 
 
-3.3.8 (1st of September 2013)
+3.3.8 (1st September 2013)
 * NEW:
    * Added Hungarian language file - thx Zityi
    * Added a few new subtitle formats
-   * Added Tools -> Sort by -> Style - thx Mike
-   * When moving start/end in waveform and holding down ALT will now
-     move border if closest subtitle if less than 500 ms away - thx Leon
+   * Added "Tools -> Sort by -> Style" - thx Mike
+   * When moving start/end in waveform and holding down the ALT key will now
+     move border if the closest subtitle is less than 500 ms away - thx Leon
 * IMPROVED:
    * Updated Spanish language file - thx pakitonaranjo
    * Updated Polish language file - thx Admas
@@ -16,29 +16,29 @@
    * Updated Simplified Chinese language file - thx Leon
    * Updated German language file - thx Siegwarth
    * Added support for the Māori language in PAC - thx Mark
-   * Allow ebu stl with 23/29 fps - thx Raul/Antonio
+   * Allow EBU STL with 23/29 fps - thx Raul/Antonio
    * Minor improvements to WebVTT + added WebVTT with line# - thx Benoît
    * Loading unknown subtitles now might work via generic parser
-   * Ctrl+v now allows import of up to 2000 lines (old limit was 500) - thx Leon
-   * EBU: Added 'Standard Display Code' ('Open subtitling' or 'Level 1/2 teletext')
+   * Ctrl+V now allows import of up to 2000 lines (old limit was 500) - thx Leon
+   * EBU: Added "Standard Display Code" ("Open subtitling" or "Level 1/2 teletext")
 * FIXED:
    * Fix common errors: Fixed two bugs regarding Spanish "¿¡ !?" - thx Mike
    * Bug in getting result from plugin - thx Herman
-   * Fix in "Unknwown format 64" - thx Mark
+   * Fix in "Unknown format 64" - thx Mark
    * Some fixes for SCC - thx Johan
-   * Converting ssa <--> ass now keeps most inline styles - thx Mike
+   * Converting SSA <--> ASS now keeps most inline styles - thx Mike
    * Fix common errors: In "Remove empty lines" at top (in paragraph) the 
      before/after text was switched - thx Andreas
    * Fixed some language tags - thx Marco/Leon
-   * Fixed problem in 'Fix italic tags' - thx Mike
-   * Fixed bugs in 'Apply duration limits' - thx Mike
+   * Fixed problem in "Fix italic tags" - thx Mike
+   * Fixed bugs in "Apply duration limits" - thx Mike
    * When typing "&" SE would show "_" in the list view - thx XhmikosR
    * Allow regex search in empty string - thx vmb
    * Fixed crash when loading sub from dvd - thx Cristiano
    * Export to images now uses font size correctly
-   * Export to images can now render Arabic (use 'Simple rendering')
-   * Bug in reading end time code in format Gpac ttxt - thx noMnoMnoM 
-   * Better ocr of some yellow fonts - thx Albert
+   * Export to images can now render Arabic (use "Simple rendering")
+   * Bug in reading end time code in format Gpac ttxt - thx noMnoMnoM
+   * Better OCR of some yellow fonts - thx Albert
 
 
 3.3.7 (3rd August 2013)
@@ -47,7 +47,7 @@
    * Added a few new subtitle formats
 * IMPROVED:
    * Updated Portuguese language file - thx moob
-   * Updated Basque langauge file - thx Xabier Aramendi
+   * Updated Basque language file - thx Xabier Aramendi
    * Updated Dutch language file - thx Herman
    * Updated Czech language file - thx Trottel
    * Updated Brazilian Portuguese translation - thx Igor Rückert
@@ -64,7 +64,7 @@
 * FIXED:
    * Fixed crash/bugs in MicroDvd format - thx klm
    * Fixed annoying crash when loading a subtitle from "source view"
-   * OCR - Change ocr fix language when changing spell check dictionary
+   * OCR - Change OCR fix language when changing spell check dictionary
    * Fixed Hebrew in PAC files - thx Yaniv
    * Fixed minor language detection bug regarding Korean - thx Hoyt
    * Fixed baseline horizontal alignment in Export to Blu-ray sup - thx THXTEX
@@ -107,7 +107,7 @@
    * Split of subtitle now keep styles - thx Kyousuke
    * Some output changes for Rhozet Marmonic - thx Itai
    * Installer version can now list installed plugins
-   * Fixed bug in format DCinema interop regaring LoadFont URI - thx Radoslav
+   * Fixed bug in format DCinema interop regarding LoadFont URI - thx Radoslav
    * Can now save " " (space) in multiple replace settings - thx dandomina
    * Italian language now active again (broken in 3.3.4)
    * Clear suggestions in OCR now actually works
@@ -127,7 +127,7 @@
    * Updated Italian translation - thx Johnny B. Goode
    * DVD ripping slightly faster now
    * Improvements to change/fix casing regarding music symbols - thx DrJackson
-   * "Remove text for HI" colors suspious lines - thx Alice
+   * "Remove text for HI" colors suspicious lines - thx Alice
 * FIXED:
    * Fixed plugin loader so it also works with installer version - thx Quetsbeek
    * Fix bug in "Remove text for HI" - thx Alice
@@ -187,14 +187,14 @@
    * Batch convert can now also "Fix common errors" and more - thx Adem
    * Volume level is now remembered (no longer in settings) - thx fox
    * Some improvements to language detection - thx fox/mihai
-   * Better import of ssa/ass from Matroska files - thx Mike
+   * Better import of SSA/ASS from Matroska files - thx Mike
 * FIXED:
    * VobSub files created by Subtitle Edit now have better compatibility - thx George
    * Possible crash + bug in "Fix common errors" on selected lines - thx Dan
    * "Drag and drop" of large Blu-ray sup files - thx AT
    * Minor fix in "Fix common errors -> Fix invalid italic tags" - thx azu
    * List view height in "Set sync point" etc. with large font - thx fox
-   * Can now load ass files with "[V4 Styles]" in header - thx Derek
+   * Can now load ASS files with "[V4 Styles]" in header - thx Derek
    * "Frame mode" no longer auto-changes duration/end-time - thx Gerard
 
 
@@ -206,9 +206,9 @@
    * Greek language - thx Menes
 * IMPROVED:
    * Improved reading of bad srt files - thx Ile
-   * Slow Timed Text 1.0 loading speeded up
-   * Sligtly improved reading of italics in timed text draft - thx Jean
-   * Export to png/xml now uses font styles from ssa/ass
+   * Slow Timed Text 1.0 loading sped up
+   * Slightly improved reading of italics in timed text draft - thx Jean
+   * Export to png/xml now uses font styles from SSA/ASS
    * Export images - better cropping
    * Alignment tags now works for format PAC - thx Jussi
    * Allows chars/sec down to 4 due to e.g. Japanese - thx dandomina
@@ -216,9 +216,9 @@
    * No longer removes last lines in "Merge short lines" - thx Pax
    * Some fixes for networking mode regarding insert/split - thx Dan
    * Fixed possible crash in list view regarding syntax coloring
-   * Point sync no longer thows away ssa/ass styling - thx Mike
+   * Point sync no longer throws away SSA/ASS styling - thx Mike
    * Fixed bug in Dutch language file - thx jan bruyndonckx
-   * Fixed bug in converting ass to ssa
+   * Fixed bug in converting ASS to SSA
    * Some fixes for xsubtitle - thx Ed
    * File -> SSA/ASS properties - only update/add changed properties
 
@@ -309,7 +309,7 @@
    * Updated Polish language file - thx Adam Malich
    * Updated Romanian language file - thx DrJackson
    * Better reading of Cavena 890 format - thx Victor
-   * Version number now inludes the revision from SVN - thx XhmikosR
+   * Version number now includes the revision from SVN - thx XhmikosR
    * Unfocused selection in list view now has more visible color - thx Adem
    * Import of subs from mp4 files can now read closed captions - thx Zsolt
    * Some new parameters to command line converting - thx Mateo
@@ -621,7 +621,7 @@
      html tags (thx chamallow)
    * Updated names list (thx chamallow)
    * "Google translate" window is now resizable (thx Kerensky)
-   * Bold/italic/font tags now work better in ssa/ass subtitles
+   * Bold/italic/font tags now work better in SSA/ASS subtitles
    * Icons are now external in the "Icons" folder - you can change them easily yourself
      without re-compiling (thx 6205)
    * New toolbar icons from gnome-look.org with some customization (thx 6205)
