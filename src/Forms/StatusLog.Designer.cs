@@ -66,6 +66,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(400, 200);
             this.Name = "StatusLog";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

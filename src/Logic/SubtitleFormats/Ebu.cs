@@ -15,6 +15,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     {
         static readonly Regex RegExpr = new Regex(@"^[a-f0-9]{6}$", RegexOptions.Compiled);
 
+        public List<int> VerticalPositions = new List<int>();
+        public List<int> JustificationCodes = new List<int>();
+
         public EbuGeneralSubtitleInformation Header;
 
         /// <summary>
@@ -174,7 +177,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 ExtensionBlockNumber = 255;
                 CumulativeStatus = 0;
                 VerticalPosition = 0x16;
-                JustificationCode = 0;
+                JustificationCode = 2;
                 CommentFlag = 0;
             }
 
@@ -324,8 +327,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 TextField = TextField.Replace(Environment.NewLine, newline);
 
                 string endOfLine = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a });
+
                 if (header.DisplayStandardCode == "0")
-                    newline = string.Empty;
+                {
+                    endOfLine = string.Empty;
+                }
                 TextField += endOfLine;
 
                 // convert text to bytes
@@ -471,6 +477,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 int rows;
                 if (header == null || !int.TryParse(header.MaximumNumberOfDisplayableRows, out rows))
                     rows = 23;
+
+                if (header != null && header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2") // teletext
+                    rows = 23;
+                else if (header != null && header.DisplayStandardCode == "0" && header.MaximumNumberOfDisplayableRows == "02") // open subtitling
+                    rows = 15;
+
                 if (p.Text.StartsWith("{\\an7}") || p.Text.StartsWith("{\\an8}") || p.Text.StartsWith("{\\an9}"))
                 {
                     tti.VerticalPosition = 1; // top (vertical)
@@ -560,6 +572,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Header = Encoding.UTF8.GetString(buffer);
             Paragraph last = null;
             byte lastExtensionBlockNumber = 0xff;
+            JustificationCodes = new List<int>();
+            VerticalPositions = new List<int>();
             foreach (EbuTextTimingInformation tti in ReadTTI(buffer, header))
             {
                 if (tti.ExtensionBlockNumber != 0xfe) // FEh : Reserved for User Data
@@ -930,7 +944,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 tti.TimeCodeOutMilliseconds = (int)(1000 / (header.FrameRate / buffer[index + 9 + 3]));
 
                 tti.VerticalPosition = buffer[index + 13];
+                VerticalPositions.Add(tti.VerticalPosition);
                 tti.JustificationCode = buffer[index + 14];
+                JustificationCodes.Add(tti.JustificationCode);
                 tti.CommentFlag = buffer[index + 15];
 
                 // build text
