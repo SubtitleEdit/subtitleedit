@@ -397,7 +397,7 @@
    * Added export to FAB image script
    * Added import of XSub from DivX files (use File -> Open)
  * IMPROVED:
-   * Updated Basque languaged file - thx Xabier Aramendi
+   * Updated Basque language file - thx Xabier Aramendi
    * Export images alignment - thx Marcin
    * Export images can now use bold font
    * Many improvements to fix common errors - thx Majid
