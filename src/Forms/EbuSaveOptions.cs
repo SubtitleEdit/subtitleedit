@@ -226,6 +226,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Subtitle temp = new Subtitle();
                 ebu.LoadSubtitle(temp, null, fileName);
                 FillFromHeader(ebu.Header);
+                if (ebu.JustificationCodes.Count > 2 && ebu.JustificationCodes[1] == ebu.JustificationCodes[2])
+                {
+                    if (ebu.JustificationCodes[1] >= 0 && ebu.JustificationCodes[1] < 4)
+                        comboBoxJustificationCode.SelectedIndex = ebu.JustificationCodes[1];
+                }
             }
         }
 

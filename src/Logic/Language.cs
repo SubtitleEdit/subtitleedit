@@ -1055,6 +1055,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SubtitlesJoined = "Subtitles joined",
                 StatusLog = "Status log",
                 XSceneChangesImported = "{0} scene changes imported",
+                PluginXExecuted = "Plugin '{0}' executed.",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {

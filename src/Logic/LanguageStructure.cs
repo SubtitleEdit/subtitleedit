@@ -945,6 +945,7 @@
             public string SubtitlesJoined { get; set; }
             public string StatusLog { get; set; }
             public string XSceneChangesImported { get; set; }
+            public string PluginXExecuted { get; set; }
 
             public class MainMenu
             {

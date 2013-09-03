@@ -13579,6 +13579,9 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         RestoreSubtitleListviewIndexes();
                         ShowSource();
+
+                        if (!string.IsNullOrEmpty(_language.PluginXExecuted))
+                            ShowStatus(string.Format(_language.PluginXExecuted, name));
                     }
                     else
                     {
