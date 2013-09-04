@@ -1294,12 +1294,30 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 var fontStyle = FontStyle.Regular;
                 if (parameter.SubtitleFontBold)
                     fontStyle = FontStyle.Bold;
-                font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize, fontStyle);
+                font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize, fontStyle);               
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message);
-                font = new Font(FontFamily.Families[0].Name, parameter.SubtitleFontSize);
+                try
+                {
+                    var fontStyle = FontStyle.Regular;
+                    if (!parameter.SubtitleFontBold)
+                        fontStyle = FontStyle.Bold;
+                    font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize, fontStyle);
+                }
+                catch
+                {
+                    MessageBox.Show(exception.Message);
+
+                    if (FontFamily.Families[0].IsStyleAvailable(FontStyle.Regular))
+                        font = new Font(FontFamily.Families[0].Name, parameter.SubtitleFontSize);
+                    else if (FontFamily.Families.Length > 1 && FontFamily.Families[1].IsStyleAvailable(FontStyle.Regular))
+                        font = new Font(FontFamily.Families[1].Name, parameter.SubtitleFontSize);
+                    else if (FontFamily.Families.Length > 2 && FontFamily.Families[1].IsStyleAvailable(FontStyle.Regular))
+                        font = new Font(FontFamily.Families[2].Name, parameter.SubtitleFontSize);
+                    else
+                        font = new Font("Arial", parameter.SubtitleFontSize);
+                }                
             }
 
             SizeF textSize = g.MeasureString("Hj!", font);
