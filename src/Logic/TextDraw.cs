@@ -50,8 +50,22 @@ namespace Nikse.SubtitleEdit.Logic
                 fontStyle = FontStyle.Bold;
             else if (isUnderline)
                 fontStyle = FontStyle.Underline;
-            path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, font.Size, next, sf);
-
+            try
+            {
+                path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, font.Size, next, sf);
+            }
+            catch
+            {
+                fontStyle = FontStyle.Regular;
+                try
+                {
+                    path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, font.Size, next, sf);
+                }
+                catch
+                {
+                    path.AddString(sb.ToString(), new FontFamily("Arial"), (int)fontStyle, font.Size, next, sf);
+                }
+            }
             sb.Length = 0;
         }
 
