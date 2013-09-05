@@ -1344,12 +1344,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 baseLinePadding = 12;
             if (parameter.SubtitleFontSize < 25)
                 baseLinePadding = 9;
-            if (lines[lines.Length - 1].Contains("g") || lines[lines.Length - 1].Contains("j") || lines[lines.Length - 1].Contains("p") || lines[lines.Length - 1].Contains("q") || lines[lines.Length - 1].Contains("y") || lines[lines.Length - 1].Contains(","))
+            if (lines.Length > 0)
             {
-                string textNoBelow = lines[lines.Length - 1].Replace("g", "a").Replace("j", "a").Replace("p", "a").Replace("q", "a").Replace("y", "a").Replace(",", "a");
-                baseLinePadding -= (int)Math.Round((TextDraw.MeasureTextHeight(font, lines[lines.Length - 1], parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold)));
-                if (baseLinePadding < 0)
-                    baseLinePadding = 0;
+                if (lines[lines.Length - 1].Contains("g") || lines[lines.Length - 1].Contains("j") || lines[lines.Length - 1].Contains("p") || lines[lines.Length - 1].Contains("q") || lines[lines.Length - 1].Contains("y") || lines[lines.Length - 1].Contains(","))
+                {
+                    string textNoBelow = lines[lines.Length - 1].Replace("g", "a").Replace("j", "a").Replace("p", "a").Replace("q", "a").Replace("y", "a").Replace(",", "a");
+                    baseLinePadding -= (int)Math.Round((TextDraw.MeasureTextHeight(font, lines[lines.Length - 1], parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold)));
+                    if (baseLinePadding < 0)
+                        baseLinePadding = 0;
+                }
             }
 
             var lefts = new List<float>();
