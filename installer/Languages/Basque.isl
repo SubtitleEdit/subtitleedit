@@ -1,9 +1,9 @@
-; *** Inno Setup version 5.1.11+ Basque messages ***
+; *** Inno Setup version 5.5.3+ Basque messages ***
 ;
-; Translated by 3ARRANO (3arrano@3arrano.com)
+; Basque Translation: (EUS_Xabier Aramendi) (azpidatziak@gmail.com)
 ;
 ; To download user-contributed translations of this file, go to:
-;   http://www.jrsoftware.org/is3rdparty.php
+;   http://www.jrsoftware.org/files/istrans/
 ;
 ; Note: When translating this text, do not add periods (.) to the end of
 ; messages that didn't have them already, because on those messages Inno
@@ -30,289 +30,310 @@ LanguageCodePage=0
 [Messages]
 
 ; *** Application titles
-SetupAppTitle=Instalaketa
-SetupWindowTitle=Instalaketa - %1
-UninstallAppTitle=Desinstalaketa
-UninstallAppFullTitle=Desinstalaketa - %1
+SetupAppTitle=Ezarpena
+SetupWindowTitle=Ezarpena - %1
+UninstallAppTitle=Kentzea
+UninstallAppFullTitle=Kentzea - %1
 
 ; *** Misc. common
 InformationTitle=Argibideak
-ConfirmTitle=Berretsi
+ConfirmTitle=Baieztatu
 ErrorTitle=Akatsa
 
 ; *** SetupLdr messages
-SetupLdrStartupMessage=Programa honek %1 instalatuko du. Jarraitu nahi duzu?
-LdrCannotCreateTemp=Ezin izan da aldi baterako fitxategirik sortu. Instalaketa ezeztatu da
-LdrCannotExecTemp=Aldi baterako karpetako fitxategia ezin izan da abiarazi. Instalaketa ezeztatu da
+SetupLdrStartupMessage=Honek %1 ezarriko du. Jarraitzea nahi duzu?
+LdrCannotCreateTemp=Ezinezkoa aldibaterako agiri bat sortzea. Ezarpena utzita
+LdrCannotExecTemp=Ezinezkoa agiria exekutatzea aldibaterako zuzenbidean. Ezarpena utzita
+
 ; *** Startup error messages
-LastErrorMessage=%1.%n%n%2 akatsa: %3
-SetupFileMissing=Ez da %1 fitxategia aurkitu instalaketaren direktorioan. Zuzendu arazoa edo eskuratu programaren kopia berri bat.
-SetupFileCorrupt=Instalaketa fitxategiak hondaturik daude. Eskuratu programaren kopia berri bat.
-SetupFileCorruptOrWrongVer=Instalaketa fitxategiak hondaturik daude, edo ez dira instalatzailearen bertsio honekin bateragarriak. Zuzendu arazoa edo eskuratu programaren kopia berri bat.
-NotOnThisPlatform=Programa hau ez dabil %1 sistemapean.
-OnlyOnThisPlatform=Programa hau %1 sistemapean soilik dabil.
-OnlyOnTheseArchitectures=Programa hau ondorengo prozesagailuen arkitekturetarako diseinatu diren Windowsen bertsioetan soilik instala daiteke:%n%n%1
-MissingWOW64APIs=Darabilzun Windowsen bertsioak ez dakar 64-biteko instalaketa bat burutzeko instalatzaileak behar duen funtzionalitaterik. Arazo hau konpontzeko, instalatu Service Pack %1 zerbitzu paketea.
-WinVersionTooLowError=Programa honek %1 %2 edo bertsio berriagoa behar du.
-WinVersionTooHighError=Programa hau ezin da instalatu %1 %2 edo bertsio berriagoan.
-AdminPrivilegesRequired=Programa hau instalatzeko administratzaile gisa hasi behar duzu saioa.
-PowerUserPrivilegesRequired=Programa hau instalatzeko administratzaile gisa edo Agintedun Erabiltzaileen taldeko kide gisa hasi behar duzu saioa.
-SetupAppRunningError=Instalatzaileak une honetan %1 irekita dagoela nabaritu du.%n%nItxi bere leiho guztiak, ondoren klikatu Ados jarraitzeko, edo Utzi irteteko.
-UninstallAppRunningError=Instalatzaileak une honetan %1 irekita dagoela nabaritu du.%n%nItxi bere leiho guztiak, ondoren klikatu Ados jarraitzeko, edo Utzi irteteko.
+LastErrorMessage=%1.%n%nAkatsa %2: %3
+SetupFileMissing=%1 agiria ez dago ezarpen zuzenbidean. Mesedez zuzendu arazoa edo lortu programaren kopia berri bat.
+SetupFileCorrupt=Ezarpen agiriak hondatuta daude. Mesedez lortu programaren kopia berri bat.
+SetupFileCorruptOrWrongVer=Ezarpen agiriak hondatuta daude, edo bateraezinak dira Ezartzaile bertsio honekin. Mesedez zuzendu arazoa edo lortu programaren kopia berri bat.
+InvalidParameter=Parametro baliogabe bat igaro da komando lerroan:%n%n%1
+SetupAlreadyRunning=Ezarpena jadanik ekinean dago.
+WindowsVersionNotSupported=Programa honek ez du zure ordenagailuan ekinean dagoen Windows bertsioa sostengatzen.
+WindowsServicePackRequired=Programa honek %1 Service Pack %2 edo berriagoa behar du.
+
+
+NotOnThisPlatform=Programa honek ez du ekingo hemen: %1.
+OnlyOnThisPlatform=Programa hau hemen ekin behar da: %1.
+OnlyOnTheseArchitectures=Programa hau hurrengo Windows arkitekturatarako diseinaturiko bertsioetan bakarrik ezarri daiteke:%n%n%1
+MissingWOW64APIs=Erabiltzen ari zaren Windows bertsioak ez du Ezartzaileak 64-biteko ezarpen bat egiteko behar dituen eginkizunak barneratzen. Arazo hau zuzentzeko, mesedez ezarri Service Pack %1.
+WinVersionTooLowError=Programa honek %1 bertsioa %2 edo berriagoa behar du.
+WinVersionTooHighError=Programa hau ezin da %1 bertsioa %2 edo berriagoan ezarria izan.
+AdminPrivilegesRequired=Administrari bezala izena-emanda egon behar zara programa hau ezartzeko.
+PowerUserPrivilegesRequired=Administrari bezala izena-emanda edo Boteredun Erabiltzaile taldeko kide bezala egon behar zara programa hau ezartzerakoan.
+SetupAppRunningError=Ezartzaileak %1 ekinean dagoela atzeman du.%n%nMesedez itxi bere eskabide guztiak orain, orduan klikatu Ongi jarritzeko, edo Ezeztatu irtetzeko.
+UninstallAppRunningError=Kentzaileak %1 ekinean dagoela atzeman du.%n%nMesedez itxi bere eskabide guztiak orain, orduan klikatu Ongi jarritzeko, edo Ezeztatu irtetzeko.
 
 ; *** Misc. errors
-ErrorCreatingDir=Instalatzaileak ezin izan du "%1" direktorioa sortu
-ErrorTooManyFilesInDir=Ezinezkoa izan da "%1" direktorioan fitxategi bat sortzea, fitxategi gehiegi dituelako barnean
+ErrorCreatingDir=Ezartzaileak ezin izan du zuzenbidea sortu "%1" 
+ErrorTooManyFilesInDir=Ezinezkoa agiri bat sortzea "%1" zuzenbidean agiri gehiegi dituelako
 
 ; *** Setup common messages
-ExitSetupTitle=Instalatzailetik Irten
-ExitSetupMessage=Instalaketa ez da burutu. Orain irtenez gero, programa ez da instalatuko.%n%nInstalaketa burutzeko edonoiz ireki dezakezu berriro instalatzailea.%n%nInstalatzailetik Irten?
-AboutSetupMenuItem=&Instalatzaileari Buruz...
-AboutSetupTitle=Instalatzaileari Buruz
-AboutSetupMessage=%1 %2%n%3%n%n%1en webgunea :%n%4
+ExitSetupTitle=Irten Ezartzailetik
+ExitSetupMessage=Ezarpena ez dago osatuta. Orain irtetzen bazara, programa ez da ezarriko.%n%nEzartzailea berriro edonoiz abiatu dezakezu ezarpena osatzeko.%n%nIrten Ezartzailetik?
+AboutSetupMenuItem=&Ezartzaileari buruz...
+AboutSetupTitle=Ezartzaileari buruz
+AboutSetupMessage=%1 bertsioa %2%n%3%n%n%1 webgunea:%n%4
 AboutSetupNote=
 TranslatorNote=
 
 ; *** Buttons
-ButtonBack=< A&urrekoa
+ButtonBack=< &Atzera
 ButtonNext=&Hurrengoa >
-ButtonInstall=&Instalatu
-ButtonOK=Ados
-ButtonCancel=Utzi
+ButtonInstall=&Ezarri
+ButtonOK=Ongi
+ButtonCancel=Ezeztatu
 ButtonYes=&Bai
 ButtonYesToAll=Bai &Guztiari
 ButtonNo=&Ez
 ButtonNoToAll=E&z Guztiari
 ButtonFinish=A&maitu
-ButtonBrowse=&Arakatu...
-ButtonWizardBrowse=A&rakatu...
-ButtonNewFolder=&Karpeta Berria Sortu
+ButtonBrowse=&Bilatu...
+ButtonWizardBrowse=B&ilatu...
+ButtonNewFolder=Egi&n Agiritegi Berria
 
 ; *** "Select Language" dialog messages
-SelectLanguageTitle=Hautatu Instalatzailearen Hizkuntza
-SelectLanguageLabel=Hautatu instalaketarako erabili nahi duzun hizkuntza:
+SelectLanguageTitle=Hautatu Ezarpen Hizkuntza
+SelectLanguageLabel=Hautatu ezarpenean zehar erabiltzeko hizkuntza:
 
 ; *** Common wizard text
-ClickNext=Klikatu Hurrengoa jarraitzeko, edo Utzi instalatzailetik irteteko.
+ClickNext=Klikatu Hurrengoa jarraitzeko, edo Ezeztatu Ezartzailetik irtetzeko
 BeveledLabel=
-BrowseDialogTitle=Karpetak Arakatu
-BrowseDialogLabel=Hautatu karpeta bat azpiko zerrendan, ondoren klikatu Ados.
-NewFolderName=Karpeta Berria
+BrowseDialogTitle=Bilatu Agiritegia
+BrowseDialogLabel=Hautatu agiritegi bat azpiko zerrendan, orduan klikatu Ongi
+NewFolderName=Agiritegi Berria
 
 ; *** "Welcome" wizard page
-WelcomeLabel1=Ongietorri [name] Instalatzeko Morroira
-WelcomeLabel2=Programa honek [name/ver] zure konputagailuan instalatuko du.%n%nGomendagarria da jarraitu aurretik gainontzeko aplikazioak ixtea.
+WelcomeLabel1=Ongi etorria [name] Ezarpen Laguntzailera
+WelcomeLabel2=Honek [name/ver] zure ordenagailuan ezarriko du.%n%nGomendagarria da beste aplikazio guztiak istea jarraitu aurretik.
 
 ; *** "Password" wizard page
-WizardPassword=Pasahitza
-PasswordLabel1=Instalaketa hau pasahitzez babesturik dago.
-PasswordLabel3=Sartu pasahitza, ondoren klikatu Hurrengoa jarraitzeko. Pasahitzetan maiuskulak bereizten dira.
-PasswordEditLabel=&Pasahitza:
-IncorrectPassword=Sartu duzun pasahitza ez da zuzena. Saiatu berriro.
+WizardPassword=Sarhitza
+PasswordLabel1=Ezarpen hau sarhitzez babestuta dago.
+PasswordLabel3=Mesedez eman sarhitza, orduan klikatu Hurrengoa jarraitzeko. Sarhitzek hizki larri-xeheak bereizten dituzte.
+PasswordEditLabel=&Sarhitza:
+IncorrectPassword=Eman duzun sarhitza ez da zuzena. Mesedez saiatu berriro.
 
 ; *** "License Agreement" wizard page
-WizardLicense=Lizentziaren Onarpena
-LicenseLabel=Irakurri ondorengo argibide garrantzitsu hauek jarraitu aurretik.
-LicenseLabel3=Irakurri ondorengo Lizentziaren Onarpena. Lizentzia honen baldintzak onartu behar dituzu instalaketaren jarraitu aurretik.
-LicenseAccepted=Lizentziaren baldintzak &onartzen ditut
-LicenseNotAccepted=&Ez ditut lizentziaren baldintzak onartzen
+WizardLicense=Baimen Ituna
+LicenseLabel=Mesedez irakurri hurrengo argibide garrantzitsuak jarraitu aurretik.
+LicenseLabel3=Mesedez irakurri hurrengo Baimen Ituna. Itun honen baldintzak onartu behar dituzu ezarpenarekin jarraitu aurretik.
+LicenseAccepted=&Onartzen dut ituna
+LicenseNotAccepted=&Ez dut onartzen ituna
 
 ; *** "Information" wizard pages
 WizardInfoBefore=Argibideak
-InfoBeforeLabel=Irakurri ondorengo argibide garrantzitsu hauek jarraitu aurretik.
-InfoBeforeClickLabel=Instalaketarekin jarraitzeko gertu egotean, klikatu Hurrengoa.
+InfoBeforeLabel=Mesedez irakurri hurrengo argibide garrantzitsuak jarraitu aurretik.
+InfoBeforeClickLabel=Ezarpenarekin jarraitzeko gertu zaudenean, klikatu Hurrengoa.
 WizardInfoAfter=Argibideak
-InfoAfterLabel=Irakurri ondorengo argibide garrantzitsu hauek jarraitu aurretik.
-InfoAfterClickLabel=Instalaketarekin jarraitzeko gertu egotean, klikatu Hurrengoa.
+InfoAfterLabel=Mesedez irakurri hurrengo argibide garrantzitsuak jarraitu aurretik.
+InfoAfterClickLabel=Ezarpenarekin jarraitzeko gertu zaudenean, klikatu Hurrengoa.
 
 ; *** "User Information" wizard page
-WizardUserInfo=Erabiltzailearen Datuak
-UserInfoDesc=Sartu zure datuak.
+WizardUserInfo=Erabailtzaile Argibideak
+UserInfoDesc=Mesedez sartu zure argibideak
 UserInfoName=&Erabiltzaile Izena:
-UserInfoOrg=E&rakundea:
+UserInfoOrg=&Antolakundea:
 UserInfoSerial=&Serie Zenbakia:
 UserInfoNameRequired=Izen bat sartu behar duzu.
 
 ; *** "Select Destination Location" wizard page
-WizardSelectDir=Hautatu Helburu Direktorioa
-SelectDirDesc=Non instalatu beharko litzateke [name]?
-SelectDirLabel3=Instalatzaileak [name] ondorengo karpetan instalatuko du.
-SelectDirBrowseLabel=Jarraitzeko, klikatu Hurrengoa. Beste karpeta bat hautatu nahi baduzu, klikatu Arakatu.
-DiskSpaceMBLabel=Gutxienez [mb] MBko toki hutsa behar da diskan.
-ToUNCPathname=Instalatzaileak ezin du UNC bideizen baten instalatu. Sarean instalatzen saiatzen ari bazara, sareko diska bat mapeatu beharko duzu.
-InvalidPath=Bideizen oso bat sartu behar duzu, unitate hizki eta guzti; adibidez:%n%nC:\APP%n%nedo UNC bideizen bat honela:%n%n\\zerbitzaria\elkarbanatua
-InvalidDrive=Hautatu duzun unitatea edo UNC elkarbanatua ez dago edo ezin da bertara sartu. Hautatu beste bat.
-DiskSpaceWarningTitle=Ez Dago Behar Beste Toki Diskan
-DiskSpaceWarning=Instalatzaileak gutxienez %1 KBko toki hutsa behar du instalatzeko, baina hautaturiko unitateak %2 KB soilik ditu hutsik.%n%nHala ere jarraitu nahi duzu?
-DirNameTooLong=Karpetaren izena edo bideizena luzeegia da.
-InvalidDirName=Karpetaren izena ez da zuzena.
-BadDirName32=Karpetaren izenak ezin dezake ondorengo karaktereetarik bat ere eduki:%n%n%1
-DirExistsTitle=Karpeta Badago
-DirExists=Karpeta hau:%n%n%1%n%nlehendik ere badago. Hala ere bertan instalatu nahi duzu?
-DirDoesntExistTitle=Karpeta Ez Dago
-DirDoesntExist=Karpeta hau:%n%n%1%n%nez dago. Sortu nahi duzu?
+WizardSelectDir=Hautatu Helmuga Kokalekua
+SelectDirDesc=Non ezarri behar da [name]?
+SelectDirLabel3=Ezartzaileak [name] hurrengo agiritegian ezarriko du.
+SelectDirBrowseLabel=Jarraitzeko, klikatu Hurrengoa. Beste agiritegi bat hautatzea nahi baduzu, klikatu Bilatu.
+DiskSpaceMBLabel=Gutxienez [mb] MB-eko toki askea behar da diska gogorrean.
+CannotInstallToNetworkDrive=Ezarpena ezin da sare gidagailu batean egin.
+CannotInstallToUNCPath=Ezarpena ezin da UNC helburu batean egin.
+InvalidPath=Helburu osoa gidagailu hizkiarekin sartu behar duzu; adibidez:%n%nC:\APP%n%nedo UNC helburu bat forma honetan:%n%n\\server\share
+InvalidDrive=Hautatu duzun gidagailua edo UNC elkarbanaketa ez dago edo sarbidea ezinezkoa da. Mesedez hautatu beste bat.
+DiskSpaceWarningTitle=Ez Dago Nahikoa Toki Diskan
+DiskSpaceWarning=Ezarpenak gutxienez %1 KB-eko toki askea behar du ezartzeko, baina hautaturiko gidagailuak %2 KB bakarrik ditu eskuragarri.%n%nHorrela ere jarraitzea nahi duzu?
+DirNameTooLong=Agiritegi izena edo helburua luzeegia da.
+InvalidDirName=Agiritegi izena ez da baliozkoa.
+BadDirName32=Agiritegi izenek ezin dute hurrengo hizkietako bat ere izan:%n%n%1
+DirExistsTitle=Agiritegia Badago
+DirExists=Agiritegia:%n%n%1%n%njadanik badago. Horrela ere agiritegi horretan ezartzea nahi duzu?
+DirDoesntExistTitle=Agiritegia Ez Dago
+DirDoesntExist=Agiritegia:%n%n%1%n%nez dago. Nahi duzu agiritegia sortzea?
 
 ; *** "Select Components" wizard page
 WizardSelectComponents=Hautatu Osagaiak
-SelectComponentsDesc=Zein osagai instalatu behar dira?
-SelectComponentsLabel2=Hautatu instalatu nahi dituzun osagaiak; garbitu instalatu nahi ez dituzunak. Klikatu Hurrengoa jarraitzeko gertu egotean.
-FullInstallation=Guztia instalatu
+SelectComponentsDesc=Zer osagai ezarri behar dira?
+SelectComponentsLabel2=Hautatu ezartzea nahi dituzun osagaiak; garbitu ezartzea nahi ez dituzun osagaiak. Klikatu Hurrengoa jarraitzeko gertu zaudenean.
+FullInstallation=Ezarpen osoa
 ; if possible don't translate 'Compact' as 'Minimal' (I mean 'Minimal' in your language)
-CompactInstallation=Instalaketa Trinkoa
-CustomInstallation=Instalaketa Pertsonalizatua
-NoUninstallWarningTitle=Osagai Hauek Badituzu
-NoUninstallWarning=Instalatzaileak nabaritu du ondorengo osagaiok jadanik konputagailuan instalaturik dituzula:%n%n%1%n%nOsagai hauek ez aukeratzeak ez ditu desinstalatuko.%n%nHala ere jarraitu nahi duzu?
+CompactInstallation=Ezarpen trinkoa
+CustomInstallation=Norbere ezarpena
+NoUninstallWarningTitle=Osagaiak Badaude
+NoUninstallWarning=Ezartzaileak atzeman du hurrengo osagaiak jadanik zure ordenagailuan ezarrita daudela:%n%n%1%n%nOsagai hauek deshautatuz gero ez dira ezarriko.%n%nHorrela ere jarraitzea nahi duzu?
 ComponentSize1=%1 KB
 ComponentSize2=%1 MB
-ComponentsDiskSpaceMBLabel=Uneko aukeraketak gutxienez [mb] MBko toki hutsa behar du diskan.
+ComponentsDiskSpaceMBLabel=Oraingo hautapenak gutxienez [mb] MB-eko tokia behar du diskan.
 
 ; *** "Select Additional Tasks" wizard page
-WizardSelectTasks=Hautatu Ataza Gehigarriak
-SelectTasksDesc=Zein ataza gehigarri burutu behar dira?
-SelectTasksLabel2=Hautatu [name] instalatu bitartean instalatzaileak burutu beharreko ataza gehigarriak, ondoren klikatu Hurrengoa.
+WizardSelectTasks=Hautatu Eginkizun Gehigarriak
+SelectTasksDesc=Zer eginkizun gehigarri burutu behar dira?
+SelectTasksLabel2=Hautatu Ezartzaileak  [name]-ren ezarpenean zehar burutzea nahi dituzun eginkizun gehigarriak, orduan klikatu Hurrengoa
 
 ; *** "Select Start Menu Folder" wizard page
-WizardSelectProgramGroup=Hautatu Hasi Menuko Karpeta
-SelectStartMenuFolderDesc=Non sortu behar ditu instalatzaileak programaren lasterbideak?
-SelectStartMenuFolderLabel3=Instalatzaileak Hasi Menuko ondorengo karpetan sortuko ditu programaren lasterbideak.
-SelectStartMenuFolderBrowseLabel=Jarraitzeko, klikatu Hurrengoa. Beste karpeta bat hautatu nahi baduzu, klikatu Arakatu.
-MustEnterGroupName=Karpeta izen bat sartu behar duzu.
-GroupNameTooLong=Karpetaren izena edo bideizena luzeegia da.
-InvalidGroupName=Karpetaren izena ez da zuzena.
-BadGroupName=Karpetaren izenak ezin dezake ondorengo karaktereetarik bat ere eduki:%n%n%1
-NoProgramGroupCheck2=&Ez sortu Hasi Menuko karpetarik
+WizardSelectProgramGroup=Hautatu Hasiera Menuko Agiritegia
+SelectStartMenuFolderDesc=Non ezarri behar ditu Ezartzaileak programaren lasterbideak?
+SelectStartMenuFolderLabel3=Ezartzaileak programaren lasterbideak hurrengo Hasiera Menuko agiritegian sortuko ditu.
+SelectStartMenuFolderBrowseLabel=Jarraitzeko, klikatu Hurrengoa. Beste agiritegi bat hautatzea nahi baduzu, klikatu Bilatu.
+MustEnterGroupName=Agiritegi izen bat sartu behar duzu.
+GroupNameTooLong=Agiritegi izena edo helburua luzeegia da.
+InvalidGroupName=Agiritegi izena ez da baliozkoa.
+BadGroupName=Agiritegi izenak ezin du hurrengo hizkietako bat ere izan:%n%n%1
+NoProgramGroupCheck2=&Ez sortu Hasiera Menuko agiritegia
 
 ; *** "Ready to Install" wizard page
-WizardReady=Instalatzeko Gertu
-ReadyLabel1=Instalatzailea [name] zure konputagailuan instalatzen hasteko gertu dago.
-ReadyLabel2a=Klikatu Instalatu instalaketarekin jarraitzeko, edo klikatu Aurrekoa ezarpenen bat berrikusi edo aldatu nahi baduzu.
-ReadyLabel2b=Klikatu Instalatu instalaketarekin jarraitzeko.
-ReadyMemoUserInfo=Erabiltzailearen datuak:
-ReadyMemoDir=Helburu direktorioa:
-ReadyMemoType=Instalaketa mota:
+WizardReady=Ezartzeko Gertu
+ReadyLabel1=Ezartzailea orain gertu dago [name] zure ordenagailuan ezartzeko.
+ReadyLabel2a=Klikatu Ezarri ezarpenarekin jarraitzeko, edo klikatu Atzera ezarpenen bat berrikustea edo aldatzea nahi baduzu.
+ReadyLabel2b=Klikatu Ezarri ezarpenarekin jarraitzeko.
+ReadyMemoUserInfo=Erabiltzaile argibideak:
+ReadyMemoDir=Helmuga kokalekua:
+ReadyMemoType=Ezarpen mota:
 ReadyMemoComponents=Hautaturiko osagaiak:
-ReadyMemoGroup=Hasi Menuko karpeta:
-ReadyMemoTasks=Ataza gehigarriak:
+ReadyMemoGroup=Hasiera Menuko agiritegia:
+ReadyMemoTasks=Eginkizun gehigarriak:
 
 ; *** "Preparing to Install" wizard page
-WizardPreparing=Instalatzeko Gertatzen
-PreparingDesc=Instalatzailea [name] zure konputagailuan instalatzeko gertatzen ari da.
-PreviousInstallNotCompleted=Aurreko programa baten instalaketa/desinstalaketa ez da burutu. Instalaketa hura burutzeko konputagailua berrabiarazi beharko duzu.%n%nKonputagailua berrabiarazi ondoren, ireki instalatzailea berriro [name] instalatzen bukatzeko.
-CannotContinue=Ezinezkoa da instalaketarekin jarraitzea. Klikatu Utzi irteteko.
+WizardPreparing=Ezartzeko Gertatzen
+PreparingDesc=Ezartzailea [name] zure ordenagailuan ezartzeko gertatzen ari da.
+PreviousInstallNotCompleted=Aurreko programaren ezartze/kentzea ez dago osatuta. Zure ordenagailua berrabiarazi behar duzu ezarpena osatzeko.%n%nZure ordenagailua berrabiarazi ondoren, ekin Ezartzailea berriro [name]-ren ezarpena osatzeko.
+CannotContinue=Ezarpenak ezin du jarraitu. Mesedez klikatu Ezeztatu irtetzeko.
+ApplicationsFound=Hurrengo aplikazioak Ezartzaileak eguneratu behar dituen agiriak erabiltzen ari dira. Gomendagarria da Ezartzaileari aplikazio hauek berezgaitasunez istea ahalbidetzea.
+ApplicationsFound2=Hurrengo aplikazioak Ezartzaileak eguneratu behar dituen agiriak erabiltzen ari dira. Gomendagarria da Ezartzaileari aplikazio hauek berezgaitasunez istea ahalbidetzea. Ezarpena osatu ondoren, Ezartzailea aplikazioak berrabiarazten saiatuko da.
+CloseApplications=&Berezgaitasunez itxi aplikazioak
+DontCloseApplications=&Ez itxi aplikazioak
+ErrorCloseApplications=Ezartzaileak ezin ditu berezgaitasunez aplikazio guztiak itxi. Gomendagarria da Ezartzaileak eguneratu behar dituen agiriak erabiltzen ari diren aplikazio guztiak istea jarraitu aurretik.
 
 ; *** "Installing" wizard page
-WizardInstalling=Instalatzen
-InstallingLabel=Itxaron instalatzaileak [name] zure konputagailuan instalatu artean.
+WizardInstalling=Ezartzen
+InstallingLabel=Mesedez itxaron Ezartzaileak [name] zure ordenagailuan ezartzen duen bitartean.
 
 ; *** "Setup Completed" wizard page
-FinishedHeadingLabel=[name] Instalatzeko Morroia Burutzen
-FinishedLabelNoIcons=Instalatzaileak [name] zure konputagailuan instalatu du.
-FinishedLabel=Instalatzaileak [name] zure konputagailuan instalatu du. Aplikazioa abiarazteko instalaturiko ikonoetan klikatu.
-ClickFinish=Klikatu Amaitu instalatzailetik irteteko.
-FinishedRestartLabel=[name] programaren instalaketa burutzeko, instalatzaileak konputagailua berrabiarazi beharra du. Orain berrabiarazi nahi duzu?
-FinishedRestartMessage=[name] programaren instalaketa burutzeko, instalatzaileak konputagailua berrabiarazi beharra du.%n%nOrain berrabiarazi nahi duzu?
-ShowReadmeCheck=Bai, IRAKURRI fitxategia ikusi nahi dut
-YesRadio=&Bai, berrabiarazi orain
-NoRadio=&Ez, beranduago berrabiaraziko dut
+FinishedHeadingLabel=[name] Ezarpen Laguntzailea osatzen
+FinishedLabelNoIcons=Ezartzaileak amaitu du [name] zure ordenagailuan ezartzeaz.
+FinishedLabel=Ezartzaileak amaitu du [name] zure ordenagailuan ezartzea. Aplikazioa ezarritako ikurren bidez abiarazi daiteke.
+ClickFinish=Klikatu Amaitu Ezartzailetik irtetzeko.
+FinishedRestartLabel=[name]-ren ezarpena osatzeko, Ezartzaileak zure ordenagailua berrabiarazi behar du. Orain berrabiaraztea nahi duzu?
+FinishedRestartMessage=[name]-ren ezarpena osatzeko, Ezartzaileak zure ordenagailua berrabiarazi behar du.%n%nOrain berrabiaraztea nahi duzu?
+ShowReadmeCheck=Bai, IRAKURRI agiria ikustea nahi dut
+YesRadio=&Bai, berrabiarazi ordenagailua orain
+NoRadio=&Ez, geroago berrabiaraziko dut ordenagailua
 ; used for example as 'Run MyProg.exe'
-RunEntryExec=Abiarazi %1
+RunEntryExec=Ekin %1
 ; used for example as 'View Readme.txt'
 RunEntryShellExec=Ikusi %1
 
 ; *** "Setup Needs the Next Disk" stuff
-ChangeDiskTitle=Instalatzaileak Hurrengo Diska Behar Du
-SelectDiskLabel2=Sartu %1. diska eta klikatu Ados.%n%nDiska honetako fitxategiak ez badaude azpian ageri den karpetan, sartu bideizen egokia edo klikatu Arakatu.
-PathLabel=&Bideizena:
-FileNotInDir2="%1" fitxategia ezin izan da "%2" karpetan aurkitu. Sartu diska zuzena edo hautatu beste karpeta bat.
-SelectDirectoryLabel=Zehaztu hurrengo diskaren kokapena.
+ChangeDiskTitle=Ezarpenak Hurrengo Diska Behar Du
+SelectDiskLabel2=Mesedez txertatu %1 Diska eta klikatu Ongi.%n%nDiska honetako agiriak azpian erakutsitakoa ez den beste agiritegi batean aurkitu badaitezke, sartu helburu zuzena edo klikatu Bilatu.
+PathLabel=&Helburua:
+FileNotInDir2="%1" agiria ezin da hemen aurkitu: "%2". Mesedez txertatu diska zuzena edo hautatu beste agiritegi bat.
+SelectDirectoryLabel=Mesedez adierazi hurrengo diskaren kokalekua.
 
 ; *** Installation phase messages
-SetupAborted=Instalaketa ez da burutu.%n%nKonpondu arazoa eta abiarazi instalatzailea berriro.
-EntryAbortRetryIgnore=Klikatu Saiatu Berriz berriro saiatzeko, Ezikusi hala ere jarraitzeko, edo Utzi instalaketa uzteko.
+SetupAborted=Ezarpena ez da osatu.%n%nMesedez zuzendu arazoa eta ekin Ezartzailea berriro.
+EntryAbortRetryIgnore=Klikatu Bersaiatu berriro saiatzeko, Ezikusi horrela ere jarraitzeko, edo Utzi ezarpena ezeztatzeko.
 
 ; *** Installation status messages
-StatusCreateDirs=Direktorioak sortzen...
-StatusExtractFiles=Fitxategiak ateratzen...
+StatusClosingApplications=Aplikazioak isten...
+StatusCreateDirs=Zuzenbideak sortzen...
+StatusExtractFiles=Agiriak ateratzen...
 StatusCreateIcons=Lasterbideak sortzen...
 StatusCreateIniEntries=INI sarrerak sortzen...
-StatusCreateRegistryEntries=Erregistroko sarrerak sortzen...
-StatusRegisterFiles=Fitxategiak erregistratzen...
-StatusSavingUninstall=Desinstalaketarako datuak gordetzen...
-StatusRunProgram=Instalaketa burutzen...
-StatusRollback=Aldaketak desegiten...
+StatusCreateRegistryEntries=Erregistro sarrerak sortzen...
+StatusRegisterFiles=Agiriak erregistratzen...
+StatusSavingUninstall=Kentze argibideak gordetzen...
+StatusRunProgram=Ezarpena amaitzen...
+StatusRestartingApplications=Aplikazioak berrabiarazten...
+StatusRollback=Aldaketak leheneratzen...
 
 ; *** Misc. errors
 ErrorInternal2=Barneko akatsa: %1
-ErrorFunctionFailedNoCode=Hutsegitea: %1
-ErrorFunctionFailed=Hutsegitea: %1; Kodea: %2
-ErrorFunctionFailedWithMessage=Hutsegitea: %1; Kodea: %2.%n%3
-ErrorExecutingProgram=Ezin izan da fitxategi hau abiarazi:%n%1
+ErrorFunctionFailedNoCode=%1 hutsegitea
+ErrorFunctionFailed=%1 hutsegitea; kodea %2
+ErrorFunctionFailedWithMessage=%1 hutsegitea; kodea %2.%n%3
+ErrorExecutingProgram=Ezinezkoa agiria exekutatzea:%n%1
 
 ; *** Registry errors
-ErrorRegOpenKey=Akatsa erregistroko gakoa irekitzean:%n%1\%2
-ErrorRegCreateKey=Akatsa erregistroko gakoa sortzean:%n%1\%2
-ErrorRegWriteKey=Akatsa erregistroko gakoa idaztean:%n%1\%2
+ErrorRegOpenKey=Akatsa erregistro giltza irekitzerakoan:%n%1\%2
+ErrorRegCreateKey=Akatsa erregistro giltza sortzerakoan:%n%1\%2
+ErrorRegWriteKey=Akatsa erregistro giltza idazterakoan:%n%1\%2
 
 ; *** INI errors
-ErrorIniEntry=Akatsa "%1" fitxategian INI sarrera sortzean.
+ErrorIniEntry=Akatsa INI sarrera "%1" agirian sortzerakoan.
 
 ; *** File copying errors
-FileAbortRetryIgnore=Klikatu Saiatu Berriz berriro saiatzeko, Ezikusi fitxategi hau saltatzeko (ez da gomendagarria), edo Utzi instalaketa uzteko.
-FileAbortRetryIgnore2=Klikatu Saiatu Berriz berriro saiatzeko, Ezikusi hala ere jarraitzeko (ez da gomendagarria), edo Utzi instalaketa uzteko.
-SourceIsCorrupted=Iturburu fitxategia hondaturik dago
-SourceDoesntExist=Ez dago "%1" izeneko iturburu fitxategirik
-ExistingFileReadOnly=Lehendik zegoen fitxategia irakurtzeko-soilik gisa markaturik dago.%n%nKlikatu Saiatu Berriz irakurtzeko-soilik atributua ezabatu eta berriro saiatzeko, Ezikusi fitxategi hau saltatzeko, edo Utzi instalaketa uzteko.
-ErrorReadingExistingDest=Akats bat izan da lehendik zegoen fitxategi hau irakurtzean:
-FileExists=Fitxategia lehendik ere bazegoen.%n%nInstalatzaileak gainidatzi dezan nahi duzu?
-ExistingFileNewer=Lehendik zegoen fitxategia Instalatzaileak instalatu nahi duena baino berriagoa da. Lehendik zegoena mantentzea gomendatzen da.%n%nLehengoa mantendu nahi duzu?
-ErrorChangingAttr=Akats bat izan da lehendik zegoen fitxategi honen atributuak aldatzean:
-ErrorCreatingTemp=Akats bat izan da ondorengo helburu direktorioan fitxategi bat sortzean:
-ErrorReadingSource=Akats bat izan da iturburu fitxategia irakurtzean:
-ErrorCopying=Akats bat izan da fitxategi hau kopiatzean:
-ErrorReplacingExistingFile=Akats bat izan da lehendik zegoen fitxategi hau ordezkatzean:
-ErrorRestartReplace=RestartReplacek huts egin du:
-ErrorRenamingTemp=Akats bat izan da ondorengo helburu direktorioan fitxategi bat berrizendatzean:
-ErrorRegisterServer=Ezinezkoa izan da DLL/OCX hau erregistratzea: %1
-ErrorRegSvr32Failed=RegSvr32k huts egin du %1 itxiera kodea emanez
-ErrorRegisterTypeLib=Ezinezkoa izan da moten liburutegi hau erregistratzea: %1
+FileAbortRetryIgnore=Klikatu Bersaiatu berriro saitzeko, Ezikusi agiri hau jauzteko (ez da gomendatua), edo Utzi ezarpena ezeztatzeko.
+FileAbortRetryIgnore2=Klikatu Bersaiatu berriro saitzeko, Ezikusi horrela ere jarraitzeko (ez da gomendatua), edo Utzi ezarpena ezeztatzeko.
+SourceIsCorrupted=Iturburu agiria hondatuta dago.
+SourceDoesntExist="%1" iturburu agiria ez dago
+ExistingFileReadOnly=Dagoen agiria irakurtzeko-bakarrik bezala markatuta dago.%n%nKlikatu Bersaiatu irakurtzeko-bakarrik ezaugarria kentzeko eta saiatu berriro, Ezikusi agiri hau jauzteko, edo Utzi ezarpena ezeztatzeko.
+ErrorReadingExistingDest=Akats bat gertatu da dagoen agiria irakurtzen saiatzerakoan:
+FileExists=Agiria jadanik badago.%n%nNahi duzu Ezartzaileak gainidaztea?
+ExistingFileNewer=Dagoen agiria Ezartzailea ezartzen saiatzen ari dena baino berriagoa da. Gomendagarria da dagoen agiriari heustea.%n%nDagoen agiriari heustea nahi diozu?
+ErrorChangingAttr=Akats bat gertatu da dagoen agiriaren ezaugarriak aldatzen saiatzerakoan:
+ErrorCreatingTemp=Akats bat gertatu da helmuga zuzenbidean agiri bat sortzen saiatzerakoan:
+ErrorReadingSource=Akats bat gertatu da iturburu agiria irakurtzen saiatzerakoan:
+ErrorCopying=Akats bat gertatu da agiri bat kopiatzen saiatzerakoan:
+ErrorReplacingExistingFile=Akats bat gertatu da dagoen agiria ordezten saiatzerakoan:
+ErrorRestartReplace=Berrabiarazte-Ordezte hutsegitea:
+ErrorRenamingTemp=Akats bat gertatu da helmuga zuzenbideko agiri bat berrizendatzen saiatzerakoan:
+ErrorRegisterServer=Ezinezkoa DLL/OCX erregistratzea: %1
+ErrorRegSvr32Failed=RegSvr32 hutsegitea %1 irteera kodearekin
+ErrorRegisterTypeLib=Ezinezkoa liburutegi mota erregistratzea: %1
 
 ; *** Post-installation errors
-ErrorOpeningReadme=Akats bat izan da IRAKURRI fitxategia irekitzean.
-ErrorRestartingComputer=Instalatzaileak ezin izan du konputagailua berrabiarazi. Egin ezazu eskuz.
+ErrorOpeningReadme=Akats bat gertatu da IRAKURRI agiria irekitzen saiatzerakoan.
+ErrorRestartingComputer=Ezartzaileak ezin du ordenagailua berrabiarazi. Mesedez egin hau eskuz.
 
 ; *** Uninstaller messages
-UninstallNotFound=Ez da "%1" fitxategia aurkitu. Ezin izan da desinstalatu.
-UninstallOpenError=Ezin izan da "%1" ireki. Ezin izan da desinstalatu
-UninstallUnsupportedVer=Desinstalaketarako "%1" log fitxategia instalatzailearen bertsio honek ezagutzen ez duen formatu batean dago. Ezin izan da desinstalatu
-UninstallUnknownEntry=Sarrera ezezagun bat (%1) aurkitu da desinstalaketarako logean
-ConfirmUninstall=Ziur %1 eta bere osagai guztiak ezabatu nahi dituzula?
-UninstallOnlyOnWin64=Instalaketa hau 64-biteko Windowsean soilik desinstala daiteke.
-OnlyAdminCanUninstall=Instalaketa hau administratzaile eskumenak dituen erabiltzaile batek soilik desinstala dezake.
-UninstallStatusLabel=Itxaron %1 zure konputagailutik ezabatzen den artean.
-UninstalledAll=%1 arrakastatsuki ezabatu da zure konputagailutik.
-UninstalledMost=%1 desinstalatu da.%n%nZenbait fitxategi ezin izan dira ezabatu. Fitxategi hauek eskuz ezaba daitezke.
-UninstalledAndNeedsRestart=%1 guztiz desinstalatzeko, zure konputagailua berrabiarazi beharra dago.%n%nOrain berrabiarazi nahi duzu?
-UninstallDataCorrupted="%1" fitxategia hondaturik dago. Ezin izan da desinstalatu
+UninstallNotFound="%1" agiria ez dago. Ezinezkoa kentzea
+UninstallOpenError="%1" agiria ezin da ireki. Ezinezkoa kentzea
+UninstallUnsupportedVer="%1" kentze ohar agiria kentzaile bertsio honek ezagutzen ez duen heuskarri batean dago. Ezinezkoa kentzea.
+UninstallUnknownEntry=Sarrera ezezagun bat (%1) aurkitu da kentze oharrean
+ConfirmUninstall=Zihur zaude %1 eta bere osagai guztiak erabat kentzea nahi dituzula?
+UninstallOnlyOnWin64=Ezarpen hau 64-biteko Windows-etik bakarrik kendu daiteke.
+OnlyAdminCanUninstall=Ezarpen hau administrari pribilegioak dituen erabiltzaile batek bakarrik kendu dezake.
+UninstallStatusLabel=Mesedez itxaron %1 zure ordenagailutik kentzen den bitartean.
+UninstalledAll=%1 ongi kendu da zure ordenagailutik.
+UninstalledMost=%1-ren kentzea osatuta.%n%nZenbait gai ezin izan dira kendu. Hauek eskuz kendu daitezke.
+UninstalledAndNeedsRestart=%1-ren kentzea osatzeko, zure ordenagailua berrabiarazi behar duzu.%n%nOrain berrabiaraztea nahi duzu?
+UninstallDataCorrupted="%1" agiria hondatuta da. Ezinezkoa kentzea
 
 ; *** Uninstallation phase messages
-ConfirmDeleteSharedFileTitle=Fitxategi Elkarbanatua Ezabatu?
-ConfirmDeleteSharedFile2=Sistemaren arabera ondorengo fitxategi elkarbanatua ez du inongo programak erabiliko hemendik aurrera. Desinstalatzaileak fitxategi hau ezabatu nahi duzu?%n%nProgramaren bat fitxategi hau erabiltzen badabil oraindik eta ezabatzen baduzu, programa hori ez da egoki ibiliko. Ziur ez bazaude, hautatu Ez. Fitxategia sisteman uzteak ez dizu inongo kalterik eragingo.
-SharedFileNameLabel=Fitxategi izena:
-SharedFileLocationLabel=Kokapena:
-WizardUninstalling=Desinstalaketaren Egoera
-StatusUninstalling=Orain desinstalatzen: %1...
+ConfirmDeleteSharedFileTitle=Ezabatu Agiri Elkarbanatua?
+ConfirmDeleteSharedFile2=Sistemaren arabera hurrengo agiri elkarbanatua ez du inongo programak erabiliko hemendik aurrera. Kentzaileak agiri hau ezabatu dezan nahi duzu?%n%nProgramaren bat agiri hau erabiltzen ari da oraindik eta ezabatzen baduzu, programa hori ez da egoki ibiliko. Zihur ez bazaude, hautatu Ez. Agiria sisteman uzteak ez du inongo kalterik eragingo.
+SharedFileNameLabel=Agiri izena:
+SharedFileLocationLabel=Kokalekua:
+WizardUninstalling=Kentze Egoera
+StatusUninstalling=Kentzen %1...
 
+; *** Shutdown block reasons
+ShutdownBlockReasonInstallingApp=Ezartzen %1.
+ShutdownBlockReasonUninstallingApp=Kentzen %1.
 ; The custom messages below aren't used by Setup itself, but if you make
 ; use of them in your scripts, you'll want to translate them.
 
 [CustomMessages]
-
+;Inno Setup Built-in Custom Messages
 NameAndVersion=%1 %2 bertsioa
-AdditionalIcons=Ikono gehigarriak:
-CreateDesktopIcon=&Mahaigainean lasterbidea sortu
-CreateQuickLaunchIcon=&Ataza Barran lasterbidea sortu
-ProgramOnTheWeb=%1 sarean
-UninstallProgram=%1 desinstalatu
-LaunchProgram=%1 abiarazi
-AssocFileExtension=&Lotu %1 programa %2 fitxategi luzapenarekin
-AssocingFileExtension=%1 programa %2 fitxategi luzapenarekin lotzen...
+AdditionalIcons=Ikur gehigarriak:
+CreateDesktopIcon=Sortu &mahaigain ikurra
+CreateQuickLaunchIcon=Sortu &Abiarazpen Azkarreko ikurra
+ProgramOnTheWeb=%1 Webean
+UninstallProgram=Kendu %1
+LaunchProgram=Abiarazi %1
+AssocFileExtension=&Elkartu %1 programa %2 agiri luzapenarekin
+AssocingFileExtension=%1 programa %2 agiri luzapenarekin elkartzen...
+AutoStartProgramGroupDescription=Abirazpena:
+AutoStartProgram=Berezgaitasunez abiarazi %1
+AddonHostProgramNotFound=%1 ezin da aurkitu hautatu duzun agiritegian.%n%nHorrela ere jarraitzea nahi duzu?
