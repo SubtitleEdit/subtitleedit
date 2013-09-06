@@ -443,7 +443,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             int imageDecodeTime = (bm.Width * bm.Height * 9 + 1599) / 1600;
             // write PCS start
             PacketHeader[10] = 0x16;                                            // ID
-            int dts = pic.StartTimeForWrite - (frameInitTime + windowInitTime);
+            int dts = pic.StartTimeForWrite - (frameInitTime + windowInitTime + imageDecodeTime); //            int dts = pic.StartTimeForWrite - windowInitTime; ????
+
             ToolBox.SetDWord(PacketHeader, 2, pic.StartTimeForWrite);              // PTS
             ToolBox.SetDWord(PacketHeader, 6, dts);                             // DTS
             ToolBox.SetWord(PacketHeader, 11, HeaderPCSStart.Length);           // size
@@ -539,8 +540,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
             // write PCS end
             PacketHeader[10] = 0x16;                                            // ID
-            ToolBox.SetDWord(PacketHeader, 2, pic.EndTimeForWrite);             // PTS
-            dts = pic.StartTimeForWrite - 1;
+            ToolBox.SetDWord(PacketHeader, 2, pic.EndTimeForWrite);             // PTS            
+            dts = pic.EndTimeForWrite - 1; //dts = pic.StartTimeForWrite - 1;
             ToolBox.SetDWord(PacketHeader, 6, dts);                             // DTS
             ToolBox.SetWord(PacketHeader, 11, HeaderPCSEnd.Length);             // size
             for (int i = 0; i < PacketHeader.Length; i++)
