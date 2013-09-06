@@ -1,6 +1,8 @@
-<words>
+﻿<words>
+  <word>15er</word>
   <word>70er</word>
   <word>80er</word>
+  <word>aah</word>
   <word>abend</word>
   <word>abenteuerlustigen</word>
   <word>abfrieren</word>
@@ -22,6 +24,7 @@
   <word>ablief</word>
   <word>abrappeln</word>
   <word>abrasiert</word>
+  <word>abschlafft</word>
   <word>abschrubben</word>
   <word>abschädeln</word>
   <word>abspann</word>
@@ -148,6 +151,7 @@
   <word>backpfeife</word>
   <word>bambussprossen</word>
   <word>bedauerns</word>
+  <word>beeil</word>
   <word>beeilung</word>
   <word>befall</word>
   <word>befehlshabende</word>
@@ -245,6 +249,7 @@
   <word>draufgeklatscht</word>
   <word>draufgestürzt</word>
   <word>draufgängerisch</word>
+  <word>draus</word>
   <word>drill</word>
   <word>drinblieb</word>
   <word>drinblieben</word>
@@ -256,6 +261,7 @@
   <word>drüber</word>
   <word>drücken</word>
   <word>drυckvorgang</word>
+  <word>du's</word>
   <word>dummerchen</word>
   <word>dumpfbacke</word>
   <word>durchatmen</word>
@@ -385,6 +391,7 @@
   <word>größeres</word>
   <word>grün</word>
   <word>guttun</word>
+  <word>ha</word>
   <word>hab's</word>
   <word>haben's</word>
   <word>habt's</word>
@@ -401,6 +408,7 @@
   <word>heißt</word>
   <word>hellsehen</word>
   <word>heul</word>
+  <word>hey</word>
   <word>hierbleiben</word>
   <word>hierlassen</word>
   <word>hierzubleiben</word>
@@ -412,6 +420,9 @@
   <word>hintendrauf</word>
   <word>hintenrum</word>
   <word>hitzkopf</word>
+  <word>hm</word>
+  <word>hmm</word>
+  <word>ho</word>
   <word>hochgehenlassen</word>
   <word>hochgeklettert</word>
   <word>hochheben</word>
@@ -493,6 +504,7 @@
   <word>lahmgelegt</word>
   <word>lammkeule</word>
   <word>lausch</word>
+  <word>lehn</word>
   <word>leid</word>
   <word>lieg</word>
   <word>liegt's</word>
@@ -529,12 +541,15 @@
   <word>models</word>
   <word>monds</word>
   <word>morgengrauen</word>
+  <word>na</word>
   <word>nachgejagt</word>
   <word>nachmittag</word>
   <word>nacht</word>
   <word>nehm</word>
   <word>nehmen's</word>
   <word>nenn</word>
+  <word>ner</word>
+  <word>nerv</word>
   <word>nimm's</word>
   <word>notizblock</word>
   <word>näher</word>
@@ -603,6 +618,7 @@
   <word>rausschicken</word>
   <word>rausschmeißen</word>
   <word>rauswerfen</word>
+  <word>rauszubringen</word>
   <word>rauszufinden</word>
   <word>rauszuholen</word>
   <word>red</word>
@@ -614,7 +630,9 @@
   <word>reingelassen</word>
   <word>reingelegt</word>
   <word>reinlegen</word>
+  <word>ruh</word>
   <word>rum</word>
+  <word>rumkriegen</word>
   <word>rumstehen</word>
   <word>rumsteht</word>
   <word>runterbringen</word>
@@ -630,13 +648,16 @@
   <word>scheißdreck</word>
   <word>scheiße</word>
   <word>scheißegal</word>
+  <word>scheißkahn</word>
   <word>schieb</word>
   <word>schlaf</word>
   <word>schließ</word>
   <word>schluck</word>
   <word>schmeiß</word>
+  <word>schmier</word>
   <word>schokoriegel</word>
   <word>schwimm</word>
+  <word>schwör</word>
   <word>schäm</word>
   <word>schöner</word>
   <word>schüsse</word>
@@ -644,11 +665,14 @@
   <word>seh's</word>
   <word>seh</word>
   <word>selbstgemacht</word>
+  <word>selbstverstümmelungen</word>
   <word>setz</word>
+  <word>sexspielzeug</word>
   <word>shirt</word>
   <word>shoppen</word>
   <word>sich's</word>
   <word>sie's</word>
+  <word>sorg</word>
   <word>spar</word>
   <word>spaß</word>
   <word>spiel</word>
@@ -674,6 +698,7 @@
   <word>style</word>
   <word>stürzte</word>
   <word>stütz</word>
+  <word>suhlen</word>
   <word>supermodel</word>
   <word>surreal</word>
   <word>särge</word>
@@ -688,6 +713,7 @@
   <word>tentakel</word>
   <word>tiefergelegt</word>
   <word>tiefgefrorene</word>
+  <word>tja</word>
   <word>totgeglaubte</word>
   <word>totzukriegen</word>
   <word>totzulachen</word>
@@ -710,17 +736,21 @@
   <word>verbrenn</word>
   <word>vergess</word>
   <word>verkabeln</word>
+  <word>verkackt</word>
   <word>verlier</word>
   <word>verpass</word>
   <word>verrückteste</word>
   <word>verrücktesten</word>
   <word>versuch's</word>
   <word>versucht's</word>
+  <word>vietnamesisch</word>
   <word>vollgekotzt</word>
   <word>volltanken</word>
+  <word>vorbeigeschaut</word>
   <word>vordrängeln</word>
   <word>wag</word>
   <word>wann's</word>
+  <word>war's</word>
   <word>weiterschlafen</word>
   <word>weiß</word>
   <word>wenn's</word>
@@ -733,6 +763,7 @@
   <word>witzfigur</word>
   <word>wo's</word>
   <word>woandershin</word>
+  <word>wow</word>
   <word>wrackteile</word>
   <word>wär's</word>
   <word>wär</word>
@@ -746,11 +777,14 @@
   <word>zieht's</word>
   <word>zuhause</word>
   <word>zurückgepfiffen</word>
+  <word>zurückmachen</word>
   <word>zurückzulassen</word>
   <word>zusammengekettet</word>
   <word>zusammenschlägt</word>
   <word>zähneputzen</word>
   <word>äh</word>
+  <word>ähem</word>
+  <word>ähm</word>
   <word>ölverschmierten</word>
   <word>über</word>
   <word>überfallen</word>

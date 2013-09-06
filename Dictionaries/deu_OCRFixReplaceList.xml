@@ -1,4 +1,4 @@
-<OCRFixReplaceList>
+﻿<OCRFixReplaceList>
   <WholeWords>
     <Word from="/a" to="Ja" />
     <Word from="/ch" to="Ich" />
@@ -28,6 +28,7 @@
     <Word from="00om" to="000 m" />
     <Word from="100m" to="100 m" />
     <Word from="120m" to="120 m" />
+    <Word from="13Oj§hrie" to="130 jährige" />
     <Word from="13Oj§hrie" to="130-jährige" />
     <Word from="145m" to="145 m" />
     <Word from="150m" to="150 m" />
@@ -57,14 +58,6 @@
     <Word from="750m" to="750 m" />
     <Word from="85m" to="85 m" />
     <Word from="90m" to="90 m" />
-    <Word from="\/\/i6fUl'1l€fi" to="Wie fühlen" />
-    <Word from="\/\/il'fUl'1I'€l'1" to="Wir führen" />
-    <Word from="\/GFQHUQGH" to="Vergnügen" />
-    <Word from="\/OFVVUFf€" to="Vorwürfe" />
-    <Word from="\/Vahrheit" to="Wahrheit" />
-    <Word from="\/Vir" to="Wir" />
-    <Word from="\Nynn" to="Wynn" />
-    <Word from="_" to="-" />
     <Word from="a//em" to="allem" />
     <Word from="A//es" to="Alles" />
     <Word from="abbeif$en" to="abbeißen" />
@@ -93,6 +86,7 @@
     <Word from="abhéngig" to="abhängig" />
     <Word from="abhéngiges" to="abhängiges" />
     <Word from="Abhérstationen" to="Abhörstationen" />
+    <Word from="Abjetzt" to="Ab jetzt" />
     <Word from="abkfihlen" to="abkühlen" />
     <Word from="Abkfirzung" to="Abkürzung" />
     <Word from="abkommlich" to="abkömmlich" />
@@ -121,12 +115,14 @@
     <Word from="ACHZT" to="ÄCHZT" />
     <Word from="Acic" to="Acid" />
     <Word from="ADDRESSDATEI" to="ADRESSDATEI" />
+    <Word from="Adiös" to="Adiós" />
     <Word from="Admiralitat" to="Admiralität" />
     <Word from="Admiralitéit" to="Admiralität" />
     <Word from="Admiralitét" to="Admiralität" />
     <Word from="Affére" to="Affäre" />
     <Word from="Afféren" to="Affären" />
     <Word from="AFl" to="AFI" />
+    <Word from="aggresivem" to="aggressivem" />
     <Word from="Agypten" to="Ägypten" />
     <Word from="aher" to="aber" />
     <Word from="AI/en/vichtigste" to="Allerwichtigste" />
@@ -443,6 +439,7 @@
     <Word from="bedréngten" to="bedrängten" />
     <Word from="Beeilungf" to="Beeilung!" />
     <Word from="Beeilungl" to="Beeilung!" />
+    <Word from="Beerdingungsinsiiiui" to="Beerdigungsinstitut" />
     <Word from="Beerdingungsinstitut" to="Beerdigungsinstitut" />
     <Word from="Befehll" to="Befehl!" />
     <Word from="beffirdert" to="befördert" />
@@ -530,6 +527,7 @@
     <Word from="berllihren" to="berühren" />
     <Word from="berllihrt" to="berührt" />
     <Word from="berlllhmten" to="berühmten" />
+    <Word from="Bern/e" to="Bernie" />
     <Word from="beruhrt" to="berührt" />
     <Word from="beruhrte" to="berührte" />
     <Word from="berﬂhmter" to="berühmter" />
@@ -667,6 +665,7 @@
     <Word from="bittersiJl3es" to="bittersüßes" />
     <Word from="Bitteschén" to="Bitteschön" />
     <Word from="BIue" to="Blue" />
+    <Word from="bißchen" to="bisschen" />
     <Word from="BL1hne" to="Bühne" />
     <Word from="Bl6cke" to="Blöcke" />
     <Word from="bl6d" to="blöd" />
@@ -805,6 +804,7 @@
     <Word from="Bundnis" to="Bündnis" />
     <Word from="Burger" to="Bürger" />
     <Word from="Burgerrechtlerin" to="Bürgerrechtlerin" />
+    <Word from="Buro" to="Büro" />
     <Word from="BURO" to="BÜRO" />
     <Word from="Buro" to="Büro" />
     <Word from="Burol" to="Büro!" />
@@ -843,6 +843,7 @@
     <Word from="Bﬂchern" to="Büchern" />
     <Word from="Bﬂste" to="Büste" />
     <Word from="Cafe" to="Café" />
+    <Word from="Cafä" to="Café" />
     <Word from="CASAREN" to="CÄSAREN" />
     <Word from="Charakterméngel" to="Charaktermängel" />
     <Word from="Charakterstérke" to="Charakterstärke" />
@@ -896,15 +897,17 @@
     <Word from="dartlber" to="darüber" />
     <Word from="DARUBER" to="DARÜBER" />
     <Word from="DarUber" to="Darüber" />
+    <Word from="DARUBER" to="DARÜBER" />
+    <Word from="DarUber" to="Darüber" />
     <Word from="dasjetzt" to="das jetzt" />
     <Word from="dasl" to="das!" />
     <Word from="Dateniibermittlung" to="Datenübermittlung" />
     <Word from="dauem" to="dauern" />
     <Word from="dauerf" to="dauert" />
     <Word from="dazugehéren" to="dazugehören" />
+    <Word from="Daß" to="Dass" />
     <Word from="Daﬂlr" to="Dafür" />
     <Word from="Ddrfern" to="Dörfern" />
-    <Word from="de__n" to="den" />
     <Word from="def" to="der" />
     <Word from="Defekf/v" to="Detektiv" />
     <Word from="deinerZelle" to="deiner Zelle" />
@@ -927,12 +930,14 @@
     <Word from="derWelle" to="der Welle" />
     <Word from="DerWL1rfel" to="Der Würfel" />
     <Word from="DerZauberer" to="Der Zauberer" />
+    <Word from="de__n" to="den" />
     <Word from="dfeserr" to="diesem" />
     <Word from="dffentlichen" to="öffentlichen" />
     <Word from="dffnen" to="öffnen" />
     <Word from="Dfimonen" to="Dämonen" />
     <Word from="dfinn" to="dünn" />
     <Word from="dichl" to="dich!" />
+    <Word from="diejüngste" to="die Jüngste" />
     <Word from="dienstunfahig" to="dienstunfähig" />
     <Word from="Dieselkapitéin" to="Dieselkapitän" />
     <Word from="Dieselkapitén" to="Dieselkapitän" />
@@ -1123,6 +1128,7 @@
     <Word from="eindriicken" to="eindrücken" />
     <Word from="Eindring/Inge" to="Eindringlinge" />
     <Word from="eindrucken" to="eindrücken" />
+    <Word from="einejunge" to="eine junge" />
     <Word from="einerfrﬂhen" to="einer frühen" />
     <Word from="einervorfuhrung" to="einer Vorführung" />
     <Word from="einfiihren" to="einführen" />
@@ -1147,6 +1153,7 @@
     <Word from="eingeschétzt" to="eingeschätzt" />
     <Word from="eingesturzt" to="eingestürzt" />
     <Word from="eingieBt" to="eingießt" />
+    <Word from="eingschaltet" to="eingeschaltet" />
     <Word from="Einhérnern" to="Einhörner" />
     <Word from="einlegenl" to="einlegen!" />
     <Word from="einlédt" to="einlädt" />
@@ -1178,7 +1185,9 @@
     <Word from="empiirt" to="empört" />
     <Word from="emst" to="ernst" />
     <Word from="en/varten" to="erwarten" />
+    <Word from="En/vartungen" to="Erwartungen" />
     <Word from="en/véhnt" to="erwähnt" />
+    <Word from="Enchantä" to="Enchanté" />
     <Word from="endgiiltig" to="endgültig" />
     <Word from="endgultig" to="endgültig" />
     <Word from="endgultigen" to="endgültigen" />
@@ -1330,14 +1339,14 @@
     <Word from="ertrégst" to="erträgst" />
     <Word from="ertréinken" to="ertränken" />
     <Word from="ertént" to="ertönt" />
-    <Word from="Erv\/an" to="Erwan" />
-    <Word from="Erv\/an's" to="Erwan's" />
     <Word from="ervvartez" to="erwartet" />
     <Word from="ervvilrgen" to="erwürgen" />
     <Word from="ervvéhnen" to="erwähnen" />
     <Word from="ervvéihnen" to="erwähnen" />
     <Word from="ervvéihnt" to="erwähnt" />
     <Word from="ervvéihnte" to="erwähnte" />
+    <Word from="Erv\/an" to="Erwan" />
+    <Word from="Erv\/an's" to="Erwan's" />
     <Word from="erw'a'hnt" to="erwähnt" />
     <Word from="Erwar" to="Er war" />
     <Word from="erwe/sen" to="erweisen" />
@@ -1408,10 +1417,12 @@
     <Word from="fallengelassen" to="fallen gelassen" />
     <Word from="Fallschirmjégereinheiten" to="Fallschirmjägereinheiten" />
     <Word from="Fam/Z/e" to="Familie" />
+    <Word from="Faß" to="Fass" />
     <Word from="FBl" to="FBI" />
     <Word from="Fe/nd" to="Feind" />
     <Word from="fehlschlégt" to="fehlschlägt" />
     <Word from="Feindberllihrung" to="Feindberührung" />
+    <Word from="Feindübewvachung" to="Feindüberwachung" />
     <Word from="feltig" to="fertig" />
     <Word from="femen" to="fernen" />
     <Word from="fernhéilt" to="fernhält" />
@@ -1815,6 +1826,8 @@
     <Word from="Féustlinge" to="Fäustlinge" />
     <Word from="für'ne" to="für 'ne" />
     <Word from="fürchlerlichen" to="fürchterlichen" />
+    <Word from="fürjede" to="für jede" />
+    <Word from="fürjeden" to="für jeden" />
     <Word from="Fﬂhrungsprogramm" to="Führungsprogramm" />
     <Word from="Fﬂhrungsstil" to="Führungsstil" />
     <Word from="fﬂllen" to="füllen" />
@@ -2067,6 +2080,7 @@
     <Word from="Gerijcht" to="Gerücht" />
     <Word from="Gerllicht" to="Gerücht" />
     <Word from="gerllistet" to="gerüstet" />
+    <Word from="gernhaben" to="gern haben" />
     <Word from="gernhaben" to="gern-haben" />
     <Word from="gernntgt" to="geröntgt" />
     <Word from="geréit" to="gerät" />
@@ -2126,8 +2140,10 @@
     <Word from="Gesiiff" to="Gesöff" />
     <Word from="gesiindigt" to="gesündigt" />
     <Word from="gespiirt" to="gespürt" />
+    <Word from="Gesprach" to="Gespräch" />
     <Word from="GESPRACH" to="GESPRÄCH" />
     <Word from="Gesprach" to="Gespräch" />
+    <Word from="GESPRACH" to="GESPRÄCH" />
     <Word from="GESPRACHE" to="GESPRÄCHE" />
     <Word from="Gespréch" to="Gespräch" />
     <Word from="Gespréche" to="Gespräche" />
@@ -2437,6 +2453,7 @@
     <Word from="grolZ~" to="große" />
     <Word from="gror$er" to="großer" />
     <Word from="grorker" to="großer" />
+    <Word from="grosses" to="großes" />
     <Word from="GROSSTE" to="GRÖSSTE" />
     <Word from="groﬂ" to="groß" />
     <Word from="groﬂe" to="große" />
@@ -2547,6 +2564,7 @@
     <Word from="Halsbénder" to="Halsbänder" />
     <Word from="Halsl" to="Hals!" />
     <Word from="haltenl" to="halten!" />
+    <Word from="Haltjohnny" to="Halt Johnny" />
     <Word from="Hammerschédel" to="Hammerschädel" />
     <Word from="Handfléche" to="Handfläche" />
     <Word from="Handlungsstrénge" to="Handlungsstränge" />
@@ -2572,6 +2590,7 @@
     <Word from="Hausschlilssel" to="Hausschlüssel" />
     <Word from="Haustilr" to="Haustür" />
     <Word from="Hausubervvachung" to="Hausüberwachung" />
+    <Word from="haßt" to="hasst" />
     <Word from="Hbr" to="Hör" />
     <Word from="hc'5ren" to="hören" />
     <Word from="hc'§r" to="hör" />
@@ -2623,6 +2642,7 @@
     <Word from="heillst" to="heißt" />
     <Word from="heilZ~" to="heißt" />
     <Word from="heir$" to="heiß" />
+    <Word from="heisst" to="heißt" />
     <Word from="Helllger" to="Heiliger" />
     <Word from="Helzlichen" to="Herzlichen" />
     <Word from="Hen'je" to="Herrje" />
@@ -2667,9 +2687,11 @@
     <Word from="hierherzuriick" to="hierher zurück" />
     <Word from="hierijber" to="hierüber" />
     <Word from="hierjede" to="hier jede" />
+    <Word from="hierjeder" to="hier jeder" />
     <Word from="hierl" to="hier!" />
     <Word from="hierL" to="hieß" />
     <Word from="hierwar" to="hier war" />
+    <Word from="hierzum" to="hier zum" />
     <Word from="hierzum" to="hier-zum" />
     <Word from="hieﬂ" to="hieß" />
     <Word from="Hiibsch" to="Hübsch" />
@@ -2746,6 +2768,7 @@
     <Word from="hinilber" to="hinüber" />
     <Word from="hinreiliend" to="hinreißend" />
     <Word from="hinschmeifit" to="hinschmeißt" />
+    <Word from="HintenNäldler" to="Hinterwäldler" />
     <Word from="Hintergrundlérm" to="Hintergrundlärm" />
     <Word from="hinterhfiltig" to="hinterhältig" />
     <Word from="hinterhéiltiger" to="hinterhältiger" />
@@ -2906,6 +2929,8 @@
     <Word from="I5sst" to="lässt" />
     <Word from="I5stern" to="lästern" />
     <Word from="I6sen" to="lösen" />
+    <Word from="Iaß" to="lass" />
+    <Word from="Iaßt" to="lasst" />
     <Word from="Icll" to="Ich" />
     <Word from="identifizieet" to="identifiziert" />
     <Word from="IDENTITAT" to="IDENTITÄT" />
@@ -2915,6 +2940,7 @@
     <Word from="Iebtjetzt" to="lebt jetzt" />
     <Word from="Ieck" to="leck" />
     <Word from="Iehn" to="lehn" />
+    <Word from="Ieid‚" to="leid‚" />
     <Word from="Ieinenlose" to="leinenlose" />
     <Word from="Ienistische" to="leninistische" />
     <Word from="Ietztendlich" to="letztendlich" />
@@ -2980,6 +3006,7 @@
     <Word from="iibrig" to="übrig" />
     <Word from="IieB" to="ließ" />
     <Word from="Iiebte" to="liebte" />
+    <Word from="Iief's" to="lief's" />
     <Word from="Iiehe" to="liebe" />
     <Word from="Iieﬂest" to="ließest" />
     <Word from="iiffentlichen" to="öffentlichen" />
@@ -3029,6 +3056,7 @@
     <Word from="istjedoch" to="ist jedoch" />
     <Word from="istjemand" to="ist jemand" />
     <Word from="istjetzt" to="ist jetzt" />
+    <Word from="istJohnny" to="ist Johnny" />
     <Word from="istjung" to="ist jung" />
     <Word from="istweg" to="ist weg" />
     <Word from="ITIUSSEFI" to="müssen" />
@@ -3044,6 +3072,7 @@
     <Word from="Iésst" to="lässt" />
     <Word from="Iésste" to="lässte" />
     <Word from="Iéuft" to="läuft" />
+    <Word from="J0Shua" to="Joshua" />
     <Word from="Jackettkaufen" to="Jackett kaufen" />
     <Word from="jahr" to="Jahr" />
     <Word from="jahre" to="Jahre" />
@@ -3061,6 +3090,7 @@
     <Word from="job" to="Job" />
     <Word from="Jogglng" to="Jogging" />
     <Word from="john" to="John" />
+    <Word from="johnny" to="Johnny" />
     <Word from="journalisten" to="Journalisten" />
     <Word from="Jullo" to="Julie" />
     <Word from="JUNGFRAULICHE" to="JUNGFRÄULICHE" />
@@ -3071,6 +3101,7 @@
     <Word from="Jungsl" to="Jungs!" />
     <Word from="Jungste" to="Jüngste" />
     <Word from="Jurlgs" to="Jungs" />
+    <Word from="Justitzministeriums" to="Justizministeriums" />
     <Word from="Jéger" to="Jäger" />
     <Word from="Jéhrige" to="Jährige" />
     <Word from="jéhrigen" to="jährigen" />
@@ -3299,6 +3330,7 @@
     <Word from="Kombuse" to="Kombüse" />
     <Word from="Komiidie" to="Komödie" />
     <Word from="kommerz/ellen" to="kommerziellen" />
+    <Word from="kommjetzt" to="komm jetzt" />
     <Word from="Kompatibilitfits" to="Kompatibilitäts" />
     <Word from="Kompatibilitéits" to="Kompatibilitäts" />
     <Word from="Kompatiblit5ts" to="Kompatiblitäts" />
@@ -3364,8 +3396,8 @@
     <Word from="Ktisschen" to="Küsschen" />
     <Word from="ktlmmere" to="kümmere" />
     <Word from="ktznnen" to="können" />
-    <Word from="KUCHE" to="KÜCHE" />
     <Word from="Kuche" to="Küche" />
+    <Word from="KUCHE" to="KÜCHE" />
     <Word from="Kuckucksgeréusch" to="Kuckucksgeräusch" />
     <Word from="KUl'ZSCl'1lUSS9" to="Kürzschlüsse" />
     <Word from="kulz" to="kurz" />
@@ -3387,6 +3419,8 @@
     <Word from="KUSSE" to="KÜSSE" />
     <Word from="KUSSGH" to="küssen" />
     <Word from="kusste" to="küsste" />
+    <Word from="KUSTE" to="KÜSTE" />
+    <Word from="Kuste" to="Küste" />
     <Word from="KUSTE" to="KÜSTE" />
     <Word from="Kuste" to="Küste" />
     <Word from="Kéfer" to="Käfer" />
@@ -3468,6 +3502,8 @@
     <Word from="L'a'ndern" to="Ländern" />
     <Word from="l'a'sst" to="lässt" />
     <Word from="l'a'uft" to="läuft" />
+    <Word from="l/chtes" to="lichtes" />
+    <Word from="l/Vings" to="Wings" />
     <Word from="L5cheln" to="Lächeln" />
     <Word from="L6ffel" to="Löffel" />
     <Word from="L6schen" to="Löschen" />
@@ -3487,6 +3523,7 @@
     <Word from="Laudal" to="Lauda!" />
     <Word from="laufl" to="lauf!" />
     <Word from="Lauﬂ" to="Lauf!" />
+    <Word from="Laß" to="Lass" />
     <Word from="lch" to="Ich" />
     <Word from="ldee" to="Idee" />
     <Word from="ldeen" to="Ideen" />
@@ -3817,6 +3854,7 @@
     <Word from="Massenzerstérungswaffen" to="Massenzerstörungswaffen" />
     <Word from="Mater/al" to="Material" />
     <Word from="Maxiriicke" to="Maxiröcke" />
+    <Word from="Mayonaise" to="Mayonnaise" />
     <Word from="mbglichst" to="möglichst" />
     <Word from="Mdge" to="Möge" />
     <Word from="mdglichen/veise" to="möglicherweise" />
@@ -3936,6 +3974,8 @@
     <Word from="mirja" to="mir ja" />
     <Word from="mirje" to="mir je" />
     <Word from="mirjeglichen" to="mir jeglichen" />
+    <Word from="mirjemals" to="mir jemals" />
+    <Word from="mirjemand" to="mir jemand" />
     <Word from="mirjetzt" to="mir jetzt" />
     <Word from="mirso" to="mir so" />
     <Word from="mirvon" to="mir von" />
@@ -4021,14 +4061,19 @@
     <Word from="Muskatnijsse" to="Muskatnüsse" />
     <Word from="Muskelkumpelsl" to="Muskelkumpels!" />
     <Word from="muskuléren" to="muskulären" />
-    <Word from="muss_'§e" to="musste" />
+    <Word from="mussen" to="müssen" />
     <Word from="MUSSEN" to="MÜSSEN" />
     <Word from="mussen" to="müssen" />
+    <Word from="MUSSEN" to="MÜSSEN" />
     <Word from="mUssen's" to="müssen's" />
+    <Word from="muss_'§e" to="musste" />
     <Word from="Musterschuler" to="Musterschüler" />
     <Word from="Mutterja" to="Mutter ja" />
     <Word from="mutterlich" to="mütterlich" />
     <Word from="Mutze" to="Mütze" />
+    <Word from="muß" to="muss" />
+    <Word from="mußt" to="musst" />
+    <Word from="mußte" to="musste" />
     <Word from="mx't" to="mit" />
     <Word from="Mzlinnern" to="Männern" />
     <Word from="Mébel" to="Möbel" />
@@ -4097,6 +4142,7 @@
     <Word from="Méusehtipfer" to="Mäusehüpfer" />
     <Word from="Méusen" to="Mäusen" />
     <Word from="Méuserennen" to="Mäuserennen" />
+    <Word from="müßt" to="müsst" />
     <Word from="mﬂde" to="müde" />
     <Word from="mﬂssen" to="müssen" />
     <Word from="n'a'chste" to="nächste" />
@@ -4144,24 +4190,24 @@
     <Word from="Nehmf" to="Nehmt" />
     <Word from="neinl" to="nein!" />
     <Word from="Neln" to="Nein" />
-    <Word from="ner\/t" to="nervt" />
     <Word from="nerv6s" to="nervös" />
     <Word from="Nervensége" to="Nervensäge" />
     <Word from="Nervenséige" to="Nervensäge" />
     <Word from="nerviis" to="nervös" />
     <Word from="Nervés" to="Nervös" />
+    <Word from="ner\/t" to="nervt" />
     <Word from="Neuankiimmlinge" to="Neuankömmlinge" />
     <Word from="neuromuskuléren" to="neuromuskulären" />
     <Word from="Neuzugéinge" to="Neuzugänge" />
     <Word from="Nfichster" to="Nächster" />
     <Word from="NIANN" to="MANN" />
-    <Word from="nic_l_1t" to="nicht" />
     <Word from="nichsten" to="nächsten" />
     <Word from="nichtim" to="nicht im" />
     <Word from="nichtjemand" to="nicht jemand" />
     <Word from="Nichtjetzt" to="Nicht jetzt" />
     <Word from="Nichtsl" to="Nichts!" />
     <Word from="nichtzurilckgelassen" to="nicht zurückgelassen" />
+    <Word from="nic_l_1t" to="nicht" />
     <Word from="niederkémpfen" to="niederkämpfen" />
     <Word from="niederliells" to="niederließ" />
     <Word from="niedlichl" to="niedlich!" />
@@ -4291,6 +4337,8 @@
     <Word from="Partyhijte" to="Partyhüte" />
     <Word from="Passendervveise" to="Passenderweise" />
     <Word from="Paulgenauso" to="Paul genauso" />
+    <Word from="paß" to="pass" />
+    <Word from="paßt" to="passt" />
     <Word from="peinliohl" to="peinlich" />
     <Word from="persdnlich" to="persönlich" />
     <Word from="persfinlich" to="persönlich" />
@@ -4366,6 +4414,7 @@
     <Word from="Privatsphére" to="Privatsphäre" />
     <Word from="Probfeme" to="Probleme" />
     <Word from="Profitinzerinnen" to="Profitänzerinnen" />
+    <Word from="Protege" to="Protégé" />
     <Word from="prude" to="prüde" />
     <Word from="Pruf" to="Prüf" />
     <Word from="prufen" to="prüfen" />
@@ -4398,6 +4447,7 @@
     <Word from="Pubertéit" to="Pubertät" />
     <Word from="Publlkuml" to="Publlkum!" />
     <Word from="PUPPCHEN" to="PÜPPCHEN" />
+    <Word from="PUpst" to="Pupst" />
     <Word from="Purzelbéume" to="Purzelbäume" />
     <Word from="Péckchen" to="Päckchen" />
     <Word from="péidagogisch" to="pädagogisch" />
@@ -4414,11 +4464,13 @@
     <Word from="Quél" to="Quäl" />
     <Word from="Quélt" to="Quält" />
     <Word from="R'a'che" to="Räche" />
+    <Word from="R/ck" to="Rick" />
     <Word from="R/nge" to="Ringe" />
     <Word from="R6mer" to="Römer" />
     <Word from="rachsiichtiger" to="rachsüchtiger" />
     <Word from="ranghfiheren" to="ranghöheren" />
     <Word from="ranghéheren" to="ranghöheren" />
+    <Word from="ranzukommen" to="ran zukommen" />
     <Word from="ranzukommen" to="ran-zukommen" />
     <Word from="Rasenméherunfall" to="Rasenmäherunfall" />
     <Word from="Rasterllibertragung" to="Rasterübertragung" />
@@ -4575,6 +4627,7 @@
     <Word from="Runterl" to="Runter!" />
     <Word from="runterspillen" to="runterspülen" />
     <Word from="runterspllllen" to="runterspülen" />
+    <Word from="runterspült" to="runter spült" />
     <Word from="runterspült" to="runter-spült" />
     <Word from="runtervverfen" to="runterwerfen" />
     <Word from="Rupem" to="Rupert!" />
@@ -4673,6 +4726,8 @@
     <Word from="ScheilSe" to="Scheiße" />
     <Word from="ScheilZ&gt;" to="Scheiß" />
     <Word from="Scheir$oling" to="Scheißding" />
+    <Word from="scheissegal" to="scheißegal" />
+    <Word from="Scheisskarre" to="Scheißkarre" />
     <Word from="Scheiﬂe" to="Scheiße" />
     <Word from="scheme" to="scheiße" />
     <Word from="scheuf$lich" to="scheußlich" />
@@ -4781,6 +4836,7 @@
     <Word from="Schlilssel" to="Schlüssel" />
     <Word from="Schlilssell" to="Schlüssel" />
     <Word from="Schlilsselparty" to="Schlüsselparty" />
+    <Word from="schlimmsterAlbtraum" to="schlimmster Albtraum" />
     <Word from="Schlleﬂen" to="Schließen" />
     <Word from="Schllisse" to="Schüsse" />
     <Word from="schllitze" to="schütze" />
@@ -4792,6 +4848,7 @@
     <Word from="Schlusselszenen" to="Schlüsselszenen" />
     <Word from="Schlusselwérter" to="Schlusselwörter" />
     <Word from="Schlussl" to="Schluss!" />
+    <Word from="Schluß" to="Schluss" />
     <Word from="Schléchter" to="Schlächter" />
     <Word from="schléfst" to="schläfst" />
     <Word from="Schléft" to="Schläft" />
@@ -4840,6 +4897,7 @@
     <Word from="Schones" to="Schönes" />
     <Word from="schonl" to="schon!" />
     <Word from="schopferische" to="schöpferische" />
+    <Word from="schoß" to="schoss" />
     <Word from="Schrankwénde" to="Schrankwände" />
     <Word from="Schraubenschlijssel" to="Schraubenschlüssel" />
     <Word from="schrecklichl" to="schrecklich!" />
@@ -5054,6 +5112,7 @@
     <Word from="spfit" to="spät" />
     <Word from="SpieB" to="Spieß" />
     <Word from="spief$ig" to="spießig" />
+    <Word from="Spielzeuggeschfiftn" to="Spielzeuggeschäft" />
     <Word from="Spielzeuggeschfiftn" to="Spielzeuggeschäft--" />
     <Word from="spiilte" to="spülte" />
     <Word from="spiiren" to="spüren" />
@@ -5109,7 +5168,7 @@
     <Word from="Statusmeldungl" to="Statusmeldung!" />
     <Word from="stdrte" to="störte" />
     <Word from="stecktjede" to="steckt jede" />
-    <Word from="stehenbleiben" to="stehen bleiben" />
+    <Word from="Stehenbleiben" to="Stehen bleiben" />
     <Word from="Stehvermiigen" to="Stehvermögen" />
     <Word from="Steigbilgeldinger" to="Steigbügeldinger" />
     <Word from="Steinhéuser" to="Steinhäuser" />
@@ -5287,6 +5346,7 @@
     <Word from="tdtete" to="tötete" />
     <Word from="Telefongespréche" to="Telefongespräche" />
     <Word from="Tempelschénderf" to="Tempelschänder!" />
+    <Word from="TemPO" to="Tempo" />
     <Word from="TESTGELANDE" to="TESTGELÄNDE" />
     <Word from="Testvorfﬂhrungen" to="Testvorführungen" />
     <Word from="tfidlich" to="tödlich" />
@@ -5380,6 +5440,7 @@
     <Word from="Tschiissl" to="Tschüss!" />
     <Word from="tschijss" to="tschüss" />
     <Word from="Tschtiss" to="Tschüss" />
+    <Word from="tschüß" to="tschüss" />
     <Word from="Tschﬂs" to="Tschüs" />
     <Word from="Ttir" to="Tür" />
     <Word from="ttlckisch" to="tückisch" />
@@ -5388,6 +5449,7 @@
     <Word from="Tupperschiissel" to="Tupperschüssel" />
     <Word from="TUR" to="TÜR" />
     <Word from="TUr" to="Tür" />
+    <Word from="TUR" to="TÜR" />
     <Word from="Turen" to="Türen" />
     <Word from="TURKEI" to="TÜRKEI" />
     <Word from="Turmwiichter" to="Turmwächter" />
@@ -5438,8 +5500,10 @@
     <Word from="Uben/vachungen" to="Überwachungen" />
     <Word from="Uben/vachungsgesetz" to="Überwachungsgesetz" />
     <Word from="Uben/vinden" to="überwinden" />
+    <Word from="Uber" to="über" />
     <Word from="UBER" to="ÜBER" />
     <Word from="Uber" to="über" />
+    <Word from="UBER" to="ÜBER" />
     <Word from="Uberall" to="überall" />
     <Word from="Uberanstrenge" to="überanstrenge" />
     <Word from="Uberanstrengung" to="Überanstrengung" />
@@ -5536,6 +5600,7 @@
     <Word from="Ubertraf" to="übertraf" />
     <Word from="UBERTRAGEN" to="ÜBERTRAGEN" />
     <Word from="Ubertragen" to="übertragen" />
+    <Word from="UBERTRAGEN" to="ÜBERTRAGEN" />
     <Word from="UBERTRAGUNG" to="ÜBERTRAGUNG" />
     <Word from="ubertreibe" to="übertreibe" />
     <Word from="Ubertreiben" to="übertreiben" />
@@ -5752,8 +5817,6 @@
     <Word from="V6lker" to="Völker" />
     <Word from="V6llig" to="Völlig" />
     <Word from="v6lllg" to="völlig" />
-    <Word from="v\/as" to="was" />
-    <Word from="V\/e" to="We" />
     <Word from="vdllig" to="völlig" />
     <Word from="Ve/Teidigungskréfte" to="Verteidigungskräfte" />
     <Word from="Velzeih" to="Verzeih" />
@@ -5865,6 +5928,7 @@
     <Word from="vernunftig" to="vernünftig" />
     <Word from="vernunftigsten" to="vernünftigsten" />
     <Word from="vernﬂnftig" to="vernünftig" />
+    <Word from="verpaßt" to="verpasst" />
     <Word from="verpesfefe" to="verpestete" />
     <Word from="verprilgle" to="verprügle" />
     <Word from="verprugeln" to="verprügeln" />
@@ -5995,6 +6059,7 @@
     <Word from="vewvendet" to="verwendet" />
     <Word from="vfillig" to="völlig" />
     <Word from="VGFKUFZGH" to="verkürzen" />
+    <Word from="VI/illkommen" to="Willkommen" />
     <Word from="VI/itwicky" to="Witwicky" />
     <Word from="vial" to="viel" />
     <Word from="Videoiiben/vachung" to="Videoüberwachung" />
@@ -6069,6 +6134,8 @@
     <Word from="VVeil'2&gt;t" to="Weißt" />
     <Word from="VVir" to="Wir" />
     <Word from="VVM" to="WM" />
+    <Word from="v\/as" to="was" />
+    <Word from="V\/e" to="We" />
     <Word from="Végel" to="Vögel" />
     <Word from="végeln" to="vögeln" />
     <Word from="végelt" to="vögelt" />
@@ -6176,6 +6243,7 @@
     <Word from="weilZ&gt;" to="weiß" />
     <Word from="weilZ~" to="weiß" />
     <Word from="weiss" to="weiß" />
+    <Word from="weissen" to="weißen" />
     <Word from="weisst" to="weißt" />
     <Word from="weiterhiipfen" to="weiterhüpfen" />
     <Word from="Weiterpessen" to="Weiterpressen" />
@@ -6214,6 +6282,7 @@
     <Word from="widerspriichliche" to="widersprüchliche" />
     <Word from="Widerwéirtig" to="Widerwärtig" />
     <Word from="wiedergewéihltl" to="wiedergewählt" />
+    <Word from="wiederhaben" to="wieder haben" />
     <Word from="wiederhaben" to="wieder-haben" />
     <Word from="Wiederhéren" to="Wiederhören" />
     <Word from="Wieheifiternoch" to="Wieheißternoch" />
@@ -6286,6 +6355,7 @@
     <Word from="wirja" to="wir ja" />
     <Word from="wirje" to="wir je" />
     <Word from="wirjede" to="wir jede" />
+    <Word from="wirjeden" to="wir jeden" />
     <Word from="wirjetzt" to="wir jetzt" />
     <Word from="Wirnisse" to="Wirrnisse" />
     <Word from="Wirsind" to="Wir sind" />
@@ -6367,8 +6437,10 @@
     <Word from="wunsche" to="wünsche" />
     <Word from="Wunschen" to="Wünschen" />
     <Word from="wunscht" to="wünscht" />
+    <Word from="wunschte" to="wünschte" />
     <Word from="WUNSCHTE" to="WÜNSCHTE" />
     <Word from="wunschte" to="wünschte" />
+    <Word from="WUNSCHTE" to="WÜNSCHTE" />
     <Word from="wurcle" to="wurde" />
     <Word from="wUrde" to="würde" />
     <Word from="Wurdige" to="Würdige" />
@@ -6378,6 +6450,8 @@
     <Word from="Wuste" to="Wüste" />
     <Word from="WUSTEN" to="WÜSTEN" />
     <Word from="wutend" to="wütend" />
+    <Word from="wußte" to="wusste" />
+    <Word from="wußtest" to="wusstest" />
     <Word from="w§r's" to="wär's" />
     <Word from="w§re" to="wäre" />
     <Word from="W§ren's" to="Wären's" />
@@ -6434,6 +6508,7 @@
     <Word from="Wﬂrfel" to="Würfel" />
     <Word from="z'a'h" to="zäh" />
     <Word from="Z/egf" to="liegt" />
+    <Word from="Z/yarettenbäume" to="Zigarettenbäume" />
     <Word from="Z05" to="los" />
     <Word from="z6gel1e" to="zögerte" />
     <Word from="z6gern" to="zögern" />
@@ -6586,8 +6661,8 @@
     <Word from="zurtickgezogen" to="zurückgezogen" />
     <Word from="zurtlckgekommen" to="zurückgekommen" />
     <Word from="zurtlckvervvandeln" to="zurückverwandeln" />
-    <Word from="ZURUCK" to="ZURÜCK" />
     <Word from="Zuruck" to="Zurück" />
+    <Word from="ZURUCK" to="ZURÜCK" />
     <Word from="zuruckbleiben" to="zurückbleiben" />
     <Word from="zuruckblicken" to="zurückblicken" />
     <Word from="zuruckdenke" to="zurückdenke" />
@@ -6642,6 +6717,8 @@
     <Word from="zuverllssig" to="zuverlässig" />
     <Word from="zuverléssig" to="zuverlässig" />
     <Word from="zuverléssiger" to="zuverlässiger" />
+    <Word from="zuviel" to="zu viel" />
+    <Word from="zuviele" to="zu viele" />
     <Word from="zuzuflligen" to="zuzufügen" />
     <Word from="Zuﬂucht" to="Zuflucht" />
     <Word from="zvvei" to="zwei" />
@@ -6676,6 +6753,14 @@
     <Word from="Zéihlungen" to="Zählungen" />
     <Word from="Zéihne" to="Zähne" />
     <Word from="Zélibat" to="Zölibat" />
+    <Word from="\/GFQHUQGH" to="Vergnügen" />
+    <Word from="\/OFVVUFf€" to="Vorwürfe" />
+    <Word from="\/Vahrheit" to="Wahrheit" />
+    <Word from="\/Vir" to="Wir" />
+    <Word from="\/\/i6fUl'1l€fi" to="Wie fühlen" />
+    <Word from="\/\/il'fUl'1I'€l'1" to="Wir führen" />
+    <Word from="\Nynn" to="Wynn" />
+    <Word from="_" to="-" />
     <Word from="Äu" to="Au" />
     <Word from="é" to="à" />
     <Word from="échzt" to="ächzt" />
@@ -6722,125 +6807,53 @@
     <Word from="ﬂlr" to="für" />
     <Word from="ﬂlrchterlich" to="fürchterlich" />
     <Word from="ﬂndet" to="findet" />
-    <Word from="l/chtes" to="lichtes" />
-    <Word from="Z/yarettenbäume" to="Zigarettenbäume" />
-    <Word from="kommjetzt" to="komm jetzt" />
-    <Word from="J0Shua" to="Joshua" />
-    <Word from="Abjetzt" to="Ab jetzt" />
-    <Word from="einejunge" to="eine junge" />
-    <Word from="Haltjohnny" to="Halt Johnny" />
-    <Word from="istJohnny" to="ist Johnny" />
-    <Word from="PUpst" to="Pupst" />
-    <Word from="johnny" to="Johnny" />
-    <Word from="diejüngste" to="die Jüngste" />
-    <Word from="Cafä" to="Café" />
-    <Word from="Adiös" to="Adiós" />
-    <Word from="Schluß" to="Schluss" />
-    <Word from="daß" to="dass" />
-    <Word from="muß" to="muss" />
-    <Word from="Iaß" to="lass" />
-    <Word from="mußt" to="musst" />
-    <Word from="paßt" to="passt" />
-    <Word from="bißchen" to="bisschen" />
-    <Word from="Iaßt" to="lasst" />
-    <Word from="Laß" to="Lass" />
-    <Word from="Faß" to="Fass" />
-    <Word from="HintenNäldler" to="Hinterwäldler" />
-    <Word from="haßt" to="hasst" />
-    <Word from="Iief's" to="lief's" />
-    <Word from="müßt" to="müsst" />
-    <Word from="wußtest" to="wusstest" />
-    <Word from="schoß" to="schoss" />
-    <Word from="wußte" to="wusste" />
-    <Word from="wirjeden" to="wir jeden" />
-    <Word from="Paß" to="Pass" />
-    <Word from="tschüß" to="tschüss" />
-    <Word from="Daß" to="Dass" />
-    <Word from="mußte" to="musste" />
-    <Word from="verpaßt" to="verpasst" />
-    <Word from="paß" to="pass" />
-    <Word from="R/ck" to="Rick" />
-    <Word from="Bern/e" to="Bernie" />
-    <Word from="Enchantä" to="Enchanté" />
-    <Word from="schlimmsterAlbtraum" to="schlimmster Albtraum" />
-    <Word from="fürjeden" to="für jeden" />
-    <Word from="heisst" to="heißt" />
-    <Word from="Ieid‚" to="leid‚" />
-    <Word from="Weisst" to="Weißt" />
-    <Word from="weissen" to="weißen" />
-    <Word from="Justitzministeriums" to="Justizministeriums" />
-    <Word from="grosses" to="großes" />
-    <Word from="scheissegal" to="scheißegal" />
-    <Word from="zuviele" to="zu viele" />
-    <Word from="Scheisskarre" to="Scheißkarre" />
-    <Word from="mirjemand" to="mir jemand" />
-    <Word from="mirjemals" to="mir jemals" />
-    <Word from="En/vartungen" to="Erwartungen" />
-    <Word from="l/Vings" to="Wings" />
-    <Word from="hierjeder" to="hier jeder" />
-    <Word from="VI/illkommen" to="Willkommen" />
-    <Word from="Stehenbleiben" to="Stehen bleiben" />
-    <Word from="aggresivem" to="aggressivem" />
-    <Word from="zuviel" to="zu viel" />
-    <Word from="Mayonaise" to="Mayonnaise" />
-    <Word from="eingschaltet" to="eingeschaltet" />
-    <Word from="TemPO" to="Tempo" />
-    <Word from="fürjede" to="für jede" />
-    <Word from="Feindübewvachung" to="Feindüberwachung" />
-    <Word from="Protege" to="Protégé" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
-    <WordPart from="¤" to="o" />
     <WordPart from="IVI" to="M" />
+    <WordPart from="IVl" to="M" />
+    <WordPart from="I\/I" to="M" />
+    <WordPart from="I\/l" to="M" />
     <WordPart from="lVI" to="M" />
-    <WordPart from="IVl" to="M" />
     <WordPart from="lVl" to="M" />
-    <WordPart from="IVl" to="M" />
-    <WordPart from="I\/I" to="M" />
-    <WordPart from="I\/I" to="M" />
     <WordPart from="l\/I" to="M" />
-    <WordPart from="I\/l" to="M" />
     <WordPart from="l\/l" to="M" />
-    <WordPart from="I\/l" to="M" />
+    <WordPart from="¤" to="o" />
   </PartialWordsAlways>
   <PartialWords>
     <!-- Will be used to check words not in dictionary -->
-    <!-- If new word(s) exists in spelling dictionary, it(they) is accepted -->
-    <WordPart from="¤" to="o" />
-    <WordPart from="ı=" to="f" />
-    <WordPart from="ﬁ" to="fi" />
-    <WordPart from="ﬂ" to="fl" />
+    <!-- If new word(s) exists in spelling dictionary, it (they) is accepted -->
     <WordPart from="/" to="l" />
-    <WordPart from="vv" to="w" />
-    <WordPart from="VV" to="W" />
-    <WordPart from="IVI" to="M" />
-    <WordPart from="lVI" to="M" />
-    <WordPart from="IVl" to="M" />
-    <WordPart from="lVl" to="M" />
-    <WordPart from="m" to="rn" />
-    <WordPart from="l" to="i" />
-    <WordPart from="€" to="e" />
-    <WordPart from="I" to="l" />
+    <WordPart from="B" to="ß" />
+    <WordPart from="c" to="e" />
     <WordPart from="c" to="o" />
-    <WordPart from="i" to="t" />
     <WordPart from="cc" to="oo" />
-    <WordPart from="ii" to="tt" />
-    <WordPart from="ii" to="ü" />
-    <WordPart from="n/" to="ry" />
     <!-- "f " will be two words -->
     <WordPart from="f" to="f " />
-    <WordPart from="c" to="e" />
-    <WordPart from="o" to="e" />
-    <WordPart from="o" to="e" />
-    <WordPart from="I" to="t" />
+    <WordPart from="I" to="l" />
+    <WordPart from="i" to="t" />
+    <WordPart from="ii" to="tt" />
+    <WordPart from="ii" to="ü" />
+    <WordPart from="IVI" to="M" />
+    <WordPart from="IVl" to="M" />
+    <WordPart from="l" to="i" />
+    <WordPart from="lVI" to="M" />
+    <WordPart from="lVl" to="M" />
+    <WordPart from="m" to="rn" />
     <WordPart from="n" to="o" />
-    <WordPart from="s" to="e" />
-    <WordPart from="\A" to="Vi" />
     <WordPart from="n/" to="rv" />
-    <WordPart from="í" to="i" />
-    <WordPart from="B" to="ß" />
+    <WordPart from="n/" to="ry" />
+    <WordPart from="o" to="e" />
+    <WordPart from="s" to="e" />
+    <WordPart from="VV" to="W" />
+    <WordPart from="\A" to="Vi" />
+    <WordPart from="¤" to="o" />
     <WordPart from="é" to="ä" />
+    <WordPart from="í" to="i" />
+    <WordPart from="ı=" to="f" />
+    <WordPart from="€" to="e" />
+    <WordPart from="ﬁ" to="fi" />
+    <WordPart from="ﬂ" to="fl" />
   </PartialWords>
   <PartialLines>
     <!-- Partial lines - but whole words only -->
