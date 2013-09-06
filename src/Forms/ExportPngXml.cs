@@ -1350,9 +1350,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     string textNoBelow = lines[lines.Length - 1].Replace("g", "a").Replace("j", "a").Replace("p", "a").Replace("q", "a").Replace("y", "a").Replace(",", "a");
                     baseLinePadding -= (int)Math.Round((TextDraw.MeasureTextHeight(font, lines[lines.Length - 1], parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold)));
-                    if (baseLinePadding < 0)
-                        baseLinePadding = 0;
                 }
+                else
+                {
+                    baseLinePadding += 1;
+                }
+                if (baseLinePadding < 0)
+                    baseLinePadding = 0;
             }
 
             var lefts = new List<float>();
