@@ -592,19 +592,20 @@ namespace Nikse.SubtitleEdit.Logic
         {
             int different = 0;
             int maxDiff = (int)(bmp1.Width * bmp1.Height / 5.0);
+            NikseBitmap nbmp1 = new NikseBitmap(bmp1);
 
             for (int x = 1; x < bmp1.Width; x++)
             {
                 for (int y = 1; y < bmp1.Height; y++)
                 {
-                    if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
+                    if (!IsColorClose(nbmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
                     {
                         different++;
                     }
                 }
                 if (different > maxDiff)
                     return different + 10;
-            }
+            }            
             return different;
         }
 

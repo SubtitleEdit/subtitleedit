@@ -2160,7 +2160,9 @@ namespace Nikse.SubtitleEdit.Forms
                 // check for expand match!
                 if (compareItem.ExpandCount > 0 && compareItem.Bitmap.Width > targetItem.Bitmap.Width)
                 {
-                    int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, ImageSplitter.Copy(parentBitmap, new Rectangle(targetItem.X, targetItem.Y, compareItem.Bitmap.Width, compareItem.Bitmap.Height)));
+                    Bitmap cutBitmap = ImageSplitter.Copy(parentBitmap, new Rectangle(targetItem.X, targetItem.Y, compareItem.Bitmap.Width, compareItem.Bitmap.Height));
+                    int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, cutBitmap);
+                    cutBitmap.Dispose();
                     if (dif < smallestDifference)
                     {
                         smallestDifference = dif;
@@ -2196,30 +2198,33 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(1, 0, target.Width - 2, target.Height));
                     int topCrop = 0;
-                    cutBitmap = ImageSplitter.CropTopAndBottom(cutBitmap, out topCrop, 2);
-                    if (cutBitmap.Height != target.Height)
-                        FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap);
+                    Bitmap cutBitmap2 = ImageSplitter.CropTopAndBottom(cutBitmap, out topCrop, 2);
+                    if (cutBitmap2.Height != target.Height)
+                        FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2);
                     cutBitmap.Dispose();
+                    cutBitmap2.Dispose();
                 }
 
                 if (smallestDifference > 0 && target.Width > 15)
                 {
                     Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(1, 0, target.Width - 2, target.Height));
                     int topCrop = 0;
-                    cutBitmap = ImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
-                    if (cutBitmap.Height != target.Height)
-                        FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap);
+                    Bitmap cutBitmap2 = ImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
+                    if (cutBitmap2.Height != target.Height)
+                        FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2);
                     cutBitmap.Dispose();
+                    cutBitmap2.Dispose();
                 }
 
                 if (smallestDifference > 0 && target.Width > 15)
                 {
                     Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(1, 0, target.Width - 2, target.Height));
                     int topCrop = 0;
-                    cutBitmap = ImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
-                    if (cutBitmap.Height != target.Height)
-                        FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap);
+                    Bitmap cutBitmap2 = ImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
+                    if (cutBitmap2.Height != target.Height)
+                        FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2);
                     cutBitmap.Dispose();
+                    cutBitmap2.Dispose();
                 }
             }
 
