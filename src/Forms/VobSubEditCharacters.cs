@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (name == a.Name)
                         {
-                            listBoxFileNames.Items.Add("[" + text +"] " + node.InnerText + ".bmp");
+                            listBoxFileNames.Items.Add("[" + text +"] " + node.InnerText + ".mbmp");
                             _italics.Add(node.Attributes["Italic"] != null);
                         }
 
@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = node.Attributes["Text"].InnerText;
                     if (text == target)
                     {
-                        listBoxFileNames.Items.Add(node.InnerText + ".bmp");
+                        listBoxFileNames.Items.Add(node.InnerText + ".mbmp");
                         _italics.Add(node.Attributes["Italic"] != null);
                     }
                 }
@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Forms
             Bitmap bmp;
             if (File.Exists(fileName))
             {
-                Bitmap tmp = new Bitmap(fileName);
+                ManagedBitmap tmp = new ManagedBitmap(fileName);
                 try
                 {
                     labelImageInfo.Text = string.Format(Configuration.Settings.Language.VobSubEditCharacters.Image + " - {0}x{1}", tmp.Width, tmp.Height);
@@ -194,8 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
                 catch
                 {
                 }
-                bmp = new Bitmap(tmp);
-                tmp.Dispose();
+                bmp = tmp.ToOldBitmap();
             }
             else
             {

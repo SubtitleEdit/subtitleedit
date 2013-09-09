@@ -9447,7 +9447,7 @@ namespace Nikse.SubtitleEdit.Forms
                     vobSubOcr.ShowIcon = true;
                 }
                 _formPositionsAndSizes.SetPositionAndSize(vobSubOcr);
-                if (vobSubOcr.Initialize(fileName, Configuration.Settings.VobSubOcr, true))
+                if (vobSubOcr.Initialize(fileName, Configuration.Settings.VobSubOcr, true, this)) 
                 {
                     if (vobSubOcr.ShowDialog(this) == DialogResult.OK)
                     {

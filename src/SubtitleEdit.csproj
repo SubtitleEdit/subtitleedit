@@ -733,6 +733,7 @@
     <Compile Include="Logic\BluRaySup\ImageObjectFragment.cs" />
     <Compile Include="Logic\BluRaySup\PaletteInfo.cs" />
     <Compile Include="Logic\BluRaySup\ToolBox.cs" />
+    <Compile Include="Logic\BmpReader.cs" />
     <Compile Include="Logic\DetectEncoding\EncodingTools.cs" />
     <Compile Include="Logic\DetectEncoding\Multilang\CMLangConvertCharset.cs" />
     <Compile Include="Logic\DetectEncoding\Multilang\CMLangConvertCharsetClass.cs" />
@@ -781,6 +782,7 @@
     <Compile Include="Logic\HashSet.cs" />
     <Compile Include="Logic\IfoParser.cs" />
     <Compile Include="Logic\Language.cs" />
+    <Compile Include="Logic\ManagedBitmap.cs" />
     <Compile Include="Logic\Mp4\Boxes\Box.cs" />
     <Compile Include="Logic\Mp4\Boxes\Mdhd.cs" />
     <Compile Include="Logic\Mp4\Boxes\Mdia.cs" />

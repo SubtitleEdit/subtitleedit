@@ -271,7 +271,6 @@ namespace Nikse.SubtitleEdit.Logic
             return different;
         }
 
-
         private static List<ImageSplitterItem> SplitHorizontal(ImageSplitterItem verticalItem, int xOrMorePixelsMakesSpace)
         { // split line into letters
             Bitmap bmp = verticalItem.Bitmap;
@@ -569,6 +568,66 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         internal static unsafe int IsBitmapsAlike(NikseBitmap bmp1, NikseBitmap bmp2)
+        {
+            int different = 0;
+            int maxDiff = (int)(bmp1.Width * bmp1.Height / 5.0);
+
+            for (int x = 1; x < bmp1.Width; x++)
+            {
+                for (int y = 1; y < bmp1.Height; y++)
+                {
+                    if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
+                    {
+                        different++;
+                    }
+                }
+                if (different > maxDiff)
+                    return different + 10;
+            }
+            return different;
+        }
+
+        internal static unsafe int IsBitmapsAlike(ManagedBitmap bmp1, NikseBitmap bmp2)
+        {
+            int different = 0;
+            int maxDiff = (int)(bmp1.Width * bmp1.Height / 5.0);
+
+            for (int x = 1; x < bmp1.Width; x++)
+            {
+                for (int y = 1; y < bmp1.Height; y++)
+                {
+                    if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
+                    {
+                        different++;
+                    }
+                }
+                if (different > maxDiff)
+                    return different + 10;
+            }
+            return different;
+        }
+
+        internal static unsafe int IsBitmapsAlike(ManagedBitmap bmp1, Bitmap bmp2)
+        {
+            int different = 0;
+            int maxDiff = (int)(bmp1.Width * bmp1.Height / 5.0);
+
+            for (int x = 1; x < bmp1.Width; x++)
+            {
+                for (int y = 1; y < bmp1.Height; y++)
+                {
+                    if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
+                    {
+                        different++;
+                    }
+                }
+                if (different > maxDiff)
+                    return different + 10;
+            }
+            return different;
+        }
+
+        internal static unsafe int IsBitmapsAlike(NikseBitmap bmp1, ManagedBitmap bmp2)
         {
             int different = 0;
             int maxDiff = (int)(bmp1.Width * bmp1.Height / 5.0);
