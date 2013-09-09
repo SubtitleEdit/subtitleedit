@@ -39,6 +39,24 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public ManagedBitmap(Stream stream)
+        {
+            byte[] buffer = new byte[8];
+            stream.Read(buffer, 0, buffer.Length);
+          //  System.Windows.Forms.MessageBox.Show(System.Text.Encoding.UTF8.GetString(buffer, 0, 4));
+            Width = buffer[4] << 8 | buffer[5];
+            Height = buffer[6] << 8 | buffer[7];
+            _colors = new Color[Width * Height];
+            buffer = new byte[Width * Height * 4];
+            stream.Read(buffer, 0, buffer.Length);
+            int start = 0;
+            for (int i = 0; i < _colors.Length; i++)
+            {
+                _colors[i] = Color.FromArgb(buffer[start], buffer[start + 1], buffer[start + 2], buffer[start + 3]);
+                start += 4;
+            }
+        }
+
         public ManagedBitmap(Bitmap oldBitmap)
         {
             NikseBitmap nbmp = new NikseBitmap(oldBitmap);
@@ -74,6 +92,23 @@ namespace Nikse.SubtitleEdit.Logic
                     gz.Flush();
                     gz.Close();
                 }
+            }
+        }
+
+        public void AppendToStream(Stream targetStream)
+        {
+            using (MemoryStream outFile = new MemoryStream())
+            {
+                byte[] buffer = System.Text.Encoding.UTF8.GetBytes("MBMP");
+                outFile.Write(buffer, 0, buffer.Length);
+                WriteInt16(outFile, (short)Width);
+                WriteInt16(outFile, (short)Height);
+                foreach (Color c in _colors)
+                {
+                    WriteColor(outFile, c);
+                }
+                buffer = outFile.ToArray();
+                targetStream.Write(buffer, 0, buffer.Length);
             }
         }
 
