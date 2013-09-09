@@ -58,7 +58,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
-            this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
             this.GroupBoxTesseractMethod = new System.Windows.Forms.GroupBox();
             this.buttonGetTesseractDictionaries = new System.Windows.Forms.Button();
             this.checkBoxTesseractMusicOn = new System.Windows.Forms.CheckBox();
@@ -66,6 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxUseModiInTesseractForUnknownWords = new System.Windows.Forms.CheckBox();
             this.labelTesseractLanguage = new System.Windows.Forms.Label();
             this.comboBoxTesseractLanguages = new System.Windows.Forms.ComboBox();
+            this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
             this.groupBoxModiMethod = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxModiLanguage = new System.Windows.Forms.ComboBox();
@@ -138,9 +138,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.splitContainerBottom = new System.Windows.Forms.SplitContainer();
+            this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
+            this.labelMaxErrorPercent = new System.Windows.Forms.Label();
+            this.numericUpDownMaxErrorPct = new System.Windows.Forms.NumericUpDown();
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.GroupBoxTesseractMethod.SuspendLayout();
@@ -169,6 +171,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom.Panel1.SuspendLayout();
             this.splitContainerBottom.Panel2.SuspendLayout();
             this.splitContainerBottom.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxErrorPct)).BeginInit();
             this.SuspendLayout();
             // 
             // contextMenuStripListview
@@ -191,7 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 298);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 276);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
@@ -383,31 +386,16 @@ namespace Nikse.SubtitleEdit.Forms
             // groupBoxOcrMethod
             // 
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
             this.groupBoxOcrMethod.Size = new System.Drawing.Size(392, 192);
             this.groupBoxOcrMethod.TabIndex = 0;
             this.groupBoxOcrMethod.TabStop = false;
             this.groupBoxOcrMethod.Text = "OCR method";
-            // 
-            // comboBoxOcrMethod
-            // 
-            this.comboBoxOcrMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxOcrMethod.FormattingEnabled = true;
-            this.comboBoxOcrMethod.Items.AddRange(new object[] {
-            "OCR via tesseract",
-            "OCR via image compare",
-            "OCR via Microsoftr MODI",
-            "OCR via nOCR"});
-            this.comboBoxOcrMethod.Location = new System.Drawing.Point(13, 20);
-            this.comboBoxOcrMethod.Name = "comboBoxOcrMethod";
-            this.comboBoxOcrMethod.Size = new System.Drawing.Size(366, 21);
-            this.comboBoxOcrMethod.TabIndex = 0;
-            this.comboBoxOcrMethod.SelectedIndexChanged += new System.EventHandler(this.ComboBoxOcrMethodSelectedIndexChanged);
             // 
             // GroupBoxTesseractMethod
             // 
@@ -489,6 +477,21 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxTesseractLanguages.Size = new System.Drawing.Size(195, 21);
             this.comboBoxTesseractLanguages.TabIndex = 1;
             this.comboBoxTesseractLanguages.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTesseractLanguagesSelectedIndexChanged);
+            // 
+            // comboBoxOcrMethod
+            // 
+            this.comboBoxOcrMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxOcrMethod.FormattingEnabled = true;
+            this.comboBoxOcrMethod.Items.AddRange(new object[] {
+            "OCR via tesseract",
+            "OCR via image compare",
+            "OCR via Microsoftr MODI",
+            "OCR via nOCR"});
+            this.comboBoxOcrMethod.Location = new System.Drawing.Point(13, 20);
+            this.comboBoxOcrMethod.Name = "comboBoxOcrMethod";
+            this.comboBoxOcrMethod.Size = new System.Drawing.Size(366, 21);
+            this.comboBoxOcrMethod.TabIndex = 0;
+            this.comboBoxOcrMethod.SelectedIndexChanged += new System.EventHandler(this.ComboBoxOcrMethodSelectedIndexChanged);
             // 
             // groupBoxModiMethod
             // 
@@ -640,6 +643,8 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxImageCompareMethod
             // 
+            this.groupBoxImageCompareMethod.Controls.Add(this.labelMaxErrorPercent);
+            this.groupBoxImageCompareMethod.Controls.Add(this.numericUpDownMaxErrorPct);
             this.groupBoxImageCompareMethod.Controls.Add(this.checkBoxRightToLeft);
             this.groupBoxImageCompareMethod.Controls.Add(this.numericUpDownPixelsIsSpace);
             this.groupBoxImageCompareMethod.Controls.Add(this.buttonEditCharacterDatabase);
@@ -657,7 +662,7 @@ namespace Nikse.SubtitleEdit.Forms
             // checkBoxRightToLeft
             // 
             this.checkBoxRightToLeft.AutoSize = true;
-            this.checkBoxRightToLeft.Location = new System.Drawing.Point(173, 100);
+            this.checkBoxRightToLeft.Location = new System.Drawing.Point(9, 107);
             this.checkBoxRightToLeft.Name = "checkBoxRightToLeft";
             this.checkBoxRightToLeft.Size = new System.Drawing.Size(83, 17);
             this.checkBoxRightToLeft.TabIndex = 6;
@@ -666,7 +671,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownPixelsIsSpace
             // 
-            this.numericUpDownPixelsIsSpace.Location = new System.Drawing.Point(173, 67);
+            this.numericUpDownPixelsIsSpace.Location = new System.Drawing.Point(173, 54);
             this.numericUpDownPixelsIsSpace.Maximum = new decimal(new int[] {
             50,
             0,
@@ -699,7 +704,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelNoOfPixelsIsSpace
             // 
             this.labelNoOfPixelsIsSpace.AutoSize = true;
-            this.labelNoOfPixelsIsSpace.Location = new System.Drawing.Point(6, 69);
+            this.labelNoOfPixelsIsSpace.Location = new System.Drawing.Point(6, 56);
             this.labelNoOfPixelsIsSpace.Name = "labelNoOfPixelsIsSpace";
             this.labelNoOfPixelsIsSpace.Size = new System.Drawing.Size(104, 13);
             this.labelNoOfPixelsIsSpace.TabIndex = 4;
@@ -1304,6 +1309,48 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom.SplitterDistance = 658;
             this.splitContainerBottom.TabIndex = 39;
             // 
+            // timerHideStatus
+            // 
+            this.timerHideStatus.Interval = 2000;
+            this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
+            // 
+            // labelMaxErrorPercent
+            // 
+            this.labelMaxErrorPercent.AutoSize = true;
+            this.labelMaxErrorPercent.Location = new System.Drawing.Point(7, 83);
+            this.labelMaxErrorPercent.Name = "labelMaxErrorPercent";
+            this.labelMaxErrorPercent.Size = new System.Drawing.Size(55, 13);
+            this.labelMaxErrorPercent.TabIndex = 45;
+            this.labelMaxErrorPercent.Text = "Max Err%";
+            // 
+            // numericUpDownMaxErrorPct
+            // 
+            this.numericUpDownMaxErrorPct.DecimalPlaces = 1;
+            this.numericUpDownMaxErrorPct.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownMaxErrorPct.Location = new System.Drawing.Point(173, 81);
+            this.numericUpDownMaxErrorPct.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxErrorPct.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numericUpDownMaxErrorPct.Name = "numericUpDownMaxErrorPct";
+            this.numericUpDownMaxErrorPct.Size = new System.Drawing.Size(50, 21);
+            this.numericUpDownMaxErrorPct.TabIndex = 44;
+            this.numericUpDownMaxErrorPct.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            65536});
+            // 
             // textBoxCurrentText
             // 
             this.textBoxCurrentText.AllowDrop = true;
@@ -1340,11 +1387,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
-            // 
-            // timerHideStatus
-            // 
-            this.timerHideStatus.Interval = 2000;
-            this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
             // 
             // VobSubOcr
             // 
@@ -1408,6 +1450,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom.Panel1.PerformLayout();
             this.splitContainerBottom.Panel2.ResumeLayout(false);
             this.splitContainerBottom.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxErrorPct)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1525,5 +1568,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonSpellCheckDownload;
         private System.Windows.Forms.Timer timerHideStatus;
         private System.Windows.Forms.ToolStripMenuItem dOSTToolStripMenuItem;
+        private System.Windows.Forms.Label labelMaxErrorPercent;
+        private System.Windows.Forms.NumericUpDown numericUpDownMaxErrorPct;
     }
 }
