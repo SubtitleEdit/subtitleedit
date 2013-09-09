@@ -44,10 +44,10 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
 
             _directoryPath = Configuration.VobSubCompareFolder + databaseFolderName + Path.DirectorySeparatorChar;
-            if (!File.Exists(_directoryPath + "CompareDescription.xml"))
+            if (!File.Exists(_directoryPath + "Images.xml"))
                 _compareDoc.LoadXml("<OcrBitmaps></OcrBitmaps>");
             else
-                _compareDoc.Load(_directoryPath + "CompareDescription.xml");
+                _compareDoc.Load(_directoryPath + "Images.xml");
 
             Refill(Additions);
 
@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (name == a.Name)
                         {
-                            listBoxFileNames.Items.Add("[" + text +"] " + node.InnerText + ".mbmp");
+                            listBoxFileNames.Items.Add("[" + text +"] " + node.InnerText);
                             _italics.Add(node.Attributes["Italic"] != null);
                         }
 
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void FillComboWithUniqueAndSortedTexts()
         {
             List<string> texts = new List<string>();
-            foreach (XmlNode node in _compareDoc.DocumentElement.SelectNodes("FileName"))
+            foreach (XmlNode node in _compareDoc.DocumentElement.SelectNodes("Item"))
             {
                 if (node.Attributes.Count >= 1)
                 {
@@ -182,21 +182,22 @@ namespace Nikse.SubtitleEdit.Forms
         private void ListBoxFileNamesSelectedIndexChanged(object sender, EventArgs e)
         {
             checkBoxItalic.Checked = _italics[listBoxFileNames.SelectedIndex];
-            string fileName = _directoryPath + GetSelectedFileName();
-            Bitmap bmp;
-            if (File.Exists(fileName))
+            string databaseName = _directoryPath + "Images.db";
+            string posAsString = GetSelectedFileName();
+            Bitmap bmp = null;
+
+            if (File.Exists(databaseName))
             {
-                ManagedBitmap tmp = new ManagedBitmap(fileName);
-                try
-                {
-                    labelImageInfo.Text = string.Format(Configuration.Settings.Language.VobSubEditCharacters.Image + " - {0}x{1}", tmp.Width, tmp.Height);
+                using (var f = new FileStream(databaseName, FileMode.Open))
+                {                   
+                    int pos = Convert.ToInt32(databaseName);
+                    f.Position = pos;
+                    ManagedBitmap mbmp = new ManagedBitmap(f);
+                    bmp = mbmp.ToOldBitmap();
                 }
-                catch
-                {
-                }
-                bmp = tmp.ToOldBitmap();
             }
-            else
+
+            if (bmp == null)
             {
                 bmp = new Bitmap(1,1);
                 labelImageInfo.Text = Configuration.Settings.Language.VobSubEditCharacters.ImageFileNotFound;
@@ -233,7 +234,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             string target = GetSelectedFileName();
             target = target.Substring(0, target.Length - 4);
-            XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + target + "']");
+            XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + target + "']");
             if (node != null)
             {
                 string newText = textBoxText.Text;
@@ -308,7 +309,7 @@ namespace Nikse.SubtitleEdit.Forms
             int oldComboBoxIndex = comboBoxTexts.SelectedIndex;
             string target = GetSelectedFileName();
             target = target.Substring(0, target.Length - 4);
-            XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + target + "']");
+            XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + target + "']");
             if (node != null)
             {
                 _compareDoc.DocumentElement.RemoveChild(node);

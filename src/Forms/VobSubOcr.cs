@@ -723,38 +723,81 @@ namespace Nikse.SubtitleEdit.Forms
                 _compareDoc.LoadXml("<OcrBitmaps></OcrBitmaps>");
             else
                 _compareDoc.Load(path + "CompareDescription.xml");
-
-            foreach (string bmpFileName in Directory.GetFiles(path, "*.bmp"))
+            
+            string databaseName = path + "Images.db";
+            if (!File.Exists(databaseName))
             {
-                string newName = bmpFileName.Replace(".bmp", ".mbmp");
-                if (!File.Exists(newName))
+                using (var f = new FileStream(databaseName, FileMode.Create))
                 {
-                    Bitmap b = new Bitmap(bmpFileName);
-                    ManagedBitmap m = new ManagedBitmap(b);
-                    b.Dispose();
-                    m.Save(newName);
-                }
-            }
-
-
-            foreach (string bmpFileName in Directory.GetFiles(path, "*.mbmp"))
-            {
-                string name = Path.GetFileNameWithoutExtension(bmpFileName);
-
-                XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + name + "']");
-                if (node != null)
-                {
-                    bool isItalic = node.Attributes["Italic"] != null;
-                    int expandCount = 0;
-                    if (node.Attributes["Expand"] != null)
+                    foreach (string bmpFileName in Directory.GetFiles(path, "*.bmp"))
                     {
-                        if (!int.TryParse(node.Attributes["Expand"].InnerText, out expandCount))
-                            expandCount = 0;
+                        string name = Path.GetFileNameWithoutExtension(bmpFileName);
+
+                        XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + name + "']");
+                        if (node != null)
+                        {
+                            node.InnerText = f.Position.ToString(CultureInfo.InvariantCulture);                           
+                            var b = new Bitmap(bmpFileName);
+                            var m = new ManagedBitmap(b);
+                            b.Dispose();
+                            m.AppendToStream(f);                           
+                        }
                     }
-                    ManagedBitmap mbmp = new ManagedBitmap(bmpFileName);
-                    _compareBitmaps.Add(new CompareItem(mbmp, name, isItalic, expandCount));
+                    f.Close();
+                }
+                _compareDoc.Save(path + "Images.xml");
+                string text = File.ReadAllText(path + "Images.xml");
+                File.WriteAllText(path + "Images.xml", text.Replace("<FileName", "<Item").Replace("</FileName>", "</Item>"));
+            }
+
+            if (File.Exists(databaseName))
+            {
+                _compareDoc.Load(path + "Images.xml");
+                using (var f = new FileStream(databaseName, FileMode.Open))
+                {
+                    foreach (XmlNode node in _compareDoc.DocumentElement.SelectNodes("Item"))
+                    {
+                        try //if (node.Attributes["Pos"] != null)
+                        {
+                            string name = node.InnerText;
+                            int pos = Convert.ToInt32(name);
+                            bool isItalic = node.Attributes["Italic"] != null;
+                            int expandCount = 0;
+                            if (node.Attributes["Expand"] != null)
+                            {
+                                if (!int.TryParse(node.Attributes["Expand"].InnerText, out expandCount))
+                                    expandCount = 0;
+                            }
+                            f.Position = pos;
+                            ManagedBitmap mbmp = new ManagedBitmap(f);
+                            _compareBitmaps.Add(new CompareItem(mbmp, name, isItalic, expandCount));
+                        }
+                        catch
+                        {
+                            //MessageBox.Show(node.OuterXml);
+                        }
+                    }
                 }
             }
+
+        //    foreach (string bmpFileName in Directory.GetFiles(path, "*.mbmp"))
+        //    {
+        //        string name = Path.GetFileNameWithoutExtension(bmpFileName);
+
+        //        XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + name + "']");
+        //        if (node != null)
+        //        {
+        //            bool isItalic = node.Attributes["Italic"] != null;
+        //            int expandCount = 0;
+        //            if (node.Attributes["Expand"] != null)
+        //            {
+        //                if (!int.TryParse(node.Attributes["Expand"].InnerText, out expandCount))
+        //                    expandCount = 0;
+        //            }
+        //            ManagedBitmap mbmp = new ManagedBitmap(bmpFileName);
+        //            _compareBitmaps.Add(new CompareItem(mbmp, name, isItalic, expandCount));
+        //        }
+        //    }
         }
 
         private void DisposeImageCompareBitmaps()
@@ -2241,7 +2284,7 @@ namespace Nikse.SubtitleEdit.Forms
                     maxDiff = 12.9; // let bluray sup have a 12.9% diff
                 if (differencePercentage < maxDiff) //_vobSubOcrSettings.AllowDifferenceInPercent) // should be around 1.0...
                 {
-                    XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + _compareBitmaps[smallestIndex].Name + "']");
+                    XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + _compareBitmaps[smallestIndex].Name + "']");
                     if (node != null && _bluRaySubtitlesOriginal != null && "ceoil".Contains(node.Attributes["Text"].InnerText) && differencePercentage > 12)
                         node = null;
                     if (node != null)
@@ -2271,7 +2314,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                XmlNode nodeGuess = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + _compareBitmaps[smallestIndex].Name + "']");
+                XmlNode nodeGuess = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + _compareBitmaps[smallestIndex].Name + "']");
                 if (nodeGuess != null)
                 {
                     bool isItalicGuess = nodeGuess.Attributes["Italic"] != null;
@@ -2281,7 +2324,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!int.TryParse(nodeGuess.Attributes["Expand"].InnerText, out expandCountGuess))
                             expandCountGuess = 0;
                     }
-                    secondBestGuess = new CompareMatch(nodeGuess.Attributes["Text"].InnerText, isItalicGuess, expandCountGuess, _compareBitmaps[smallestIndex].Name);
+                    secondBestGuess = new CompareMatch(nodeGuess.InnerText, isItalicGuess, expandCountGuess, _compareBitmaps[smallestIndex].Name);
                 }
 
             }
@@ -2314,7 +2357,7 @@ namespace Nikse.SubtitleEdit.Forms
                          if (compareItem.NumberOfForegroundColors == -1)
                                 compareItem.NumberOfForegroundColors = CalculateNumberOfForegroundColors(compareItem.Bitmap);
 
-                         if (Math.Abs(compareItem.NumberOfForegroundColors - numberOfForegroundColors) < minForeColorMatch)
+                         if (Math.Abs(compareItem.NumberOfForegroundColors - numberOfForegroundColors) < 50)
                          {
                              int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
                              if (dif < smallestDifference)
@@ -2645,13 +2688,30 @@ namespace Nikse.SubtitleEdit.Forms
         private string SaveCompareItem(Bitmap newTarget, string text, bool isItalic, int expandCount)
         {
             string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
-            string name = Guid.NewGuid().ToString();
-            string fileName = path + name + ".bmp";
-            new ManagedBitmap(newTarget).Save(fileName.Replace(".bmp", ".mbmp"));
+            string databaseName = path + "Images.db";
+            FileStream f;
+            long pos = 0;
+            if (!File.Exists(databaseName))
+            {
+                using (f = new FileStream(databaseName, FileMode.Create))
+                {
+                    pos = f.Position;
+                    new ManagedBitmap(newTarget).AppendToStream(f);
+                }
+            }
+            else
+            {
+                using (f = new FileStream(databaseName, FileMode.Append))
+                {
+                    pos = f.Position;
+                    new ManagedBitmap(newTarget).AppendToStream(f);
+                }
+            }
+            string name = pos.ToString(CultureInfo.InvariantCulture);
 
             _compareBitmaps.Add(new CompareItem(new ManagedBitmap(newTarget), name, isItalic, expandCount));
 
-            XmlElement element = _compareDoc.CreateElement("FileName");
+            XmlElement element = _compareDoc.CreateElement("Item");
             XmlAttribute attribute = _compareDoc.CreateAttribute("Text");
             attribute.InnerText = text;
             element.Attributes.Append(attribute);
@@ -2667,9 +2727,9 @@ namespace Nikse.SubtitleEdit.Forms
                 italic.InnerText = "true";
                 element.Attributes.Append(italic);
             }
-            element.InnerText = name;
+            element.InnerText = pos.ToString(CultureInfo.InvariantCulture);
             _compareDoc.DocumentElement.AppendChild(element);
-            _compareDoc.Save(path + "CompareDescription.xml");
+            _compareDoc.Save(path + "Images.xml");
             return name;
         }
 
