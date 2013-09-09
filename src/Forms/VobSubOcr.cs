@@ -21,17 +21,19 @@ namespace Nikse.SubtitleEdit.Forms
     {
         internal class CompareItem
         {
-            public Bitmap Bitmap { get; private set; }
+            public ManagedBitmap Bitmap { get; private set; }
             public string Name { get; private set; }
             public bool Italic { get; set; }
             public int ExpandCount { get; private set; }
+            public int NumberOfForegroundColors { get; set; }
 
-            public CompareItem(Bitmap bmp, string name, bool isItalic, int expandCount)
+            public CompareItem(ManagedBitmap bmp, string name, bool isItalic, int expandCount)
             {
                 Bitmap = bmp;
                 Name = name;
                 Italic = isItalic;
                 ExpandCount = expandCount;
+                NumberOfForegroundColors = -1;
             }
         }
 
@@ -144,6 +146,7 @@ namespace Nikse.SubtitleEdit.Forms
             public int Language { get; set; }
         }
 
+        private Nikse.SubtitleEdit.Forms.Main _main;
         public string FileName { get; set; }
         Subtitle _subtitle = new Subtitle();
         List<CompareItem> _compareBitmaps;
@@ -397,7 +400,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool useNewSubIdxCode)
         {
-            Initialize(vobSubFileName, vobSubOcrSettings, useNewSubIdxCode);
+            Initialize(vobSubFileName, vobSubOcrSettings, useNewSubIdxCode, null);
             FormVobSubOcr_Shown(null, null);
 
             int max = GetSubtitleCount();
@@ -475,8 +478,9 @@ namespace Nikse.SubtitleEdit.Forms
             SetButtonsEnabledAfterOcrDone();
         }
 
-        internal bool Initialize(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool useNewSubIdxCode)
+        internal bool Initialize(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool useNewSubIdxCode, Nikse.SubtitleEdit.Forms.Main main)
         {
+            _main = main;
             _useNewSubIdxCode = useNewSubIdxCode;
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
@@ -722,6 +726,19 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (string bmpFileName in Directory.GetFiles(path, "*.bmp"))
             {
+                string newName = bmpFileName.Replace(".bmp", ".mbmp");
+                if (!File.Exists(newName))
+                {
+                    Bitmap b = new Bitmap(bmpFileName);
+                    ManagedBitmap m = new ManagedBitmap(b);
+                    b.Dispose();
+                    m.Save(newName);
+                }
+            }
+
+
+            foreach (string bmpFileName in Directory.GetFiles(path, "*.mbmp"))
+            {
                 string name = Path.GetFileNameWithoutExtension(bmpFileName);
 
                 XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + name + "']");
@@ -734,24 +751,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!int.TryParse(node.Attributes["Expand"].InnerText, out expandCount))
                             expandCount = 0;
                     }
-
-                    Bitmap bmp = null;
-                    using (var ms = new MemoryStream(File.ReadAllBytes(bmpFileName))) // load bmp without file lock
-                    {
-                        bmp = (Bitmap)Bitmap.FromStream(ms, false, false);
-                    }
-
-                    _compareBitmaps.Add(new CompareItem(bmp, name, isItalic, expandCount));
-                }
-                else
-                {
-                    try
-                    {
-                        File.Delete(bmpFileName);
-                    }
-                    catch
-                    {
-                    }
+                    ManagedBitmap mbmp = new ManagedBitmap(bmpFileName);
+                    _compareBitmaps.Add(new CompareItem(mbmp, name, isItalic, expandCount));
                 }
             }
         }
@@ -766,7 +767,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         try
                         {
-                            item.Bitmap.Dispose();
+                            //item.Bitmap.Dispose();
                         }
                         catch
                         {
@@ -794,7 +795,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DvdSubRipChooseLanguage ChooseLanguage = new DvdSubRipChooseLanguage();
                 ChooseLanguage.Initialize(_vobSubMergedPackist, _palette, vobSubParser.IdxLanguages, string.Empty);
-                if (ChooseLanguage.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+                Form form = _main;
+                if (form == null)
+                    form = this;
+                ChooseLanguage.Activate();
+                if (ChooseLanguage.ShowDialog(form) == System.Windows.Forms.DialogResult.OK)
                 {
                     _vobSubMergedPackist = ChooseLanguage.SelectedVobSubMergedPacks;
                     SetTesseractLanguageFromLanguageString(ChooseLanguage.SelectedLanguageString);
@@ -2296,6 +2301,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void FindBestMatch(ref int index, ref int smallestDifference, ref int smallestIndex, Bitmap target2)
         {
             NikseBitmap target = new NikseBitmap(target2);
+            int numberOfForegroundColors = CalculateNumberOfForegroundColors(target);
+            int minForeColorMatch = 99;
+
             if (smallestDifference > 0)
             {
                 index = 0;
@@ -2303,16 +2311,26 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (compareItem.Bitmap.Width == target.Width && compareItem.Bitmap.Height == target.Height) // precise math in size
                     {
-                        int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
-                        if (dif < smallestDifference)
-                        {
-                            smallestDifference = dif;
-                            smallestIndex = index;
-                            if (dif == 0)
-                            {
-                                break; // foreach ending
-                            }
-                        }
+                         if (compareItem.NumberOfForegroundColors == -1)
+                                compareItem.NumberOfForegroundColors = CalculateNumberOfForegroundColors(compareItem.Bitmap);
+
+                         if (Math.Abs(compareItem.NumberOfForegroundColors - numberOfForegroundColors) < minForeColorMatch)
+                         {
+                             int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
+                             if (dif < smallestDifference)
+                             {
+                                 smallestDifference = dif;
+                                 smallestIndex = index;
+                                 if (dif == 0)
+                                 {
+                                     break; // foreach ending
+                                 }
+                             }
+                         }
+                         else
+                         {
+                             smallestDifference = (int)(smallestDifference - 0.00000001);
+                         }
                     }
                     index++;
                 }
@@ -2327,13 +2345,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (compareItem.Bitmap.Width == target.Width && compareItem.Bitmap.Height == target.Height - 1)
                         {
-                            int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
-                            if (dif < smallestDifference)
+                            if (compareItem.NumberOfForegroundColors == -1)
+                                compareItem.NumberOfForegroundColors = CalculateNumberOfForegroundColors(compareItem.Bitmap);
+
+                            if (Math.Abs(compareItem.NumberOfForegroundColors - numberOfForegroundColors) < minForeColorMatch)
                             {
-                                smallestDifference = dif;
-                                smallestIndex = index;
-                                if (dif == 0)
-                                    break; // foreach ending
+                                int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
+                                if (dif < smallestDifference)
+                                {
+                                    smallestDifference = dif;
+                                    smallestIndex = index;
+                                    if (dif == 0)
+                                        break; // foreach ending
+                                }
                             }
                         }
                         index++;
@@ -2347,13 +2371,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (compareItem.Bitmap.Width == target.Width && compareItem.Bitmap.Height == target.Height + 1)
                         {
-                            int dif = ImageSplitter.IsBitmapsAlike(target, compareItem.Bitmap);
-                            if (dif < smallestDifference)
+                            if (compareItem.NumberOfForegroundColors == -1)
+                                compareItem.NumberOfForegroundColors = CalculateNumberOfForegroundColors(compareItem.Bitmap);
+
+                            if (Math.Abs(compareItem.NumberOfForegroundColors - numberOfForegroundColors) < minForeColorMatch)
                             {
-                                smallestDifference = dif;
-                                smallestIndex = index;
-                                if (dif == 0)
-                                    break; // foreach ending
+                                int dif = ImageSplitter.IsBitmapsAlike(target, compareItem.Bitmap);
+                                if (dif < smallestDifference)
+                                {
+                                    smallestDifference = dif;
+                                    smallestIndex = index;
+                                    if (dif == 0)
+                                        break; // foreach ending
+                                }
                             }
                         }
                         index++;
@@ -2367,13 +2397,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (compareItem.Bitmap.Width == target.Width + 1 && compareItem.Bitmap.Height == target.Height + 1)
                         {
-                            int dif = ImageSplitter.IsBitmapsAlike(target, compareItem.Bitmap);
-                            if (dif < smallestDifference)
+                            if (compareItem.NumberOfForegroundColors == -1)
+                                compareItem.NumberOfForegroundColors = CalculateNumberOfForegroundColors(compareItem.Bitmap);
+
+                            if (Math.Abs(compareItem.NumberOfForegroundColors - numberOfForegroundColors) < minForeColorMatch)
                             {
-                                smallestDifference = dif;
-                                smallestIndex = index;
-                                if (dif == 0)
-                                    break; // foreach ending
+                                int dif = ImageSplitter.IsBitmapsAlike(target, compareItem.Bitmap);
+                                if (dif < smallestDifference)
+                                {
+                                    smallestDifference = dif;
+                                    smallestIndex = index;
+                                    if (dif == 0)
+                                        break; // foreach ending
+                                }
                             }
                         }
                         index++;
@@ -2387,13 +2423,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (compareItem.Bitmap.Width == target.Width - 1 && compareItem.Bitmap.Height == target.Height)
                         {
-                            int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
-                            if (dif < smallestDifference)
+                            if (compareItem.NumberOfForegroundColors == -1)
+                                compareItem.NumberOfForegroundColors = CalculateNumberOfForegroundColors(compareItem.Bitmap);
+
+                            if (Math.Abs(compareItem.NumberOfForegroundColors - numberOfForegroundColors) < minForeColorMatch)
                             {
-                                smallestDifference = dif;
-                                smallestIndex = index;
-                                if (dif == 0)
-                                    break; // foreach ending
+                                int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
+                                if (dif < smallestDifference)
+                                {
+                                    smallestDifference = dif;
+                                    smallestIndex = index;
+                                    if (dif == 0)
+                                        break; // foreach ending
+                                }
                             }
                         }
                         index++;
@@ -2407,13 +2449,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (compareItem.Bitmap.Width == target.Width - 1 && compareItem.Bitmap.Height == target.Height - 1)
                         {
-                            int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
-                            if (dif < smallestDifference)
+                            if (compareItem.NumberOfForegroundColors == -1)
+                                compareItem.NumberOfForegroundColors = CalculateNumberOfForegroundColors(compareItem.Bitmap);
+
+                            if (Math.Abs(compareItem.NumberOfForegroundColors - numberOfForegroundColors) < minForeColorMatch)
                             {
-                                smallestDifference = dif;
-                                smallestIndex = index;
-                                if (dif == 0)
-                                    break; // foreach ending
+                                int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
+                                if (dif < smallestDifference)
+                                {
+                                    smallestDifference = dif;
+                                    smallestIndex = index;
+                                    if (dif == 0)
+                                        break; // foreach ending
+                                }
                             }
                         }
                         index++;
@@ -2427,13 +2475,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (compareItem.Bitmap.Width - 1 == target.Width && compareItem.Bitmap.Height == target.Height)
                         {
-                            int dif = ImageSplitter.IsBitmapsAlike(target, compareItem.Bitmap);
-                            if (dif < smallestDifference)
+                            if (compareItem.NumberOfForegroundColors == -1)
+                                compareItem.NumberOfForegroundColors = CalculateNumberOfForegroundColors(compareItem.Bitmap);
+
+                            if (Math.Abs(compareItem.NumberOfForegroundColors - numberOfForegroundColors) < minForeColorMatch)
                             {
-                                smallestDifference = dif;
-                                smallestIndex = index;
-                                if (dif == 0)
-                                    break; // foreach ending
+                                int dif = ImageSplitter.IsBitmapsAlike(target, compareItem.Bitmap);
+                                if (dif < smallestDifference)
+                                {
+                                    smallestDifference = dif;
+                                    smallestIndex = index;
+                                    if (dif == 0)
+                                        break; // foreach ending
+                                }
                             }
                         }
                         index++;
@@ -2447,13 +2501,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (compareItem.Bitmap.Width == target.Width - 2 && compareItem.Bitmap.Height == target.Height)
                         {
-                            int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
-                            if (dif < smallestDifference)
+                            if (compareItem.NumberOfForegroundColors == -1)
+                                compareItem.NumberOfForegroundColors = CalculateNumberOfForegroundColors(compareItem.Bitmap);
+
+                            if (Math.Abs(compareItem.NumberOfForegroundColors - numberOfForegroundColors) < minForeColorMatch)
                             {
-                                smallestDifference = dif;
-                                smallestIndex = index;
-                                if (dif == 0)
-                                    break; // foreach ending
+                                int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
+                                if (dif < smallestDifference)
+                                {
+                                    smallestDifference = dif;
+                                    smallestIndex = index;
+                                    if (dif == 0)
+                                        break; // foreach ending
+                                }
                             }
                         }
                         index++;
@@ -2467,13 +2527,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (compareItem.Bitmap.Width == target.Width - 3 && compareItem.Bitmap.Height == target.Height)
                         {
-                            int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
-                            if (dif < smallestDifference)
+                            if (compareItem.NumberOfForegroundColors == -1)
+                                compareItem.NumberOfForegroundColors = CalculateNumberOfForegroundColors(compareItem.Bitmap);
+
+                            if (Math.Abs(compareItem.NumberOfForegroundColors - numberOfForegroundColors) < minForeColorMatch)
                             {
-                                smallestDifference = dif;
-                                smallestIndex = index;
-                                if (dif == 0)
-                                    break; // foreach ending
+                                int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
+                                if (dif < smallestDifference)
+                                {
+                                    smallestDifference = dif;
+                                    smallestIndex = index;
+                                    if (dif == 0)
+                                        break; // foreach ending
+                                }
                             }
                         }
                         index++;
@@ -2487,13 +2553,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (compareItem.Bitmap.Width == target.Width && compareItem.Bitmap.Height == target.Height - 3)
                         {
-                            int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
-                            if (dif < smallestDifference)
+                            if (compareItem.NumberOfForegroundColors == -1)
+                                compareItem.NumberOfForegroundColors = CalculateNumberOfForegroundColors(compareItem.Bitmap);
+
+                            if (Math.Abs(compareItem.NumberOfForegroundColors - numberOfForegroundColors) < minForeColorMatch)
                             {
-                                smallestDifference = dif;
-                                smallestIndex = index;
-                                if (dif == 0)
-                                    break; // foreach ending
+                                int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
+                                if (dif < smallestDifference)
+                                {
+                                    smallestDifference = dif;
+                                    smallestIndex = index;
+                                    if (dif == 0)
+                                        break; // foreach ending
+                                }
                             }
                         }
                         index++;
@@ -2507,13 +2579,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (compareItem.Bitmap.Width - 2 == target.Width && compareItem.Bitmap.Height == target.Height)
                         {
-                            int dif = ImageSplitter.IsBitmapsAlike(target, compareItem.Bitmap);
-                            if (dif < smallestDifference)
+                            if (compareItem.NumberOfForegroundColors == -1)
+                                compareItem.NumberOfForegroundColors = CalculateNumberOfForegroundColors(compareItem.Bitmap);
+
+                            if (Math.Abs(compareItem.NumberOfForegroundColors - numberOfForegroundColors) < minForeColorMatch)
                             {
-                                smallestDifference = dif;
-                                smallestIndex = index;
-                                if (dif == 0)
-                                    break; // foreach ending
+                                int dif = ImageSplitter.IsBitmapsAlike(target, compareItem.Bitmap);
+                                if (dif < smallestDifference)
+                                {
+                                    smallestDifference = dif;
+                                    smallestIndex = index;
+                                    if (dif == 0)
+                                        break; // foreach ending
+                                }
                             }
                         }
                         index++;
@@ -2534,14 +2612,44 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private unsafe int CalculateNumberOfForegroundColors(NikseBitmap nikseBitmap)
+        {
+            int count = 0;
+            for (int y = 0; y < nikseBitmap.Height; y++)
+            {
+                for (int x = 0; x < nikseBitmap.Width; x++)
+                {
+                    Color c = nikseBitmap.GetPixel(x, y);
+                    if (c.A > 100 && c.R + c.G + c.B > 200)
+                        count++;
+                }
+            }
+            return count;
+        }
+
+        private int CalculateNumberOfForegroundColors(ManagedBitmap managedBitmap)
+        {
+            int count = 0;
+            for (int y = 0; y < managedBitmap.Height; y++)
+            {
+                for (int x = 0; x < managedBitmap.Width; x++)
+                {
+                    Color c = managedBitmap.GetPixel(x, y);
+                    if (c.A > 100 && c.R + c.G + c.B > 200)
+                        count++;
+                }
+            }
+            return count;
+        }
+
         private string SaveCompareItem(Bitmap newTarget, string text, bool isItalic, int expandCount)
         {
             string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
             string name = Guid.NewGuid().ToString();
             string fileName = path + name + ".bmp";
-            newTarget.Save(fileName);
+            new ManagedBitmap(newTarget).Save(fileName.Replace(".bmp", ".mbmp"));
 
-            _compareBitmaps.Add(new CompareItem(newTarget, name, isItalic, expandCount));
+            _compareBitmaps.Add(new CompareItem(new ManagedBitmap(newTarget), name, isItalic, expandCount));
 
             XmlElement element = _compareDoc.CreateElement("FileName");
             XmlAttribute attribute = _compareDoc.CreateAttribute("Text");
