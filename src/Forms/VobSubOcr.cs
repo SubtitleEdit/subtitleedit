@@ -235,6 +235,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelTesseractLanguage.Text = language.Language;
             labelImageDatabase.Text = language.ImageDatabase;
             labelNoOfPixelsIsSpace.Text = language.NoOfPixelsIsSpace;
+            if (!string.IsNullOrEmpty(language.MaxErrorPercent)) //TODO: Remove in SE 3.4
+                labelMaxErrorPercent.Text = language.MaxErrorPercent;
             buttonNewCharacterDatabase.Text = language.New;
             buttonEditCharacterDatabase.Text = language.Edit;
             buttonStartOcr.Text = language.StartOcr;
@@ -278,6 +280,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonGoogleIt.Text = Configuration.Settings.Language.Main.VideoControls.GoogleIt;
 
             numericUpDownPixelsIsSpace.Left = labelNoOfPixelsIsSpace.Left + labelNoOfPixelsIsSpace.Width + 5;
+            numericUpDownMaxErrorPct.Left = numericUpDownPixelsIsSpace.Left;
             groupBoxSubtitleImage.Text = string.Empty;
             labelFixesMade.Text = string.Empty;
             labelFixesMade.Left = checkBoxAutoFixCommonErrors.Left + checkBoxAutoFixCommonErrors.Width;
@@ -373,6 +376,15 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxEmphasis2Transparent.Left = pictureBoxEmphasis2.Left + pictureBoxEmphasis2.Width + 3;
 
             buttonGetTesseractDictionaries.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.GetTesseractDictionaries.Title);
+
+            try
+            {
+                numericUpDownMaxErrorPct.Value = (decimal)Configuration.Settings.VobSubOcr.AllowDifferenceInPercent;
+            }
+            catch
+            {
+                numericUpDownMaxErrorPct.Value = 1.1m;
+            }
         }
 
         private void FillSpellCheckDictionaries()
@@ -2220,14 +2232,22 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 index++;
-            }
+            }           
 
             // Search images with minor location changes
             FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, target);
 
-
-            if (target.Height < 35)
+            if (smallestDifference * 100.0 / (target.Width * target.Height) > _vobSubOcrSettings.AllowDifferenceInPercent && target.Width < 70)
             {
+                if (smallestDifference > 0.9 && target.Width > 25)
+                {
+                    Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(4, 0, target.Width - 4, target.Height));
+                    FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap);
+                    cutBitmap.Dispose();
+                    double differencePercentage = smallestDifference * 100.0 / (target.Width * target.Height);
+                }
+
+
                 if (smallestDifference > 0 && target.Width > 12)
                 {
                     Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(1, 0, target.Width - 2, target.Height));
@@ -2273,16 +2293,17 @@ namespace Nikse.SubtitleEdit.Forms
                         FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2);
                     cutBitmap.Dispose();
                     cutBitmap2.Dispose();
-                }
+                }               
             }
 
             if (smallestIndex >= 0)
             {
                 double differencePercentage = smallestDifference * 100.0 / (target.Width * target.Height);
-                double maxDiff = _vobSubOcrSettings.AllowDifferenceInPercent; // should be around 1.0 for vob/sub...
-                if (_bluRaySubtitlesOriginal != null)
-                    maxDiff = 12.9; // let bluray sup have a 12.9% diff
-                if (differencePercentage < maxDiff) //_vobSubOcrSettings.AllowDifferenceInPercent) // should be around 1.0...
+                double maxDiff = (double)numericUpDownMaxErrorPct.Value; 
+                //_vobSubOcrSettings.AllowDifferenceInPercent; // should be around 1.0 for vob/sub...
+                //if (_bluRaySubtitlesOriginal != null)
+                //    maxDiff = 12.9; // let bluray sup have a 12.9% diff
+                if (differencePercentage <= maxDiff) //_vobSubOcrSettings.AllowDifferenceInPercent) // should be around 1.0...
                 {
                     XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + _compareBitmaps[smallestIndex].Name + "']");
                     if (node != null && _bluRaySubtitlesOriginal != null && "ceoil".Contains(node.Attributes["Text"].InnerText) && differencePercentage > 12)
@@ -2345,7 +2366,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             NikseBitmap target = new NikseBitmap(target2);
             int numberOfForegroundColors = CalculateNumberOfForegroundColors(target);
-            int minForeColorMatch = 99;
+            int minForeColorMatch = 90;
 
             if (smallestDifference > 0)
             {
@@ -2354,10 +2375,10 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (compareItem.Bitmap.Width == target.Width && compareItem.Bitmap.Height == target.Height) // precise math in size
                     {
-                         if (compareItem.NumberOfForegroundColors == -1)
+                         if (compareItem.NumberOfForegroundColors < 1)
                                 compareItem.NumberOfForegroundColors = CalculateNumberOfForegroundColors(compareItem.Bitmap);
 
-                         if (Math.Abs(compareItem.NumberOfForegroundColors - numberOfForegroundColors) < 50)
+                         if (Math.Abs(compareItem.NumberOfForegroundColors - numberOfForegroundColors) < 40)
                          {
                              int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, target);
                              if (dif < smallestDifference)
@@ -2369,11 +2390,7 @@ namespace Nikse.SubtitleEdit.Forms
                                      break; // foreach ending
                                  }
                              }
-                         }
-                         else
-                         {
-                             smallestDifference = (int)(smallestDifference - 0.00000001);
-                         }
+                         }                         
                     }
                     index++;
                 }
@@ -3630,6 +3647,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_bluRaySubtitlesOriginal != null)
             {
+                numericUpDownMaxErrorPct.Value = 12.9m;
                 LoadBluRaySup();
                 bool hasForcedSubtitles = false;
                 foreach (var x in _bluRaySubtitlesOriginal)
@@ -5988,6 +6006,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines = checkBoxAutoBreakLines.Checked;
             Configuration.Settings.VobSubOcr.LineOcrDraw = checkBoxNOcrCorrect.Checked;
             Configuration.Settings.VobSubOcr.LineOcrAdvancedItalic = checkBoxNOcrItalic.Checked;
+            Configuration.Settings.VobSubOcr.AllowDifferenceInPercent = (double)numericUpDownMaxErrorPct.Value;
             if (comboBoxOcrMethod.SelectedIndex == 3) // line ocr
             {
                 Configuration.Settings.VobSubOcr.LineOcrLastSpellcheck = LanguageString;

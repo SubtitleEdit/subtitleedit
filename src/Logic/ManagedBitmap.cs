@@ -43,7 +43,6 @@ namespace Nikse.SubtitleEdit.Logic
         {
             byte[] buffer = new byte[8];
             stream.Read(buffer, 0, buffer.Length);
-          //  System.Windows.Forms.MessageBox.Show(System.Text.Encoding.UTF8.GetString(buffer, 0, 4));
             Width = buffer[4] << 8 | buffer[5];
             Height = buffer[6] << 8 | buffer[7];
             _colors = new Color[Width * Height];

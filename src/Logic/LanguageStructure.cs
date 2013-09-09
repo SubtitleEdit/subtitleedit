@@ -1950,6 +1950,7 @@
             public string OcrViaImageCompare { get; set; }
             public string ImageDatabase { get; set; }
             public string NoOfPixelsIsSpace { get; set; }
+            public string MaxErrorPercent { get; set; }
             public string New { get; set; }
             public string Edit { get; set; }
             public string StartOcr { get; set; }
