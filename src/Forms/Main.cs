@@ -12873,7 +12873,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemTTProperties.Visible = false;
             }
 
-            toolStripMenuItemNuendoProperties.Visible = format.GetType() == typeof(Nuendo);
+            toolStripMenuItemNuendoProperties.Visible = format.Name == "Nuendo";
             toolStripMenuItemFcpProperties.Visible = format.GetType() == typeof(FinalCutProXml);
 
             toolStripSeparator20.Visible = subtitleLoaded;
