@@ -314,6 +314,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Delete)
                 DeleteToolStripMenuItemClick(null, null);
+            if (listViewReplaceList.SelectedItems.Count == 1)
+            {
+                if (e.KeyCode == Keys.Up && e.Control && !e.Alt && !e.Shift)
+                    moveUpToolStripMenuItem_Click(sender, e);
+                if (e.KeyCode == Keys.Down && e.Control && !e.Alt && !e.Shift)
+                    moveDownToolStripMenuItem_Click(sender, e);
+            }
         }
 
         private void ButtonUpdateClick(object sender, EventArgs e)
