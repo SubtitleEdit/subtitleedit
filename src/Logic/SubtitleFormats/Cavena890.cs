@@ -556,7 +556,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 int languageId = buffer[start - 8];
                 if (languageId == LanguageIdHebrew && _language != "HEBNOA")
                     languageId = LanguageIdChinese;
-                Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageId = languageId;
+                if ((_language == "VFONTL" || _language == "SFN804") && languageId == 84)
+                    languageId = 80;
+                    Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageId = languageId;
 
                 string line1 = FixText(buffer, start, TextLength, languageId);
                 string line2 = FixText(buffer, start + TextLength + 6, TextLength, languageId);
@@ -622,11 +624,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var sb = new StringBuilder();
                 int index = start;
 
-                while (textLength > 1 && index + textLength < buffer.Length && (buffer[index + textLength] == 127 || buffer[index + textLength] == 0))
+                while (textLength >= 1 && index + textLength < buffer.Length && (buffer[index + textLength-1] == 0))
                     textLength--;
                 if (textLength > 0)
-                {
-                    text = Encoding.GetEncoding(1201).GetString(buffer, index, textLength - 1).Replace("\0", string.Empty);
+                {                    
+                    text = Encoding.GetEncoding(1201).GetString(buffer, index, textLength).Replace("\0", string.Empty);
                 }
                 else
                 {
@@ -691,6 +693,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text = text.Replace("<i></i>", "<i>");
                 if (text.Contains("<i>") && !text.Contains("</i>"))
                     text += "</i>";
+            }
+
+            if (!string.IsNullOrEmpty(text))
+            {
+                for (byte i = 0; i < 32; i++)
+                    text = text.Replace(Convert.ToChar(i), ' '); // remove bad chars
             }
 
             return text;
