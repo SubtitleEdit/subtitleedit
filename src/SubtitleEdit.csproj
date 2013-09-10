@@ -870,7 +870,6 @@
     <Compile Include="Logic\SubtitleFormats\TSB4.cs" />
     <Compile Include="Logic\SubtitleFormats\UniversalSubtitleFormat.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle54.cs" />
-    <Compile Include="Logic\SubtitleFormats\Nuendo.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProTest2Xml.cs" />
     <Compile Include="Logic\SubtitleFormats\JsonType4.cs" />
     <Compile Include="Logic\SubtitleFormats\DCinemaSmpte.cs" />

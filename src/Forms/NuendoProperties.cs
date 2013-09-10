@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonChooseCharacter_Click(object sender, EventArgs e)
         {
             openFileDialog1.Filter = "Csv files|*.csv";
+            openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 textBoxCharacterFile.Text = openFileDialog1.FileName;
