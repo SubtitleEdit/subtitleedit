@@ -93,7 +93,9 @@ namespace Nikse.SubtitleEdit.Forms
             template = template.Replace("{text}", "{2}");
             template = template.Replace("{translation}", "{3}");
             template = template.Replace("{number}", "{4}");
+            template = template.Replace("{number:", "{4:");
             template = template.Replace("{number-1}", "{5}");
+            template = template.Replace("{number-1:", "{5:");
             template = template.Replace("{duration}", "{6}");
             template = template.Replace("{tab}", "\t");
             return template;
