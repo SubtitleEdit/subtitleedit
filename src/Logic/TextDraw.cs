@@ -83,18 +83,18 @@ namespace Nikse.SubtitleEdit.Logic
 
             float width = 0;
             PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-            int index = list.Length - 40;
+            int index = list.Length - 42;
             if (index < 0)
                 index = 0;
-            for (int i = index; i < list.Length; i++)
+            for (int i = index; i < list.Length; i+=2)
             {
                 if (list[i].X > width)
                     width = list[i].X;
             }
-            int max = 50;
+            int max = 52;
             if (max > list.Length)
                 max = list.Length;
-            for (int i = 0; i < max; i++)
+            for (int i = 0; i < max; i+=2)
             {
                 if (list[i].X > width)
                     width = list[i].X;
@@ -120,13 +120,13 @@ namespace Nikse.SubtitleEdit.Logic
             int index = list.Length - 80;
             if (index < 0)
                 index = 0;
-            for (int i = index; i < list.Length; i++)
+            for (int i = index; i < list.Length; i+=2)
             {
                 if (list[i].Y > height)
                     height = list[i].Y;
             }
 
-            for (int i = 0; i < list.Length; i++)
+            for (int i = 0; i < list.Length; i+=2)
             {
                 if (list[i].Y > height)
                     height = list[i].Y;

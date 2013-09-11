@@ -473,8 +473,8 @@ namespace Nikse.SubtitleEdit.Logic
                 y = 0;
                 while (!done && y < Height)
                 {
-                    Color c = GetPixel(x, y);
-                    if (c.A != 0)
+                    int alpha = GetAlpha(x, y);
+                    if (alpha != 0)
                     {
                         done = true;
                         leftStart = x;
@@ -495,8 +495,8 @@ namespace Nikse.SubtitleEdit.Logic
                 y = 0;
                 while (!done && y < Height)
                 {
-                    Color c = GetPixel(x, y);
-                    if (c.A != 0)
+                    int alpha = GetAlpha(x, y);
+                    if (alpha != 0)
                     {
                         done = true;
                         rightEnd = x;
@@ -520,8 +520,8 @@ namespace Nikse.SubtitleEdit.Logic
                     x = 0;
                     while (!done && x < Width)
                     {
-                        Color c = GetPixel(x, y);
-                        if (c.A != 0)
+                        int alpha = GetAlpha(x, y);
+                        if (alpha != 0)
                         {
                             done = true;
                             newHeight = y + maximumCropping;
@@ -697,8 +697,8 @@ namespace Nikse.SubtitleEdit.Logic
                 x = 0;
                 while (!done && x < Width)
                 {
-                    Color c = GetPixel(x, y);
-                    if (c.A > 10)
+                    int alpha = GetAlpha(x, y);
+                    if (alpha > 10)
                     {
                         done = true;
                         newTop = y - maximumCropping;
@@ -736,6 +736,11 @@ namespace Nikse.SubtitleEdit.Logic
             buffer[3] = (byte)color.A;
             for (int i=0; i<_bitmapData.Length; i+=4)
                 Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
+        }
+
+        public int GetAlpha(int x, int y)
+        {
+            return _bitmapData[(x * 4) + (y * 4 * Width) + 3];
         }
 
         public Color GetPixel(int x, int y)
