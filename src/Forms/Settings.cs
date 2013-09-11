@@ -286,6 +286,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxWaveFormAppearence.Text = language.WaveFormAppearance;
             checkBoxWaveFormShowGrid.Text = language.WaveFormShowGridLines;
             checkBoxReverseMouseWheelScrollDirection.Text = language.ReverseMouseWheelScrollDirection;
+            checkBoxAllowOverlap.Text = language.WaveFormAllowOverlap;
             buttonWaveFormGridColor.Text = language.WaveFormGridColor;
             buttonWaveFormColor.Text = language.WaveFormColor;
             buttonWaveFormSelectedColor.Text = language.WaveFormSelectedColor;
@@ -483,6 +484,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 comboBoxSpectrogramAppearance.SelectedIndex = 1;
             checkBoxReverseMouseWheelScrollDirection.Checked = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
+            checkBoxAllowOverlap.Checked = Configuration.Settings.VideoControls.WaveFormAllowOverlap;
 
             var generalNode = new TreeNode(Configuration.Settings.Language.General.GeneralText);
             generalNode.Nodes.Add(language.GoToFirstSelectedLine + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine));
@@ -998,6 +1000,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 Configuration.Settings.VideoControls.SpectrogramAppearance = "Classic";
             Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward = checkBoxReverseMouseWheelScrollDirection.Checked;
+            Configuration.Settings.VideoControls.WaveFormAllowOverlap = checkBoxAllowOverlap.Checked;
 
             //Main General
             foreach (TreeNode node in treeViewShortcuts.Nodes[0].Nodes)
