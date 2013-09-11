@@ -1407,7 +1407,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     x = parameter.ScreenWidth / 2;
                 }
 
-                bmp = new Bitmap(parameter.ScreenWidth, parameter.ScreenHeight / 3);
+                bmp = new Bitmap(parameter.ScreenWidth, sizeY); // parameter.ScreenHeight / 3);
 
                 Graphics surface = Graphics.FromImage(bmp);
                 surface.CompositingQuality = CompositingQuality.HighQuality;
@@ -1477,9 +1477,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     surface.DrawString(text, font, brush, new PointF { X = x - 1, Y = y + 1 - j }, sf);
 
                 }
+                brush.Dispose();
                 brush = new SolidBrush(parameter.SubtitleColor);
                 surface.DrawString(text, font, brush, new PointF { X = x, Y = y }, sf);
                 surface.Dispose();
+                brush.Dispose();
             }
             else
             {
