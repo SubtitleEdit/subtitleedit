@@ -191,13 +191,12 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// </summary>
         /// <param name="bm">bitmap to compress</param>
         /// <returns>RLE buffer</returns>
-        private static byte[] EncodeImage(Bitmap bm, Dictionary<Color, int> palette)
+        private static byte[] EncodeImage(NikseBitmap bm, Dictionary<Color, int> palette)
         {
             var bytes = new List<Byte>();
             byte color = 0;
             int ofs = 0;
             int len = 0;
-            //boolean eol;
             for (int y = 0; y < bm.Height; y++)
             {
                 ofs = y * bm.Width;
@@ -289,7 +288,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             return (byte)smallestDiffIndex;
         }
 
-        private static Dictionary<Color, int> GetBitmapPalette(Bitmap bitmap)
+        private static Dictionary<Color, int> GetBitmapPalette(NikseBitmap bitmap)
         {
             var pal = new Dictionary<Color, int>();
             for (int y = 0; y < bitmap.Height; y++)
@@ -334,8 +333,9 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// <param name="fps">frames per second</param>
         /// <param name="bottomMargin">image bottom margin</param>
         /// <returns>byte buffer containing the binary stream representation of one caption</returns>
-        public static byte[] CreateSupFrame(BluRaySupPicture pic, Bitmap bm, double fps, int bottomMargin, ContentAlignment alignment)
+        public static byte[] CreateSupFrame(BluRaySupPicture pic, Bitmap bmp, double fps, int bottomMargin, ContentAlignment alignment)
         {
+            var bm = new NikseBitmap(bmp);
             var colorPalette = GetBitmapPalette(bm);
             var pal = new BluRaySupPalette(colorPalette.Count);
             int k = 0;
