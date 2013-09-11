@@ -474,6 +474,31 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             index++;
                             buffer[index] = 0x41;
                         }
+                        else if (current == "è")
+                        {
+                            buffer[index] = 0x81;
+                            index++;
+                            buffer[index] = 0x65;
+                        }
+                        else if (current == "é")
+                        {
+                            buffer[index] = 0x82;
+                            index++;
+                            buffer[index] = 0x65;
+                        }
+
+                        else if (current == "É")
+                        {
+                            buffer[index] = 0x82;
+                            index++;
+                            buffer[index] = 0x45;
+                        }
+                        else if (current == "È")
+                        {
+                            buffer[index] = 0x81;
+                            index++;
+                            buffer[index] = 0x45;
+                        }
 
                         else if (i + 3 < text.Length && text.Substring(i, 3) == "<i>")
                         {
@@ -658,6 +683,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text = text.Replace(encoding.GetString(new byte[] { 0x1C }), "ø");
                 text = text.Replace(encoding.GetString(new byte[] { 0x1D }), "å");
                 text = text.Replace(encoding.GetString(new byte[] { 0x1E }), "Æ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x1F }), "Ø");
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x5B }), "Æ");
                 text = text.Replace(encoding.GetString(new byte[] { 0x5C }), "Ø");
@@ -671,6 +697,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x8C, 0x61 }), "å");
                 text = text.Replace(encoding.GetString(new byte[] { 0x8C, 0x41 }), "Å");
+
+                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x65 }), "è");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x65 }), "é");
+
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x45 }), "É");
+                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x65 }), "È");
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x88 }), "<i>");
                 text = text.Replace(encoding.GetString(new byte[] { 0x98 }), "</i>");
@@ -694,13 +726,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (text.Contains("<i>") && !text.Contains("</i>"))
                     text += "</i>";
             }
-
-            if (!string.IsNullOrEmpty(text))
-            {
-                for (byte i = 0; i < 32; i++)
-                    text = text.Replace(Convert.ToChar(i), ' '); // remove bad chars
-            }
-
             return text;
         }
 
