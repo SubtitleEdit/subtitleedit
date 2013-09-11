@@ -1410,9 +1410,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 bmp = new Bitmap(parameter.ScreenWidth, sizeY); // parameter.ScreenHeight / 3);
 
                 Graphics surface = Graphics.FromImage(bmp);
-                surface.CompositingQuality = CompositingQuality.HighQuality;
-                surface.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                surface.SmoothingMode = SmoothingMode.HighQuality;
+                surface.CompositingQuality = CompositingQuality.HighSpeed;
+                surface.InterpolationMode = InterpolationMode.Default;
+                surface.SmoothingMode = SmoothingMode.HighSpeed;
                 surface.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
                 for (int j = 0; j < parameter.BorderWidth; j++)
                 {
@@ -1479,6 +1479,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 brush.Dispose();
                 brush = new SolidBrush(parameter.SubtitleColor);
+                surface.CompositingQuality = CompositingQuality.HighQuality;
+                surface.SmoothingMode = SmoothingMode.HighQuality;
+                surface.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 surface.DrawString(text, font, brush, new PointF { X = x, Y = y }, sf);
                 surface.Dispose();
                 brush.Dispose();
