@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
@@ -54,10 +55,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             ImageCompareDocument = new XmlDocument();
             _directoryPath = Configuration.VobSubCompareFolder + databaseFolderName + Path.DirectorySeparatorChar;
-            if (!File.Exists(_directoryPath + "CompareDescription.xml"))
+            if (!File.Exists(_directoryPath + "Images.xml"))
                 ImageCompareDocument.LoadXml("<OcrBitmaps></OcrBitmaps>");
             else
-                ImageCompareDocument.Load(_directoryPath + "CompareDescription.xml");
+                ImageCompareDocument.Load(_directoryPath + "Images.xml");
 
             for (int i = 0; i < _matches.Count; i++)
                 listBoxInspectItems.Items.Add(_matches[i].Text);
@@ -81,20 +82,38 @@ namespace Nikse.SubtitleEdit.Forms
             var match = _matches[index];
             if (!string.IsNullOrEmpty(match.Name))
             {
+                Bitmap bitmap = new Bitmap(1,1);
                 foreach (XmlNode node in ImageCompareDocument.DocumentElement.ChildNodes)
                 {
                     if (node.Attributes["Text"] != null && node.InnerText == match.Name)
                     {
                         string text = node.Attributes["Text"].InnerText;
-                        string imageFileName = node.InnerText + ".bmp";
+                        string imageFileName = node.InnerText;
                         imageFileName = Path.Combine(_directoryPath, imageFileName);
                         textBoxText.Text = text;
                         checkBoxItalic.Checked = node.Attributes["Italic"] != null;
-                        Bitmap bitmap = new Bitmap(imageFileName);
-                        pictureBoxCompareBitmap.Image = bitmap;
-                        pictureBoxCompareBitmapDouble.Width = bitmap.Width * 2;
-                        pictureBoxCompareBitmapDouble.Height = bitmap.Height * 2;
-                        pictureBoxCompareBitmapDouble.Image = bitmap;
+
+                        string databaseName = Path.Combine(_directoryPath, "Images.db");
+                        using (var f = new FileStream(databaseName, FileMode.Open))
+                        {
+                            try
+                            {
+                                string name = node.InnerText;
+                                int pos = Convert.ToInt32(name);
+                                f.Position = pos;
+                                ManagedBitmap mbmp = new ManagedBitmap(f);
+                                bitmap = mbmp.ToOldBitmap();
+                                pictureBoxCompareBitmap.Image = bitmap;
+                                pictureBoxCompareBitmapDouble.Width = bitmap.Width * 2;
+                                pictureBoxCompareBitmapDouble.Height = bitmap.Height * 2;
+                                pictureBoxCompareBitmapDouble.Image = bitmap;
+                            }
+                            catch (Exception exception)
+                            {
+                                MessageBox.Show(exception.Message);
+                            }
+                        }
+
 
                         try
                         {
@@ -189,14 +208,34 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                XmlNode newNode = ImageCompareDocument.CreateElement("FileName");
+                XmlNode newNode = ImageCompareDocument.CreateElement("Item");
                 XmlAttribute text = newNode.OwnerDocument.CreateAttribute("Text");
                 text.InnerText = textBoxText.Text;
                 newNode.Attributes.Append(text);
-                string name = Guid.NewGuid().ToString();
+
+
+                string databaseName = Path.Combine(_directoryPath, "Images.db");
+                FileStream f;
+                long pos = 0;
+                if (!File.Exists(databaseName))
+                {
+                    using (f = new FileStream(databaseName, FileMode.Create))
+                    {
+                        pos = f.Position;
+                        new ManagedBitmap(pictureBoxInspectItem.Image as Bitmap).AppendToStream(f);
+                    }
+                }
+                else
+                {
+                    using (f = new FileStream(databaseName, FileMode.Append))
+                    {
+                        pos = f.Position;
+                        new ManagedBitmap(pictureBoxInspectItem.Image as Bitmap).AppendToStream(f);
+                    }
+                }
+                string name = pos.ToString(CultureInfo.InvariantCulture);
                 newNode.InnerText = name;
-                string imageFileName = Path.Combine(_directoryPath, name + ".bmp");
-                pictureBoxInspectItem.Image.Save(imageFileName, System.Drawing.Imaging.ImageFormat.Bmp);
+
 
                 SetItalic(newNode);
                 ImageCompareDocument.DocumentElement.AppendChild(newNode);
