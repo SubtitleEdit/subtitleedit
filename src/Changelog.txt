@@ -6,13 +6,17 @@
 * IMPROVED:
    * Updated Czech language file - thx Trottel
    * Updated Russian language file - thx Sergey
+   * Updated Brazilian Portuguese langauge file - thx Igor
    * Updated word lists - thx Siegwarth
    * Minor improvements for EBU open subtitling
+   * Added 'Allow overlap in waveform' as setting
 * FIXED:
    * Crash in export of images - thx Eros UK
    * Crash in OCR via "Image compare" with large image databases - thx Zoltan
    * Improved baseline in export of images - thx THXTEX
    * Fixed duration (in some players) in blu-ray sup export - thx THXTEX
+   * Fixed bug in "Sub Station Alpha" color - thx Stuart
+   * Fixed some letters in Cavena 890 format - thx Calle
 
 
 3.3.8 (1st September 2013)
