@@ -354,7 +354,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderColor>Kantfarve</BorderColor>
     <BorderWidth>Kantbredde</BorderWidth>
     <ImageFormat>Billed format</ImageFormat>
-    <AntiAlias>Anti alias</AntiAlias>
+    <SimpleRendering>Simpel rendering</SimpleRendering>
     <Text3D>3D</Text3D>
     <SideBySide3D>Half-Side-by-side</SideBySide3D>
     <HalfTopBottom3D>Half-Top/Bottom</HalfTopBottom3D>
@@ -1150,6 +1150,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <SubtitlesJoined>Undertekster flettet</SubtitlesJoined>
     <StatusLog>Status beskeder</StatusLog>
     <XSceneChangesImported>{0} sceneskift importeret</XSceneChangesImported>
+    <PluginXExecuted>Plugin '{0}' afviklet</PluginXExecuted>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -1408,6 +1409,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <WaveFormGridColor>Gitter farve</WaveFormGridColor>
     <WaveFormShowGridLines>Vis gitterlinjer</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Skift musehjul rulle retning</ReverseMouseWheelScrollDirection>
+    <WaveFormAllowOverlap>Tillad overlapning (når du flytter/resizing)</WaveFormAllowOverlap>
     <WaveFormColor>Farve</WaveFormColor>
     <WaveFormSelectedColor>Valgte farve</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Baggrundsfarve</WaveFormBackgroundColor>
@@ -1477,6 +1479,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <MergeDialogue>Flet dialog (indsæt tankestreger)</MergeDialogue>
     <GoToNext>Gå til næste linje</GoToNext>
     <GoToPrevious>Gå til forrige line</GoToPrevious>
+    <GoToCurrentSubtitleStart>Gå til nuværende linje start</GoToCurrentSubtitleStart>
+    <GoToCurrentSubtitleEnd>Gå til nuværende linje slut</GoToCurrentSubtitleEnd>
     <ToggleFocus>Skift fokus imellem liste visning og undertekst tekstboks</ToggleFocus>
     <ToggleDialogueDashes>Toogle dialog tankestreger</ToggleDialogueDashes>
     <Alignment>Justering (valgte linier)</Alignment>
@@ -1760,6 +1764,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <OcrViaImageCompare>OCR via billede sammenligning</OcrViaImageCompare>
     <ImageDatabase>Billeddatabase</ImageDatabase>
     <NoOfPixelsIsSpace>Antal pixels er mellemrum</NoOfPixelsIsSpace>
+    <MaxErrorPercent>Max. fejl%</MaxErrorPercent>
     <New>Ny</New>
     <Edit>Ret</Edit>
     <StartOcr>Start OCR</StartOcr>

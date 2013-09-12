@@ -5,7 +5,8 @@
     <Version>3.3.9</Version>
     <TranslatedBy>Tradução (Português do Brasil): Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile>
+    </HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
@@ -287,6 +288,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneralSubtitleInformation>Informação geral da legenda</GeneralSubtitleInformation>
     <CodePageNumber>Número da página de códigos</CodePageNumber>
     <DiskFormatCode>Código do formato do disco</DiskFormatCode>
+    <DisplayStandardCode>Exibir código padrão</DisplayStandardCode>
     <CharacterCodeTable>Tabela de caracteres</CharacterCodeTable>
     <LanguageCode>Código de idioma</LanguageCode>
     <OriginalProgramTitle>Título original do programa</OriginalProgramTitle>
@@ -323,6 +325,26 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <TotalMilliseconds>Total milliseg.:</TotalMilliseconds>
     <EndDelayInMillisecs>Atraso final em miliseg.:</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportCustomText>
+    <Title>Exportar formato de texto personalizado</Title>
+    <Formats>Formatos</Formats>
+    <New>Novo</New>
+    <Edit>Editar</Edit>
+    <Delete>Excluir</Delete>
+    <SaveAs>S&amp;alvar como...</SaveAs>
+    <SaveSubtitleAs>Salvar legenda como...</SaveSubtitleAs>
+    <SubtitleExportedInCustomFormatToX>Legenda exportada no formato personalizado para: {0}</SubtitleExportedInCustomFormatToX>
+  </ExportCustomText>
+  <ExportCustomTextFormat>
+    <Title>Modelo de formato de texto personalizado</Title>
+    <Template>Modelo</Template>
+    <Header>Cabeçalho</Header>
+    <TextLine>Linha de texto (parágrafo)</TextLine>
+    <TimeCode>Código de tempo</TimeCode>
+    <NewLine>Nova linha</NewLine>
+    <Footer>Rodapé</Footer>
+    <DoNotModify>[Não modificar]</DoNotModify>
+  </ExportCustomTextFormat>
   <ExportPngXml>
     <Title>Exportar BDN XML/PNG</Title>
     <ImageSettings>Ajuste de imagem</ImageSettings>
@@ -332,7 +354,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderColor>Cor da borda</BorderColor>
     <BorderWidth>Tamanho da borda</BorderWidth>
     <ImageFormat>Formato de imagem</ImageFormat>
-    <AntiAlias>Anti alias</AntiAlias>
+    <SimpleRendering>Renderização simples</SimpleRendering>
     <Text3D>3D</Text3D>
     <SideBySide3D>3D lado-a-lado</SideBySide3D>
     <HalfTopBottom3D>Metade-Superior/Inferior</HalfTopBottom3D>
@@ -649,6 +671,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
         <ExportUltech130>Ultech caption...</ExportUltech130>
+        <ExportCustomTextFormat>Exportar formato de texto personalizado...</ExportCustomTextFormat>
         <Exit>&amp;Sair</Exit>
       </File>
       <Edit>
@@ -695,6 +718,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <TextNumberOfCharactersPerSeconds>Texto - número de caracteres/seg</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Texto - palavras por minuto</WordsPerMinute>
         <Style>Estilo</Style>
+        <Ascending>Ascendente</Ascending>
+        <Descending>Descendente</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Fazer nova tradução a partir da legenda atual</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Conversão em lote...</BatchConvert>
         <GenerateTimeAsText>Gerar tempo como texto...</GenerateTimeAsText>
@@ -1124,6 +1149,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <SubtitlesJoined>Legendas juntadas</SubtitlesJoined>
     <StatusLog>Log de status</StatusLog>
     <XSceneChangesImported>{0} alterações de cena importadas</XSceneChangesImported>
+    <PluginXExecuted>Plugin '{0}' executado.</PluginXExecuted>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Selecionar legenda a partir do arquivo Matroska</Title>
@@ -1382,6 +1408,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <WaveFormGridColor>Cor do quadriculado</WaveFormGridColor>
     <WaveFormShowGridLines>Mostrar quadriculado</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Invertir direção da roda do mouse</ReverseMouseWheelScrollDirection>
+    <WaveFormAllowOverlap>Permitir sobrepor (ao mover/redimensionar)</WaveFormAllowOverlap>
     <WaveFormColor>Cor</WaveFormColor>
     <WaveFormSelectedColor>Cor selecionada</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Cor de fundo</WaveFormBackgroundColor>
@@ -1451,6 +1478,8 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <MergeDialogue>Combinar diálogo (inserir traços)</MergeDialogue>
     <GoToNext>Ir para próxima linha</GoToNext>
     <GoToPrevious>Ir para linha anterior</GoToPrevious>
+    <GoToCurrentSubtitleStart>Ir para início da linha atual</GoToCurrentSubtitleStart>
+    <GoToCurrentSubtitleEnd>Ir para fim da linha atual</GoToCurrentSubtitleEnd>
     <ToggleFocus>Alternar foco entre exibição em lista e caixa de texto de legenda</ToggleFocus>
     <ToggleDialogueDashes>Alternar traços de diálogo</ToggleDialogueDashes>
     <Alignment>Alinhamento (linhas selecionadas)</Alignment>
@@ -1735,6 +1764,7 @@ Manter as alterações?</KeepChangesMessage>
     <OcrViaImageCompare>OCR por comparação de imagens</OcrViaImageCompare>
     <ImageDatabase>Base de dados de imagem</ImageDatabase>
     <NoOfPixelsIsSpace>Nenhum dos pixels é espaço</NoOfPixelsIsSpace>
+    <MaxErrorPercent>Máx. erro%</MaxErrorPercent>
     <New>Novo</New>
     <Edit>Editar</Edit>
     <StartOcr>Iniciar OCR</StartOcr>
