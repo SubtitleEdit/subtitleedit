@@ -2,14 +2,16 @@
 
 3.3.9 (? 2013)
 * NEW:
-   * ...
+   * Shortcuts keys Ctrl+up/down now move contents in 
+     "Multi-Replace" list view - thx Ivandrofly
 * IMPROVED:
    * Updated Czech language file - thx Trottel
    * Updated Russian language file - thx Sergey
    * Updated Brazilian Portuguese langauge file - thx Igor
    * Updated word lists - thx Siegwarth
    * Minor improvements for EBU open subtitling
-   * Added 'Allow overlap in waveform' as setting
+   * Added "Allow overlap in waveform" as setting
+   * Large "Image compare" databases now loads much faster - thx Zoltan
 * FIXED:
    * Crash in export of images - thx Eros UK
    * Crash in OCR via "Image compare" with large image databases - thx Zoltan
