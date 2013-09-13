@@ -1524,9 +1524,9 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ShowEarlier>Früher anzeigen</ShowEarlier>
     <ShowLater>Später anzeigen</ShowLater>
     <TotalAdjustmentX>Gesamte Anpassung: {0}</TotalAdjustmentX>
-    <AllLines>Alle Texte</AllLines>
+    <AllLines>Alle Zeilen</AllLines>
     <SelectedLinesOnly>Nur ausgewählte Zeilen</SelectedLinesOnly>
-    <SelectedLinesAndForward>Ausgewählte Zeile(n) und weiter</SelectedLinesAndForward>
+    <SelectedLinesAndForward>Ausgewählte Zeile(n) und weitere</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Verlauf (für Rückgängig)</Title>
