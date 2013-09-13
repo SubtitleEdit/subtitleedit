@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
         internal VobSubEditCharacters(string databaseFolderName, List<VobSubOcr.ImageCompareAddition> additions)
         {
             InitializeComponent();
+            labelCount.Text = string.Empty;
             if (additions != null)
             {
                 Additions = new List<VobSubOcr.ImageCompareAddition>();
@@ -118,6 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FillComboWithUniqueAndSortedTexts()
         {
+            int count = 0;
             List<string> texts = new List<string>();
             foreach (XmlNode node in _compareDoc.DocumentElement.SelectNodes("Item"))
             {
@@ -126,9 +128,11 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = node.Attributes["Text"].InnerText;
                     if (!texts.Contains(text))
                         texts.Add(text);
+                    count++;
                 }
             }
             texts.Sort();
+            labelCount.Text = string.Format("{0:#,##0}", count);
 
             comboBoxTexts.Items.Clear();
             foreach (string text in texts)
@@ -153,7 +157,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = node.Attributes["Text"].InnerText;
                     if (text == target)
                     {
-                        listBoxFileNames.Items.Add(node.InnerText + ".mbmp");
+                        listBoxFileNames.Items.Add(node.InnerText);
                         _italics.Add(node.Attributes["Italic"] != null);
                     }
                 }
@@ -182,6 +186,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ListBoxFileNamesSelectedIndexChanged(object sender, EventArgs e)
         {
             checkBoxItalic.Checked = _italics[listBoxFileNames.SelectedIndex];
+            string name = listBoxFileNames.Items[listBoxFileNames.SelectedIndex].ToString();
             string databaseName = _directoryPath + "Images.db";
             string posAsString = GetSelectedFileName();
             Bitmap bmp = null;
@@ -189,11 +194,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (File.Exists(databaseName))
             {
                 using (var f = new FileStream(databaseName, FileMode.Open))
-                {                   
-                    int pos = Convert.ToInt32(databaseName);
-                    f.Position = pos;
-                    ManagedBitmap mbmp = new ManagedBitmap(f);
-                    bmp = mbmp.ToOldBitmap();
+                {
+                    f.Position = Convert.ToInt64(name);
+                    bmp = new ManagedBitmap(f).ToOldBitmap();
                 }
             }
 
