@@ -1122,7 +1122,7 @@ http://soft98.ir
     <ShowLater>نمایش بعد</ShowLater>
     <TotalAdjustmentX>Total adjustment: {0}</TotalAdjustmentX>
     <AllLines>همه خطوط</AllLines>
-    <SelectedLinesonly>انتخاب خطوط تنها</SelectedLinesonly>
+    <SelectedLinesOnly>انتخاب خطوط تنها</SelectedLinesOnly>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>تاریخچه -برای خنثی سازی</Title>

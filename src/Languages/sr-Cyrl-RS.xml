@@ -1080,7 +1080,7 @@
     <ShowLater>Постави &amp;касније</ShowLater>
     <TotalAdjustmentX>Укупно измена: {0}</TotalAdjustmentX>
     <AllLines>&amp;Све линије</AllLines>
-    <SelectedLinesonly>&amp;Изабране линије</SelectedLinesonly>
+    <SelectedLinesOnly>&amp;Изабране линије</SelectedLinesOnly>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Историја</Title>

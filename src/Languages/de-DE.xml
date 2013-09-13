@@ -1525,7 +1525,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ShowLater>Später anzeigen</ShowLater>
     <TotalAdjustmentX>Gesamte Anpassung: {0}</TotalAdjustmentX>
     <AllLines>Alle Texte</AllLines>
-    <SelectedLinesonly>Nur ausgewählte Zeilen</SelectedLinesonly>
+    <SelectedLinesOnly>Nur ausgewählte Zeilen</SelectedLinesOnly>
     <SelectedLinesAndForward>Ausgewählte Zeile(n) und weiter</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>

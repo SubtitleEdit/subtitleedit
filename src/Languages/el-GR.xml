@@ -1100,7 +1100,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowLater>Εμφάνιση αργότερα</ShowLater>
     <TotalAdjustmentX>Συνολική προσαρμογή: {0}</TotalAdjustmentX>
     <AllLines>Όλες οι γραμμές</AllLines>
-    <SelectedLinesonly>Μόνο οι επιλεγμένες γραμμές</SelectedLinesonly>
+    <SelectedLinesOnly>Μόνο οι επιλεγμένες γραμμές</SelectedLinesOnly>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Ιστορικό (για αναίρεση)</Title>

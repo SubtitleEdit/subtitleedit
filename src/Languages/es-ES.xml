@@ -1099,7 +1099,7 @@ pueden editar el mismo archivo de subtítulo (colaboración)</Information>
     <ShowLater>Mostrar después</ShowLater>
     <TotalAdjustmentX>Total de ajustes: {0}</TotalAdjustmentX>
     <AllLines>Todas las líneas</AllLines>
-    <SelectedLinesonly>Sólo líneas seleccionadas</SelectedLinesonly>
+    <SelectedLinesOnly>Sólo líneas seleccionadas</SelectedLinesOnly>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Historial (para deshacer)</Title>
