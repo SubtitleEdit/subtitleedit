@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         const int LanguageIdHebrew = 20;
         const int LanguageIdLatin = 68;
         const int LanguageIdChinese = 84;
+        const int LanguageIdRussian = 9999;
 
         static List<int> _hebrewCodes = new List<int> {
             0x40, // א
@@ -43,32 +44,100 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         static List<string> _hebrewLetters = new List<string> {
             "א",
-            "ב",
-            "ג",
-            "ד",
-            "ה",
-            "ו",
-            "ז",
-            "ח",
-            "י",
-            "ל",
-            "ם",
-            "מ",
-            "ן",
-            "נ",
-            "ס",
-            "ע",
-            "פ",
-            "צ",
-            "ק",
-            "ר",
-            "ש",
-            "ת",
-            "כ",
-            "ך",
-            "ט",
-            "ף",
-            "ץ",
+        };
+
+        static List<int> _russianCodes = new List<int> {
+            0x42, // Б
+            0x45, // Е
+            0x5A, // З
+            0x56, // В
+            0x49, // И
+            0x4E, // Н
+            0x58, // Ы
+            0x51, // Я
+            0x56, // V
+            0x53, // С
+            0x72, // р
+            0x69, // и
+            0x71, // я
+            0x6E, // н
+            0x74, // т
+            0x5C, // Э            
+            0x77, // ю
+            0x46, // Ф
+            0x5E, // Ч
+            0x44, // Д
+            0x62, // б
+            0x73, // с
+            0x75, // у
+            0x64, // д
+            0x60, // ж
+            0x6A, // й
+            0x6C, // л
+            0x47, // Г
+            0x78, // ы
+            0x7A, // з
+            0x7E, // ч
+            0x6D, // м
+            0x67, // г
+            0x79, // ь
+            0x70, // п
+            0x76, // в
+            0x55, // У
+            0x7D, // щ
+            0x66, // ф
+            0x7C, // э
+            0x7B, // ш
+            0x50, // П
+            0x52, // П
+            0x68, // П
+        };
+
+        static List<string> _russianLetters = new List<string> {
+            "Б",
+            "Е",
+            "З",
+            "В",
+            "И",
+            "Н",
+            "Ы",
+            "Я",
+            "V",
+            "С",
+            "р",
+            "и",
+            "я",
+            "н",
+            "т",
+            "Э",
+            "ю",
+            "Ф",
+            "Ч",
+            "Д",
+            "б",
+            "с",
+            "у",
+            "д",
+            "ж",
+            "й",
+            "л",
+            "Г",
+            "ы",
+            "з",
+            "ч",
+            "м",
+            "г",
+            "ь",
+            "п",
+            "в",
+            "У",
+            "щ",            
+            "ф",
+            "э",
+            "ш",
+            "П",
+            "Р",
+            "х",
         };
 
         public override string Extension
@@ -583,7 +652,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     languageId = LanguageIdChinese;
                 if ((_language == "VFONTL" || _language == "SFN804") && languageId == 84)
                     languageId = 80;
-                    Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageId = languageId;
+
+                Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageId = languageId;
+                if (_language.StartsWith("KYRIL"))
+                    languageId = LanguageIdRussian;
 
                 string line1 = FixText(buffer, start, TextLength, languageId);
                 string line2 = FixText(buffer, start + TextLength + 6, TextLength, languageId);
@@ -623,7 +695,31 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             string text;
 
-            if (languageId == LanguageIdHebrew) // (_language == "HEBNOA")
+            if (languageId == LanguageIdRussian)
+            {
+                var encoding = Encoding.Default; // which encoding?? Encoding.GetEncoding("ISO-8859-5")
+                var sb = new StringBuilder();
+                for (int i = 0; i < textLength; i++)
+                {
+                    int b = buffer[start + i];
+                    int idx = _russianCodes.IndexOf(b);
+                    if (idx >= 0)
+                        sb.Append(_russianLetters[idx]);
+                    else
+                        sb.Append(encoding.GetString(buffer, start + i, 1));
+                }
+
+                text = sb.ToString();
+
+                text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
+                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
+                
+                if (text.Contains("<i></i>"))
+                    text = text.Replace("<i></i>", "<i>");
+                if (text.Contains("<i>") && !text.Contains("</i>"))
+                    text += "</i>";
+            }
+            else if (languageId == LanguageIdHebrew) // (_language == "HEBNOA")
             {
                 var encoding = Encoding.Default; // which encoding?? Encoding.GetEncoding("ISO-8859-5")
                 var sb = new StringBuilder();
