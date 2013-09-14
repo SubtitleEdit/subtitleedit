@@ -465,5 +465,10 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxCharacter.Invalidate();
         }
 
+        private void InsertLetter(object sender, EventArgs e)
+        {
+            textBoxCharacters.SelectedText = (sender as ToolStripMenuItem).Text;
+        }
+
     }
 }
