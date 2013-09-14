@@ -208,7 +208,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonDelete_Click(object sender, EventArgs e)
         {
-
             if (_nocrChar != null)
             {
                 _nocrChars.Remove(_nocrChar);

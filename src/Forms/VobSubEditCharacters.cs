@@ -195,6 +195,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 using (var f = new FileStream(databaseName, FileMode.Open))
                 {
+                    if (name.Contains("]"))
+                        name = name.Substring(name.IndexOf("]") + 1).Trim();
                     f.Position = Convert.ToInt64(name);
                     bmp = new ManagedBitmap(f).ToOldBitmap();
                 }
@@ -236,7 +238,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             string target = GetSelectedFileName();
-            target = target.Substring(0, target.Length - 4);
             XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + target + "']");
             if (node != null)
             {
@@ -311,7 +312,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             int oldComboBoxIndex = comboBoxTexts.SelectedIndex;
             string target = GetSelectedFileName();
-            target = target.Substring(0, target.Length - 4);
             XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + target + "']");
             if (node != null)
             {

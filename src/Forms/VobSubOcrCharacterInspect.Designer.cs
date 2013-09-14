@@ -53,9 +53,10 @@
             // 
             // buttonCancel
             // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(634, 286);
+            this.buttonCancel.Location = new System.Drawing.Point(644, 300);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 8;
@@ -64,6 +65,9 @@
             // 
             // groupBoxCurrentCompareImage
             // 
+            this.groupBoxCurrentCompareImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxCurrentCompareImage.Controls.Add(this.buttonAddBetterMatch);
             this.groupBoxCurrentCompareImage.Controls.Add(this.checkBoxItalic);
             this.groupBoxCurrentCompareImage.Controls.Add(this.labelDoubleSize);
@@ -76,7 +80,7 @@
             this.groupBoxCurrentCompareImage.Controls.Add(this.pictureBoxCompareBitmap);
             this.groupBoxCurrentCompareImage.Location = new System.Drawing.Point(443, 12);
             this.groupBoxCurrentCompareImage.Name = "groupBoxCurrentCompareImage";
-            this.groupBoxCurrentCompareImage.Size = new System.Drawing.Size(266, 268);
+            this.groupBoxCurrentCompareImage.Size = new System.Drawing.Size(276, 282);
             this.groupBoxCurrentCompareImage.TabIndex = 11;
             this.groupBoxCurrentCompareImage.TabStop = false;
             this.groupBoxCurrentCompareImage.Text = "Current compare image";
@@ -179,9 +183,10 @@
             // 
             // buttonOK
             // 
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(553, 286);
+            this.buttonOK.Location = new System.Drawing.Point(563, 300);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 7;
@@ -199,11 +204,13 @@
             // 
             // groupBoxInspectItems
             // 
+            this.groupBoxInspectItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBoxInspectItems.Controls.Add(this.pictureBoxInspectItem);
             this.groupBoxInspectItems.Controls.Add(this.listBoxInspectItems);
             this.groupBoxInspectItems.Location = new System.Drawing.Point(12, 12);
             this.groupBoxInspectItems.Name = "groupBoxInspectItems";
-            this.groupBoxInspectItems.Size = new System.Drawing.Size(425, 268);
+            this.groupBoxInspectItems.Size = new System.Drawing.Size(425, 282);
             this.groupBoxInspectItems.TabIndex = 13;
             this.groupBoxInspectItems.TabStop = false;
             this.groupBoxInspectItems.Text = "Inspect items";
@@ -221,12 +228,16 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(722, 323);
+            this.ClientSize = new System.Drawing.Size(732, 337);
             this.Controls.Add(this.groupBoxInspectItems);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBoxCurrentCompareImage);
             this.Controls.Add(this.buttonOK);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "VobSubOcrCharacterInspect";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "VobSubOcrCharacterInspect";
