@@ -116,6 +116,8 @@
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportUltech130 = new System.Windows.Forms.ToolStripMenuItem();
             this.vobSubsubidxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorExportCustomText = new System.Windows.Forms.ToolStripSeparator();
+            this.exportCustomTextFormatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -432,8 +434,6 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripSeparatorExportCustomText = new System.Windows.Forms.ToolStripSeparator();
-            this.exportCustomTextFormatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1253,6 +1253,18 @@
             this.vobSubsubidxToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.vobSubsubidxToolStripMenuItem.Text = "VobSub (sub/idx)...";
             this.vobSubsubidxToolStripMenuItem.Click += new System.EventHandler(this.VobSubsubidxToolStripMenuItemClick);
+            // 
+            // toolStripSeparatorExportCustomText
+            // 
+            this.toolStripSeparatorExportCustomText.Name = "toolStripSeparatorExportCustomText";
+            this.toolStripSeparatorExportCustomText.Size = new System.Drawing.Size(255, 6);
+            // 
+            // exportCustomTextFormatToolStripMenuItem
+            // 
+            this.exportCustomTextFormatToolStripMenuItem.Name = "exportCustomTextFormatToolStripMenuItem";
+            this.exportCustomTextFormatToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.exportCustomTextFormatToolStripMenuItem.Text = "Export custom text format...";
+            this.exportCustomTextFormatToolStripMenuItem.Click += new System.EventHandler(this.exportCustomTextFormatToolStripMenuItem_Click);
             // 
             // toolStripSeparator10
             // 
@@ -3422,7 +3434,7 @@
             // ShowSubtitleTimer
             // 
             this.ShowSubtitleTimer.Enabled = true;
-            this.ShowSubtitleTimer.Interval = 15;
+            this.ShowSubtitleTimer.Interval = 16;
             this.ShowSubtitleTimer.Tick += new System.EventHandler(this.ShowSubtitleTimerTick);
             // 
             // timerAutoDuration
@@ -4256,18 +4268,6 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
-            // 
-            // toolStripSeparatorExportCustomText
-            // 
-            this.toolStripSeparatorExportCustomText.Name = "toolStripSeparatorExportCustomText";
-            this.toolStripSeparatorExportCustomText.Size = new System.Drawing.Size(255, 6);
-            // 
-            // exportCustomTextFormatToolStripMenuItem
-            // 
-            this.exportCustomTextFormatToolStripMenuItem.Name = "exportCustomTextFormatToolStripMenuItem";
-            this.exportCustomTextFormatToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.exportCustomTextFormatToolStripMenuItem.Text = "Export custom text format...";
-            this.exportCustomTextFormatToolStripMenuItem.Click += new System.EventHandler(this.exportCustomTextFormatToolStripMenuItem_Click);
             // 
             // Main
             // 
