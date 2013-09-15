@@ -734,6 +734,7 @@
     <Compile Include="Logic\BluRaySup\PaletteInfo.cs" />
     <Compile Include="Logic\BluRaySup\ToolBox.cs" />
     <Compile Include="Logic\BmpReader.cs" />
+    <Compile Include="Logic\NikseBitmapImageSplitter.cs" />
     <Compile Include="Logic\DetectEncoding\EncodingTools.cs" />
     <Compile Include="Logic\DetectEncoding\Multilang\CMLangConvertCharset.cs" />
     <Compile Include="Logic\DetectEncoding\Multilang\CMLangConvertCharsetClass.cs" />

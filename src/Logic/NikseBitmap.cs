@@ -29,6 +29,13 @@ namespace Nikse.SubtitleEdit.Logic
             _bitmapData = new byte[Width * Height * 4];
         }
 
+        public NikseBitmap(int width, int height, byte[] bitmapData)
+        {
+            Width = width;
+            Height = height;
+            _bitmapData = bitmapData;
+        }
+
         public NikseBitmap(Bitmap inputBitmap)
         {
             if (inputBitmap == null)
@@ -891,6 +898,26 @@ namespace Nikse.SubtitleEdit.Logic
             newBitmap.Palette = bPalette;
             return newBitmap;
         }
+
+
+        public NikseBitmap CopyRectangle(Rectangle section)
+        {
+            if (section.Bottom > Height)
+                section = new Rectangle(section.Left, section.Top, section.Width, Height - section.Top);
+            if (section.Width + section.Left > Width)
+                section = new Rectangle(section.Left, section.Top, Width - section.Left, section.Height);
+            var newBitmapData = new byte[section.Width * section.Height * 4];
+            int index = 0;
+            for (int y = section.Top; y < section.Bottom; y++)
+            {
+                int pixelAddress = (section.Left * 4) + (y * 4 * Width);
+                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * section.Width);
+                index += 4 * section.Width;
+            }
+            return new NikseBitmap(section.Width, section.Height, newBitmapData);
+        }
+
+
 
     }
 }
