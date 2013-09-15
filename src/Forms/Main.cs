@@ -13770,7 +13770,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var addWaveForm = new AddWareForm();
                 string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
                 string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
-                addWaveForm.Initialize(_videoFileName, spectrogramFolder);
+                addWaveForm.Initialize(_videoFileName, spectrogramFolder, _videoAudioTrackNumber);
                 if (addWaveForm.ShowDialog() == DialogResult.OK)
                 {
                     addWaveForm.WavePeak.WritePeakSamples(peakWaveFileName);

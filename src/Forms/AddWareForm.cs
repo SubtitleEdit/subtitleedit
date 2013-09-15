@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
         public List<Bitmap> SpectrogramBitmaps { get; private set; }
         private string _encodeParamters;
         private const string RetryEncodeParameters = "acodec=s16l";
+        private int _audioTrackNumber = -1;
 
         public AddWareForm()
         {
@@ -27,8 +28,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         public WavePeakGenerator WavePeak { get; private set; }
 
-        public void Initialize(string videoFile, string spectrogramDirectory)
+        public void Initialize(string videoFile, string spectrogramDirectory, int audioTrackNumber)
         {
+            _audioTrackNumber = audioTrackNumber;
+            if (_audioTrackNumber < 0)
+                _audioTrackNumber = 0;
             Text = Configuration.Settings.Language.AddWaveForm.Title;
             buttonRipWave.Text = Configuration.Settings.Language.AddWaveForm.GenerateWaveFormData;
             labelPleaseWait.Text = Configuration.Settings.Language.AddWaveForm.PleaseWait;
@@ -47,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms
             SourceVideoFileName = labelVideoFileName.Text;
             string targetFile = Path.GetTempFileName() + ".wav";
 //            string parameters = "-I dummy -vvv \"" + SourceVideoFileName + "\" --sout=#transcode{vcodec=none,acodec=s16l}:file{dst=\"" + targetFile + "\"}  vlc://quit";
-            string parameters = "-I dummy -vvv --no-sout-video --sout #transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=\"" + targetFile + "\"} \"" + SourceVideoFileName + "\" vlc://quit";
+            string parameters = "-I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout #transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=\"" + targetFile + "\"} \"" + SourceVideoFileName + "\" vlc://quit";
 
 
 
@@ -55,7 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
             {
                 vlcPath = "cvlc";
-                parameters = "-vvv --no-sout-video --sout '#transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=" + targetFile + "}' \"" + SourceVideoFileName + "\" vlc://quit";
+                parameters = "-vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout '#transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=" + targetFile + "}' \"" + SourceVideoFileName + "\" vlc://quit";
             }
             else // windows
             {
