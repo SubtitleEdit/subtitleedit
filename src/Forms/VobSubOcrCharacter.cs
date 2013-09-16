@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             pictureBoxSubtitleImage.Image = vobSubImage;
-            pictureBoxCharacter.Image = character.Bitmap;
+            pictureBoxCharacter.Image = character.NikseBitmap.GetBitmap();
 
             if (_additions.Count > 0)
             {
@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     buttonLastEdit.Font = new System.Drawing.Font(buttonLastEdit.Font.FontFamily, buttonLastEdit.Font.Size);
                 pictureBoxLastEdit.Visible = true;
-                pictureBoxLastEdit.Image = last.Image;
+                pictureBoxLastEdit.Image = last.Image.GetBitmap();
                 buttonLastEdit.Text = string.Format(Configuration.Settings.Language.VobSubOcrCharacter.EditLastX, last.Text);
                 pictureBoxLastEdit.Top = buttonLastEdit.Top - last.Image.Height + buttonLastEdit.Height;
             }
@@ -131,7 +131,7 @@ namespace Nikse.SubtitleEdit.Forms
             Bitmap bm = new Bitmap(org.Width, org.Height);
             Graphics g = Graphics.FromImage(bm);
             g.DrawImage(org, 0, 0, org.Width, org.Height);
-            g.DrawRectangle(Pens.Red, character.X, character.Y, character.Bitmap.Width, character.Bitmap.Height - 1);
+            g.DrawRectangle(Pens.Red, character.X, character.Y, character.NikseBitmap.Width, character.NikseBitmap.Height - 1);
             g.Dispose();
             pictureBoxSubtitleImage.Image = bm;
 

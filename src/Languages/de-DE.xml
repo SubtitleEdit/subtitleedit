@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.9</Version>
-    <TranslatedBy>Übersetzt von Christoph Kitsche. Berichtigungen und Ergänzungen von Nobody.</TranslatedBy>
+    <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Nobody.</TranslatedBy>
     <CultureName>de-DE</CultureName>
     <HelpFile></HelpFile>
     <OK>&amp;OK</OK>
@@ -353,7 +353,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderColor>Rahmenfarbe</BorderColor>
     <BorderWidth>Rahmenbreite</BorderWidth>
     <ImageFormat>Bildformat</ImageFormat>
-    <AntiAlias>Antialiasing</AntiAlias>
+    <SimpleRendering>Einfaches Rendern</SimpleRendering>
     <Text3D>3D</Text3D>
     <SideBySide3D>Halb Nebeneinander</SideBySide3D>
     <HalfTopBottom3D>Halb oben/unten</HalfTopBottom3D>
@@ -1148,6 +1148,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <SubtitlesJoined>Untertitel Verbunden</SubtitlesJoined>
     <StatusLog>Status Log</StatusLog>
     <XSceneChangesImported>{0} Szenenänderungen importiert</XSceneChangesImported>
+    <PluginXExecuted>Plugin '{0}' ausgeführt.</PluginXExecuted>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Untertitel aus Matroska Datei auswählen</Title>
@@ -1406,6 +1407,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveFormGridColor>Rasterfarbe</WaveFormGridColor>
     <WaveFormShowGridLines>Raster anzeigen</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Scrollen mit Mausrad umkehren</ReverseMouseWheelScrollDirection>
+    <WaveFormAllowOverlap>Überlappung erlauben (beim Verschieben/Skalieren)</WaveFormAllowOverlap>
     <WaveFormColor>Farbe</WaveFormColor>
     <WaveFormSelectedColor>Farbe markiert</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Hintergrundfarbe</WaveFormBackgroundColor>
@@ -1475,6 +1477,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MergeDialogue>Dialoge verbinden ('-' einfügen)</MergeDialogue>
     <GoToNext>Zum nächsten Text</GoToNext>
     <GoToPrevious>Zum vorherigen Text</GoToPrevious>
+    <GoToCurrentSubtitleStart>Zum aktuellen Textstart</GoToCurrentSubtitleStart>
+    <GoToCurrentSubtitleEnd>Zum aktuellen Textende</GoToCurrentSubtitleEnd>
     <ToggleFocus>Zwischen Listenansicht und Textbox umschalten</ToggleFocus>
     <ToggleDialogueDashes>Dialog Striche umschalten</ToggleDialogueDashes>
     <Alignment>Ausrichtung (gewählte Zeilen)</Alignment>
@@ -1524,9 +1528,9 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ShowEarlier>Früher anzeigen</ShowEarlier>
     <ShowLater>Später anzeigen</ShowLater>
     <TotalAdjustmentX>Gesamte Anpassung: {0}</TotalAdjustmentX>
-    <AllLines>Alle Zeilen</AllLines>
-    <SelectedLinesOnly>Nur ausgewählte Zeilen</SelectedLinesOnly>
-    <SelectedLinesAndForward>Ausgewählte Zeile(n) und weitere</SelectedLinesAndForward>
+    <AllLines>Alle Texte</AllLines>
+    <SelectedLinesonly>Nur ausgewählte Zeilen</SelectedLinesonly>
+    <SelectedLinesAndForward>Ausgewählte Zeile(n) und weiter</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Verlauf (für Rückgängig)</Title>
@@ -1759,6 +1763,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <OcrViaImageCompare>OCR mit Bildvergleich</OcrViaImageCompare>
     <ImageDatabase>Bilder Datenbank</ImageDatabase>
     <NoOfPixelsIsSpace>Zahl an Pixeln als Leerzeichen</NoOfPixelsIsSpace>
+    <MaxErrorPercent>Max. Fehler%</MaxErrorPercent>
     <New>Neu</New>
     <Edit>Bearbeiten</Edit>
     <StartOcr>OCR starten</StartOcr>

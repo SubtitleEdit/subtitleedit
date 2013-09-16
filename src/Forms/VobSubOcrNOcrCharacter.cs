@@ -87,8 +87,8 @@ namespace Nikse.SubtitleEdit.Forms
             _additions = additions;
             _nocrChar = new NOcrChar();
             _nocrChar.MarginTop = character.Y - character.ParentY;
-            _imageWidth = character.Bitmap.Width;
-            _imageHeight = character.Bitmap.Height;
+            _imageWidth = character.NikseBitmap.Width;
+            _imageHeight = character.NikseBitmap.Height;
             _drawLineOn = false;
             _warningNoNotForegroundLinesShown = false;
 
@@ -102,13 +102,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             pictureBoxSubtitleImage.Image = vobSubImage;
-            pictureBoxCharacter.Image = character.Bitmap;
+            pictureBoxCharacter.Image = character.NikseBitmap.GetBitmap();
 
             Bitmap org = (Bitmap)vobSubImage.Clone();
             Bitmap bm = new Bitmap(org.Width, org.Height);
             Graphics g = Graphics.FromImage(bm);
             g.DrawImage(org, 0, 0, org.Width, org.Height);
-            g.DrawRectangle(Pens.Red, character.X, character.Y, character.Bitmap.Width, character.Bitmap.Height - 1);
+            g.DrawRectangle(Pens.Red, character.X, character.Y, character.NikseBitmap.Width, character.NikseBitmap.Height - 1);
             g.Dispose();
             pictureBoxSubtitleImage.Image = bm;
 

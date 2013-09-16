@@ -7,32 +7,16 @@ namespace Nikse.SubtitleEdit.Logic
         public int X { get; set; }
         public int Y { get; set; }
         public int ParentY { get; set; }
-        public Bitmap Bitmap 
-        { 
-            get 
-            {
-                if (NikseBitmap == null)
-                    return null;
-                return NikseBitmap.GetBitmap();
-            }
-            set
-            {
-                if (value == null)
-                    NikseBitmap = null;
-                else
-                    NikseBitmap = new NikseBitmap(value);
-            }
-        }
         public NikseBitmap NikseBitmap { get; set; }
         public string SpecialCharacter { get; set; }
 
-        public ImageSplitterItem(int x, int y, Bitmap bitmap)
-        {
-            X = x;
-            Y = y;
-            Bitmap = bitmap;
-            SpecialCharacter = null;
-        }
+        //public ImageSplitterItem(int x, int y, Bitmap bitmap)
+        //{
+        //    X = x;
+        //    Y = y;
+        //    Bitmap = bitmap;
+        //    SpecialCharacter = null;
+        //}
 
         public ImageSplitterItem(int x, int y, NikseBitmap bitmap)
         {
