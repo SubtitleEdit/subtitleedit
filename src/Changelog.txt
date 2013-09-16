@@ -12,9 +12,9 @@
    * Updated word lists - thx Siegwarth
    * Minor improvements for EBU open subtitling
    * Added "Allow overlap in waveform" as setting
-   * Large "Image compare" ocr databases now loads much faster - thx Zoltan
+   * Large "Image compare" OCR databases now loads much faster - thx Zoltan
    * Cavena 890 can now read Russian
-   * Waveform generation can now uses current audio track (vlc only atm) 
+   * Waveform generation now uses current audio track (VLC only atm)
 * FIXED:
    * Crash in export of images - thx Eros UK
    * Crash in OCR via "Image compare" with large image databases - thx Zoltan
