@@ -10,14 +10,6 @@ namespace Nikse.SubtitleEdit.Logic
         public NikseBitmap NikseBitmap { get; set; }
         public string SpecialCharacter { get; set; }
 
-        //public ImageSplitterItem(int x, int y, Bitmap bitmap)
-        //{
-        //    X = x;
-        //    Y = y;
-        //    Bitmap = bitmap;
-        //    SpecialCharacter = null;
-        //}
-
         public ImageSplitterItem(int x, int y, NikseBitmap bitmap)
         {
             X = x;
