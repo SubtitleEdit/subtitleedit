@@ -19,11 +19,6 @@ namespace Nikse.SubtitleEdit.Logic
             return diff < tolerance && diff > -tolerance;
         }
 
-        public static NikseBitmap Copy(NikseBitmap sourceBitmap, Rectangle section)
-        {
-            return sourceBitmap.CopyRectangle(section);
-        }
-
         public static NikseBitmap CropTopAndBottom(NikseBitmap bmp, out int topCropping)
         {
             int startTop = 0;
@@ -35,8 +30,8 @@ namespace Nikse.SubtitleEdit.Logic
                 bool allTransparent = true;
                 for (int x = 1; x < bmp.Width - 1; x++)
                 {
-                    Color c = bmp.GetPixel(x, y);
-                    if (c.A != 0)
+                    int a = bmp.GetAlpha(x, y);
+                    if (a != 0)
                     {
                         allTransparent = false;
                         break;
@@ -55,15 +50,15 @@ namespace Nikse.SubtitleEdit.Logic
                 bool allTransparent = true;
                 for (int x = 1; x < bmp.Width-1; x++)
                 {
-                    Color c = bmp.GetPixel(x, y);
-                    if (c.A != 0)
+                    int a = bmp.GetAlpha(x, y);
+                    if (a != 0)
                     {
                         allTransparent = false;
                         break;
                     }
                 }
                 if (allTransparent == false)
-                    return Copy(bmp, new Rectangle(0, startTop, bmp.Width - 1, y-startTop+1));
+                    return bmp.CopyRectangle(new Rectangle(0, startTop, bmp.Width - 1, y-startTop+1));
             }
             return bmp;
         }
@@ -81,8 +76,8 @@ namespace Nikse.SubtitleEdit.Logic
                 bool allTransparent = true;
                 for (int x = 1; x < bmp.Width - 1; x++)
                 {
-                    Color c = bmp.GetPixel(x, y);
-                    if (c.A != 0)
+                    int a = bmp.GetAlpha(x, y);
+                    if (a != 0)
                     {
                         difference++;
                         if (difference >= maxDifferentPixelsOnLine)
@@ -106,8 +101,8 @@ namespace Nikse.SubtitleEdit.Logic
                 bool allTransparent = true;
                 for (int x = 1; x < bmp.Width - 1; x++)
                 {
-                    Color c = bmp.GetPixel(x, y);
-                    if (c.A != 0)
+                    int a = bmp.GetAlpha(x, y);
+                    if (a != 0)
                     {
                         difference++;
                         if (difference >= maxDifferentPixelsOnLine)
@@ -118,7 +113,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
                 if (allTransparent == false)
-                    return Copy(bmp, new Rectangle(0, startTop, bmp.Width - 1, y - startTop + 1));
+                    return bmp.CopyRectangle(new Rectangle(0, startTop, bmp.Width - 1, y - startTop + 1));
             }
             return bmp;
         }
@@ -143,8 +138,8 @@ namespace Nikse.SubtitleEdit.Logic
                 bool allTransparent = true;
                 for (int x = 0; x < bmp.Width; x++)
                 {
-                    Color c = bmp.GetPixel(x, y);
-                    if (c.A != 0)
+                    int a = bmp.GetAlpha(x, y);
+                    if (a != 0)
                     {
                         allTransparent = false;
                         break;
@@ -160,7 +155,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         if (size > 2)
                         {
-                            NikseBitmap part = Copy(bmp, new Rectangle(0, startY, bmp.Width, size+1));
+                            NikseBitmap part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size+1));
 //                            part.Save("c:\\line_0_to_width.bmp");
                             parts.Add(new ImageSplitterItem(0, startY, part));
 //                            bmp.Save("c:\\original.bmp");
@@ -177,7 +172,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             if (size > 2)
             {
-                NikseBitmap part = Copy(bmp, new Rectangle(0, startY, bmp.Width, size+1));
+                NikseBitmap part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size+1));
                 parts.Add(new ImageSplitterItem(0, startY, part));
             }
             return parts;
@@ -193,8 +188,8 @@ namespace Nikse.SubtitleEdit.Logic
                 bool allTransparent = true;
                 for (int x = 0; x < bmp.Width; x++)
                 {
-                    Color c = bmp.GetPixel(x, y);
-                    if (c.A != 0)
+                    int a = bmp.GetAlpha(x, y);
+                    if (a != 0)
                     {
                         allTransparent = false;
                         break;
@@ -210,7 +205,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         if (size > 2)
                         {
-                            NikseBitmap part = Copy(bmp, new Rectangle(0, startY, bmp.Width, size + 1));
+                            NikseBitmap part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1));
                             //                            part.Save("c:\\line_0_to_width.bmp");
                             parts.Add(new ImageSplitterItem(0, startY, part));
                             //                            bmp.Save("c:\\original.bmp");
@@ -227,7 +222,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             if (size > 2)
             {
-                NikseBitmap part = Copy(bmp, new Rectangle(0, startY, bmp.Width, size + 1));
+                NikseBitmap part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1));
                 parts.Add(new ImageSplitterItem(0, startY, part));
             }
             return parts;
@@ -236,16 +231,14 @@ namespace Nikse.SubtitleEdit.Logic
         public static int IsBitmapsAlike(Bitmap bmp1, Bitmap bmp2)
         {
             int different = 0;
-            int maxDiff = (int)(bmp1.Width * bmp1.Height / 5.0);
+            int maxDiff = bmp1.Width * bmp1.Height / 5;
 
             for (int x = 1; x < bmp1.Width; x++)
             {
                 for (int y = 1; y < bmp1.Height; y++)
                 {
                     if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
-                    {
                         different++;
-                    }
                 }
                 if (different > maxDiff)
                     return different + 10;
@@ -324,7 +317,7 @@ namespace Nikse.SubtitleEdit.Logic
                             startX--;
                             end++;
                         }
-                        NikseBitmap b1 = Copy(bmp, new Rectangle(startX, 0, end, bmp.Height));
+                        NikseBitmap b1 = bmp.CopyRectangle(new Rectangle(startX, 0, end, bmp.Height));
 //                         b1.Save(@"d:\temp\cursive.bmp"); // just for debugging
 
                         // make non-black/transparent stuff from other letter transparent
@@ -377,7 +370,7 @@ namespace Nikse.SubtitleEdit.Logic
                                     startX--;
                                 lastEndX = x;
                                 int end = x + 1 - startX;
-                                NikseBitmap part = Copy(bmp, new Rectangle(startX, 0, end, bmp.Height));
+                                NikseBitmap part = bmp.CopyRectangle(new Rectangle(startX, 0, end, bmp.Height));
                                 RemoveBlackBarRight(part);
                                 int addY;
                                 //                            part.Save("c:\\before" + startX.ToString() + ".bmp"); // just for debugging
@@ -407,7 +400,7 @@ namespace Nikse.SubtitleEdit.Logic
                     startX--;
                 lastEndX = bmp.Width-1;
                 int end = lastEndX + 1 - startX;
-                NikseBitmap part = Copy(bmp, new Rectangle(startX, 0, end, bmp.Height - 1));
+                NikseBitmap part = bmp.CopyRectangle(new Rectangle(startX, 0, end, bmp.Height - 1));
                 int addY;
                 part = CropTopAndBottom(part, out addY);
                 parts.Add(new ImageSplitterItem(startX, verticalItem.Y + addY, part));
@@ -475,8 +468,7 @@ namespace Nikse.SubtitleEdit.Logic
             for (y = 0; y < bmp.Height - 1; y++)
             {
                 Color c = bmp.GetPixel(x, y);
-                if (c.A == 0 || //c.ToArgb() == transparentColor.ToArgb() ||
-                    IsColorClose(c, Color.Black, 280)) // still dark color...
+                if (c.A == 0 || IsColorClose(c, Color.Black, 280)) // still dark color...
                 {
                 }
                 else
@@ -569,16 +561,14 @@ namespace Nikse.SubtitleEdit.Logic
         internal static unsafe int IsBitmapsAlike(NikseBitmap bmp1, NikseBitmap bmp2)
         {
             int different = 0;
-            int maxDiff = (int)(bmp1.Width * bmp1.Height / 5.0);
+            int maxDiff = bmp1.Width * bmp1.Height / 5;
 
             for (int x = 1; x < bmp1.Width; x++)
             {
                 for (int y = 1; y < bmp1.Height; y++)
                 {
                     if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
-                    {
                         different++;
-                    }
                 }
                 if (different > maxDiff)
                     return different + 10;
@@ -589,102 +579,38 @@ namespace Nikse.SubtitleEdit.Logic
         internal static unsafe int IsBitmapsAlike(ManagedBitmap bmp1, NikseBitmap bmp2)
         {
             int different = 0;
-            int maxDiff = (int)(bmp1.Width * bmp1.Height / 5.0);
+            int maxDiff = bmp1.Width * bmp1.Height / 5;
 
             for (int x = 1; x < bmp1.Width; x++)
             {
                 for (int y = 1; y < bmp1.Height; y++)
                 {
                     if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
-                    {
                         different++;
-                    }
                 }
                 if (different > maxDiff)
                     return different + 10;
             }
             return different;
-        }
-
-        internal static unsafe int IsBitmapsAlike(ManagedBitmap bmp1, Bitmap bmp2)
-        {
-            int different = 0;
-            int maxDiff = (int)(bmp1.Width * bmp1.Height / 5.0);
-
-            for (int x = 1; x < bmp1.Width; x++)
-            {
-                for (int y = 1; y < bmp1.Height; y++)
-                {
-                    if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
-                    {
-                        different++;
-                    }
-                }
-                if (different > maxDiff)
-                    return different + 10;
-            }
-            return different;
-        }
+        }       
 
         internal static unsafe int IsBitmapsAlike(NikseBitmap bmp1, ManagedBitmap bmp2)
         {
             int different = 0;
-            int maxDiff = (int)(bmp1.Width * bmp1.Height / 5.0);
+            int maxDiff = bmp1.Width * bmp1.Height / 5;
 
             for (int x = 1; x < bmp1.Width; x++)
             {
                 for (int y = 1; y < bmp1.Height; y++)
                 {
                     if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
-                    {
                         different++;
-                    }
                 }
                 if (different > maxDiff)
                     return different + 10;
             }
             return different;
-        }
+        }      
 
-        internal static unsafe int IsBitmapsAlike(Bitmap bmp1, NikseBitmap bmp2)
-        {
-            int different = 0;
-            int maxDiff = (int)(bmp1.Width * bmp1.Height / 5.0);
-            NikseBitmap nbmp1 = new NikseBitmap(bmp1);
-
-            for (int x = 1; x < bmp1.Width; x++)
-            {
-                for (int y = 1; y < bmp1.Height; y++)
-                {
-                    if (!IsColorClose(nbmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
-                    {
-                        different++;
-                    }
-                }
-                if (different > maxDiff)
-                    return different + 10;
-            }            
-            return different;
-        }
-
-        internal static unsafe int IsBitmapsAlike(NikseBitmap bmp1, Bitmap bmp2)
-        {
-            int different = 0;
-            int maxDiff = (int)(bmp1.Width * bmp1.Height / 5.0);
-
-            for (int x = 1; x < bmp1.Width; x++)
-            {
-                for (int y = 1; y < bmp1.Height; y++)
-                {
-                    if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
-                    {
-                        different++;
-                    }
-                }
-                if (different > maxDiff)
-                    return different + 10;
-            }
-            return different;
-        }
     }
 }

@@ -813,7 +813,6 @@
     <Compile Include="Logic\PositionsAndSizes.cs" />
     <Compile Include="Logic\Settings.cs" />
     <Compile Include="Logic\Enums\SubtitleSortCriteria.cs" />
-    <Compile Include="Logic\ImageSplitter.cs" />
     <Compile Include="Logic\ImageSplitterItem.cs" />
     <Compile Include="Logic\Configuration.cs" />
     <Compile Include="Logic\Enums\FindType.cs" />

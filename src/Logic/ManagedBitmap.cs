@@ -71,6 +71,20 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public ManagedBitmap(NikseBitmap nbmp)
+        {
+            Width = nbmp.Width;
+            Height = nbmp.Height;
+            _colors = new Color[Width * Height];
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    this.SetPixel(x, y, nbmp.GetPixel(x, y));
+                }
+            }
+        }
+
         public void Save(string fileName)
         {
             using (MemoryStream outFile = new MemoryStream())

@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
         internal void Initialize(Bitmap bitmap, int pixelsIsSpace, bool rightToLeft, List<NOcrChar> nocrChars, VobSubOcr vobSubOcr, double unItalicFactor)
         {
             _bitmap = bitmap;
-            NikseBitmap nbmp = new NikseBitmap(bitmap);
+            var nbmp = new NikseBitmap(bitmap);
             nbmp.ReplaceNonWhiteWithTransparent();
             bitmap = nbmp.GetBitmap();
             _bitmap2 = bitmap;
@@ -43,24 +43,23 @@ namespace Nikse.SubtitleEdit.Forms
             _vobSubOcr = vobSubOcr;
             _unItalicFactor = unItalicFactor;
 
-            _imageList = ImageSplitter.SplitBitmapToLetters(bitmap, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom);
+            _imageList = NikseBitmapImageSplitter.SplitBitmapToLetters(nbmp, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom);
             int index = 0;
             while (index < _imageList.Count)
             {
                 ImageSplitterItem item = _imageList[index];
-                if (item.Bitmap == null)
+                if (item.NikseBitmap == null)
                 {
                     listBoxInspectItems.Items.Add(item.SpecialCharacter);
                     _matchList.Add(null);
                 }
                 else
                 {
-                    nbmp = new NikseBitmap(item.Bitmap);
+                    nbmp = item.NikseBitmap;
                     nbmp.ReplaceNonWhiteWithTransparent();
                     item.Y += nbmp.CropTopTransparent(0);
                     nbmp.CropTransparentSidesAndBottom(0, true);
                     nbmp.ReplaceTransparentWith(Color.Black);
-                    item.Bitmap = nbmp.GetBitmap();
 
                     //get nocr matches
                     Nikse.SubtitleEdit.Forms.VobSubOcr.CompareMatch match = vobSubOcr.GetNOcrCompareMatch(item, bitmap, _nocrChars, _unItalicFactor, false, false);
@@ -86,12 +85,13 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             var img = _imageList[listBoxInspectItems.SelectedIndex];
-            if (img.Bitmap != null)
+            if (img.NikseBitmap != null)
             {
-                pictureBoxInspectItem.Width = img.Bitmap.Width;
-                pictureBoxInspectItem.Height = img.Bitmap.Height;
-                pictureBoxInspectItem.Image = img.Bitmap;
-                pictureBoxCharacter.Image = img.Bitmap;
+                pictureBoxInspectItem.Width = img.NikseBitmap.Width;
+                pictureBoxInspectItem.Height = img.NikseBitmap.Height;
+                var old = img.NikseBitmap.GetBitmap();
+                pictureBoxInspectItem.Image = old;
+                pictureBoxCharacter.Image = old;
                 SizePictureBox();
             }
             else
@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             int index  = listBoxInspectItems.SelectedIndex;
             var img = _imageList[index];
-            if (img.Bitmap == null)
+            if (img.NikseBitmap == null)
                 return;
 
             var match = _matchList[index];
@@ -248,12 +248,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         shrinkSelection = false;
                     }
-                    else if (index + 1 < _imageList.Count && _imageList[index + 1].Bitmap != null) // only allow expand to EndOfLine or space
+                    else if (index + 1 < _imageList.Count && _imageList[index + 1].NikseBitmap != null) // only allow expand to EndOfLine or space
                     {
                         index++;
                         expandSelectionList.Add(_imageList[index]);
                     }
-                    img = VobSubOcr.GetExpandedSelection(_bitmap, expandSelectionList, false); // true
+                    img = VobSubOcr.GetExpandedSelection(new NikseBitmap(_bitmap), expandSelectionList, false); // true
                 }
 
                 vobSubOcrNOcrCharacter.Initialize(_bitmap2, img, new Point(0, 0), false, expandSelectionList.Count > 1, null, null, _vobSubOcr);
