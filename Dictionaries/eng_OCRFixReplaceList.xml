@@ -181,6 +181,7 @@
     <Word from="BIack" to="Black" />
     <Word from="BIess" to="Bless" />
     <Word from="bigos___" to="bigos..." />
+    <Word from="BIame" to="Blame" />
     <Word from="BIind" to="Blind" />
     <Word from="BIood" to="Blood" />
     <Word from="BIue" to="Blue" />
@@ -1570,6 +1571,44 @@
     <Word from="IfGod" to="If God" />
     <Word from="notjudge" to="not judge" />
     <Word from="andjudge" to="and judge" />
+    <Word from="OKBY" to="Okay" />
+    <Word from="myjourney" to="my journey" />
+    <Word from="yourpremium" to="your premium" />
+    <Word from="we'rejust" to="we're just" />
+    <Word from="Iittlejokes" to="little jokes" />
+    <Word from="Iifejust" to="life just" />
+    <Word from="Andjust" to="And just" />
+    <Word from="ofThe" to="of The" />
+    <Word from="lifejust" to="life just" />
+    <Word from="AIice" to="Alice" />
+    <Word from="lnternationalAirport" to="lnternational Airport" />
+    <Word from="yourbody" to="your body" />
+    <Word from="DollarBaby" to="Dollar Baby" />
+    <Word from="ofjonesing" to="of jonesing" />
+    <Word from="yourpanties" to="your panties" />
+    <Word from="offforme" to="off for me" />
+    <Word from="pantyparty" to="panty party" />
+    <Word from="everhit" to="ever hit" />
+    <Word from="theirhomes" to="their homes" />
+    <Word from="AirForce" to="Air Force" />
+    <Word from="yourhead" to="your head" />
+    <Word from="betterbe" to="better be" />
+    <Word from="myparty" to="my party" />
+    <Word from="disasterlockdown" to="disaster lockdown" />
+    <Word from="Ifpot's" to="If pot's" />
+    <Word from="ifmy" to="if my" />
+    <Word from="yourmoney" to="your money" />
+    <Word from="Potterfan" to="Potter fan" />
+    <Word from="Hermionejust" to="Hermione just" />
+    <Word from="ofourshit" to="of our shit" />
+    <Word from="showyou" to="show you" />
+    <Word from="answernow" to="answer now" />
+    <Word from="theirsjust" to="theirs just" />
+    <Word from="BIackie" to="Blackie" />
+    <Word from="SIeep" to="Sleep" />
+    <Word from="foryour" to="for your" />
+    <Word from="oryour" to="or your" />
+    <Word from="forArthur" to="for Arthur" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -1788,6 +1827,31 @@
     <LinePart from="[scu RRYING]" to="[SCURRYING]" />
     <LinePart from="(GRUNT5)" to="(GRUNTS)" />
     <LinePart from="[GRUNT5]" to="[GRUNTS]" />
+    <LinePart from="NARRA TOR:" to="NARRATOR:" />
+    <LinePart from="(GROAN ING" to="(GROANING" />
+    <LinePart from="[GROAN ING" to="[GROANING" />
+    <LinePart from="GROAN ING)" to="GROANING)" />
+    <LinePart from="GROAN ING]" to="GROANING]" />
+    <LinePart from="(LAUGH ING" to="(LAUGHING" />
+    <LinePart from="[LAUGH ING" to="[LAUGHING" />
+    <LinePart from="LAUGH ING)" to="LAUGHING)" />
+    <LinePart from="LAUGH ING]" to="LAUGHING]" />
+    <LinePart from="(BU BBLING" to="(BUBBLING" />
+    <LinePart from="[BU BBLING" to="[BUBBLING" />
+    <LinePart from="BU BBLING)" to="BUBBLING)" />
+    <LinePart from="BU BBLING]" to="BUBBLING]" />
+    <LinePart from="(SH USHING" to="(SHUSHING" />
+    <LinePart from="[SH USHING" to="[SHUSHING" />
+    <LinePart from="SH USHING)" to="SHUSHING)" />
+    <LinePart from="SH USHING]" to="SHUSHING]" />
+    <LinePart from="(CH ILDREN" to="(CHILDREN" />
+    <LinePart from="[CH ILDREN" to="[CHILDREN" />
+    <LinePart from="CH ILDREN)" to="CHILDREN)" />
+    <LinePart from="CH ILDREN]" to="CHILDREN]" />
+    <LinePart from="(MURMU RING" to="(MURMURING" />
+    <LinePart from="[MURMU RING" to="[MURMURING" />
+    <LinePart from="MURMU RING)" to="MURMURING)" />
+    <LinePart from="MURMU RING]" to="MURMURING]" />
   </PartialLines>
   <BeginLines>
     <Beginning from="|was" to="I was" />
