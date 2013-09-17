@@ -11615,6 +11615,109 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitleAlternate = new Subtitle();
             _subtitleAlternateFileName = fileName;
             SubtitleFormat format = _subtitleAlternate.LoadSubtitle(fileName, out encoding, null);
+
+            if (format == null)
+            {
+                var ebu = new Ebu();
+                if (ebu.IsMine(null, fileName))
+                {
+                    ebu.LoadSubtitle(_subtitleAlternate, null, fileName);
+                    format = ebu;
+                }
+            }
+            if (format == null)
+            {
+                var pac = new Pac();
+                if (pac.IsMine(null, fileName))
+                {
+                    pac.BatchMode = true;
+                    pac.LoadSubtitle(_subtitleAlternate, null, fileName);
+                    format = pac;
+                }
+            }
+            if (format == null)
+            {
+                var cavena890 = new Cavena890();
+                if (cavena890.IsMine(null, fileName))
+                {
+                    cavena890.LoadSubtitle(_subtitleAlternate, null, fileName);
+                    format = cavena890;
+                }
+            }
+            if (format == null)
+            {
+                var spt = new Spt();
+                if (spt.IsMine(null, fileName))
+                {
+                    spt.LoadSubtitle(_subtitleAlternate, null, fileName);
+                    format = spt;
+                }
+            }
+            if (format == null)
+            {
+                var cheetahCaption = new CheetahCaption();
+                if (cheetahCaption.IsMine(null, fileName))
+                {
+                    cheetahCaption.LoadSubtitle(_subtitleAlternate, null, fileName);
+                    format = cheetahCaption;
+                }
+            }
+            if (format == null)
+            {
+                var capMakerPlus = new CapMakerPlus();
+                if (capMakerPlus.IsMine(null, fileName))
+                {
+                    capMakerPlus.LoadSubtitle(_subtitleAlternate, null, fileName);
+                    format = capMakerPlus;
+                }
+            }
+            if (format == null)
+            {
+                var captionate = new Captionate();
+                if (captionate.IsMine(null, fileName))
+                {
+                    captionate.LoadSubtitle(_subtitleAlternate, null, fileName);
+                    format = captionate;
+                }
+            }
+            if (format == null)
+            {
+                var ultech130 = new Ultech130();
+                if (ultech130.IsMine(null, fileName))
+                {
+                    ultech130.LoadSubtitle(_subtitleAlternate, null, fileName);
+                    format = ultech130;
+                }
+            }
+            if (format == null)
+            {
+                var nciCaption = new NciCaption();
+                if (nciCaption.IsMine(null, fileName))
+                {
+                    nciCaption.LoadSubtitle(_subtitleAlternate, null, fileName);
+                    format = nciCaption;
+                }
+            }
+            if (format == null)
+            {
+                var tsb4 = new TSB4();
+                if (tsb4.IsMine(null, fileName))
+                {
+                    tsb4.LoadSubtitle(_subtitleAlternate, null, fileName);
+                    format = tsb4;
+                }
+            }
+            if (format == null)
+            {
+                var avidStl = new AvidStl();
+                if (avidStl.IsMine(null, fileName))
+                {
+                    avidStl.LoadSubtitle(_subtitleAlternate, null, fileName);
+                    format = avidStl;
+                }
+            }
+
+
             if (format == null)
                 return false;
 
