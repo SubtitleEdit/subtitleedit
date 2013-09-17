@@ -73,31 +73,38 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 bool success = false;
                 if (regex.Match(line).Success)
                 {
-                    string s = line;
-                    if (line.Length > 9 && line[8] == ' ')
-                        s = line.Substring(0, 8) + ":" + line.Substring(9);
-                    string[] parts = s.Split(':');
-                    if (parts.Length > 3)
+                    try
                     {
-                        int hours = int.Parse(parts[0]);
-                        int minutes = int.Parse(parts[1]);
-                        int seconds = int.Parse(parts[2]);
-                        string text = string.Empty;
-                        for (int i = 3; i < parts.Length; i++ )
+                        string s = line;
+                        if (line.Length > 9 && line[8] == ' ')
+                            s = line.Substring(0, 8) + ":" + line.Substring(9);
+                        string[] parts = s.Split(':');
+                        if (parts.Length > 3)
                         {
-                            if (text.Length == 0)
-                                text = parts[i];
-                            else
-                                text += ":" + parts[i];
-                        }
-                        text = text.Replace("|", Environment.NewLine);
-                        var start = new TimeCode(hours, minutes, seconds, 0);
-                        double duration = Utilities.GetOptimalDisplayMilliseconds(text);
-                        var end = new TimeCode(TimeSpan.FromMilliseconds(start.TotalMilliseconds + duration));
+                            int hours = int.Parse(parts[0]);
+                            int minutes = int.Parse(parts[1]);
+                            int seconds = int.Parse(parts[2]);
+                            string text = string.Empty;
+                            for (int i = 3; i < parts.Length; i++)
+                            {
+                                if (text.Length == 0)
+                                    text = parts[i];
+                                else
+                                    text += ":" + parts[i];
+                            }
+                            text = text.Replace("|", Environment.NewLine);
+                            var start = new TimeCode(hours, minutes, seconds, 0);
+                            double duration = Utilities.GetOptimalDisplayMilliseconds(text);
+                            var end = new TimeCode(TimeSpan.FromMilliseconds(start.TotalMilliseconds + duration));
 
-                        var p = new Paragraph(start, end, text);
-                        subtitle.Paragraphs.Add(p);
-                        success = true;
+                            var p = new Paragraph(start, end, text);
+                            subtitle.Paragraphs.Add(p);
+                            success = true;
+                        }
+                    }
+                    catch
+                    {
+                        _errorCount++;
                     }
                 }
                 if (!success)
