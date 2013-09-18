@@ -122,20 +122,27 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
-                var fi = new FileInfo(fileName);
-                if (fi.Length > 1150 && fi.Length < 1024000) // not too small or too big
+                try
                 {
-                    byte[] buffer = File.ReadAllBytes(fileName);
-                    if (buffer[0] == 0x38 &&
-                        buffer[1] == 0x35 &&
-                        buffer[2] == 0x30 &&
-                        buffer[1024] == 0 &&
-                        buffer[1025] == 0 &&
-                        buffer[1026] == 0 &&
-                        buffer[1027] == 0xff)
+                    var fi = new FileInfo(fileName);
+                    if (fi.Length > 1150 && fi.Length < 1024000) // not too small or too big
                     {
-                        return true;
+                        byte[] buffer = File.ReadAllBytes(fileName);
+                        if (buffer[0] == 0x38 &&
+                            buffer[1] == 0x35 &&
+                            buffer[2] == 0x30 &&
+                            buffer[1024] == 0 &&
+                            buffer[1025] == 0 &&
+                            buffer[1026] == 0 &&
+                            buffer[1027] == 0xff)
+                        {
+                            return true;
+                        }
                     }
+                }
+                catch
+                {
+                    return false;
                 }
             }
             return false;

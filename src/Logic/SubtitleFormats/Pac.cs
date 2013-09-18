@@ -856,39 +856,46 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
+            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))            
             {
-                var fi = new FileInfo(fileName);
-                if (fi.Length > 100 && fi.Length < 1024000) // not too small or too big
+                try
                 {
-                    byte[] buffer = File.ReadAllBytes(fileName);
+                    var fi = new FileInfo(fileName);
+                    if (fi.Length > 100 && fi.Length < 1024000) // not too small or too big
+                    {
+                        byte[] buffer = File.ReadAllBytes(fileName);
 
-                    if (buffer[00] == 1 && // These bytes seems to be PAC files... TODO: Verify!
-                        buffer[01] == 0 &&
-                        buffer[02] == 0 &&
-                        buffer[03] == 0 &&
-                        buffer[04] == 0 &&
-                        buffer[05] == 0 &&
-                        buffer[06] == 0 &&
-                        buffer[07] == 0 &&
-                        buffer[08] == 0 &&
-                        buffer[09] == 0 &&
-                        buffer[10] == 0 &&
-                        buffer[11] == 0 &&
-                        buffer[12] == 0 &&
-                        buffer[13] == 0 &&
-                        buffer[14] == 0 &&
-                        buffer[15] == 0 &&
-                        buffer[16] == 0 &&
-                        buffer[17] == 0 &&
-                        buffer[18] == 0 &&
-                        buffer[19] == 0 &&
-                        buffer[20] == 0 &&
-                        //buffer[21] < 10 && // start from number
-                        //buffer[22] == 0 &&
-                        buffer[23] == 0x60 &&
-                        fileName.ToLower().EndsWith(".pac"))
-                        return true;
+                        if (buffer[00] == 1 && // These bytes seems to be PAC files... TODO: Verify!
+                            buffer[01] == 0 &&
+                            buffer[02] == 0 &&
+                            buffer[03] == 0 &&
+                            buffer[04] == 0 &&
+                            buffer[05] == 0 &&
+                            buffer[06] == 0 &&
+                            buffer[07] == 0 &&
+                            buffer[08] == 0 &&
+                            buffer[09] == 0 &&
+                            buffer[10] == 0 &&
+                            buffer[11] == 0 &&
+                            buffer[12] == 0 &&
+                            buffer[13] == 0 &&
+                            buffer[14] == 0 &&
+                            buffer[15] == 0 &&
+                            buffer[16] == 0 &&
+                            buffer[17] == 0 &&
+                            buffer[18] == 0 &&
+                            buffer[19] == 0 &&
+                            buffer[20] == 0 &&
+                            //buffer[21] < 10 && // start from number
+                            //buffer[22] == 0 &&
+                            buffer[23] == 0x60 &&
+                            fileName.ToLower().EndsWith(".pac"))
+                            return true;
+                    }
+                }
+                catch
+                {
+                    return false;
                 }
             }
             return false;

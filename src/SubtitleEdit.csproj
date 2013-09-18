@@ -1438,6 +1438,7 @@
     <EmbeddedResource Include="Resources\OpenOfficeDictionaries.xml.zip" />
     <EmbeddedResource Include="Resources\HunspellDictionaries.xml.zip" />
     <EmbeddedResource Include="Resources\TesseractDictionaries.xml.zip" />
+    <EmbeddedResource Include="Resources\nOCR_TesseractHelper.xml.zip" />
     <None Include="Web References\MicrosoftTranslationService\GetTranslationsResponse.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
