@@ -3077,6 +3077,55 @@ namespace Nikse.SubtitleEdit.Forms
             return nocrChars;
         }
 
+        public static List<NOcrChar> LoadNOcrForTesseract(string xmlRessourceName)
+        {
+            var nocrChars = new List<NOcrChar>();
+            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
+            Stream strm = asm.GetManifestResourceStream(xmlRessourceName);
+            if (strm != null)
+            {
+                XmlDocument doc = new XmlDocument();
+                var rdr = new StreamReader(strm);
+                using (var zip = new System.IO.Compression.GZipStream(rdr.BaseStream, System.IO.Compression.CompressionMode.Decompress))
+                {
+                    byte[] data = new byte[175000];
+                    zip.Read(data, 0, 175000);
+                    doc.LoadXml(System.Text.Encoding.UTF8.GetString(data));
+                }
+                rdr.Close();
+
+                try
+                {
+                    foreach (XmlNode node in doc.DocumentElement.SelectNodes("Char"))
+                    {
+                        var oc = new NOcrChar(node.Attributes["Text"].Value);
+                        oc.Width = Convert.ToInt32(node.Attributes["Width"].Value, CultureInfo.InvariantCulture);
+                        oc.Height = Convert.ToInt32(node.Attributes["Height"].Value, CultureInfo.InvariantCulture);
+                        oc.MarginTop = Convert.ToInt32(node.Attributes["MarginTop"].Value, CultureInfo.InvariantCulture);
+                        if (node.Attributes["Italic"] != null)
+                            oc.Italic = Convert.ToBoolean(node.Attributes["Italic"].Value, CultureInfo.InvariantCulture);
+                        if (node.Attributes["ExpandCount"] != null)
+                            oc.ExpandCount = Convert.ToInt32(node.Attributes["ExpandCount"].Value, CultureInfo.InvariantCulture);
+                        foreach (XmlNode pointNode in node.SelectNodes("Point"))
+                        {
+                            var op = new NOcrPoint(DecodePoint(pointNode.Attributes["Start"].Value), DecodePoint(pointNode.Attributes["End"].Value));
+                            XmlAttribute a = pointNode.Attributes["On"];
+                            if (a != null && Convert.ToBoolean(a.Value))
+                                oc.LinesForeground.Add(op);
+                            else
+                                oc.LinesBackground.Add(op);
+                        }
+                        nocrChars.Add(oc);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                }
+            }
+            return nocrChars;
+        }
+
         private static Point DecodePoint(string text)
         {
             var arr = text.Split(',');
@@ -3995,6 +4044,125 @@ namespace Nikse.SubtitleEdit.Forms
             return "<i>" + Utilities.RemoveHtmlTags(GetStringWithItalicTags(matches)) + "</i>";
         }
 
+        public string NocrFastCheck(Bitmap bitmap)
+        {
+            var nbmpInput = new NikseBitmap(bitmap);
+            nbmpInput.ReplaceNonWhiteWithTransparent();
+            //bitmap = nbmp.GetBitmap();
+
+            var matches = new List<CompareMatch>();
+            List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLetters(nbmpInput, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom);
+
+            foreach (ImageSplitterItem item in list)
+            {
+                if (item.NikseBitmap != null)
+                {
+                    item.NikseBitmap.ReplaceNonWhiteWithTransparent();
+                    item.Y += item.NikseBitmap.CropTopTransparent(0);
+                    item.NikseBitmap.CropTransparentSidesAndBottom(0, true);
+                    item.NikseBitmap.ReplaceTransparentWith(Color.Black);
+                }
+            }
+            int index = 0;
+            var expandSelectionList = new List<ImageSplitterItem>();
+            while (index < list.Count)
+            {
+                ImageSplitterItem item = list[index];
+                if (item.NikseBitmap == null)
+                {
+                    matches.Add(new CompareMatch(item.SpecialCharacter, false, 0, null));
+                }
+                else
+                {
+                    CompareMatch match = null; // = GetNOcrCompareMatch(item, bitmap, _nocrChars, _unItalicFactor, checkBoxNOcrItalic.Checked, !checkBoxNOcrCorrect.Checked);
+
+                    var nbmp = item.NikseBitmap;
+                    int index2 = 0;
+                    int topMargin = item.Y - item.ParentY;
+                    foreach (NOcrChar oc in _nocrChars)
+                    {                        
+                        if (Math.Abs(oc.Width - nbmp.Width) < 3 && Math.Abs(oc.Height - nbmp.Height) < 4 && Math.Abs(oc.MarginTop - topMargin) < 4)
+                        { // only very accurate matches
+
+                            bool ok = true;
+                            index2 = 0;
+                            while (index2 < oc.LinesForeground.Count && ok)
+                            {
+                                NOcrPoint op = oc.LinesForeground[index2];
+                                foreach (Point point in op.ScaledGetPoints(oc, nbmp.Width, nbmp.Height))
+                                {
+                                    if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+                                    {
+                                        Color c = nbmp.GetPixel(point.X, point.Y);
+                                        if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            Point p = new Point(point.X - 1, point.Y);
+                                            if (p.X < 0)
+                                                p.X = 1;
+                                            c = nbmp.GetPixel(p.X, p.Y);
+                                            if (nbmp.Width > 20 && c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                            {
+                                            }
+                                            else
+                                            {
+                                                ok = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                index2++;
+                            }
+                            index2 = 0;
+                            while (index2 < oc.LinesBackground.Count && ok)
+                            {
+                                NOcrPoint op = oc.LinesBackground[index2];
+                                foreach (Point point in op.ScaledGetPoints(oc, nbmp.Width, nbmp.Height))
+                                {
+                                    if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+                                    {
+                                        Color c = nbmp.GetPixel(point.X, point.Y);
+                                        if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                        {
+                                            Point p = new Point(point.X, point.Y);
+                                            if (oc.Width > 19 && point.X > 0)
+                                                p.X = p.X - 1;
+                                            c = nbmp.GetPixel(p.X, p.Y);
+                                            if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                            {
+                                                ok = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                index2++;
+                            }
+                            if (ok)
+                                match = new CompareMatch(oc.Text, oc.Italic, 0, null);
+                        }
+                    }
+
+
+                    if (match == null)
+                    {
+                        matches.Add(new CompareMatch("*", false, 0, null));
+                    }
+                    else // found image match
+                    {
+                        matches.Add(new CompareMatch(match.Text, match.Italic, 0, null));
+                        if (match.ExpandCount > 0)
+                            index += match.ExpandCount - 1;
+                    }
+                }
+                index++;
+            }
+            return GetStringWithItalicTags(matches); 
+        }
+
         static void NOcrThreadDoWork(object sender, DoWorkEventArgs e)
         {
             var p = (NOcrThreadParameter)e.Argument;
@@ -4107,6 +4275,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (comboBoxOcrMethod.SelectedIndex == 0 && _tesseractAsyncStrings == null)
             {
+                _nocrChars = null;
                 _tesseractAsyncStrings = new string[max];
                 _tesseractAsyncIndex = (int)numericUpDownStartNumber.Value + 5;
                 _tesseractThread = new BackgroundWorker();
@@ -4886,7 +5055,7 @@ namespace Nikse.SubtitleEdit.Forms
                         line = line.Replace("  ", " ");
                     }
                 }
-
+                
 
                 if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length < 2)
                 {
@@ -4946,6 +5115,38 @@ namespace Nikse.SubtitleEdit.Forms
                     ButtonStopClick(null, null);
                     _ocrFixEngine.Abort = false;
                     return string.Empty;
+                }
+
+                string tmp = Utilities.RemoveHtmlTags(line).Trim();
+                if (!tmp.Trim().EndsWith("..."))
+                {
+                    tmp = tmp.TrimEnd('.').TrimEnd();
+                    if (tmp.Length > 2 && Utilities.LowercaseLetters.Contains(tmp.Substring(tmp.Length - 1, 1)))
+                    {
+                        if (_nocrChars == null)
+                            _nocrChars = LoadNOcrForTesseract("Nikse.SubtitleEdit.Resources.nOCR_TesseractHelper.xml.zip");
+                        string text = Utilities.RemoveHtmlTags(NocrFastCheck(bitmap).TrimEnd());
+                        string post = string.Empty;
+                        if (line.EndsWith("</i>"))
+                        {
+                            post = "</i>";
+                            line = line.Remove(line.Length - 4, 4).Trim();
+                        }
+                        if (text.EndsWith("."))
+                        {
+                            line = line.TrimEnd('.').Trim();
+                            while (text.EndsWith(".") || text.EndsWith(" "))
+                            {
+                                line += text.Substring(text.Length - 1).Trim();
+                                text = text.Remove(text.Length - 1, 1);
+                            }
+                        }
+                        else if (text.EndsWith("l") && text.EndsWith("!") && !text.EndsWith("l!"))
+                        {
+                            line = line.Remove(line.Length - 1, 1) + "!";
+                        }
+                        line += post;
+                    }
                 }
 
                 // Log used word guesses (via word replace list)

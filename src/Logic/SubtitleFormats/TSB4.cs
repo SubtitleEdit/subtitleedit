@@ -41,7 +41,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 return;
             }
-            byte[] array = File.ReadAllBytes(fileName);
+            byte[] array;
+            try
+            {
+                array = File.ReadAllBytes(fileName);
+            }
+            catch
+            {
+                _errorCount++;
+                return;
+            }
             if (array.Length < 100)
             {
                 return;

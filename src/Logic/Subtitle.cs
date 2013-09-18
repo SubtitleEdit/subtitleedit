@@ -120,7 +120,16 @@ namespace Nikse.SubtitleEdit.Logic
             StreamReader sr;
             if (useThisEncoding != null)
             {
-                sr = new StreamReader(fileName, useThisEncoding);
+                try
+                {
+                    sr = new StreamReader(fileName, useThisEncoding);
+                }
+                catch (Exception exception)
+                {
+                    System.Windows.Forms.MessageBox.Show(exception.Message);
+                    encoding = Encoding.UTF8;
+                    return null;
+                }
             }
             else
             {

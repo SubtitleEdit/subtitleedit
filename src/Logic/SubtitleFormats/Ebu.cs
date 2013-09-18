@@ -543,15 +543,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var fi = new FileInfo(fileName);
                 if (fi.Length > 1024 + 128 && fi.Length < 1024000) // not too small or too big
                 {
-                    byte[] buffer = File.ReadAllBytes(fileName);
-                    EbuGeneralSubtitleInformation header = ReadHeader(buffer);
-                    if (header.DiskFormatCode.StartsWith("STL23") ||
-                        header.DiskFormatCode.StartsWith("STL24") ||
-                        header.DiskFormatCode.StartsWith("STL25") ||
-                        header.DiskFormatCode.StartsWith("STL29") ||
-                        header.DiskFormatCode.StartsWith("STL30"))
+                    try
                     {
-                        return Utilities.IsInteger(header.CodePageNumber) || fileName.ToLower().EndsWith("stl");
+                        byte[] buffer = File.ReadAllBytes(fileName);
+                        EbuGeneralSubtitleInformation header = ReadHeader(buffer);
+                        if (header.DiskFormatCode.StartsWith("STL23") ||
+                            header.DiskFormatCode.StartsWith("STL24") ||
+                            header.DiskFormatCode.StartsWith("STL25") ||
+                            header.DiskFormatCode.StartsWith("STL29") ||
+                            header.DiskFormatCode.StartsWith("STL30"))
+                        {
+                            return Utilities.IsInteger(header.CodePageNumber) || fileName.ToLower().EndsWith("stl");
+                        }
+                    }
+                    catch
+                    {
+                        return false;
                     }
                 }
             }

@@ -2386,48 +2386,69 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
-                    var bdnXml = new BdnXml();
-                    string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
-                    var list = new List<string>();
-                    foreach (string l in arr)
-                        list.Add(l);
-                    if (bdnXml.IsMine(list, fileName))
+                    try
                     {
-                        if (ContinueNewOrExit())
+                        var bdnXml = new BdnXml();
+                        string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                        var list = new List<string>();
+                        foreach (string l in arr)
+                            list.Add(l);
+                        if (bdnXml.IsMine(list, fileName))
                         {
-                            ImportAndOcrBdnXml(fileName, bdnXml, list);
+                            if (ContinueNewOrExit())
+                            {
+                                ImportAndOcrBdnXml(fileName, bdnXml, list);
+                            }
+                            return;
                         }
-                        return;
+                    }
+                    catch
+                    {
+                        format = null;
                     }
                 }
 
                 if (fileName.ToLower().EndsWith(".dost"))
                 {
-                    var dost = new Dost();
-                    string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
-                    var list = new List<string>();
-                    foreach (string l in arr)
-                        list.Add(l);
-                    if (dost.IsMine(list, fileName))
+                    try
                     {
-                        if (ContinueNewOrExit())
-                            ImportAndOcrDost(fileName, dost, list);
-                        return;
+                        var dost = new Dost();
+                        string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                        var list = new List<string>();
+                        foreach (string l in arr)
+                            list.Add(l);
+                        if (dost.IsMine(list, fileName))
+                        {
+                            if (ContinueNewOrExit())
+                                ImportAndOcrDost(fileName, dost, list);
+                            return;
+                        }
+                    }
+                    catch
+                    {
+                        format = null;
                     }
                 }
 
                 if (format == null || format.Name == new Scenarist().Name)
                 {
-                    var son = new Son();
-                    string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
-                    var list = new List<string>();
-                    foreach (string l in arr)
-                        list.Add(l);
-                    if (son.IsMine(list, fileName))
+                    try
                     {
-                        if (ContinueNewOrExit())
-                            ImportAndOcrSon(fileName, son, list);
-                        return;
+                        var son = new Son();
+                        string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                        var list = new List<string>();
+                        foreach (string l in arr)
+                            list.Add(l);
+                        if (son.IsMine(list, fileName))
+                        {
+                            if (ContinueNewOrExit())
+                                ImportAndOcrSon(fileName, son, list);
+                            return;
+                        }
+                    }
+                    catch
+                    {
+                        format = null;
                     }
                 }
 
@@ -2456,35 +2477,49 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null || format.Name == new Scenarist().Name)
                 {
-                    var sst = new SonicScenaristBitmaps();
-                    string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
-                    var list = new List<string>();
-                    foreach (string l in arr)
-                        list.Add(l);
-                    if (sst.IsMine(list, fileName))
+                    try
                     {
-                        if (ContinueNewOrExit())
-                            ImportAndOcrSst(fileName, sst, list);
-                        return;
+                        var sst = new SonicScenaristBitmaps();
+                        string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                        var list = new List<string>();
+                        foreach (string l in arr)
+                            list.Add(l);
+                        if (sst.IsMine(list, fileName))
+                        {
+                            if (ContinueNewOrExit())
+                                ImportAndOcrSst(fileName, sst, list);
+                            return;
+                        }
+                    }
+                    catch
+                    {
+                        format = null;
                     }
                 }
 
                 if (format == null)
                 {
-                    var htmlSamiArray = new HtmlSamiArray();
-                    string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
-                    var list = new List<string>();
-                    foreach (string l in arr)
-                        list.Add(l);
-                    if (htmlSamiArray.IsMine(list, fileName))
+                    try
                     {
-                        htmlSamiArray.LoadSubtitle(_subtitle, list, fileName);
-                        _oldSubtitleFormat = htmlSamiArray;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
+                        var htmlSamiArray = new HtmlSamiArray();
+                        string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                        var list = new List<string>();
+                        foreach (string l in arr)
+                            list.Add(l);
+                        if (htmlSamiArray.IsMine(list, fileName))
+                        {
+                            htmlSamiArray.LoadSubtitle(_subtitle, list, fileName);
+                            _oldSubtitleFormat = htmlSamiArray;
+                            SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                            SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                            encoding = GetCurrentEncoding();
+                            justConverted = true;
+                            format = GetCurrentSubtitleFormat();
+                        }
+                    }
+                    catch
+                    {
+                        format = null;
                     }
                 }
 

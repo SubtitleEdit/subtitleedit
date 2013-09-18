@@ -80,15 +80,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
-                FileInfo fi = new FileInfo(fileName);
-                if (fi.Length > 100 && fi.Length < 1024000) // not too small or too big
+                try
                 {
-                    byte[] buffer = File.ReadAllBytes(fileName);
+                    FileInfo fi = new FileInfo(fileName);
+                    if (fi.Length > 100 && fi.Length < 1024000) // not too small or too big
+                    {
+                        byte[] buffer = File.ReadAllBytes(fileName);
 
-                    if (buffer[00] > 10 &&
-                        buffer[01] == 0 &&
-                        fileName.ToLower().EndsWith(".spt"))
-                        return true;
+                        if (buffer[00] > 10 &&
+                            buffer[01] == 0 &&
+                            fileName.ToLower().EndsWith(".spt"))
+                            return true;
+                    }
+                }
+                catch
+                {
+                    return false;
                 }
             }
             return false;
