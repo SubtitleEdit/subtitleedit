@@ -461,7 +461,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (arr.Length == 2)
                     {
                         string[] start = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        string[] end = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] end = arr[1].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         if ((start.Length == 3 || start.Length == 4) && (end.Length == 3 || end.Length == 4))
                         {
                             if (p != null)
@@ -478,8 +478,8 @@ namespace Nikse.SubtitleEdit.Logic
                     else if (arr.Length == 3)
                     {
                         string[] start = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        string[] end = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        string[] duration = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] end = arr[1].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] duration = arr[2].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
                         if (start.Length < 3)
                         {
@@ -514,6 +514,123 @@ namespace Nikse.SubtitleEdit.Logic
                 p.Text = sb.ToString().Trim();
                 subtitle.Paragraphs.Add(p);
             }
+
+            double averateDuration = 0;
+            foreach (Paragraph a in subtitle.Paragraphs)
+            {
+                double d = a.Duration.TotalSeconds;
+                if (d > 10)
+                    d = 8;
+                averateDuration += d;
+            }
+            averateDuration = averateDuration / subtitle.Paragraphs.Count;
+            if (averateDuration < 0.2 || (averateDuration < 0.5 && subtitle.Paragraphs.Count > 100 && subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].StartTime.TotalSeconds < 140 && subtitle.Paragraphs[subtitle.Paragraphs.Count - 2].StartTime.TotalSeconds < 140))
+            {
+                subtitle = ImportTimeCodesOnSameSeperateLineNoMilliseconds(lines);
+                int i = 0;
+                foreach (Paragraph a in subtitle.Paragraphs)
+                {
+                    i++;
+                    var next = subtitle.GetParagraphOrDefault(i);
+                    if (next != null && a.EndTime.TotalMilliseconds >= next.StartTime.TotalMilliseconds)
+                    {
+                        a.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                    }
+                }
+                return subtitle;
+            }
+
+            subtitle.Renumber(1);
+            return subtitle;
+        }
+
+        private Subtitle ImportTimeCodesOnSameSeperateLineNoMilliseconds(string[] lines)
+        {
+            Paragraph p = null;
+            var subtitle = new Subtitle();
+            var sb = new StringBuilder();
+            for (int idx = 0; idx < lines.Length; idx++)
+            {
+                string line = lines[idx];
+                string lineWithPerhapsOnlyNumbers = line.Replace(" ", string.Empty).Replace(".", string.Empty).Replace(",", string.Empty).Replace("\t", string.Empty).Replace(":", string.Empty).Replace(";", string.Empty).Replace("{", string.Empty).Replace("}", string.Empty).Replace("[", string.Empty).Replace("]", string.Empty).Replace("-", string.Empty).Replace(">", string.Empty).Replace("<", string.Empty);
+                bool allNumbers = lineWithPerhapsOnlyNumbers.Length > 0;
+                foreach (char c in lineWithPerhapsOnlyNumbers)
+                {
+                    if (!"0123456789".Contains(c.ToString()))
+                        allNumbers = false;
+                }
+                if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)
+                {
+                    string[] arr = line.Replace("-", " ").Replace(">", " ").Replace("{", " ").Replace("}", " ").Replace("[", " ").Replace("]", " ").Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (arr.Length == 2)
+                    {
+                        string[] start = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] end = arr[1].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        if ((start.Length == 3 || start.Length == 4) && (end.Length == 3 || end.Length == 4))
+                        {
+                            if (start.Length == 3)
+                                start = (arr[0].Trim() + ".000").Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            if (end.Length == 3)
+                                end = (arr[1].Trim() + ".000").Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                            if (p != null)
+                            {
+                                p.Text = sb.ToString().Trim();
+                                subtitle.Paragraphs.Add(p);
+                            }
+                            p = new Paragraph();
+                            sb = new StringBuilder();
+                            p.StartTime = DecodeTime(start);
+                            p.EndTime = DecodeTime(end);
+                        }
+                    }
+                    else if (arr.Length == 3)
+                    {
+                        string[] start = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] end = arr[1].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] duration = arr[2].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                        if (start.Length == 3)
+                            start = (arr[0].Trim() + ".000").Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        if (end.Length == 3)
+                            end = (arr[1].Trim() + ".000").Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        if (duration.Length == 3)
+                            duration = (arr[2].Trim() + ".000").Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                        if (start.Length < 3)
+                        {
+                            start = end;
+                            end = duration;
+                        }
+
+                        if ((start.Length == 3 || start.Length == 4) && (end.Length == 3 || end.Length == 4))
+                        {
+                            if (p != null)
+                            {
+                                p.Text = sb.ToString().Trim();
+                                subtitle.Paragraphs.Add(p);
+                            }
+                            p = new Paragraph();
+                            sb = new StringBuilder();
+                            p.StartTime = DecodeTime(start);
+                            p.EndTime = DecodeTime(end);
+                        }
+                    }
+                }
+                if (p != null && !allNumbers && line.Length > 1)
+                {
+                    line = line.Trim();
+                    if (line.StartsWith("}{}") || line.StartsWith("][]"))
+                        line = line.Remove(0, 3);
+                    sb.AppendLine(line.Trim());
+                }
+            }
+            if (p != null)
+            {
+                p.Text = sb.ToString().Trim();
+                subtitle.Paragraphs.Add(p);
+            }         
+
             subtitle.Renumber(1);
             return subtitle;
         }
