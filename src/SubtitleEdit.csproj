@@ -848,6 +848,7 @@
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
     <Compile Include="Logic\SubtitleFormats\SwiftTextLineNumber .cs" />
+    <Compile Include="Logic\SubtitleFormats\Titra.cs" />
     <Compile Include="Logic\SubtitleFormats\WebVTTFileWithLineNumber.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProXmlGap.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle66.cs" />
