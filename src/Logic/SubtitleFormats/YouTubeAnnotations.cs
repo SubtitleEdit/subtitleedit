@@ -231,12 +231,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private TimeCode DecodeTimeCode(string time)
         {
             string[] arr = time.Split(".:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            int hours = int.Parse(arr[0]);
-            int minutes = int.Parse(arr[1]);
-            int seconds = int.Parse(arr[2]);
-            int milliseconds = int.Parse(arr[3]);
-            TimeSpan ts = new TimeSpan(0, hours, minutes, seconds, milliseconds);
-            return new TimeCode(ts);
+            if (arr.Length == 3)
+                return new TimeCode(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3]));
         }
 
         private string EncodeTime(TimeCode timeCode)
