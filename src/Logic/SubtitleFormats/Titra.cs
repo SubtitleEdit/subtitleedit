@@ -33,6 +33,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
+        private int GetMaxCharsForDuration(double durationSeconds)
+        {
+            return (int)Math.Round(15.7 * durationSeconds);            
+        }
+
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
@@ -58,7 +63,7 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
             {
                 index++;
                 string text = Utilities.RemoveHtmlTags(p.Text);
-                sb.AppendLine(string.Format("* {0} :\t{1}\t{2}\t{3}{4}{5}", index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), text.Length + "c",  Environment.NewLine, text));
+                sb.AppendLine(string.Format("* {0} :\t{1}\t{2}\t{3}{4}{5}", index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), GetMaxCharsForDuration(p.Duration.TotalSeconds) + "c", Environment.NewLine, text));
                 sb.AppendLine();
                 if (!text.Contains(Environment.NewLine))
                     sb.AppendLine();
