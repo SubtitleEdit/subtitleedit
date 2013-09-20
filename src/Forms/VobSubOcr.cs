@@ -107,7 +107,8 @@ namespace Nikse.SubtitleEdit.Forms
                 CompareBitmaps = new List<CompareItem>();
                 foreach (CompareItem c in compareBitmaps)
                 {
-                    CompareBitmaps.Add(new CompareItem(c.Bitmap, c.Name, c.Italic, c.ExpandCount));
+                    CompareBitmaps.Add(c);
+//                    CompareBitmaps.Add(new CompareItem(c.Bitmap, c.Name, c.Italic, c.ExpandCount));
                 }
                 Increment = increment;
                 NumberOfPixelsIsSpace = numberOfPixelsIsSpace;
@@ -730,6 +731,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
+                comboBoxCharacterDatabase.SelectedIndexChanged -= ComboBoxCharacterDatabaseSelectedIndexChanged;
                 string characterDatabasePath = Configuration.VobSubCompareFolder.TrimEnd(Path.DirectorySeparatorChar);
                 if (!Directory.Exists(characterDatabasePath))
                     Directory.CreateDirectory(characterDatabasePath);
@@ -752,6 +754,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (comboBoxCharacterDatabase.SelectedIndex < 0)
                     comboBoxCharacterDatabase.SelectedIndex = 0;
+                comboBoxCharacterDatabase.SelectedIndexChanged += ComboBoxCharacterDatabaseSelectedIndexChanged; 
 
             }
             catch (Exception ex)
@@ -830,22 +833,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void DisposeImageCompareBitmaps()
         {
-            if (_compareBitmaps != null)
-            {
-                foreach (CompareItem item in _compareBitmaps)
-                {
-                    if (item.Bitmap != null)
-                    {
-                        try
-                        {
-                            //item.Bitmap.Dispose();
-                        }
-                        catch
-                        {
-                        }
-                    }
-                }
-            }
+            _compareBitmaps = null;
         }
 
         private bool InitializeSubIdx(string vobSubFileName)
@@ -855,6 +843,7 @@ namespace Nikse.SubtitleEdit.Forms
             vobSubParser.OpenSubIdx(vobSubFileName, idxFileName);
             _vobSubMergedPackist = vobSubParser.MergeVobSubPacks();
             _palette = vobSubParser.IdxPalette;
+            vobSubParser.VobSubPacks.Clear();
 
             List<int> languageStreamIds = new List<int>();
             foreach (var pack in _vobSubMergedPackist)
@@ -4287,6 +4276,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (comboBoxOcrMethod.SelectedIndex == 1)
             {
+                if (_compareBitmaps == null)
+                    LoadImageCompareBitmaps();
+
                 _icThreadsStop = false;
                 _icThreads = new List<BackgroundWorker>();
                 _icThreadResults = new string[_subtitle.Paragraphs.Count];
