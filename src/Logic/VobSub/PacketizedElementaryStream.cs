@@ -65,16 +65,22 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             if (PresentationTimeStampDecodeTimeStampFlags == Helper.B00000010 ||
                 PresentationTimeStampDecodeTimeStampFlags == Helper.B00000011)
             {
-                string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
-                bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
-                PresentationTimeStamp = Convert.ToUInt64(bString, 2);
+                ulong pts = (ulong)(((buffer[tempIndex + 3]) << 7) + ((buffer[tempIndex + 4] & Helper.B11111110) >> 1));
+                pts += (ulong)(((buffer[tempIndex + 1]) << 7) + (buffer[tempIndex + 2] >> 1)) << 15;
+                pts += (ulong)((buffer[tempIndex] & Helper.B00001110) << 29);
+                //string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
+                //bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
+                //PresentationTimeStamp = Convert.ToUInt64(bString, 2);
                 tempIndex += 5;
             }
             if (PresentationTimeStampDecodeTimeStampFlags == Helper.B00000011)
             {
-                string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
-                bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
-                DecodeTimeStamp = Convert.ToUInt64(bString, 2);
+                //string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
+                //bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
+                //DecodeTimeStamp = Convert.ToUInt64(bString, 2);
+                ulong dts = (ulong)(((buffer[tempIndex + 3]) << 7) + ((buffer[tempIndex + 4] & Helper.B11111110) >> 1));
+                dts += (ulong)(((buffer[tempIndex + 1]) << 7) + (buffer[tempIndex + 2] >> 1)) << 15;
+                dts += (ulong)((buffer[tempIndex] & Helper.B00001110) << 29);
             }
 
             int dataIndex = index + HeaderDataLength + 24 - Mpeg2Header.Length;
