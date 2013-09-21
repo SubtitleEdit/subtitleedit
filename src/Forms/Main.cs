@@ -5571,7 +5571,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, tsi_Click);
                 }
-                setStylesForSelectedLinesToolStripMenuItem.Visible = styles.Count > 1;
+                setStylesForSelectedLinesToolStripMenuItem.Visible = styles.Count >= 1;
                 toolStripMenuItemAssStyles.Visible = true;
                 setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.TimedTextSetStyle;
             }
