@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             //b4To9AsBinary = b4To9AsBinary.Substring(2,3) + b4To9AsBinary.Substring(6,15) + b4To9AsBinary.Substring(22,15);
             //SystemClockReferenceQuotient = Helper.GetUInt32FromBinaryString(b4To9AsBinary);
 
-            //SystemClockReferenceRemainder = (ulong)(((buffer[8] & Helper.B00000011) << 8) + buffer[9]) 
+            //SystemClockReferenceRemainder = (ulong)(((buffer[8] & Helper.B00000011) << 8) + buffer[9])
 
             ProgramMuxRate = Helper.GetEndian(buffer, 10, 3) >> 2;
 

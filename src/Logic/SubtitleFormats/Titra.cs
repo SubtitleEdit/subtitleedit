@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class Titra : SubtitleFormat
     {
-        //* 1 :	01:01:31:19	01:01:33:04	22c
+        //* 1 : 01:01:31:19 01:01:33:04 22c
         static Regex regexTimeCodes = new Regex(@"^\* \d+ :\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t\d+c", RegexOptions.Compiled);
         private int _maxMsDiv10 = 0;
 
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private int GetMaxCharsForDuration(double durationSeconds)
         {
-            return (int)Math.Round(15.7 * durationSeconds);            
+            return (int)Math.Round(15.7 * durationSeconds);
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -43,14 +43,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             sb.AppendLine(@"TVS - TITRA FILM
 
-Titre VO :	L'heure d'été
-Titre VST :	
-Création :	23/10/2009 - 16:31
-Révision :	26/10/2009 - 17:48
-Langue VO :	Français
-Langue VST :	Espagnol
-Bobine :	e01
-
+Titre VO :   L'heure d'été
+Titre VST :
+Création :   23/10/2009 - 16:31
+Révision :   26/10/2009 - 17:48
+Langue VO :  Français
+Langue VST : Espagnol
+Bobine :     e01
 
 
 BEWARE : No more than 40 characters ON A LINE
@@ -107,7 +106,7 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
                     {
                         _errorCount += 10;
                     }
-                } 
+                }
                 else if (line.Trim().Length == 0)
                 {
                     // skip these lines

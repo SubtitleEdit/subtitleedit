@@ -856,7 +856,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))            
+            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
                 try
                 {

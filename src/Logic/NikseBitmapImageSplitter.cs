@@ -592,7 +592,7 @@ namespace Nikse.SubtitleEdit.Logic
                     return different + 10;
             }
             return different;
-        }       
+        }
 
         internal static unsafe int IsBitmapsAlike(NikseBitmap bmp1, ManagedBitmap bmp2)
         {
@@ -610,7 +610,7 @@ namespace Nikse.SubtitleEdit.Logic
                     return different + 10;
             }
             return different;
-        }      
+        }
 
     }
 }
