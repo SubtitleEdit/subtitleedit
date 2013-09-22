@@ -664,7 +664,7 @@
 //                }
 //                if (different > maxDiff)
 //                    return different + 10;
-//            }            
+//            }
 //            return different;
 //        }
 

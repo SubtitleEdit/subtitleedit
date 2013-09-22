@@ -754,7 +754,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (comboBoxCharacterDatabase.SelectedIndex < 0)
                     comboBoxCharacterDatabase.SelectedIndex = 0;
-                comboBoxCharacterDatabase.SelectedIndexChanged += ComboBoxCharacterDatabaseSelectedIndexChanged; 
+                comboBoxCharacterDatabase.SelectedIndexChanged += ComboBoxCharacterDatabaseSelectedIndexChanged;
 
             }
             catch (Exception ex)
@@ -773,7 +773,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _compareDoc.LoadXml("<OcrBitmaps></OcrBitmaps>");
             else
                 _compareDoc.Load(path + "CompareDescription.xml");
-            
+
             string databaseName = path + "Images.db";
             if (!File.Exists(databaseName))
             {
@@ -786,11 +786,11 @@ namespace Nikse.SubtitleEdit.Forms
                         XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + name + "']");
                         if (node != null)
                         {
-                            node.InnerText = f.Position.ToString(CultureInfo.InvariantCulture);                           
+                            node.InnerText = f.Position.ToString(CultureInfo.InvariantCulture);
                             var b = new Bitmap(bmpFileName);
                             var m = new ManagedBitmap(b);
                             b.Dispose();
-                            m.AppendToStream(f);                           
+                            m.AppendToStream(f);
                         }
                     }
                     f.Close();
@@ -2223,7 +2223,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (CompareItem compareItem in _compareBitmaps)
             {
                 // check for expand match!
-                if (compareItem.ExpandCount > 0 && compareItem.Bitmap.Width > target.Width && 
+                if (compareItem.ExpandCount > 0 && compareItem.Bitmap.Width > target.Width &&
                     parentBitmap.Width >= compareItem.Bitmap.Width + targetItem.X &&
                     parentBitmap.Height >= compareItem.Bitmap.Height + targetItem.Y)
                 {
@@ -2238,7 +2238,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 index++;
-            }           
+            }
 
             // Search images with minor location changes
             FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, target);
@@ -2289,13 +2289,13 @@ namespace Nikse.SubtitleEdit.Forms
                     var cutBitmap2 = NikseBitmapImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
                     if (cutBitmap2.Height != target.Height)
                         FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2);
-                }               
+                }
             }
 
             if (smallestIndex >= 0)
             {
                 double differencePercentage = smallestDifference * 100.0 / (target.Width * target.Height);
-                double maxDiff = (double)numericUpDownMaxErrorPct.Value; 
+                double maxDiff = (double)numericUpDownMaxErrorPct.Value;
                 //_vobSubOcrSettings.AllowDifferenceInPercent; // should be around 1.0 for vob/sub...
                 //if (_bluRaySubtitlesOriginal != null)
                 //    maxDiff = 12.9; // let bluray sup have a 12.9% diff
@@ -3830,7 +3830,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     int smallestDifference = 10000;
                     int smallestIndex = -1;
-                   
+
                     if (smallestDifference > 0)
                     {
                         index = 0;
@@ -3952,7 +3952,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             bitmap.Dispose();
             p.Result = GetStringWithItalicTags(matches);
-            
+
         }
 
         void ImageCompareThreadRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -4069,7 +4069,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int index2 = 0;
                     int topMargin = item.Y - item.ParentY;
                     foreach (NOcrChar oc in _nocrChars)
-                    {                        
+                    {
                         if (Math.Abs(oc.Width - nbmp.Width) < 3 && Math.Abs(oc.Height - nbmp.Height) < 4 && Math.Abs(oc.MarginTop - topMargin) < 4)
                         { // only very accurate matches
 
@@ -4149,7 +4149,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 index++;
             }
-            return GetStringWithItalicTags(matches); 
+            return GetStringWithItalicTags(matches);
         }
 
         static void NOcrThreadDoWork(object sender, DoWorkEventArgs e)
@@ -5047,7 +5047,7 @@ namespace Nikse.SubtitleEdit.Forms
                         line = line.Replace("  ", " ");
                     }
                 }
-                
+
 
                 if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length < 2)
                 {

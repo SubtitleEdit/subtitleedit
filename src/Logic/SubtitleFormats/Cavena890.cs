@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x71, // я
             0x6E, // н
             0x74, // т
-            0x5C, // Э            
+            0x5C, // Э
             0x77, // ю
             0x46, // Ф
             0x5E, // Ч
@@ -131,7 +131,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "п",
             "в",
             "У",
-            "щ",            
+            "щ",
             "ф",
             "э",
             "ш",
@@ -713,7 +713,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
                 text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
-                
+
                 if (text.Contains("<i></i>"))
                     text = text.Replace("<i></i>", "<i>");
                 if (text.Contains("<i>") && !text.Contains("</i>"))
@@ -748,7 +748,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 while (textLength >= 1 && index + textLength < buffer.Length && (buffer[index + textLength-1] == 0))
                     textLength--;
                 if (textLength > 0)
-                {                    
+                {
                     text = Encoding.GetEncoding(1201).GetString(buffer, index, textLength).Replace("\0", string.Empty);
                 }
                 else

@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _xml.LoadXml(subtitle.Header);
                 var xnsmgr = new XmlNamespaceManager(_xml.NameTable);
                 xnsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                if (_xml.DocumentElement.SelectSingleNode("ttml:head", xnsmgr) == null)                
+                if (_xml.DocumentElement.SelectSingleNode("ttml:head", xnsmgr) == null)
                     _xml.LoadXml(new TimedText10().ToText(new Subtitle(), "tt")); // load default xml
             }
             catch

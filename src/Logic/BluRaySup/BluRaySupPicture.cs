@@ -540,7 +540,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
             // write PCS end
             PacketHeader[10] = 0x16;                                            // ID
-            ToolBox.SetDWord(PacketHeader, 2, pic.EndTimeForWrite);             // PTS            
+            ToolBox.SetDWord(PacketHeader, 2, pic.EndTimeForWrite);             // PTS
             dts = pic.EndTimeForWrite - 1; //dts = pic.StartTimeForWrite - 1;
             ToolBox.SetDWord(PacketHeader, 6, dts);                             // DTS
             ToolBox.SetWord(PacketHeader, 11, HeaderPCSEnd.Length);             // size

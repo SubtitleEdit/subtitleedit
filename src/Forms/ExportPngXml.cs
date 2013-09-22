@@ -1294,7 +1294,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 var fontStyle = FontStyle.Regular;
                 if (parameter.SubtitleFontBold)
                     fontStyle = FontStyle.Bold;
-                font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize, fontStyle);               
+                font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize, fontStyle);
             }
             catch (Exception exception)
             {
@@ -1317,7 +1317,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         font = new Font(FontFamily.Families[2].Name, parameter.SubtitleFontSize);
                     else
                         font = new Font("Arial", parameter.SubtitleFontSize);
-                }                
+                }
             }
 
             SizeF textSize = g.MeasureString("Hj!", font);

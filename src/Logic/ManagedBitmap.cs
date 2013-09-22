@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Logic
             using (MemoryStream fd = new MemoryStream())
             using (Stream fs = File.OpenRead(fileName))
             using (Stream csStream = new GZipStream(fs, CompressionMode.Decompress))
-            {                
+            {
                 int nRead;
                 while ((nRead = csStream.Read(buffer, 0, buffer.Length)) > 0)
                 {
@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Logic
                 csStream.Close();
                 buffer = fd.ToArray();
             }
-            
+
             Width = buffer[4] << 8 | buffer[5];
             Height = buffer[6] << 8 | buffer[7];
             _colors = new Color[Width * Height];
@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         private int ReadInt16(Stream stream)
-        {            
+        {
             byte b0 = (byte)stream.ReadByte();
             byte b1 = (byte)stream.ReadByte();
             return b0 << 8 | b1;
@@ -178,9 +178,9 @@ namespace Nikse.SubtitleEdit.Logic
         /// <param name="section">Source rectangle</param>
         /// <returns>Rectangle from current image as new bitmap</returns>
         public ManagedBitmap GetRectangle(Rectangle section)
-        { 
+        {
             ManagedBitmap newRectangle = new ManagedBitmap(section.Width, section.Height);
-            
+
             int recty = 0;
             for (int y=section.Top; y < section.Top + section.Height; y++)
             {

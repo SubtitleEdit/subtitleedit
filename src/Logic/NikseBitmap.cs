@@ -918,6 +918,5 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
 
-
     }
 }
