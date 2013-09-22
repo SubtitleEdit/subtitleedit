@@ -316,24 +316,32 @@ namespace Nikse.SubtitleEdit.Forms
         /// <summary>
         /// Write the 5 PTS bytes to buffer
         /// </summary>
-        private void UpdatePresentationTimeStamp(byte[] buffer, long addPresentationTimeStamp, VobSubPack vsp)
+        private static void UpdatePresentationTimeStamp(byte[] buffer, long addPresentationTimeStamp, VobSubPack vsp)
         {
             const int presentationTimeStampIndex = 23;
-
-            string pre = "0011";
-            if (vsp.PacketizedElementaryStream.PresentationTimeStampDecodeTimeStampFlags == Helper.B00000010)
-                pre = "0010";
-
             long newPts = addPresentationTimeStamp + ((long)vsp.PacketizedElementaryStream.PresentationTimeStamp.Value);
-            string bString = Convert.ToString(newPts, 2).PadLeft(33, '0');
 
-            string fiveBytesString = pre + bString.Substring(0, 3) + "1" + bString.Substring(3, 15) + "1" + bString.Substring(18, 15) + "1";
-
-            for (int i = 0; i < 5; i++)
+            var buffer5b = BitConverter.GetBytes((UInt64)newPts);
+            if (BitConverter.IsLittleEndian)
             {
-                byte b = Convert.ToByte(fiveBytesString.Substring((i * 8), 8), 2);
-                buffer[presentationTimeStampIndex + i] = b;
+                buffer[presentationTimeStampIndex + 4] = (byte)(buffer5b[0] << 1 | Helper.B00000001); // last 7 bits + '1'
+                buffer[presentationTimeStampIndex + 3] = (byte)((buffer5b[0] >> 7) + (buffer5b[1] << 1)); // the next 8 bits (1 from last byte, 7 from next)
+                buffer[presentationTimeStampIndex + 2] = (byte)((buffer5b[1] >> 6 | Helper.B00000001) + (buffer5b[2] << 2)); // the next 7 bits (1 from 2nd last byte, 6 from 3rd last byte)
+                buffer[presentationTimeStampIndex + 1] = (byte)((buffer5b[2] >> 6) + (buffer5b[3] << 2)); // the next 8 bits (2 from 3rd last byte, 6 from 2rd last byte)
+                buffer[presentationTimeStampIndex] = (byte)((buffer5b[3] >> 6 | Helper.B00000001) + (buffer5b[4] << 2));
             }
+            else
+            {
+                buffer[presentationTimeStampIndex + 4] = (byte)(buffer5b[7] << 1 | Helper.B00000001); // last 7 bits + '1'
+                buffer[presentationTimeStampIndex + 3] = (byte)((buffer5b[7] >> 7) + (buffer5b[6] << 1)); // the next 8 bits (1 from last byte, 7 from next)
+                buffer[presentationTimeStampIndex + 2] = (byte)((buffer5b[6] >> 6 | Helper.B00000001) + (buffer5b[5] << 2)); // the next 7 bits (1 from 2nd last byte, 6 from 3rd last byte)
+                buffer[presentationTimeStampIndex + 1] = (byte)((buffer5b[5] >> 6) + (buffer5b[4] << 2)); // the next 8 bits (2 from 3rd last byte, 6 from 2rd last byte)
+                buffer[presentationTimeStampIndex] = (byte)((buffer5b[4] >> 6 | Helper.B00000001) + (buffer5b[3] << 2));
+            }
+            if (vsp.PacketizedElementaryStream.PresentationTimeStampDecodeTimeStampFlags == Helper.B00000010)
+                buffer[presentationTimeStampIndex] += Helper.B00100000;
+            else
+                buffer[presentationTimeStampIndex] += Helper.B00110000;
         }
 
         internal static bool IsPrivateStream2(byte[] buffer, int index)
