@@ -1609,6 +1609,95 @@
     <Word from="foryour" to="for your" />
     <Word from="oryour" to="or your" />
     <Word from="forArthur" to="for Arthur" />
+    <Word from="CIamp" to="Clamp" />
+    <Word from="CIose" to="Close" />
+    <Word from="GIove" to="Glove" />
+    <Word from="EIIen" to="Ellen" />
+    <Word from="PIay" to="Play" />
+    <Word from="EIgyn" to="Elgyn" />
+    <Word from="AIert" to="Alert" />
+    <Word from="CIaus" to="Claus" />
+    <Word from="CIimb" to="Climb" />
+    <Word from="military'II" to="military'll" />
+    <Word from="anylonget" to="any longer" />
+    <Word from="yourlife" to="your life" />
+    <Word from="Yourbitch'IIgetyou" to="Your bitch'll get you" />
+    <Word from="yourdick" to="your dick" />
+    <Word from="Tellyourbitch" to="Tell your bitch" />
+    <Word from="rememberyou" to="remember you" />
+    <Word from="newface" to="new face" />
+    <Word from="Butyou" to="But you" />
+    <Word from="don'tyou" to="don't you" />
+    <Word from="yourlives" to="your lives" />
+    <Word from="Iovedher" to="loved her" />
+    <Word from="reallydid" to="really did" />
+    <Word from="firstperson" to="first person" />
+    <Word from="mybest" to="my best" />
+    <Word from="Justgive" to="Just give" />
+    <Word from="AIong" to="Along" />
+    <Word from="atyourbody" to="at your body" />
+    <Word from="myhands" to="my hands" />
+    <Word from="sayhe" to="say he" />
+    <Word from="mybooty" to="my booty" />
+    <Word from="yourbooty" to="your booty" />
+    <Word from="yourgirl" to="your girl" />
+    <Word from="yourlegs" to="your legs" />
+    <Word from="betterifthey" to="better if they" />
+    <Word from="manybeautiful" to="many beautiful" />
+    <Word from="contactpolice" to="contact police" />
+    <Word from="numberbelow" to="number below" />
+    <Word from="biggestproblem" to="biggest problem" />
+    <Word from="Itgave" to="It gave" />
+    <Word from="everybodykind" to="everybody kind" />
+    <Word from="theyhad" to="they had" />
+    <Word from="knowherlast" to="know her last" />
+    <Word from="herhearing" to="her hearing" />
+    <Word from="othermembers" to="other members" />
+    <Word from="BIing" to="Bling" />
+    <Word from="CIyde" to="Clyde" />
+    <Word from="foundguilty" to="found guilty" />
+    <Word from="fouryears" to="four years" />
+    <Word from="countyjail" to="county jail" />
+    <Word from="yearin" to="year in" />
+    <Word from="theirrole" to="their role" />
+    <Word from="manybottles" to="many bottles" />
+    <Word from="can'tpronounce" to="can't pronounce" />
+    <Word from="manybowls" to="many bowls" />
+    <Word from="ofthatgreen" to="of that green" />
+    <Word from="manyjoyrides" to="many joyrides" />
+    <Word from="Superrich" to="Super rich" />
+    <Word from="Iprefer" to="I prefer" />
+    <Word from="Theymust" to="They must" />
+    <Word from="can'tpronounce" to="can't pronounce" />
+    <Word from="whatyou" to="what you" />
+    <Word from="I'IIjump" to="I'll jump" />
+    <Word from="can'tpronounce" to="can't pronounce" />
+    <Word from="nobodyknow" to="nobody know" />
+    <Word from="neverknew" to="never knew" />
+    <Word from="EIectronica" to="Electronica" />
+    <Word from="AIarm" to="Alarm" />
+    <Word from="getyourman" to="get your man" />
+    <Word from="sayyou" to="say you" />
+    <Word from="getyour" to="get your" />
+    <Word from="Fuckyou" to="Fuck you" />
+    <Word from="Whyyou" to="Why you" />
+    <Word from="butyoujust" to="but you just" />
+    <Word from="forgetyourname" to="forget your name" />
+    <Word from="Whatyou" to="What you" />
+    <Word from="Co/'ncidenta//y" to="Coincidentally" />
+    <Word from="GIad" to="Glad" />
+    <Word from="RachelMarron" to="Rachel Marron" />
+    <Word from="She'llgive" to="She'll give" />
+    <Word from="presidentialsuite" to="presidential suite" />
+    <Word from="andgentlemen" to="and gentlemen" />
+    <Word from="willnot" to="will not" />
+    <Word from="ourproducers" to="our producers" />
+    <Word from="Ifshe's" to="If she's" />
+    <Word from="CIock" to="Clock" />
+    <Word from="Ishould" to="I should" />
+    <Word from="I'llgo" to="I'll go" />
+    <Word from="maypass" to="may pass" />
+    <Word from="andprotecting" to="and protecting" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -1852,6 +1941,33 @@
     <LinePart from="[MURMU RING" to="[MURMURING" />
     <LinePart from="MURMU RING)" to="MURMURING)" />
     <LinePart from="MURMU RING]" to="MURMURING]" />
+    <LinePart from="(GU N " to="(GUN " />
+    <LinePart from="[GU N " to="[GUN " />
+    <LinePart from="GU N)" to="GUN)" />
+    <LinePart from="GU N]" to="GUN]" />
+    <LinePart from="CH ILDREN:" to="CHILDREN:" />
+    <LinePart from="STU DENTS:" to="STUDENTS:" />
+    <LinePart from="(WH ISTLE" to="(WHISTLE" />
+    <LinePart from="[WH ISTLE" to="[WHISTLE" />
+    <LinePart from="WH ISTLE)" to="WHISTLE)" />
+    <LinePart from="WH ISTLE]" to="WHISTLE]" />
+    <LinePart from="U LU LATING" to="ULULATING" />
+    <LinePart from="AU DIENCE:" to="AUDIENCE:" />
+    <LinePart from="HA WAIIAN" to="HAWAIIAN" />
+    <LinePart from="(ARTH UR" to="(ARTHUR" />
+    <LinePart from="[ARTH UR" to="[ARTHUR" />
+    <LinePart from="ARTH UR)" to="ARTHUR)" />
+    <LinePart from="ARTH UR]" to="ARTHUR]" />
+    <LinePart from="J EREMY:" to="JEREMY:" />
+    <LinePart from="(ELEVA TOR" to="(ELEVATOR" />
+    <LinePart from="[ELEVA TOR" to="[ELEVATOR" />
+    <LinePart from="ELEVA TOR)" to="ELEVATOR)" />
+    <LinePart from="ELEVA TOR]" to="ELEVATOR]" />
+    <LinePart from="CONTIN U ES" to="CONTINUES" />
+    <LinePart from="WIN D HOWLING" to="WIND HOWLING" />
+    <LinePart from="telis me" to="tells me" />
+    <LinePart from="Telis me" to="Tells me" />
+    <LinePart from="forbest act" to="for best act" />
   </PartialLines>
   <BeginLines>
     <Beginning from="|was" to="I was" />
@@ -1931,6 +2047,9 @@
     <Beginning from="AT|'EN BOROUGH:" to="ATTENBOROUGH:" />
     <Beginning from="DAVID AT|'EN BOROUGH:" to="DAVID ATTENBOROUGH:" />
     <Beginning from="&lt;i&gt;AT|'EN BOROUGH:" to="&lt;i&gt;ATTENBOROUGH:" />
+    <Beginning from="TH REE " to="THREE " />
+    <Beginning from="NARRA TOR" to="NARRATOR" />
+    <Beginning from="&lt;i&gt;NARRA TOR" to="&lt;i&gt;NARRATOR" />
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
