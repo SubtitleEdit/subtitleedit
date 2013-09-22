@@ -6180,6 +6180,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (subtitleListView1.SelectedItems.Count != 1)
                 return;
 
+            if (_compareBitmaps == null)
+                LoadImageCompareBitmaps();
+
             Cursor = Cursors.WaitCursor;
             Bitmap bitmap = GetSubtitleBitmap(subtitleListView1.SelectedItems[0].Index);
             NikseBitmap parentBitmap = new NikseBitmap(bitmap);
