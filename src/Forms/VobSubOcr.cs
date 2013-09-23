@@ -26,14 +26,16 @@ namespace Nikse.SubtitleEdit.Forms
             public bool Italic { get; set; }
             public int ExpandCount { get; private set; }
             public int NumberOfForegroundColors { get; set; }
+            public string Text { get; set; }
 
-            public CompareItem(ManagedBitmap bmp, string name, bool isItalic, int expandCount)
+            public CompareItem(ManagedBitmap bmp, string name, bool isItalic, int expandCount, string text)
             {
                 Bitmap = bmp;
                 Name = name;
                 Italic = isItalic;
                 ExpandCount = expandCount;
                 NumberOfForegroundColors = -1;
+                Text = text;
             }
         }
 
@@ -818,6 +820,7 @@ namespace Nikse.SubtitleEdit.Forms
                             string name = node.InnerText;
                             int pos = Convert.ToInt32(name);
                             bool isItalic = node.Attributes["Italic"] != null;
+                            string text = node.Attributes["Text"].InnerText;
                             int expandCount = 0;
                             if (node.Attributes["Expand"] != null)
                             {
@@ -826,7 +829,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             f.Position = pos;
                             ManagedBitmap mbmp = new ManagedBitmap(f);
-                            _compareBitmaps.Add(new CompareItem(mbmp, name, isItalic, expandCount));
+                            _compareBitmaps.Add(new CompareItem(mbmp, name, isItalic, expandCount, text));
                         }
                         catch
                         {
@@ -1333,8 +1336,11 @@ namespace Nikse.SubtitleEdit.Forms
                 groupBoxSubtitleImage.Text = Configuration.Settings.Language.VobSubOcr.SubtitleImage;
                 bmp = new Bitmap(1, 1);
             }
-            pictureBoxSubtitleImage.Image = bmp;
+            Bitmap old = pictureBoxSubtitleImage.Image as Bitmap;
+            pictureBoxSubtitleImage.Image = bmp.Clone() as Bitmap;
             pictureBoxSubtitleImage.Invalidate();
+            if (old != null)
+                old.Dispose();
             return bmp;
         }
 
@@ -1349,8 +1355,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 groupBoxSubtitleImage.Text = Configuration.Settings.Language.VobSubOcr.SubtitleImage;
             }
-            pictureBoxSubtitleImage.Image = bmp;
+            Bitmap old = pictureBoxSubtitleImage.Image as Bitmap;
+            pictureBoxSubtitleImage.Image = bmp.Clone() as Bitmap;
             pictureBoxSubtitleImage.Invalidate();
+            if (old != null)
+                old.Dispose();
         }
 
         private static Point MakePointItalic(Point p, int height, int moveLeftPixels, double unItalicFactor)
@@ -2257,10 +2266,16 @@ namespace Nikse.SubtitleEdit.Forms
                     int dif = NikseBitmapImageSplitter.IsBitmapsAlike(compareItem.Bitmap, cutBitmap);
                     if (dif < smallestDifference)
                     {
-                        smallestDifference = dif;
-                        smallestIndex = index;
-                        if (dif == 0)
-                            break; // foreach ending
+                        bool allow = true;
+                        if (Math.Abs(target.Height - compareItem.Bitmap.Height) > 5 && compareItem.Text == "\"")
+                            allow = false;
+                        if (allow)
+                        {
+                            smallestDifference = dif;
+                            smallestIndex = index;
+                            if (dif == 0)
+                                break; // foreach ending
+                        }
                     }
                 }
                 index++;
@@ -2327,49 +2342,29 @@ namespace Nikse.SubtitleEdit.Forms
                 //    maxDiff = 12.9; // let bluray sup have a 12.9% diff
                 if (differencePercentage <= maxDiff) //_vobSubOcrSettings.AllowDifferenceInPercent) // should be around 1.0...
                 {
-                    XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + _compareBitmaps[smallestIndex].Name + "']");
-                    if (node != null && _bluRaySubtitlesOriginal != null && "ceoil".Contains(node.Attributes["Text"].InnerText) && differencePercentage > 12)
-                        node = null;
-                    if (node != null)
+                    //XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + _compareBitmaps[smallestIndex].Name + "']");
+                    var hit = _compareBitmaps[smallestIndex];
+                    if (_bluRaySubtitlesOriginal != null && "ceoil".Contains(hit.Text) && differencePercentage > 12)
+                        hit = null;
+                    if (hit != null)
                     {
-                        bool isItalic = node.Attributes["Italic"] != null;
-
-                        int expandCount = 0;
-                        if (node.Attributes["Expand"] != null)
-                        {
-                            if (!int.TryParse(node.Attributes["Expand"].InnerText, out expandCount))
-                                expandCount = 0;
-                        }
-
-                        var text = node.Attributes["Text"].InnerText;
                         bool ok = true;
-                        if ("iloc".Contains(text) && differencePercentage > 3)
+                        if ("iloc".Contains(hit.Text) && differencePercentage > 3)
                             ok = false;
-                        else if ("OGEF".Contains(text) && differencePercentage > 4)
+                        else if ("OGEF".Contains(hit.Text) && differencePercentage > 4)
                             ok = false;
-                        else if ("UN".Contains(text) && differencePercentage > 5)
+                        else if ("UN".Contains(hit.Text) && differencePercentage > 5)
                             ok = false;
-                        else if ("LD".Contains(text) && differencePercentage > 5)
+                        else if ("LD".Contains(hit.Text) && differencePercentage > 5)
                             ok = false;
 
                         if (ok)
-                            return new CompareMatch(text, isItalic, expandCount, _compareBitmaps[smallestIndex].Name);
+                            return new CompareMatch(hit.Text, hit.Italic, hit.ExpandCount, hit.Name);
                     }
                 }
 
-                XmlNode nodeGuess = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + _compareBitmaps[smallestIndex].Name + "']");
-                if (nodeGuess != null)
-                {
-                    bool isItalicGuess = nodeGuess.Attributes["Italic"] != null;
-                    int expandCountGuess = 0;
-                    if (nodeGuess.Attributes["Expand"] != null)
-                    {
-                        if (!int.TryParse(nodeGuess.Attributes["Expand"].InnerText, out expandCountGuess))
-                            expandCountGuess = 0;
-                    }
-                    secondBestGuess = new CompareMatch(nodeGuess.InnerText, isItalicGuess, expandCountGuess, _compareBitmaps[smallestIndex].Name);
-                }
-
+                var guess = _compareBitmaps[smallestIndex];
+                secondBestGuess = new CompareMatch(guess.Text, guess.Italic, guess.ExpandCount, guess.Name);
             }
 
             return null;
@@ -2769,7 +2764,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             string name = pos.ToString(CultureInfo.InvariantCulture);
 
-            _compareBitmaps.Add(new CompareItem(new ManagedBitmap(newTarget), name, isItalic, expandCount));
+            _compareBitmaps.Add(new CompareItem(new ManagedBitmap(newTarget), name, isItalic, expandCount, text));
 
             XmlElement element = _compareDoc.CreateElement("Item");
             XmlAttribute attribute = _compareDoc.CreateAttribute("Text");
@@ -4426,7 +4421,6 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Value = i + 1;
             labelStatus.Refresh();
             progressBar1.Refresh();
-//            Application.DoEvents();
             if (_abort)
             {
                 SetButtonsEnabledAfterOcrDone();
@@ -4468,7 +4462,6 @@ namespace Nikse.SubtitleEdit.Forms
                     text = Utilities.AutoBreakLine(text);
             }
 
-            //Application.DoEvents();
             if (_abort)
             {
                 textBoxCurrentText.Text = text;
@@ -5519,7 +5512,6 @@ namespace Nikse.SubtitleEdit.Forms
             _nocrThreadsStop = true;
             _icThreadsStop = true;
             buttonStop.Enabled = false;
-//            Application.DoEvents();
             progressBar1.Visible = false;
             labelStatus.Text = string.Empty;
             SetButtonsEnabledAfterOcrDone();
@@ -5532,7 +5524,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _selectedIndex = subtitleListView1.SelectedItems[0].Index;
                 textBoxCurrentText.Text = _subtitle.Paragraphs[_selectedIndex].Text;
                 if (_mainOcrRunning && _mainOcrBitmap != null)
-                    ShowSubtitleImage(subtitleListView1.SelectedItems[0].Index, _mainOcrBitmap.Clone() as Bitmap);
+                    ShowSubtitleImage(subtitleListView1.SelectedItems[0].Index, _mainOcrBitmap);
                 else
                     ShowSubtitleImage(subtitleListView1.SelectedItems[0].Index);
                 numericUpDownStartNumber.Value = _selectedIndex + 1;
