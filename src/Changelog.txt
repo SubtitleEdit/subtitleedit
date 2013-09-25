@@ -16,16 +16,16 @@
    * Large "Image compare" OCR databases now loads much faster - thx Zoltan
    * Can now read Russian in Cavena 890
    * Waveform generation now uses current audio track (VLC only atm)
-   * Open original subtitle now allows ebu/890/pac formats - thx Andreas
+   * Open original subtitle now allows EBU/890/PAC formats - thx Andreas
 * FIXED:
    * Crash in export of images - thx Eros UK
    * Crash in OCR via "Image compare" with large image databases - thx Zoltan
    * Improved baseline in export of images - thx THXTEX
    * Fixed duration (in some players) in blu-ray sup export - thx THXTEX
-   * Fixed bug in "Sub Station Alpha" color - thx Stuart
+   * Fixed bug in SSA color - thx Stuart
    * Fixed some letters in Cavena 890 format - thx Calle
    * Some fixes/improvements for "Unknown subtitle format importer"
-   * Fixed possible crash in format TMPlayer
+   * Fixed possible crash in TMPlayer format
 
 
 3.3.8 (1st September 2013)
