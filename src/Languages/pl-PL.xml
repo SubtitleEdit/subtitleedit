@@ -288,6 +288,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneralSubtitleInformation>Ogólne informacje o napisach</GeneralSubtitleInformation>
     <CodePageNumber>Strona kodowa:</CodePageNumber>
     <DiskFormatCode>Kod formatu:</DiskFormatCode>
+    <DisplayStandardCode>Wyświetlaj kod standardowy</DisplayStandardCode>
     <CharacterCodeTable>Tablica znaków::</CharacterCodeTable>
     <LanguageCode>Kod języka:</LanguageCode>
     <OriginalProgramTitle>Oryginalny tytuł programu:</OriginalProgramTitle>
@@ -324,6 +325,26 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TotalMilliseconds>Ogółem msek.:</TotalMilliseconds>
     <EndDelayInMillisecs>Ostateczne opóźnienie w msek.:</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportCustomText>
+    <Title>Eksport do niestandardowego formatu tekstowego</Title>
+    <Formats>Formaty</Formats>
+    <New>Nowy</New>
+    <Edit>Edytuj</Edit>
+    <Delete>Usuń</Delete>
+    <SaveAs>Z&amp;apisz jako...</SaveAs>
+    <SaveSubtitleAs>Zapisz napisy jako...</SaveSubtitleAs>
+    <SubtitleExportedInCustomFormatToX>Napisy wyeksportowane w formacie niestandardowym: {0}</SubtitleExportedInCustomFormatToX>
+  </ExportCustomText>
+  <ExportCustomTextFormat>
+    <Title>Szablon niestandardowego formatu tekstowego</Title>
+    <Template>Szablon</Template>
+    <Header>Nagłówek</Header>
+    <TextLine>Linia tekstu (akapit)</TextLine>
+    <TimeCode>Kod czasu</TimeCode>
+    <NewLine>Nowa linia</NewLine>
+    <Footer>Stopka</Footer>
+    <DoNotModify>[Bez modyfikacji]</DoNotModify>
+  </ExportCustomTextFormat>
   <ExportPngXml>
     <Title>Eksport BDN XML/PNG</Title>
     <ImageSettings>Ustawienia obrazu</ImageSettings>
@@ -333,9 +354,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderColor>Kolor obramowania:</BorderColor>
     <BorderWidth>Szerokość obramowania:</BorderWidth>
     <ImageFormat>Format obrazu</ImageFormat>
-    <AntiAlias>Wygładzanie</AntiAlias>
+    <SimpleRendering>Proste renderowanie</SimpleRendering>
     <Text3D>3D</Text3D>
-    <SideBySide3D>Half-side-by-side</SideBySide3D>
+    <SideBySide3D>Połowa-Side-by-Side</SideBySide3D>
     <HalfTopBottom3D>Połowa-Góra/Dół</HalfTopBottom3D>
     <Depth>Głębia</Depth>
     <ExportAllLines>Eksport wszystkich linii...</ExportAllLines>
@@ -652,6 +673,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
         <ExportUltech130>Ultech caption...</ExportUltech130>
+        <ExportCustomTextFormat>Eksport do niestandardowego formatu tekstowego...</ExportCustomTextFormat>
         <Exit>W&amp;yjdź</Exit>
       </File>
       <Edit>
@@ -697,6 +719,9 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <TextNumberOfLines>Tekst - ilość linii</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Tekst - ilość znaków/sek.</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Tekst - słów na minutę (snm)</WordsPerMinute>
+        <Style>Styl</Style>
+        <Ascending>Rosnąco</Ascending>
+        <Descending>Malejąco</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Utwórz pusty plik dla aktualnie tłumaczonych napisów</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Konwersja wielu plików równocześnie...</BatchConvert>
         <GenerateTimeAsText>Generuj czas jako tekst...</GenerateTimeAsText>
@@ -829,7 +854,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
     </Menu>
     <Controls>
       <SubtitleFormat>Format napisów</SubtitleFormat>
-      <FileEncoding>Kodowanie pliku</FileEncoding>
+      <FileEncoding>Kodowanie</FileEncoding>
       <ListView>Widok listy napisów</ListView>
       <SourceView>Widok źródłowych napisów</SourceView>
       <UndoChangesInEditPanel>Cofnij zmiany edycji</UndoChangesInEditPanel>
@@ -1129,6 +1154,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <SubtitlesJoined>Dołączanie napisów</SubtitlesJoined>
     <StatusLog>Status Dziennika zdarzeń</StatusLog>
     <XSceneChangesImported>Zaimportowano {0} zmian w scenach</XSceneChangesImported>
+    <PluginXExecuted>Wtyczka '{0}' wykonana.</PluginXExecuted>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Wybór napisów z pliku Matroska</Title>
@@ -1387,6 +1413,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <WaveFormGridColor>Kolor siatki</WaveFormGridColor>
     <WaveFormShowGridLines>Pokaż linie siatki</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Odwróć kierunek obrotu rolki myszki</ReverseMouseWheelScrollDirection>
+    <WaveFormAllowOverlap>Zezwalaj na nakładanie (podczas przenoszenia/zmiany rozmiaru)</WaveFormAllowOverlap>
     <WaveFormColor>Kolor wykresu</WaveFormColor>
     <WaveFormSelectedColor>Kolor zaznaczenia</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Kolor tła</WaveFormBackgroundColor>
@@ -1456,6 +1483,8 @@ Chcesz zapisać?</NegativeTimeWarning>
     <MergeDialogue>Połącz dialogi (wstaw myślniki)</MergeDialogue>
     <GoToNext>Przejdź do następnej linii</GoToNext>
     <GoToPrevious>Przejdź do poprzedniej linii</GoToPrevious>
+    <GoToCurrentSubtitleStart>Przejdź do początku aktualnej linii</GoToCurrentSubtitleStart>
+    <GoToCurrentSubtitleEnd>Przejdź do końca aktualnej linii</GoToCurrentSubtitleEnd>
     <ToggleFocus>Przełącz fokus między widokiem listy i polem tekstowym napisów</ToggleFocus>
     <ToggleDialogueDashes>Przełącz myślniki dialogów</ToggleDialogueDashes>
     <Alignment>Wyrównanie (wybrane linie)</Alignment>
@@ -1740,6 +1769,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <OcrViaImageCompare>OCR za pomocą porównania obrazów</OcrViaImageCompare>
     <ImageDatabase>Baza obrazów:</ImageDatabase>
     <NoOfPixelsIsSpace>Liczba efektywnych pikseli:</NoOfPixelsIsSpace>
+    <MaxErrorPercent>Max. % błędu</MaxErrorPercent>
     <New>Nowy</New>
     <Edit>Edytuj</Edit>
     <StartOcr>Start OCR</StartOcr>
@@ -1809,6 +1839,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <ZoomOut>Pomniejsz</ZoomOut>
     <AddParagraphHere>Dodaj tutaj tekst</AddParagraphHere>
     <AddParagraphHereAndPasteText>Dodaj tutaj tekst ze schowka</AddParagraphHereAndPasteText>
+    <FocusTextBox>Skoncentrowane pole tekstowe</FocusTextBox>
     <DeleteParagraph>Usuń tekst</DeleteParagraph>
     <Split>Podziel</Split>
     <SplitAtCursor>Podziel przy kursorze</SplitAtCursor>
