@@ -6537,6 +6537,13 @@ namespace Nikse.SubtitleEdit.Forms
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Delete)
+            {
+                DeleteToolStripMenuItemClick(sender, e);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                subtitleListView1.Focus();
+            }
         }
 
         private void DeleteToolStripMenuItemClick(object sender, EventArgs e)
@@ -6624,9 +6631,9 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.Fill(_subtitle);
 
             if (selIdx < subtitleListView1.Items.Count)
-                subtitleListView1.SelectIndexAndEnsureVisible(selIdx);
+                subtitleListView1.SelectIndexAndEnsureVisible(selIdx, true);
             else
-                subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView1.Items.Count - 1);
+                subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView1.Items.Count - 1, true);
         }
 
         private void buttonUknownToNames_Click(object sender, EventArgs e)
