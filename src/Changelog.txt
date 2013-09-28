@@ -2,7 +2,7 @@
 
 3.3.9 (? 2013)
 * NEW:
-   * Added new subtitle format
+   * Added new subtitle formats
    * Shortcuts keys Ctrl+up/down now move contents in 
      "Multi-Replace" list view - thx Ivandrofly
 * IMPROVED:
@@ -17,6 +17,8 @@
    * Can now read Russian in Cavena 890
    * Waveform generation now uses current audio track (VLC only atm)
    * Open original subtitle now allows EBU/890/PAC formats - thx Andreas
+   * Format "DCinema SMPTE" is now valid (uses xsd) - thx Wolfgang
+   * Improved italic fix - thx XhmikosR 
 * FIXED:
    * Crash in export of images - thx Eros UK
    * Crash in OCR via "Image compare" with large image databases - thx Zoltan
@@ -26,6 +28,7 @@
    * Fixed some letters in Cavena 890 format - thx Calle
    * Some fixes/improvements for "Unknown subtitle format importer"
    * Fixed possible crash in TMPlayer format
+   * Read of YouTube Annotations time codes without "hour" - thx Joshu
 
 
 3.3.8 (1st September 2013)
