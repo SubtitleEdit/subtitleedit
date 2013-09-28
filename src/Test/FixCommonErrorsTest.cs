@@ -255,6 +255,16 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>What do i care.</i>");
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixItalicsLine1BadEndingDouble()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "<i>To be a life-changing weekend</i>" + Environment.NewLine + "<i>for all of us.");
+            target.FixInvalidItalicTags();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>To be a life-changing weekend" + Environment.NewLine + "for all of us.</i>");
+        }
+
         #endregion
 
         #region Fix Missing Periods At End Of Line
@@ -373,7 +383,6 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The clock is 12 a.m.");
         }
         #endregion
-
 
         #region Fix missingspaces
         [TestMethod]

@@ -2352,6 +2352,10 @@ namespace Nikse.SubtitleEdit.Logic
                         else
                             text = text.Substring(0, lastIndex - 1) + endTag;
                     }
+                    if (text.StartsWith("<i>") && text.EndsWith("</i>") && text.Contains("</i>" + Environment.NewLine + "<i>"))
+                    {
+                        text = text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+                    }
                 }
 
                 if (italicBeginTagCount == 1 && italicEndTagCount == 0)
