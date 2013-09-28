@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using System.Xml.Schema;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -100,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             string xmlStructure =
-                "<dcst:SubtitleReel Version=\"1.0\" xmlns:dcst=\"http://www.smpte-ra.org/schemas/428-7/2010/DCST\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">" + Environment.NewLine +
+                "<dcst:SubtitleReel xmlns:dcst=\"http://www.smpte-ra.org/schemas/428-7/2010/DCST\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">" + Environment.NewLine +
                 "  <dcst:Id>urn:uuid:7be835a3-cfb4-43d0-bb4b-f0b4c95e962e</dcst:Id>" + Environment.NewLine +
                 "  <dcst:ContentTitleText></dcst:ContentTitleText> " + Environment.NewLine +
                 "  <dcst:AnnotationText>This is a subtitle file</dcst:AnnotationText>" + Environment.NewLine +
@@ -232,11 +233,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         XmlNode textNode = xml.CreateElement("dcst:Text", "dcst");
 
-                        XmlAttribute vPosition = xml.CreateAttribute("VPosition");
+                        XmlAttribute vPosition = xml.CreateAttribute("Vposition");
                         vPosition.InnerText = vPos.ToString();
                         textNode.Attributes.Append(vPosition);
 
-                        XmlAttribute vAlign = xml.CreateAttribute("VAlign");
+                        XmlAttribute vAlign = xml.CreateAttribute("Valign");
                         if (alignVTop)
                             vAlign.InnerText = "top";
                         else if (alignVCenter)
@@ -245,7 +246,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             vAlign.InnerText = "bottom";
                         textNode.Attributes.Append(vAlign); textNode.Attributes.Append(vAlign);
 
-                        XmlAttribute hAlign = xml.CreateAttribute("HAlign");
+                        XmlAttribute hAlign = xml.CreateAttribute("Halign");
                         if (alignLeft)
                             hAlign.InnerText = "left";
                         else if (alignRight)
@@ -255,7 +256,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         textNode.Attributes.Append(hAlign);
 
                         XmlAttribute direction = xml.CreateAttribute("Direction");
-                        direction.InnerText = "horizontal";
+                        direction.InnerText = "ltr";
                         textNode.Attributes.Append(direction);
 
                         int i = 0;
@@ -437,9 +438,37 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     no++;
                 }
             }
+            string result = ToUtf8XmlString(xml).Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\"").Replace(" xmlns:dcst=\"dcst\"", string.Empty);
 
-            return ToUtf8XmlString(xml).Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\"").Replace(" xmlns:dcst=\"dcst\"", string.Empty);
+            string res = "Nikse.SubtitleEdit.Resources.SMPTE-428-7-2007-DCST.xsd";
+            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
+            Stream strm = asm.GetManifestResourceStream(res);
+            if (strm != null)
+            {
+                try
+                {
+                    var xmld = new XmlDocument();
+                    xmld.LoadXml(result);
+                    var xr = XmlReader.Create(strm);
+                    xmld.Schemas.Add(null, xr);
+                    xmld.Validate(ValidationCallBack);
+                    xr.Close();
+                    strm.Close();
+                }
+                catch (Exception exception)
+                {
+                    System.Windows.Forms.MessageBox.Show("SMPTE-428-7-2007-DCST.xsd:" + exception.Message);
+                }
+            }
+            return result;
         }
+
+
+        private void ValidationCallBack(object sender, ValidationEventArgs e)
+        {
+            throw new Exception(e.Message);
+        }
+
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {

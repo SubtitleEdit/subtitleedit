@@ -17826,12 +17826,12 @@ namespace Nikse.SubtitleEdit.Forms
             var form = new HardSubExtract(_videoFileName);
             if (form.ShowDialog(this) == DialogResult.OK)
             {
-                MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines); //TODO: Fix text
-                _subtitle = form.SubtitleFromOcr;
-                _subtitleAlternate = new Subtitle();
-                _subtitleAlternateFileName = null;
-                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                SubtitleListview1.SelectIndexAndEnsureVisible(0);
+                
+                if (!string.IsNullOrEmpty(form.OcrFileName))
+                {
+                    MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines); //TODO: Fix text
+                    OpenSubtitle(form.OcrFileName, null);
+                }
             }
         }
 

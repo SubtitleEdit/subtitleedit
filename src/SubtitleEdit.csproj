@@ -847,6 +847,7 @@
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle67.cs" />
     <Compile Include="Logic\SubtitleFormats\SwiftTextLineNumber .cs" />
     <Compile Include="Logic\SubtitleFormats\Titra.cs" />
     <Compile Include="Logic\SubtitleFormats\WebVTTFileWithLineNumber.cs" />
@@ -1440,6 +1441,9 @@
     <EmbeddedResource Include="Resources\HunspellDictionaries.xml.zip" />
     <EmbeddedResource Include="Resources\TesseractDictionaries.xml.zip" />
     <EmbeddedResource Include="Resources\nOCR_TesseractHelper.xml.zip" />
+    <EmbeddedResource Include="Resources\SMPTE-428-7-2007-DCST.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Web References\MicrosoftTranslationService\GetTranslationsResponse.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>

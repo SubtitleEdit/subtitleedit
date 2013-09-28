@@ -30,200 +30,122 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.numericUpDownFont2Diff = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
-            this.numericUpDownFont1Diff = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownInterval = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.pictureBoxColor2 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.pictureBoxColor1 = new System.Windows.Forms.PictureBox();
+            this.labelCustomRgb = new System.Windows.Forms.Label();
+            this.pictureBoxCustomColor = new System.Windows.Forms.PictureBox();
+            this.numericUpDownCustomMaxDiff = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxCustomColor = new System.Windows.Forms.CheckBox();
+            this.checkBoxYellow = new System.Windows.Forms.CheckBox();
             this.numericUpDownPixelsBottom = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
-            this.buttonStart = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.labelClickOnTextColor = new System.Windows.Forms.Label();
-            this.buttonStop = new System.Windows.Forms.Button();
             this.openFileDialogVideo = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.buttonShowImg = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.timerRefreshProgressbar = new System.Windows.Forms.Timer(this.components);
+            this.label8 = new System.Windows.Forms.Label();
+            this.tbBlacks = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.tbFrameNum = new System.Windows.Forms.TextBox();
+            this.tbFileName = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.StartStop = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.buttonStop = new System.Windows.Forms.Button();
             this.mediaPlayer = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
-            this.button2 = new System.Windows.Forms.Button();
+            this.contextMenuStripScreenshot = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFont2Diff)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFont1Diff)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInterval)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxColor2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxColor1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustomColor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCustomMaxDiff)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPixelsBottom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.contextMenuStripScreenshot.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.button2);
-            this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.numericUpDownFont2Diff);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.numericUpDownFont1Diff);
-            this.groupBox1.Controls.Add(this.numericUpDownInterval);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.pictureBoxColor2);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.pictureBoxColor1);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
+            this.groupBox1.Controls.Add(this.labelCustomRgb);
+            this.groupBox1.Controls.Add(this.pictureBoxCustomColor);
+            this.groupBox1.Controls.Add(this.numericUpDownCustomMaxDiff);
+            this.groupBox1.Controls.Add(this.checkBoxCustomColor);
+            this.groupBox1.Controls.Add(this.checkBoxYellow);
+            this.groupBox1.Location = new System.Drawing.Point(12, 85);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(341, 225);
+            this.groupBox1.Size = new System.Drawing.Size(341, 117);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Detection options";
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(183, 182);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 28;
-            this.button1.Text = "Test";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(13, 27);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(112, 13);
-            this.label7.TabIndex = 25;
-            this.label7.Text = "Hardcoded font colors";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(205, 89);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(86, 13);
-            this.label6.TabIndex = 24;
-            this.label6.Text = "color diff allowed";
-            // 
-            // numericUpDownFont2Diff
-            // 
-            this.numericUpDownFont2Diff.Location = new System.Drawing.Point(133, 87);
-            this.numericUpDownFont2Diff.Maximum = new decimal(new int[] {
-            40,
-            0,
-            0,
-            0});
-            this.numericUpDownFont2Diff.Name = "numericUpDownFont2Diff";
-            this.numericUpDownFont2Diff.Size = new System.Drawing.Size(66, 20);
-            this.numericUpDownFont2Diff.TabIndex = 23;
-            this.numericUpDownFont2Diff.Value = new decimal(new int[] {
-            15,
-            0,
-            0,
-            0});
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(205, 60);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(86, 13);
-            this.label5.TabIndex = 22;
-            this.label5.Text = "color diff allowed";
-            // 
-            // numericUpDownFont1Diff
-            // 
-            this.numericUpDownFont1Diff.Location = new System.Drawing.Point(133, 58);
-            this.numericUpDownFont1Diff.Maximum = new decimal(new int[] {
-            40,
-            0,
-            0,
-            0});
-            this.numericUpDownFont1Diff.Name = "numericUpDownFont1Diff";
-            this.numericUpDownFont1Diff.Size = new System.Drawing.Size(66, 20);
-            this.numericUpDownFont1Diff.TabIndex = 21;
-            this.numericUpDownFont1Diff.Value = new decimal(new int[] {
-            15,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDownInterval
-            // 
-            this.numericUpDownInterval.Location = new System.Drawing.Point(16, 182);
-            this.numericUpDownInterval.Maximum = new decimal(new int[] {
-            2000,
-            0,
-            0,
-            0});
-            this.numericUpDownInterval.Name = "numericUpDownInterval";
-            this.numericUpDownInterval.Size = new System.Drawing.Size(59, 20);
-            this.numericUpDownInterval.TabIndex = 20;
-            this.numericUpDownInterval.Value = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 166);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(139, 13);
-            this.label3.TabIndex = 17;
-            this.label3.Text = "Scan interval in milliseconds";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(43, 89);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 13);
-            this.label2.TabIndex = 11;
-            this.label2.Text = "Font color2";
-            // 
-            // pictureBoxColor2
-            // 
-            this.pictureBoxColor2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxColor2.Location = new System.Drawing.Point(16, 84);
-            this.pictureBoxColor2.Name = "pictureBoxColor2";
-            this.pictureBoxColor2.Size = new System.Drawing.Size(21, 21);
-            this.pictureBoxColor2.TabIndex = 10;
-            this.pictureBoxColor2.TabStop = false;
-            this.pictureBoxColor2.Click += new System.EventHandler(this.pictureBoxColor2_Click);
-            // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(43, 60);
+            this.label1.Location = new System.Drawing.Point(9, 80);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 13);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Font color1";
+            this.label1.Size = new System.Drawing.Size(101, 16);
+            this.label1.TabIndex = 31;
+            this.label1.Text = "Allow diff per RGB";
             // 
-            // pictureBoxColor1
+            // labelCustomRgb
             // 
-            this.pictureBoxColor1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxColor1.Location = new System.Drawing.Point(16, 52);
-            this.pictureBoxColor1.Name = "pictureBoxColor1";
-            this.pictureBoxColor1.Size = new System.Drawing.Size(21, 21);
-            this.pictureBoxColor1.TabIndex = 8;
-            this.pictureBoxColor1.TabStop = false;
-            this.pictureBoxColor1.Click += new System.EventHandler(this.pictureBoxBackground_Click);
+            this.labelCustomRgb.AutoSize = true;
+            this.labelCustomRgb.Location = new System.Drawing.Point(177, 56);
+            this.labelCustomRgb.Name = "labelCustomRgb";
+            this.labelCustomRgb.Size = new System.Drawing.Size(30, 13);
+            this.labelCustomRgb.TabIndex = 37;
+            this.labelCustomRgb.Text = "RGB";
+            // 
+            // pictureBoxCustomColor
+            // 
+            this.pictureBoxCustomColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxCustomColor.Location = new System.Drawing.Point(152, 53);
+            this.pictureBoxCustomColor.Name = "pictureBoxCustomColor";
+            this.pictureBoxCustomColor.Size = new System.Drawing.Size(21, 21);
+            this.pictureBoxCustomColor.TabIndex = 8;
+            this.pictureBoxCustomColor.TabStop = false;
+            this.pictureBoxCustomColor.Click += new System.EventHandler(this.pictureBoxCustomColor_Click);
+            // 
+            // numericUpDownCustomMaxDiff
+            // 
+            this.numericUpDownCustomMaxDiff.Location = new System.Drawing.Point(116, 76);
+            this.numericUpDownCustomMaxDiff.Name = "numericUpDownCustomMaxDiff";
+            this.numericUpDownCustomMaxDiff.Size = new System.Drawing.Size(38, 20);
+            this.numericUpDownCustomMaxDiff.TabIndex = 2;
+            this.numericUpDownCustomMaxDiff.Value = new decimal(new int[] {
+            14,
+            0,
+            0,
+            0});
+            // 
+            // checkBoxCustomColor
+            // 
+            this.checkBoxCustomColor.AutoSize = true;
+            this.checkBoxCustomColor.Location = new System.Drawing.Point(11, 55);
+            this.checkBoxCustomColor.Name = "checkBoxCustomColor";
+            this.checkBoxCustomColor.Size = new System.Drawing.Size(135, 17);
+            this.checkBoxCustomColor.TabIndex = 1;
+            this.checkBoxCustomColor.Text = "Check for custom color";
+            this.checkBoxCustomColor.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxYellow
+            // 
+            this.checkBoxYellow.AutoSize = true;
+            this.checkBoxYellow.Checked = true;
+            this.checkBoxYellow.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxYellow.Location = new System.Drawing.Point(9, 19);
+            this.checkBoxYellow.Name = "checkBoxYellow";
+            this.checkBoxYellow.Size = new System.Drawing.Size(124, 17);
+            this.checkBoxYellow.TabIndex = 0;
+            this.checkBoxYellow.Text = "Check for yellow text";
+            this.checkBoxYellow.UseVisualStyleBackColor = true;
             // 
             // numericUpDownPixelsBottom
             // 
@@ -237,7 +159,7 @@
             this.numericUpDownPixelsBottom.Size = new System.Drawing.Size(66, 20);
             this.numericUpDownPixelsBottom.TabIndex = 19;
             this.numericUpDownPixelsBottom.Value = new decimal(new int[] {
-            100,
+            127,
             0,
             0,
             0});
@@ -252,24 +174,16 @@
             this.label4.TabIndex = 18;
             this.label4.Text = "Search number of pixels from bottom";
             // 
-            // buttonStart
-            // 
-            this.buttonStart.Location = new System.Drawing.Point(12, 243);
-            this.buttonStart.Name = "buttonStart";
-            this.buttonStart.Size = new System.Drawing.Size(118, 23);
-            this.buttonStart.TabIndex = 1;
-            this.buttonStart.Text = "Start detect";
-            this.buttonStart.UseVisualStyleBackColor = true;
-            this.buttonStart.Click += new System.EventHandler(this.buttonStartClick);
-            // 
             // pictureBox2
             // 
             this.pictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox2.ContextMenuStrip = this.contextMenuStripScreenshot;
+            this.pictureBox2.Cursor = System.Windows.Forms.Cursors.Cross;
             this.pictureBox2.Location = new System.Drawing.Point(11, 37);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(867, 373);
+            this.pictureBox2.Size = new System.Drawing.Size(843, 373);
             this.pictureBox2.TabIndex = 4;
             this.pictureBox2.TabStop = false;
             this.pictureBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox2_Paint);
@@ -286,21 +200,11 @@
             this.labelClickOnTextColor.TabIndex = 19;
             this.labelClickOnTextColor.Text = "Click on text color";
             // 
-            // buttonStop
-            // 
-            this.buttonStop.Location = new System.Drawing.Point(136, 243);
-            this.buttonStop.Name = "buttonStop";
-            this.buttonStop.Size = new System.Drawing.Size(75, 23);
-            this.buttonStop.TabIndex = 21;
-            this.buttonStop.Text = "Stop";
-            this.buttonStop.UseVisualStyleBackColor = true;
-            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
-            // 
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(821, 695);
+            this.buttonCancel.Location = new System.Drawing.Point(797, 695);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 25;
@@ -312,23 +216,13 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(740, 695);
+            this.buttonOK.Location = new System.Drawing.Point(716, 695);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 24;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
-            // 
-            // buttonShowImg
-            // 
-            this.buttonShowImg.Location = new System.Drawing.Point(235, 243);
-            this.buttonShowImg.Name = "buttonShowImg";
-            this.buttonShowImg.Size = new System.Drawing.Size(118, 23);
-            this.buttonShowImg.TabIndex = 26;
-            this.buttonShowImg.Text = "Update subtitle area";
-            this.buttonShowImg.UseVisualStyleBackColor = true;
-            this.buttonShowImg.Click += new System.EventHandler(this.buttonShowImg_Click);
             // 
             // labelStatus
             // 
@@ -345,20 +239,107 @@
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.button1);
+            this.groupBox2.Controls.Add(this.pictureBox2);
             this.groupBox2.Controls.Add(this.numericUpDownPixelsBottom);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.labelClickOnTextColor);
-            this.groupBox2.Controls.Add(this.pictureBox2);
             this.groupBox2.Location = new System.Drawing.Point(12, 273);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(884, 416);
+            this.groupBox2.Size = new System.Drawing.Size(860, 416);
             this.groupBox2.TabIndex = 27;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Subtitle area (red rectangle)";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(357, 11);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(246, 26);
+            this.button1.TabIndex = 37;
+            this.button1.Text = "Take screenshot from video player";
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // timerRefreshProgressbar
             // 
             this.timerRefreshProgressbar.Tick += new System.EventHandler(this.TimerRefreshProgressbarTick);
+            // 
+            // label8
+            // 
+            this.label8.Location = new System.Drawing.Point(125, 236);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(96, 23);
+            this.label8.TabIndex = 34;
+            this.label8.Text = "# of subtitles";
+            // 
+            // tbBlacks
+            // 
+            this.tbBlacks.Location = new System.Drawing.Point(229, 236);
+            this.tbBlacks.Name = "tbBlacks";
+            this.tbBlacks.ReadOnly = true;
+            this.tbBlacks.Size = new System.Drawing.Size(48, 20);
+            this.tbBlacks.TabIndex = 33;
+            // 
+            // label9
+            // 
+            this.label9.Location = new System.Drawing.Point(125, 209);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(100, 23);
+            this.label9.TabIndex = 32;
+            this.label9.Text = "Scanning Frame #";
+            // 
+            // tbFrameNum
+            // 
+            this.tbFrameNum.Location = new System.Drawing.Point(229, 209);
+            this.tbFrameNum.Name = "tbFrameNum";
+            this.tbFrameNum.ReadOnly = true;
+            this.tbFrameNum.Size = new System.Drawing.Size(48, 20);
+            this.tbFrameNum.TabIndex = 31;
+            // 
+            // tbFileName
+            // 
+            this.tbFileName.Location = new System.Drawing.Point(6, 35);
+            this.tbFileName.Name = "tbFileName";
+            this.tbFileName.Size = new System.Drawing.Size(285, 20);
+            this.tbFileName.TabIndex = 30;
+            this.tbFileName.Text = "c:\\foo.mpg";
+            // 
+            // label10
+            // 
+            this.label10.Location = new System.Drawing.Point(6, 16);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(72, 16);
+            this.label10.TabIndex = 29;
+            this.label10.Text = "Source file";
+            // 
+            // StartStop
+            // 
+            this.StartStop.Location = new System.Drawing.Point(16, 209);
+            this.StartStop.Name = "StartStop";
+            this.StartStop.Size = new System.Drawing.Size(75, 26);
+            this.StartStop.TabIndex = 28;
+            this.StartStop.Text = "Start";
+            this.StartStop.Click += new System.EventHandler(this.StartStop_Click);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.label10);
+            this.groupBox3.Controls.Add(this.tbFileName);
+            this.groupBox3.Location = new System.Drawing.Point(12, 12);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(341, 67);
+            this.groupBox3.TabIndex = 35;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Input";
+            // 
+            // buttonStop
+            // 
+            this.buttonStop.Location = new System.Drawing.Point(18, 240);
+            this.buttonStop.Name = "buttonStop";
+            this.buttonStop.Size = new System.Drawing.Size(75, 26);
+            this.buttonStop.TabIndex = 36;
+            this.buttonStop.Text = "Stop";
+            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
             // 
             // mediaPlayer
             // 
@@ -374,7 +355,7 @@
             this.mediaPlayer.ShowFullscreenButton = true;
             this.mediaPlayer.ShowMuteButton = true;
             this.mediaPlayer.ShowStopButton = true;
-            this.mediaPlayer.Size = new System.Drawing.Size(527, 247);
+            this.mediaPlayer.Size = new System.Drawing.Size(503, 247);
             this.mediaPlayer.SubtitleText = "";
             this.mediaPlayer.TabIndex = 23;
             this.mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -383,28 +364,36 @@
             this.mediaPlayer.VideoWidth = 0;
             this.mediaPlayer.Volume = 0D;
             // 
-            // button2
+            // contextMenuStripScreenshot
             // 
-            this.button2.Location = new System.Drawing.Point(264, 182);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 29;
-            this.button2.Text = "Test";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.contextMenuStripScreenshot.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveImageAsToolStripMenuItem});
+            this.contextMenuStripScreenshot.Name = "contextMenuStripScreenshot";
+            this.contextMenuStripScreenshot.Size = new System.Drawing.Size(158, 26);
+            // 
+            // saveImageAsToolStripMenuItem
+            // 
+            this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
+            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.saveImageAsToolStripMenuItem.Text = "Save image as...";
+            this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.saveImageAsToolStripMenuItem_Click);
             // 
             // HardSubExtract
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(908, 728);
+            this.ClientSize = new System.Drawing.Size(884, 728);
+            this.Controls.Add(this.buttonStop);
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.StartStop);
+            this.Controls.Add(this.tbBlacks);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.tbFrameNum);
             this.Controls.Add(this.labelStatus);
-            this.Controls.Add(this.buttonShowImg);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.mediaPlayer);
-            this.Controls.Add(this.buttonStop);
-            this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.KeyPreview = true;
@@ -414,19 +403,18 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import/OCR burned-in subtitles from video file";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HardSubExtract_FormClosing);
             this.Shown += new System.EventHandler(this.HardSubExtract_Shown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFont2Diff)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFont1Diff)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInterval)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxColor2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxColor1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustomColor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCustomMaxDiff)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPixelsBottom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.contextMenuStripScreenshot.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -435,32 +423,36 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.PictureBox pictureBoxColor2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.PictureBox pictureBoxColor1;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button buttonStart;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label labelClickOnTextColor;
         private System.Windows.Forms.NumericUpDown numericUpDownPixelsBottom;
-        private System.Windows.Forms.NumericUpDown numericUpDownInterval;
-        private System.Windows.Forms.Button buttonStop;
         private Controls.VideoPlayerContainer mediaPlayer;
         private System.Windows.Forms.OpenFileDialog openFileDialogVideo;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.Button buttonShowImg;
         private System.Windows.Forms.Label labelStatus;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown numericUpDownFont1Diff;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.NumericUpDown numericUpDownFont2Diff;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Timer timerRefreshProgressbar;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox tbBlacks;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox tbFrameNum;
+        private System.Windows.Forms.TextBox tbFileName;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button StartStop;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.CheckBox checkBoxCustomColor;
+        private System.Windows.Forms.CheckBox checkBoxYellow;
+        private System.Windows.Forms.NumericUpDown numericUpDownCustomMaxDiff;
+        private System.Windows.Forms.PictureBox pictureBoxCustomColor;
+        private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.Button buttonStop;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label labelCustomRgb;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripScreenshot;
+        private System.Windows.Forms.ToolStripMenuItem saveImageAsToolStripMenuItem;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
