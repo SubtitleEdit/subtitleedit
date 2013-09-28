@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "D-Cinema smpte"; }
+            get { return "D-Cinema SMPTE"; }
         }
 
         public override bool IsTimeBased
@@ -139,12 +139,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (Configuration.Settings.General.CurrentFrameRate == 24)
                 {
-                    ss.CurrentDCinemaEditRate = "1 24";
+                    ss.CurrentDCinemaEditRate = "24 1";
                     ss.CurrentDCinemaTimeCodeRate = "24";
                 }
                 else
                 {
-                    ss.CurrentDCinemaEditRate = "1 25";
+                    ss.CurrentDCinemaEditRate = "25 1";
                     ss.CurrentDCinemaTimeCodeRate = "25";
                 }
             }
@@ -426,11 +426,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         textNode.InnerXml = " ";
                         subNode.AppendChild(textNode);
 
-                        XmlAttribute vPosition = xml.CreateAttribute("VPosition");
+                        XmlAttribute vPosition = xml.CreateAttribute("Vposition");
                         vPosition.InnerText = vPos.ToString();
                         textNode.Attributes.Append(vPosition);
 
-                        XmlAttribute vAlign = xml.CreateAttribute("VAlign");
+                        XmlAttribute vAlign = xml.CreateAttribute("Valign");
                         vAlign.InnerText = "bottom";
                         textNode.Attributes.Append(vAlign);
                     }
@@ -550,9 +550,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         switch (innerNode.Name.ToString())
                         {
                             case "Text":
-                                if (innerNode.Attributes["VPosition"] != null)
+                                if (innerNode.Attributes["Vposition"] != null)
                                 {
-                                    string vPosition = innerNode.Attributes["VPosition"].InnerText;
+                                    string vPosition = innerNode.Attributes["Vposition"].InnerText;
                                     if (vPosition != lastVPosition)
                                     {
                                         if (pText.Length > 0 && lastVPosition.Length > 0)
@@ -564,17 +564,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 bool alignRight = false;
                                 bool alignVTop = false;
                                 bool alignVCenter = false;
-                                if (innerNode.Attributes["HAlign"] != null)
+                                if (innerNode.Attributes["Halign"] != null)
                                 {
-                                    string hAlign = innerNode.Attributes["HAlign"].InnerText;
+                                    string hAlign = innerNode.Attributes["Halign"].InnerText;
                                     if (hAlign == "left")
                                         alignLeft = true;
                                     else if (hAlign == "right")
                                         alignRight = true;
                                 }
-                                if (innerNode.Attributes["VAlign"] != null)
+                                if (innerNode.Attributes["Valign"] != null)
                                 {
-                                    string hAlign = innerNode.Attributes["VAlign"].InnerText;
+                                    string hAlign = innerNode.Attributes["Valign"].InnerText;
                                     if (hAlign == "top")
                                         alignVTop = true;
                                     else if (hAlign == "center")
