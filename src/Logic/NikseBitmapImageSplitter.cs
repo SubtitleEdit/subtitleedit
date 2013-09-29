@@ -207,9 +207,9 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 if (allTransparent)
                 {
-                    if (size > 8 && size <= lineMinHeight)
+                    if (size > 2 && size <= 15)
                     {
-                        size++; // at least 5 pixels, like top of 'i'
+                        size++; // at least 15 pixels, like top of 'i' or top of 'È'
                     }
                     else
                     {
@@ -261,7 +261,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (size > 2 && size <= lineMinHeight)
                     {
-                        size++; // at least 5 pixels, like top of 'i'
+                        size++; // at least 'lineMinHeight' pixels, like top of 'i'
                     }
                     else
                     {
