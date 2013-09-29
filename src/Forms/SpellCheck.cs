@@ -178,8 +178,6 @@ namespace Nikse.SubtitleEdit.Forms
             Match match = regEx.Match(richTextBoxParagraph.Text);
             if (match.Success)
             {
-
-
                 richTextBoxParagraph.SelectionStart = match.Index;
                 richTextBoxParagraph.SelectionLength = word.Length;
                 while (richTextBoxParagraph.SelectedText != word && richTextBoxParagraph.SelectionStart > 0)
@@ -188,6 +186,33 @@ namespace Nikse.SubtitleEdit.Forms
                     richTextBoxParagraph.SelectionLength = word.Length;
                 }
                 richTextBoxParagraph.SelectionColor = Color.Red;
+            }
+            else if (richTextBoxParagraph.Text.Length > 0)
+            {
+                int idx = richTextBoxParagraph.Text.IndexOf(word);
+                while (idx >= 0)
+                {
+                    bool ok = idx == 0 || richTextBoxParagraph.Text[idx - 1] == ' ' || richTextBoxParagraph.Text[idx - 1] == '"' || idx == richTextBoxParagraph.Text.Length - word.Length ||
+                                       Environment.NewLine.EndsWith(richTextBoxParagraph.Text[idx - 1].ToString());
+
+                    if (ok)
+                    {
+                        richTextBoxParagraph.SelectionStart = idx;
+                        richTextBoxParagraph.SelectionLength = word.Length;
+                        while (richTextBoxParagraph.SelectedText != word && richTextBoxParagraph.SelectionStart > 0)
+                        {
+                            richTextBoxParagraph.SelectionStart = richTextBoxParagraph.SelectionStart - 1;
+                            richTextBoxParagraph.SelectionLength = word.Length;
+                        }
+                        richTextBoxParagraph.SelectionColor = Color.Red;
+                    }
+
+                    idx += word.Length;
+                    if (idx < richTextBoxParagraph.Text.Length)
+                        idx = richTextBoxParagraph.Text.IndexOf(word, idx);
+                    else
+                        idx = -1;
+                }
             }
         }
 
