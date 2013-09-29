@@ -826,6 +826,7 @@
     <Compile Include="Logic\SpellCheck\WindowsHunspell.cs" />
     <Compile Include="Logic\SsaStyle.cs" />
     <Compile Include="Logic\StripableText.cs" />
+    <Compile Include="Logic\SubtitleFormats\AdobeAfterEffectsFTME.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncore.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreLineTabNewLine.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreLineTabs.cs" />
