@@ -5496,8 +5496,8 @@ namespace Nikse.SubtitleEdit.Forms
                     int startIndex = p.Text.IndexOf(oldWord);
                     while (startIndex >= 0 && startIndex < p.Text.Length && p.Text.Substring(startIndex).Contains(oldWord))
                     {
-                        bool startOk = (startIndex == 0) || (p.Text[startIndex - 1] == ' ') ||
-                                       (Environment.NewLine.EndsWith(p.Text[startIndex - 1].ToString()));
+                        bool startOk = startIndex == 0 || p.Text[startIndex - 1] == ' ' || startIndex == p.Text.Length - oldWord.Length ||
+                                       Environment.NewLine.EndsWith(p.Text[startIndex - 1].ToString());
 
                         if (startOk)
                         {
@@ -5508,7 +5508,10 @@ namespace Nikse.SubtitleEdit.Forms
                                     p.Text = p.Text.Remove(startIndex, oldWord.Length).Insert(startIndex, changeWord);
                             }
                         }
-                        startIndex = p.Text.IndexOf(oldWord, startIndex + 2);
+                        if (startIndex + 2 >= p.Text.Length)
+                            startIndex = -1;
+                        else
+                            startIndex = p.Text.IndexOf(oldWord, startIndex + 2);
                     }
 
                 }
