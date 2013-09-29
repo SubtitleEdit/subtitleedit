@@ -172,8 +172,70 @@ namespace Nikse.SubtitleEdit.Logic
             }
             if (size > 2)
             {
-                NikseBitmap part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size+1));
-                parts.Add(new ImageSplitterItem(0, startY, part));
+                if (size == bmp.Height)
+                {
+                    if (size > 100)
+                        return SplitVerticalTransparentOrBlack(bmp, 8);
+                    else
+                        parts.Add(new ImageSplitterItem(0, startY, bmp));
+                }
+                else
+                {
+                    parts.Add(new ImageSplitterItem(0, startY, bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1))));
+                }
+
+            }
+            return parts;
+        }
+
+        public static List<ImageSplitterItem> SplitVerticalTransparentOrBlack(NikseBitmap bmp, int lineMinHeight)
+        {
+            int startY = 0;
+            int size = 0;
+            var parts = new List<ImageSplitterItem>();
+            for (int y = 0; y < bmp.Height; y++)
+            {
+                bool allTransparent = true;
+                for (int x = 0; x < bmp.Width; x++)
+                {
+                    Color c = bmp.GetPixel(x, y);
+                    if (c.A > 20 && c.R + c.G + c.B > 20)
+                    {
+                        allTransparent = false;
+                        break;
+                    }
+                }
+                if (allTransparent)
+                {
+                    if (size > 8 && size <= lineMinHeight)
+                    {
+                        size++; // at least 5 pixels, like top of 'i'
+                    }
+                    else
+                    {
+                        if (size > 8)
+                        {
+                            NikseBitmap part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1));
+                            //                            part.Save("c:\\line_0_to_width.bmp");
+                            parts.Add(new ImageSplitterItem(0, startY, part));
+                            //                            bmp.Save("c:\\original.bmp");
+                        }
+                        size = 0;
+                        startY = y;
+                    }
+                }
+                else
+                {
+                    size++;
+                }
+
+            }
+            if (size > 2)
+            {
+                if (size == bmp.Height)
+                    parts.Add(new ImageSplitterItem(0, startY, bmp));
+                else
+                    parts.Add(new ImageSplitterItem(0, startY, bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1))));
             }
             return parts;
         }
@@ -222,8 +284,17 @@ namespace Nikse.SubtitleEdit.Logic
             }
             if (size > 2)
             {
-                NikseBitmap part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1));
-                parts.Add(new ImageSplitterItem(0, startY, part));
+                if (size == bmp.Height)
+                {
+                    if (size > 100)                    
+                        return SplitVerticalTransparentOrBlack(bmp, lineMinHeight);
+                    else
+                        parts.Add(new ImageSplitterItem(0, startY, bmp));
+                }
+                else
+                {
+                    parts.Add(new ImageSplitterItem(0, startY, bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1))));
+                }
             }
             return parts;
         }
