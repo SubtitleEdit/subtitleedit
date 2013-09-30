@@ -381,6 +381,7 @@ namespace Nikse.SubtitleEdit.Logic
         public double CurrentFrameRate { get; set; }
         public string DefaultSubtitleFormat { get; set; }
         public string DefaultEncoding { get; set; }
+        public bool AutoConvertToUtf8 { get; set; }
         public bool AutoGuessAnsiEncoding { get; set; }
         public string SubtitleFontName { get; set; }
         public int SubtitleFontSize { get; set; }
@@ -481,6 +482,7 @@ namespace Nikse.SubtitleEdit.Logic
             CenterSubtitleInTextBox = false;
             DefaultSubtitleFormat = "SubRip";
             DefaultEncoding = Encoding.UTF8.EncodingName;
+            AutoConvertToUtf8 = false;
             AutoGuessAnsiEncoding = false;
             ShowRecentFiles = true;
             RememberSelectedLine = true;
@@ -945,6 +947,8 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     settings = CustomDeserialize(settingsFileName); //  15 msecs
 
+                    if (settings.General.AutoConvertToUtf8)
+                        settings.General.DefaultEncoding = Encoding.UTF8.EncodingName;
                     //too slow... :(  - settings = Deserialize(Configuration.BaseDirectory + "Settings.xml"); // 688 msecs
                 }
                 //catch
@@ -1089,6 +1093,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("DefaultEncoding");
             if (subNode != null)
                 settings.General.DefaultEncoding = subNode.InnerText;
+            subNode = node.SelectSingleNode("AutoConvertToUtf8");
+            if (subNode != null)
+                settings.General.AutoConvertToUtf8 = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("AutoGuessAnsiEncoding");
             if (subNode != null)
                 settings.General.AutoGuessAnsiEncoding = Convert.ToBoolean(subNode.InnerText);
@@ -2248,8 +2255,9 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ShowWaveform", settings.General.ShowWaveform.ToString());
             textWriter.WriteElementString("ShowSpectrogram", settings.General.ShowSpectrogram.ToString());
             textWriter.WriteElementString("DefaultFrameRate", settings.General.DefaultFrameRate.ToString(CultureInfo.InvariantCulture));
-            textWriter.WriteElementString("DefaultSubtitleFormat", settings.General.DefaultSubtitleFormat);
+            textWriter.WriteElementString("DefaultSubtitleFormat", settings.General.DefaultSubtitleFormat);            
             textWriter.WriteElementString("DefaultEncoding", settings.General.DefaultEncoding);
+            textWriter.WriteElementString("AutoConvertToUtf8", settings.General.AutoConvertToUtf8.ToString());
             textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString());
             textWriter.WriteElementString("SubtitleFontName", settings.General.SubtitleFontName);
             textWriter.WriteElementString("SubtitleFontSize", settings.General.SubtitleFontSize.ToString());
