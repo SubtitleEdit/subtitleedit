@@ -9107,6 +9107,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string fileName = files[0];
 
+                    saveFileDialog1.InitialDirectory = System.IO.Path.GetDirectoryName(fileName);
+                    openFileDialog1.InitialDirectory = System.IO.Path.GetDirectoryName(fileName);
+
                     var fi = new FileInfo(fileName);
                     string ext = Path.GetExtension(fileName).ToLower();
 
@@ -13816,6 +13819,11 @@ namespace Nikse.SubtitleEdit.Forms
                 string ext = Path.GetExtension(fileName).ToLower();
                 if (Utilities.GetVideoFileFilter(true).Contains(ext))
                 {
+                    if (string.IsNullOrEmpty(_fileName))
+                    {
+                        saveFileDialog1.InitialDirectory = System.IO.Path.GetDirectoryName(fileName);
+                        openFileDialog1.InitialDirectory = System.IO.Path.GetDirectoryName(fileName);
+                    }
                     OpenVideo(fileName);
                 }
                 else
