@@ -2671,6 +2671,8 @@ namespace Nikse.SubtitleEdit.Forms
                         _converted = true;
                         ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName) + " - " + string.Format(_language.ConvertedToX, format.FriendlyName));
                     }
+                    if (Configuration.Settings.General.AutoConvertToUtf8)
+                        encoding = Encoding.UTF8;
                     SetEncoding(encoding);
 
                     if (format.GetType() == typeof(SubStationAlpha))
