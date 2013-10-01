@@ -504,7 +504,7 @@ namespace Nikse.SubtitleEdit.Logic
             VideoPlayerShowFullscreenButton = true;
             ListViewLineSeparatorString = "<br />";
             ListViewDoubleClickAction = 1;
-            UppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWZYXÆØÃÅÄÖÉÈÁÂÀÇÊÍÓÔÕÚŁАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯĞİŞÜÙÁÌÑ";
+            UppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWZYXÆØÃÅÄÖÉÈÁÂÀÇÊÍÓÔÕÚŁАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯĞİŞÜÙÁÌÑÎ";
             DefaultAdjustMilliseconds = 1000;
             AutoRepeatOn = true;
             AutoContinueOn = false;
