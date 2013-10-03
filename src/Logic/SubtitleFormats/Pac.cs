@@ -139,6 +139,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xeA67, // ğ
             0xeA47, // Ğ
             0xe849, // İ
+
+            0xE75A, // Ž
+            0xE753, // Š
+            0xE743, // Č
+            0xE77A, // ž
+            0xE773, // š
+            0xE763, // č
         };
 
         static readonly List<string> LatinLetters = new List<string> {
@@ -263,6 +270,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "ğ",
             "Ğ",
             "İ",
+
+            "Ž", // 0xE75A
+            "Š", // 0xE753
+            "Č", // 0xE743
+            "ž", // 0xE77A
+            "š", // 0xE773
+            "č", // 0xE763
         };
 
         static readonly List<int> HebrewCodes = new List<int>
@@ -1381,7 +1395,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
 
-            return encoding.GetString(buffer, index, 1);
+            if (b > 13)
+                return encoding.GetString(buffer, index, 1);
+            else
+                return string.Empty;
         }
 
         public static string GetCyrillicString(byte[] buffer, ref int index)
