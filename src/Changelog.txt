@@ -29,6 +29,8 @@
    * Some fixes/improvements for "Unknown subtitle format importer"
    * Fixed possible crash in TMPlayer format
    * Read of YouTube Annotations time codes without "hour" - thx Joshu
+   * Fixed crash in spell check - thx Ruud
+   * Fixed Serbian letters in format pac - thx Arran
 
 
 3.3.8 (1st September 2013)
