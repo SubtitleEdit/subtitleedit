@@ -1329,6 +1329,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (index < numberOfImages)
             {
                 bmp = GetSubtitleBitmap(index);
+                if (bmp == null)
+                    bmp = new Bitmap(1, 1);
                 groupBoxSubtitleImage.Text = string.Format(Configuration.Settings.Language.VobSubOcr.SubtitleImageXofY, index + 1, numberOfImages) + "   " + bmp.Width + "x" + bmp.Height;
             }
             else
