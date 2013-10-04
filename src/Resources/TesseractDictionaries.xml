@@ -64,6 +64,11 @@
     <Description>Greek language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Hindi</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.hin.tar.gz</DownloadLink>
+    <Description>Hindi language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Hungarian</EnglishName>
     <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.hun.tar.gz</DownloadLink>
     <Description>Hungarian language data for Tesseract 3.02</Description>

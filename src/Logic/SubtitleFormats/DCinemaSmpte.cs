@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     xmlAsString = xmlAsString.Replace("<dcst:", "<").Replace("</dcst:", "</");
                     xmlAsString = xmlAsString.Replace("xmlns=\"http://www.smpte-ra.org/schemas/428-7/2007/DCST\"", string.Empty);
+                    xmlAsString = xmlAsString.Replace("xmlns=\"http://www.smpte-ra.org/schemas/428-7/2010/DCST\"", string.Empty);
                     xml.LoadXml(xmlAsString);
                     var subtitles = xml.DocumentElement.SelectNodes("//Subtitle");
                     if (subtitles != null && subtitles.Count >= 0)
@@ -101,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             string xmlStructure =
-                "<dcst:SubtitleReel xmlns:dcst=\"http://www.smpte-ra.org/schemas/428-7/2010/DCST\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">" + Environment.NewLine +
+                "<dcst:SubtitleReel xmlns:dcst=\"http://www.smpte-ra.org/schemas/428-7/2007/DCST\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">" + Environment.NewLine +
                 "  <dcst:Id>urn:uuid:7be835a3-cfb4-43d0-bb4b-f0b4c95e962e</dcst:Id>" + Environment.NewLine +
                 "  <dcst:ContentTitleText></dcst:ContentTitleText> " + Environment.NewLine +
                 "  <dcst:AnnotationText>This is a subtitle file</dcst:AnnotationText>" + Environment.NewLine +
@@ -134,6 +135,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             xml.DocumentElement.SelectSingleNode("dcst:Id", nsmgr).InnerText = ss.CurrentDCinemaSubtitleId;
             xml.DocumentElement.SelectSingleNode("dcst:ReelNumber", nsmgr).InnerText = ss.CurrentDCinemaReelNumber;
             xml.DocumentElement.SelectSingleNode("dcst:IssueDate", nsmgr).InnerText = ss.CurrentDCinemaIssueDate;
+            if (string.IsNullOrEmpty(ss.CurrentDCinemaLanguage))
+                ss.CurrentDCinemaLanguage = "en";
             xml.DocumentElement.SelectSingleNode("dcst:Language", nsmgr).InnerText = ss.CurrentDCinemaLanguage;
             if (ss.CurrentDCinemaEditRate == null && ss.CurrentDCinemaTimeCodeRate == null)
             {
@@ -457,7 +460,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 catch (Exception exception)
                 {
-                    System.Windows.Forms.MessageBox.Show("SMPTE-428-7-2007-DCST.xsd:" + exception.Message);
+                    if (!BatchMode)
+                        System.Windows.Forms.MessageBox.Show("SMPTE-428-7-2007-DCST.xsd:" + exception.Message);
                 }
             }
             return result;
