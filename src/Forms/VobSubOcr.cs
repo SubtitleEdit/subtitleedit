@@ -785,6 +785,8 @@ namespace Nikse.SubtitleEdit.Forms
             string databaseName = path + "Images.db";
             if (!File.Exists(databaseName))
             {
+                labelStatus.Text = Configuration.Settings.Language.VobSubOcr.LoadingImageCompareDatabase;
+                labelStatus.Refresh();
                 using (var f = new FileStream(databaseName, FileMode.Create))
                 {
                     foreach (string bmpFileName in Directory.GetFiles(path, "*.bmp"))
@@ -806,10 +808,13 @@ namespace Nikse.SubtitleEdit.Forms
                 _compareDoc.Save(path + "Images.xml");
                 string text = File.ReadAllText(path + "Images.xml");
                 File.WriteAllText(path + "Images.xml", text.Replace("<FileName", "<Item").Replace("</FileName>", "</Item>"));
+                labelStatus.Text = string.Empty;
             }
 
             if (File.Exists(databaseName))
             {
+                labelStatus.Text = Configuration.Settings.Language.VobSubOcr.LoadingImageCompareDatabase;
+                labelStatus.Refresh();
                 _compareDoc.Load(path + "Images.xml");
                 using (var f = new FileStream(databaseName, FileMode.Open))
                 {
@@ -837,6 +842,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+                labelStatus.Text = string.Empty;
             }
         }
 
@@ -5193,37 +5199,38 @@ namespace Nikse.SubtitleEdit.Forms
                     return string.Empty;
                 }
 
-                string tmp = Utilities.RemoveHtmlTags(line).Trim();
-                if (!tmp.Trim().EndsWith("..."))
-                {
-                    tmp = tmp.TrimEnd('.').TrimEnd();
-                    if (tmp.Length > 2 && Utilities.LowercaseLetters.Contains(tmp.Substring(tmp.Length - 1, 1)))
-                    {
-                        if (_nocrChars == null)
-                            _nocrChars = LoadNOcrForTesseract("Nikse.SubtitleEdit.Resources.nOCR_TesseractHelper.xml.zip");
-                        string text = Utilities.RemoveHtmlTags(NocrFastCheck(bitmap).TrimEnd());
-                        string post = string.Empty;
-                        if (line.EndsWith("</i>"))
-                        {
-                            post = "</i>";
-                            line = line.Remove(line.Length - 4, 4).Trim();
-                        }
-                        if (text.EndsWith("."))
-                        {
-                            line = line.TrimEnd('.').Trim();
-                            while (text.EndsWith(".") || text.EndsWith(" "))
-                            {
-                                line += text.Substring(text.Length - 1).Trim();
-                                text = text.Remove(text.Length - 1, 1);
-                            }
-                        }
-                        else if (text.EndsWith("l") && text.EndsWith("!") && !text.EndsWith("l!"))
-                        {
-                            line = line.Remove(line.Length - 1, 1) + "!";
-                        }
-                        line += post;
-                    }
-                }
+                //check tesseract... find some otherway to do this...
+                //string tmp = Utilities.RemoveHtmlTags(line).Trim();
+                //if (!tmp.Trim().EndsWith("..."))
+                //{
+                //    tmp = tmp.TrimEnd('.').TrimEnd();
+                //    if (tmp.Length > 2 && Utilities.LowercaseLetters.Contains(tmp.Substring(tmp.Length - 1, 1)))
+                //    {
+                //        if (_nocrChars == null)
+                //            _nocrChars = LoadNOcrForTesseract("Nikse.SubtitleEdit.Resources.nOCR_TesseractHelper.xml.zip");
+                //        string text = Utilities.RemoveHtmlTags(NocrFastCheck(bitmap).TrimEnd());
+                //        string post = string.Empty;
+                //        if (line.EndsWith("</i>"))
+                //        {
+                //            post = "</i>";
+                //            line = line.Remove(line.Length - 4, 4).Trim();
+                //        }
+                //        if (text.EndsWith("."))
+                //        {
+                //            line = line.TrimEnd('.').Trim();
+                //            while (text.EndsWith(".") || text.EndsWith(" "))
+                //            {
+                //                line += text.Substring(text.Length - 1).Trim();
+                //                text = text.Remove(text.Length - 1, 1);
+                //            }
+                //        }
+                //        else if (text.EndsWith("l") && text.EndsWith("!") && !text.EndsWith("l!"))
+                //        {
+                //            line = line.Remove(line.Length - 1, 1) + "!";
+                //        }
+                //        line += post;
+                //    }
+                //}
 
                 // Log used word guesses (via word replace list)
                 foreach (string guess in _ocrFixEngine.AutoGuessesUsed)
