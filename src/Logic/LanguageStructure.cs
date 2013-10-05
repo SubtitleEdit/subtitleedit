@@ -1958,6 +1958,8 @@
             public string Stop { get; set; }
             public string StartOcrFrom { get; set; }
             public string LoadingVobSubImages { get; set; }
+            public string LoadingImageCompareDatabase { get; set; }
+            public string ConvertingImageCompareDatabase { get; set; }
             public string SubtitleImage { get; set; }
             public string SubtitleText { get; set; }
             public string UnableToCreateCharacterDatabaseFolder { get; set; }
