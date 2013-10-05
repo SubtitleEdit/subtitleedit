@@ -406,9 +406,9 @@ nl.types_default=Standaard installatie
 
 ; Polish
 pl.comp_translations=Tłumaczenia
-pl.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-pl.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-pl.msg_AskToDownNET=Subtitle Edit wymaga do poprawnej pracy .NET Framework 2.0. Pobierz i zainstaluj .NET Framework i uruchom ponownie instalator.%n%nCzy chcesz teraz pobrać .NET Framework 2.0?
+pl.msg_AppIsRunning=Instalator wykrył, że Subtitle Edit jest obecnie uruchomiony.%n%nProszę teraz zamknąć wszystkie kopie SE, a następnie kliknąć przycisk OK, aby kontynuować, lub Anuluj, aby wyjść.
+pl.msg_AppIsRunningUninstall=Deinstalator wykrył, że Subtitle Edit jest obecnie uruchomiony.%n%nProszę teraz zamknąć wszystkie kopie SE, a następnie kliknąć przycisk OK, aby kontynuować, lub Anuluj, aby wyjść.
+pl.msg_AskToDownNET=Subtitle Edit do poprawnej pracy wymaga .NET Framework 2.0. Pobierz i zainstaluj .NET Framework i uruchom ponownie instalator.%n%nCzy chcesz teraz pobrać .NET Framework 2.0?
 pl.msg_DeleteSettings=Czy chcesz także usunąć ustawienia Subtitle Edit oraz wszelkie niestandardowe zmiany wprowadzone w słownikach?%n%nJeśli planujesz ponowną instalację Subtitle Edit, nie musisz ich usuwać.
 pl.msg_OptimizingPerformance=Optymalizowanie wydajności...
 pl.msg_SetupIsRunningWarning=Instalator Subtitle Edit już jest uruchomiony!
