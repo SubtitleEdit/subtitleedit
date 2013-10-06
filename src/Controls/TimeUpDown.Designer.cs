@@ -32,28 +32,28 @@
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
-            //
+            // 
             // maskedTextBox1
-            //
+            // 
             this.maskedTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.maskedTextBox1.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
-            this.maskedTextBox1.Location = new System.Drawing.Point(4, 4);
+            this.maskedTextBox1.Location = new System.Drawing.Point(4, 3);
             this.maskedTextBox1.Mask = "00:00:00.000";
             this.maskedTextBox1.Name = "maskedTextBox1";
-            this.maskedTextBox1.Size = new System.Drawing.Size(67, 13);
+            this.maskedTextBox1.Size = new System.Drawing.Size(71, 13);
             this.maskedTextBox1.TabIndex = 21;
             this.maskedTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MaskedTextBox1KeyDown);
-            //
+            // 
             // numericUpDown1
-            //
+            // 
             this.numericUpDown1.Location = new System.Drawing.Point(2, 1);
             this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(87, 20);
+            this.numericUpDown1.Size = new System.Drawing.Size(91, 20);
             this.numericUpDown1.TabIndex = 20;
             this.numericUpDown1.TabStop = false;
-            //
+            // 
             // TimeUpDown
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
@@ -61,7 +61,7 @@
             this.Controls.Add(this.maskedTextBox1);
             this.Controls.Add(this.numericUpDown1);
             this.Name = "TimeUpDown";
-            this.Size = new System.Drawing.Size(92, 24);
+            this.Size = new System.Drawing.Size(94, 24);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

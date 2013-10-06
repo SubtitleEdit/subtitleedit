@@ -62,10 +62,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else if (numericUpDown1.Value < NumericUpDownValue)
                     {
-                        if (millisecs.Value - 100 > 0)
-                            SetTotalMilliseconds(millisecs.Value - 100);
-                        else if (millisecs.Value > 0)
-                            SetTotalMilliseconds(0);
+                        SetTotalMilliseconds(millisecs.Value - 100);
                     }
                 }
                 else
@@ -101,9 +98,17 @@ namespace Nikse.SubtitleEdit.Controls
         {
             TimeSpan ts = TimeSpan.FromMilliseconds(milliseconds);
             if (Mode == TimeMode.HHMMSSMS)
+            {
+                if (Mode == TimeMode.HHMMSSMS && milliseconds < 0)
+                    maskedTextBox1.Mask = "-00:00:00.000";
+                else
+                    maskedTextBox1.Mask = "00:00:00.000";
                 maskedTextBox1.Text = new TimeCode(ts).ToString();
+            }
             else
-                maskedTextBox1.Text = new TimeCode(ts).ToString().Substring(0,9) + string.Format("{0:00}", Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(ts.Milliseconds));
+            {
+                maskedTextBox1.Text = new TimeCode(ts).ToString().Substring(0, 9) + string.Format("{0:00}", Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(ts.Milliseconds));
+            }
         }
 
         public double? GetTotalMilliseconds()
@@ -146,7 +151,10 @@ namespace Nikse.SubtitleEdit.Controls
                         if (Utilities.IsInteger(times[3]))
                             milliSeconds = int.Parse(times[3].PadRight(3, '0'));
 
-                        return new TimeCode(hours, minutes, seconds, milliSeconds);
+                        var tc = new TimeCode(hours, minutes, seconds, milliSeconds);
+                        if (times[0].StartsWith("-") && tc.TotalMilliseconds > 0)
+                            tc.TotalMilliseconds = tc.TotalMilliseconds * -1;
+                        return tc;
                     }
                 }
                 else
@@ -181,7 +189,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (Mode == TimeMode.HHMMSSMS)
+                if (Mode == TimeMode.HHMMSSMS && value != null && value.TotalMilliseconds < 0)
+                    maskedTextBox1.Mask = "-00:00:00.000";
+                else if (Mode == TimeMode.HHMMSSMS)
                     maskedTextBox1.Mask = "00:00:00.000";
                 else
                     maskedTextBox1.Mask = "00:00:00:00";
