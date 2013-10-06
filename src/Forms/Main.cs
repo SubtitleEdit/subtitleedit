@@ -12852,8 +12852,14 @@ namespace Nikse.SubtitleEdit.Forms
                     timeUpDownVideoPositionAdjust.Enabled = true;
                 }
                 int index = ShowSubtitle();
-                timeUpDownVideoPosition.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(mediaPlayer.CurrentPosition * 1000.0));
-                timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(mediaPlayer.CurrentPosition * 1000.0));
+  
+                double pos = mediaPlayer.CurrentPosition * 1000.0;
+                if (timeUpDownVideoPosition.TimeCode.TotalMilliseconds != pos)
+                    timeUpDownVideoPosition.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(pos));
+
+                if (timeUpDownVideoPositionAdjust.TimeCode.TotalMilliseconds != pos)
+                    timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(pos));
+                
                 mediaPlayer.RefreshProgressBar();
 
                 trackBarWaveFormPosition.ValueChanged -= trackBarWaveFormPosition_ValueChanged;
