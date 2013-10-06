@@ -3,6 +3,7 @@
 3.3.9 (? 2013)
 * NEW:
    * Added new subtitle formats
+   * Edit -> Modify selection
    * Shortcuts keys Ctrl+up/down now move contents in 
      "Multi-Replace" list view - thx Ivandrofly
 * IMPROVED:
@@ -31,6 +32,7 @@
    * Read of YouTube Annotations time codes without "hour" - thx Joshu
    * Fixed crash in spell check - thx Ruud
    * Fixed Serbian letters in format pac - thx Arran
+   * Can now work with negative time codes in SubRip - thx Salad
 
 
 3.3.8 (1st September 2013)
