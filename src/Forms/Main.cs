@@ -13317,7 +13317,6 @@ namespace Nikse.SubtitleEdit.Forms
                 generateDatetimeInfoFromVideoToolStripMenuItem.Visible = true;
                 toolStripMenuItemExportCaptionInc.Visible = true;
                 toolStripMenuItemExportUltech130.Visible = true;
-                toolStripMenuItemModifySelection.Visible = true;
                 toolStripMenuItemInverseSelection.Visible = true;
                 toolStripMenuItemSpellCheckFromCurrentLine.Visible = true;
                 toolStripMenuItemImportOcrHardSub.Visible = true;
@@ -13330,7 +13329,6 @@ namespace Nikse.SubtitleEdit.Forms
                 generateDatetimeInfoFromVideoToolStripMenuItem.Visible = false;
                 toolStripMenuItemExportCaptionInc.Visible = false;
                 toolStripMenuItemExportUltech130.Visible = false;
-                toolStripMenuItemModifySelection.Visible = false;
                 toolStripMenuItemInverseSelection.Visible = false;
                 toolStripMenuItemSpellCheckFromCurrentLine.Visible = false;
                 toolStripMenuItemImportOcrHardSub.Visible = false;
