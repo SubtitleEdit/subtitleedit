@@ -4985,15 +4985,22 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 if (checkBoxTesseractMusicOn.Checked)
                                 {
-                                    if ((line.StartsWith("J' ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Substring(1, 2) == "' ")
+                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Substring(1, 2) == "' ")
                                     {
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                     }
-
                                     if (unItalicText.StartsWith("J'") && (line.StartsWith("♪") || textWithOutFixes.StartsWith("♪") || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
                                     {
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                     }
+                                    if ((line.StartsWith("J` ") || line.StartsWith("J“ ") || line.StartsWith("J' ") || line.StartsWith("J* ")) && unItalicText.StartsWith("S "))
+                                    {
+                                        unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
+                                    }
+                                    if ((line.StartsWith("J` ") || line.StartsWith("J“ ") || line.StartsWith("J' ") || line.StartsWith("J* ")) && unItalicText.StartsWith("<i>S</i> "))
+                                    {
+                                        unItalicText = "♪ " + unItalicText.Remove(0, 8).TrimStart();
+                                    }                                    
                                     if (unItalicText.StartsWith(";'") && (line.StartsWith("♪") || textWithOutFixes.StartsWith("♪") || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
                                     {
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
