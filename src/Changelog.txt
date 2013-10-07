@@ -18,8 +18,8 @@
    * Can now read Russian in Cavena 890
    * Waveform generation now uses current audio track (VLC only atm)
    * Open original subtitle now allows EBU/890/PAC formats - thx Andreas
-   * Format "DCinema SMPTE" is now valid (uses xsd) - thx Wolfgang
-   * Improved italic fix - thx XhmikosR 
+   * "DCinema SMPTE" format is now valid (uses xsd) - thx Wolfgang
+   * Improved italic fix - thx XhmikosR
 * FIXED:
    * Crash in export of images - thx Eros UK
    * Crash in OCR via "Image compare" with large image databases - thx Zoltan
@@ -31,7 +31,7 @@
    * Fixed possible crash in TMPlayer format
    * Read of YouTube Annotations time codes without "hour" - thx Joshu
    * Fixed crash in spell check - thx Ruud
-   * Fixed Serbian letters in format pac - thx Arran
+   * Fixed Serbian letters in PAC format - thx Arran
    * Can now work with negative time codes in SubRip - thx Salad
 
 
@@ -71,7 +71,7 @@
    * Fixed crash when loading sub from dvd - thx Cristiano
    * Export to images now uses font size correctly
    * Export to images can now render Arabic (use "Simple rendering")
-   * Bug in reading end time code in format Gpac ttxt - thx noMnoMnoM
+   * Bug in reading end time code in Gpac ttxt format - thx noMnoMnoM
    * Better OCR of some yellow fonts - thx Albert
 
 
@@ -96,7 +96,7 @@
    * When opening an invalid Timed Text file an improved error will now be shown
    * A "*" will now be shown in the title bar if a subtitle has been changed
 * FIXED:
-   * Fixed crash/bugs in MicroDvd format - thx klm
+   * Fixed crash/bugs in MicroDVD format - thx klm
    * Fixed annoying crash when loading a subtitle from "source view"
    * OCR - Change OCR fix language when changing spell check dictionary
    * Fixed Hebrew in PAC files - thx Yaniv
@@ -217,7 +217,7 @@
    * Updated German language file - thx Christoph Kitsche
    * Updated Portuguese language file - thx moob
    * Remembers size of controls in main window better - thx George/Leszek
-   * Format Sami: html-decodes text + reads class attributes better
+   * SAMI format: html-decodes text + reads class attributes better
    * Batch convert can now also "Fix common errors" and more - thx Adem
    * Volume level is now remembered (no longer in settings) - thx fox
    * Some improvements to language detection - thx fox/mihai
@@ -244,7 +244,7 @@
    * Slightly improved reading of italics in timed text draft - thx Jean
    * Export to png/xml now uses font styles from SSA/ASS
    * Export images - better cropping
-   * Alignment tags now works for format PAC - thx Jussi
+   * Alignment tags now works for PAC format - thx Jussi
    * Allows chars/sec down to 4 due to e.g. Japanese - thx dandomina
 * FIXED:
    * No longer removes last lines in "Merge short lines" - thx Pax
@@ -276,7 +276,7 @@
    * Tools -> Apply duration limits
    * Tools -> Sort -> Text - chars/sec
    * Main window list view context menu: Save selected lines as...
-   * Will now display any errors found in SubRip/MicroDvd/SSA/ASS on load
+   * Will now display any errors found in SubRip/MicroDVD/SSA/ASS on load
    * File -> Statistics: Displays info about current subtitle
    * Click on status bar in footer will now show status history
    * "Fix common errors" item to fix Turkish ANSI letters to Unicode - thx Adem
@@ -312,7 +312,7 @@
    * Fixed bug in parsing of Blu-ray sup files - thx e.patic82
    * Reading of SAMI files with time codes in quotes - thx Josh
    * Reading of Ulead files with position codes - thx Steve
-   * Reading of time codes + adjust with format SCC - thx Marquise
+   * Reading of time codes + adjust with SCC format - thx Marquise
    * Accents and tildes in Cheetah caption format - thx David
    * Now always uses output folder in command line convert - thx the hulk
    * Cropping of bottom images in File -> Export - thx moob
@@ -360,7 +360,7 @@
    * Fixed italics in .890 writing - thx victor
    * Insert line before/after shortcuts - thx Omar
    * Minor bug with fixing "I" inside lowercase word - thx Alberto
-   * New line in format Encore with tabs - thx Tim
+   * New line in Encore format with tabs - thx Tim
    * Minor bug in Remove interjections - thx Pson
    * Crash when working with Advanced Sub Station Alpha styles
 
@@ -368,7 +368,7 @@
 3.2.7 (14th April 2012)
  * NEW:
    * Added Finnish language - thx Veikko
-   * Can now import binary subtitle format Cheetah Caption
+   * Can now import binary Cheetah Caption subtitle format
  * IMPROVED:
    * VLC audio extraction now generates smaller wave file - thx utocne
      (transcoding parameters now in Settings.xml)
@@ -469,7 +469,7 @@
    * Added Portuguese (Portugal) language file - thx Ricardo Perdigão
    * Added Japanese language file - thx Nardog
    * Added Spanish language file - thx m2s
-   * Support for subtitle format AvidCaption - thx Laszlo
+   * Support for subtitle AvidCaption format - thx Laszlo
    * Support for F4 subtitle formats - thx Fred
    * Export to Blu-ray sup format
  * IMPROVED:
@@ -480,9 +480,9 @@
    * Many new configurable shortcuts (e.g. for fullscreen video player)
    * OCR tweaked a bit + Blu-ray sup files are processed faster
    * TextBox with current subtitle now shows cursor position - thx Leszek
-   * Subtitle format PAC much improved - thx Peter
-   * Subtitle format FCP Xml improved - thx Ulrik
-   * Subtitle format D-Cinema improved - thx Karam
+   * Subtitle PAC format much improved - thx Peter
+   * Subtitle FCP format Xml improved - thx Ulrik
+   * Subtitle D-Cinema format improved - thx Karam
    * Splitting of lines - Thx Trottel
    * Auto break lines - thx Majid
    * Some fixes for Fix common errors/Remove text for HI - thx Majid
@@ -507,8 +507,8 @@
  * NEW:
    * Added German language file - thx JW 301
    * Added Greek language file - thx The Rabbit
-   * Some basic support for subtitle format WebVTT
-   * Some basic support for subtitle format SCC
+   * Some basic support for WebVTT subtitle format
+   * Some basic support for SCC subtitle format
  * IMPROVED:
    * Updated Basque language file - thx xabier aramendi
    * Improved drag-and-drop support in textbox - thx vmb
@@ -520,7 +520,7 @@
    * Fixed WinXP crash when OCR'ing Blu-ray/SON - thx edea
    * Can now actually use MPlayer2 on windows - thx rotulos1
    * Fixed a (rare) crash in change casing - fix names
-   * Fixed a bug in format Timed Text draft - thx Thomas
+   * Fixed a bug in Timed Text draft format - thx Thomas
    * Fix for using Chinese traditional Tesseract OCR dictionary
 
 
@@ -535,7 +535,7 @@
    * Tools -> Make empty translation from current subtitle (thx vmb)
    * Tools -> Show original text in audio/video previews (thx vmb)
    * Command line conversion between subtitle formats
-     (Example: subtitleedit /convert *.srt microdvd - thx Carl)
+     (Example: subtitleedit /convert *.srt MicroDVD - thx Carl)
    * Subtitle preview font size (below video player) is now available in 
      Options -> Settings
    * Edit -> Select all
@@ -561,7 +561,7 @@
    * Improved Remove text for HI (thx sialivi/aMvEL)
    * Undo now also works for original subtitle (thx Trottel)
  * FIXED:
-   * Adjust all times did not work for MicroDvd (thx Wolf)
+   * Adjust all times did not work for MicroDVD (thx Wolf)
    * Fixed a bug in VobSub parser which could cause scrambled images
    * Fixed a bug in VobSub parser so it no longer ignores custom 
      background color
@@ -586,7 +586,7 @@
    * Wave form control can adjust play rate (slow, normal, fast and very fast - VLC player only)
    * Ability to remember the last selected line when re-opening subtitles (thx Frederic)
    * Now remembers video file and original subtitle (thx Luis)
-   * Support for the subtitle format "QuickTime text" (two variations) + Scenarist + Adobe Encore
+   * Support for the subtitle "QuickTime text" format (two variations) + Scenarist + Adobe Encore
    * Added "Chars/sec" info to textbox in main window (thx Kerensky)
    * Options to choose font color and background color (for list view/text-boxes)
    * Can now import VobSub subtitles embedded in Matroska (.mkv) files
@@ -624,7 +624,7 @@
    * A minor bug in Visual Sync, if end scene was after video length (thx tsieberg)
    * OCR Fix Engine: Lines after "..." will no longer be changed to start with uppercase
    * Fixed bug in reading of SSA files ("," was removed) - thx Péter
-   * Fixed line breaking bug in mpl format - thx Przemek
+   * Fixed line breaking bug in MPL format - thx Przemek
    * Fixed shortcuts for adjust commands Ctrl+Space/Shift+Space/F9/F10
 
 
@@ -636,7 +636,7 @@
    * Added Microsoft translate
    * Option to remove blank lines when opening a subtitle (thx honeybunny)
    * Can now read subtitles in the binary EBU format (thx corbin dallas/Iban)
-   * Can now read/write subtitle Sony DVD Architect format (thx Mark/Zedopipo)
+   * Can now read/write Sony DVD Architect subtitle format (thx Mark/Zedopipo)
    * Setting "Font name" is possible via right-click menu in list view
    * New cool installer (thx XhmikosR)
  * IMPROVED:
