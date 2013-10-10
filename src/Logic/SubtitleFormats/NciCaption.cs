@@ -41,14 +41,24 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (fileName.ToLower().EndsWith(".cap"))
                     {
                         byte[] buffer = File.ReadAllBytes(fileName);
-                        return (buffer[0] == 0x43 &&
+
+                       
+                        return ((buffer[0] == 0x43 &&  // CAPT.2.0  
                                 buffer[1] == 0x41 &&
                                 buffer[2] == 0x50 &&
                                 buffer[3] == 0x54 &&
                                 buffer[4] == 0x00 &&
                                 buffer[5] == 0x32 &&
                                 buffer[6] == 0x2e &&
-                                buffer[7] == 0x30);
+                                buffer[7] == 0x30) || 
+                               (buffer[0] == 0x43 && // CAPT.1.2
+                                buffer[1] == 0x41 &&
+                                buffer[2] == 0x50 &&
+                                buffer[3] == 0x54 &&
+                                buffer[4] == 0x00 &&
+                                buffer[5] == 0x31 &&
+                                buffer[6] == 0x2e &&
+                                buffer[7] == 0x32));
                     }
                 }
             }
@@ -126,65 +136,100 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             subtitle.Renumber(1);
 
-            i = 230;
-            int countTimecodes = 0;
-            int start = i;
-            int lastNumber = -1;
-            while (i < buffer.Length - 66)
+
+            if (buffer[0] == 0x43 && // CAPT.1.2
+                                buffer[1] == 0x41 &&
+                                buffer[2] == 0x50 &&
+                                buffer[3] == 0x54 &&
+                                buffer[4] == 0x00 &&
+                                buffer[5] == 0x31 &&
+                                buffer[6] == 0x2e &&
+                                buffer[7] == 0x32)
             {
-                if (buffer[i] == 0xff && buffer[i + 1] == 0xff && buffer[i + 2] == 0xff && buffer[i + 3] == 0xff)
+                i = 396;
+                int start = i;
+                int number = 0;
+                while (i < buffer.Length - 66)
                 {
-                    int length = i - start - 2;
-                    if (length >= 10)
+                    if (buffer[i] == 0xff && buffer[i + 1] == 0xff && buffer[i + 2] != 0xff && buffer[i + 28] == 0xff && buffer[i + 29] == 0xff && buffer[i + 30] != 0xff)
                     {
-                        int count = length / 14;
-                        if (length % 14 == 10)
+                        if (buffer[i+14] == number+1)
                         {
-                            count++;
-                        }
-                        else
-                        {
-                            //System.Windows.Forms.MessageBox.Show("Problem at with a length of " + length.ToString() + " at file position " + (i + 2) + " which gives remainer: " + (length % 14));
-                            if (length % 14 == 8)
-                                count++;
-                        }
-                        for (int k = 0; k < count; k++)
-                        {
-                            int index = start + 2 + (14 * k);
-                            int number = buffer[index] + buffer[index + 1] * 256;
-                            if (number != lastNumber + 1)
+                            Paragraph p = subtitle.GetParagraphOrDefault(number);
+                            if (p != null)
                             {
-                                int tempNumber = buffer[index-2] + buffer[index -1] * 256;
-                                if (tempNumber == lastNumber + 1)
-                                {
-                                    index -= 2;
-                                    number = tempNumber;
-                                }
+                                p.StartTime = DecodeTimeCode(buffer, i + 18);
+                                p.EndTime = DecodeTimeCode(buffer, i + 22);
+                                number++;
                             }
-                            if (number > lastNumber)
-                            {
-                                lastNumber = number;
-                                Paragraph p = subtitle.GetParagraphOrDefault(number);
-                                if (p != null)
-                                {
-                                    if (k < count - 1)
-                                    {
-                                        p.StartTime = DecodeTimeCode(buffer, index + 6);
-                                        p.EndTime = DecodeTimeCode(buffer, index + 10);
-                                    }
-                                    else
-                                    {
-                                        p.StartTime = DecodeTimeCode(buffer, index + 6);
-                                    }
-                                    countTimecodes++;
-                                }
-                            }
+                            i += 25;
                         }
                     }
-                    start = i + 2;
-                    i += 5;
+                    i++;
                 }
-                i++;
+            }
+            else
+            {
+                i = 230;
+                int countTimecodes = 0;
+                int start = i;
+                int lastNumber = -1;
+                while (i < buffer.Length - 66)
+                {
+                    if (buffer[i] == 0xff && buffer[i + 1] == 0xff && buffer[i + 2] == 0xff && buffer[i + 3] == 0xff)
+                    {
+                        int length = i - start - 2;
+                        if (length >= 10)
+                        {
+                            int count = length / 14;
+                            if (length % 14 == 10)
+                            {
+                                count++;
+                            }
+                            else
+                            {
+                                //System.Windows.Forms.MessageBox.Show("Problem at with a length of " + length.ToString() + " at file position " + (i + 2) + " which gives remainer: " + (length % 14));
+                                if (length % 14 == 8)
+                                    count++;
+                            }
+                            for (int k = 0; k < count; k++)
+                            {
+                                int index = start + 2 + (14 * k);
+                                int number = buffer[index] + buffer[index + 1] * 256;
+                                if (number != lastNumber + 1)
+                                {
+                                    int tempNumber = buffer[index - 2] + buffer[index - 1] * 256;
+                                    if (tempNumber == lastNumber + 1)
+                                    {
+                                        index -= 2;
+                                        number = tempNumber;
+                                    }
+                                }
+                                if (number > lastNumber)
+                                {
+                                    lastNumber = number;
+                                    Paragraph p = subtitle.GetParagraphOrDefault(number);
+                                    if (p != null)
+                                    {
+                                        if (k < count - 1)
+                                        {
+                                            p.StartTime = DecodeTimeCode(buffer, index + 6);
+                                            p.EndTime = DecodeTimeCode(buffer, index + 10);
+                                        }
+                                        else
+                                        {
+                                            p.StartTime = DecodeTimeCode(buffer, index + 6);
+                                        }
+                                        countTimecodes++;
+                                    }
+                                }
+                            }
+                        }
+                        start = i + 2;
+                        i += 5;
+                    }
+                    i++;
+                }
             }
 
             for (i = 0; i < subtitle.Paragraphs.Count; i++)
