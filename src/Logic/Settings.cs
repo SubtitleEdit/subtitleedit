@@ -718,6 +718,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainListViewColumnPaste { get; set; }
         public string MainTextBoxItalic { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
+        public string MainTextBoxMoveLastWordDown { get; set; }
+        public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
         public string MainCreateInsertSubAtVideoPos { get; set; }
         public string MainCreatePlayFromJustBefore { get; set; }
         public string MainCreateSetStart { get; set; }
@@ -2035,6 +2037,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainTextBoxSplitAtCursor");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxSplitAtCursor = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxMoveLastWordDown");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxMoveLastWordDown = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordFromNextUp");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainCreateInsertSubAtVideoPos");
                 if (subNode != null)
                     settings.Shortcuts.MainCreateInsertSubAtVideoPos = subNode.InnerText;
@@ -2595,6 +2603,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);
+            textWriter.WriteElementString("MainTextBoxMoveLastWordDown", settings.Shortcuts.MainTextBoxMoveLastWordDown);
+            textWriter.WriteElementString("MainTextBoxMoveFirstWordFromNextUp", settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);            
             textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", settings.Shortcuts.MainCreateInsertSubAtVideoPos);
             textWriter.WriteElementString("MainCreatePlayFromJustBefore", settings.Shortcuts.MainCreatePlayFromJustBefore);
             textWriter.WriteElementString("MainCreateSetStart", settings.Shortcuts.MainCreateSetStart);

@@ -1783,6 +1783,8 @@ can edit in same subtitle file (collaboration)",
                 ListViewColumnInsert = "Column, insert text",
                 ListViewColumnPaste ="Column, paste",
                 ShowBeamer = "Start subtitle fullscreen beamer",
+                MainTextBoxMoveLastWordDown = "Move last word down to next subtitle line",
+                MainTextBoxMoveFirstWordFromNextUp = "Move first word from next subtitle line up",
             };
 
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater

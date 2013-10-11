@@ -573,6 +573,10 @@ namespace Nikse.SubtitleEdit.Forms
             var textBoxNode = new TreeNode(Configuration.Settings.Language.Settings.TextBox);
             textBoxNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxItalic));
             textBoxNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.SplitLineAtCursorPosition + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxMoveLastWordDown))
+                textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxMoveLastWordDown + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp))
+                textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp));
             treeViewShortcuts.Nodes.Add(textBoxNode);
 
             var createNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Create);
@@ -1200,6 +1204,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainTextBoxItalic = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.SplitLineAtCursorPosition.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.MainTextBoxMoveLastWordDown != null && text == Configuration.Settings.Language.Settings.MainTextBoxMoveLastWordDown.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp != null && text == Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp = GetShortcut(node.Text);
                 }
             }
 

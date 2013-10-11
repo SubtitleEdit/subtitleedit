@@ -2849,6 +2849,8 @@ namespace Nikse.SubtitleEdit.Logic
                     if (!AllKeys.ContainsKey(k))
                         AllKeys.Add(k, val);
                 }
+                if (!AllKeys.ContainsKey("pagedown"))
+                    AllKeys.Add("pagedown", Keys.RButton | Keys.Space);
             }
 
             string[] parts = keysInString.ToLower().Split("+".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
