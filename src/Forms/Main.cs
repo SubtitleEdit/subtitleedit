@@ -119,6 +119,8 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _video500MsRight = Keys.None;
         Keys _mainVideoFullscreen = Keys.None;
         Keys _mainTextBoxSplitAtCursor = Keys.None;
+        Keys _mainTextBoxMoveLastWordDown = Keys.None;
+        Keys _mainTextBoxMoveFirstWordFromNextUp = Keys.None;
         Keys _mainCreateInsertSubAtVideoPos = Keys.None;
         Keys _mainCreatePlayFromJustBefore = Keys.None;
         Keys _mainCreateSetStart = Keys.None;
@@ -6619,6 +6621,68 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_mainTextBoxSplitAtCursor == e.KeyData)
             {
                 ToolStripMenuItemSplitTextAtCursorClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainTextBoxMoveLastWordDown == e.KeyData)
+            {
+                int firstIndex = FirstSelectedIndex;
+                if (firstIndex >= 0)
+                {
+                    var p = _subtitle.GetParagraphOrDefault(firstIndex);
+                    var next = _subtitle.GetParagraphOrDefault(firstIndex + 1);
+                    if (p != null && next != null)
+                    {
+                        string s = p.Text.Trim();
+                        int idx = s.LastIndexOf(" ");
+                        if (idx > 0)
+                        {
+                            string lastWord = s.Substring(idx).Trim();
+                            p.Text = Utilities.AutoBreakLine(s.Substring(0, idx).Trim());
+                            next.Text = Utilities.AutoBreakLine(lastWord.Trim() + " " + next.Text.Trim());
+                            SubtitleListview1.SetText(firstIndex, p.Text);
+                            SubtitleListview1.SetText(firstIndex + 1, next.Text);
+                        }
+                        else if (s.Length > 0)
+                        {
+                            next.Text = Utilities.AutoBreakLine(p.Text.Trim() + " " + next.Text.Trim());
+                            p.Text = string.Empty;
+                            SubtitleListview1.SetText(firstIndex, p.Text);
+                            SubtitleListview1.SetText(firstIndex + 1, next.Text);
+                        }
+                        textBoxListViewText.Text = p.Text;
+                    }
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainTextBoxMoveFirstWordFromNextUp == e.KeyData)
+            {
+                int firstIndex = FirstSelectedIndex;
+                if (firstIndex >= 0)
+                {
+                    var p = _subtitle.GetParagraphOrDefault(firstIndex);
+                    var next = _subtitle.GetParagraphOrDefault(firstIndex + 1);
+                    if (p != null && next != null)
+                    {
+                        string s = next.Text.Trim();
+                        int idx = s.IndexOf(" ");
+                        if (idx > 0)
+                        {
+                            string firstWord = s.Substring(0, idx).Trim();
+                            p.Text = Utilities.AutoBreakLine(p.Text.Trim() + " " + firstWord);
+                            next.Text = Utilities.AutoBreakLine(s.Substring(idx).Trim());
+                            SubtitleListview1.SetText(firstIndex, p.Text);
+                            SubtitleListview1.SetText(firstIndex + 1, next.Text);
+                        }
+                        else
+                        {
+                            p.Text = Utilities.AutoBreakLine(p.Text.Trim() + " " + next.Text.Trim());
+                            next.Text = string.Empty;
+                            SubtitleListview1.SetText(firstIndex, p.Text);
+                            SubtitleListview1.SetText(firstIndex + 1, next.Text);
+                        }
+                        textBoxListViewText.Text = p.Text;
+                    }
+                }
                 e.SuppressKeyPress = true;
             }
 
@@ -13445,6 +13509,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = _mainEditReverseStartAndEndingForRTL;
             italicToolStripMenuItem1.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
             _mainTextBoxSplitAtCursor = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
+            _mainTextBoxMoveLastWordDown = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown);
+            _mainTextBoxMoveFirstWordFromNextUp = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
             _mainCreateInsertSubAtVideoPos = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
             _mainCreatePlayFromJustBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore);
             _mainCreateSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);

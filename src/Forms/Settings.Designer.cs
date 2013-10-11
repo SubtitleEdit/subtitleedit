@@ -157,6 +157,7 @@
             this.buttonWaveFormsFolderEmpty = new System.Windows.Forms.Button();
             this.labelWaveFormsFolderInfo = new System.Windows.Forms.Label();
             this.groupBoxWaveFormAppearence = new System.Windows.Forms.GroupBox();
+            this.checkBoxAllowOverlap = new System.Windows.Forms.CheckBox();
             this.checkBoxReverseMouseWheelScrollDirection = new System.Windows.Forms.CheckBox();
             this.panelWaveFormTextColor = new System.Windows.Forms.Panel();
             this.buttonWaveFormTextColor = new System.Windows.Forms.Button();
@@ -249,7 +250,6 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.checkBoxAllowOverlap = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1791,6 +1791,16 @@
             this.groupBoxWaveFormAppearence.TabStop = false;
             this.groupBoxWaveFormAppearence.Text = "Wave form appearence";
             // 
+            // checkBoxAllowOverlap
+            // 
+            this.checkBoxAllowOverlap.AutoSize = true;
+            this.checkBoxAllowOverlap.Location = new System.Drawing.Point(262, 55);
+            this.checkBoxAllowOverlap.Name = "checkBoxAllowOverlap";
+            this.checkBoxAllowOverlap.Size = new System.Drawing.Size(212, 17);
+            this.checkBoxAllowOverlap.TabIndex = 10;
+            this.checkBoxAllowOverlap.Text = "Allow overlap (when dragging/resizing)";
+            this.checkBoxAllowOverlap.UseVisualStyleBackColor = true;
+            // 
             // checkBoxReverseMouseWheelScrollDirection
             // 
             this.checkBoxReverseMouseWheelScrollDirection.AutoSize = true;
@@ -2610,6 +2620,8 @@
             "NumPad7",
             "NumPad8",
             "NumPad9",
+            "PageDown",
+            "PageUp",
             "Sleep",
             "Multiply",
             "Add",
@@ -2875,16 +2887,6 @@
             this.labelStatus.Size = new System.Drawing.Size(60, 13);
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
-            // 
-            // checkBoxAllowOverlap
-            // 
-            this.checkBoxAllowOverlap.AutoSize = true;
-            this.checkBoxAllowOverlap.Location = new System.Drawing.Point(262, 55);
-            this.checkBoxAllowOverlap.Name = "checkBoxAllowOverlap";
-            this.checkBoxAllowOverlap.Size = new System.Drawing.Size(212, 17);
-            this.checkBoxAllowOverlap.TabIndex = 10;
-            this.checkBoxAllowOverlap.Text = "Allow overlap (when dragging/resizing)";
-            this.checkBoxAllowOverlap.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
