@@ -110,7 +110,6 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (CompareItem c in compareBitmaps)
                 {
                     CompareBitmaps.Add(c);
-//                    CompareBitmaps.Add(new CompareItem(c.Bitmap, c.Name, c.Italic, c.ExpandCount));
                 }
                 Increment = increment;
                 NumberOfPixelsIsSpace = numberOfPixelsIsSpace;
@@ -820,7 +819,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     foreach (XmlNode node in _compareDoc.DocumentElement.SelectNodes("Item"))
                     {
-                        try //if (node.Attributes["Pos"] != null)
+                        try
                         {
                             string name = node.InnerText;
                             int pos = Convert.ToInt32(name);
@@ -833,7 +832,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     expandCount = 0;
                             }
                             f.Position = pos;
-                            ManagedBitmap mbmp = new ManagedBitmap(f);
+                            var mbmp = new ManagedBitmap(f);
                             _compareBitmaps.Add(new CompareItem(mbmp, name, isItalic, expandCount, text));
                         }
                         catch
@@ -2345,30 +2344,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 double differencePercentage = smallestDifference * 100.0 / (target.Width * target.Height);
                 double maxDiff = (double)numericUpDownMaxErrorPct.Value;
-                //_vobSubOcrSettings.AllowDifferenceInPercent; // should be around 1.0 for vob/sub...
-                //if (_bluRaySubtitlesOriginal != null)
-                //    maxDiff = 12.9; // let bluray sup have a 12.9% diff
-                if (differencePercentage <= maxDiff) //_vobSubOcrSettings.AllowDifferenceInPercent) // should be around 1.0...
+                if (differencePercentage <= maxDiff) 
                 {
-                    //XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + _compareBitmaps[smallestIndex].Name + "']");
                     var hit = _compareBitmaps[smallestIndex];
-                    if (_bluRaySubtitlesOriginal != null && "ceoil".Contains(hit.Text) && differencePercentage > 12)
-                        hit = null;
-                    if (hit != null)
-                    {
-                        bool ok = true;
-                        if ("iloc".Contains(hit.Text) && differencePercentage > 3)
-                            ok = false;
-                        else if ("OGEF".Contains(hit.Text) && differencePercentage > 4)
-                            ok = false;
-                        else if ("UN".Contains(hit.Text) && differencePercentage > 5)
-                            ok = false;
-                        else if ("LD".Contains(hit.Text) && differencePercentage > 5)
-                            ok = false;
-
-                        if (ok)
-                            return new CompareMatch(hit.Text, hit.Italic, hit.ExpandCount, hit.Name);
-                    }
+                    return new CompareMatch(hit.Text, hit.Italic, hit.ExpandCount, hit.Name);
                 }
 
                 var guess = _compareBitmaps[smallestIndex];
@@ -3159,15 +3138,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (item.NikseBitmap != null)
                 {
-                    //var old = item.Bitmap;
                     var nbmp = item.NikseBitmap;
                     nbmp.ReplaceNonWhiteWithTransparent();
                     item.Y += nbmp.CropTopTransparent(0);
                     nbmp.CropTransparentSidesAndBottom(0, true);
                     nbmp.ReplaceTransparentWith(Color.Black);
-                    //item.Bitmap = nbmp.GetBitmap();
-                    //old.Dispose();
-
                     GetNOcrCompareMatch(item, bitmap, _nocrChars, _unItalicFactor, false, false);
                 }
             }
@@ -3185,7 +3160,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var nbmpInput = new NikseBitmap(bitmap);
                 nbmpInput.ReplaceNonWhiteWithTransparent();
-                //bitmap = nbmp.GetBitmap();
 
                 var matches = new List<CompareMatch>();
                 List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLetters(nbmpInput, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom);
@@ -3318,7 +3292,6 @@ namespace Nikse.SubtitleEdit.Forms
                         index++;
                     if (shrinkSelection && expandSelectionList.Count < 2)
                     {
-                        //index--;
                         shrinkSelection = false;
                         expandSelectionList = new List<ImageSplitterItem>();
                     }
@@ -3945,31 +3918,11 @@ namespace Nikse.SubtitleEdit.Forms
                     double maxDiff = (double)p.MaxErrorPercent;
                     if (differencePercentage <= maxDiff && smallestIndex >= 0)
                     {
-                        XmlNode node = p.CompareDoc.DocumentElement.SelectSingleNode("Item[.='" + p.CompareBitmaps[smallestIndex].Name + "']");
-                        if (node != null)
-                        {
-                            bool isItalic = node.Attributes["Italic"] != null;
-                            int expandCount = 0;
-                            if (node.Attributes["Expand"] != null)
-                            {
-                                if (!int.TryParse(node.Attributes["Expand"].InnerText, out expandCount))
-                                    expandCount = 0;
-                            }
-                            var text = node.Attributes["Text"].InnerText;
-                            match = new CompareMatch(text, isItalic, expandCount, p.CompareBitmaps[smallestIndex].Name);
-                        }
-
-                        if (match == null)
-                        {
-                            p.Result = string.Empty;
-                            return;
-                        }
-                        else // found image match
-                        {
-                            matches.Add(new CompareMatch(match.Text, match.Italic, 0, null));
-                            if (match.ExpandCount > 0)
-                                outerIndex += match.ExpandCount - 1;
-                        }
+                        var hit = p.CompareBitmaps[smallestIndex];                       
+                        match = new CompareMatch(hit.Text, hit.Italic, hit.ExpandCount, hit.Name);
+                        matches.Add(new CompareMatch(match.Text, match.Italic, 0, null));
+                        if (match.ExpandCount > 0)
+                            outerIndex += match.ExpandCount - 1;
                     }
                     else
                     {
@@ -4072,7 +4025,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var nbmpInput = new NikseBitmap(bitmap);
             nbmpInput.ReplaceNonWhiteWithTransparent();
-            //bitmap = nbmp.GetBitmap();
 
             var matches = new List<CompareMatch>();
             List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLetters(nbmpInput, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom);
@@ -4098,7 +4050,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    CompareMatch match = null; // = GetNOcrCompareMatch(item, bitmap, _nocrChars, _unItalicFactor, checkBoxNOcrItalic.Checked, !checkBoxNOcrCorrect.Checked);
+                    CompareMatch match = null; 
 
                     var nbmp = item.NikseBitmap;
                     int index2 = 0;
@@ -4380,8 +4332,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (noOfThreads >= max)
                     noOfThreads = max - 1;
                 int start = (int)numericUpDownStartNumber.Value + 5;
-                if (noOfThreads > 1)
-                noOfThreads = 1; // Threading is not really good - subtitle picture creation should probably be threaded instead
+                if (noOfThreads > 2)
+                noOfThreads = 2; // Threading is not really good - subtitle picture creation should probably be threaded also/instead
                 for (int i = 0; i < noOfThreads; i++)
                 {
                     if (start + i < max)
@@ -4542,16 +4494,8 @@ namespace Nikse.SubtitleEdit.Forms
         private string Tesseract3DoOcrViaExe(Bitmap bmp, string language, string psmMode)
         {
             // change yellow color to white - easier for Tesseract
-            NikseBitmap nbmp = new NikseBitmap(bmp);
+            var nbmp = new NikseBitmap(bmp);
             nbmp.ReplaceYellowWithWhite(); // optimized replace
-            //for (int y = 0; y < bmp.Height; y++)
-            //    for (int x = 0; x < bmp.Width; x++)
-            //    {
-            //        Color c = bmp.GetPixel(x, y);
-            //        if (c.A > 200 && c.R > 220 && c.G > 220 && c.B < 40)
-            //            bmp.SetPixel(x, y, Color.White);
-            //    }
-
             bool useHocr = true;
 
             string tempTiffFileName = Path.GetTempPath() + Guid.NewGuid().ToString() + ".png";
@@ -4560,7 +4504,7 @@ namespace Nikse.SubtitleEdit.Forms
             string tempTextFileName = Path.GetTempPath() + Guid.NewGuid().ToString();
             b.Dispose();
 
-            Process process = new Process();
+            var process = new Process();
             process.StartInfo = new ProcessStartInfo(Configuration.TesseractFolder + "tesseract.exe");
             process.StartInfo.UseShellExecute = true;
             process.StartInfo.Arguments = "\"" + tempTiffFileName + "\" \"" + tempTextFileName + "\" -l " + language;
@@ -4852,7 +4796,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _ocrFixEngine.UnknownWordsFound.Clear();
 
                         // which is best - normal image or one color image?
-                        NikseBitmap nbmp = new NikseBitmap(bitmap);
+                        var nbmp = new NikseBitmap(bitmap);
                         nbmp.MakeOneColor(Color.White);
                         Bitmap oneColorBitmap = nbmp.GetBitmap();
                         string oneColorText = Tesseract3DoOcrViaExe(oneColorBitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.
@@ -5247,9 +5191,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (checkBoxAutoFixCommonErrors.Checked)
                     line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
 
-                if (badWords >= numberOfWords) //result.Count)
+                if (badWords >= numberOfWords) 
                     subtitleListView1.SetBackgroundColor(index, Color.Red);
-                else if (badWords >= numberOfWords / 2) // result.Count / 2)
+                else if (badWords >= numberOfWords / 2) 
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else if (badWords > 0 || line.Contains("_") || HasSingleLetters(line))
                     subtitleListView1.SetBackgroundColor(index, Color.Yellow);
@@ -6109,7 +6053,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = false;
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
-            numericUpDownPixelsIsSpace.Value = 11; // vobSubOcrSettings.XOrMorePixelsMakesSpace;
+            numericUpDownPixelsIsSpace.Value = 11; 
             _vobSubOcrSettings = vobSubOcrSettings;
 
             InitializeModi();
@@ -6171,7 +6115,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             listBoxUnknownWords.Top = listBoxLog.Top;
             listBoxUnknownWords.Left = listBoxLog.Left;
-            //listBoxUnknownWords.Size = listBoxLog.Size;
         }
 
         private void importTextWithMatchingTimeCodesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -6423,7 +6366,6 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeTesseract();
             LoadImageCompareCharacterDatabaseList();
 
-            //_palette = palette;
             if (_palette == null)
                 checkBoxCustomFourColors.Checked = true;
 
