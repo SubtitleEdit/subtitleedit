@@ -4312,26 +4312,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (comboBoxOcrMethod.SelectedIndex == 1)
             {
                 if (_compareBitmaps == null)
-                    LoadImageCompareBitmaps();
-
-                //_icThreadsStop = false;
-                //_icThreads = new List<BackgroundWorker>();
-                //_icThreadResults = new string[_subtitle.Paragraphs.Count];
-                //int noOfThreads = Environment.ProcessorCount - 2; // -1 or -2?
-                //if (noOfThreads >= max)
-                //    noOfThreads = max - 1;
-                //int start = (int)numericUpDownStartNumber.Value + 5;
-                //for (int i = 0; i < noOfThreads; i++)
-                //{
-                //    if (start + i < max)
-                //    {
-                //        var bw = new BackgroundWorker();
-                //        var p = new ImageCompareThreadParameter(GetSubtitleBitmap(start + i), start + i, _compareBitmaps, bw, noOfThreads, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, (float)numericUpDownMaxErrorPct.Value, _compareDoc);
-                //        bw.DoWork += ImageCompareThreadDoWork;
-                //        bw.RunWorkerCompleted += ImageCompareThreadRunWorkerCompleted;
-                //        bw.RunWorkerAsync(p);
-                //    }
-                //}
+                    LoadImageCompareBitmaps();               
             }
             else if (comboBoxOcrMethod.SelectedIndex == 3)
             {
@@ -4388,7 +4369,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainOcrTimer.Tick += mainOcrTimer_Tick;
             _mainOcrTimer.Interval = 5;
             _mainOcrRunning = true;
-            _mainOcrTimer.Start();
+            mainOcrTimer_Tick(null, null);
 
             if (comboBoxOcrMethod.SelectedIndex == 1)
             {
@@ -4399,10 +4380,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (noOfThreads >= max)
                     noOfThreads = max - 1;
                 int start = (int)numericUpDownStartNumber.Value + 5;
+                if (noOfThreads > 1)
+                noOfThreads = 1; // Threading is not really good - subtitle picture creation should probably be threaded instead
                 for (int i = 0; i < noOfThreads; i++)
                 {
                     if (start + i < max)
                     {
+                        Application.DoEvents();
                         var bw = new BackgroundWorker();
                         var p = new ImageCompareThreadParameter(GetSubtitleBitmap(start + i), start + i, _compareBitmaps, bw, noOfThreads, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, (float)numericUpDownMaxErrorPct.Value, _compareDoc);
                         bw.DoWork += ImageCompareThreadDoWork;
