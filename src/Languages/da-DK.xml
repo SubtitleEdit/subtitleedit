@@ -1524,6 +1524,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <ListViewColumnInsert>Column, indsæt tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Column, indsæt fra udklipsholder</ListViewColumnPaste>
     <ShowBeamer>Start undertekst fremviser (fuldskærm)</ShowBeamer>
+    <MainTextBoxMoveLastWordDown>Flyt sidste ord ned til næste linje</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>Flyt første ord fra næste linje op</MainTextBoxMoveFirstWordFromNextUp>
   </Settings>
   <ShowEarlierLater>
     <Title>Vis valgte linjer tidligere/senere</Title>
@@ -1771,6 +1773,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <Stop>Stop</Stop>
     <StartOcrFrom>Start OCR fra undertekst nr:</StartOcrFrom>
     <LoadingVobSubImages>Indlæser VobSub billeder...</LoadingVobSubImages>
+    <LoadingImageCompareDatabase>Loader billede database...</LoadingImageCompareDatabase>
+    <ConvertingImageCompareDatabase>Konverterer billede database til nyt format (images.db/images.xml)...</ConvertingImageCompareDatabase>
     <SubtitleImage>Undertekst billede</SubtitleImage>
     <SubtitleText>Undertekst</SubtitleText>
     <UnableToCreateCharacterDatabaseFolder>Stand til at skabe 'tegn database mappe': {0}</UnableToCreateCharacterDatabaseFolder>

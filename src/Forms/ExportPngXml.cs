@@ -1323,6 +1323,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             SizeF textSize = g.MeasureString("Hj!", font);
             var lineHeight = (textSize.Height * 0.64f);
 
+   
+         
+
             textSize = g.MeasureString(Utilities.RemoveHtmlTags(text), font);
             g.Dispose();
             bmp.Dispose();
@@ -1358,6 +1361,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (baseLinePadding < 0)
                     baseLinePadding = 0;
             }
+
+            //TODO: Better baseline - test http://bobpowell.net/formattingtext.aspx
+            //float baselineOffset=font.SizeInPoints/font.FontFamily.GetEmHeight(font.Style)*font.FontFamily.GetCellAscent(font.Style);
+            //float baselineOffsetPixels = g.DpiY/72f*baselineOffset;
+            //baseLinePadding = (int)Math.Round(baselineOffsetPixels);
 
             var lefts = new List<float>();
             foreach (string line in Utilities.RemoveHtmlFontTag(text.Replace("<i>", string.Empty).Replace("</i>", string.Empty)).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))

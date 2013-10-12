@@ -11,6 +11,7 @@
    * Updated Russian language file - thx Sergey
    * Updated Brazilian Portuguese langauge file - thx Igor
    * Updated German langauge file - thx Siegwarth
+   * Updated Bulgarian language file - thx Iavor
    * Updated word lists - thx Siegwarth
    * Minor improvements for EBU open subtitling
    * Added "Allow overlap in waveform" as setting
@@ -20,6 +21,8 @@
    * Open original subtitle now allows EBU/890/PAC formats - thx Andreas
    * "DCinema SMPTE" format is now valid (uses xsd) - thx Wolfgang
    * Improved italic fix - thx XhmikosR
+   * NCI CAPT format can now also read version 1.2 files
+   * Pageup/Pagedown can now be used in custom shortcuts
 * FIXED:
    * Crash in export of images - thx Eros UK
    * Crash in OCR via "Image compare" with large image databases - thx Zoltan
