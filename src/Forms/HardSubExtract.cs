@@ -17,10 +17,10 @@ namespace Nikse.SubtitleEdit.Forms
         private string _videoFileName;
         private LibVlc11xDynamic _libVlc;
         private VideoInfo _videoInfo;
-        long startMilliseconds = 0;
+        //long startMilliseconds = 0;
         Subtitle _subtitle;
         public Subtitle SubtitleFromOcr;
-        private System.Windows.Forms.Timer timer1;
+        //private System.Windows.Forms.Timer timer1;
         private const int lineChecksWidth = 50;
         private const int lineChecksHeight = 25;
         public string OcrFileName = null;
