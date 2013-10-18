@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string l in lines)
-                sb.AppendLine(l);
+                sb.AppendLine(l.Replace("<SYNC Start= \"", "<SYNC Start=\"").Replace("<SYNC Start = \"", "<SYNC Start=\"").Replace("<SYNC Start =\"", "<SYNC Start=\"").Replace("<SYNC  Start=\"", "<SYNC Start=\""));
             string allInput = sb.ToString();
             string allInputLower = allInput.ToLower();
 
