@@ -8370,6 +8370,46 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _subtitle.Paragraphs.Add(p);
                     }
+
+                    if (!string.IsNullOrEmpty(matroskaSubtitleInfo.CodecPrivate))
+                    {
+                        bool eventsStarted = false;
+                        bool fontsStarted = false;
+                        bool graphicsStarted = false;
+                        var header = new StringBuilder();
+                        foreach (string line in matroskaSubtitleInfo.CodecPrivate.Replace(Environment.NewLine, "\n").Split('\n'))
+                        {
+                            if (!eventsStarted && !fontsStarted && !graphicsStarted)
+                            {
+                                header.AppendLine(line);
+                            }
+                            else if (line.Trim().ToLower().StartsWith("dialogue:")) 
+                            {
+                                eventsStarted = true;
+                                fontsStarted = false;
+                                graphicsStarted = false;
+                            }
+                            else if (line.Trim().ToLower() == "[events]")
+                            {
+                                eventsStarted = true;
+                                fontsStarted = false;
+                                graphicsStarted = false;
+                            }
+                            else if (line.Trim().ToLower() == "[fonts]")
+                            {
+                                eventsStarted = false;
+                                fontsStarted = true;
+                                graphicsStarted = false;
+                            }
+                            else if (line.Trim().ToLower() == "[graphics]")
+                            {
+                                eventsStarted = false;
+                                fontsStarted = false;
+                                graphicsStarted = true;
+                            }
+                        }
+                        _subtitle.Header = header.ToString();
+                    }
                 }
                 else
                 {
