@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.3.9 (? 2013)
+3.3.9 (19th October 2013)
 * NEW:
    * Added new subtitle formats
    * Edit -> Modify selection
@@ -36,6 +36,7 @@
    * Fixed crash in spell check - thx Ruud
    * Fixed Serbian letters in PAC format - thx Arran
    * Can now work with negative time codes in SubRip - thx Salad
+   * Loading styles when importing ssa/ass from Matroska files - thx the hulk/Scott
 
 
 3.3.8 (1st September 2013)
