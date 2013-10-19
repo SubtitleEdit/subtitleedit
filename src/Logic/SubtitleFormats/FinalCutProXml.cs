@@ -496,6 +496,24 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 if (valueNode != null)
                                     text += valueNode.InnerText;
                             }
+                            if (text == string.Empty)
+                            {
+                                foreach (XmlNode parameterNode in generatorItemNode.SelectNodes("effect/parameter[parameterid='str1']"))
+                                {
+                                    XmlNode valueNode = parameterNode.SelectSingleNode("value");
+                                    if (valueNode != null)
+                                        text += valueNode.InnerText;
+                                }
+                            }
+                            if (text == string.Empty)
+                            {
+                                foreach (XmlNode parameterNode in generatorItemNode.SelectNodes("effect/parameter[parameterid='str2']"))
+                                {
+                                    XmlNode valueNode = parameterNode.SelectSingleNode("value");
+                                    if (valueNode != null)
+                                        text += valueNode.InnerText;
+                                }
+                            }
 
                             bool italic = false;
                             bool bold = false;
