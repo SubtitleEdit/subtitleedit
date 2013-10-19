@@ -151,9 +151,9 @@ namespace Nikse.SubtitleEdit.Logic
         public static ContextMenu GetRegExContextMenu(TextBox textBox)
         {
             var cm = new ContextMenu();
-            cm.MenuItems.Add("Word boundary (\\b)", delegate { textBox.SelectedText = "\\b"; });
+            cm.MenuItems.Add("Word boundary (\\b)", delegate { textBox.SelectedText = "\\b"; }); //TODO: Add language tags
             cm.MenuItems.Add("Non word boundary (\\B)", delegate { textBox.SelectedText = "\\B"; });
-            cm.MenuItems.Add("Carriage return + new line (\\r\\n)", delegate { textBox.SelectedText = "\\r\\n"; });
+            cm.MenuItems.Add("New line (\\r\\n)", delegate { textBox.SelectedText = "\\r\\n"; });
             cm.MenuItems.Add("Any digit (\\d)", delegate { textBox.SelectedText = "\\d"; });
             cm.MenuItems.Add("Any character (.)", delegate { textBox.SelectedText = "."; });
             cm.MenuItems.Add("Any whitespace", delegate { textBox.SelectedText = "\\s"; });
@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static ContextMenu GetReplaceTextContextMenu(TextBox textBox)
         {
             var cm = new ContextMenu();
-            cm.MenuItems.Add("Carriage return + new line (\\r\\n)", delegate { textBox.SelectedText = "\\r\\n"; });
+            cm.MenuItems.Add("New line (\\n)", delegate { textBox.SelectedText = "\\n"; }); //TODO: Add language tags
             return cm;
         }
 
