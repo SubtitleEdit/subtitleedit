@@ -129,7 +129,10 @@ namespace Nikse.SubtitleEdit.Forms
             Regex regEx = null;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
-            if (textBox1.Text.Length > 0)
+            string text = textBox1.Text;
+            if (comboBoxRule.SelectedIndex != 4)
+                text = text.Replace("\\r\\n", Environment.NewLine);
+            if (text.Length > 0)
             {
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
@@ -139,22 +142,22 @@ namespace Nikse.SubtitleEdit.Forms
                         Paragraph p = _subtitle.Paragraphs[i];
                         if (comboBoxRule.SelectedIndex == 0) // Contains
                         {
-                            if (checkBoxCaseSensitive.Checked && p.Text.Contains(textBox1.Text) || !checkBoxCaseSensitive.Checked && p.Text.ToLower().Contains(textBox1.Text.ToLower()))
+                            if (checkBoxCaseSensitive.Checked && p.Text.Contains(text) || !checkBoxCaseSensitive.Checked && p.Text.ToLower().Contains(text.ToLower()))
                                 AddToListView(p, i);
                         }
                         else if (comboBoxRule.SelectedIndex == 1) // Starts with
                         {
-                            if (checkBoxCaseSensitive.Checked && p.Text.StartsWith(textBox1.Text) || !checkBoxCaseSensitive.Checked && p.Text.ToLower().StartsWith(textBox1.Text.ToLower()))
+                            if (checkBoxCaseSensitive.Checked && p.Text.StartsWith(text) || !checkBoxCaseSensitive.Checked && p.Text.ToLower().StartsWith(text.ToLower()))
                                 AddToListView(p, i);
                         }
                         else if (comboBoxRule.SelectedIndex == 2) // Ends with
                         {
-                            if (checkBoxCaseSensitive.Checked && p.Text.EndsWith(textBox1.Text) || !checkBoxCaseSensitive.Checked && p.Text.ToLower().EndsWith(textBox1.Text.ToLower()))
+                            if (checkBoxCaseSensitive.Checked && p.Text.EndsWith(text) || !checkBoxCaseSensitive.Checked && p.Text.ToLower().EndsWith(text.ToLower()))
                                 AddToListView(p, i);
                         }
                         else if (comboBoxRule.SelectedIndex == 3) // Not contains
                         {
-                            if (checkBoxCaseSensitive.Checked && !p.Text.Contains(textBox1.Text) || !checkBoxCaseSensitive.Checked && !p.Text.ToLower().Contains(textBox1.Text.ToLower()))
+                            if (checkBoxCaseSensitive.Checked && !p.Text.Contains(text) || !checkBoxCaseSensitive.Checked && !p.Text.ToLower().Contains(text.ToLower()))
                                 AddToListView(p, i);
                         }
                         else if (comboBoxRule.SelectedIndex == 4) // RegEx
@@ -164,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 try
                                 {
-                                    regEx = new Regex(textBox1.Text, RegexOptions.Compiled);
+                                    regEx = new Regex(text, RegexOptions.Compiled);
                                 }
                                 catch (Exception e)
                                 {
