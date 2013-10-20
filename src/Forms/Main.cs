@@ -12485,26 +12485,31 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
                 int index = SubtitleListview1.SelectedItems[0].Index;
-                Paragraph oldParagraph = new Paragraph(_subtitle.Paragraphs[index]);
+                var p = _subtitle.Paragraphs[index];
+                var oldParagraph = new Paragraph(p);
                 if (oldParagraph.StartTime.IsMaxTime || oldParagraph.EndTime.IsMaxTime)
                     adjustEndTime = true;
                 double videoPosition = mediaPlayer.CurrentPosition;
-                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
+                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + p.Number + " " + p.Text));
 
                 timeUpDownStartTime.TimeCode = new TimeCode(TimeSpan.FromSeconds(videoPosition));
 
-                var duration = _subtitle.Paragraphs[index].Duration.TotalMilliseconds;
+                var duration = p.Duration.TotalMilliseconds;
 
-                _subtitle.Paragraphs[index].StartTime.TotalMilliseconds = TimeSpan.FromSeconds(videoPosition).TotalMilliseconds;
+                p.StartTime.TotalMilliseconds = TimeSpan.FromSeconds(videoPosition).TotalMilliseconds;
                 if (adjustEndTime)
-                    _subtitle.Paragraphs[index].EndTime.TotalMilliseconds = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds + duration;
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
                 if (oldParagraph.StartTime.IsMaxTime)
-                    _subtitle.Paragraphs[index].EndTime.TotalMilliseconds = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(_subtitle.Paragraphs[index].Text);
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
 
-                SubtitleListview1.SetStartTime(index, _subtitle.Paragraphs[index]);
-                SubtitleListview1.SetDuration(index, _subtitle.Paragraphs[index]);
-                timeUpDownStartTime.TimeCode = _subtitle.Paragraphs[index].StartTime;
+                SubtitleListview1.SetStartTime(index, p);
+                SubtitleListview1.SetDuration(index, p);
+                timeUpDownStartTime.TimeCode = p.StartTime;
                 timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
+
+                if (!adjustEndTime)
+                    SetDurationInSeconds(p.Duration.TotalSeconds);               
+
                 UpdateOriginalTimeCodes(oldParagraph);
                 if (IsFramesRelevant && CurrentFrameRate > 0)
                 {
