@@ -4740,7 +4740,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void Renumber()
         {
             if (_subtitle != null && _subtitle.Paragraphs != null && _subtitle.Paragraphs.Count > 0)
-                _subtitle.Renumber(_subtitle.Paragraphs[0].Number);
+                _subtitle.Renumber(1);
         }
 
         private void RemoveTextForHearImparedToolStripMenuItemClick(object sender, EventArgs e)
@@ -5991,7 +5991,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    int startNumber = _subtitle.Paragraphs[0].Number;
                     indexes.Reverse();
                     foreach (int i in indexes)
                     {
@@ -5999,7 +5998,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (_networkSession != null && _networkSession.LastSubtitle != null && i < _networkSession.LastSubtitle.Paragraphs.Count)
                             _networkSession.LastSubtitle.Paragraphs.RemoveAt(i);
                     }
-                    _subtitle.Renumber(startNumber);
+                    _subtitle.Renumber(1);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     if (SubtitleListview1.FirstVisibleIndex == 0)
                         SubtitleListview1.FirstVisibleIndex = -1;
@@ -6108,7 +6107,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _subtitle.Paragraphs.Insert(firstSelectedIndex, newParagraph);
                 _subtitleListViewIndex = -1;
-                _subtitle.Renumber(startNumber);
+                _subtitle.Renumber(1);
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             }
             SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
@@ -6141,10 +6140,6 @@ namespace Nikse.SubtitleEdit.Forms
                 style = styles[0];
 
             MakeHistoryForUndo(_language.BeforeInsertLine);
-
-            int startNumber = 1;
-            if (_subtitle.Paragraphs.Count > 0)
-                startNumber = _subtitle.Paragraphs[0].Number;
 
             int firstSelectedIndex = 0;
             if (SubtitleListview1.SelectedItems.Count > 0)
@@ -6198,7 +6193,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 _subtitle.Paragraphs.Insert(firstSelectedIndex, newParagraph);
-                _subtitle.Renumber(startNumber);
+                _subtitle.Renumber(1);
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             }
             SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
@@ -6770,7 +6765,6 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                 MakeHistoryForUndo(_language.BeforeSplitLine);
 
-                int startNumber = _subtitle.Paragraphs[0].Number;
                 int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
                 Paragraph currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
@@ -7129,7 +7123,7 @@ namespace Nikse.SubtitleEdit.Forms
                         newParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                     }
                     _subtitle.Paragraphs.Insert(firstSelectedIndex + 1, newParagraph);
-                    _subtitle.Renumber(startNumber);
+                    _subtitle.Renumber(1);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 }
                 SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
@@ -7145,7 +7139,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
-                int startNumber = _subtitle.Paragraphs[0].Number;
                 int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
                 Paragraph prevParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex-1);
@@ -7198,7 +7191,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         _subtitle.Paragraphs.Remove(currentParagraph);
-                        _subtitle.Renumber(startNumber);
+                        _subtitle.Renumber(1);
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         SubtitleListview1.Items[firstSelectedIndex-1].Selected = true;
                     }
@@ -7344,7 +7337,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeWithLineAfter(bool insertDash)
         {
-            int startNumber = _subtitle.Paragraphs[0].Number;
             int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
             Paragraph currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
@@ -7446,7 +7438,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     _subtitle.Paragraphs.Remove(nextParagraph);
-                    _subtitle.Renumber(startNumber);
+                    _subtitle.Renumber(1);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 }
                 ShowSource();
@@ -8113,7 +8105,6 @@ namespace Nikse.SubtitleEdit.Forms
                 if (typewriter.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeTypeWriterEffect);
-                    int firstNumber = _subtitle.Paragraphs[0].Number;
                     int lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
                     int index = lastSelectedIndex;
                     _subtitle.Paragraphs.RemoveAt(index);
@@ -8128,7 +8119,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.Paragraphs.Insert(index, p);
                         index++;
                     }
-                    _subtitle.Renumber(firstNumber);
+                    _subtitle.Renumber(1);
                     _subtitleListViewIndex = -1;
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -8149,7 +8140,6 @@ namespace Nikse.SubtitleEdit.Forms
                 if (karaoke.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeKaraokeEffect);
-                    int firstNumber = _subtitle.Paragraphs[0].Number;
                     int lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
                     bool isframeBased = GetCurrentSubtitleFormat().IsFrameBased;
 
@@ -8176,7 +8166,7 @@ namespace Nikse.SubtitleEdit.Forms
                         i--;
                     }
 
-                    _subtitle.Renumber(firstNumber);
+                    _subtitle.Renumber(1);
                     _subtitleListViewIndex = -1;
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -12600,10 +12590,6 @@ namespace Nikse.SubtitleEdit.Forms
             // current movie pos
             double totalMilliseconds = mediaPlayer.CurrentPosition * 1000.0;
 
-            int startNumber = 1;
-            if (_subtitle.Paragraphs.Count > 0)
-                startNumber = _subtitle.Paragraphs[0].Number;
-
             var tc = new TimeCode(TimeSpan.FromMilliseconds(totalMilliseconds));
             MakeHistoryForUndo(_language.BeforeInsertSubtitleAtVideoPosition + "  " + tc.ToString());
 
@@ -12641,7 +12627,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 _subtitleListViewIndex = -1;
-                _subtitle.Renumber(startNumber);
+                _subtitle.Renumber(1);
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             }
             SubtitleListview1.SelectIndexAndEnsureVisible(index);
@@ -14114,10 +14100,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             mediaPlayer.Pause();
 
-            int startNumber = 1;
-            if (_subtitle.Paragraphs.Count > 0)
-                startNumber = _subtitle.Paragraphs[0].Number;
-
             // find index where to insert
             int index = 0;
             foreach (Paragraph p in _subtitle.Paragraphs)
@@ -14153,7 +14135,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 _subtitleListViewIndex = -1;
-                _subtitle.Renumber(startNumber);
+                _subtitle.Renumber(1);
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             }
             SubtitleListview1.SelectIndexAndEnsureVisible(index);
