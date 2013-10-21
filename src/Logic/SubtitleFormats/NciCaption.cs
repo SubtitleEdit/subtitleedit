@@ -42,15 +42,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         byte[] buffer = File.ReadAllBytes(fileName);
 
-                       
-                        return ((buffer[0] == 0x43 &&  // CAPT.2.0  
+
+                        return ((buffer[0] == 0x43 &&  // CAPT.2.0
                                 buffer[1] == 0x41 &&
                                 buffer[2] == 0x50 &&
                                 buffer[3] == 0x54 &&
                                 buffer[4] == 0x00 &&
                                 buffer[5] == 0x32 &&
                                 buffer[6] == 0x2e &&
-                                buffer[7] == 0x30) || 
+                                buffer[7] == 0x30) ||
                                (buffer[0] == 0x43 && // CAPT.1.2
                                 buffer[1] == 0x41 &&
                                 buffer[2] == 0x50 &&

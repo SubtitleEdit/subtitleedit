@@ -2263,7 +2263,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ShowWaveform", settings.General.ShowWaveform.ToString());
             textWriter.WriteElementString("ShowSpectrogram", settings.General.ShowSpectrogram.ToString());
             textWriter.WriteElementString("DefaultFrameRate", settings.General.DefaultFrameRate.ToString(CultureInfo.InvariantCulture));
-            textWriter.WriteElementString("DefaultSubtitleFormat", settings.General.DefaultSubtitleFormat);            
+            textWriter.WriteElementString("DefaultSubtitleFormat", settings.General.DefaultSubtitleFormat);
             textWriter.WriteElementString("DefaultEncoding", settings.General.DefaultEncoding);
             textWriter.WriteElementString("AutoConvertToUtf8", settings.General.AutoConvertToUtf8.ToString());
             textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString());
@@ -2604,7 +2604,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);
             textWriter.WriteElementString("MainTextBoxMoveLastWordDown", settings.Shortcuts.MainTextBoxMoveLastWordDown);
-            textWriter.WriteElementString("MainTextBoxMoveFirstWordFromNextUp", settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);            
+            textWriter.WriteElementString("MainTextBoxMoveFirstWordFromNextUp", settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
             textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", settings.Shortcuts.MainCreateInsertSubAtVideoPos);
             textWriter.WriteElementString("MainCreatePlayFromJustBefore", settings.Shortcuts.MainCreatePlayFromJustBefore);
             textWriter.WriteElementString("MainCreateSetStart", settings.Shortcuts.MainCreateSetStart);

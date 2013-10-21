@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic
             for (int i = 0; i < _bitmapData.Length; i += 4)
             {
                 if (_bitmapData[i + 3] > 200 && // Alpha
-                    _bitmapData[i + 2] + _bitmapData[i + 1] + _bitmapData[i] > 200) 
+                    _bitmapData[i + 2] + _bitmapData[i + 1] + _bitmapData[i] > 200)
                     Buffer.BlockCopy(buffer, 0, _bitmapData, i, 3);
             }
         }

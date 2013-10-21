@@ -2344,7 +2344,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 double differencePercentage = smallestDifference * 100.0 / (target.Width * target.Height);
                 double maxDiff = (double)numericUpDownMaxErrorPct.Value;
-                if (differencePercentage <= maxDiff) 
+                if (differencePercentage <= maxDiff)
                 {
                     var hit = _compareBitmaps[smallestIndex];
                     return new CompareMatch(hit.Text, hit.Italic, hit.ExpandCount, hit.Name);
@@ -3911,14 +3911,14 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             index++;
                         }
-                    }               
+                    }
 
                     CompareMatch match = null;
                     double differencePercentage = smallestDifference * 100.0 / (item.NikseBitmap.Width * item.NikseBitmap.Height);
                     double maxDiff = (double)p.MaxErrorPercent;
                     if (differencePercentage <= maxDiff && smallestIndex >= 0)
                     {
-                        var hit = p.CompareBitmaps[smallestIndex];                       
+                        var hit = p.CompareBitmaps[smallestIndex];
                         match = new CompareMatch(hit.Text, hit.Italic, hit.ExpandCount, hit.Name);
                         matches.Add(new CompareMatch(match.Text, match.Italic, 0, null));
                         if (match.ExpandCount > 0)
@@ -4050,7 +4050,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    CompareMatch match = null; 
+                    CompareMatch match = null;
 
                     var nbmp = item.NikseBitmap;
                     int index2 = 0;
@@ -4264,7 +4264,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (comboBoxOcrMethod.SelectedIndex == 1)
             {
                 if (_compareBitmaps == null)
-                    LoadImageCompareBitmaps();               
+                    LoadImageCompareBitmaps();
             }
             else if (comboBoxOcrMethod.SelectedIndex == 3)
             {
@@ -4358,7 +4358,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return true;
             }
 
-            var bmp = ShowSubtitleImage(i);            
+            var bmp = ShowSubtitleImage(i);
             var startTime = new TimeCode(TimeSpan.FromMilliseconds(GetSubtitleStartTimeMilliseconds(i)));
             var endTime = new TimeCode(TimeSpan.FromMilliseconds(GetSubtitleEndTimeMilliseconds(i)));
             labelStatus.Text = string.Format("{0} / {1}: {2} - {3}", i + 1, max, startTime, endTime);
@@ -4928,7 +4928,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if ((line.StartsWith("J` ") || line.StartsWith("J“ ") || line.StartsWith("J' ") || line.StartsWith("J* ")) && unItalicText.StartsWith("<i>S</i> "))
                                     {
                                         unItalicText = "♪ " + unItalicText.Remove(0, 8).TrimStart();
-                                    }                                    
+                                    }
                                     if (unItalicText.StartsWith(";'") && (line.StartsWith("♪") || textWithOutFixes.StartsWith("♪") || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
                                     {
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
@@ -5191,9 +5191,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (checkBoxAutoFixCommonErrors.Checked)
                     line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
 
-                if (badWords >= numberOfWords) 
+                if (badWords >= numberOfWords)
                     subtitleListView1.SetBackgroundColor(index, Color.Red);
-                else if (badWords >= numberOfWords / 2) 
+                else if (badWords >= numberOfWords / 2)
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else if (badWords > 0 || line.Contains("_") || HasSingleLetters(line))
                     subtitleListView1.SetBackgroundColor(index, Color.Yellow);
@@ -6053,7 +6053,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = false;
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
-            numericUpDownPixelsIsSpace.Value = 11; 
+            numericUpDownPixelsIsSpace.Value = 11;
             _vobSubOcrSettings = vobSubOcrSettings;
 
             InitializeModi();

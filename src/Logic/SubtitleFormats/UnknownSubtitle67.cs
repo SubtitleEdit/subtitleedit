@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     string start = node.Attributes["value"].InnerText;
                     if (!string.IsNullOrEmpty(start))
-                        start = start.Replace(",", ".");                   
+                        start = start.Replace(",", ".");
                     string text = node.InnerText;
 
                     subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start, System.Globalization.CultureInfo.InvariantCulture), 0));

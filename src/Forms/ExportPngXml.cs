@@ -1323,8 +1323,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             SizeF textSize = g.MeasureString("Hj!", font);
             var lineHeight = (textSize.Height * 0.64f);
 
-   
-         
+
+
 
             textSize = g.MeasureString(Utilities.RemoveHtmlTags(text), font);
             g.Dispose();
