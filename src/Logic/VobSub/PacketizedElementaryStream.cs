@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 PresentationTimeStamp += (ulong)(buffer[tempIndex + 2] & Helper.B11111110) << 14;
                 PresentationTimeStamp += (ulong)buffer[tempIndex + 1] << 22;
                 PresentationTimeStamp += (ulong)(buffer[tempIndex + 0] & Helper.B00001110) << 29;
-                
+
                 //string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
                 //bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
                 //PresentationTimeStamp = Convert.ToUInt64(bString, 2);

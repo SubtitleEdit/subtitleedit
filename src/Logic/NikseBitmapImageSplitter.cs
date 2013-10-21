@@ -286,7 +286,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (size == bmp.Height)
                 {
-                    if (size > 100)                    
+                    if (size > 100)
                         return SplitVerticalTransparentOrBlack(bmp, lineMinHeight);
                     else
                         parts.Add(new ImageSplitterItem(0, startY, bmp));

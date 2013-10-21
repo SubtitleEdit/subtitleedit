@@ -1682,7 +1682,7 @@
             public string ListViewColumnPaste { get; set; }
             public string ShowBeamer { get; set; }
             public string MainTextBoxMoveLastWordDown { get; set; }
-            public string MainTextBoxMoveFirstWordFromNextUp { get; set; }           
+            public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
         }
 
         public class ShowEarlierLater

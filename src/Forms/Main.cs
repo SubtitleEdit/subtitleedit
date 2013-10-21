@@ -8373,7 +8373,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 header.AppendLine(line);
                             }
-                            else if (line.Trim().ToLower().StartsWith("dialogue:")) 
+                            else if (line.Trim().ToLower().StartsWith("dialogue:"))
                             {
                                 eventsStarted = true;
                                 fontsStarted = false;
@@ -12498,7 +12498,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
 
                 if (!adjustEndTime)
-                    SetDurationInSeconds(p.Duration.TotalSeconds);               
+                    SetDurationInSeconds(p.Duration.TotalSeconds);
 
                 UpdateOriginalTimeCodes(oldParagraph);
                 if (IsFramesRelevant && CurrentFrameRate > 0)
@@ -12947,14 +12947,14 @@ namespace Nikse.SubtitleEdit.Forms
                     timeUpDownVideoPositionAdjust.Enabled = true;
                 }
                 int index = ShowSubtitle();
-  
+
                 double pos = mediaPlayer.CurrentPosition * 1000.0;
                 if (timeUpDownVideoPosition.TimeCode.TotalMilliseconds != pos)
                     timeUpDownVideoPosition.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(pos));
 
                 if (timeUpDownVideoPositionAdjust.TimeCode.TotalMilliseconds != pos)
                     timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(pos));
-                
+
                 mediaPlayer.RefreshProgressBar();
 
                 trackBarWaveFormPosition.ValueChanged -= trackBarWaveFormPosition_ValueChanged;
@@ -17936,7 +17936,7 @@ namespace Nikse.SubtitleEdit.Forms
             var form = new HardSubExtract(_videoFileName);
             if (form.ShowDialog(this) == DialogResult.OK)
             {
-                
+
                 if (!string.IsNullOrEmpty(form.OcrFileName))
                 {
                     MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines); //TODO: Fix text
