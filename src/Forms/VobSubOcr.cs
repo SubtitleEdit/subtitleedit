@@ -4913,7 +4913,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 if (checkBoxTesseractMusicOn.Checked)
                                 {
-                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Substring(1, 2) == "' ")
+                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Substring(1, 2) == "' ")
+                                    {
+                                        unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
+                                    }
+                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Substring(1, 1) == " ")
+                                    {
+                                        unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
+                                    }
+                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Substring(2, 1) == " ")
                                     {
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                     }
