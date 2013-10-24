@@ -44,6 +44,32 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         static List<string> _hebrewLetters = new List<string> {
             "א",
+            "ב",
+            "ג",
+            "ד",
+            "ה",
+            "ו",
+            "ז",
+            "ח",
+            "י",
+            "ל",
+            "ם",
+            "מ",
+            "ן",
+            "נ",
+            "ס",
+            "ע",
+            "פ",
+            "צ",
+            "ק",
+            "ר",
+            "ש",
+            "ת",
+            "כ",
+            "ך",
+            "ט",
+            "ף",
+            "ץ",
         };
 
         static List<int> _russianCodes = new List<int> {
@@ -656,6 +682,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageId = languageId;
                 if (_language.StartsWith("KYRIL"))
                     languageId = LanguageIdRussian;
+                else if (_language.StartsWith("HEBNOA") && languageId == LanguageIdChinese)
+                    languageId = LanguageIdHebrew;
 
                 string line1 = FixText(buffer, start, TextLength, languageId);
                 string line2 = FixText(buffer, start + TextLength + 6, TextLength, languageId);
