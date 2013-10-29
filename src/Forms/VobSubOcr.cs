@@ -6465,7 +6465,12 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines = checkBoxAutoBreakLines.Checked;
             Configuration.Settings.VobSubOcr.LineOcrDraw = checkBoxNOcrCorrect.Checked;
             Configuration.Settings.VobSubOcr.LineOcrAdvancedItalic = checkBoxNOcrItalic.Checked;
-            Configuration.Settings.VobSubOcr.AllowDifferenceInPercent = (double)numericUpDownMaxErrorPct.Value;
+
+            if (_bluRaySubtitlesOriginal != null)
+                Configuration.Settings.VobSubOcr.BlurayAllowDifferenceInPercent = (double)numericUpDownMaxErrorPct.Value;
+            else
+                Configuration.Settings.VobSubOcr.AllowDifferenceInPercent = (double)numericUpDownMaxErrorPct.Value;
+
             if (comboBoxOcrMethod.SelectedIndex == 3) // line ocr
             {
                 Configuration.Settings.VobSubOcr.LineOcrLastSpellcheck = LanguageString;
