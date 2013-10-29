@@ -592,6 +592,7 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public int XOrMorePixelsMakesSpace { get; set; }
         public double AllowDifferenceInPercent { get; set; }
+        public double BlurayAllowDifferenceInPercent { get; set; }
         public string LastImageCompareFolder { get; set; }
         public int LastModiLanguageId { get; set; }
         public string LastOcrMethod { get; set; }
@@ -617,6 +618,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             XOrMorePixelsMakesSpace = 8;
             AllowDifferenceInPercent = 1.0;
+            BlurayAllowDifferenceInPercent = 7.5;
             LastImageCompareFolder = "English";
             LastModiLanguageId = 9;
             LastOcrMethod = "Tesseract";
@@ -1774,6 +1776,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("AllowDifferenceInPercent");
             if (subNode != null)
                 settings.VobSubOcr.AllowDifferenceInPercent = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            subNode = node.SelectSingleNode("BlurayAllowDifferenceInPercent");
+            if (subNode != null)
+                settings.VobSubOcr.BlurayAllowDifferenceInPercent = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
             subNode = node.SelectSingleNode("LastImageCompareFolder");
             if (subNode != null)
                 settings.VobSubOcr.LastImageCompareFolder = subNode.InnerText;
@@ -2508,6 +2513,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteStartElement("VobSubOcr", "");
             textWriter.WriteElementString("XOrMorePixelsMakesSpace", settings.VobSubOcr.XOrMorePixelsMakesSpace.ToString());
             textWriter.WriteElementString("AllowDifferenceInPercent", settings.VobSubOcr.AllowDifferenceInPercent.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("BlurayAllowDifferenceInPercent", settings.VobSubOcr.BlurayAllowDifferenceInPercent.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("LastImageCompareFolder", settings.VobSubOcr.LastImageCompareFolder);
             textWriter.WriteElementString("LastModiLanguageId", settings.VobSubOcr.LastModiLanguageId.ToString());
             textWriter.WriteElementString("LastOcrMethod", settings.VobSubOcr.LastOcrMethod);

@@ -3721,7 +3721,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_bluRaySubtitlesOriginal != null)
             {
-                numericUpDownMaxErrorPct.Value = 12.9m;
+                numericUpDownMaxErrorPct.Value = (decimal)Configuration.Settings.VobSubOcr.BlurayAllowDifferenceInPercent;
                 LoadBluRaySup();
                 bool hasForcedSubtitles = false;
                 foreach (var x in _bluRaySubtitlesOriginal)
@@ -5276,7 +5276,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string CallModi(int i)
         {
-            var bmp = GetSubtitleBitmap(i).Clone() as Bitmap;
+            Bitmap bmp;
+            try
+            {
+                var tmp = GetSubtitleBitmap(i);
+                if (tmp == null)
+                    return string.Empty;
+                bmp = tmp.Clone() as Bitmap;
+            }
+            catch
+            {
+                return string.Empty;
+            }
             var mp = new ModiParameter { Bitmap = bmp, Text = "", Language = GetModiLanguage() };
 
             // We call in a seperate thread... or app will crash sometimes :(
