@@ -234,6 +234,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <IssueDate>Akats eguna</IssueDate>
     <EditRate>Editatu frame neurria</EditRate>
     <TimeCodeRate>Denbora kode neurria</TimeCodeRate>
+    <StartTime>Hasiera denbora</StartTime>
     <Font>Hizkia</Font>
     <FontId>ID-a</FontId>
     <FontUri>URI-a</FontUri>
@@ -242,10 +243,16 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffectColor>Eragin margoa</FontEffectColor>
     <FontSize>Neurria</FontSize>
     <ChooseColor>Hatutatu margoa</ChooseColor>
+    <Generate>Sortu</Generate>
   </DCinemaProperties>
   <DurationsBridgeGaps>
     <Title>Zubitu iraupen hutsarte txikiak</Title>
     <GapsBridgedX>Zubitutako hutsarte txiki zenbatekoa: {0}</GapsBridgedX>
+    <GapToNext>Hutsartetu hurrengora</GapToNext>
+    <BridgeGapsSmallerThanXPart1>Zubitu hutsarte txikiagoak:</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart2>segundumilaen</BridgeGapsSmallerThanXPart2>
+    <ProlongEndTime>Aurreko idazkiak hutsarte denbora guztia hartzen du</ProlongEndTime>
+    <DivideEven>Idazkiak hutsarte denbora zatitzen du</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubrip>
     <Title>Grabatu ifo/vob azpidatziak (dvd)-tik</Title>
@@ -281,6 +288,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneralSubtitleInformation>Azpidatzi argibide orokorra</GeneralSubtitleInformation>
     <CodePageNumber>Kode orrialde zenbakia:</CodePageNumber>
     <DiskFormatCode>Diska heuskarri kodea:</DiskFormatCode>
+    <DisplayStandardCode>Erakutsi kode estandarra</DisplayStandardCode>
     <CharacterCodeTable>Hizki-kode taula:</CharacterCodeTable>
     <LanguageCode>Hizkuntza kodea:</LanguageCode>
     <OriginalProgramTitle>Jator. programa izenburua:</OriginalProgramTitle>
@@ -317,6 +325,26 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <TotalMilliseconds>Guztira segmil.:</TotalMilliseconds>
     <EndDelayInMillisecs>Amai atzerap. sm:</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportCustomText>
+    <Title>Esportatu norbere idazki heuskarria</Title>
+    <Formats>Heuskarriak</Formats>
+    <New>Berria</New>
+    <Edit>Editatu</Edit>
+    <Delete>Ezabatu</Delete>
+    <SaveAs>&amp;Gorde honela...</SaveAs>
+    <SaveSubtitleAs>Gorde azpdiatzia honela...</SaveSubtitleAs>
+    <SubtitleExportedInCustomFormatToX>Azpidatzia norbere heuskarrian esporatatuta hona:</SubtitleExportedInCustomFormatToX>
+  </ExportCustomText>
+  <ExportCustomTextFormat>
+    <Title>Norbere idazki heuskarri eredua</Title>
+    <Template>Eredua</Template>
+    <Header>Idazburua</Header>
+    <TextLine>Idazki lerroa (esaldia)</TextLine>
+    <TimeCode>Denbora kodea</TimeCode>
+    <NewLine>Lerro berria</NewLine>
+    <Footer>Idazohina</Footer>
+    <DoNotModify>[Ez aldatu]</DoNotModify>
+  </ExportCustomTextFormat>
   <ExportPngXml>
     <Title>Esportatu BDN XML/PNG</Title>
     <ImageSettings>Irudi ezarpenak</ImageSettings>
@@ -326,7 +354,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderColor>Hertz margoa</BorderColor>
     <BorderWidth>Hertz zabalera:</BorderWidth>
     <ImageFormat>Irudi heuskarria</ImageFormat>
-    <AntiAlias>Hertz lausopena</AntiAlias>
+    <SimpleRendering>Aurkezpen arrunta</SimpleRendering>
     <Text3D>3D</Text3D>
     <SideBySide3D>Aldez-alde</SideBySide3D>
     <HalfTopBottom3D>Goitik/Behera</HalfTopBottom3D>
@@ -643,6 +671,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP</ExportCheetahCap>
         <ExportUltech130>Ultech caption...</ExportUltech130>
+        <ExportCustomTextFormat>Esportatu norbere idazki heuskarria</ExportCustomTextFormat>
         <Exit>Irte&amp;n</Exit>
       </File>
       <Edit>
@@ -666,6 +695,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>&amp;Tresnak</Title>
         <AdjustDisplayDuration>&amp;Zehaztu iraupenak...</AdjustDisplayDuration>
         <ApplyDurationLimits>&amp;Ezarri iraupen mugak...</ApplyDurationLimits>
+        <DurationsBridgeGap>Zubitu hutsartea iraupenetan</DurationsBridgeGap>
         <FixCommonErrors>Z&amp;uzendu akats arruntak...</FixCommonErrors>
         <StartNumberingFrom>&amp;Hasi zenbakitzea hemendik...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>&amp;Kendu gorrentzako idatzia...</RemoveTextForHearingImpaired>
@@ -687,6 +717,9 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <TextNumberOfLines>Idatzia - Lerro zenbatekoa</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Idatzia - hizk./seg. zenbatekoa</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Idatzia - hitz minutuko (hm-ko)</WordsPerMinute>
+        <Style>Estiloa</Style>
+        <Ascending>Gorantz</Ascending>
+        <Descending>Beherantz</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Egin itzul&amp;pen huts berri bat uneko azpidatzitik</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>&amp;Multzo bihurketa</BatchConvert>
         <GenerateTimeAsText>Sortu denbora idazki bezala</GenerateTimeAsText>
@@ -1114,6 +1147,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SubtitlesJoined>Azpidatziak batuta</SubtitlesJoined>
     <StatusLog>Egoera oharra</StatusLog>
     <XSceneChangesImported>{0} agerraldi aldaketa inportaturik</XSceneChangesImported>
+    <PluginXExecuted>'{0}' plugin exekutaturik.</PluginXExecuted>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Hautatu azpidatzia Matroska agiritik</Title>
@@ -1278,8 +1312,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <PreviewLinesModifiedX>Aurreikuspena - esaldi aldatuak: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>&amp;Erakutsi aldatutako lerroak bakarrik</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Lerroen arteko segundumilaen gutxiengoa</MinimumMillisecondsBetweenParagraphs>
-    <FrameInfo>
-    </FrameInfo>
+    <FrameInfo>Frame neurri argibideak</FrameInfo>
     <OneFrameXisYMilliseconds>Bat frame {0:0.00} fs-ko dira {1} segundumilaen</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
@@ -1316,7 +1349,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <DefaultFileEncoding>Berezko agiri kodeaketa:</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Berez atzeman ANSI kodeaketa:</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Lerro bakarraren geh. luzera:</SubtitleLineMaximumLength>
-    <MaximumCharactersPerSecond>Geh. hizki/seg:</MaximumCharactersPerSecond>
+    <MaximumCharactersPerSecond>Geh. hizkirri/seg:</MaximumCharactersPerSecond>
     <AutoWrapWhileTyping>Berez-bildu idazterakoan</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Gutx. iraupena segundumilaenetan:</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Geh. iraupena segundumilaenetan:</DurationMaximumMilliseconds>
@@ -1366,11 +1399,12 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <ShowFullscreenButton>Erakutsi ikusleiho-osoa botoia</ShowFullscreenButton>
     <PreviewFontSize>Azpidatzi aurreikuspen hizki neurria:</PreviewFontSize>
     <MainWindowVideoControls>Leiho nagusiko bideo aginteak</MainWindowVideoControls>
-    <CustomSearchTextAndUrl>Norbererarako idatzi eta url bilaketa:</CustomSearchTextAndUrl>
+    <CustomSearchTextAndUrl>Norbere idatzi eta url bilaketa:</CustomSearchTextAndUrl>
     <WaveFormAppearance>Uhinera itxurapena</WaveFormAppearance>
     <WaveFormGridColor>Saretxo margoa</WaveFormGridColor>
     <WaveFormShowGridLines>Erakutsi saretxo lerroak</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Alderantzizkatu sagu-gurpilaren irriskari norabidea</ReverseMouseWheelScrollDirection>
+    <WaveFormAllowOverlap>Ahalbidetu gainjarpena (mugitzean/birneurriratzean)</WaveFormAllowOverlap>
     <WaveFormColor>Margoa</WaveFormColor>
     <WaveFormSelectedColor>Hautaturikoa</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Atzeko margoa</WaveFormBackgroundColor>
@@ -1422,7 +1456,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <Shortcut>Lasterteklak:</Shortcut>
     <Control>Ktrl</Control>
     <Alt>Alt</Alt>
-    <Shift>Shift</Shift>
+    <Shift>Aldatu</Shift>
     <Key>Tekla:</Key>
     <TextBox>Idazkutxa</TextBox>
     <UpdateShortcut>Eguneratu</UpdateShortcut>
@@ -1440,6 +1474,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <MergeDialogue>Batu elkarrizketa (txertatu marratxoak)</MergeDialogue>
     <GoToNext>Joan hurrengo lerrora</GoToNext>
     <GoToPrevious>Joan aurreko lerrora</GoToPrevious>
+    <GoToCurrentSubtitleStart>Joan oraingo lerro hasierara</GoToCurrentSubtitleStart>
+    <GoToCurrentSubtitleEnd>Joan oraingo lerro amaierara</GoToCurrentSubtitleEnd>
     <ToggleFocus>Aldatu fokoa zerrenda ikusi eta azpidatziaren idaz kutxa artean</ToggleFocus>
     <ToggleDialogueDashes>Aldatu elkarrizketa marratxoak</ToggleDialogueDashes>
     <Alignment>Lerrokapena (hautaturiko lerroak)</Alignment>
@@ -1535,7 +1571,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <NumberOfEqualParts>Zati berdin zenbatekoa</NumberOfEqualParts>
     <SubtitleInfo>Azpidatzi argibideak</SubtitleInfo>
     <NumberOfLinesX>Lerro zenbatekoa: {0:#,###}</NumberOfLinesX>
-    <NumberOfCharactersX>Hizki zenbatekoa: {0:#,###,###}</NumberOfCharactersX>
+    <NumberOfCharactersX>Hizkirri zenbatekoa: {0:#,###,###}</NumberOfCharactersX>
     <Output>Irteera</Output>
     <FileName>Agiri izena</FileName>
     <OutputFolder>Irteera agiritegia</OutputFolder>
@@ -1581,9 +1617,9 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <MostUsedWords>Gehien erabilitako hitzak</MostUsedWords>
     <NothingFound>Ez da ezer aurkitu</NothingFound>
     <NumberOfLinesX>Azpidatzi lerro zenbatekoa: {0:#,###}</NumberOfLinesX>
-    <LengthInFormatXinCharactersY>{0} hizki zenbatekoa: {1:#,###,##0}</LengthInFormatXinCharactersY>
-    <NumberOfCharactersInTextOnly>Hizki zenbatekoa idatzian bakarrik: {0:#,###,##0}</NumberOfCharactersInTextOnly>
-    <TotalCharsPerSecond>Hizki/segundu guztira: {0:0.0} segundu</TotalCharsPerSecond>
+    <LengthInFormatXinCharactersY>{0} hizkirri zenbatekoa: {1:#,###,##0}</LengthInFormatXinCharactersY>
+    <NumberOfCharactersInTextOnly>Hizkirri zenbatekoa idatzian bakarrik: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalCharsPerSecond>Hizkirri/segunduko guztira: {0:0.0} segundu</TotalCharsPerSecond>
     <NumberOfItalicTags>Etzana etiketa zenbatekoa: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Lodia etiketa zenbatekoa: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Azpimarratua etiketa zenbatekoa: {0}</NumberOfUnderlineTags>
@@ -1723,6 +1759,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <OcrViaImageCompare>OCR irudi alderaketa bidez</OcrViaImageCompare>
     <ImageDatabase>Irudi databasea</ImageDatabase>
     <NoOfPixelsIsSpace>Pixel zenbatekoa tartean</NoOfPixelsIsSpace>
+    <MaxErrorPercent>Geh. akats%</MaxErrorPercent>
     <New>Berria</New>
     <Edit>Editatu</Edit>
     <StartOcr>Hasi OCR-a</StartOcr>
@@ -1792,6 +1829,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <ZoomOut>Hurrundu</ZoomOut>
     <AddParagraphHere>Gehitu idatzia hemen</AddParagraphHere>
     <AddParagraphHereAndPasteText>Gehitu idatzia gakotik hemen</AddParagraphHereAndPasteText>
+    <FocusTextBox>Fokutu idazki kutxa</FocusTextBox>
     <DeleteParagraph>Ezabatu idatzia</DeleteParagraph>
     <Split>Ba&amp;nandu</Split>
     <SplitAtCursor>Banandu &amp;kurtsorean</SplitAtCursor>
