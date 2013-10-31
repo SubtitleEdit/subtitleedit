@@ -1,5 +1,18 @@
 ﻿Subtitle Edit Changelog
 
+3.3.10 (xth November 2013)
+* NEW:
+   * Added new subtitle formats
+* IMPROVED:
+   * OCR max. error% is now saved for bluray - thx Zoltán
+* FIXED:
+   * F11 (Set start time) sometimes kept duration - thx Rinus/Quetsbeek 
+   * Cavana 890 now works with Hebrew again - thx Yaniv
+   * Crash on bad images when using ocr via Tesseract+Modi - thx Barry
+   * Fix regarding italics in remove text for HI - thx cipry15
+   * Now allows html tags in SAMI - thx estima
+
+
 3.3.9 (19th October 2013)
 * NEW:
    * Added new subtitle formats
