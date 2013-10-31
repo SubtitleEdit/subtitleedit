@@ -1121,17 +1121,14 @@ namespace Nikse.SubtitleEdit.Forms
             var sb = new StringBuilder();
             foreach (string line in lines)
             {
-                string tmp = line.TrimEnd(new char[] { '.', '!', '?', ':', }).Trim();
-                if (line != line.ToLower() && line == line.ToUpper())
+                string lineNoHtml = Utilities.RemoveHtmlTags(line);
+                string tmp = lineNoHtml.TrimEnd(new char[] { '.', '!', '?', ':', }).Trim();
+                if (lineNoHtml != lineNoHtml.ToLower() && lineNoHtml == lineNoHtml.ToUpper())
                 {
-                    if (tmp == "YES" || tmp == "NO" || tmp == "WHY" || tmp.Length == 1)
+                    if (tmp == "YES" || tmp == "NO" || tmp == "WHY" || tmp == "HI" || tmp.Length == 1)
                     {
                         sb.AppendLine(line);
                     }
-                    //else if (line.EndsWith(".") ||line.EndsWith("!") ||line.EndsWith("?"))
-                    //{
-                    //    sb.AppendLine(line);
-                    //}
                 }
                 else
                 {
