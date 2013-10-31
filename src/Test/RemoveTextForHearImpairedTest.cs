@@ -561,6 +561,42 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveLineIfAllUppercase3()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = true;
+            target.checkBoxRemoveInterjections.Checked = false;
+            target.checkBoxRemoveTextBeforeColon.Checked = false;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
+            target.checkBoxColonSeparateLine.Checked = false;
+            target.checkBoxRemoveTextBetweenParentheses.Checked = true;
+            string text = "(<i>GOIN' BACK TO INDIANA</i>" + Environment.NewLine + "CONTINUES PLAYING)";
+            string expected = "";
+            string actual = target.RemoveLineIfAllUppercase(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveLineIfParentheses3()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
+            target.checkBoxRemoveInterjections.Checked = false;
+            target.checkBoxRemoveTextBeforeColon.Checked = false;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
+            target.checkBoxColonSeparateLine.Checked = false;
+            target.checkBoxRemoveTextBetweenParentheses.Checked = true;
+            string text = "(<i>GOIN' BACK TO INDIANA</i>" + Environment.NewLine + "CONTINUES PLAYING)";
+            string expected = "";
+            string actual = target.RemoveHearImpairedTags(text);
+            Assert.AreEqual(expected, actual);
+        }
+
 
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
