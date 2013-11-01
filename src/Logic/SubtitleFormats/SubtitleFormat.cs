@@ -57,6 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new FinalCutProXml(),
                     new FinalCutProXXml(),
                     new FinalCutProXmlGap(),
+                    new FinalCutProXCM(),
                     new FinalCutProTestXml(),
                     new FinalCutProTest2Xml(),
                     new FlashXml(),

@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private const int ClosenessForBorderSelection = 14;
+        public int ClosenessForBorderSelection = 15;
         private const int MininumSelectionMilliseconds = 100;
 
         private long _buttonDownTimeTicks;
@@ -1208,7 +1208,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private static bool IsParagrapBorderHit(int milliseconds, List<Paragraph> paragraphs)
+        private bool IsParagrapBorderHit(int milliseconds, List<Paragraph> paragraphs)
         {
             foreach (Paragraph p in paragraphs)
             {
@@ -1219,7 +1219,7 @@ namespace Nikse.SubtitleEdit.Controls
             return false;
         }
 
-        private static bool IsParagrapBorderHit(int milliseconds, Paragraph paragraph)
+        private bool IsParagrapBorderHit(int milliseconds, Paragraph paragraph)
         {
             if (paragraph == null)
                 return false;
