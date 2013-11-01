@@ -5008,9 +5008,49 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (line.EndsWith("!") && !unItalicText.EndsWith("!") && !unItalicText.EndsWith("!</i>"))
                                 {
                                     if (unItalicText.EndsWith("!'"))
+                                    {
                                         unItalicText = unItalicText.TrimEnd('\'');
+                                    }
                                     else
-                                        unItalicText += "!";
+                                    {
+                                        if (unItalicText.EndsWith("l</i>") && _ocrFixEngine != null)
+                                        {
+                                            string w = unItalicText.Substring(0, unItalicText.Length - 4);
+                                            int wIdx = w.Length - 1;
+                                            while (wIdx >= 0 && !(" .,!?<>:;'-$@£()[]<>/\"".Contains(w[wIdx].ToString())))
+                                            {
+                                                wIdx--;
+                                            }
+                                            if (wIdx + 1 < w.Length && unItalicText.Length > 5)
+                                            {
+                                                w = w.Substring(wIdx + 1);
+                                                if (!_ocrFixEngine.DoSpell(w))
+                                                    unItalicText = unItalicText.Remove(unItalicText.Length - 5, 1);
+                                            }
+                                            unItalicText = unItalicText.Insert(unItalicText.Length - 4, "!");
+                                        }
+                                        else if (unItalicText.EndsWith("l") && _ocrFixEngine != null)
+                                        {
+                                            string w = unItalicText;
+                                            int wIdx = w.Length - 1;
+                                            while (wIdx >= 0 && !(" .,!?<>:;'-$@£()[]<>/\"".Contains(w[wIdx].ToString())))
+                                            {
+                                                wIdx--;
+                                            }
+                                            if (wIdx + 1 < w.Length && unItalicText.Length > 5)
+                                            {
+                                                w = w.Substring(wIdx + 1);
+                                                if (!_ocrFixEngine.DoSpell(w))
+                                                    unItalicText = unItalicText.Remove(unItalicText.Length - 1, 1);
+                                            }
+                                            unItalicText += "!";
+                                        }
+                                        else
+                                        {
+                                            unItalicText += "!";
+                                        }
+                                        
+                                    }
                                 }
                                 if (line.EndsWith("?") && !unItalicText.EndsWith("?") && !unItalicText.EndsWith("?</i>"))
                                 {
