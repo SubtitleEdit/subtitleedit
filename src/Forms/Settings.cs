@@ -287,6 +287,17 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxWaveFormShowGrid.Text = language.WaveFormShowGridLines;
             checkBoxReverseMouseWheelScrollDirection.Text = language.ReverseMouseWheelScrollDirection;
             checkBoxAllowOverlap.Text = language.WaveFormAllowOverlap;
+            labelWaveformBorderHitMs1.Text = language.WaveformBorderHitMs1;
+            labelWaveformBorderHitMs2.Text = language.WaveformBorderHitMs2;
+            numericUpDownWaveformBorderHitMs.Left = labelWaveformBorderHitMs1.Left + labelWaveformBorderHitMs1.Width;
+            labelWaveformBorderHitMs2.Left = numericUpDownWaveformBorderHitMs.Left + numericUpDownWaveformBorderHitMs.Width + 2;
+            if (string.IsNullOrEmpty(language.WaveformBorderHitMs1))
+            {
+                labelWaveformBorderHitMs1.Visible = false;
+                numericUpDownWaveformBorderHitMs.Visible = false;
+                labelWaveformBorderHitMs2.Visible = false;
+            }
+
             buttonWaveFormGridColor.Text = language.WaveFormGridColor;
             buttonWaveFormColor.Text = language.WaveFormColor;
             buttonWaveFormSelectedColor.Text = language.WaveFormSelectedColor;
@@ -485,6 +496,9 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxSpectrogramAppearance.SelectedIndex = 1;
             checkBoxReverseMouseWheelScrollDirection.Checked = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
             checkBoxAllowOverlap.Checked = Configuration.Settings.VideoControls.WaveFormAllowOverlap;
+            if (Configuration.Settings.VideoControls.WaveformBorderHitMs >= numericUpDownWaveformBorderHitMs.Minimum &&
+                Configuration.Settings.VideoControls.WaveformBorderHitMs <= numericUpDownWaveformBorderHitMs.Maximum)
+                numericUpDownWaveformBorderHitMs.Value = Configuration.Settings.VideoControls.WaveformBorderHitMs;
 
             var generalNode = new TreeNode(Configuration.Settings.Language.General.GeneralText);
             generalNode.Nodes.Add(language.GoToFirstSelectedLine + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine));
@@ -1005,6 +1019,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.VideoControls.SpectrogramAppearance = "Classic";
             Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward = checkBoxReverseMouseWheelScrollDirection.Checked;
             Configuration.Settings.VideoControls.WaveFormAllowOverlap = checkBoxAllowOverlap.Checked;
+            Configuration.Settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(numericUpDownWaveformBorderHitMs.Value);
 
             //Main General
             foreach (TreeNode node in treeViewShortcuts.Nodes[0].Nodes)

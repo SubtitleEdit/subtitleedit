@@ -157,6 +157,9 @@
             this.buttonWaveFormsFolderEmpty = new System.Windows.Forms.Button();
             this.labelWaveFormsFolderInfo = new System.Windows.Forms.Label();
             this.groupBoxWaveFormAppearence = new System.Windows.Forms.GroupBox();
+            this.labelWaveformBorderHitMs2 = new System.Windows.Forms.Label();
+            this.numericUpDownWaveformBorderHitMs = new System.Windows.Forms.NumericUpDown();
+            this.labelWaveformBorderHitMs1 = new System.Windows.Forms.Label();
             this.checkBoxAllowOverlap = new System.Windows.Forms.CheckBox();
             this.checkBoxReverseMouseWheelScrollDirection = new System.Windows.Forms.CheckBox();
             this.panelWaveFormTextColor = new System.Windows.Forms.Panel();
@@ -278,6 +281,7 @@
             this.groupBoxSpectrogram.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBoxWaveFormAppearence.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaveformBorderHitMs)).BeginInit();
             this.tabPageTools.SuspendLayout();
             this.groupBoxSpellCheck.SuspendLayout();
             this.groupBoxFixCommonErrors.SuspendLayout();
@@ -1771,6 +1775,9 @@
             // 
             // groupBoxWaveFormAppearence
             // 
+            this.groupBoxWaveFormAppearence.Controls.Add(this.labelWaveformBorderHitMs2);
+            this.groupBoxWaveFormAppearence.Controls.Add(this.numericUpDownWaveformBorderHitMs);
+            this.groupBoxWaveFormAppearence.Controls.Add(this.labelWaveformBorderHitMs1);
             this.groupBoxWaveFormAppearence.Controls.Add(this.checkBoxAllowOverlap);
             this.groupBoxWaveFormAppearence.Controls.Add(this.checkBoxReverseMouseWheelScrollDirection);
             this.groupBoxWaveFormAppearence.Controls.Add(this.panelWaveFormTextColor);
@@ -1790,6 +1797,41 @@
             this.groupBoxWaveFormAppearence.TabIndex = 0;
             this.groupBoxWaveFormAppearence.TabStop = false;
             this.groupBoxWaveFormAppearence.Text = "Wave form appearence";
+            // 
+            // labelWaveformBorderHitMs2
+            // 
+            this.labelWaveformBorderHitMs2.AutoSize = true;
+            this.labelWaveformBorderHitMs2.Location = new System.Drawing.Point(454, 93);
+            this.labelWaveformBorderHitMs2.Name = "labelWaveformBorderHitMs2";
+            this.labelWaveformBorderHitMs2.Size = new System.Drawing.Size(62, 13);
+            this.labelWaveformBorderHitMs2.TabIndex = 14;
+            this.labelWaveformBorderHitMs2.Text = "milliseconds";
+            // 
+            // numericUpDownWaveformBorderHitMs
+            // 
+            this.numericUpDownWaveformBorderHitMs.Location = new System.Drawing.Point(392, 91);
+            this.numericUpDownWaveformBorderHitMs.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownWaveformBorderHitMs.Name = "numericUpDownWaveformBorderHitMs";
+            this.numericUpDownWaveformBorderHitMs.Size = new System.Drawing.Size(44, 21);
+            this.numericUpDownWaveformBorderHitMs.TabIndex = 12;
+            this.numericUpDownWaveformBorderHitMs.Value = new decimal(new int[] {
+            18,
+            0,
+            0,
+            0});
+            // 
+            // labelWaveformBorderHitMs1
+            // 
+            this.labelWaveformBorderHitMs1.AutoSize = true;
+            this.labelWaveformBorderHitMs1.Location = new System.Drawing.Point(259, 93);
+            this.labelWaveformBorderHitMs1.Name = "labelWaveformBorderHitMs1";
+            this.labelWaveformBorderHitMs1.Size = new System.Drawing.Size(127, 13);
+            this.labelWaveformBorderHitMs1.TabIndex = 13;
+            this.labelWaveformBorderHitMs1.Text = "Marker hit must be within";
             // 
             // checkBoxAllowOverlap
             // 
@@ -2944,6 +2986,7 @@
             this.groupBox1.PerformLayout();
             this.groupBoxWaveFormAppearence.ResumeLayout(false);
             this.groupBoxWaveFormAppearence.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaveformBorderHitMs)).EndInit();
             this.tabPageTools.ResumeLayout(false);
             this.groupBoxSpellCheck.ResumeLayout(false);
             this.groupBoxSpellCheck.PerformLayout();
@@ -3206,5 +3249,8 @@
         private System.Windows.Forms.TextBox textBoxCustomSearchUrl3;
         private System.Windows.Forms.ComboBox comboBoxCustomSearch3;
         private System.Windows.Forms.CheckBox checkBoxAllowOverlap;
+        private System.Windows.Forms.Label labelWaveformBorderHitMs2;
+        private System.Windows.Forms.NumericUpDown numericUpDownWaveformBorderHitMs;
+        private System.Windows.Forms.Label labelWaveformBorderHitMs1;
     }
 }

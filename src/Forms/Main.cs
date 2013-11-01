@@ -450,6 +450,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.TextColor = Configuration.Settings.VideoControls.WaveFormTextColor;
                 audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
                 audioVisualizer.AllowOverlap = Configuration.Settings.VideoControls.WaveFormAllowOverlap;
+                audioVisualizer.ClosenessForBorderSelection = Configuration.Settings.VideoControls.WaveformBorderHitMs;
 
                 for (double zoomCounter = AudioVisualizer.ZoomMininum; zoomCounter <= AudioVisualizer.ZoomMaxinum + (0.001); zoomCounter += 0.1)
                 {
@@ -2167,11 +2168,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var fi = new FileInfo(fileName);
 
-                if (Path.GetExtension(fileName).ToLower() == ".ts" && fi.Length > 10000 && IsTransportStream(fileName)) //TODO: Also check mpg, mpeg - and file header!
-                {
-                    ImportSubtitleFromTransportStream(fileName);
-                    return;
-                }
+                //if (Path.GetExtension(fileName).ToLower() == ".ts" && fi.Length > 10000 && IsTransportStream(fileName)) //TODO: Also check mpg, mpeg - and file header!
+                //{
+                //    ImportSubtitleFromTransportStream(fileName);
+                //    return;
+                //}
 
                 if ((Path.GetExtension(fileName).ToLower() == ".mp4" || Path.GetExtension(fileName).ToLower() == ".m4v" || Path.GetExtension(fileName).ToLower() == ".3gp")
                     && fi.Length > 10000)
@@ -2597,7 +2598,7 @@ namespace Nikse.SubtitleEdit.Forms
                         s2.Paragraphs.Clear();
                         foreach (Paragraph p in _subtitle.Paragraphs)
                         {
-                            if (p.Extra.ToLower() == classes[0].ToLower())
+                            if (p.Extra != null && p.Extra.ToLower() == classes[0].ToLower())
                                 s1.Paragraphs.Add(p);
                             else
                                 s2.Paragraphs.Add(p);
@@ -3531,6 +3532,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.TextColor =  Configuration.Settings.VideoControls.WaveFormTextColor;
             audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
             audioVisualizer.AllowOverlap = Configuration.Settings.VideoControls.WaveFormAllowOverlap;
+            audioVisualizer.ClosenessForBorderSelection = Configuration.Settings.VideoControls.WaveformBorderHitMs;
 
             string newSyntaxColoring = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall.ToString() +
                            Configuration.Settings.Tools.ListViewSyntaxColorDurationBig.ToString() +
