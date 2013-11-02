@@ -1336,7 +1336,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <WaveformAndSpectrogram>Waveform/spektrogram</WaveformAndSpectrogram>
     <Tools>Værktøj</Tools>
     <WordLists>Ordlister</WordLists>
-    <SsaStyle>SSA Style</SsaStyle>
+    <SsaStyle>ASS/SSA Style</SsaStyle>
     <Proxy>Proxy</Proxy>
     <ShowToolBarButtons>Vis Værktøjslinjeknapperne</ShowToolBarButtons>
     <New>Ny</New>

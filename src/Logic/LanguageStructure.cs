@@ -1584,7 +1584,9 @@
             public string SubStationAlphaStyle { get; set; }
             public string ChooseFont { get; set; }
             public string ChooseColor { get; set; }
-            public string Example { get; set; }
+            public string SsaOutline { get; set; }
+            public string SsaShadow { get; set; }
+            public string SsaOpaqueBox { get; set; }            
             public string Testing123 { get; set; }
             public string Language { get; set; }
             public string NamesIgnoreLists { get; set; }

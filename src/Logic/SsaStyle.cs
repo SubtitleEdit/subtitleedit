@@ -37,12 +37,14 @@ namespace Nikse.SubtitleEdit.Logic
             Outline = Color.Black;
             Background = Color.Black;
             Alignment = "2";
-            OutlineWidth = 2;
-            ShadowWidth = 2;
+            OutlineWidth = Configuration.Settings.SubtitleSettings.SsaOutline;
+            ShadowWidth = Configuration.Settings.SubtitleSettings.SsaShadow;
             MarginLeft = 10;
             MarginRight = 10;
             MarginVertical = 10;
             BorderStyle = "1";
+            if (Configuration.Settings.SubtitleSettings.SsaOpaqueBox)
+                BorderStyle = "3";
             RawLine = string.Empty;
             LoadedFromHeader = false;
         }
