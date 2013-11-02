@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -154,8 +156,12 @@ namespace Nikse.SubtitleEdit.Forms
             _ssaFontColor = ssa.SsaFontColorArgb;
             fontDialogSSAStyle.Font = new System.Drawing.Font(ssa.SsaFontName, (float)ssa.SsaFontSize);
             fontDialogSSAStyle.Color = System.Drawing.Color.FromArgb(_ssaFontColor);
+            if (ssa.SsaOutline >= numericUpDownSsaOutline.Minimum && ssa.SsaOutline <= numericUpDownSsaOutline.Maximum)
+                numericUpDownSsaOutline.Value = ssa.SsaOutline;
+            if (ssa.SsaShadow >= numericUpDownSsaShadow.Minimum && ssa.SsaShadow <= numericUpDownSsaShadow.Maximum)
+                numericUpDownSsaShadow.Value = ssa.SsaShadow;
+            checkBoxSsaOpaqueBox.Checked = ssa.SsaOpaqueBox;
             UpdateSsaExample();
-
 
             var proxy = Configuration.Settings.Proxy;
             textBoxProxyAddress.Text = proxy.ProxyAddress;
@@ -316,8 +322,13 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSsaStyle.Text = language.SubStationAlphaStyle;
             buttonSSAChooseFont.Text = language.ChooseFont;
             buttonSSAChooseColor.Text = language.ChooseColor;
-            labelExampleColon.Text = language.Example;
-            labelSSAExample.Text = language.Testing123;
+
+            if (language.SsaOutline != null) // TODO: Remove in SE 3.4
+            {
+                labelSsaOutline.Text = language.SsaOutline;
+                labelSsaShadow.Text = language.SsaShadow;
+                checkBoxSsaOpaqueBox.Text = language.SsaOpaqueBox;
+            }
 
             groupBoxWordLists.Text = language.WordLists;
             labelWordListLanguage.Text = language.Language;
@@ -988,6 +999,9 @@ namespace Nikse.SubtitleEdit.Forms
             ssa.SsaFontName = _ssaFontName;
             ssa.SsaFontSize = _ssaFontSize;
             ssa.SsaFontColorArgb = _ssaFontColor;
+            ssa.SsaOutline = (int)numericUpDownSsaOutline.Value;
+            ssa.SsaShadow = (int)numericUpDownSsaShadow.Value;
+            ssa.SsaOpaqueBox = checkBoxSsaOpaqueBox.Checked;
 
             ProxySettings proxy = Configuration.Settings.Proxy;
             proxy.ProxyAddress = textBoxProxyAddress.Text ;
@@ -1352,20 +1366,113 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateSsaExample()
         {
-            labelSSAExample.ForeColor = System.Drawing.Color.FromArgb(_ssaFontColor);
-            labelSSAExample.Font = new System.Drawing.Font(_ssaFontName, (float)_ssaFontSize);
+            labelSSAFont.Text = string.Format("{0}, size {1}", fontDialogSSAStyle.Font.Name, fontDialogSSAStyle.Font.Size);
+            GeneratePreviewReal();
+        }
 
-            labelSSAFont.Text = string.Format("{0}, size {1}",
-                                fontDialogSSAStyle.Font.Name,
-                                fontDialogSSAStyle.Font.Size);
+        private void GeneratePreviewReal()
+        {
+            if (pictureBoxPreview.Image != null)
+                pictureBoxPreview.Image.Dispose();
+            var bmp = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
+
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+
+                // Draw background
+                const int rectangleSize = 9;
+                for (int y = 0; y < bmp.Height; y += rectangleSize)
+                {
+                    for (int x = 0; x < bmp.Width; x += rectangleSize)
+                    {
+                        Color c = Color.WhiteSmoke;
+                        if (y % (rectangleSize * 2) == 0)
+                        {
+                            if (x % (rectangleSize * 2) == 0)
+                                c = Color.LightGray;
+                        }
+                        else
+                        {
+                            if (x % (rectangleSize * 2) != 0)
+                                c = Color.LightGray;
+                        }
+                        g.FillRectangle(new SolidBrush(c), x, y, rectangleSize, rectangleSize);
+                    }
+                }
+
+                // Draw text
+                Font font;
+                try
+                {
+                    font = new Font(_ssaFontName, (float)_ssaFontSize);
+                }
+                catch
+                {
+                    font = new Font(Font, FontStyle.Regular);
+                }
+                g.TextRenderingHint = TextRenderingHint.AntiAlias;
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near };
+                var path = new GraphicsPath();
+
+                bool newLine = false;
+                var sb = new StringBuilder();
+                sb.Append("This is a test!");
+
+                bool bold = false;
+                bool italic = false;
+                bool underline = false;
+                var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), bold) + 1;
+                var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), bold) + 1;
+
+                float left = 5;
+                left = ((float)(bmp.Width - measuredWidth * 0.8 + 15) / 2);
+
+                float top = 2;
+                top = bmp.Height - measuredHeight - ((int)10);
+
+                int leftMargin = 0;
+                int pathPointsStart = -1;
+
+                if (checkBoxSsaOpaqueBox.Checked)
+                {
+                    g.FillRectangle(new SolidBrush(Color.Black), left, top, measuredWidth + 3, measuredHeight + 3);
+                }
+
+                TextDraw.DrawText(font, sf, path, sb, italic, bold, underline, left, top, ref newLine, leftMargin, ref pathPointsStart);
+
+                int outline = (int)numericUpDownSsaOutline.Value;
+
+                // draw shadow
+                if (numericUpDownSsaShadow.Value > 0 && !checkBoxSsaOpaqueBox.Checked)
+                {
+                    for (int i = 0; i < (int)numericUpDownSsaShadow.Value; i++)
+                    {
+                        var shadowPath = new GraphicsPath();
+                        sb = new StringBuilder();
+                        sb.Append("This is a test!");
+                        int pathPointsStart2 = -1;
+                        TextDraw.DrawText(font, sf, shadowPath, sb, italic, bold, underline, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
+                        g.FillPath(new SolidBrush(Color.FromArgb(200, Color.Black)), shadowPath);
+                    }
+                }
+
+                if (outline > 0 && !checkBoxSsaOpaqueBox.Checked)
+                {
+                    g.DrawPath(new Pen(Color.Black, outline), path);
+                }
+                g.FillPath(new SolidBrush(System.Drawing.Color.FromArgb(_ssaFontColor)), path);
+
+
+            }
+            pictureBoxPreview.Image = bmp;
         }
 
         private void ButtonSsaChooseColorClick(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = labelSSAExample.ForeColor;
+            colorDialogSSAStyle.Color = System.Drawing.Color.FromArgb(_ssaFontColor);
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
             {
-                labelSSAExample.ForeColor = colorDialogSSAStyle.Color;
                 _ssaFontColor = colorDialogSSAStyle.Color.ToArgb();
                 UpdateSsaExample();
             }
@@ -2314,6 +2421,23 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 i++;
             }
+        }
+
+        private void numericUpDownSsaOutline_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateSsaExample();
+        }
+
+        private void numericUpDownSsaShadow_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateSsaExample();
+        }
+
+        private void checkBoxSsaOpaqueBox_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDownSsaOutline.Enabled = !checkBoxSsaOpaqueBox.Checked;
+            numericUpDownSsaShadow.Enabled = !checkBoxSsaOpaqueBox.Checked;
+            UpdateSsaExample();
         }
 
     }

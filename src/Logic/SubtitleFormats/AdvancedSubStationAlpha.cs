@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 using System.Xml;
 
@@ -15,10 +16,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             get
             {
+                string borderStyle = "1"; // 1=normal, 3=opaque box
+                if (Configuration.Settings.SubtitleSettings.SsaOpaqueBox)
+                    borderStyle = "3";
+                
                 return "Style: Default," + Configuration.Settings.SubtitleSettings.SsaFontName + "," +
                     ((int)Configuration.Settings.SubtitleSettings.SsaFontSize) + "," +
                     GetSsaColorString(Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb)) + "," +
-                    "&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0,1,2,2,2,10,10,10,1";
+                    "&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0," +  borderStyle + "," + Configuration.Settings.SubtitleSettings.SsaOutline.ToString(CultureInfo.InvariantCulture) + "," + 
+                    Configuration.Settings.SubtitleSettings.SsaShadow.ToString(CultureInfo.InvariantCulture) + ",2,10,10,10,1";
             }
         }
 

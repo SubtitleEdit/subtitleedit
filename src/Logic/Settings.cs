@@ -194,6 +194,9 @@ namespace Nikse.SubtitleEdit.Logic
         public string SsaFontName { get; set; }
         public double SsaFontSize { get; set; }
         public int SsaFontColorArgb { get; set; }
+        public int SsaOutline { get; set; }
+        public int SsaShadow { get; set; }
+        public bool SsaOpaqueBox { get; set; }
         public string DCinemaFontFile { get; set; }
         public string DCinemaLoadFontResource { get; set; }
         public int DCinemaFontSize { get; set; }
@@ -231,6 +234,9 @@ namespace Nikse.SubtitleEdit.Logic
             SsaFontName = "Arial";
             SsaFontSize = 20;
             SsaFontColorArgb = System.Drawing.Color.FromArgb(255, 255, 255).ToArgb();
+            SsaOutline = 2;
+            SsaShadow = 1;
+            SsaOpaqueBox = false;
 
             DCinemaFontFile = "Arial.ttf";
             DCinemaLoadFontResource = "urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391";
@@ -1501,6 +1507,15 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("SsaFontColorArgb");
                 if (subNode != null)
                     settings.SubtitleSettings.SsaFontColorArgb = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("SsaOutline");
+                if (subNode != null)
+                    settings.SubtitleSettings.SsaOutline = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("SsaShadow");
+                if (subNode != null)
+                    settings.SubtitleSettings.SsaShadow = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("SsaOpaqueBox");
+                if (subNode != null)
+                    settings.SubtitleSettings.SsaOpaqueBox = Convert.ToBoolean(subNode.InnerText);                
                 subNode = node.SelectSingleNode("DCinemaFontFile");
                 if (subNode != null)
                     settings.SubtitleSettings.DCinemaFontFile = subNode.InnerText;
@@ -2415,6 +2430,9 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SsaFontName", settings.SubtitleSettings.SsaFontName);
             textWriter.WriteElementString("SsaFontSize", settings.SubtitleSettings.SsaFontSize.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("SsaFontColorArgb", settings.SubtitleSettings.SsaFontColorArgb.ToString());
+            textWriter.WriteElementString("SsaOutline", settings.SubtitleSettings.SsaOutline.ToString());
+            textWriter.WriteElementString("SsaShadow", settings.SubtitleSettings.SsaShadow.ToString());
+            textWriter.WriteElementString("SsaOpaqueBox", settings.SubtitleSettings.SsaOpaqueBox.ToString());
             textWriter.WriteElementString("DCinemaFontFile", settings.SubtitleSettings.DCinemaFontFile);
             textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString());
             textWriter.WriteElementString("DCinemaBottomMargin", settings.SubtitleSettings.DCinemaBottomMargin.ToString());
