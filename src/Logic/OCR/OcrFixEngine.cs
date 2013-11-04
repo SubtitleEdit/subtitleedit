@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         /// </summary>
         /// <param name="threeLetterIsoLanguageName">E.g. eng for English</param>
         /// <param name="parentForm">Used for centering/show spellcheck dialog</param>
-        public OcrFixEngine(string threeLetterIsoLanguageName, Form parentForm)
+        public OcrFixEngine(string threeLetterIsoLanguageName, string hunspellName, Form parentForm)
         {
             _parentForm = parentForm;
 
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                                              parentForm.Top + (parentForm.Height / 2 - _spellCheck.Height / 2));
 
             LoadReplaceLists(threeLetterIsoLanguageName);
-            LoadSpellingDictionaries(threeLetterIsoLanguageName); // Hunspell etc.
+            LoadSpellingDictionaries(threeLetterIsoLanguageName, hunspellName); // Hunspell etc.
 
             AutoGuessesUsed = new List<string>();
             UnknownWordsFound = new List<string>();
@@ -115,14 +115,33 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
         }
 
-        private void LoadSpellingDictionaries(string threeLetterIsoLanguageName)
+        private void LoadSpellingDictionaries(string threeLetterIsoLanguageName, string hunspellName)
         {
             string dictionaryFolder = Utilities.DictionaryFolder;
             if (!Directory.Exists(dictionaryFolder))
                 return;
 
-            // use US default
-            if (threeLetterIsoLanguageName == "eng" && File.Exists(Path.Combine(dictionaryFolder, "en_US.dic")))
+            if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.ToLower() == "en_gb" && File.Exists(Path.Combine(dictionaryFolder, "en_GB.dic")))
+            {
+                LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-GB"), "en_GB.dic", true);
+                return;
+            }
+            else if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.ToLower() == "en_ca" && File.Exists(Path.Combine(dictionaryFolder, "en_CA.dic")))
+            {
+                LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-CA"), "en_CA.dic", true);
+                return;
+            }
+            else if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.ToLower() == "en_au" && File.Exists(Path.Combine(dictionaryFolder, "en_AU.dic")))
+            {
+                LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-AU"), "en_AU.dic", true);
+                return;
+            }
+            else if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.ToLower() == "en_za" && File.Exists(Path.Combine(dictionaryFolder, "en_ZA.dic")))
+            {
+                LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-ZA"), "en_ZA.dic", true);
+                return;
+            }
+            else if (threeLetterIsoLanguageName == "eng" && File.Exists(Path.Combine(dictionaryFolder, "en_US.dic")))
             {
                 LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-US"), "en_US.dic", true);
                 return;

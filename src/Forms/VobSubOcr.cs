@@ -2781,7 +2781,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string SplitAndOcrBitmapNormal(Bitmap bitmap, int listViewIndex)
         {
             if (_ocrFixEngine == null)
-                LoadOcrFixEngine(null);
+                LoadOcrFixEngine(null, LanguageString);
 
             string threadText = null;
             if (_icThreadResults != null && !string.IsNullOrEmpty(_icThreadResults[listViewIndex]))
@@ -4919,36 +4919,68 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                     if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Substring(1, 1) == " ")
                                     {
+                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
+                                        if (ita)
+                                            unItalicText = "<i>" + unItalicText + "</i>";
                                     }
                                     if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Substring(2, 1) == " ")
                                     {
+                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
+                                        if (ita)
+                                            unItalicText = "<i>" + unItalicText + "</i>";
                                     }
                                     if (unItalicText.StartsWith("J'") && (line.StartsWith("♪") || textWithOutFixes.StartsWith("♪") || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
                                     {
+                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
+                                        if (ita)
+                                            unItalicText = "<i>" + unItalicText + "</i>";
                                     }
                                     if ((line.StartsWith("J` ") || line.StartsWith("J“ ") || line.StartsWith("J' ") || line.StartsWith("J* ")) && unItalicText.StartsWith("S "))
                                     {
+                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
+                                        if (ita)
+                                            unItalicText = "<i>" + unItalicText + "</i>";
                                     }
                                     if ((line.StartsWith("J` ") || line.StartsWith("J“ ") || line.StartsWith("J' ") || line.StartsWith("J* ")) && unItalicText.StartsWith("<i>S</i> "))
                                     {
+                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 8).TrimStart();
+                                        if (ita)
+                                            unItalicText = "<i>" + unItalicText + "</i>";
                                     }
                                     if (unItalicText.StartsWith(";'") && (line.StartsWith("♪") || textWithOutFixes.StartsWith("♪") || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
                                     {
+                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
+                                        if (ita)
+                                            unItalicText = "<i>" + unItalicText + "</i>";
                                     }
                                     if (unItalicText.StartsWith(",{*") && (line.StartsWith("♪") || textWithOutFixes.StartsWith("♪") || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
                                     {
+                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 3).TrimStart();
+                                        if (ita)
+                                            unItalicText = "<i>" + unItalicText + "</i>";
                                     }
 
                                     if (unItalicText.EndsWith("J'") && (line.EndsWith("♪") || textWithOutFixes.EndsWith("♪") || textWithOutFixes.EndsWith("♪</i>") || unItalicText.StartsWith("♪")))
                                     {
+                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
                                         unItalicText = unItalicText.Remove(unItalicText.Length - 3, 2).TrimEnd() + " ♪";
+                                        if (ita)
+                                            unItalicText = "<i>" + unItalicText + "</i>";
                                     }
                                 }
 
@@ -5670,10 +5702,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Configuration.Settings.VobSubOcr.TesseractLastLanguage = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
             _ocrFixEngine = null;
-            LoadOcrFixEngine(null);
+            LoadOcrFixEngine(null, null);
         }
 
-        private void LoadOcrFixEngine(string threeLetterISOLanguageName)
+        private void LoadOcrFixEngine(string threeLetterISOLanguageName, string hunspellName)
         {
             if (string.IsNullOrEmpty(threeLetterISOLanguageName) && comboBoxTesseractLanguages.SelectedItem != null)
             {
@@ -5681,7 +5713,7 @@ namespace Nikse.SubtitleEdit.Forms
                 threeLetterISOLanguageName = _languageId;
             }
 
-            _ocrFixEngine = new OcrFixEngine(threeLetterISOLanguageName, this);
+            _ocrFixEngine = new OcrFixEngine(threeLetterISOLanguageName, hunspellName, this);
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
                 string loadedDictionaryName = _ocrFixEngine.SpellCheckDictionaryName;
@@ -6085,7 +6117,7 @@ namespace Nikse.SubtitleEdit.Forms
             catch
             {
             }
-            LoadOcrFixEngine(threeLetterISOLanguageName);
+            LoadOcrFixEngine(threeLetterISOLanguageName, LanguageString);
         }
 
         internal void Initialize(Subtitle bdnSubtitle, VobSubOcrSettings vobSubOcrSettings, bool isSon)
