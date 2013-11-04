@@ -2648,7 +2648,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixOcrErrorsViaReplaceList(string threeLetterISOLanguageName)
         {
-            OcrFixEngine ocrFixEngine = new OcrFixEngine(threeLetterISOLanguageName, this);
+            OcrFixEngine ocrFixEngine = new OcrFixEngine(threeLetterISOLanguageName, null, this);
             string fixAction = _language.FixCommonOcrErrors;
             int noOfFixes = 0;
             string lastLine = string.Empty;

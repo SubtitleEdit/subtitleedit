@@ -3,8 +3,10 @@
 3.3.10 (xth November 2013)
 * NEW:
    * Added new subtitle formats
+   * Added option to control border-marker-hit-size in audio waveform
 * IMPROVED:
    * OCR max. error% is now saved for bluray - thx Zoltán
+   * More default values for ASS/SSA
 * FIXED:
    * F11 (Set start time) sometimes kept duration - thx Rinus/Quetsbeek 
    * Cavana 890 now works with Hebrew again - thx Yaniv
