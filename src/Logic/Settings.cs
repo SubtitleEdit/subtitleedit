@@ -108,6 +108,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool BatchConvertRemoveTextForHI { get; set; }
         public bool BatchConvertFixCommonErrors { get; set; }
         public bool BatchConvertMultipleReplace { get; set; }
+        public bool BatchConvertSplitLongLines { get; set; }
         public bool BatchConvertAutoBalance { get; set; }
         public bool BatchConvertSetMinDisplayTimeBetweenSubtitles { get; set; }
         public string BatchConvertLanguage { get; set; }
@@ -612,6 +613,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool TopToBottom { get; set; }
         public int DefaultMillisecondsForUnknownDurations { get; set; }
         public bool PromptForUnknownWords { get; set; }
+        public bool GuessUnknownWords { get; set; }
         public bool AutoBreakSubtitleIfMoreThanTwoLines { get; set; }
         public double ItalicFactor { get; set; }
         public bool LineOcrDraw { get; set; }
@@ -636,6 +638,7 @@ namespace Nikse.SubtitleEdit.Logic
             TopToBottom = true;
             DefaultMillisecondsForUnknownDurations = 5000;
             PromptForUnknownWords = true;
+            GuessUnknownWords = true;
             AutoBreakSubtitleIfMoreThanTwoLines = true;
             ItalicFactor = 0.2;
 
@@ -1426,6 +1429,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("BatchConvertAutoBalance");
             if (subNode != null)
                 settings.Tools.BatchConvertAutoBalance = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("BatchConvertSplitLongLines");
+            if (subNode != null)
+                settings.Tools.BatchConvertSplitLongLines = Convert.ToBoolean(subNode.InnerText);            
             subNode = node.SelectSingleNode("BatchConvertSetMinDisplayTimeBetweenSubtitles");
             if (subNode != null)
                 settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles = Convert.ToBoolean(subNode.InnerText);
@@ -1832,6 +1838,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("PromptForUnknownWords");
             if (subNode != null)
                 settings.VobSubOcr.PromptForUnknownWords = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("GuessUnknownWords");
+            if (subNode != null)
+                settings.VobSubOcr.GuessUnknownWords = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("AutoBreakSubtitleIfMoreThanTwoLines");
             if (subNode != null)
                 settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines = Convert.ToBoolean(subNode.InnerText);
@@ -2398,6 +2407,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("BatchConvertRemoveFormatting", settings.Tools.BatchConvertRemoveFormatting.ToString());
             textWriter.WriteElementString("BatchConvertFixCasing", settings.Tools.BatchConvertFixCasing.ToString());
             textWriter.WriteElementString("BatchConvertRemoveTextForHI", settings.Tools.BatchConvertRemoveTextForHI.ToString());
+            textWriter.WriteElementString("BatchConvertSplitLongLines", settings.Tools.BatchConvertSplitLongLines.ToString());            
             textWriter.WriteElementString("BatchConvertFixCommonErrors", settings.Tools.BatchConvertFixCommonErrors.ToString());
             textWriter.WriteElementString("BatchConvertMultipleReplace", settings.Tools.BatchConvertMultipleReplace.ToString());
             textWriter.WriteElementString("BatchConvertAutoBalance", settings.Tools.BatchConvertAutoBalance.ToString());
@@ -2549,6 +2559,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("TopToBottom", settings.VobSubOcr.TopToBottom.ToString());
             textWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString());
             textWriter.WriteElementString("PromptForUnknownWords", settings.VobSubOcr.PromptForUnknownWords.ToString());
+            textWriter.WriteElementString("GuessUnknownWords", settings.VobSubOcr.GuessUnknownWords.ToString());            
             textWriter.WriteElementString("AutoBreakSubtitleIfMoreThanTwoLines", settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines.ToString());
             textWriter.WriteElementString("ItalicFactor", settings.VobSubOcr.ItalicFactor.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("LineOcrDraw", settings.VobSubOcr.LineOcrDraw.ToString());

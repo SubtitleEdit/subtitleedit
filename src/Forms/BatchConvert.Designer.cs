@@ -32,6 +32,7 @@
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
+            this.checkBoxSplitLongLines = new System.Windows.Forms.CheckBox();
             this.buttonRemoveTextForHiSettings = new System.Windows.Forms.Button();
             this.checkBoxSetMinimumDisplayTimeBetweenSubs = new System.Windows.Forms.CheckBox();
             this.checkBoxAutoBalance = new System.Windows.Forms.CheckBox();
@@ -93,7 +94,7 @@
             // 
             this.buttonConvert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonConvert.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonConvert.Location = new System.Drawing.Point(857, 547);
+            this.buttonConvert.Location = new System.Drawing.Point(857, 564);
             this.buttonConvert.Name = "buttonConvert";
             this.buttonConvert.Size = new System.Drawing.Size(98, 21);
             this.buttonConvert.TabIndex = 2;
@@ -105,7 +106,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(961, 547);
+            this.buttonCancel.Location = new System.Drawing.Point(961, 564);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 3;
@@ -117,6 +118,7 @@
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.checkBoxSplitLongLines);
             this.groupBoxConvertOptions.Controls.Add(this.buttonRemoveTextForHiSettings);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxSetMinimumDisplayTimeBetweenSubs);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxAutoBalance);
@@ -131,10 +133,20 @@
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxRemoveFormatting);
             this.groupBoxConvertOptions.Location = new System.Drawing.Point(498, 19);
             this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
-            this.groupBoxConvertOptions.Size = new System.Drawing.Size(520, 193);
+            this.groupBoxConvertOptions.Size = new System.Drawing.Size(520, 210);
             this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
+            // 
+            // checkBoxSplitLongLines
+            // 
+            this.checkBoxSplitLongLines.AutoSize = true;
+            this.checkBoxSplitLongLines.Location = new System.Drawing.Point(16, 145);
+            this.checkBoxSplitLongLines.Name = "checkBoxSplitLongLines";
+            this.checkBoxSplitLongLines.Size = new System.Drawing.Size(93, 17);
+            this.checkBoxSplitLongLines.TabIndex = 8;
+            this.checkBoxSplitLongLines.Text = "Split long lines";
+            this.checkBoxSplitLongLines.UseVisualStyleBackColor = true;
             // 
             // buttonRemoveTextForHiSettings
             // 
@@ -150,7 +162,7 @@
             // checkBoxSetMinimumDisplayTimeBetweenSubs
             // 
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.AutoSize = true;
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Location = new System.Drawing.Point(16, 169);
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Location = new System.Drawing.Point(16, 191);
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Name = "checkBoxSetMinimumDisplayTimeBetweenSubs";
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Size = new System.Drawing.Size(190, 17);
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.TabIndex = 9;
@@ -160,7 +172,7 @@
             // checkBoxAutoBalance
             // 
             this.checkBoxAutoBalance.AutoSize = true;
-            this.checkBoxAutoBalance.Location = new System.Drawing.Point(16, 145);
+            this.checkBoxAutoBalance.Location = new System.Drawing.Point(16, 168);
             this.checkBoxAutoBalance.Name = "checkBoxAutoBalance";
             this.checkBoxAutoBalance.Size = new System.Drawing.Size(113, 17);
             this.checkBoxAutoBalance.TabIndex = 8;
@@ -264,7 +276,7 @@
             this.groupBoxOffsetTimeCodes.Controls.Add(this.labelHoursMinSecsMilliSecs);
             this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(280, 89);
             this.groupBoxOffsetTimeCodes.Name = "groupBoxOffsetTimeCodes";
-            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(239, 98);
+            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(239, 115);
             this.groupBoxOffsetTimeCodes.TabIndex = 11;
             this.groupBoxOffsetTimeCodes.TabStop = false;
             this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
@@ -299,7 +311,7 @@
             this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownAdjust.Mode = Nikse.SubtitleEdit.Controls.TimeUpDown.TimeMode.HHMMSSMS;
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
-            this.timeUpDownAdjust.Size = new System.Drawing.Size(92, 24);
+            this.timeUpDownAdjust.Size = new System.Drawing.Size(96, 24);
             this.timeUpDownAdjust.TabIndex = 1;
             // 
             // labelHoursMinSecsMilliSecs
@@ -359,7 +371,7 @@
             this.groupBoxOutput.Controls.Add(this.textBoxOutputFolder);
             this.groupBoxOutput.Location = new System.Drawing.Point(12, 316);
             this.groupBoxOutput.Name = "groupBoxOutput";
-            this.groupBoxOutput.Size = new System.Drawing.Size(1027, 218);
+            this.groupBoxOutput.Size = new System.Drawing.Size(1027, 235);
             this.groupBoxOutput.TabIndex = 1;
             this.groupBoxOutput.TabStop = false;
             this.groupBoxOutput.Text = "Output";
@@ -606,7 +618,7 @@
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(15, 556);
+            this.progressBar1.Location = new System.Drawing.Point(15, 573);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(833, 10);
             this.progressBar1.TabIndex = 8;
@@ -615,7 +627,7 @@
             // 
             this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(12, 540);
+            this.labelStatus.Location = new System.Drawing.Point(12, 557);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 9;
@@ -626,7 +638,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1048, 580);
+            this.ClientSize = new System.Drawing.Size(1048, 597);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.groupBoxOutput);
@@ -710,6 +722,7 @@
         private System.Windows.Forms.CheckBox checkBoxSetMinimumDisplayTimeBetweenSubs;
         private System.Windows.Forms.CheckBox checkBoxScanFolderRecursive;
         private System.Windows.Forms.Button buttonRemoveTextForHiSettings;
+        private System.Windows.Forms.CheckBox checkBoxSplitLongLines;
 
     }
 }

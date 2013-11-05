@@ -308,6 +308,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoTransparentBackground.Left = groupBoxSubtitleImage.Width - checkBoxAutoTransparentBackground.Width - 2;
             checkBoxPromptForUnknownWords.Text = language.PromptForUnknownWords;
             checkBoxPromptForUnknownWords.Checked = Configuration.Settings.VobSubOcr.PromptForUnknownWords;
+            checkBoxGuessUnknownWords.Checked = Configuration.Settings.VobSubOcr.GuessUnknownWords;
 
             groupBoxOcrAutoFix.Text = language.OcrAutoCorrectionSpellchecking;
             checkBoxGuessUnknownWords.Text = language.TryToGuessUnkownWords;
@@ -6534,6 +6535,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VobSubOcr.ItalicFactor = _unItalicFactor;
             Configuration.Settings.VobSubOcr.UseModiInTesseractForUnknownWords = checkBoxUseModiInTesseractForUnknownWords.Checked;
             Configuration.Settings.VobSubOcr.PromptForUnknownWords = checkBoxPromptForUnknownWords.Checked;
+            Configuration.Settings.VobSubOcr.GuessUnknownWords = checkBoxGuessUnknownWords.Checked;
             Configuration.Settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines = checkBoxAutoBreakLines.Checked;
             Configuration.Settings.VobSubOcr.LineOcrDraw = checkBoxNOcrCorrect.Checked;
             Configuration.Settings.VobSubOcr.LineOcrAdvancedItalic = checkBoxNOcrItalic.Checked;
