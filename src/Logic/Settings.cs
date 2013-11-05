@@ -1431,7 +1431,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.BatchConvertAutoBalance = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("BatchConvertSplitLongLines");
             if (subNode != null)
-                settings.Tools.BatchConvertSplitLongLines = Convert.ToBoolean(subNode.InnerText);            
+                settings.Tools.BatchConvertSplitLongLines = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("BatchConvertSetMinDisplayTimeBetweenSubtitles");
             if (subNode != null)
                 settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles = Convert.ToBoolean(subNode.InnerText);
@@ -1521,7 +1521,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.SubtitleSettings.SsaShadow = Convert.ToInt32(subNode.InnerText);
                 subNode = node.SelectSingleNode("SsaOpaqueBox");
                 if (subNode != null)
-                    settings.SubtitleSettings.SsaOpaqueBox = Convert.ToBoolean(subNode.InnerText);                
+                    settings.SubtitleSettings.SsaOpaqueBox = Convert.ToBoolean(subNode.InnerText);
                 subNode = node.SelectSingleNode("DCinemaFontFile");
                 if (subNode != null)
                     settings.SubtitleSettings.DCinemaFontFile = subNode.InnerText;
@@ -2407,7 +2407,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("BatchConvertRemoveFormatting", settings.Tools.BatchConvertRemoveFormatting.ToString());
             textWriter.WriteElementString("BatchConvertFixCasing", settings.Tools.BatchConvertFixCasing.ToString());
             textWriter.WriteElementString("BatchConvertRemoveTextForHI", settings.Tools.BatchConvertRemoveTextForHI.ToString());
-            textWriter.WriteElementString("BatchConvertSplitLongLines", settings.Tools.BatchConvertSplitLongLines.ToString());            
+            textWriter.WriteElementString("BatchConvertSplitLongLines", settings.Tools.BatchConvertSplitLongLines.ToString());
             textWriter.WriteElementString("BatchConvertFixCommonErrors", settings.Tools.BatchConvertFixCommonErrors.ToString());
             textWriter.WriteElementString("BatchConvertMultipleReplace", settings.Tools.BatchConvertMultipleReplace.ToString());
             textWriter.WriteElementString("BatchConvertAutoBalance", settings.Tools.BatchConvertAutoBalance.ToString());
@@ -2521,7 +2521,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("LastActiveTab", settings.VideoControls.LastActiveTab);
             textWriter.WriteElementString("WaveFormDrawGrid", settings.VideoControls.WaveFormDrawGrid.ToString());
             textWriter.WriteElementString("WaveFormAllowOverlap", settings.VideoControls.WaveFormAllowOverlap.ToString());
-            textWriter.WriteElementString("WaveformBorderHitMs", settings.VideoControls.WaveformBorderHitMs.ToString());           
+            textWriter.WriteElementString("WaveformBorderHitMs", settings.VideoControls.WaveformBorderHitMs.ToString());
             textWriter.WriteElementString("WaveFormGridColor", settings.VideoControls.WaveFormGridColor.ToArgb().ToString());
             textWriter.WriteElementString("WaveFormColor", settings.VideoControls.WaveFormColor.ToArgb().ToString());
             textWriter.WriteElementString("WaveFormSelectedColor", settings.VideoControls.WaveFormSelectedColor.ToArgb().ToString());
@@ -2559,7 +2559,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("TopToBottom", settings.VobSubOcr.TopToBottom.ToString());
             textWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString());
             textWriter.WriteElementString("PromptForUnknownWords", settings.VobSubOcr.PromptForUnknownWords.ToString());
-            textWriter.WriteElementString("GuessUnknownWords", settings.VobSubOcr.GuessUnknownWords.ToString());            
+            textWriter.WriteElementString("GuessUnknownWords", settings.VobSubOcr.GuessUnknownWords.ToString());
             textWriter.WriteElementString("AutoBreakSubtitleIfMoreThanTwoLines", settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines.ToString());
             textWriter.WriteElementString("ItalicFactor", settings.VobSubOcr.ItalicFactor.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("LineOcrDraw", settings.VobSubOcr.LineOcrDraw.ToString());

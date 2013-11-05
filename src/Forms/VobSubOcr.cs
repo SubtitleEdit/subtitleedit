@@ -5082,7 +5082,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         {
                                             unItalicText += "!";
                                         }
-                                        
+
                                     }
                                 }
                                 if (line.EndsWith("?") && !unItalicText.EndsWith("?") && !unItalicText.EndsWith("?</i>"))

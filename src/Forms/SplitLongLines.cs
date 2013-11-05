@@ -303,7 +303,7 @@ namespace Nikse.SubtitleEdit.Forms
                 startTag = text.Substring(0, end + 1);
             }
             return startTag;
-        }      
+        }
 
         private void NumericUpDownMaxCharactersValueChanged(object sender, EventArgs e)
         {

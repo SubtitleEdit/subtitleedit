@@ -1587,7 +1587,7 @@
             public string ChooseColor { get; set; }
             public string SsaOutline { get; set; }
             public string SsaShadow { get; set; }
-            public string SsaOpaqueBox { get; set; }            
+            public string SsaOpaqueBox { get; set; }
             public string Testing123 { get; set; }
             public string Language { get; set; }
             public string NamesIgnoreLists { get; set; }
