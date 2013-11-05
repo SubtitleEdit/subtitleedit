@@ -8961,7 +8961,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool ascii = false;
             int color = 0;
             bool toggle = false;
-            for (int c = offset, val, i = 0; c < _buffer.Length; c++, i++)
+            for (int c = offset, i = 0; c < _buffer.Length; c++, i++)
     		{
                 //var char_value = _buffer[c];
 
