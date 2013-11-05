@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -168,9 +169,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p != null && p.Text != null)
                 {
                     string oldText = Utilities.RemoveHtmlTags(p.Text);
-                    if (QualifiesForSplit(p.Text, singleLineMaxCharacters, totalLineMaxCharacters) && IsFixAllowed(p))
+                    if (SplitLongLinesHelper.QualifiesForSplit(p.Text, singleLineMaxCharacters, totalLineMaxCharacters) && IsFixAllowed(p))
                     {
-                        if (!QualifiesForSplit(Utilities.AutoBreakLine(p.Text), singleLineMaxCharacters, totalLineMaxCharacters))
+                        if (!SplitLongLinesHelper.QualifiesForSplit(Utilities.AutoBreakLine(p.Text), singleLineMaxCharacters, totalLineMaxCharacters))
                         {
                             Paragraph newParagraph = new Paragraph(p);
                             newParagraph.Text = Utilities.AutoBreakLine(p.Text);
@@ -302,22 +303,7 @@ namespace Nikse.SubtitleEdit.Forms
                 startTag = text.Substring(0, end + 1);
             }
             return startTag;
-        }
-
-        private static bool QualifiesForSplit(string text, int singleLineMaxCharacters, int totalLineMaxCharacters)
-        {
-            string s = Utilities.RemoveHtmlTags(text.Trim());
-            if (s.Length > totalLineMaxCharacters)
-                return true;
-
-            string[] arr = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            foreach (string line in arr)
-            {
-                if (line.Length > singleLineMaxCharacters)
-                    return true;
-            }
-            return false;
-        }
+        }      
 
         private void NumericUpDownMaxCharactersValueChanged(object sender, EventArgs e)
         {
