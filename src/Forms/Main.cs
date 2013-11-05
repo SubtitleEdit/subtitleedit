@@ -8937,15 +8937,15 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private readonly static String[] colors = {
-		"{\\c&HC0C0C0&}",   // black /gray
-		"{\\c&H4040FF&}",   // red
-		"{\\c&H00FF00&}",   // green
-		"{\\c&H00FFFF&}",   // yellow
-		"{\\c&HFF409B&}",   // blue //DM15032004 081.6 int18 changed
-		"{\\c&HFF00FF&}",   // magenta
-		"{\\c&HFFFF00&}",   // cyan
-		"{\\c&HFFFFFF&}",   // white
-	    };
+        "{\\c&HC0C0C0&}",   // black /gray
+        "{\\c&H4040FF&}",   // red
+        "{\\c&H00FF00&}",   // green
+        "{\\c&H00FFFF&}",   // yellow
+        "{\\c&HFF409B&}",   // blue //DM15032004 081.6 int18 changed
+        "{\\c&HFF00FF&}",   // magenta
+        "{\\c&HFFFF00&}",   // cyan
+        "{\\c&HFFFFFF&}",   // white
+        };
 
         public static byte bytereverse(byte n)
         {
@@ -8962,121 +8962,121 @@ namespace Nikse.SubtitleEdit.Forms
             int color = 0;
             bool toggle = false;
             for (int c = offset, i = 0; c < _buffer.Length; c++, i++)
-    		{
+            {
                 //var char_value = _buffer[c];
 
                 var char_value = 0x7F & bytereverse(_buffer[c]);
 
-			if (char_value >> 3 == 0)  //0x0..7
-			{ 
-				ascii = true; 
-				text += ((color==1) ? colors[char_value] : "");// + (char)active_set[32]; 
-			}
-			else if (char_value>>4 == 0)   //0x8..F
-			{ 
-				text += " ";//(char)active_set[32]; 
-			}
-			else if (char_value >> 7 == 1)  //0x80..FF
-			{ 
-				text += " "; //(char)active_set[32]; 
-			}
-			else if (char_value < 27)  //0x10..1A
-			{ 
-				ascii = false; 
-				text += " "; //(char)active_set[32]; 
-			}
-			else if (char_value < 32) //0x1B..1F
-			{  
-				if (char_value == 0x1B) //ESC
-				{
-					if (toggle)
-					{
-					//	active_set = CharSet.getActive_G0_Set(primary_set_mapping, primary_national_set_mapping, row);
-					//	active_national_set = CharSet.getActiveNationalSubset(primary_set_mapping, primary_national_set_mapping, row);
-					}
-					else
-					{
-						//active_set = CharSet.getActive_G0_Set(secondary_set_mapping, secondary_national_set_mapping, row);
-						//active_national_set = CharSet.getActiveNationalSubset(secondary_set_mapping, secondary_national_set_mapping, row);
-					}
-					toggle = !toggle;
-				}
+            if (char_value >> 3 == 0)  //0x0..7
+            {
+                ascii = true;
+                text += ((color==1) ? colors[char_value] : "");// + (char)active_set[32];
+            }
+            else if (char_value>>4 == 0)   //0x8..F
+            {
+                text += " ";//(char)active_set[32];
+            }
+            else if (char_value >> 7 == 1)  //0x80..FF
+            {
+                text += " "; //(char)active_set[32];
+            }
+            else if (char_value < 27)  //0x10..1A
+            {
+                ascii = false;
+                text += " "; //(char)active_set[32];
+            }
+            else if (char_value < 32) //0x1B..1F
+            {
+                if (char_value == 0x1B) //ESC
+                {
+                    if (toggle)
+                    {
+                    //  active_set = CharSet.getActive_G0_Set(primary_set_mapping, primary_national_set_mapping, row);
+                    //  active_national_set = CharSet.getActiveNationalSubset(primary_set_mapping, primary_national_set_mapping, row);
+                    }
+                    else
+                    {
+                        //active_set = CharSet.getActive_G0_Set(secondary_set_mapping, secondary_national_set_mapping, row);
+                        //active_national_set = CharSet.getActiveNationalSubset(secondary_set_mapping, secondary_national_set_mapping, row);
+                    }
+                    toggle = !toggle;
+                }
 
-				text += " "; //(char)active_set[32]; 
-				continue; 
-			}
-			else if (char_value == 0x7F) //0x7F
-			{
-                text += " "; // (char)active_set[32]; 
-				continue; 
-			}
+                text += " "; //(char)active_set[32];
+                continue;
+            }
+            else if (char_value == 0x7F) //0x7F
+            {
+                text += " "; // (char)active_set[32];
+                continue;
+            }
 
-			if (!ascii)
-			{
-                text += " "; /// (char)active_set[32]; 
-				continue; 
-			}
+            if (!ascii)
+            {
+                text += " "; /// (char)active_set[32];
+                continue;
+            }
 
 
-			if (false) //active_national_set != null)
-			{
-				// all chars 0x20..7F
+            if (false) //active_national_set != null)
+            {
+                // all chars 0x20..7F
             //    switch (char_value)  // special national characters
             //    {
             //    case 0x23:
-            //        text += (char)active_national_set[0]; 
-            //        continue loopi; 
+            //        text += (char)active_national_set[0];
+            //        continue loopi;
             //    case 0x24:
-            //        text += (char)active_national_set[1]; 
-            //        continue loopi; 
+            //        text += (char)active_national_set[1];
+            //        continue loopi;
             //    case 0x40:
-            //        text += (char)active_national_set[2]; 
-            //        continue loopi; 
+            //        text += (char)active_national_set[2];
+            //        continue loopi;
             //    case 0x5b:
-            //        text += (char)active_national_set[3]; 
-            //        continue loopi; 
+            //        text += (char)active_national_set[3];
+            //        continue loopi;
             //    case 0x5c:
-            //        text += (char)active_national_set[4]; 
-            //        continue loopi; 
+            //        text += (char)active_national_set[4];
+            //        continue loopi;
             //    case 0x5d:
-            //        text += (char)active_national_set[5]; 
-            //        continue loopi; 
+            //        text += (char)active_national_set[5];
+            //        continue loopi;
             //    case 0x5e:
-            //        text += (char)active_national_set[6]; 
-            //        continue loopi; 
+            //        text += (char)active_national_set[6];
+            //        continue loopi;
             //    case 0x5f:
-            //        text += (char)active_national_set[7]; 
-            //        continue loopi; 
+            //        text += (char)active_national_set[7];
+            //        continue loopi;
             //    case 0x60:
-            //        text += (char)active_national_set[8]; 
-            //        continue loopi; 
+            //        text += (char)active_national_set[8];
+            //        continue loopi;
             //    case 0x7b:
-            //        text += (char)active_national_set[9]; 
-            //        continue loopi; 
+            //        text += (char)active_national_set[9];
+            //        continue loopi;
             //    case 0x7c:
-            //        text += (char)active_national_set[10]; 
-            //        continue loopi; 
+            //        text += (char)active_national_set[10];
+            //        continue loopi;
             //    case 0x7d:
-            //        text += (char)active_national_set[11]; 
-            //        continue loopi; 
+            //        text += (char)active_national_set[11];
+            //        continue loopi;
             //    case 0x7e:
-            //        text += (char)active_national_set[12]; 
-            //        continue loopi; 
+            //        text += (char)active_national_set[12];
+            //        continue loopi;
             //    }
             }
 
-            text += System.Text.Encoding.Default.GetString(new byte[] { (byte)char_value });  //(char)active_set[char_value]; 
-			//continue loopi; 
-		}
+            text += System.Text.Encoding.Default.GetString(new byte[] { (byte)char_value });  //(char)active_set[char_value];
+            //continue loopi;
+        }
 
-		
-		if (color == 1) 
-			return colors[7] + text.Trim();
 
-		else 
-			return text;
-	}
-    
+        if (color == 1)
+            return colors[7] + text.Trim();
+
+        else
+            return text;
+    }
+
 
         private bool ImportSubtitleFromMp4(string fileName)
         {

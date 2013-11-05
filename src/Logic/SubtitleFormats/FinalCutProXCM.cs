@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "          <video offset=\"0s\" ref=\"r6\" duration=\"147005859/24000s\">" + Environment.NewLine +
                 "            <audio lane=\"-1\" offset=\"0s\" ref=\"r6\" duration=\"147005000/24000s\" role=\"dialogue\"/>" + Environment.NewLine +
                 "          </video>" + Environment.NewLine +
-                "        </clip>" + Environment.NewLine + 
+                "        </clip>" + Environment.NewLine +
                 "      </spine>" + Environment.NewLine +
                 "    </sequence>" + Environment.NewLine +
                 "  </project>" + Environment.NewLine +
@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 chapterMarker.Attributes.Append(attr);
 
                 attr = xml.CreateAttribute("value");
-                attr.Value = p.Text.Replace(Environment.NewLine, Convert.ToChar(8232).ToString()); 
+                attr.Value = p.Text.Replace(Environment.NewLine, Convert.ToChar(8232).ToString());
                 chapterMarker.Attributes.Append(attr);
 
                 attr = xml.CreateAttribute("posterOffset");
