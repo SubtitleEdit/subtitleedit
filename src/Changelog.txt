@@ -7,12 +7,14 @@
 * IMPROVED:
    * OCR max. error% is now saved for bluray - thx Zoltán
    * More default values for ASS/SSA
+   * Added split long lines to "Batch convert" - thx menes
 * FIXED:
    * F11 (Set start time) sometimes kept duration - thx Rinus/Quetsbeek 
    * Cavana 890 now works with Hebrew again - thx Yaniv
    * Crash on bad images when using ocr via Tesseract+Modi - thx Barry
    * Fix regarding italics in remove text for HI - thx cipry15
    * Now allows html tags in SAMI - thx estima
+   * Now possible to choose en-GB spell check in OCR window - thx Paul
 
 
 3.3.9 (19th October 2013)

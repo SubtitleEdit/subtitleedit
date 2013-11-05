@@ -167,6 +167,7 @@
             public string Converted { get; set; }
             public string ConvertedX { get; set; }
             public string Settings { get; set; }
+            public string SplitLongLines { get; set; }
             public string AutoBalance { get; set; }
             public string ScanFolder { get; set; }
             public string ScanningFolder { get; set; }

@@ -272,6 +272,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Converted = "Converted",
                 ConvertedX = "Converted ({0})",
                 Settings = "Settings",
+                SplitLongLines = "Split long lines",
                 AutoBalance = "Auto balance lines",
                 OverwriteOriginalFiles = "Overwrite original files (new extension if format is changed)",
                 ScanFolder = "Scan folder...",
@@ -2229,7 +2230,7 @@ Keep changes?",
             if (node.ChildNodes.Count == 0)
             {
                 string oldText = node.InnerText;
-                string newText = Forms.GoogleTranslate.TranslateTextViaApi(node.InnerText, languagePair);
+                string newText = Nikse.SubtitleEdit.Forms.GoogleTranslate.TranslateTextViaApi(node.InnerText, languagePair);
                 if (!string.IsNullOrEmpty(oldText) && !string.IsNullOrEmpty(newText))
                 {
                     if (oldText.Contains("{0:"))
