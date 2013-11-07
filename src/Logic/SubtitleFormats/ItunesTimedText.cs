@@ -198,19 +198,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (text.StartsWith("{\\an") && text.Length > 6 && text[5] == '}')
                     text = text.Remove(0, 6);
 
-                if (subtitle.Header != null && p.Extra != null && GetStylesFromHeader(subtitle.Header).Contains(p.Extra))
+                if (subtitle.Header != null && p.Style != null && GetStylesFromHeader(subtitle.Header).Contains(p.Style))
                 {
-                    if (p.Extra != defaultStyle)
+                    if (p.Style != defaultStyle)
                     {
                         XmlAttribute styleAttr = xml.CreateAttribute("style");
-                        styleAttr.InnerText = p.Extra;
+                        styleAttr.InnerText = p.Style;
                         paragraph.Attributes.Append(styleAttr);
                     }
                 }
-                else if (!string.IsNullOrEmpty(p.Extra))
+                else if (!string.IsNullOrEmpty(p.Style))
                 {
                     XmlAttribute styleP = xml.CreateAttribute("style");
-                    styleP.InnerText = p.Extra;
+                    styleP.InnerText = p.Style;
                     paragraph.Attributes.Append(styleP);
                 }
 

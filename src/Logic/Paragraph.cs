@@ -40,6 +40,10 @@ namespace Nikse.SubtitleEdit.Logic
 
         public string ID { get; set; }
 
+        public string Language { get; set; }
+
+        public string Style { get; set; }
+
         public Paragraph()
         {
             StartTime = new TimeCode(TimeSpan.FromSeconds(0));
@@ -71,6 +75,8 @@ namespace Nikse.SubtitleEdit.Logic
             Effect = paragraph.Effect;
             Layer = paragraph.Layer;
             ID = paragraph.ID;
+            Language = paragraph.Language;
+            Style = paragraph.Style;
         }
 
         public Paragraph(int startFrame, int endFrame, string text)

@@ -205,133 +205,172 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (body.Attributes["style"] != null)
                 defaultStyle = body.Attributes["style"].InnerText;
 
-            //XmlNode titleNode = xml.DocumentElement.SelectSingleNode("//ttml:head", nsmgr).FirstChild.FirstChild;
-            //titleNode.InnerText = title;
-
             XmlNode div = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).SelectSingleNode("ttml:div", nsmgr);
             if (div == null)
                 div = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
 
             int no = 0;
             var headerStyles = GetStylesFromHeader(subtitle.Header);
-            foreach (Paragraph p in subtitle.Paragraphs)
+            var languages = GetUsedLanguages(subtitle);
+            if (languages.Count > 0)
             {
-                XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
-                string text = p.Text;
-
-                bool first = true;
-                foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                foreach (Paragraph p in subtitle.Paragraphs)
                 {
-                    if (!first)
+                    if (p.Language == null)
                     {
-                        XmlNode br = xml.CreateElement("br", "http://www.w3.org/ns/ttml");
-                        paragraph.AppendChild(br);
-                    }
-
-                    System.Collections.Generic.Stack<XmlNode> styles = new Stack<XmlNode>();
-                    XmlNode currentStyle = xml.CreateTextNode(string.Empty);
-                    paragraph.AppendChild(currentStyle);
-                    int skipCount = 0;
-                    for (int i = 0; i < line.Length; i++)
-                    {
-                        if (skipCount > 0)
-                        {
-                            skipCount--;
-                        }
-                        else if (line.Substring(i).StartsWith("<i>"))
-                        {
-                            styles.Push(currentStyle);
-                            currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
-                            paragraph.AppendChild(currentStyle);
-                            XmlAttribute attr = xml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/10/ttml#style");
-                            attr.InnerText = "italic";
-                            currentStyle.Attributes.Append(attr);
-                            skipCount = 2;
-                        }
-                        else if (line.Substring(i).StartsWith("<b>"))
-                        {
-                            currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
-                            paragraph.AppendChild(currentStyle);
-                            XmlAttribute attr = xml.CreateAttribute("tts:fontWeight", "http://www.w3.org/ns/10/ttml#style");
-                            attr.InnerText = "bold";
-                            currentStyle.Attributes.Append(attr);
-                            skipCount = 2;
-                        }
-                        else if (line.Substring(i).StartsWith("<font "))
-                        {
-                            int endIndex = line.Substring(i + 1).IndexOf(">");
-                            if (endIndex > 0)
-                            {
-                                skipCount = endIndex + 1;
-                                string fontContent = line.Substring(i, skipCount);
-                                if (fontContent.Contains(" color="))
-                                {
-                                    string[] arr = fontContent.Substring(fontContent.IndexOf(" color=") + 7).Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                                    if (arr.Length > 0)
-                                    {
-                                        string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
-                                        currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
-                                        paragraph.AppendChild(currentStyle);
-                                        XmlAttribute attr = xml.CreateAttribute("tts:color", "http://www.w3.org/ns/10/ttml#style");
-                                        attr.InnerText = fontColor;
-                                        currentStyle.Attributes.Append(attr);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                skipCount = line.Length;
-                            }
-                        }
-                        else if (line.Substring(i).StartsWith("</i>") || line.Substring(i).StartsWith("</b>") || line.Substring(i).StartsWith("</font>"))
-                        {
-                            currentStyle = xml.CreateTextNode(string.Empty);
-                            if (styles.Count > 0)
-                            {
-                                currentStyle = styles.Pop().CloneNode(true);
-                                currentStyle.InnerText = string.Empty;
-                            }
-                            paragraph.AppendChild(currentStyle);
-                            if (line.Substring(i).StartsWith("</font>"))
-                                skipCount = 6;
-                            else
-                                skipCount = 3;
-                        }
-                        else
-                        {
-                            currentStyle.InnerText = currentStyle.InnerText + line.Substring(i, 1);
-                        }
-                    }
-                    first = false;
-                }
-
-                XmlAttribute start = xml.CreateAttribute("begin");
-                start.InnerText = ConvertToTimeString(p.StartTime);
-                paragraph.Attributes.Append(start);
-
-                XmlAttribute id = xml.CreateAttribute("id");
-                id.InnerText = "p" + no.ToString();
-                paragraph.Attributes.Append(id);
-
-                XmlAttribute end = xml.CreateAttribute("end");
-                end.InnerText = ConvertToTimeString(p.EndTime);
-                paragraph.Attributes.Append(end);
-
-                if (subtitle.Header != null && p.Extra != null && headerStyles.Contains(p.Extra))
-                {
-                    if (p.Extra != defaultStyle)
-                    {
-                        XmlAttribute styleAttr = xml.CreateAttribute("style");
-                        styleAttr.InnerText = p.Extra;
-                        paragraph.Attributes.Append(styleAttr);
+                        XmlNode paragraph = MakeParagraph(subtitle, xml, defaultStyle, no, headerStyles, p);
+                        div.AppendChild(paragraph);
+                        no++;
                     }
                 }
+                var divParentNode = div.ParentNode;
+                if (div.ChildNodes.Count == 0)
+                    divParentNode.RemoveChild(div);
 
-                div.AppendChild(paragraph);
-                no++;
+                foreach (string language in languages)
+                { 
+                    div = xml.CreateElement("div", "http://www.w3.org/ns/ttml");
+                    XmlAttribute attr = xml.CreateAttribute("xml:lang", "http://www.w3.org/XML/1998/namespace");
+                    attr.Value = language;
+                    div.Attributes.Append(attr);
+                    divParentNode.AppendChild(div);
+                    foreach (Paragraph p in subtitle.Paragraphs)
+                    {
+                        if (p.Language == language)
+                        {
+                            XmlNode paragraph = MakeParagraph(subtitle, xml, defaultStyle, no, headerStyles, p);
+                            div.AppendChild(paragraph);
+                            no++;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (Paragraph p in subtitle.Paragraphs)
+                {
+                    XmlNode paragraph = MakeParagraph(subtitle, xml, defaultStyle, no, headerStyles, p);
+                    div.AppendChild(paragraph);
+                    no++;
+                }
             }
 
             return ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty).Replace(" xmlns:tts=\"http://www.w3.org/ns/10/ttml#style\">", ">");
+        }
+
+        private static XmlNode MakeParagraph(Subtitle subtitle, XmlDocument xml, string defaultStyle, int no, List<string> headerStyles, Paragraph p)
+        {
+            XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
+            string text = p.Text;
+
+            bool first = true;
+            foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (!first)
+                {
+                    XmlNode br = xml.CreateElement("br", "http://www.w3.org/ns/ttml");
+                    paragraph.AppendChild(br);
+                }
+
+                System.Collections.Generic.Stack<XmlNode> styles = new Stack<XmlNode>();
+                XmlNode currentStyle = xml.CreateTextNode(string.Empty);
+                paragraph.AppendChild(currentStyle);
+                int skipCount = 0;
+                for (int i = 0; i < line.Length; i++)
+                {
+                    if (skipCount > 0)
+                    {
+                        skipCount--;
+                    }
+                    else if (line.Substring(i).StartsWith("<i>"))
+                    {
+                        styles.Push(currentStyle);
+                        currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
+                        paragraph.AppendChild(currentStyle);
+                        XmlAttribute attr = xml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/10/ttml#style");
+                        attr.InnerText = "italic";
+                        currentStyle.Attributes.Append(attr);
+                        skipCount = 2;
+                    }
+                    else if (line.Substring(i).StartsWith("<b>"))
+                    {
+                        currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
+                        paragraph.AppendChild(currentStyle);
+                        XmlAttribute attr = xml.CreateAttribute("tts:fontWeight", "http://www.w3.org/ns/10/ttml#style");
+                        attr.InnerText = "bold";
+                        currentStyle.Attributes.Append(attr);
+                        skipCount = 2;
+                    }
+                    else if (line.Substring(i).StartsWith("<font "))
+                    {
+                        int endIndex = line.Substring(i + 1).IndexOf(">");
+                        if (endIndex > 0)
+                        {
+                            skipCount = endIndex + 1;
+                            string fontContent = line.Substring(i, skipCount);
+                            if (fontContent.Contains(" color="))
+                            {
+                                string[] arr = fontContent.Substring(fontContent.IndexOf(" color=") + 7).Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                if (arr.Length > 0)
+                                {
+                                    string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
+                                    currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
+                                    paragraph.AppendChild(currentStyle);
+                                    XmlAttribute attr = xml.CreateAttribute("tts:color", "http://www.w3.org/ns/10/ttml#style");
+                                    attr.InnerText = fontColor;
+                                    currentStyle.Attributes.Append(attr);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            skipCount = line.Length;
+                        }
+                    }
+                    else if (line.Substring(i).StartsWith("</i>") || line.Substring(i).StartsWith("</b>") || line.Substring(i).StartsWith("</font>"))
+                    {
+                        currentStyle = xml.CreateTextNode(string.Empty);
+                        if (styles.Count > 0)
+                        {
+                            currentStyle = styles.Pop().CloneNode(true);
+                            currentStyle.InnerText = string.Empty;
+                        }
+                        paragraph.AppendChild(currentStyle);
+                        if (line.Substring(i).StartsWith("</font>"))
+                            skipCount = 6;
+                        else
+                            skipCount = 3;
+                    }
+                    else
+                    {
+                        currentStyle.InnerText = currentStyle.InnerText + line.Substring(i, 1);
+                    }
+                }
+                first = false;
+            }
+
+            XmlAttribute start = xml.CreateAttribute("begin");
+            start.InnerText = ConvertToTimeString(p.StartTime);
+            paragraph.Attributes.Append(start);
+
+            XmlAttribute id = xml.CreateAttribute("id");
+            id.InnerText = "p" + no.ToString();
+            paragraph.Attributes.Append(id);
+
+            XmlAttribute end = xml.CreateAttribute("end");
+            end.InnerText = ConvertToTimeString(p.EndTime);
+            paragraph.Attributes.Append(end);
+
+            if (subtitle.Header != null && p.Style != null && headerStyles.Contains(p.Style))
+            {
+                if (p.Style != defaultStyle)
+                {
+                    XmlAttribute styleAttr = xml.CreateAttribute("style");
+                    styleAttr.InnerText = p.Style;
+                    paragraph.Attributes.Append(styleAttr);
+                }
+            }
+            return paragraph;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -437,9 +476,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     startSeconds = endCode.TotalSeconds;
 
                     var p = new Paragraph(startCode, endCode, pText.ToString().Replace("   ", " ").Replace("  ", " "));
-                    p.Extra = defaultStyle;
+                    p.Style = defaultStyle;
                     if (node.Attributes["style"] != null)
-                        p.Extra = node.Attributes["style"].InnerText;
+                        p.Style = node.Attributes["style"].InnerText;
 
                     if (node.Attributes["region"] != null)
                     {
@@ -447,6 +486,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (region == "top")
                             p.Text = "{\\an8}" + p.Text;
                     }
+
+                    // check language
+                    if (node.ParentNode.Name == "div")
+                    {
+                        if (node.ParentNode.Attributes["xml:lang"] != null)
+                            p.Language = node.ParentNode.Attributes["xml:lang"].InnerText;
+                        else if (node.ParentNode.Attributes["lang"] != null)
+                            p.Language = node.ParentNode.Attributes["lang"].InnerText;
+                    }
+
+                    p.Extra = SetExtra(p);
 
                     subtitle.Paragraphs.Add(p);
                 }
@@ -457,6 +507,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
             subtitle.Renumber(1);
+        }
+
+        public static string SetExtra(Paragraph p)
+        {
+            string style = p.Style;
+            if (string.IsNullOrEmpty(style))
+                style = "-";
+            string lang = p.Language;
+            if (string.IsNullOrEmpty(lang))
+                lang = "-";
+            return string.Format("{0} / {1}", style, lang);
         }
 
         private static void ReadSpan(StringBuilder pText, XmlNode innerNode)
@@ -604,6 +665,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             catch
             {
+            }
+            return list;
+        }
+
+        public static List<string> GetUsedLanguages(Subtitle subtitle)
+        {
+            var list = new List<string>();
+            foreach (Paragraph p in subtitle.Paragraphs)
+            {
+                if (p.Language != null)
+                {
+                    string l = p.Language.ToLower().Trim();
+                    if (!list.Contains(l))
+                        list.Add(l);
+                }
             }
             return list;
         }
