@@ -434,6 +434,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItemSetLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2090,6 +2091,7 @@
             this.contextMenuStripListview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setStylesForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemAssStyles,
+            this.toolStripMenuItemSetLanguage,
             this.toolStripMenuItemWebVTT,
             this.toolStripMenuItemDelete,
             this.toolStripMenuItemInsertBefore,
@@ -2128,7 +2130,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 782);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 826);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
@@ -2983,7 +2985,7 @@
             this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownVideoPosition.Mode = Nikse.SubtitleEdit.Controls.TimeUpDown.TimeMode.HHMMSSMS;
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
-            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(92, 25);
+            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(96, 25);
             this.timeUpDownVideoPosition.TabIndex = 12;
             // 
             // buttonGotoSub
@@ -3428,7 +3430,7 @@
             this.timeUpDownVideoPositionAdjust.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownVideoPositionAdjust.Mode = Nikse.SubtitleEdit.Controls.TimeUpDown.TimeMode.HHMMSSMS;
             this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
-            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(92, 25);
+            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(96, 25);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
             // 
             // ShowSubtitleTimer
@@ -4074,7 +4076,7 @@
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Mode = Nikse.SubtitleEdit.Controls.TimeUpDown.TimeMode.HHMMSSMS;
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(92, 25);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 25);
             this.timeUpDownStartTime.TabIndex = 0;
             // 
             // numericUpDownDuration
@@ -4268,6 +4270,12 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
+            // 
+            // toolStripMenuItemSetLanguage
+            // 
+            this.toolStripMenuItemSetLanguage.Name = "toolStripMenuItemSetLanguage";
+            this.toolStripMenuItemSetLanguage.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemSetLanguage.Text = "Timed text - set language";
             // 
             // Main
             // 
@@ -4753,6 +4761,7 @@
         private System.Windows.Forms.ToolStripMenuItem descendingToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorExportCustomText;
         private System.Windows.Forms.ToolStripMenuItem exportCustomTextFormatToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetLanguage;
     }
 }
 

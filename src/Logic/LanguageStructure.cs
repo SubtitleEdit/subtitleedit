@@ -1140,6 +1140,7 @@
                     public string AdvancedSubStationAlphaStyles { get; set; }
                     public string TimedTextSetStyle { get; set; }
                     public string TimedTextStyles { get; set; }
+                    public string TimedTextSetLanguage { get; set; }
                     public string SamiSetStyle { get; set; }
                     public string Cut { get; set; }
                     public string Copy { get; set; }
