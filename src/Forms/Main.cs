@@ -2411,6 +2411,21 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (format == null)
+                {
+                    var elr = new ELRStudioClosedCaption();
+                    if (elr.IsMine(null, fileName))
+                    {
+                        elr.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = elr;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
                 if (fileName.ToLower().EndsWith(".dost"))
                 {
                     try
