@@ -31,7 +31,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         //00:01:00:29   9420 9420 94ae 94ae 94d0 94d0 4920 f761 7320 ...    semi colon (instead of colon) before frame number is used to indicate drop frame
-        static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d\d:\d\d[:;,]\d\d\t", RegexOptions.Compiled);
+        private const string _timeCodeRegEx = @"^\d+:\d\d:\d\d[:,]\d\d\t";
+        protected virtual Regex RegexTimeCodes { get { return new Regex(_timeCodeRegEx); } }
+        protected bool DropFrame = false;
+
 
         private static readonly List<string> _letters = new List<string>
                                                      {
@@ -734,6 +737,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private string ToTimeCode(double totalMilliseconds)
         {
             TimeSpan ts = TimeSpan.FromMilliseconds(totalMilliseconds);
+            if (DropFrame)
+                return string.Format("{0:00}:{1:00}:{2:00};{3:00}", ts.Hours, ts.Minutes, ts.Seconds, MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds, MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
         }
 
