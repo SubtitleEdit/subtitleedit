@@ -139,6 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainAdjustSelected100MsForward = Keys.None;
         Keys _mainAdjustSelected100MsBack = Keys.None;
         Keys _mainInsertAfter = Keys.None;
+        Keys _mainTextBoxInsertAfter = Keys.None;
         Keys _mainInsertBefore = Keys.None;
         Keys _mainMergeDialogue = Keys.None;
         Keys _mainToggleFocus = Keys.None;
@@ -6722,6 +6723,11 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_mainTextBoxSplitAtCursor == e.KeyData)
             {
                 ToolStripMenuItemSplitTextAtCursorClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainInsertAfter)
+            {
+                InsertAfter();
                 e.SuppressKeyPress = true;
             }
             else if (_mainTextBoxMoveLastWordDown == e.KeyData)
@@ -13808,8 +13814,9 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAdjustSetStartKeepDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration);
             _mainAdjustSetEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEnd);
             _mainAdjustSelected100MsForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward);
-            _mainAdjustSelected100MsBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack);
+            _mainAdjustSelected100MsBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack);            
             _mainInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
+            _mainTextBoxInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
             _mainInsertBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
             _mainMergeDialogue = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialogue);
             _mainToggleFocus = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToogleFocus);
