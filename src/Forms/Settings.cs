@@ -602,6 +602,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxMoveLastWordDown + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp))
                 textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp));
+            textBoxNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxInsertAfter));
             treeViewShortcuts.Nodes.Add(textBoxNode);
 
             var createNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Create);
@@ -1237,6 +1238,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp != null && text == Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter != null && text == Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTextBoxInsertAfter = GetShortcut(node.Text);
                 }
             }
 
