@@ -5,19 +5,19 @@
    * Added new subtitle formats
    * Added option to control border-marker-hit-size in audio waveform
 * IMPROVED:
-   * OCR max. error% is now saved for bluray - thx Zoltán
+   * OCR max. error% is now saved for blu-ray - thx Zoltán
    * More default values for ASS/SSA
    * Added split long lines to "Batch convert" - thx menes
    * Added support for multiple languages in TimedText / DFXP - thx Laszlo
 * FIXED:
-   * F11 (Set start time) sometimes kept duration - thx Rinus/Quetsbeek 
+   * F11 (Set start time) sometimes kept duration - thx Rinus/Quetsbeek
    * Cavana 890 now works with Hebrew again - thx Yaniv
-   * Crash on bad images when using ocr via Tesseract+Modi - thx Barry
+   * Crash on bad images when using OCR via Tesseract + Modi - thx Barry
    * Fix regarding italics in remove text for HI - thx cipry15
-   * Now allows html tags in SAMI - thx estima
+   * Now allows HTML tags in SAMI - thx estima
    * Now possible to choose en-GB spell check in OCR window - thx Paul
-   * "Insert sub after current line" no longer inserts before cur line
-   * Batch convert now works with more cc formats
+   * "Insert sub after current line" no longer inserts before current line
+   * Batch convert now works with more CC formats
 
 
 3.3.9 (19th October 2013)
@@ -676,7 +676,7 @@
      (thx DrJackson for the idea, Jaime Olivares for zip unpack code & Pierre for testing)
    * "Compare subtitle" color high-lighting is now more like other compare programs
    * Fix common errors - Fix alone lowercase "i" to "I" now works better close to
-     html tags (thx chamallow)
+     HTML tags (thx chamallow)
    * Updated names list (thx chamallow)
    * "Google translate" window is now resizable (thx Kerensky)
    * Bold/italic/font tags now work better in SSA/ASS subtitles
