@@ -641,6 +641,16 @@ namespace Nikse.SubtitleEdit.Forms
                                 format = avidStl;
                             }
                         }
+                        
+                        if (format == null)
+                        {
+                            var elr = new ELRStudioClosedCaption();
+                            if (elr.IsMine(null, fileName))
+                            {
+                                elr.LoadSubtitle(sub, null, fileName);
+                                format = elr;
+                            }
+                        }
 
                         if (format != null && format.GetType() == typeof(MicroDvd))
                         {
