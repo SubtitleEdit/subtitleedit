@@ -5,6 +5,8 @@
    * Added new subtitle formats
    * Added option to control border-marker-hit-size in audio waveform
 * IMPROVED:
+   * Updated Portuguese language file - thx moob
+   * Updated Dutch language file - thx Herman
    * OCR max. error% is now saved for blu-ray - thx Zoltán
    * More default values for ASS/SSA
    * Added split long lines to "Batch convert" - thx menes

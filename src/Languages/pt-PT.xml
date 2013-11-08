@@ -9,7 +9,7 @@ Contactos:
 moob: mailto:moob@live.com.pt
 Ricardo Perdigão: mailto:ricardofonseca1977@gmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
-    <HelpFile>Ajuda</HelpFile>
+    <HelpFile></HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>	
     <Apply>Aplicar</Apply>
@@ -158,6 +158,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Converted>Convertido</Converted>
     <ConvertedX>Convertido ({0})</ConvertedX>
     <Settings>Configurações</Settings>
+    <SplitLongLines>Dividir linhas longas</SplitLongLines>	
     <AutoBalance>Igualar automaticamente as linhas</AutoBalance>
     <ScanFolder>Examinar pasta...</ScanFolder>
     <ScanningFolder>A examinar {0} e as sub-pastas por ficheiros de legendas...</ScanningFolder>
@@ -1152,6 +1153,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <SubtitlesJoined>Legendas unidas</SubtitlesJoined>
     <StatusLog>Estado do registo</StatusLog>
 	<XSceneChangesImported>{0} mudanças de cena importados</XSceneChangesImported>
+    <PluginXExecuted>Plugin '{0}' executado.</PluginXExecuted>	
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
@@ -1337,7 +1339,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformAndSpectrogram>Forma de onda/espectrograma</WaveformAndSpectrogram>
     <Tools>Ferramentas</Tools>
     <WordLists>Listas de palavras</WordLists>
-    <SsaStyle>Estilo SSA</SsaStyle>
+    <SsaStyle>Estilo SSA/ASS</SsaStyle>
     <Proxy>Proxy</Proxy>
     <ShowToolBarButtons>Mostrar botões da barra de ferramentas</ShowToolBarButtons>
     <New>Novo</New>
@@ -1410,6 +1412,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveFormGridColor>Cor da grelha</WaveFormGridColor>
     <WaveFormShowGridLines>Mostrar linha na grelha</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Inverter direcção da roda do rato</ReverseMouseWheelScrollDirection>
+    <WaveFormAllowOverlap>Permitir sobreposição (ao mover / redimensionar)</WaveFormAllowOverlap>	
     <WaveFormColor>Cor</WaveFormColor>
     <WaveFormSelectedColor>Cor seleccionada</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Cor de fundo</WaveFormBackgroundColor>
@@ -1424,7 +1427,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SubStationAlphaStyle>Sub Station Alpha estilo</SubStationAlphaStyle>
     <ChooseFont>Tipo de letra</ChooseFont>
     <ChooseColor>Escolher cor</ChooseColor>
-    <Example>Exemplo</Example>
+    <SsaOutline>Contorno</SsaOutline>
+    <SsaShadow>Sombra</SsaShadow>
+    <SsaOpaqueBox>Caixa opaca</SsaOpaqueBox>
     <Testing123>Testando 123...</Testing123>
     <Language>Idioma</Language>
     <NamesIgnoreLists>Nomes ignorados (respeita maiús/minús)</NamesIgnoreLists>
@@ -1523,6 +1528,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ListViewColumnInsert>Coluna, inserir texto</ListViewColumnInsert>
     <ListViewColumnPaste>Coluna, colar</ListViewColumnPaste>
     <ShowBeamer>Iniciar a legenda em ecrã inteiro</ShowBeamer>
+    <MainTextBoxMoveLastWordDown>Mover a última palavra para baixo para a próxima linha de legendas</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>Mover a primeira palavra a partir da próxima linha acima das legendas</MainTextBoxMoveFirstWordFromNextUp>	
   </Settings>
   <ShowEarlierLater>
     <Title>Mostrar linhas seleccionadas antes/depois</Title>
@@ -1765,12 +1772,15 @@ Manter as alterações?</KeepChangesMessage>
     <OcrViaImageCompare>OCR por comparação de imagens</OcrViaImageCompare>
     <ImageDatabase>Base de dados de imagem</ImageDatabase>
     <NoOfPixelsIsSpace>Nenhum dos pixéis é espaço</NoOfPixelsIsSpace>
+    <MaxErrorPercent>Max. erros%</MaxErrorPercent>	
     <New>Novo</New>
     <Edit>Editar</Edit>
     <StartOcr>Iniciar OCR</StartOcr>
     <Stop>Parar</Stop>
     <StartOcrFrom>Iniciar OCR da legenda:</StartOcrFrom>
-    <LoadingVobSubImages>Carregando imagens VobSub...</LoadingVobSubImages>
+    <LoadingVobSubImages>Carregamento de imagens VobSub...</LoadingVobSubImages>
+    <LoadingImageCompareDatabase>Carregamento de imagem comparativa da base de dados...</LoadingImageCompareDatabase>
+    <ConvertingImageCompareDatabase>Converter imagem comparativa da base de daddos para novo formato (images.db/images.xml)...</ConvertingImageCompareDatabase>	
     <SubtitleImage>Imagens da legenda</SubtitleImage>
     <SubtitleText>Texto da legenda</SubtitleText>
     <UnableToCreateCharacterDatabaseFolder>Impossível criar 'Pasta de base de dados de caracteres': {0}</UnableToCreateCharacterDatabaseFolder>
