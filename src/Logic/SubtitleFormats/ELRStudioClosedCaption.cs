@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -82,74 +81,62 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
 
             int i = 128;
-            while (i < buffer.Length - 66)
+            while (i < buffer.Length - 40)
             {
                 try
                 {
-
-                    if (buffer[i] == 0xfe && buffer[i + 1] == 0xff && buffer[i + 2] == 0xff && buffer[i + 3] == 0xff && buffer[i + 4] != 0xff &&
-                        buffer[i + 14] == 0xff && buffer[i + 15] == 0xff && buffer[i + 16] == 0xff && buffer[i + 17] == 0xff && buffer[i + 18] != 0xff)
+                    if (buffer[i] == 0xc4 && buffer[i + 1] == 9 && buffer[i + 2] == 0 && buffer[i + 3] == 0x10) // start time (hopefully)
                     {
                         var p = new Paragraph();
+                        p.StartTime = GetTimeCode(buffer, i + 4);
+                        i += 7;
 
-                        int frames = buffer[i - 14];
-                        int seconds = buffer[i - 13];
-                        int minutes = buffer[i - 12];
-                        int hours = buffer[i - 11];
-                        p.StartTime = new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
-
-                        frames = buffer[i - 6];
-                        seconds = buffer[i - 5];
-                        minutes = buffer[i - 4];
-                        hours = buffer[i - 3];
-                        p.EndTime = new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
-
-                        p.StartTime = GetTimeCode(buffer, i - 14);
-                        p.EndTime = GetTimeCode(buffer, i - 6);
-
-                        int length = buffer[i + 27];
-                        var sb = new StringBuilder();
-                        int j = i + 40;
-                        int charsInCurrentLine = 0;
-                        while (j + 4 < buffer.Length)
+                        // seek to endtime
+                        while (i < buffer.Length - 10 && !(buffer[i] == 0xc4 && buffer[i + 1] == 9 && buffer[i + 2] == 0 && buffer[i + 3] == 0x10))
                         {
-                            if (buffer[j] == 0 && buffer[j + 1] == 0 && buffer[j + 2] == 0 && buffer[j + 3] == 0)
+                            i++;
+                        }
+                        if (buffer[i] == 0xc4 && buffer[i + 1] == 9 && buffer[i + 2] == 0 && buffer[i + 3] == 0x10)
+                        {
+                            p.EndTime = GetTimeCode(buffer, i + 4);
+                            i += 7;
+                        }
+                        if (p.EndTime.TotalMilliseconds == 0)
+                        {
+                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 2000;
+                        }
+                        
+                        // seek to text
+                        int length = 0;
+                        var sb = new StringBuilder();
+                        while (i < buffer.Length - 10 && !(buffer[i] == 0xc4 && buffer[i + 1] == 9 && buffer[i + 2] == 0 && buffer[i + 3] == 0x10))
+                        {
+                            if (buffer[i] == 9 && buffer[i + 1] == 0 && buffer[i + 2] == 0x44)
                             {
-                                break;
-                            }
-                            else if (buffer[j] == 0 && buffer[j + 3] == 0x96)
-                            {
-                                sb.Append(Environment.NewLine);
-                                j += 4;
-                                length = buffer[j];
-                                j += 9;
-                                charsInCurrentLine = 0;
-                            }
-                            else if (charsInCurrentLine <= length)
-                            {
-                                sb.Append(Encoding.GetEncoding(1252).GetString(buffer, j, 1));
-                                charsInCurrentLine++;
+                                length = buffer[i - 1];
+                                i += 12;
+                                for (int j = i; j < i + (length*4); j+=4)
+                                {
+                                    sb.Append(Encoding.GetEncoding(1252).GetString(buffer, j, 1));
+                                }
+                                sb.AppendLine();
                             }
                             else
                             {
-                                break;
+                                i++;
                             }
-                            j += 4;
                         }
-
-                        p.Text = sb.ToString();
+                        p.Text = p.Text + " " + sb.ToString().TrimEnd();
                         subtitle.Paragraphs.Add(p);
-                        i += 20;
                     }
                     else
                     {
                         i++;
                     }
-
                 }
                 catch
                 {
-                    i += 20;
+                    i += 5;
                 }
             }
             subtitle.Renumber(1);
