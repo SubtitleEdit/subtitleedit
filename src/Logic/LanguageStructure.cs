@@ -1736,6 +1736,7 @@
             public string EditWordOnly { get; set; }
             public string AddXToNamesEtc { get; set; }
             public string AutoFixNames { get; set; }
+            public string CheckOneLetterWords { get; set; }
             public string ImageText { get; set; }
             public string SpellCheckCompleted { get; set; }
             public string SpellCheckAborted { get; set; }

@@ -258,6 +258,7 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.checkBoxSpellCheckOneLetterWords = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1982,6 +1983,7 @@
             // 
             // groupBoxSpellCheck
             // 
+            this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckOneLetterWords);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
             this.groupBoxSpellCheck.Location = new System.Drawing.Point(6, 283);
             this.groupBoxSpellCheck.Name = "groupBoxSpellCheck";
@@ -2998,6 +3000,16 @@
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
             // 
+            // checkBoxSpellCheckOneLetterWords
+            // 
+            this.checkBoxSpellCheckOneLetterWords.AutoSize = true;
+            this.checkBoxSpellCheckOneLetterWords.Location = new System.Drawing.Point(16, 43);
+            this.checkBoxSpellCheckOneLetterWords.Name = "checkBoxSpellCheckOneLetterWords";
+            this.checkBoxSpellCheckOneLetterWords.Size = new System.Drawing.Size(205, 17);
+            this.checkBoxSpellCheckOneLetterWords.TabIndex = 1;
+            this.checkBoxSpellCheckOneLetterWords.Text = "Prompt for unknown one letter words";
+            this.checkBoxSpellCheckOneLetterWords.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3329,5 +3341,6 @@
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.PictureBox pictureBoxPreview;
         private System.Windows.Forms.CheckBox checkBoxSsaOpaqueBox;
+        private System.Windows.Forms.CheckBox checkBoxSpellCheckOneLetterWords;
     }
 }

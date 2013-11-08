@@ -6168,7 +6168,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (prev != null)
             {
                 newParagraph.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + addMilliseconds;
-                newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + 2000;
+                newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
                 if (next != null && newParagraph.EndTime.TotalMilliseconds > next.StartTime.TotalMilliseconds)
                     newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
                 if (newParagraph.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds)
@@ -6264,7 +6264,7 @@ namespace Nikse.SubtitleEdit.Forms
                     addMilliseconds = 1;
 
                 newParagraph.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + addMilliseconds;
-                newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + 2000;
+                newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
                 if (next != null && newParagraph.EndTime.TotalMilliseconds > next.StartTime.TotalMilliseconds)
                     newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
                 if (newParagraph.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds)
@@ -12859,7 +12859,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // create and insert
-            var newParagraph = new Paragraph("", totalMilliseconds, totalMilliseconds + 2000);
+            var newParagraph = new Paragraph("", totalMilliseconds, totalMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs);
             if (GetCurrentSubtitleFormat().IsFrameBased)
             {
                 newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);

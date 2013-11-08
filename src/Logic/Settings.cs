@@ -456,6 +456,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string Company { get; set; }
         public bool MoveVideo100Or500MsPlaySmallSample { get; set; }
         public bool DisableVideoAutoLoading { get; set; }
+        public int NewEmptyDefaultMs { get; set; }
         public bool ShowBetaStuff { get; set; }
 
         public GeneralSettings()
@@ -534,6 +535,7 @@ namespace Nikse.SubtitleEdit.Logic
             MoveVideo100Or500MsPlaySmallSample = false;
             DisableVideoAutoLoading = false;
             ShowBetaStuff = false;
+            NewEmptyDefaultMs = 2000;
         }
 
     }
@@ -1314,6 +1316,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ShowBetaStuff");
             if (subNode != null)
                 settings.General.ShowBetaStuff = Convert.ToBoolean(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("NewEmptyDefaultMs");
+            if (subNode != null)
+                settings.General.NewEmptyDefaultMs = Convert.ToInt32(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("MoveVideo100Or500MsPlaySmallSample");
             if (subNode != null)
                 settings.General.MoveVideo100Or500MsPlaySmallSample = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -2373,6 +2378,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MoveVideo100Or500MsPlaySmallSample", settings.General.MoveVideo100Or500MsPlaySmallSample.ToString());
             textWriter.WriteElementString("DisableVideoAutoLoading", settings.General.DisableVideoAutoLoading.ToString());
             textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
+            textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
 
 
             textWriter.WriteEndElement();
