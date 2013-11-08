@@ -15,6 +15,7 @@
     <SubtitleFiles>Ondertitel bestanden</SubtitleFiles>
     <AllFiles>Alle bestanden</AllFiles>
     <VideoFiles>Videobestanden</VideoFiles>
+    <AudioFiles>Audio files</AudioFiles>
     <OpenSubtitle>Open ondertitel</OpenSubtitle>
     <OpenVideoFile>Open video bestand</OpenVideoFile>
     <OpenVideoFileTitle>Open video bestand titel</OpenVideoFileTitle>
@@ -73,14 +74,11 @@
   </General>
   <About>
     <Title>Over Subtitle Edit</Title>
-    <AboutText1>
-      Subtitle Edit is vrije software onder de GNU Public License.
-
-      U mag het verspreiden, wijzigen en vrij gebruiken.
-      C# broncode is beschikbaar op http://code.google.com/p/subtitleedit
-
-      Bezoek www.nikse.dk voor de nieuwste versie.
-      Suggesties zijn van harte welkom
+    <AboutText1>Subtitle Edit is vrije software onder de GNU Public License.
+U mag het verspreiden, wijzigen en vrij gebruiken.
+C# broncode is beschikbaar op http://code.google.com/p/subtitleedit
+Bezoek www.nikse.dk voor de nieuwste versie.
+Suggesties zijn van harte welkom
 
       E-mail: mailto:nikse.dk@gmail.com
     </AboutText1>
@@ -150,7 +148,7 @@
     <ReDoCasing>Herdoe tekenstijl</ReDoCasing>
     <Convert>Converteer</Convert>
     <NothingToConvert>Niets te converteren</NothingToConvert>
-    <PleaseChooseOutputFolder>Kies alstublieft de doelmap</PleaseChooseOutputFolder>
+    <PleaseChooseOutputFolder>Kies alsjeblieft de doelmap</PleaseChooseOutputFolder>
     <Converted>Geconverteerd</Converted>
     <ConvertedX>Geconverteerd ({0})</ConvertedX>
     <Settings>Instellingen</Settings>
@@ -232,6 +230,8 @@
     <Language>Taal</Language>
     <IssueDate>Publicatiedatum</IssueDate>
     <EditRate>Bewerken snelheid</EditRate>
+    <TimeCodeRate>Tijd code ratio</TimeCodeRate>
+    <StartTime>Starttijd</StartTime>
     <Font>Lettertype</Font>
     <FontId>ID</FontId>
     <FontUri>URI</FontUri>
@@ -240,7 +240,17 @@
     <FontEffectColor>Effect kleur</FontEffectColor>
     <FontSize>Grootte</FontSize>
     <ChooseColor>Kies kleur...</ChooseColor>
+    <Generate>Genereer</Generate>
   </DCinemaProperties>
+  <DurationsBridgeGaps>
+    <Title>Overbrug kleine hiaten in duratie</Title>
+    <GapsBridgedX>Aantal kleine hiaten gedicht: {0}</GapsBridgedX>
+    <GapToNext>Hiaat naar volgende</GapToNext>
+    <BridgeGapsSmallerThanXPart1>Overbrug hiaten kleiner dan</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart2>milliseconden</BridgeGapsSmallerThanXPart2>
+    <ProlongEndTime>Eerdere tekst gebruikt de gehele hiaattijd.</ProlongEndTime>
+    <DivideEven>Tekst verdeeld hiaattijd</DivideEven>
+  </DurationsBridgeGaps>
   <DvdSubrip>
     <Title>Rip ondertitels van ifo/vobs (dvd)</Title>
     <DvdGroupTitle>dvd-bestanden/info</DvdGroupTitle>
@@ -275,6 +285,7 @@
     <GeneralSubtitleInformation>Algemene informatie over ondertitel</GeneralSubtitleInformation>
     <CodePageNumber>Code paginanummer</CodePageNumber>
     <DiskFormatCode>Diskformaat code</DiskFormatCode>
+    <DisplayStandardCode>Toon standaard code</DisplayStandardCode>
     <CharacterCodeTable>Karakter tabel</CharacterCodeTable>
     <LanguageCode>Taalcode</LanguageCode>
     <OriginalProgramTitle>Originele programma titel</OriginalProgramTitle>
@@ -311,6 +322,26 @@
     <TotalMilliseconds>Totaal milliseconden:.</TotalMilliseconds>
     <EndDelayInMillisecs>Einde vertraging in milliseconden:.</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportCustomText>
+    <Title>Exporteer eigen tekstformaat</Title>
+    <Formats>Formaten</Formats>
+    <New>Nieuw</New>
+    <Edit>Edit</Edit>
+    <Delete>Delete</Delete>
+    <SaveAs>Bewaar als</SaveAs>
+    <SaveSubtitleAs>Bewaar ondertitel als</SaveSubtitleAs>
+    <SubtitleExportedInCustomFormatToX>Ondertitel geëxporteerd naar eigen formaat:</SubtitleExportedInCustomFormatToX>
+  </ExportCustomText>
+  <ExportCustomTextFormat>
+    <Title>Eigen tekst formaat sjabloon</Title>
+    <Template>Sjabloon</Template>
+    <Header>Koptekst</Header>
+    <TextLine>Tekstregel (ondertitel)</TextLine>
+    <TimeCode>Tijd code</TimeCode>
+    <NewLine>Nieuwe regel</NewLine>
+    <Footer>Voettekst</Footer>
+    <DoNotModify>[Pas niet aan]</DoNotModify>
+  </ExportCustomTextFormat>
   <ExportPngXml>
     <Title>Export BDN XML/PNG</Title>
     <ImageSettings>Beeldinstellingen</ImageSettings>
@@ -320,7 +351,7 @@
     <BorderColor>Randkleur</BorderColor>
     <BorderWidth>Randbreedte</BorderWidth>
     <ImageFormat>Beeldformaat</ImageFormat>
-    <AntiAlias>Anti alias</AntiAlias>
+    <SimpleRendering>Eenvoudige weergave</SimpleRendering>
     <Text3D>3D teksten</Text3D>
     <SideBySide3D>Zij-aan-zij 3D</SideBySide3D>
     <HalfTopBottom3D>Half-Top/bodem</HalfTopBottom3D>
@@ -520,7 +551,7 @@
   </GetDictionaries>
   <GetTesseractDictionaries>
     <Title>Woordenboek nodig?</Title>
-    <DescriptionLine1>Haal Tesseract woordenboeken vanuit het Web.</DescriptionLine1>
+    <DescriptionLine1>Haal Tesseract woordenboeken vanaf het Web.</DescriptionLine1>
     <DownloadFailed>Download mislukt.</DownloadFailed>
     <GetDictionariesHere>Haal woordenboeken hier:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Kies je taal en klik download.</ChooseLanguageAndClickDownload>
@@ -550,6 +581,16 @@
     <Title>Ga naar ondertitelnummer</Title>
     <XIsNotAValidNumber>{0} is geen geldig nummer</XIsNotAValidNumber>
   </GoToLine>
+  <ImportSceneChanges>
+    <Title>Inporteer scene wijzigingen</Title>
+    <OpenTextFile>Open tekstbestand</OpenTextFile>
+    <ImportOptions>importeer opties</ImportOptions>
+    <TextFiles>Tekstbestanden</TextFiles>
+    <TimeCodes>Tijdcodes</TimeCodes>
+    <Frames>Beelden</Frames>
+    <Seconds>Seconden</Seconds>
+    <Milliseconds>Milliseconden</Milliseconds>
+  </ImportSceneChanges>
   <ImportText>
     <Title>Importeer platte tekst</Title>
     <OpenTextFile>Open tekstbestand...</OpenTextFile>
@@ -627,6 +668,7 @@
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
         <ExportUltech130>Ultech caption...</ExportUltech130>
+        <ExportCustomTextFormat>Exporteer eigen tekstformaat</ExportCustomTextFormat>
         <Exit>&amp;Sluiten</Exit>
       </File>
       <Edit>
@@ -650,6 +692,7 @@
         <Title>Gereedschap</Title>
         <AdjustDisplayDuration>&amp;Pas duur aan...</AdjustDisplayDuration>
         <ApplyDurationLimits>Pas duur limiet aan</ApplyDurationLimits>
+        <DurationsBridgeGap>Overbrug hiaat in duratie</DurationsBridgeGap>
         <FixCommonErrors>&amp;Herstel veel voorkomende fouten...</FixCommonErrors>
         <StartNumberingFrom>Beginnen met nummeren vanaf...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Tekst voor slechthorende verwijderen...</RemoveTextForHearingImpaired>
@@ -671,9 +714,13 @@
         <TextNumberOfLines>Tekst - aantal regels</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Tekst - aantal tekens/sec</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Tekst - woorden per minuut (wpm)</WordsPerMinute>
+        <Style>Stijl</Style>
+        <Ascending>Oplopend</Ascending>
+        <Descending>Aflopend</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Maak nieuwe lege vertaling van de huidige ondertitel</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Converteren batch...</BatchConvert>
         <GenerateTimeAsText>Genereer tijd als tekst...</GenerateTimeAsText>
+        <MeasurementConverter>Divers omrekeningen</MeasurementConverter>
         <SplitSubtitle>Splits ondertitel...</SplitSubtitle>
         <AppendSubtitle>Sluit ondertitel aan...</AppendSubtitle>
         <JoinSubtitles>Voeg ondertitels samen...</JoinSubtitles>
@@ -681,8 +728,11 @@
       <Video>
         <Title>Video</Title>
         <OpenVideo>Open video bestand...</OpenVideo>
+        <OpenDvd>Open DVD...</OpenDvd>
         <ChooseAudioTrack>Kies audio spoor</ChooseAudioTrack>
         <CloseVideo>Sluit video bestand</CloseVideo>
+        <ImportSceneChanges>importeer scene wijzigingen</ImportSceneChanges>
+        <RemoveSceneChanges>Verwijder scene wijzigingen</RemoveSceneChanges>
         <ShowHideVideo>Toon/verberg video</ShowHideVideo>
         <ShowHideWaveForm>Toon/verberg golfvorm</ShowHideWaveForm>
         <ShowHideWaveformAndSpectrogram>Toon/verberg golfvorm en spectrogram</ShowHideWaveformAndSpectrogram>
@@ -893,9 +943,9 @@
     <OpenVideoFile>Open video bestand...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Nieuwe beeld snelheid({0}) is gebruikt voor de berekening van start/eind tijd codes</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Nieuwe beeld snelheid ({0}) is gebruikt voor de berekening van begin/einde beeldnummers</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>Het zoekterm  is niet gevonden.  Wilt u nog een keer zoeken vanaf het begin van het document?</FindContinue>
+    <FindContinue>De zoekterm  is niet gevonden.  Wilt u nog een keer zoeken vanaf het begin van het document?</FindContinue>
     <FindContinueTitle>Doorgaan met zoeken?</FindContinueTitle>
-    <ReplaceContinueNotFound>Het zoekterm  is niet gevonden.  Wilt u nog een keer zoeken vanaf het begin van het document en zoeken/vervangen voortzetten?</ReplaceContinueNotFound>
+    <ReplaceContinueNotFound>De zoekterm  is niet gevonden.  Wilt u nog een keer zoeken vanaf het begin van het document en zoeken/vervangen voortzetten?</ReplaceContinueNotFound>
     <ReplaceXContinue>De zoekterm werd  {0} keer (s) vervangen. Wilt u nog een keer zoeken vanaf het begin van het document en zoeken/vervangen voortzetten?</ReplaceXContinue>
     <ReplaceContinueTitle>Doorgaan met 'vervangen'?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Zoeken naar '{0}' vanaf regel nummer {1}...</SearchingForXFromLineY>
@@ -907,7 +957,7 @@
     <FoundNothingToReplace>Niets gevonden om te vervangen</FoundNothingToReplace>
     <ReplaceCountX>Vervang aantal: {0}</ReplaceCountX>
     <NoXFoundAtLineY>Overeenkomst gevonden op regel {0}: {1}</NoXFoundAtLineY>
-    <OneReplacementMade>Een vervanging gemaakt.</OneReplacementMade>
+    <OneReplacementMade>Een vervanging gedaan.</OneReplacementMade>
     <BeforeChangesMadeInSourceView>Voor wijzigingen in de bronweergave</BeforeChangesMadeInSourceView>
     <UnableToParseSourceView>Kan bronweergave tekst niet ontleden!</UnableToParseSourceView>
     <GoToLineNumberX>Ga naar regel nummer {0}</GoToLineNumberX>
@@ -917,11 +967,11 @@
     <DisplayTimeAdjustedX>Weergave tijd aangepast: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Weergave tijden aangepast: {0}</DisplayTimesAdjustedX>
     <StarTimeAdjustedX>Start tijd aangepast : {0}</StarTimeAdjustedX>
-    <BeforeCommonErrorFixes>Voor reparatie veel voorkomende fouten</BeforeCommonErrorFixes>
+    <BeforeCommonErrorFixes>Voor reparatie veelvoorkomende fouten</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Veelvoorkomende fouten vastgesteld in geselecteerde regels</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Veelvoorkomende fouten gerepareerd</CommonErrorsFixed>
     <BeforeRenumbering>Voor hernummering</BeforeRenumbering>
-    <RenumberedStartingFromX>Hernummert vanaf: {0}</RenumberedStartingFromX>
+    <RenumberedStartingFromX>Hernummering vanaf: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Voor het verwijderen van slechthorenden indicaties</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Tekst voor doven verwijderd: Een regel</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Teksten voor doven verwijderd: {0} regels</TextingForHearingImpairedRemovedXLines>
@@ -1089,12 +1139,30 @@
     <BeforeDisplaySubtitleJoin>Voor samenvoegen van ondertitels</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Ondertitels samengevoegd</SubtitlesJoined>
     <StatusLog>Status logboek</StatusLog>
+    <XSceneChangesImported>{0} scene wijzigingen geïmporteerd</XSceneChangesImported>
+    <PluginXExecuted>Plugin '{0}' uitgevoerd.</PluginXExecuted>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Kies ondertiteling uit Matroska bestand</Title>
     <PleaseChoose>Meer dan een ondertitel gevonden - kies aub</PleaseChoose>
     <TrackXLanguageYTypeZ>Spoor {0} - {1} - Taal: {2} - Type: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MeasurementConverter>
+    <Title>Diverse berekeningen</Title>
+    <ConvertFrom>Omzetten van</ConvertFrom>
+    <ConvertTo>Omzetten naar</ConvertTo>
+    <CopyToClipboard>Kopieer naar klembord</CopyToClipboard>
+    <Celsius>Celsius</Celsius>
+    <Fahrenheit>Fahrenheit</Fahrenheit>
+    <Miles>Miles</Miles>
+    <Kilometers>Kilometers</Kilometers>
+    <Meters>Meters</Meters>
+    <Yards>Yards</Yards>
+    <Feet>Feet</Feet>
+    <Inches>Inches</Inches>
+    <Pounds>Pounds</Pounds>
+    <Kilos>Kilos</Kilos>
+  </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Voeg regels met dezelfde tekst samen</Title>
   </MergeDoubleLines>
@@ -1161,6 +1229,14 @@
     <Information>Start nieuwe sessie (samenwerking)</Information>
     <Start>Start</Start>
   </NetworkStart>
+  <OpenVideoDvd>
+    <Title>Open DVD via VLC</Title>
+    <OpenDvdFrom>Open DVD van...</OpenDvdFrom>
+    <Disc>Disc</Disc>
+    <Folder>Map</Folder>
+    <ChooseDrive>Kies drive</ChooseDrive>
+    <ChooseFolder>Kies map</ChooseFolder>
+  </OpenVideoDvd>
   <PluginsGet>
     <Title>Plugins</Title>
     <InstalledPlugins>Geïnstalleerde plugins</InstalledPlugins>
@@ -1229,6 +1305,8 @@
     <PreviewLinesModifiedX>Voorbeeld - ondertitels gewijzigd: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Toon alleen gewijzigde regels</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum milliseconden tussen regels</MinimumMillisecondsBetweenParagraphs>
+    <FrameInfo>Beeldsnelheid info</FrameInfo>
+    <OneFrameXisYMilliseconds>Een beeld op {0:0.00} fps is {1} milliseconden</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Stel Sync punt voor  regel vast {0}</Title>
@@ -1246,7 +1324,7 @@
     <WaveformAndSpectrogram>Golfvorm/spectrogram</WaveformAndSpectrogram>
     <Tools>Gereedschappen</Tools>
     <WordLists>Woordenlijsten</WordLists>
-    <SsaStyle>ASS/SSA Style</SsaStyle>
+    <SsaStyle>SSA Style</SsaStyle>
     <Proxy>Proxy</Proxy>
     <ShowToolBarButtons>Toon werkbalk knoppen</ShowToolBarButtons>
     <New>Nieuw</New>
@@ -1319,6 +1397,9 @@
     <WaveFormGridColor>Rasterkleur</WaveFormGridColor>
     <WaveFormShowGridLines>Toon rasterlijnen</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Omgekeerd muiswiel scroll richting</ReverseMouseWheelScrollDirection>
+    <WaveFormAllowOverlap>Sta overlap toe (bij verplaatsen/ aanpassing)</WaveFormAllowOverlap>
+    <WaveformBorderHitMs1>Laat herpositionering toe binnen</WaveformBorderHitMs1>
+    <WaveformBorderHitMs2>milliseconden</WaveformBorderHitMs2>
     <WaveFormColor>Kleur</WaveFormColor>
     <WaveFormSelectedColor>Geselecteerde kleur</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Achtergrond kleur</WaveFormBackgroundColor>
@@ -1333,7 +1414,9 @@
     <SubStationAlphaStyle>Sub Station Alpha stijl</SubStationAlphaStyle>
     <ChooseFont>Kies lettertype</ChooseFont>
     <ChooseColor>Kies kleur</ChooseColor>
-    <Example>Voorbeeld</Example>
+    <SsaOutline>Omranding</SsaOutline>
+    <SsaShadow>Schaduw</SsaShadow>
+    <SsaOpaqueBox>Opaque doos</SsaOpaqueBox>
     <Testing123>Testing 123...</Testing123>
     <Language>Taal</Language>
     <NamesIgnoreLists>Namen/negeer lijst (hoofdlettergevoelig)</NamesIgnoreLists>
@@ -1388,6 +1471,8 @@
     <MergeDialogue>samenvoegen dialoog (voeg koppelteken in)</MergeDialogue>
     <GoToNext>Ga naar volgende regel</GoToNext>
     <GoToPrevious>Ga naar vorige regel</GoToPrevious>
+    <GoToCurrentSubtitleStart>Ga naar huidige regel start</GoToCurrentSubtitleStart>
+    <GoToCurrentSubtitleEnd>Ga naar huidige regel eind</GoToCurrentSubtitleEnd>
     <ToggleFocus>Verander tussen de lijstweergave en ondertitel tekstvak</ToggleFocus>
     <ToggleDialogueDashes>Verander dialoog streepjes</ToggleDialogueDashes>
     <Alignment>Uitlijning (geselecteerde regels)</Alignment>
@@ -1430,6 +1515,8 @@
     <ListViewColumnInsert>Kolom, tekst invoegen</ListViewColumnInsert>
     <ListViewColumnPaste>Kolom, samenvoegen</ListViewColumnPaste>
     <ShowBeamer>Start ondertiteling volledig scherm beamer</ShowBeamer>
+    <MainTextBoxMoveLastWordDown>verplaats laatste woord naar beneden naar volgende ondertitel</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>verplaats eerste woord naar boven van volgende ondertitel</MainTextBoxMoveFirstWordFromNextUp>
   </Settings>
   <ShowEarlierLater>
     <Title>Toon geselecteerde regels eerder/later</Title>
@@ -1540,7 +1627,7 @@
     <LineLengthMinimum>Ondertitel lengte - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Ondertitel lengte - maximum: {0}</LineLengthMaximum>
     <LineLengthAvarage>Ondertitel lengte - gemiddelde: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Ondertitel, aantal regels - gemiddelde: {0:0.0}</LinesPerSubtitleAvarage>
+    <LinesPerSubtitleAvarage>Ondertitel aantal regels - gemiddelde: {0:0.0}</LinesPerSubtitleAvarage>
     <SingleLineLengthMinimum>Enkele regellengte - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Enkele regellengte - maximum: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAvarage>Enkele regellengte - gemiddelde: {0}</SingleLineLengthAvarage>
@@ -1670,12 +1757,15 @@
     <OcrViaImageCompare>OCR via beeld vergelijken</OcrViaImageCompare>
     <ImageDatabase>Afbeeldingen database</ImageDatabase>
     <NoOfPixelsIsSpace>Geen van pixels is ruimte</NoOfPixelsIsSpace>
+    <MaxErrorPercent>Max. fout%</MaxErrorPercent>
     <New>Nieuw</New>
     <Edit>Bewerken</Edit>
     <StartOcr>Start OCR</StartOcr>
     <Stop>Stop</Stop>
     <StartOcrFrom>Start OCR vanuit ondertitel nr:</StartOcrFrom>
     <LoadingVobSubImages>Laden VobSub afbeeldingen...</LoadingVobSubImages>
+    <LoadingImageCompareDatabase>Laadt beeld vergelijk database</LoadingImageCompareDatabase>
+    <ConvertingImageCompareDatabase>Converteer beeld van vergeleken database naar nieuw formaat (images.db/images.xml)...</ConvertingImageCompareDatabase>
     <SubtitleImage>Ondertitel beeld</SubtitleImage>
     <SubtitleText>Ondertitel tekst</SubtitleText>
     <UnableToCreateCharacterDatabaseFolder>Kan  'Karakter databank map' {0} niet maken</UnableToCreateCharacterDatabaseFolder>
@@ -1739,6 +1829,7 @@
     <ZoomOut>Zoom uit</ZoomOut>
     <AddParagraphHere>Voeg hier tekst toe</AddParagraphHere>
     <AddParagraphHereAndPasteText>Voeg tekst van het klembord hier toe</AddParagraphHereAndPasteText>
+    <FocusTextBox>Focus tekstveld</FocusTextBox>
     <DeleteParagraph>Tekst wissen</DeleteParagraph>
     <Split>Splits</Split>
     <SplitAtCursor>Splits op de cursor</SplitAtCursor>
