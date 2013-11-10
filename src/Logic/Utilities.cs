@@ -2852,6 +2852,8 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 if (!AllKeys.ContainsKey("pagedown"))
                     AllKeys.Add("pagedown", Keys.RButton | Keys.Space);
+                if (!AllKeys.ContainsKey("home"))
+                    AllKeys.Add("home", Keys.MButton | Keys.Space);
             }
 
             string[] parts = keysInString.ToLower().Split("+".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
