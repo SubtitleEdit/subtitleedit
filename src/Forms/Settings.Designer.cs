@@ -175,6 +175,7 @@
             this.checkBoxWaveFormShowGrid = new System.Windows.Forms.CheckBox();
             this.tabPageTools = new System.Windows.Forms.TabPage();
             this.groupBoxSpellCheck = new System.Windows.Forms.GroupBox();
+            this.checkBoxSpellCheckOneLetterWords = new System.Windows.Forms.CheckBox();
             this.checkBoxSpellCheckAutoChangeNames = new System.Windows.Forms.CheckBox();
             this.groupBoxFixCommonErrors = new System.Windows.Forms.GroupBox();
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules = new System.Windows.Forms.CheckBox();
@@ -258,7 +259,6 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.checkBoxSpellCheckOneLetterWords = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1992,6 +1992,16 @@
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
             // 
+            // checkBoxSpellCheckOneLetterWords
+            // 
+            this.checkBoxSpellCheckOneLetterWords.AutoSize = true;
+            this.checkBoxSpellCheckOneLetterWords.Location = new System.Drawing.Point(16, 43);
+            this.checkBoxSpellCheckOneLetterWords.Name = "checkBoxSpellCheckOneLetterWords";
+            this.checkBoxSpellCheckOneLetterWords.Size = new System.Drawing.Size(205, 17);
+            this.checkBoxSpellCheckOneLetterWords.TabIndex = 1;
+            this.checkBoxSpellCheckOneLetterWords.Text = "Prompt for unknown one letter words";
+            this.checkBoxSpellCheckOneLetterWords.UseVisualStyleBackColor = true;
+            // 
             // checkBoxSpellCheckAutoChangeNames
             // 
             this.checkBoxSpellCheckAutoChangeNames.AutoSize = true;
@@ -2723,6 +2733,7 @@
             "Space",
             "Tab",
             "Up",
+            "Back",
             "NumPad0",
             "NumPad1",
             "NumPad2",
@@ -3000,16 +3011,6 @@
             this.labelStatus.Size = new System.Drawing.Size(60, 13);
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
-            // 
-            // checkBoxSpellCheckOneLetterWords
-            // 
-            this.checkBoxSpellCheckOneLetterWords.AutoSize = true;
-            this.checkBoxSpellCheckOneLetterWords.Location = new System.Drawing.Point(16, 43);
-            this.checkBoxSpellCheckOneLetterWords.Name = "checkBoxSpellCheckOneLetterWords";
-            this.checkBoxSpellCheckOneLetterWords.Size = new System.Drawing.Size(205, 17);
-            this.checkBoxSpellCheckOneLetterWords.TabIndex = 1;
-            this.checkBoxSpellCheckOneLetterWords.Text = "Prompt for unknown one letter words";
-            this.checkBoxSpellCheckOneLetterWords.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
