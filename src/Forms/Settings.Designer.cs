@@ -2712,6 +2712,7 @@
             "F12",
             "Del",
             "Down",
+            "Home",
             "End",
             "Escape",
             "Insert",
