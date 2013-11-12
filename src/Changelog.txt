@@ -4,13 +4,16 @@
 * NEW:
    * Added new subtitle formats
    * Added option to control border-marker-hit-size in audio waveform
+   * Added option regarding spell check and sigle letters
 * IMPROVED:
    * Updated Portuguese language file - thx moob
    * Updated Dutch language file - thx Herman
    * OCR max. error% is now saved for blu-ray - thx Zoltán
-   * More default values for ASS/SSA
+   * More default values for ASS/SSA in options
    * Added split long lines to "Batch convert" - thx menes
    * Added support for multiple languages in TimedText / DFXP - thx Laszlo
+   * Custom shortcuts can now use "Home" + "Back" (backspace) keys
+   * Added shortcut for "Insert after" in text box (default is Alt+Insert)
 * FIXED:
    * F11 (Set start time) sometimes kept duration - thx Rinus/Quetsbeek
    * Cavana 890 now works with Hebrew again - thx Yaniv
@@ -20,6 +23,8 @@
    * Now possible to choose en-GB spell check in OCR window - thx Paul
    * "Insert sub after current line" no longer inserts before current line
    * Batch convert now works with more CC formats
+   * Import sub with matching time codes in OCR window 
+     now works with other formats than srt - thx osgZach
 
 
 3.3.9 (19th October 2013)
