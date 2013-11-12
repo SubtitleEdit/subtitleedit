@@ -6241,7 +6241,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     foreach (Paragraph currentP in _subtitle.Paragraphs)
                     {
-                        if (string.IsNullOrEmpty(currentP.Text) && p.StartTime.TotalMilliseconds == currentP.StartTime.TotalMilliseconds)
+                        if (string.IsNullOrEmpty(currentP.Text) && Math.Abs(p.StartTime.TotalMilliseconds - currentP.StartTime.TotalMilliseconds) <= 40)
                         {
                             currentP.Text = p.Text;
                             subtitleListView1.SetText(index, p.Text);
