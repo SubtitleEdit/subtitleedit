@@ -155,6 +155,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Converted>Konverteret</Converted>
     <ConvertedX>Konverteret ({0})</ConvertedX>
     <Settings>Indstillinger</Settings>
+    <SplitLongLines>Split lange linjer</SplitLongLines>
     <AutoBalance>Auto-balancer linjer</AutoBalance>
     <ScanFolder>Scan mappe...</ScanFolder>
     <ScanningFolder>Scanner {0} og undermapper for undertekster...</ScanningFolder>
@@ -804,6 +805,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha stilarter...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Timed Text - sæt style</TimedTextSetStyle>
         <TimedTextStyles>Timed Text styles...</TimedTextStyles>
+        <TimedTextSetLanguage>Timed Text - vælg sprog</TimedTextSetLanguage>
         <SamiSetStyle>Sami - sæt class</SamiSetStyle>
         <Cut>Klip</Cut>
         <Copy>Kopier</Copy>
@@ -1410,6 +1412,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <WaveFormShowGridLines>Vis gitterlinjer</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Skift musehjul rulle retning</ReverseMouseWheelScrollDirection>
     <WaveFormAllowOverlap>Tillad overlapning (når du flytter/resizing)</WaveFormAllowOverlap>
+    <WaveformBorderHitMs1>Grænse-markør ved flyt er aktiv inden for</WaveformBorderHitMs1>
+    <WaveformBorderHitMs2>millisekunder</WaveformBorderHitMs2>
     <WaveFormColor>Farve</WaveFormColor>
     <WaveFormSelectedColor>Valgte farve</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Baggrundsfarve</WaveFormBackgroundColor>
@@ -1424,7 +1428,9 @@ Fortsæt?</SubtitleAppendPrompt>
     <SubStationAlphaStyle>Sub Station Alpha Style</SubStationAlphaStyle>
     <ChooseFont>Vælg skrifttype</ChooseFont>
     <ChooseColor>Vælg farve</ChooseColor>
-    <Example>Eksempel</Example>
+    <SsaOutline>Orids</SsaOutline>
+    <SsaShadow>Skygge</SsaShadow>
+    <SsaOpaqueBox>Baggrundsboks</SsaOpaqueBox>
     <Testing123>Dette er en test 123...</Testing123>
     <Language>Sprog</Language>
     <NamesIgnoreLists>Navne/ignorer list</NamesIgnoreLists>
@@ -1567,6 +1573,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <EditWordOnly>Rediger kun ord</EditWordOnly>
     <AddXToNamesEtc>Tilføj '{0}' til navne mv. liste</AddXToNamesEtc>
     <AutoFixNames>Auto fix navne, hvor kun små/store bogstaver udgør forskellen</AutoFixNames>
+    <CheckOneLetterWords>Spørg ved enkeltbogstaver</CheckOneLetterWords>
     <ImageText>Billede tekst</ImageText>
     <SpellCheckCompleted>Stavekontrol færdig</SpellCheckCompleted>
     <SpellCheckAborted>Stavekontrol afbrudt</SpellCheckAborted>
