@@ -443,6 +443,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.OnPause += AudioWaveForm_OnPause;
                 audioVisualizer.OnTimeChangedAndOffsetRest += AudioWaveForm_OnTimeChangedAndOffsetRest;
                 audioVisualizer.OnZoomedChanged += AudioWaveForm_OnZoomedChanged;
+                audioVisualizer.InsertAtVideoPosition += audioVisualizer_InsertAtVideoPosition;
                 audioVisualizer.DrawGridLines = Configuration.Settings.VideoControls.WaveFormDrawGrid;
                 audioVisualizer.GridColor = Configuration.Settings.VideoControls.WaveFormGridColor;
                 audioVisualizer.SelectedColor = Configuration.Settings.VideoControls.WaveFormSelectedColor;
@@ -470,6 +471,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
             }
+        }
+
+        void audioVisualizer_InsertAtVideoPosition(object sender, EventArgs e)
+        {
+            InsertNewTextAtVideoPosition();
         }
 
         void TimerClearStatus_Tick(object sender, EventArgs e)
@@ -6725,7 +6731,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ToolStripMenuItemSplitTextAtCursorClick(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainInsertAfter)
+            else if (e.KeyData == _mainTextBoxInsertAfter)
             {
                 InsertAfter();
                 e.SuppressKeyPress = true;
@@ -13816,7 +13822,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAdjustSelected100MsForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward);
             _mainAdjustSelected100MsBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack);            
             _mainInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
-            _mainTextBoxInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
+            _mainTextBoxInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxInsertAfter);
             _mainInsertBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
             _mainMergeDialogue = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialogue);
             _mainToggleFocus = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToogleFocus);
