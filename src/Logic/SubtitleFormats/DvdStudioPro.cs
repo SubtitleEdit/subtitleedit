@@ -58,7 +58,7 @@ $HorzAlign          =   Center
                 double factor = (1000.0 / Configuration.Settings.General.CurrentFrameRate);
                 string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds  / factor));
                 string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, (int)Math.Round(p.EndTime.Milliseconds / factor));
-                sb.Append(string.Format(paragraphWriteFormat, startTime, endTime, EncodeStyles(p.Text.Replace(Environment.NewLine, " | "))));
+                sb.Append(string.Format(paragraphWriteFormat, startTime, endTime, EncodeStyles(p.Text)));
             }
             return sb.ToString().Trim();
         }
@@ -142,6 +142,9 @@ $HorzAlign          =   Center
 
         internal static string EncodeStyles(string text)
         {
+            text = text.Replace("<I>", "<i>").Replace("</I>", "</i>");
+            bool allItalic = text.StartsWith("<i>") && text.EndsWith("</i>") && Utilities.CountTagInText(text, "<i>") == 1;
+
             text = text.Replace("<i>", "^I");
             text = text.Replace("<I>", "^I");
             text = text.Replace("</i>", "^I");
@@ -152,7 +155,9 @@ $HorzAlign          =   Center
             text = text.Replace("</b>", "^B");
             text = text.Replace("</B>", "^B");
 
-            return text;
+            if (allItalic)
+                return text.Replace(Environment.NewLine, "^|");
+            return text.Replace(Environment.NewLine, "|");
         }
 
         private static bool GetTimeCode(TimeCode timeCode, string timeString)
