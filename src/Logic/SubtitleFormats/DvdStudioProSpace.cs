@@ -58,7 +58,7 @@ $HorzAlign          =   Center
                 double factor = (1000.0 / Configuration.Settings.General.CurrentFrameRate);
                 string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds / factor));
                 string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, (int)Math.Round(p.EndTime.Milliseconds / factor));
-                sb.Append(string.Format(paragraphWriteFormat, startTime, endTime, DvdStudioPro.EncodeStyles(p.Text.Replace(Environment.NewLine, " | "))));
+                sb.Append(string.Format(paragraphWriteFormat, startTime, endTime, DvdStudioPro.EncodeStyles(p.Text)));
             }
             return sb.ToString().Trim();
         }
