@@ -43,12 +43,6 @@
   </Dictionary>
   <Dictionary>
     <EnglishName>Catalan</EnglishName>
-    <NativeName>català</NativeName>
-    <DownloadLink>http://baixades.softcatala.org/?url=http%3A%2F%2Fwww.softcatala.org%2Fdiccionaris%2Factualitzacions%2Fsinonims%2Fthesaurus-ca.oxt</DownloadLink>
-    <Description>Diccionari català de sinònims / Catalan thesaurus dictionary</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Catalan</EnglishName>
     <NativeName>català-valencià</NativeName>
     <DownloadLink>http://softcatala.org/diccionaris/actualitzacions/OOo/avl.oxt</DownloadLink>
     <Description>Spelling dictionary for Catalan (Valencian version)</Description>
@@ -271,33 +265,33 @@
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish</EnglishName>
-    <NativeName>Español</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/diccionario-espanol/releases/1.0/spanish-dictionary.oxt</DownloadLink>
-    <Description>Spanish dictionary 1.0</Description>
+    <NativeName>España</NativeName>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.7/espana</DownloadLink>
+    <Description>Spanish dictionary 0.7 (07/03/2013)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish</EnglishName>
-    <NativeName>Spanish</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.6/es_any.oxt</DownloadLink>
-    <Description>Spanish dictionaries 0.6</Description>
+    <NativeName>Español Genérico</NativeName>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.7/generico-america-latina-y-espana</DownloadLink>
+    <Description>Genérico (América latina y España)  0.7</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish (Argentina)</EnglishName>
     <NativeName>Español (Argentina)</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.6/es_ar.oxt</DownloadLink>
-    <Description>Diccionario Español - Argentina (Sinónimos y Separación Silábica)</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.7/argentina</DownloadLink>
+    <Description>Diccionario Español - Argentina (Sinónimos y Separación Silábica) 0.7</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish (Mexico)</EnglishName>
     <NativeName>Español (México)</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.6/es_mx.oxt</DownloadLink>
-    <Description>Diccionario de corrección ortográfica en español (México)</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.7/mexico</DownloadLink>
+    <Description>Diccionario de corrección ortográfica en español (México) 0.7</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish (Venezuela)</EnglishName>
     <NativeName>Español (Venezuela)</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.6/es_ve.oxt</DownloadLink>
-    <Description>Diccionarios en Español para Venezuela</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.7/venezuela</DownloadLink>
+    <Description>Diccionarios en Español para Venezuela 0.7</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Swahili</EnglishName>
