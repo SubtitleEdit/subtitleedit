@@ -370,7 +370,7 @@ namespace Test
             var target = new FixCommonErrors_Accessor();
             InitializeFixCommonErrorsLine(target, "The font is ita/ic!");
             target.FixOcrErrorsViaReplaceList("eng");
-            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The font is italic!");
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The font is italic!"); // will fail if English dictionary is not found
         }
 
         [TestMethod]

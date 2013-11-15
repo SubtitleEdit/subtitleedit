@@ -46,6 +46,9 @@ namespace Nikse.SubtitleEdit.Forms
             public string SavDialogFileName { get; set; }
             public string Error { get; set; }
             public bool LineJoinRound { get; set; }
+            public Color ShadowColor { get; set; }
+            public int ShadowWidth { get; set; }
+            public int ShadowAlpha { get; set; }
 
             public MakeBitmapParameter()
             {
@@ -245,6 +248,10 @@ namespace Nikse.SubtitleEdit.Forms
                                     Depth3D = (int)numericUpDownDepth3D.Value,
                                     BackgroundColor = Color.Transparent,
                                     SavDialogFileName = saveFileDialog1.FileName,
+                                    ShadowColor = panelShadowColor.BackColor,
+                                    ShadowWidth = (int)comboBoxShadowWidth.SelectedIndex,
+                                    ShadowAlpha = (int)numericUpDownShadowTransparency.Value,
+            
                                 };
             if (index < _subtitle.Paragraphs.Count)
             {
@@ -1252,6 +1259,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.Type3D = comboBox3D.SelectedIndex;
             mbp.Depth3D = (int)numericUpDownDepth3D.Value;
             mbp.BottomMargin = comboBoxBottomMargin.SelectedIndex;
+            mbp.ShadowWidth = comboBoxShadowWidth.SelectedIndex;
+            mbp.ShadowAlpha = (int)numericUpDownShadowTransparency.Value;
+            mbp.ShadowColor = panelShadowColor.BackColor;
             if (_exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
             {
                 mbp.LineJoinRound = true;
@@ -1711,6 +1721,24 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (sb.Length > 0)
                     TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
+
+                if (parameter.ShadowWidth > 0)
+                {
+                    var shadowPath = (GraphicsPath)path.Clone();
+                    for (int k = 0; k < parameter.ShadowWidth; k++)
+                    {
+                        var translateMatrix = new Matrix();
+                        translateMatrix.Translate(1, 1);
+                        shadowPath.Transform(translateMatrix);
+
+                        var p1 = new Pen(Color.FromArgb(parameter.ShadowAlpha, parameter.ShadowColor), parameter.BorderWidth);
+                        if (parameter.LineJoinRound)
+                            p1.LineJoin = LineJoin.Round;
+                        g.DrawPath(p1, shadowPath);
+                        p1.Dispose();
+                    }
+                }
+
                 if (parameter.BorderWidth > 0)
                 {
                     var p1 = new Pen(parameter.BorderColor, parameter.BorderWidth);
@@ -1719,7 +1747,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     g.DrawPath(p1, path);
                     p1.Dispose();
                 }
+
                 g.FillPath(new SolidBrush(c), path);
+
+
+
                 g.Dispose();
             }
 
@@ -1934,6 +1966,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Right);
             }
 
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.ShadowWidth)) //TODO: Remove in 3.4
+            {
+                buttonShadowColor.Text = Configuration.Settings.Language.ExportPngXml.ShadowColor;
+                labelShadowWidth.Text = Configuration.Settings.Language.ExportPngXml.ShadowWidth;
+                labelShadowTransparency.Text = Configuration.Settings.Language.ExportPngXml.Transparency;
+            }
+
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(subtitleListView1);
             subtitleListView1.AutoSizeAllColumns(this);
@@ -1966,6 +2005,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 comboBoxLanguage.SelectedIndex = 25;
             }
+
             comboBoxImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP";
             labelImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP";
             labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
@@ -2184,6 +2224,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void ExportPngXml_Shown(object sender, EventArgs e)
         {
+            comboBoxShadowWidth.SelectedIndex = 0;
+            panelShadowColor.BackColor = Color.Black;
+            bool shadowVisible = _exportType == "BDNXML" || _exportType == "BLURAYSUP" || _exportType == "DOST" || _exportType == "IMAGE/FRAME" || _exportType == "FCP";
+            labelShadowWidth.Visible = shadowVisible;
+            buttonShadowColor.Visible = shadowVisible;
+            comboBoxShadowWidth.Visible = shadowVisible;
+            panelShadowColor.Visible = shadowVisible;
+            labelShadowTransparency.Visible = shadowVisible;
+            numericUpDownShadowTransparency.Visible = shadowVisible;
             _isLoading = false;
         }
 
@@ -2316,6 +2365,32 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
             }
         }
+
+        private void buttonShadowColor_Click(object sender, EventArgs e)
+        {
+            colorDialog1.Color = panelShadowColor.BackColor;
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                panelShadowColor.BackColor = colorDialog1.Color;
+                subtitleListView1_SelectedIndexChanged(null, null);
+            }
+        }
+
+        private void panelShadowColor_MouseClick(object sender, MouseEventArgs e)
+        {
+            buttonShadowColor_Click(sender, e);
+        }
+
+        private void comboBoxShadowWidth_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void numericUpDownShadowTransparency_ValueChanged(object sender, EventArgs e)
+        {
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
 
     }
 }

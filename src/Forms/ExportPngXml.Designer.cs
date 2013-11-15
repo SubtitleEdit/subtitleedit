@@ -30,11 +30,17 @@
         {
             this.components = new System.ComponentModel.Container();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonExport = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.labelShadowWidth = new System.Windows.Forms.Label();
+            this.comboBoxShadowWidth = new System.Windows.Forms.ComboBox();
+            this.panelShadowColor = new System.Windows.Forms.Panel();
+            this.buttonShadowColor = new System.Windows.Forms.Button();
             this.labelDepth = new System.Windows.Forms.Label();
             this.label3D = new System.Windows.Forms.Label();
             this.comboBox3D = new System.Windows.Forms.ComboBox();
@@ -69,14 +75,15 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxExportImage = new System.Windows.Forms.GroupBox();
             this.timerPreview = new System.Windows.Forms.Timer(this.components);
+            this.labelShadowTransparency = new System.Windows.Forms.Label();
+            this.numericUpDownShadowTransparency = new System.Windows.Forms.NumericUpDown();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.groupBoxImageSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).BeginInit();
             this.groupBoxExportImage.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -88,11 +95,25 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveImageAsToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(158, 26);
+            // 
+            // saveImageAsToolStripMenuItem
+            // 
+            this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
+            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.saveImageAsToolStripMenuItem.Text = "Save image as...";
+            this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.saveImageAsToolStripMenuItem_Click);
+            // 
             // buttonExport
             // 
             this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonExport.Location = new System.Drawing.Point(517, 566);
+            this.buttonExport.Location = new System.Drawing.Point(742, 566);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(126, 21);
             this.buttonExport.TabIndex = 6;
@@ -105,7 +126,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(649, 566);
+            this.buttonCancel.Location = new System.Drawing.Point(874, 566);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 0;
@@ -118,7 +139,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar1.Location = new System.Drawing.Point(12, 566);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(499, 21);
+            this.progressBar1.Size = new System.Drawing.Size(724, 21);
             this.progressBar1.TabIndex = 5;
             this.progressBar1.Visible = false;
             // 
@@ -126,6 +147,12 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.numericUpDownShadowTransparency);
+            this.groupBoxImageSettings.Controls.Add(this.labelShadowTransparency);
+            this.groupBoxImageSettings.Controls.Add(this.labelShadowWidth);
+            this.groupBoxImageSettings.Controls.Add(this.comboBoxShadowWidth);
+            this.groupBoxImageSettings.Controls.Add(this.panelShadowColor);
+            this.groupBoxImageSettings.Controls.Add(this.buttonShadowColor);
             this.groupBoxImageSettings.Controls.Add(this.labelDepth);
             this.groupBoxImageSettings.Controls.Add(this.label3D);
             this.groupBoxImageSettings.Controls.Add(this.comboBox3D);
@@ -158,10 +185,66 @@
             this.groupBoxImageSettings.Controls.Add(this.checkBoxSkipEmptyFrameAtStart);
             this.groupBoxImageSettings.Location = new System.Drawing.Point(12, 218);
             this.groupBoxImageSettings.Name = "groupBoxImageSettings";
-            this.groupBoxImageSettings.Size = new System.Drawing.Size(712, 161);
+            this.groupBoxImageSettings.Size = new System.Drawing.Size(937, 161);
             this.groupBoxImageSettings.TabIndex = 3;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // labelShadowWidth
+            // 
+            this.labelShadowWidth.Location = new System.Drawing.Point(662, 55);
+            this.labelShadowWidth.Name = "labelShadowWidth";
+            this.labelShadowWidth.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.labelShadowWidth.Size = new System.Drawing.Size(110, 13);
+            this.labelShadowWidth.TabIndex = 35;
+            this.labelShadowWidth.Text = "Shadow width";
+            this.labelShadowWidth.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // comboBoxShadowWidth
+            // 
+            this.comboBoxShadowWidth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxShadowWidth.FormattingEnabled = true;
+            this.comboBoxShadowWidth.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15"});
+            this.comboBoxShadowWidth.Location = new System.Drawing.Point(778, 52);
+            this.comboBoxShadowWidth.Name = "comboBoxShadowWidth";
+            this.comboBoxShadowWidth.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxShadowWidth.TabIndex = 38;
+            this.comboBoxShadowWidth.SelectedIndexChanged += new System.EventHandler(this.comboBoxShadowWidth_SelectedIndexChanged);
+            // 
+            // panelShadowColor
+            // 
+            this.panelShadowColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelShadowColor.Location = new System.Drawing.Point(905, 26);
+            this.panelShadowColor.Name = "panelShadowColor";
+            this.panelShadowColor.Size = new System.Drawing.Size(21, 20);
+            this.panelShadowColor.TabIndex = 37;
+            this.panelShadowColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelShadowColor_MouseClick);
+            // 
+            // buttonShadowColor
+            // 
+            this.buttonShadowColor.Location = new System.Drawing.Point(778, 25);
+            this.buttonShadowColor.Name = "buttonShadowColor";
+            this.buttonShadowColor.Size = new System.Drawing.Size(121, 21);
+            this.buttonShadowColor.TabIndex = 36;
+            this.buttonShadowColor.Text = "Shadow color";
+            this.buttonShadowColor.UseVisualStyleBackColor = true;
+            this.buttonShadowColor.Click += new System.EventHandler(this.buttonShadowColor_Click);
             // 
             // labelDepth
             // 
@@ -236,7 +319,7 @@
             // 
             // labelFrameRate
             // 
-            this.labelFrameRate.Location = new System.Drawing.Point(421, 137);
+            this.labelFrameRate.Location = new System.Drawing.Point(416, 137);
             this.labelFrameRate.Name = "labelFrameRate";
             this.labelFrameRate.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.labelFrameRate.Size = new System.Drawing.Size(110, 13);
@@ -248,14 +331,14 @@
             // comboBoxFramerate
             // 
             this.comboBoxFramerate.FormattingEnabled = true;
-            this.comboBoxFramerate.Location = new System.Drawing.Point(537, 134);
+            this.comboBoxFramerate.Location = new System.Drawing.Point(532, 134);
             this.comboBoxFramerate.Name = "comboBoxFramerate";
             this.comboBoxFramerate.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFramerate.TabIndex = 25;
             // 
             // labelLanguage
             // 
-            this.labelLanguage.Location = new System.Drawing.Point(421, 108);
+            this.labelLanguage.Location = new System.Drawing.Point(416, 108);
             this.labelLanguage.Name = "labelLanguage";
             this.labelLanguage.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.labelLanguage.Size = new System.Drawing.Size(110, 13);
@@ -275,7 +358,7 @@
             "Jpg",
             "Png",
             "Tiff"});
-            this.comboBoxLanguage.Location = new System.Drawing.Point(537, 105);
+            this.comboBoxLanguage.Location = new System.Drawing.Point(532, 105);
             this.comboBoxLanguage.Name = "comboBoxLanguage";
             this.comboBoxLanguage.Size = new System.Drawing.Size(121, 21);
             this.comboBoxLanguage.TabIndex = 24;
@@ -283,7 +366,7 @@
             // 
             // labelImageFormat
             // 
-            this.labelImageFormat.Location = new System.Drawing.Point(421, 81);
+            this.labelImageFormat.Location = new System.Drawing.Point(416, 81);
             this.labelImageFormat.Name = "labelImageFormat";
             this.labelImageFormat.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.labelImageFormat.Size = new System.Drawing.Size(110, 13);
@@ -302,7 +385,7 @@
             "Jpg",
             "Png",
             "Tiff"});
-            this.comboBoxImageFormat.Location = new System.Drawing.Point(537, 78);
+            this.comboBoxImageFormat.Location = new System.Drawing.Point(532, 78);
             this.comboBoxImageFormat.Name = "comboBoxImageFormat";
             this.comboBoxImageFormat.Size = new System.Drawing.Size(121, 21);
             this.comboBoxImageFormat.TabIndex = 23;
@@ -513,7 +596,7 @@
             // 
             // labelBorderWidth
             // 
-            this.labelBorderWidth.Location = new System.Drawing.Point(421, 54);
+            this.labelBorderWidth.Location = new System.Drawing.Point(416, 54);
             this.labelBorderWidth.Name = "labelBorderWidth";
             this.labelBorderWidth.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.labelBorderWidth.Size = new System.Drawing.Size(110, 13);
@@ -542,7 +625,7 @@
             "13",
             "14",
             "15"});
-            this.comboBoxBorderWidth.Location = new System.Drawing.Point(537, 51);
+            this.comboBoxBorderWidth.Location = new System.Drawing.Point(532, 51);
             this.comboBoxBorderWidth.Name = "comboBoxBorderWidth";
             this.comboBoxBorderWidth.Size = new System.Drawing.Size(121, 21);
             this.comboBoxBorderWidth.TabIndex = 22;
@@ -551,7 +634,7 @@
             // panelBorderColor
             // 
             this.panelBorderColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelBorderColor.Location = new System.Drawing.Point(664, 25);
+            this.panelBorderColor.Location = new System.Drawing.Point(659, 25);
             this.panelBorderColor.Name = "panelBorderColor";
             this.panelBorderColor.Size = new System.Drawing.Size(21, 20);
             this.panelBorderColor.TabIndex = 21;
@@ -559,7 +642,7 @@
             // 
             // buttonBorderColor
             // 
-            this.buttonBorderColor.Location = new System.Drawing.Point(537, 24);
+            this.buttonBorderColor.Location = new System.Drawing.Point(532, 24);
             this.buttonBorderColor.Name = "buttonBorderColor";
             this.buttonBorderColor.Size = new System.Drawing.Size(121, 21);
             this.buttonBorderColor.TabIndex = 20;
@@ -606,7 +689,7 @@
             this.groupBoxExportImage.Controls.Add(this.pictureBox1);
             this.groupBoxExportImage.Location = new System.Drawing.Point(13, 386);
             this.groupBoxExportImage.Name = "groupBoxExportImage";
-            this.groupBoxExportImage.Size = new System.Drawing.Size(711, 174);
+            this.groupBoxExportImage.Size = new System.Drawing.Size(936, 174);
             this.groupBoxExportImage.TabIndex = 1;
             this.groupBoxExportImage.TabStop = false;
             // 
@@ -614,6 +697,39 @@
             // 
             this.timerPreview.Interval = 500;
             this.timerPreview.Tick += new System.EventHandler(this.timerPreview_Tick);
+            // 
+            // labelShadowTransparency
+            // 
+            this.labelShadowTransparency.Location = new System.Drawing.Point(662, 83);
+            this.labelShadowTransparency.Name = "labelShadowTransparency";
+            this.labelShadowTransparency.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.labelShadowTransparency.Size = new System.Drawing.Size(110, 13);
+            this.labelShadowTransparency.TabIndex = 39;
+            this.labelShadowTransparency.Text = "Transparency";
+            this.labelShadowTransparency.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // numericUpDownShadowTransparency
+            // 
+            this.numericUpDownShadowTransparency.Location = new System.Drawing.Point(778, 81);
+            this.numericUpDownShadowTransparency.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDownShadowTransparency.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownShadowTransparency.Name = "numericUpDownShadowTransparency";
+            this.numericUpDownShadowTransparency.Size = new System.Drawing.Size(47, 20);
+            this.numericUpDownShadowTransparency.TabIndex = 40;
+            this.numericUpDownShadowTransparency.Value = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDownShadowTransparency.ValueChanged += new System.EventHandler(this.numericUpDownShadowTransparency_ValueChanged);
             // 
             // subtitleListView1
             // 
@@ -627,32 +743,18 @@
             this.subtitleListView1.Location = new System.Drawing.Point(12, 12);
             this.subtitleListView1.Name = "subtitleListView1";
             this.subtitleListView1.OwnerDraw = true;
-            this.subtitleListView1.Size = new System.Drawing.Size(712, 200);
+            this.subtitleListView1.Size = new System.Drawing.Size(937, 200);
             this.subtitleListView1.TabIndex = 1;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveImageAsToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(158, 48);
-            // 
-            // saveImageAsToolStripMenuItem
-            // 
-            this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
-            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.saveImageAsToolStripMenuItem.Text = "Save image as...";
-            this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.saveImageAsToolStripMenuItem_Click);
-            // 
             // ExportPngXml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(730, 592);
+            this.ClientSize = new System.Drawing.Size(955, 592);
             this.Controls.Add(this.groupBoxExportImage);
             this.Controls.Add(this.groupBoxImageSettings);
             this.Controls.Add(this.progressBar1);
@@ -673,11 +775,12 @@
             this.SizeChanged += new System.EventHandler(this.ExportPngXml_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExportPngXml_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.groupBoxImageSettings.ResumeLayout(false);
             this.groupBoxImageSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).EndInit();
             this.groupBoxExportImage.ResumeLayout(false);
-            this.contextMenuStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -727,5 +830,11 @@
         private System.Windows.Forms.Timer timerPreview;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem saveImageAsToolStripMenuItem;
+        private System.Windows.Forms.Label labelShadowWidth;
+        private System.Windows.Forms.ComboBox comboBoxShadowWidth;
+        private System.Windows.Forms.Panel panelShadowColor;
+        private System.Windows.Forms.Button buttonShadowColor;
+        private System.Windows.Forms.NumericUpDown numericUpDownShadowTransparency;
+        private System.Windows.Forms.Label labelShadowTransparency;
     }
 }

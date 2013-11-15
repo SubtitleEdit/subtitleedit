@@ -404,6 +404,9 @@
             public string FontColor { get; set; }
             public string BorderColor { get; set; }
             public string BorderWidth { get; set; }
+            public string ShadowColor { get; set; }
+            public string ShadowWidth { get; set; }
+            public string Transparency { get; set; }
             public string ImageFormat { get; set; }
             public string SimpleRendering { get; set; }
             public string Text3D { get; set; }
