@@ -156,7 +156,7 @@ $HorzAlign          =   Center
             text = text.Replace("</B>", "^B");
 
             if (allItalic)
-                return text.Replace(Environment.NewLine, "|^");
+                return text.Replace(Environment.NewLine, "|^I");
             return text.Replace(Environment.NewLine, "|");
         }
 
