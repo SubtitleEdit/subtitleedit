@@ -210,6 +210,9 @@ namespace Nikse.SubtitleEdit.Forms
                     top = (bmp.Height - measuredHeight) / 2;
                 else
                     top = bmp.Height - measuredHeight - ((int)numericUpDownMarginVertical.Value);
+                top -= (int)numericUpDownShadowWidth.Value;
+                if (radioButtonTopCenter.Checked || radioButtonMiddleCenter.Checked || radioButtonBottomCenter.Checked)
+                    left -= (int)(numericUpDownShadowWidth.Value / 2);
 
                 int leftMargin = 0;
                 int pathPointsStart = -1;
@@ -229,14 +232,16 @@ namespace Nikse.SubtitleEdit.Forms
                 // draw shadow
                 if (numericUpDownShadowWidth.Value > 0 && radioButtonOutline.Checked)
                 {
+                    var shadowPath = (GraphicsPath) path.Clone();
                     for (int i = 0; i < (int)numericUpDownShadowWidth.Value; i++)
                     {
-                        var shadowPath = new GraphicsPath();
-                        sb = new StringBuilder();
-                        sb.Append("This is a test!");
-                        int pathPointsStart2 = -1;
-                        TextDraw.DrawText(font, sf, shadowPath, sb, checkBoxFontItalic.Checked, checkBoxFontBold.Checked, checkBoxFontUnderline.Checked, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
-                        g.FillPath(new SolidBrush(Color.FromArgb(200, panelBackColor.BackColor)), shadowPath);
+                        var translateMatrix = new Matrix();
+                        translateMatrix.Translate(1, 1);
+                        shadowPath.Transform(translateMatrix);
+
+                        var p1 = new Pen(Color.FromArgb(250, panelBackColor.BackColor), outline);
+                        g.DrawPath(p1, shadowPath);
+                        p1.Dispose();
                     }
                 }
 
