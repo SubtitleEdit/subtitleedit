@@ -754,7 +754,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainAdjustSelected100MsBack { get; set; }
         public string MainInsertAfter { get; set; }
         public string MainTextBoxInsertAfter { get; set; }
-        public string MainWaveformInsertAfter { get; set; }
+        public string MainWaveformInsertAtCurrentPosition { get; set; }
         public string MainInsertBefore { get; set; }
         public string MainMergeDialogue { get; set; }
         public string MainToogleFocus { get; set; }
@@ -841,7 +841,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustSelected100MsBack = string.Empty;
             MainInsertAfter = "Alt+Insert";
             MainTextBoxInsertAfter = "Alt+Insert";
-            MainWaveformInsertAfter = "Alt+Insert";
+            MainWaveformInsertAtCurrentPosition = "Insert";
             MainInsertBefore = "Control+Shift+Insert";
             MainMergeDialogue = string.Empty;
             WaveformVerticalZoom = string.Empty;
@@ -2143,9 +2143,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainTextBoxInsertAfter");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxInsertAfter = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainWaveformInsertAfter");
+                subNode = node.SelectSingleNode("MainWaveformInsertAtCurrentPosition");
                 if (subNode != null)
-                    settings.Shortcuts.MainWaveformInsertAfter = subNode.InnerText;               
+                    settings.Shortcuts.MainWaveformInsertAtCurrentPosition = subNode.InnerText;               
                 subNode = node.SelectSingleNode("MainInsertBefore");
                 if (subNode != null)
                     settings.Shortcuts.MainInsertBefore = subNode.InnerText;
@@ -2681,7 +2681,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainAdjustSelected100MsBack", settings.Shortcuts.MainAdjustSelected100MsBack);
             textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
             textWriter.WriteElementString("MainTextBoxInsertAfter", settings.Shortcuts.MainTextBoxInsertAfter);
-            textWriter.WriteElementString("MainWaveformInsertAfter", settings.Shortcuts.MainWaveformInsertAfter);
+            textWriter.WriteElementString("MainWaveformInsertAtCurrentPosition", settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
             textWriter.WriteElementString("MainInsertBefore", settings.Shortcuts.MainInsertBefore);
             textWriter.WriteElementString("MainMergeDialogue", settings.Shortcuts.MainMergeDialogue);
             textWriter.WriteElementString("MainToogleFocus", settings.Shortcuts.MainToogleFocus);

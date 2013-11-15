@@ -9,6 +9,7 @@ namespace Nikse.SubtitleEdit.Controls
     /// </summary>
     public class SETextBox : TextBox
     {
+        private string breakChars = "\".!?,)([]<>:;♪{}-/#*| ¿¡" + Environment.NewLine + "\t";
         string _dragText = string.Empty;
         int _dragStartFrom = 0;
         long _dragStartTicks = 0;
@@ -23,6 +24,42 @@ namespace Nikse.SubtitleEdit.Controls
             DragDrop += new DragEventHandler(SETextBox_DragDrop);
             MouseDown += new MouseEventHandler(SETextBox_MouseDown);
             MouseUp += new MouseEventHandler(SETextBox_MouseUp);
+            KeyDown += SETextBox_KeyDown;
+        }
+
+        void SETextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Back)
+            { 
+                int index = SelectionStart;
+                if (SelectionLength == 0)
+                {
+                    string s = Text;
+                    int deleteFrom = index-1;
+
+                    if (deleteFrom > 0 && deleteFrom < s.Length)
+                    {
+                        if (s[deleteFrom] == ' ')
+                            deleteFrom--;
+                        while (deleteFrom > 0 && !(breakChars).Contains(s.Substring(deleteFrom, 1)))
+                        {
+                            deleteFrom--;
+                        }
+                        if (deleteFrom == index - 1)
+                        {
+                            while (deleteFrom > 0 && (breakChars.Replace(" ", string.Empty)).Contains(s.Substring(deleteFrom, 1)))
+                            {
+                                deleteFrom--;
+                            }
+                        }
+                        if (s[deleteFrom] == ' ')
+                            deleteFrom++;
+                        Text = s.Remove(deleteFrom, index - deleteFrom);
+                        SelectionStart = deleteFrom;
+                    }
+                }
+                e.SuppressKeyPress = true;
+            }
         }
 
         void SETextBox_MouseUp(object sender, MouseEventArgs e)
@@ -207,8 +244,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private void SelectCurrentWord(TextBox tb)
-        {
-            string breakChars = "\".!?,)([]<>:;♪{}-/#*| ¿¡" + Environment.NewLine + "\t";
+        {            
             int selectionLength = 0;
             int i = tb.SelectionStart;
             while (i > 0 && breakChars.Contains(tb.Text.Substring(i - 1, 1)) == false)

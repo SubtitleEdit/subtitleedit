@@ -13833,12 +13833,15 @@ namespace Nikse.SubtitleEdit.Forms
             _waveformSearchSilenceForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward);
             _waveformSearchSilenceBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack);
             _waveformAddTextAtHere = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHere);
-            _mainTranslateCustomSearch1  = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1);
-            _mainTranslateCustomSearch2  = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2);
-            _mainTranslateCustomSearch3  = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3);
-            _mainTranslateCustomSearch4  = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch4);
-            _mainTranslateCustomSearch5  = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch5);
-            _mainTranslateCustomSearch6  = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch6);
+            _mainTranslateCustomSearch1 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1);
+            _mainTranslateCustomSearch2 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2);
+            _mainTranslateCustomSearch3 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3);
+            _mainTranslateCustomSearch4 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch4);
+            _mainTranslateCustomSearch5 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch5);
+            _mainTranslateCustomSearch6 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch6);
+
+            if (audioVisualizer != null)
+                audioVisualizer.InsertAtVideoPositionShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
         }
 
         public static object GetPropertiesAndDoAction(string pluginFileName, out string name, out string text, out decimal version, out string description, out string actionType, out string shortcut, out System.Reflection.MethodInfo mi)

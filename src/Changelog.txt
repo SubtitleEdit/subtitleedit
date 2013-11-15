@@ -5,6 +5,7 @@
    * Added new subtitle formats
    * Added option to control border-marker-hit-size in audio waveform
    * Added option regarding spell check and sigle letters
+   * Ctrl+Backspace in text box now deletes word to the left - thx Ivandrofly
 * IMPROVED:
    * Updated Portuguese language file - thx moob
    * Updated Dutch language file - thx Herman
@@ -25,6 +26,7 @@
    * Batch convert now works with more CC formats
    * Import sub with matching time codes in OCR window 
      now works with other formats than srt - thx osgZach
+   * Fix for multiline italics in Spruce/DVD Studio pro - thx Damian
 
 
 3.3.9 (19th October 2013)

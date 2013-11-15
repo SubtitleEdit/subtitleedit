@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Controls
         double _wholeParagraphMinMilliseconds = 0;
         double _wholeParagraphMaxMilliseconds = double.MaxValue;
 
-        public Keys _insertAtVideoPosition = Keys.None;
+        public Keys InsertAtVideoPositionShortcut = Keys.None;
         public bool MouseWheelScrollUpIsForward = true;
         public const double ZoomMininum = 0.1;
         public const double ZoomMaxinum = 2.5;
@@ -270,7 +270,7 @@ namespace Nikse.SubtitleEdit.Controls
             ShowSpectrogram = true;
             ShowWaveform = true;
             VerticalZoomPercent = 1.0;
-            _insertAtVideoPosition = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAfter);
+            InsertAtVideoPositionShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
         }
 
         public void NearestSubtitles(Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex)
@@ -1462,7 +1462,7 @@ namespace Nikse.SubtitleEdit.Controls
                 Invalidate();
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _insertAtVideoPosition)
+            else if (e.KeyData == InsertAtVideoPositionShortcut)
             {
                 if (InsertAtVideoPosition != null)
                 {
