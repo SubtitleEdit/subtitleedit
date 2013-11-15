@@ -88,7 +88,7 @@ $ColorIndex4    = 3
             text = text.Replace("<u>", "^U");
             text = text.Replace("</u>", string.Empty);
             if (allItalic)
-                return text.Replace(Environment.NewLine, "|^");
+                return text.Replace(Environment.NewLine, "|^I");
             return text.Replace(Environment.NewLine, "|");
         }
 
