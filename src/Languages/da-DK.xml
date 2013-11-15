@@ -354,6 +354,9 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Skriftfarve</FontColor>
     <BorderColor>Kantfarve</BorderColor>
     <BorderWidth>Kantbredde</BorderWidth>
+    <ShadowColor>Skygge farve</ShadowColor>
+    <ShadowWidth>Skygge tykkelse</ShadowWidth>
+    <Transparency>Alpha</Transparency>
     <ImageFormat>Billed format</ImageFormat>
     <SimpleRendering>Simpel rendering</SimpleRendering>
     <Text3D>3D</Text3D>
