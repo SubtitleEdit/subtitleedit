@@ -59,35 +59,30 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 return;
             }
-            bool flag = true;
             for (int i = 0; i < array.Length - 20; i++)
             {
-                if (array[i] == 84 && array[i + 1] == 73 && array[i + 2] == 84 && array[i + 3] == 76 && array[i + 8] == 84 && array[i + 9] == 73 && array[i + 10] == 77 && array[i + 11] == 69)
+                if (array[i] == 84 && array[i + 1] == 73 && array[i + 2] == 84 && array[i + 3] == 76 && array[i + 8] == 84 && array[i + 9] == 73 && array[i + 10] == 77 && array[i + 11] == 69) // TITL + TIME
                 {
-                    int num = (int)array[i + 4];
-                    int num2 = (int)array[i + 16] + (int)array[i + 17] * 256;
-                    if (flag && array[i + 17] == 32)
-                    {
-                        num2 = (int)array[i + 16];
-                    }
+                    int endOfText = (int)array[i + 4];
+
+                    bool hasTimeCode = true;
+                    int start = array[i + 16] + array[i + 17] * 256;
+                    if (hasTimeCode && array[i + 17] == 32)
+                        start = (int)array[i + 16];
                     else
-                    {
-                        flag = false;
-                    }
-                    int num3 = (int)array[i + 20] + (int)array[i + 21] * 256;
-                    if (flag && array[i + 21] == 32)
-                    {
-                        num2 = (int)array[i + 20];
-                    }
+                        hasTimeCode = false;
+
+                    int end = array[i + 20] + array[i + 21] * 256;
+                    if (hasTimeCode && array[i + 21] == 32)
+                        start = (int)array[i + 20];
                     else
-                    {
-                        flag = false;
-                    }
-                    string text = Encoding.Default.GetString(array, i + 53, num - 47);
-                    text = text.Trim();
-                    var item = new Paragraph(text, (double)SubtitleFormat.FramesToMilliseconds((double)num2), (double)SubtitleFormat.FramesToMilliseconds((double)num3));
+                        hasTimeCode = false;
+
+                    string text = Encoding.Default.GetString(array, i + 53, endOfText - 47);
+                    text = text.Trim('\0').Trim();
+                    var item = new Paragraph(text, (double)SubtitleFormat.FramesToMilliseconds((double)start), (double)SubtitleFormat.FramesToMilliseconds((double)end));
                     subtitle.Paragraphs.Add(item);
-                    i += num + 5;
+                    i += endOfText + 5;
                 }
             }
             subtitle.RemoveEmptyLines();
