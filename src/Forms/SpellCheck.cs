@@ -593,16 +593,16 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (_currentWord.Length > 1)
                     {
-                        if (_currentWord.EndsWith("'"))
-                        {
-                            _postfix = "'";
-                            _currentWord = _currentWord.Substring(0, _currentWord.Length - 1);
-                        }
-                        if (_currentWord.EndsWith("`"))
-                        {
-                            _postfix = "`";
-                            _currentWord = _currentWord.Substring(0, _currentWord.Length - 1);
-                        }
+                        //if (_currentWord.EndsWith("'"))
+                        //{
+                        //    _postfix = "'";
+                        //    _currentWord = _currentWord.Substring(0, _currentWord.Length - 1);
+                        //}
+                        //if (_currentWord.EndsWith("`"))
+                        //{
+                        //    _postfix = "`";
+                        //    _currentWord = _currentWord.Substring(0, _currentWord.Length - 1);
+                        //}
                     }
 
                     if (_namesEtcList.IndexOf(_currentWord) >= 0)
@@ -645,6 +645,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (_currentWord.Length > 1)
                         {
                             correct = DoSpell(_currentWord);
+                            if (!correct && (_currentWord.EndsWith("'") || _currentWord.EndsWith("`")))
+                                correct = DoSpell(_currentWord.TrimEnd('\'').TrimEnd('`'));
                         }
                         else
                         {
@@ -657,10 +659,10 @@ namespace Nikse.SubtitleEdit.Forms
                                 correct = true;
                         }
 
-                        if (!correct && Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng && _postfix == "'" &&
-                            _languageName.StartsWith("en_") && _currentWord.ToLower().EndsWith("in"))
+                        if (!correct && Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng && 
+                            _languageName.StartsWith("en_") && _currentWord.ToLower().EndsWith("in'"))
                         {
-                            correct = DoSpell(_currentWord + "g");
+                            correct = DoSpell(_currentWord.TrimEnd('\'') + "g");
                         }
 
                         if (correct)
@@ -700,7 +702,10 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                Initialize(_languageName, _currentWord, suggestions, _currentParagraph.Text, string.Format(Configuration.Settings.Language.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
+                                if (_postfix != null && _postfix == "'")
+                                    Initialize(_languageName, _currentWord + _postfix, suggestions, _currentParagraph.Text, string.Format(Configuration.Settings.Language.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
+                                else
+                                    Initialize(_languageName, _currentWord, suggestions, _currentParagraph.Text, string.Format(Configuration.Settings.Language.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
                                 if (!this.Visible)
                                     this.ShowDialog(_mainWindow);
                                 return; // wait for user input

@@ -259,6 +259,7 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.checkBoxTreatINQuoteAsING = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1983,6 +1984,7 @@
             // 
             // groupBoxSpellCheck
             // 
+            this.groupBoxSpellCheck.Controls.Add(this.checkBoxTreatINQuoteAsING);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckOneLetterWords);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
             this.groupBoxSpellCheck.Location = new System.Drawing.Point(6, 283);
@@ -3012,6 +3014,16 @@
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
             // 
+            // checkBoxTreatINQuoteAsING
+            // 
+            this.checkBoxTreatINQuoteAsING.AutoSize = true;
+            this.checkBoxTreatINQuoteAsING.Location = new System.Drawing.Point(16, 66);
+            this.checkBoxTreatINQuoteAsING.Name = "checkBoxTreatINQuoteAsING";
+            this.checkBoxTreatINQuoteAsING.Size = new System.Drawing.Size(253, 17);
+            this.checkBoxTreatINQuoteAsING.TabIndex = 2;
+            this.checkBoxTreatINQuoteAsING.Text = "Treat word ending \" in\' \" as \" ing \" (English only)";
+            this.checkBoxTreatINQuoteAsING.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3344,5 +3356,6 @@
         private System.Windows.Forms.PictureBox pictureBoxPreview;
         private System.Windows.Forms.CheckBox checkBoxSsaOpaqueBox;
         private System.Windows.Forms.CheckBox checkBoxSpellCheckOneLetterWords;
+        private System.Windows.Forms.CheckBox checkBoxTreatINQuoteAsING;
     }
 }

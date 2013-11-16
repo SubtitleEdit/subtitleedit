@@ -374,8 +374,11 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSpellCheck.Text = language.SpellCheck;
             checkBoxSpellCheckAutoChangeNames.Text = Configuration.Settings.Language.SpellCheck.AutoFixNames;
             checkBoxSpellCheckOneLetterWords.Text = Configuration.Settings.Language.SpellCheck.CheckOneLetterWords;
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.SpellCheck.CheckOneLetterWords))
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.SpellCheck.CheckOneLetterWords)) // TODO: remove in SE 3.4
                 checkBoxSpellCheckOneLetterWords.Visible = false;
+            checkBoxTreatINQuoteAsING.Text = Configuration.Settings.Language.SpellCheck.TreatINQuoteAsING;
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.SpellCheck.TreatINQuoteAsING)) // TODO: remove in SE 3.4
+                checkBoxTreatINQuoteAsING.Visible = false;
 
             comboBoxListViewDoubleClickEvent.Items.Clear();
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewNothing);
@@ -490,6 +493,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked = toolsSettings.OcrFixUseHardcodedRules;
             checkBoxSpellCheckAutoChangeNames.Checked = toolsSettings.SpellCheckAutoChangeNames;
             checkBoxSpellCheckOneLetterWords.Checked = toolsSettings.SpellCheckOneLetterWords;
+            checkBoxTreatINQuoteAsING.Checked = toolsSettings.SpellCheckEnglishAllowInQuoteAsIng;
 
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -993,6 +997,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.MusicSymbolToReplace = textBoxMusicSymbolsToReplace.Text;
             toolsSettings.SpellCheckAutoChangeNames = checkBoxSpellCheckAutoChangeNames.Checked;
             toolsSettings.SpellCheckOneLetterWords = checkBoxSpellCheckOneLetterWords.Checked;
+            toolsSettings.SpellCheckEnglishAllowInQuoteAsIng = checkBoxTreatINQuoteAsING.Checked;
             toolsSettings.OcrFixUseHardcodedRules = checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked;
 
             WordListSettings wordListSettings = Configuration.Settings.WordLists;
