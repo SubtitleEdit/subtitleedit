@@ -1692,6 +1692,8 @@
             public string ShowBeamer { get; set; }
             public string MainTextBoxMoveLastWordDown { get; set; }
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
+            public string MainTextBoxAutoBreak { get; set; }
+            public string MainTextBoxUnbreak { get; set; }
         }
 
         public class ShowEarlierLater

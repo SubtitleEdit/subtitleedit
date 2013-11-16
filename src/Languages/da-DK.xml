@@ -1535,6 +1535,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <ShowBeamer>Start undertekst fremviser (fuldskærm)</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Flyt sidste ord ned til næste linje</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Flyt første ord fra næste linje op</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxAutoBreak>Auto-ombryd tekst</MainTextBoxAutoBreak>
+    <MainTextBoxUnbreak>Fjern linjeskift</MainTextBoxUnbreak>
   </Settings>
   <ShowEarlierLater>
     <Title>Vis valgte linjer tidligere/senere</Title>
