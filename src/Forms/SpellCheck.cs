@@ -274,16 +274,27 @@ namespace Nikse.SubtitleEdit.Forms
             _userWordList = new List<string>();
             _userPhraseList = new List<string>();
             _userWordDictionary = new XmlDocument();
-            if (File.Exists(Utilities.DictionaryFolder + _languageName + "_user.xml"))
+            string fileName = Utilities.DictionaryFolder + _languageName + "_user.xml";
+            if (File.Exists(fileName))
             {
-                _userWordDictionary.Load(Utilities.DictionaryFolder + _languageName + "_user.xml");
-                foreach (XmlNode node in _userWordDictionary.DocumentElement.SelectNodes("word"))
+                try
                 {
-                    string word = node.InnerText.Trim().ToLower();
-                    if (word.Contains(" "))
-                        _userPhraseList.Add(word);
-                    else
-                        _userWordList.Add(word);
+                    _userWordDictionary.Load(fileName);
+                    foreach (XmlNode node in _userWordDictionary.DocumentElement.SelectNodes("word"))
+                    {
+                        string word = node.InnerText.Trim().ToLower();
+                        if (word.Contains(" "))
+                            _userPhraseList.Add(word);
+                        else
+                            _userWordList.Add(word);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show("Unable to load user dictionary for " + _languageName + " from file: " + fileName + Environment.NewLine +
+                        Environment.NewLine +
+                        exception.Source + ": " + exception.Message);
+                    _userWordDictionary.LoadXml("<words />");
                 }
             }
             else
