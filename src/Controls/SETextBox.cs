@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Controls
                         }
                         if (deleteFrom == index - 1)
                         {
-                            while (deleteFrom > 0 && (breakChars.Replace(" ", string.Empty)).Contains(s.Substring(deleteFrom, 1)))
+                            while (deleteFrom > 0 && (breakChars.Replace(" ", string.Empty)).Contains(s.Substring(deleteFrom - 1, 1)))
                             {
                                 deleteFrom--;
                             }
