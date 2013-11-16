@@ -1794,6 +1794,8 @@ can edit in same subtitle file (collaboration)",
                 ShowBeamer = "Start subtitle fullscreen beamer",
                 MainTextBoxMoveLastWordDown = "Move last word down to next subtitle line",
                 MainTextBoxMoveFirstWordFromNextUp = "Move first word from next subtitle line up",
+                MainTextBoxAutoBreak = "Auto break text",
+                MainTextBoxUnbreak = "Unbreak text",
             };
 
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater

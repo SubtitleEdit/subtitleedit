@@ -754,6 +754,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainAdjustSelected100MsBack { get; set; }
         public string MainInsertAfter { get; set; }
         public string MainTextBoxInsertAfter { get; set; }
+        public string MainTextBoxAutoBreak { get; set; }
+        public string MainTextBoxUnbreak { get; set; }        
         public string MainWaveformInsertAtCurrentPosition { get; set; }
         public string MainInsertBefore { get; set; }
         public string MainMergeDialogue { get; set; }
@@ -840,9 +842,11 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustSelected100MsForward = string.Empty;
             MainAdjustSelected100MsBack = string.Empty;
             MainInsertAfter = "Alt+Insert";
-            MainTextBoxInsertAfter = "Alt+Insert";
             MainWaveformInsertAtCurrentPosition = "Insert";
             MainInsertBefore = "Control+Shift+Insert";
+            MainTextBoxInsertAfter = "Alt+Insert";
+            MainTextBoxAutoBreak = "Control+R";
+            MainTextBoxUnbreak = string.Empty;
             MainMergeDialogue = string.Empty;
             WaveformVerticalZoom = string.Empty;
             WaveformPlaySelection = string.Empty;
@@ -2143,6 +2147,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainTextBoxInsertAfter");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxInsertAfter = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxAutoBreak");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxAutoBreak = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxUnbreak");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxUnbreak = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainWaveformInsertAtCurrentPosition");
                 if (subNode != null)
                     settings.Shortcuts.MainWaveformInsertAtCurrentPosition = subNode.InnerText;               
@@ -2681,6 +2691,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainAdjustSelected100MsBack", settings.Shortcuts.MainAdjustSelected100MsBack);
             textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
             textWriter.WriteElementString("MainTextBoxInsertAfter", settings.Shortcuts.MainTextBoxInsertAfter);
+            textWriter.WriteElementString("MainTextBoxAutoBreak", settings.Shortcuts.MainTextBoxAutoBreak);
+            textWriter.WriteElementString("MainTextBoxUnbreak", settings.Shortcuts.MainTextBoxUnbreak);
             textWriter.WriteElementString("MainWaveformInsertAtCurrentPosition", settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
             textWriter.WriteElementString("MainInsertBefore", settings.Shortcuts.MainInsertBefore);
             textWriter.WriteElementString("MainMergeDialogue", settings.Shortcuts.MainMergeDialogue);

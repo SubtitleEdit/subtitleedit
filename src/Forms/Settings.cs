@@ -606,6 +606,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp))
                 textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp));
             textBoxNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxInsertAfter));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxAutoBreak))
+                textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxAutoBreak + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxUnbreak))
+                textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxUnbreak + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxUnbreak));
             treeViewShortcuts.Nodes.Add(textBoxNode);
 
             var createNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Create);
@@ -1245,6 +1249,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter != null && text == Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxInsertAfter = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.MainTextBoxAutoBreak != null && text == Configuration.Settings.Language.Settings.MainTextBoxAutoBreak.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTextBoxAutoBreak = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.MainTextBoxUnbreak != null && text == Configuration.Settings.Language.Settings.MainTextBoxUnbreak.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTextBoxUnbreak = GetShortcut(node.Text);
                 }
             }
 

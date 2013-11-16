@@ -139,8 +139,10 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainAdjustSelected100MsForward = Keys.None;
         Keys _mainAdjustSelected100MsBack = Keys.None;
         Keys _mainInsertAfter = Keys.None;
-        Keys _mainTextBoxInsertAfter = Keys.None;
         Keys _mainInsertBefore = Keys.None;
+        Keys _mainTextBoxInsertAfter = Keys.None;
+        Keys _mainTextBoxAutoBreak = Keys.None;
+        Keys _mainTextBoxUnbreak = Keys.None;
         Keys _mainMergeDialogue = Keys.None;
         Keys _mainToggleFocus = Keys.None;
         Keys _mainListViewToggleDashes = Keys.None;
@@ -6690,12 +6692,12 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.SelectAll();
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.R)
+            else if (e.KeyData == _mainTextBoxAutoBreak)
             {
                 ButtonAutoBreakClick(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.U)
+            else if (e.KeyData == _mainTextBoxUnbreak)
             {
                 ButtonUnBreakClick(null, null);
                 e.SuppressKeyPress = true;
@@ -6714,7 +6716,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         textBoxListViewText.Text = string.Format("<{0}>{1}</{0}>", tag, textBoxListViewText.Text);
                     }
-                    //SubtitleListview1.SetText(i, textBoxListViewText.Text);
                 }
                 else
                 {
@@ -13822,8 +13823,10 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAdjustSelected100MsForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward);
             _mainAdjustSelected100MsBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack);            
             _mainInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
-            _mainTextBoxInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxInsertAfter);
             _mainInsertBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
+            _mainTextBoxInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxInsertAfter);
+            _mainTextBoxAutoBreak = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak);
+            _mainTextBoxUnbreak = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreak);
             _mainMergeDialogue = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialogue);
             _mainToggleFocus = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToogleFocus);
             _waveformVerticalZoom = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
@@ -13853,8 +13856,15 @@ namespace Nikse.SubtitleEdit.Forms
             actionType = null;
             shortcut = null;
             mi = null;
-
-            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(System.IO.File.ReadAllBytes(pluginFileName));
+            System.Reflection.Assembly assembly;
+            try
+            {
+                assembly = System.Reflection.Assembly.Load(System.IO.File.ReadAllBytes(pluginFileName));
+            }
+            catch
+            {
+                return null;
+            }
             string objectName = Path.GetFileNameWithoutExtension(pluginFileName);
             if (assembly != null)
             {
@@ -15898,13 +15908,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.R)
+            else if (e.KeyData == _mainTextBoxAutoBreak)
             {
                 if (textBoxListViewTextAlternate.Text.Length > 0)
                     textBoxListViewTextAlternate.Text = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text);
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.U)
+            else if (e.KeyData == _mainTextBoxUnbreak)
             {
                 textBoxListViewTextAlternate.Text = Utilities.UnbreakLine(textBoxListViewTextAlternate.Text);
                 e.SuppressKeyPress = true;
