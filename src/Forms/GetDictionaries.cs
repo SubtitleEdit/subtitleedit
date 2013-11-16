@@ -221,20 +221,5 @@ namespace Nikse.SubtitleEdit.Forms
 
         }
 
-        private void labelPleaseWait_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void labelChooseLanguageAndClickDownload_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void labelDescription1_Click(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

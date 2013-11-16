@@ -78,7 +78,6 @@
             this.labelDescription1.Size = new System.Drawing.Size(316, 13);
             this.labelDescription1.TabIndex = 8;
             this.labelDescription1.Text = "Subtitle Edit\'s spell check is based on the NHunspell engine which";
-            this.labelDescription1.Click += new System.EventHandler(this.labelDescription1_Click);
             // 
             // comboBoxDictionaries
             // 
@@ -111,7 +110,6 @@
             this.labelChooseLanguageAndClickDownload.Size = new System.Drawing.Size(201, 13);
             this.labelChooseLanguageAndClickDownload.TabIndex = 11;
             this.labelChooseLanguageAndClickDownload.Text = "Choose your languge and click download";
-            this.labelChooseLanguageAndClickDownload.Click += new System.EventHandler(this.labelChooseLanguageAndClickDownload_Click);
             // 
             // labelPleaseWait
             // 
@@ -121,7 +119,6 @@
             this.labelPleaseWait.Size = new System.Drawing.Size(73, 13);
             this.labelPleaseWait.TabIndex = 12;
             this.labelPleaseWait.Text = "Please wait...";
-            this.labelPleaseWait.Click += new System.EventHandler(this.labelPleaseWait_Click);
             // 
             // GetDictionaries
             // 
