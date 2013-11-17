@@ -9,6 +9,7 @@
 * IMPROVED:
    * Updated Portuguese language file - thx moob
    * Updated Dutch language file - thx Herman
+   * Updated Catalan language file - thx Juansa
    * OCR max. error% is now saved for blu-ray - thx Zoltán
    * More default values for ASS/SSA in options
    * Added split long lines to "Batch convert" - thx menes
@@ -27,6 +28,8 @@
    * Import sub with matching time codes in OCR window 
      now works with other formats than srt - thx osgZach
    * Fix for multiline italics in Spruce/DVD Studio pro - thx Damian
+   * Fixed bad link for Spannish spell check dictionary - thx Nils
+   * Minor fix for format TSB4 - thx Leart 
 
 
 3.3.9 (19th October 2013)
