@@ -217,6 +217,11 @@ namespace Nikse.SubtitleEdit.Logic
             return _tracks;
         }
 
+        /// <summary>
+        /// Get first time of track
+        /// </summary>
+        /// <param name="trackNumber">Track number</param>
+        /// <returns>Start time in milliseconds</returns>
         public Int64 GetTrackStartTime(int trackNumber)
         {
             byte b;
@@ -337,7 +342,7 @@ namespace Nikse.SubtitleEdit.Logic
                         f.Seek(dataSize, SeekOrigin.Current);
                 }
             }
-            return clusterTimeCode + trackStartTime * (1000000000 / _timeCodeScale);
+            return (clusterTimeCode + trackStartTime) * _timeCodeScale / 1000000;
         }
 
         private static int GetMatroskaVariableIntLength(byte b)
@@ -844,9 +849,9 @@ namespace Nikse.SubtitleEdit.Logic
                             byte trackType = (byte)f.ReadByte();
                             if (trackType == 0x11) // subtitle
                                 isSubtitle = true;
-                            if ((trackType & Logic.VobSub.Helper.B00000001) == Logic.VobSub.Helper.B00000001)
+                            if (trackType == 1)
                                 isVideo = true;
-                            if ((trackType & Logic.VobSub.Helper.B00000010) == Logic.VobSub.Helper.B00000010)
+                            if (trackType == 2)
                                 isAudio = true;
                         }
                         f.Seek(afterPosition, SeekOrigin.Begin);

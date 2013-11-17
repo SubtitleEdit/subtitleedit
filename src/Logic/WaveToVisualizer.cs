@@ -189,7 +189,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// Generate peaks (samples with some interval) for an uncompressed wave file
         /// </summary>
         /// <param name="peaksPerSecond">Sampeles per second / sample rate</param>
-        public void GeneratePeakSamples(int peaksPerSecond)
+        public void GeneratePeakSamples(int peaksPerSecond, int delayInMilliseconds)
         {
             PeaksPerSecond = peaksPerSecond;
 
@@ -197,6 +197,13 @@ namespace Nikse.SubtitleEdit.Logic
             DataMinValue = int.MaxValue;
             DataMaxValue = int.MinValue;
             PeakSamples = new List<int>();
+
+            if (delayInMilliseconds > 0)
+            {
+                for (int i = 0; i < peaksPerSecond * delayInMilliseconds / 1000; i++)
+                    PeakSamples.Add(0);
+            }
+
             int bytesInterval = (int)Header.BytesPerSecond / PeaksPerSecond;
             _data = new byte[Header.BytesPerSecond];
             _stream.Position = Header.DataStartPosition;
