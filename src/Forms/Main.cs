@@ -11596,21 +11596,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = sender as ToolStripItem;
             if (item != null)
-            {
-                string s = item.Text;
-
-                if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
-                {
-                    textBoxSource.Text = textBoxSource.Text.Insert(textBoxSource.SelectionStart, s);
-                }
-                else
-                {
-                    if (textBoxListViewTextAlternate.Visible && textBoxListViewTextAlternate.Enabled && textBoxListViewTextAlternate.Focused)
-                        textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Insert(textBoxListViewTextAlternate.SelectionStart, s);
-                    else
-                        textBoxListViewText.Text = textBoxListViewText.Text.Insert(textBoxListViewText.SelectionStart, s);
-                }
-            }
+                PasteIntoActiveTextBox(item.Text);
         }
 
         private void ToolStripMenuItemAutoMergeShortLinesClick(object sender, EventArgs e)
@@ -16317,6 +16303,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 superscriptToolStripMenuItem.Visible = tb.SelectionLength > 0;
                 subscriptToolStripMenuItem.Visible = tb.SelectionLength > 0;
+                toolStripMenuItemInsertUnicodeControlCharacters.Visible = true;
             }
             else
             {
@@ -16324,6 +16311,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripSeparator26.Visible = false;
                 superscriptToolStripMenuItem.Visible = false;
                 subscriptToolStripMenuItem.Visible = false;
+                toolStripMenuItemInsertUnicodeControlCharacters.Visible = false;
             }
 
             var formatType = GetCurrentSubtitleFormat().GetType();
@@ -18381,6 +18369,51 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(form.LogMessage);
             }
             _formPositionsAndSizes.SavePositionAndSize(form);
+        }
+
+        private void PasteIntoActiveTextBox(string s)
+        {
+            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            {
+                textBoxSource.Text = textBoxSource.Text.Insert(textBoxSource.SelectionStart, s);
+            }
+            else
+            {
+                if (textBoxListViewTextAlternate.Visible && textBoxListViewTextAlternate.Enabled && textBoxListViewTextAlternate.Focused)
+                    textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Insert(textBoxListViewTextAlternate.SelectionStart, s);
+                else
+                    textBoxListViewText.Text = textBoxListViewText.Text.Insert(textBoxListViewText.SelectionStart, s);
+            }
+        }
+
+        private void leftToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PasteIntoActiveTextBox(Convert.ToChar(8207).ToString());
+        }
+
+        private void righttoleftMarkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PasteIntoActiveTextBox(Convert.ToChar(8206).ToString());
+        }
+
+        private void startOfLefttorightEmbeddingLREToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PasteIntoActiveTextBox(Convert.ToChar(0x202A).ToString());
+        }
+
+        private void startOfRighttoleftEmbeddingRLEToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PasteIntoActiveTextBox(Convert.ToChar(0x202B).ToString());
+        }
+
+        private void startOfLefttorightOverrideLROToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PasteIntoActiveTextBox(Convert.ToChar(0x202D).ToString());
+        }
+
+        private void startOfRighttoleftOverrideRLOToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PasteIntoActiveTextBox(Convert.ToChar(0x202E).ToString());
         }
 
     }

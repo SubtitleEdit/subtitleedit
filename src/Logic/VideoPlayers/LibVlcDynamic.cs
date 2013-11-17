@@ -53,10 +53,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         libvlc_media_new_path _libvlc_media_new_path;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate IntPtr libvlc_media_player_new_from_media(IntPtr media);
-        libvlc_media_player_new_from_media _libvlc_media_player_new_from_media;
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void libvlc_media_release(IntPtr media);
         libvlc_media_release _libvlc_media_release;
 
@@ -65,6 +61,28 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void libvlc_video_get_size(IntPtr mediaPlayer, UInt32 number, out UInt32 x, out UInt32 y);
         libvlc_video_get_size _libvlc_video_get_size;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int libvlc_video_take_snapshot(IntPtr mediaPlayer, byte num, byte[] filePath, UInt32 width, UInt32 height);
+        libvlc_video_take_snapshot _libvlc_video_take_snapshot;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void libvlc_video_set_callbacks(IntPtr playerInstance, LockCallbackDelegate @lock, UnlockCallbackDelegate unlock, DisplayCallbackDelegate display, IntPtr opaque);
+        libvlc_video_set_callbacks _libvlc_video_set_callbacks;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int libvlc_video_set_format(IntPtr mediaPlayer, string chroma, UInt32 width, UInt32 height, UInt32 pitch);
+        libvlc_video_set_format _libvlc_video_set_format;
+
+
+        // LibVLC Audio Controls - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__audio.html
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int libvlc_audio_get_volume(IntPtr mediaPlayer);
+        libvlc_audio_get_volume _libvlc_audio_get_volume;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void libvlc_audio_set_volume(IntPtr mediaPlayer, int volume);
+        libvlc_audio_set_volume _libvlc_audio_set_volume;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int libvlc_audio_get_track_count(IntPtr mediaPlayer);
@@ -79,21 +97,15 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         libvlc_audio_set_track _libvlc_audio_set_track;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int libvlc_video_take_snapshot(IntPtr mediaPlayer, byte num, byte[] filePath, UInt32 width, UInt32 height);
-        libvlc_video_take_snapshot _libvlc_video_take_snapshot;
-
-
-        // LibVLC Audio Controls - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__audio.html
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int libvlc_audio_get_volume(IntPtr mediaPlayer);
-        libvlc_audio_get_volume _libvlc_audio_get_volume;
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void libvlc_audio_set_volume(IntPtr mediaPlayer, int volume);
-        libvlc_audio_set_volume _libvlc_audio_set_volume;
+        private delegate Int64 libvlc_audio_get_delay(IntPtr mediaPlayer);
+        libvlc_audio_get_delay _libvlc_audio_get_delay;
 
 
         // LibVLC Media Player - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__media__player.html
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate IntPtr libvlc_media_player_new_from_media(IntPtr media);
+        libvlc_media_player_new_from_media _libvlc_media_player_new_from_media;
+        
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void libvlc_media_player_play(IntPtr mediaPlayer);
         libvlc_media_player_play _libvlc_media_player_play;
@@ -150,13 +162,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private delegate int libvlc_media_player_next_frame(IntPtr mediaPlayer);
         libvlc_media_player_next_frame _libvlc_media_player_next_frame;
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void libvlc_video_set_callbacks(IntPtr playerInstance, LockCallbackDelegate @lock, UnlockCallbackDelegate unlock, DisplayCallbackDelegate display, IntPtr opaque);
-        libvlc_video_set_callbacks _libvlc_video_set_callbacks;
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int libvlc_video_set_format(IntPtr mediaPlayer, string chroma, UInt32 width, UInt32 height, UInt32 pitch);
-        libvlc_video_set_format _libvlc_video_set_format;
 
 
 
@@ -238,6 +243,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _libvlc_media_player_next_frame = (libvlc_media_player_next_frame)GetDllType(typeof(libvlc_media_player_next_frame), "libvlc_media_player_next_frame");
             _libvlc_video_set_callbacks = (libvlc_video_set_callbacks)GetDllType(typeof(libvlc_video_set_callbacks), "libvlc_video_set_callbacks");
             _libvlc_video_set_format = (libvlc_video_set_format)GetDllType(typeof(libvlc_video_set_format), "libvlc_video_set_format");
+            _libvlc_audio_get_delay = (libvlc_audio_get_delay)GetDllType(typeof(libvlc_audio_get_delay), "libvlc_audio_get_delay");
         }
 
         private bool IsAllMethodsLoaded()
@@ -411,6 +417,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             set
             {
                 _libvlc_audio_set_track(_mediaPlayer, value+1);
+            }
+        }
+
+        /// <summary>
+        /// Audio delay in milliseconds
+        /// </summary>
+        public Int64 AudioDelay
+        {
+            get
+            {
+                return _libvlc_audio_get_delay(_mediaPlayer) / 1000; // converts microseconds to milliseconds
             }
         }
 
@@ -610,15 +627,18 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 //  Linux: libvlc_media_player_set_xdrawable (_mediaPlayer, xdrawable);
                 //  Mac: libvlc_media_player_set_nsobject (_mediaPlayer, view);
 
-                _libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows
-
-                //hack: sometimes vlc opens in it's own windows - this code seems to prevent this
-                for (int j = 0; j < 50; j++)
+                if (ownerControl != null)
                 {
-                    System.Threading.Thread.Sleep(10);
-                    System.Windows.Forms.Application.DoEvents();
+                    _libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows
+
+                    //hack: sometimes vlc opens in it's own windows - this code seems to prevent this
+                    for (int j = 0; j < 50; j++)
+                    {
+                        System.Threading.Thread.Sleep(10);
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+                    _libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows
                 }
-                _libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows
 
                 if (onVideoEnded != null)
                 {
