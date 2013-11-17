@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _encodeParamters;
         private const string RetryEncodeParameters = "acodec=s16l";
         private int _audioTrackNumber = -1;
+        private int _delayInMilliseconds = 0;
 
         public AddWareForm()
         {
@@ -52,7 +53,6 @@ namespace Nikse.SubtitleEdit.Forms
             string targetFile = Path.GetTempFileName() + ".wav";
 //            string parameters = "-I dummy -vvv \"" + SourceVideoFileName + "\" --sout=#transcode{vcodec=none,acodec=s16l}:file{dst=\"" + targetFile + "\"}  vlc://quit";
             string parameters = "-I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout #transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=\"" + targetFile + "\"} \"" + SourceVideoFileName + "\" vlc://quit";
-
 
 
             string vlcPath;
@@ -153,13 +153,13 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            ReadWaveFile(targetFile);
+            ReadWaveFile(targetFile, _delayInMilliseconds);
             labelProgress.Text = string.Empty;
             File.Delete(targetFile);
             this.DialogResult = DialogResult.OK;
         }
 
-        private void ReadWaveFile(string targetFile)
+        private void ReadWaveFile(string targetFile, int delayInMilliseconds)
         {
             WavePeakGenerator waveFile = new WavePeakGenerator(targetFile);
 
@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingPeakFile;
             this.Refresh();
-            waveFile.GeneratePeakSamples(sampleRate); // samples per second - SampleRate
+            waveFile.GeneratePeakSamples(sampleRate, delayInMilliseconds); // samples per second - SampleRate
 
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
             {
@@ -202,12 +202,12 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 numberOfAudioTracks++;
                                 trackNumber = ti.TrackNumber;
+                                break;
                             }
                         }
                         if (numberOfAudioTracks == 1)
                         {
-                            Int64 startTime = mkv.GetTrackStartTime(trackNumber);
-                            //MessageBox.Show(startTime.ToString());
+                            _delayInMilliseconds = (int)mkv.GetTrackStartTime(trackNumber);
                         }
                     }                    
                 }
@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Visible = false;
             try
             {
-                ReadWaveFile(_wavFileName);
+                ReadWaveFile(_wavFileName, _delayInMilliseconds);
                 labelProgress.Text = string.Empty;
                 this.DialogResult = DialogResult.OK;
             }
