@@ -30,6 +30,9 @@
    * Fix for multiline italics in Spruce/DVD Studio pro - thx Damian
    * Fixed bad link for Spannish spell check dictionary - thx Nils
    * Minor fix for format TSB4 - thx Leart 
+   * Audio mkv delays now might work when creating waveform
+   * Add to "Names/noise list" in spell checknow used word in textbox 
+     (and not the original word)
 
 
 3.3.9 (19th October 2013)
