@@ -65,21 +65,25 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     int endOfText = (int)array[i + 4];
 
-                    bool hasTimeCode = true;
                     int start = array[i + 16] + array[i + 17] * 256;
-                    if (hasTimeCode && array[i + 17] == 32)
-                        start = (int)array[i + 16];
-                    else
-                        hasTimeCode = false;
+                    if (array[i + 18] != 32)
+                        start += array[i + 18] * 256 * 256;
 
                     int end = array[i + 20] + array[i + 21] * 256;
-                    if (hasTimeCode && array[i + 21] == 32)
-                        start = (int)array[i + 20];
-                    else
-                        hasTimeCode = false;
+                    if (array[i + 22] != 32)
+                        end += array[i + 22] * 256 * 256;
 
-                    string text = Encoding.Default.GetString(array, i + 53, endOfText - 47);
-                    text = text.Trim('\0').Trim();
+                    int textStart = i;
+                    while (textStart < i + endOfText && !(array[textStart] == 0x4C && array[textStart+1] == 0x49 && array[textStart+2] == 0x4E && array[textStart+3] == 0x45)) // LINE
+                    {
+                        textStart++;
+                    }
+                    int length = i + endOfText - textStart -2;
+                    textStart += 8;
+
+                    string text = Encoding.Default.GetString(array, textStart, length);
+                    //    text = Encoding.Default.GetString(array, i + 53, endOfText - 47);
+                    text = text.Trim('\0').Replace("\0", " ").Trim();
                     var item = new Paragraph(text, (double)SubtitleFormat.FramesToMilliseconds((double)start), (double)SubtitleFormat.FramesToMilliseconds((double)end));
                     subtitle.Paragraphs.Add(item);
                     i += endOfText + 5;
