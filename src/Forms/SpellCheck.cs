@@ -470,27 +470,23 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     break;
                 case SpellCheckAction.AddToNamesEtc:
-                    if (_currentWord == ChangeWord)
+                    if (ChangeWord.Length > 1 && !_namesEtcList.Contains(ChangeWord))
                     {
-                        _namesEtcList.Add(_currentWord);
-                        _namesEtcListUppercase.Add(_currentWord.ToUpper());
-                        if (!_currentWord.EndsWith("s"))
-                            _namesEtcListWithApostrophe.Add(_currentWord + "'s");
-                        else if (!_currentWord.EndsWith("'"))
-                            _namesEtcListWithApostrophe.Add(_currentWord + "'");
-                        Utilities.AddWordToLocalNamesEtcList(_currentWord, _languageName);
-                    }
-                    else
-                    {
-                        if (!_namesEtcList.Contains(ChangeWord))
-                            Utilities.AddWordToLocalNamesEtcList(ChangeWord, _languageName);
+                        _namesEtcList.Add(ChangeWord);
                         _namesEtcListUppercase.Add(ChangeWord.ToUpper());
-                        _namesEtcListUppercase.Add(_currentWord.ToUpper());
-                        if (!_currentWord.EndsWith("s"))
-                        _noOfChangedWords++;
-                        if (!_changeAllDictionary.ContainsKey(_currentWord))
-                            _changeAllDictionary.Add(_currentWord, ChangeWord);
-                        _mainWindow.CorrectWord(_prefix + ChangeWord + _postfix, _currentParagraph, _prefix + _currentWord + _postfix, ref _firstChange);
+                        if (_languageName.StartsWith("en_") && !ChangeWord.ToLower().EndsWith("s"))
+                        {
+                            _namesEtcList.Add(ChangeWord + "s");
+                            _namesEtcListUppercase.Add(ChangeWord.ToUpper() + "S");
+                        }
+                        if (!ChangeWord.ToLower().EndsWith("s"))
+                        {
+                            _namesEtcListWithApostrophe.Add(ChangeWord + "'s");
+                            _namesEtcListUppercase.Add(ChangeWord.ToUpper() + "'S");
+                        }
+                        if (!ChangeWord.EndsWith("'"))
+                            _namesEtcListWithApostrophe.Add(ChangeWord + "'");
+                        Utilities.AddWordToLocalNamesEtcList(ChangeWord, _languageName);
                     }
                     break;
                 case SpellCheckAction.ChangeWholeText:
@@ -658,6 +654,8 @@ namespace Nikse.SubtitleEdit.Forms
                             correct = DoSpell(_currentWord);
                             if (!correct && (_currentWord.EndsWith("'") || _currentWord.EndsWith("`")))
                                 correct = DoSpell(_currentWord.TrimEnd('\'').TrimEnd('`'));
+                            if (!correct && _currentWord.EndsWith("'s") && _currentWord.Length > 4)
+                                correct = DoSpell(_currentWord.TrimEnd('s').TrimEnd('\''));
                         }
                         else
                         {
