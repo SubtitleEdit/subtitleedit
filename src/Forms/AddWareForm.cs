@@ -187,9 +187,37 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddWareForm_Shown(object sender, EventArgs e)
         {
             if (labelVideoFileName.Text.Length > 1 && File.Exists(labelVideoFileName.Text))
+            {
+                if (labelVideoFileName.Text.ToLower().EndsWith(".mkv"))
+                {
+                    var mkv = new Matroska(labelVideoFileName.Text);
+                    if (mkv.IsValid)
+                    {
+                        var trackInfo = mkv.GetTrackInfo();
+                        int numberOfAudioTracks = 0;
+                        int trackNumber = 2;
+                        foreach (var ti in trackInfo)
+                        {
+                            if (ti.IsAudio)
+                            {
+                                numberOfAudioTracks++;
+                                trackNumber = ti.TrackNumber;
+                            }
+                        }
+                        if (numberOfAudioTracks == 1)
+                        {
+                            Int64 startTime = mkv.GetTrackStartTime(trackNumber);
+                            //MessageBox.Show(startTime.ToString());
+                        }
+                    }                    
+                }
+
                 buttonRipWave_Click(null, null);
+            }
             else if (_wavFileName != null)
+            {
                 FixWaveOnly();
+            }
         }
 
         private void AddWareForm_KeyDown(object sender, KeyEventArgs e)
