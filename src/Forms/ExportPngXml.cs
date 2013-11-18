@@ -774,7 +774,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 else if (_exportType == "VOBSUB")
                 {
                     if (!param.Saved)
-                        vobSubWriter.WriteParagraph(param.P, param.Bitmap);
+                        vobSubWriter.WriteParagraph(param.P, param.Bitmap, param.Alignment);
                     param.Saved = true;
                 }
                 else if (_exportType == "FAB")
