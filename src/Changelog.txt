@@ -36,6 +36,7 @@
      (and not the original word)
    * Alignment now works when exporting to sub/idx - thx adrianbergonzi
    * Changed VLC audio extraction parameters so it works better with SE
+   * Fixed bug in "Find double words" - thx Matt
 
 
 3.3.9 (19th October 2013)
