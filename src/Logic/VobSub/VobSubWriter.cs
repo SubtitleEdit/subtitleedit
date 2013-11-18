@@ -277,7 +277,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             stream.WriteByte((byte)(i % 256));
         }
 
-        private byte[] GetSubImageBuffer(RunLengthTwoParts twoPartBuffer, NikseBitmap nbmp, Paragraph p)
+        private byte[] GetSubImageBuffer(RunLengthTwoParts twoPartBuffer, NikseBitmap nbmp, Paragraph p, ContentAlignment alignment)
         {
             var ms = new MemoryStream();
 
@@ -311,7 +311,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             WriteContrast(ms); // 3 bytes
 
             // Control command 5 = SetDisplayArea
-            WriteDisplayArea(ms, nbmp); // 7 bytes
+            WriteDisplayArea(ms, nbmp, alignment); // 7 bytes
 
             // Control command 6 = SetPixelDataAddress
             WritePixelDataAddress(ms, imageTopFieldDataAddress, imageBottomFieldDataAddress); // 5 bytes
@@ -332,7 +332,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             return ms.ToArray();
         }
 
-        public void WriteParagraph(Paragraph p, Bitmap bmp) // inspired by code from SubtitleCreator
+        public void WriteParagraph(Paragraph p, Bitmap bmp, ContentAlignment alignment) // inspired by code from SubtitleCreator
         {
             // timestamp: 00:00:33:900, filepos: 000000000
             _idx.AppendLine(string.Format("timestamp: {0:00}:{1:00}:{2:00}:{3:000}, filepos: {4}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds, _subFile.Position.ToString("X").PadLeft(9, '0').ToLower()));
@@ -340,7 +340,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             var nbmp = new NikseBitmap(bmp);
             nbmp.ConverToFourColors(_background, _pattern, _emphasis1, _emphasis2);
             var twoPartBuffer = nbmp.RunLengthEncodeForDvd(_background, _pattern, _emphasis1, _emphasis2);
-            var imageBuffer = GetSubImageBuffer(twoPartBuffer, nbmp, p);
+            var imageBuffer = GetSubImageBuffer(twoPartBuffer, nbmp, p, alignment);
 
             int bufferIndex = 0;
             byte VobSubID = 32;
@@ -467,59 +467,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             filepos += EndPosition;
             mwsub.GotoBegin();
             _subFile.Write(mwsub.GetBuf(), 0, (int)EndPosition);
-        }
-
-        public void WriteParagraphSE(Paragraph p, Bitmap bmp)
-        {
-            // timestamp: 00:00:33:900, filepos: 000000000
-            _idx.AppendLine(string.Format("timestamp: {0:00}:{1:00}:{2:00}:{3:000}, filepos: {4}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds, _subFile.Position.ToString("X").PadLeft(9, '0').ToLower()));
-
-            // write binary vobsub file (duration + image)
-            _subFile.Write(Mpeg2PackHeaderBuffer, 0, Mpeg2PackHeaderBuffer.Length);
-
-            var nbmp = new NikseBitmap(bmp);
-            nbmp.ConverToFourColors(_background, _pattern, _emphasis1, _emphasis2);
-            var twoPartBuffer = nbmp.RunLengthEncodeForDvd(_background, _pattern, _emphasis1, _emphasis2);
-            var imageBuffer = GetSubImageBuffer(twoPartBuffer, nbmp, p);
-
-            // PES size
-            WritePesSize(0, imageBuffer, PacketizedElementaryStreamHeaderBufferFirst);
-            _subFile.Write(PacketizedElementaryStreamHeaderBufferFirst, 0, PacketizedElementaryStreamHeaderBufferFirst.Length);
-
-            // PTS (timestamp)
-            FillPTS(p.StartTime);
-            _subFile.Write(PresentationTimeStampBuffer, 0, PresentationTimeStampBuffer.Length);
-
-            _subFile.WriteByte(0x1e); // ??
-            _subFile.WriteByte(0x60); // ??
-            _subFile.WriteByte(0x3a); // ??
-
-            _subFile.WriteByte((byte)_languageStreamId); //sub-stream number, 32=english
-
-            if (Mpeg2PackHeaderBuffer.Length + imageBuffer.Length + 7 > PacketizedElementaryStreamMaximumLength)
-            {
-                int index = 0;
-                while (index < imageBuffer.Length)
-                {
-                    _subFile.WriteByte(imageBuffer[index]);
-                    if (_subFile.Position % 0x800 == 0) // write header for next PES packet
-                    {
-                        _subFile.Write(Mpeg2PackHeaderBuffer, 0, Mpeg2PackHeaderBuffer.Length);
-                        WritePesSize(index, imageBuffer, PacketizedElementaryStreamHeaderBufferNext);
-                        _subFile.Write(PacketizedElementaryStreamHeaderBufferNext, 0, PacketizedElementaryStreamHeaderBufferNext.Length);
-                        _subFile.WriteByte((byte)_languageStreamId); //sub-stream number, 32=english
-                    }
-                    index++;
-                }
-            }
-            else
-            {
-                _subFile.Write(imageBuffer, 0, imageBuffer.Length); // write image bytes + control sequence
-            }
-
-            while  (_subFile.Position % 0x800 != 0) // 2048 packet size - pad with 0xff
-                _subFile.WriteByte(0xff);
-        }
+        }    
 
         private static void WritePesSize(int subtract, byte[] imageBuffer, byte[] writeBuffer)
         {
@@ -543,15 +491,33 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             WriteEndianWord(imageBottomFieldDataAddress, stream);
         }
 
-        private void WriteDisplayArea(Stream stream, NikseBitmap nbmp)
+        private void WriteDisplayArea(Stream stream, NikseBitmap nbmp, ContentAlignment alignment)
         {
             stream.WriteByte(5);
 
             // Write 6 bytes of area - starting X, ending X, starting Y, ending Y, each 12 bits
             ushort startX = (ushort) ((_screenWidth - nbmp.Width) / 2);
-            ushort endX = (ushort)(startX + nbmp.Width-1);
             ushort startY = (ushort)(_screenHeight - nbmp.Height - _bottomMargin);
-            ushort endY = (ushort)(startY + nbmp.Height-1);
+
+            if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
+            {
+                startY = (ushort)_bottomMargin;
+            }
+            if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
+            {
+                startY = (ushort)((_screenHeight / 2) - (nbmp.Height / 2));
+            }
+            if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.BottomLeft)
+            {
+                startX = (ushort)_bottomMargin;
+            }
+            if (alignment == ContentAlignment.TopRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.BottomRight)
+            {
+                startX = (ushort)(_screenWidth - nbmp.Width - _bottomMargin);
+            }
+
+            ushort endX = (ushort)(startX + nbmp.Width - 1);
+            ushort endY = (ushort)(startY + nbmp.Height - 1);
 
             WriteEndianWord((ushort)(startX << 4 | endX >> 8), stream); // 16 - 12 start x + 4 end x
             WriteEndianWord((ushort)(endX << 8 | startY >> 4), stream); // 16 - 8 endx + 8 starty
