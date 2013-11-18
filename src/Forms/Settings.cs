@@ -319,6 +319,12 @@ namespace Nikse.SubtitleEdit.Forms
             buttonWaveFormsFolderEmpty.Text = language.WaveformAndSpectrogramsFolderEmpty;
             InitializeWaveformsAndSpectrogramsFolderEmpty(language);
 
+            if (!string.IsNullOrEmpty(language.WaveformFFMPEGPath)) //TODO: Remove in SE 3.4
+            {
+                checkBoxUseFFMPEG.Text = language.WaveformUseFFMPEG;
+                labelFFMPEGPath.Text = language.WaveformFFMPEGPath;
+            }
+
             groupBoxSsaStyle.Text = language.SubStationAlphaStyle;
             buttonSSAChooseFont.Text = language.ChooseFont;
             buttonSSAChooseColor.Text = language.ChooseColor;
@@ -517,6 +523,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.VideoControls.WaveformBorderHitMs >= numericUpDownWaveformBorderHitMs.Minimum &&
                 Configuration.Settings.VideoControls.WaveformBorderHitMs <= numericUpDownWaveformBorderHitMs.Maximum)
                 numericUpDownWaveformBorderHitMs.Value = Configuration.Settings.VideoControls.WaveformBorderHitMs;
+            checkBoxUseFFMPEG.Checked = Configuration.Settings.General.UseFFMPEGForWaveExtraction;
+            textBoxFFMPEGPath.Text = Configuration.Settings.General.FFMPEGLocation;
 
             var generalNode = new TreeNode(Configuration.Settings.Language.General.GeneralText);
             generalNode.Nodes.Add(language.GoToFirstSelectedLine + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine));
@@ -1049,6 +1057,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward = checkBoxReverseMouseWheelScrollDirection.Checked;
             Configuration.Settings.VideoControls.WaveFormAllowOverlap = checkBoxAllowOverlap.Checked;
             Configuration.Settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(numericUpDownWaveformBorderHitMs.Value);
+            Configuration.Settings.General.UseFFMPEGForWaveExtraction = checkBoxUseFFMPEG.Checked;
+            Configuration.Settings.General.FFMPEGLocation = textBoxFFMPEGPath.Text;
 
             //Main General
             foreach (TreeNode node in treeViewShortcuts.Nodes[0].Nodes)
@@ -2461,6 +2471,17 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownSsaOutline.Enabled = !checkBoxSsaOpaqueBox.Checked;
             numericUpDownSsaShadow.Enabled = !checkBoxSsaOpaqueBox.Checked;
             UpdateSsaExample();
+        }
+
+        private void buttonBrowseToFFMPEG_Click(object sender, EventArgs e)
+        {
+            openFileDialogFFMPEG.Title = Configuration.Settings.Language.Settings.WaveformBrowseToFFMPEG;
+            if (!Utilities.IsRunningOnLinux() && !Utilities.IsRunningOnMac())
+            {
+                openFileDialogFFMPEG.Filter = "FFMPEG.exe|FFMPEG.exe";
+            }
+            if (openFileDialogFFMPEG.ShowDialog(this) == DialogResult.OK)
+                textBoxFFMPEGPath.Text = openFileDialogFFMPEG.FileName;
         }
 
     }
