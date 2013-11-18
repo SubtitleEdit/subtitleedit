@@ -1428,6 +1428,9 @@ Fortsæt?</SubtitleAppendPrompt>
     <SpectrogramAppearance>Spektrogram udseende</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Enkelt farve gradient</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassisk</SpectrogramClassic>
+    <WaveformUseFFMPEG>Benyt FFMPEG til at udtrække lydfiler</WaveformUseFFMPEG>
+    <WaveformFFMPEGPath>Sti til FFMPEG</WaveformFFMPEGPath>
+    <WaveformBrowseToFFMPEG>Vælg sti stil FFMPEG</WaveformBrowseToFFMPEG>
     <SubStationAlphaStyle>Sub Station Alpha Style</SubStationAlphaStyle>
     <ChooseFont>Vælg skrifttype</ChooseFont>
     <ChooseColor>Vælg farve</ChooseColor>
@@ -1579,6 +1582,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <AddXToNamesEtc>Tilføj '{0}' til navne mv. liste</AddXToNamesEtc>
     <AutoFixNames>Auto fix navne, hvor kun små/store bogstaver udgør forskellen</AutoFixNames>
     <CheckOneLetterWords>Spørg ved enkeltbogstaver</CheckOneLetterWords>
+    <TreatINQuoteAsING>Accepter ord der slutter med i' som ing (kun på engelsk)</TreatINQuoteAsING>
     <ImageText>Billede tekst</ImageText>
     <SpellCheckCompleted>Stavekontrol færdig</SpellCheckCompleted>
     <SpellCheckAborted>Stavekontrol afbrudt</SpellCheckAborted>
