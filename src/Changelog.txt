@@ -35,6 +35,7 @@
    * Add to "Names/noise list" in spell checknow used word in textbox 
      (and not the original word)
    * Alignment now works when exporting to sub/idx - thx adrianbergonzi
+   * Changed VLC audio extraction parameters so it works better with SE
 
 
 3.3.9 (19th October 2013)
