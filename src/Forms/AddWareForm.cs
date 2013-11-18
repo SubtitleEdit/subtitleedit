@@ -71,15 +71,23 @@ namespace Nikse.SubtitleEdit.Forms
                 exeFilePath = Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic.GetVlcPath("vlc.exe");
                 if (!System.IO.File.Exists(exeFilePath))
                 {
-                    if (MessageBox.Show(Configuration.Settings.Language.AddWaveForm.VlcMediaPlayerNotFound + Environment.NewLine +
-                                        Environment.NewLine +
-                                        Configuration.Settings.Language.AddWaveForm.GoToVlcMediaPlayerHomePage,
-                                       Configuration.Settings.Language.AddWaveForm.VlcMediaPlayerNotFoundTitle, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                    if (Configuration.Settings.General.UseFFMPEGForWaveExtraction && File.Exists(Configuration.Settings.General.FFMPEGLocation) && !string.IsNullOrEmpty(Configuration.Settings.General.FFMPEGWaveTranscodeSettings))
                     {
-                        System.Diagnostics.Process.Start("http://www.videolan.org/");
+                        // We will run FFMPEG
                     }
-                    buttonRipWave.Enabled = true;
-                    return;
+                    else
+                    {
+
+                        if (MessageBox.Show(Configuration.Settings.Language.AddWaveForm.VlcMediaPlayerNotFound + Environment.NewLine +
+                                            Environment.NewLine +
+                                            Configuration.Settings.Language.AddWaveForm.GoToVlcMediaPlayerHomePage,
+                                           Configuration.Settings.Language.AddWaveForm.VlcMediaPlayerNotFoundTitle, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                        {
+                            System.Diagnostics.Process.Start("http://www.videolan.org/");
+                        }
+                        buttonRipWave.Enabled = true;
+                        return;
+                    }
                 }
             }
 
@@ -134,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (seconds > 1 && Convert.ToInt32(seconds) % 60 == 0 && runningOnWindows)
+                if (seconds > 1 && Convert.ToInt32(seconds) % 10 == 0 && runningOnWindows)
                 {
                     try
                     {
