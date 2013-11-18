@@ -16,6 +16,7 @@
    * Added support for multiple languages in TimedText / DFXP - thx Laszlo
    * Custom shortcuts can now use "Home" + "Back" (backspace) keys
    * Added shortcut for "Insert after" in text box (default is Alt+Insert)
+   * Audio extraction can now be done with FFMPEG (see Options -> Settings)
 * FIXED:
    * F11 (Set start time) sometimes kept duration - thx Rinus/Quetsbeek
    * Cavana 890 now works with Hebrew again - thx Yaniv
@@ -33,6 +34,7 @@
    * Audio mkv delays now might work when creating waveform
    * Add to "Names/noise list" in spell checknow used word in textbox 
      (and not the original word)
+   * Alignment now works when exporting to sub/idx - thx adrianbergonzi
 
 
 3.3.9 (19th October 2013)
