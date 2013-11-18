@@ -54,7 +54,11 @@ namespace Nikse.SubtitleEdit.Forms
             SourceVideoFileName = labelVideoFileName.Text;
             string targetFile = Path.GetTempFileName() + ".wav";
 //            string parameters = "-I dummy -vvv \"" + SourceVideoFileName + "\" --sout=#transcode{vcodec=none,acodec=s16l}:file{dst=\"" + targetFile + "\"}  vlc://quit";
-            string parameters = "-I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout #transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=\"" + targetFile + "\"} \"" + SourceVideoFileName + "\" vlc://quit";
+      //      string parameters = "-I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout #transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=\"" + targetFile + "\"} \"" + SourceVideoFileName + "\" vlc://quit";
+            string parameters = "\"" + SourceVideoFileName + "\" -I dummy -vvv --no-sout-video --sout=\"#transcode{acodec=s16l,channels=1,ab=64,samplerate=8000}:std{access=file,mux=wav,dst=" + targetFile + "}\" vlc://quit";
+
+
+
             string exeFilePath;
             if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
             {
@@ -103,7 +107,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Visible = true;
             try
             {
-                process.PriorityClass = ProcessPriorityClass.BelowNormal;
+                process.PriorityClass = ProcessPriorityClass.Normal;
             }
             catch
             {
