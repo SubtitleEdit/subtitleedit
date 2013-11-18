@@ -2121,7 +2121,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 pictureBox1.Top = groupBoxExportImage.Height - bmp.Height - int.Parse(comboBoxBottomMargin.Text);
                 pictureBox1.Left = (w - bmp.Width) / 2;
                 var alignment = GetAlignmentFromParagraph(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index], _format, _subtitle);
-                if (_exportType == "BDNXML" || _exportType == "BLURAYSUP")
+                if (_exportType == "BDNXML" || _exportType == "BLURAYSUP" || _exportType == "VOBSUB")
                 {
                     if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
                         pictureBox1.Left = int.Parse(comboBoxBottomMargin.Text);
