@@ -32,7 +32,7 @@
    * Fixed bad link for Spannish spell check dictionary - thx Nils
    * Minor fix for format TSB4 - thx Leart 
    * Audio mkv delays now might work when creating waveform
-   * Add to "Names/noise list" in spell checknow used word in textbox 
+   * Add to "Names/noise list" in spell checknow uses word in textbox 
      (and not the original word)
    * Alignment now works when exporting to sub/idx - thx adrianbergonzi
    * Changed VLC audio extraction parameters so it works better with SE
