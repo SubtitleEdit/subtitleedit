@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -44,6 +45,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             var ocrFixWords = new Dictionary<string, string>();
             var ocrFixPartialLines = new Dictionary<string, string>();
+
+            try
+            {
+                var ci = new CultureInfo(LanguageString.Replace("_", "-"));
+                _threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
+            }
+            catch
+            { 
+            }
 
             string replaceListXmlFileName = Utilities.DictionaryFolder + _threeLetterISOLanguageName + "_OCRFixReplaceList.xml";
             if (File.Exists(replaceListXmlFileName))
@@ -135,6 +145,23 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
             }
             _threeLetterISOLanguageName = languageId;
+        }
+
+        public string LanguageString
+        {
+            get
+            {
+                string name = comboBoxDictionaries.SelectedItem.ToString();
+                int start = name.LastIndexOf("[");
+                int end = name.LastIndexOf("]");
+                if (start >= 0 && end > start)
+                {
+                    start++;
+                    name = name.Substring(start, end - start);
+                    return name;
+                }
+                return null;
+            }
         }
     }
 }
