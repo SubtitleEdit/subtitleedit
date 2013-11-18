@@ -11188,7 +11188,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FindDoubleWordsToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var regex = new Regex(@"\b([\w]+)[ \r\n]+\1[ ,.!?\r\n]");
+            var regex = new Regex(@"\b(\w+)\s+\1\b");
             _findHelper = new FindReplaceDialogHelper(FindType.RegEx, string.Format(_language.DoubleWordsViaRegEx, regex), new List<string>(), regex, string.Empty, 0, 0, _subtitleListViewIndex);
 
             ReloadFromSourceView();
