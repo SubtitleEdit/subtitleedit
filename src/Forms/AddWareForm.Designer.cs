@@ -36,6 +36,7 @@
             this.labelSourcevideoFile = new System.Windows.Forms.Label();
             this.labelVideoFileName = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.labelInfo = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelPleaseWait
@@ -105,11 +106,22 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
+            // labelInfo
+            // 
+            this.labelInfo.ForeColor = System.Drawing.Color.Gray;
+            this.labelInfo.Location = new System.Drawing.Point(427, 6);
+            this.labelInfo.Name = "labelInfo";
+            this.labelInfo.Size = new System.Drawing.Size(120, 13);
+            this.labelInfo.TabIndex = 18;
+            this.labelInfo.Text = "label1";
+            this.labelInfo.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // AddWareForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(550, 138);
+            this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.labelVideoFileName);
             this.Controls.Add(this.labelSourcevideoFile);
@@ -143,5 +155,6 @@
         private System.Windows.Forms.Label labelSourcevideoFile;
         private System.Windows.Forms.Label labelVideoFileName;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Label labelInfo;
     }
 }

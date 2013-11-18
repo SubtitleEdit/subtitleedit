@@ -451,6 +451,9 @@ namespace Nikse.SubtitleEdit.Logic
         public int ListViewTextWidth { get; set; }
         public string VlcWaveTranscodeSettings { get; set; }
         public string VlcLocation { get; set; }
+        public bool UseFFMPEGForWaveExtraction { get; set; }
+        public string FFMPEGWaveTranscodeSettings { get; set; }
+        public string FFMPEGLocation { get; set; }
         public bool UseTimeFormatHHMMSSFF { get; set; }
         public int ClearStatusBarAfterSeconds { get; set; }
         public string Company { get; set; }
@@ -530,6 +533,7 @@ namespace Nikse.SubtitleEdit.Logic
             OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;"; // matroska/mp4/m4v files (can contain subtitles)
             ListViewColumsRememberSize = true;
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
+            FFMPEGWaveTranscodeSettings = "-i \"{0}\" -vn -ar 44100 -ac 2 -ab 128 -vol 320 -f wav \"{1}\""; // -vol 512 will boot volume... 256 is normal
             UseTimeFormatHHMMSSFF = false;
             ClearStatusBarAfterSeconds = 10;
             MoveVideo100Or500MsPlaySmallSample = false;
@@ -1307,6 +1311,15 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("VlcLocation");
             if (subNode != null)
                 settings.General.VlcLocation = subNode.InnerText.Trim();
+            subNode = node.SelectSingleNode("UseFFMPEGForWaveExtraction");
+            if (subNode != null)
+                settings.General.UseFFMPEGForWaveExtraction = Convert.ToBoolean(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("FFMPEGWaveTranscodeSettings");
+            if (subNode != null)
+                settings.General.FFMPEGWaveTranscodeSettings = subNode.InnerText.Trim();
+            subNode = node.SelectSingleNode("FFMPEGLocation");
+            if (subNode != null)
+                settings.General.FFMPEGLocation = subNode.InnerText.Trim();
             subNode = node.SelectSingleNode("UseTimeFormatHHMMSSFF");
             if (subNode != null)
                 settings.General.UseTimeFormatHHMMSSFF = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -2387,6 +2400,9 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ListViewTextWidth", settings.General.ListViewTextWidth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
             textWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
+            textWriter.WriteElementString("UseFFMPEGForWaveExtraction", settings.General.UseFFMPEGForWaveExtraction.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("FFMPEGWaveTranscodeSettings", settings.General.FFMPEGWaveTranscodeSettings);
+            textWriter.WriteElementString("FFMPEGLocation", settings.General.FFMPEGLocation);
             textWriter.WriteElementString("UseTimeFormatHHMMSSFF", settings.General.UseTimeFormatHHMMSSFF.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ClearStatusBarAfterSeconds", settings.General.ClearStatusBarAfterSeconds.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("Company", settings.General.Company);

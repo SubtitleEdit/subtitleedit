@@ -175,6 +175,7 @@
             this.checkBoxWaveFormShowGrid = new System.Windows.Forms.CheckBox();
             this.tabPageTools = new System.Windows.Forms.TabPage();
             this.groupBoxSpellCheck = new System.Windows.Forms.GroupBox();
+            this.checkBoxTreatINQuoteAsING = new System.Windows.Forms.CheckBox();
             this.checkBoxSpellCheckOneLetterWords = new System.Windows.Forms.CheckBox();
             this.checkBoxSpellCheckAutoChangeNames = new System.Windows.Forms.CheckBox();
             this.groupBoxFixCommonErrors = new System.Windows.Forms.GroupBox();
@@ -259,7 +260,12 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.checkBoxTreatINQuoteAsING = new System.Windows.Forms.CheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.checkBoxUseFFMPEG = new System.Windows.Forms.CheckBox();
+            this.labelFFMPEGPath = new System.Windows.Forms.Label();
+            this.textBoxFFMPEGPath = new System.Windows.Forms.TextBox();
+            this.buttonBrowseToFFMPEG = new System.Windows.Forms.Button();
+            this.openFileDialogFFMPEG = new System.Windows.Forms.OpenFileDialog();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -313,6 +319,7 @@
             this.tabPageSyntaxColoring.SuspendLayout();
             this.groupBoxListViewSyntaxColoring.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSyntaxColorTextMoreThanXLines)).BeginInit();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -1702,6 +1709,7 @@
             // 
             // tabPageWaveForm
             // 
+            this.tabPageWaveForm.Controls.Add(this.groupBox3);
             this.tabPageWaveForm.Controls.Add(this.groupBoxSpectrogram);
             this.tabPageWaveForm.Controls.Add(this.groupBox1);
             this.tabPageWaveForm.Controls.Add(this.groupBoxWaveFormAppearence);
@@ -1761,7 +1769,7 @@
             this.groupBox1.Controls.Add(this.labelWaveFormsFolderInfo);
             this.groupBox1.Location = new System.Drawing.Point(6, 325);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(813, 116);
+            this.groupBox1.Size = new System.Drawing.Size(394, 116);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             // 
@@ -1993,6 +2001,16 @@
             this.groupBoxSpellCheck.TabIndex = 4;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
+            // 
+            // checkBoxTreatINQuoteAsING
+            // 
+            this.checkBoxTreatINQuoteAsING.AutoSize = true;
+            this.checkBoxTreatINQuoteAsING.Location = new System.Drawing.Point(16, 66);
+            this.checkBoxTreatINQuoteAsING.Name = "checkBoxTreatINQuoteAsING";
+            this.checkBoxTreatINQuoteAsING.Size = new System.Drawing.Size(253, 17);
+            this.checkBoxTreatINQuoteAsING.TabIndex = 2;
+            this.checkBoxTreatINQuoteAsING.Text = "Treat word ending \" in\' \" as \" ing \" (English only)";
+            this.checkBoxTreatINQuoteAsING.UseVisualStyleBackColor = true;
             // 
             // checkBoxSpellCheckOneLetterWords
             // 
@@ -3014,15 +3032,58 @@
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
             // 
-            // checkBoxTreatINQuoteAsING
+            // groupBox3
             // 
-            this.checkBoxTreatINQuoteAsING.AutoSize = true;
-            this.checkBoxTreatINQuoteAsING.Location = new System.Drawing.Point(16, 66);
-            this.checkBoxTreatINQuoteAsING.Name = "checkBoxTreatINQuoteAsING";
-            this.checkBoxTreatINQuoteAsING.Size = new System.Drawing.Size(253, 17);
-            this.checkBoxTreatINQuoteAsING.TabIndex = 2;
-            this.checkBoxTreatINQuoteAsING.Text = "Treat word ending \" in\' \" as \" ing \" (English only)";
-            this.checkBoxTreatINQuoteAsING.UseVisualStyleBackColor = true;
+            this.groupBox3.Controls.Add(this.buttonBrowseToFFMPEG);
+            this.groupBox3.Controls.Add(this.textBoxFFMPEGPath);
+            this.groupBox3.Controls.Add(this.labelFFMPEGPath);
+            this.groupBox3.Controls.Add(this.checkBoxUseFFMPEG);
+            this.groupBox3.Location = new System.Drawing.Point(406, 325);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(416, 116);
+            this.groupBox3.TabIndex = 3;
+            this.groupBox3.TabStop = false;
+            // 
+            // checkBoxUseFFMPEG
+            // 
+            this.checkBoxUseFFMPEG.AutoSize = true;
+            this.checkBoxUseFFMPEG.Location = new System.Drawing.Point(6, 20);
+            this.checkBoxUseFFMPEG.Name = "checkBoxUseFFMPEG";
+            this.checkBoxUseFFMPEG.Size = new System.Drawing.Size(201, 17);
+            this.checkBoxUseFFMPEG.TabIndex = 1;
+            this.checkBoxUseFFMPEG.Text = "Use FFMPEG for wave file extraction";
+            this.checkBoxUseFFMPEG.UseVisualStyleBackColor = true;
+            // 
+            // labelFFMPEGPath
+            // 
+            this.labelFFMPEGPath.AutoSize = true;
+            this.labelFFMPEGPath.Location = new System.Drawing.Point(6, 49);
+            this.labelFFMPEGPath.Name = "labelFFMPEGPath";
+            this.labelFFMPEGPath.Size = new System.Drawing.Size(71, 13);
+            this.labelFFMPEGPath.TabIndex = 2;
+            this.labelFFMPEGPath.Text = "FFMPEG path";
+            // 
+            // textBoxFFMPEGPath
+            // 
+            this.textBoxFFMPEGPath.Location = new System.Drawing.Point(9, 65);
+            this.textBoxFFMPEGPath.MaxLength = 1000;
+            this.textBoxFFMPEGPath.Name = "textBoxFFMPEGPath";
+            this.textBoxFFMPEGPath.Size = new System.Drawing.Size(366, 21);
+            this.textBoxFFMPEGPath.TabIndex = 22;
+            // 
+            // buttonBrowseToFFMPEG
+            // 
+            this.buttonBrowseToFFMPEG.Location = new System.Drawing.Point(381, 65);
+            this.buttonBrowseToFFMPEG.Name = "buttonBrowseToFFMPEG";
+            this.buttonBrowseToFFMPEG.Size = new System.Drawing.Size(29, 21);
+            this.buttonBrowseToFFMPEG.TabIndex = 23;
+            this.buttonBrowseToFFMPEG.Text = "...";
+            this.buttonBrowseToFFMPEG.UseVisualStyleBackColor = true;
+            this.buttonBrowseToFFMPEG.Click += new System.EventHandler(this.buttonBrowseToFFMPEG_Click);
+            // 
+            // openFileDialogFFMPEG
+            // 
+            this.openFileDialogFFMPEG.FileName = "openFileDialog1";
             // 
             // Settings
             // 
@@ -3118,6 +3179,8 @@
             this.groupBoxListViewSyntaxColoring.ResumeLayout(false);
             this.groupBoxListViewSyntaxColoring.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSyntaxColorTextMoreThanXLines)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3357,5 +3420,11 @@
         private System.Windows.Forms.CheckBox checkBoxSsaOpaqueBox;
         private System.Windows.Forms.CheckBox checkBoxSpellCheckOneLetterWords;
         private System.Windows.Forms.CheckBox checkBoxTreatINQuoteAsING;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button buttonBrowseToFFMPEG;
+        private System.Windows.Forms.TextBox textBoxFFMPEGPath;
+        private System.Windows.Forms.Label labelFFMPEGPath;
+        private System.Windows.Forms.CheckBox checkBoxUseFFMPEG;
+        private System.Windows.Forms.OpenFileDialog openFileDialogFFMPEG;
     }
 }

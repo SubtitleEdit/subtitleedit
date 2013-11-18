@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             labelProgress.Text = string.Empty;
             buttonCancel.Visible = false;
+            labelInfo.Text = string.Empty;
         }
 
         public WavePeakGenerator WavePeak { get; private set; }
@@ -48,23 +49,23 @@ namespace Nikse.SubtitleEdit.Forms
         {
             buttonRipWave.Enabled = false;
             _cancel = false;
+            bool runningOnWindows = false;
 
             SourceVideoFileName = labelVideoFileName.Text;
             string targetFile = Path.GetTempFileName() + ".wav";
 //            string parameters = "-I dummy -vvv \"" + SourceVideoFileName + "\" --sout=#transcode{vcodec=none,acodec=s16l}:file{dst=\"" + targetFile + "\"}  vlc://quit";
             string parameters = "-I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout #transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=\"" + targetFile + "\"} \"" + SourceVideoFileName + "\" vlc://quit";
-
-
-            string vlcPath;
+            string exeFilePath;
             if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
             {
-                vlcPath = "cvlc";
+                exeFilePath = "cvlc";
                 parameters = "-vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout '#transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=" + targetFile + "}' \"" + SourceVideoFileName + "\" vlc://quit";
             }
             else // windows
             {
-                vlcPath = Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic.GetVlcPath("vlc.exe");
-                if (!System.IO.File.Exists(vlcPath))
+                runningOnWindows = true;
+                exeFilePath = Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic.GetVlcPath("vlc.exe");
+                if (!System.IO.File.Exists(exeFilePath))
                 {
                     if (MessageBox.Show(Configuration.Settings.Language.AddWaveForm.VlcMediaPlayerNotFound + Environment.NewLine +
                                         Environment.NewLine +
@@ -78,10 +79,22 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            labelInfo.Text = "VCL";
+            if (Configuration.Settings.General.UseFFMPEGForWaveExtraction && File.Exists(Configuration.Settings.General.FFMPEGLocation) && !string.IsNullOrEmpty(Configuration.Settings.General.FFMPEGWaveTranscodeSettings))
+            {
+                exeFilePath = Configuration.Settings.General.FFMPEGLocation;
+                parameters = string.Format(Configuration.Settings.General.FFMPEGWaveTranscodeSettings, SourceVideoFileName, targetFile);
+                //-i indicates the input
+                //-ab indicates the bit rate (in this example 160kb/sec)
+                //-vn means no video ouput
+                //-ac 2 means 2 channels
+                //-ar 44100 indicates the sampling frequency.
+                labelInfo.Text = "FFMPEG";
+            } 
+            
             labelPleaseWait.Visible = true;
-
             Process process = new Process();
-            process.StartInfo = new ProcessStartInfo(vlcPath, parameters);
+            process.StartInfo = new ProcessStartInfo(exeFilePath, parameters);
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
             progressBar1.Style = ProgressBarStyle.Marquee;
@@ -116,6 +129,30 @@ namespace Nikse.SubtitleEdit.Forms
                     DialogResult = DialogResult.Cancel;
                     return;
                 }
+
+                if (seconds > 1 && Convert.ToInt32(seconds) % 60 == 0 && runningOnWindows)
+                {
+                    try
+                    {
+                        var drive = new DriveInfo("c");
+                        if (drive.IsReady)
+                        {
+                            if (drive.AvailableFreeSpace < 50 * 1000000) // 50 mb
+                            {
+                                labelInfo.ForeColor = Color.Red;
+                                labelInfo.Text = "LOW DISC SPACE!";
+                            }
+                            else if (labelInfo.ForeColor == Color.Red)
+                            {
+                                labelInfo.Text = Utilities.FormatBytesToDisplayFileSize(drive.AvailableFreeSpace) + " free";
+                            }
+                        }
+                    }
+                    catch
+                    { 
+                    }
+                }
+
             }
             buttonCancel.Visible = false;
             progressBar1.Visible = false;
@@ -132,7 +169,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 MessageBox.Show("Could not find extracted wave file! This feature requires VLC media player 1.1.x or newer (32-bit)." + Environment.NewLine
                                 + Environment.NewLine +
-                                "Command line: " + vlcPath + " " + parameters);
+                                "Command line: " + exeFilePath + " " + parameters);
 
                 labelPleaseWait.Visible = false;
                 labelProgress.Text = string.Empty;
@@ -145,7 +182,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show("Sorry! VLC was unable to extract audio to wave file via this command line:" + Environment.NewLine
                                 + Environment.NewLine +
-                                "Command line: " + vlcPath + " " + parameters);
+                                "Command line: " + exeFilePath + " " + parameters);
 
                 labelPleaseWait.Visible = false;
                 labelProgress.Text = string.Empty;

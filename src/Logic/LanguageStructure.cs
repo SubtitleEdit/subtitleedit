@@ -1586,6 +1586,9 @@
             public string SpectrogramAppearance { get; set; }
             public string SpectrogramOneColorGradient { get; set; }
             public string SpectrogramClassic { get; set; }
+            public string WaveformUseFFMPEG { get; set; }
+            public string WaveformFFMPEGPath { get; set; }
+            public string WaveformBrowseToFFMPEG { get; set; }
             public string SubStationAlphaStyle { get; set; }
             public string ChooseFont { get; set; }
             public string ChooseColor { get; set; }
