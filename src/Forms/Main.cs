@@ -446,6 +446,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.OnTimeChangedAndOffsetRest += AudioWaveForm_OnTimeChangedAndOffsetRest;
                 audioVisualizer.OnZoomedChanged += AudioWaveForm_OnZoomedChanged;
                 audioVisualizer.InsertAtVideoPosition += audioVisualizer_InsertAtVideoPosition;
+                audioVisualizer.PlayFirstSelectedSubtitle += audioVisualizer_PlayFirstSelectedSubtitle;
                 audioVisualizer.DrawGridLines = Configuration.Settings.VideoControls.WaveFormDrawGrid;
                 audioVisualizer.GridColor = Configuration.Settings.VideoControls.WaveFormGridColor;
                 audioVisualizer.SelectedColor = Configuration.Settings.VideoControls.WaveFormSelectedColor;
@@ -473,6 +474,12 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
             }
+        }
+
+        void audioVisualizer_PlayFirstSelectedSubtitle(object sender, EventArgs e)
+        {
+            PlayCurrent();
+            audioVisualizer.Focus();
         }
 
         void audioVisualizer_InsertAtVideoPosition(object sender, EventArgs e)
@@ -13830,7 +13837,10 @@ namespace Nikse.SubtitleEdit.Forms
             _mainTranslateCustomSearch6 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch6);
 
             if (audioVisualizer != null)
+            {
                 audioVisualizer.InsertAtVideoPositionShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
+                audioVisualizer.PlayFirstSelectedSubtitleShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformPlayFirstSelected);
+            }
         }
 
         public static object GetPropertiesAndDoAction(string pluginFileName, out string name, out string text, out decimal version, out string description, out string actionType, out string shortcut, out System.Reflection.MethodInfo mi)

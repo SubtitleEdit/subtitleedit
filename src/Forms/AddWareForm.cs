@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
                 exeFilePath = Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic.GetVlcPath("vlc.exe");
                 if (!System.IO.File.Exists(exeFilePath))
                 {
-                    if (Configuration.Settings.General.UseFFMPEGForWaveExtraction && File.Exists(Configuration.Settings.General.FFMPEGLocation) && !string.IsNullOrEmpty(Configuration.Settings.General.FFMPEGWaveTranscodeSettings))
+                    if (Configuration.Settings.General.UseFFMPEGForWaveExtraction && File.Exists(Configuration.Settings.General.FFMPEGLocation))
                     {
                         // We will run FFMPEG
                     }
@@ -92,10 +92,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             labelInfo.Text = "VCL";
-            if (Configuration.Settings.General.UseFFMPEGForWaveExtraction && File.Exists(Configuration.Settings.General.FFMPEGLocation) && !string.IsNullOrEmpty(Configuration.Settings.General.FFMPEGWaveTranscodeSettings))
+            if (Configuration.Settings.General.UseFFMPEGForWaveExtraction && File.Exists(Configuration.Settings.General.FFMPEGLocation))
             {
+                string FFMPEGWaveTranscodeSettings = "-i \"{0}\" -vn -ar 44100 -ac 2 -ab 128 -vol 448 -f wav \"{1}\""; // -vol 512 will boot volume... 256 is normal
                 exeFilePath = Configuration.Settings.General.FFMPEGLocation;
-                parameters = string.Format(Configuration.Settings.General.FFMPEGWaveTranscodeSettings, SourceVideoFileName, targetFile);
+                parameters = string.Format(FFMPEGWaveTranscodeSettings, SourceVideoFileName, targetFile);
                 //-i indicates the input
                 //-ab indicates the bit rate (in this example 160kb/sec)
                 //-vn means no video ouput
@@ -235,6 +236,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddWareForm_Shown(object sender, EventArgs e)
         {
+            Refresh();
             var audioTrackNames = new List<string>();
             var mkvAudioTrackNumbers = new Dictionary<int, int>();
             int numberOfAudioTracks = 0;

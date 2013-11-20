@@ -99,11 +99,13 @@ namespace Nikse.SubtitleEdit.Controls
         public event EventHandler OnPause;
         public event EventHandler OnZoomedChanged;
         public event EventHandler InsertAtVideoPosition;
+        public event EventHandler PlayFirstSelectedSubtitle;
 
         double _wholeParagraphMinMilliseconds = 0;
         double _wholeParagraphMaxMilliseconds = double.MaxValue;
 
         public Keys InsertAtVideoPositionShortcut = Keys.None;
+        public Keys PlayFirstSelectedSubtitleShortcut = Keys.None;
         public bool MouseWheelScrollUpIsForward = true;
         public const double ZoomMininum = 0.1;
         public const double ZoomMaxinum = 2.5;
@@ -271,6 +273,7 @@ namespace Nikse.SubtitleEdit.Controls
             ShowWaveform = true;
             VerticalZoomPercent = 1.0;
             InsertAtVideoPositionShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
+            PlayFirstSelectedSubtitleShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformPlayFirstSelected);
         }
 
         public void NearestSubtitles(Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex)
@@ -1467,6 +1470,14 @@ namespace Nikse.SubtitleEdit.Controls
                 if (InsertAtVideoPosition != null)
                 {
                     InsertAtVideoPosition.Invoke(this, null);
+                    e.SuppressKeyPress = true;
+                }
+            }
+            else if (e.KeyData == PlayFirstSelectedSubtitleShortcut)
+            {
+                if (PlayFirstSelectedSubtitle != null)
+                {
+                    PlayFirstSelectedSubtitle.Invoke(this, null);
                     e.SuppressKeyPress = true;
                 }
             }

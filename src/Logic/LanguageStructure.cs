@@ -1666,6 +1666,8 @@
             public string WaveformSeekSilenceForward { get; set; }
             public string WaveformSeekSilenceBack { get; set; }
             public string WaveformAddTextHere { get; set; }
+            public string WaveformPlayNewSelection { get; set; }
+            public string WaveformPlayFirstSelectedSubtitle { get; set; }
             public string GoBack100Milliseconds { get; set; }
             public string GoForward100Milliseconds { get; set; }
             public string GoBack500Milliseconds { get; set; }
