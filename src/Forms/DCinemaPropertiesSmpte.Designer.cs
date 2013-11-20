@@ -547,8 +547,7 @@
             this.timeUpDownStartTime.AutoSize = true;
             this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.Location = new System.Drawing.Point(241, 263);
-            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.timeUpDownStartTime.Mode = Nikse.SubtitleEdit.Controls.TimeUpDown.TimeMode.HHMMSSMS;
+            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);            
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(123, 27);
             this.timeUpDownStartTime.TabIndex = 8;

@@ -246,6 +246,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 InitializeComponent();
 
+                //if (Configuration.Settings.General.UseTimeFormatHHMMSSFF) nixe harboe
+                //    timeUpDownStartTime.Mode = Configuration.Settings.
+
                 textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
                 labelAlternateCharactersPerSecond.Visible = false;
@@ -1234,6 +1237,12 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph original = null;
                 if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
                     original = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitleAlternate.Paragraphs);
+
+                if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                { // so we don't get weird rounds we'll use whole frames when moving start time
+                    double fr = 1000.0 / Configuration.Settings.General.CurrentFrameRate;
+                    paragraph.StartTime.TotalMilliseconds = ((int)Math.Round(paragraph.StartTime.TotalMilliseconds / fr)) * fr;
+                }
 
                 timeUpDownStartTime.TimeCode = paragraph.StartTime;
                 decimal durationInSeconds = (decimal) (paragraph.Duration.TotalSeconds);

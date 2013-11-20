@@ -2996,7 +2996,6 @@
             this.timeUpDownVideoPosition.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownVideoPosition.Location = new System.Drawing.Point(96, 191);
             this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownVideoPosition.Mode = Nikse.SubtitleEdit.Controls.TimeUpDown.TimeMode.HHMMSSMS;
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
             this.timeUpDownVideoPosition.Size = new System.Drawing.Size(96, 25);
             this.timeUpDownVideoPosition.TabIndex = 12;
@@ -3441,7 +3440,6 @@
             this.timeUpDownVideoPositionAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownVideoPositionAdjust.Location = new System.Drawing.Point(96, 213);
             this.timeUpDownVideoPositionAdjust.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownVideoPositionAdjust.Mode = Nikse.SubtitleEdit.Controls.TimeUpDown.TimeMode.HHMMSSMS;
             this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
             this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(96, 25);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
@@ -4088,7 +4086,6 @@
             this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.Location = new System.Drawing.Point(9, 26);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownStartTime.Mode = Nikse.SubtitleEdit.Controls.TimeUpDown.TimeMode.HHMMSSMS;
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 25);
             this.timeUpDownStartTime.TabIndex = 0;

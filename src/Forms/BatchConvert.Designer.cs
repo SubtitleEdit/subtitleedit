@@ -309,7 +309,6 @@
             this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 37);
             this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownAdjust.Mode = Nikse.SubtitleEdit.Controls.TimeUpDown.TimeMode.HHMMSSMS;
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
             this.timeUpDownAdjust.Size = new System.Drawing.Size(96, 24);
             this.timeUpDownAdjust.TabIndex = 1;
