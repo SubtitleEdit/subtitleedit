@@ -185,6 +185,12 @@
     <Compile Include="Forms\ChangeSpeedInPercent.Designer.cs">
       <DependentUpon>ChangeSpeedInPercent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ChooseAudioTrack.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChooseAudioTrack.Designer.cs">
+      <DependentUpon>ChooseAudioTrack.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ChooseLanguage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1145,6 +1151,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ChangeSpeedInPercent.resx">
       <DependentUpon>ChangeSpeedInPercent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChooseAudioTrack.resx">
+      <DependentUpon>ChooseAudioTrack.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ChooseEncoding.resx">
       <DependentUpon>ChooseEncoding.cs</DependentUpon>

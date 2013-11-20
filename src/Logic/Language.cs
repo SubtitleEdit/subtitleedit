@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.ChangeCasingNames ChangeCasingNames;
         public LanguageStructure.ChangeFrameRate ChangeFrameRate;
         public LanguageStructure.ChangeSpeedInPercent ChangeSpeedInPercent;
+        public LanguageStructure.ChooseAudioTrack ChooseAudioTrack;
         public LanguageStructure.ChooseEncoding ChooseEncoding;
         public LanguageStructure.ChooseLanguage ChooseLanguage;
         public LanguageStructure.ColumnPaste ColumnPaste;
@@ -321,6 +322,11 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Adjust speed in percent",
                 Info = "Change speed of subtitle in percent",
+            };
+
+            ChooseAudioTrack = new LanguageStructure.ChooseAudioTrack
+            {
+                Title = "Choose audio track",
             };
 
             ChooseEncoding = new LanguageStructure.ChooseEncoding

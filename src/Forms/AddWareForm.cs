@@ -235,30 +235,97 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddWareForm_Shown(object sender, EventArgs e)
         {
+            var audioTrackNames = new List<string>();
+            var mkvAudioTrackNumbers = new Dictionary<int, int>();
+            int numberOfAudioTracks = 0;
             if (labelVideoFileName.Text.Length > 1 && File.Exists(labelVideoFileName.Text))
             {
                 if (labelVideoFileName.Text.ToLower().EndsWith(".mkv"))
-                {
-                    var mkv = new Matroska(labelVideoFileName.Text);
-                    if (mkv.IsValid)
+                { // Choose for number of audio tracks in matroska files
+                    try
                     {
-                        var trackInfo = mkv.GetTrackInfo();
-                        int numberOfAudioTracks = 0;
-                        int trackNumber = 2;
-                        foreach (var ti in trackInfo)
+                        var mkv = new Matroska(labelVideoFileName.Text);
+                        if (mkv.IsValid)
                         {
-                            if (ti.IsAudio)
+                            var trackInfo = mkv.GetTrackInfo();
+                            foreach (var ti in trackInfo)
                             {
-                                numberOfAudioTracks++;
-                                trackNumber = ti.TrackNumber;
-                                break;
+                                if (ti.IsAudio)
+                                {
+                                    numberOfAudioTracks++;
+                                    if (ti.CodecId != null && ti.Language != null)
+                                        audioTrackNames.Add("#" + ti.TrackNumber + ": " + ti.CodecId.Replace("\0", string.Empty) + " - " + ti.Language.Replace("\0", string.Empty));
+                                    else
+                                        audioTrackNames.Add("#" + ti.TrackNumber.ToString());
+                                    mkvAudioTrackNumbers.Add(mkvAudioTrackNumbers.Count, ti.TrackNumber);
+                                }
                             }
                         }
-                        if (numberOfAudioTracks == 1)
+                    }
+                    catch
+                    { 
+                    }
+                }
+                else if (labelVideoFileName.Text.ToLower().EndsWith(".mp4") || labelVideoFileName.Text.ToLower().EndsWith(".m4v"))
+                { // Choose for number of audio tracks in mp4 files
+                    try
+                    {
+                        var mp4 = new Nikse.SubtitleEdit.Logic.Mp4.Mp4Parser(labelVideoFileName.Text);
+                        var tracks = mp4.GetAudioTracks();
+                        int i=0;
+                        foreach (var track in tracks)
                         {
-                            _delayInMilliseconds = (int)mkv.GetTrackStartTime(trackNumber);
+                            i++;
+                            if (track.name != null && track.Mdia != null && track.Mdia.Mdhd != null && track.Mdia.Mdhd.LanguageString != null)
+                                audioTrackNames.Add(i + ":  " + track.name + " - " + track.Mdia.Mdhd.LanguageString);
+                            else if (track.name != null)
+                                audioTrackNames.Add(i + ":  " + track.name);
+                            else
+                                audioTrackNames.Add(i.ToString());
                         }
-                    }                    
+                        numberOfAudioTracks = tracks.Count;
+                    }
+                    catch
+                    { 
+                    }                 
+                }
+
+                if (Configuration.Settings.General.UseFFMPEGForWaveExtraction)
+                { // don't know how to extract audio number x via FFMPEG...
+                    numberOfAudioTracks = 1;
+                    _audioTrackNumber = 0;
+                }
+
+                // Choose audio track
+                if (numberOfAudioTracks > 1)
+                { 
+                    var form = new ChooseAudioTrack(audioTrackNames, _audioTrackNumber);
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        _audioTrackNumber = form.SelectedTrack;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        return;
+                    }
+                }
+
+                // check for delay in matroska files
+                if (labelVideoFileName.Text.ToLower().EndsWith(".mkv"))
+                {
+                    try
+                    {
+                        var mkv = new Matroska(labelVideoFileName.Text);
+                        if (mkv.IsValid)
+                        {
+                            _delayInMilliseconds = (int)mkv.GetTrackStartTime(mkvAudioTrackNumbers[_audioTrackNumber]);
+                        }
+                    }
+                    catch
+                    {
+                        _delayInMilliseconds = 0;
+                    }
                 }
 
                 buttonRipWave_Click(null, null);

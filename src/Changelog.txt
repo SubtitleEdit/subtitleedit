@@ -17,6 +17,8 @@
    * Custom shortcuts can now use "Home" + "Back" (backspace) keys
    * Added shortcut for "Insert after" in text box (default is Alt+Insert)
    * Audio extraction can now be done with FFMPEG (see Options -> Settings)
+   * Italics/{\an8} now works for format "SoftNi" - thx Adrian
+   * Add audio waveform - mkv/mp4 will ask for track if more than 1 (VLC only)
 * FIXED:
    * F11 (Set start time) sometimes kept duration - thx Rinus/Quetsbeek
    * Cavana 890 now works with Hebrew again - thx Yaniv
