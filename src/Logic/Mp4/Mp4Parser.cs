@@ -29,6 +29,22 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
             return list;
         }
 
+        public List<Trak> GetAudioTracks()
+        {
+            var list = new List<Trak>();
+            if (Moov != null && Moov.Tracks != null)
+            {
+                foreach (var trak in Moov.Tracks)
+                {
+                    if (trak.Mdia != null && trak.Mdia.IsAudio)
+                    {
+                        list.Add(trak);
+                    }
+                }
+            }
+            return list;
+        }
+
         public TimeSpan Duration
         {
             get

@@ -466,7 +466,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     header.TimeCodeFirstInCue = firstTimeCode;
             }
 
-            byte[] buffer = Encoding.ASCII.GetBytes(header.ToString());
+            byte[] buffer = Encoding.Default.GetBytes(header.ToString());
             fs.Write(buffer, 0, buffer.Length);
 
             int subtitleNumber = 0;
@@ -609,31 +609,31 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private EbuGeneralSubtitleInformation ReadHeader(byte[] buffer)
         {
             var header = new EbuGeneralSubtitleInformation();
-            header.CodePageNumber = Encoding.ASCII.GetString(buffer, 0, 3);
-            header.DiskFormatCode = Encoding.ASCII.GetString(buffer, 3, 8);
-            header.DisplayStandardCode = Encoding.ASCII.GetString(buffer, 11, 1);
-            header.CharacterCodeTableNumber = Encoding.ASCII.GetString(buffer, 12, 2);
-            header.LanguageCode = Encoding.ASCII.GetString(buffer, 14, 2);
-            header.OriginalProgrammeTitle = Encoding.ASCII.GetString(buffer, 16, 32);
-            header.OriginalEpisodeTitle = Encoding.ASCII.GetString(buffer, 48, 32);
-            header.TranslatedProgrammeTitle = Encoding.ASCII.GetString(buffer, 80, 32);
-            header.TranslatedEpisodeTitle = Encoding.ASCII.GetString(buffer, 112, 32);
-            header.TranslatorsName = Encoding.ASCII.GetString(buffer, 144, 32);
-            header.TranslatorsContactDetails = Encoding.ASCII.GetString(buffer, 176, 32);
-            header.SubtitleListReferenceCode = Encoding.ASCII.GetString(buffer, 208, 16);
-            header.CreationDate = Encoding.ASCII.GetString(buffer, 224, 6);
-            header.RevisionDate = Encoding.ASCII.GetString(buffer, 230, 6);
-            header.RevisionNumber = Encoding.ASCII.GetString(buffer, 236, 2);
-            header.TotalNumberOfTextAndTimingInformationBlocks = Encoding.ASCII.GetString(buffer, 238, 5);
-            header.TotalNumberOfSubtitles = Encoding.ASCII.GetString(buffer, 243, 5);
-            header.TotalNumberOfSubtitleGroups = Encoding.ASCII.GetString(buffer, 248, 3);
-            header.MaximumNumberOfDisplayableCharactersInAnyTextRow = Encoding.ASCII.GetString(buffer, 251, 2);
-            header.MaximumNumberOfDisplayableRows = Encoding.ASCII.GetString(buffer, 253, 2);
-            header.TimeCodeStatus = Encoding.ASCII.GetString(buffer, 255, 1);
-            header.TimeCodeStartOfProgramme = Encoding.ASCII.GetString(buffer, 256, 8);
-            header.CountryOfOrigin = Encoding.ASCII.GetString(buffer, 274, 3);
-            header.SpareBytes = Encoding.ASCII.GetString(buffer, 373, 75);
-            header.UserDefinedArea = Encoding.ASCII.GetString(buffer, 448, 576);
+            header.CodePageNumber = Encoding.Default.GetString(buffer, 0, 3);
+            header.DiskFormatCode = Encoding.Default.GetString(buffer, 3, 8);
+            header.DisplayStandardCode = Encoding.Default.GetString(buffer, 11, 1);
+            header.CharacterCodeTableNumber = Encoding.Default.GetString(buffer, 12, 2);
+            header.LanguageCode = Encoding.Default.GetString(buffer, 14, 2);
+            header.OriginalProgrammeTitle = Encoding.Default.GetString(buffer, 16, 32);
+            header.OriginalEpisodeTitle = Encoding.Default.GetString(buffer, 48, 32);
+            header.TranslatedProgrammeTitle = Encoding.Default.GetString(buffer, 80, 32);
+            header.TranslatedEpisodeTitle = Encoding.Default.GetString(buffer, 112, 32);
+            header.TranslatorsName = Encoding.Default.GetString(buffer, 144, 32);
+            header.TranslatorsContactDetails = Encoding.Default.GetString(buffer, 176, 32);
+            header.SubtitleListReferenceCode = Encoding.Default.GetString(buffer, 208, 16);
+            header.CreationDate = Encoding.Default.GetString(buffer, 224, 6);
+            header.RevisionDate = Encoding.Default.GetString(buffer, 230, 6);
+            header.RevisionNumber = Encoding.Default.GetString(buffer, 236, 2);
+            header.TotalNumberOfTextAndTimingInformationBlocks = Encoding.Default.GetString(buffer, 238, 5);
+            header.TotalNumberOfSubtitles = Encoding.Default.GetString(buffer, 243, 5);
+            header.TotalNumberOfSubtitleGroups = Encoding.Default.GetString(buffer, 248, 3);
+            header.MaximumNumberOfDisplayableCharactersInAnyTextRow = Encoding.Default.GetString(buffer, 251, 2);
+            header.MaximumNumberOfDisplayableRows = Encoding.Default.GetString(buffer, 253, 2);
+            header.TimeCodeStatus = Encoding.Default.GetString(buffer, 255, 1);
+            header.TimeCodeStartOfProgramme = Encoding.Default.GetString(buffer, 256, 8);
+            header.CountryOfOrigin = Encoding.Default.GetString(buffer, 274, 3);
+            header.SpareBytes = Encoding.Default.GetString(buffer, 373, 75);
+            header.UserDefinedArea = Encoding.Default.GetString(buffer, 448, 576);
 
             return header;
         }

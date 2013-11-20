@@ -217,6 +217,11 @@
             public string Info { get; set; }
         }
 
+        public class ChooseAudioTrack
+        {
+            public string Title { get; set; }
+        }
+
         public class ChooseEncoding
         {
             public string Title { get; set; }
