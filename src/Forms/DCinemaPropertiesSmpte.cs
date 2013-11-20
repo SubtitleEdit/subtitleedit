@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxEditRate.Text = ss.CurrentDCinemaEditRate;
                 comboBoxTimeCodeRate.Text = ss.CurrentDCinemaTimeCodeRate;
 
-                timeUpDownStartTime.Mode = SubtitleEdit.Controls.TimeUpDown.TimeMode.HHMMSSFF;
+                //timeUpDownStartTime.Mode = SubtitleEdit.Controls.TimeUpDown.TimeMode.HHMMSSFF;
                 if (string.IsNullOrEmpty(ss.CurrentDCinemaStartTime))
                     ss.CurrentDCinemaStartTime = "00:00:00:00";
                 timeUpDownStartTime.MaskedTextBox.Text = ss.CurrentDCinemaStartTime;
