@@ -664,7 +664,10 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformSeekSilenceForward + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformSeekSilenceBack + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformAddTextHere + GetShortcutText(Configuration.Settings.Shortcuts.WaveformAddTextHere));
-            audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.WaveForm.PlaySelection + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlaySelection));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformPlayNewSelection))
+                audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformPlayNewSelection + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlaySelection));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformPlayFirstSelectedSubtitle))
+                audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformPlayFirstSelectedSubtitle + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlayFirstSelected));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition + GetShortcutText(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition));
             treeViewShortcuts.Nodes.Add(audioVisualizerNode);
 
@@ -1355,8 +1358,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.WaveformZoomIn = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.WaveForm.ZoomOut).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformZoomOut = GetShortcut(node.Text);
-                    else if (text == (Configuration.Settings.Language.WaveForm.PlaySelection).Replace("&", string.Empty))
+                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformPlayNewSelection) && text == (Configuration.Settings.Language.Settings.WaveformPlayNewSelection).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformPlaySelection = GetShortcut(node.Text);
+                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformPlayFirstSelectedSubtitle) && text == (Configuration.Settings.Language.Settings.WaveformPlayFirstSelectedSubtitle).Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.WaveformPlayFirstSelected = GetShortcut(node.Text);                        
                     else if (text == (Configuration.Settings.Language.Settings.VerticalZoom).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformVerticalZoom = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.WaveformSeekSilenceForward).Replace("&", string.Empty))
