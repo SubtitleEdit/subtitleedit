@@ -563,7 +563,7 @@ namespace Nikse.SubtitleEdit.Forms
             Console.WriteLine();
             Console.WriteLine(Title + " - Batch converter");
             Console.WriteLine();
-            Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces> [/offset:hh:mm:ss:msec] [/encoding:<encoding name>] [/fps:<frame rate>] [/inputfolder:<input folder>] [/outputfolder:<output folder>]");
+            Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces> [/offset:hh:mm:ss:msec] [/encoding:<encoding name>] [/fps:<frame rate>] [/inputfolder:<input folder>] [/outputfolder:<output folder>] [/pac-codepage:<code page>]");
             Console.WriteLine();
             Console.WriteLine("    example: SubtitleEdit /convert *.srt sami");
             Console.WriteLine("    list available formats: SubtitleEdit /convert /list");
@@ -675,6 +675,13 @@ namespace Nikse.SubtitleEdit.Forms
                         inputFolder = Directory.GetCurrentDirectory();
                 }
 
+                string pacCodePage = string.Empty;
+                for (int idx = 4; idx < max; idx++)
+                    if (args.Length > idx && args[idx].ToLower().StartsWith("/pac-codepage:"))
+                        pacCodePage = args[idx].ToLower();
+                if (pacCodePage.Length > "/pac-codepage:".Length)
+                    pacCodePage = pacCodePage.Remove(0, "/pac-codepage:".Length);
+
                 bool overwrite = false;
                 for (int idx=4; idx < max; idx++)
                     if (args.Length > idx && args[idx].ToLower() == ("/overwrite"))
@@ -771,7 +778,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                 }
                                             }
 
-                                            BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite);
+                                            BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage);
                                             done = true;
                                         }
                                     }
@@ -904,7 +911,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (!done)
                         {
-                            BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, overwrite);
+                            BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, overwrite, pacCodePage);
                         }
                     }
                     else
@@ -935,7 +942,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Environment.Exit(1);
         }
 
-        internal static bool BatchConvertSave(string toFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IList<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite)
+        internal static bool BatchConvertSave(string toFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IList<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite, string pacCodePage)
         {
             // adjust offset
             if (!string.IsNullOrEmpty(offset) && (offset.StartsWith("/offset:") || offset.StartsWith("offset:")))
@@ -1014,8 +1021,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (!targetFormatFound)
             {
                 var pac = new Pac();
-                if (pac.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                if (pac.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower() || toFormat.ToLower() == "pac" || toFormat.ToLower() == ".pac")
                 {
+                    pac.BatchMode = true;
+                    if (!string.IsNullOrEmpty(pacCodePage) && Utilities.IsInteger(pacCodePage))
+                        pac.CodePage = Convert.ToInt32(pacCodePage);
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension, outputFolder, overwrite);
                     Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));

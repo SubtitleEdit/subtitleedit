@@ -971,11 +971,11 @@ namespace Nikse.SubtitleEdit.Forms
                 bool success;
                 if (checkBoxOverwriteOriginalFiles.Checked)
                 {
-                    success = Main.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), System.IO.Path.GetDirectoryName(p.FileName), _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, true);
+                    success = Main.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), System.IO.Path.GetDirectoryName(p.FileName), _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, true, string.Empty);
                 }
                 else
                 {
-                    success = Main.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), textBoxOutputFolder.Text, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, checkBoxOverwrite.Checked);
+                    success = Main.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), textBoxOutputFolder.Text, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, checkBoxOverwrite.Checked, string.Empty);
                 }
 
                 if (success)
