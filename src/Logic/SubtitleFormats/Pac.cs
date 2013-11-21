@@ -687,6 +687,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private string _fileName = string.Empty;
         private int _codePage = -1;
 
+        public int CodePage
+        {
+            get 
+            {
+                return _codePage;
+            }
+            set
+            {
+                _codePage = value;
+            }
+
+        }
+
         public override string Extension
         {
             get { return ".pac"; }
