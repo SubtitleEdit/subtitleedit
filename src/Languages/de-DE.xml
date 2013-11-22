@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
@@ -154,6 +154,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Converted>Umgewandelt</Converted>
     <ConvertedX>Umgewandelt ({0})</ConvertedX>
     <Settings>Einstellungen</Settings>
+    <SplitLongLines>Lange Zeilen trennen</SplitLongLines>
     <AutoBalance>Zeilen automatsich ausbancieren</AutoBalance>
     <ScanFolder>Durchsuche Ordner...</ScanFolder>
     <ScanningFolder>Durchsuche {0} und Unterordner nach Untertiteldateien...</ScanningFolder>
@@ -352,6 +353,9 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Schriftfarbe</FontColor>
     <BorderColor>Rahmenfarbe</BorderColor>
     <BorderWidth>Rahmenbreite</BorderWidth>
+    <ShadowColor>Schattenfarbe</ShadowColor>
+    <ShadowWidth>Schattenbreite</ShadowWidth>
+    <Transparency>Alpha</Transparency>
     <ImageFormat>Bildformat</ImageFormat>
     <SimpleRendering>Einfaches Rendern</SimpleRendering>
     <Text3D>3D</Text3D>
@@ -802,6 +806,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <AdvancedSubStationAlphaStyles>Erweiterte SSA Formatierungen...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Zeitlich festgelegter Textstil</TimedTextSetStyle>
         <TimedTextStyles>Zeitlich festgelegte Textstile...</TimedTextStyles>
+        <TimedTextSetLanguage>Zeitlich festgelegte Textsprache</TimedTextSetLanguage>
         <SamiSetStyle>Sami Klasse festlegen</SamiSetStyle>
         <Cut>Ausschneiden</Cut>
         <Copy>Kopieren</Copy>
@@ -855,8 +860,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
       <ListView>Listenansicht</ListView>
       <SourceView>Quellansicht</SourceView>
       <UndoChangesInEditPanel>Rückgängig</UndoChangesInEditPanel>
-      <Previous>Vorheriger</Previous>
-      <Next>Nächster</Next>
+      <Previous>Zurück</Previous>
+      <Next>Weiter</Next>
       <AutoBreak>Auto&amp;Umbruch</AutoBreak>
       <Unbreak>Umbruch entfernen</Unbreak>
     </Controls>
@@ -1334,7 +1339,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformAndSpectrogram>Wellenform/Spektrogramm</WaveformAndSpectrogram>
     <Tools>Werkzeuge</Tools>
     <WordLists>Wortlisten</WordLists>
-    <SsaStyle>SSA Formatierung</SsaStyle>
+    <SsaStyle>ASS/SSA Formatierung</SsaStyle>
     <Proxy>Proxy</Proxy>
     <ShowToolBarButtons>Knöpfe in Symbolleiste anzeigen</ShowToolBarButtons>
     <New>Neu</New>
@@ -1408,6 +1413,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveFormShowGridLines>Raster anzeigen</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Scrollen mit Mausrad umkehren</ReverseMouseWheelScrollDirection>
     <WaveFormAllowOverlap>Überlappung erlauben (beim Verschieben/Skalieren)</WaveFormAllowOverlap>
+    <WaveformBorderHitMs1>Randmarke erreicht in</WaveformBorderHitMs1>
+    <WaveformBorderHitMs2>Millisekunden</WaveformBorderHitMs2>
     <WaveFormColor>Farbe</WaveFormColor>
     <WaveFormSelectedColor>Farbe markiert</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Hintergrundfarbe</WaveFormBackgroundColor>
@@ -1419,10 +1426,15 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <SpectrogramAppearance>Spektogramm Darstellung</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Einfarbiger Verlauf</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassisch</SpectrogramClassic>
+    <WaveformUseFFMPEG>FFMPEG für Wellenformdaten verwenden</WaveformUseFFMPEG>
+    <WaveformFFMPEGPath>FFMPEG Pfad</WaveformFFMPEGPath>
+    <WaveformBrowseToFFMPEG>FFMPEG suchen</WaveformBrowseToFFMPEG>
     <SubStationAlphaStyle>Substation Alpha Formatierung</SubStationAlphaStyle>
     <ChooseFont>Schriftart wählen</ChooseFont>
     <ChooseColor>Farbe wählen</ChooseColor>
-    <Example>Beispiel</Example>
+    <SsaOutline>Kontur</SsaOutline>
+    <SsaShadow>Schatten</SsaShadow>
+    <SsaOpaqueBox>Opake Box</SsaOpaqueBox>
     <Testing123>Test 123...</Testing123>
     <Language>Sprache</Language>
     <NamesIgnoreLists>Namen/Ignorierliste (Groß-/Kleinschreibung)</NamesIgnoreLists>
@@ -1521,6 +1533,10 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ListViewColumnInsert>Zeile, Text einfügen</ListViewColumnInsert>
     <ListViewColumnPaste>Zeile, Einfügen</ListViewColumnPaste>
     <ShowBeamer>Starte Untertitel Vollbildbeamer</ShowBeamer>
+    <MainTextBoxMoveLastWordDown>Letzes Wort zur nächsten Zeile</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>Erstes Wort der nächsten Zeile nach oben</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxAutoBreak>Auto Umbruch</MainTextBoxAutoBreak>
+    <MainTextBoxUnbreak>Umbruch entfernen</MainTextBoxUnbreak>
   </Settings>
   <ShowEarlierLater>
     <Title>Ausgewählte Texte früher/später anzeigen</Title>
@@ -1562,6 +1578,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <EditWordOnly>Nur Wort bearbeiten</EditWordOnly>
     <AddXToNamesEtc>Füge '{0}' zur Namensliste hinzu</AddXToNamesEtc>
     <AutoFixNames>Namen Autokorrektur nur bei Groß-/Klein Unterschied</AutoFixNames>
+    <CheckOneLetterWords>Abfrage für unbekannte ein Buchstaben Wörter</CheckOneLetterWords>
+    <TreatINQuoteAsING>Wortende " in' " in " ing " ändern (Nur Englisch)</TreatINQuoteAsING>
     <ImageText>Bildtext</ImageText>
     <SpellCheckCompleted>Rechtschreibprüfung abgeschlossen</SpellCheckCompleted>
     <SpellCheckAborted>Rechtschreibprüfung abgebrochen</SpellCheckAborted>
@@ -1742,7 +1760,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
   <VobSubEditCharacters>
     <Title>Bearbeite Bildvergleichsdatenbank</Title>
     <ChooseCharacter>Zeichen auswählen</ChooseCharacter>
-    <ImageCompareFiles>Bildvergleichs Dateien</ImageCompareFiles>
+    <ImageCompareFiles>Bildvergleich Dateien</ImageCompareFiles>
     <CurrentCompareImage>Aktuelles Vergleichsbild</CurrentCompareImage>
     <TextAssociatedWithImage>Dem Bild zugeordneter Text</TextAssociatedWithImage>
     <IsItalic>Ist &amp;kursiv</IsItalic>
@@ -1770,6 +1788,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Stop>Stop</Stop>
     <StartOcrFrom>Beginne OCR bei Text Nr.:</StartOcrFrom>
     <LoadingVobSubImages>Lade VobSub Bilder...</LoadingVobSubImages>
+    <LoadingImageCompareDatabase>Lade Bildvergleich Datenbank...</LoadingImageCompareDatabase>
+    <ConvertingImageCompareDatabase>Konvertiere Bildvergleich Datenbank (images.db/images.xml)...</ConvertingImageCompareDatabase>
     <SubtitleImage>Untertitel Bild</SubtitleImage>
     <SubtitleText>Untertitel Text</SubtitleText>
     <UnableToCreateCharacterDatabaseFolder>Zeichendatenbank Ordner konnte nicht erstellt werden: {0}</UnableToCreateCharacterDatabaseFolder>
