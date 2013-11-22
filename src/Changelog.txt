@@ -6,6 +6,7 @@
    * Added option to control border-marker-hit-size in audio waveform
    * Added option regarding spell check and sigle letters
    * Ctrl+Backspace in text box now deletes word to the left - thx Ivandrofly
+   * Can now import FCP+image
 * IMPROVED:
    * Updated Portuguese language file - thx moob
    * Updated Dutch language file - thx Herman
