@@ -2456,6 +2456,30 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
+                    try
+                    {
+                        var fcpImage = new FinalCutProImage();
+                        string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                        var list = new List<string>();
+                        foreach (string l in arr)
+                            list.Add(l);
+                        if (fcpImage.IsMine(list, fileName))
+                        {
+                            if (ContinueNewOrExit())
+                            {
+                                ImportAndOcrDost(fileName, fcpImage, list);
+                            }
+                            return;
+                        }
+                    }
+                    catch
+                    {
+                        format = null;
+                    }
+                }
+
+                if (format == null)
+                {
                     var elr = new ELRStudioClosedCaption();
                     if (elr.IsMine(null, fileName))
                     {

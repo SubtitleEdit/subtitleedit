@@ -855,6 +855,7 @@
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
+    <Compile Include="Logic\SubtitleFormats\FinalCutProImage.cs" />
     <Compile Include="Logic\SubtitleFormats\ELRStudioClosedCaption.cs" />
     <Compile Include="Logic\SubtitleFormats\ScenaristClosedCaptionsDropFrame.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProXCM.cs" />
