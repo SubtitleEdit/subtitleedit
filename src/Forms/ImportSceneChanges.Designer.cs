@@ -1,4 +1,4 @@
-﻿namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms
 {
     partial class ImportSceneChanges
     {
@@ -35,6 +35,7 @@
             this.radioButtonMilliseconds = new System.Windows.Forms.RadioButton();
             this.radioButtonSeconds = new System.Windows.Forms.RadioButton();
             this.radioButtonFrames = new System.Windows.Forms.RadioButton();
+            this.radioButtonHHMMSSMS = new System.Windows.Forms.RadioButton();
             this.groupBoxImportText = new System.Windows.Forms.GroupBox();
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.buttonOpenText = new System.Windows.Forms.Button();
@@ -84,9 +85,10 @@
             this.groupBoxTimeCodes.Controls.Add(this.radioButtonMilliseconds);
             this.groupBoxTimeCodes.Controls.Add(this.radioButtonSeconds);
             this.groupBoxTimeCodes.Controls.Add(this.radioButtonFrames);
+            this.groupBoxTimeCodes.Controls.Add(this.radioButtonHHMMSSMS);
             this.groupBoxTimeCodes.Location = new System.Drawing.Point(6, 19);
             this.groupBoxTimeCodes.Name = "groupBoxTimeCodes";
-            this.groupBoxTimeCodes.Size = new System.Drawing.Size(329, 99);
+            this.groupBoxTimeCodes.Size = new System.Drawing.Size(329, 120);
             this.groupBoxTimeCodes.TabIndex = 5;
             this.groupBoxTimeCodes.TabStop = false;
             this.groupBoxTimeCodes.Text = "Time codes";
@@ -122,6 +124,16 @@
             this.radioButtonFrames.TabStop = true;
             this.radioButtonFrames.Text = "Frames";
             this.radioButtonFrames.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonHHMMSSMS
+            // 
+            this.radioButtonHHMMSSMS.AutoSize = true;
+            this.radioButtonHHMMSSMS.Location = new System.Drawing.Point(19, 90);
+            this.radioButtonHHMMSSMS.Name = "radioButtonHHMMSSMS";
+            this.radioButtonHHMMSSMS.Size = new System.Drawing.Size(167, 17);
+            this.radioButtonHHMMSSMS.TabIndex = 3;
+            this.radioButtonHHMMSSMS.Text = "HH:MM:SS.ms (00:00:01.500)";
+            this.radioButtonHHMMSSMS.UseVisualStyleBackColor = true;
             // 
             // groupBoxImportText
             // 
@@ -200,6 +212,7 @@
         private System.Windows.Forms.RadioButton radioButtonMilliseconds;
         private System.Windows.Forms.RadioButton radioButtonSeconds;
         private System.Windows.Forms.RadioButton radioButtonFrames;
+		private System.Windows.Forms.RadioButton radioButtonHHMMSSMS;
         private System.Windows.Forms.GroupBox groupBoxImportText;
         private System.Windows.Forms.TextBox textBoxText;
         private System.Windows.Forms.Button buttonOpenText;

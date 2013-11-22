@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOpenText_Click(object sender, EventArgs e)
         {
             openFileDialog1.Title = buttonOpenText.Text;
-            openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+            openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.scenechange|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -62,6 +62,8 @@ namespace Nikse.SubtitleEdit.Forms
                 string s = File.ReadAllText(fileName, encoding).Trim();
                 if (s.Contains("."))
                     radioButtonSeconds.Checked = true;
+                if (s.Contains(".") && s.Contains(":"))
+                    radioButtonHHMMSSMS.Checked = true;
                 if (!s.Contains(Environment.NewLine) && s.Contains(";"))
                 {
                     var sb = new StringBuilder();
@@ -88,22 +90,35 @@ namespace Nikse.SubtitleEdit.Forms
             SceneChangesInSeconds = new List<double>();
             foreach (string line in textBoxText.Lines)
             {
-                double d;
-                if (double.TryParse(line, out d))
+				if (radioButtonHHMMSSMS.Checked)
                 {
-                    if (radioButtonFrames.Checked)
-                    {
-                        SceneChangesInSeconds.Add(d / _frameRate);
-                    }
-                    else if (radioButtonSeconds.Checked)
-                    {
-                        SceneChangesInSeconds.Add(d);
-                    }
-                    else
-                    {
-                        SceneChangesInSeconds.Add(d / 1000.0);
-                    }
+					// Parse string (HH:MM:SS.ms)
+					string[] timeParts = line.Split(":.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+					// If 4 parts were found...
+					if (timeParts.Length == 4)
+					{
+                        SceneChangesInSeconds.Add(Convert.ToDouble(timeParts[0]) * 3600.0 + Convert.ToDouble(timeParts[1]) * 60.0 + Convert.ToDouble(timeParts[2]) + Convert.ToDouble(timeParts[3]) / 1000.0);
+					}
                 }
+				else
+				{
+					double d;
+					if (double.TryParse(line, out d))
+					{
+						if (radioButtonFrames.Checked)
+						{
+							SceneChangesInSeconds.Add(d / _frameRate);
+						}
+						else if (radioButtonSeconds.Checked)
+						{
+							SceneChangesInSeconds.Add(d);
+						}
+						else if (radioButtonMilliseconds.Checked)
+						{
+							SceneChangesInSeconds.Add(d / 1000.0);
+						}
+					}
+				}
             }
             DialogResult = DialogResult.OK;
         }
