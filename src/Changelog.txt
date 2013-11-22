@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.3.10 (xth November 2013)
+3.3.10 (22nd November 2013)
 * NEW:
    * Added new subtitle formats
    * Added option to control border-marker-hit-size in audio waveform
