@@ -1698,6 +1698,22 @@
     <Word from="I'llgo" to="I'll go" />
     <Word from="maypass" to="may pass" />
     <Word from="andprotecting" to="and protecting" />
+    <Word from="BIessed" to="Blessed" />
+    <Word from="CIean" to="Clean" />
+    <Word from="SIave" to="Slave" />
+    <Word from="AIi" to="Ali" />
+    <Word from="AIIah" to="Allah" />
+    <Word from="AIIahu" to="Allahu" />
+    <Word from="CIick" to="Click" />
+    <Word from="BIast" to="Blast" />
+    <Word from="AIlah" to="Allah" />
+    <Word from="SIow" to="Slow" />
+    <Word from="theirpolicies" to="their policies" />
+    <Word from="Orperhaps" to="Or perhaps" />
+    <Word from="ofsex" to="of sex" />
+    <Word from="forpleasure" to="for pleasure" />
+    <Word from="ourpower" to="our power" />
+    <Word from="Yourpiece" to="Your piece" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
