@@ -10,6 +10,7 @@
    * Updated Portuguese language file - thx moob
    * Updated Dutch language file - thx Herman
    * Updated Catalan language file - thx Juansa
+   * Updated German language file - thx Siegwarth
    * OCR max. error% is now saved for blu-ray - thx Zoltán
    * More default values for ASS/SSA in options
    * Added split long lines to "Batch convert" - thx menes
