@@ -173,7 +173,7 @@ namespace Nikse.SubtitleEdit.Logic
                 i++;
             }
             if (includeAudioFiles && !string.IsNullOrEmpty(Configuration.Settings.Language.General.AudioFiles))
-                sb.Append("|" + Configuration.Settings.Language.General.AudioFiles + "|*.mp3;*.wav;*.wma;*.ogg;*.mpa;*.ape;*.aiff;*.flac;*.aac");
+                sb.Append("|" + Configuration.Settings.Language.General.AudioFiles + "|*.mp3;*.wav;*.wma;*.ogg;*.mpa;*.m4a;*.ape;*.aiff;*.flac;*.aac");
             sb.Append("|" + Configuration.Settings.Language.General.AllFiles + "|*.*");
             return sb.ToString();
         }
