@@ -154,6 +154,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Converted>Convertito</Converted>
     <ConvertedX>Convertito ({0})</ConvertedX>
     <Settings>Impostazioni</Settings>
+    <SplitLongLines>Dividi linee lunghe</SplitLongLines>
     <AutoBalance>Blianciamento automatico linee</AutoBalance>
     <ScanFolder>Scansiona cartella...</ScanFolder>
     <ScanningFolder>Scansiona {0} e sottocartelle per file di sottotitoli...</ScanningFolder>
@@ -287,6 +288,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneralSubtitleInformation>Informazioni generali sottotitolo</GeneralSubtitleInformation>
     <CodePageNumber>Tabella Codici Numero</CodePageNumber>
     <DiskFormatCode>Codice formato disco</DiskFormatCode>
+    <DisplayStandardCode>Mostra codice standard</DisplayStandardCode>
     <CharacterCodeTable>Tabella caratteri</CharacterCodeTable>
     <LanguageCode>Codice lingua</LanguageCode>
     <OriginalProgramTitle>Titolo programma originale</OriginalProgramTitle>
@@ -323,6 +325,26 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TotalMilliseconds>Millisecondi totali:</TotalMilliseconds>
     <EndDelayInMillisecs>Ritardo finale in millisecondi:</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportCustomText>
+    <Title>Esporta formato testo personalizzato</Title>
+    <Formats>Formati</Formats>
+    <New>Nuovo</New>
+    <Edit>Modifica</Edit>
+    <Delete>Elimina</Delete>
+    <SaveAs>S&amp;alva come...</SaveAs>
+    <SaveSubtitleAs>Salva sottotitolo come...</SaveSubtitleAs>
+    <SubtitleExportedInCustomFormatToX>Sottotitolo esportato in formato personalizzato: {0}</SubtitleExportedInCustomFormatToX>
+  </ExportCustomText>
+  <ExportCustomTextFormat>
+    <Title>Modello formato testo personalizzato</Title>
+    <Template>Modello</Template>
+    <Header>Intestazione</Header>
+    <TextLine>Linea di testo (paragrafo)</TextLine>
+    <TimeCode>Time code</TimeCode>
+    <NewLine>Nuova linea</NewLine>
+    <Footer>Piè di pagina</Footer>
+    <DoNotModify>[Non modificare]</DoNotModify>
+  </ExportCustomTextFormat>
   <ExportPngXml>
     <Title>Esporta BDN XML/PNG</Title>
     <ImageSettings>Impostazioni immagine</ImageSettings>
@@ -332,7 +354,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderColor>Colore bordo</BorderColor>
     <BorderWidth>Larghezza bordo</BorderWidth>
     <ImageFormat>Formato immagine</ImageFormat>
-    <AntiAlias>Anti alias</AntiAlias>
+    <SimpleRendering>Rendering semplice</SimpleRendering>
     <Text3D>3D</Text3D>
     <SideBySide3D>Centro-Affiancato</SideBySide3D>
     <HalfTopBottom3D>Centro-Alto/Basso</HalfTopBottom3D>
@@ -651,6 +673,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
         <ExportUltech130>Ultech caption...</ExportUltech130>
+        <ExportCustomTextFormat>Esporta formato testo personalizzato...</ExportCustomTextFormat>
         <Exit>E&amp;sci</Exit>
       </File>
       <Edit>
@@ -697,6 +720,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TextNumberOfCharactersPerSeconds>Testo - numero di car/sec</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Testo - parole al minuto</WordsPerMinute>
         <Style>Stile</Style>
+        <Ascending>Ascendente</Ascending>
+        <Descending>Discendente</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Nuova traduzione vuota dal sottotitolo corrente</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Conversioni Batch...</BatchConvert>
         <GenerateTimeAsText>Genera tempo come testo...</GenerateTimeAsText>
@@ -780,6 +805,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AdvancedSubStationAlphaStyles>Stili Advanced Sub Station Alphai...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Testo calcolato - imposta stile</TimedTextSetStyle>
         <TimedTextStyles>Stili testo calcolato...</TimedTextStyles>
+        <TimedTextSetLanguage>Testo calcolato - imposta lingua</TimedTextSetLanguage>
         <SamiSetStyle>Sami - imposta classi</SamiSetStyle>
         <Cut>Taglia</Cut>
         <Copy>Copia</Copy>
@@ -1127,6 +1153,7 @@ la codifica ANSI andranno perse. Salvare comunque?</UnicodeMusicSymbolsAnsiWarni
     <SubtitlesJoined>Sottotitoli uniti</SubtitlesJoined>
     <StatusLog>Log di stato</StatusLog>
     <XSceneChangesImported>{0} cambi scena importati</XSceneChangesImported>
+    <PluginXExecuted>Plugin '{0}' eseguito</PluginXExecuted>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Scegli sottotitolo da file Matroska</Title>
@@ -1385,6 +1412,9 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <WaveFormGridColor>Griglia colori</WaveFormGridColor>
     <WaveFormShowGridLines>Mostra griglia linee</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Inverti la direzione di scorrimento della rotella del mouse</ReverseMouseWheelScrollDirection>
+    <WaveFormAllowOverlap>Consenti sovrapposizione (durante muovi/ridimensiona)</WaveFormAllowOverlap>
+    <WaveformBorderHitMs1>Il marcatore del bordo deve essere all'interno</WaveformBorderHitMs1>
+    <WaveformBorderHitMs2>millisecondi</WaveformBorderHitMs2>
     <WaveFormColor>Colore</WaveFormColor>
     <WaveFormSelectedColor>Colore selezionato</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Colore sfondo</WaveFormBackgroundColor>
@@ -1399,7 +1429,9 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <SubStationAlphaStyle>Stile Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Scegli font</ChooseFont>
     <ChooseColor>Scegli colore</ChooseColor>
-    <Example>Esempio</Example>
+    <SsaOutline>Contorno</SsaOutline>
+    <SsaShadow>Ombra</SsaShadow>
+    <SsaOpaqueBox>Box opaco</SsaOpaqueBox>
     <Testing123>Esempio 123...</Testing123>
     <Language>Lingua</Language>
     <NamesIgnoreLists>Lista nomi/ecc (sensibile a MAIUSC/minusc)</NamesIgnoreLists>
@@ -1454,6 +1486,8 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <MergeDialogue>Unisci dialoghi (inserisci trattini)</MergeDialogue>
     <GoToNext>Vai alla linea successiva</GoToNext>
     <GoToPrevious>Vai alla linea precedente</GoToPrevious>
+    <GoToCurrentSubtitleStart>Vai all'inizio della linea corrente</GoToCurrentSubtitleStart>
+    <GoToCurrentSubtitleEnd>Vai alla fine della linea corrente</GoToCurrentSubtitleEnd>
     <ToggleFocus>Alterna focus tra lista sorgente e casella testo sottotitolo</ToggleFocus>
     <ToggleDialogueDashes>Alterna trattini di dialogo</ToggleDialogueDashes>
     <Alignment>Allineamento (linee selezionate)</Alignment>
@@ -1498,6 +1532,8 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <ListViewColumnInsert>Colonna, inserisci testo</ListViewColumnInsert>
     <ListViewColumnPaste>Colonna, incolla</ListViewColumnPaste>
     <ShowBeamer>Inizia sottotitolo fullscreen beamer</ShowBeamer>
+    <MainTextBoxMoveLastWordDown>Sposta l'ultima parola nella linea sottotitolo successiva</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>Sposta la prima parola dalla prossima linea di sottotitolo</MainTextBoxMoveFirstWordFromNextUp>
   </Settings>
   <ShowEarlierLater>
     <Title>Mostra linee selezionate prima/dopo</Title>
@@ -1539,6 +1575,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <EditWordOnly>Modifica solo la parola</EditWordOnly>
     <AddXToNamesEtc>Aggiungi '{0}' alla lista nomi/ecc</AddXToNamesEtc>
     <AutoFixNames>Correggi i nomi quando differisce solo MAIUSC/minusc</AutoFixNames>
+    <CheckOneLetterWords>Chiedi per parole di una lettera sconosciute</CheckOneLetterWords>
     <ImageText>Immagine testo</ImageText>
     <SpellCheckCompleted>Controllo ortografico completato</SpellCheckCompleted>
     <SpellCheckAborted>Controllo ortografico annullato</SpellCheckAborted>
@@ -1741,12 +1778,15 @@ Mantenere le modifiche?</KeepChangesMessage>
     <OcrViaImageCompare>OCR via confronto immagine</OcrViaImageCompare>
     <ImageDatabase>Database immagini</ImageDatabase>
     <NoOfPixelsIsSpace>Num di pixel è spazio</NoOfPixelsIsSpace>
+    <MaxErrorPercent>Errori max %</MaxErrorPercent>
     <New>Nuovo</New>
     <Edit>Modifica</Edit>
     <StartOcr>Inizia OCR</StartOcr>
     <Stop>Ferma</Stop>
     <StartOcrFrom>Inizia OCR dal sottotitolo n.:</StartOcrFrom>
     <LoadingVobSubImages>Caricamento immagini VobSub...</LoadingVobSubImages>
+    <LoadingImageCompareDatabase>Carica database immagine comparativa</LoadingImageCompareDatabase>
+    <ConvertingImageCompareDatabase>Conversione database immagine comparativa nel nuovo formato (images.db/images.xml)...</ConvertingImageCompareDatabase>
     <SubtitleImage>Immagine sottotitolo</SubtitleImage>
     <SubtitleText>Testo sottotitolo</SubtitleText>
     <UnableToCreateCharacterDatabaseFolder>Impossibile creare 'Cartella database caratteri': {0}</UnableToCreateCharacterDatabaseFolder>
