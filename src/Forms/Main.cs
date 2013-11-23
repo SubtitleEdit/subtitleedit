@@ -1251,13 +1251,26 @@ namespace Nikse.SubtitleEdit.Forms
                 if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                 { // so we don't get weird rounds we'll use whole frames when moving start time
                     double fr = 1000.0 / Configuration.Settings.General.CurrentFrameRate;
-                    paragraph.StartTime.TotalMilliseconds = ((int)Math.Round(paragraph.StartTime.TotalMilliseconds / fr)) * fr;
+                    if (e.BeforeParagraph != null && e.BeforeParagraph.StartTime.TotalMilliseconds != e.Paragraph.StartTime.TotalMilliseconds &&
+                                                     e.BeforeParagraph.Duration.TotalMilliseconds == e.Paragraph.Duration.TotalMilliseconds)
+                    {
+                        // move paragraph
+                        paragraph.StartTime.TotalMilliseconds = ((int)Math.Round(paragraph.StartTime.TotalMilliseconds / fr)) * fr;
+                        paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds + e.BeforeParagraph.Duration.TotalMilliseconds;
+                    }
+                    else if (e.BeforeParagraph != null && e.BeforeParagraph.EndTime.TotalMilliseconds == e.Paragraph.EndTime.TotalMilliseconds)
+                    {
+                        paragraph.EndTime.TotalMilliseconds = ((int)Math.Round(paragraph.EndTime.TotalMilliseconds / fr)) * fr;
+                        int end = SubtitleFormat.MillisecondsToFrames(paragraph.EndTime.TotalMilliseconds);
+                        int dur = SubtitleFormat.MillisecondsToFrames(paragraph.Duration.TotalMilliseconds);                        
+                        paragraph.StartTime.TotalMilliseconds = SubtitleFormat.FramesToMilliseconds(end - dur);
+                    }
                 }
 
                 timeUpDownStartTime.TimeCode = paragraph.StartTime;
                 decimal durationInSeconds = (decimal) (paragraph.Duration.TotalSeconds);
                 if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
-                    SetDurationInSeconds((double)durationInSeconds);
+                    SetDurationInSeconds((double)durationInSeconds);               
 
                 if (original != null)
                 {
@@ -7740,20 +7753,17 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                     {
-                        int frames = (int)Math.Round((Convert.ToDouble(numericUpDownDuration.Value) % 1.0 * 100.0));
-                        if (frames > Configuration.Settings.General.CurrentFrameRate-1)
+                        int seconds = (int)numericUpDownDuration.Value;
+                        int frames = Convert.ToInt32((numericUpDownDuration.Value - seconds) * 100);                       
+                        if (frames > Math.Round(Configuration.Settings.General.CurrentFrameRate) - 1)
                         {
-                            int seconds = (int)numericUpDownDuration.Value;
                             numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
-                            int extraSeconds = (int)Math.Round((frames / (Configuration.Settings.General.CurrentFrameRate-1)));
-                            int restFrames = (int)Math.Round((frames % (Configuration.Settings.General.CurrentFrameRate-1)));
-                            if (frames == 99)
-                                numericUpDownDuration.Value = (decimal)(seconds + (((int)(Configuration.Settings.General.CurrentFrameRate - 1)) / 100.0));
+                            if (frames >= 99)
+                                numericUpDownDuration.Value = (decimal)(seconds + ((Math.Round((Configuration.Settings.General.CurrentFrameRate - 1))) / 100.0));
                             else
-                                numericUpDownDuration.Value = (decimal)(seconds + extraSeconds + restFrames / 100.0);
+                                numericUpDownDuration.Value = (decimal)(seconds + 1);
                             numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
                         }
-
                     }
                     temp.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + GetDurationInMilliseconds();
 
