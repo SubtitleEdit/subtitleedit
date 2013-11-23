@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelInfo.Text = "VCL";
             if (Configuration.Settings.General.UseFFMPEGForWaveExtraction && File.Exists(Configuration.Settings.General.FFMPEGLocation))
             {
-                string FFMPEGWaveTranscodeSettings = "-i \"{0}\" -vn -ar 44100 -ac 2 -ab 128 -vol 448 -f wav \"{1}\""; // -vol 512 will boot volume... 256 is normal
+                string FFMPEGWaveTranscodeSettings = "-i \"{0}\" -vn -ar 44100 -ac 2 -ab 128 -vol 448 -f wav \"{1}\""; // -vol 448 will boot volume... 256 is normal
                 exeFilePath = Configuration.Settings.General.FFMPEGLocation;
                 parameters = string.Format(FFMPEGWaveTranscodeSettings, SourceVideoFileName, targetFile);
                 //-i indicates the input

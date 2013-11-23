@@ -1,5 +1,15 @@
 ﻿Subtitle Edit Changelog
 
+
+3.3.11 (xx December 2013)
+* NEW:
+* IMPROVED:
+   * Updated Italian language file - thx SilverDrake
+   * Added file type .m4a to audio file types
+* FIXED:
+   * Dragging line in wave form in frames mode keeps duration - thx Adrian
+
+
 3.3.10 (22nd November 2013)
 * NEW:
    * Added new subtitle formats
