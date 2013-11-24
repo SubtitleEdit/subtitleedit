@@ -5,7 +5,7 @@
 * NEW:
 * IMPROVED:
    * Updated Italian language file - thx SilverDrake
-   * Added file type .m4a to audio file types
+   * Added .m4a file type to audio file types
 * FIXED:
    * Dragging line in wave form in frames mode keeps duration - thx Adrian
 
@@ -14,22 +14,22 @@
 * NEW:
    * Added new subtitle formats
    * Added option to control border-marker-hit-size in audio waveform
-   * Added option regarding spell check and sigle letters
+   * Added option regarding spell check and single letters
    * Ctrl+Backspace in text box now deletes word to the left - thx Ivandrofly
    * Can now import FCP+image
 * IMPROVED:
-   * Updated Portuguese language file - thx moob
-   * Updated Dutch language file - thx Herman
    * Updated Catalan language file - thx Juansa
+   * Updated Dutch language file - thx Herman
    * Updated German language file - thx Siegwarth
+   * Updated Portuguese language file - thx moob
    * OCR max. error% is now saved for blu-ray - thx Zoltán
    * More default values for ASS/SSA in options
    * Added split long lines to "Batch convert" - thx menes
    * Added support for multiple languages in TimedText / DFXP - thx Laszlo
    * Custom shortcuts can now use "Home" + "Back" (backspace) keys
    * Added shortcut for "Insert after" in text box (default is Alt+Insert)
-   * Audio extraction can now be done with FFMPEG (see Options -> Settings)
-   * Italics/{\an8} now works for format "SoftNi" - thx Adrian
+   * Audio extraction can now be done with FFmpeg (see Options -> Settings)
+   * Italics/{\an8} now works for "SoftNi" format - thx Adrian
    * Add audio waveform - mkv/mp4 will ask for track if more than 1 (VLC only)
 * FIXED:
    * F11 (Set start time) sometimes kept duration - thx Rinus/Quetsbeek
@@ -41,17 +41,17 @@
    * "Insert sub after current line" no longer inserts before current line
    * Batch convert now works with more CC formats
    * Import sub with matching time codes in OCR window 
-     now works with other formats than srt - thx osgZach
+     now works with other formats than SRT - thx osgZach
    * Fix for multiline italics in Spruce/DVD Studio pro - thx Damian
    * Fixed bad link for Spannish spell check dictionary - thx Nils
-   * Minor fix for format TSB4 - thx Leart 
+   * Minor fix for TSB4 format - thx Leart 
    * Audio mkv delays now might work when creating waveform
    * Add to "Names/noise list" in spell checknow uses word in textbox 
      (and not the original word)
    * Alignment now works when exporting to sub/idx - thx adrianbergonzi
    * Changed VLC audio extraction parameters so it works better with SE
    * Fixed bug in "Find double words" - thx Matt
-   * Command line convert does not prompt for pac code page - thx Ethan
+   * Command line convert does not prompt for PAC code page - thx Ethan
 
 
 3.3.9 (19th October 2013)
@@ -126,7 +126,7 @@
    * Fixed bugs in "Apply duration limits" - thx Mike
    * When typing "&" SE would show "_" in the list view - thx XhmikosR
    * Allow regex search in empty string - thx vmb
-   * Fixed crash when loading sub from dvd - thx Cristiano
+   * Fixed crash when loading sub from DVD - thx Cristiano
    * Export to images now uses font size correctly
    * Export to images can now render Arabic (use "Simple rendering")
    * Bug in reading end time code in Gpac ttxt format - thx noMnoMnoM
@@ -187,7 +187,7 @@
    * Updated Basque language file - thx Xabier Aramendi
    * Updated Dutch language file - thx Quetsbeek
    * Support for color, size and font name in MicroDVD - thx SimlyTheBOSS
-   * Start OCR if srt file contains only image file names
+   * Start OCR if SRT file contains only image file names
    * Added Turkish letters to PAC import/export - thx aydngur
    * Updated NHunspell to 1.1.1.0 - thx tmaierhofer
    * Compare now show filename of current subtitle (if available)
@@ -297,7 +297,7 @@
    * German language - thx Christoph Kitsche
    * Greek language - thx Menes
 * IMPROVED:
-   * Improved reading of bad srt files - thx Ile
+   * Improved reading of bad SRT files - thx Ile
    * Slow Timed Text 1.0 loading sped up
    * Slightly improved reading of italics in timed text draft - thx Jean
    * Export to png/xml now uses font styles from SSA/ASS
