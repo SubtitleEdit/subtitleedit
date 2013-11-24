@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 2000;
                         }
-                        
+
                         // seek to text
                         int length = 0;
                         var sb = new StringBuilder();

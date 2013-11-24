@@ -251,7 +251,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     ShadowColor = panelShadowColor.BackColor,
                                     ShadowWidth = (int)comboBoxShadowWidth.SelectedIndex,
                                     ShadowAlpha = (int)numericUpDownShadowTransparency.Value,
-            
+
                                 };
             if (index < _subtitle.Paragraphs.Count)
             {

@@ -641,7 +641,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 format = avidStl;
                             }
                         }
-                        
+
                         if (format == null)
                         {
                             var elr = new ELRStudioClosedCaption();

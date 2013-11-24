@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate IntPtr libvlc_media_player_new_from_media(IntPtr media);
         libvlc_media_player_new_from_media _libvlc_media_player_new_from_media;
-        
+
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void libvlc_media_player_play(IntPtr mediaPlayer);
         libvlc_media_player_play _libvlc_media_player_play;

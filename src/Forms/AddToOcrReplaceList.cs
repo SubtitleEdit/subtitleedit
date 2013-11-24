@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
             }
             catch
-            { 
+            {
             }
 
             string replaceListXmlFileName = Utilities.DictionaryFolder + _threeLetterISOLanguageName + "_OCRFixReplaceList.xml";
