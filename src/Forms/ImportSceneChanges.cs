@@ -90,35 +90,35 @@ namespace Nikse.SubtitleEdit.Forms
             SceneChangesInSeconds = new List<double>();
             foreach (string line in textBoxText.Lines)
             {
-				if (radioButtonHHMMSSMS.Checked)
+                if (radioButtonHHMMSSMS.Checked)
                 {
-					// Parse string (HH:MM:SS.ms)
-					string[] timeParts = line.Split(":.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-					// If 4 parts were found...
-					if (timeParts.Length == 4)
-					{
+                    // Parse string (HH:MM:SS.ms)
+                    string[] timeParts = line.Split(":.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    // If 4 parts were found...
+                    if (timeParts.Length == 4)
+                    {
                         SceneChangesInSeconds.Add(Convert.ToDouble(timeParts[0]) * 3600.0 + Convert.ToDouble(timeParts[1]) * 60.0 + Convert.ToDouble(timeParts[2]) + Convert.ToDouble(timeParts[3]) / 1000.0);
-					}
+                    }
                 }
-				else
-				{
-					double d;
-					if (double.TryParse(line, out d))
-					{
-						if (radioButtonFrames.Checked)
-						{
-							SceneChangesInSeconds.Add(d / _frameRate);
-						}
-						else if (radioButtonSeconds.Checked)
-						{
-							SceneChangesInSeconds.Add(d);
-						}
-						else if (radioButtonMilliseconds.Checked)
-						{
-							SceneChangesInSeconds.Add(d / 1000.0);
-						}
-					}
-				}
+                else
+                {
+                    double d;
+                    if (double.TryParse(line, out d))
+                    {
+                        if (radioButtonFrames.Checked)
+                        {
+                            SceneChangesInSeconds.Add(d / _frameRate);
+                        }
+                        else if (radioButtonSeconds.Checked)
+                        {
+                            SceneChangesInSeconds.Add(d);
+                        }
+                        else if (radioButtonMilliseconds.Checked)
+                        {
+                            SceneChangesInSeconds.Add(d / 1000.0);
+                        }
+                    }
+                }
             }
             DialogResult = DialogResult.OK;
         }

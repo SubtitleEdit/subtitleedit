@@ -757,7 +757,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainInsertAfter { get; set; }
         public string MainTextBoxInsertAfter { get; set; }
         public string MainTextBoxAutoBreak { get; set; }
-        public string MainTextBoxUnbreak { get; set; }        
+        public string MainTextBoxUnbreak { get; set; }
         public string MainWaveformInsertAtCurrentPosition { get; set; }
         public string MainInsertBefore { get; set; }
         public string MainMergeDialogue { get; set; }
@@ -766,7 +766,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string WaveformZoomIn { get; set; }
         public string WaveformZoomOut { get; set; }
         public string WaveformPlaySelection { get; set; }
-        public string WaveformPlayFirstSelected { get; set; }        
+        public string WaveformPlayFirstSelected { get; set; }
         public string WaveformSearchSilenceForward { get; set; }
         public string WaveformSearchSilenceBack { get; set; }
         public string WaveformAddTextHere { get; set; }
@@ -2165,7 +2165,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.Shortcuts.MainTextBoxUnbreak = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainWaveformInsertAtCurrentPosition");
                 if (subNode != null)
-                    settings.Shortcuts.MainWaveformInsertAtCurrentPosition = subNode.InnerText;               
+                    settings.Shortcuts.MainWaveformInsertAtCurrentPosition = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainInsertBefore");
                 if (subNode != null)
                     settings.Shortcuts.MainInsertBefore = subNode.InnerText;

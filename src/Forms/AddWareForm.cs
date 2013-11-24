@@ -103,8 +103,8 @@ namespace Nikse.SubtitleEdit.Forms
                 //-ac 2 means 2 channels
                 //-ar 44100 indicates the sampling frequency.
                 labelInfo.Text = "FFMPEG";
-            } 
-            
+            }
+
             labelPleaseWait.Visible = true;
             Process process = new Process();
             process.StartInfo = new ProcessStartInfo(exeFilePath, parameters);
@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                     catch
-                    { 
+                    {
                     }
                 }
 
@@ -265,7 +265,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                     catch
-                    { 
+                    {
                     }
                 }
                 else if (labelVideoFileName.Text.ToLower().EndsWith(".mp4") || labelVideoFileName.Text.ToLower().EndsWith(".m4v"))
@@ -288,8 +288,8 @@ namespace Nikse.SubtitleEdit.Forms
                         numberOfAudioTracks = tracks.Count;
                     }
                     catch
-                    { 
-                    }                 
+                    {
+                    }
                 }
 
                 if (Configuration.Settings.General.UseFFMPEGForWaveExtraction)
@@ -300,7 +300,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 // Choose audio track
                 if (numberOfAudioTracks > 1)
-                { 
+                {
                     var form = new ChooseAudioTrack(audioTrackNames, _audioTrackNumber);
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {

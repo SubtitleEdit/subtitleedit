@@ -288,7 +288,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         private Int64 FindTrackStartInCluster(int targetTrackNumber)
-        {                    
+        {
             byte b;
             bool done = false;
             UInt32 matroskaId;

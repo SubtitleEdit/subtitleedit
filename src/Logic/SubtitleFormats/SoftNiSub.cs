@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     lineSb.Append(tempLine);
                     count++;
-             
+
                     text = lineSb.ToString();
                     // Replace remaining italics tags
                     text = text.Replace("<i>", @"[");
@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                                 // Replace "</i>line break<i>" with just a line break (Subrip does not need to close italics and open them again in the next line).
                                 text = text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
-                                
+
                                 // Subtitle appears at the top (add tag)
                                 if (positionTop)
                                     text = "{\\an8}" + text;

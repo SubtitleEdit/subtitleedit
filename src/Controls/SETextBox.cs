@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Controls
         void SETextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Back)
-            { 
+            {
                 int index = SelectionStart;
                 if (SelectionLength == 0)
                 {
@@ -244,7 +244,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private void SelectCurrentWord(TextBox tb)
-        {            
+        {
             int selectionLength = 0;
             int i = tb.SelectionStart;
             while (i > 0 && breakChars.Contains(tb.Text.Substring(i - 1, 1)) == false)

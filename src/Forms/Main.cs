@@ -1262,7 +1262,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         paragraph.EndTime.TotalMilliseconds = ((int)Math.Round(paragraph.EndTime.TotalMilliseconds / fr)) * fr;
                         int end = SubtitleFormat.MillisecondsToFrames(paragraph.EndTime.TotalMilliseconds);
-                        int dur = SubtitleFormat.MillisecondsToFrames(paragraph.Duration.TotalMilliseconds);                        
+                        int dur = SubtitleFormat.MillisecondsToFrames(paragraph.Duration.TotalMilliseconds);
                         paragraph.StartTime.TotalMilliseconds = SubtitleFormat.FramesToMilliseconds(end - dur);
                     }
                 }
@@ -1270,7 +1270,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownStartTime.TimeCode = paragraph.StartTime;
                 decimal durationInSeconds = (decimal) (paragraph.Duration.TotalSeconds);
                 if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
-                    SetDurationInSeconds((double)durationInSeconds);               
+                    SetDurationInSeconds((double)durationInSeconds);
 
                 if (original != null)
                 {
@@ -3503,7 +3503,7 @@ namespace Nikse.SubtitleEdit.Forms
                         styles = Sami.GetStylesFromHeader(_subtitle.Header);
                     else if (format.Name == "Nuendo")
                         styles = GetNuendoStyles();
-              
+
                     foreach (Paragraph p in _subtitle.Paragraphs)
                     {
                         if (string.IsNullOrEmpty(p.Extra) && styles.Count > 0)
@@ -5688,14 +5688,14 @@ namespace Nikse.SubtitleEdit.Forms
                 var languages = TimedText10.GetUsedLanguages(_subtitle);
                 toolStripMenuItemSetLanguage.DropDownItems.Clear();
                 if (!string.IsNullOrEmpty(_language.Menu.ContextMenu.AdvancedSubStationAlphaStyles)) // TODO: remove if in 3.4
-                    toolStripMenuItemSetLanguage.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles; 
+                    toolStripMenuItemSetLanguage.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
                 toolStripMenuItemSetLanguage.Visible = true;
                 if (languages.Count > 0)
                 {
                     foreach (string language in languages)
                     {
                         toolStripMenuItemSetLanguage.DropDownItems.Add(language, null, AddLanguageClick);
-                    }                    
+                    }
                     toolStripMenuItemSetLanguage.DropDownItems.Add("-");
                 }
 
@@ -5711,7 +5711,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (string language in moreLanguages)
                 {
                     newItem.DropDownItems.Add(language, null, AddLanguageClick);
-                }  
+                }
             }
             else if ((formatType == typeof(Sami) || formatType == typeof(SamiModern)) && SubtitleListview1.SelectedItems.Count > 0)
             {
@@ -7754,7 +7754,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                     {
                         int seconds = (int)numericUpDownDuration.Value;
-                        int frames = Convert.ToInt32((numericUpDownDuration.Value - seconds) * 100);                       
+                        int frames = Convert.ToInt32((numericUpDownDuration.Value - seconds) * 100);
                         if (frames > Math.Round(Configuration.Settings.General.CurrentFrameRate) - 1)
                         {
                             numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
@@ -13867,7 +13867,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAdjustSetStartKeepDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration);
             _mainAdjustSetEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEnd);
             _mainAdjustSelected100MsForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward);
-            _mainAdjustSelected100MsBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack);            
+            _mainAdjustSelected100MsBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack);
             _mainInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
             _mainInsertBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
             _mainTextBoxInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxInsertAfter);

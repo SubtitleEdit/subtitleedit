@@ -467,7 +467,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             filepos += EndPosition;
             mwsub.GotoBegin();
             _subFile.Write(mwsub.GetBuf(), 0, (int)EndPosition);
-        }    
+        }
 
         private static void WritePesSize(int subtract, byte[] imageBuffer, byte[] writeBuffer)
         {

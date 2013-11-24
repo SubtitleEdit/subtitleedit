@@ -228,7 +228,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     divParentNode.RemoveChild(div);
 
                 foreach (string language in languages)
-                { 
+                {
                     div = xml.CreateElement("div", "http://www.w3.org/ns/ttml");
                     XmlAttribute attr = xml.CreateAttribute("xml:lang", "http://www.w3.org/XML/1998/namespace");
                     attr.Value = language;

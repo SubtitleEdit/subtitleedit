@@ -689,7 +689,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public int CodePage
         {
-            get 
+            get
             {
                 return _codePage;
             }

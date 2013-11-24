@@ -1361,7 +1361,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformPlayNewSelection) && text == (Configuration.Settings.Language.Settings.WaveformPlayNewSelection).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformPlaySelection = GetShortcut(node.Text);
                     else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformPlayFirstSelectedSubtitle) && text == (Configuration.Settings.Language.Settings.WaveformPlayFirstSelectedSubtitle).Replace("&", string.Empty))
-                        Configuration.Settings.Shortcuts.WaveformPlayFirstSelected = GetShortcut(node.Text);                        
+                        Configuration.Settings.Shortcuts.WaveformPlayFirstSelected = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.VerticalZoom).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformVerticalZoom = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.WaveformSeekSilenceForward).Replace("&", string.Empty))
