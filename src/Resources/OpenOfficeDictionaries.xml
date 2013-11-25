@@ -228,6 +228,12 @@
     <Description>Norsk stavekontroll (bokmål og nynorsk) 2.0.10</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Polish</EnglishName>
+    <NativeName>polski</NativeName>
+    <DownloadLink>http://sjp.pl/slownik/ort/sjp-myspell-pl-20131125.zip</DownloadLink>
+    <Description>Zestaw polskich słowników do OpenOffice.org 3.0</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Portuguese (Brazilian)</EnglishName>
     <NativeName>Português (do Brasil)</NativeName>
     <DownloadLink>http://extensions.libreoffice.org/extension-center/vero-verificador-ortografico-e-hifenizador-em-portugues-do-brasil/pscreleasefolder.2012-01-04.1563120832/2.1/vero_pt_br_v210aoc.oxt</DownloadLink>
@@ -260,7 +266,7 @@
   <Dictionary>
     <EnglishName>Slovak</EnglishName>
     <NativeName>slovenčina</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/slovenian-dictionary-pack/releases/2012.01.04/pack-sl.oxt</DownloadLink>
+    <DownloadLink>http://www.sk-spell.sk.cx/files/hunspell-sk-20110228.zip</DownloadLink>
     <Description>Slovak dictionary package / Slovenské slovníky</Description>
   </Dictionary>
   <Dictionary>
