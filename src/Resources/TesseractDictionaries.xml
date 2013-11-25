@@ -25,6 +25,11 @@
     <Description>Chinese (Simplified) language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Chinese (Traditional)</EnglishName>
+    <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.chi_tra.tar.gz</DownloadLink>
+    <Description>Chinese (Traditional) language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Czech</EnglishName>
     <DownloadLink>http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.ces.tar.gz</DownloadLink>
     <Description>Czech language data for Tesseract 3.02</Description>

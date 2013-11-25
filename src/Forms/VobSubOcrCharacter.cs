@@ -241,6 +241,16 @@ namespace Nikse.SubtitleEdit.Forms
                 ButtonExpandSelectionClick(null, null);
                 e.SuppressKeyPress = true;
             }
+            else if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Subtract && buttonShrinkSelection.Visible)
+            {
+                ButtonShrinkSelectionClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Add && buttonExpandSelection.Visible)
+            {
+                ButtonExpandSelectionClick(null, null);
+                e.SuppressKeyPress = true;
+            }
         }
     }
 }
