@@ -181,7 +181,38 @@ namespace Nikse.SubtitleEdit.Forms
             List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
 
             // Extract dic/aff files in dictionary folder
-            string path;
+            bool found = false;
+            ExtractDic(dictionaryFolder, zip, dir, ref found);
+
+            if (!found) // check zip inside zip
+            {
+                foreach (ZipExtractor.ZipFileEntry entry in dir)
+                {
+                    if (entry.FilenameInZip.ToLower().EndsWith(".zip"))
+                    {
+                        var innerMs = new MemoryStream();
+                        zip.ExtractFile(entry, innerMs);
+                        ZipExtractor innerZip = ZipExtractor.Open(innerMs);
+                        List<ZipExtractor.ZipFileEntry> innerDir = innerZip.ReadCentralDir();
+                        ExtractDic(dictionaryFolder, innerZip, innerDir, ref found);
+                        innerZip.Close();
+                        innerMs.Close();
+                    }
+                }
+            }
+
+            zip.Close();
+            ms.Close();
+            Cursor = Cursors.Default;
+            labelPleaseWait.Text = string.Empty;
+            buttonOK.Enabled = true;
+            buttonDownload.Enabled = true;
+            comboBoxDictionaries.Enabled = true;
+            MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
+        }
+
+        private static void ExtractDic(string dictionaryFolder, ZipExtractor zip, List<ZipExtractor.ZipFileEntry> dir, ref bool found)
+        {
             foreach (ZipExtractor.ZipFileEntry entry in dir)
             {
                 if (entry.FilenameInZip.ToLower().EndsWith(".dic") || entry.FilenameInZip.ToLower().EndsWith(".aff"))
@@ -196,18 +227,12 @@ namespace Nikse.SubtitleEdit.Forms
                     if (fileName.StartsWith("de_DE_frami"))
                         fileName = fileName.Replace("de_DE_frami", "de_DE");
 
-                    path = Path.Combine(dictionaryFolder, fileName);
+                    string path = Path.Combine(dictionaryFolder, fileName);
                     zip.ExtractFile(entry, path);
+
+                    found = true;
                 }
             }
-            zip.Close();
-            ms.Close();
-            Cursor = Cursors.Default;
-            labelPleaseWait.Text = string.Empty;
-            buttonOK.Enabled = true;
-            buttonDownload.Enabled = true;
-            comboBoxDictionaries.Enabled = true;
-            MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
         }
 
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
