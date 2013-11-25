@@ -63,7 +63,7 @@
             this.radioButtonSeconds.Checked = true;
             this.radioButtonSeconds.Location = new System.Drawing.Point(11, 21);
             this.radioButtonSeconds.Name = "radioButtonSeconds";
-            this.radioButtonSeconds.Size = new System.Drawing.Size(67, 17);
+            this.radioButtonSeconds.Size = new System.Drawing.Size(65, 17);
             this.radioButtonSeconds.TabIndex = 0;
             this.radioButtonSeconds.TabStop = true;
             this.radioButtonSeconds.Text = "Seconds";
@@ -89,7 +89,7 @@
             this.radioButtonAutoRecalculate.AutoSize = true;
             this.radioButtonAutoRecalculate.Location = new System.Drawing.Point(344, 21);
             this.radioButtonAutoRecalculate.Name = "radioButtonAutoRecalculate";
-            this.radioButtonAutoRecalculate.Size = new System.Drawing.Size(82, 17);
+            this.radioButtonAutoRecalculate.Size = new System.Drawing.Size(80, 17);
             this.radioButtonAutoRecalculate.TabIndex = 2;
             this.radioButtonAutoRecalculate.Text = "Recalculate";
             this.radioButtonAutoRecalculate.UseVisualStyleBackColor = true;
@@ -102,6 +102,21 @@
             this.comboBoxPercent.FormattingEnabled = true;
             this.comboBoxPercent.Items.AddRange(new object[] {
             "- Please choose -",
+            "75",
+            "76",
+            "77",
+            "78",
+            "79",
+            "80",
+            "81",
+            "82",
+            "83",
+            "84",
+            "85",
+            "86",
+            "87",
+            "88",
+            "89",
             "90",
             "91",
             "92",
