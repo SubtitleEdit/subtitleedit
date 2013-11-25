@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewBackups.Columns[0].Text = l.DateAndTime;
             listViewBackups.Columns[1].Text = l.FileName;
             listViewBackups.Columns[2].Text = l.Extension;
+            listViewBackups.Columns[3].Text = Configuration.Settings.Language.General.Size;
             labelInfo.Text = l.Information;
 
             buttonOK.Text = Configuration.Settings.Language.General.OK;
@@ -52,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void RestoreAutoBackup_Shown(object sender, EventArgs e)
         {
             //2011-12-13_20-19-18_title
-            var fileNamePattern = new Regex(@"^\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d_", RegexOptions.Compiled);
+            var fileNamePattern = new Regex(@"^\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d", RegexOptions.Compiled);
             listViewBackups.Columns[2].Width = -2;
             if (Directory.Exists(Configuration.AutoBackupFolder))
             {
@@ -80,6 +81,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             string displayName = Path.GetFileName(fileName).Remove(0, 20);
 
+            if (displayName == "srt")
+                displayName = "Untitled.srt";
+
             var item = new ListViewItem(displayDate);
             item.UseItemStyleForSubItems = false;
             item.Tag = fileName;
@@ -89,6 +93,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             subItem = new ListViewItem.ListViewSubItem(item, Path.GetExtension(fileName));
             item.SubItems.Add(subItem);
+
+            try
+            {
+                FileInfo fi = new FileInfo(fileName);
+                subItem = new ListViewItem.ListViewSubItem(item, fi.Length + " bytes");
+                item.SubItems.Add(subItem);
+            }
+            catch
+            { 
+            }
+
 
             listViewBackups.Items.Add(item);
         }

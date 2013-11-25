@@ -37,6 +37,7 @@
             this.labelInfo = new System.Windows.Forms.Label();
             this.linkLabelOpenContainingFolder = new System.Windows.Forms.LinkLabel();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -44,7 +45,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(466, 383);
+            this.buttonCancel.Location = new System.Drawing.Point(552, 383);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 5;
@@ -55,7 +56,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(385, 383);
+            this.buttonOK.Location = new System.Drawing.Point(471, 383);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 4;
@@ -71,13 +72,14 @@
             this.listViewBackups.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderDateTime,
             this.columnHeaderFileName,
-            this.columnHeaderExtension});
+            this.columnHeaderExtension,
+            this.columnHeaderSize});
             this.listViewBackups.FullRowSelect = true;
             this.listViewBackups.HideSelection = false;
             this.listViewBackups.Location = new System.Drawing.Point(12, 37);
             this.listViewBackups.MultiSelect = false;
             this.listViewBackups.Name = "listViewBackups";
-            this.listViewBackups.Size = new System.Drawing.Size(529, 333);
+            this.listViewBackups.Size = new System.Drawing.Size(615, 333);
             this.listViewBackups.TabIndex = 1;
             this.listViewBackups.UseCompatibleStateImageBehavior = false;
             this.listViewBackups.View = System.Windows.Forms.View.Details;
@@ -109,6 +111,7 @@
             // 
             // linkLabelOpenContainingFolder
             // 
+            this.linkLabelOpenContainingFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabelOpenContainingFolder.AutoSize = true;
             this.linkLabelOpenContainingFolder.Location = new System.Drawing.Point(13, 387);
             this.linkLabelOpenContainingFolder.Name = "linkLabelOpenContainingFolder";
@@ -120,6 +123,7 @@
             // 
             // labelStatus
             // 
+            this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
             this.labelStatus.Location = new System.Drawing.Point(186, 387);
             this.labelStatus.Name = "labelStatus";
@@ -127,11 +131,17 @@
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
             // 
+            // columnHeaderSize
+            // 
+            this.columnHeaderSize.Text = "Size";
+            this.columnHeaderSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeaderSize.Width = 101;
+            // 
             // RestoreAutoBackup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(553, 414);
+            this.ClientSize = new System.Drawing.Size(639, 414);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.linkLabelOpenContainingFolder);
             this.Controls.Add(this.labelInfo);
@@ -165,5 +175,6 @@
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.LinkLabel linkLabelOpenContainingFolder;
         private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.ColumnHeader columnHeaderSize;
     }
 }
