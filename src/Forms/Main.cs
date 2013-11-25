@@ -268,6 +268,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = Title;
                 timeUpDownStartTime.TimeCode = new TimeCode(0, 0, 0, 0);
                 checkBoxAutoRepeatOn.Checked = Configuration.Settings.General.AutoRepeatOn;
+                comboBoxAutoRepeat.SelectedIndex = Configuration.Settings.General.AutoRepeatCount;
                 checkBoxAutoContinue.Checked = Configuration.Settings.General.AutoContinueOn;
                 checkBoxSyncListViewWithVideoWhilePlaying.Checked = Configuration.Settings.General.SyncListViewWithVideoWhilePlaying;
 
@@ -408,7 +409,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 labelAutoDuration.Visible = false;
                 mediaPlayer.SubtitleText = string.Empty;
-                comboBoxAutoRepeat.SelectedIndex = 2;
+//                comboBoxAutoRepeat.SelectedIndex = 2;
                 comboBoxAutoContinue.SelectedIndex = 2;
                 timeUpDownVideoPosition.TimeCode = new TimeCode(0, 0, 0, 0);
                 timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(0, 0, 0, 0);
@@ -7917,6 +7918,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance = splitContainerListViewAndText.SplitterDistance;
                 }
                 Configuration.Settings.General.AutoRepeatOn = checkBoxAutoRepeatOn.Checked;
+                Configuration.Settings.General.AutoRepeatCount = Convert.ToInt32(comboBoxAutoRepeat.Text);
                 Configuration.Settings.General.AutoContinueOn = checkBoxAutoContinue.Checked;
                 Configuration.Settings.General.SyncListViewWithVideoWhilePlaying = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
                 if (audioVisualizer != null)

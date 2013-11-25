@@ -427,6 +427,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string UppercaseLetters { get; set; }
         public int DefaultAdjustMilliseconds { get; set; }
         public bool AutoRepeatOn { get; set; }
+        public int AutoRepeatCount { get; set; }
         public bool AutoContinueOn { get; set; }
         public bool SyncListViewWithVideoWhilePlaying { get; set; }
         public int AutoBackupSeconds { get; set; }
@@ -517,6 +518,7 @@ namespace Nikse.SubtitleEdit.Logic
             UppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWZYXÆØÃÅÄÖÉÈÁÂÀÇÊÍÓÔÕÚŁАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯĞİŞÜÙÁÌÑÎ";
             DefaultAdjustMilliseconds = 1000;
             AutoRepeatOn = true;
+            AutoRepeatCount = 2;
             AutoContinueOn = false;
             SyncListViewWithVideoWhilePlaying = false;
             AutoBackupSeconds = 60 * 15;
@@ -1239,6 +1241,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("AutoRepeatOn");
             if (subNode != null)
                 settings.General.AutoRepeatOn = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("AutoRepeatCount");
+            if (subNode != null)
+                settings.General.AutoRepeatCount = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("SyncListViewWithVideoWhilePlaying");
             if (subNode != null)
                 settings.General.SyncListViewWithVideoWhilePlaying = Convert.ToBoolean(subNode.InnerText);
@@ -2376,6 +2381,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("UppercaseLetters", settings.General.UppercaseLetters);
             textWriter.WriteElementString("DefaultAdjustMilliseconds", settings.General.DefaultAdjustMilliseconds.ToString());
             textWriter.WriteElementString("AutoRepeatOn", settings.General.AutoRepeatOn.ToString());
+            textWriter.WriteElementString("AutoRepeatCount", settings.General.AutoRepeatCount.ToString(System.Globalization.CultureInfo.InvariantCulture));
             textWriter.WriteElementString("AutoContinueOn", settings.General.AutoContinueOn.ToString());
             textWriter.WriteElementString("SyncListViewWithVideoWhilePlaying", settings.General.SyncListViewWithVideoWhilePlaying.ToString());
             textWriter.WriteElementString("AutoBackupSeconds", settings.General.AutoBackupSeconds.ToString());
