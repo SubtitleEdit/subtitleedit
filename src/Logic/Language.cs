@@ -539,6 +539,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SaveFabImageScriptAs = "Choose Blu-ray sup file name",
                 SaveDvdStudioProStlAs = "Choose DVD Studio Pro STL file name",
                 SomeLinesWereTooLongX = "Some lines were too long:\r\n{0}",
+                LineHeight = "Line height",
             };
 
             ExportText = new LanguageStructure.ExportText
