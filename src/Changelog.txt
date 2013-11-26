@@ -3,11 +3,18 @@
 
 3.3.11 (xx December 2013)
 * NEW:
+   * Added "line height" to image export
 * IMPROVED:
    * Updated Italian language file - thx SilverDrake
    * Added .m4a file type to audio file types
+   * Added Chinese Traditional to Tesseract ocr dictionary list
+   * Added Polish spelling dictionary to download list
+   * "Adjust display durations" now allows down to 75% - thx Dennis
 * FIXED:
    * Dragging line in wave form in frames mode keeps duration - thx Adrian
+   * Fixed Slovak spell check dictionary link
+   * "Restore auto-backup" window now displays number of bytes
+   * Status text after re-calculating display times fixed - thx Dennis
 
 
 3.3.10 (22nd November 2013)
