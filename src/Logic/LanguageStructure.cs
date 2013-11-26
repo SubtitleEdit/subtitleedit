@@ -431,6 +431,7 @@
             public string SaveFabImageScriptAs { get; set; }
             public string SaveDvdStudioProStlAs { get; set; }
             public string SomeLinesWereTooLongX { get; set; }
+            public string LineHeight { get; set; }            
         }
 
         public class ExportText

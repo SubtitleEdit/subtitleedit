@@ -49,6 +49,8 @@ namespace Nikse.SubtitleEdit.Forms
             public Color ShadowColor { get; set; }
             public int ShadowWidth { get; set; }
             public int ShadowAlpha { get; set; }
+            public int LineHeight { get; set; }
+            
 
             public MakeBitmapParameter()
             {
@@ -251,7 +253,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     ShadowColor = panelShadowColor.BackColor,
                                     ShadowWidth = (int)comboBoxShadowWidth.SelectedIndex,
                                     ShadowAlpha = (int)numericUpDownShadowTransparency.Value,
-
+                                    LineHeight = (int)numericUpDownLineSpacing.Value,
                                 };
             if (index < _subtitle.Paragraphs.Count)
             {
@@ -1203,6 +1205,42 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return Color.FromArgb(150, borderColor.R, borderColor.G, borderColor.B);
         }
 
+        private static Font SetFont(MakeBitmapParameter parameter, float fontSize)
+        {
+            Font font;
+            try
+            {
+                var fontStyle = FontStyle.Regular;
+                if (parameter.SubtitleFontBold)
+                    fontStyle = FontStyle.Bold;
+                font = new Font(parameter.SubtitleFontName, fontSize, fontStyle);
+            }
+            catch (Exception exception)
+            {
+                try
+                {
+                    var fontStyle = FontStyle.Regular;
+                    if (!parameter.SubtitleFontBold)
+                        fontStyle = FontStyle.Bold;
+                    font = new Font(parameter.SubtitleFontName, fontSize, fontStyle);
+                }
+                catch
+                {
+                    MessageBox.Show(exception.Message);
+
+                    if (FontFamily.Families[0].IsStyleAvailable(FontStyle.Regular))
+                        font = new Font(FontFamily.Families[0].Name, fontSize);
+                    else if (FontFamily.Families.Length > 1 && FontFamily.Families[1].IsStyleAvailable(FontStyle.Regular))
+                        font = new Font(FontFamily.Families[1].Name, fontSize);
+                    else if (FontFamily.Families.Length > 2 && FontFamily.Families[1].IsStyleAvailable(FontStyle.Regular))
+                        font = new Font(FontFamily.Families[2].Name, fontSize);
+                    else
+                        font = new Font("Arial", fontSize);
+                }
+            }
+            return font;
+        }
+
         private Bitmap GenerateImageFromTextWithStyle(Paragraph p, out MakeBitmapParameter mbp)
         {
             mbp = new MakeBitmapParameter();
@@ -1224,6 +1262,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.SubtitleColor = _subtitleColor;
             mbp.SubtitleFontSize = _subtitleFontSize;
             mbp.SubtitleFontBold = _subtitleFontBold;
+            mbp.LineHeight = (int) numericUpDownLineSpacing.Value;
 
             if (_format.HasStyleSupport && !string.IsNullOrEmpty(p.Extra))
             {
@@ -1262,6 +1301,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.ShadowWidth = comboBoxShadowWidth.SelectedIndex;
             mbp.ShadowAlpha = (int)numericUpDownShadowTransparency.Value;
             mbp.ShadowColor = panelShadowColor.BackColor;
+            mbp.LineHeight = (int)numericUpDownLineSpacing.Value;
             if (_exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
             {
                 mbp.LineJoinRound = true;
@@ -1294,49 +1334,58 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             text = text.Replace("<U>", string.Empty);
             text = text.Replace("</U>", string.Empty);
 
+            //var bmp = new Bitmap(400, 200);
+            //var g = Graphics.FromImage(bmp);
+            //if (!parameter.SimpleRendering)
+            //    parameter.SubtitleFontSize = g.DpiY * parameter.SubtitleFontSize / 72;
+            //Font font;
+            //try
+            //{
+            //    var fontStyle = FontStyle.Regular;
+            //    if (parameter.SubtitleFontBold)
+            //        fontStyle = FontStyle.Bold;
+            //    font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize, fontStyle);
+            //}
+            //catch (Exception exception)
+            //{
+            //    try
+            //    {
+            //        var fontStyle = FontStyle.Regular;
+            //        if (!parameter.SubtitleFontBold)
+            //            fontStyle = FontStyle.Bold;
+            //        font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize, fontStyle);
+            //    }
+            //    catch
+            //    {
+            //        MessageBox.Show(exception.Message);
+
+            //        if (FontFamily.Families[0].IsStyleAvailable(FontStyle.Regular))
+            //            font = new Font(FontFamily.Families[0].Name, parameter.SubtitleFontSize);
+            //        else if (FontFamily.Families.Length > 1 && FontFamily.Families[1].IsStyleAvailable(FontStyle.Regular))
+            //            font = new Font(FontFamily.Families[1].Name, parameter.SubtitleFontSize);
+            //        else if (FontFamily.Families.Length > 2 && FontFamily.Families[1].IsStyleAvailable(FontStyle.Regular))
+            //            font = new Font(FontFamily.Families[2].Name, parameter.SubtitleFontSize);
+            //        else
+            //            font = new Font("Arial", parameter.SubtitleFontSize);
+            //    }
+            //}
+
+
+
+
+            //SizeF textSize = g.MeasureString("Hj!", font);
+            //var lineHeight = (textSize.Height * 0.64f);
             var bmp = new Bitmap(400, 200);
             var g = Graphics.FromImage(bmp);
-            if (!parameter.SimpleRendering)
-                parameter.SubtitleFontSize = g.DpiY * parameter.SubtitleFontSize / 72;
-            Font font;
-            try
-            {
-                var fontStyle = FontStyle.Regular;
-                if (parameter.SubtitleFontBold)
-                    fontStyle = FontStyle.Bold;
-                font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize, fontStyle);
-            }
-            catch (Exception exception)
-            {
-                try
-                {
-                    var fontStyle = FontStyle.Regular;
-                    if (!parameter.SubtitleFontBold)
-                        fontStyle = FontStyle.Bold;
-                    font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize, fontStyle);
-                }
-                catch
-                {
-                    MessageBox.Show(exception.Message);
-
-                    if (FontFamily.Families[0].IsStyleAvailable(FontStyle.Regular))
-                        font = new Font(FontFamily.Families[0].Name, parameter.SubtitleFontSize);
-                    else if (FontFamily.Families.Length > 1 && FontFamily.Families[1].IsStyleAvailable(FontStyle.Regular))
-                        font = new Font(FontFamily.Families[1].Name, parameter.SubtitleFontSize);
-                    else if (FontFamily.Families.Length > 2 && FontFamily.Families[1].IsStyleAvailable(FontStyle.Regular))
-                        font = new Font(FontFamily.Families[2].Name, parameter.SubtitleFontSize);
-                    else
-                        font = new Font("Arial", parameter.SubtitleFontSize);
-                }
-            }
-
-            SizeF textSize = g.MeasureString("Hj!", font);
-            var lineHeight = (textSize.Height * 0.64f);
+            var fontSize = g.DpiY * parameter.SubtitleFontSize / 72;
+            Font font = SetFont(parameter, parameter.SubtitleFontSize);
+            var lineHeight = parameter.LineHeight; // (textSize.Height * 0.64f);
 
 
 
 
-            textSize = g.MeasureString(Utilities.RemoveHtmlTags(text), font);
+
+            var textSize = g.MeasureString(Utilities.RemoveHtmlTags(text), font);
             g.Dispose();
             bmp.Dispose();
             int sizeX = (int)(textSize.Width * 1.8) + 150;
@@ -1972,6 +2021,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 labelShadowWidth.Text = Configuration.Settings.Language.ExportPngXml.ShadowWidth;
                 labelShadowTransparency.Text = Configuration.Settings.Language.ExportPngXml.Transparency;
             }
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.LineHeight)) //TODO: Remove in 3.4
+                labelLineHeight.Text = Configuration.Settings.Language.ExportPngXml.LineHeight;
 
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(subtitleListView1);
@@ -2062,6 +2113,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFramerate.SelectedIndex = 1;
                 comboBoxFramerate.DropDownStyle = ComboBoxStyle.DropDownList;
             }
+            if (Configuration.Settings.General.CurrentFrameRate == 24)
+                comboBoxFramerate.SelectedIndex = 1;
+            else if (Configuration.Settings.General.CurrentFrameRate == 25)
+                comboBoxFramerate.SelectedIndex = 2;
 
             for (int i=0; i<1000; i++)
                 comboBoxBottomMargin.Items.Add(i);
@@ -2196,6 +2251,21 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void comboBoxSubtitleFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
+            Bitmap bmp = new Bitmap(100, 100);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                var mbp = new MakeBitmapParameter();
+                mbp.SubtitleFontName = _subtitleFontName;
+                mbp.SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
+                mbp.SubtitleFontBold = _subtitleFontBold;
+                var fontSize = g.DpiY * mbp.SubtitleFontSize / 72;
+                Font font = SetFont(mbp, fontSize);
+
+                SizeF textSize = g.MeasureString("Hj!", font);
+                int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
+                if (lineHeight >= numericUpDownLineSpacing.Minimum && lineHeight <= numericUpDownLineSpacing.Maximum && lineHeight != numericUpDownLineSpacing.Value)
+                    numericUpDownLineSpacing.Value = lineHeight;
+            }
             subtitleListView1_SelectedIndexChanged(null, null);
         }
 
@@ -2387,6 +2457,32 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         }
 
         private void numericUpDownShadowTransparency_ValueChanged(object sender, EventArgs e)
+        {
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void comboBoxSubtitleFont_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Bitmap bmp = new Bitmap(100, 100);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                var mbp = new MakeBitmapParameter();
+                mbp.SubtitleFontName = _subtitleFontName;
+                mbp.SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
+                mbp.SubtitleFontBold = _subtitleFontBold;
+                var fontSize = g.DpiY * mbp.SubtitleFontSize / 72;
+                Font font = SetFont(mbp, fontSize);
+
+                SizeF textSize = g.MeasureString("Hj!", font);
+                int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
+                if (lineHeight >= numericUpDownLineSpacing.Minimum && lineHeight <= numericUpDownLineSpacing.Maximum && lineHeight != numericUpDownLineSpacing.Value)
+                    numericUpDownLineSpacing.Value = lineHeight;
+            }
+            bmp.Dispose();
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void numericUpDownLineSpacing_ValueChanged(object sender, EventArgs e)
         {
             subtitleListView1_SelectedIndexChanged(null, null);
         }

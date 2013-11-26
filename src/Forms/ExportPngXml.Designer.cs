@@ -37,6 +37,8 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.numericUpDownShadowTransparency = new System.Windows.Forms.NumericUpDown();
+            this.labelShadowTransparency = new System.Windows.Forms.Label();
             this.labelShadowWidth = new System.Windows.Forms.Label();
             this.comboBoxShadowWidth = new System.Windows.Forms.ComboBox();
             this.panelShadowColor = new System.Windows.Forms.Panel();
@@ -75,15 +77,16 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxExportImage = new System.Windows.Forms.GroupBox();
             this.timerPreview = new System.Windows.Forms.Timer(this.components);
-            this.labelShadowTransparency = new System.Windows.Forms.Label();
-            this.numericUpDownShadowTransparency = new System.Windows.Forms.NumericUpDown();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.numericUpDownLineSpacing = new System.Windows.Forms.NumericUpDown();
+            this.labelLineHeight = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxImageSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).BeginInit();
             this.groupBoxExportImage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineSpacing)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -147,6 +150,8 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.labelLineHeight);
+            this.groupBoxImageSettings.Controls.Add(this.numericUpDownLineSpacing);
             this.groupBoxImageSettings.Controls.Add(this.numericUpDownShadowTransparency);
             this.groupBoxImageSettings.Controls.Add(this.labelShadowTransparency);
             this.groupBoxImageSettings.Controls.Add(this.labelShadowWidth);
@@ -189,6 +194,39 @@
             this.groupBoxImageSettings.TabIndex = 3;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // numericUpDownShadowTransparency
+            // 
+            this.numericUpDownShadowTransparency.Location = new System.Drawing.Point(778, 81);
+            this.numericUpDownShadowTransparency.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDownShadowTransparency.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownShadowTransparency.Name = "numericUpDownShadowTransparency";
+            this.numericUpDownShadowTransparency.Size = new System.Drawing.Size(47, 20);
+            this.numericUpDownShadowTransparency.TabIndex = 40;
+            this.numericUpDownShadowTransparency.Value = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDownShadowTransparency.ValueChanged += new System.EventHandler(this.numericUpDownShadowTransparency_ValueChanged);
+            // 
+            // labelShadowTransparency
+            // 
+            this.labelShadowTransparency.Location = new System.Drawing.Point(662, 83);
+            this.labelShadowTransparency.Name = "labelShadowTransparency";
+            this.labelShadowTransparency.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.labelShadowTransparency.Size = new System.Drawing.Size(110, 13);
+            this.labelShadowTransparency.TabIndex = 39;
+            this.labelShadowTransparency.Text = "Transparency";
+            this.labelShadowTransparency.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // labelShadowWidth
             // 
@@ -481,6 +519,7 @@
             this.comboBoxSubtitleFont.Name = "comboBoxSubtitleFont";
             this.comboBoxSubtitleFont.Size = new System.Drawing.Size(121, 21);
             this.comboBoxSubtitleFont.TabIndex = 1;
+            this.comboBoxSubtitleFont.SelectedIndexChanged += new System.EventHandler(this.comboBoxSubtitleFont_SelectedIndexChanged);
             this.comboBoxSubtitleFont.SelectedValueChanged += new System.EventHandler(this.comboBoxSubtitleFont_SelectedValueChanged);
             // 
             // comboBoxSubtitleFontSize
@@ -698,39 +737,6 @@
             this.timerPreview.Interval = 500;
             this.timerPreview.Tick += new System.EventHandler(this.timerPreview_Tick);
             // 
-            // labelShadowTransparency
-            // 
-            this.labelShadowTransparency.Location = new System.Drawing.Point(662, 83);
-            this.labelShadowTransparency.Name = "labelShadowTransparency";
-            this.labelShadowTransparency.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.labelShadowTransparency.Size = new System.Drawing.Size(110, 13);
-            this.labelShadowTransparency.TabIndex = 39;
-            this.labelShadowTransparency.Text = "Transparency";
-            this.labelShadowTransparency.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // numericUpDownShadowTransparency
-            // 
-            this.numericUpDownShadowTransparency.Location = new System.Drawing.Point(778, 81);
-            this.numericUpDownShadowTransparency.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numericUpDownShadowTransparency.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownShadowTransparency.Name = "numericUpDownShadowTransparency";
-            this.numericUpDownShadowTransparency.Size = new System.Drawing.Size(47, 20);
-            this.numericUpDownShadowTransparency.TabIndex = 40;
-            this.numericUpDownShadowTransparency.Value = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            this.numericUpDownShadowTransparency.ValueChanged += new System.EventHandler(this.numericUpDownShadowTransparency_ValueChanged);
-            // 
             // subtitleListView1
             // 
             this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -749,6 +755,29 @@
             this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
+            // 
+            // numericUpDownLineSpacing
+            // 
+            this.numericUpDownLineSpacing.Location = new System.Drawing.Point(778, 130);
+            this.numericUpDownLineSpacing.Name = "numericUpDownLineSpacing";
+            this.numericUpDownLineSpacing.Size = new System.Drawing.Size(47, 20);
+            this.numericUpDownLineSpacing.TabIndex = 53;
+            this.numericUpDownLineSpacing.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownLineSpacing.ValueChanged += new System.EventHandler(this.numericUpDownLineSpacing_ValueChanged);
+            // 
+            // labelLineHeight
+            // 
+            this.labelLineHeight.Location = new System.Drawing.Point(662, 132);
+            this.labelLineHeight.Name = "labelLineHeight";
+            this.labelLineHeight.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.labelLineHeight.Size = new System.Drawing.Size(110, 13);
+            this.labelLineHeight.TabIndex = 54;
+            this.labelLineHeight.Text = "Line height";
+            this.labelLineHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ExportPngXml
             // 
@@ -778,9 +807,10 @@
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBoxImageSettings.ResumeLayout(false);
             this.groupBoxImageSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).EndInit();
             this.groupBoxExportImage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineSpacing)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -836,5 +866,7 @@
         private System.Windows.Forms.Button buttonShadowColor;
         private System.Windows.Forms.NumericUpDown numericUpDownShadowTransparency;
         private System.Windows.Forms.Label labelShadowTransparency;
+        private System.Windows.Forms.Label labelLineHeight;
+        private System.Windows.Forms.NumericUpDown numericUpDownLineSpacing;
     }
 }
