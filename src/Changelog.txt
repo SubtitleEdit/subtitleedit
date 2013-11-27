@@ -1,6 +1,5 @@
 ﻿Subtitle Edit Changelog
 
-
 3.3.11 (xx December 2013)
 * NEW:
    * Added "line height" to image export
