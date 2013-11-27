@@ -37,6 +37,8 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.labelLineHeight = new System.Windows.Forms.Label();
+            this.numericUpDownLineSpacing = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownShadowTransparency = new System.Windows.Forms.NumericUpDown();
             this.labelShadowTransparency = new System.Windows.Forms.Label();
             this.labelShadowWidth = new System.Windows.Forms.Label();
@@ -78,15 +80,13 @@
             this.groupBoxExportImage = new System.Windows.Forms.GroupBox();
             this.timerPreview = new System.Windows.Forms.Timer(this.components);
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.numericUpDownLineSpacing = new System.Windows.Forms.NumericUpDown();
-            this.labelLineHeight = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxImageSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineSpacing)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).BeginInit();
             this.groupBoxExportImage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineSpacing)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -194,6 +194,34 @@
             this.groupBoxImageSettings.TabIndex = 3;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // labelLineHeight
+            // 
+            this.labelLineHeight.Location = new System.Drawing.Point(662, 132);
+            this.labelLineHeight.Name = "labelLineHeight";
+            this.labelLineHeight.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.labelLineHeight.Size = new System.Drawing.Size(110, 13);
+            this.labelLineHeight.TabIndex = 54;
+            this.labelLineHeight.Text = "Line height";
+            this.labelLineHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // numericUpDownLineSpacing
+            // 
+            this.numericUpDownLineSpacing.Location = new System.Drawing.Point(778, 130);
+            this.numericUpDownLineSpacing.Maximum = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            this.numericUpDownLineSpacing.Name = "numericUpDownLineSpacing";
+            this.numericUpDownLineSpacing.Size = new System.Drawing.Size(47, 20);
+            this.numericUpDownLineSpacing.TabIndex = 53;
+            this.numericUpDownLineSpacing.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownLineSpacing.ValueChanged += new System.EventHandler(this.numericUpDownLineSpacing_ValueChanged);
             // 
             // numericUpDownShadowTransparency
             // 
@@ -756,29 +784,6 @@
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             // 
-            // numericUpDownLineSpacing
-            // 
-            this.numericUpDownLineSpacing.Location = new System.Drawing.Point(778, 130);
-            this.numericUpDownLineSpacing.Name = "numericUpDownLineSpacing";
-            this.numericUpDownLineSpacing.Size = new System.Drawing.Size(47, 20);
-            this.numericUpDownLineSpacing.TabIndex = 53;
-            this.numericUpDownLineSpacing.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDownLineSpacing.ValueChanged += new System.EventHandler(this.numericUpDownLineSpacing_ValueChanged);
-            // 
-            // labelLineHeight
-            // 
-            this.labelLineHeight.Location = new System.Drawing.Point(662, 132);
-            this.labelLineHeight.Name = "labelLineHeight";
-            this.labelLineHeight.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.labelLineHeight.Size = new System.Drawing.Size(110, 13);
-            this.labelLineHeight.TabIndex = 54;
-            this.labelLineHeight.Text = "Line height";
-            this.labelLineHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // ExportPngXml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -807,10 +812,10 @@
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBoxImageSettings.ResumeLayout(false);
             this.groupBoxImageSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineSpacing)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).EndInit();
             this.groupBoxExportImage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineSpacing)).EndInit();
             this.ResumeLayout(false);
 
         }
