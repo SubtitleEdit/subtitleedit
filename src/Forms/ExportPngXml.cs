@@ -2265,6 +2265,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
                 if (lineHeight >= numericUpDownLineSpacing.Minimum && lineHeight <= numericUpDownLineSpacing.Maximum && lineHeight != numericUpDownLineSpacing.Value)
                     numericUpDownLineSpacing.Value = lineHeight;
+                else if (lineHeight > numericUpDownLineSpacing.Maximum)
+                    numericUpDownLineSpacing.Value = numericUpDownLineSpacing.Maximum;
             }
             subtitleListView1_SelectedIndexChanged(null, null);
         }
