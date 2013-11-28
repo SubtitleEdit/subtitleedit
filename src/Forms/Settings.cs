@@ -335,6 +335,8 @@ namespace Nikse.SubtitleEdit.Forms
                 labelSsaShadow.Text = language.SsaShadow;
                 checkBoxSsaOpaqueBox.Text = language.SsaOpaqueBox;
             }
+            numericUpDownSsaOutline.Left = labelSsaOutline.Left + labelSsaOutline.Width + 4;
+            numericUpDownSsaShadow.Left = labelSsaShadow.Left + labelSsaShadow.Width + 4;
 
             groupBoxWordLists.Text = language.WordLists;
             labelWordListLanguage.Text = language.Language;
