@@ -2151,6 +2151,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxResolution.SelectedIndex = 8;
             }
 
+            if (_subtitleFontSize == Configuration.Settings.Tools.ExportLastFontSize && Configuration.Settings.Tools.ExportLastLineHeight >= numericUpDownLineSpacing.Minimum &&
+                Configuration.Settings.Tools.ExportLastLineHeight <= numericUpDownLineSpacing.Maximum)
+            {
+                numericUpDownLineSpacing.Value = Configuration.Settings.Tools.ExportLastLineHeight;
+            }
+
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
@@ -2378,6 +2384,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportBluRayBottomMargin = comboBoxBottomMargin.SelectedIndex;
             else
                 Configuration.Settings.Tools.ExportBottomMargin = comboBoxBottomMargin.SelectedIndex;
+            Configuration.Settings.Tools.ExportLastFontSize = (int)_subtitleFontSize;
+            Configuration.Settings.Tools.ExportLastLineHeight = (int)numericUpDownLineSpacing.Value;
         }
 
         private void numericUpDownDepth3D_ValueChanged(object sender, EventArgs e)
