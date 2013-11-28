@@ -120,6 +120,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string ExportVobSubVideoResolution { get; set; }
         public string ExportBluRayFontName { get; set; }
         public int ExportBluRayFontSize { get; set; }
+        public int ExportLastFontSize { get; set; }
+        public int ExportLastLineHeight { get; set; }
         public string ExportBluRayVideoResolution { get; set; }
         public Color ExportFontColor { get; set; }
         public Color ExportBorderColor { get; set; }
@@ -1490,6 +1492,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportBluRayFontSize");
             if (subNode != null)
                 settings.Tools.ExportBluRayFontSize = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportLastFontSize");
+            if (subNode != null)
+                settings.Tools.ExportLastFontSize = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportLastLineHeight");
+            if (subNode != null)
+                settings.Tools.ExportLastLineHeight = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportBluRayVideoResolution");
             if (subNode != null)
                 settings.Tools.ExportBluRayVideoResolution = subNode.InnerText;
@@ -2468,6 +2476,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ExportVobSubVideoResolution", settings.Tools.ExportVobSubVideoResolution);
             textWriter.WriteElementString("ExportBluRayFontName", settings.Tools.ExportBluRayFontName);
             textWriter.WriteElementString("ExportBluRayFontSize", settings.Tools.ExportBluRayFontSize.ToString());
+            textWriter.WriteElementString("ExportLastFontSize", settings.Tools.ExportLastFontSize.ToString());
+            textWriter.WriteElementString("ExportBluRayFontSize", settings.Tools.ExportLastLineHeight.ToString());
             textWriter.WriteElementString("ExportBluRayVideoResolution", settings.Tools.ExportBluRayVideoResolution);
             textWriter.WriteElementString("ExportFontColor", settings.Tools.ExportFontColor.ToArgb().ToString());
             textWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString());
