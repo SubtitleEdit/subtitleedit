@@ -411,6 +411,13 @@
             this.fontNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemInsertUnicodeSymbol = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemInsertUnicodeControlCharacters = new System.Windows.Forms.ToolStripMenuItem();
+            this.leftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.righttoleftMarkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startOfLefttorightEmbeddingLREToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startOfRighttoleftEmbeddingRLEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startOfLefttorightOverrideLROToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startOfRighttoleftOverrideRLOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.superscriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.subscriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonAutoBreak = new System.Windows.Forms.Button();
@@ -435,13 +442,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemInsertUnicodeControlCharacters = new System.Windows.Forms.ToolStripMenuItem();
-            this.leftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.righttoleftMarkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.startOfLefttorightEmbeddingLREToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.startOfRighttoleftEmbeddingRLEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.startOfLefttorightOverrideLROToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.startOfRighttoleftOverrideRLOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemRtlUnicodeControlChars = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1303,6 +1304,7 @@
             this.toolStripMenuItemShowOriginalInPreview,
             this.toolStripSeparator25,
             this.toolStripMenuItemRightToLeftMode,
+            this.toolStripMenuItemRtlUnicodeControlChars,
             this.toolStripMenuItemReverseRightToLeftStartEnd,
             this.toolStripSeparator21,
             this.toolStripMenuItemModifySelection,
@@ -3890,7 +3892,7 @@
             this.superscriptToolStripMenuItem,
             this.subscriptToolStripMenuItem});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(243, 424);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(243, 402);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
             // 
             // toolStripMenuItemWebVttVoice
@@ -4013,6 +4015,61 @@
             this.toolStripMenuItemInsertUnicodeSymbol.Name = "toolStripMenuItemInsertUnicodeSymbol";
             this.toolStripMenuItemInsertUnicodeSymbol.Size = new System.Drawing.Size(242, 22);
             this.toolStripMenuItemInsertUnicodeSymbol.Text = "Insert unicode character";
+            // 
+            // toolStripMenuItemInsertUnicodeControlCharacters
+            // 
+            this.toolStripMenuItemInsertUnicodeControlCharacters.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.leftToolStripMenuItem,
+            this.righttoleftMarkToolStripMenuItem,
+            this.startOfLefttorightEmbeddingLREToolStripMenuItem,
+            this.startOfRighttoleftEmbeddingRLEToolStripMenuItem,
+            this.startOfLefttorightOverrideLROToolStripMenuItem,
+            this.startOfRighttoleftOverrideRLOToolStripMenuItem});
+            this.toolStripMenuItemInsertUnicodeControlCharacters.Name = "toolStripMenuItemInsertUnicodeControlCharacters";
+            this.toolStripMenuItemInsertUnicodeControlCharacters.Size = new System.Drawing.Size(242, 22);
+            this.toolStripMenuItemInsertUnicodeControlCharacters.Text = "Insert unicode control character";
+            // 
+            // leftToolStripMenuItem
+            // 
+            this.leftToolStripMenuItem.Name = "leftToolStripMenuItem";
+            this.leftToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+            this.leftToolStripMenuItem.Text = "Left-to-right mark (LRM)";
+            this.leftToolStripMenuItem.Click += new System.EventHandler(this.leftToolStripMenuItem_Click);
+            // 
+            // righttoleftMarkToolStripMenuItem
+            // 
+            this.righttoleftMarkToolStripMenuItem.Name = "righttoleftMarkToolStripMenuItem";
+            this.righttoleftMarkToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+            this.righttoleftMarkToolStripMenuItem.Text = "Right-to-left mark (RLM)";
+            this.righttoleftMarkToolStripMenuItem.Click += new System.EventHandler(this.righttoleftMarkToolStripMenuItem_Click);
+            // 
+            // startOfLefttorightEmbeddingLREToolStripMenuItem
+            // 
+            this.startOfLefttorightEmbeddingLREToolStripMenuItem.Name = "startOfLefttorightEmbeddingLREToolStripMenuItem";
+            this.startOfLefttorightEmbeddingLREToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+            this.startOfLefttorightEmbeddingLREToolStripMenuItem.Text = "Start of left-to-right embedding (LRE)";
+            this.startOfLefttorightEmbeddingLREToolStripMenuItem.Click += new System.EventHandler(this.startOfLefttorightEmbeddingLREToolStripMenuItem_Click);
+            // 
+            // startOfRighttoleftEmbeddingRLEToolStripMenuItem
+            // 
+            this.startOfRighttoleftEmbeddingRLEToolStripMenuItem.Name = "startOfRighttoleftEmbeddingRLEToolStripMenuItem";
+            this.startOfRighttoleftEmbeddingRLEToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+            this.startOfRighttoleftEmbeddingRLEToolStripMenuItem.Text = "Start of right-to-left embedding (RLE)";
+            this.startOfRighttoleftEmbeddingRLEToolStripMenuItem.Click += new System.EventHandler(this.startOfRighttoleftEmbeddingRLEToolStripMenuItem_Click);
+            // 
+            // startOfLefttorightOverrideLROToolStripMenuItem
+            // 
+            this.startOfLefttorightOverrideLROToolStripMenuItem.Name = "startOfLefttorightOverrideLROToolStripMenuItem";
+            this.startOfLefttorightOverrideLROToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+            this.startOfLefttorightOverrideLROToolStripMenuItem.Text = "Start of left-to-right override (LRO)";
+            this.startOfLefttorightOverrideLROToolStripMenuItem.Click += new System.EventHandler(this.startOfLefttorightOverrideLROToolStripMenuItem_Click);
+            // 
+            // startOfRighttoleftOverrideRLOToolStripMenuItem
+            // 
+            this.startOfRighttoleftOverrideRLOToolStripMenuItem.Name = "startOfRighttoleftOverrideRLOToolStripMenuItem";
+            this.startOfRighttoleftOverrideRLOToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+            this.startOfRighttoleftOverrideRLOToolStripMenuItem.Text = "Start of right-to-left override (RLO)";
+            this.startOfRighttoleftOverrideRLOToolStripMenuItem.Click += new System.EventHandler(this.startOfRighttoleftOverrideRLOToolStripMenuItem_Click);
             // 
             // superscriptToolStripMenuItem
             // 
@@ -4282,60 +4339,12 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // toolStripMenuItemInsertUnicodeControlCharacters
+            // toolStripMenuItemRtlUnicodeControlChars
             // 
-            this.toolStripMenuItemInsertUnicodeControlCharacters.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.leftToolStripMenuItem,
-            this.righttoleftMarkToolStripMenuItem,
-            this.startOfLefttorightEmbeddingLREToolStripMenuItem,
-            this.startOfRighttoleftEmbeddingRLEToolStripMenuItem,
-            this.startOfLefttorightOverrideLROToolStripMenuItem,
-            this.startOfRighttoleftOverrideRLOToolStripMenuItem});
-            this.toolStripMenuItemInsertUnicodeControlCharacters.Name = "toolStripMenuItemInsertUnicodeControlCharacters";
-            this.toolStripMenuItemInsertUnicodeControlCharacters.Size = new System.Drawing.Size(242, 22);
-            this.toolStripMenuItemInsertUnicodeControlCharacters.Text = "Insert unicode control character";
-            // 
-            // leftToolStripMenuItem
-            // 
-            this.leftToolStripMenuItem.Name = "leftToolStripMenuItem";
-            this.leftToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
-            this.leftToolStripMenuItem.Text = "Left-to-right mark (LRM)";
-            this.leftToolStripMenuItem.Click += new System.EventHandler(this.leftToolStripMenuItem_Click);
-            // 
-            // righttoleftMarkToolStripMenuItem
-            // 
-            this.righttoleftMarkToolStripMenuItem.Name = "righttoleftMarkToolStripMenuItem";
-            this.righttoleftMarkToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
-            this.righttoleftMarkToolStripMenuItem.Text = "Right-to-left mark (RLM)";
-            this.righttoleftMarkToolStripMenuItem.Click += new System.EventHandler(this.righttoleftMarkToolStripMenuItem_Click);
-            // 
-            // startOfLefttorightEmbeddingLREToolStripMenuItem
-            // 
-            this.startOfLefttorightEmbeddingLREToolStripMenuItem.Name = "startOfLefttorightEmbeddingLREToolStripMenuItem";
-            this.startOfLefttorightEmbeddingLREToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
-            this.startOfLefttorightEmbeddingLREToolStripMenuItem.Text = "Start of left-to-right embedding (LRE)";
-            this.startOfLefttorightEmbeddingLREToolStripMenuItem.Click += new System.EventHandler(this.startOfLefttorightEmbeddingLREToolStripMenuItem_Click);
-            // 
-            // startOfRighttoleftEmbeddingRLEToolStripMenuItem
-            // 
-            this.startOfRighttoleftEmbeddingRLEToolStripMenuItem.Name = "startOfRighttoleftEmbeddingRLEToolStripMenuItem";
-            this.startOfRighttoleftEmbeddingRLEToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
-            this.startOfRighttoleftEmbeddingRLEToolStripMenuItem.Text = "Start of right-to-left embedding (RLE)";
-            this.startOfRighttoleftEmbeddingRLEToolStripMenuItem.Click += new System.EventHandler(this.startOfRighttoleftEmbeddingRLEToolStripMenuItem_Click);
-            // 
-            // startOfLefttorightOverrideLROToolStripMenuItem
-            // 
-            this.startOfLefttorightOverrideLROToolStripMenuItem.Name = "startOfLefttorightOverrideLROToolStripMenuItem";
-            this.startOfLefttorightOverrideLROToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
-            this.startOfLefttorightOverrideLROToolStripMenuItem.Text = "Start of left-to-right override (LRO)";
-            this.startOfLefttorightOverrideLROToolStripMenuItem.Click += new System.EventHandler(this.startOfLefttorightOverrideLROToolStripMenuItem_Click);
-            // 
-            // startOfRighttoleftOverrideRLOToolStripMenuItem
-            // 
-            this.startOfRighttoleftOverrideRLOToolStripMenuItem.Name = "startOfRighttoleftOverrideRLOToolStripMenuItem";
-            this.startOfRighttoleftOverrideRLOToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
-            this.startOfRighttoleftOverrideRLOToolStripMenuItem.Text = "Start of right-to-left override (RLO)";
-            this.startOfRighttoleftOverrideRLOToolStripMenuItem.Click += new System.EventHandler(this.startOfRighttoleftOverrideRLOToolStripMenuItem_Click);
+            this.toolStripMenuItemRtlUnicodeControlChars.Name = "toolStripMenuItemRtlUnicodeControlChars";
+            this.toolStripMenuItemRtlUnicodeControlChars.Size = new System.Drawing.Size(305, 22);
+            this.toolStripMenuItemRtlUnicodeControlChars.Text = "Fix RTL via Unicode tags";
+            this.toolStripMenuItemRtlUnicodeControlChars.Click += new System.EventHandler(this.toolStripMenuItemRtlUnicodeControlChar_Click);
             // 
             // Main
             // 
@@ -4829,6 +4838,7 @@
         private System.Windows.Forms.ToolStripMenuItem startOfRighttoleftEmbeddingRLEToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startOfLefttorightOverrideLROToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startOfRighttoleftOverrideRLOToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRtlUnicodeControlChars;
     }
 }
 

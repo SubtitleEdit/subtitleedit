@@ -18481,5 +18481,21 @@ namespace Nikse.SubtitleEdit.Forms
             PasteIntoActiveTextBox(Convert.ToChar(0x202E).ToString());
         }
 
+        private void toolStripMenuItemRtlUnicodeControlChar_Click(object sender, EventArgs e)
+        {
+            string rtl = Convert.ToChar(0x202B).ToString();
+            int selectedIndex = FirstSelectedIndex;
+            foreach (int index in SubtitleListview1.SelectedIndices)
+            {
+                Paragraph p = _subtitle.Paragraphs[index];
+                string text = p.Text.Replace(rtl, string.Empty);
+                p.Text = rtl + text.Replace(Environment.NewLine, Environment.NewLine + rtl);
+                SubtitleListview1.SetText(index, p.Text);
+                if (index == selectedIndex)
+                    textBoxListViewText.Text = p.Text;
+            }
+            RefreshSelectedParagraph();
+        }
+
     }
 }
