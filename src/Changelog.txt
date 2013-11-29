@@ -3,6 +3,7 @@
 3.3.11 (xx December 2013)
 * NEW:
    * Added "line height" to image export
+   * Added Vietnamese language file - thx everytime
 * IMPROVED:
    * Updated Italian language file - thx SilverDrake
    * Added .m4a file type to audio file types
