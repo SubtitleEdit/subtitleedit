@@ -451,7 +451,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/></SpectrogramInfo>");
-            double sampleDuration = Header.LengthInSeconds / (totalSamples / NFFT);
+            double sampleDuration = Header.LengthInSeconds / (totalSamples / Convert.ToDouble(NFFT));
             double totalDuration = Header.LengthInSeconds;
             doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = sampleDuration.ToString(CultureInfo.InvariantCulture);
             doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText = totalDuration.ToString(CultureInfo.InvariantCulture);
