@@ -6528,6 +6528,15 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSplitLine.Visible = false;
             string s = Utilities.RemoveHtmlTags(text, true).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
 
+            // remove unicode control characters
+            s = s.Replace(Convert.ToChar(8207).ToString(), string.Empty).
+                Replace(Convert.ToChar(8206).ToString(), string.Empty).
+                Replace(Convert.ToChar(0x202A).ToString(), string.Empty).
+                Replace(Convert.ToChar(0x202B).ToString(), string.Empty).
+                Replace(Convert.ToChar(0x202D).ToString(), string.Empty).
+                Replace(Convert.ToChar(0x202E).ToString(), string.Empty).
+                Replace(Convert.ToChar(0x202B).ToString(), string.Empty);
+
             if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
             {
                 lineTotal.ForeColor = Color.Black;
