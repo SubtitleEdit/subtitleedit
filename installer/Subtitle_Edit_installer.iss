@@ -140,6 +140,7 @@ Name: srC;  MessagesFile: compiler:Languages\SerbianCyrillic.isl
 Name: srL;  MessagesFile: compiler:Languages\SerbianLatin.isl
 Name: sv;   MessagesFile: Languages\Swedish.isl
 Name: tr;   MessagesFile: Languages\Turkish.isl
+Name: vn;   MessagesFile: Languages\Vietnamese.isl
 Name: zh;   MessagesFile: Languages\ChineseSimplified.isl
 Name: zhTW; MessagesFile: Languages\ChineseTraditional.isl
 #endif
