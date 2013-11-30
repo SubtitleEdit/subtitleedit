@@ -50,13 +50,9 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRipWave.Enabled = false;
             _cancel = false;
             bool runningOnWindows = false;
-
             SourceVideoFileName = labelVideoFileName.Text;
-            string targetFile = Path.GetTempFileName() + ".wav";
-//            string parameters = "-I dummy -vvv \"" + SourceVideoFileName + "\" --sout=#transcode{vcodec=none,acodec=s16l}:file{dst=\"" + targetFile + "\"}  vlc://quit";
-      //      string parameters = "-I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout #transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=\"" + targetFile + "\"} \"" + SourceVideoFileName + "\" vlc://quit";
+            string targetFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".wav"); 
             string parameters = "\"" + SourceVideoFileName + "\" -I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout=\"#transcode{acodec=s16l,channels=2,ab=128,samplerate=24000}:std{access=file,mux=wav,dst=" + targetFile + "}\" vlc://quit";
-                                                                                                                                                                                                // ,samplerate=48000
             string exeFilePath;
             if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
             {
@@ -92,14 +88,16 @@ namespace Nikse.SubtitleEdit.Forms
             labelInfo.Text = "VLC";
             if (Configuration.Settings.General.UseFFMPEGForWaveExtraction && File.Exists(Configuration.Settings.General.FFMPEGLocation))
             {
-                string FFMPEGWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav \"{1}\""; // -vol 448 will boot volume... 256 is normal
+                string FFMPEGWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav \"{1}\""; 
+                //-i indicates the input
+                //-vn means no video ouput
+                //-ar 44100 indicates the sampling frequency.
+                //-ab indicates the bit rate (in this example 160kb/sec)
+                //-vol 448 will boot volume... 256 is normal
+                //-ac 2 means 2 channels
+
                 exeFilePath = Configuration.Settings.General.FFMPEGLocation;
                 parameters = string.Format(FFMPEGWaveTranscodeSettings, SourceVideoFileName, targetFile);
-                //-i indicates the input
-                //-ab indicates the bit rate (in this example 160kb/sec)
-                //-vn means no video ouput
-                //-ac 2 means 2 channels
-                //-ar 44100 indicates the sampling frequency.
                 labelInfo.Text = "FFMPEG";
             }
 
