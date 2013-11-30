@@ -1,4 +1,4 @@
-; *** Inno Setup version 5.5.0+ Chinese (Traditional) messages by Samuel Lee (751555749@qq.com) ***
+; *** Inno Setup version 5.5.3+ Chinese (Traditional) messages by Samuel Lee (751555749@qq.com) ***
 ;
 ; To download user-contributed translations of this file, go to:
 ;   http://www.jrsoftware.org/files/istrans/
@@ -137,7 +137,7 @@ UserInfoNameRequired=±z¥²¶·¿é¤J±zªº¦WºÙ¡C
 WizardSelectDir=¿ï¾Ü¥Øªº¸ê®Æ§¨
 SelectDirDesc=¿ï¾Ü¦w¸Ëµ{¦¡¦w¸Ë [name] ªº¦ì¸m¡C
 SelectDirLabel3=¦w¸Ëµ{¦¡±N·|§â [name] ¦w¸Ë¨ì¤U­±ªº¸ê®Æ§¨¡C
-SelectDirBrowseLabel=«ö [½T©w] Ä~Äò¡A¦pªG±z·Q¿ï¾Ü¥t¤@­Ó¸ê®Æ§¨¡A½Ð«ö [ÂsÄý]¡C
+SelectDirBrowseLabel=«ö [¤U¤@¨B] Ä~Äò¡A¦pªG±z·Q¿ï¾Ü¥t¤@­Ó¸ê®Æ§¨¡A½Ð«ö [ÂsÄý]¡C
 DiskSpaceMBLabel=³Ì¤Ö»Ý­n [mb] MB ºÏºÐªÅ¶¡¡C
 CannotInstallToNetworkDrive=¦w¸Ëµ{¦¡µLªk¦w¸Ë©óºôµ¸ºÏºÐ¾÷¡C
 CannotInstallToUNCPath=¦w¸Ëµ{¦¡µLªk¦w¸Ë©ó UNC ¸ô®|¡C
@@ -176,7 +176,7 @@ SelectTasksLabel2=¿ï¾Ü¦w¸Ëµ{¦¡¦b¦w¸Ë [name] ®É­n°õ¦æªºªþ¥[¤u§@¡AµM«á«ö [¤U¤@¨B]¡
 WizardSelectProgramGroup=¿ï¾Ü¡u¶}©l¡v¥\¯àªíªº¸ê®Æ§¨
 SelectStartMenuFolderDesc=¿ï¾Ü¦w¸Ëµ{¦¡«Ø¥ßµ{¦¡ªº±¶®|ªº¦ì¸m¡C
 SelectStartMenuFolderLabel3=¦w¸Ëµ{¦¡±N·|§âµ{¦¡ªº±¶®|«Ø¥ß¦b¤U­±ªº¡u¶}©l¡v¥\¯àªí¸ê®Æ§¨¡C
-SelectStartMenuFolderBrowseLabel=«ö [½T©w] Ä~Äò¡A¦pªG±z·Q¿ï¾Ü¥t¤@­Ó¸ê®Æ§¨¡A½Ð«ö [ÂsÄý]¡C
+SelectStartMenuFolderBrowseLabel=«ö [¤U¤@¨B] Ä~Äò¡A¦pªG±z·Q¿ï¾Ü¥t¤@­Ó¸ê®Æ§¨¡A½Ð«ö [ÂsÄý]¡C
 MustEnterGroupName=±z¥²¶·¿é¤J¤@­Ó¸ê®Æ§¨ªº¦WºÙ¡C
 GroupNameTooLong=¸ê®Æ§¨¦WºÙ©Î¸ô®|¤Óªø¡C
 InvalidGroupName=¸ê®Æ§¨¦WºÙ¤£¥¿½T¡C
@@ -203,7 +203,7 @@ ApplicationsFound=¤U­±ªºÀ³¥Îµ{¦¡¥¿¦b¨Ï¥Î¦w¸Ëµ{¦¡©Ò»Ý­n§ó·sªº¤åÀÉ¡C«ØÄ³±z¤¹³\¦w¸Ë
 ApplicationsFound2=¤U­±ªºÀ³¥Îµ{¦¡¥¿¦b¨Ï¥Î¦w¸Ëµ{¦¡©Ò»Ý­n§ó·sªº¤åÀÉ¡C«ØÄ³±z¤¹³\¦w¸Ëµ{¦¡¦Û°ÊÃö³¬³o¨ÇÀ³¥Îµ{¦¡¡C·í¦w¸Ë¹Lµ{µ²§ô«á¡A¥»¦w¸Ëµ{¦¡±N·|¹Á¸Õ­«·s¶}±Ò¸ÓÀ³¥Îµ{¦¡¡C
 CloseApplications=Ãö³¬À³¥Îµ{¦¡(&A)
 DontCloseApplications=¤£­nÃö³¬À³¥Îµ{¦¡ (&D)
-
+ErrorCloseApplications=¦w¸Ëµ{¦¡µLªk¦Û°ÊÃö³¬©Ò¦³À³¥Îµ{¦¡¡C«ØÄ³±z¦bÄ~Äò«e¥ýÃö³¬©Ò¦³À³¥Îµ{¦¡¨Ï¥ÎªºÀÉ®×¡C
 ; *** "Installing" wizard page
 WizardInstalling=¥¿¦b¦w¸Ë
 InstallingLabel=½Ðµy­Ô¡A¦w¸Ëµ{¦¡¥¿¦b±N [name] ¦w¸Ë¨ì±zªº¹q¸£¤W
