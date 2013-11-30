@@ -554,6 +554,24 @@ tr.tsk_ResetSettings=Reset Subtitle Edit's settings
 tr.types_custom=Custom installation
 tr.types_default=Default installation
 
+; Vietnamese
+vn.comp_translations=Translations
+vn.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+vn.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+vn.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
+vn.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+vn.msg_OptimizingPerformance=Optimizing performance...
+vn.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+vn.run_VisitWebsite=Visit Subtitle Edit's Website
+vn.sm_com_Changelog=Subtitle Edit's Changelog
+vn.tsk_AllUsers=For all users
+vn.tsk_CurrentUser=For the current user only
+vn.tsk_Other=Other:
+vn.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+vn.tsk_ResetSettings=Reset Subtitle Edit's settings
+vn.types_custom=Custom installation
+vn.types_default=Default installation
+
 ; Chinese Simplified
 zh.comp_translations=Translations
 zh.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
@@ -570,7 +588,7 @@ zh.tsk_Other=Other:
 zh.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 zh.tsk_ResetSettings=Reset Subtitle Edit's settings
 zh.types_custom=Custom installation
-zh.types_default=Default installationen
+zh.types_default=Default installation
 
 ; Chinese Traditional
 zhTW.comp_translations=Translations
