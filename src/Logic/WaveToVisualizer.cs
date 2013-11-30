@@ -84,6 +84,18 @@ namespace Nikse.SubtitleEdit.Logic
             DataChunkSize = BitConverter.ToUInt32(buffer, 4);
             DataStartPosition = ConstantHeaderSize + FmtChunkSize + 8;
 
+            // if some other chunck than data
+            long oldPos = ConstantHeaderSize + FmtChunkSize;
+            while (DataId != "data" && oldPos + DataChunkSize + 16 < stream.Length)
+            {
+                oldPos = oldPos + DataChunkSize + 8;
+                stream.Position = oldPos;
+                stream.Read(buffer, 0, buffer.Length);
+                DataId = Encoding.UTF8.GetString(buffer, 0, 4);
+                DataChunkSize = BitConverter.ToUInt32(buffer, 4);
+                DataStartPosition = ConstantHeaderSize + FmtChunkSize + 8;
+            }
+
             _headerData = new byte[DataStartPosition];
             stream.Position = 0;
             stream.Read(_headerData, 0, _headerData.Length);
@@ -449,7 +461,7 @@ namespace Nikse.SubtitleEdit.Logic
                 bitmaps.Add(bmp); // save serialized gif instead????
             }
 
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/></SpectrogramInfo>");
             double sampleDuration = Header.LengthInSeconds / (totalSamples / Convert.ToDouble(NFFT));
             double totalDuration = Header.LengthInSeconds;
