@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
-using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Logic
 {
+    /// <summary>
+    /// http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html
+    /// </summary>
     public class WaveHeader
     {
         const int ConstantHeaderSize = 20;
-        private byte[] _headerData;
+        private readonly byte[] _headerData;
 
         public string ChunkId { get; private set; }
         public uint ChunkSize { get; private set; }
@@ -21,6 +24,10 @@ namespace Nikse.SubtitleEdit.Logic
 
         /// <summary>
         /// 1 = PCM (uncompressed)
+        /// 0x0101 = IBM mu-law format
+        /// 0x0102 = IBM a-law format
+        /// 0x0103 = IBM AVC Adaptive Differential Pulse Code Modulation format
+        /// 0xFFFE = WAVE_FORMAT_EXTENSIBLE, Determined by SubFormat
         /// </summary>
         public int AudioFormat { get; private set; }
 
@@ -60,21 +67,21 @@ namespace Nikse.SubtitleEdit.Logic
                 throw new ArgumentException("Stream is too small");
 
             // constant header
-            ChunkId = Encoding.UTF8.GetString(buffer, 0, 4);
-            ChunkSize = BitConverter.ToUInt32(buffer, 4);
-            Format = Encoding.UTF8.GetString(buffer, 8, 4);
-            FmtId = Encoding.UTF8.GetString(buffer, 12, 4);
-            FmtChunkSize = BitConverter.ToInt32(buffer, 16);
+            ChunkId = Encoding.UTF8.GetString(buffer, 0, 4); // Chunk ID: "RIFF" (Resource Interchange File Format), RF64 = new 64-bit format - see http://tech.ebu.ch/docs/tech/tech3306-2009.pdf
+            ChunkSize = BitConverter.ToUInt32(buffer, 4); // Chunk size: 16 or 18 or 40
+            Format = Encoding.UTF8.GetString(buffer, 8, 4); // Format code - "WAVE"
+            FmtId = Encoding.UTF8.GetString(buffer, 12, 4); // Contains the letters "fmt "
+            FmtChunkSize = BitConverter.ToInt32(buffer, 16); // 16 for PCM.  This is the size of the rest of the Subchunk which follows this number.
 
             // fmt data
             buffer = new byte[FmtChunkSize];
             stream.Read(buffer, 0, buffer.Length);
-            AudioFormat = BitConverter.ToInt16(buffer, 0);
+            AudioFormat = BitConverter.ToInt16(buffer, 0); // PCM = 1
             NumberOfChannels = BitConverter.ToInt16(buffer, 2);
-            SampleRate = BitConverter.ToInt32(buffer, 4);
-            ByteRate = BitConverter.ToInt32(buffer, 8);
+            SampleRate = BitConverter.ToInt32(buffer, 4); // 8000, 44100, etc.
+            ByteRate = BitConverter.ToInt32(buffer, 8); // SampleRate * NumChannels * BitsPerSample/8
             BlockAlign = BitConverter.ToInt16(buffer, 12);
-            BitsPerSample = BitConverter.ToInt16(buffer, 14);
+            BitsPerSample = BitConverter.ToInt16(buffer, 14); // 8 bits = 8, 16 bits = 16, etc.
 
             // data
             buffer = new byte[8];
@@ -84,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic
             DataChunkSize = BitConverter.ToUInt32(buffer, 4);
             DataStartPosition = ConstantHeaderSize + FmtChunkSize + 8;
 
-            // if some other chunck than data
+            // if some other ChunckId than 'data' (e.g. LIST) we search for 'data'
             long oldPos = ConstantHeaderSize + FmtChunkSize;
             while (DataId != "data" && oldPos + DataChunkSize + 16 < stream.Length)
             {
@@ -201,6 +208,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// Generate peaks (samples with some interval) for an uncompressed wave file
         /// </summary>
         /// <param name="peaksPerSecond">Sampeles per second / sample rate</param>
+        /// <param name="delayInMilliseconds">Delay in milliseconds (normally zero)</param>
         public void GeneratePeakSamples(int peaksPerSecond, int delayInMilliseconds)
         {
             PeaksPerSecond = peaksPerSecond;
@@ -375,12 +383,12 @@ namespace Nikse.SubtitleEdit.Logic
 
         //////////////////////////////////////// SPECTRUM ///////////////////////////////////////////////////////////
 
-        public List<Bitmap> GenerateFourierData(int NFFT, string spectrogramDirectory)
+        public List<Bitmap> GenerateFourierData(int nfft, string spectrogramDirectory)
         {
             List<Bitmap> bitmaps = new List<Bitmap>();
 
             // setup fourier transformation
-            Fourier f = new Fourier(NFFT, true);
+            Fourier f = new Fourier(nfft, true);
             double divider = 2.0;
             for (int k = 0; k < Header.BitsPerSample - 2; k++)
                 divider *= 2;
@@ -389,18 +397,18 @@ namespace Nikse.SubtitleEdit.Logic
             ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataRerader();
 
             // set up one column of the spectrogram
-            Color[] palette = new Color[NFFT];
+            Color[] palette = new Color[nfft];
             if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Classic")
             {
-                for (int colorIndex = 0; colorIndex < NFFT; colorIndex++)
-                    palette[colorIndex] = PaletteValue(colorIndex, NFFT);
+                for (int colorIndex = 0; colorIndex < nfft; colorIndex++)
+                    palette[colorIndex] = PaletteValue(colorIndex, nfft);
             }
             else
             {
                 var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveFormColor.R,
                                                  Configuration.Settings.VideoControls.WaveFormColor.G,
-                                                 Configuration.Settings.VideoControls.WaveFormColor.B, NFFT);
-                for (int i = 0; i < NFFT; i++)
+                                                 Configuration.Settings.VideoControls.WaveFormColor.B, nfft);
+                for (int i = 0; i < nfft; i++)
                     palette[i] = list[i];
             }
 
@@ -409,7 +417,7 @@ namespace Nikse.SubtitleEdit.Logic
             DataMaxValue = int.MinValue;
             var samples = new List<int>();
             int index = 0;
-            int sampleSize = NFFT * 1024; // 1024 = bitmap width
+            int sampleSize = nfft * 1024; // 1024 = bitmap width
             int count = 0;
             long totalSamples = 0;
 
@@ -440,7 +448,7 @@ namespace Nikse.SubtitleEdit.Logic
                         var samplesAsReal = new double[sampleSize];
                         for (int k = 0; k < sampleSize; k++)
                             samplesAsReal[k] = samples[k] / divider;
-                        Bitmap bmp = DrawSpectrogram(NFFT, samplesAsReal, f, palette);
+                        Bitmap bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
                         bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
                         bitmaps.Add(bmp); // save serialized gif instead????
                         samples = new List<int>();
@@ -456,45 +464,44 @@ namespace Nikse.SubtitleEdit.Logic
                 var samplesAsReal = new double[sampleSize];
                 for (int k = 0; k < sampleSize && k < samples.Count; k++)
                     samplesAsReal[k] = samples[k] / divider;
-                Bitmap bmp = DrawSpectrogram(NFFT, samplesAsReal, f, palette);
+                Bitmap bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
                 bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
                 bitmaps.Add(bmp); // save serialized gif instead????
             }
 
             var doc = new XmlDocument();
             doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/></SpectrogramInfo>");
-            double sampleDuration = Header.LengthInSeconds / (totalSamples / Convert.ToDouble(NFFT));
+            double sampleDuration = Header.LengthInSeconds / (totalSamples / Convert.ToDouble(nfft));
             double totalDuration = Header.LengthInSeconds;
             doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = sampleDuration.ToString(CultureInfo.InvariantCulture);
             doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText = totalDuration.ToString(CultureInfo.InvariantCulture);
-            doc.Save(System.IO.Path.Combine(spectrogramDirectory, "Info.xml"));
+            doc.Save(Path.Combine(spectrogramDirectory, "Info.xml"));
 
             return bitmaps;
         }
 
-        private Bitmap DrawSpectrogram(int NFFT, double[] samples, Fourier f, Color[] palette)
+        private Bitmap DrawSpectrogram(int nfft, double[] samples, Fourier f, Color[] palette)
         {
-            int NumSamples = samples.Length;
+            const int overlap = 0;
+            int numSamples = samples.Length;
+            int colIncrement = nfft * (1 - overlap);
 
-            int Overlap = 0;
-            int ColIncrement = NFFT * (1 - Overlap);
-
-            int Numcols = NumSamples / ColIncrement;
+            int numcols = numSamples / colIncrement;
             // make sure we don't step beyond the end of the recording
-            while ((Numcols - 1) * ColIncrement + NFFT > NumSamples)
-                Numcols--;
+            while ((numcols - 1) * colIncrement + nfft > numSamples)
+                numcols--;
 
-            double[] real = new double[NFFT];
-            double[] imag = new double[NFFT];
-            double[] magnitude = new double[NFFT / 2];
-            Bitmap bmp = new Bitmap(Numcols, NFFT / 2);
-            for (int col = 0; col <= Numcols - 1; col++)
+            double[] real = new double[nfft];
+            double[] imag = new double[nfft];
+            double[] magnitude = new double[nfft / 2];
+            Bitmap bmp = new Bitmap(numcols, nfft / 2);
+            for (int col = 0; col <= numcols - 1; col++)
             {
                 // read a segment of the recorded signal
-                for (int c = 0; c <= NFFT - 1; c++)
+                for (int c = 0; c <= nfft - 1; c++)
                 {
                     imag[c] = 0;
-                    real[c] = samples[col * ColIncrement + c] * Fourier.Hanning(NFFT, c);
+                    real[c] = samples[col * colIncrement + c] * Fourier.Hanning(nfft, c);
                 }
 
                 // transform to the frequency domain
@@ -504,10 +511,10 @@ namespace Nikse.SubtitleEdit.Logic
                 f.MagnitudeSpectrum(real, imag, Fourier.W0Hanning, magnitude);
 
                 // Draw
-                for (int newY = 0; newY < NFFT / 2 - 1; newY++)
+                for (int newY = 0; newY < nfft / 2 - 1; newY++)
                 {
                     int colorIndex = MapToPixelIndex(magnitude[newY], 100, 255);
-                    bmp.SetPixel(col, (NFFT / 2 - 1) - newY, palette[colorIndex]);
+                    bmp.SetPixel(col, (nfft / 2 - 1) - newY, palette[colorIndex]);
                 }
             }
             return bmp;
@@ -515,45 +522,43 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static Color PaletteValue(int x, int range)
         {
-            double G = 0;
-            double R = 0;
-            double b = 0;
-            double r4 = 0;
-            double U = 0;
+            double g;
+            double r;
+            double b;
 
-            r4 = range / 4.0;
-            U = 255;
+            double r4 = range / 4.0;
+            double u = 255;
 
             if (x < r4)
             {
                 b = x / r4;
-                G = 0;
-                R = 0;
+                g = 0;
+                r = 0;
             }
             else if (x < 2 * r4)
             {
                 b = (1 - (x - r4) / r4);
-                G = 1 - b;
-                R = 0;
+                g = 1 - b;
+                r = 0;
             }
             else if (x < 3 * r4)
             {
                 b = 0;
-                G = (2 - (x - r4) / r4);
-                R = 1 - G;
+                g = (2 - (x - r4) / r4);
+                r = 1 - g;
             }
             else
             {
                 b = (x - 3 * r4) / r4;
-                G = 0;
-                R = 1 - b;
+                g = 0;
+                r = 1 - b;
             }
 
-            R = ((int)(System.Math.Sqrt(R) * U)) & 0xff;
-            G = ((int)(System.Math.Sqrt(G) * U)) & 0xff;
-            b = ((int)(System.Math.Sqrt(b) * U)) & 0xff;
+            r = ((int)(Math.Sqrt(r) * u)) & 0xff;
+            g = ((int)(Math.Sqrt(g) * u)) & 0xff;
+            b = ((int)(Math.Sqrt(b) * u)) & 0xff;
 
-            return Color.FromArgb((int)R, (int)G, (int)b);
+            return Color.FromArgb((int)r, (int)g, (int)b);
         }
 
         /// <summary>
@@ -562,13 +567,12 @@ namespace Nikse.SubtitleEdit.Logic
         /// </summary>
         private int MapToPixelIndex(double magnitude, double rangedB, int rangeIndex)
         {
-            const double Log10 = 2.30258509299405;
+            const double log10 = 2.30258509299405;
 
-            double levelIndB;
             if (magnitude == 0)
                 return 0;
 
-            levelIndB = 20 * Math.Log(magnitude) / Log10;
+            double levelIndB = 20 * Math.Log(magnitude) / log10;
             if (levelIndB < -rangedB)
                 return 0;
 
