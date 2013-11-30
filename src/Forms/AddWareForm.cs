@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
             string targetFile = Path.GetTempFileName() + ".wav";
 //            string parameters = "-I dummy -vvv \"" + SourceVideoFileName + "\" --sout=#transcode{vcodec=none,acodec=s16l}:file{dst=\"" + targetFile + "\"}  vlc://quit";
       //      string parameters = "-I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout #transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=\"" + targetFile + "\"} \"" + SourceVideoFileName + "\" vlc://quit";
-            string parameters = "\"" + SourceVideoFileName + "\" -I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout=\"#transcode{acodec=s16l,channels=2,ab=128,samplerate=48000}:std{access=file,mux=wav,dst=" + targetFile + "}\" vlc://quit";
+            string parameters = "\"" + SourceVideoFileName + "\" -I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout=\"#transcode{acodec=s16l,channels=2,ab=128,samplerate=24000}:std{access=file,mux=wav,dst=" + targetFile + "}\" vlc://quit";
                                                                                                                                                                                                 // ,samplerate=48000
             string exeFilePath;
             if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
@@ -89,10 +89,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            labelInfo.Text = "VCL";
+            labelInfo.Text = "VLC";
             if (Configuration.Settings.General.UseFFMPEGForWaveExtraction && File.Exists(Configuration.Settings.General.FFMPEGLocation))
             {
-                string FFMPEGWaveTranscodeSettings = "-i \"{0}\" -vn -ar 44100 -ac 2 -ab 128 -vol 448 -f wav \"{1}\""; // -vol 448 will boot volume... 256 is normal
+                string FFMPEGWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav \"{1}\""; // -vol 448 will boot volume... 256 is normal
                 exeFilePath = Configuration.Settings.General.FFMPEGLocation;
                 parameters = string.Format(FFMPEGWaveTranscodeSettings, SourceVideoFileName, targetFile);
                 //-i indicates the input
