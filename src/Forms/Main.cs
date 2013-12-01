@@ -150,6 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainListViewCopyText = Keys.None;
         Keys _mainEditReverseStartAndEndingForRTL = Keys.None;
         Keys _waveformVerticalZoom = Keys.None;
+        Keys _waveformVerticalZoomOut = Keys.None;
         Keys _waveformZoomIn = Keys.None;
         Keys _waveformZoomOut = Keys.None;
         Keys _waveformPlaySelection = Keys.None;
@@ -10097,10 +10098,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformVerticalZoom)
             {
-                if (audioVisualizer.VerticalZoomPercent > 0.2)
-                    audioVisualizer.VerticalZoomPercent -= 0.1;
-                else
-                    audioVisualizer.VerticalZoomPercent = 1;
+                if (audioVisualizer.VerticalZoomPercent >= 0.1)
+                    audioVisualizer.VerticalZoomPercent -= 0.05;
+                e.SuppressKeyPress = true;
+            }
+            else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformVerticalZoomOut)
+            {
+                if (audioVisualizer.VerticalZoomPercent < 1)
+                    audioVisualizer.VerticalZoomPercent += 0.05;
                 e.SuppressKeyPress = true;
             }
             if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformZoomIn)
@@ -13887,6 +13892,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainMergeDialogue = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialogue);
             _mainToggleFocus = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToogleFocus);
             _waveformVerticalZoom = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
+            _waveformVerticalZoomOut = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoomOut);
             _waveformZoomIn = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomIn);
             _waveformZoomOut = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomOut);
             _waveformPlaySelection = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelection);

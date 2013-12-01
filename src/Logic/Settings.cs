@@ -767,6 +767,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainMergeDialogue { get; set; }
         public string MainToogleFocus { get; set; }
         public string WaveformVerticalZoom { get; set; }
+        public string WaveformVerticalZoomOut { get; set; }
         public string WaveformZoomIn { get; set; }
         public string WaveformZoomOut { get; set; }
         public string WaveformPlaySelection { get; set; }
@@ -855,7 +856,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxAutoBreak = "Control+R";
             MainTextBoxUnbreak = string.Empty;
             MainMergeDialogue = string.Empty;
-            WaveformVerticalZoom = string.Empty;
+            WaveformVerticalZoom = "Shift+Add";
+            WaveformVerticalZoomOut = "Shift+Subtract";
             WaveformPlaySelection = string.Empty;
             WaveformPlayFirstSelected = string.Empty;
             WaveformSearchSilenceForward = string.Empty;
@@ -2191,6 +2193,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("WaveformVerticalZoom");
                 if (subNode != null)
                     settings.Shortcuts.WaveformVerticalZoom = subNode.InnerText;
+                subNode = node.SelectSingleNode("WaveformVerticalZoomOut");
+                if (subNode != null)
+                    settings.Shortcuts.WaveformVerticalZoomOut = subNode.InnerText;
                 subNode = node.SelectSingleNode("WaveformZoomIn");
                 if (subNode != null)
                     settings.Shortcuts.WaveformZoomIn = subNode.InnerText;
@@ -2729,6 +2734,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainMergeDialogue", settings.Shortcuts.MainMergeDialogue);
             textWriter.WriteElementString("MainToogleFocus", settings.Shortcuts.MainToogleFocus);
             textWriter.WriteElementString("WaveformVerticalZoom", settings.Shortcuts.WaveformVerticalZoom);
+            textWriter.WriteElementString("WaveformVerticalZoomOut", settings.Shortcuts.WaveformVerticalZoomOut);
             textWriter.WriteElementString("WaveformZoomIn", settings.Shortcuts.WaveformZoomIn);
             textWriter.WriteElementString("WaveformZoomOut", settings.Shortcuts.WaveformZoomOut);
             textWriter.WriteElementString("WaveformPlaySelection", settings.Shortcuts.WaveformPlaySelection);
