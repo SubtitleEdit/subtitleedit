@@ -383,10 +383,10 @@ namespace Nikse.SubtitleEdit.Logic
 
         //////////////////////////////////////// SPECTRUM ///////////////////////////////////////////////////////////
 
-        public List<ManagedBitmap> GenerateFourierData(int nfft, string spectrogramDirectory)
+        public List<Bitmap> GenerateFourierData(int nfft, string spectrogramDirectory)
         {
             const int BitmapWidth = 1024;
-            List<ManagedBitmap> bitmaps = new List<ManagedBitmap>();
+            var bitmaps = new List<Bitmap>();
 
             // setup fourier transformation
             Fourier f = new Fourier(nfft, true);
@@ -452,7 +452,7 @@ namespace Nikse.SubtitleEdit.Logic
                             for (int k = 0; k < sampleSize; k++)
                                 samplesAsReal[k] = samples[k] / divider;
                             var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
-                            bmp.AppendToStream(outFile);
+                            bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
                             bitmaps.Add(bmp); 
                             samples = new List<int>();
                             count++;
@@ -468,7 +468,7 @@ namespace Nikse.SubtitleEdit.Logic
                     for (int k = 0; k < sampleSize && k < samples.Count; k++)
                         samplesAsReal[k] = samples[k] / divider;
                     var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
-                    bmp.AppendToStream(outFile);
+                    bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
                     bitmaps.Add(bmp);
                 }
             }
@@ -488,7 +488,7 @@ namespace Nikse.SubtitleEdit.Logic
             return bitmaps;
         }
 
-        private ManagedBitmap DrawSpectrogram(int nfft, double[] samples, Fourier f, Color[] palette)
+        private Bitmap DrawSpectrogram(int nfft, double[] samples, Fourier f, Color[] palette)
         {
             const int overlap = 0;
             int numSamples = samples.Length;
@@ -502,7 +502,7 @@ namespace Nikse.SubtitleEdit.Logic
             double[] real = new double[nfft];
             double[] imag = new double[nfft];
             double[] magnitude = new double[nfft / 2];
-            var bmp = new ManagedBitmap(numcols, nfft / 2);
+            var bmp = new Bitmap(numcols, nfft / 2);
             for (int col = 0; col <= numcols - 1; col++)
             {
                 // read a segment of the recorded signal

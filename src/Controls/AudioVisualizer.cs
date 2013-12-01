@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _noClear;
         private double _gapAtStart = -1;
 
-        private List<ManagedBitmap> _spectrogramBitmaps = new List<ManagedBitmap>();
+        private List<Bitmap> _spectrogramBitmaps = new List<Bitmap>();
         private string _spectrogramDirectory;
         private double _sampleDuration;
         private double _imageWidth = 0;
@@ -239,15 +239,15 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     try
                     {
-                        //Bitmap bmp = _spectrogramBitmaps[i];
-                        //bmp.Dispose();
+                        Bitmap bmp = _spectrogramBitmaps[i];
+                        bmp.Dispose();
                     }
                     catch
                     {
                     }
                 }
             }
-            _spectrogramBitmaps = new List<ManagedBitmap>();
+            _spectrogramBitmaps = new List<Bitmap>();
         }
 
         public void ClearSelection()
@@ -1585,7 +1585,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void InitializeSpectrogram(string spectrogramDirectory)
         {
-            _spectrogramBitmaps = new List<ManagedBitmap>();
+            _spectrogramBitmaps = new List<Bitmap>();
             _tempShowSpectrogram = ShowSpectrogram;
             ShowSpectrogram = false;
             if (Directory.Exists(spectrogramDirectory))
@@ -1606,22 +1606,20 @@ namespace Nikse.SubtitleEdit.Controls
 
         void LoadSpectrogramBitmapsAsync(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            string fileName = Path.Combine(_spectrogramDirectory, "Images.db");
-            if (File.Exists(fileName))
+            int count = 0;
+            string fileName = Path.Combine(_spectrogramDirectory, count + ".gif");
+            while (File.Exists(Path.Combine(_spectrogramDirectory, count + ".gif")))
             {
-                using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+                using (var ms = new MemoryStream(File.ReadAllBytes(fileName)))
                 {
-                    fs.Position = 0;
-                    while (fs.Position < fs.Length - 10)
-                    {
-                        _spectrogramBitmaps.Add(new ManagedBitmap(fs));
-                    }
-                    
+                    _spectrogramBitmaps.Add((Bitmap)Bitmap.FromStream(ms));
                 }
+                count++;
+                fileName = Path.Combine(_spectrogramDirectory, count + ".gif");
             }
         }
 
-        public void InitializeSpectrogram(List<ManagedBitmap> spectrogramBitmaps, string spectrogramDirectory)
+        public void InitializeSpectrogram(List<Bitmap> spectrogramBitmaps, string spectrogramDirectory)
         {
             _spectrogramBitmaps = spectrogramBitmaps;
             LoadSpectrogramInfo(spectrogramDirectory);
@@ -1657,42 +1655,34 @@ namespace Nikse.SubtitleEdit.Controls
         {
             double duration = EndPositionSeconds - StartPositionSeconds;
             int width = (int)(duration / _sampleDuration);
-            if (_lastSpectrogramStart == seconds && _lastSpectrogramWidth == width && _lastSpectrogramBitmap != null)
-            {
-                if (ShowWaveform)
-                    graphics.DrawImage(_lastSpectrogramBitmap, new Rectangle(0, Height - _lastSpectrogramBitmap.Height, Width, _lastSpectrogramBitmap.Height));
-                else
-                    graphics.DrawImage(_lastSpectrogramBitmap, new Rectangle(0, 0, Width, Height));
-                return;
-            }
+           
+            Bitmap bmpDestination = new Bitmap(width, 128); //calculate width
+            Graphics gfx = Graphics.FromImage(bmpDestination);
 
-            var bmpDestination = new ManagedBitmap(width, _nfft / 2);
             double startRow = seconds / _secondsPerImage;
             int bitmapIndex = (int)startRow;
             int subtractValue = (int)Math.Round((startRow - bitmapIndex) * _imageWidth);
+
             int i = 0;
             while (i * _imageWidth < width && i + bitmapIndex < _spectrogramBitmaps.Count)
             {
                 var bmp = _spectrogramBitmaps[i + bitmapIndex];
-                bmpDestination.DrawImage(bmp, new Point(bmp.Width * i - subtractValue, 0));
+                gfx.DrawImage(bmp, new Point(bmp.Width * i - subtractValue, 0));
                 i++;
             }
             if (i + bitmapIndex < _spectrogramBitmaps.Count && subtractValue > 0)
             {
                 var bmp = _spectrogramBitmaps[i + bitmapIndex];
-                bmpDestination.DrawImage(bmp, new Point(bmp.Width * i - subtractValue, 0));
+                gfx.DrawImage(bmp, new Point(bmp.Width * i - subtractValue, 0));
                 i++;
             }
-            if (_lastSpectrogramBitmap != null)
-                _lastSpectrogramBitmap.Dispose();
-            _lastSpectrogramBitmap = bmpDestination.ToOldBitmap();
-            if (ShowWaveform)
-                graphics.DrawImage(_lastSpectrogramBitmap, new Rectangle(0, Height - bmpDestination.Height, Width, bmpDestination.Height));
-            else
-                graphics.DrawImage(_lastSpectrogramBitmap, new Rectangle(0, 0, Width, Height));
+            gfx.Dispose();
 
-            _lastSpectrogramStart = seconds;
-            _lastSpectrogramWidth = width;
+            if (ShowWaveform)
+                graphics.DrawImage(bmpDestination, new Rectangle(0, Height - bmpDestination.Height, Width, bmpDestination.Height));
+            else
+                graphics.DrawImage(bmpDestination, new Rectangle(0, 0, Width, Height));
+            bmpDestination.Dispose();
         }
 
         private double GetAverageVolumeForNextMilliseconds(int sampleIndex, int milliseconds)
