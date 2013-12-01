@@ -82,8 +82,9 @@ namespace Nikse.SubtitleEdit.Controls
         private List<ManagedBitmap> _spectrogramBitmaps = new List<ManagedBitmap>();
         private string _spectrogramDirectory;
         private double _sampleDuration;
+        private double _imageWidth = 0;
+        private int _nfft = 0;
         private double _secondsPerImage = 0;
-        private const int SpectrogramBitmapWidth = 1024;
         private double _lastSpectrogramStart;
         private int _lastSpectrogramWidth;
         private Bitmap _lastSpectrogramBitmap;
@@ -451,7 +452,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     DrawSpectrogramBitmap(StartPositionSeconds, graphics);
                     if (ShowWaveform)
-                        imageHeight -= 128;
+                        imageHeight -= _nfft / 2;
                 }
 
                 var penNormal = new Pen(Color);
@@ -1628,16 +1629,25 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void LoadSpectrogramInfo(string spectrogramDirectory)
         {
-            var doc = new XmlDocument();
-            string xmlInfoFileName = Path.Combine(spectrogramDirectory, "Info.xml");
-            if (File.Exists(xmlInfoFileName))
+            try
             {
-                doc.Load(xmlInfoFileName);
-                _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText, System.Globalization.CultureInfo.InvariantCulture);
-                _secondsPerImage = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText, System.Globalization.CultureInfo.InvariantCulture);
-                ShowSpectrogram = true;
+                var doc = new XmlDocument();
+                string xmlInfoFileName = Path.Combine(spectrogramDirectory, "Info.xml");
+                if (File.Exists(xmlInfoFileName))
+                {
+                    doc.Load(xmlInfoFileName);
+                    _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText, System.Globalization.CultureInfo.InvariantCulture);
+                    _secondsPerImage = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText, System.Globalization.CultureInfo.InvariantCulture);
+                    _nfft = Convert.ToInt32(doc.DocumentElement.SelectSingleNode("NFFT").InnerText, System.Globalization.CultureInfo.InvariantCulture);
+                    _imageWidth = Convert.ToInt32(doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText, System.Globalization.CultureInfo.InvariantCulture);
+                    ShowSpectrogram = true;
+                }
+                else
+                {
+                    ShowSpectrogram = false;
+                }
             }
-            else
+            catch
             {
                 ShowSpectrogram = false;
             }
@@ -1656,12 +1666,12 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            var bmpDestination = new ManagedBitmap(width, 128); //calculate width
+            var bmpDestination = new ManagedBitmap(width, _nfft / 2);
             double startRow = seconds / _secondsPerImage;
             int bitmapIndex = (int)startRow;
-            int subtractValue = (int)Math.Round((startRow - bitmapIndex) * SpectrogramBitmapWidth);
+            int subtractValue = (int)Math.Round((startRow - bitmapIndex) * _imageWidth);
             int i = 0;
-            while (i * SpectrogramBitmapWidth < width && i + bitmapIndex < _spectrogramBitmaps.Count)
+            while (i * _imageWidth < width && i + bitmapIndex < _spectrogramBitmaps.Count)
             {
                 var bmp = _spectrogramBitmaps[i + bitmapIndex];
                 bmpDestination.DrawImage(bmp, new Point(bmp.Width * i - subtractValue, 0));
