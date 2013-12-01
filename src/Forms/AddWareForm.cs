@@ -189,10 +189,11 @@ namespace Nikse.SubtitleEdit.Forms
             FileInfo fi = new FileInfo(targetFile);
             if (fi.Length <= 200)
             {
-                MessageBox.Show("Sorry! VLC was unable to extract audio to wave file via this command line:" + Environment.NewLine
-                                + Environment.NewLine +
-                                "Command line: " + exeFilePath + " " + parameters);
-
+                MessageBox.Show("Sorry! VLC/FFMPEG was unable to extract audio to wave file via this command line:" + Environment.NewLine +
+                                Environment.NewLine +
+                                "Command line: " + exeFilePath + " " + parameters + Environment.NewLine +
+                                Environment.NewLine +
+                                "Note: Do check free disk space.");
                 labelPleaseWait.Visible = false;
                 labelProgress.Text = string.Empty;
                 buttonRipWave.Enabled = true;
