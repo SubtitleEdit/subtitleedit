@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _cancel = false;
         private string _wavFileName = null;
         private string _spectrogramDirectory;
-        public List<Bitmap> SpectrogramBitmaps { get; private set; }
+        public List<ManagedBitmap> SpectrogramBitmaps { get; private set; }
         private string _encodeParamters;
         private const string RetryEncodeParameters = "acodec=s16l";
         private int _audioTrackNumber = -1;

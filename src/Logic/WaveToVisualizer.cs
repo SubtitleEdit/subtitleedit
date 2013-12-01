@@ -383,9 +383,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         //////////////////////////////////////// SPECTRUM ///////////////////////////////////////////////////////////
 
-        public List<Bitmap> GenerateFourierData(int nfft, string spectrogramDirectory)
+        public List<ManagedBitmap> GenerateFourierData(int nfft, string spectrogramDirectory)
         {
-            List<Bitmap> bitmaps = new List<Bitmap>();
+            List<ManagedBitmap> bitmaps = new List<ManagedBitmap>();
 
             // setup fourier transformation
             Fourier f = new Fourier(nfft, true);
@@ -426,61 +426,68 @@ namespace Nikse.SubtitleEdit.Logic
             _stream.Position = Header.DataStartPosition;
             int bytesRead = _stream.Read(_data, 0, _data.Length);
 
-            while (bytesRead == Header.BytesPerSecond)
+            using (FileStream outFile = new FileStream(Path.Combine(spectrogramDirectory, "Images.db"), FileMode.Create))
             {
-                while (index < Header.BytesPerSecond)
+                while (bytesRead == Header.BytesPerSecond)
                 {
-                    int value = 0;
-                    for (int channelNumber = 0; channelNumber < Header.NumberOfChannels; channelNumber++)
+                    while (index < Header.BytesPerSecond)
                     {
-                        value += readSampleDataValue.Invoke(ref index);
-                    }
-                    value = value / Header.NumberOfChannels;
-                    if (value < DataMinValue)
-                        DataMinValue = value;
-                    if (value > DataMaxValue)
-                        DataMaxValue = value;
-                    samples.Add(value);
-                    totalSamples++;
+                        int value = 0;
+                        for (int channelNumber = 0; channelNumber < Header.NumberOfChannels; channelNumber++)
+                        {
+                            value += readSampleDataValue.Invoke(ref index);
+                        }
+                        value = value / Header.NumberOfChannels;
+                        if (value < DataMinValue)
+                            DataMinValue = value;
+                        if (value > DataMaxValue)
+                            DataMaxValue = value;
+                        samples.Add(value);
+                        totalSamples++;
 
-                    if (samples.Count == sampleSize)
-                    {
-                        var samplesAsReal = new double[sampleSize];
-                        for (int k = 0; k < sampleSize; k++)
-                            samplesAsReal[k] = samples[k] / divider;
-                        Bitmap bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
-                        bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
-                        bitmaps.Add(bmp); // save serialized gif instead????
-                        samples = new List<int>();
-                        count++;
+                        if (samples.Count == sampleSize)
+                        {
+                            var samplesAsReal = new double[sampleSize];
+                            for (int k = 0; k < sampleSize; k++)
+                                samplesAsReal[k] = samples[k] / divider;
+                            var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
+                            bmp.AppendToStream(outFile);
+//                            bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
+                            bitmaps.Add(bmp); // save serialized gif instead????
+                            samples = new List<int>();
+                            count++;
+                        }
                     }
+                    bytesRead = _stream.Read(_data, 0, _data.Length);
+                    index = 0;
                 }
-                bytesRead = _stream.Read(_data, 0, _data.Length);
-                index = 0;
-            }
 
-            if (samples.Count > 0)
-            {
-                var samplesAsReal = new double[sampleSize];
-                for (int k = 0; k < sampleSize && k < samples.Count; k++)
-                    samplesAsReal[k] = samples[k] / divider;
-                Bitmap bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
-                bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
-                bitmaps.Add(bmp); // save serialized gif instead????
+                if (samples.Count > 0)
+                {
+                    var samplesAsReal = new double[sampleSize];
+                    for (int k = 0; k < sampleSize && k < samples.Count; k++)
+                        samplesAsReal[k] = samples[k] / divider;
+                    var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
+                    bmp.AppendToStream(outFile);
+                    //bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
+                    bitmaps.Add(bmp); // save serialized gif instead????
+                }
             }
 
             var doc = new XmlDocument();
-            doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/><SecondsPerImage /></SpectrogramInfo>");
+            doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/><AudioFormat /><AudioFormat /><ChunkId /><SecondsPerImage /></SpectrogramInfo>");
             double sampleDuration = Header.LengthInSeconds / (totalSamples / Convert.ToDouble(nfft));
             doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = sampleDuration.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText =  Header.LengthInSeconds.ToString(CultureInfo.InvariantCulture);
+            doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText = Header.LengthInSeconds.ToString(CultureInfo.InvariantCulture);
+            doc.DocumentElement.SelectSingleNode("AudioFormat").InnerText = Header.AudioFormat.ToString(CultureInfo.InvariantCulture);
+            doc.DocumentElement.SelectSingleNode("ChunkId").InnerText = Header.ChunkId.ToString(CultureInfo.InvariantCulture);
             doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)(sampleSize / (double)Header.SampleRate)).ToString(CultureInfo.InvariantCulture);
             doc.Save(Path.Combine(spectrogramDirectory, "Info.xml"));
 
             return bitmaps;
         }
 
-        private Bitmap DrawSpectrogram(int nfft, double[] samples, Fourier f, Color[] palette)
+        private ManagedBitmap DrawSpectrogram(int nfft, double[] samples, Fourier f, Color[] palette)
         {
             const int overlap = 0;
             int numSamples = samples.Length;
@@ -494,7 +501,7 @@ namespace Nikse.SubtitleEdit.Logic
             double[] real = new double[nfft];
             double[] imag = new double[nfft];
             double[] magnitude = new double[nfft / 2];
-            Bitmap bmp = new Bitmap(numcols, nfft / 2);
+            var bmp = new ManagedBitmap(numcols, nfft / 2);
             for (int col = 0; col <= numcols - 1; col++)
             {
                 // read a segment of the recorded signal

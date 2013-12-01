@@ -208,5 +208,23 @@ namespace Nikse.SubtitleEdit.Logic
             return nbmp.GetBitmap();
         }
 
+
+        internal void DrawImage(ManagedBitmap bmp, Point point)
+        {
+            for (int y = 0; y < bmp.Height; y++)
+            {
+                int newY = point.Y + y;
+                if (newY >= 0 && newY < Height)
+                {
+                    for (int x = 0; x < bmp.Width; x++)
+                    {
+                        int newX = point.X + x;
+                        if (newX >= 0 && newX < Width)
+                            this.SetPixel(newX, newY, bmp.GetPixel(x, y));
+                    }
+                }
+            }
+        }
+
     }
 }
