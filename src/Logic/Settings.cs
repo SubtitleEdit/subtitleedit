@@ -134,6 +134,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MusicSymbolStyle { get; set; }
         public int BridgeGapMilliseconds { get; set; }
         public string ExportCustomTemplates { get; set; }
+        public string ChangeCasingChoice { get; set; }
 
         public ToolsSettings()
         {
@@ -177,6 +178,7 @@ namespace Nikse.SubtitleEdit.Logic
             BridgeGapMilliseconds = 100;
             ExportCustomTemplates = "SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]ÆæMicroDvdÆÆ{{start}}{{end}}{text}\r\nÆffÆ||Æ";
         }
+
     }
 
     public class WordListSettings
@@ -1536,7 +1538,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportCustomTemplates");
             if (subNode != null)
                 settings.Tools.ExportCustomTemplates = subNode.InnerText;
-
+            subNode = node.SelectSingleNode("ChangeCasingChoice");
+            if (subNode != null)
+                settings.Tools.ChangeCasingChoice = subNode.InnerText;
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -2495,6 +2499,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MusicSymbolStyle", settings.Tools.MusicSymbolStyle);
             textWriter.WriteElementString("BridgeGapMilliseconds", settings.Tools.BridgeGapMilliseconds.ToString());
             textWriter.WriteElementString("ExportCustomTemplates", settings.Tools.ExportCustomTemplates);
+            textWriter.WriteElementString("ChangeCasingChoice", settings.Tools.ChangeCasingChoice);            
 
             textWriter.WriteEndElement();
 
