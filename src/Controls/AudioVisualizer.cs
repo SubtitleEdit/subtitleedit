@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Controls
         private List<Bitmap> _spectrogramBitmaps = new List<Bitmap>();
         private string _spectrogramDirectory;
         private double _sampleDuration;
-        private double _totalDuration = 0;
+        private double _secondsPerImage = 0;
         private const int SpectrogramBitmapWidth = 1024;
 
         public delegate void ParagraphEventHandler(object sender, ParagraphEventArgs e);
@@ -1599,7 +1599,7 @@ namespace Nikse.SubtitleEdit.Controls
             var doc = new XmlDocument();
             doc.Load(Path.Combine(_spectrogramDirectory, "Info.xml"));
             _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText, System.Globalization.CultureInfo.InvariantCulture);
-            _totalDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText, System.Globalization.CultureInfo.InvariantCulture);
+            _secondsPerImage = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText, System.Globalization.CultureInfo.InvariantCulture);
             ShowSpectrogram = _tempShowSpectrogram;
         }
 
@@ -1628,7 +1628,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 doc.Load(xmlInfoFileName);
                 _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText, System.Globalization.CultureInfo.InvariantCulture);
-                _totalDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText, System.Globalization.CultureInfo.InvariantCulture);
+                _secondsPerImage = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText, System.Globalization.CultureInfo.InvariantCulture);
                 ShowSpectrogram = true;
             }
             else
@@ -1645,9 +1645,9 @@ namespace Nikse.SubtitleEdit.Controls
             Bitmap bmpDestination = new Bitmap(width, 128); //calculate width
             Graphics gfx = Graphics.FromImage(bmpDestination);
 
-            double startRow = seconds / (_sampleDuration);
-            int bitmapIndex = (int)(startRow / SpectrogramBitmapWidth);
-            int subtractValue = (int)startRow % SpectrogramBitmapWidth;
+            double startRow = seconds / _secondsPerImage;
+            int bitmapIndex = (int)startRow;
+            int subtractValue = (int)Math.Round((startRow - bitmapIndex) * SpectrogramBitmapWidth);
 
             int i = 0;
             while (i * SpectrogramBitmapWidth < width && i + bitmapIndex < _spectrogramBitmaps.Count)
@@ -1670,7 +1670,6 @@ namespace Nikse.SubtitleEdit.Controls
                 graphics.DrawImage(bmpDestination, new Rectangle(0, 0, Width, Height));
             bmpDestination.Dispose();
         }
-
 
         private double GetAverageVolumeForNextMilliseconds(int sampleIndex, int milliseconds)
         {

@@ -470,11 +470,11 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             var doc = new XmlDocument();
-            doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/></SpectrogramInfo>");
+            doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/><SecondsPerImage /></SpectrogramInfo>");
             double sampleDuration = Header.LengthInSeconds / (totalSamples / Convert.ToDouble(nfft));
-            double totalDuration = Header.LengthInSeconds;
             doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = sampleDuration.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText = totalDuration.ToString(CultureInfo.InvariantCulture);
+            doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText =  Header.LengthInSeconds.ToString(CultureInfo.InvariantCulture);
+            doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)(sampleSize / (double)Header.SampleRate)).ToString(CultureInfo.InvariantCulture);
             doc.Save(Path.Combine(spectrogramDirectory, "Info.xml"));
 
             return bitmaps;
