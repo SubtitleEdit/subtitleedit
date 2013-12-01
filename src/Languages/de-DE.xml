@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.11</Version>
-    <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Nobody.</TranslatedBy>
+    <TranslatedBy>Übersetzt von Christoph Kitsche. Berichtigungen und Ergänzungen von Siegwarth. Rechtschreibfehler korrigiert von Christoph Kitsche.</TranslatedBy>
     <CultureName>de-DE</CultureName>
     <HelpFile></HelpFile>
     <OK>&amp;OK</OK>
@@ -155,7 +155,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertedX>Umgewandelt ({0})</ConvertedX>
     <Settings>Einstellungen</Settings>
     <SplitLongLines>Lange Zeilen trennen</SplitLongLines>
-    <AutoBalance>Zeilen automatsich ausbancieren</AutoBalance>
+    <AutoBalance>Zeilen automatisch ausbancieren</AutoBalance>
     <ScanFolder>Durchsuche Ordner...</ScanFolder>
     <ScanningFolder>Durchsuche {0} und Unterordner nach Untertiteldateien...</ScanningFolder>
     <Recursive>Unterordner einschließen</Recursive>
@@ -189,7 +189,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FrameRateNotCorrect>Bildfrequenz ist nicht korrekt</FrameRateNotCorrect>
     <FrameRateNotChanged>Bildfrequenz ist gleich - nichts zu konvertieren</FrameRateNotChanged>
   </ChangeFrameRate>
-    <ChangeSpeedInPercent>
+  <ChangeSpeedInPercent>
     <Title>Geschwindigkeit prozentual verändern</Title>
     <Info>Geschwindigeit der Untertitel prozentual verändern</Info>
   </ChangeSpeedInPercent>
@@ -860,8 +860,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
       <ListView>Listenansicht</ListView>
       <SourceView>Quellansicht</SourceView>
       <UndoChangesInEditPanel>Rückgängig</UndoChangesInEditPanel>
-      <Previous>Zurück</Previous>
-      <Next>Weiter</Next>
+      <Previous>Vorheriger</Previous>
+      <Next>Nächster</Next>
       <AutoBreak>Auto&amp;Umbruch</AutoBreak>
       <Unbreak>Umbruch entfernen</Unbreak>
     </Controls>
