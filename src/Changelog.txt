@@ -4,8 +4,10 @@
 * NEW:
    * Added "line height" to image export
    * Added Vietnamese language file - thx everytime
+   * Added custom shortcut for vertical zoom out of waveform
 * IMPROVED:
    * Updated Italian language file - thx SilverDrake
+   * Updated German language file - thx Christoph
    * Added .m4a file type to audio file types
    * Added Chinese Traditional to Tesseract OCR dictionary list
    * Added Polish spelling dictionary to download list
