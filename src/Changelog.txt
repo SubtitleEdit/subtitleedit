@@ -7,7 +7,7 @@
 * IMPROVED:
    * Updated Italian language file - thx SilverDrake
    * Added .m4a file type to audio file types
-   * Added Chinese Traditional to Tesseract ocr dictionary list
+   * Added Chinese Traditional to Tesseract OCR dictionary list
    * Added Polish spelling dictionary to download list
    * "Adjust display durations" now allows down to 75% - thx Dennis
    * "Restore auto-backup" window now displays number of bytes
@@ -49,11 +49,11 @@
    * Batch convert now works with more CC formats
    * Import sub with matching time codes in OCR window 
      now works with other formats than SRT - thx osgZach
-   * Fix for multiline italics in Spruce/DVD Studio pro - thx Damian
-   * Fixed bad link for Spannish spell check dictionary - thx Nils
-   * Minor fix for TSB4 format - thx Leart 
+   * Fix for multi-line italics in Spruce/DVD Studio pro - thx Damian
+   * Fixed bad link for Spanish spell check dictionary - thx Nils
+   * Minor fix for TSB4 format - thx Leart
    * Audio mkv delays now might work when creating waveform
-   * Add to "Names/noise list" in spell checknow uses word in textbox 
+   * Add to "Names/noise list" in spell check now uses word in textbox 
      (and not the original word)
    * Alignment now works when exporting to sub/idx - thx adrianbergonzi
    * Changed VLC audio extraction parameters so it works better with SE
@@ -71,7 +71,7 @@
    * Updated Czech language file - thx Trottel
    * Updated Russian language file - thx Sergey
    * Updated Brazilian Portuguese langauge file - thx Igor
-   * Updated German langauge file - thx Siegwarth
+   * Updated German language file - thx Siegwarth
    * Updated Bulgarian language file - thx Iavor
    * Updated word lists - thx Siegwarth
    * Minor improvements for EBU open subtitling
