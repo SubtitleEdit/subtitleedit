@@ -12,6 +12,9 @@
    * "Adjust display durations" now allows down to 75% - thx Dennis
    * "Restore auto-backup" window now displays number of bytes
 * FIXED:
+   * Fixed audio waveform so it works better with VLC
+   * Fixed sync of spectrogram
+   * Fixed spectrogram so it works with FFMPEG
    * Dragging line in wave form in frames mode keeps duration - thx Adrian
    * Fixed Slovak spell check dictionary link
    * Status text after re-calculating display times fixed - thx Dennis
