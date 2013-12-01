@@ -663,6 +663,8 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.WaveForm.ZoomIn + GetShortcutText(Configuration.Settings.Shortcuts.WaveformZoomIn));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.WaveForm.ZoomOut + GetShortcutText(Configuration.Settings.Shortcuts.WaveformZoomOut));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.VerticalZoom + GetShortcutText(Configuration.Settings.Shortcuts.WaveformVerticalZoom));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.VerticalZoomOut))
+                audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.VerticalZoomOut + GetShortcutText(Configuration.Settings.Shortcuts.WaveformVerticalZoomOut));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformSeekSilenceForward + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformSeekSilenceBack + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformAddTextHere + GetShortcutText(Configuration.Settings.Shortcuts.WaveformAddTextHere));
@@ -768,6 +770,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     DirectoryInfo spectrogramDir = new DirectoryInfo(dir.FullName);
                     foreach (FileInfo fi in spectrogramDir.GetFiles("*.gif"))
+                    {
+                        bytes += fi.Length;
+                        count++;
+                    }
+                    foreach (FileInfo fi in spectrogramDir.GetFiles("*.db"))
                     {
                         bytes += fi.Length;
                         count++;
@@ -1366,6 +1373,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.WaveformPlayFirstSelected = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.VerticalZoom).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformVerticalZoom = GetShortcut(node.Text);
+                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.VerticalZoomOut) && text == (Configuration.Settings.Language.Settings.VerticalZoomOut).Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.WaveformVerticalZoomOut = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.WaveformSeekSilenceForward).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformSearchSilenceForward = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.WaveformSeekSilenceBack).Replace("&", string.Empty))
