@@ -2273,6 +2273,9 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         File.Delete(fileName.FullName);
                     }
+                    string imageDbFileName = Path.Combine(dir.FullName, "Images.db");
+                    if (File.Exists(imageDbFileName))
+                        File.Delete(imageDbFileName);
                     string xmlFileName = Path.Combine(dir.FullName, "Info.xml");
                     if (File.Exists(xmlFileName))
                         File.Delete(xmlFileName);
