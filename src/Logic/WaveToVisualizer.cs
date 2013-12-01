@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic
                 stream.Read(buffer, 0, buffer.Length);
                 DataId = Encoding.UTF8.GetString(buffer, 0, 4);
                 DataChunkSize = BitConverter.ToUInt32(buffer, 4);
-                DataStartPosition = ConstantHeaderSize + FmtChunkSize + 8;
+                DataStartPosition = (int)oldPos + 8;
             }
 
             _headerData = new byte[DataStartPosition];
@@ -126,15 +126,21 @@ namespace Nikse.SubtitleEdit.Logic
 
         internal void WriteHeader(Stream fromStream, Stream toStream, int sampleRate, int numberOfChannels, int bitsPerSample, int dataSize)
         {
+            const int fmtChunckSize = 16;
+            const int headerSize = 44;
             int byteRate = sampleRate * (bitsPerSample / 8) * numberOfChannels;
-
-            WriteInt32ToByteArray(_headerData, 4, dataSize + DataStartPosition - 8);
+            WriteInt32ToByteArray(_headerData, 4, dataSize + headerSize - 8);
+            WriteInt16ToByteArray(_headerData, 16, fmtChunckSize); // 
             WriteInt16ToByteArray(_headerData, ConstantHeaderSize + 2, numberOfChannels);
             WriteInt32ToByteArray(_headerData, ConstantHeaderSize + 4, sampleRate);
             WriteInt32ToByteArray(_headerData, ConstantHeaderSize + 8, byteRate);
             WriteInt16ToByteArray(_headerData, ConstantHeaderSize + 14, bitsPerSample);
-            WriteInt32ToByteArray(_headerData, ConstantHeaderSize + FmtChunkSize + 4, dataSize);
-            toStream.Write(_headerData, 0, _headerData.Length);
+            _headerData[ConstantHeaderSize + fmtChunckSize + 0] = Convert.ToByte('d');
+            _headerData[ConstantHeaderSize + fmtChunckSize + 1] = Convert.ToByte('a');
+            _headerData[ConstantHeaderSize + fmtChunckSize + 2] = Convert.ToByte('t');
+            _headerData[ConstantHeaderSize + fmtChunckSize + 3] = Convert.ToByte('a');
+            WriteInt32ToByteArray(_headerData, ConstantHeaderSize + fmtChunckSize + 4, dataSize);
+            toStream.Write(_headerData, 0, headerSize);
         }
 
         private static void WriteInt16ToByteArray(byte[] headerData, int index, int value)
