@@ -385,6 +385,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public List<ManagedBitmap> GenerateFourierData(int nfft, string spectrogramDirectory)
         {
+            const int BitmapWidth = 1024;
             List<ManagedBitmap> bitmaps = new List<ManagedBitmap>();
 
             // setup fourier transformation
@@ -417,7 +418,7 @@ namespace Nikse.SubtitleEdit.Logic
             DataMaxValue = int.MinValue;
             var samples = new List<int>();
             int index = 0;
-            int sampleSize = nfft * 1024; // 1024 = bitmap width
+            int sampleSize = nfft * BitmapWidth;
             int count = 0;
             long totalSamples = 0;
 
@@ -452,8 +453,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 samplesAsReal[k] = samples[k] / divider;
                             var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
                             bmp.AppendToStream(outFile);
-//                            bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
-                            bitmaps.Add(bmp); // save serialized gif instead????
+                            bitmaps.Add(bmp); 
                             samples = new List<int>();
                             count++;
                         }
@@ -469,19 +469,20 @@ namespace Nikse.SubtitleEdit.Logic
                         samplesAsReal[k] = samples[k] / divider;
                     var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
                     bmp.AppendToStream(outFile);
-                    //bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
-                    bitmaps.Add(bmp); // save serialized gif instead????
+                    bitmaps.Add(bmp);
                 }
             }
 
             var doc = new XmlDocument();
-            doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/><AudioFormat /><AudioFormat /><ChunkId /><SecondsPerImage /></SpectrogramInfo>");
+            doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/><AudioFormat /><AudioFormat /><ChunkId /><SecondsPerImage /><ImageWidth /><NFFT /></SpectrogramInfo>");
             double sampleDuration = Header.LengthInSeconds / (totalSamples / Convert.ToDouble(nfft));
             doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = sampleDuration.ToString(CultureInfo.InvariantCulture);
             doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText = Header.LengthInSeconds.ToString(CultureInfo.InvariantCulture);
             doc.DocumentElement.SelectSingleNode("AudioFormat").InnerText = Header.AudioFormat.ToString(CultureInfo.InvariantCulture);
             doc.DocumentElement.SelectSingleNode("ChunkId").InnerText = Header.ChunkId.ToString(CultureInfo.InvariantCulture);
             doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)(sampleSize / (double)Header.SampleRate)).ToString(CultureInfo.InvariantCulture);
+            doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = BitmapWidth.ToString(CultureInfo.InvariantCulture);
+            doc.DocumentElement.SelectSingleNode("NFFT").InnerText = nfft.ToString(CultureInfo.InvariantCulture);
             doc.Save(Path.Combine(spectrogramDirectory, "Info.xml"));
 
             return bitmaps;
