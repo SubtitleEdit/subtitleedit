@@ -433,50 +433,47 @@ namespace Nikse.SubtitleEdit.Logic
             _stream.Position = Header.DataStartPosition;
             int bytesRead = _stream.Read(_data, 0, _data.Length);
 
-            using (FileStream outFile = new FileStream(Path.Combine(spectrogramDirectory, "Images.db"), FileMode.Create))
+            while (bytesRead == Header.BytesPerSecond)
             {
-                while (bytesRead == Header.BytesPerSecond)
+                while (index < Header.BytesPerSecond)
                 {
-                    while (index < Header.BytesPerSecond)
+                    int value = 0;
+                    for (int channelNumber = 0; channelNumber < Header.NumberOfChannels; channelNumber++)
                     {
-                        int value = 0;
-                        for (int channelNumber = 0; channelNumber < Header.NumberOfChannels; channelNumber++)
-                        {
-                            value += readSampleDataValue.Invoke(ref index);
-                        }
-                        value = value / Header.NumberOfChannels;
-                        if (value < DataMinValue)
-                            DataMinValue = value;
-                        if (value > DataMaxValue)
-                            DataMaxValue = value;
-                        samples.Add(value);
-                        totalSamples++;
-
-                        if (samples.Count == sampleSize)
-                        {
-                            var samplesAsReal = new double[sampleSize];
-                            for (int k = 0; k < sampleSize; k++)
-                                samplesAsReal[k] = samples[k] / divider;
-                            var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
-                            bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
-                            bitmaps.Add(bmp);
-                            samples = new List<int>();
-                            count++;
-                        }
+                        value += readSampleDataValue.Invoke(ref index);
                     }
-                    bytesRead = _stream.Read(_data, 0, _data.Length);
-                    index = 0;
-                }
+                    value = value / Header.NumberOfChannels;
+                    if (value < DataMinValue)
+                        DataMinValue = value;
+                    if (value > DataMaxValue)
+                        DataMaxValue = value;
+                    samples.Add(value);
+                    totalSamples++;
 
-                if (samples.Count > 0)
-                {
-                    var samplesAsReal = new double[sampleSize];
-                    for (int k = 0; k < sampleSize && k < samples.Count; k++)
-                        samplesAsReal[k] = samples[k] / divider;
-                    var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
-                    bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
-                    bitmaps.Add(bmp);
+                    if (samples.Count == sampleSize)
+                    {
+                        var samplesAsReal = new double[sampleSize];
+                        for (int k = 0; k < sampleSize; k++)
+                            samplesAsReal[k] = samples[k] / divider;
+                        var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
+                        bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
+                        bitmaps.Add(bmp);
+                        samples = new List<int>();
+                        count++;
+                    }
                 }
+                bytesRead = _stream.Read(_data, 0, _data.Length);
+                index = 0;
+            }
+
+            if (samples.Count > 0)
+            {
+                var samplesAsReal = new double[sampleSize];
+                for (int k = 0; k < sampleSize && k < samples.Count; k++)
+                    samplesAsReal[k] = samples[k] / divider;
+                var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
+                bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
+                bitmaps.Add(bmp);
             }
 
             var doc = new XmlDocument();
