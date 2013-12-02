@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
                 item.SubItems.Add(subItem);
             }
             catch
-            { 
+            {
             }
 
 

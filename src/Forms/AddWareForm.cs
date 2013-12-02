@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms
             _cancel = false;
             bool runningOnWindows = false;
             SourceVideoFileName = labelVideoFileName.Text;
-            string targetFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".wav"); 
+            string targetFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".wav");
             string parameters = "\"" + SourceVideoFileName + "\" -I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout=\"#transcode{acodec=s16l,channels=2,ab=128,samplerate=24000}:std{access=file,mux=wav,dst=" + targetFile + "}\" vlc://quit";
             string exeFilePath;
             if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelInfo.Text = "VLC";
             if (Configuration.Settings.General.UseFFMPEGForWaveExtraction && File.Exists(Configuration.Settings.General.FFMPEGLocation))
             {
-                string FFMPEGWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav \"{1}\""; 
+                string FFMPEGWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav \"{1}\"";
                 //-i indicates the input
                 //-vn means no video ouput
                 //-ar 44100 indicates the sampling frequency.

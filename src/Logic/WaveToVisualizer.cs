@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Logic
             const int headerSize = 44;
             int byteRate = sampleRate * (bitsPerSample / 8) * numberOfChannels;
             WriteInt32ToByteArray(_headerData, 4, dataSize + headerSize - 8);
-            WriteInt16ToByteArray(_headerData, 16, fmtChunckSize); // 
+            WriteInt16ToByteArray(_headerData, 16, fmtChunckSize); //
             WriteInt16ToByteArray(_headerData, ConstantHeaderSize + 2, numberOfChannels);
             WriteInt32ToByteArray(_headerData, ConstantHeaderSize + 4, sampleRate);
             WriteInt32ToByteArray(_headerData, ConstantHeaderSize + 8, byteRate);
@@ -459,7 +459,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 samplesAsReal[k] = samples[k] / divider;
                             var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
                             bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
-                            bitmaps.Add(bmp); 
+                            bitmaps.Add(bmp);
                             samples = new List<int>();
                             count++;
                         }

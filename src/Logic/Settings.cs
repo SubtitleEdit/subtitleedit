@@ -2499,7 +2499,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MusicSymbolStyle", settings.Tools.MusicSymbolStyle);
             textWriter.WriteElementString("BridgeGapMilliseconds", settings.Tools.BridgeGapMilliseconds.ToString());
             textWriter.WriteElementString("ExportCustomTemplates", settings.Tools.ExportCustomTemplates);
-            textWriter.WriteElementString("ChangeCasingChoice", settings.Tools.ChangeCasingChoice);            
+            textWriter.WriteElementString("ChangeCasingChoice", settings.Tools.ChangeCasingChoice);
 
             textWriter.WriteEndElement();
 

@@ -1655,7 +1655,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             double duration = EndPositionSeconds - StartPositionSeconds;
             int width = (int)(duration / _sampleDuration);
-           
+
             Bitmap bmpDestination = new Bitmap(width, 128); //calculate width
             Graphics gfx = Graphics.FromImage(bmpDestination);
 
