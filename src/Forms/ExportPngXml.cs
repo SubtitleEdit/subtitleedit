@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             public int ShadowWidth { get; set; }
             public int ShadowAlpha { get; set; }
             public int LineHeight { get; set; }
-            
+
 
             public MakeBitmapParameter()
             {

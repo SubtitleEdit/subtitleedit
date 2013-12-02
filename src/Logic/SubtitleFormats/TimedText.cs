@@ -243,7 +243,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                             else
                             {
-                                subtitle.Paragraphs.Add(new Paragraph(TimedText10.GetTimeCode(start, false), TimedText10.GetTimeCode(end, false), text));                                
+                                subtitle.Paragraphs.Add(new Paragraph(TimedText10.GetTimeCode(start, false), TimedText10.GetTimeCode(end, false), text));
                             }
                         }
                     }
