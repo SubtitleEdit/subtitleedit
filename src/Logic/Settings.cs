@@ -2486,7 +2486,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ExportBluRayFontName", settings.Tools.ExportBluRayFontName);
             textWriter.WriteElementString("ExportBluRayFontSize", settings.Tools.ExportBluRayFontSize.ToString());
             textWriter.WriteElementString("ExportLastFontSize", settings.Tools.ExportLastFontSize.ToString());
-            textWriter.WriteElementString("ExportBluRayFontSize", settings.Tools.ExportLastLineHeight.ToString());
+            textWriter.WriteElementString("ExportLastLineHeight", settings.Tools.ExportLastLineHeight.ToString());
             textWriter.WriteElementString("ExportBluRayVideoResolution", settings.Tools.ExportBluRayVideoResolution);
             textWriter.WriteElementString("ExportFontColor", settings.Tools.ExportFontColor.ToArgb().ToString());
             textWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString());

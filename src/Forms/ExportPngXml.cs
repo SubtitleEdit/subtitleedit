@@ -2152,7 +2152,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             if (_subtitleFontSize == Configuration.Settings.Tools.ExportLastFontSize && Configuration.Settings.Tools.ExportLastLineHeight >= numericUpDownLineSpacing.Minimum &&
-                Configuration.Settings.Tools.ExportLastLineHeight <= numericUpDownLineSpacing.Maximum)
+                Configuration.Settings.Tools.ExportLastLineHeight <= numericUpDownLineSpacing.Maximum && Configuration.Settings.Tools.ExportLastLineHeight > 0)
             {
                 numericUpDownLineSpacing.Value = Configuration.Settings.Tools.ExportLastLineHeight;
             }
