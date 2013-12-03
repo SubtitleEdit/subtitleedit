@@ -8,11 +8,13 @@
 * IMPROVED:
    * Updated Italian language file - thx SilverDrake
    * Updated German language file - thx Christoph
+   * Updated Bulgarian language file - thx Iavor
    * Added .m4a file type to audio file types
    * Added Chinese Traditional to Tesseract OCR dictionary list
    * Added Polish spelling dictionary to download list
    * "Adjust display durations" now allows down to 75% - thx Dennis
    * "Restore auto-backup" window now displays number of bytes
+   * Now remembers last 'Change casing' choice - thx anil
 * FIXED:
    * Fixed audio waveform so it works better with VLC
    * Fixed sync of spectrogram
@@ -20,6 +22,7 @@
    * Dragging line in wave form in frames mode keeps duration - thx Adrian
    * Fixed Slovak spell check dictionary link
    * Status text after re-calculating display times fixed - thx Dennis
+   * Do not leave empty file in temp folder after generating waveform
 
 
 3.3.10 (22nd November 2013)
