@@ -1684,6 +1684,23 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 addLeft = left + 2;
                             left = addLeft;
 
+                            if (parameter.ShadowWidth > 0)
+                            {
+                                var shadowPath = (GraphicsPath)path.Clone();
+                                for (int k = 0; k < parameter.ShadowWidth; k++)
+                                {
+                                    var translateMatrix = new Matrix();
+                                    translateMatrix.Translate(1, 1);
+                                    shadowPath.Transform(translateMatrix);
+
+                                    var p1 = new Pen(Color.FromArgb(parameter.ShadowAlpha, parameter.ShadowColor), parameter.BorderWidth);
+                                    if (parameter.LineJoinRound)
+                                        p1.LineJoin = LineJoin.Round;
+                                    g.DrawPath(p1, shadowPath);
+                                    p1.Dispose();
+                                }
+                            }
+
                             if (parameter.BorderWidth > 0)
                             {
                                 var p1 = new Pen(parameter.BorderColor, parameter.BorderWidth);
