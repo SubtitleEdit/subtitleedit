@@ -5,7 +5,7 @@
     <Version>3.3.11</Version>
     <TranslatedBy>Превод на български: Ivo Ivanov и JJD</TranslatedBy>
     <CultureName>bg-BG</CultureName>
-    <HelpFile>Помощен файл</HelpFile>
+    <HelpFile></HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>Отказ</Cancel>
     <Apply>Прилагане</Apply>
@@ -154,6 +154,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Converted>Конвертирани</Converted>
     <ConvertedX>Конвертирани {0}</ConvertedX>
     <Settings>Настройки</Settings>
+    <SplitLongLines>Резделяне на дълги редове</SplitLongLines>
     <AutoBalance>Авто балансиране на редовете</AutoBalance>
     <ScanFolder>Сканиране на папки...</ScanFolder>
     <ScanningFolder>Търсене {0} и под папки за субтитърни файлове</ScanningFolder>
@@ -192,6 +193,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Нагласяне скоростта в проценти</Title>
     <Info>Промяна скоростта на субтитрите в проценти</Info>
   </ChangeSpeedInPercent>
+  <ChooseAudioTrack>
+    <Title>Избор на аудио поток</Title>
+  </ChooseAudioTrack>
   <ChooseEncoding>
     <Title>Избор на кодиране</Title>
     <CodePage>Кодова страница</CodePage>
@@ -352,6 +356,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Цвят на шрифта</FontColor>
     <BorderColor>Цвят на контура</BorderColor>
     <BorderWidth>Широчина на контура</BorderWidth>
+    <ShadowColor>Цвят на сянка</ShadowColor>
+    <ShadowWidth>Мащаб на сянка</ShadowWidth>
+    <Transparency>Алфа</Transparency>
     <ImageFormat>Формат на снимката</ImageFormat>
     <SimpleRendering>Просто рендиране</SimpleRendering>
     <Text3D>3D</Text3D>
@@ -802,6 +809,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha - стилове...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Времеви текст - задаване на стил</TimedTextSetStyle>
         <TimedTextStyles>Времеви текст - стилове...</TimedTextStyles>
+        <TimedTextSetLanguage>Времеви текст - задаване на език</TimedTextSetLanguage>
         <SamiSetStyle>Sami - задаване на стил</SamiSetStyle>
         <Cut>Изрязване</Cut>
         <Copy>Копиране</Copy>
@@ -1406,6 +1414,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveFormShowGridLines>Показване на мрежа</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Обръщане на скрул бутона на мишката</ReverseMouseWheelScrollDirection>
     <WaveFormAllowOverlap>Възможно презастъпване (при местене/оразмеряване)</WaveFormAllowOverlap>
+    <WaveformBorderHitMs1>Ограждащият маркер трябва да бъде</WaveformBorderHitMs1>
+    <WaveformBorderHitMs2>милисекунди</WaveformBorderHitMs2>
     <WaveFormColor>Цвят на сигнала</WaveFormColor>
     <WaveFormSelectedColor>Цвят на избран</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Цвят на фона</WaveFormBackgroundColor>
@@ -1417,10 +1427,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpectrogramAppearance>Изглед на спектрограмата</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Преливане в един цвят</SpectrogramOneColorGradient>
     <SpectrogramClassic>Класически</SpectrogramClassic>
+    <WaveformUseFFMPEG>Използване на FFMPEG</WaveformUseFFMPEG>
+    <WaveformFFMPEGPath>Път до FFMPEG</WaveformFFMPEGPath>
+    <WaveformBrowseToFFMPEG>Разлистване до FFMPEG</WaveformBrowseToFFMPEG>
     <SubStationAlphaStyle>Стил на Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Избор на шрифт</ChooseFont>
     <ChooseColor>Избор на цвят</ChooseColor>
-    <Example>Пример</Example>
+    <SsaOutline>Около</SsaOutline>
+    <SsaShadow>Сянка</SsaShadow>
+    <SsaOpaqueBox>Обратнен фон</SsaOpaqueBox>
     <Testing123>Тестване 123...</Testing123>
     <Language>Език</Language>
     <NamesIgnoreLists>Имена/списък с игнорирани</NamesIgnoreLists>
@@ -1487,6 +1502,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformSeekSilenceForward>Търсене на тишина напред</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Търсене тишина назад</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Добавяне на текст тук (за ново избиране)</WaveformAddTextHere>
+    <WaveformPlayNewSelection>Пускане на новата селекция</WaveformPlayNewSelection>
+    <WaveformPlayFirstSelectedSubtitle>Пускане на избрания субтитър</WaveformPlayFirstSelectedSubtitle>
     <GoBack100Milliseconds>100 мс назад</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 мс напред</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 мс назад</GoBack500Milliseconds>
@@ -1519,6 +1536,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnInsert>Колона, вмъкване на текст</ListViewColumnInsert>
     <ListViewColumnPaste>Колона, поставяне</ListViewColumnPaste>
     <ShowBeamer>Начало сиянието на субтитрите в пълен екран</ShowBeamer>
+    <MainTextBoxMoveLastWordDown>Преместване на последната дума в следващия субтитърен ред</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>Преместване нагоре на първата дума от следващият субтитърен ред</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxAutoBreak>Автоматично прекъсване на текст</MainTextBoxAutoBreak>
+    <MainTextBoxUnbreak>Непрекъсване на текст</MainTextBoxUnbreak>
   </Settings>
   <ShowEarlierLater>
     <Title>Покажи избраните редове по-рано/по-късно</Title>
@@ -1560,6 +1581,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EditWordOnly>Редактирай думата</EditWordOnly>
     <AddXToNamesEtc>Добави '{0}' към списъка с имена</AddXToNamesEtc>
     <AutoFixNames>Поправи имена с различна големина на буквите</AutoFixNames>
+    <CheckOneLetterWords>Питане за непозната буква</CheckOneLetterWords>
+    <TreatINQuoteAsING>Приемане на крайно "in" за "ing" (Само за английски)</TreatINQuoteAsING>
     <ImageText>Изображение с текст</ImageText>
     <SpellCheckCompleted>Проверката на правопис е завършена.</SpellCheckCompleted>
     <SpellCheckAborted>Проверката на правопис е прекратена</SpellCheckAborted>
@@ -1766,6 +1789,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Stop>Спиране</Stop>
     <StartOcrFrom>Стартиране на OCR от субтитри номер:</StartOcrFrom>
     <LoadingVobSubImages>Зареждане на VobSub изображения...</LoadingVobSubImages>
+    <LoadingImageCompareDatabase>Зареждане на сравнителна база данни за изображенията</LoadingImageCompareDatabase>
+    <ConvertingImageCompareDatabase>Конвертиране базата данни за изображения в нов формат (images.db/images.xml)</ConvertingImageCompareDatabase>
     <SubtitleImage>Изображение със субтитри</SubtitleImage>
     <SubtitleText>Текст на субтитри</SubtitleText>
     <UnableToCreateCharacterDatabaseFolder>Не може да се създаде 'Папка с база данни от символи': {0}</UnableToCreateCharacterDatabaseFolder>
