@@ -194,6 +194,9 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Juster hastighed i procent</Title>
     <Info>Skift hastighed for undertekst i procent</Info>
   </ChangeSpeedInPercent>
+  <ChooseAudioTrack>
+    <Title>Vælg lydspor</Title>
+  </ChooseAudioTrack>
   <ChooseEncoding>
     <Title>Vælg tegntabel</Title>
     <CodePage>Tegntabel</CodePage>
@@ -377,6 +380,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveDvdStudioProStlAs>Vælg DVD Studio Pro STL filnavn</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>Nogle linjer var for lange:
 {0}</SomeLinesWereTooLongX>
+    <LineHeight>Linje højde</LineHeight>
   </ExportPngXml>
   <ExportText>
     <Title>Eksport tekst</Title>
@@ -1500,9 +1504,12 @@ Fortsæt?</SubtitleAppendPrompt>
     <AutoDurationSelectedLines>Auto-varighed (valgte linjer)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Byt rundt på højre-mod-venstre start/slut</ReverseStartAndEndingForRTL>
     <VerticalZoom>Lodret zoom</VerticalZoom>
+    <VerticalZoomOut>Lodret zoom ud</VerticalZoomOut>
     <WaveformSeekSilenceForward>Søg stilhed frem</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Søg stilhed tilbage</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Tilføj tekst her (for ny selektion)</WaveformAddTextHere>
+    <WaveformPlayNewSelection>Spil ny markering</WaveformPlayNewSelection>
+    <WaveformPlayFirstSelectedSubtitle>Spil første valgte undertekst</WaveformPlayFirstSelectedSubtitle>
     <GoBack100Milliseconds>100 ms tilbage</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms frem</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms tilbage</GoBack500Milliseconds>
