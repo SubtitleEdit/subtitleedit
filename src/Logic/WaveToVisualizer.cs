@@ -389,7 +389,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         //////////////////////////////////////// SPECTRUM ///////////////////////////////////////////////////////////
 
-        public List<Bitmap> GenerateFourierData(int nfft, string spectrogramDirectory)
+        public List<Bitmap> GenerateFourierData(int nfft, string spectrogramDirectory, int delayInMilliseconds)
         {
             const int BitmapWidth = 1024;
             var bitmaps = new List<Bitmap>();
@@ -428,11 +428,28 @@ namespace Nikse.SubtitleEdit.Logic
             int count = 0;
             long totalSamples = 0;
 
+            // write delay (if any)
+            int delaySampleCount = (int) (Header.SampleRate * (delayInMilliseconds / 1000.0));
+            for (int i = 0; i < delaySampleCount; i++)
+            {
+                samples.Add(0);
+                if (samples.Count == sampleSize)
+                {
+                    var samplesAsReal = new double[sampleSize];
+                    for (int k = 0; k < sampleSize; k++)
+                        samplesAsReal[k] = 0;
+                    var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
+                    bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
+                    bitmaps.Add(bmp);
+                    samples = new List<int>();
+                    count++;
+                }
+            }
+
             // load data in smaller parts
             _data = new byte[Header.BytesPerSecond];
             _stream.Position = Header.DataStartPosition;
             int bytesRead = _stream.Read(_data, 0, _data.Length);
-
             while (bytesRead == Header.BytesPerSecond)
             {
                 while (index < Header.BytesPerSecond)
