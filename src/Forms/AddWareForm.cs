@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingSpectrogram;
                 this.Refresh();
                 System.IO.Directory.CreateDirectory(_spectrogramDirectory);
-                SpectrogramBitmaps = waveFile.GenerateFourierData(256, _spectrogramDirectory); // image height = nfft / 2
+                SpectrogramBitmaps = waveFile.GenerateFourierData(256, _spectrogramDirectory, delayInMilliseconds); // image height = nfft / 2
             }
             labelPleaseWait.Visible = false;
 
