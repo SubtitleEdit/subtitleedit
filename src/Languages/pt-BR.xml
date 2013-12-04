@@ -1,12 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="Brazilian Portuguese">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.11</Version>
     <TranslatedBy>Tradução (Português do Brasil): Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile></HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
@@ -155,6 +154,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Converted>Convertido</Converted>
     <ConvertedX>Convertido ({0})</ConvertedX>
     <Settings>Configurações</Settings>
+    <SplitLongLines>Dividir linhas longas</SplitLongLines>
     <AutoBalance>Ajuste automático de linhas</AutoBalance>
     <ScanFolder>Analisar pasta...</ScanFolder>
     <ScanningFolder>Analisando {0} e subpastas por legendas...</ScanningFolder>
@@ -193,6 +193,9 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Ajustar velocidade em porcentagem</Title>
     <Info>Alterar velocidade da legenda em porcentagem</Info>
   </ChangeSpeedInPercent>
+  <ChooseAudioTrack>
+    <Title>Escolher faixa de áudio</Title>
+  </ChooseAudioTrack>
   <ChooseEncoding>
     <Title>Selecionar codificador</Title>
     <CodePage>Página de códigos</CodePage>
@@ -353,6 +356,9 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Cor da fonte</FontColor>
     <BorderColor>Cor da borda</BorderColor>
     <BorderWidth>Tamanho da borda</BorderWidth>
+    <ShadowColor>Cor da sombra</ShadowColor>
+    <ShadowWidth>Largura da sombra</ShadowWidth>
+    <Transparency>Alpha</Transparency>
     <ImageFormat>Formato de imagem</ImageFormat>
     <SimpleRendering>Renderização simples</SimpleRendering>
     <Text3D>3D</Text3D>
@@ -372,6 +378,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveFabImageScriptAs>Escolher nome arquivo Blu-ray SUP</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Escolher nome arquivo DVD Studio Pro STL</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>Algumas linhas são muito longas: {0}</SomeLinesWereTooLongX>
+    <LineHeight>Altura da linha</LineHeight>
   </ExportPngXml>
   <ExportText>
     <Title>Exportar texto</Title>
@@ -802,7 +809,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <SubStationAlphaStyles>Estilos Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Estilos Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Texto Cronometrado - definir estilo</TimedTextSetStyle>
-        <TimedTextStyles>Estilos Texto Cronometrado...</TimedTextStyles>
+        <TimedTextStyles>Estilos de Texto Cronometrado...</TimedTextStyles>
+        <TimedTextSetLanguage>Texto Cronometrado - definir idioma</TimedTextSetLanguage>
         <SamiSetStyle>Sami - definir classe</SamiSetStyle>
         <Cut>Recortar</Cut>
         <Copy>Copiar</Copy>
@@ -1409,6 +1417,8 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <WaveFormShowGridLines>Mostrar quadriculado</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Invertir direção da roda do mouse</ReverseMouseWheelScrollDirection>
     <WaveFormAllowOverlap>Permitir sobrepor (ao mover/redimensionar)</WaveFormAllowOverlap>
+    <WaveformBorderHitMs1>Marcador da borda deve ser entre</WaveformBorderHitMs1>
+    <WaveformBorderHitMs2>milisegundos</WaveformBorderHitMs2>
     <WaveFormColor>Cor</WaveFormColor>
     <WaveFormSelectedColor>Cor selecionada</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Cor de fundo</WaveFormBackgroundColor>
@@ -1420,10 +1430,15 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <SpectrogramAppearance>Aparência do espectrograma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Degradê de cor</SpectrogramOneColorGradient>
     <SpectrogramClassic>Clássico</SpectrogramClassic>
+    <WaveformUseFFMPEG>Usar FFmepg para extração Wave</WaveformUseFFMPEG>
+    <WaveformFFMPEGPath>Caminho para FFmepg</WaveformFFMPEGPath>
+    <WaveformBrowseToFFMPEG>Procurar FFmpeg</WaveformBrowseToFFMPEG>
     <SubStationAlphaStyle>Estilo Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Escolher fonte</ChooseFont>
     <ChooseColor>Escolher cor</ChooseColor>
-    <Example>Exemplo</Example>
+    <SsaOutline>Borda</SsaOutline>
+    <SsaShadow>Sombra</SsaShadow>
+    <SsaOpaqueBox>Caixa opaca</SsaOpaqueBox>
     <Testing123>Testando 123...</Testing123>
     <Language>Idioma</Language>
     <NamesIgnoreLists>Nomes a serem ignorarados (caso sensitivo)</NamesIgnoreLists>
@@ -1486,10 +1501,13 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <CopyTextOnly>Copiar somente texto para área de transferência (linhas selecionadas)</CopyTextOnly>
     <AutoDurationSelectedLines>Duração automática (linhas selecionadas)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Reverter início/fim RTL</ReverseStartAndEndingForRTL>
-    <VerticalZoom>Zoom vertical </VerticalZoom>
+    <VerticalZoom>+ zoom vertical</VerticalZoom>
+    <VerticalZoomOut>- zoom vertical</VerticalZoomOut>
     <WaveformSeekSilenceForward>Procurar silêncio adiante</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Procurar silêncio atrás</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Adicionar texto aqui (para nova seleção)</WaveformAddTextHere>
+    <WaveformPlayNewSelection>Tocar nova seleção</WaveformPlayNewSelection>
+    <WaveformPlayFirstSelectedSubtitle>Tocar primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
     <GoBack100Milliseconds>100 ms atrás</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms adiante</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms atrás</GoBack500Milliseconds>
@@ -1522,6 +1540,10 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <ListViewColumnInsert>Coluna, inserir texto</ListViewColumnInsert>
     <ListViewColumnPaste>Coluna, colar</ListViewColumnPaste>
     <ShowBeamer>Iniciar projeção da legenda em tela cheia</ShowBeamer>
+    <MainTextBoxMoveLastWordDown>Mover última palavra para baixo na próxima linha</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>Mover primeira palavra da próxima linha para cima</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxAutoBreak>Auto quebrar texto</MainTextBoxAutoBreak>
+    <MainTextBoxUnbreak>Unir texto</MainTextBoxUnbreak>
   </Settings>
   <ShowEarlierLater>
     <Title>Mostrar linhas selec. antes/depois</Title>
@@ -1563,6 +1585,8 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <EditWordOnly>Editar somente palavra</EditWordOnly>
     <AddXToNamesEtc>Adicionar '{0}' à lista de nomes</AddXToNamesEtc>
     <AutoFixNames>Autocorrigir formato em nomes</AutoFixNames>
+    <CheckOneLetterWords>Perguntar por palavras de uma letra só desconhecidas</CheckOneLetterWords>
+    <TreatINQuoteAsING>Tratar fim da palavra " in' " como " ing " (somente Inglês)</TreatINQuoteAsING>
     <ImageText>Imagem de texto</ImageText>
     <SpellCheckCompleted>Revisão ortográfica completada.</SpellCheckCompleted>
     <SpellCheckAborted>Revisão ortográfica cancelada</SpellCheckAborted>
@@ -1771,6 +1795,8 @@ Manter as alterações?</KeepChangesMessage>
     <Stop>Parar</Stop>
     <StartOcrFrom>Iniciar OCR da legenda:</StartOcrFrom>
     <LoadingVobSubImages>Carregando imagens VobSub...</LoadingVobSubImages>
+    <LoadingImageCompareDatabase>Carregando banco de dados de comparação de imagem...</LoadingImageCompareDatabase>
+    <ConvertingImageCompareDatabase>Convertendo banco de dados de comparação de imagens para novo formato (images.db/images.xml)...</ConvertingImageCompareDatabase>
     <SubtitleImage>Imagens de legenda</SubtitleImage>
     <SubtitleText>Texto da legenda</SubtitleText>
     <UnableToCreateCharacterDatabaseFolder>Não foi possível criar 'Pasta de base de dados de caracteres': {0}</UnableToCreateCharacterDatabaseFolder>
