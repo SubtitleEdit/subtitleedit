@@ -85,9 +85,6 @@ namespace Nikse.SubtitleEdit.Controls
         private double _imageWidth = 0;
         private int _nfft = 0;
         private double _secondsPerImage = 0;
-        private double _lastSpectrogramStart;
-        private int _lastSpectrogramWidth;
-        private Bitmap _lastSpectrogramBitmap;
 
         public delegate void ParagraphEventHandler(object sender, ParagraphEventArgs e);
         public event ParagraphEventHandler OnNewSelectionRightClicked;
@@ -1667,13 +1664,13 @@ namespace Nikse.SubtitleEdit.Controls
             while (i * _imageWidth < width && i + bitmapIndex < _spectrogramBitmaps.Count)
             {
                 var bmp = _spectrogramBitmaps[i + bitmapIndex];
-                gfx.DrawImage(bmp, new Point(bmp.Width * i - subtractValue, 0));
+                gfx.DrawImageUnscaled(bmp, new Point(bmp.Width * i - subtractValue, 0));
                 i++;
             }
             if (i + bitmapIndex < _spectrogramBitmaps.Count && subtractValue > 0)
             {
                 var bmp = _spectrogramBitmaps[i + bitmapIndex];
-                gfx.DrawImage(bmp, new Point(bmp.Width * i - subtractValue, 0));
+                gfx.DrawImageUnscaled(bmp, new Point(bmp.Width * i - subtractValue, 0));
                 i++;
             }
             gfx.Dispose();
