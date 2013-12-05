@@ -273,7 +273,6 @@ namespace Nikse.SubtitleEdit.Logic
                         {
                             afterPosition = f.Position + dataSize;
                             return FindTrackStartInCluster(trackNumber);
-                            f.Seek(afterPosition, SeekOrigin.Begin);
                         }
                         else if (matroskaId != 0x18538067) // segment
                         {
