@@ -227,6 +227,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (fileName.StartsWith("de_DE_frami"))
                         fileName = fileName.Replace("de_DE_frami", "de_DE");
 
+                    // Russian fix
+                    if (fileName.StartsWith("russian-aot"))
+                        fileName = fileName.Replace("russian-aot", "ru_RU");                    
+
                     string path = Path.Combine(dictionaryFolder, fileName);
                     zip.ExtractFile(entry, path);
 
