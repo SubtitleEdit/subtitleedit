@@ -58,14 +58,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!string.IsNullOrEmpty(subtitle.Header) && (subtitle.Header.Contains("[ar:") || subtitle.Header.Contains("[ti:")))
                 sb.Append(subtitle.Header);
 
-            foreach (Paragraph p in subtitle.Paragraphs)
+            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
+                Paragraph p = subtitle.Paragraphs[i];
+                Paragraph next = null;
+                if (i + 1 < subtitle.Paragraphs.Count)
+                    next = subtitle.Paragraphs[i + 1];
+
                 string text = Utilities.RemoveHtmlTags(p.Text);
-                text = text.Replace(Environment.NewLine, "|");
-                sb.AppendLine(string.Format("[{0:00}:{1:00}.{2:00}]{3}", p.StartTime.Hours * 60 + p.StartTime.Minutes,
-                                                               p.StartTime.Seconds,
-                                                               p.StartTime.Milliseconds / 10,
-                                                               text.Replace(Environment.NewLine, " ")));
+                text = text.Replace(Environment.NewLine, " "); // text = text.Replace(Environment.NewLine, "|");
+                sb.AppendLine(string.Format("[{0:00}:{1:00}.{2:00}]{3}", p.StartTime.Hours * 60 + p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds / 10.0), text));
+
+                if (next == null || next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 100)
+                {
+                    TimeCode tc = new TimeCode(TimeSpan.FromMilliseconds(p.EndTime.TotalMilliseconds));
+                    sb.AppendLine(string.Format("[{0:00}:{1:00}.{2:00}]{3}", tc.Hours * 60 + tc.Minutes, tc.Seconds, (int)Math.Round(tc.Milliseconds / 10.0), string.Empty));
+                }
             }
             return sb.ToString().Trim();
         }
@@ -90,10 +98,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             int milliseconds = int.Parse(parts[2]) * 10;
                             string text = line.Remove(0, 9).Trim().TrimStart(']').Trim();
                             var start = new TimeCode(0, minutes, seconds, milliseconds);
-                            double duration = Utilities.GetOptimalDisplayMilliseconds(text);
-                            var end = new TimeCode(TimeSpan.FromMilliseconds(start.TotalMilliseconds + duration));
-
-                            var p = new Paragraph(start, end, text);
+                            var p = new Paragraph(start, new TimeCode(0,0,0,0), text);
                             subtitle.Paragraphs.Add(p);
                         }
                         catch
@@ -164,11 +169,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         int seconds = int.Parse(parts[1]);
                         int milliseconds = int.Parse(parts[2]) * 10;
                         string text = GetTextAfterTimeCodes(p.Text);
-                        var start = new TimeCode(0, minutes, seconds, milliseconds);
-                        double duration = Utilities.GetOptimalDisplayMilliseconds(text);
-                        var end = new TimeCode(TimeSpan.FromMilliseconds(start.TotalMilliseconds + duration));
-
-                        var newParagraph = new Paragraph(start, end, text);
+                        var start = new TimeCode(0, minutes, seconds, milliseconds);                        
+                        var newParagraph = new Paragraph(start, new TimeCode(0,0,0,0), text);
                         subtitle.Paragraphs.Add(newParagraph);
                     }
                     catch
@@ -183,14 +185,33 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
+                p.Text = Utilities.AutoBreakLine(p.Text);
                 Paragraph next = subtitle.GetParagraphOrDefault(index + 1);
-                if (next != null && next.StartTime.TotalMilliseconds <= p.EndTime.TotalMilliseconds)
-                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
-
+                if (next != null)
+                {
+                    if (string.IsNullOrEmpty(next.Text))
+                    {                        
+                        p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds));
+                    }
+                    else
+                    {
+                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;                       
+                    }
+                    if (p.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                    {
+                        double duration = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                        p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds + duration));
+                    }
+                }
+                else
+                {
+                    double duration = Utilities.GetOptimalDisplayMilliseconds(p.Text, 16) + 1500;
+                    p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds + duration));
+                }
                 index++;
-                p.Number = index;
             }
-
+            subtitle.RemoveEmptyLines();
+            subtitle.Renumber(1);
         }
 
         private string GetTextAfterTimeCodes(string s)
