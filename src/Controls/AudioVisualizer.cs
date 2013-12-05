@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -610,14 +610,34 @@ namespace Nikse.SubtitleEdit.Controls
         private void DrawBackground(Graphics graphics)
         {
             graphics.Clear(BackgroundColor);
+
             if (DrawGridLines)
             {
-                using (Pen pen = new Pen(new SolidBrush(GridColor)))
+                if (_wavePeaks == null)
                 {
-                    for (int i = 0; i < Width; i += 10)
+                    using (Pen pen = new Pen(new SolidBrush(GridColor)))
                     {
-                        graphics.DrawLine(pen, i, 0, i, Height);
-                        graphics.DrawLine(pen, 0, i, Width, i);
+                        for (int i = 0; i < Width; i += 10)
+                        {
+                            graphics.DrawLine(pen, i, 0, i, Height);
+                            graphics.DrawLine(pen, 0, i, Width, i);
+                        }
+                    }
+                }
+                else
+                {
+                    double interval = 0.1 * _wavePeaks.Header.SampleRate * _zoomFactor; // pixels that is 0.1 second
+                    if (ZoomFactor < 0.4)
+                        interval = 1.0 * _wavePeaks.Header.SampleRate * _zoomFactor; // pixels that is 1 second
+                    int start = SecondsToXPosition(StartPositionSeconds) % ((int)Math.Round(interval));
+                    using (Pen pen = new Pen(new SolidBrush(GridColor)))
+                    {
+                        for (double i = start; i < Width; i += interval)
+                        {
+                            var j = (int)Math.Round(i);
+                            graphics.DrawLine(pen, j, 0, j, Height);
+                            graphics.DrawLine(pen, 0, j, Width, j);
+                        }
                     }
                 }
             }
@@ -650,7 +670,7 @@ namespace Nikse.SubtitleEdit.Controls
                 position = SecondsToXPosition(seconds);
             }
             pen.Dispose();
-            textBrush.Dispose();
+            textBrush.Dispose();          
         }
 
         private static string GetDisplayTime(double seconds)
