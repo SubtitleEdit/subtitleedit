@@ -209,7 +209,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ReadWaveFile(string targetFile, int delayInMilliseconds)
         {
-            WavePeakGenerator waveFile = new WavePeakGenerator(targetFile);
+            var waveFile = new WavePeakGenerator(targetFile);
 
             int sampleRate = Configuration.Settings.VideoControls.WaveFormMininumSampleRate; // Normally 128
             while (!(waveFile.Header.SampleRate % sampleRate == 0) && sampleRate < 5000)
@@ -352,9 +352,10 @@ namespace Nikse.SubtitleEdit.Forms
             _cancel = true;
         }
 
-        internal void InitializeViaWaveFile(string fileName)
+        internal void InitializeViaWaveFile(string fileName, string spectrogramFolder)
         {
             _wavFileName = fileName;
+            _spectrogramDirectory = spectrogramFolder;
         }
 
         private void FixWaveOnly()
