@@ -14695,7 +14695,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 var addWaveForm = new AddWareForm();
-                addWaveForm.InitializeViaWaveFile(fileName);
+                string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
+                addWaveForm.InitializeViaWaveFile(fileName, spectrogramFolder);
                 if (addWaveForm.ShowDialog() == DialogResult.OK)
                 {
                     string peakWaveFileName = GetPeakWaveFileName(_videoFileName);

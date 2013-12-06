@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.3.11 (xx December 2013)
+3.3.11 (6th December 2013)
 * NEW:
    * Added "line height" to image export
    * Added Vietnamese language file - thx everytime
