@@ -473,6 +473,9 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripComboBoxWaveForm.SelectedIndexChanged += toolStripComboBoxWaveForm_SelectedIndexChanged;
 
                 FixLargeFonts();
+
+                if (Configuration.Settings.General.RightToLeftMode)
+                    ToolStripMenuItemRightToLeftModeClick(null, null);
             }
             catch (Exception exception)
             {
@@ -7938,6 +7941,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (!string.IsNullOrEmpty(_fileName))
                     Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
+                Configuration.Settings.General.RightToLeftMode = toolStripMenuItemRightToLeftMode.Checked;
+                
 
                 SaveUndockedPositions();
                 SaveListViewWidths();

@@ -464,6 +464,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool MoveVideo100Or500MsPlaySmallSample { get; set; }
         public bool DisableVideoAutoLoading { get; set; }
         public int NewEmptyDefaultMs { get; set; }
+        public bool RightToLeftMode { get; set; }
         public bool ShowBetaStuff { get; set; }
 
         public GeneralSettings()
@@ -542,6 +543,7 @@ namespace Nikse.SubtitleEdit.Logic
             ClearStatusBarAfterSeconds = 10;
             MoveVideo100Or500MsPlaySmallSample = false;
             DisableVideoAutoLoading = false;
+            RightToLeftMode = false;
             ShowBetaStuff = false;
             NewEmptyDefaultMs = 2000;
         }
@@ -1340,6 +1342,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("DisableVideoAutoLoading");
             if (subNode != null)
                 settings.General.DisableVideoAutoLoading = Convert.ToBoolean(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("RightToLeftMode");
+            if (subNode != null)
+                settings.General.RightToLeftMode = Convert.ToBoolean(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("ShowBetaStuff");
             if (subNode != null)
                 settings.General.ShowBetaStuff = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -2430,6 +2435,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("Company", settings.General.Company);
             textWriter.WriteElementString("MoveVideo100Or500MsPlaySmallSample", settings.General.MoveVideo100Or500MsPlaySmallSample.ToString());
             textWriter.WriteElementString("DisableVideoAutoLoading", settings.General.DisableVideoAutoLoading.ToString());
+            textWriter.WriteElementString("RightToLeftMode", settings.General.RightToLeftMode.ToString());
             textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
             textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
 
