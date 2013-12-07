@@ -5134,6 +5134,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         line = "[♪ " + line.Remove(0, 3).TrimStart();
                     }
+                    if (line.StartsWith("<i>[J'"))
+                    {
+                        line = "<i>[♪ " + line.Remove(0, 6).TrimStart();
+                    }
                     if (line.EndsWith("J'"))
                     {
                         line = line.Remove(line.Length - 2, 2).TrimEnd() + " ♪";
