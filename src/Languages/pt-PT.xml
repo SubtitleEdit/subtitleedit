@@ -4,10 +4,8 @@
     <Title>Subtitle Edit</Title>
     <Version>3.3.11</Version>
     <TranslatedBy> ------------------------------------------------------------------------------------------------
-Traduzido sem o novo Acordo Ortográfico para Português de Portugal, por moob e Ricardo Perdigão
-Contactos:
-moob: mailto:moob@live.com.pt
-Ricardo Perdigão: mailto:ricardofonseca1977@gmail.com</TranslatedBy>
+Traduzido sem o novo Acordo Ortográfico para Português de Portugal, por Marco Barbosa
+Email: mailto:moob@live.com.pt</TranslatedBy>
     <CultureName>pt-PT</CultureName>
     <HelpFile></HelpFile>
     <OK>&amp;OK</OK>
@@ -197,6 +195,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Ajustar a velocidade em percentagem</Title>
     <Info>Alterar a velocidade da legenda em percentagem</Info>
   </ChangeSpeedInPercent>
+  <ChooseAudioTrack>
+    <Title>Escolher a faixa de áudio</Title>
+  </ChooseAudioTrack>  
   <ChooseEncoding>
     <Title>Seleccionar codificador</Title>
     <CodePage>Página de códigos</CodePage>
@@ -357,6 +358,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Cor do tipo de letra</FontColor>
     <BorderColor>Cor da borda</BorderColor>
     <BorderWidth>Tamanho da borda</BorderWidth>
+    <ShadowColor>Cor da sombra</ShadowColor>
+    <ShadowWidth>Largura da sombra</ShadowWidth>
+    <Transparency>Opacidade</Transparency>	
 	<ImageFormat>Formato de Imagem</ImageFormat>
     <SimpleRendering>Renderização simples</SimpleRendering>
     <Text3D>3D</Text3D>	
@@ -375,7 +379,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveVobSubAs>Escolha o nome do ficheiro VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Escolha o nome do ficheiro Blu-ray sup</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Escolha o nome do ficheiro DVD Studio Pro STL</SaveDvdStudioProStlAs>
-    <SomeLinesWereTooLongX>Linhas demasiado longas: {0}</SomeLinesWereTooLongX>	
+    <SomeLinesWereTooLongX>Linhas demasiado longas: {0}</SomeLinesWereTooLongX>
+    <LineHeight>Altura da linha</LineHeight>	
   </ExportPngXml>
   <ExportText>
     <Title>Exportar texto</Title>
@@ -807,6 +812,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha estilos...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Texto cronometrado - Ajustar estilo</TimedTextSetStyle>
         <TimedTextStyles>Texto cronometrado estilos...</TimedTextStyles>
+        <TimedTextSetLanguage>Texto cronometrado - definir o idioma</TimedTextSetLanguage>		
         <SamiSetStyle>Sami - Ajustar classe</SamiSetStyle>
         <Cut>Cortar</Cut>
         <Copy>Copiar</Copy>
@@ -1424,6 +1430,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SpectrogramAppearance>Aparência do espectrograma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Degradê de cor</SpectrogramOneColorGradient>
     <SpectrogramClassic>Clássico</SpectrogramClassic>
+    <WaveformUseFFMPEG>Usar o FFMPEG para extrair wave</WaveformUseFFMPEG>
+    <WaveformFFMPEGPath>Directoria do FFMPEG</WaveformFFMPEGPath>
+    <WaveformBrowseToFFMPEG>Procurar por FFMPEG</WaveformBrowseToFFMPEG>	
     <SubStationAlphaStyle>Sub Station Alpha estilo</SubStationAlphaStyle>
     <ChooseFont>Tipo de letra</ChooseFont>
     <ChooseColor>Escolher cor</ChooseColor>
@@ -1492,10 +1501,13 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <CopyTextOnly>Copiar só o texto para a área de transferência (linhas seleccionadas)</CopyTextOnly>
     <AutoDurationSelectedLines>Auto-duração (linhas seleccionadas)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Inverter RTL início/fim</ReverseStartAndEndingForRTL>
-    <VerticalZoom>Zoom vertical</VerticalZoom>
+    <VerticalZoom>Zoom vertical entrada</VerticalZoom>
+    <VerticalZoomOut>Zoom vertical saída</VerticalZoomOut>	
     <WaveformSeekSilenceForward>Localizar silêncio no áudio adiante</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Localizar silêncio no áudio atrás</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Adicionar texto aqui (para nova selecção)</WaveformAddTextHere>
+    <WaveformPlayNewSelection>Reproduzir a nova selecção</WaveformPlayNewSelection>
+    <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>	
     <GoBack100Milliseconds>100 ms atrás</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms adiante</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms atrás</GoBack500Milliseconds>
@@ -1529,7 +1541,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ListViewColumnPaste>Coluna, colar</ListViewColumnPaste>
     <ShowBeamer>Iniciar a legenda em ecrã inteiro</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mover a última palavra para baixo para a próxima linha de legendas</MainTextBoxMoveLastWordDown>
-    <MainTextBoxMoveFirstWordFromNextUp>Mover a primeira palavra a partir da próxima linha acima das legendas</MainTextBoxMoveFirstWordFromNextUp>	
+    <MainTextBoxMoveFirstWordFromNextUp>Mover a primeira palavra a partir da próxima linha acima das legendas</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxAutoBreak>Quebra de texto automática</MainTextBoxAutoBreak>
+    <MainTextBoxUnbreak>Remover quebra de texto</MainTextBoxUnbreak>	
   </Settings>
   <ShowEarlierLater>
     <Title>Mostrar linhas seleccionadas antes/depois</Title>
@@ -1571,6 +1585,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <EditWordOnly>Só editar palavra</EditWordOnly>
     <AddXToNamesEtc>Adicionar '{0}' à lista de nomes</AddXToNamesEtc>
     <AutoFixNames>Corrigir automaticamente formato de nomes</AutoFixNames>
+    <CheckOneLetterWords>Solicitar uma letra para uma palavra desconhecida</CheckOneLetterWords>
+    <TreatINQuoteAsING>Considerar a palavra final " in' " como " ing " (apenas em Inglês)</TreatINQuoteAsING>	
     <ImageText>Imagem de texto</ImageText>
     <SpellCheckCompleted>Verificação ortográfica terminada.</SpellCheckCompleted>
     <SpellCheckAborted>Verificação ortográfica cancelada</SpellCheckAborted>
