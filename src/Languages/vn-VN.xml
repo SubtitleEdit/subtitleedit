@@ -513,7 +513,7 @@ Rất hân hạnh được chào đón.
     <From>Từ:</From>
     <To>Đến:</To>
     <Translate>Dịch</Translate>
-    <PleaseWait>Xin vui lòng chờ... viêc này có thể mất một ít thời gian</PleaseWait>
+    <PleaseWait>Chờ đi...Đang dịch mà, chờ tí... </PleaseWait>
     <PoweredByGoogleTranslate>Cung cấp bởi Google dịch</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Cung cấp bởi Microsoft dịch</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
@@ -830,7 +830,7 @@ Rất hân hạnh được chào đón.
       <Fast>Nhanh</Fast>
       <VeryFast>Rất nhanh </VeryFast>
     </VideoControls>
-    <SaveChangesToUntitled>Lưu thay đổi tiêu đề?</SaveChangesToUntitled>
+    <SaveChangesToUntitled>Lưu với tiêu đề khác?</SaveChangesToUntitled>
     <SaveChangesToX>Lưu các thay đổi để {0}?</SaveChangesToX>
     <SaveChangesToUntitledOriginal>Lưu thay đổi tiêu đề ban đầu?</SaveChangesToUntitledOriginal>
     <SaveChangesToOriginalX>Lưu thay đổi ban đầu {0}?</SaveChangesToOriginalX>
