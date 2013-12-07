@@ -1,5 +1,15 @@
 ﻿Subtitle Edit Changelog
 
+3.3.12 (xth December 2013)
+* NEW:
+   *
+* IMPROVED:
+   * Updated Portuguese langauge file - thx moob
+   * Updated Viewnamese language file - thx everytime
+   * Now remembers RTL mode - thx FTABoy
+* FIXED:
+   * 
+
 3.3.11 (6th December 2013)
 * NEW:
    * Added "line height" to image export
