@@ -10,6 +10,7 @@
    * Now remembers RTL mode - thx FTABoy
 * FIXED:
   * Fixed bug in "Fix common errors: Remove hyphen" - thx honeybunny
+  * Fixed bug in "Remove text for HI" issue - thx cipry15
 
 
 3.3.11 (6th December 2013)
