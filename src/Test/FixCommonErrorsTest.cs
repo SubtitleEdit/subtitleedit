@@ -493,5 +493,58 @@ namespace Test
 
         #endregion
 
+        #region FixHyphens
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixSingleLineDash1Italic()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "<i>- Mm-hmm.</i>");
+            target.FixHyphens();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>Mm-hmm.</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixSingleLineDash1Font()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "<font color='red'>- Mm-hmm.</font>");
+            target.FixHyphens();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<font color='red'>Mm-hmm.</font>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixSingleLineDash1()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "- Mm-hmm.");
+            target.FixHyphens();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Mm-hmm.");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixSingleLineDash3()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "- I-I never thought of that.");
+            target.FixHyphens();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "I-I never thought of that.");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixSingleLineDash4()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "- Uh-huh.");
+            target.FixHyphens();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Uh-huh.");
+        }
+        #endregion
+
     }
 }

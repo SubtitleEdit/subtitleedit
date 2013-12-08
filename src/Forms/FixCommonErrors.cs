@@ -2915,14 +2915,19 @@ namespace Nikse.SubtitleEdit.Forms
                             if (remove)
                             {
                                 int idx = text.IndexOf("-");
-                                if (idx < 5)
+                                var st = new StripableText(text);
+                                if (idx < 5 && st.Pre.Length >= idx)
                                 {
                                     text = text.Remove(idx, 1).TrimStart();
                                     idx = text.IndexOf("-");
-                                    if (idx < 5 && idx >= 0)
+                                    st = new StripableText(text);
+                                    if (idx < 5 && idx >= 0 && st.Pre.Length >= idx)
+                                    {
                                         text = text.Remove(idx, 1).TrimStart();
+                                        st = new StripableText(text);
+                                    }
                                     idx = text.IndexOf("-");
-                                    if (idx < 5 && idx >= 0)
+                                    if (idx < 5 && idx >= 0 && st.Pre.Length >= idx)
                                         text = text.Remove(idx, 1).TrimStart();
 
                                     text = text.Replace("  ", " ");
@@ -2967,7 +2972,29 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
-
+                else if (text.StartsWith("<font "))
+                {
+                    Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
+                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).Trim().EndsWith("-"))
+                    {
+                        string oldText = p.Text;
+                        var st = new StripableText(text);
+                        if (st.Pre.EndsWith("-") || st.Pre.EndsWith("- "))
+                        {
+                            text = st.Pre.TrimEnd().TrimEnd('-').TrimEnd() + st.StrippedText + st.Post;
+                        }
+                        if (text != oldText)
+                        {
+                            if (AllowFix(p, fixAction))
+                            {
+                                p.Text = text;
+                                iFixes++;
+                                _totalFixes++;
+                                AddFixToListView(p, fixAction, oldText, p.Text);
+                            }
+                        }
+                    }
+                }
             }
             if (iFixes > 0)
                 LogStatus(_language.FixHyphens, string.Format(_language.XHyphensFixed, iFixes));
