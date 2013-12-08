@@ -446,23 +446,31 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     int colonIndex = s2.IndexOf(":");
                                     string start = s2.Substring(0, colonIndex);
-                                    int periodIndex = start.LastIndexOf(". ");
-                                    int questIndex = start.LastIndexOf("? ");
-                                    int exclaIndex = start.LastIndexOf("! ");
-                                    int endIndex = periodIndex;
-                                    if (endIndex == -1 || questIndex > endIndex)
-                                        endIndex = questIndex;
-                                    if (endIndex == -1 || exclaIndex > endIndex)
-                                        endIndex = exclaIndex;
-                                    if (colonIndex > 0 && colonIndex < s2.Length - 1)
+
+                                    bool doContinue = true;
+                                    if (checkBoxRemoveTextBeforeColonOnlyUppercase.Checked && start != start.ToUpper())
+                                        doContinue = false;
+                                    if (doContinue)
                                     {
-                                        if ("1234567890".Contains(s2.Substring(colonIndex - 1, 1)) && "1234567890".Contains(s2.Substring(colonIndex + 1, 1)))
-                                            endIndex = -10;
+
+                                        int periodIndex = start.LastIndexOf(". ");
+                                        int questIndex = start.LastIndexOf("? ");
+                                        int exclaIndex = start.LastIndexOf("! ");
+                                        int endIndex = periodIndex;
+                                        if (endIndex == -1 || questIndex > endIndex)
+                                            endIndex = questIndex;
+                                        if (endIndex == -1 || exclaIndex > endIndex)
+                                            endIndex = exclaIndex;
+                                        if (colonIndex > 0 && colonIndex < s2.Length - 1)
+                                        {
+                                            if ("1234567890".Contains(s2.Substring(colonIndex - 1, 1)) && "1234567890".Contains(s2.Substring(colonIndex + 1, 1)))
+                                                endIndex = -10;
+                                        }
+                                        if (endIndex == -1)
+                                            s2 = s2.Remove(0, colonIndex - endIndex);
+                                        else if (endIndex > 0)
+                                            s2 = s2.Remove(endIndex + 1, colonIndex - endIndex);
                                     }
-                                    if (endIndex == -1)
-                                        s2 = s2.Remove(0, colonIndex - endIndex);
-                                    else if (endIndex > 0)
-                                        s2 = s2.Remove(endIndex + 1, colonIndex - endIndex);
 
                                     if (count == 0)
                                         removedInFirstLine = true;
@@ -558,6 +566,8 @@ namespace Nikse.SubtitleEdit.Forms
                         newText = newText.Replace(Environment.NewLine, Environment.NewLine + "- ");
                 }
             }
+            if (text.Contains("<i>") && !newText.Contains("<i>") && newText.EndsWith("</i>"))
+                newText = "<i>" + newText;
             return newText;
         }
 

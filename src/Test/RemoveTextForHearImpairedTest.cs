@@ -83,6 +83,44 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveColonTest2a()
+        {
+            var target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
+            target.checkBoxRemoveTextBeforeColon.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxColonSeparateLine.Checked = false;
+            target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = false;
+            string text = "GIOVANNI: <i>Number 9: I never look for a scapegoat.</i>";
+            string expected = "<i>I never look for a scapegoat.</i>";
+            string actual = target.RemoveColon(text, string.Empty);
+            Assert.AreEqual(expected, actual);
+        }
+
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveColonTest2b()
+        {
+            var target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveIfAllUppercase.Checked = false;
+            target.checkBoxRemoveTextBeforeColon.Checked = true;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxOnlyIfInSeparateLine.Checked = false;
+            target.checkBoxColonSeparateLine.Checked = false;
+            target.checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = true;
+            string text = "GIOVANNI: <i>Number 9: I never look for a scapegoat.</i>";
+            string expected = "<i>Number 9: I never look for a scapegoat.</i>";
+            string actual = target.RemoveColon(text, string.Empty);
+            Assert.AreEqual(expected, actual);
+        }
+
+        
+
         /// <summary>
         ///A test for RemoveHIInsideLine
         ///</summary>
