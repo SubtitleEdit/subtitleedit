@@ -6,9 +6,11 @@
 * IMPROVED:
    * Updated Portuguese langauge file - thx moob
    * Updated Viewnamese language file - thx everytime
+   * Updated Basque language file - thx Xabier
    * Now remembers RTL mode - thx FTABoy
 * FIXED:
-   * 
+  * Fixed bug in "Fix common errors: Remove hyphen" - thx honeybunny
+
 
 3.3.11 (6th December 2013)
 * NEW:
