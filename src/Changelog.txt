@@ -4,8 +4,8 @@
 * NEW:
    *
 * IMPROVED:
-   * Updated Portuguese langauge file - thx moob
-   * Updated Viewnamese language file - thx everytime
+   * Updated Portuguese language file - thx moob
+   * Updated Vietnamese language file - thx everytime
    * Updated Basque language file - thx Xabier
    * Now remembers RTL mode - thx FTABoy
 * FIXED:
@@ -28,17 +28,17 @@
    * Added Polish spelling dictionary to download list
    * "Adjust display durations" now allows down to 75% - thx Dennis
    * "Restore auto-backup" window now displays number of bytes
-   * Now remembers last 'Change casing' choice - thx anil
+   * Now remembers last "Change casing" choice - thx anil
 * FIXED:
    * Fixed audio waveform so it works better with VLC
-   * Fixed sync of spectrogram
+   * Fixed spectrogram sync
    * Fixed spectrogram so it works with FFmpeg
    * Dragging line in wave form in frames mode keeps duration - thx Adrian
    * Fixed Slovak spell check dictionary link
    * Status text after re-calculating display times fixed - thx Dennis
-   * Do not leave empty file in temp folder after extracting audio
-   * Export to image based formats: text in font tags now also get shadow 
-   * Some fixes for format ".lrc" - thx sialivi
+   * Do not leave empty files in temp folder after extracting audio
+   * Export to image based formats: text in font tags now also gets shadow
+   * Some fixes for ".lrc" format - thx sialivi
 
 
 3.3.10 (22nd November 2013)
@@ -121,7 +121,7 @@
    * Fixed crash in spell check - thx Ruud
    * Fixed Serbian letters in PAC format - thx Arran
    * Can now work with negative time codes in SubRip - thx Salad
-   * Loading styles when importing ssa/ass from Matroska files - thx the hulk/Scott
+   * Loading styles when importing ASS/SSA from Matroska files - thx the hulk/Scott
 
 
 3.3.8 (1st September 2013)
