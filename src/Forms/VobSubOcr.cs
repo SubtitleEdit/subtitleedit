@@ -1354,20 +1354,27 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowSubtitleImage(int index, Bitmap bmp)
         {
-            int numberOfImages = GetSubtitleCount();
-            if (index < numberOfImages)
+            try
             {
-                groupBoxSubtitleImage.Text = string.Format(Configuration.Settings.Language.VobSubOcr.SubtitleImageXofY, index + 1, numberOfImages) + "   " + bmp.Width + "x" + bmp.Height;
+                int numberOfImages = GetSubtitleCount();
+                if (index < numberOfImages)
+                {
+                    groupBoxSubtitleImage.Text = string.Format(Configuration.Settings.Language.VobSubOcr.SubtitleImageXofY, index + 1, numberOfImages) + "   " + bmp.Width + "x" + bmp.Height;
+                }
+                else
+                {
+                    groupBoxSubtitleImage.Text = Configuration.Settings.Language.VobSubOcr.SubtitleImage;
+                }
+                Bitmap old = pictureBoxSubtitleImage.Image as Bitmap;
+                pictureBoxSubtitleImage.Image = bmp.Clone() as Bitmap;
+                pictureBoxSubtitleImage.Invalidate();
+                if (old != null)
+                    old.Dispose();
             }
-            else
-            {
-                groupBoxSubtitleImage.Text = Configuration.Settings.Language.VobSubOcr.SubtitleImage;
+            catch
+            { 
+                // can crash is user is clicking around...
             }
-            Bitmap old = pictureBoxSubtitleImage.Image as Bitmap;
-            pictureBoxSubtitleImage.Image = bmp.Clone() as Bitmap;
-            pictureBoxSubtitleImage.Invalidate();
-            if (old != null)
-                old.Dispose();
         }
 
         private static Point MakePointItalic(Point p, int height, int moveLeftPixels, double unItalicFactor)
@@ -5095,7 +5102,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 line = unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty);
                                 if (checkBoxAutoFixCommonErrors.Checked)
+                                {
+                                    if (line.Contains("'.") && !textWithOutFixes.Contains("'.") && textWithOutFixes.Contains(":") && !line.EndsWith("'.") && Configuration.Settings.Tools.OcrFixUseHardcodedRules)
+                                    {
+                                        line = line.Replace("'.", ":");
+                                    }
                                     line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                                }
                                 line = "<i>" + line + "</i>";
                             }
                             else
@@ -5561,12 +5574,19 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (subtitleListView1.SelectedItems.Count > 0)
             {
-                _selectedIndex = subtitleListView1.SelectedItems[0].Index;
+                try
+                {
+                    _selectedIndex = subtitleListView1.SelectedItems[0].Index;
+                }
+                catch
+                {
+                    return;
+                }
                 textBoxCurrentText.Text = _subtitle.Paragraphs[_selectedIndex].Text;
                 if (_mainOcrRunning && _mainOcrBitmap != null)
-                    ShowSubtitleImage(subtitleListView1.SelectedItems[0].Index, _mainOcrBitmap);
+                    ShowSubtitleImage(_selectedIndex, _mainOcrBitmap);
                 else
-                    ShowSubtitleImage(subtitleListView1.SelectedItems[0].Index);
+                    ShowSubtitleImage(_selectedIndex);
                 numericUpDownStartNumber.Value = _selectedIndex + 1;
             }
             else
