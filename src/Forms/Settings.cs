@@ -335,8 +335,17 @@ namespace Nikse.SubtitleEdit.Forms
                 labelSsaShadow.Text = language.SsaShadow;
                 checkBoxSsaOpaqueBox.Text = language.SsaOpaqueBox;
             }
+            groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
+
             numericUpDownSsaOutline.Left = labelSsaOutline.Left + labelSsaOutline.Width + 4;
             numericUpDownSsaShadow.Left = labelSsaShadow.Left + labelSsaShadow.Width + 4;
+            if (Math.Abs(numericUpDownSsaOutline.Left - numericUpDownSsaShadow.Left) < 9)
+            {
+                if (numericUpDownSsaOutline.Left > numericUpDownSsaShadow.Left)
+                    numericUpDownSsaShadow.Left = numericUpDownSsaOutline.Left;
+                else
+                    numericUpDownSsaOutline.Left = numericUpDownSsaShadow.Left;
+            }
 
             groupBoxWordLists.Text = language.WordLists;
             labelWordListLanguage.Text = language.Language;
