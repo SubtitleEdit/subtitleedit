@@ -11,6 +11,7 @@
 * FIXED:
   * Fixed bug in "Fix common errors: Remove hyphen" - thx honeybunny
   * Fixed bug in "Remove text for HI" issue - thx cipry15
+  * Fixed bug in "Auto br" - thx XhmikosR
 
 
 3.3.11 (6th December 2013)

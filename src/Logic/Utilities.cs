@@ -593,6 +593,11 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
+            if (splitPos > maximumLength) // too long first line
+                splitPos = -1;
+            else if (splitPos >= 0 && s.Length - splitPos > maximumLength) // too long second line
+                splitPos = -1;
+
             if (splitPos == -1)
             {
                 for (int j = 0; j < 25; j++)
