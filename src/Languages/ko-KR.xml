@@ -3,7 +3,8 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.12</Version>
-    <TranslatedBy>한글: 도움돌 (domddol@gmail.com)</TranslatedBy>
+    <TranslatedBy>☞ 한글화: 도움돌 (domddol@gmail.com)
+☞ 피드백: http://aav639.blog.me/150142070038</TranslatedBy>
     <CultureName>ko-KR</CultureName>
     <HelpFile></HelpFile>
     <OK>확인(&amp;O)</OK>
@@ -15,10 +16,11 @@
     <SubtitleFiles>자막 파일</SubtitleFiles>
     <AllFiles>모든 파일</AllFiles>
     <VideoFiles>비디오 파일</VideoFiles>
+    <AudioFiles>오디오 파일</AudioFiles>
     <OpenSubtitle>자막 열기</OpenSubtitle>
     <OpenVideoFile>비디오 열기</OpenVideoFile>
     <OpenVideoFileTitle>비디오 파일 열기</OpenVideoFileTitle>
-    <NoVideoLoaded>로드된 동영상이 없습니다!</NoVideoLoaded>
+    <NoVideoLoaded>로드된 비디오가 없습니다...</NoVideoLoaded>
     <VideoInformation>비디오 정보</VideoInformation>
     <PositionX>위치 / 시간: {0}</PositionX>
     <StartTime>시작</StartTime>
@@ -74,13 +76,13 @@
   <About>
     <Title>Subtitle Edit 제품 정보</Title>
     <AboutText1>
-      Subtitle Edit는 GNU 정책을 따르는 무료 소프트웨어입니다.
-      자유롭게 배포할 수 있으며 수정해서 사용할 수도 있습니다.
-      C# 코드는 http://code.google.com/p/subtitleedit 에 있습니다.
-      최신 버전은 홈페이지(www.nikse.dk)를 방문하시기 바랍니다.
-      제안은 아래 이메일 주소로 접수되며 제안은 언제나 환영입니다.
-      이메일 주소: mailto:nikse.dk@gmail.com
-    </AboutText1>
+Subtitle Edit는 GNU 정책을 따르는 무료 소프트웨어입니다.
+자유롭게 배포할 수 있으며 수정해서 사용할 수 있습니다.
+C# 코드는 http://code.google.com/p/subtitleedit 에 있습니다.
+최신 버전은 홈페이지(www.nikse.dk)를 방문하시기 바랍니다.
+귀하의 의견은 아래 이메일 주소로 접수되며 언제나 환영합니다.
+이메일 주소: mailto:nikse.dk@gmail.com
+   </AboutText1>
   </About>
   <AddToNames>
     <Title>이름/기타 목록에 단어 추가</Title>
@@ -108,8 +110,8 @@
     <ExtractingMinutes>추출 시간: {0}.{1:00} 분</ExtractingMinutes>
   </AddWaveForm>
   <AdjustDisplayDuration>
-    <Title>표시 시간 조정...</Title>
-    <AdjustVia>※ 사용자가 선택한 방식으로 표시 시간을 조정합니다.</AdjustVia>
+    <Title>표시시간 조정...</Title>
+    <AdjustVia>※ 사용자가 선택한 방식으로 표시시간을 조정합니다.</AdjustVia>
     <Seconds>시간(초)</Seconds>
     <Percent>백분율(%)</Percent>
     <Recalculate>다시 계산</Recalculate>
@@ -120,7 +122,7 @@
     <PleaseChoose> ----------- 선택 ------------</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
-    <Title>최대/최소 표시 시간 설정 및 적용</Title>
+    <Title>최대/최소 표시시간 설정 및 적용</Title>
     <FixesAvailable>수리 가능: {0}</FixesAvailable>
     <UnableToFix>수리 불가: {0}</UnableToFix>
   </ApplyDurationLimits>
@@ -141,16 +143,22 @@
     <OverwriteExistingFiles>기존 파일에 덮어쓰기</OverwriteExistingFiles>
     <Style>스타일...</Style>
     <ConvertOptions>변환 옵션</ConvertOptions>
-    <AutoBreakLongLines>긴 줄 자동 줄바꿈</AutoBreakLongLines>
-    <FixItalics>기울임꼴 수정</FixItalics>
     <RemoveFormatting>서식 태그 제거</RemoveFormatting>
     <RemoveTextForHI>HI용 텍스트 제거</RemoveTextForHI>
+    <OverwriteOriginalFiles>원본 파일 덮어쓰기 (형식이 변경된 경우)</OverwriteOriginalFiles>
     <ReDoCasing>대/소문자 구분</ReDoCasing>
     <Convert>변환</Convert>
     <NothingToConvert>변환할 것이 없습니다!</NothingToConvert>
     <PleaseChooseOutputFolder>출력 폴더를 선택하십시오!</PleaseChooseOutputFolder>
     <Converted>변환됐습니다!</Converted>
     <ConvertedX>({0}) 변환 완료함.</ConvertedX>
+    <Settings>설정</Settings>
+    <SplitLongLines>긴 줄 분할</SplitLongLines>
+    <AutoBalance>자동 줄맞춤</AutoBalance>
+    <ScanFolder>폴더 검사...</ScanFolder>
+    <ScanningFolder>{0} 및 자막 파일에 대한 하위 폴더 검사...</ScanningFolder>
+    <Recursive>하위 폴더 포함</Recursive>
+    <SetMinMsBetweenSubtitles>자막 사이의 분과 밀리초 설정</SetMinMsBetweenSubtitles>
   </BatchConvert>
   <Beamer>
     <Title>프로젝터</Title>
@@ -184,6 +192,9 @@
     <Title># 비율로 자막 속도 조정</Title>
     <Info>비율로 자막 속도를 조정합니다.</Info>
   </ChangeSpeedInPercent>
+  <ChooseAudioTrack>
+    <Title>오디오 트랙 선택</Title>
+  </ChooseAudioTrack>
   <ChooseEncoding>
     <Title>자막 인코딩 선택</Title>
     <CodePage>코드 페이지</CodePage>
@@ -194,6 +205,16 @@
     <Title>언어 선택</Title>
     <Language>언어</Language>
   </ChooseLanguage>
+  <ColumnPaste>
+    <Title>열 붙여넣기</Title>
+    <ChooseColumn>열 선택</ChooseColumn>
+    <OverwriteShiftCellsDown>덮어쓰기 및 셀 아래로 이동</OverwriteShiftCellsDown>
+    <Overwrite>덮어쓰기</Overwrite>
+    <ShiftCellsDown>셀 아래로 이동</ShiftCellsDown>
+    <TimeCodesOnly>타임 코드만</TimeCodesOnly>
+    <TextOnly>텍스트만</TextOnly>
+    <OriginalTextOnly>원본 텍스트만</OriginalTextOnly>
+  </ColumnPaste>
   <CompareSubtitles>
     <Title>자막 비교</Title>
     <PreviousDifference>뒤로(&amp;P)...</PreviousDifference>
@@ -214,6 +235,8 @@
     <Language>언어</Language>
     <IssueDate>출시일</IssueDate>
     <EditRate>편집 비율</EditRate>
+    <TimeCodeRate>타임 코드 속도</TimeCodeRate>
+    <StartTime>시작 시간</StartTime>
     <Font>글꼴</Font>
     <FontId>글꼴 ID</FontId>
     <FontUri>URI</FontUri>
@@ -222,7 +245,17 @@
     <FontEffectColor>색상 효과</FontEffectColor>
     <FontSize>크기</FontSize>
     <ChooseColor>색상 선택...</ChooseColor>
+    <Generate>생성</Generate>
   </DCinemaProperties>
+  <DurationsBridgeGaps>
+    <Title># 표시시간 사이의 시간 간격 메우기</Title>
+    <GapsBridgedX>메워진 간격: {0}개</GapsBridgedX>
+    <GapToNext>이후 시간 간격</GapToNext>
+    <BridgeGapsSmallerThanXPart1>- 다음보다 작은 간격 메움:</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart2>(밀리초)</BridgeGapsSmallerThanXPart2>
+    <ProlongEndTime>이전 텍스트로 간격을 메움</ProlongEndTime>
+    <DivideEven>텍스트가 간격을 공유</DivideEven>
+  </DurationsBridgeGaps>
   <DvdSubrip>
     <Title>DVD(ifo/vob)에서 자막 가져오기</Title>
     <DvdGroupTitle>DVD 파일/정보</DvdGroupTitle>
@@ -257,6 +290,7 @@
     <GeneralSubtitleInformation>일반적인 자막 정보</GeneralSubtitleInformation>
     <CodePageNumber>코드 페이지 번호</CodePageNumber>
     <DiskFormatCode>디스크 포맷 코드</DiskFormatCode>
+    <DisplayStandardCode>표준 코드 표시</DisplayStandardCode>
     <CharacterCodeTable>문자 테이블</CharacterCodeTable>
     <LanguageCode>언어 코드</LanguageCode>
     <OriginalProgramTitle>오리지널 프로그램 제목</OriginalProgramTitle>
@@ -293,6 +327,26 @@
     <TotalMilliseconds>총 시간 (밀리초):</TotalMilliseconds>
     <EndDelayInMillisecs>끝지점 지연 (밀리초):</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportCustomText>
+    <Title>사용자 지정 텍스트 형식으로 내보내기</Title>
+    <Formats>형식</Formats>
+    <New>신규</New>
+    <Edit>편집</Edit>
+    <Delete>삭제</Delete>
+    <SaveAs>다른 이름으로 저장(&amp;A)...</SaveAs>
+    <SaveSubtitleAs>다름 이름으로 자막 저장...</SaveSubtitleAs>
+    <SubtitleExportedInCustomFormatToX>사용자 지정 형식으로 내보낸 자막: {0}</SubtitleExportedInCustomFormatToX>
+  </ExportCustomText>
+  <ExportCustomTextFormat>
+    <Title>사용자 지정 텍스트 형식의 템플릿</Title>
+    <Template>템플릿</Template>
+    <Header>머리글</Header>
+    <TextLine>텍스트 라인 (단락)</TextLine>
+    <TimeCode>타임 코드</TimeCode>
+    <NewLine>새 라인</NewLine>
+    <Footer>바닥글</Footer>
+    <DoNotModify>[변경 없음]</DoNotModify>
+  </ExportCustomTextFormat>
   <ExportPngXml>
     <Title>BDN (xml/png) 내보내기</Title>
     <ImageSettings>이미지 설정</ImageSettings>
@@ -301,13 +355,19 @@
     <FontColor>폰트 색</FontColor>
     <BorderColor>테두리 색</BorderColor>
     <BorderWidth>테두리 폭</BorderWidth>
+    <ShadowColor>그림자 색</ShadowColor>
+    <ShadowWidth>그림자 폭</ShadowWidth>
+    <Transparency>알파</Transparency>
     <ImageFormat>이미지 형식</ImageFormat>
-    <AntiAlias>선 보정</AntiAlias>
-    <SideBySide3D>3D 호환</SideBySide3D>
+    <SimpleRendering>간단한 렌더링</SimpleRendering>
+    <Text3D>3D</Text3D>
+    <SideBySide3D>Half-side-by-side</SideBySide3D>
+    <HalfTopBottom3D>Half-Top/Bottom</HalfTopBottom3D>
+    <Depth>깊이</Depth>
     <ExportAllLines>모든 줄 내보내기...</ExportAllLines>
-    <XImagesSavedInY>{0} 개의 이미지가 {1} 에 저장되었습니다.</XImagesSavedInY>
+    <XImagesSavedInY>{0}개의 이미지가 {1}에 저장되었습니다.</XImagesSavedInY>
     <VideoResolution>비디오 해상도</VideoResolution>
-    <Align>폰트 정렬</Align>
+    <Align>정렬</Align>
     <Left>왼쪽</Left>
     <Right>오른쪽</Right>
     <Center>가운데</Center>
@@ -315,7 +375,9 @@
     <SaveBluRraySupAs>블루레이 자막 (sup) 파일로 저장</SaveBluRraySupAs>
     <SaveVobSubAs>VobSub 파일로 저장</SaveVobSubAs>
     <SaveFabImageScriptAs>Fab 이미지 스크립트로 저장</SaveFabImageScriptAs>
-    <SaveDvdStudioProStlAs>DVD Studio Pro STL (으)로 저장</SaveDvdStudioProStlAs>
+    <SaveDvdStudioProStlAs>DVD Studio Pro STL로 저장</SaveDvdStudioProStlAs>
+    <SomeLinesWereTooLongX>너무 긴 줄: {0}</SomeLinesWereTooLongX>
+    <LineHeight>줄 높이</LineHeight>
   </ExportPngXml>
   <ExportText>
     <Title>텍스트로 내보내기</Title>
@@ -328,16 +390,24 @@
     <RemoveStyling>스타일링 제거</RemoveStyling>
     <ShowLineNumbers>자막 번호 표시</ShowLineNumbers>
     <AddNewLineAfterLineNumber>자막 번호 다음 줄부터 기록</AddNewLineAfterLineNumber>
-    <ShowTimeCode>시간 코드 표시</ShowTimeCode>
-    <AddNewLineAfterTimeCode>시간 코드 다음 줄부터 기록</AddNewLineAfterTimeCode>
+    <ShowTimeCode>타임 코드 표시</ShowTimeCode>
+    <AddNewLineAfterTimeCode>타임 코드 다음 줄부터 기록</AddNewLineAfterTimeCode>
     <AddNewLineAfterTexts>텍스트 끝나면 다음 줄로 재시작</AddNewLineAfterTexts>
     <AddNewLineBetweenSubtitles>자막 사이에 새 줄 추가</AddNewLineBetweenSubtitles>
-    <TimeCodeFormat>시간 코드 형식</TimeCodeFormat>
+    <TimeCodeFormat>타임 코드 형식</TimeCodeFormat>
     <Srt>.SRT</Srt>
     <Milliseconds>밀리초</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>시간 코드 구분</TimeCodeSeperator>
+    <TimeCodeSeperator>타임 코드 구분</TimeCodeSeperator>
   </ExportText>
+  <ExtractDateTimeInfo>
+    <Title>텍스트로 시간 생성</Title>
+    <OpenVideoFile>날짜/시간 정보를 추출할 비디오 파일 선택</OpenVideoFile>
+    <StartFrom>시작</StartFrom>
+    <DateTimeFormat>날짜/시간 형식</DateTimeFormat>
+    <Example>예</Example>
+    <GenerateSubtitle>자막 생성(&amp;G)</GenerateSubtitle>
+  </ExtractDateTimeInfo>
   <FindDialog>
     <Title>찾기</Title>
     <Find>찾기</Find>
@@ -368,9 +438,9 @@
     <RemovedEmptyLineAtBottom>마지막 빈 줄을 삭제했습니다.</RemovedEmptyLineAtBottom>
     <RemovedEmptyLinesUnsedLineBreaks>빈 줄 및 불필요한 줄의 줄바꿈 삭제하기</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>삭제한 빈 줄: {0}</EmptyLinesRemovedX>
-    <FixOverlappingDisplayTimes>중복된 표시 시간 수정하기</FixOverlappingDisplayTimes>
-    <FixShortDisplayTimes>짧은 표시 시간 수정하기</FixShortDisplayTimes>
-    <FixLongDisplayTimes>긴 표시 시간 수정하기</FixLongDisplayTimes>
+    <FixOverlappingDisplayTimes>중복된 표시시간 수정하기</FixOverlappingDisplayTimes>
+    <FixShortDisplayTimes>짧은 표시시간 수정하기</FixShortDisplayTimes>
+    <FixLongDisplayTimes>긴 표시시간 수정하기</FixLongDisplayTimes>
     <FixInvalidItalicTags>잘못된 기울임꼴 태그 수정하기</FixInvalidItalicTags>
     <RemoveUnneededSpaces>불필요한 공백 제거하기</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>불필요한 마침표 제거하기</RemoveUnneededPeriods>
@@ -419,10 +489,10 @@
     <MergeShortLineAll>짧은 줄 병합 (대화형식 제외)</MergeShortLineAll>
     <XLineBreaksAdded>{0} 개의 줄바꿈이 추가되었습니다.</XLineBreaksAdded>
     <BreakLongLine>긴 줄(행) 줄바꿈</BreakLongLine>
-    <FixLongDisplayTime>긴 표시 시간 수정하기</FixLongDisplayTime>
+    <FixLongDisplayTime>긴 표시시간 수정하기</FixLongDisplayTime>
     <FixInvalidItalicTag>잘못된 기울임꼴 태그 수정하기</FixInvalidItalicTag>
-    <FixShortDisplayTime>짧은 표시 시간 수정하기</FixShortDisplayTime>
-    <FixOverlappingDisplayTime>중복된 표시 시간 수정하기</FixOverlappingDisplayTime>
+    <FixShortDisplayTime>짧은 표시시간 수정하기</FixShortDisplayTime>
+    <FixOverlappingDisplayTime>중복된 표시시간 수정하기</FixOverlappingDisplayTime>
     <FixInvalidItalicTagsExample>&lt;i&gt;서울특별시&lt;i&gt; --&gt; &lt;i&gt;서울특별시&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>넌  정말  최고야! --&gt; 넌 정말 최고야!</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>안돼!. --&gt; 안돼!</RemoveUnneededPeriodsExample>
@@ -434,9 +504,9 @@
     <XFixedToYZ>{0} 수정함: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>텍스트 번호 {0}을 수정할 수 없음: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} 개의 중복된 시간을 수정했습니다.</XOverlappingTimestampsFixed>
-    <XDisplayTimesProlonged>{0} 개의 표시 시간이 연장되었습니다.</XDisplayTimesProlonged>
+    <XDisplayTimesProlonged>{0} 개의 표시시간이 연장되었습니다.</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>{0} 개의 잘못된 HTML 태그가 수정되었습니다.</XInvalidHtmlTagsFixed>
-    <XDisplayTimesShortned>{0} 개의 표시 시간이 단축되었습니다.</XDisplayTimesShortned>
+    <XDisplayTimesShortned>{0} 개의 표시시간이 단축되었습니다.</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} 개가 줄바꿈되었습니다.</XLinesUnbreaked>
     <UnneededSpace>불필요한 공백</UnneededSpace>
     <XUnneededSpacesRemoved>{0} 개의 불필요한 공백이 제거되었습니다.</XUnneededSpacesRemoved>
@@ -480,14 +550,24 @@
     <Title># 사전 다운로드....</Title>
     <DescriptionLine1>Subtitle Edit 맞춤법 검사의 기반은 오픈 오피스 맞춤법 검사</DescriptionLine1>
     <DescriptionLine2>사전에 사용되는 'NHunspell' 엔진입니다.</DescriptionLine2>
-    <GetDictionariesHere>사전 가져오기:</GetDictionariesHere>
+    <GetDictionariesHere>사전 가져올 곳:</GetDictionariesHere>
     <OpenOpenOfficeWiki>'Open Office Wiki' 사전 열기</OpenOpenOfficeWiki>
     <GetAllDictionaries>모든 사전 가져오기</GetAllDictionaries>
-    <ChooseLanguageAndClickDownload>※ 언어를 선택하고 다운로드를 클릭합니다.</ChooseLanguageAndClickDownload>
+    <ChooseLanguageAndClickDownload>언어를 선택하고 다운로드를 클릭합니다.</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>'Dictionaries' 폴더 열기</OpenDictionariesFolder>
     <Download>다운로드</Download>
     <XDownloaded>{0}을 다운로드하고 설치했습니다.</XDownloaded>
   </GetDictionaries>
+  <GetTesseractDictionaries>
+    <Title>사전이 필요하십니까?</Title>
+    <DescriptionLine1>웹에서 Tesseract OCR 사전 얻기</DescriptionLine1>
+    <DownloadFailed>다운로드 실패!</DownloadFailed>
+    <GetDictionariesHere>사전 가져올 곳:</GetDictionariesHere>
+    <ChooseLanguageAndClickDownload>언어를 선택하고 다운로드를 클릭합니다.</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>'Dictionaries' 폴더 열기</OpenDictionariesFolder>
+    <Download>다운로드</Download>
+    <XDownloaded>{0}을 다운로드하고 설치했습니다.</XDownloaded>
+  </GetTesseractDictionaries>
   <GoogleTranslate>
     <Title>Google 번역기</Title>
     <From>번역 전:</From>
@@ -513,6 +593,16 @@
       지정된 범위의 숫자를 입력하십시오!
     </XIsNotAValidNumber>
   </GoToLine>
+  <ImportSceneChanges>
+    <Title>장면 전환 가져오기</Title>
+    <OpenTextFile>텍스트 파일 열기...</OpenTextFile>
+    <ImportOptions>옵션 가져오기</ImportOptions>
+    <TextFiles>텍스트 파일</TextFiles>
+    <TimeCodes>타임 코드</TimeCodes>
+    <Frames>프레임</Frames>
+    <Seconds>초</Seconds>
+    <Milliseconds>밀리초</Milliseconds>
+  </ImportSceneChanges>
   <ImportText>
     <Title>일반 텍스트 파일로 새 자막 구성...</Title>
     <OpenTextFile>텍스트 파일 열기</OpenTextFile>
@@ -524,12 +614,14 @@
     <MergeShortLines>연속해서 짧은 줄 하나로</MergeShortLines>
     <RemoveEmptyLines>공백 줄 제거</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>문자 없는 줄 제거</RemoveLinesWithoutLetters>
+    <GenerateTimeCodes>타임 코드 생성</GenerateTimeCodes>
     <GapBetweenSubtitles>자막 간격 (ms)</GapBetweenSubtitles>
     <Auto>자동</Auto>
     <Fixed>수정</Fixed>
     <Refresh>새로 고침(&amp;R)</Refresh>
     <TextFiles>텍스트 파일</TextFiles>
     <PreviewLinesModifiedX>미리 보기 - 자막 줄 구성: {0} 개</PreviewLinesModifiedX>
+    <TimeCodes>타임 코드</TimeCodes>
   </ImportText>
   <Interjections>
     <Title>감탄사</Title>
@@ -567,10 +659,11 @@
         <ImportOcrFromDvd>DVD(vob/ifo)에서 자막 가져오기/OCR...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>VobSub(sub/idx)에서 자막 가져오기/OCR...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Blu-ray(sup)에서 자막 가져오기/OCR...</ImportBluRaySupFile>
+        <ImportXSub>Divx/avi에서 XSub 가져오기/OCR...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Matroska 파일에서 자막 가져오기</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>사용자 정의의 인코딩 자막 가져오기</ImportSubtitleWithManualChosenEncoding>
         <ImportText>일반 텍스트 파일에서 자막 가져오기</ImportText>
-        <ImportTimecodes>다른 자막에서 시간 코드 가져오기</ImportTimecodes>
+        <ImportTimecodes>다른 자막에서 타임 코드 가져오기</ImportTimecodes>
         <Export>내보내기</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>블루레이 자막(sup)으로...</ExportBluRaySup>
@@ -587,6 +680,7 @@
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
         <ExportUltech130>Ultech 자막...</ExportUltech130>
+        <ExportCustomTextFormat>사용자 지정의 텍스트 형식 내보내기...</ExportCustomTextFormat>
         <Exit>끝내기(&amp;X)</Exit>
       </File>
       <Edit>
@@ -603,11 +697,14 @@
         <RightToLeftMode>RTL 모드...</RightToLeftMode>
         <ReverseRightToLeftStartEnd>LTR 모드 (선택한 줄)...</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>오디오/비디오 미리 보기에 원본 텍스트 표시</ShowOriginalTextInAudioAndVideoPreview>
+        <ModifySelection>선택 바꾸기...</ModifySelection>
+        <InverseSelection>역 선택</InverseSelection>
       </Edit>
       <Tools>
         <Title>도구</Title>
-        <AdjustDisplayDuration>표시 시간 조정...</AdjustDisplayDuration>
-        <ApplyDurationLimits>최대/최소 표시 시간 설정 및 적용...</ApplyDurationLimits>
+        <AdjustDisplayDuration>표시시간 조정...</AdjustDisplayDuration>
+        <ApplyDurationLimits>최대/최소 표시시간 설정 및 적용...</ApplyDurationLimits>
+        <DurationsBridgeGap>표시시간 사이의 간격 메우기</DurationsBridgeGap>
         <FixCommonErrors>일반적인 오류 수정...</FixCommonErrors>
         <StartNumberingFrom>자막 번호 변경하기</StartNumberingFrom>
         <RemoveTextForHearingImpaired>청각 장애인용 텍스트 삭제...</RemoveTextForHearingImpaired>
@@ -615,21 +712,27 @@
         <ChangeFrameRate>프레임 속도 변경...</ChangeFrameRate>
         <ChangeSpeedInPercent>비율로 속도 조정...</ChangeSpeedInPercent>
         <MergeShortLines>짧은 줄 병합하기</MergeShortLines>
+        <MergeDuplicateText>동일한 텍스트 라인 병합...</MergeDuplicateText>
         <SplitLongLines>긴 줄 분할하기</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>단락 사이의 최소 간격 설정...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>정렬 기준</SortBy>
         <Number>번호 순</Number>
         <StartTime>시작 시간</StartTime>
         <EndTime>종료 시간</EndTime>
-        <Duration>길이 (표시 시간)</Duration>
+        <Duration>길이 (표시시간)</Duration>
         <TextAlphabetically>텍스트 - 알파벳 순</TextAlphabetically>
         <TextSingleLineMaximumLength>텍스트 - 줄 당 최대 문자수</TextSingleLineMaximumLength>
         <TextTotalLength>텍스트 - 한화면에 표시되는 총 문자수</TextTotalLength>
         <TextNumberOfLines>텍스트 - 한화면에 표시되는 라인(줄)수</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>텍스트 - 초 당 문자수</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>텍스트 - 분 당 단어수</WordsPerMinute>
+        <Style>스타일</Style>
+        <Ascending>오름차순</Ascending>
+        <Descending>내림차순</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>여기에 번역 공간 만들기</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>일괄 변환...</BatchConvert>
+        <GenerateTimeAsText>텍스트로 시간 생성...</GenerateTimeAsText>
+        <MeasurementConverter>치수 변환기...</MeasurementConverter>
         <SplitSubtitle>자막 분할하기</SplitSubtitle>
         <AppendSubtitle>자막 병합하기</AppendSubtitle>
         <JoinSubtitles>새 자막 등록...</JoinSubtitles>
@@ -637,8 +740,11 @@
       <Video>
         <Title>비디오</Title>
         <OpenVideo>비디오 파일 열기</OpenVideo>
+        <OpenDvd>DVD 열기...</OpenDvd>
         <ChooseAudioTrack>오디오 트랙 선택하기</ChooseAudioTrack>
         <CloseVideo>비디오 파일 닫기</CloseVideo>
+        <ImportSceneChanges>장면 전환 가져오기...</ImportSceneChanges>
+        <RemoveSceneChanges>장면 전환 제거</RemoveSceneChanges>
         <ShowHideVideo>비디오 표시 | 숨김</ShowHideVideo>
         <ShowHideWaveForm>오디오 표시 | 숨김</ShowHideWaveForm>
         <ShowHideWaveformAndSpectrogram>파형 및 스펙트로그램 표시 | 숨김</ShowHideWaveformAndSpectrogram>
@@ -648,6 +754,7 @@
       <SpellCheck>
         <Title>맞춤법</Title>
         <SpellCheck>맞춤법 검사(&amp;S)...</SpellCheck>
+        <SpellCheckFromCurrentLine>현재 줄부터 맞춤법 검사...</SpellCheckFromCurrentLine>
         <FindDoubleWords>더블 워드 찾기</FindDoubleWords>
         <FindDoubleLines>중복 라인 찾기</FindDoubleLines>
         <GetDictionaries>사전 가져오기</GetDictionaries>
@@ -703,15 +810,16 @@
         <SubStationAlphaSetStyle>Sub Station Alpha - 스타일 설정</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Sub Station Alpha 스타일...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha 스타일...</AdvancedSubStationAlphaStyles>
-        <TimedTextSetStyle>Timed Text - 스타일 설정</TimedTextSetStyle>
-        <TimedTextStyles>Timed Text 스타일...</TimedTextStyles>
+        <TimedTextSetStyle>시간 제한 텍스트 - 스타일 설정</TimedTextSetStyle>
+        <TimedTextStyles>시간 제한 텍스트 스타일...</TimedTextStyles>
+        <TimedTextSetLanguage>시간 제한 텍스트 - 언어 설정</TimedTextSetLanguage>
         <SamiSetStyle>SAMI - 클래스 설정</SamiSetStyle>
         <Cut>잘라내기</Cut>
         <Copy>복사</Copy>
         <Paste>붙여넣기</Paste>
         <Delete>줄 삭제...</Delete>
         <SplitLineAtCursorPosition>포인터 위치에서 줄 분할</SplitLineAtCursorPosition>
-        <AutoDurationCurrentLine>표시 시간 자동 설정 (현재 줄)</AutoDurationCurrentLine>
+        <AutoDurationCurrentLine>표시시간 자동 설정 (현재 줄)</AutoDurationCurrentLine>
         <SelectAll>모두 선택</SelectAll>
         <InsertFirstLine>줄 삽입</InsertFirstLine>
         <InsertBefore>전에 빈 줄 삽입...</InsertBefore>
@@ -725,6 +833,7 @@
         <ColumnInsertTextFromSubtitle>새 자막의 텍스트 삽입...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>텍스트 파일 가져오고 셀 아래로...</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>클립보드에서 붙여넣기</ColumnPasteFromClipboard>
+        <ColumnCopyOriginalTextToCurrent>원본에서 텍스트 복사</ColumnCopyOriginalTextToCurrent>
         <Split>줄 분할 (현재 줄 안에서)</Split>
         <MergeSelectedLines>선택한 줄 병합</MergeSelectedLines>
         <MergeSelectedLinesASDialogue>선택한 대화 라인 병합</MergeSelectedLinesASDialogue>
@@ -743,10 +852,12 @@
         <VisualSyncSelectedLines>시각 동기화...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft 번역</GoogleAndMicrosoftTranslateSelectedLine>
         <GoogleTranslateSelectedLines>Google 번역...</GoogleTranslateSelectedLines>
-        <AdjustDisplayDurationForSelectedLines>표시 시간 조정...</AdjustDisplayDurationForSelectedLines>
+        <AdjustDisplayDurationForSelectedLines>표시시간 조정...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>일반 오류 수정...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>대/소문자 바꾸기</ChangeCasingForSelectedLines>
         <SaveSelectedLines>선택한 줄 저장...</SaveSelectedLines>
+        <WebVTTSetNewVoice>새로운 음성 설정...</WebVTTSetNewVoice>
+        <WebVTTRemoveVoices>음성 제거</WebVTTRemoveVoices>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -764,7 +875,7 @@
       <Translate>번역</Translate>
       <Create>작성</Create>
       <Adjust>조정</Adjust>
-      <SelectCurrentElementWhilePlaying>현재 재생되고 있는 자막 라인을 표시합니다.</SelectCurrentElementWhilePlaying>
+      <SelectCurrentElementWhilePlaying>현재 재생되고 있는 자막 라인을 표시</SelectCurrentElementWhilePlaying>
       <AutoRepeat>자동 반복</AutoRepeat>
       <AutoRepeatOn>사용</AutoRepeatOn>
       <AutoRepeatCount>반복 횟수</AutoRepeatCount>
@@ -833,7 +944,7 @@
     <SavedSubtitleX>{0} 자막을 저장했습니다.</SavedSubtitleX>
     <SavedOriginalSubtitleX>원본 자막 {0}을 저장했습니다.</SavedOriginalSubtitleX>
     <FileOnDiskModified>디스크 상의 파일이 변경되었습니다.</FileOnDiskModified>
-    <OverwriteModifiedFile>{1} {2}{3}에서 변경된 파일 {0}로 {4} {5} 디스크에 로드된 현재 파일을 덮어 쓰시겠습니까?</OverwriteModifiedFile>
+    <OverwriteModifiedFile>{1} {2}{3}에서 변경된 파일 {0}로 {4} {5} 디스크에 로드된 현재 파일을 덮어쓰시겠습니까?</OverwriteModifiedFile>
     <UnableToSaveSubtitleX>자막 파일 {0}을 저장할 수 없습니다.</UnableToSaveSubtitleX>
     <BeforeNew>새 작업 전</BeforeNew>
     <New>새 작업</New>
@@ -843,7 +954,7 @@
     <BeforeShowLater>느리게 표시하기 전</BeforeShowLater>
     <LineNumberX>자막 번호: {0:#,##0.##}</LineNumberX>
     <OpenVideoFile>비디오 파일 열기...</OpenVideoFile>
-    <NewFrameRateUsedToCalculateTimeCodes>새 프레임 속도 ({0})가 시작/종료 시간 코드의 계산에 사용되었습니다.</NewFrameRateUsedToCalculateTimeCodes>
+    <NewFrameRateUsedToCalculateTimeCodes>새 프레임 속도 ({0})가 시작/종료 타임 코드의 계산에 사용되었습니다.</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>새 프레임 속도 ({0})가 시작/종료 프레임 수를 계산하는데 사용되었습니다.</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>
       검색 항목을 찾을 수 없습니다.
@@ -874,9 +985,9 @@
     <GoToLineNumberX>'{0}'번 줄로 이동했습니다.</GoToLineNumberX>
     <CreateAdjustChangesApplied>줄 만들기/조정의 변경 사항이 적용되었습니다.</CreateAdjustChangesApplied>
     <SelectedLines>선택한 줄</SelectedLines>
-    <BeforeDisplayTimeAdjustment>표시 시간 조정 전</BeforeDisplayTimeAdjustment>
-    <DisplayTimeAdjustedX>조정된 표시 시간: {0}</DisplayTimeAdjustedX>
-    <DisplayTimesAdjustedX>조정된 표시 시간: {0}</DisplayTimesAdjustedX>
+    <BeforeDisplayTimeAdjustment>표시시간 조정 전</BeforeDisplayTimeAdjustment>
+    <DisplayTimeAdjustedX>조정된 표시시간: {0}</DisplayTimeAdjustedX>
+    <DisplayTimesAdjustedX>조정된 표시시간: {0}</DisplayTimesAdjustedX>
     <StarTimeAdjustedX>조정된 시작 시간: {0}</StarTimeAdjustedX>
     <BeforeCommonErrorFixes>일반적인 오류 수정 전</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>선택한 줄의 일반적 오류가 수정되었습니다.</CommonErrorsFixedInSelectedLines>
@@ -906,7 +1017,7 @@
     <TranslateSwedishToDanish>현재 로드된 스웨덴어 자막을 덴마크어로 번역</TranslateSwedishToDanish>
     <TranslateSwedishToDanishWarning>
       현재 로드된 자막이 스웨덴어가 확실합니까?
-      스웨덴어가 맞으면 덴마크어로 바르게 번역됩니다.
+      스웨덴어가 맞으면 덴마크어로 번역될 것입니다.
     </TranslateSwedishToDanishWarning>
     <TranslatingViaNikseDkMt>www.nikse.dk/mt를 통해 번역하는 중...</TranslatingViaNikseDkMt>
     <BeforeSwedishToDanishTranslation>스웨덴어를 덴마크어로 번역 전</BeforeSwedishToDanishTranslation>
@@ -973,6 +1084,8 @@
     <VobSubFiles>VobSub 자막 파일</VobSubFiles>
     <OpenBluRaySupFile>블루레이 자막 (Sup) 파일 열기...</OpenBluRaySupFile>
     <BluRaySupFiles>블루레이 자막 (Sup) 파일</BluRaySupFiles>
+    <OpenXSubFiles>XSUB 파일 열기...</OpenXSubFiles>
+    <XSubFiles>XSUB 파일</XSubFiles>
     <BeforeImportingVobSubFile>VobSub 자막 가져오기 전</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>블루레이 자막 (Sup) 파일 가져오기 전</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>BDN xml 파일 가져오기 전</BeforeImportingBdnXml>
@@ -1004,7 +1117,7 @@
       자막 안에 유니코드식 음표가 존재합니다. 만약 ANSI 인코딩으로 저장하게 되면
       이 유니코드식 문자는 손실될 것입니다. 그래도 계속 하시겠습니까?
     </UnicodeMusicSymbolsAnsiWarning>
-    <NegativeTimeWarning>자막 안에 음수 시간 코드가 있습니다. 계속 하시겠습니까?</NegativeTimeWarning>
+    <NegativeTimeWarning>자막 안에 음수 타임 코드가 있습니다. 계속 하시겠습니까?</NegativeTimeWarning>
     <BeforeMergeShortLines>짧은 줄 병합 전</BeforeMergeShortLines>
     <BeforeSplitLongLines>긴 줄 분할 전</BeforeSplitLongLines>
     <MergedShortLinesX>병합된 자막 줄: {0}개</MergedShortLinesX>
@@ -1014,8 +1127,8 @@
     <TextImported>텍스트를 가져왔습니다.</TextImported>
     <BeforePointSynchronization>지점 동기화 전</BeforePointSynchronization>
     <PointSynchronizationDone>지점 동기화 완료!</PointSynchronizationDone>
-    <BeforeTimeCodeImport>시간 코드 가져오기 전</BeforeTimeCodeImport>
-    <TimeCodeImportedFromXY>{0}에서 시간 코드를 가져왔습니다: {1}</TimeCodeImportedFromXY>
+    <BeforeTimeCodeImport>타임 코드 가져오기 전</BeforeTimeCodeImport>
+    <TimeCodeImportedFromXY>{0}에서 타임 코드를 가져왔습니다: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>비디오 다음 위치에 자막 추가 전</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>시작 시간을 정하고 나머지 조정하기 전</BeforeSetStartTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>비디오 종료 지점 설정하기 전</BeforeSetEndAndVideoPosition>
@@ -1042,10 +1155,10 @@
     <TextFiles>텍스트 파일</TextFiles>
     <SubtitleExported>내보낸 자막</SubtitleExported>
     <LineNumberXErrorReadingFromSourceLineY>라인 {0} - 읽기 오류: {1}</LineNumberXErrorReadingFromSourceLineY>
-    <LineNumberXErrorReadingTimeCodeFromSourceLineY>라인 {0} - 시간 코드 판독 오류: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
+    <LineNumberXErrorReadingTimeCodeFromSourceLineY>라인 {0} - 타임 코드 판독 오류: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>라인 {0} - 예상되는 라인 번호: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <BeforeGuessingTimeCodes>시간 코드 예상하기 전</BeforeGuessingTimeCodes>
-    <BeforeAutoDuration>선택한 줄의 표시 시간을 자동으로 설정하기 전</BeforeAutoDuration>
+    <BeforeGuessingTimeCodes>타임 코드 예상하기 전</BeforeGuessingTimeCodes>
+    <BeforeAutoDuration>선택한 줄의 표시시간을 자동으로 설정하기 전</BeforeAutoDuration>
     <BeforeColumnPaste>열 붙여넣기 전</BeforeColumnPaste>
     <BeforeColumnDelete>열 삭제하기 전</BeforeColumnDelete>
     <BeforeColumnImportText>열에 텍스트를 가져오기 전</BeforeColumnImportText>
@@ -1057,12 +1170,33 @@
     <BeforeDisplaySubtitleJoin>새 자막 등록 전</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined> 새 자막이 등록됨!</SubtitlesJoined>
     <StatusLog># 로그 기록</StatusLog>
+    <XSceneChangesImported>{0}개의 장면 전환을 가져옴</XSceneChangesImported>
+    <PluginXExecuted>'{0}' 플러그인이 실행됨.</PluginXExecuted>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>MATROSKA 파일 안에 있는 자막 선택하기</Title>
     <PleaseChoose>한개 이상의 자막 발견! - 자막을 선택하십시오!</PleaseChoose>
     <TrackXLanguageYTypeZ>트랙 {0} - {1} - 언어: {2} - 종류: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MeasurementConverter>
+    <Title>치수 변환기</Title>
+    <ConvertFrom>변환 대상</ConvertFrom>
+    <ConvertTo>변환 결과</ConvertTo>
+    <CopyToClipboard>클립보드에 복사</CopyToClipboard>
+    <Celsius>섭씨</Celsius>
+    <Fahrenheit>화씨</Fahrenheit>
+    <Miles>마일</Miles>
+    <Kilometers>킬로미터</Kilometers>
+    <Meters>미터</Meters>
+    <Yards>야드</Yards>
+    <Feet>피트</Feet>
+    <Inches>인치</Inches>
+    <Pounds>파운드</Pounds>
+    <Kilos>킬로</Kilos>
+  </MeasurementConverter>
+  <MergeDoubleLines>
+    <Title>동일한 텍스트 라인 병합</Title>
+  </MergeDoubleLines>
   <MergedShortLines>
     <Title># 짧은 줄 병합 (다음 조건 이하인 두개의 자막 합치기 - 병합된 자막 줄을 클릭하면 원본 자막 줄로 이동함)</Title>
     <MaximumCharacters>다음 문자수 이하로 병합</MaximumCharacters>
@@ -1071,6 +1205,22 @@
     <MergedText>병합된 텍스트</MergedText>
     <OnlyMergeContinuationLines>연속한 줄만 병합</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <ModifySelection>
+    <Title>선택 바꾸기</Title>
+    <Rule>규칙</Rule>
+    <CaseSensitive>대/소문자 구분</CaseSensitive>
+    <DoWithMatches>일치 방법</DoWithMatches>
+    <MakeNewSelection>새로운 선택</MakeNewSelection>
+    <AddToCurrentSelection>현재 선택에 추가</AddToCurrentSelection>
+    <SubtractFromCurrentSelection>현재 선택에서 빼기</SubtractFromCurrentSelection>
+    <IntersectWithCurrentSelection>현재 선택과 교차</IntersectWithCurrentSelection>
+    <MatchingLinesX>일치하는 줄: {0}</MatchingLinesX>
+    <Contains>포함</Contains>
+    <StartsWith>로 시작</StartsWith>
+    <EndsWith>로 끝남</EndsWith>
+    <NoContains>포함하지 않음</NoContains>
+    <RegEx>정규 표현식</RegEx>
+  </ModifySelection>
   <MultipleReplace>
     <Title># 다중 바꾸기</Title>
     <FindWhat>찾을 내용:</FindWhat>
@@ -1089,14 +1239,14 @@
     <Export>내보내기...</Export>
     <ImportRulesTitle>바꾸기 규칙 가져오기...</ImportRulesTitle>
     <ExportRulesTitle>바꾸기 규칙 내보내기...</ExportRulesTitle>
-    <Rules>내보내기 규칙</Rules>
+    <Rules>규칙</Rules>
   </MultipleReplace>
   <NetworkChat>
     <Title>채팅</Title>
     <Send>전송</Send>
   </NetworkChat>
   <NetworkJoin>
-    <Title>네트워크 -  기존 세션 참여</Title>
+    <Title>네트워크 - 기존 세션 참여</Title>
     <Information>
       기존 세션에 참여하면 같은 자막 파일을 여러 사람들이 협력해서
       편집할 수 있습니다.
@@ -1116,6 +1266,14 @@
     </Information>
     <Start>시작</Start>
   </NetworkStart>
+  <OpenVideoDvd>
+    <Title>VLC로 DVD 열기</Title>
+    <OpenDvdFrom>DVD 열기...</OpenDvdFrom>
+    <Disc>디스크</Disc>
+    <Folder>폴더</Folder>
+    <ChooseDrive>드라이브 선택</ChooseDrive>
+    <ChooseFolder>폴더 선택</ChooseFolder>
+  </OpenVideoDvd>
   <PluginsGet>
     <Title>플러그 인</Title>
     <InstalledPlugins>설치된 플러그인</InstalledPlugins>
@@ -1184,10 +1342,12 @@
     <PreviewLinesModifiedX>미리 보기 - 수정할 라인: {0}개</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>수정할 자막만 보기</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>다음 시간 미만인 자막 간격을 다음 시간으로.. (단위: 밀리초)</MinimumMillisecondsBetweenParagraphs>
+    <FrameInfo>프레임 속도 정보</FrameInfo>
+    <OneFrameXisYMilliseconds>{0:0.00} fps에서 하나의 프레임은 {1} 밀리초입니다.</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
-    <Title>라인 "{0}"의 지점 동기화</Title>
-    <SyncPointTimeCode># 동기화 지점 (시간 코드)</SyncPointTimeCode>
+    <Title>{0} 라인에 대한 지점 동기화 설정</Title>
+    <SyncPointTimeCode># 동기화 지점 (타임 코드)</SyncPointTimeCode>
     <ThreeSecondsBack>&lt;&lt; 3초</ThreeSecondsBack>
     <HalfASecondBack>&lt;&lt; ½초</HalfASecondBack>
     <HalfASecondForward>½초 &gt;&gt;</HalfASecondForward>
@@ -1221,8 +1381,8 @@
     <SubtitleLineMaximumLength>줄당 최대 문자수</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>초당 최대 문자수</MaximumCharactersPerSecond>
     <AutoWrapWhileTyping>타이핑시 자동 줄바꿈</AutoWrapWhileTyping>
-    <DurationMinimumMilliseconds>최소 표시 시간 (밀리초)</DurationMinimumMilliseconds>
-    <DurationMaximumMilliseconds>최대 표시 시간 (밀리초)</DurationMaximumMilliseconds>
+    <DurationMinimumMilliseconds>최소 표시시간 (밀리초)</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>최대 표시시간 (밀리초)</DurationMaximumMilliseconds>
     <SubtitleFont>자막 글꼴</SubtitleFont>
     <SubtitleFontSize>글자 크기</SubtitleFontSize>
     <SubtitleBold>굵게</SubtitleBold>
@@ -1252,14 +1412,14 @@
     <AutoBackupEveryFifteenMinutes>15 분마다</AutoBackupEveryFifteenMinutes>
     <AllowEditOfOriginalSubtitle>원본 자막의 편집 허용</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>삭제 라인 알림</PromptDeleteLines>
-    <TimeCodeMode>시간 코드 모드</TimeCodeMode>
+    <TimeCodeMode>타임 코드 모드</TimeCodeMode>
     <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msek (00:00:01.500)</TimeCodeModeHHMMSSMsec>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
-    <VideoEngine>비디오 엔진</VideoEngine>
-    <DirectShow>DirectShow</DirectShow>
+    <VideoEngine>비디오 장치</VideoEngine>
+    <DirectShow>다이렉트쇼</DirectShow>
     <DirectShowDescription>system32\quartz.dll</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  DirectX의 .NET Managed 코드</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - DirectX의 .NET Managed 코드</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC 미디어 플레이어</VlcMediaPlayer>
@@ -1267,15 +1427,16 @@
     <ShowStopButton>정지 버튼 표시</ShowStopButton>
     <ShowMuteButton>음소거 버튼 표시</ShowMuteButton>
     <ShowFullscreenButton>전체 화면 단추 표시</ShowFullscreenButton>
-    <DefaultVolume>현재 볼륨:</DefaultVolume>
-    <VolumeNotes>볼륨 간격: 0 - 100</VolumeNotes>
     <PreviewFontSize>미리 보기의 글자 크기:</PreviewFontSize>
     <MainWindowVideoControls>메인 창의 비디오 컨트롤</MainWindowVideoControls>
     <CustomSearchTextAndUrl>사용자 지정 검색 서비스 / URL</CustomSearchTextAndUrl>
-    <WaveFormAppearance>파형의 모양</WaveFormAppearance>
+    <WaveFormAppearance>파형 스타일</WaveFormAppearance>
     <WaveFormGridColor>눈금 색</WaveFormGridColor>
     <WaveFormShowGridLines>눈금선 표시</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>마우스 휠의 스크롤 방향 반전</ReverseMouseWheelScrollDirection>
+    <WaveFormAllowOverlap>중복 허용 (이동 및 크기 조정시)</WaveFormAllowOverlap>
+    <WaveformBorderHitMs1>최대 테두리 표시시간</WaveformBorderHitMs1>
+    <WaveformBorderHitMs2>밀리초</WaveformBorderHitMs2>
     <WaveFormColor>색상</WaveFormColor>
     <WaveFormSelectedColor>선택된 색상</WaveFormSelectedColor>
     <WaveFormBackgroundColor>배경 색상</WaveFormBackgroundColor>
@@ -1287,10 +1448,15 @@
     <SpectrogramAppearance>스펙트로그램의 모양</SpectrogramAppearance>
     <SpectrogramOneColorGradient>단색 그라데이션</SpectrogramOneColorGradient>
     <SpectrogramClassic>클래식</SpectrogramClassic>
+    <WaveformUseFFMPEG>파형 추출을 위해 FFMPEG 사용</WaveformUseFFMPEG>
+    <WaveformFFMPEGPath>- FFMPEG 경로</WaveformFFMPEGPath>
+    <WaveformBrowseToFFMPEG>FFMPEG 찾아보기</WaveformBrowseToFFMPEG>
     <SubStationAlphaStyle>Sub Station Alpha 스타일</SubStationAlphaStyle>
     <ChooseFont>글꼴 선택</ChooseFont>
     <ChooseColor>색상 선택</ChooseColor>
-    <Example>예</Example>
+    <SsaOutline>윤곽선</SsaOutline>
+    <SsaShadow>그림자</SsaShadow>
+    <SsaOpaqueBox>불투명 상자</SsaOpaqueBox>
     <Testing123>테스트: 123 ABC ...</Testing123>
     <Language>언어</Language>
     <NamesIgnoreLists>이름/기타 목록 (대소문자 구분)</NamesIgnoreLists>
@@ -1322,7 +1488,7 @@
     <MergeLinesShorterThan>다음보다 짧은 줄 병합</MergeLinesShorterThan>
     <MusicSymbol>음표</MusicSymbol>
     <MusicSymbolsToReplace>대체 음표 (공백으로 구분)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>고정된 규칙을 사용해 흔히 있는 OCR 오류를 해결함.</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonOcrErrorsUseHardcodedRules>고정된 규칙을 사용해 흔히 있는 OCR 오류 해결</FixCommonOcrErrorsUseHardcodedRules>
     <Shortcuts>단축키</Shortcuts>
     <Shortcut>단축키</Shortcut>
     <Control>Ctrl</Control>
@@ -1335,26 +1501,31 @@
     <ToggleDockUndockOfVideoControls>비디오 컨트롤 연결 | 해제</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>종료 지점과 새로 추가할 지점을 정하고 새 지점으로 이동</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>종료 지점 정하고 다음 지점으로 이동</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetStartAutoDurationAndGoToNext>시작 지점과 표시 시간을 정하고 다음 지점으로 이동</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>시작 지점과 표시시간을 정하고 다음 지점으로 이동</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>종료 지점과 다음 시작 지점을 정하고 다음 지점으로 이동</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>다운 키=시작 지점 설정, 업 키=종료 지점 정하고 다음으로</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>선택한 줄을 100밀리초 앞으로 이동</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>선택한 줄을 100밀리초 뒤로 이동</AdjustSelected100MsBack>
-    <AdjustSetStartTimeOnly>종료 시간 유지하고 시작 시간을 정함</AdjustSetStartTimeOnly>
+    <AdjustSetStartTimeKeepDuration>시작 시간 설정, 간격 유지</AdjustSetStartTimeKeepDuration>
     <MainCreateStartDownEndUp>다운 키로 새로 만들기, 업 키로 종료 시간 설정</MainCreateStartDownEndUp>
     <MergeDialogue>대화 병합 (대시 삽입)</MergeDialogue>
     <GoToNext>다음 줄로 이동</GoToNext>
     <GoToPrevious>이전 줄로 이동</GoToPrevious>
+    <GoToCurrentSubtitleStart>현재 줄의 시작 지점으로 이동</GoToCurrentSubtitleStart>
+    <GoToCurrentSubtitleEnd>현재 줄의 끝 지점으로 이동</GoToCurrentSubtitleEnd>
     <ToggleFocus>자막 보기와 자막 텍스트 상자 간에 포커스를 전환</ToggleFocus>
     <ToggleDialogueDashes>대화의 대시('-') 전환</ToggleDialogueDashes>
     <Alignment>정렬 (선택한 줄)</Alignment>
     <CopyTextOnly>클립 보드에 텍스트 복사 (선택한 줄)</CopyTextOnly>
-    <AutoDurationSelectedLines>자동 표시 시간 (선택한 줄)</AutoDurationSelectedLines>
+    <AutoDurationSelectedLines>자동 표시시간 (선택한 줄)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>줄의 좌우 처음/끝 문자를 반대로</ReverseStartAndEndingForRTL>
-    <VerticalZoom>세로 확대/축소</VerticalZoom>
+    <VerticalZoom>세로 확대</VerticalZoom>
+    <VerticalZoomOut>세로 축소</VerticalZoomOut>
     <WaveformSeekSilenceForward>이후 무음 탐색</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>이전 무음 탐색</WaveformSeekSilenceBack>
-    <WaveformAddTextHere>여기에 텍스트 추가 (새로운 선택을 위해)</WaveformAddTextHere>
+    <WaveformAddTextHere>여기에 텍스트 추가 (새로운 선택용)</WaveformAddTextHere>
+    <WaveformPlayNewSelection>새로운 자막 재생</WaveformPlayNewSelection>
+    <WaveformPlayFirstSelectedSubtitle>처음 선택한 자막 재생</WaveformPlayFirstSelectedSubtitle>
     <GoBack100Milliseconds>0.1초 뒤로</GoBack100Milliseconds>
     <GoForward100Milliseconds>0.1초 앞으로</GoForward100Milliseconds>
     <GoBack500Milliseconds>0.5초 뒤로</GoBack500Milliseconds>
@@ -1370,11 +1541,11 @@
     <CustomSearch6>번역, 사용자 지정 검색 6</CustomSearch6>
     <SyntaxColoring>구문 컬러링</SyntaxColoring>
     <ListViewSyntaxColoring># 자막 편집시 컬러링 규칙</ListViewSyntaxColoring>
-    <SyntaxColorDurationIfTooSmall>너무 짧은 표시 시간</SyntaxColorDurationIfTooSmall>
-    <SyntaxColorDurationIfTooLarge>너무 긴 표시 시간</SyntaxColorDurationIfTooLarge>
+    <SyntaxColorDurationIfTooSmall>너무 짧은 표시시간</SyntaxColorDurationIfTooSmall>
+    <SyntaxColorDurationIfTooLarge>너무 긴 표시시간</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>줄 당 문자수를 초과할 때</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>다음 줄 수보다 문자가 더 많을 때:</SyntaxColorTextMoreThanXLines>
-    <SyntaxColorOverlap>표시 시간이 중복될 때</SyntaxColorOverlap>
+    <SyntaxColorTextMoreThanXLines>다음 줄 수 보다 문자가 더 많을 때:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorOverlap>표시시간이 중복될 때</SyntaxColorOverlap>
     <SyntaxErrorColor>오류색 선택</SyntaxErrorColor>
     <GoToFirstSelectedLine>첫번째 선택한 줄로 이동</GoToFirstSelectedLine>
     <MergeSelectedLines>선택한 줄 병합</MergeSelectedLines>
@@ -1386,7 +1557,11 @@
     <ListViewColumnDelete>열, 텍스트 삭제</ListViewColumnDelete>
     <ListViewColumnInsert>열, 텍스트 삽입</ListViewColumnInsert>
     <ListViewColumnPaste>열, 붙여 넣기</ListViewColumnPaste>
-    <ShowBeamer>프로젝터 시작 (풀화면 자막)</ShowBeamer>
+    <ShowBeamer>전체 화면으로 자막 프로젝터 시작</ShowBeamer>
+    <MainTextBoxMoveLastWordDown>마지막 단어를 아래로 이동</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>다음 줄의 첫 단어를 위로 이동</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxAutoBreak>자동 줄바꿈</MainTextBoxAutoBreak>
+    <MainTextBoxUnbreak>줄바꿈 제거</MainTextBoxUnbreak>
   </Settings>
   <ShowEarlierLater>
     <Title>선택한 줄 빠르게/느리게</Title>
@@ -1428,6 +1603,8 @@
     <EditWordOnly>단어만 수정</EditWordOnly>
     <AddXToNamesEtc>이름/기타 목록에 '{0}' 추가</AddXToNamesEtc>
     <AutoFixNames>자동으로 이름의 대소문자 수정</AutoFixNames>
+    <CheckOneLetterWords>알 수 없는 홑문자 단어 알림</CheckOneLetterWords>
+    <TreatINQuoteAsING>단어 끝의 "in"->"ing"로 바꿈 (영어 전용)</TreatINQuoteAsING>
     <ImageText>이미지 텍스트</ImageText>
     <SpellCheckCompleted>맞춤법 검사 완료!</SpellCheckCompleted>
     <SpellCheckAborted>맞춤법 검사 중지!</SpellCheckAborted>
@@ -1468,7 +1645,7 @@
     <Part1>Part1</Part1>
     <Part2>Part2</Part2>
     <UnableToSaveFileX>{0}을 저장할 수 없습니다!</UnableToSaveFileX>
-    <OverwriteExistingFiles>기존 파일에 덮어쓰기 하시겠습니까?</OverwriteExistingFiles>
+    <OverwriteExistingFiles>기존 파일에 덮어쓰시겠습니까?</OverwriteExistingFiles>
     <FolderNotFoundX>폴더를 찾을 수 없음: {0}</FolderNotFoundX>
     <Untitled>제목 없음</Untitled>
   </SplitSubtitle>
@@ -1501,9 +1678,9 @@
     <SingleLineLengthMinimum>한 줄의 길이 - 최소: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>한 줄의 길이 - 최대: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAvarage>한 줄의 길이 - 평균: {0}</SingleLineLengthAvarage>
-    <DurationMinimum>표시 시간 - 최소: {0:0.000}초</DurationMinimum>
-    <DurationMaximum>표시 시간 - 최대: {0:0.000}초</DurationMaximum>
-    <DurationAvarage>표시 시간 - 평균: {0:0.000}초</DurationAvarage>
+    <DurationMinimum>표시시간 - 최소: {0:0.000}초</DurationMinimum>
+    <DurationMaximum>표시시간 - 최대: {0:0.000}초</DurationMaximum>
+    <DurationAvarage>표시시간 - 평균: {0:0.000}초</DurationAvarage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha 속성</Title>
@@ -1559,6 +1736,7 @@
     <PlusShadow>+ 그림자</PlusShadow>
     <OpaqueBox>불투명 상자 (테두리 색상 사용)</OpaqueBox>
     <Import>가져오기...</Import>
+    <Export>내보내기...</Export>
     <Copy>복사</Copy>
     <CopyOfY>{0} 복사</CopyOfY>
     <CopyXOfY>{0}의 {1} 복사</CopyXOfY>
@@ -1566,7 +1744,11 @@
     <Remove>제거</Remove>
     <RemoveAll>모두 제거</RemoveAll>
     <ImportStyleFromFile>파일에서 스타일 가져오기...</ImportStyleFromFile>
-    <ChooseStyle>스타일 선택</ChooseStyle>
+    <ExportStyleToFile>스타일 파일로 내보내기... (파일이 존재하면 스타일 추가)</ExportStyleToFile>
+    <ChooseStyle>가져올 스타일 선택</ChooseStyle>
+    <StyleAlreadyExits>이미 존재하는 스타일: {0}</StyleAlreadyExits>
+    <StyleXExportedToFileY>'{0}'스타일을 '{1}'파일로 내보냈습니다.</StyleXExportedToFileY>
+    <StyleXImportedFromFileY>'{0}'스타일을 '{1}'파일에서 가져왔습니다.</StyleXImportedFromFileY>
   </SubStationAlphaStyles>
   <PointSync>
     <Title># 지점 동기화</Title>
@@ -1579,7 +1761,7 @@
     <ApplySync>동기화 적용</ApplySync>
   </PointSync>
   <UnknownSubtitle>
-    <Title># 알 수 없는 자막 형식 #</Title>
+    <Title># 알 수 없는 자막 형식</Title>
     <Message>
       이 문제를 해결하려면 mailto:niksedk@gmail.com (으)로
       자막 사본을 보내 주십시오!
@@ -1620,16 +1802,20 @@
     <OcrMethod>OCR 방식</OcrMethod>
     <OcrViaModi>MS Office 문서 이미징 (MODI)에 의한 OCR...(MS Office 필요함)</OcrViaModi>
     <OcrViaTesseract>TESSERACT 프로그램에 의한 OCR...</OcrViaTesseract>
+    <OcrViaNOCR>NOCR에 의한 OCR</OcrViaNOCR>
     <Language>언어</Language>
     <OcrViaImageCompare>이미지 비교에 의한 OCR...</OcrViaImageCompare>
     <ImageDatabase>이미지 데이터베이스</ImageDatabase>
     <NoOfPixelsIsSpace>공간 픽셀</NoOfPixelsIsSpace>
+    <MaxErrorPercent>최대. 오류 %</MaxErrorPercent>
     <New>신규</New>
     <Edit>편집</Edit>
     <StartOcr>OCR 시작</StartOcr>
     <Stop>OCR 중지</Stop>
     <StartOcrFrom>OCR 시작 번호:</StartOcrFrom>
     <LoadingVobSubImages>VobSub 이미지를 불러오는 중...</LoadingVobSubImages>
+    <LoadingImageCompareDatabase>이미지 데이터베이스 불러오기...</LoadingImageCompareDatabase>
+    <ConvertingImageCompareDatabase>이미지 데이터베이스를 새 형식으로 변환... (images.db/images.xml)</ConvertingImageCompareDatabase>
     <SubtitleImage>이미지 자막</SubtitleImage>
     <SubtitleText>자막 텍스트</SubtitleText>
     <UnableToCreateCharacterDatabaseFolder>문자 데이터베이스 폴더를 만들 수 없습니다: {0}</UnableToCreateCharacterDatabaseFolder>
@@ -1645,7 +1831,7 @@
     <UnknownWords>알 수 없는 단어</UnknownWords>
     <OcrAutoCorrectionSpellchecking>OCR 자동 맞춤법 검사</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>OCR 오류 수정</FixOcrErrors>
-    <ImportTextWithMatchingTimeCodes>시간 코드가 일치하는 텍스트 가져오기</ImportTextWithMatchingTimeCodes>
+    <ImportTextWithMatchingTimeCodes>타임 코드가 일치하는 텍스트 가져오기</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>다른 이름으로 이미지 자막 저장...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>모든 이미지(png/bdn xml) 저장...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>HTML 인덱스를 사용하여 모든 이미지 저장...</SaveAllSubtitleImagesWithHtml>
@@ -1693,6 +1879,7 @@
     <ZoomOut>축소</ZoomOut>
     <AddParagraphHere>여기에 텍스트 추가</AddParagraphHere>
     <AddParagraphHereAndPasteText>여기에 클립보드로부터 텍스트 추가</AddParagraphHereAndPasteText>
+    <FocusTextBox>텍스트 상자에 초점</FocusTextBox>
     <DeleteParagraph>텍스트 삭제</DeleteParagraph>
     <Split>분할</Split>
     <SplitAtCursor>커서 위치에서 분할</SplitAtCursor>
@@ -1702,11 +1889,11 @@
     <ShowWaveformAndSpectrogram>파형 및 스펙트로그램 표시</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>파형만 표시</ShowWaveformOnly>
     <ShowSpectrogramOnly>스펙트로그램만 표시</ShowSpectrogramOnly>
-    <GuessTimeCodes>시간 코드 추측...</GuessTimeCodes>
+    <GuessTimeCodes>타임 코드 추측...</GuessTimeCodes>
     <SeekSilence>무음 탐색...</SeekSilence>
   </WaveForm>
   <WaveFormGenerateTimeCodes>
-    <Title>시간 코드 추측</Title>
+    <Title>타임 코드 추측</Title>
     <StartFrom>시작 위치</StartFrom>
     <CurrentVideoPosition>현재 비디오 위치</CurrentVideoPosition>
     <Beginning>처음</Beginning>
@@ -1722,4 +1909,8 @@
     <SplitLongLinesAt2>밀리초</SplitLongLinesAt2>
     <Other>기타</Other>
   </WaveFormGenerateTimeCodes>
+  <WebVttNewVoice>
+    <Title>WebVTT - 새로운 음성 설정</Title>
+    <VoiceName>음성 이름</VoiceName>
+  </WebVttNewVoice>
 </Language>
