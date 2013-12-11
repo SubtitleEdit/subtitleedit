@@ -1543,6 +1543,10 @@ namespace Nikse.SubtitleEdit.Forms
             multipleReplaceToolStripMenuItem.Text = _language.Menu.Edit.MultipleReplace;
             gotoLineNumberToolStripMenuItem.Text = _language.Menu.Edit.GoToSubtitleNumber;
             toolStripMenuItemRightToLeftMode.Text = _language.Menu.Edit.RightToLeftMode;
+
+            if (!string.IsNullOrEmpty(_language.Menu.Edit.FixTrlViaUnicodeControlCharacters)) // TODO: Fix in 3.4
+                toolStripMenuItemRtlUnicodeControlChars.Text = _language.Menu.Edit.FixTrlViaUnicodeControlCharacters;
+
             toolStripMenuItemReverseRightToLeftStartEnd.Text = _language.Menu.Edit.ReverseRightToLeftStartEnd;
             if (!string.IsNullOrEmpty(_language.Menu.Edit.ModifySelection))
                 toolStripMenuItemModifySelection.Text = _language.Menu.Edit.ModifySelection;
@@ -11641,6 +11645,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void EditToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
+            toolStripMenuItemRtlUnicodeControlChars.Visible = IsUnicode;
             if (!IsUnicode || _subtitleListViewIndex == -1)
             {
                 toolStripMenuItemInsertUnicodeCharacter.Visible = false;
@@ -18275,7 +18280,10 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         ShowStatus(string.Empty);
-                        MessageBox.Show("Not a valid xsub file!");
+                        if (!string.IsNullOrEmpty(_language.NotAValidXSubFile))
+                            MessageBox.Show(_language.NotAValidXSubFile);
+                        else
+                            MessageBox.Show("Not a valid xsub file!");
                     }
                 }
             }
@@ -18423,11 +18431,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             int index = _subtitle.GetIndex(audioVisualizer.RightClickedParagraph);
             if (index >= 0)
-            {
                 SubtitleListview1.SelectIndexAndEnsureVisible(index);
-                textBoxListViewText.Focus();
-                textBoxListViewText.SelectAll();
-            }
+            textBoxListViewText.Focus();
+            textBoxListViewText.SelectAll();
         }
 
         private void AscendingToolStripMenuItem_Click(object sender, EventArgs e)
