@@ -695,6 +695,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>&amp;Multi-erstat...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Gå til undertekst nummer...</GoToSubtitleNumber>
         <RightToLeftMode>Højre-mod-venstre mode</RightToLeftMode>
+        <FixTrlViaUnicodeControlCharacters>Fix RTL via Unicode kontrol tegn</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Byt rundt på højre-mod-venstre start/slut</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Vis oprindelig tekst i audio/video previews</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modificer markering...</ModifySelection>
@@ -1160,6 +1161,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <StatusLog>Status beskeder</StatusLog>
     <XSceneChangesImported>{0} sceneskift importeret</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' afviklet</PluginXExecuted>
+    <NotAValidXSubFile>Ikke en valid xsub fil!</NotAValidXSubFile>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>

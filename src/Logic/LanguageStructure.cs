@@ -956,6 +956,7 @@
             public string StatusLog { get; set; }
             public string XSceneChangesImported { get; set; }
             public string PluginXExecuted { get; set; }
+            public string NotAValidXSubFile { get; set; }
 
             public class MainMenu
             {
@@ -1018,6 +1019,7 @@
                     public string MultipleReplace { get; set; }
                     public string GoToSubtitleNumber { get; set; }
                     public string RightToLeftMode { get; set; }
+                    public string FixTrlViaUnicodeControlCharacters { get; set; }
                     public string ReverseRightToLeftStartEnd { get; set; }
                     public string ShowOriginalTextInAudioAndVideoPreview { get; set; }
                     public string ModifySelection { get; set; }
