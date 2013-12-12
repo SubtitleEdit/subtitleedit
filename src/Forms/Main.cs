@@ -113,10 +113,14 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _toggleVideoDockUndock = Keys.None;
         Keys _videoPause = Keys.None;
         Keys _videoPlayPauseToggle = Keys.None;
+        Keys _video1FrameLeft = Keys.None;
+        Keys _video1FrameRight = Keys.None;
         Keys _video100MsLeft = Keys.None;
         Keys _video100MsRight = Keys.None;
         Keys _video500MsLeft = Keys.None;
         Keys _video500MsRight = Keys.None;
+        Keys _video1000MsLeft = Keys.None;
+        Keys _video1000MsRight = Keys.None;
         Keys _mainVideoFullscreen = Keys.None;
         Keys _mainTextBoxSplitAtCursor = Keys.None;
         Keys _mainTextBoxMoveLastWordDown = Keys.None;
@@ -10506,73 +10510,45 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     UndockVideoControlsToolStripMenuItemClick(null, null);
             }
+            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video1FrameLeft)
+            {
+                MoveVideoSeconds(-1.0 / Configuration.Settings.General.CurrentFrameRate);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video1FrameRight)
+            {
+                MoveVideoSeconds(1.0 / Configuration.Settings.General.CurrentFrameRate);
+                e.SuppressKeyPress = true;
+            }
             else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video100MsLeft)
             {
-                if (mediaPlayer.IsPaused && Configuration.Settings.General.MoveVideo100Or500MsPlaySmallSample)
-                {
-                    double p = mediaPlayer.CurrentPosition - 0.1;
-                    mediaPlayer.CurrentPosition = p;
-                    mediaPlayer.Play();
-                    System.Threading.Thread.Sleep(99);
-                    mediaPlayer.Stop();
-                    mediaPlayer.CurrentPosition = p;
-                }
-                else
-                {
-                    mediaPlayer.CurrentPosition -= 0.1;
-                }
+                MoveVideoSeconds(-0.1);
                 e.SuppressKeyPress = true;
             }
             else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video100MsRight)
             {
-                if (mediaPlayer.IsPaused && Configuration.Settings.General.MoveVideo100Or500MsPlaySmallSample)
-                {
-                    double p = mediaPlayer.CurrentPosition + 0.1;
-                    mediaPlayer.CurrentPosition = p;
-                    mediaPlayer.Play();
-                    System.Threading.Thread.Sleep(99);
-                    mediaPlayer.Stop();
-                    mediaPlayer.CurrentPosition = p;
-                }
-                else
-                {
-                    mediaPlayer.CurrentPosition += 0.1;
-                }
+                MoveVideoSeconds(0.1);
                 e.SuppressKeyPress = true;
             }
             else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video500MsLeft)
             {
-                if (mediaPlayer.IsPaused && Configuration.Settings.General.MoveVideo100Or500MsPlaySmallSample)
-                {
-                    double p = mediaPlayer.CurrentPosition - 0.5;
-                    mediaPlayer.CurrentPosition = p;
-                    mediaPlayer.Play();
-                    System.Threading.Thread.Sleep(99);
-                    mediaPlayer.Stop();
-                    mediaPlayer.CurrentPosition = p;
-                }
-                else
-                {
-                    mediaPlayer.CurrentPosition -= 0.5;
-                }
+                MoveVideoSeconds(-0.5);
                 e.SuppressKeyPress = true;
-
             }
             else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video500MsRight)
             {
-                if (mediaPlayer.IsPaused && Configuration.Settings.General.MoveVideo100Or500MsPlaySmallSample)
-                {
-                    double p = mediaPlayer.CurrentPosition + 0.5;
-                    mediaPlayer.CurrentPosition = p;
-                    mediaPlayer.Play();
-                    System.Threading.Thread.Sleep(99);
-                    mediaPlayer.Stop();
-                    mediaPlayer.CurrentPosition = p;
-                }
-                else
-                {
-                    mediaPlayer.CurrentPosition += 0.5;
-                }
+                MoveVideoSeconds(0.5);
+                e.SuppressKeyPress = true;
+            }
+
+            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video1000MsLeft)
+            {
+                MoveVideoSeconds(-1.0);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video1000MsRight)
+            {
+                MoveVideoSeconds(1.0);
                 e.SuppressKeyPress = true;
             }
             else if (_mainToolsBeamer == e.KeyData)
@@ -10806,7 +10782,22 @@ namespace Nikse.SubtitleEdit.Forms
             // put new entries above tabs
         }
 
-
+        private void MoveVideoSeconds(double seconds)
+        {
+            if (mediaPlayer.IsPaused && Configuration.Settings.General.MoveVideo100Or500MsPlaySmallSample)
+            {
+                double p = mediaPlayer.CurrentPosition + seconds;
+                mediaPlayer.CurrentPosition = p;
+                mediaPlayer.Play();
+                System.Threading.Thread.Sleep(99);
+                mediaPlayer.Stop();
+                mediaPlayer.CurrentPosition = p;
+            }
+            else
+            {
+                mediaPlayer.CurrentPosition += seconds;
+            }
+        }
 
         private void RunCustomSearch(string url)
         {
@@ -13848,10 +13839,14 @@ namespace Nikse.SubtitleEdit.Forms
             _toggleVideoDockUndock = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             _videoPause = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);
             _videoPlayPauseToggle = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle);
+            _video1FrameLeft = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameLeft);
+            _video1FrameRight = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameRight);
             _video100MsLeft = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo100MsLeft);
             _video100MsRight = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo100MsRight);
             _video500MsLeft  = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo500MsLeft);
             _video500MsRight = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo500MsRight);
+            _video1000MsLeft = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsLeft);
+            _video1000MsRight = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsRight);
             _mainVideoFullscreen = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
 
             spellCheckToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);

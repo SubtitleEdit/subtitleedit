@@ -587,10 +587,18 @@ namespace Nikse.SubtitleEdit.Forms
             videoNode.Nodes.Add(Configuration.Settings.Language.Settings.Pause + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoPause));
             videoNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Video.ShowHideVideo + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoShowHideVideo));
             videoNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDockUndockOfVideoControls + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoBack1Frame))
+                videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoBack1Frame + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo1FrameLeft));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoForward1Frame))
+                videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoForward1Frame + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo1FrameRight));
             videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoBack100Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo100MsLeft));
             videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoForward100Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo100MsRight));
             videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoBack500Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo500MsLeft));
             videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoForward500Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo500MsRight));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoBack1Second))
+                videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoBack1Second + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo1000MsLeft));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoForward1Second))
+                videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoForward1Second + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo1000MsRight));
             videoNode.Nodes.Add(Configuration.Settings.Language.Settings.Fullscreen + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoFullscreen));
             treeViewShortcuts.Nodes.Add(videoNode);
 
@@ -1189,6 +1197,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainVideoShowHideVideo = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.ToggleDockUndockOfVideoControls.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideoToggleVideoControls = GetShortcut(node.Text);
+                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoBack1Frame) && text == Configuration.Settings.Language.Settings.GoBack1Frame.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainVideo1FrameLeft = GetShortcut(node.Text);
+                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoForward1Frame) && text == Configuration.Settings.Language.Settings.GoForward1Frame.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainVideo1FrameRight= GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.GoBack100Milliseconds.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideo100MsLeft = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.GoForward100Milliseconds.Replace("&", string.Empty))
@@ -1197,6 +1209,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainVideo500MsLeft = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.GoForward500Milliseconds.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideo500MsRight = GetShortcut(node.Text);
+                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoBack1Second) && text == Configuration.Settings.Language.Settings.GoBack1Second.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainVideo1000MsLeft = GetShortcut(node.Text);
+                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoForward1Second) && text == Configuration.Settings.Language.Settings.GoForward1Second.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainVideo1000MsRight = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.Fullscreen.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideoFullscreen = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.Pause.Replace("&", string.Empty))
