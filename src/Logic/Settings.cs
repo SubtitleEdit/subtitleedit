@@ -722,10 +722,14 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainVideoPlayPauseToggle { get; set; }
         public string MainVideoShowHideVideo { get; set; }
         public string MainVideoToggleVideoControls { get; set; }
+        public string MainVideo1FrameLeft { get; set; }
+        public string MainVideo1FrameRight { get; set; }
         public string MainVideo100MsLeft { get; set; }
         public string MainVideo100MsRight { get; set; }
         public string MainVideo500MsLeft { get; set; }
         public string MainVideo500MsRight { get; set; }
+        public string MainVideo1000MsLeft { get; set; }
+        public string MainVideo1000MsRight { get; set; }
         public string MainVideoFullscreen { get; set; }
         public string MainSpellCheck { get; set; }
         public string MainSpellCheckFindDoubleWords { get; set; }
@@ -819,10 +823,14 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideoPlayPauseToggle = "Control+P";
             MainVideoPause = "Control+Alt+P";
             MainVideoShowHideVideo = "Control+Q";
+            MainVideo1FrameLeft = string.Empty;
+            MainVideo1FrameRight = string.Empty;
             MainVideo100MsLeft = string.Empty;
             MainVideo100MsRight = string.Empty;
             MainVideo500MsLeft = "Alt+Left";
             MainVideo500MsRight = "Alt+Right";
+            MainVideo1000MsLeft = string.Empty;
+            MainVideo1000MsRight = string.Empty;
             MainVideoFullscreen = "Alt+Return";
             MainSpellCheck = "Control+Shift+S";
             MainSpellCheckFindDoubleWords = "Control+Shift+D";
@@ -2052,6 +2060,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainVideoToggleVideoControls");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoToggleVideoControls = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideo1FrameLeft");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideo1FrameLeft = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideo1FrameRight");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideo1FrameRight = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainVideo100MsLeft");
                 if (subNode != null)
                     settings.Shortcuts.MainVideo100MsLeft = subNode.InnerText;
@@ -2064,6 +2078,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainVideo500MsRight");
                 if (subNode != null)
                     settings.Shortcuts.MainVideo500MsRight = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideo1000MsLeft");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideo1000MsLeft = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideo1000MsRight");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideo1000MsRight = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainVideoFullscreen");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoFullscreen = subNode.InnerText;
@@ -2695,10 +2715,14 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainVideoPlayPauseToggle", settings.Shortcuts.MainVideoPlayPauseToggle);
             textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);
             textWriter.WriteElementString("MainVideoToggleVideoControls", settings.Shortcuts.MainVideoToggleVideoControls);
+            textWriter.WriteElementString("MainVideo1FrameLeft", settings.Shortcuts.MainVideo1FrameLeft);
+            textWriter.WriteElementString("MainVideo1FrameRight", settings.Shortcuts.MainVideo1FrameRight);
             textWriter.WriteElementString("MainVideo100MsLeft", settings.Shortcuts.MainVideo100MsLeft);
             textWriter.WriteElementString("MainVideo100MsRight", settings.Shortcuts.MainVideo100MsRight);
             textWriter.WriteElementString("MainVideo500MsLeft", settings.Shortcuts.MainVideo500MsLeft);
             textWriter.WriteElementString("MainVideo500MsRight", settings.Shortcuts.MainVideo500MsRight);
+            textWriter.WriteElementString("MainVideo1000MsLeft", settings.Shortcuts.MainVideo1000MsLeft);
+            textWriter.WriteElementString("MainVideo1000MsRight", settings.Shortcuts.MainVideo1000MsRight);
             textWriter.WriteElementString("MainVideoFullscreen", settings.Shortcuts.MainVideoFullscreen);
             textWriter.WriteElementString("MainSpellCheck", settings.Shortcuts.MainSpellCheck);
             textWriter.WriteElementString("MainSpellCheckFindDoubleWords", settings.Shortcuts.MainSpellCheckFindDoubleWords);
