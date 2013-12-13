@@ -135,6 +135,7 @@
             this.toolStripMenuItemShowOriginalInPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemRightToLeftMode = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemRtlUnicodeControlChars = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemReverseRightToLeftStartEnd = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemModifySelection = new System.Windows.Forms.ToolStripMenuItem();
@@ -442,7 +443,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemRtlUnicodeControlChars = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportImages = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -866,6 +867,7 @@
             this.matroskaImportStripMenuItem,
             this.toolStripMenuItemManualAnsi,
             this.toolStripMenuItemImportText,
+            this.toolStripMenuItemImportImages,
             this.toolStripMenuItemImportTimeCodes,
             this.toolStripSeparator22,
             this.toolStripMenuItemExport,
@@ -1409,6 +1411,13 @@
             this.toolStripMenuItemRightToLeftMode.Size = new System.Drawing.Size(305, 22);
             this.toolStripMenuItemRightToLeftMode.Text = "Right to left mode";
             this.toolStripMenuItemRightToLeftMode.Click += new System.EventHandler(this.ToolStripMenuItemRightToLeftModeClick);
+            // 
+            // toolStripMenuItemRtlUnicodeControlChars
+            // 
+            this.toolStripMenuItemRtlUnicodeControlChars.Name = "toolStripMenuItemRtlUnicodeControlChars";
+            this.toolStripMenuItemRtlUnicodeControlChars.Size = new System.Drawing.Size(305, 22);
+            this.toolStripMenuItemRtlUnicodeControlChars.Text = "Fix RTL via Unicode tags";
+            this.toolStripMenuItemRtlUnicodeControlChars.Click += new System.EventHandler(this.toolStripMenuItemRtlUnicodeControlChar_Click);
             // 
             // toolStripMenuItemReverseRightToLeftStartEnd
             // 
@@ -4339,12 +4348,12 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // toolStripMenuItemRtlUnicodeControlChars
+            // toolStripMenuItemImportImages
             // 
-            this.toolStripMenuItemRtlUnicodeControlChars.Name = "toolStripMenuItemRtlUnicodeControlChars";
-            this.toolStripMenuItemRtlUnicodeControlChars.Size = new System.Drawing.Size(305, 22);
-            this.toolStripMenuItemRtlUnicodeControlChars.Text = "Fix RTL via Unicode tags";
-            this.toolStripMenuItemRtlUnicodeControlChars.Click += new System.EventHandler(this.toolStripMenuItemRtlUnicodeControlChar_Click);
+            this.toolStripMenuItemImportImages.Name = "toolStripMenuItemImportImages";
+            this.toolStripMenuItemImportImages.Size = new System.Drawing.Size(337, 22);
+            this.toolStripMenuItemImportImages.Text = "Import images...";
+            this.toolStripMenuItemImportImages.Click += new System.EventHandler(this.toolStripMenuItemImportImages_Click);
             // 
             // Main
             // 
@@ -4839,6 +4848,7 @@
         private System.Windows.Forms.ToolStripMenuItem startOfLefttorightOverrideLROToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startOfRighttoleftOverrideRLOToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRtlUnicodeControlChars;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportImages;
     }
 }
 

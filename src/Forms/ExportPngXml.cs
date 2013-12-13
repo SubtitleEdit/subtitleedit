@@ -2137,9 +2137,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             for (int i=0; i<1000; i++)
                 comboBoxBottomMargin.Items.Add(i);
-            comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBottomMargin;
-            if (exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME")
+            if (Configuration.Settings.Tools.ExportBottomMargin >= 0 && Configuration.Settings.Tools.ExportBottomMargin < comboBoxBottomMargin.Items.Count)
+                comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBottomMargin;
+
+            if (exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME" && Configuration.Settings.Tools.ExportBluRayBottomMargin >= 0 && Configuration.Settings.Tools.ExportBluRayBottomMargin < comboBoxBottomMargin.Items.Count)
                 comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBluRayBottomMargin;
+
             if (_exportType == "BLURAYSUP" || _exportType == "VOBSUB" || _exportType == "IMAGE/FRAME")
             {
                 comboBoxBottomMargin.Visible = true;

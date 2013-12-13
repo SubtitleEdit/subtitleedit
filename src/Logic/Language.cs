@@ -51,6 +51,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.GoogleTranslate GoogleTranslate;
         public LanguageStructure.GoogleOrMicrosoftTranslate GoogleOrMicrosoftTranslate;
         public LanguageStructure.GoToLine GoToLine;
+        public LanguageStructure.ImportImages ImportImages;
         public LanguageStructure.ImportSceneChanges ImportSceneChanges;
         public LanguageStructure.ImportText ImportText;
         public LanguageStructure.Interjections Interjections;
@@ -773,6 +774,14 @@ namespace Nikse.SubtitleEdit.Logic
                 XIsNotAValidNumber = "{0} is not a valid number",
             };
 
+            ImportImages = new LanguageStructure.ImportImages
+            {
+                Title = "Import images",
+                Input = "Input",
+                InputDescription = "Choose input files (browse or drag-n-drop)",
+                ImageFiles = "Image files",
+            };
+
             ImportSceneChanges = new LanguageStructure.ImportSceneChanges
             {
                 Title = "Import scene changes",
@@ -1097,6 +1106,7 @@ namespace Nikse.SubtitleEdit.Logic
                         ImportSubtitleFromMatroskaFile = "Import subtitle from Matroska file...",
                         ImportSubtitleWithManualChosenEncoding = "Import subtitle with manual chosen encoding...",
                         ImportText = "Import plain text...",
+                        ImportImages = "Import images...",
                         ImportTimecodes = "Import time codes...",
                         Export = "Export",
                         ExportBdnXml = "BDN xml/png...",

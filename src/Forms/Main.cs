@@ -1514,6 +1514,10 @@ namespace Nikse.SubtitleEdit.Forms
             matroskaImportStripMenuItem.Text = _language.Menu.File.ImportSubtitleFromMatroskaFile;
             toolStripMenuItemManualAnsi.Text = _language.Menu.File.ImportSubtitleWithManualChosenEncoding;
             toolStripMenuItemImportText.Text = _language.Menu.File.ImportText;
+            if (!string.IsNullOrEmpty(_language.Menu.File.ImportImages))
+                toolStripMenuItemImportImages.Text = _language.Menu.File.ImportImages;
+            else
+                toolStripMenuItemImportImages.Visible = false;
             toolStripMenuItemImportTimeCodes.Text = _language.Menu.File.ImportTimecodes;
             toolStripMenuItemExport.Text = _language.Menu.File.Export;
             toolStripMenuItemExportPngXml.Text = _language.Menu.File.ExportBdnXml;
@@ -18517,6 +18521,23 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.Text = p.Text;
             }
             RefreshSelectedParagraph();
+        }
+
+        private void toolStripMenuItemImportImages_Click(object sender, EventArgs e)
+        {
+            if (!ContinueNewOrExit())
+                return;
+
+            if (!string.IsNullOrEmpty(_videoFileName)  && mediaPlayer.VideoPlayer != null)
+                mediaPlayer.Pause();
+
+            var form = new ImportImages();
+            _formPositionsAndSizes.SetPositionAndSize(form);
+            if (form.ShowDialog(this) == DialogResult.OK && form.Subtitle.Paragraphs.Count > 0)
+            {
+                ImportAndOcrSrt("images", form.Subtitle);
+            }
+            _formPositionsAndSizes.SavePositionAndSize(form);            
         }
 
     }
