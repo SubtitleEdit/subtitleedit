@@ -667,6 +667,14 @@
             public string XIsNotAValidNumber { get; set; }
         }
 
+        public class ImportImages
+        {
+            public string Title { get; set; }
+            public string ImageFiles { get; set; }
+            public string Input { get; set; }
+            public string InputDescription { get; set; }
+        }
+
         public class ImportSceneChanges
         {
             public string Title { get; set; }
@@ -986,6 +994,7 @@
                     public string ImportSubtitleFromMatroskaFile { get; set; }
                     public string ImportSubtitleWithManualChosenEncoding { get; set; }
                     public string ImportText { get; set; }
+                    public string ImportImages { get; set; }
                     public string ImportTimecodes { get; set; }
                     public string Export { get; set; }
                     public string ExportBdnXml { get; set; }
