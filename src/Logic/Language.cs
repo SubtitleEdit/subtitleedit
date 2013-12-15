@@ -1077,6 +1077,7 @@ namespace Nikse.SubtitleEdit.Logic
                 XSceneChangesImported = "{0} scene changes imported",
                 PluginXExecuted = "Plugin '{0}' executed.",
                 NotAValidXSubFile = "Not a valid xsub file!",
+                BeforeMergeLinesWithSameText = "Before merging lines with same text",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -1427,6 +1428,8 @@ namespace Nikse.SubtitleEdit.Logic
             MergeDoubleLines = new LanguageStructure.MergeDoubleLines
             {
                 Title = "Merge lines with same text",
+                MaxMillisecondsBetweenLines = "Max. milliseconds between lines",
+                IncludeIncrementing = "Include incrementing lines",
             };
 
             MergedShortLines = new LanguageStructure.MergeShortLines

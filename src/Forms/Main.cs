@@ -796,7 +796,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         var fi = new FileInfo(fileName);
-                        if (fi.Length < 1024 * 1024 && !done) // max 1 mb
+                        if (fi.Length < 10 * 1024 * 1024 && !done) // max 10 mb
                         {
                             format = sub.LoadSubtitle(fileName, out encoding, null, true);
 
@@ -1575,6 +1575,7 @@ namespace Nikse.SubtitleEdit.Forms
             changeSpeedInPercentToolStripMenuItem.Text = _language.Menu.Tools.ChangeSpeedInPercent;
             toolStripMenuItemAutoMergeShortLines.Text = _language.Menu.Tools.MergeShortLines;
             toolStripMenuItemMergeDuplicateText.Text = _language.Menu.Tools.MergeDuplicateText;
+            toolStripMenuItemMergeDuplicateText.Visible = !string.IsNullOrEmpty(_language.Menu.Tools.MergeDuplicateText);
             toolStripMenuItemAutoSplitLongLines.Text = _language.Menu.Tools.SplitLongLines;
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
             toolStripMenuItem1.Text = _language.Menu.Tools.SortBy;
@@ -13738,7 +13739,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.General.ShowBetaStuff)
             {
-                toolStripMenuItemMergeDuplicateText.Visible = true;
                 generateDatetimeInfoFromVideoToolStripMenuItem.Visible = true;
                 toolStripMenuItemExportCaptionInc.Visible = true;
                 toolStripMenuItemExportUltech130.Visible = true;
@@ -13750,7 +13750,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                toolStripMenuItemMergeDuplicateText.Visible = false;
                 generateDatetimeInfoFromVideoToolStripMenuItem.Visible = false;
                 toolStripMenuItemExportCaptionInc.Visible = false;
                 toolStripMenuItemExportUltech130.Visible = false;
@@ -18215,7 +18214,10 @@ namespace Nikse.SubtitleEdit.Forms
                 form.Initialize(_subtitle);
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    MakeHistoryForUndo(_language.BeforeMergeShortLines);
+                    if (!string.IsNullOrEmpty(_language.BeforeMergeLinesWithSameText)) //TODO: Remove in SE 3.3.4
+                        MakeHistoryForUndo(_language.BeforeMergeLinesWithSameText);
+                    else
+                        MakeHistoryForUndo(_language.BeforeMergeShortLines);
                     _subtitle.Paragraphs.Clear();
                     foreach (Paragraph p in form.MergedSubtitle.Paragraphs)
                         _subtitle.Paragraphs.Add(p);
