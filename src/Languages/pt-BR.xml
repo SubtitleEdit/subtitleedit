@@ -5,7 +5,8 @@
     <Version>3.3.12</Version>
     <TranslatedBy>Tradução (Português do Brasil): Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile>
+    </HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
@@ -591,6 +592,12 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Ir para legenda número</Title>
     <XIsNotAValidNumber>{0} não é um número válido</XIsNotAValidNumber>
   </GoToLine>
+  <ImportImages>
+    <Title>Importar imagens</Title>
+    <ImageFiles>Arquivos de imagem</ImageFiles>
+    <Input>Entrada</Input>
+    <InputDescription>Escolha os arquivos de entrada (procure ou arraste)</InputDescription>
+  </ImportImages>
   <ImportSceneChanges>
     <Title>Importar alterações de cena</Title>
     <OpenTextFile>Abrir arquivo de texto...</OpenTextFile>
@@ -661,6 +668,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSubtitleFromMatroskaFile>Importar legenda de arquivo Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importar legenda selecionando codificação manualmente...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importar texto simples...</ImportText>
+        <ImportImages>Importar imagens...</ImportImages>
         <ImportTimecodes>Importar códigos de tempo...</ImportTimecodes>
         <Export>Exportar</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
@@ -693,6 +701,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>Substituição &amp;múltipla...</MultipleReplace>
         <GoToSubtitleNumber>Ir para legenda número...</GoToSubtitleNumber>
         <RightToLeftMode>Modo direita-para-esquerda</RightToLeftMode>
+        <FixTrlViaUnicodeControlCharacters>Corrigir RTL via caracteres de controle Unicode</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Reverter início/fim RTL (para linhas selecionadas)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Exibir texto original nas prévias de áudio/vídeo</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modificar seleção...</ModifySelection>
@@ -1158,6 +1167,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <StatusLog>Log de status</StatusLog>
     <XSceneChangesImported>{0} alterações de cena importadas</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' executado.</PluginXExecuted>
+    <NotAValidXSubFile>Não é um arquivo xsub válido!</NotAValidXSubFile>
+    <BeforeMergeLinesWithSameText>Antes de unir linhas com o mesmo texto</BeforeMergeLinesWithSameText>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Selecionar legenda a partir do arquivo Matroska</Title>
@@ -1182,6 +1193,8 @@ Deseja continuar?</SubtitleAppendPrompt>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Mesclar linhas com o mesmo texto</Title>
+    <MaxMillisecondsBetweenLines>Máx. milisegundos entre linhas</MaxMillisecondsBetweenLines>
+    <IncludeIncrementing>Incluir linhas aumentadas</IncludeIncrementing>
   </MergeDoubleLines>
   <MergedShortLines>
     <Title>Combinar linhas curtas</Title>
@@ -1508,10 +1521,14 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <WaveformAddTextHere>Adicionar texto aqui (para nova seleção)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Tocar nova seleção</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Tocar primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
+    <GoBack1Frame>Um quadro para trás</GoBack1Frame>
+    <GoForward1Frame>Um quadro para frente</GoForward1Frame>
     <GoBack100Milliseconds>100 ms atrás</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms adiante</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms atrás</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 ms adiante</GoForward500Milliseconds>
+    <GoBack1Second>Um segundo para trás</GoBack1Second>
+    <GoForward1Second>Um segundo para frente</GoForward1Second>
     <TogglePlayPause>Alternar tocar/pausar</TogglePlayPause>
     <Pause>Pausar</Pause>
     <Fullscreen>Tela cheia</Fullscreen>
