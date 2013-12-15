@@ -2,7 +2,8 @@
 
 3.3.12 (xth December 2013)
 * NEW:
-   *
+   * Added "File -> Import images"
+   * Added "Tools -> Merge lines with same text"
 * IMPROVED:
    * Updated Portuguese language file - thx moob
    * Updated Vietnamese language file - thx everytime

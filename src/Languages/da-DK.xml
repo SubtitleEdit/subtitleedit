@@ -593,6 +593,12 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Gå til linjenummer</Title>
     <XIsNotAValidNumber>{0} er ikke et gyldigt tal</XIsNotAValidNumber>
   </GoToLine>
+  <ImportImages>
+    <Title>Importer billeder</Title>
+    <ImageFiles>Billedfiler</ImageFiles>
+    <Input>Input</Input>
+    <InputDescription>Vælg input filer (gennemse eller drag-n-drop)</InputDescription>
+  </ImportImages>
   <ImportSceneChanges>
     <Title>Importer sceneskift</Title>
     <OpenTextFile>Åbn tekst fil...</OpenTextFile>
@@ -663,6 +669,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSubtitleFromMatroskaFile>Importer undertekster fra Matroska fil...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importer undertekst med manuel valgt tegnsæt...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importer tekst...</ImportText>
+        <ImportImages>Importer billeder...</ImportImages>
         <ImportTimecodes>Import tidskoder...</ImportTimecodes>
         <Export>Eksporter</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
@@ -1162,6 +1169,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <XSceneChangesImported>{0} sceneskift importeret</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' afviklet</PluginXExecuted>
     <NotAValidXSubFile>Ikke en valid xsub fil!</NotAValidXSubFile>
+    <BeforeMergeLinesWithSameText>Før fusioner linjer med samme tekst</BeforeMergeLinesWithSameText>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -1186,6 +1194,8 @@ Fortsæt?</SubtitleAppendPrompt>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Flet linjer med samme tekst</Title>
+    <MaxMillisecondsBetweenLines>Max. millisekunder mellem linjer</MaxMillisecondsBetweenLines>
+    <IncludeIncrementing>Medtag forøgning af linjer</IncludeIncrementing>
   </MergeDoubleLines>
   <MergedShortLines>
     <Title>Flet korte linjer</Title>
@@ -1512,10 +1522,14 @@ Fortsæt?</SubtitleAppendPrompt>
     <WaveformAddTextHere>Tilføj tekst her (for ny selektion)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Spil ny markering</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Spil første valgte undertekst</WaveformPlayFirstSelectedSubtitle>
+    <GoBack1Frame>En frame tilbage</GoBack1Frame>
+    <GoForward1Frame>En frame frem</GoForward1Frame>
     <GoBack100Milliseconds>100 ms tilbage</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms frem</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms tilbage</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 ms frem</GoForward500Milliseconds>
+    <GoBack1Second>Et sekund tilbage</GoBack1Second>
+    <GoForward1Second>Et sekund fremad</GoForward1Second>
     <TogglePlayPause>Skift mellem afspil og pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Fuldskærm</Fullscreen>
