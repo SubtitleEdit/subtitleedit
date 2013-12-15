@@ -965,6 +965,7 @@
             public string XSceneChangesImported { get; set; }
             public string PluginXExecuted { get; set; }
             public string NotAValidXSubFile { get; set; }
+            public string BeforeMergeLinesWithSameText { get; set; }
 
             public class MainMenu
             {
@@ -1325,6 +1326,8 @@
         public class MergeDoubleLines
         {
             public string Title { get; set; }
+            public string MaxMillisecondsBetweenLines { get; set; }
+            public string IncludeIncrementing { get; set; }
         }
 
         public class MergeShortLines

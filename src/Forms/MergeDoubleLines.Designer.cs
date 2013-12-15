@@ -32,12 +32,15 @@
             this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
             this.listViewFixes = new System.Windows.Forms.ListView();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.checkBoxLineAfterNext = new System.Windows.Forms.CheckBox();
+            this.checkBoxIncludeIncrementing = new System.Windows.Forms.CheckBox();
+            this.numericUpDownMaxMillisecondsBetweenLines = new System.Windows.Forms.NumericUpDown();
+            this.labelMaxMillisecondsBetweenLines = new System.Windows.Forms.Label();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxLinesFound.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).BeginInit();
             this.SuspendLayout();
             // 
             // columnHeader4
@@ -65,7 +68,7 @@
             this.listViewFixes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader4,
             this.columnHeader5,
-            this.columnHeader7});
+            this.columnHeaderText});
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.Location = new System.Drawing.Point(6, 19);
             this.listViewFixes.Name = "listViewFixes";
@@ -80,10 +83,10 @@
             this.columnHeader5.Text = "Line#";
             this.columnHeader5.Width = 122;
             // 
-            // columnHeader7
+            // columnHeaderText
             // 
-            this.columnHeader7.Text = "New text";
-            this.columnHeader7.Width = 500;
+            this.columnHeaderText.Text = "New text";
+            this.columnHeaderText.Width = 500;
             // 
             // buttonOK
             // 
@@ -110,16 +113,45 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.ButtonCancelClick);
             // 
-            // checkBoxLineAfterNext
+            // checkBoxIncludeIncrementing
             // 
-            this.checkBoxLineAfterNext.AutoSize = true;
-            this.checkBoxLineAfterNext.Location = new System.Drawing.Point(15, 13);
-            this.checkBoxLineAfterNext.Name = "checkBoxLineAfterNext";
-            this.checkBoxLineAfterNext.Size = new System.Drawing.Size(145, 17);
-            this.checkBoxLineAfterNext.TabIndex = 46;
-            this.checkBoxLineAfterNext.Text = "Also check line after next";
-            this.checkBoxLineAfterNext.UseVisualStyleBackColor = true;
-            this.checkBoxLineAfterNext.CheckedChanged += new System.EventHandler(this.checkBoxOnlyContinuationLines_CheckedChanged);
+            this.checkBoxIncludeIncrementing.AutoSize = true;
+            this.checkBoxIncludeIncrementing.Checked = true;
+            this.checkBoxIncludeIncrementing.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxIncludeIncrementing.Location = new System.Drawing.Point(306, 16);
+            this.checkBoxIncludeIncrementing.Name = "checkBoxIncludeIncrementing";
+            this.checkBoxIncludeIncrementing.Size = new System.Drawing.Size(148, 17);
+            this.checkBoxIncludeIncrementing.TabIndex = 47;
+            this.checkBoxIncludeIncrementing.Text = "Include incrementing lines";
+            this.checkBoxIncludeIncrementing.UseVisualStyleBackColor = true;
+            this.checkBoxIncludeIncrementing.CheckedChanged += new System.EventHandler(this.checkBoxFixIncrementing_CheckedChanged);
+            // 
+            // numericUpDownMaxMillisecondsBetweenLines
+            // 
+            this.numericUpDownMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(202, 15);
+            this.numericUpDownMaxMillisecondsBetweenLines.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxMillisecondsBetweenLines.Name = "numericUpDownMaxMillisecondsBetweenLines";
+            this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownMaxMillisecondsBetweenLines.TabIndex = 48;
+            this.numericUpDownMaxMillisecondsBetweenLines.Value = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxMillisecondsBetweenLines.ValueChanged += new System.EventHandler(this.numericUpDownMaxMillisecondsBetweenLines_ValueChanged);
+            // 
+            // labelMaxMillisecondsBetweenLines
+            // 
+            this.labelMaxMillisecondsBetweenLines.AutoSize = true;
+            this.labelMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(18, 17);
+            this.labelMaxMillisecondsBetweenLines.Name = "labelMaxMillisecondsBetweenLines";
+            this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(178, 13);
+            this.labelMaxMillisecondsBetweenLines.TabIndex = 49;
+            this.labelMaxMillisecondsBetweenLines.Text = "Maximum milliseconds between lines";
             // 
             // SubtitleListview1
             // 
@@ -147,7 +179,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1052, 725);
-            this.Controls.Add(this.checkBoxLineAfterNext);
+            this.Controls.Add(this.numericUpDownMaxMillisecondsBetweenLines);
+            this.Controls.Add(this.labelMaxMillisecondsBetweenLines);
+            this.Controls.Add(this.checkBoxIncludeIncrementing);
             this.Controls.Add(this.groupBoxLinesFound);
             this.Controls.Add(this.SubtitleListview1);
             this.Controls.Add(this.buttonOK);
@@ -157,10 +191,12 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Merge double lines";
+            this.Text = "Merge lines with same text";
             this.Shown += new System.EventHandler(this.MergeDoubleLines_Shown);
+            this.ResizeEnd += new System.EventHandler(this.MergeDoubleLines_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeDoubleLines_KeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -172,10 +208,12 @@
         private System.Windows.Forms.GroupBox groupBoxLinesFound;
         private System.Windows.Forms.ListView listViewFixes;
         private System.Windows.Forms.ColumnHeader columnHeader5;
-        private System.Windows.Forms.ColumnHeader columnHeader7;
+        private System.Windows.Forms.ColumnHeader columnHeaderText;
         private Controls.SubtitleListView SubtitleListview1;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.CheckBox checkBoxLineAfterNext;
+        private System.Windows.Forms.CheckBox checkBoxIncludeIncrementing;
+        private System.Windows.Forms.NumericUpDown numericUpDownMaxMillisecondsBetweenLines;
+        private System.Windows.Forms.Label labelMaxMillisecondsBetweenLines;
     }
 }
