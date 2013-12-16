@@ -861,6 +861,7 @@
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
+    <Compile Include="Logic\SubtitleFormats\DCinemaSmpte2007.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProImage.cs" />
     <Compile Include="Logic\SubtitleFormats\ELRStudioClosedCaption.cs" />
     <Compile Include="Logic\SubtitleFormats\ScenaristClosedCaptionsDropFrame.cs" />
@@ -892,7 +893,7 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle54.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProTest2Xml.cs" />
     <Compile Include="Logic\SubtitleFormats\JsonType4.cs" />
-    <Compile Include="Logic\SubtitleFormats\DCinemaSmpte.cs" />
+    <Compile Include="Logic\SubtitleFormats\DCinemaSmpte2010.cs" />
     <Compile Include="Logic\SubtitleFormats\DCSubtitle.cs" />
     <Compile Include="Logic\SubtitleFormats\DvdStudioProSpace.cs" />
     <Compile Include="Logic\SubtitleFormats\Eeg708.cs" />
@@ -1465,9 +1466,14 @@
     <EmbeddedResource Include="Resources\HunspellDictionaries.xml.zip" />
     <EmbeddedResource Include="Resources\TesseractDictionaries.xml.zip" />
     <EmbeddedResource Include="Resources\nOCR_TesseractHelper.xml.zip" />
-    <EmbeddedResource Include="Resources\SMPTE-428-7-2007-DCST.xsd">
+    <None Include="Resources\SMPTE-428-7-2007-DCST.xsd">
       <SubType>Designer</SubType>
-    </EmbeddedResource>
+    </None>
+    <EmbeddedResource Include="Resources\SMPTE-428-7-2007-DCST.xsd.gz" />
+    <None Include="Resources\SMPTE-428-7-2010-DCST.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <EmbeddedResource Include="Resources\SMPTE-428-7-2010-DCST.xsd.gz" />
     <None Include="Web References\MicrosoftTranslationService\GetTranslationsResponse.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
