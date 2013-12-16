@@ -12438,25 +12438,24 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowSubtitleTimerTick(object sender, EventArgs e)
         {
             ShowSubtitleTimer.Stop();
-            if (mediaPlayer != null)
+            int oldIndex = FirstSelectedIndex;
+            int index = ShowSubtitle();
+            if (index != -1 && checkBoxSyncListViewWithVideoWhilePlaying.Checked && oldIndex != index)
             {
-                int index = ShowSubtitle();
-                if (index != -1 && checkBoxSyncListViewWithVideoWhilePlaying.Checked)
+                if ((DateTime.Now.Ticks - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
                 {
-                    if ((DateTime.Now.Ticks - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+                    if (_endSeconds <= 0 || !checkBoxAutoRepeatOn.Checked)
                     {
-                        if (_endSeconds <= 0 || !checkBoxAutoRepeatOn.Checked)
+                        if (!timerAutoDuration.Enabled && !mediaPlayer.IsPaused)
                         {
-                            if (!timerAutoDuration.Enabled && !mediaPlayer.IsPaused)
-                            {
-                                SubtitleListview1.BeginUpdate();
-                                SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
-                                SubtitleListview1.EndUpdate();
-                            }
+                            SubtitleListview1.BeginUpdate();
+                            SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                            SubtitleListview1.EndUpdate();
                         }
                     }
                 }
             }
+
             if (_changeSubtitleToString != SerializeSubtitle(_subtitle))
             {
                 if (!Text.EndsWith("*"))
@@ -13444,7 +13443,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemSubStationAlpha.Visible = false;
             }
 
-            if (format.GetType() == typeof(DCSubtitle) || format.GetType() == typeof(DCinemaSmpte))
+            if (format.GetType() == typeof(DCSubtitle) || format.GetType() == typeof(DCinemaSmpte2010))
             {
                 toolStripMenuItemDCinemaProperties.Visible = true;
             }

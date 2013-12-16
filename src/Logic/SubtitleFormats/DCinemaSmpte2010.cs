@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    public class DCinemaSmpte : SubtitleFormat
+    public class DCinemaSmpte2010 : SubtitleFormat
     {
         //<?xml version="1.0" encoding="UTF-8"?>
         //<dcst:SubtitleReel xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcst="http://www.smpte-ra.org/schemas/428-7/2010/DCST">
@@ -31,6 +32,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private double frameRate = 24;
 
+        public int Version { get; set; }
+
         public override string Extension
         {
             get { return ".xml"; }
@@ -38,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "D-Cinema SMPTE"; }
+            get { return "D-Cinema SMPTE 2010"; }
         }
 
         public override bool IsTimeBased
@@ -51,13 +54,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string xmlAsString = sb.ToString().Trim();
+
+            if (xmlAsString.Contains("http://www.smpte-ra.org/schemas/428-7/2007/DCST"))
+                return false;
+
             if (xmlAsString.Contains("<dcst:SubtitleReel") || xmlAsString.Contains("<SubtitleReel"))
             {
                 var xml = new XmlDocument();
                 try
                 {
                     xmlAsString = xmlAsString.Replace("<dcst:", "<").Replace("</dcst:", "</");
-                    xmlAsString = xmlAsString.Replace("xmlns=\"http://www.smpte-ra.org/schemas/428-7/2007/DCST\"", string.Empty);
                     xmlAsString = xmlAsString.Replace("xmlns=\"http://www.smpte-ra.org/schemas/428-7/2010/DCST\"", string.Empty);
                     xml.LoadXml(xmlAsString);
                     var subtitles = xml.DocumentElement.SelectNodes("//Subtitle");
@@ -102,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             string xmlStructure =
-                "<dcst:SubtitleReel xmlns:dcst=\"http://www.smpte-ra.org/schemas/428-7/2007/DCST\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">" + Environment.NewLine +
+                "<dcst:SubtitleReel xmlns:dcst=\"http://www.smpte-ra.org/schemas/428-7/2010/DCST\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">" + Environment.NewLine +
                 "  <dcst:Id>urn:uuid:7be835a3-cfb4-43d0-bb4b-f0b4c95e962e</dcst:Id>" + Environment.NewLine +
                 "  <dcst:ContentTitleText></dcst:ContentTitleText> " + Environment.NewLine +
                 "  <dcst:AnnotationText>This is a subtitle file</dcst:AnnotationText>" + Environment.NewLine +
@@ -443,7 +449,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             string result = ToUtf8XmlString(xml).Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\"").Replace(" xmlns:dcst=\"dcst\"", string.Empty);
 
-            string res = "Nikse.SubtitleEdit.Resources.SMPTE-428-7-2007-DCST.xsd";
+            string res = "Nikse.SubtitleEdit.Resources.SMPTE-428-7-2010-DCST.xsd.gz";
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
             Stream strm = asm.GetManifestResourceStream(res);
             if (strm != null)
@@ -451,17 +457,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 try
                 {
                     var xmld = new XmlDocument();
-                    xmld.LoadXml(result);
-                    var xr = XmlReader.Create(strm);
-                    xmld.Schemas.Add(null, xr);
-                    xmld.Validate(ValidationCallBack);
-                    xr.Close();
-                    strm.Close();
+                    var rdr = new StreamReader(strm);
+                    using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
+                    {
+                        xmld.LoadXml(result);
+                        var xr = XmlReader.Create(zip);
+                        xmld.Schemas.Add(null, xr);
+                        xmld.Validate(ValidationCallBack);
+                        xr.Close();
+                        strm.Close();
+                    }
+                    rdr.Close();                    
                 }
                 catch (Exception exception)
                 {
                     if (!BatchMode)
-                        System.Windows.Forms.MessageBox.Show("SMPTE-428-7-2007-DCST.xsd:" + exception.Message);
+                        System.Windows.Forms.MessageBox.Show("SMPTE-428-7-2010-DCST.xsd: " + exception.Message);
                 }
             }
             return result;
@@ -481,7 +492,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument();
-            xml.LoadXml(sb.ToString().Replace("<dcst:", "<").Replace("</dcst:", "</").Replace("xmlns=\"http://www.smpte-ra.org/schemas/428-7/2007/DCST\"", string.Empty)); // tags might be prefixed with namespace (or not)... so we just remove them
+            xml.LoadXml(sb.ToString().Replace("<dcst:", "<").Replace("</dcst:", "</").Replace("xmlns=\"http://www.smpte-ra.org/schemas/428-7/2010/DCST\"", string.Empty)); // tags might be prefixed with namespace (or not)... so we just remove them
 
             var ss = Configuration.Settings.SubtitleSettings;
             try

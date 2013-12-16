@@ -375,7 +375,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void DcinemaSmpteItalic()
         {
-            var target = new DCinemaSmpte();
+            var target = new DCinemaSmpte2010();
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("<i>Italic</i>", 1000, 5000));
             string text = target.ToText(subtitle, "title");
@@ -386,7 +386,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void DcinemaSmpteColorAndItalic()
         {
-            var target = new DCinemaSmpte();
+            var target = new DCinemaSmpte2010();
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("<font color=\"#ff0000\"><i>Red</i></font>", 1000, 5000));
             string text = target.ToText(subtitle, "title");
