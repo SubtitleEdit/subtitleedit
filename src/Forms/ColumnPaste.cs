@@ -35,6 +35,8 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonTextOnly.Text = Configuration.Settings.Language.ColumnPaste.TextOnly;
                 radioButtonOriginalText.Text = Configuration.Settings.Language.ColumnPaste.OriginalTextOnly;
             }
+            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
 
         private void FixLargeFonts()

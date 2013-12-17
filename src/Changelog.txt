@@ -11,11 +11,12 @@
    * Updated Basque language file - thx Xabier
    * Updated Korean language file - thx domddol
    * Updated Brazilian Portuguese language file - thx Igor Rückert
-   * Now remembers RTL mode - thx FTABoy
+   * Now remembers RTL mode - thx FTABoy   
 * FIXED:
   * Fixed bug in "Fix common errors: Remove hyphen" - thx honeybunny
   * Fixed bug in "Remove text for HI" issue - thx cipry15
   * Fixed bug in "Auto br" - thx XhmikosR
+  * Split up D-cinema smtp to 2007 and 2010 versions - thx Knut
 
 
 3.3.11 (6th December 2013)
