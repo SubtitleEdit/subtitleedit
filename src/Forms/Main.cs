@@ -3217,7 +3217,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private DialogResult FileSaveAs()
         {
-            SubtitleFormat currentFormat = GetCurrentSubtitleFormat();
+            SubtitleFormat currentFormat = null;
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.LastSaveAsFormat))
+                currentFormat = Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.LastSaveAsFormat);
+            if (currentFormat == null)
+                currentFormat = GetCurrentSubtitleFormat();
+
             Utilities.SetSaveDialogFilter(saveFileDialog1, currentFormat);
 
             saveFileDialog1.Title = _language.SaveSubtitleAs;
@@ -3260,7 +3265,10 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         if (SaveSubtitle(format) == DialogResult.OK)
+                        {
+                            Configuration.Settings.General.LastSaveAsFormat = format.Name;
                             SetCurrentFormat(format);
+                        }
                     }
                     index++;
                 }
