@@ -4414,7 +4414,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
                             }
                             _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
-                            ShowStatus(string.Format(msg + _language.XFoundAtLineNumberY + _language.XFoundAtLineNumberY, _findHelper.SelectedIndex + 1, _findHelper.FindText));
+                            ShowStatus(string.Format(msg + _language.XFoundAtLineNumberY,  _findHelper.FindText, _findHelper.SelectedIndex + 1));
                         }
                         else
                         {
@@ -4439,7 +4439,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         textBoxListViewText.SelectionStart = _findHelper.SelectedPosition;
                                         textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
                                         _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
-                                        ShowStatus(string.Format(msg + _language.XFoundAtLineNumberY + _language.XFoundAtLineNumberY, _findHelper.SelectedIndex + 1, _findHelper.FindText));
+                                        ShowStatus(string.Format(msg + _language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
                                     }
 
                                 }
