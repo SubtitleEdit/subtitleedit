@@ -4,6 +4,7 @@
 * NEW:
    * Added "File -> Import images"
    * Added "Tools -> Merge lines with same text"
+   * "Save as..." now remembers subtitle format
 * IMPROVED:
    * Updated Portuguese language file - thx moob
    * Updated Vietnamese language file - thx everytime

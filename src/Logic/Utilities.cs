@@ -190,7 +190,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
             {
-                if (format.FriendlyName == friendlyName)
+                if (format.FriendlyName == friendlyName || format.Name == friendlyName)
                     return format;
             }
             return null;
