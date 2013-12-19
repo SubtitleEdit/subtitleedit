@@ -30,6 +30,15 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSplitting.Text = Configuration.Settings.Language.ImportText.Splitting;
             radioButtonAutoSplit.Text = Configuration.Settings.Language.ImportText.AutoSplitText;
             radioButtonLineMode.Text = Configuration.Settings.Language.ImportText.OneLineIsOneSubtitle;
+            labelLineBreak.Left = radioButtonLineMode.Left + radioButtonLineMode.Width + 10;
+            labelLineBreak.Text = Configuration.Settings.Language.ImportText.LineBreak;
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.LineBreak)) //TODO: Remove in 3.4
+            {
+                labelLineBreak.Visible = false;
+                textBoxLineBreak.Visible = false;
+            }
+            textBoxLineBreak.Left = labelLineBreak.Left + labelLineBreak.Width + 3;
+
             radioButtonSplitAtBlankLines.Text = Configuration.Settings.Language.ImportText.SplitAtBlankLines;
             checkBoxMergeShortLines.Text = Configuration.Settings.Language.ImportText.MergeShortLines;
             checkBoxRemoveEmptyLines.Text = Configuration.Settings.Language.ImportText.RemoveEmptyLines;
@@ -221,8 +230,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ImportLineMode(IEnumerable<string> lines)
         {
-            foreach (string line in lines)
+            foreach (string _line in lines)
             {
+                // Replace user line break character with Environment.NewLine.
+                string line = _line;
+                if (textBoxLineBreak.Text.Length > 0) 
+                { 
+                    line = _line.Replace(textBoxLineBreak.Text, Environment.NewLine); 
+                }
+
                 if (line.Trim().Length == 0)
                 {
                     if (!checkBoxRemoveEmptyLines.Checked)
@@ -490,6 +506,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void RadioButtonLineModeCheckedChanged(object sender, EventArgs e)
         {
             GeneratePreview();
+            // textBoxLineBreak and its label are enabled if radioButtonLineMode is checked.
+            textBoxLineBreak.Enabled = radioButtonLineMode.Checked;
+            labelLineBreak.Enabled = radioButtonLineMode.Checked;
         }
 
         private void RadioButtonAutoSplitCheckedChanged(object sender, EventArgs e)
@@ -639,6 +658,11 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 Configuration.Settings.Tools.ImportTextSplitting = "auto";
             Configuration.Settings.Tools.ImportTextMergeShortLines = checkBoxMergeShortLines.Checked;
+        }
+
+        private void textBoxLineBreak_TextChanged(object sender, EventArgs e)
+        {
+            GeneratePreview();
         }
 
     }
