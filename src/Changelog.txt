@@ -5,6 +5,8 @@
    * Added "File -> Import images"
    * Added "Tools -> Merge lines with same text"
    * "Save as..." now remembers subtitle format
+   * Importing from plain text file,  "One line is one subtitle" now has a 
+     "Line break" option - thx Adrian
 * IMPROVED:
    * Updated Portuguese language file - thx moob
    * Updated Vietnamese language file - thx everytime
