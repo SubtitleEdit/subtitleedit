@@ -1143,7 +1143,7 @@ namespace Nikse.SubtitleEdit.Logic
                         MultipleReplace = "&Multiple replace...",
                         GoToSubtitleNumber = "&Go to subtitle number...",
                         RightToLeftMode = "Right-to-left mode",
-                        FixTrlViaUnicodeControlCharacters = "Fix RTL via Unicode control characters",
+                        FixTrlViaUnicodeControlCharacters = "Fix RTL via Unicode control characters (for selected lines)",
                         ReverseRightToLeftStartEnd = "Reverse RTL start/end (for selected lines)",
                         ShowOriginalTextInAudioAndVideoPreview = "Show original text in audio/video previews",
                         ModifySelection = "Modify selection...",
