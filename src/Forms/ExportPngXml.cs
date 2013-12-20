@@ -1371,8 +1371,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             //}
 
 
-
-
             //SizeF textSize = g.MeasureString("Hj!", font);
             //var lineHeight = (textSize.Height * 0.64f);
             var bmp = new Bitmap(400, 200);
@@ -1380,9 +1378,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var fontSize = g.DpiY * parameter.SubtitleFontSize / 72;
             Font font = SetFont(parameter, parameter.SubtitleFontSize);
             var lineHeight = parameter.LineHeight; // (textSize.Height * 0.64f);
-
-
-
 
 
             var textSize = g.MeasureString(Utilities.RemoveHtmlTags(text), font);
@@ -1598,22 +1593,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             addLeft = left + 2;
                         left = addLeft;
 
-
-                        if (parameter.BorderWidth > 0)
-                        {
-                            var p1 = new Pen(parameter.BorderColor, parameter.BorderWidth);
-                            if (parameter.LineJoinRound)
-                                p1.LineJoin = LineJoin.Round;
-                            g.DrawPath(p1, path);
-                            p1.Dispose();
-                        }
+                        DrawShadowAndPAth(parameter, g, path);
                         var p2 = new SolidBrush(c);
                         g.FillPath(p2, path);
                         p2.Dispose();
                         path.Reset();
                         path = new GraphicsPath();
                         sb = new StringBuilder();
-
 
                         int endIndex = text.Substring(i).IndexOf(">");
                         if (endIndex == -1)
@@ -1682,33 +1668,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             }
                             if (addLeft < 0.01)
                                 addLeft = left + 2;
-                            left = addLeft;
+                            left = addLeft;                            
 
-                            if (parameter.ShadowWidth > 0)
-                            {
-                                var shadowPath = (GraphicsPath)path.Clone();
-                                for (int k = 0; k < parameter.ShadowWidth; k++)
-                                {
-                                    var translateMatrix = new Matrix();
-                                    translateMatrix.Translate(1, 1);
-                                    shadowPath.Transform(translateMatrix);
-
-                                    var p1 = new Pen(Color.FromArgb(parameter.ShadowAlpha, parameter.ShadowColor), parameter.BorderWidth);
-                                    if (parameter.LineJoinRound)
-                                        p1.LineJoin = LineJoin.Round;
-                                    g.DrawPath(p1, shadowPath);
-                                    p1.Dispose();
-                                }
-                            }
-
-                            if (parameter.BorderWidth > 0)
-                            {
-                                var p1 = new Pen(parameter.BorderColor, parameter.BorderWidth);
-                                if (parameter.LineJoinRound)
-                                    p1.LineJoin = LineJoin.Round;
-                                g.DrawPath(p1, path);
-                                p1.Dispose();
-                            }
+                            DrawShadowAndPAth(parameter, g, path);
                             g.FillPath(new SolidBrush(c), path);
                             path.Reset();
                             sb = new StringBuilder();
@@ -1787,37 +1749,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (sb.Length > 0)
                     TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
-
-                if (parameter.ShadowWidth > 0)
-                {
-                    var shadowPath = (GraphicsPath)path.Clone();
-                    for (int k = 0; k < parameter.ShadowWidth; k++)
-                    {
-                        var translateMatrix = new Matrix();
-                        translateMatrix.Translate(1, 1);
-                        shadowPath.Transform(translateMatrix);
-
-                        var p1 = new Pen(Color.FromArgb(parameter.ShadowAlpha, parameter.ShadowColor), parameter.BorderWidth);
-                        if (parameter.LineJoinRound)
-                            p1.LineJoin = LineJoin.Round;
-                        g.DrawPath(p1, shadowPath);
-                        p1.Dispose();
-                    }
-                }
-
-                if (parameter.BorderWidth > 0)
-                {
-                    var p1 = new Pen(parameter.BorderColor, parameter.BorderWidth);
-                    if (parameter.LineJoinRound)
-                        p1.LineJoin = LineJoin.Round;
-                    g.DrawPath(p1, path);
-                    p1.Dispose();
-                }
-
+                DrawShadowAndPAth(parameter, g, path);
                 g.FillPath(new SolidBrush(c), path);
-
-
-
                 g.Dispose();
             }
 
@@ -1887,6 +1820,35 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
             }
             return nbmp.GetBitmap();
+        }
+
+        private static void DrawShadowAndPAth(MakeBitmapParameter parameter, Graphics g, GraphicsPath path)
+        {
+            if (parameter.ShadowWidth > 0)
+            {
+                var shadowPath = (GraphicsPath)path.Clone();
+                for (int k = 0; k < parameter.ShadowWidth; k++)
+                {
+                    var translateMatrix = new Matrix();
+                    translateMatrix.Translate(1, 1);
+                    shadowPath.Transform(translateMatrix);
+
+                    var p1 = new Pen(Color.FromArgb(parameter.ShadowAlpha, parameter.ShadowColor), parameter.BorderWidth);
+                    if (parameter.LineJoinRound)
+                        p1.LineJoin = LineJoin.Round;
+                    g.DrawPath(p1, shadowPath);
+                    p1.Dispose();
+                }
+            }
+
+            if (parameter.BorderWidth > 0)
+            {
+                var p1 = new Pen(parameter.BorderColor, parameter.BorderWidth);
+                if (parameter.LineJoinRound)
+                    p1.LineJoin = LineJoin.Round;
+                g.DrawPath(p1, path);
+                p1.Dispose();
+            }
         }
 
         private static Bitmap ScaleToHalfWidth(Bitmap bmp)
