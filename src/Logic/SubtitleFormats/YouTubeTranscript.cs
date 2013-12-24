@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class YouTubeTranscript : SubtitleFormat
     {
-        static Regex regexTimeCodes = new Regex(@"^\d{1,2}:\d\d$", RegexOptions.Compiled);
+        static Regex regexTimeCodes = new Regex(@"^\d{1,3}:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0}:{1:00}", time.Hours / 60 + time.Minutes , time.Seconds);
+            return string.Format("{0}:{1:00}", time.Hours * 60 + time.Minutes , time.Seconds);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
