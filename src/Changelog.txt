@@ -19,6 +19,8 @@
   * Fixed bug in "Remove text for HI" issue - thx cipry15
   * Fixed bug in "Auto br" - thx XhmikosR
   * Split up D-cinema smtp to 2007 and 2010 versions - thx Knut
+  * Missing outline/shadow in export images - thx minhjirachi
+  * Fixed some missing characters in format PAC - thx Adrian
 
 
 3.3.11 (6th December 2013)

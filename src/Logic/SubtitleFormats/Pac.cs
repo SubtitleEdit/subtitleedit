@@ -146,6 +146,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xE77A, // ž
             0xE773, // š
             0xE763, // č
+
+            0xA8,  // ¿
+            0xAD,  // ¡
+            0xA6,  // ª
+            0xA7,  // º
+
+            0xAB, // "«"
+            0xBB, // "»"
+            0xB3, // "³"
+            0x1C, // "“"
+            0x1D, // "”"
+            0x18, // "‘"
+            0x19, // "’"
+            0x13, // "–"
+            0x14, // "—"
         };
 
         static readonly List<string> LatinLetters = new List<string> {
@@ -277,6 +292,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "ž", // 0xE77A
             "š", // 0xE773
             "č", // 0xE763
+
+            "¿", // 0xA8
+            "¡", // 0xAD
+            "ª", // 0xA6
+            "º", // 0xA7
+
+            "«", // 0xAB
+            "»", // 0xBB
+            "³", // 0xB3
+            "“", // 0x1C
+            "”", // 0x1D
+            "‘", // 0x18
+            "’", // 0x19
+            "–", // 0x13
+            "—", // 0x14
         };
 
         static readonly List<int> HebrewCodes = new List<int>
