@@ -13,6 +13,7 @@
    * Updated Basque language file - thx Xabier
    * Updated Korean language file - thx domddol
    * Updated Brazilian Portuguese language file - thx Igor Rückert
+   * Updated Croatian language file - thx Jozo Marić
    * Now remembers RTL mode - thx FTABoy   
 * FIXED:
   * Fixed bug in "Fix common errors: Remove hyphen" - thx honeybunny
