@@ -4,8 +4,10 @@
     <Title>Subtitle Edit</Title>
     <Version>3.3.12</Version>
     <TranslatedBy> ------------------------------------------------------------------------------------------------
-Traduzido sem o novo Acordo Ortográfico para Português de Portugal, por Marco Barbosa
-Email: mailto:moob@live.com.pt</TranslatedBy>
+Traduzido sem o novo Acordo Ortográfico para Português de Portugal, por moob e Ricardo Perdigão
+Contactos:
+moob: mailto:moob@live.com.pt
+Ricardo Perdigão: mailto:ricardofonseca1977@gmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
     <HelpFile></HelpFile>
     <OK>&amp;OK</OK>
@@ -593,6 +595,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Ir para linha número</Title>
     <XIsNotAValidNumber>{0} não é um número válido</XIsNotAValidNumber>
   </GoToLine>
+  <ImportImages>
+    <Title>Importar imagens</Title>
+    <ImageFiles>Ficheiros de imagens</ImageFiles>
+   <Input>Entrada</Input>
+    <InputDescription>Escolher ficheiros de entrada (Selecionar ou arrastar-e-soltar)</InputDescription>	
+  </ImportImages>  
     <ImportSceneChanges>
     <Title>Importar mudanças de cena</Title>
     <OpenTextFile>Abrir ficheiro de texto...</OpenTextFile>
@@ -610,6 +618,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Splitting>Divisão</Splitting>
     <AutoSplitText>Auto-dividir texto</AutoSplitText>
     <OneLineIsOneSubtitle>Uma linha é uma legenda</OneLineIsOneSubtitle>
+    <LineBreak>Quebra de linha</LineBreak>	
     <SplitAtBlankLines>Dividir nas linhas em branco</SplitAtBlankLines>
     <MergeShortLines>Combinar linhas curtas continuadas</MergeShortLines>
     <RemoveEmptyLines>Remover linhas em branco</RemoveEmptyLines>
@@ -663,6 +672,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSubtitleFromMatroskaFile>Importar legenda de ficheiro Matroska (mkv)...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importar legenda seleccionando codificação manualmente...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importar texto simples...</ImportText>
+        <ImportImages>Importar imagens...</ImportImages>		
         <ImportTimecodes>Importar códigos de tempo...</ImportTimecodes>
         <Export>Exportar</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
@@ -695,6 +705,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>&amp;Substituição múltipla...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Ir para linha número...</GoToSubtitleNumber>
         <RightToLeftMode>Modo Direita-para-esquerda</RightToLeftMode>
+        <FixTrlViaUnicodeControlCharacters>Corrigir RTL via controle de caracteres Unicode (para linhas seleccionadas)</FixTrlViaUnicodeControlCharacters>		
         <ReverseRightToLeftStartEnd>Reverter RTL inicio/fim (para linhas seleccionadas)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Mostrar o texto original na pré-visualização de áudio/vídeo</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modificar a selecção...</ModifySelection>
@@ -1159,7 +1170,9 @@ Deseja continuar?</SubtitleAppendPrompt>
     <SubtitlesJoined>Legendas unidas</SubtitlesJoined>
     <StatusLog>Estado do registo</StatusLog>
 	<XSceneChangesImported>{0} mudanças de cena importados</XSceneChangesImported>
-    <PluginXExecuted>Plugin '{0}' executado.</PluginXExecuted>	
+    <PluginXExecuted>Plugin '{0}' executado.</PluginXExecuted>
+    <NotAValidXSubFile>Ficheiro xsub invalido!</NotAValidXSubFile>
+    <BeforeMergeLinesWithSameText>Antes de combinar linhas com o mesmo texto</BeforeMergeLinesWithSameText>	
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
@@ -1184,6 +1197,8 @@ Deseja continuar?</SubtitleAppendPrompt>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Combinar linhas com o mesmo texto</Title>
+    <MaxMillisecondsBetweenLines>Max. milissegundos entre linhas</MaxMillisecondsBetweenLines>
+    <IncludeIncrementing>Incluir linhas adicionais</IncludeIncrementing>	
   </MergeDoubleLines>  
   <MergedShortLines>
     <Title>Combinar linhas curtas</Title>
@@ -1433,7 +1448,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformUseFFMPEG>Usar o FFMPEG para extrair wave</WaveformUseFFMPEG>
     <WaveformFFMPEGPath>Directoria do FFMPEG</WaveformFFMPEGPath>
     <WaveformBrowseToFFMPEG>Procurar por FFMPEG</WaveformBrowseToFFMPEG>	
-    <SubStationAlphaStyle>Sub Station Alpha estilo</SubStationAlphaStyle>
+    <SubStationAlphaStyle>Sub Station Alpha estilo (Avançado)</SubStationAlphaStyle>
     <ChooseFont>Tipo de letra</ChooseFont>
     <ChooseColor>Escolher cor</ChooseColor>
     <SsaOutline>Contorno</SsaOutline>
@@ -1507,11 +1522,15 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformSeekSilenceBack>Localizar silêncio no áudio atrás</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Adicionar texto aqui (para nova selecção)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Reproduzir a nova selecção</WaveformPlayNewSelection>
-    <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>	
+    <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
+    <GoBack1Frame>Um frame para atrás</GoBack1Frame>
+    <GoForward1Frame>Um frame para a frente</GoForward1Frame>	
     <GoBack100Milliseconds>100 ms atrás</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms adiante</GoForward100Milliseconds>
-    <GoBack500Milliseconds>500 ms atrás</GoBack500Milliseconds>
-    <GoForward500Milliseconds>500 ms adiante</GoForward500Milliseconds>
+    <GoBack500Milliseconds>500 ms para atrás</GoBack500Milliseconds>
+    <GoForward500Milliseconds>500 ms para a frente</GoForward500Milliseconds>
+    <GoBack1Second>Um segundo para trás</GoBack1Second>
+    <GoForward1Second>Um segundo para a frente</GoForward1Second>	
     <TogglePlayPause>Alternar reproduzir/pausar</TogglePlayPause>
     <Pause>Pausar</Pause>
     <Fullscreen>Ecrã inteiro</Fullscreen>
