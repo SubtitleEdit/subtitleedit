@@ -74,7 +74,7 @@
     <Size>크기</Size>
   </General>
   <About>
-    <Title> * Subtitle Edit 정보</Title>
+    <Title>* Subtitle Edit 정보</Title>
     <AboutText1>
 Subtitle Edit는 GNU 정책을 따르는 무료 소프트웨어입니다.
 자유롭게 배포할 수 있으며 수정해서 사용할 수 있습니다.
@@ -614,6 +614,7 @@ C# 코드는 http://code.google.com/p/subtitleedit 에 있습니다.
     <Splitting>줄 분할</Splitting>
     <AutoSplitText>자동으로</AutoSplitText>
     <OneLineIsOneSubtitle>한 줄로 된 구문을 하나의 자막으로</OneLineIsOneSubtitle>
+    <LineBreak>줄바꿈</LineBreak>
     <SplitAtBlankLines>공백 줄 기준으로</SplitAtBlankLines>
     <MergeShortLines>연속해서 짧은 줄 하나로</MergeShortLines>
     <RemoveEmptyLines>공백 줄 제거</RemoveEmptyLines>
@@ -1012,9 +1013,8 @@ C# 코드는 http://code.google.com/p/subtitleedit 에 있습니다.
     <SelectedLinesTranslated>선택한 줄이 번역됨!</SelectedLinesTranslated>
     <SubtitleTranslated>자막이 번역됨!</SubtitleTranslated>
     <TranslateSwedishToDanish>현재 로드된 스웨덴어 자막을 덴마크어로 번역</TranslateSwedishToDanish>
-    <TranslateSwedishToDanishWarning>
-      현재 로드된 자막이 스웨덴어가 확실합니까?
-      스웨덴어가 맞으면 덴마크어로 번역될 것입니다.
+    <TranslateSwedishToDanishWarning>현재 로드된 자막이 스웨덴어가 확실합니까?
+스웨덴어가 맞으면 덴마크어로 번역될 것입니다.
     </TranslateSwedishToDanishWarning>
     <TranslatingViaNikseDkMt>www.nikse.dk/mt를 통해 번역하는 중...</TranslatingViaNikseDkMt>
     <BeforeSwedishToDanishTranslation>스웨덴어를 덴마크어로 번역 전</BeforeSwedishToDanishTranslation>
@@ -1163,7 +1163,7 @@ C# 코드는 http://code.google.com/p/subtitleedit 에 있습니다.
     <UnableToReadPluginResult>플러그인에서 자막 결과를 읽을 수 없습니다!</UnableToReadPluginResult>
     <UnableToCreateBackupDirectory>백업 디렉터리를 만들 수 없습니다. {0}: {1}</UnableToCreateBackupDirectory>
     <BeforeDisplaySubtitleJoin>새 자막 등록 전</BeforeDisplaySubtitleJoin>
-    <SubtitlesJoined> 새 자막이 등록됨!</SubtitlesJoined>
+    <SubtitlesJoined>새 자막이 등록됨!</SubtitlesJoined>
     <StatusLog>* 로그 기록</StatusLog>
     <XSceneChangesImported>{0}개의 장면 전환을 가져옴</XSceneChangesImported>
     <PluginXExecuted>'{0}' 플러그인이 실행됨.</PluginXExecuted>
