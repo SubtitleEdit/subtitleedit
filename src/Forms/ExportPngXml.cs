@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.VobSub;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -10,9 +13,6 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.VobSub;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -1589,7 +1589,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     addLeft = list[k].X;
                             }
                         }
-                        if (addLeft < 0.01)
+                        if (path.PointCount == 0)
+                            addLeft = left;
+                        else if (addLeft < 0.01)
                             addLeft = left + 2;
                         left = addLeft;
 
@@ -1654,7 +1656,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 oldPathPointIndex = 0;
                             if (sb.Length > 0)
                             {
+                                if (lastText.Length > 0  && left > 2)
+                                    left -= 1.5f;
+
                                 lastText.Append(sb.ToString());
+
                                 TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                             }
                             if (path.PointCount > 0)
@@ -1676,6 +1682,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             sb = new StringBuilder();
                             if (colorStack.Count > 0)
                                 c = colorStack.Pop();
+                            if (left >= 3)
+                                left -= 2.5f;
                         }
                         i += 6;
                     }
@@ -2294,6 +2302,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             labelShadowTransparency.Visible = shadowVisible;
             numericUpDownShadowTransparency.Visible = shadowVisible;
             _isLoading = false;
+            subtitleListView1_SelectedIndexChanged(null, null);
         }
 
         private void comboBoxHAlign_SelectedIndexChanged(object sender, EventArgs e)
