@@ -1,9 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using System;
+using System.IO;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -166,6 +166,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             _header.CodePageNumber = textBoxCodePageNumber.Text;
+            if (_header.CodePageNumber.Length < 3)
+            {
+                _header.CodePageNumber = "865";
+            }
 
             if (comboBoxDiscFormatCode.SelectedIndex == 1)
                 _header.DiskFormatCode = "STL30.01";
