@@ -110,15 +110,28 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonOpenTextClick(object sender, EventArgs e)
         {
             openFileDialog1.Title = buttonOpenText.Text;
-            openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt|Adobe Story|*.astx|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+            if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
+                openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+            else
+                openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt|Adobe Story|*.astx|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
             openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Multiselect = checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                string ext = Path.GetExtension(openFileDialog1.FileName).ToLower();
-                if (ext == ".astx")
-                    LoadAdobeStory(openFileDialog1.FileName);
+                if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
+                {
+                    foreach (string fileName in openFileDialog1.FileNames)
+                        AddInputFile(fileName);
+                }
                 else
-                    LoadTextFile(openFileDialog1.FileName);
+                {
+                    string ext = Path.GetExtension(openFileDialog1.FileName).ToLower();
+                    if (ext == ".astx")
+                        LoadAdobeStory(openFileDialog1.FileName);
+                    else
+                        LoadTextFile(openFileDialog1.FileName);
+                }
+                GeneratePreview();
             }
         }
 
