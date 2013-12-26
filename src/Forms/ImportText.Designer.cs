@@ -30,6 +30,7 @@
         {
             this.buttonOpenText = new System.Windows.Forms.Button();
             this.groupBoxImportText = new System.Windows.Forms.GroupBox();
+            this.checkBoxMultipleFiles = new System.Windows.Forms.CheckBox();
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.groupBoxImportOptions = new System.Windows.Forms.GroupBox();
             this.checkBoxGenerateTimeCodes = new System.Windows.Forms.CheckBox();
@@ -51,10 +52,13 @@
             this.radioButtonLineMode = new System.Windows.Forms.RadioButton();
             this.checkBoxRemoveEmptyLines = new System.Windows.Forms.CheckBox();
             this.groupBoxImportResult = new System.Windows.Forms.GroupBox();
-            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
+            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.listViewInputFiles = new System.Windows.Forms.ListView();
+            this.columnHeaderFName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxImportText.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
             this.groupBoxTimeCodes.SuspendLayout();
@@ -80,6 +84,8 @@
             // 
             this.groupBoxImportText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImportText.Controls.Add(this.listViewInputFiles);
+            this.groupBoxImportText.Controls.Add(this.checkBoxMultipleFiles);
             this.groupBoxImportText.Controls.Add(this.textBoxText);
             this.groupBoxImportText.Controls.Add(this.buttonOpenText);
             this.groupBoxImportText.Location = new System.Drawing.Point(12, 12);
@@ -88,6 +94,18 @@
             this.groupBoxImportText.TabIndex = 0;
             this.groupBoxImportText.TabStop = false;
             this.groupBoxImportText.Text = "Import text";
+            // 
+            // checkBoxMultipleFiles
+            // 
+            this.checkBoxMultipleFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxMultipleFiles.AutoSize = true;
+            this.checkBoxMultipleFiles.Location = new System.Drawing.Point(164, 22);
+            this.checkBoxMultipleFiles.Name = "checkBoxMultipleFiles";
+            this.checkBoxMultipleFiles.Size = new System.Drawing.Size(198, 17);
+            this.checkBoxMultipleFiles.TabIndex = 5;
+            this.checkBoxMultipleFiles.Text = "Multiple files - one file is one subtitle";
+            this.checkBoxMultipleFiles.UseVisualStyleBackColor = true;
+            this.checkBoxMultipleFiles.CheckedChanged += new System.EventHandler(this.checkBoxMultipleFiles_CheckedChanged);
             // 
             // textBoxText
             // 
@@ -99,7 +117,7 @@
             this.textBoxText.Multiline = true;
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxText.Size = new System.Drawing.Size(505, 272);
+            this.textBoxText.Size = new System.Drawing.Size(505, 297);
             this.textBoxText.TabIndex = 1;
             this.textBoxText.TextChanged += new System.EventHandler(this.TextBoxTextTextChanged);
             this.textBoxText.DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBoxTextDragDrop);
@@ -368,28 +386,6 @@
             this.groupBoxImportResult.TabStop = false;
             this.groupBoxImportResult.Text = "Preview";
             // 
-            // SubtitleListview1
-            // 
-            this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SubtitleListview1.DisplayExtraFromExtra = false;
-            this.SubtitleListview1.FirstVisibleIndex = -1;
-            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SubtitleListview1.FullRowSelect = true;
-            this.SubtitleListview1.GridLines = true;
-            this.SubtitleListview1.HideSelection = false;
-            this.SubtitleListview1.Location = new System.Drawing.Point(6, 19);
-            this.SubtitleListview1.MultiSelect = false;
-            this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(852, 187);
-            this.SubtitleListview1.TabIndex = 0;
-            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
-            this.SubtitleListview1.UseSyntaxColoring = true;
-            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
-            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
@@ -417,6 +413,58 @@
             this.buttonOK.Text = "&Next >";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
+            // 
+            // SubtitleListview1
+            // 
+            this.SubtitleListview1.AllowDrop = true;
+            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SubtitleListview1.DisplayExtraFromExtra = false;
+            this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SubtitleListview1.FullRowSelect = true;
+            this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HideSelection = false;
+            this.SubtitleListview1.Location = new System.Drawing.Point(6, 19);
+            this.SubtitleListview1.MultiSelect = false;
+            this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.OwnerDraw = true;
+            this.SubtitleListview1.Size = new System.Drawing.Size(852, 187);
+            this.SubtitleListview1.TabIndex = 0;
+            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
+            this.SubtitleListview1.UseSyntaxColoring = true;
+            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
+            // 
+            // listViewInputFiles
+            // 
+            this.listViewInputFiles.AllowDrop = true;
+            this.listViewInputFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewInputFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderFName,
+            this.columnHeaderSize});
+            this.listViewInputFiles.FullRowSelect = true;
+            this.listViewInputFiles.HideSelection = false;
+            this.listViewInputFiles.Location = new System.Drawing.Point(6, 48);
+            this.listViewInputFiles.Name = "listViewInputFiles";
+            this.listViewInputFiles.Size = new System.Drawing.Size(505, 297);
+            this.listViewInputFiles.TabIndex = 6;
+            this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
+            this.listViewInputFiles.View = System.Windows.Forms.View.Details;
+            this.listViewInputFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragDrop);
+            this.listViewInputFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragEnter);
+            // 
+            // columnHeaderFName
+            // 
+            this.columnHeaderFName.Text = "File name";
+            this.columnHeaderFName.Width = 420;
+            // 
+            // columnHeaderSize
+            // 
+            this.columnHeaderSize.Text = "Size";
+            this.columnHeaderSize.Width = 81;
             // 
             // ImportText
             // 
@@ -484,5 +532,9 @@
         private System.Windows.Forms.GroupBox groupBoxTimeCodes;
         private System.Windows.Forms.Label labelLineBreak;
         private System.Windows.Forms.TextBox textBoxLineBreak;
+        private System.Windows.Forms.CheckBox checkBoxMultipleFiles;
+        private System.Windows.Forms.ListView listViewInputFiles;
+        private System.Windows.Forms.ColumnHeader columnHeaderFName;
+        private System.Windows.Forms.ColumnHeader columnHeaderSize;
     }
 }
