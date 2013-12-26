@@ -690,7 +690,9 @@
         public class ImportText
         {
             public string Title { get; set; }
+            public string OneSubtitleIsOneFile { get; set; }
             public string OpenTextFile { get; set; }
+            public string OpenTextFiles { get; set; }
             public string ImportOptions { get; set; }
             public string Splitting { get; set; }
             public string AutoSplitText { get; set; }

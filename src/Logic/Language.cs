@@ -797,7 +797,9 @@ namespace Nikse.SubtitleEdit.Logic
             ImportText = new LanguageStructure.ImportText
             {
                 Title = "Import plain text",
+                OneSubtitleIsOneFile = "Multiple files - one file is one subtitle",
                 OpenTextFile = "Open text file...",
+                OpenTextFiles = "Open text files...",
                 ImportOptions = "Import options",
                 Splitting = "Splitting",
                 AutoSplitText = "Auto split text",

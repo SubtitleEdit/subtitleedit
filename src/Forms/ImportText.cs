@@ -39,6 +39,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
             textBoxLineBreak.Left = labelLineBreak.Left + labelLineBreak.Width + 3;
 
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.OpenTextFiles)) //TODO: Fix in 3.4
+            { 
+                checkBoxMultipleFiles.Visible = false;                
+            }
+            else
+            {
+                checkBoxMultipleFiles.AutoSize = true;
+                checkBoxMultipleFiles.Text = Configuration.Settings.Language.ImportText.OneSubtitleIsOneFile;
+                checkBoxMultipleFiles.Left = buttonOpenText.Left - checkBoxMultipleFiles.Width - 9;
+            }
+            listViewInputFiles.Visible = false;
+
             radioButtonSplitAtBlankLines.Text = Configuration.Settings.Language.ImportText.SplitAtBlankLines;
             checkBoxMergeShortLines.Text = Configuration.Settings.Language.ImportText.MergeShortLines;
             checkBoxRemoveEmptyLines.Text = Configuration.Settings.Language.ImportText.RemoveEmptyLines;
@@ -126,7 +138,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void GeneratePreviewReal()
         {
             _subtitle = new Subtitle();
-            if (radioButtonLineMode.Checked)
+            if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
+                ImportMultipleFiles(listViewInputFiles.Items);
+            else if (radioButtonLineMode.Checked)
                 ImportLineMode(textBoxText.Lines);
             else if (radioButtonAutoSplit.Checked)
                 ImportAutoSplit(textBoxText.Lines);
@@ -154,6 +168,43 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxImportResult.Text = string.Format(Configuration.Settings.Language.ImportText.PreviewLinesModifiedX, _subtitle.Paragraphs.Count);
             SubtitleListview1.Fill(_subtitle);
             SubtitleListview1.SelectIndexAndEnsureVisible(0);
+        }
+
+        private void ImportMultipleFiles(ListView.ListViewItemCollection listViewItemCollection)
+        {
+            foreach (ListViewItem item in listViewItemCollection)
+            {
+                string line = string.Empty;
+                try
+                {
+                    line = System.IO.File.ReadAllText(item.Text).Trim();
+                }
+                catch
+                {
+                    line = string.Empty;    
+                }
+
+                line = line.Replace("|", Environment.NewLine);
+                if (textBoxLineBreak.Text.Length > 0)
+                {
+                    line = line.Replace(textBoxLineBreak.Text, Environment.NewLine);
+                }
+
+                if (line.Trim().Length == 0)
+                {
+                    if (!checkBoxRemoveEmptyLines.Checked)
+                        _subtitle.Paragraphs.Add(new Paragraph());
+                }
+                else if (!ContainsLetters(line))
+                {
+                    if (!checkBoxRemoveLinesWithoutLetters.Checked)
+                        _subtitle.Paragraphs.Add(new Paragraph(0, 0, line.Trim()));
+                }
+                else
+                {
+                    _subtitle.Paragraphs.Add(new Paragraph(0, 0, line.Trim()));
+                }
+            }
         }
 
         private void MergeLinesWithContinuation()
@@ -663,6 +714,59 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBoxLineBreak_TextChanged(object sender, EventArgs e)
         {
             GeneratePreview();
+        }
+
+        private void checkBoxMultipleFiles_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxMultipleFiles.Checked)
+            {
+                listViewInputFiles.Visible = true;
+                textBoxText.Visible = false;
+                buttonOpenText.Text = Configuration.Settings.Language.ImportText.OpenTextFiles;
+                groupBoxSplitting.Enabled = false;
+            }
+            else
+            {
+                listViewInputFiles.Visible = false;
+                textBoxText.Visible = true;
+                buttonOpenText.Text = Configuration.Settings.Language.ImportText.OpenTextFile;
+                groupBoxSplitting.Enabled = true;
+                
+            }
+            GeneratePreview();
+        }
+
+        private void listViewInputFiles_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
+                e.Effect = DragDropEffects.All;
+        }
+
+        private void listViewInputFiles_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (string fileName in fileNames)
+            {
+                AddInputFile(fileName);
+            }
+            GeneratePreview();
+        }
+
+        private void AddInputFile(string fileName)
+        {
+            try
+            {
+                var fi = new FileInfo(fileName);
+                var item = new ListViewItem(fileName);
+                item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));            
+                if (fi.Length < 1024 * 1024) // max 1 mb
+                {
+                    listViewInputFiles.Items.Add(item);
+                }
+            }
+            catch
+            {
+            }
         }
 
     }
