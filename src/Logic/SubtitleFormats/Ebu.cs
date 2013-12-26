@@ -256,6 +256,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 TextField = TextField.Replace("</u>", underlineOff);
                 TextField = TextField.Replace("</U>", underlineOff);
 
+                //em-dash (–) tags
+               // TextField = TextField.Replace("–", "Ð");
+
                 //font tags
                 if (header.DisplayStandardCode == "0") // Open subtitling
                 {
@@ -334,8 +337,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 TextField += endOfLine;
 
+                // save em-dash indexes (–)
+                List<int> indexOfEmdash = new List<int>();
+                for (int j=0; j<TextField.Length; j++)
+                {
+                    if (TextField.Substring(j, 1) == "–")
+                        indexOfEmdash.Add(j);
+                }
+
                 // convert text to bytes
                 byte[] bytes = encoding.GetBytes(TextField);
+
+                // restore em-dashes (–)
+                foreach (int index in indexOfEmdash)
+                {
+                    bytes[index] = 0xd0;
+                }
 
                 for (int i = 0; i < 112; i++)
                 {
@@ -499,19 +516,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     tti.VerticalPosition = (byte)startRow;  // bottom (vertical)
                 }
 
-                tti.JustificationCode = saveOptions.JustificationCode;
+               tti.JustificationCode = saveOptions.JustificationCode;
                 if (p.Text.StartsWith("{\\an1}") || p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an7}"))
                 {
                     tti.JustificationCode = 1; // 01h=left-justified text
-                }
-                else if (p.Text.StartsWith("{\\an2}") || p.Text.StartsWith("{\\an5}") || p.Text.StartsWith("{\\an8}"))
-                {
-                    tti.JustificationCode = 2; // 02h=centred text
                 }
                 else if (p.Text.StartsWith("{\\an3}") || p.Text.StartsWith("{\\an6}") || p.Text.StartsWith("{\\an9}"))
                 {
                     tti.JustificationCode = 3; // 03h=right-justified
                 }
+                else // If it's not left- or right-justified, it's centred.
+                {
+                    tti.JustificationCode = 2; // 02h=centred text
+                 }               
 
                 tti.SubtitleNumber = (ushort)subtitleNumber;
                 tti.TextField = p.Text;
@@ -1015,6 +1032,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             sb.Append("<u>");
                         else if (b == underlineOff)
                             sb.Append("</u>");
+                        //else if (b == 0xD0) // em-dash 
+                        //    sb.Append("–");
                         else if (b == textFieldTerminator)
                             break;
                         else if ((b >= 0x20 && b <= 0x7F) || b >= 0xA1)
