@@ -13451,7 +13451,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemSubStationAlpha.Visible = false;
             }
 
-            if (format.GetType() == typeof(DCSubtitle) || format.GetType() == typeof(DCinemaSmpte2010))
+            if (format.GetType() == typeof(DCSubtitle) || format.GetType() == typeof(DCinemaSmpte2010) || format.GetType() == typeof(DCinemaSmpte2007))
             {
                 toolStripMenuItemDCinemaProperties.Visible = true;
             }
