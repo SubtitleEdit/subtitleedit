@@ -42,6 +42,8 @@ namespace Nikse.SubtitleEdit.Controls
             double? millisecs = GetTotalMilliseconds();
             if (millisecs.HasValue)
             {
+                if (millisecs.Value == TimeCode.MaxTime.TotalMilliseconds)
+                    millisecs = 0;
 
                 if (Mode == TimeMode.HHMMSSMS)
                 {
@@ -112,6 +114,9 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
+                if (maskedTextBox1.Text.Replace(".", string.Empty).Replace(",", string.Empty).Replace(":", string.Empty).Trim() == string.Empty)
+                   return TimeCode.MaxTime;
+
                 string startTime = maskedTextBox1.Text;
                 startTime = startTime.Replace(' ', '0');
 
@@ -178,6 +183,12 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
+                if (value.TotalMilliseconds == TimeCode.MaxTime.TotalMilliseconds)
+                {
+                    maskedTextBox1.Text = string.Empty;
+                    return;
+                }
+
                 if (Mode == TimeMode.HHMMSSMS && value != null && value.TotalMilliseconds < 0)
                     maskedTextBox1.Mask = "-00:00:00.000";
                 else if (Mode == TimeMode.HHMMSSMS)
