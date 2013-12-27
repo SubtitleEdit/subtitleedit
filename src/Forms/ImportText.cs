@@ -32,6 +32,8 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonLineMode.Text = Configuration.Settings.Language.ImportText.OneLineIsOneSubtitle;
             labelLineBreak.Left = radioButtonLineMode.Left + radioButtonLineMode.Width + 10;
             labelLineBreak.Text = Configuration.Settings.Language.ImportText.LineBreak;
+            columnHeaderFName.Text = Configuration.Settings.Language.JoinSubtitles.FileName;
+            columnHeaderSize.Text = Configuration.Settings.Language.General.Size;
             if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.LineBreak)) //TODO: Remove in 3.4
             {
                 labelLineBreak.Visible = false;
