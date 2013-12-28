@@ -592,6 +592,12 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Joan azpidatzi zenbakira</Title>
     <XIsNotAValidNumber>{0} Ez da baliozko zenbakia</XIsNotAValidNumber>
   </GoToLine>
+  <ImportImages>
+    <Title>Inportatu irudiak</Title>
+    <ImageFiles>Irudi agiriak</ImageFiles>
+    <Input>Sarrera</Input>
+    <InputDescription>Hautatu sarrera agiriak (bilatu edo arrastatu-eta-askatu)</InputDescription>
+  </ImportImages>
   <ImportSceneChanges>
     <Title>Inportatu agerraldi aldaketak</Title>
     <OpenTextFile>&amp;Inportatu idazki agiria...</OpenTextFile>
@@ -604,11 +610,14 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
   </ImportSceneChanges>
   <ImportText>
     <Title>Inportatu idatzi laua</Title>
+    <OneSubtitleIsOneFile>Agiri anitz - agiri bat azpidatzi bat da</OneSubtitleIsOneFile>
     <OpenTextFile>&amp;Ireki idatzi agiria...</OpenTextFile>
+    <OpenTextFiles>Ireki idatzi agiriak...</OpenTextFiles>
     <ImportOptions>Inportatu aukerak</ImportOptions>
     <Splitting>Banantzen</Splitting>
     <AutoSplitText>Berez banantze idatzia</AutoSplitText>
     <OneLineIsOneSubtitle>Lerro bat azpidatzi bat da</OneLineIsOneSubtitle>
+    <LineBreak>Lerro haustea</LineBreak>
     <SplitAtBlankLines>Banandu lerro hutsetan</SplitAtBlankLines>
     <MergeShortLines>Batu jarraipena duten lerro laburrak</MergeShortLines>
     <RemoveEmptyLines>Kendu hutsik dauden lerroak</RemoveEmptyLines>
@@ -662,6 +671,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSubtitleFromMatroskaFile>Inportatu azpidatzia &amp;Matroska agiritik...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Inportatu azpidatzia esk&amp;uzko kodeaketa hautapenarekin...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Inportatu idatzi laua&amp;...</ImportText>
+        <ImportImages>Inportatu irudiak</ImportImages>
         <ImportTimecodes>Inportatu denbora &amp;kodeak...</ImportTimecodes>
         <Export>&amp;Esportatu</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
@@ -694,6 +704,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>Ordezte &amp;anitza...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Joan azpidatzi zenbakira...</GoToSubtitleNumber>
         <RightToLeftMode>Eskuin-ezker &amp;modua</RightToLeftMode>
+        <FixTrlViaUnicodeControlCharacters>Zurendu ESEZ Unicode hizki agitearen bidez (hautaturiko lerroetan)</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Aldera&amp;ntzizkatu ESEZ hasiera/amaiera (hautaturiko lerroetan)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Erakutsi jatorrizko idatzia audio/bideo aurreikuspenetan</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Aldatu hautapena...</ModifySelection>
@@ -1157,6 +1168,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <StatusLog>Egoera oharra</StatusLog>
     <XSceneChangesImported>{0} agerraldi aldaketa inportaturik</XSceneChangesImported>
     <PluginXExecuted>'{0}' plugin exekutaturik.</PluginXExecuted>
+    <NotAValidXSubFile>Ez da baliozko xsub agiria!</NotAValidXSubFile>
+    <BeforeMergeLinesWithSameText>Idatzi bera duten lerroak batu aurretik</BeforeMergeLinesWithSameText>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Hautatu azpidatzia Matroska agiritik</Title>
@@ -1181,6 +1194,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Batu idazki bera duten lerroak</Title>
+    <MaxMillisecondsBetweenLines>Geh. segundumilaen lerroen artean</MaxMillisecondsBetweenLines>
+    <IncludeIncrementing>Barneratu gehikuntza lerroak</IncludeIncrementing>
   </MergeDoubleLines>
   <MergedShortLines>
     <Title>Batu lerro laburrak</Title>
@@ -1340,7 +1355,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <WaveformAndSpectrogram>Uhinera/argilitzaera</WaveformAndSpectrogram>
     <Tools>Tresnak</Tools>
     <WordLists>Hitz zerrendak</WordLists>
-    <SsaStyle>SSA Estiloa</SsaStyle>
+    <SsaStyle>ASS/SSA Estiloa</SsaStyle>
     <Proxy>Proxya</Proxy>
     <ShowToolBarButtons>Erakutsi tresnabarra botoiak</ShowToolBarButtons>
     <New>Berria</New>
@@ -1435,7 +1450,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <ChooseColor>Hautatu margoa</ChooseColor>
     <SsaOutline>Ingurua</SsaOutline>
     <SsaShadow>Itzala</SsaShadow>
-    <SsaOpaqueBox>Kutxa argik.</SsaOpaqueBox>
+    <SsaOpaqueBox>Kutxa argikaitza</SsaOpaqueBox>
     <Testing123>Aztertzen 123...</Testing123>
     <Language>Hizkuntza:</Language>
     <NamesIgnoreLists>Izen/ezikusi zerrenda (larri-xehe artean)</NamesIgnoreLists>
@@ -1505,10 +1520,14 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <WaveformAddTextHere>Gehitu idatzia hemen (hautapen berrirako)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Irakurri hautapen berria</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Irakurri lehenik hautaturiko azpidatzia</WaveformPlayFirstSelectedSubtitle>
+    <GoBack1Frame>Frame bat atzera</GoBack1Frame>
+    <GoForward1Frame>Frame bat aurrera</GoForward1Frame>
     <GoBack100Milliseconds>100 sm atzera</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 sm aurrera</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 sm atzera</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 sm aurrera</GoForward500Milliseconds>
+    <GoBack1Second>Segundu bat atzera</GoBack1Second>
+    <GoForward1Second>Segundu bat aurrera</GoForward1Second>
     <TogglePlayPause>Aldatu irakurri/pausatu</TogglePlayPause>
     <Pause>Pausatu</Pause>
     <Fullscreen>Ikusleiho-osoan</Fullscreen>
