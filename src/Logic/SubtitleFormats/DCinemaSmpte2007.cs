@@ -467,7 +467,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         xr.Close();
                         strm.Close();
                     }
-                    rdr.Close();                    
+                    rdr.Close();
                 }
                 catch (Exception exception)
                 {

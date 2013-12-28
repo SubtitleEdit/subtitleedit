@@ -119,7 +119,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        
+
 
         /// <summary>
         ///A test for RemoveHIInsideLine

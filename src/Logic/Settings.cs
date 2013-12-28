@@ -1357,7 +1357,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.General.RightToLeftMode = Convert.ToBoolean(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("LastSaveAsFormat");
             if (subNode != null)
-                settings.General.LastSaveAsFormat = subNode.InnerText.Trim();            
+                settings.General.LastSaveAsFormat = subNode.InnerText.Trim();
             subNode = node.SelectSingleNode("ShowBetaStuff");
             if (subNode != null)
                 settings.General.ShowBetaStuff = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -2461,7 +2461,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MoveVideo100Or500MsPlaySmallSample", settings.General.MoveVideo100Or500MsPlaySmallSample.ToString());
             textWriter.WriteElementString("DisableVideoAutoLoading", settings.General.DisableVideoAutoLoading.ToString());
             textWriter.WriteElementString("RightToLeftMode", settings.General.RightToLeftMode.ToString());
-            textWriter.WriteElementString("LastSaveAsFormat", settings.General.LastSaveAsFormat);            
+            textWriter.WriteElementString("LastSaveAsFormat", settings.General.LastSaveAsFormat);
             textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
             textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
 

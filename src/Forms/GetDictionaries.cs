@@ -229,7 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // Russian fix
                     if (fileName.StartsWith("russian-aot"))
-                        fileName = fileName.Replace("russian-aot", "ru_RU");                    
+                        fileName = fileName.Replace("russian-aot", "ru_RU");
 
                     string path = Path.Combine(dictionaryFolder, fileName);
                     zip.ExtractFile(entry, path);

@@ -528,7 +528,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else // If it's not left- or right-justified, it's centred.
                 {
                     tti.JustificationCode = 2; // 02h=centred text
-                 }               
+                 }
 
                 tti.SubtitleNumber = (ushort)subtitleNumber;
                 tti.TextField = p.Text;
@@ -1032,7 +1032,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             sb.Append("<u>");
                         else if (b == underlineOff)
                             sb.Append("</u>");
-                        //else if (b == 0xD0) // em-dash 
+                        //else if (b == 0xD0) // em-dash
                         //    sb.Append("–");
                         else if (b == textFieldTerminator)
                             break;

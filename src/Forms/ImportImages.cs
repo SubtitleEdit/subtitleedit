@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 FileInfo fi = new FileInfo(fileName);
                 var item = new ListViewItem(fileName);
-                item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));                           
+                item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
                 string ext = Path.GetExtension(fileName).ToLower();
                 if (ext == ".png" || ext == ".jpg" || ext == ".bmp" || ext == ".gif" || ext == ".tif" || ext == ".tiff")
                 {

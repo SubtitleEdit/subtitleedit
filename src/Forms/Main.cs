@@ -7963,7 +7963,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!string.IsNullOrEmpty(_fileName))
                     Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
                 Configuration.Settings.General.RightToLeftMode = toolStripMenuItemRightToLeftMode.Checked;
-                
+
 
                 SaveUndockedPositions();
                 SaveListViewWidths();
@@ -18546,7 +18546,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ImportAndOcrSrt("images", form.Subtitle);
             }
-            _formPositionsAndSizes.SavePositionAndSize(form);            
+            _formPositionsAndSizes.SavePositionAndSize(form);
         }
 
     }
