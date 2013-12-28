@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         int seconds = int.Parse(parts[1]);
                         int milliseconds = int.Parse(parts[2]) * 10;
                         string text = GetTextAfterTimeCodes(p.Text);
-                        var start = new TimeCode(0, minutes, seconds, milliseconds);                        
+                        var start = new TimeCode(0, minutes, seconds, milliseconds);
                         var newParagraph = new Paragraph(start, new TimeCode(0,0,0,0), text);
                         subtitle.Paragraphs.Add(newParagraph);
                     }
@@ -190,12 +190,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (next != null)
                 {
                     if (string.IsNullOrEmpty(next.Text))
-                    {                        
+                    {
                         p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds));
                     }
                     else
                     {
-                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;                       
+                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
                     }
                     if (p.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     {

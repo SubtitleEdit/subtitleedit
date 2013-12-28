@@ -42,8 +42,8 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxLineBreak.Left = labelLineBreak.Left + labelLineBreak.Width + 3;
 
             if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.OpenTextFiles)) //TODO: Fix in 3.4
-            { 
-                checkBoxMultipleFiles.Visible = false;                
+            {
+                checkBoxMultipleFiles.Visible = false;
             }
             else
             {
@@ -196,7 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                    line = string.Empty;    
+                    line = string.Empty;
                 }
 
                 line = line.Replace("|", Environment.NewLine);
@@ -300,9 +300,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 // Replace user line break character with Environment.NewLine.
                 string line = _line;
-                if (textBoxLineBreak.Text.Length > 0) 
-                { 
-                    line = _line.Replace(textBoxLineBreak.Text, Environment.NewLine); 
+                if (textBoxLineBreak.Text.Length > 0)
+                {
+                    line = _line.Replace(textBoxLineBreak.Text, Environment.NewLine);
                 }
 
                 if (line.Trim().Length == 0)
@@ -746,7 +746,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxText.Visible = true;
                 buttonOpenText.Text = Configuration.Settings.Language.ImportText.OpenTextFile;
                 groupBoxSplitting.Enabled = true;
-                
+
             }
             GeneratePreview();
         }
@@ -773,7 +773,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var fi = new FileInfo(fileName);
                 var item = new ListViewItem(fileName);
-                item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));            
+                item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
                 if (fi.Length < 1024 * 1024) // max 1 mb
                 {
                     listViewInputFiles.Items.Add(item);

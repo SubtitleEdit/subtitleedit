@@ -1372,7 +1372,7 @@ namespace Nikse.SubtitleEdit.Forms
                     old.Dispose();
             }
             catch
-            { 
+            {
                 // can crash is user is clicking around...
             }
         }

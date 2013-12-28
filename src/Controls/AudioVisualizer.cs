@@ -670,7 +670,7 @@ namespace Nikse.SubtitleEdit.Controls
                 position = SecondsToXPosition(seconds);
             }
             pen.Dispose();
-            textBrush.Dispose();          
+            textBrush.Dispose();
         }
 
         private static string GetDisplayTime(double seconds)

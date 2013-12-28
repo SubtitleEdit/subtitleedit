@@ -1674,7 +1674,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             }
                             if (addLeft < 0.01)
                                 addLeft = left + 2;
-                            left = addLeft;                            
+                            left = addLeft;
 
                             DrawShadowAndPAth(parameter, g, path);
                             g.FillPath(new SolidBrush(c), path);
