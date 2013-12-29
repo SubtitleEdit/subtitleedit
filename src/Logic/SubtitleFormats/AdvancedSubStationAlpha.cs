@@ -439,7 +439,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 {
                     int start = text.IndexOf(@"{\fn");
                     int end = text.IndexOf('}', start);
-                    if (end > 0)
+                    if (end > 0 && !text.Substring(start).StartsWith("{\\fn}"))
                     {
                         string fontName = text.Substring(start + 4, end - (start + 4));
                         string extraTags = string.Empty;
@@ -449,8 +449,12 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             text = text.Insert(start, "<font face=\"" + fontName + "\"" + extraTags + "><i>");
                         else
                             text = text.Insert(start, "<font face=\"" + fontName + "\"" + extraTags + ">");
-
-                        text += "</font>";
+                        
+                        int indexOfEndTag = text.IndexOf("{\\fn}", start);
+                        if (indexOfEndTag > 0)
+                            text = text.Remove(indexOfEndTag, "{\\fn}".Length).Insert(indexOfEndTag, "</font>");
+                        else
+                            text += "</font>";
                     }
                 }
 
@@ -458,7 +462,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 {
                     int start = text.IndexOf(@"{\fs");
                     int end = text.IndexOf('}', start);
-                    if (end > 0)
+                    if (end > 0 && !text.Substring(start).StartsWith("{\\fs}"))
                     {
                         string fontSize = text.Substring(start + 4, end - (start + 4));
                         string extraTags = string.Empty;
@@ -470,7 +474,12 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 text = text.Insert(start, "<font size=\"" + fontSize + "\"" + extraTags + "><i>");
                             else
                                 text = text.Insert(start, "<font size=\"" + fontSize + "\"" + extraTags + ">");
-                            text += "</font>";
+
+                            int indexOfEndTag = text.IndexOf("{\\fs}", start);
+                            if (indexOfEndTag > 0)
+                                text = text.Remove(indexOfEndTag, "{\\fs}".Length).Insert(indexOfEndTag, "</font>");
+                            else
+                                text += "</font>";
                         }
                     }
                 }
@@ -479,7 +488,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 {
                     int start = text.IndexOf(@"{\c");
                     int end = text.IndexOf('}', start);
-                    if (end > 0)
+                    if (end > 0 && !text.Substring(start).StartsWith("{\\c}"))
                     {
                         string color = text.Substring(start + 4, end - (start + 4));
                         string extraTags = string.Empty;
@@ -497,7 +506,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             text = text.Insert(start, "<font color=\"" + color + "\"" + extraTags + "><i>");
                         else
                             text = text.Insert(start, "<font color=\"" + color + "\"" + extraTags + ">");
-                        text += "</font>";
+                        int indexOfEndTag = text.IndexOf("{\\c}", start);
+                        if (indexOfEndTag > 0)
+                            text = text.Remove(indexOfEndTag, "{\\c}".Length).Insert(indexOfEndTag, "</font>");
+                        else
+                            text += "</font>";
                     }
                 }
 
@@ -505,7 +518,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 {
                     int start = text.IndexOf(@"{\1c");
                     int end = text.IndexOf('}', start);
-                    if (end > 0)
+                    if (end > 0 && !text.Substring(start).StartsWith("{\\1c}"))
                     {
                         string color = text.Substring(start + 5, end - (start + 5));
                         string extraTags = string.Empty;
