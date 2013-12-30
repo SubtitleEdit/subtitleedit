@@ -11986,6 +11986,12 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                if (timeCodeSubtitle.Paragraphs.Count != _subtitle.Paragraphs.Count && !string.IsNullOrEmpty(_language.ImportTimeCodesDifferentNumberOfLinesWarning))
+                {
+                    if (MessageBox.Show(string.Format(_language.ImportTimeCodesDifferentNumberOfLinesWarning, timeCodeSubtitle.Paragraphs.Count, _subtitle.Paragraphs.Count), _title, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+                        return;
+                }
+
                 MakeHistoryForUndo(_language.BeforeTimeCodeImport);
 
                 if (GetCurrentSubtitleFormat().IsFrameBased)

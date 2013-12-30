@@ -969,6 +969,7 @@
             public string PluginXExecuted { get; set; }
             public string NotAValidXSubFile { get; set; }
             public string BeforeMergeLinesWithSameText { get; set; }
+            public string ImportTimeCodesDifferentNumberOfLinesWarning { get; set; }
 
             public class MainMenu
             {

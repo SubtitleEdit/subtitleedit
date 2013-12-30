@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.3.12 (xth December 2013)
+3.3.12 (xth January 2013)
 * NEW:
    * Added "File -> Import images"
    * Added "Tools -> Merge lines with same text"
@@ -23,6 +23,7 @@
   * Missing outline/shadow in export images - thx minhjirachi
   * Fixed some missing characters in PAC format - thx Adrian
   * Fixed some bugs in "Youtube transcript" format - thx tony
+  * Fixed bug in reading of end-tags in ASS - thx Null
 
 
 3.3.11 (6th December 2013)
