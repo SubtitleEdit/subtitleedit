@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Forms
                 formSubOcr.InitializeQuick(subs, _palette, Configuration.Settings.VobSubOcr, SelectedLanguageString);
                 var subtitle = formSubOcr.ReadyVobSubRip();
                 var exportBdnXmlPng = new ExportPngXml();
-                exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Nikse.SubtitleEdit.Logic.SubtitleFormats.SubRip(), "VOBSUB", "DVD", formSubOcr);
+                exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Nikse.SubtitleEdit.Logic.SubtitleFormats.SubRip(), "VOBSUB", "DVD", formSubOcr, SelectedLanguageString);
                 exportBdnXmlPng.ShowDialog(this);
             }
 

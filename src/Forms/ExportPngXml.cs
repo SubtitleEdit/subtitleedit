@@ -2151,10 +2151,48 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
 
-        internal void InitializeFromVobSubOcr(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VobSubOcr vobSubOcr)
+        internal void InitializeFromVobSubOcr(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VobSubOcr vobSubOcr, string languageString)
         {
             _vobSubOcr = vobSubOcr;
             Initialize(subtitle, format, exportType, fileName, null);
+            
+            //set language
+            if (!string.IsNullOrEmpty(languageString))
+            {
+                if (languageString.Contains("(") && !languageString.StartsWith("("))
+                    languageString = languageString.Substring(0, languageString.IndexOf("(") - 1).Trim();
+                for (int i = 0; i < comboBoxLanguage.Items.Count; i++)
+                {
+                    string l = comboBoxLanguage.Items[i].ToString();
+                    if (l == languageString)
+                        comboBoxLanguage.SelectedIndex = i;
+                }
+            }
+
+            //Disable options not available when exporting existing images
+            comboBoxSubtitleFont.Enabled = false;
+            comboBoxSubtitleFontSize.Enabled = false;
+
+            buttonColor.Visible = false;
+            panelColor.Visible = false;
+            checkBoxBold.Visible = false;
+            checkBoxSimpleRender.Visible = false;
+            comboBox3D.Enabled = false;
+            numericUpDownDepth3D.Enabled = false;
+
+            buttonBorderColor.Visible = false;
+            panelBorderColor.Visible = false;
+            labelBorderWidth.Visible = false;
+            comboBoxBorderWidth.Visible = false;
+
+            buttonShadowColor.Visible = false;
+            panelShadowColor.Visible = false;
+            labelShadowWidth.Visible = false;
+            comboBoxShadowWidth.Visible = false;
+            labelShadowTransparency.Visible = false;
+            numericUpDownShadowTransparency.Visible = false;
+            labelLineHeight.Visible = false;
+            numericUpDownLineSpacing.Visible = false;
         }
 
         private void subtitleListView1_SelectedIndexChanged(object sender, EventArgs e)

@@ -222,6 +222,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         string _lastLine;
         string _languageId;
+        string _importLanguageString;
 
         // Dictionaries/spellchecking/fixing
         OcrFixEngine _ocrFixEngine;
@@ -593,6 +594,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxCustomFourColors.Checked = true;
 
             SetTesseractLanguageFromLanguageString(languageString);
+            _importLanguageString = languageString;
         }
 
         internal void InitializeQuick(List<VobSubMergedPack> vobSubMergedPackist, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string languageString)
@@ -615,6 +617,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_palette == null)
                 checkBoxCustomFourColors.Checked = true;
+
+            _importLanguageString = languageString;
+            if (_importLanguageString.Contains("(") && !_importLanguageString.StartsWith("("))
+                _importLanguageString = _importLanguageString.Substring(0, languageString.IndexOf("(") - 1).Trim();
         }
 
         internal void InitializeBatch(List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
@@ -878,6 +884,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _vobSubMergedPackist = ChooseLanguage.SelectedVobSubMergedPacks;
                     SetTesseractLanguageFromLanguageString(ChooseLanguage.SelectedLanguageString);
+                    _importLanguageString = ChooseLanguage.SelectedLanguageString;
                 }
                 else
                 {
@@ -6805,21 +6812,21 @@ namespace Nikse.SubtitleEdit.Forms
         private void vobSubToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "VOBSUB", FileName, this);
+            exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "VOBSUB", FileName, this, _importLanguageString);
             exportBdnXmlPng.ShowDialog(this);
         }
 
         private void bluraySupToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BLURAYSUP", FileName, this);
+            exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BLURAYSUP", FileName, this, _importLanguageString);
             exportBdnXmlPng.ShowDialog(this);
         }
 
         private void bDNXMLToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BDNXML", FileName, this);
+            exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BDNXML", FileName, this, _importLanguageString);
             exportBdnXmlPng.ShowDialog(this);
         }
 
@@ -6947,7 +6954,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void dOSTToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "DOST", FileName, this);
+            exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "DOST", FileName, this, _importLanguageString);
             exportBdnXmlPng.ShowDialog(this);
         }
 
