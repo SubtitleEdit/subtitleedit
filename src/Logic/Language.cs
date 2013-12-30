@@ -1081,6 +1081,7 @@ namespace Nikse.SubtitleEdit.Logic
                 PluginXExecuted = "Plugin '{0}' executed.",
                 NotAValidXSubFile = "Not a valid xsub file!",
                 BeforeMergeLinesWithSameText = "Before merging lines with same text",
+                ImportTimeCodesDifferentNumberOfLinesWarning = "Subtitle with time codes has a different number of lines ({0}) than current subtitle ({1}) - continue anyway?",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
