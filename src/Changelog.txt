@@ -4,7 +4,6 @@
 * NEW:
    * Added "File -> Import images"
    * Added "Tools -> Merge lines with same text"
-   * "Save as..." now remembers subtitle format
    * Importing from plain text file,  "One line is one subtitle" now has a 
      "Line break" option - thx Adrian
 * IMPROVED:
@@ -15,6 +14,10 @@
    * Updated Brazilian Portuguese language file - thx Igor Rückert
    * Updated Croatian language file - thx Jozo Marić
    * Now remembers RTL mode - thx FTABoy
+   * Export images from DVD now only shows relevant options
+   * Fix short durations will now see if line can start earlier - thx Daniel
+   * "File -> Import plain text" can now import from multiple files
+   * "Save as..." now remembers subtitle format
 * FIXED:
   * Fixed bug in "Fix common errors: Remove hyphen" - thx honeybunny
   * Fixed bug in "Remove text for HI" issue - thx cipry15
