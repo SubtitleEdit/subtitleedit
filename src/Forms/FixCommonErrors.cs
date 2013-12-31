@@ -862,6 +862,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!skip && displayTime < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 {
                     Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
+                    Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
                     if (next == null || (p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds) < next.StartTime.TotalMilliseconds)
                     {
                         Paragraph temp = new Paragraph(p);
@@ -876,6 +877,20 @@ namespace Nikse.SubtitleEdit.Forms
                                 noOfShortDisplayTimes++;
                                 AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                             }
+                        }
+                    }
+                    else if (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                    {
+                        if (AllowFix(p, fixAction))
+                        {
+                            string oldCurrent = p.ToString();
+                            if (next != null && next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
+                                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                            p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+
+                            _totalFixes++;
+                            noOfShortDisplayTimes++;
+                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
                     else
@@ -895,12 +910,27 @@ namespace Nikse.SubtitleEdit.Forms
                         temp.EndTime.TotalMilliseconds++;
                     }
                     Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
+                    Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
                     if (next == null || (temp.EndTime.TotalMilliseconds) < next.StartTime.TotalMilliseconds)
                     {
                         if (AllowFix(p, fixAction))
                         {
                             string oldCurrent = p.ToString();
                             p.EndTime.TotalMilliseconds = temp.EndTime.TotalMilliseconds;
+                            _totalFixes++;
+                            noOfShortDisplayTimes++;
+                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                        }
+                    }
+                    else if (temp.Duration.TotalMilliseconds - p.Duration.TotalMilliseconds < 1500 && (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds ))
+                    {
+                        if (AllowFix(p, fixAction))
+                        {
+                            string oldCurrent = p.ToString();
+                            if (next != null && next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
+                                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                            p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds;
+
                             _totalFixes++;
                             noOfShortDisplayTimes++;
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
