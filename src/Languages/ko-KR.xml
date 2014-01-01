@@ -136,7 +136,7 @@ C# 코드는 http://code.google.com/p/subtitleedit 에 있습니다.
   <BatchConvert>
     <Title>일괄 변환</Title>
     <Input>입력</Input>
-    <InputDescription>파일 입력 (탐색 또는 드래그 앤 드롭)</InputDescription>
+    <InputDescription>파일 입력 (찾아보기 또는 드래그 앤 드롭)</InputDescription>
     <Status>상태</Status>
     <Output>출력</Output>
     <ChooseOutputFolder>출력 폴더 선택</ChooseOutputFolder>
@@ -608,16 +608,18 @@ C# 코드는 http://code.google.com/p/subtitleedit 에 있습니다.
     <Milliseconds>밀리초</Milliseconds>
   </ImportSceneChanges>
   <ImportText>
-    <Title>일반 텍스트 파일로 새 자막 구성...</Title>
+    <Title>일반 텍스트 파일로 새 자막 구성</Title>
+    <OneSubtitleIsOneFile>여러 파일 - 하나의 파일을 하나의 자막으로</OneSubtitleIsOneFile>
     <OpenTextFile>텍스트 파일 열기</OpenTextFile>
+    <OpenTextFiles>텍스트 파일 열기</OpenTextFiles>
     <ImportOptions>추출 옵션</ImportOptions>
     <Splitting>줄 분할</Splitting>
     <AutoSplitText>자동으로</AutoSplitText>
-    <OneLineIsOneSubtitle>한 줄로 된 구문을 하나의 자막으로</OneLineIsOneSubtitle>
+    <OneLineIsOneSubtitle>하나의 줄을 하나의 자막으로</OneLineIsOneSubtitle>
     <LineBreak>줄바꿈</LineBreak>
-    <SplitAtBlankLines>공백 줄 기준으로</SplitAtBlankLines>
-    <MergeShortLines>연속해서 짧은 줄 하나로</MergeShortLines>
-    <RemoveEmptyLines>공백 줄 제거</RemoveEmptyLines>
+    <SplitAtBlankLines>빈 줄에서 분할</SplitAtBlankLines>
+    <MergeShortLines>연속해서 짧은 줄 병합</MergeShortLines>
+    <RemoveEmptyLines>빈 줄 제거</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>문자 없는 줄 제거</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>타임코드 생성</GenerateTimeCodes>
     <GapBetweenSubtitles>자막 간격 (ms)</GapBetweenSubtitles>
@@ -1119,11 +1121,11 @@ C# 코드는 http://code.google.com/p/subtitleedit 에 있습니다.
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>단락 사이의 최소 간격 수정 전</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>단락 사이의 최소 간격 수정: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>일반 텍스트 파일 가져오기 전</BeforeImportText>
-    <TextImported>텍스트를 가져왔습니다.</TextImported>
+    <TextImported>텍스트 가져오기 완료!</TextImported>
     <BeforePointSynchronization>지점 동기화 전</BeforePointSynchronization>
     <PointSynchronizationDone>지점 동기화 완료!</PointSynchronizationDone>
     <BeforeTimeCodeImport>타임코드 가져오기 전</BeforeTimeCodeImport>
-    <TimeCodeImportedFromXY>{0}에서 타임코드를 가져왔습니다: {1}</TimeCodeImportedFromXY>
+    <TimeCodeImportedFromXY>{0}에서 {1}개의 타임코드를 가져왔습니다!</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>비디오 다음 위치에 자막 추가 전</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>시작 시간을 정하고 나머지 조정하기 전</BeforeSetStartTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>비디오 끝 지점 설정하기 전</BeforeSetEndAndVideoPosition>
