@@ -1780,6 +1780,9 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.VideoControls.CustomSearchUrl3 = subNode.InnerText;
             subNode = node.SelectSingleNode("CustomSearchUrl4");
             if (subNode != null)
+                settings.VideoControls.CustomSearchUrl4 = subNode.InnerText;
+            subNode = node.SelectSingleNode("CustomSearchUrl5");
+            if (subNode != null)
                 settings.VideoControls.CustomSearchUrl5 = subNode.InnerText;
             subNode = node.SelectSingleNode("CustomSearchUrl6");
             if (subNode != null)
