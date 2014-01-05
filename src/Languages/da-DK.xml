@@ -611,11 +611,14 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </ImportSceneChanges>
   <ImportText>
     <Title>Importer tekst</Title>
+    <OneSubtitleIsOneFile>Flere filer - en fil er en tekst</OneSubtitleIsOneFile>
     <OpenTextFile>Åbn tekst fil...</OpenTextFile>
+    <OpenTextFiles>Åbn tekstfiler...</OpenTextFiles>
     <ImportOptions>Import valgmuligheder</ImportOptions>
     <Splitting>Opdeling</Splitting>
     <AutoSplitText>Auto split tekst</AutoSplitText>
     <OneLineIsOneSubtitle>En linje er en undertekst</OneLineIsOneSubtitle>
+    <LineBreak>Linjeskift</LineBreak>
     <SplitAtBlankLines>Split ved blanke linjer</SplitAtBlankLines>
     <MergeShortLines>Flet kort linjer med fortsættelsen</MergeShortLines>
     <RemoveEmptyLines>Fjern tomme linjer</RemoveEmptyLines>
@@ -1170,6 +1173,10 @@ Fortsæt?</SubtitleAppendPrompt>
     <PluginXExecuted>Plugin '{0}' afviklet</PluginXExecuted>
     <NotAValidXSubFile>Ikke en valid xsub fil!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Før fusioner linjer med samme tekst</BeforeMergeLinesWithSameText>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>Undertekst med tidskoder har et forskelligt antal linier ({0}) end nuværende undertekst ({1}) - fortsæt alligevel?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ErrorLoadIdx>Subtitle Edit kan ikke læse/redigere .idx filer. Idx filer er en del af et idx/sub fil par (også kaldet VobSub), og SE kan kun åbne .sub filen.</ErrorLoadIdx>
+    <ErrorLoadRar>Denne fil er sandsynligvis en komprimeret .rar fil. SE kan ikke åbne komprimerede filer.</ErrorLoadRar>
+    <ErrorLoadZip>Denne fil er sandsynligvis en komprimeret .zip fil. SE kan ikke åbne komprimerede filer.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>

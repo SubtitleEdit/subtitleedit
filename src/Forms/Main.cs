@@ -2664,7 +2664,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // check for idx file
-                if (format == null && fi.Length > 500 && Path.GetExtension(fileName).ToLower() == ".idx")
+                if (format == null && fi.Length > 100 && Path.GetExtension(fileName).ToLower() == ".idx")
                 {
                     if (string.IsNullOrEmpty(_language.ErrorLoadIdx))
                         MessageBox.Show("Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and SE can open the .sub file.");
@@ -2674,12 +2674,22 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // check for .rar file
-                if (format == null && fi.Length > 500 && IsRarFile(fileName))
+                if (format == null && fi.Length > 100 && IsRarFile(fileName))
                 {
                     if (string.IsNullOrEmpty(_language.ErrorLoadRar))
                         MessageBox.Show("This file seems to be a compressed .rar file. SE cannot open compressed files.");
                     else
                         MessageBox.Show(_language.ErrorLoadRar);
+                    return;
+                }
+
+                // check for .zip file
+                if (format == null && fi.Length > 100 && IsZipFile(fileName))
+                {
+                    if (string.IsNullOrEmpty(_language.ErrorLoadZip))
+                        MessageBox.Show("This file seems to be a compressed .zip file. SE cannot open compressed files.");
+                    else
+                        MessageBox.Show(_language.ErrorLoadZip);
                     return;
                 }
 
@@ -9795,7 +9805,16 @@ namespace Nikse.SubtitleEdit.Forms
             string s = System.Text.Encoding.ASCII.GetString(buffer, 0, buffer.Length);
             return s == "Rar!";
         }
-        
+
+
+        public static bool IsZipFile(string fileName)
+        {
+            var buffer = new byte[4];
+            var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite) { Position = 0 };
+            fs.Read(buffer, 0, 4);
+            fs.Close();
+            return buffer[0] == 0x50 && buffer[1] == 0x4B && buffer[2] == 0x03 && buffer[3] == 0x04;
+        }
 
         private bool IsSpDvdSupFile(string subFileName)
         {
