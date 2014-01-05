@@ -29,6 +29,7 @@
   * Fixed some missing characters in PAC format - thx Adrian
   * Fixed some bugs in "Youtube transcript" format - thx tony
   * Fixed bug in reading of end-tags in ASS - thx Null
+  * "Delete" context menu in text box did not work - thx ivandrofly
 
 
 3.3.11 (6th December 2013)
