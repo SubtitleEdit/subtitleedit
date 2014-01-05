@@ -122,6 +122,7 @@ SW_VER: 2.25";
                 p.Text = text.ToString().Trim();
             subtitle.Header = header.ToString();
             subtitle.RemoveEmptyLines();
+            subtitle.Renumber(1);
         }
 
         private static TimeCode GetTimeCode(string timeString)
