@@ -14810,9 +14810,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void DeleteToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (textBoxListViewTextAlternate.Focused)
-                textBoxListViewTextAlternate.DeselectAll();
+                textBoxListViewTextAlternate.SelectedText = string.Empty;
             else
-                textBoxListViewText.DeselectAll();
+                textBoxListViewText.SelectedText = string.Empty;
         }
 
         private void NormalToolStripMenuItem1Click(object sender, EventArgs e)
