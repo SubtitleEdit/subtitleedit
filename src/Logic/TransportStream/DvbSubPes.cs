@@ -35,6 +35,9 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
         public DvbSubPes(byte[] buffer, int index)
         {
+            if (buffer.Length < 9)
+                return;
+
             StartCode = Helper.GetEndian(buffer, index + 0, 3);
             StreamId = buffer[index + 3];
             Length = Helper.GetEndianWord(buffer, index + 4);

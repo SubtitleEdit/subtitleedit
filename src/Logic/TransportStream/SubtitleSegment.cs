@@ -44,6 +44,9 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             if (buffer.Length - 6 < DataBuffer.Length)
                 return;
 
+            if (index + 6 + DataBuffer.Length > buffer.Length)
+                return;
+
             Buffer.BlockCopy(buffer, index + 6, DataBuffer, 0, DataBuffer.Length);
             IsValid = true;
 

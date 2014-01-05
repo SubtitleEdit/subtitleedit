@@ -62,6 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new FinalCutProTestXml(),
                     new FinalCutProTest2Xml(),
                     new FlashXml(),
+                    new FLVCoreCuePoints(),
                     new Footage(),
                     new GpacTtxt(),
                     new ImageLogicAutocaption(),
