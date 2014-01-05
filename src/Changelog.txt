@@ -18,8 +18,8 @@
    * Fix short durations will now see if line can start earlier - thx Daniel
    * "File -> Import plain text" can now import from multiple files
    * "Save as..." now remembers subtitle format
-   * Now detects vobsub/bluray-sup with wrong extension when opening a file
-   * Now gives nice error message when opening idx or rar files
+   * Now detects VobSub/Bluray-sup with wrong extension when opening a file
+   * Now gives nice error message when opening idx, rar or zip files
 * FIXED:
   * Fixed bug in "Fix common errors: Remove hyphen" - thx honeybunny
   * Fixed bug in "Remove text for HI" issue - thx cipry15
