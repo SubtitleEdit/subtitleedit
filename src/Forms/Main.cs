@@ -2242,11 +2242,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var fi = new FileInfo(fileName);
 
-                //if (Path.GetExtension(fileName).ToLower() == ".ts" && fi.Length > 10000 && IsTransportStream(fileName)) //TODO: Also check mpg, mpeg - and file header!
-                //{
-                //    ImportSubtitleFromTransportStream(fileName);
-                //    return;
-                //}
+                if (Path.GetExtension(fileName).ToLower() == ".ts" && fi.Length > 10000 && IsTransportStream(fileName)) //TODO: Also check mpg, mpeg - and file header!
+                {
+                    ImportSubtitleFromTransportStream(fileName);
+                    return;
+                }
 
                 if ((Path.GetExtension(fileName).ToLower() == ".mp4" || Path.GetExtension(fileName).ToLower() == ".m4v" || Path.GetExtension(fileName).ToLower() == ".3gp")
                     && fi.Length > 10000)
@@ -9056,8 +9056,10 @@ namespace Nikse.SubtitleEdit.Forms
       
         private bool ImportSubtitleFromTransportStream(string fileName)
         {
+            ShowStatus("Parsing transport stream - please wait...");
             var tsParser = new Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamParser();
             tsParser.ParseTsFile(fileName);
+            ShowStatus(string.Empty);
 
             if (tsParser.SubtitlePacketIds.Count == 0)
             {
@@ -9065,43 +9067,49 @@ namespace Nikse.SubtitleEdit.Forms
                 return false;
             }
 
-            // choose subtitle track
-            if (tsParser.SubtitlePacketIds.Count == 0)
+            int packedId = tsParser.SubtitlePacketIds[0];
+            if (tsParser.SubtitlePacketIds.Count > 1)
             {
-                MessageBox.Show(_language.NoSubtitlesFound);
-                return false;
+                var subChooser = new TransportStreamSubtitleChooser();
+                _formPositionsAndSizes.SetPositionAndSize(subChooser);
+                subChooser.Initialize(tsParser);
+                if (subChooser.ShowDialog(this) == DialogResult.Cancel)
+                    return false;
+                packedId = tsParser.SubtitlePacketIds[subChooser.SelectedIndex];
+                _formPositionsAndSizes.SavePositionAndSize(subChooser);
             }
+            var subtitles = tsParser.GetSubtitlePesPackets(packedId);
+           
+            var formSubOcr = new VobSubOcr();
+            _formPositionsAndSizes.SetPositionAndSize(formSubOcr);
+            formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName);
+            if (formSubOcr.ShowDialog(this) == DialogResult.OK)
+            {
+                MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
 
-            //var formSubOcr = new VobSubOcr();
-            //_formPositionsAndSizes.SetPositionAndSize(formSubOcr);
-            //formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName);
-            //if (formSubOcr.ShowDialog(this) == DialogResult.OK)
-            //{
-            //    MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
+                _subtitle.Paragraphs.Clear();
+                SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                _subtitle.WasLoadedWithFrameNumbers = false;
+                _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
+                {
+                    _subtitle.Paragraphs.Add(p);
+                }
 
-            //    _subtitle.Paragraphs.Clear();
-            //    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-            //    _subtitle.WasLoadedWithFrameNumbers = false;
-            //    _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
-            //    foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
-            //    {
-            //        _subtitle.Paragraphs.Add(p);
-            //    }
+                ShowSource();
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                _subtitleListViewIndex = -1;
+                SubtitleListview1.FirstVisibleIndex = -1;
+                SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
-            //    ShowSource();
-            //    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-            //    _subtitleListViewIndex = -1;
-            //    SubtitleListview1.FirstVisibleIndex = -1;
-            //    SubtitleListview1.SelectIndexAndEnsureVisible(0);
+                _fileName = string.Empty;
+                Text = Title;
 
-            //    _fileName = string.Empty;
-            //    Text = Title;
-
-            //    Configuration.Settings.Save();
-            //    _formPositionsAndSizes.SavePositionAndSize(formSubOcr);
-            //    return true;
-            //}
-            //_formPositionsAndSizes.SavePositionAndSize(formSubOcr);
+                Configuration.Settings.Save();
+                _formPositionsAndSizes.SavePositionAndSize(formSubOcr);
+                return true;
+            }
+            _formPositionsAndSizes.SavePositionAndSize(formSubOcr);
             return false;
         }
 

@@ -617,6 +617,12 @@
     <Compile Include="Forms\TimedTextStyles.Designer.cs">
       <DependentUpon>TimedTextStyles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TransportStreamSubtitleChooser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TransportStreamSubtitleChooser.Designer.cs">
+      <DependentUpon>TransportStreamSubtitleChooser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\UnknownSubtitle.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -864,6 +870,7 @@
     <Compile Include="Logic\SubtitleFormats\DCinemaSmpte2007.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProImage.cs" />
     <Compile Include="Logic\SubtitleFormats\ELRStudioClosedCaption.cs" />
+    <Compile Include="Logic\SubtitleFormats\FLVCoreCuePoints.cs" />
     <Compile Include="Logic\SubtitleFormats\ScenaristClosedCaptionsDropFrame.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProXCM.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle67.cs" />
@@ -1385,6 +1392,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TimedTextStyles.resx">
       <DependentUpon>TimedTextStyles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TransportStreamSubtitleChooser.resx">
+      <DependentUpon>TransportStreamSubtitleChooser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UnknownSubtitle.resx">
       <DependentUpon>UnknownSubtitle.cs</DependentUpon>

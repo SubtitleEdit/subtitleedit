@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
@@ -17,6 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public long TotalNumberOfPrivateStream1Continuation0 { get; private set; }
         public List<int> SubtitlePacketIds { get; private set; }
         public List<Packet> SubtitlePackets { get; private set; }
+        public List<Packet> ProgramAssociationTables { get; private set; }
 
         public void ParseTsFile(string fileName)
         {
@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             TotalNumberOfPrivateStream1Continuation0 = 0;
             SubtitlePacketIds = new List<int>();
             SubtitlePackets = new List<Packet>();
+            ProgramAssociationTables = new List<Packet>();
             ms.Position = 0;
             int packetLength = DeterminePacketLength(ms);
             var packetBuffer = new byte[packetLength];
@@ -48,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 byte syncByte = packetBuffer[0];
                 if (syncByte == Packet.SynchronizationByte)
                 {
-                    Packet packet = new Packet(packetBuffer);
+                    var packet = new Packet(packetBuffer);
 
                     if (packet.IsNullPacket)
                     {
@@ -56,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     }
                     else if (packet.IsProgramAssociationTable)
                     {
-                        StringBuilder sb = new StringBuilder();
+                        var sb = new StringBuilder();
                         sb.AppendLine("PacketNo: " + TotalNumberOfPackets + 1);
                         sb.AppendLine("PacketId: " + packet.PacketId);
                         sb.AppendLine();
@@ -87,8 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                         sb.AppendLine("CurrentNextIndicator: " + packet.ProgramAssociationTable.CurrentNextIndicator);
                         sb.AppendLine("SectionNumber: " + packet.ProgramAssociationTable.SectionNumber);
                         sb.AppendLine("LastSectionNumber: " + packet.ProgramAssociationTable.LastSectionNumber);
-
-                        //MessageBox.Show(sb.ToString());
+                        ProgramAssociationTables.Add(packet);
                     }
                     else if (packet.IsPrivateStream1 || SubtitlePacketIds.Contains(packet.PacketId))
                     {
@@ -99,25 +99,25 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                         if (!SubtitlePacketIds.Contains(packet.PacketId))
                         {
                             SubtitlePacketIds.Add(packet.PacketId);
-//                            MessageBox.Show("Subtitle packet id=" + packet.PacketId);
                         }
                         if (packet.ContinuityCounter == 0)
                         {
                             TotalNumberOfPrivateStream1Continuation0++;
 
-                            int pes_extensionlength = 0xFF &  packetBuffer[12 + packet.AdaptionFieldLength];
+                            int pes_extensionlength = 0;
+                            if (12 + packet.AdaptionFieldLength < packetBuffer.Length)
+                                pes_extensionlength = 0xFF & packetBuffer[12 + packet.AdaptionFieldLength];
                             int pes_offset = 13 + packet.AdaptionFieldLength + pes_extensionlength;
-                            bool isTeletext = (pes_extensionlength == 0x24 && (0xFF & packetBuffer[pes_offset])>>4 == 1);
+                            bool isTeletext = (pes_extensionlength == 0x24 && (0xFF & packetBuffer[pes_offset]) >> 4 == 1);
 
                             // workaround uk freesat teletext
                             if (!isTeletext)
                                 isTeletext = (pes_extensionlength == 0x24 && (0xFF & packetBuffer[pes_offset]) == 0x99);
 
-                            //if (isTeletext)
-                            //    MessageBox.Show(TotalNumberOfPackets.ToString() +  ": Teletext!");
-                                //if (!isTeletext)
-                                //    pes_subID = ((0xFF & ts_packet[pes_offset]) == 0x20 && (0xFF & ts_packet[pes_offset + 1]) == 0 && (0xFF & ts_packet[pes_offset + 2]) == 0xF) ? 0x20 : 0;
+                            if (!isTeletext)
+                            {
 
+                            }
                         }
                     }
                     TotalNumberOfPackets++;
@@ -129,34 +129,60 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     break;
                 }
             }
-            //MessageBox.Show("Done parsing " + Environment.NewLine +
-            //                Environment.NewLine +
-            //                "#Packets: " + TotalNumberOfPackets.ToString() + Environment.NewLine +
-            //                "#Null packets: " + NumberOfNullPackets.ToString() + Environment.NewLine +
-            //                "#Private stream 1's: " + TotalNumberOfPrivateStream1.ToString() + Environment.NewLine +
-            //                "#Private stream 1's with continuation=0: " + TotalNumberOfPrivateStream1Continuation0.ToString());
         }
 
-        public List<PacketizedElementaryStream> GetSubtitlePesPackets(int packetId)
+        public List<DvbSubPes> GetSubtitlePesPackets(int packetId)
         {
-            var list = new List<PacketizedElementaryStream>();
-            var buffer = new byte[20000];
-            int index =0;
+            var list = new List<DvbSubPes>();
+            int last = -1;
+            List<Packet> packetList = new List<Packet>();
             foreach (Packet packet in SubtitlePackets)
             {
-                if (packet.ContinuityCounter == 0)
+                if (packet.PacketId == packetId)
                 {
-                    if (index > 0)
+                    if (packet.PayloadUnitStartIndicator)
                     {
-                        var pes = new PacketizedElementaryStream(buffer, 0);
-                        list.Add(pes);
+                        if (packetList.Count > 0)
+                            AddPesPacket(list, packetList);
+                        packetList = new List<Packet>();
                     }
-                    index = 0;
+                    if (packet.Payload != null && last != packet.ContinuityCounter)
+                        packetList.Add(packet);
+                    last = packet.ContinuityCounter;
                 }
-                Buffer.BlockCopy(packet.Payload, 0, buffer, index, packet.Payload.Length);
-                index += packet.Payload.Length;
             }
+            if (packetList.Count > 0)
+                AddPesPacket(list, packetList);
             return list;
+        }
+
+        private static void AddPesPacket(List<DvbSubPes> list, List<Packet> packetList)
+        {
+            int bufferSize = 0;
+            foreach (Packet p in packetList)
+                bufferSize += p.Payload.Length;
+            var pesData = new byte[bufferSize];
+            int pesIndex = 0;
+            foreach (Packet p in packetList)
+            {
+                Buffer.BlockCopy(p.Payload, 0, pesData, pesIndex, p.Payload.Length);
+                pesIndex += p.Payload.Length;
+            }
+
+            DvbSubPes pes;
+            if (Nikse.SubtitleEdit.Logic.VobSub.VobSubParser.IsMpeg2PackHeader(pesData))
+            {
+                pes = new DvbSubPes(pesData, Nikse.SubtitleEdit.Logic.VobSub.Mpeg2Header.Length);
+            }
+            else if (Nikse.SubtitleEdit.Logic.VobSub.VobSubParser.IsPrivateStream1(pesData, 0))
+            {
+                pes = new DvbSubPes(pesData, 0);
+            }
+            else
+            {
+                pes = new DvbSubPes(pesData, 0);
+            }
+            list.Add(pes);
         }
 
         private int DeterminePacketLength(Stream ms)
