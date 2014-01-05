@@ -972,6 +972,7 @@
             public string ImportTimeCodesDifferentNumberOfLinesWarning { get; set; }
             public string ErrorLoadIdx { get; set; }
             public string ErrorLoadRar { get; set; }
+            public string ErrorLoadZip { get; set; }
 
             public class MainMenu
             {
