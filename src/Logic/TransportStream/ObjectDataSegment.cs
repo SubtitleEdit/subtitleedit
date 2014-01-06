@@ -32,29 +32,31 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public const int MapTable4To8Bit = 0x22;
         public const int EndOfObjectLineCode = 0xf0;
 
-        public ObjectDataSegment(byte[] buffer, int index, ClutDefinitionSegment cds)
+        public int BufferIndex { get; private set; }
+
+        public ObjectDataSegment(byte[] buffer, int index)
         {
             ObjectId = Helper.GetEndianWord(buffer, index);
             ObjectVersionNumber = buffer[index + 2] >> 4;
             ObjectCodingMethod = (buffer[index + 2] & Helper.B00001100) >> 2;
             NonModifyingColorFlag = (buffer[index + 2] & Helper.B00000010) > 0;
-
-            DecodeImage(buffer, index, cds);
+            BufferIndex = index;
+            //DecodeImage(buffer, index, cds);
         }
+
+//        public string test = string.Empty;
 
         public void DecodeImage(byte[] buffer, int index, ClutDefinitionSegment cds)
         {
             Image = new Bitmap(720, 40);
-            var r = new Random();
-            Color c = Color.Red;
-            List<int> twoToFourBitColorLookup = new List<int> { 0, 1, 2, 3 };
-            List<int> twoToEightBitColorLookup = new List<int> { 0, 1, 2, 3 };
-            List<int> fourToEightBitColorLookup = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ,15 };
+            var twoToFourBitColorLookup = new List<int> { 0, 1, 2, 3 };
+            var twoToEightBitColorLookup = new List<int> { 0, 1, 2, 3 };
+            var fourToEightBitColorLookup = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ,15 };
 
             if (ObjectCodingMethod == 0)
             {
-                int pixelCode = 0;
-                int runLength = 0;
+                int pixelCode;
+                int runLength;
                 TopFieldDataBlockLength = Helper.GetEndianWord(buffer, index + 3);
                 BottomFieldDataBlockLength = Helper.GetEndianWord(buffer, index + 5);
                 int dataType = buffer[index + 7];
@@ -63,12 +65,12 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 int start = index;
                 int x = 0;
                 int y = 0;
-                while (index < start + TopFieldDataBlockLength)
+                  while (index < start + TopFieldDataBlockLength)
                 {
                     if (dataType == PixelDecoding2Bit)
                     {
                         int bitIndex = 0;
-                        while (index < start + TopFieldDataBlockLength && TwoBitPixelDecoding(buffer, ref index, ref pixelCode, ref runLength, ref bitIndex))
+                        while (index < start + TopFieldDataBlockLength && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out pixelCode, out runLength))
                         {
                             DrawPixels(cds, twoToFourBitColorLookup[pixelCode], runLength, ref x, ref y);
                         }
@@ -76,15 +78,17 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     else if (dataType == PixelDecoding4Bit)
                     {
                         bool startHalf = false;
-                        while (index < start + TopFieldDataBlockLength && FourBitPixelDecoding(buffer, ref index, ref pixelCode, ref runLength, ref startHalf))
+  //                      test = string.Empty;
+                        while (index < start + TopFieldDataBlockLength && FourBitPixelDecoding(buffer, ref index, ref startHalf, out pixelCode, out runLength))
                         {
+//                            test += runLength + " of " + pixelCode.ToString("X4").Substring(2) + ", ";
                             DrawPixels(cds, pixelCode, runLength, ref x, ref y);
                         }
                     }
                     else if (dataType == PixelDecoding8Bit)
                     {
                         System.Windows.Forms.MessageBox.Show("8-bit pixel decoding!");
-                        while (index < start + TopFieldDataBlockLength && EightBitPixelDecoding(buffer, ref index, ref pixelCode, ref runLength))
+                        while (index < start + TopFieldDataBlockLength && EightBitPixelDecoding(buffer, ref index, out pixelCode, out runLength))
                         {
                             DrawPixels(cds, pixelCode, runLength, ref x, ref y);
                         }
@@ -108,7 +112,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                         index++;
                         twoToEightBitColorLookup[2] = buffer[index];
                         index++;
-                        twoToEightBitColorLookup[4] = buffer[index];
+                        twoToEightBitColorLookup[3] = buffer[index];
                         index++;
                     }
                     else if (dataType == MapTable4To8Bit)
@@ -142,7 +146,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     if (dataType == PixelDecoding2Bit)
                     {
                         int bitIndex = 0;
-                        while (index < start + BottomFieldDataBlockLength - 1 && TwoBitPixelDecoding(buffer, ref index, ref pixelCode, ref runLength, ref bitIndex))
+                        while (index < start + BottomFieldDataBlockLength - 1 && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out pixelCode, out runLength))
                         {
                             DrawPixels(cds, twoToFourBitColorLookup[pixelCode], runLength, ref x, ref y);
                         }
@@ -150,7 +154,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     else if (dataType == PixelDecoding4Bit)
                     {
                         bool startHalf = false;
-                        while (index < start + BottomFieldDataBlockLength - 1 && FourBitPixelDecoding(buffer, ref index, ref pixelCode, ref runLength, ref startHalf))
+                        while (index < start + BottomFieldDataBlockLength - 1 && FourBitPixelDecoding(buffer, ref index, ref startHalf, out pixelCode, out runLength))
                         {
                             DrawPixels(cds, pixelCode, runLength, ref x, ref y);
                         }
@@ -158,7 +162,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     else if (dataType == PixelDecoding8Bit)
                     {
                         System.Windows.Forms.MessageBox.Show("8-bit pixel decoding!");
-                        while (index < start + BottomFieldDataBlockLength - 1 && EightBitPixelDecoding(buffer, ref index, ref pixelCode, ref runLength))
+                        while (index < start + BottomFieldDataBlockLength - 1 && EightBitPixelDecoding(buffer, ref index, out pixelCode, out runLength))
                         {
                             DrawPixels(cds, pixelCode, runLength, ref x, ref y);
                         }
@@ -228,7 +232,6 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 }
             }
 
-
             for (int k = 0; k < runLength; k++)
             {
                 if (y < Image.Height && x < Image.Width)
@@ -244,8 +247,10 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             return result;
         }
 
-        private bool EightBitPixelDecoding(byte[] buffer, ref int index, ref int pixelCode, ref int runLength)
+        private bool EightBitPixelDecoding(byte[] buffer, ref int index, out int pixelCode, out int runLength)
         {
+            pixelCode = 0;
+            runLength = 1;
             int firstByte = Next8Bits(buffer, ref index);
             if (firstByte != 0)
             {
@@ -288,9 +293,10 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             return result;
         }
 
-        private bool FourBitPixelDecoding(byte[] buffer, ref int index, ref int pixelCode, ref int runLength, ref bool startHalf)
+        private bool FourBitPixelDecoding(byte[] buffer, ref int index, ref bool startHalf, out int pixelCode, out int runLength)
         {
             pixelCode = 0;
+            runLength = 1;
             int first = Next4Bits(buffer, ref index, ref startHalf);
             if (first != 0)
             {
@@ -315,6 +321,16 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                         }
                         return false;
                     }
+                }
+                else if (next1 == Helper.B00001100)
+                {
+                    runLength = 1;
+                    pixelCode = 0;
+                }
+                else if (next1 == Helper.B00001101)
+                {
+                    runLength = 2;
+                    pixelCode = 0;
                 }
                 else
                 {
@@ -370,8 +386,10 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             return result;
         }
 
-        private bool TwoBitPixelDecoding(byte[] buffer, ref int index, ref int pixelCode, ref int runLength, ref int bitIndex)
+        private bool TwoBitPixelDecoding(byte[] buffer, ref int index, ref int bitIndex, out int pixelCode, out int runLength)
         {
+            runLength = 1;
+            pixelCode = 0;
             int first = Next2Bits(buffer, ref index, ref bitIndex);
             if (first != 0)
             {

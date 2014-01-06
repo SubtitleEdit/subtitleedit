@@ -1056,6 +1056,7 @@
     <Compile Include="Logic\TransportStream\ClutDefinitionSegment.cs" />
     <Compile Include="Logic\TransportStream\DisplayDefinitionSegment.cs" />
     <Compile Include="Logic\TransportStream\DvbSubPes.cs" />
+    <Compile Include="Logic\TransportStream\DvbSubtitle.cs" />
     <Compile Include="Logic\TransportStream\Helper.cs" />
     <Compile Include="Logic\TransportStream\HummingDecoder.cs" />
     <Compile Include="Logic\TransportStream\ObjectDataSegment.cs" />

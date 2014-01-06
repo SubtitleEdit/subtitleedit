@@ -1254,12 +1254,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_dvbSubtitles != null)
             {
-                foreach (var segment in _dvbSubtitles[index].SubtitleSegments)
-                {
-                    if (segment.ObjectData != null && segment.ObjectData.Image != null)
-                        return segment.ObjectData.Image;                
-               }
-                return new Bitmap(1, 1);
+                return _dvbSubtitles[index].GetImageFull();
             }            
 
             if (_bluRaySubtitlesOriginal != null)

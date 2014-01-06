@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
@@ -50,6 +48,10 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         /// </summary>
         public bool TransportPriority { get; set; }
 
+
+        /// <summary>
+        /// Program Identifier
+        /// </summary>
         public int PacketId { get; set; }
 
         /// <summary>
@@ -118,12 +120,8 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     ProgramAssociationTable = new ProgramAssociationTable(packetBuffer, payloadStart+1); // TODO: what index?
                 }
 
-                //if (PayloadUnitStartIndicator)
-                //    payloadStart += packetBuffer[payloadStart];
-
                 // Save payload
                 Payload = new byte[packetBuffer.Length - payloadStart];
-
                 Buffer.BlockCopy(packetBuffer, payloadStart, Payload, 0, Payload.Length);
             }
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
@@ -17,21 +16,16 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public int SegmentType { get; set; }
         public int PageId { get; set; }
         public int SegmentLength { get; set; }
-        public byte[] DataBuffer { get; set; }
         public bool IsValid { get; set; }
-        public int DisplayWidth { get; set; }
-        public int DisplayHeight { get; set; }
-
-        public StringBuilder sb = new StringBuilder();
 
         public ClutDefinitionSegment ClutDefinition;
         public ObjectDataSegment ObjectData;
+        public DisplayDefinitionSegment DisplayDefinition;
+        public PageCompositionSegment PageComposition;
+        public RegionCompositionSegment RegionComposition;
 
-        public SubtitleSegment(byte[] buffer, int index, ClutDefinitionSegment cds)
+        public SubtitleSegment(byte[] buffer, int index)
         {
-            DisplayWidth = 720;
-            DisplayHeight = 576;
-
             if (buffer == null || buffer.Length < 7)
                 return;
 
@@ -40,50 +34,32 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             PageId = Helper.GetEndianWord(buffer, index + 2);
             SegmentLength = Helper.GetEndianWord(buffer, index + 4);
 
-            DataBuffer = new byte[SegmentLength];
-            if (buffer.Length - 6 < DataBuffer.Length)
+            if (buffer.Length - 6 < SegmentLength)
                 return;
 
-            if (index + 6 + DataBuffer.Length > buffer.Length)
+            if (index + 6 + SegmentLength > buffer.Length)
                 return;
 
-            Buffer.BlockCopy(buffer, index + 6, DataBuffer, 0, DataBuffer.Length);
             IsValid = true;
 
             switch (SegmentType)
             {
                 case PageCompositionSegment:
-                    var pcs = new PageCompositionSegemnt(buffer, index + 6);
-                    sb.AppendLine("PageTimeOut: " + pcs.PageTimeOut);
-                    sb.AppendLine("PageVersionNumber: " + pcs.PageVersionNumber);
-                    sb.AppendLine("PageState: " + pcs.PageState);
+                    PageComposition = new PageCompositionSegment(buffer, index + 6, SegmentLength-2);
                     break;
                 case RegionCompositionSegment:
-                    var rcs = new RegionCompositionSegment(buffer, index + 6);
-                    sb.AppendLine("RegionId: " + rcs.RegionId);
-                    sb.AppendLine("RegionVersionNumber: " + rcs.RegionVersionNumber);
-                    sb.AppendLine("RegionFillFlag: " + rcs.RegionFillFlag);
-                    sb.AppendLine("RegionWidth: " + rcs.RegionWidth);
-                    sb.AppendLine("RegionHeight: " + rcs.RegionHeight);
+                    RegionComposition = new RegionCompositionSegment(buffer, index + 6, SegmentLength-10);
                     break;
                 case ClutDefinitionSegment:
                     ClutDefinition = new ClutDefinitionSegment(buffer, index + 6, SegmentLength);
                     break;
                 case ObjectDataSegment:
-                    ObjectData = new ObjectDataSegment(buffer, index + 6, cds);
+                    ObjectData = new ObjectDataSegment(buffer, index + 6);
                     break;
                 case DisplayDefinitionSegment:
-                    var dds = new DisplayDefinitionSegment(buffer, index + 6);
-                    sb.AppendLine("DisplayDefinitionVersionNumber: " + dds.DisplayDefinitionVersionNumber);
-                    sb.AppendLine("DisplayWith: " + dds.DisplayWith);
-                    sb.AppendLine("DisplayHeight: " + dds.DisplayHeight);
-                    sb.AppendLine("DisplayWindowFlag: " + dds.DisplayWindowFlag);
-                    DisplayWidth = dds.DisplayWith; // override default value
-                    DisplayHeight = dds.DisplayHeight; // override default value
+                    DisplayDefinition = new DisplayDefinitionSegment(buffer, index + 6);
                     break;
                 case EndOfDisplaySetSegment:
-                    break;
-                default:
                     break;
             }
         }
