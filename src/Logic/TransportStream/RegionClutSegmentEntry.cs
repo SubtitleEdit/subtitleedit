@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
         public Color GetColor()
         {
-            float y, cr, cb;
+            double y, cr, cb;
             if (FullRangeFlag)
             {
                 y = ClutEntryY;
@@ -34,9 +34,9 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             }
             else
             {
-                y = (ClutEntryY * 255) / 63;
-                cr = (ClutEntryCr * 255) / 15;
-                cb = (ClutEntryCb * 255) / 15;
+                y = ClutEntryY * 255 / 63.0;
+                cr = ClutEntryCr * 255 / 15.0;
+                cb = ClutEntryCb * 255 / 15.0;
             }
 
             // Calculate rgb - based on Project X
@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             g = BoundByteRange(g);
             b = BoundByteRange(b);
 
-            if (y == 0) // full transparency
+            if (y < 0.1) // full transparency
                 t = 0;
 
             return Color.FromArgb(t, r, g, b);
