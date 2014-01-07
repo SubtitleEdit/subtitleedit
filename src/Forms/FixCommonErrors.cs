@@ -1171,11 +1171,14 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.Text.EndsWith(" ...</i>"))
                     p.Text = p.Text.Remove(p.Text.Length - 8, 1);
 
-                p.Text = p.Text.Replace("... ?", "...?");
-                p.Text = p.Text.Replace("... !", "...!");
+                if (Language != "fr") // special rules for French
+                {
+                    p.Text = p.Text.Replace("... ?", "...?");
+                    p.Text = p.Text.Replace("... !", "...!");
 
-                p.Text = p.Text.Replace(" :", ":");
-                p.Text = p.Text.Replace(" :", ":");
+                    p.Text = p.Text.Replace(" :", ":");
+                    p.Text = p.Text.Replace(" :", ":");
+                }
 
                 if (!p.Text.Contains("- ..."))
                     p.Text = p.Text.Replace(" ... ", "... ");
@@ -1195,14 +1198,19 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.Text.Contains(" ." + Environment.NewLine))
                     p.Text = p.Text.Replace(" ." + Environment.NewLine, "." + Environment.NewLine);
 
-                if (p.Text.Contains(" !"))
-                    p.Text = p.Text.Replace(" !", "!");
+
+                if (Language != "fr") // special rules for French
+                {
+                    if (p.Text.Contains(" !"))
+                        p.Text = p.Text.Replace(" !", "!");
+
+                    if (p.Text.Contains(" ?"))
+                        p.Text = p.Text.Replace(" ?", "?");
+                }
+
 
                 if (p.Text.Contains("! </i>" + Environment.NewLine))
                     p.Text = p.Text.Replace("! </i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
-
-                if (p.Text.Contains(" ?"))
-                    p.Text = p.Text.Replace(" ?", "?");
 
                 if (p.Text.Contains("? </i>" + Environment.NewLine))
                     p.Text = p.Text.Replace("? </i>" + Environment.NewLine, "?</i>" + Environment.NewLine);
@@ -1666,6 +1674,34 @@ namespace Nikse.SubtitleEdit.Forms
                                 newText = newText.Insert(index + 4, " ");
                         }
                         index = newText.IndexOf("</i>", index + 4);
+                    }
+                    if (newText != p.Text && AllowFix(p, fixAction))
+                    {
+                        _totalFixes++;
+                        missingSpaces++;
+
+                        string oldText = p.Text;
+                        p.Text = newText;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
+                }
+
+                if (Language == "fr") // special rules for French
+                { 
+                    string newText = p.Text;
+                    int j = 1;
+                    while (j < newText.Length)
+                    { 
+                        string ch = newText.Substring(j, 1);
+                        if ("!?:;".Contains(ch))
+                        {
+                            if (Utilities.AllLetters.Contains(newText.Substring(j - 1, 1)))
+                            {
+                                newText = newText.Insert(j, " ");
+                                j++;
+                            }
+                        }
+                        j++;
                     }
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
