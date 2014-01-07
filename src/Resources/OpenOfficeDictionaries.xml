@@ -264,6 +264,12 @@
     <Description>Serbian (Cyrillic and Latin) Spelling and Hyphenation 2013.07.15</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Sinhala</EnglishName>
+    <NativeName>Sinhala</NativeName>
+    <DownloadLink>http://extensions.openoffice.org/en/download/4346</DownloadLink>
+    <Description>Sinhala by laknath</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Slovak</EnglishName>
     <NativeName>slovenčina</NativeName>
     <DownloadLink>http://www.sk-spell.sk.cx/files/hunspell-sk-20110228.zip</DownloadLink>
