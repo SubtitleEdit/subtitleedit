@@ -9078,7 +9078,7 @@ namespace Nikse.SubtitleEdit.Forms
                 packedId = tsParser.SubtitlePacketIds[subChooser.SelectedIndex];
                 _formPositionsAndSizes.SavePositionAndSize(subChooser);
             }
-            var subtitles = tsParser.GetSubtitlePesPackets(packedId);
+            var subtitles = tsParser.GetDvbSubtitles(packedId);
            
             var formSubOcr = new VobSubOcr();
             _formPositionsAndSizes.SetPositionAndSize(formSubOcr);

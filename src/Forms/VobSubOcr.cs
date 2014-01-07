@@ -221,7 +221,7 @@ namespace Nikse.SubtitleEdit.Forms
         List<XSub> _xSubList;
 
         // DVB (from transport stream)
-        List<Logic.TransportStream.DvbSubPes> _dvbSubtitles;
+        List<Logic.TransportStream.DvbSubtitle> _dvbSubtitles;
 
         string _lastLine;
         string _languageId;
@@ -1254,7 +1254,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_dvbSubtitles != null)
             {
-                return _dvbSubtitles[index].GetImageFull();
+                var dvbBmp = _dvbSubtitles[index].Pes.GetImageFull();
+                NikseBitmap nDvbBmp = new NikseBitmap(dvbBmp);
+                nDvbBmp.CropTopTransparent(2);
+                nDvbBmp.CropSidesAndBottom(2, Color.Transparent, true);
+                dvbBmp.Dispose();
+                return nDvbBmp.GetBitmap();
+                //return _dvbSubtitles[index].Pes.GetImageFull();
             }            
 
             if (_bluRaySubtitlesOriginal != null)
@@ -1307,7 +1313,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_xSubList != null)
                 return (long)_xSubList[index].Start.TotalMilliseconds;
             else if (_dvbSubtitles != null)
-                return (long)_dvbSubtitles[index].PresentationTimeStamp + 45 / 90;
+                return (long)_dvbSubtitles[index].StartMilliseconds;
             else
                 return (long)_vobSubMergedPackist[index].StartTime.TotalMilliseconds;
         }
@@ -1325,7 +1331,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_xSubList != null)
                 return (long)_xSubList[index].End.TotalMilliseconds;
             else if (_dvbSubtitles != null)
-                return (long)_dvbSubtitles[index].PresentationTimeStamp + 45 / 90;
+                return (long)_dvbSubtitles[index].EndMilliseconds;
             else
                 return (long)_vobSubMergedPackist[index].EndTime.TotalMilliseconds;
         }
@@ -6984,7 +6990,7 @@ namespace Nikse.SubtitleEdit.Forms
             exportBdnXmlPng.ShowDialog(this);
         }
 
-        internal void Initialize(List<Logic.TransportStream.DvbSubPes> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
+        internal void Initialize(List<Logic.TransportStream.DvbSubtitle> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
         {
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
@@ -7008,14 +7014,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             _dvbSubtitles = subtitles;
 
-            foreach (Logic.TransportStream.DvbSubPes pes in _dvbSubtitles)
+            foreach (var sub in _dvbSubtitles)
             {
-                double pts = 0;
-                if (pes.PresentationTimeStamp != null)
-                    pts = pes.PresentationTimeStamp.Value;
-                var p = new Paragraph(string.Empty, ((pts + 45) / 90.0), ((pts + 45) / 90.0));
-                _subtitle.Paragraphs.Add(p);
+                _subtitle.Paragraphs.Add(new Paragraph(string.Empty, sub.StartMilliseconds, sub.EndMilliseconds));
             }
+            _subtitle.Renumber(1);
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
 
