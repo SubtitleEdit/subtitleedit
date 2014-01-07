@@ -351,6 +351,12 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             }
         }
 
-	
+        public int PresentationTimeStampToMilliseconds()
+        {
+            if (PresentationTimeStamp.HasValue)
+                return (int)Math.Round(PresentationTimeStamp.Value + 45.0 / 90.0);
+            else
+                return 0;
+        }
     }
 }

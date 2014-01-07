@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public List<Packet> SubtitlePackets { get; private set; }
         public List<Packet> ProgramAssociationTables { get; private set; }
         private Dictionary<int, List<DvbSubPes>> SubtitlesLookup { get; set; }
+        private Dictionary<int, List<DvbSubtitle>> DvbSubtitlesLookup { get; set; }
 
         public void ParseTsFile(string fileName)
         {
@@ -130,6 +131,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 }
             }
 
+            // check for SubPictureStreamId = 32
             SubtitlesLookup = new Dictionary<int,List<DvbSubPes>>();
             foreach (int pid in SubtitlePacketIds)
             {
@@ -148,41 +150,50 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     SubtitlesLookup.Add(pid, list);
                 }
             }
-
             SubtitlePacketIds.Clear();
             foreach (int key in SubtitlesLookup.Keys)
                 SubtitlePacketIds.Add(key);
             SubtitlePacketIds.Sort();
+
+
+            // Merge packets and set start/end time
+            DvbSubtitlesLookup = new Dictionary<int, List<DvbSubtitle>>();
+            foreach (int pid in SubtitlePacketIds)
+            {
+                var subtitles = new List<DvbSubtitle>();
+                var list = GetSubtitlePesPackets(pid);                
+                for (int i=0; i<list.Count; i++)
+                {
+                    var pes = list[i];
+                    pes.ParseSegments();
+                    if (pes.ObjectDataList.Count > 0)
+                    {
+                        var sub = new DvbSubtitle();
+                        sub.StartMilliseconds = pes.PresentationTimeStampToMilliseconds();
+                        sub.Pes = pes;
+                        if (i + 1 < list.Count)
+                            sub.EndMilliseconds = list[i + 1].PresentationTimeStampToMilliseconds() - 25;
+                        else
+                            sub.EndMilliseconds = sub.StartMilliseconds + 3500;
+                        subtitles.Add(sub);    
+                    }
+                }
+                DvbSubtitlesLookup.Add(pid, subtitles);
+            }
+            SubtitlePacketIds.Clear();
+            foreach (int key in DvbSubtitlesLookup.Keys)
+            {
+                if (DvbSubtitlesLookup[key].Count > 0)
+                    SubtitlePacketIds.Add(key);
+            }
+            SubtitlePacketIds.Sort();
         }
 
-        public bool HasDvdSubPictures(List<DvbSubPes> list)
+        public List<DvbSubtitle> GetDvbSubtitles(int packetId)
         {
-            foreach (var dvbSubPes in list )
-            {
-                if (dvbSubPes.IsDvbSubpicture)
-                    return true;
-            }
-            return false;
-        }
-
-        public List<DvbSubtitle> ConverToSubtitleList(List<DvbSubPes> list)
-        {
-            var subs = new List<DvbSubtitle>();
-            var sub = new DvbSubtitle();
-            for (int i = 0; i < list.Count; i++)
-            {
-                var dvbSubPes = list[i];
-
-                dvbSubPes.ParseSegments();
-                //if (dvbSubPes.HasImage)
-                //{ 
-                //}
-                sub.StartMilliseconds = Convert.ToInt32(dvbSubPes.PresentationTimeStamp);
-                sub.Pes = dvbSubPes;
-                sub.EndMilliseconds = 0;
-                subs.Add(sub);
-            }
-            return subs;
+            if (DvbSubtitlesLookup.ContainsKey(packetId))
+                return DvbSubtitlesLookup[packetId];
+            return null;
         }
 
         private List<DvbSubPes> MakeSubtitlePesPackets(int packetId)
