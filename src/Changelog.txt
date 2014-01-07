@@ -5,7 +5,11 @@
    * Added "File -> Import images"
    * Added "Tools -> Merge lines with same text"
    * Importing from plain text file,  "One line is one subtitle" now has a 
-     "Line break" option - thx Adrian
+     "Line break" option - thx Adrian   
+   * Added initial support for importing DVB subtitles from transport streams
+   * Added xml subtitle format "FLVCoreCuePoints" - thx Jon
+   * Added some support for fxpxml 1.3
+   * Added link to Sinhala spell check dictionary 
 * IMPROVED:
    * Updated Portuguese language file - thx moob
    * Updated Vietnamese language file - thx everytime
@@ -20,6 +24,7 @@
    * "Save as..." now remembers subtitle format
    * Now detects VobSub/Bluray-sup with wrong extension when opening a file
    * Now gives nice error message when opening idx, rar or zip files
+   * French rules regarding spaces/!?:; in "Fix common errors" - thx René
 * FIXED:
   * Fixed bug in "Fix common errors: Remove hyphen" - thx honeybunny
   * Fixed bug in "Remove text for HI" issue - thx cipry15
