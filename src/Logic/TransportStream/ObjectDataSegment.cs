@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         }
 
         public void DecodeImage(byte[] buffer, int index, ClutDefinitionSegment cds)
-        {           
+        {
             if (ObjectCodingMethod == 0)
             {
                 var twoToFourBitColorLookup = new List<int> { 0, 1, 2, 3 };
@@ -260,7 +260,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     _fastImage.SetPixel(x, y, c);
                 x++;
             }
-        }       
+        }
 
         private static int Next8Bits(byte[] buffer, ref int index)
         {
@@ -372,7 +372,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                         }
                         else if (next1 == Helper.B00001111)
                         {
-                            runLength = ((next2 << 4) + next3) + 25; // 25-280 
+                            runLength = ((next2 << 4) + next3) + 25; // 25-280
                             pixelCode = Next4Bits(buffer, ref index, ref startHalf);
                         }
                     }
@@ -441,7 +441,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     }
                     else if (next2 == Helper.B00000010)
                     {
-                        runLength = (Next2Bits(buffer, ref index, ref bitIndex) << 2) +  // 12-27 
+                        runLength = (Next2Bits(buffer, ref index, ref bitIndex) << 2) +  // 12-27
                                      Next2Bits(buffer, ref index, ref bitIndex) + 12;
                         pixelCode = Next2Bits(buffer, ref index, ref bitIndex);
                     }

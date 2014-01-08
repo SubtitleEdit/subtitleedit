@@ -449,7 +449,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             text = text.Insert(start, "<font face=\"" + fontName + "\"" + extraTags + "><i>");
                         else
                             text = text.Insert(start, "<font face=\"" + fontName + "\"" + extraTags + ">");
-                        
+
                         int indexOfEndTag = text.IndexOf("{\\fn}", start);
                         if (indexOfEndTag > 0)
                             text = text.Remove(indexOfEndTag, "{\\fn}".Length).Insert(indexOfEndTag, "</font>");

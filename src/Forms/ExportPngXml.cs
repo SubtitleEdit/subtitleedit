@@ -2158,7 +2158,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             _vobSubOcr = vobSubOcr;
             Initialize(subtitle, format, exportType, fileName, null);
-            
+
             //set language
             if (!string.IsNullOrEmpty(languageString))
             {

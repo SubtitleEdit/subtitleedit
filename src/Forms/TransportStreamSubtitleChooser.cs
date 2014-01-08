@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void TransportStreamSubtitleChooser_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
-                DialogResult = DialogResult.Cancel; 
+                DialogResult = DialogResult.Cancel;
         }
 
         internal void Initialize(Logic.TransportStream.TransportStreamParser tsParser)

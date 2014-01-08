@@ -25,13 +25,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
-        }      
+        }
 
         public override string ToText(Subtitle subtitle, string title)
         {
             var u52 = new UnknownSubtitle52();
             var rtBox = new System.Windows.Forms.RichTextBox { Text = u52.ToText(subtitle, title) };
-            return rtBox.Rtf;            
+            return rtBox.Rtf;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var u52 = new UnknownSubtitle52();
             u52.LoadSubtitle(subtitle, lines2, fileName);
-            _errorCount = u52.ErrorCount;           
+            _errorCount = u52.ErrorCount;
         }
 
     }

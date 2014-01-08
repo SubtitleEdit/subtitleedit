@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
     {
         public ulong StartMilliseconds { get; set; }
         public ulong EndMilliseconds { get; set; }
-        public DvbSubPes Pes { get; set; }      
+        public DvbSubPes Pes { get; set; }
 
         /// <summary>
         /// Get complete bitmap

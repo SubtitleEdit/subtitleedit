@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.AppendChild(name);
 
                 XmlNode parameters = xml.CreateElement("Parameters");
-                
+
                 XmlNode parameter = xml.CreateElement("Parameter");
                 name = xml.CreateElement("Name");
                 name.InnerText = "source";
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 xml.DocumentElement.AppendChild(paragraph);
             }
-            
+
 
             return ToUtf8XmlString(xml);
         }
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             string allText = sb.ToString();
             if (!allText.Contains("<FLVCoreCuePoints") && allText.Contains("<CuePoint"))
-                return;            
+                return;
 
             var xml = new XmlDocument();
             try

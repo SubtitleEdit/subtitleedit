@@ -394,7 +394,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 b2 = (byte)(((b2 & Helper.B00001111) << 4) | ((b3 & Helper.B11110000) >> 4));
             }
 
-            if (b1 >> 2 == 0) 
+            if (b1 >> 2 == 0)
             {
                 runLength = (b1 << 6) | (b2 >> 2);
                 color = b2 & Helper.B00000011;
@@ -411,7 +411,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 return 2;
             }
 
-            if (b1 >> 4 == 0) 
+            if (b1 >> 4 == 0)
             {
                 runLength = (b1 << 2) | (b2 >> 6);
                 color = (b2 & Helper.B00110000) >> 4;
@@ -424,7 +424,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 return 1;
             }
 
-            if (b1 >> 6 == 0) 
+            if (b1 >> 6 == 0)
             {
                 runLength = b1 >> 2;
                 color = b1 & Helper.B00000011;

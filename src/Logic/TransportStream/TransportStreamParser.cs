@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
                             if (!isTeletext)
                             {
-                                
+
                             }
                         }
                     }
@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             foreach (int pid in SubtitlePacketIds)
             {
                 var subtitles = new List<DvbSubtitle>();
-                var list = GetSubtitlePesPackets(pid);                
+                var list = GetSubtitlePesPackets(pid);
                 for (int i=0; i<list.Count; i++)
                 {
                     var pes = list[i];
@@ -175,7 +175,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                             sub.EndMilliseconds = list[i + 1].PresentationTimeStampToMilliseconds() - 25;
                         if (sub.EndMilliseconds < 1)
                             sub.EndMilliseconds = sub.StartMilliseconds + 3500;
-                        subtitles.Add(sub);    
+                        subtitles.Add(sub);
                     }
                 }
                 DvbSubtitlesLookup.Add(pid, subtitles);
@@ -251,7 +251,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 pes = new DvbSubPes(pesData, 0);
             }
             else
-            { 
+            {
                 pes = new DvbSubPes(pesData, 0);
             }
             list.Add(pes);

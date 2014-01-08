@@ -9053,7 +9053,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _formPositionsAndSizes.SavePositionAndSize(formSubOcr);
             }
         }
-      
+
         private bool ImportSubtitleFromTransportStream(string fileName)
         {
             ShowStatus("Parsing transport stream - please wait...");
@@ -9079,7 +9079,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _formPositionsAndSizes.SavePositionAndSize(subChooser);
             }
             var subtitles = tsParser.GetDvbSubtitles(packedId);
-           
+
             var formSubOcr = new VobSubOcr();
             _formPositionsAndSizes.SetPositionAndSize(formSubOcr);
             formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName);
