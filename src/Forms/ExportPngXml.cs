@@ -2128,9 +2128,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             foreach (var x in FontFamily.Families)
             {
-                comboBoxSubtitleFont.Items.Add(x.Name);
-                if (string.Compare(x.Name, _subtitleFontName, true) == 0)
-                    comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
+                if (x.IsStyleAvailable(FontStyle.Regular) || x.IsStyleAvailable(FontStyle.Bold))
+                {
+                    comboBoxSubtitleFont.Items.Add(x.Name);
+                    if (string.Compare(x.Name, _subtitleFontName, true) == 0)
+                        comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
+                }
             }
             if (comboBoxSubtitleFont.SelectedIndex == -1)
                 comboBoxSubtitleFont.SelectedIndex = 0; // take first font if default font not found (e.g. linux)
