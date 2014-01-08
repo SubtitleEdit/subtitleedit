@@ -141,9 +141,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (var x in System.Drawing.FontFamily.Families)
             {
-                comboBoxSubtitleFont.Items.Add(x.Name);
-                if (string.Compare(x.Name, gs.SubtitleFontName, true) == 0)
-                    comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
+                if (x.IsStyleAvailable(FontStyle.Regular) && x.IsStyleAvailable(FontStyle.Bold))
+                {
+                    comboBoxSubtitleFont.Items.Add(x.Name);
+                    if (string.Compare(x.Name, gs.SubtitleFontName, true) == 0)
+                        comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
+                }
             }
 
             WordListSettings wordListSettings = Configuration.Settings.WordLists;
