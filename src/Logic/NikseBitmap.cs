@@ -932,5 +932,30 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
 
+        public Color GetBrightestColor()
+        {
+            int max = Width * Height - 4;
+            Color brightest = Color.Black;
+            Color c = GetPixel(0, 0);
+            for (int i = 0; i < max; i++)
+            {
+                c = GetPixelNext();
+                if (c.A > 220 && c.R + c.G + c.B > 200 && c.R + c.G + c.B > brightest.R + brightest.G + brightest.B)
+                    brightest = c;
+            }
+            if (IsColorClose(Color.White, brightest, 40))
+                return Color.Transparent;
+            if (IsColorClose(Color.Black, brightest, 10))
+                return Color.Transparent;
+            return brightest;
+        }       
+
+        private bool IsColorClose(Color color1, Color color2, int maxDiff)
+        {
+            if (Math.Abs(color1.R - color2.R) < maxDiff && Math.Abs(color1.G - color2.G) < maxDiff && Math.Abs(color1.B - color2.B) < maxDiff)
+                return true;
+            return false;
+        }
+
     }
 }

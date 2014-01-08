@@ -2186,6 +2186,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (File.Exists(fileName))
             {
                 bool videoFileLoaded = false;
+                string ext = Path.GetExtension(fileName).ToLower();
 
                 // save last first visible index + first selected index from listview
                 if (!string.IsNullOrEmpty(_fileName))
@@ -2193,7 +2194,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
 
-                if (Path.GetExtension(fileName).ToLower() == ".sub" && IsVobSubFile(fileName, false))
+                if (ext == ".sub" && IsVobSubFile(fileName, false))
                 {
                     if (MessageBox.Show(this, _language.ImportThisVobSubSubtitle, _title, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
@@ -2202,7 +2203,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (Path.GetExtension(fileName).ToLower() == ".sup")
+                if (ext == ".sup")
                 {
                     if (IsBluRaySupFile(fileName))
                     {
@@ -2216,7 +2217,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (Path.GetExtension(fileName).ToLower() == ".mkv" || Path.GetExtension(fileName).ToLower() == ".mks")
+                if (ext == ".mkv" || ext == ".mks")
                 {
                     Matroska mkv = new Matroska();
                     bool isValid = false;
@@ -2234,7 +2235,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (Path.GetExtension(fileName).ToLower() == ".divx" || Path.GetExtension(fileName).ToLower() == ".avi")
+                if (ext == ".divx" || ext == ".avi")
                 {
                     if (ImportSubtitleFromDivX(fileName))
                         return;
@@ -2242,13 +2243,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var fi = new FileInfo(fileName);
 
-                if (Path.GetExtension(fileName).ToLower() == ".ts" && fi.Length > 10000 && IsTransportStream(fileName)) //TODO: Also check mpg, mpeg - and file header!
+                if ((ext == ".ts" || ext == ".mpeg" || ext == ".mpg") && fi.Length > 10000 && IsTransportStream(fileName)) //TODO: Also check mpg, mpeg - and file header!
                 {
                     ImportSubtitleFromTransportStream(fileName);
                     return;
                 }
 
-                if ((Path.GetExtension(fileName).ToLower() == ".mp4" || Path.GetExtension(fileName).ToLower() == ".m4v" || Path.GetExtension(fileName).ToLower() == ".3gp")
+                if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp")
                     && fi.Length > 10000)
                 {
                     if (ImportSubtitleFromMp4(fileName))
@@ -2337,7 +2338,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (format == null && Path.GetExtension(fileName).ToLower() == ".wsb")
+                if (format == null && ext == ".wsb")
                 {
                     string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
                     var list = new List<string>();
@@ -2664,7 +2665,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // check for idx file
-                if (format == null && fi.Length > 100 && Path.GetExtension(fileName).ToLower() == ".idx")
+                if (format == null && fi.Length > 100 && ext == ".idx")
                 {
                     if (string.IsNullOrEmpty(_language.ErrorLoadIdx))
                         MessageBox.Show("Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and SE can open the .sub file.");
@@ -2966,11 +2967,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                var buffer = new byte[1];
+                var buffer = new byte[193];
                 var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite) { Position = 0 };
                 fs.Read(buffer, 0, buffer.Length);
                 fs.Close();
-                return buffer[0] == 0x47; // 47hex (71 dec) == TS sync byte
+                return buffer[0] == 0x47 && buffer[188] == 0x47; // 47hex (71 dec or 'G') == TS sync byte
             }
             catch (Exception ex)
             {
@@ -9072,7 +9073,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var subChooser = new TransportStreamSubtitleChooser();
                 _formPositionsAndSizes.SetPositionAndSize(subChooser);
-                subChooser.Initialize(tsParser);
+                subChooser.Initialize(tsParser, fileName);
                 if (subChooser.ShowDialog(this) == DialogResult.Cancel)
                     return false;
                 packedId = tsParser.SubtitlePacketIds[subChooser.SelectedIndex];
@@ -9564,11 +9565,15 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         OpenSubtitle(fileName, null);
                     }
-                    else if (fi.Length < 50000000 && ext == ".sub" && IsVobSubFile(fileName, true)) // max 50 mb
+                    else if (fi.Length < 150000000 && ext == ".sub" && IsVobSubFile(fileName, true)) // max 150 mb
                     {
                         OpenSubtitle(fileName, null);
                     }
-                    else if (fi.Length < 150000000 && ext == ".sup" && IsBluRaySupFile(fileName)) // max 150 mb
+                    else if (fi.Length < 250000000 && ext == ".sup" && IsBluRaySupFile(fileName)) // max 250 mb
+                    {
+                        OpenSubtitle(fileName, null);
+                    }
+                    else if ((ext == ".ts" || ext == ".mpg" || ext == ".mpeg") && IsTransportStream(fileName))
                     {
                         OpenSubtitle(fileName, null);
                     }
