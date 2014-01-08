@@ -171,9 +171,9 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                         var sub = new DvbSubtitle();
                         sub.StartMilliseconds = pes.PresentationTimeStampToMilliseconds();
                         sub.Pes = pes;
-                        if (i + 1 < list.Count)
+                        if (i + 1 < list.Count && list[i + 1].PresentationTimeStampToMilliseconds() > 25)
                             sub.EndMilliseconds = list[i + 1].PresentationTimeStampToMilliseconds() - 25;
-                        else
+                        if (sub.EndMilliseconds < 1)
                             sub.EndMilliseconds = sub.StartMilliseconds + 3500;
                         subtitles.Add(sub);    
                     }

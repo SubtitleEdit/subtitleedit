@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Logic.TransportStream
@@ -23,6 +22,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
         public List<string> FirstDataTypes = new List<string>();
         public Bitmap Image { get; set; }
+        private FastBitmap _fastImage;
 
         public const int PixelDecoding2Bit = 0x10;
         public const int PixelDecoding4Bit = 0x11;
@@ -41,179 +41,201 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             ObjectCodingMethod = (buffer[index + 2] & Helper.B00001100) >> 2;
             NonModifyingColorFlag = (buffer[index + 2] & Helper.B00000010) > 0;
             BufferIndex = index;
-            //DecodeImage(buffer, index, cds);
         }
 
-//        public string test = string.Empty;
-
         public void DecodeImage(byte[] buffer, int index, ClutDefinitionSegment cds)
-        {
-            Image = new Bitmap(720, 40);
-            var twoToFourBitColorLookup = new List<int> { 0, 1, 2, 3 };
-            var twoToEightBitColorLookup = new List<int> { 0, 1, 2, 3 };
-            var fourToEightBitColorLookup = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ,15 };
-
+        {           
             if (ObjectCodingMethod == 0)
             {
-                int pixelCode;
-                int runLength;
+                var twoToFourBitColorLookup = new List<int> { 0, 1, 2, 3 };
+                var twoToEightBitColorLookup = new List<int> { 0, 1, 2, 3 };
+                var fourToEightBitColorLookup = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+
+                int pixelCode = 0;
+                int runLength = 0;
                 TopFieldDataBlockLength = Helper.GetEndianWord(buffer, index + 3);
                 BottomFieldDataBlockLength = Helper.GetEndianWord(buffer, index + 5);
                 int dataType = buffer[index + 7];
+                int length = TopFieldDataBlockLength;
 
                 index += 8;
                 int start = index;
                 int x = 0;
                 int y = 0;
-                  while (index < start + TopFieldDataBlockLength)
+
+                // Pre-decoding to determine image size
+                int width = 0;
+                while (index < start + TopFieldDataBlockLength)
                 {
-                    if (dataType == PixelDecoding2Bit)
-                    {
-                        int bitIndex = 0;
-                        while (index < start + TopFieldDataBlockLength && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out pixelCode, out runLength))
-                        {
-                            DrawPixels(cds, twoToFourBitColorLookup[pixelCode], runLength, ref x, ref y);
-                        }
-                    }
-                    else if (dataType == PixelDecoding4Bit)
-                    {
-                        bool startHalf = false;
-  //                      test = string.Empty;
-                        while (index < start + TopFieldDataBlockLength && FourBitPixelDecoding(buffer, ref index, ref startHalf, out pixelCode, out runLength))
-                        {
-//                            test += runLength + " of " + pixelCode.ToString("X4").Substring(2) + ", ";
-                            DrawPixels(cds, pixelCode, runLength, ref x, ref y);
-                        }
-                    }
-                    else if (dataType == PixelDecoding8Bit)
-                    {
-                        System.Windows.Forms.MessageBox.Show("8-bit pixel decoding!");
-                        while (index < start + TopFieldDataBlockLength && EightBitPixelDecoding(buffer, ref index, out pixelCode, out runLength))
-                        {
-                            DrawPixels(cds, pixelCode, runLength, ref x, ref y);
-                        }
-                    }
-                    else if (dataType == MapTable2To4Bit)
-                    {
-                        //4 entry numbers of 4-bits each; entry number 0 first, entry number 3 last
-                        twoToFourBitColorLookup[0] = buffer[index] >> 4;
-                        twoToFourBitColorLookup[1] = buffer[index] & Helper.B00001111;
-                        index++;
-                        twoToFourBitColorLookup[2] = buffer[index] >> 4;
-                        twoToFourBitColorLookup[3] = buffer[index] & Helper.B00001111;
-                        index++;
-                    }
-                    else if (dataType == MapTable2To8Bit)
-                    {
-                        //4 entry numbers of 8-bits each; entry number 0 first, entry number 3 last
-                        twoToEightBitColorLookup[0] = buffer[index];
-                        index++;
-                        twoToEightBitColorLookup[1] = buffer[index];
-                        index++;
-                        twoToEightBitColorLookup[2] = buffer[index];
-                        index++;
-                        twoToEightBitColorLookup[3] = buffer[index];
-                        index++;
-                    }
-                    else if (dataType == MapTable4To8Bit)
-                    {
-                        // 16 entry numbers of 8-bits each
-                        for (int k = 0; k < 16; k++)
-                        {
-                            fourToEightBitColorLookup[k] = buffer[index];
-                            index++;
-                        }
-                    }
-                    else if (dataType == EndOfObjectLineCode)
-                    {
-                        x = 0;
-                        y += 2; // interlaced - skip one line
-                    }
-                    if (index < start + TopFieldDataBlockLength)
-                    {                        
-                        dataType = buffer[index];
-                        index++;
-                    }
+                    index = CalculateSize(buffer, index, ref dataType, start, ref x, ref y, length, ref runLength, ref width);
+                }
+                if (width > 2000)
+                    width = 2000;
+                if (y > 500)
+                    y = 500;
+                Image = new Bitmap(width, y + 1);
+                _fastImage = new FastBitmap(Image);
+                _fastImage.LockImage();
+
+                x = 0;
+                y = 0;
+                index = start;
+                while (index < start + TopFieldDataBlockLength)
+                {
+                    index = ProcessDataType(buffer, index, cds, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength);
                 }
 
                 x = 0;
                 y = 1;
-                index = start + TopFieldDataBlockLength;
-                start = index;
+                if (BottomFieldDataBlockLength == 0)
+                {
+                    index = start;
+                }
+                else
+                {
+                    length = BottomFieldDataBlockLength;
+                    index = start + TopFieldDataBlockLength;
+                    start = index;
+                }
                 dataType = buffer[index - 1];
                 while (index < start + BottomFieldDataBlockLength - 1)
                 {
-                    if (dataType == PixelDecoding2Bit)
-                    {
-                        int bitIndex = 0;
-                        while (index < start + BottomFieldDataBlockLength - 1 && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out pixelCode, out runLength))
-                        {
-                            DrawPixels(cds, twoToFourBitColorLookup[pixelCode], runLength, ref x, ref y);
-                        }
-                    }
-                    else if (dataType == PixelDecoding4Bit)
-                    {
-                        bool startHalf = false;
-                        while (index < start + BottomFieldDataBlockLength - 1 && FourBitPixelDecoding(buffer, ref index, ref startHalf, out pixelCode, out runLength))
-                        {
-                            DrawPixels(cds, pixelCode, runLength, ref x, ref y);
-                        }
-                    }
-                    else if (dataType == PixelDecoding8Bit)
-                    {
-                        System.Windows.Forms.MessageBox.Show("8-bit pixel decoding!");
-                        while (index < start + BottomFieldDataBlockLength - 1 && EightBitPixelDecoding(buffer, ref index, out pixelCode, out runLength))
-                        {
-                            DrawPixels(cds, pixelCode, runLength, ref x, ref y);
-                        }
-                    }
-                    else if (dataType == MapTable2To4Bit)
-                    {
-                        //4 entry numbers of 4-bits each; entry number 0 first, entry number 3 last
-                        twoToFourBitColorLookup[0] = buffer[index] >> 4;
-                        twoToFourBitColorLookup[1] = buffer[index] & Helper.B00001111;
-                        index++;
-                        twoToFourBitColorLookup[2] = buffer[index] >> 4;
-                        twoToFourBitColorLookup[3] = buffer[index] & Helper.B00001111;
-                        index++;
-                    }
-                    else if (dataType == MapTable2To8Bit)
-                    {
-                        //4 entry numbers of 8-bits each; entry number 0 first, entry number 3 last
-                        twoToEightBitColorLookup[0] = buffer[index];
-                        index++;
-                        twoToEightBitColorLookup[1] = buffer[index];
-                        index++;
-                        twoToEightBitColorLookup[2] = buffer[index];
-                        index++;
-                        twoToEightBitColorLookup[4] = buffer[index];
-                        index++;
-                    }
-                    else if (dataType == MapTable4To8Bit)
-                    {
-                        // 16 entry numbers of 8-bits each
-                        for (int k = 0; k < 16; k++)
-                        {
-                            fourToEightBitColorLookup[k] = buffer[index];
-                            index++;
-                        }
-                    }
-                    else if (dataType == EndOfObjectLineCode)
-                    {
-                        x = 0;
-                        y += 2; // interlaced - skip one line
-                    }
-                    if (index < start + BottomFieldDataBlockLength)
-                    {
-                        dataType = buffer[index];
-                        index++;
-                    }
+                    index = ProcessDataType(buffer, index, cds, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength);
                 }
+                _fastImage.UnlockImage();
             }
             else if (ObjectCodingMethod == 1)
             {
+                Image = new Bitmap(1, 1);
                 NumberOfCodes = buffer[index + 3];
             }
+        }
+
+        private int ProcessDataType(byte[] buffer, int index, ClutDefinitionSegment cds, ref int dataType, int start,
+                                    List<int> twoToFourBitColorLookup, List<int> fourToEightBitColorLookup, List<int> twoToEightBitColorLookup,
+                                    ref int x, ref int y, int length,  ref int pixelCode, ref int runLength)
+        {
+            if (dataType == PixelDecoding2Bit)
+            {
+                int bitIndex = 0;
+                while (index < start + length - 1 && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out pixelCode, out runLength))
+                {
+                    DrawPixels(cds, twoToFourBitColorLookup[pixelCode], runLength, ref x, ref y);
+                }
+            }
+            else if (dataType == PixelDecoding4Bit)
+            {
+                bool startHalf = false;
+                while (index < start + length - 1 && FourBitPixelDecoding(buffer, ref index, ref startHalf, out pixelCode, out runLength))
+                {
+                    DrawPixels(cds, fourToEightBitColorLookup[pixelCode], runLength, ref x, ref y);
+                }
+            }
+            else if (dataType == PixelDecoding8Bit)
+            {
+                while (index < start + length - 1 && EightBitPixelDecoding(buffer, ref index, out pixelCode, out runLength))
+                {
+                    DrawPixels(cds, pixelCode, runLength, ref x, ref y);
+                }
+            }
+            else if (dataType == MapTable2To4Bit)
+            {
+                //4 entry numbers of 4-bits each; entry number 0 first, entry number 3 last
+                twoToFourBitColorLookup[0] = buffer[index] >> 4;
+                twoToFourBitColorLookup[1] = buffer[index] & Helper.B00001111;
+                index++;
+                twoToFourBitColorLookup[2] = buffer[index] >> 4;
+                twoToFourBitColorLookup[3] = buffer[index] & Helper.B00001111;
+                index++;
+            }
+            else if (dataType == MapTable2To8Bit)
+            {
+                //4 entry numbers of 8-bits each; entry number 0 first, entry number 3 last
+                twoToEightBitColorLookup[0] = buffer[index];
+                index++;
+                twoToEightBitColorLookup[1] = buffer[index];
+                index++;
+                twoToEightBitColorLookup[2] = buffer[index];
+                index++;
+                twoToEightBitColorLookup[4] = buffer[index];
+                index++;
+            }
+            else if (dataType == MapTable4To8Bit)
+            {
+                // 16 entry numbers of 8-bits each
+                for (int k = 0; k < 16; k++)
+                {
+                    fourToEightBitColorLookup[k] = buffer[index];
+                    index++;
+                }
+            }
+            else if (dataType == EndOfObjectLineCode)
+            {
+                x = 0;
+                y += 2; // interlaced - skip one line
+            }
+
+            if (index < start + length)
+            {
+                dataType = buffer[index];
+                index++;
+            }
+
+            return index;
+        }
+
+        private int CalculateSize(byte[] buffer, int index, ref int dataType, int start, ref int x, ref int y, int length, ref int runLength, ref int width)
+        {
+            int pixelCode;
+            if (dataType == PixelDecoding2Bit)
+            {
+                int bitIndex = 0;
+                while (index < start + length - 1 && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out pixelCode, out runLength))
+                {
+                    x += runLength;
+                }
+            }
+            else if (dataType == PixelDecoding4Bit)
+            {
+                bool startHalf = false;
+                while (index < start + length - 1 && FourBitPixelDecoding(buffer, ref index, ref startHalf, out pixelCode, out runLength))
+                {
+                    x += runLength;
+                }
+            }
+            else if (dataType == PixelDecoding8Bit)
+            {
+                while (index < start + length - 1 && EightBitPixelDecoding(buffer, ref index, out pixelCode, out runLength))
+                {
+                    x += runLength;
+                }
+            }
+            else if (dataType == MapTable2To4Bit)
+            {
+                index+=2;
+            }
+            else if (dataType == MapTable2To8Bit)
+            {
+                index+=4;
+            }
+            else if (dataType == MapTable4To8Bit)
+            {
+                index += 16;
+            }
+            else if (dataType == EndOfObjectLineCode)
+            {
+                x = 0;
+                y += 2; // interlaced - skip one line
+            }
+
+            if (index < start + length)
+            {
+                dataType = buffer[index];
+                index++;
+            }
+            if (x > width)
+                width = x;
+            return index;
         }
 
 
@@ -234,20 +256,20 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
             for (int k = 0; k < runLength; k++)
             {
-                if (y < Image.Height && x < Image.Width)
-                    Image.SetPixel(x, y, c);
+                if (y < _fastImage.Height && x < _fastImage.Width)
+                    _fastImage.SetPixel(x, y, c);
                 x++;
             }
         }       
 
-        private int Next8Bits(byte[] buffer, ref int index)
+        private static int Next8Bits(byte[] buffer, ref int index)
         {
             int result = buffer[index];
             index++;
             return result;
         }
 
-        private bool EightBitPixelDecoding(byte[] buffer, ref int index, out int pixelCode, out int runLength)
+        private static bool EightBitPixelDecoding(byte[] buffer, ref int index, out int pixelCode, out int runLength)
         {
             pixelCode = 0;
             runLength = 1;
@@ -276,7 +298,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             return true;
         }
 
-        private int Next4Bits(byte[] buffer, ref int index, ref bool startHalf)
+        private static int Next4Bits(byte[] buffer, ref int index, ref bool startHalf)
         {
             int result;
             if (startHalf)
@@ -293,7 +315,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             return result;
         }
 
-        private bool FourBitPixelDecoding(byte[] buffer, ref int index, ref bool startHalf, out int pixelCode, out int runLength)
+        private static bool FourBitPixelDecoding(byte[] buffer, ref int index, ref bool startHalf, out int pixelCode, out int runLength)
         {
             pixelCode = 0;
             runLength = 1;
@@ -359,7 +381,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             return true;
         }
 
-        private int Next2Bits(byte[] buffer, ref int index, ref int bitIndex)
+        private static int Next2Bits(byte[] buffer, ref int index, ref int bitIndex)
         {
             int result;
             if (bitIndex == 0)
@@ -386,7 +408,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             return result;
         }
 
-        private bool TwoBitPixelDecoding(byte[] buffer, ref int index, ref int bitIndex, out int pixelCode, out int runLength)
+        private static bool TwoBitPixelDecoding(byte[] buffer, ref int index, ref int bitIndex, out int pixelCode, out int runLength)
         {
             runLength = 1;
             pixelCode = 0;

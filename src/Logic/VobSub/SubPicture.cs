@@ -375,11 +375,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             }
         }
 
-        private static int GetNibble(byte[] buf, int nibble_offset)
-        {
-            return (buf[nibble_offset >> 1] >> ((1 - (nibble_offset & 1)) << 2)) & 0xf;
-        }
-
         private static int DecodeRle(int index, byte[] data, out int color, out int runLength, ref bool onlyHalf, out bool restOfLine)
         {
             //Value      Bits   n=length, c=color
@@ -392,10 +387,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             byte b1 = data[index];
             byte b2 = data[index + 1];
 
-            //string binary2 = Helper.GetBinaryString(data, index, 3);
-            //if (onlyHalf)
-            //    binary2 = binary2.Substring(4);
-
             if (onlyHalf)
             {
                 byte b3 = data[index + 2];
@@ -403,7 +394,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 b2 = (byte)(((b2 & Helper.B00001111) << 4) | ((b3 & Helper.B11110000) >> 4));
             }
 
-            if (b1 >> 2 == 0) // if (binary2.StartsWith("000000"))
+            if (b1 >> 2 == 0) 
             {
                 runLength = (b1 << 6) | (b2 >> 2);
                 color = b2 & Helper.B00000011;
@@ -417,18 +408,10 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                         return 3;
                     }
                 }
-
-                    //int runLength2 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(6, 8));
-                    //int color2 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(14, 2));
-                    //if (runLength != runLength2)
-                    //    throw (new Exception("Error in runlength"));
-                    //if (color != color2)
-                    //    throw (new Exception("Error in runlength"));
-
                 return 2;
             }
 
-            if (b1 >> 4 == 0) // if (binary2.StartsWith("0000"))
+            if (b1 >> 4 == 0) 
             {
                 runLength = (b1 << 2) | (b2 >> 6);
                 color = (b2 & Helper.B00110000) >> 4;
@@ -438,44 +421,18 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                     return 2;
                 }
                 onlyHalf = true;
-
-                    //int runLength2 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(4, 6));
-                    //int color2 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(10, 2));
-                    //if (runLength != runLength2)
-                    //    throw (new Exception("Error in runlength"));
-                    //if (color != color2)
-                    //    throw (new Exception("Error in runlength"));
-
                 return 1;
             }
 
-
-            if (b1 >> 6 == 0) // if (binary2.StartsWith("00"))
+            if (b1 >> 6 == 0) 
             {
                 runLength = b1 >> 2;
                 color = b1 & Helper.B00000011;
-
-                    //int runLength2 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(2, 4));
-                    //int color2 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(6, 2));
-                    //if (runLength != runLength2)
-                    //    throw (new Exception("Error in runlength"));
-                    //if (color != color2)
-                    //    throw (new Exception("Error in runlength"));
-
-
                 return 1;
             }
 
-
             runLength = b1 >> 6;
             color = (b1 & Helper.B00110000) >> 4;
-
-                //int runLength3 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(0, 2));
-                //int color3 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(2, 2));
-                //if (runLength != runLength3)
-                //    throw (new Exception("Error in runlength"));
-                //if (color != color3)
-                //    throw (new Exception("Error in runlength"));
 
             if (onlyHalf)
             {

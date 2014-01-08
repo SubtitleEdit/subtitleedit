@@ -7,8 +7,8 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
     public class DvbSubtitle
     {
-        public int StartMilliseconds { get; set; }
-        public int EndMilliseconds { get; set; }
+        public ulong StartMilliseconds { get; set; }
+        public ulong EndMilliseconds { get; set; }
         public DvbSubPes Pes { get; set; }      
 
         /// <summary>
