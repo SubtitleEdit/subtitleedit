@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
-   
+
     public class DvbSubPes
     {
         public const int HeaderLength = 6;
@@ -25,14 +25,14 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public readonly int AdditionalCopyInfoFlag;
         public readonly int CrcFlag;
         public readonly int ExtensionFlag;
-        public readonly int HeaderDataLength;        
+        public readonly int HeaderDataLength;
 
         public readonly UInt64? PresentationTimeStamp;
         public readonly UInt64? DecodeTimeStamp;
 
         public readonly int? SubPictureStreamId;
 
-        public readonly byte[] DataBuffer;        
+        public readonly byte[] DataBuffer;
 
         public DvbSubPes(byte[] buffer, int index)
         {
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         //            list.Add(ss);
         //            if (ss.ClutDefinition != null)
         //                cds = ss.ClutDefinition;
-                        
+
         //            index += 6 + ss.SegmentLength;
         //            if (index + 6 < DataBuffer.Length)
         //                ss = new SubtitleSegment(DataBuffer, index, cds);
@@ -245,13 +245,13 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                         }
                         p.X = o.ObjectHorizontalPosition;
                         p.Y = o.ObjectVerticalPosition;
-                    }                        
+                    }
                 }
             }
 
             return p;
         }
-     
+
         public Bitmap GetImage(ObjectDataSegment ods)
         {
             if (SubtitleSegments == null)
@@ -313,7 +313,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     }
                 }
             }
-            
+
             return bmp;
         }
 
@@ -358,6 +358,6 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             else
                 return 0;
         }
-     
+
     }
 }

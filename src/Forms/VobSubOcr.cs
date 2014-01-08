@@ -1261,7 +1261,7 @@ namespace Nikse.SubtitleEdit.Forms
                 dvbBmp.Dispose();
                 return nDvbBmp.GetBitmap();
                 //return _dvbSubtitles[index].Pes.GetImageFull();
-            }            
+            }
 
             if (_bluRaySubtitlesOriginal != null)
             {

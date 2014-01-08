@@ -1687,11 +1687,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 if (Language == "fr") // special rules for French
-                { 
+                {
                     string newText = p.Text;
                     int j = 1;
                     while (j < newText.Length)
-                    { 
+                    {
                         string ch = newText.Substring(j, 1);
                         if ("!?:;".Contains(ch))
                         {
