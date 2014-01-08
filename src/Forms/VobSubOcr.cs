@@ -1258,9 +1258,10 @@ namespace Nikse.SubtitleEdit.Forms
                 NikseBitmap nDvbBmp = new NikseBitmap(dvbBmp);
                 nDvbBmp.CropTopTransparent(2);
                 nDvbBmp.CropSidesAndBottom(2, Color.Transparent, true);
-                dvbBmp.Dispose();
+                var c = nDvbBmp.GetBrightestColor();
+                groupBoxSubtitleImage.BackColor = c;
+                dvbBmp.Dispose();                
                 return nDvbBmp.GetBitmap();
-                //return _dvbSubtitles[index].Pes.GetImageFull();
             }
 
             if (_bluRaySubtitlesOriginal != null)
@@ -7022,6 +7023,10 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
 
+            FileName = fileName;
+            Text += " - " + Path.GetFileName(fileName);
+
+            groupBoxImagePalette.Visible = false;
             //SetTesseractLanguageFromLanguageString(languageString);
             //_importLanguageString = languageString;
         }

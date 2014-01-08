@@ -50,9 +50,10 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
         }
 
-        internal void Initialize(Logic.TransportStream.TransportStreamParser tsParser)
+        internal void Initialize(Logic.TransportStream.TransportStreamParser tsParser, string fileName)
         {
             _tsParser = tsParser;
+            Text = string.Format("Transport stream subtitle chooser - {0}", fileName);
             foreach (int id in tsParser.SubtitlePacketIds)
             {
                 string s = string.Format(string.Format("Transport Packet Identifier (PID) = {0}, number of subtitles = {1}", id, tsParser.GetDvbSubtitles(id).Count));
@@ -82,8 +83,9 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var sub in list)
             {
                 i++;
-                var tc = new TimeCode(TimeSpan.FromMilliseconds(sub.StartMilliseconds));
-                listBoxSubtitles.Items.Add(string.Format("{0}: {1}, {2} images", i, tc.ToString(), sub.Pes.ObjectDataList.Count));
+                var start = new TimeCode(TimeSpan.FromMilliseconds(sub.StartMilliseconds));
+                var end = new TimeCode(TimeSpan.FromMilliseconds(sub.EndMilliseconds));
+                listBoxSubtitles.Items.Add(string.Format("{0}:  {1} --> {2},  {3} image(s)", i, start.ToString(), end.ToString(), sub.Pes.ObjectDataList.Count));
             }
             if (list.Count > 0)
                 listBoxSubtitles.SelectedIndex = 0;

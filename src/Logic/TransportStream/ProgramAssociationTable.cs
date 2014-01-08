@@ -29,11 +29,14 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             index = index + 8;
             for (int i = 0; i < (SectionLength - 5) / 8; i++)
             {
-                int programNumber = packetBuffer[index] * 256 + packetBuffer[index + 1];
-                int programId = (packetBuffer[index + 2] & Helper.B00011111) * 256 + packetBuffer[index + 3];
-                ProgramNumbers.Add(programNumber);
-                ProgramIds.Add(programId);
-                index += 8;
+                if (index + 3 < packetBuffer.Length)
+                {
+                    int programNumber = packetBuffer[index] * 256 + packetBuffer[index + 1];
+                    int programId = (packetBuffer[index + 2] & Helper.B00011111) * 256 + packetBuffer[index + 3];
+                    ProgramNumbers.Add(programNumber);
+                    ProgramIds.Add(programId);
+                    index += 8;
+                }
             }
         }
     }
