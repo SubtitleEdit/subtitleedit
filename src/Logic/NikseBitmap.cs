@@ -932,6 +932,10 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
 
+        /// <summary>
+        /// Returns brightest color (not white though)
+        /// </summary>
+        /// <returns>Brightest color, if not found or if brightes color is white, then Color.Transparent is returned</returns>
         public Color GetBrightestColor()
         {
             int max = Width * Height - 4;
@@ -955,6 +959,17 @@ namespace Nikse.SubtitleEdit.Logic
             if (Math.Abs(color1.R - color2.R) < maxDiff && Math.Abs(color1.G - color2.G) < maxDiff && Math.Abs(color1.B - color2.B) < maxDiff)
                 return true;
             return false;
+        }
+
+        public void GrayScale()
+        {
+            for (int i = 0; i < _bitmapData.Length; i += 4)
+            {
+                int medium = Convert.ToInt32((_bitmapData[i + 2] + _bitmapData[i + 1] + _bitmapData[i]) * 1.5 / 3.0 + 2);
+                if (medium > byte.MaxValue)
+                    medium = byte.MaxValue;
+                _bitmapData[i + 2] = _bitmapData[i + 1] = _bitmapData[i] = (byte)medium;
+            }
         }
 
     }

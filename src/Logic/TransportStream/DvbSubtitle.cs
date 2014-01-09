@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
+﻿using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
@@ -11,19 +8,26 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public ulong EndMilliseconds { get; set; }
         public DvbSubPes Pes { get; set; }
 
+        public int? ActiveImageIndex { get; set; }
+
         /// <summary>
-        /// Get complete bitmap
+        /// Gets full image if 'ActiveImageIndex' not set, otherwise only gets image by index
         /// </summary>
         /// <returns></returns>
-        public Bitmap GetBitmap()
+        public Bitmap GetActiveImage()
         {
-            return null;
+            if (ActiveImageIndex.HasValue && ActiveImageIndex.HasValue && ActiveImageIndex >= 0 && ActiveImageIndex < Pes.ObjectDataList.Count)
+                return (Bitmap)Pes.GetImage(Pes.ObjectDataList[ActiveImageIndex.Value]).Clone();
+            return Pes.GetImageFull();
         }
 
-        public List<Bitmap> GetBitmaps()
+        public int NumberOfImages
         {
-            return null;
-        }
+            get
+            {
+                return Pes.ObjectDataList.Count;
+            }
+        }       
 
     }
 }
