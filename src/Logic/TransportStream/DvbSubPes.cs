@@ -120,31 +120,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
                 return DataBuffer[1];
             }
-        }
-
-        //public List<SubtitleSegment> SubtitleSegments
-        //{
-        //    get
-        //    {
-        //        var list = new List<SubtitleSegment>();
-        //        int index = 2;
-        //        var ss = new SubtitleSegment(DataBuffer, index, null);
-        //        ClutDefinitionSegment cds = null;
-        //        while (ss.SyncByte == Helper.B00001111)
-        //        {
-        //            list.Add(ss);
-        //            if (ss.ClutDefinition != null)
-        //                cds = ss.ClutDefinition;
-
-        //            index += 6 + ss.SegmentLength;
-        //            if (index + 6 < DataBuffer.Length)
-        //                ss = new SubtitleSegment(DataBuffer, index, cds);
-        //            else
-        //                ss.SyncByte = Helper.B11111111;
-        //        }
-        //        return list;
-        //    }
-        //}
+        }       
 
         public List<SubtitleSegment> SubtitleSegments { get; set; }
         public List<ClutDefinitionSegment> ClutDefinitions { get; set; }

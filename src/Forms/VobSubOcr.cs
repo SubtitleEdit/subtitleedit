@@ -222,6 +222,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         // DVB (from transport stream)
         List<Logic.TransportStream.DvbSubtitle> _dvbSubtitles;
+        Color _dvbSubColor = Color.Transparent;
 
         string _lastLine;
         string _languageId;
@@ -1254,12 +1255,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_dvbSubtitles != null)
             {
-                var dvbBmp = _dvbSubtitles[index].Pes.GetImageFull();
-                NikseBitmap nDvbBmp = new NikseBitmap(dvbBmp);
+                var dvbBmp = _dvbSubtitles[index].GetActiveImage();
+                var nDvbBmp = new NikseBitmap(dvbBmp);
                 nDvbBmp.CropTopTransparent(2);
-                nDvbBmp.CropSidesAndBottom(2, Color.Transparent, true);
-                var c = nDvbBmp.GetBrightestColor();
-                groupBoxSubtitleImage.BackColor = c;
+                nDvbBmp.CropTransparentSidesAndBottom(2, true);
+                if (checkBoxTransportStreamGetColorAndSplit.Checked)
+                    _dvbSubColor = nDvbBmp.GetBrightestColor();
+                if (checkBoxTransportStreamGrayscale.Checked)
+                    nDvbBmp.GrayScale();
                 dvbBmp.Dispose();                
                 return nDvbBmp.GetBitmap();
             }
@@ -4454,6 +4457,13 @@ namespace Nikse.SubtitleEdit.Forms
                     text = Utilities.AutoBreakLine(text);
             }
 
+            if (_dvbSubtitles != null && checkBoxTransportStreamGetColorAndSplit.Checked)
+            {
+                text = Utilities.UnbreakLine(text);
+                if (_dvbSubColor != Color.Transparent)
+                    text = "<font color=\"" + ColorTranslator.ToHtml(_dvbSubColor) + "\">" + text + "</font>";
+            }
+
             if (_abort)
             {
                 textBoxCurrentText.Text = text;
@@ -6681,6 +6691,11 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (int idx in indices)
                     _spList.RemoveAt(idx);
             }
+            else if (_dvbSubtitles != null)
+            {
+                foreach (int idx in indices)
+                    _dvbSubtitles.RemoveAt(idx);
+            }
             else if (_bdnXmlSubtitle != null)
             {
                 foreach (int idx in indices)
@@ -6991,6 +7006,7 @@ namespace Nikse.SubtitleEdit.Forms
             exportBdnXmlPng.ShowDialog(this);
         }
 
+        // TODO: Get language from ts file
         internal void Initialize(List<Logic.TransportStream.DvbSubtitle> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
         {
             buttonOK.Enabled = false;
@@ -7015,6 +7031,81 @@ namespace Nikse.SubtitleEdit.Forms
 
             _dvbSubtitles = subtitles;
 
+            ShowDvbSubs();
+
+            FileName = fileName;
+            Text += " - " + Path.GetFileName(fileName);
+
+            groupBoxImagePalette.Visible = false;
+            groupBoxTransportStream.Left = groupBoxImagePalette.Left;
+            groupBoxTransportStream.Top = groupBoxImagePalette.Top;
+            groupBoxTransportStream.Visible = true;
+            //SetTesseractLanguageFromLanguageString(languageString);
+            //_importLanguageString = languageString;
+        }
+
+        private void checkBoxTransportStreamGrayscale_CheckedChanged(object sender, EventArgs e)
+        {
+            SubtitleListView1SelectedIndexChanged(null, null);
+        }
+
+        private void checkBoxTransportStreamGetColorAndSplit_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxTransportStreamGetColorAndSplit.Checked)
+            {
+                SplitDvbForEachSubImage();
+            }
+            else
+            {
+                MergeDvbForEachSubImage();
+            }
+            SubtitleListView1SelectedIndexChanged(null, null);
+        }
+
+        private void MergeDvbForEachSubImage()
+        {
+            for (int i = 0; i < _dvbSubtitles.Count; i++)
+            {
+                var dvbSub = _dvbSubtitles[i];
+                if (dvbSub.ActiveImageIndex.HasValue && dvbSub.ActiveImageIndex > 0)
+                    _dvbSubtitles.RemoveAt(i);
+                else
+                    dvbSub.ActiveImageIndex = null;
+            }
+            _tesseractAsyncStrings = null;
+            ShowDvbSubs();
+        }
+
+        private void SplitDvbForEachSubImage()
+        {
+            var list = new List<Nikse.SubtitleEdit.Logic.TransportStream.DvbSubtitle>();
+            foreach (var dvbSub in _dvbSubtitles)
+            {
+                if (dvbSub.ActiveImageIndex == null)
+                {
+                    for (int i = 0; i < dvbSub.Pes.ObjectDataList.Count; i++)
+                    {
+                        var newDbvSub = new Nikse.SubtitleEdit.Logic.TransportStream.DvbSubtitle();
+                        newDbvSub.Pes = dvbSub.Pes;
+                        newDbvSub.ActiveImageIndex = i;
+                        newDbvSub.StartMilliseconds = dvbSub.StartMilliseconds;
+                        newDbvSub.EndMilliseconds = dvbSub.EndMilliseconds;
+                        list.Add(newDbvSub);
+                    }
+                }
+                else
+                {
+                    list.Add(dvbSub);
+                }
+            }
+            _dvbSubtitles = list;
+            _tesseractAsyncStrings = null;
+            ShowDvbSubs();
+        }
+
+        private void ShowDvbSubs()
+        {
+            _subtitle.Paragraphs.Clear();
             foreach (var sub in _dvbSubtitles)
             {
                 _subtitle.Paragraphs.Add(new Paragraph(string.Empty, sub.StartMilliseconds, sub.EndMilliseconds));
@@ -7022,13 +7113,6 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.Renumber(1);
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
-
-            FileName = fileName;
-            Text += " - " + Path.GetFileName(fileName);
-
-            groupBoxImagePalette.Visible = false;
-            //SetTesseractLanguageFromLanguageString(languageString);
-            //_importLanguageString = languageString;
         }
 
     }

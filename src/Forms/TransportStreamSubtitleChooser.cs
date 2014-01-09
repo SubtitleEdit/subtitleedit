@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
                 var start = new TimeCode(TimeSpan.FromMilliseconds(sub.StartMilliseconds));
                 var end = new TimeCode(TimeSpan.FromMilliseconds(sub.EndMilliseconds));
-                listBoxSubtitles.Items.Add(string.Format("{0}:  {1} --> {2},  {3} image(s)", i, start.ToString(), end.ToString(), sub.Pes.ObjectDataList.Count));
+                listBoxSubtitles.Items.Add(string.Format("{0}:  {1} --> {2},  {3} image(s)", i, start.ToString(), end.ToString(), sub.NumberOfImages));
             }
             if (list.Count > 0)
                 listBoxSubtitles.SelectedIndex = 0;
