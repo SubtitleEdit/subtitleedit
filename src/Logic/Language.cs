@@ -87,6 +87,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.SubStationAlphaProperties SubStationAlphaProperties;
         public LanguageStructure.SubStationAlphaStyles SubStationAlphaStyles;
         public LanguageStructure.PointSync PointSync;
+        public LanguageStructure.TransportStreamSubtitleChooser TransportStreamSubtitleChooser;
         public LanguageStructure.UnknownSubtitle UnknownSubtitle;
         public LanguageStructure.VisualSync VisualSync;
         public LanguageStructure.VobSubEditCharacters VobSubEditCharacters;
@@ -2056,6 +2057,13 @@ can edit in same subtitle file (collaboration)",
                 ApplySync = "Apply",
             };
 
+            TransportStreamSubtitleChooser = new LanguageStructure.TransportStreamSubtitleChooser
+            {
+                Title = "Transport stream subtitle chooser - {0}",
+                PidLine = "Transport Packet Identifier (PID) = {0}, number of subtitles = {1}",
+                SubLine = "{0}:  {1} --> {2},  {3} image(s)",
+            };
+
             UnknownSubtitle = new LanguageStructure.UnknownSubtitle
             {
                 Title = "Unknown subtitle type",
@@ -2123,6 +2131,9 @@ Keep changes?",
                 ImagePalette = "Image palette",
                 UseCustomColors = "Use custom colors",
                 Transparent = "Transparent",
+                TransportStream = "Transport stream",
+                TransportStreamGrayscale = "Grayscale",
+                TransportStreamGetColor = "Use color (will include some splitting of lines)",
                 PromptForUnknownWords = "Prompt for unknown words",
                 TryToGuessUnkownWords = "Try to guess unknown words",
                 AutoBreakSubtitleIfMoreThanTwoLines = "Auto break paragraph if more than two lines",

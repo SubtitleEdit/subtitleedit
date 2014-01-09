@@ -16,7 +16,6 @@ namespace Nikse.SubtitleEdit.Forms
         public TransportStreamSubtitleChooser()
         {
             InitializeComponent();
-            //Text = Configuration.Settings.Language.MatroskaSubtitleChooser.Title;
             labelChoose.Text = Configuration.Settings.Language.MatroskaSubtitleChooser.PleaseChoose;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -53,10 +52,15 @@ namespace Nikse.SubtitleEdit.Forms
         internal void Initialize(Logic.TransportStream.TransportStreamParser tsParser, string fileName)
         {
             _tsParser = tsParser;
-            Text = string.Format("Transport stream subtitle chooser - {0}", fileName);
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.TransportStreamSubtitleChooser.Title))
+                Text = string.Format("Transport stream subtitle chooser - {0}", fileName);
+            else
+                Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.Title, fileName);
             foreach (int id in tsParser.SubtitlePacketIds)
             {
                 string s = string.Format(string.Format("Transport Packet Identifier (PID) = {0}, number of subtitles = {1}", id, tsParser.GetDvbSubtitles(id).Count));
+                if (!string.IsNullOrEmpty(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine))
+                    s = string.Format(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine, id, tsParser.GetDvbSubtitles(id).Count));
                 listBoxTracks.Items.Add(s);
             }
             listBoxTracks.SelectedIndex = 0;
@@ -85,7 +89,10 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
                 var start = new TimeCode(TimeSpan.FromMilliseconds(sub.StartMilliseconds));
                 var end = new TimeCode(TimeSpan.FromMilliseconds(sub.EndMilliseconds));
-                listBoxSubtitles.Items.Add(string.Format("{0}:  {1} --> {2},  {3} image(s)", i, start.ToString(), end.ToString(), sub.NumberOfImages));
+                if (string.IsNullOrEmpty(Configuration.Settings.Language.TransportStreamSubtitleChooser.SubLine))
+                    listBoxSubtitles.Items.Add(string.Format("{0}:  {1} --> {2},  {3} image(s)", i, start.ToString(), end.ToString(), sub.NumberOfImages));
+                else
+                    listBoxSubtitles.Items.Add(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.SubLine, i, start.ToString(), end.ToString(), sub.NumberOfImages));
             }
             if (list.Count > 0)
                 listBoxSubtitles.SelectedIndex = 0;
@@ -101,9 +108,9 @@ namespace Nikse.SubtitleEdit.Forms
             var list = _tsParser.GetDvbSubtitles(pid);
 
             var dvbBmp = list[idx].Pes.GetImageFull();
-            NikseBitmap nDvbBmp = new NikseBitmap(dvbBmp);
+            var nDvbBmp = new NikseBitmap(dvbBmp);
             nDvbBmp.CropTopTransparent(2);
-            nDvbBmp.CropSidesAndBottom(2, Color.Transparent, true);
+            nDvbBmp.CropTransparentSidesAndBottom(2, true);
             dvbBmp.Dispose();
             var oldImage = pictureBox1.Image;
             pictureBox1.Image = nDvbBmp.GetBitmap();

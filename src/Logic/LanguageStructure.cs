@@ -1952,6 +1952,13 @@
             public string ApplySync { get; set; }
         }
 
+        public class TransportStreamSubtitleChooser
+        {
+            public string Title { get; set; }
+            public string PidLine { get; set; }
+            public string SubLine { get; set; }
+        }
+
         public class UnknownSubtitle
         {
             public string Title { get; set; }
@@ -2019,6 +2026,9 @@
             public string ImagePalette { get; set; }
             public string UseCustomColors { get; set; }
             public string Transparent { get; set; }
+            public string TransportStream { get; set; }
+            public string TransportStreamGrayscale { get; set; }
+            public string TransportStreamGetColor { get; set; }
             public string PromptForUnknownWords { get; set; }
             public string TryToGuessUnkownWords { get; set; }
             public string AutoBreakSubtitleIfMoreThanTwoLines { get; set; }
