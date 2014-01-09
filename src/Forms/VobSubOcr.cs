@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.OCR;
+using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.VobSub;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -10,10 +14,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.OCR;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.VobSub;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -314,6 +314,14 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxPromptForUnknownWords.Text = language.PromptForUnknownWords;
             checkBoxPromptForUnknownWords.Checked = Configuration.Settings.VobSubOcr.PromptForUnknownWords;
             checkBoxGuessUnknownWords.Checked = Configuration.Settings.VobSubOcr.GuessUnknownWords;
+
+            if (!string.IsNullOrEmpty(language.TransportStream))
+            {
+                groupBoxTransportStream.Text = language.TransportStream;
+                checkBoxTransportStreamGrayscale.Text = language.TransportStreamGrayscale;
+                checkBoxTransportStreamGetColorAndSplit.Text = language.TransportStreamGetColor;
+                checkBoxTransportStreamGetColorAndSplit.Left = checkBoxTransportStreamGrayscale.Left + checkBoxTransportStreamGrayscale.Width + 9;
+            }
 
             groupBoxOcrAutoFix.Text = language.OcrAutoCorrectionSpellchecking;
             checkBoxGuessUnknownWords.Text = language.TryToGuessUnkownWords;
@@ -3837,6 +3845,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
+            if (_dvbSubtitles != null && checkBoxTransportStreamGetColorAndSplit.Checked)
+                MergeDvbForEachSubImage();
+
             if (Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace != (int)numericUpDownPixelsIsSpace.Value && _bluRaySubtitlesOriginal == null)
             {
                 Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace = (int)numericUpDownPixelsIsSpace.Value;
@@ -7068,12 +7079,23 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var dvbSub = _dvbSubtitles[i];
                 if (dvbSub.ActiveImageIndex.HasValue && dvbSub.ActiveImageIndex > 0)
+                {
                     _dvbSubtitles.RemoveAt(i);
+                    string oldText = _subtitle.Paragraphs[i].Text;
+                    _subtitle.Paragraphs.RemoveAt(i);
+                    var prev = _subtitle.GetParagraphOrDefault(i - 1);
+                    if (prev != null)
+                        prev.Text = (prev.Text + Environment.NewLine + oldText).Trim();
+                }
                 else
+                {
                     dvbSub.ActiveImageIndex = null;
+                }
             }
             _tesseractAsyncStrings = null;
-            ShowDvbSubs();
+            _subtitle.Renumber(1);
+            subtitleListView1.Fill(_subtitle);
+            subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
 
         private void SplitDvbForEachSubImage()
