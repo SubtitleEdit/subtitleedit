@@ -276,20 +276,19 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 }
             }
 
-            Bitmap bmp = new Bitmap(width, height);
+            var bmp = new Bitmap(width, height);
             foreach (ObjectDataSegment ods in ObjectDataList)
             {
                 Bitmap odsImage = GetImage(ods);
                 if (odsImage != null)
                 {
                     Point odsPoint = GetImagePosition(ods);
-                    using (Graphics g = Graphics.FromImage(bmp))
+                    using (var g = Graphics.FromImage(bmp))
                     {
                         g.DrawImageUnscaled(odsImage, odsPoint);
                     }
                 }
             }
-
             return bmp;
         }
 
@@ -330,7 +329,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public ulong PresentationTimeStampToMilliseconds()
         {
             if (PresentationTimeStamp.HasValue)
-                return (ulong)Math.Round(PresentationTimeStamp.Value + 45.0 / 90.0);
+                return (ulong)Math.Round((PresentationTimeStamp.Value + 45.0) / 90.0);
             else
                 return 0;
         }
