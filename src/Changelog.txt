@@ -25,6 +25,7 @@
    * Now detects VobSub/Bluray-sup with wrong extension when opening a file
    * Now gives nice error message when opening idx, rar or zip files
    * French rules regarding spaces/!?:; in "Fix common errors" - thx René
+   * Compare window, now left list view will also sync - thx Krystian
 * FIXED:
   * Fixed bug in "Fix common errors: Remove hyphen" - thx honeybunny
   * Fixed bug in "Remove text for HI" issue - thx cipry15

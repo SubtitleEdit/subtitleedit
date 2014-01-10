@@ -203,8 +203,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView2.UseSyntaxColoring = true;
             this.subtitleListView2.View = System.Windows.Forms.View.Details;
             this.subtitleListView2.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView2SelectedIndexChanged);
-            this.subtitleListView2.Enter += new System.EventHandler(this.SubtitleListView2Enter);
-            this.subtitleListView2.Leave += new System.EventHandler(this.SubtitleListView2Leave);
             // 
             // subtitleListView1
             // 
