@@ -1062,7 +1062,6 @@
     <Compile Include="Logic\TransportStream\HummingDecoder.cs" />
     <Compile Include="Logic\TransportStream\ObjectDataSegment.cs" />
     <Compile Include="Logic\TransportStream\Packet.cs" />
-    <Compile Include="Logic\TransportStream\PacketizedElementaryStream.cs" />
     <Compile Include="Logic\TransportStream\PageCompositionSegemnt.cs" />
     <Compile Include="Logic\TransportStream\PageCompositionSegmentRegion.cs" />
     <Compile Include="Logic\TransportStream\ProgramAssociationTable.cs" />
