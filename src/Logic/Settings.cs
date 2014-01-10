@@ -127,6 +127,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Color ExportBorderColor { get; set; }
         public int ExportBottomMargin { get; set; }
         public int ExportBluRayBottomMargin { get; set; }
+        public int ExportBluRayShadow { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public string ImportTextSplitting { get; set; }
         public bool ImportTextMergeShortLines { get; set; }
@@ -175,6 +176,7 @@ namespace Nikse.SubtitleEdit.Logic
             ExportBorderColor = Color.Black;
             ExportBottomMargin = 15;
             ExportBluRayBottomMargin = 20;
+            ExportBluRayShadow = 1;
             BridgeGapMilliseconds = 100;
             ExportCustomTemplates = "SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]ÆæMicroDvdÆÆ{{start}}{{end}}{text}\r\nÆffÆ||Æ";
         }
@@ -1535,6 +1537,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportBluRayBottomMargin");
             if (subNode != null)
                 settings.Tools.ExportBluRayBottomMargin = int.Parse(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportBluRayShadow");
+            if (subNode != null)
+                settings.Tools.ExportBluRayShadow = int.Parse(subNode.InnerText);
             subNode = node.SelectSingleNode("FixCommonErrorsFixOverlapAllowEqualEndStart");
             if (subNode != null)
                 settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart = Convert.ToBoolean(subNode.InnerText);
@@ -2527,6 +2532,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString());
             textWriter.WriteElementString("ExportBottomMargin", settings.Tools.ExportBottomMargin.ToString());
             textWriter.WriteElementString("ExportBluRayBottomMargin", settings.Tools.ExportBluRayBottomMargin.ToString());
+            textWriter.WriteElementString("ExportBluRayShadow", settings.Tools.ExportBluRayShadow.ToString());            
             textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
             textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
             textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
