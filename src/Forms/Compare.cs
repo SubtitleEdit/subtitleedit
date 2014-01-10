@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -14,7 +14,6 @@ namespace Nikse.SubtitleEdit.Forms
         Subtitle _subtitle1;
         Subtitle _subtitle2;
         List<int> _differences;
-        bool _listView2Focused;
         Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
@@ -77,6 +76,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
+            subtitleListView1.SelectIndexAndEnsureVisible(0);
+            subtitleListView2.SelectIndexAndEnsureVisible(0);
         }
 
         public void Initialize(Subtitle subtitle1, string subtitleFileName1, Subtitle subtitle2, string subtitleFileName2)
@@ -94,6 +95,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(subtitleFileName1))
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(subtitleFileName1);
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
+            subtitleListView1.SelectIndexAndEnsureVisible(0);
+            subtitleListView2.SelectIndexAndEnsureVisible(0);
         }
 
         private void ButtonOpenSubtitle1Click(object sender, EventArgs e)
@@ -111,6 +114,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Encoding encoding;
                 _subtitle1.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
                 subtitleListView1.Fill(_subtitle1);
+                subtitleListView1.SelectIndexAndEnsureVisible(0);
+                subtitleListView2.SelectIndexAndEnsureVisible(0);
                 labelSubtitle1.Text = openFileDialog1.FileName;
                 if (_subtitle1.Paragraphs.Count > 0)
                     CompareSubtitles();
@@ -132,6 +137,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Encoding encoding;
                 _subtitle2.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
                 subtitleListView2.Fill(_subtitle2);
+                subtitleListView1.SelectIndexAndEnsureVisible(0);
+                subtitleListView2.SelectIndexAndEnsureVisible(0);
                 labelSubtitle2.Text = openFileDialog1.FileName;
                 if (_subtitle2.Paragraphs.Count > 0)
                     CompareSubtitles();
@@ -661,7 +668,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Timer1Tick(object sender, EventArgs e)
         {
-            if (subtitleListView1.SelectedItems.Count > 0 && _listView2Focused == false)
+            char activeListView;
+            var p = PointToClient(System.Windows.Forms.Control.MousePosition);
+            if (p.X >= subtitleListView1.Left && p.X <= subtitleListView1.Left + subtitleListView1.Width + 2)
+                activeListView = 'L';
+            else if (p.X >= subtitleListView2.Left && p.X <= subtitleListView2.Left + subtitleListView2.Width + 2)
+                activeListView = 'R';
+            else 
+                return;
+
+            if (subtitleListView1.SelectedItems.Count > 0 && activeListView == 'L')
             {
                 if (subtitleListView2.SelectedItems.Count > 0 &&
                     subtitleListView1.SelectedItems[0].Index == subtitleListView2.SelectedItems[0].Index)
@@ -678,7 +694,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView2.TopItem = subtitleListView2.Items[subtitleListView1.TopItem.Index];
                 subtitleListView2.SelectedIndexChanged += SubtitleListView2SelectedIndexChanged;
             }
-            else if (subtitleListView2.SelectedItems.Count > 0 && _listView2Focused)
+            else if (subtitleListView2.SelectedItems.Count > 0 && activeListView == 'R')
             {
                 if (subtitleListView1.SelectedItems.Count > 0 &&
                     subtitleListView2.SelectedItems[0].Index == subtitleListView1.SelectedItems[0].Index)
@@ -693,16 +709,6 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.Items.Count > subtitleListView2.TopItem.Index)
                     subtitleListView1.TopItem = subtitleListView1.Items[subtitleListView2.TopItem.Index];
             }
-        }
-
-        private void SubtitleListView2Enter(object sender, EventArgs e)
-        {
-            _listView2Focused = true;
-        }
-
-        private void SubtitleListView2Leave(object sender, EventArgs e)
-        {
-            _listView2Focused = false;
         }
 
         private void Compare_FormClosing(object sender, FormClosingEventArgs e)
