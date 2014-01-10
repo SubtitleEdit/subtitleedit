@@ -2339,6 +2339,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             labelShadowWidth.Visible = shadowVisible;
             buttonShadowColor.Visible = shadowVisible;
             comboBoxShadowWidth.Visible = shadowVisible;
+            if (comboBoxShadowWidth.Visible)
+                comboBoxShadowWidth.SelectedIndex = Configuration.Settings.Tools.ExportBluRayShadow;
             panelShadowColor.Visible = shadowVisible;
             labelShadowTransparency.Visible = shadowVisible;
             numericUpDownShadowTransparency.Visible = shadowVisible;
@@ -2416,6 +2418,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportBluRayBottomMargin = comboBoxBottomMargin.SelectedIndex;
             else
                 Configuration.Settings.Tools.ExportBottomMargin = comboBoxBottomMargin.SelectedIndex;
+
+            if (comboBoxShadowWidth.Visible)
+                Configuration.Settings.Tools.ExportBluRayShadow = comboBoxShadowWidth.SelectedIndex;
+
             Configuration.Settings.Tools.ExportLastFontSize = (int)_subtitleFontSize;
             Configuration.Settings.Tools.ExportLastLineHeight = (int)numericUpDownLineSpacing.Value;
         }
