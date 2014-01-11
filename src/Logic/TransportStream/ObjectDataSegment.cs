@@ -40,6 +40,8 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             ObjectVersionNumber = buffer[index + 2] >> 4;
             ObjectCodingMethod = (buffer[index + 2] & Helper.B00001100) >> 2;
             NonModifyingColorFlag = (buffer[index + 2] & Helper.B00000010) > 0;
+            TopFieldDataBlockLength = Helper.GetEndianWord(buffer, index + 3);
+            BottomFieldDataBlockLength = Helper.GetEndianWord(buffer, index + 5);
             BufferIndex = index;
         }
 
@@ -53,8 +55,6 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
                 int pixelCode = 0;
                 int runLength = 0;
-                TopFieldDataBlockLength = Helper.GetEndianWord(buffer, index + 3);
-                BottomFieldDataBlockLength = Helper.GetEndianWord(buffer, index + 5);
                 int dataType = buffer[index + 7];
                 int length = TopFieldDataBlockLength;
 
