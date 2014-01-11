@@ -1,7 +1,9 @@
-﻿using Nikse.SubtitleEdit.Logic.VobSub;
+﻿using Nikse.SubtitleEdit.Logic.BluRaySup;
+using Nikse.SubtitleEdit.Logic.VobSub;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
@@ -18,7 +20,8 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public List<Packet> SubtitlePackets { get; private set; }
         public List<Packet> ProgramAssociationTables { get; private set; }
         private Dictionary<int, List<DvbSubPes>> SubtitlesLookup { get; set; }
-        private Dictionary<int, List<DvbSubtitle>> DvbSubtitlesLookup { get; set; }
+        private Dictionary<int, List<TransportStreamSubtitle>> DvbSubtitlesLookup { get; set; }
+        public bool IsM2TransportStream { get; private set; }
 
         public void ParseTsFile(string fileName)
         {
@@ -33,6 +36,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         /// <param name="ms">Input stream</param>
         public void ParseTsFile(Stream ms)
         {
+            IsM2TransportStream = false;
             NumberOfNullPackets = 0;
             TotalNumberOfPackets = 0;
             TotalNumberOfPrivateStream1 = 0;
@@ -41,12 +45,23 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             SubtitlePackets = new List<Packet>();
             ProgramAssociationTables = new List<Packet>();
             ms.Position = 0;
-            int packetLength = DeterminePacketLength(ms);
+            int packetLength = 188;
+            DetectFormat(ms);
             var packetBuffer = new byte[packetLength];
+            var m2tsTimeCodeBuffer = new byte[4];
             long position = 0;
             while (position < ms.Length)
             {
                 ms.Seek(position, SeekOrigin.Begin);
+
+                if (IsM2TransportStream)
+                {
+                    ms.Read(m2tsTimeCodeBuffer, 0, m2tsTimeCodeBuffer.Length);
+                    //var tc = Helper.GetEndianWord(m2tsTimeCodeBuffer, 0);
+                    //System.Windows.Forms.MessageBox.Show("Test" + tc);
+                    position += m2tsTimeCodeBuffer.Length;
+                }
+
                 ms.Read(packetBuffer, 0, packetLength);
                 byte syncByte = packetBuffer[0];
                 if (syncByte == Packet.SynchronizationByte)
@@ -131,6 +146,55 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 }
             }
 
+            if (IsM2TransportStream)
+            {
+                DvbSubtitlesLookup = new Dictionary<int, List<TransportStreamSubtitle>>();
+                foreach (int pid in SubtitlePacketIds)
+                {
+                    var bdMs = new MemoryStream();
+                    var list = MakeSubtitlePesPackets(pid);
+                    //var startMsList = new List<ulong>();
+                    //var endMsList = new List<ulong>();
+                    foreach (var item in list)
+                    {
+                        bdMs.Write(item.DataBuffer, 0, item.DataBuffer.Length);
+                        //if (item.DataBuffer[0] == 0x16)
+                        //{
+                        //    startMsList.Add(item.PresentationTimeStampToMilliseconds() / 90);
+                        //}
+                        //else if (item.DataBuffer[0] == 0x80)
+                        //{
+                        //    endMsList.Add(item.PresentationTimeStampToMilliseconds() / 90);
+                        //}
+                    }
+                    bdMs.Position = 0;
+                    var sb = new StringBuilder();
+                    var bdList = BluRaySupParser.ParseBluRaySup(bdMs, sb, true);
+                    if (bdList.Count > 0)
+                    {
+                        var subList = new List<TransportStreamSubtitle>();
+                        for (int k=0; k < bdList.Count; k++)
+                        {
+                            var bdSup = bdList[k];
+                            ulong startMs = 0;
+                            //if (k < startMsList.Count)
+                            //    startMs = startMsList[k];
+                            ulong endMs = 0;
+                            //if (k < endMsList.Count)
+                            //    endMs = endMsList[k];
+                            subList.Add(new TransportStreamSubtitle(bdSup, startMs, endMs));
+                        }
+                        DvbSubtitlesLookup.Add(pid, subList);
+                    }
+                }                
+                SubtitlePacketIds.Clear();
+                foreach (int key in DvbSubtitlesLookup.Keys)
+                    SubtitlePacketIds.Add(key);
+                SubtitlePacketIds.Sort();
+                return;
+            }
+
+
             // check for SubPictureStreamId = 32
             SubtitlesLookup = new Dictionary<int,List<DvbSubPes>>();
             foreach (int pid in SubtitlePacketIds)
@@ -157,18 +221,17 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
 
             // Merge packets and set start/end time
-            DvbSubtitlesLookup = new Dictionary<int, List<DvbSubtitle>>();
+            DvbSubtitlesLookup = new Dictionary<int, List<TransportStreamSubtitle>>();
             foreach (int pid in SubtitlePacketIds)
             {
-                var subtitles = new List<DvbSubtitle>();
+                var subtitles = new List<TransportStreamSubtitle>();
                 var list = GetSubtitlePesPackets(pid);
                 for (int i=0; i<list.Count; i++)
                 {
                     var pes = list[i];
-                    pes.ParseSegments();
-                    if (pes.ObjectDataList.Count > 0)
+                    if (IsM2TransportStream)
                     {
-                        var sub = new DvbSubtitle();
+                        var sub = new TransportStreamSubtitle();
                         sub.StartMilliseconds = pes.PresentationTimeStampToMilliseconds();
                         sub.Pes = pes;
                         if (i + 1 < list.Count && list[i + 1].PresentationTimeStampToMilliseconds() > 25)
@@ -176,6 +239,21 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                         if (sub.EndMilliseconds < 1)
                             sub.EndMilliseconds = sub.StartMilliseconds + 3500;
                         subtitles.Add(sub);
+                    }
+                    else
+                    {
+                        pes.ParseSegments();
+                        if (pes.ObjectDataList.Count > 0)
+                        {
+                            var sub = new TransportStreamSubtitle();
+                            sub.StartMilliseconds = pes.PresentationTimeStampToMilliseconds();
+                            sub.Pes = pes;
+                            if (i + 1 < list.Count && list[i + 1].PresentationTimeStampToMilliseconds() > 25)
+                                sub.EndMilliseconds = list[i + 1].PresentationTimeStampToMilliseconds() - 25;
+                            if (sub.EndMilliseconds < 1)
+                                sub.EndMilliseconds = sub.StartMilliseconds + 3500;
+                            subtitles.Add(sub);
+                        }
                     }
                 }
                 DvbSubtitlesLookup.Add(pid, subtitles);
@@ -189,7 +267,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             SubtitlePacketIds.Sort();
         }
 
-        public List<DvbSubtitle> GetDvbSubtitles(int packetId)
+        public List<TransportStreamSubtitle> GetDvbSubtitles(int packetId)
         {
             if (DvbSubtitlesLookup.ContainsKey(packetId))
                 return DvbSubtitlesLookup[packetId];
@@ -257,9 +335,20 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             list.Add(pes);
         }
 
-        private int DeterminePacketLength(Stream ms)
+        private void DetectFormat(Stream ms)
         {
-            return 188;
+            if (ms.Length > 192 + 192 + 5)
+            {
+                ms.Seek(0, SeekOrigin.Begin);
+                var buffer = new byte[192 + 192 + 5];
+                ms.Read(buffer, 0, buffer.Length);
+                if (buffer[0] == Packet.SynchronizationByte && buffer[188] == Packet.SynchronizationByte)
+                    return;
+                if (buffer[4] == Packet.SynchronizationByte && buffer[192 + 4] == Packet.SynchronizationByte && buffer[192 + 192 + 4] == Packet.SynchronizationByte)
+                {
+                    IsM2TransportStream = true;
+                }
+            }
         }
 
     }

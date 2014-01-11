@@ -2243,7 +2243,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var fi = new FileInfo(fileName);
 
-                if ((ext == ".ts" || ext == ".mpeg" || ext == ".mpg") && fi.Length > 10000 && IsTransportStream(fileName)) //TODO: Also check mpg, mpeg - and file header!
+                if ((ext == ".ts" || ext == ".mpeg" || ext == ".mpg") && fi.Length > 10000 && IsTransportStream(fileName))
+                {
+                    ImportSubtitleFromTransportStream(fileName);
+                    return;
+                }
+
+                if ((ext == ".m2ts") && fi.Length > 10000 && IsM2TransportStream(fileName))
                 {
                     ImportSubtitleFromTransportStream(fileName);
                     return;
@@ -2979,6 +2985,29 @@ namespace Nikse.SubtitleEdit.Forms
                 return false;
             }
         }
+
+        private bool IsM2TransportStream(string fileName)
+        {
+            try
+            {
+                var buffer = new byte[192 + 192 + 5];
+                var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite) { Position = 0 };
+                fs.Read(buffer, 0, buffer.Length);
+                fs.Close();
+                if (buffer[0] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte && buffer[188] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte)
+                    return false;
+                if (buffer[4] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte && buffer[192 + 4] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte && buffer[192 + 192 + 4] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte)
+                    return true;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        
 
         private void SetUndockedWindowsTitle()
         {
