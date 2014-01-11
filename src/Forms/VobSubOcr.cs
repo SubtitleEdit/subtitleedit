@@ -7075,21 +7075,25 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeDvbForEachSubImage()
         {
-            for (int i = 0; i < _dvbSubtitles.Count; i++)
+            int i = 0;
+            while (i < _dvbSubtitles.Count)
             {
                 var dvbSub = _dvbSubtitles[i];
-                if (dvbSub.ActiveImageIndex.HasValue && dvbSub.ActiveImageIndex > 0)
+                dvbSub.ActiveImageIndex = null;
+                if (i < _dvbSubtitles.Count - 1 && dvbSub.Pes == _dvbSubtitles[i + 1].Pes)
                 {
-                    _dvbSubtitles.RemoveAt(i);
-                    string oldText = _subtitle.Paragraphs[i].Text;
-                    _subtitle.Paragraphs.RemoveAt(i);
-                    var prev = _subtitle.GetParagraphOrDefault(i - 1);
-                    if (prev != null)
-                        prev.Text = (prev.Text + Environment.NewLine + oldText).Trim();
+                    var next = _subtitle.GetParagraphOrDefault(i + 1);
+                    if (!string.IsNullOrEmpty(next.Text))
+                    {
+                        var p = _subtitle.Paragraphs[i];
+                        p.Text = (p.Text + Environment.NewLine + next.Text).Trim();
+                    }
+                    _subtitle.Paragraphs.RemoveAt(i + 1);
+                    _dvbSubtitles.RemoveAt(i + 1);
                 }
                 else
                 {
-                    dvbSub.ActiveImageIndex = null;
+                    i++;
                 }
             }
             _tesseractAsyncStrings = null;
@@ -7111,8 +7115,9 @@ namespace Nikse.SubtitleEdit.Forms
                         newDbvSub.Pes = dvbSub.Pes;
                         newDbvSub.ActiveImageIndex = i;
                         newDbvSub.StartMilliseconds = dvbSub.StartMilliseconds;
-                        newDbvSub.EndMilliseconds = dvbSub.EndMilliseconds;
-                        list.Add(newDbvSub);
+                        newDbvSub.EndMilliseconds = dvbSub.EndMilliseconds;                        
+                        if (newDbvSub.Pes.ObjectDataList[i].TopFieldDataBlockLength > 8)
+                            list.Add(newDbvSub);
                     }
                 }
                 else
