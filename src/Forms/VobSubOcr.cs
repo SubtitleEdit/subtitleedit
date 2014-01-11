@@ -221,7 +221,7 @@ namespace Nikse.SubtitleEdit.Forms
         List<XSub> _xSubList;
 
         // DVB (from transport stream)
-        List<Logic.TransportStream.DvbSubtitle> _dvbSubtitles;
+        List<Logic.TransportStream.TransportStreamSubtitle> _dvbSubtitles;
         Color _dvbSubColor = Color.Transparent;
 
         string _lastLine;
@@ -7018,7 +7018,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         // TODO: Get language from ts file
-        internal void Initialize(List<Logic.TransportStream.DvbSubtitle> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
+        internal void Initialize(List<Logic.TransportStream.TransportStreamSubtitle> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
         {
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
@@ -7051,6 +7051,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxTransportStream.Left = groupBoxImagePalette.Left;
             groupBoxTransportStream.Top = groupBoxImagePalette.Top;
             groupBoxTransportStream.Visible = true;
+            checkBoxTransportStreamGetColorAndSplit.Visible = subtitles.Count > 0 && subtitles[0].IsDvbSub;
             //SetTesseractLanguageFromLanguageString(languageString);
             //_importLanguageString = languageString;
         }
@@ -7104,14 +7105,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SplitDvbForEachSubImage()
         {
-            var list = new List<Nikse.SubtitleEdit.Logic.TransportStream.DvbSubtitle>();
+            var list = new List<Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamSubtitle>();
             foreach (var dvbSub in _dvbSubtitles)
             {
                 if (dvbSub.ActiveImageIndex == null)
                 {
                     for (int i = 0; i < dvbSub.Pes.ObjectDataList.Count; i++)
                     {
-                        var newDbvSub = new Nikse.SubtitleEdit.Logic.TransportStream.DvbSubtitle();
+                        var newDbvSub = new Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamSubtitle();
                         newDbvSub.Pes = dvbSub.Pes;
                         newDbvSub.ActiveImageIndex = i;
                         newDbvSub.StartMilliseconds = dvbSub.StartMilliseconds;
