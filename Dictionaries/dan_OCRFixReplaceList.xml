@@ -537,6 +537,39 @@
     <Word from="10O" to="100" />
     <Word from="besluttedejeg" to="besluttede jeg" />
     <Word from="varsket" to="var sket" />
+    <Word from="harjetlag" to="har jetlag" />
+    <Word from="lkke" to="Ikke" />
+    <Word from="lntet" to="Intet" />
+    <Word from="afslørerjeg" to="afslører jeg" />
+    <Word from="måjeg" to="må jeg" />
+    <Word from="Vl" to="VI" />
+    <Word from="atbygge" to="at bygge" />
+    <Word from="detmakabre" to="det makabre" />
+    <Word from="vilikke" to="vil ikke" />
+    <Word from="talsmandbekræfter" to="talsmand bekræfter" />
+    <Word from="vedatrenovere" to="ved at renovere" />
+    <Word from="forsøgeratforstå" to="forsøger at forstå" />
+    <Word from="ersket" to="er sket" />
+    <Word from="morderpå" to="morder på" />
+    <Word from="frifodiRosewood" to="fri fod i Rosewood" />
+    <Word from="holdtpressemøde" to="holdt pressemøde" />
+    <Word from="lngen" to="Ingen" />
+    <Word from="lND" to="IND" />
+    <Word from="henterjeg" to="henter jeg" />
+    <Word from="lsabel" to="Isabel" />
+    <Word from="lsabels" to="Isabels" />
+    <Word from="vinderjo" to="vinder jo" />
+    <Word from="rødmerjo" to="rødmer jo" />
+    <Word from="etjakkesæt" to="et jakkesæt" />
+    <Word from="glæderjeg" to="glæder jeg" />
+    <Word from="lgen" to="Igen" />
+    <Word from="lsær" to="Især" />
+    <Word from="iparken" to="i parken" />
+    <Word from="nårl" to="når I" />
+    <Word from="tilA1" to="til A1" />
+    <Word from="FBl" to="FBI" />
+    <Word from="viljo" to="vil jo" />
+    <Word from="detpå" to="det på" />
   </WholeWords>
   <PartialWordsAlways>
     <WordPart from="¤" to="o" />

@@ -57,8 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 if (IsM2TransportStream)
                 {
                     ms.Read(m2tsTimeCodeBuffer, 0, m2tsTimeCodeBuffer.Length);
-                    //var tc = Helper.GetEndianWord(m2tsTimeCodeBuffer, 0);
-                    //System.Windows.Forms.MessageBox.Show("Test" + tc);
+                    var tc = (m2tsTimeCodeBuffer[0]<< 24) | (m2tsTimeCodeBuffer[1] << 16) | (m2tsTimeCodeBuffer[2] << 8) | (m2tsTimeCodeBuffer[3]);
                     position += m2tsTimeCodeBuffer.Length;
                 }
 
@@ -149,24 +148,30 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             if (IsM2TransportStream)
             {
                 DvbSubtitlesLookup = new Dictionary<int, List<TransportStreamSubtitle>>();
+                SubtitlesLookup = new Dictionary<int, List<DvbSubPes>>();
                 foreach (int pid in SubtitlePacketIds)
                 {
                     var bdMs = new MemoryStream();
                     var list = MakeSubtitlePesPackets(pid);
-                    //var startMsList = new List<ulong>();
-                    //var endMsList = new List<ulong>();
+                    var startMsList = new List<ulong>();
+                    var endMsList = new List<ulong>();
                     foreach (var item in list)
                     {
                         bdMs.Write(item.DataBuffer, 0, item.DataBuffer.Length);
-                        //if (item.DataBuffer[0] == 0x16)
-                        //{
-                        //    startMsList.Add(item.PresentationTimeStampToMilliseconds() / 90);
-                        //}
+                        if (item.DataBuffer[0] == 0x16)
+                        {
+                            if (startMsList.Count <= endMsList.Count)
+                                startMsList.Add(item.PresentationTimeStampToMilliseconds());
+                            else
+                                endMsList.Add(item.PresentationTimeStampToMilliseconds());
+                        }
                         //else if (item.DataBuffer[0] == 0x80)
-                        //{
+                        //{ //TODO Load bd sub after 0x80, so we can be sure to get correct time code???
                         //    endMsList.Add(item.PresentationTimeStampToMilliseconds() / 90);
                         //}
                     }
+                    SubtitlesLookup.Add(pid, list);
+
                     bdMs.Position = 0;
                     var sb = new StringBuilder();
                     var bdList = BluRaySupParser.ParseBluRaySup(bdMs, sb, true);
@@ -177,11 +182,11 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                         {
                             var bdSup = bdList[k];
                             ulong startMs = 0;
-                            //if (k < startMsList.Count)
-                            //    startMs = startMsList[k];
+                            if (k < startMsList.Count)
+                                startMs = startMsList[k];
                             ulong endMs = 0;
-                            //if (k < endMsList.Count)
-                            //    endMs = endMsList[k];
+                            if (k < endMsList.Count)
+                                endMs = endMsList[k];
                             subList.Add(new TransportStreamSubtitle(bdSup, startMs, endMs));
                         }
                         DvbSubtitlesLookup.Add(pid, subList);
