@@ -5800,8 +5800,8 @@ namespace Nikse.SubtitleEdit.Forms
                 // languages
                 var languages = TimedText10.GetUsedLanguages(_subtitle);
                 toolStripMenuItemSetLanguage.DropDownItems.Clear();
-                if (!string.IsNullOrEmpty(_language.Menu.ContextMenu.AdvancedSubStationAlphaStyles)) // TODO: remove if in 3.4
-                    toolStripMenuItemSetLanguage.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
+                if (!string.IsNullOrEmpty(_language.Menu.ContextMenu.TimedTextSetLanguage)) // TODO: remove if in 3.4
+                    toolStripMenuItemSetLanguage.Text = _language.Menu.ContextMenu.TimedTextSetLanguage;
                 toolStripMenuItemSetLanguage.Visible = true;
                 if (languages.Count > 0)
                 {
@@ -9603,6 +9603,10 @@ namespace Nikse.SubtitleEdit.Forms
                         OpenSubtitle(fileName, null);
                     }
                     else if ((ext == ".ts" || ext == ".mpg" || ext == ".mpeg") && IsTransportStream(fileName))
+                    {
+                        OpenSubtitle(fileName, null);
+                    }
+                    else if (ext == ".m2ts" && IsM2TransportStream(fileName))
                     {
                         OpenSubtitle(fileName, null);
                     }
