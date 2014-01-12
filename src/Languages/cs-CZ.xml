@@ -193,6 +193,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Upravit rychlost v procentech</Title>
     <Info>Změnit rychlost titulků v procentech</Info>
   </ChangeSpeedInPercent>
+  <ChooseAudioTrack>
+    <Title>Vyberte stopu audia</Title>
+  </ChooseAudioTrack>
   <ChooseEncoding>
     <Title>Vybrat kódování</Title>
     <CodePage>Kódová stránka</CodePage>
@@ -376,6 +379,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveDvdStudioProStlAs>Vyberte název souboru DVD Studio Pro STL</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>Některé řádky byly příliš dlouhé:
 {0}</SomeLinesWereTooLongX>
+    <LineHeight>Výška řádku</LineHeight>
   </ExportPngXml>
   <ExportText>
     <Title>Exportovat text</Title>
@@ -588,6 +592,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Přejít na řádek číslo</Title>
     <XIsNotAValidNumber>{0} není platné číslo</XIsNotAValidNumber>
   </GoToLine>
+  <ImportImages>
+    <Title>Importovat obrázky</Title>
+    <ImageFiles>Soubory obrázků</ImageFiles>
+    <Input>Vstup</Input>
+    <InputDescription>Vyberte vstupní soubory (procházet nebo přetáhnout)</InputDescription>
+  </ImportImages>
   <ImportSceneChanges>
     <Title>Importovat změny scén</Title>
     <OpenTextFile>Otevřít textový soubor...</OpenTextFile>
@@ -600,11 +610,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ImportSceneChanges>
   <ImportText>
     <Title>Importovat prostý text</Title>
+    <OneSubtitleIsOneFile>Více souborů - jeden soubor je jeden titulek</OneSubtitleIsOneFile>
     <OpenTextFile>Otevřít textový soubor...</OpenTextFile>
+    <OpenTextFiles>Otevřít textové soubory...</OpenTextFiles>
     <ImportOptions>Importovat volby</ImportOptions>
     <Splitting>Rozdělení</Splitting>
     <AutoSplitText>Automaticky rozdělit text</AutoSplitText>
     <OneLineIsOneSubtitle>Jeden řádek je jeden titulek</OneLineIsOneSubtitle>
+    <LineBreak>Konec řádku</LineBreak>
     <SplitAtBlankLines>Rozdělit na prázdných řádcích</SplitAtBlankLines>
     <MergeShortLines>Sloučit krátké řádky s pokračováním</MergeShortLines>
     <RemoveEmptyLines>Odebrat prázdné řádky</RemoveEmptyLines>
@@ -658,6 +671,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSubtitleFromMatroskaFile>Importovat titlky ze souboru Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importovat titulky s ručně vybraným kódováním...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importovat prostý text...</ImportText>
+        <ImportImages>Importovat obrázky...</ImportImages>
         <ImportTimecodes>Importovat časové kódy...</ImportTimecodes>
         <Export>Exportovat</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
@@ -690,6 +704,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>Hro&amp;madné nahrazení...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Přejít na řádek číslo...</GoToSubtitleNumber>
         <RightToLeftMode>Režim zprava doleva</RightToLeftMode>
+        <FixTrlViaUnicodeControlCharacters>Opravit zprava do leva pomocí řídících znaků Unicode (pro vybrané řádky)</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Obrátit začátek a konec zprava doleva (pro vybrané řádky)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Zobrazit původní text v náhledech audia a videa</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Změnit výběr...</ModifySelection>
@@ -1155,6 +1170,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <StatusLog>Záznam stavu</StatusLog>
     <XSceneChangesImported>Importováno {0} změn scén</XSceneChangesImported>
     <PluginXExecuted>Spuštěn doplněk '{0}'.</PluginXExecuted>
+    <NotAValidXSubFile>Není platný soubor xsub!</NotAValidXSubFile>
+    <BeforeMergeLinesWithSameText>Před sloučením řádků se stejným textem</BeforeMergeLinesWithSameText>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vybrat titulky ze souboru Matroska</Title>
@@ -1179,6 +1196,8 @@ Pokračovat?</SubtitleAppendPrompt>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Sloučit řádky se stejným textem</Title>
+    <MaxMillisecondsBetweenLines>Max. milisekund mezi řádky</MaxMillisecondsBetweenLines>
+    <IncludeIncrementing>Včetně zvyšujících se řádků</IncludeIncrementing>
   </MergeDoubleLines>
   <MergedShortLines>
     <Title>Sloučit krátké řádky</Title>
@@ -1430,7 +1449,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <WaveformUseFFMPEG>Použít FFMPEG pro extrahování křivky</WaveformUseFFMPEG>
     <WaveformFFMPEGPath>Cesta k FFMPEG</WaveformFFMPEGPath>
     <WaveformBrowseToFFMPEG>Najít FFMPEG</WaveformBrowseToFFMPEG>
-    <SubStationAlphaStyle>Styl Sub Station Alpha</SubStationAlphaStyle>
+    <SubStationAlphaStyle>Styl (Advanced) Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Vyberte písmo</ChooseFont>
     <ChooseColor>Vyberte barvu</ChooseColor>
     <SsaOutline>Obrys</SsaOutline>
@@ -1499,13 +1518,20 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AutoDurationSelectedLines>Automatické trvání (vybrané řádky)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Obrátit začátek a konec zprava dolevaeverse RTL start/end</ReverseStartAndEndingForRTL>
     <VerticalZoom>Svislé zvětšení</VerticalZoom>
+    <VerticalZoomOut>Svislé zmenšení</VerticalZoomOut>
     <WaveformSeekSilenceForward>Tiché hledání vpřed</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Tiché hledání zpět</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Přidat text sem (pro nový výběr)</WaveformAddTextHere>
+    <WaveformPlayNewSelection>Přehrát nový výběr</WaveformPlayNewSelection>
+    <WaveformPlayFirstSelectedSubtitle>Přehrát první vybraný titulek</WaveformPlayFirstSelectedSubtitle>
+    <GoBack1Frame>Jeden snímek zpět</GoBack1Frame>
+    <GoForward1Frame>Jeden snímek vpřed</GoForward1Frame>
     <GoBack100Milliseconds>100 ms zpět</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms vpřed</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms zpět</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 ms vpřed</GoForward500Milliseconds>
+    <GoBack1Second>Jedna sekunda zpět</GoBack1Second>
+    <GoForward1Second>Jedna sekunda vpřed</GoForward1Second>
     <TogglePlayPause>Přepnout přehrávání a pozastavení</TogglePlayPause>
     <Pause>Pozastavit</Pause>
     <Fullscreen>Na celou obrazovku</Fullscreen>
