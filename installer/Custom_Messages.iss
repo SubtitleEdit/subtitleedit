@@ -1,7 +1,7 @@
 ﻿;* Subtitle Edit - Installer script
 ;*
-;* Copyright (C) 2010-2012 XhmikosR
-;* Copyright (C) 2010-2012 all the respective translators
+;* Copyright (C) 2010-2014 XhmikosR
+;* Copyright (C) 2010-2014 all the respective translators
 ;*
 ;* This file is part of Subtitle Edit.
 ;*
@@ -368,14 +368,14 @@ ja.types_default=Default installation
 
 ; Korean
 kr.comp_translations=번역
-kr.msg_AppIsRunning=설치 프로그램이 Subtitle Edit가 현재 실행중에 있음을 발견했습니다.%n%n현재 사용하고 있는 Subtitle Edit의 모든 창을 닫아 주십시오, 그러고 나서 계속하려면 '확인'을 종료하려면 '취소'를 클릭하여 주십시오.
-kr.msg_AppIsRunningUninstall=삭제 프로그램이 Subtitle Edit가 현재 실행중에 있음을 발견했습니다.%n%n현재 사용하고 있는 Subtitle Edit의 모든 창을 닫아 주십시오, 그러고 나서 계속하려면 '확인'을 종료하려면 '취소'를 클릭하여 주십시오.
-kr.msg_AskToDownNET=Subtitle Edit는 .NET Framework 2.0이 필요합니다. .NET Framework를 다운 받고 설치한 후에 설치 프로그램을 다시 실행해 주십시오.%n%n지금 .NET Framework 2.0을 다운로드 하시겠습니까?
-kr.msg_DeleteSettings=Subtitle Edit의 설정 및 사전에 포함된 사용자 지정의 모든 변경 사항을 삭제하시겠습니까?%n%n만약 Subtitle Edit를 다시 설치할 계획이라면 그것을 삭제할 필요는 없습니다.
-kr.msg_OptimizingPerformance=성능 최적화...
-kr.msg_SetupIsRunningWarning=Subtitle Edit 설치 프로그램이 이미 실행 중입니다!
-kr.run_VisitWebsite=Subtitle Edit 웹사이트 방문
-kr.sm_com_Changelog=Subtitle Edit의 변경 기록
+kr.msg_AppIsRunning=Subtitle Edit가 현재 실행되고 있습니다.%n%n이제 Subtitle Edit의 모든 인스턴스를 닫아 주십시오. 그런 다음 계속하려면 '확인'을, 종료하려면 '취소'를 클릭하십시오.
+kr.msg_AppIsRunningUninstall=Subtitle Edit가 현재 실행되고 있습니다.%n%n이제 Subtitle Edit의 모든 인스턴스를 닫아 주십시오. 그런 다음 계속하려면 '확인'을, 종료하려면 '취소'를 클릭하십시오.
+kr.msg_AskToDownNET=Subtitle Edit는 .NET Framework 2.0이 필요합니다. .NET Framework를 다운 받아 설치하신 후, Subtitle Edit 설치 마법사를 다시 실행하시기 바랍니다.%n%n지금 .NET Framework 2.0을 다운로드하시겠습니까?
+kr.msg_DeleteSettings=Subtitle Edit의 설정 및 사전에 포함된 사용자 지정의 모든 변경 사항을 삭제하시겠습니까?%n%n만약 Subtitle Edit를 다시 설치할 계획이면 그것을 삭제할 필요가 없습니다.
+kr.msg_OptimizingPerformance=성능을 최적화하는 중...
+kr.msg_SetupIsRunningWarning=Subtitle Edit 설치가 이미 실행 중입니다!
+kr.run_VisitWebsite=Subtitle Edit 웹 사이트 방문
+kr.sm_com_Changelog=Subtitle Edit 변경 내역
 kr.tsk_AllUsers=모든 사용자
 kr.tsk_CurrentUser=현재 사용자
 kr.tsk_Other=기타:
