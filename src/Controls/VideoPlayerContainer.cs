@@ -325,6 +325,7 @@ namespace Nikse.SubtitleEdit.Controls
                 var italicLookups = new System.Collections.Generic.Dictionary<int, int>();
                 var fontColorLookups = new System.Collections.Generic.Dictionary<Point, Color>();
                 System.Collections.Generic.Stack<Color> colorStack = new System.Collections.Generic.Stack<Color>();
+                System.Collections.Generic.Stack<int> fontIndices = new System.Collections.Generic.Stack<int>();
                 Color fontColor = Color.White;
                 while  (i < text.Length)
                 {
@@ -338,7 +339,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
                     {
-                        italicLookups.Add(italicBegin, sb.Length);
+                        italicLookups.Add(italicBegin, _subtitleTextBox.Text.Length + sb.ToString().Length - italicBegin);
                         _subtitleTextBox.AppendText(sb.ToString());
                         sb = new StringBuilder();
                         isItalic = false;
@@ -390,6 +391,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 }
                             }
                             i+=end;
+                            //fontIndices.Push(_subtitleTextBox.Text.Length);
                         }
                         if (fontFound)
                         {
@@ -401,7 +403,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else if (text.Substring(i).ToLower().StartsWith("</font>") && isFontColor)
                     {
-                        fontColorLookups.Add(new Point(fontColorBegin, sb.Length), fontColor);
+                        fontColorLookups.Add(new Point(fontColorBegin, _subtitleTextBox.Text.Length + sb.ToString().Length - fontColorBegin), fontColor);
                         _subtitleTextBox.AppendText(sb.ToString());
                         sb = new StringBuilder();
                         isFontColor = false;
