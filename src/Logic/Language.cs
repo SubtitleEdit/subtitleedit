@@ -365,6 +365,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SubtitlesNotAlike = "Subtitles have no similarities",
                 XNumberOfDifference = "Number of differences: {0}",
                 ShowOnlyDifferences = "Show only differences",
+                IgnoreLineBreaks = "Ignore line breaks",
                 OnlyLookForDifferencesInText = "Only look for differences in text",
                 CannotCompareWithImageBasedSubtitles = "Cannot compare with image based subtitles",
             };
