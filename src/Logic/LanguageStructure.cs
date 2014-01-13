@@ -256,6 +256,7 @@
             public string SubtitlesNotAlike { get; set; }
             public string XNumberOfDifference { get; set; }
             public string ShowOnlyDifferences { get; set; }
+            public string IgnoreLineBreaks { get; set; }            
             public string OnlyLookForDifferencesInText { get; set; }
             public string CannotCompareWithImageBasedSubtitles { get; set; }
         }

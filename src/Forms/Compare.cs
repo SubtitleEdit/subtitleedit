@@ -26,6 +26,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonPreviousDifference.Text = Configuration.Settings.Language.CompareSubtitles.PreviousDifference;
             buttonNextDifference.Text = Configuration.Settings.Language.CompareSubtitles.NextDifference;
             checkBoxShowOnlyDifferences.Text = Configuration.Settings.Language.CompareSubtitles.ShowOnlyDifferences;
+            checkBoxIgnoreLineBreaks.Text = Configuration.Settings.Language.CompareSubtitles.IgnoreLineBreaks;
+            checkBoxIgnoreLineBreaks.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.CompareSubtitles.ShowOnlyDifferences); // TODO: Remove in SE 3.4            
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText))
                 checkBoxOnlyListDifferencesInText.Text = Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText;
             else
@@ -214,7 +216,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p1 != null && p2 != null)
                     {
 
-                        if (p1.ToString() == p2.ToString() && p1.Number == p2.Number)
+                        if (FixWhitespace(p1.ToString()) == FixWhitespace(p2.ToString()) && p1.Number == p2.Number)
                         { // no differences
                         }
                         else if (p1.ToString() == new Paragraph().ToString())
@@ -227,7 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _differences.Add(index);
                             subtitleListView2.ColorOut(index, Color.Salmon);
                         }
-                        else if (p1.Text != p2.Text)
+                        else if (FixWhitespace(p1.Text) != FixWhitespace(p2.Text))
                         {
                             _differences.Add(index);
                             subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexText);
@@ -248,10 +250,10 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (p1 != null && p2 != null)
                     {
-                        if (p1.ToString() != p2.ToString())
+                        if (FixWhitespace(p1.ToString()) != FixWhitespace(p2.ToString()))
                             _differences.Add(index);
 
-                        if (p1.ToString() == p2.ToString() && p1.Number == p2.Number)
+                        if (FixWhitespace(p1.ToString()) == FixWhitespace(p2.ToString()) && p1.Number == p2.Number)
                         { // no differences
                         }
                         else if (p1.ToString() == new Paragraph().ToString())
@@ -288,7 +290,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     subtitleListView2.SetBackgroundColor(index, Color.LightGreen,
                                                                          SubtitleListView.ColumnIndexDuration);
                                 }
-                                if (p1.Text.Trim() != p2.Text.Trim())
+                                if (FixWhitespace(p1.Text.Trim()) != FixWhitespace(p2.Text.Trim()))
                                 {
                                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen,
                                                                          SubtitleListView.ColumnIndexText);
@@ -354,6 +356,17 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Start();
             subtitleListView1.FirstVisibleIndex = -1;
             subtitleListView1.SelectIndexAndEnsureVisible(0);
+        }
+
+        private string FixWhitespace(string p)
+        {
+            if (checkBoxIgnoreLineBreaks.Checked)
+            {
+                p = p.Replace(Environment.NewLine, " ");
+                while (p.Contains("  "))
+                    p = p.Replace("  ", " ");
+            }
+            return p;
         }
 
         private static int GetColumnsEqualExceptNumber(Paragraph p1, Paragraph p2)
@@ -722,6 +735,11 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void checkBoxOnlyListDifferencesInText_CheckedChanged(object sender, EventArgs e)
+        {
+            CompareSubtitles();
+        }
+
+        private void checkBoxIgnoreLineBreaks_CheckedChanged(object sender, EventArgs e)
         {
             CompareSubtitles();
         }
