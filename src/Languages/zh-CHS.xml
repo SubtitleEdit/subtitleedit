@@ -77,7 +77,7 @@
     <AboutText1>Subtitle Edit 是遵照「GNU 公共授权协议」的免费软件，
 您可以自由分发、修改和使用。
 
-C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
+C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
 
 访问 www.nikse.dk 以获得最新版本。
 
@@ -253,7 +253,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
     <DivideEven>间隔时间均分给前后两行</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubrip>
-    <Title>从 DVD 提取字幕</Title>
+    <Title>从 DVD 中提取字幕</Title>
     <DvdGroupTitle>DVD 文件/信息</DvdGroupTitle>
     <IfoFile>IFO 文件</IfoFile>
     <IfoFiles>IFO 文件</IfoFiles>
@@ -323,22 +323,22 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
     <EndDelayInMillisecs>末尾延时(毫秒):</EndDelayInMillisecs>
   </EffectTypewriter>
   <ExportCustomText>
-    <Title>输出自定义文本格式</Title>
+    <Title>导出自定义文本格式</Title>
     <Formats>格式</Formats>
     <New>新建</New>
     <Edit>编辑</Edit>
     <Delete>删除</Delete>
-    <SaveAs>另存为(&amp;S)...</SaveAs>
+    <SaveAs>另存为(&amp;N)...</SaveAs>
     <SaveSubtitleAs>将字幕另存为...</SaveSubtitleAs>
-    <SubtitleExportedInCustomFormatToX>将自定义格式字幕输出到: {0}</SubtitleExportedInCustomFormatToX>
+    <SubtitleExportedInCustomFormatToX>将自定义格式字幕保存到: {0}</SubtitleExportedInCustomFormatToX>
   </ExportCustomText>
   <ExportCustomTextFormat>
     <Title>自定义文本格式模板</Title>
     <Template>模板</Template>
     <Header>页眉</Header>
-    <TextLine>文本行 (句段)</TextLine>
+    <TextLine>文本行 (段)</TextLine>
     <TimeCode>时间码</TimeCode>
-    <NewLine>换行符</NewLine>
+    <NewLine>新行</NewLine>
     <Footer>页脚</Footer>
     <DoNotModify>[不改动]</DoNotModify>
   </ExportCustomTextFormat>
@@ -350,11 +350,14 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
     <FontColor>字体颜色</FontColor>
     <BorderColor>边缘颜色</BorderColor>
     <BorderWidth>边缘宽度</BorderWidth>
+    <ShadowColor>阴影颜色</ShadowColor>
+    <ShadowWidth>阴影宽度</ShadowWidth>
+    <Transparency>透明度</Transparency>
     <ImageFormat>图像格式</ImageFormat>
     <AntiAlias>反锯齿</AntiAlias>
     <Text3D>3D</Text3D>
-    <SideBySide3D>左右 3D 格式</SideBySide3D>
-    <HalfTopBottom3D>上下 3D 格式</HalfTopBottom3D>
+    <SideBySide3D>左右型 3D 格式</SideBySide3D>
+    <HalfTopBottom3D>上下型 3D 格式</HalfTopBottom3D>
     <Depth>深度</Depth>
     <ExportAllLines>导出所有行...</ExportAllLines>
     <XImagesSavedInY>{0} 个图像被保存在 {1}</XImagesSavedInY>
@@ -370,6 +373,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
     <SaveDvdStudioProStlAs>选择 DVD Studio Pro STL 文件名</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>某些行过长:
 {0}</SomeLinesWereTooLongX>
+    <LineHeight>行高</LineHeight>
   </ExportPngXml>
   <ExportText>
     <Title>导出文本</Title>
@@ -582,6 +586,12 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
     <Title>转到字幕编号</Title>
     <XIsNotAValidNumber>{0} 个不是有效数字</XIsNotAValidNumber>
   </GoToLine>
+  <ImportImages>
+    <Title>导入图像</Title>
+    <ImageFiles>图像文件</ImageFiles>
+    <Input>输入</Input>
+    <InputDescription>选择输入文件 (浏览或拖放)</InputDescription>
+  </ImportImages>
   <ImportSceneChanges>
     <Title>导入场景变更</Title>
     <OpenTextFile>打开文本文件...</OpenTextFile>
@@ -594,11 +604,14 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
   </ImportSceneChanges>
   <ImportText>
     <Title>导入纯文本</Title>
+    <OneSubtitleIsOneFile>多个文件 - 每个文件是独立的字幕</OneSubtitleIsOneFile>
     <OpenTextFile>打开文本文件...</OpenTextFile>
+    <OpenTextFiles>打开文本文件...</OpenTextFiles>
     <ImportOptions>导入选项</ImportOptions>
     <Splitting>分割</Splitting>
     <AutoSplitText>自动分割文本</AutoSplitText>
     <OneLineIsOneSubtitle>一行是一个字幕</OneLineIsOneSubtitle>
+    <LineBreak>换行</LineBreak>
     <SplitAtBlankLines>在空行处分割</SplitAtBlankLines>
     <MergeShortLines>用延长符合并短行</MergeShortLines>
     <RemoveEmptyLines>删除空行</RemoveEmptyLines>
@@ -652,6 +665,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
         <ImportSubtitleFromMatroskaFile>从 Matroska 文件导入字幕...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>手动选择编码方式导入字幕...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>导入纯文本...</ImportText>
+        <ImportImages>导入图像...</ImportImages>
         <ImportTimecodes>导入时间码...</ImportTimecodes>
         <Export>导出</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
@@ -668,9 +682,9 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
-        <ExportUltech130>Ultech 字幕...</ExportUltech130>
+        <ExportUltech130>Ultech 标题...</ExportUltech130>
         <ExportCustomTextFormat>导出自定义文本格式...</ExportCustomTextFormat>
-        <Exit>退出(&amp;E)</Exit>
+        <Exit>退出(&amp;X)</Exit>
       </File>
       <Edit>
         <Title>编辑(&amp;E)</Title>
@@ -684,6 +698,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
         <MultipleReplace>多重替换(&amp;M)...</MultipleReplace>
         <GoToSubtitleNumber>转到字幕编号(&amp;G)...</GoToSubtitleNumber>
         <RightToLeftMode>从右向左阅读模式</RightToLeftMode>
+        <FixTrlViaUnicodeControlCharacters>使用 Unicode 控制字符修复 RTL (针对选中的行)</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>反转 RTL 开始/结束 (所选行)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>在 音频/视频 预览中显示原始文本</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>更改选择...</ModifySelection>
@@ -1146,6 +1161,13 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
     <SubtitlesJoined>字幕已合并</SubtitlesJoined>
     <StatusLog>状态记录</StatusLog>
     <XSceneChangesImported>已导入 {0} 个场景变更</XSceneChangesImported>
+    <PluginXExecuted>插件 '{0}' 已执行。</PluginXExecuted>
+    <NotAValidXSubFile>不是有效的 xsub 文件!</NotAValidXSubFile>
+    <BeforeMergeLinesWithSameText>在合并相同文本行之前</BeforeMergeLinesWithSameText>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>带时间码的字幕与当前文件 ({1}) 的行数相差 ({0}) - 仍要继续吗?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ErrorLoadIdx>无法读取或编辑 .idx 文件。Idx 文件是 idx/sub 文件对中的一部分 (也称为VobSub), Subtitle Edit 无法打开 .sub 文件。</ErrorLoadIdx>
+    <ErrorLoadRar>此文件是一个 .rar 压缩文件。Subtitle Edit 无法打开压缩文件。</ErrorLoadRar>
+    <ErrorLoadZip>此文件是一个 .zip 压缩文件。Subtitle Edit 无法打开压缩文件。</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件选择字幕</Title>
@@ -1170,6 +1192,8 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>合并相同文本的行</Title>
+    <MaxMillisecondsBetweenLines>行间最大间隔 (毫秒)</MaxMillisecondsBetweenLines>
+    <IncludeIncrementing>包含增量行</IncludeIncrementing>
   </MergeDoubleLines>
   <MergedShortLines>
     <Title>合并短行</Title>
@@ -1402,6 +1426,9 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
     <WaveFormGridColor>网格颜色</WaveFormGridColor>
     <WaveFormShowGridLines>显示网格线</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>反转鼠标滚动方向</ReverseMouseWheelScrollDirection>
+    <WaveFormAllowOverlap>允许重叠 (当移动/调整时长时)</WaveFormAllowOverlap>
+    <WaveformBorderHitMs1>边界标记线的最短相接间隔需为</WaveformBorderHitMs1>
+    <WaveformBorderHitMs2>毫秒</WaveformBorderHitMs2>
     <WaveFormColor>颜色</WaveFormColor>
     <WaveFormSelectedColor>选定颜色</WaveFormSelectedColor>
     <WaveFormBackgroundColor>背景颜色</WaveFormBackgroundColor>
@@ -1413,10 +1440,15 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
     <SpectrogramAppearance>频谱图外观</SpectrogramAppearance>
     <SpectrogramOneColorGradient>单色梯度</SpectrogramOneColorGradient>
     <SpectrogramClassic>经典</SpectrogramClassic>
-    <SubStationAlphaStyle>字幕区 Alpha 样式</SubStationAlphaStyle>
+    <WaveformUseFFMPEG>使用 FFMPEG 进行音频波形提取</WaveformUseFFMPEG>
+    <WaveformFFMPEGPath>FFMPEG 文件路径</WaveformFFMPEGPath>
+    <WaveformBrowseToFFMPEG>浏览至 FFMPEG</WaveformBrowseToFFMPEG>
+    <SubStationAlphaStyle>(高级) Sub Station Alpha 样式</SubStationAlphaStyle>
     <ChooseFont>选择字体</ChooseFont>
     <ChooseColor>选择颜色</ChooseColor>
     <Example>示例</Example>
+    <SsaShadow>阴影</SsaShadow>
+    <SsaOpaqueBox>实色框</SsaOpaqueBox>
     <Testing123>正在测试 123...</Testing123>
     <Language>语言</Language>
     <NamesIgnoreLists>名称/忽略列表 (区分大小写)</NamesIgnoreLists>
@@ -1459,32 +1491,40 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
     <UpdateShortcut>更新</UpdateShortcut>
     <ShortcutIsNotValid>快捷键无效: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>切换 停靠/不停靠 视频控件</ToggleDockUndockOfVideoControls>
-    <CreateSetEndAddNewAndGoToNew>设置终止时间，添加新行并转到新行</CreateSetEndAddNewAndGoToNew>
+    <CreateSetEndAddNewAndGoToNew>设置终点，添加新点并转到新点</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>通过结束位置调整并转到下一个</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>调整设置时长起点及转到下个文本</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>设置终点及下个起点并转到下一个</AdjustSetEndNextStartAndGoToNext>
-    <AdjustStartDownEndUpAndGoToNext>按下按键设置起始时间，松开按键设置结束时间，并转到下一行</AdjustStartDownEndUpAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>向下方向键=设置起点，向上方向键=设置终点，并转到下一个</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>所选行前移 100ms</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>所选行后移 100ms</AdjustSelected100MsBack>
     <AdjustSetStartTimeOnly>设置开始时间，保留结束时间</AdjustSetStartTimeOnly>
-    <MainCreateStartDownEndUp>按下按键时创建新的开始时间，松开按键时设置结束时间</MainCreateStartDownEndUp>
+    <MainCreateStartDownEndUp>用向下方向键创建新的开始时间，用向上方向键设置结束时间</MainCreateStartDownEndUp>
     <MergeDialogue>合并对话 (插入破折号)</MergeDialogue>
     <GoToNext>转到下一行</GoToNext>
     <GoToPrevious>转到上一行</GoToPrevious>
     <ToggleFocus>在列表视图和文本窗口之间切换焦点</ToggleFocus>
+    <GoToCurrentSubtitleEnd>转到当前行尾</GoToCurrentSubtitleEnd>
     <ToggleDialogueDashes>开关对话前的破折号</ToggleDialogueDashes>
     <Alignment>排列 (所选行)</Alignment>
     <CopyTextOnly>仅复制文本 (所选行)</CopyTextOnly>
     <AutoDurationSelectedLines>自动时长 (所选行)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>反转 RTL 开始/结束</ReverseStartAndEndingForRTL>
-    <VerticalZoom>竖向缩放</VerticalZoom>
+    <VerticalZoom>纵向缩小</VerticalZoom>
+    <VerticalZoomOut>纵向放大</VerticalZoomOut>
     <WaveformSeekSilenceForward>向前搜索静音</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>向后搜索静音</WaveformSeekSilenceBack>
     <WaveformAddTextHere>添加文本到此处 (用于新选)</WaveformAddTextHere>
-    <GoBack100Milliseconds>向前 100 毫秒</GoBack100Milliseconds>
-    <GoForward100Milliseconds>向后 100 毫秒</GoForward100Milliseconds>
-    <GoBack500Milliseconds>向前 500 毫秒</GoBack500Milliseconds>
-    <GoForward500Milliseconds>向后 500 毫秒</GoForward500Milliseconds>
+    <WaveformPlayNewSelection>播放新的选中行</WaveformPlayNewSelection>
+    <WaveformPlayFirstSelectedSubtitle>播放首个选中行</WaveformPlayFirstSelectedSubtitle>
+    <GoBack1Frame>退回一帧</GoBack1Frame>
+    <GoForward1Frame>前进一帧</GoForward1Frame>
+    <GoBack100Milliseconds>退回 100 毫秒</GoBack100Milliseconds>
+    <GoForward100Milliseconds>前进 100 毫秒</GoForward100Milliseconds>
+    <GoBack500Milliseconds>退回 500 毫秒</GoBack500Milliseconds>
+    <GoForward500Milliseconds>前进 500 毫秒</GoForward500Milliseconds>
+    <GoBack1Second>退回一秒</GoBack1Second>
+    <GoForward1Second>前进一秒</GoForward1Second>
     <TogglePlayPause>切换 播放/暂停</TogglePlayPause>
     <Pause>暂停</Pause>
     <Fullscreen>全屏幕</Fullscreen>
@@ -1515,6 +1555,10 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
     <ListViewColumnInsert>列，插入文本</ListViewColumnInsert>
     <ListViewColumnPaste>列，粘贴</ListViewColumnPaste>
     <ShowBeamer>启动字幕全屏幕投影仪</ShowBeamer>
+    <MainTextBoxMoveLastWordDown>将上一行的最后一个单词移到下一行</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>将下一行的第一个单词移到上一行</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxAutoBreak>文本自动换行</MainTextBoxAutoBreak>
+    <MainTextBoxUnbreak>取消换行</MainTextBoxUnbreak>
   </Settings>
   <ShowEarlierLater>
     <Title>提前/推后 显示所选行</Title>
@@ -1755,12 +1799,15 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获取。
     <OcrViaImageCompare>使用图像比较 OCR</OcrViaImageCompare>
     <ImageDatabase>图像数据库</ImageDatabase>
     <NoOfPixelsIsSpace>空格像素数量</NoOfPixelsIsSpace>
+    <MaxErrorPercent>最大容错比</MaxErrorPercent>
     <New>新建</New>
     <Edit>编辑</Edit>
     <StartOcr>开始 OCR</StartOcr>
     <Stop>停止</Stop>
     <StartOcrFrom>从下列字幕编号开始 OCR:</StartOcrFrom>
     <LoadingVobSubImages>正在加载 VobSub 图像...</LoadingVobSubImages>
+    <LoadingImageCompareDatabase>正在加载图像比照数据库...</LoadingImageCompareDatabase>
+    <ConvertingImageCompareDatabase>正在将图像比照数据库转换为新格式 (images.db/images.xml)...</ConvertingImageCompareDatabase>
     <SubtitleImage>字幕图像</SubtitleImage>
     <SubtitleText>字幕文本</SubtitleText>
     <UnableToCreateCharacterDatabaseFolder>无法创建“字符数据库文件夹”: {0}</UnableToCreateCharacterDatabaseFolder>
