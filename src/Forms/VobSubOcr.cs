@@ -1269,6 +1269,8 @@ namespace Nikse.SubtitleEdit.Forms
                 nDvbBmp.CropTransparentSidesAndBottom(2, true);
                 if (checkBoxTransportStreamGetColorAndSplit.Checked)
                     _dvbSubColor = nDvbBmp.GetBrightestColor();
+                if (checkBoxAutoTransparentBackground.Checked)
+                    nDvbBmp.MakeBackgroundTransparent(140); //TODO: Put in UI or settings
                 if (checkBoxTransportStreamGrayscale.Checked)
                     nDvbBmp.GrayScale();
                 dvbBmp.Dispose();                
