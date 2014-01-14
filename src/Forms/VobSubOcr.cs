@@ -306,6 +306,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxImagePalette.Text = language.ImagePalette;
             checkBoxCustomFourColors.Text = language.UseCustomColors;
             checkBoxBackgroundTransparent.Text = language.Transparent;
+            labelMinAlpha.Text = language.TransparentMinAlpha;
             checkBoxPatternTransparent.Text = language.Transparent;
             checkBoxEmphasis1Transparent.Text = language.Transparent;
             checkBoxEmphasis2Transparent.Text = language.Transparent;
@@ -1270,7 +1271,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (checkBoxTransportStreamGetColorAndSplit.Checked)
                     _dvbSubColor = nDvbBmp.GetBrightestColor();
                 if (checkBoxAutoTransparentBackground.Checked)
-                    nDvbBmp.MakeBackgroundTransparent(140); //TODO: Put in UI or settings
+                    nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
                 if (checkBoxTransportStreamGrayscale.Checked)
                     nDvbBmp.GrayScale();
                 dvbBmp.Dispose();                
@@ -6459,6 +6460,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ResetTesseractThread();
             SubtitleListView1SelectedIndexChanged(null, null);
+            if (checkBoxAutoTransparentBackground.Checked && _dvbSubtitles != null)
+                numericUpDownAutoTransparentAlphaMax.Visible = true;
+            else
+                numericUpDownAutoTransparentAlphaMax.Visible = false;
+            labelMinAlpha.Visible = numericUpDownAutoTransparentAlphaMax.Visible;
         }
 
         internal void Initialize(string fileName, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, List<SpHeader> spList)
@@ -7146,6 +7152,11 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.Renumber(1);
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
+        }
+
+        private void numericUpDownAutoTransparentAlphaMax_ValueChanged(object sender, EventArgs e)
+        {
+            SubtitleListView1SelectedIndexChanged(null, null);
         }
 
     }
