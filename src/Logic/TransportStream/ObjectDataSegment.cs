@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 index++;
                 twoToEightBitColorLookup[2] = buffer[index];
                 index++;
-                twoToEightBitColorLookup[4] = buffer[index];
+                twoToEightBitColorLookup[3] = buffer[index];
                 index++;
             }
             else if (dataType == MapTable4To8Bit)
