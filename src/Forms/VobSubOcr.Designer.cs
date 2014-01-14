@@ -133,6 +133,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxCustomFourColors = new System.Windows.Forms.CheckBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.groupBoxSubtitleImage = new System.Windows.Forms.GroupBox();
+            this.groupBoxTransportStream = new System.Windows.Forms.GroupBox();
+            this.checkBoxTransportStreamGetColorAndSplit = new System.Windows.Forms.CheckBox();
+            this.checkBoxTransportStreamGrayscale = new System.Windows.Forms.CheckBox();
             this.checkBoxAutoTransparentBackground = new System.Windows.Forms.CheckBox();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.checkBoxShowOnlyForced = new System.Windows.Forms.CheckBox();
@@ -141,11 +144,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.splitContainerBottom = new System.Windows.Forms.SplitContainer();
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
-            this.groupBoxTransportStream = new System.Windows.Forms.GroupBox();
-            this.checkBoxTransportStreamGrayscale = new System.Windows.Forms.CheckBox();
+            this.numericUpDownAutoTransparentAlphaMax = new System.Windows.Forms.NumericUpDown();
+            this.labelMinAlpha = new System.Windows.Forms.Label();
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.checkBoxTransportStreamGetColorAndSplit = new System.Windows.Forms.CheckBox();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.GroupBoxTesseractMethod.SuspendLayout();
@@ -171,11 +173,12 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEmphasis1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPattern)).BeginInit();
             this.groupBoxSubtitleImage.SuspendLayout();
+            this.groupBoxTransportStream.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.splitContainerBottom.Panel1.SuspendLayout();
             this.splitContainerBottom.Panel2.SuspendLayout();
             this.splitContainerBottom.SuspendLayout();
-            this.groupBoxTransportStream.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutoTransparentAlphaMax)).BeginInit();
             this.SuspendLayout();
             // 
             // contextMenuStripListview
@@ -1261,6 +1264,8 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.groupBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSubtitleImage.Controls.Add(this.labelMinAlpha);
+            this.groupBoxSubtitleImage.Controls.Add(this.numericUpDownAutoTransparentAlphaMax);
             this.groupBoxSubtitleImage.Controls.Add(this.groupBoxTransportStream);
             this.groupBoxSubtitleImage.Controls.Add(this.checkBoxAutoTransparentBackground);
             this.groupBoxSubtitleImage.Controls.Add(this.groupBoxImagePalette);
@@ -1271,6 +1276,42 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSubtitleImage.TabIndex = 36;
             this.groupBoxSubtitleImage.TabStop = false;
             this.groupBoxSubtitleImage.Text = "Subtitle image";
+            // 
+            // groupBoxTransportStream
+            // 
+            this.groupBoxTransportStream.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxTransportStream.Controls.Add(this.checkBoxTransportStreamGetColorAndSplit);
+            this.groupBoxTransportStream.Controls.Add(this.checkBoxTransportStreamGrayscale);
+            this.groupBoxTransportStream.Location = new System.Drawing.Point(94, 6);
+            this.groupBoxTransportStream.Name = "groupBoxTransportStream";
+            this.groupBoxTransportStream.Size = new System.Drawing.Size(636, 38);
+            this.groupBoxTransportStream.TabIndex = 36;
+            this.groupBoxTransportStream.TabStop = false;
+            this.groupBoxTransportStream.Text = "Transport stream";
+            this.groupBoxTransportStream.Visible = false;
+            // 
+            // checkBoxTransportStreamGetColorAndSplit
+            // 
+            this.checkBoxTransportStreamGetColorAndSplit.AutoSize = true;
+            this.checkBoxTransportStreamGetColorAndSplit.Location = new System.Drawing.Point(135, 15);
+            this.checkBoxTransportStreamGetColorAndSplit.Name = "checkBoxTransportStreamGetColorAndSplit";
+            this.checkBoxTransportStreamGetColorAndSplit.Size = new System.Drawing.Size(253, 17);
+            this.checkBoxTransportStreamGetColorAndSplit.TabIndex = 1;
+            this.checkBoxTransportStreamGetColorAndSplit.Text = "Try get color (will include some splitting of lines)";
+            this.checkBoxTransportStreamGetColorAndSplit.UseVisualStyleBackColor = true;
+            this.checkBoxTransportStreamGetColorAndSplit.CheckedChanged += new System.EventHandler(this.checkBoxTransportStreamGetColorAndSplit_CheckedChanged);
+            // 
+            // checkBoxTransportStreamGrayscale
+            // 
+            this.checkBoxTransportStreamGrayscale.AutoSize = true;
+            this.checkBoxTransportStreamGrayscale.Location = new System.Drawing.Point(7, 16);
+            this.checkBoxTransportStreamGrayscale.Name = "checkBoxTransportStreamGrayscale";
+            this.checkBoxTransportStreamGrayscale.Size = new System.Drawing.Size(73, 17);
+            this.checkBoxTransportStreamGrayscale.TabIndex = 0;
+            this.checkBoxTransportStreamGrayscale.Text = "Grayscale";
+            this.checkBoxTransportStreamGrayscale.UseVisualStyleBackColor = true;
+            this.checkBoxTransportStreamGrayscale.CheckedChanged += new System.EventHandler(this.checkBoxTransportStreamGrayscale_CheckedChanged);
             // 
             // checkBoxAutoTransparentBackground
             // 
@@ -1356,30 +1397,37 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerHideStatus.Interval = 2000;
             this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
             // 
-            // groupBoxTransportStream
+            // numericUpDownAutoTransparentAlphaMax
             // 
-            this.groupBoxTransportStream.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxTransportStream.Controls.Add(this.checkBoxTransportStreamGetColorAndSplit);
-            this.groupBoxTransportStream.Controls.Add(this.checkBoxTransportStreamGrayscale);
-            this.groupBoxTransportStream.Location = new System.Drawing.Point(94, 6);
-            this.groupBoxTransportStream.Name = "groupBoxTransportStream";
-            this.groupBoxTransportStream.Size = new System.Drawing.Size(636, 38);
-            this.groupBoxTransportStream.TabIndex = 36;
-            this.groupBoxTransportStream.TabStop = false;
-            this.groupBoxTransportStream.Text = "Transport stream";
-            this.groupBoxTransportStream.Visible = false;
+            this.numericUpDownAutoTransparentAlphaMax.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAutoTransparentAlphaMax.Location = new System.Drawing.Point(432, 169);
+            this.numericUpDownAutoTransparentAlphaMax.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDownAutoTransparentAlphaMax.Name = "numericUpDownAutoTransparentAlphaMax";
+            this.numericUpDownAutoTransparentAlphaMax.Size = new System.Drawing.Size(44, 21);
+            this.numericUpDownAutoTransparentAlphaMax.TabIndex = 37;
+            this.numericUpDownAutoTransparentAlphaMax.Value = new decimal(new int[] {
+            140,
+            0,
+            0,
+            0});
+            this.numericUpDownAutoTransparentAlphaMax.Visible = false;
+            this.numericUpDownAutoTransparentAlphaMax.ValueChanged += new System.EventHandler(this.numericUpDownAutoTransparentAlphaMax_ValueChanged);
             // 
-            // checkBoxTransportStreamGrayscale
+            // labelMinAlpha
             // 
-            this.checkBoxTransportStreamGrayscale.AutoSize = true;
-            this.checkBoxTransportStreamGrayscale.Location = new System.Drawing.Point(7, 16);
-            this.checkBoxTransportStreamGrayscale.Name = "checkBoxTransportStreamGrayscale";
-            this.checkBoxTransportStreamGrayscale.Size = new System.Drawing.Size(73, 17);
-            this.checkBoxTransportStreamGrayscale.TabIndex = 0;
-            this.checkBoxTransportStreamGrayscale.Text = "Grayscale";
-            this.checkBoxTransportStreamGrayscale.UseVisualStyleBackColor = true;
-            this.checkBoxTransportStreamGrayscale.CheckedChanged += new System.EventHandler(this.checkBoxTransportStreamGrayscale_CheckedChanged);
+            this.labelMinAlpha.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelMinAlpha.AutoSize = true;
+            this.labelMinAlpha.Location = new System.Drawing.Point(176, 171);
+            this.labelMinAlpha.Name = "labelMinAlpha";
+            this.labelMinAlpha.Size = new System.Drawing.Size(252, 13);
+            this.labelMinAlpha.TabIndex = 40;
+            this.labelMinAlpha.Text = "Min. alpha value (0=transparent, 255=fully visible)";
+            this.labelMinAlpha.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.labelMinAlpha.Visible = false;
             // 
             // textBoxCurrentText
             // 
@@ -1417,17 +1465,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
-            // 
-            // checkBoxTransportStreamGetColorAndSplit
-            // 
-            this.checkBoxTransportStreamGetColorAndSplit.AutoSize = true;
-            this.checkBoxTransportStreamGetColorAndSplit.Location = new System.Drawing.Point(135, 15);
-            this.checkBoxTransportStreamGetColorAndSplit.Name = "checkBoxTransportStreamGetColorAndSplit";
-            this.checkBoxTransportStreamGetColorAndSplit.Size = new System.Drawing.Size(253, 17);
-            this.checkBoxTransportStreamGetColorAndSplit.TabIndex = 1;
-            this.checkBoxTransportStreamGetColorAndSplit.Text = "Try get color (will include some splitting of lines)";
-            this.checkBoxTransportStreamGetColorAndSplit.UseVisualStyleBackColor = true;
-            this.checkBoxTransportStreamGetColorAndSplit.CheckedChanged += new System.EventHandler(this.checkBoxTransportStreamGetColorAndSplit_CheckedChanged);
             // 
             // VobSubOcr
             // 
@@ -1487,13 +1524,14 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPattern)).EndInit();
             this.groupBoxSubtitleImage.ResumeLayout(false);
             this.groupBoxSubtitleImage.PerformLayout();
+            this.groupBoxTransportStream.ResumeLayout(false);
+            this.groupBoxTransportStream.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
             this.splitContainerBottom.Panel1.ResumeLayout(false);
             this.splitContainerBottom.Panel1.PerformLayout();
             this.splitContainerBottom.Panel2.ResumeLayout(false);
             this.splitContainerBottom.ResumeLayout(false);
-            this.groupBoxTransportStream.ResumeLayout(false);
-            this.groupBoxTransportStream.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutoTransparentAlphaMax)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1616,5 +1654,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.GroupBox groupBoxTransportStream;
         private System.Windows.Forms.CheckBox checkBoxTransportStreamGrayscale;
         private System.Windows.Forms.CheckBox checkBoxTransportStreamGetColorAndSplit;
+        private System.Windows.Forms.NumericUpDown numericUpDownAutoTransparentAlphaMax;
+        private System.Windows.Forms.Label labelMinAlpha;
     }
 }

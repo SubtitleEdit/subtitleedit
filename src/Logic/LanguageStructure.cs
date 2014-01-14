@@ -2027,6 +2027,7 @@
             public string ImagePalette { get; set; }
             public string UseCustomColors { get; set; }
             public string Transparent { get; set; }
+            public string TransparentMinAlpha { get; set; }
             public string TransportStream { get; set; }
             public string TransportStreamGrayscale { get; set; }
             public string TransportStreamGetColor { get; set; }
