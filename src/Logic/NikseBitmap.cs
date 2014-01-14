@@ -972,5 +972,23 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+
+        /// <summary>
+        /// Make pixels with some transparency completely transparent
+        /// </summary>
+        /// <param name="minAlpha">Min alpha value, 0=transparent, 255=fully visible</param>
+        internal void MakeBackgroundTransparent(int minAlpha)
+        {
+            byte[] buffer = new byte[4];
+            buffer[0] = 0; // B
+            buffer[1] = 0; // G
+            buffer[2] = 0; // R
+            buffer[3] = 0; // A
+            for (int i = 0; i < _bitmapData.Length; i += 4)
+            {
+                if (_bitmapData[i + 3] < minAlpha)
+                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
+            }
+        }
     }
 }
