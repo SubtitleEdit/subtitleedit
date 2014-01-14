@@ -6163,6 +6163,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
+                if (comboBoxDictionaries.SelectedItem == null)
+                    return null;
+
                 string name = comboBoxDictionaries.SelectedItem.ToString();
                 int start = name.LastIndexOf("[");
                 int end = name.LastIndexOf("]");
