@@ -72,6 +72,9 @@ namespace Nikse.SubtitleEdit.Controls
         private Paragraph _selectedParagraph;
         private Paragraph _currentParagraph;
         private List<Paragraph> _previousAndNextParagraphs = new List<Paragraph>();
+        private Paragraph _prevParagraph;
+        private Paragraph _nextParagraph;
+        private bool _firstMove = true;
         private double _currentVideoPositionSeconds = -1;
         private WavePeakGenerator _wavePeaks;
         private Subtitle _subtitle;
@@ -281,6 +284,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             _previousAndNextParagraphs.Clear();
             _currentParagraph = null;
+
             int positionMilliseconds = (int)Math.Round(currentVideoPositionSeconds * 1000.0);
             if (_selectedParagraph != null && _selectedParagraph.StartTime.TotalMilliseconds < positionMilliseconds && _selectedParagraph.EndTime.TotalMilliseconds > positionMilliseconds)
             {
@@ -746,8 +750,10 @@ namespace Nikse.SubtitleEdit.Controls
             if (_wavePeaks == null)
                 return;
 
+            Paragraph oldMouseDownParagraph = null;
             _mouseDownParagraphType = MouseDownParagraphType.None;
             _gapAtStart = -1;
+            _firstMove = true;
             if (e.Button == MouseButtons.Left)
             {
                 _buttonDownTimeTicks = DateTime.Now.Ticks;
@@ -758,6 +764,8 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (SetParagrapBorderHit(milliseconds, NewSelectionParagraph))
                 {
+                    if (_mouseDownParagraph != null)
+                        oldMouseDownParagraph = new Paragraph(_mouseDownParagraph);
                     if (_mouseDownParagraphType == MouseDownParagraphType.Start)
                     {
                         _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
@@ -778,6 +786,8 @@ namespace Nikse.SubtitleEdit.Controls
                     SetParagrapBorderHit(milliseconds, _currentParagraph) ||
                     SetParagrapBorderHit(milliseconds, _previousAndNextParagraphs))
                 {
+                    if (_mouseDownParagraph != null)
+                        oldMouseDownParagraph = new Paragraph(_mouseDownParagraph);
                     NewSelectionParagraph = null;
                     if (_mouseDownParagraphType == MouseDownParagraphType.Start)
                         _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
@@ -792,6 +802,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         _oldParagraph = new Paragraph(p);
                         _mouseDownParagraph = p;
+                        oldMouseDownParagraph = new Paragraph(_mouseDownParagraph);
                         _mouseDownParagraphType = MouseDownParagraphType.Whole;
                         _moveWholeStartDifferenceMilliseconds = (XPositionToSeconds(e.X) * 1000.0) - p.StartTime.TotalMilliseconds;
                         Cursor = Cursors.Hand;
@@ -812,8 +823,10 @@ namespace Nikse.SubtitleEdit.Controls
                     if (_subtitle != null && _mouseDownParagraph != null)
                     {
                         int curIdx = _subtitle.Paragraphs.IndexOf(_mouseDownParagraph);
+                        //if (curIdx > 0)
+                        //    _gapAtStart = _subtitle.Paragraphs[curIdx].StartTime.TotalMilliseconds - _subtitle.Paragraphs[curIdx - 1].EndTime.TotalMilliseconds;
                         if (curIdx > 0)
-                            _gapAtStart = _subtitle.Paragraphs[curIdx].StartTime.TotalMilliseconds - _subtitle.Paragraphs[curIdx - 1].EndTime.TotalMilliseconds;
+                            _gapAtStart = oldMouseDownParagraph.StartTime.TotalMilliseconds - _subtitle.Paragraphs[curIdx - 1].EndTime.TotalMilliseconds;
                     }
                 }
                 else if (_mouseDownParagraphType == MouseDownParagraphType.End)
@@ -821,8 +834,10 @@ namespace Nikse.SubtitleEdit.Controls
                     if (_subtitle != null && _mouseDownParagraph != null)
                     {
                         int curIdx = _subtitle.Paragraphs.IndexOf(_mouseDownParagraph);
+                        //if (curIdx >= 0 && curIdx < _subtitle.Paragraphs.Count - 1)
+                        //    _gapAtStart = _subtitle.Paragraphs[curIdx + 1].StartTime.TotalMilliseconds - _subtitle.Paragraphs[curIdx].EndTime.TotalMilliseconds;
                         if (curIdx >= 0 && curIdx < _subtitle.Paragraphs.Count - 1)
-                            _gapAtStart = _subtitle.Paragraphs[curIdx + 1].StartTime.TotalMilliseconds - _subtitle.Paragraphs[curIdx].EndTime.TotalMilliseconds;
+                            _gapAtStart = _subtitle.Paragraphs[curIdx + 1].StartTime.TotalMilliseconds - oldMouseDownParagraph.EndTime.TotalMilliseconds;
                     }
                 }
                 _mouseDown = true;
@@ -1049,6 +1064,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (_wavePeaks == null)
                 return;
 
+            int oldMouseMoveLastX = _mouseMoveLastX;
             if (e.X < 0 && StartPositionSeconds > 0.1 && _mouseDown)
             {
                 if (e.X < _mouseMoveLastX)
@@ -1106,12 +1122,39 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else if (e.Button == MouseButtons.Left)
             {
+                if (oldMouseMoveLastX == e.X)
+                    return; // no horizontal movement
+
                 if (_mouseDown)
                 {
                     if (_mouseDownParagraph != null)
                     {
                         double seconds = XPositionToSeconds(e.X);
                         int milliseconds = (int)(seconds * 1000.0);
+
+                        var subtitleIndex = _subtitle.GetIndex(_mouseDownParagraph);
+                        _prevParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex - 1);
+                        _nextParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex + 1);
+                        if (Control.ModifierKeys != Keys.Alt)
+                        {
+                            if (_firstMove && e.X > oldMouseMoveLastX && _nextParagraph != null && _mouseDownParagraphType == MouseDownParagraphType.End)
+                            {
+                                if (Math.Abs(_nextParagraph.StartTime.TotalMilliseconds - _mouseDownParagraph.EndTime.TotalMilliseconds) <= ClosenessForBorderSelection + 2)
+                                {
+                                    _mouseDownParagraph = _nextParagraph;
+                                    _mouseDownParagraphType = MouseDownParagraphType.Start;
+                                }
+                            }
+                            else if (_firstMove && e.X < oldMouseMoveLastX && _prevParagraph != null && _mouseDownParagraphType == MouseDownParagraphType.Start)
+                            {
+                                if (Math.Abs(_prevParagraph.EndTime.TotalMilliseconds - _mouseDownParagraph.StartTime.TotalMilliseconds) <= ClosenessForBorderSelection + 2)
+                                {
+                                    _mouseDownParagraph = _prevParagraph;
+                                    _mouseDownParagraphType = MouseDownParagraphType.End;
+                                }
+                            }
+                        }
+                        _firstMove = false;
 
                         if (_mouseDownParagraphType == MouseDownParagraphType.Start)
                         {
@@ -1168,6 +1211,12 @@ namespace Nikse.SubtitleEdit.Controls
                                 }
                                 else
                                 {
+//SHOW DEBUG MSG                     SolidBrush tBrush = new SolidBrush(Color.Turquoise);
+                                    //var g = this.CreateGraphics();
+                                    //g.DrawString("AllowMovePrevOrNext: " + AllowMovePrevOrNext.ToString() + ", GapStart: " + _gapAtStart.ToString(), Font, tBrush, new PointF(100, 100));
+                                    //tBrush.Dispose();
+                                    //g.Dispose();
+
                                     if (OnTimeChanged != null)
                                         OnTimeChanged.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph, _mouseDownParagraphType, AllowMovePrevOrNext));
                                 }
