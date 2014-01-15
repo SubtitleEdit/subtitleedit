@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.3.12</Version>
-    <TranslatedBy>Übersetzt von Christoph Kitsche. Berichtigungen und Ergänzungen von Siegwarth. Rechtschreibfehler korrigiert von Christoph Kitsche.</TranslatedBy>
+    <Version>3.3.13</Version>
+    <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Nobody.</TranslatedBy>
     <CultureName>de-DE</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile />
     <OK>&amp;OK</OK>
     <Cancel>&amp;Abbrechen</Cancel>
     <Apply>Übernehmen</Apply>
@@ -124,8 +124,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Längenbegrenzungen anwenden</Title>
-    <FixesAvailable>Anpassungen verfügbar: {0}</FixesAvailable>
-    <UnableToFix>Keine Anpassungen verfügbar: {0}</UnableToFix>
+    <FixesAvailable>Korrekturen verfügbar: {0}</FixesAvailable>
+    <UnableToFix>Keine Korrekturen verfügbar: {0}</UnableToFix>
   </ApplyDurationLimits>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Ausgewählte Texte ausbalancieren</TitleAutoBreak>
@@ -155,7 +155,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertedX>Umgewandelt ({0})</ConvertedX>
     <Settings>Einstellungen</Settings>
     <SplitLongLines>Lange Zeilen trennen</SplitLongLines>
-    <AutoBalance>Zeilen automatisch ausbancieren</AutoBalance>
+    <AutoBalance>Zeilen automatisch ausbalancieren</AutoBalance>
     <ScanFolder>Durchsuche Ordner...</ScanFolder>
     <ScanningFolder>Durchsuche {0} und Unterordner nach Untertiteldateien...</ScanningFolder>
     <Recursive>Unterordner einschließen</Recursive>
@@ -193,6 +193,9 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Geschwindigkeit prozentual verändern</Title>
     <Info>Geschwindigeit der Untertitel prozentual verändern</Info>
   </ChangeSpeedInPercent>
+  <ChooseAudioTrack>
+    <Title>Audiospur wählen</Title>
+  </ChooseAudioTrack>
   <ChooseEncoding>
     <Title>Kodierung auswählen</Title>
     <CodePage>Zeichentabelle</CodePage>
@@ -375,6 +378,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveFabImageScriptAs>Blu-ray SUP Dateiname wählen</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL Dateiname wählen</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>Einige Zeilen sind zu lang: {0}</SomeLinesWereTooLongX>
+    <LineHeight>Zeilenhöhe</LineHeight>
   </ExportPngXml>
   <ExportText>
     <Title>Text exportieren</Title>
@@ -524,7 +528,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixDoubleGreaterThan>Entferne &gt;&gt; </FixDoubleGreaterThan>
     <FixEllipsesStart>Entferne '...' am Anfang</FixEllipsesStart>
     <FixMissingOpenBracket>Korrigiere fehlende [</FixMissingOpenBracket>
-    <FixMusicNotation>Musikzeichen âTª mit bevorzugtem Zeichen korrigieren</FixMusicNotation>
+    <FixMusicNotation>Musikzeichen âTª mit bevorzugten Zeichen korrigieren</FixMusicNotation>
     <FixDoubleDashs>Korrigiere '--' -&gt; '...'</FixDoubleDashs>
     <FixDoubleGreaterThans>Entferne &gt;&gt; am Anfang</FixDoubleGreaterThans>
     <FixEllipsesStarts>Entferne ... am Anfang</FixEllipsesStarts>
@@ -587,6 +591,12 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Gehe zu Untertitel Nummer</Title>
     <XIsNotAValidNumber>{0} ist keine gültige Zahl</XIsNotAValidNumber>
   </GoToLine>
+  <ImportImages>
+    <Title>Bilder importieren</Title>
+    <ImageFiles>Bilddateien</ImageFiles>
+    <Input>Eingabe</Input>
+    <InputDescription>Eingabedateien auswählen (Suchen oder Ziehen)</InputDescription>
+  </ImportImages>
   <ImportSceneChanges>
     <Title>Szenenwechsel importieren</Title>
     <OpenTextFile>Textdatei öffnen...</OpenTextFile>
@@ -599,11 +609,14 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
   </ImportSceneChanges>
   <ImportText>
     <Title>Text importieren</Title>
+    <OneSubtitleIsOneFile>Mehrere Dateien - Eine Datei ist ein Untertitel</OneSubtitleIsOneFile>
     <OpenTextFile>Textdatei öffnen...</OpenTextFile>
+    <OpenTextFiles>Textdateien öffnen...</OpenTextFiles>
     <ImportOptions>Importoptionen</ImportOptions>
     <Splitting>Trennen</Splitting>
     <AutoSplitText>Text automatisch trennen</AutoSplitText>
     <OneLineIsOneSubtitle>Eine Zeile ist ein Untertitel</OneLineIsOneSubtitle>
+    <LineBreak>Zeilenumbruch</LineBreak>
     <SplitAtBlankLines>Bei Leerzeile trennen</SplitAtBlankLines>
     <MergeShortLines>Zusammengehörende kurze Texte verbinden</MergeShortLines>
     <RemoveEmptyLines>Leere Zeilen entfernen</RemoveEmptyLines>
@@ -657,6 +670,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSubtitleFromMatroskaFile>Importiere Untertitel aus Matroska Datei...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importiere Untertitel mit manuell gewählter Kodierung...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importiere Text...</ImportText>
+        <ImportImages>Importiere Bilder...</ImportImages>
         <ImportTimecodes>Importiere Zeitstempel...</ImportTimecodes>
         <Export>Exportiere</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
@@ -689,6 +703,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>&amp;Mehrfach ersetzen...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Gehe zu Untertitel Nummer...</GoToSubtitleNumber>
         <RightToLeftMode>Rechts nach links</RightToLeftMode>
+        <FixTrlViaUnicodeControlCharacters>RTL über Unicode Steuerzeichen korrigieren (ausgewählte Texte)</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Rechts nach links Start/Ende umkehren</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Originaltext in Audio/Videovorschau anzeigen</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Auswahl ändern</ModifySelection>
@@ -860,8 +875,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
       <ListView>Listenansicht</ListView>
       <SourceView>Quellansicht</SourceView>
       <UndoChangesInEditPanel>Rückgängig</UndoChangesInEditPanel>
-      <Previous>Vorheriger</Previous>
-      <Next>Nächster</Next>
+      <Previous>Zurück</Previous>
+      <Next>Weiter</Next>
       <AutoBreak>Auto&amp;Umbruch</AutoBreak>
       <Unbreak>Umbruch entfernen</Unbreak>
     </Controls>
@@ -917,7 +932,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     </VideoControls>
     <SaveChangesToUntitled>Änderungen an Unbenannt speichern?</SaveChangesToUntitled>
     <SaveChangesToX>Änderungen an {0} speichern?</SaveChangesToX>
-    <SaveChangesToUntitledOriginal>Änderungen an unbenanntem Original speichern?</SaveChangesToUntitledOriginal>
+    <SaveChangesToUntitledOriginal>Änderungen am unbenannten Original speichern?</SaveChangesToUntitledOriginal>
     <SaveChangesToOriginalX>Änderungen am Original {0} speichern?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Speichere Untertitel als...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Speichere Original Untertitel als...</SaveOriginalSubtitleAs>
@@ -1069,8 +1084,8 @@ Fortfahren?</SubtitleAppendPrompt>
     <VobSubFiles>VobSub Untertitel Dateien</VobSubFiles>
     <OpenBluRaySupFile>Blu-ray SUP Datei öffnen...</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray SUP Dateien</BluRaySupFiles>
-    <OpenXSubFiles>xsub Dateien öffnen...</OpenXSubFiles>
-    <XSubFiles>xsub Dateien</XSubFiles>
+    <OpenXSubFiles>xSub Dateien öffnen...</OpenXSubFiles>
+    <XSubFiles>xSub Dateien</XSubFiles>
     <BeforeImportingVobSubFile>Vor Import eines VobSub Untertitels</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Vor Import einer Blu-ray SUP Datei</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Vor Import einer BDN xml Datei</BeforeImportingBdnXml>
@@ -1088,9 +1103,9 @@ Fortfahren?</SubtitleAppendPrompt>
     <BeforeAutoBalanceSelectedLines>Vor Ausbalancieren der ausgewählten Texten</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Ausbalancierte Texte: {0}</NumberOfLinesAutoBalancedX>
     <BeforeRemoveLineBreaksInSelectedLines>Vor Entfernen von Zeilenumbrüchen aus ausgewählten Texten</BeforeRemoveLineBreaksInSelectedLines>
-    <NumberOfWithRemovedLineBreakX>Texte mit entferntem Zeilenumbruch: {0}</NumberOfWithRemovedLineBreakX>
+    <NumberOfWithRemovedLineBreakX>Texte mit entfernten Zeilenumbruch: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Vor mehrfachem Ersetzen</BeforeMultipleReplace>
-    <NumberOfLinesReplacedX>Texte mit ersetztem Text: {0}</NumberOfLinesReplacedX>
+    <NumberOfLinesReplacedX>Texte mit ersetzten Text: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNamesEtcList>Der Name '{0}' wurde zur Namensliste hinzugefügt.</NameXAddedToNamesEtcList>
     <NameXNotAddedToNamesEtcList>Der Name '{0}' wurde NICHT zur Namensliste hinzugefügt.</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>Das Wort '{0}' wurde zur Benutzerwortliste hinzugefügt</WordXAddedToUserDic>
@@ -1154,6 +1169,12 @@ Fortfahren?</SubtitleAppendPrompt>
     <StatusLog>Status Log</StatusLog>
     <XSceneChangesImported>{0} Szenenänderungen importiert</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' ausgeführt.</PluginXExecuted>
+    <NotAValidXSubFile>Keine gültige xSub Datei!</NotAValidXSubFile>
+    <BeforeMergeLinesWithSameText>Vor Zeilenverbinden mit gleichen Text</BeforeMergeLinesWithSameText>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>Untertitel mit Zeitstempel hat eine andere Zeilenanzahl ({0}) als der aktuelle ({1}) - Trotzdem fortfahren?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ErrorLoadIdx>SE kann keine .idx Dateien lesen. Sie sind Teile von idx/sub Dateipaaren (auch VobSub genannt). SE kann die .sub Datei öffnen.</ErrorLoadIdx>
+    <ErrorLoadRar>Diese Datei ist ein .rar Archiv. SE kann keine komprimierten Dateien öffnen.</ErrorLoadRar>
+    <ErrorLoadZip>Diese Datei ist ein .zip Archiv. SE kann keine komprimierten Dateien öffnen.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Untertitel aus Matroska Datei auswählen</Title>
@@ -1178,6 +1199,8 @@ Fortfahren?</SubtitleAppendPrompt>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Zeilen mit gleichen Text verbinden</Title>
+    <MaxMillisecondsBetweenLines>Max. Millisekunden zwischen Texten</MaxMillisecondsBetweenLines>
+    <IncludeIncrementing>Zeilenerhöhung einschließen</IncludeIncrementing>
   </MergeDoubleLines>
   <MergedShortLines>
     <Title>Kurze Texte verbinden</Title>
@@ -1484,7 +1507,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <AdjustStartDownEndUpAndGoToNext>Pfeil unten=Start, Pfeil hoch=Ende setzen und weiter</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Ausgewählte Texte 100 ms vor bewegen</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Ausgewählte Texte 100 ms zurück bewegen</AdjustSelected100MsBack>
-    <AdjustSetStartTimeOnly>Startzeit anpassen, behalte Endzeit</AdjustSetStartTimeOnly>
+    <AdjustSetStartTimeKeepDuration>Startzeit anpassen, behalte Dauer</AdjustSetStartTimeKeepDuration>
     <MainCreateStartDownEndUp>Neue Startzeit mit Pfeil unten, Endzeit mit Pfeil hoch setzen</MainCreateStartDownEndUp>
     <MergeDialogue>Dialoge verbinden ('-' einfügen)</MergeDialogue>
     <GoToNext>Zum nächsten Text</GoToNext>
@@ -1497,14 +1520,21 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <CopyTextOnly>Nur Text in Zwischenablage kopieren (gewählte Zeilen)</CopyTextOnly>
     <AutoDurationSelectedLines>Auto Dauer (gewählte Zeilen)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Rechts-nach-Links Start/Ende umkehren</ReverseStartAndEndingForRTL>
-    <VerticalZoom>Vertikaler Zoom</VerticalZoom>
+    <VerticalZoom>Vertikale vergrößern</VerticalZoom>
+    <VerticalZoomOut>Vertikal verkleinern</VerticalZoomOut>
     <WaveformSeekSilenceForward>Suche stumm vor</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Suche stumm zurück</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Text hier ergänzen (für neue Auswahl)</WaveformAddTextHere>
+    <WaveformPlayNewSelection>Neue Auswahl abspielen</WaveformPlayNewSelection>
+    <WaveformPlayFirstSelectedSubtitle>Ersten gewählten untertitel abspielen</WaveformPlayFirstSelectedSubtitle>
+    <GoBack1Frame>Ein Bild zurück</GoBack1Frame>
+    <GoForward1Frame>Ein Bild vor</GoForward1Frame>
     <GoBack100Milliseconds>100 ms zurück</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms vor</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms zurück</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 ms vor</GoForward500Milliseconds>
+    <GoBack1Second>Eine Sekunde zurück</GoBack1Second>
+    <GoForward1Second>Eine Sekunde vor</GoForward1Second>
     <TogglePlayPause>Apspielen/Pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Vollbild</Fullscreen>
@@ -1849,8 +1879,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ClickToAddWaveForm>Klicken um Wellenform hinzuzufügen</ClickToAddWaveForm>
     <ClickToAddWaveformAndSpectrogram>Klicken um Wellenform/Spektogramm hinzuzufügen</ClickToAddWaveformAndSpectrogram>
     <Seconds>Sekunden</Seconds>
-    <ZoomIn>Hineinzoomen</ZoomIn>
-    <ZoomOut>Herauszoomen</ZoomOut>
+    <ZoomIn>Vergrößern</ZoomIn>
+    <ZoomOut>Verkleinern</ZoomOut>
     <AddParagraphHere>Text hier einfügen</AddParagraphHere>
     <AddParagraphHereAndPasteText>Text aus Zwischenablage hier einfügen</AddParagraphHereAndPasteText>
     <FocusTextBox>Textfeld fokussieren</FocusTextBox>
@@ -1858,7 +1888,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Split>Trennen</Split>
     <SplitAtCursor>Beim Cursor trennen</SplitAtCursor>
     <MergeWithPrevious>Mit Vorherigem verbinden</MergeWithPrevious>
-    <MergeWithNext>Mit Nächstem verbinden</MergeWithNext>
+    <MergeWithNext>Mit nächsten verbinden</MergeWithNext>
     <PlaySelection>Auswahl wiedergeben</PlaySelection>
     <ShowWaveformAndSpectrogram>Wellenform/Spektogramm anzeigen</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Nur Wellenform anzeigen</ShowWaveformOnly>
