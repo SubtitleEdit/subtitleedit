@@ -13,12 +13,13 @@
   * Waveform/spectrogram: Moving start/end with ALT down now always works - thx Leon
   * Waveform/spectrogram: Move border left/right now also always works even when it's 
     near next/prev border
+  * Fixed transparent background in "OCR window" regarding transport streams
   * Now Viewnamese language actually shows in the "Choose language" dialog
   * Timed Text - List view context menu "Set language" had wrong text
   * Subtitle preview can now show both font and italic for same text - thx Drago
   * Fixed bug decoding dvb sub - thx aMvEL
   * Fixed possible crash in OCR window (if no language is available)
-  * Fixed transparent background in "OCR window" regarding transport streams
+  * "OCR window" - Norweigan bokmål now works as spell check language
 
 
 3.3.12 (12th January 2013)
