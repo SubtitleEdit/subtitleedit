@@ -20,6 +20,7 @@
   * Fixed bug decoding dvb sub - thx aMvEL
   * Fixed possible crash in OCR window (if no language is available)
   * "OCR window" - Norweigan bokmål now works as spell check language
+  * Disabled saving of empty files
 
 
 3.3.12 (12th January 2013)

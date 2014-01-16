@@ -3438,6 +3438,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
+                    if (allText.Trim().Length == 0)
+                    {
+                        MessageBox.Show(string.Format(_language.UnableToSaveSubtitleX, _fileName) + Environment.NewLine + Environment.NewLine + "Subtitle seems to be empty - try to re-save if you're working on a valid subtitle!");
+                        return DialogResult.Cancel;
+                    }
                     File.WriteAllText(_fileName, allText, currentEncoding);
                 }
 
