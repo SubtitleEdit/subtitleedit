@@ -399,9 +399,10 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Bridge small gaps in durations",
                 GapsBridgedX = "Number of small gaps bridged: {0}",
-                GapToNext = "Gap to next",
+                GapToNext = "Gap to next in seconds",
                 BridgeGapsSmallerThanXPart1 = "Bridge gaps smaller than",
                 BridgeGapsSmallerThanXPart2 = "milliseconds",
+                MinMsBetweenLines = "Min. milliseconds between  lines",
                 ProlongEndTime = "Previous text takes all gap time",
                 DivideEven = "Texts divides gap time",
             };

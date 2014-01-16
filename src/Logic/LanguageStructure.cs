@@ -292,6 +292,7 @@
             public string GapToNext { get; set; }
             public string BridgeGapsSmallerThanXPart1 { get; set; }
             public string BridgeGapsSmallerThanXPart2 { get; set; }
+            public string MinMsBetweenLines { get; set; }            
             public string ProlongEndTime { get; set; }
             public string DivideEven { get; set; }
         }

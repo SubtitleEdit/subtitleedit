@@ -31,6 +31,12 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMaxMs.Left = labelBridgePart1.Left + labelBridgePart1.Width + 4;
             labelMilliseconds.Text = Configuration.Settings.Language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2;
             labelMilliseconds.Left = numericUpDownMaxMs.Left + numericUpDownMaxMs.Width + 4;
+            labelMinMsBetweenLines.Text = Configuration.Settings.Language.DurationsBridgeGaps.MinMsBetweenLines;
+            numericUpDownMinMsBetweenLines.Left = labelMinMsBetweenLines.Left + labelMinMsBetweenLines.Width + 4;
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.DurationsBridgeGaps.MinMsBetweenLines))
+            {
+                numericUpDownMinMsBetweenLines.Visible = false; //TODO: Remove in SE 3.4
+            }
             radioButtonProlongEndTime.Text = Configuration.Settings.Language.DurationsBridgeGaps.ProlongEndTime;
             radioButtonDivideEven.Text = Configuration.Settings.Language.DurationsBridgeGaps.DivideEven;
 
@@ -43,6 +49,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownMaxMs.Value = 100;
             }
+            if (Configuration.Settings.General.MininumMillisecondsBetweenLines >= 1 && Configuration.Settings.General.MininumMillisecondsBetweenLines <= numericUpDownMinMsBetweenLines.Maximum)
+                numericUpDownMinMsBetweenLines.Value = Configuration.Settings.General.MininumMillisecondsBetweenLines;
+
             GeneratePreview();
         }
 
@@ -79,26 +88,27 @@ namespace Nikse.SubtitleEdit.Forms
             _fixedSubtitle = new Subtitle(_subtitle);
             var fixedIndexes = new List<int>();
 
+            int minMsBetweenLines = (int)numericUpDownMinMsBetweenLines.Value;
             for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
             {
-
                 Paragraph cur = _fixedSubtitle.Paragraphs[i];
                 Paragraph next = _fixedSubtitle.Paragraphs[i + 1];
                 string before = null;
-                if (Math.Abs(cur.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds) < (double)numericUpDownMaxMs.Value)
+                var difMs = Math.Abs(cur.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds);
+                if (difMs < (double)numericUpDownMaxMs.Value && difMs > minMsBetweenLines && numericUpDownMaxMs.Value > minMsBetweenLines)
                 {
-                    before = string.Format("{0:0.000}", (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds - 1) / 1000.0);
+                    before = string.Format("{0:0.000}", (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / 1000.0);
                     if (radioButtonDivideEven.Checked && next.StartTime.TotalMilliseconds > cur.EndTime.TotalMilliseconds)
                     {
                         double half = (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / 2.0;
                         next.StartTime.TotalMilliseconds -= half;
                     }
-                    cur.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
+                    cur.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - minMsBetweenLines;
                     fixedIndexes.Add(i);
                     fixedIndexes.Add(i+1);
                     count++;
                 }
-                var msToNext = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds -1;
+                var msToNext = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
                 if (msToNext < 2000)
                 {
                     if (!string.IsNullOrEmpty(before))
