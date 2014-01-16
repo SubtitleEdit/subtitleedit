@@ -5,7 +5,7 @@
     <Version>3.3.13</Version>
     <TranslatedBy>Vertaald door: Quetsbeek en minouhse</TranslatedBy>
     <CultureName>nl-NL</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile />
     <OK>&amp;Oké</OK>
     <Cancel>Afbreken</Cancel>
     <Apply>Voer uit</Apply>
@@ -152,6 +152,7 @@ Suggesties zijn van harte welkom
     <Converted>Geconverteerd</Converted>
     <ConvertedX>Geconverteerd ({0})</ConvertedX>
     <Settings>Instellingen</Settings>
+    <SplitLongLines>Splits lange regels</SplitLongLines>
     <AutoBalance>Balanceer regels automatisch</AutoBalance>
     <ScanFolder>Doorzoek de map</ScanFolder>
     <ScanningFolder>Doorzoek {0} en submappen naar ondertitel bestanden</ScanningFolder>
@@ -190,6 +191,9 @@ Suggesties zijn van harte welkom
     <Title>Pas de snelheid aan in procenten</Title>
     <Info>Verander de snelheid van de ondertiteling in procenten</Info>
   </ChangeSpeedInPercent>
+  <ChooseAudioTrack>
+    <Title>Kies audio spoor</Title>
+  </ChooseAudioTrack>
   <ChooseEncoding>
     <Title>Kies codering</Title>
     <CodePage>Code pagina</CodePage>
@@ -350,6 +354,9 @@ Suggesties zijn van harte welkom
     <FontColor>Tekenkleur</FontColor>
     <BorderColor>Randkleur</BorderColor>
     <BorderWidth>Randbreedte</BorderWidth>
+    <ShadowColor>Schaduw kleur</ShadowColor>
+    <ShadowWidth>Schaduw breedte</ShadowWidth>
+    <Transparency>Alpha</Transparency>
     <ImageFormat>Beeldformaat</ImageFormat>
     <SimpleRendering>Eenvoudige weergave</SimpleRendering>
     <Text3D>3D teksten</Text3D>
@@ -800,6 +807,7 @@ Suggesties zijn van harte welkom
         <AdvancedSubStationAlphaStyles>Geavanceerde Sub Station Alpha stijlen...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Getimede tekst - instellen stijl</TimedTextSetStyle>
         <TimedTextStyles>Getimede tekst stijlen...</TimedTextStyles>
+        <TimedTextSetLanguage>Getimede tekst- instellen taal</TimedTextSetLanguage>
         <SamiSetStyle>Sami - set klasse</SamiSetStyle>
         <Cut>Knip</Cut>
         <Copy>Kopieer</Copy>
@@ -1411,6 +1419,9 @@ Suggesties zijn van harte welkom
     <SpectrogramAppearance>Spectrogram uitvoering</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Een kleurverloop</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassiek</SpectrogramClassic>
+    <WaveformUseFFMPEG>Gebruik FFMPEG voor golfvorm extractie</WaveformUseFFMPEG>
+    <WaveformFFMPEGPath>Pad naar FFMPEG</WaveformFFMPEGPath>
+    <WaveformBrowseToFFMPEG>Ga naar FFMPEG</WaveformBrowseToFFMPEG>
     <SubStationAlphaStyle>Sub Station Alpha stijl</SubStationAlphaStyle>
     <ChooseFont>Kies lettertype</ChooseFont>
     <ChooseColor>Kies kleur</ChooseColor>
@@ -1483,6 +1494,8 @@ Suggesties zijn van harte welkom
     <WaveformSeekSilenceForward>Zoek stilte vooruit</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Zoek stilte terug</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Voeg hier tekst toe (voor nieuwe selectie)</WaveformAddTextHere>
+    <WaveformPlayNewSelection>Speel nieuwe selectie</WaveformPlayNewSelection>
+    <WaveformPlayFirstSelectedSubtitle>Speel eerste geselecteerde ondertitel</WaveformPlayFirstSelectedSubtitle>
     <GoBack100Milliseconds>100 ms terug</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms naar voren</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms terug</GoBack500Milliseconds>
@@ -1517,6 +1530,8 @@ Suggesties zijn van harte welkom
     <ShowBeamer>Start ondertiteling volledig scherm beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>verplaats laatste woord naar beneden naar volgende ondertitel</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>verplaats eerste woord naar boven van volgende ondertitel</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxAutoBreak>Breek tekst automatisch af</MainTextBoxAutoBreak>
+    <MainTextBoxUnbreak>Breek tekst niet automatisch af</MainTextBoxUnbreak>
   </Settings>
   <ShowEarlierLater>
     <Title>Toon geselecteerde regels eerder/later</Title>
@@ -1558,6 +1573,8 @@ Suggesties zijn van harte welkom
     <EditWordOnly>Alleen woord bewerken</EditWordOnly>
     <AddXToNamesEtc>Voeg '{0}' toe aan namen/etc lijst</AddXToNamesEtc>
     <AutoFixNames>Auto herstel namen waar alleen tekenstijl verschilt</AutoFixNames>
+    <CheckOneLetterWords>Vraag naar onbekende eenletterwoorden</CheckOneLetterWords>
+    <TreatINQuoteAsING>Behandel woord eindigend " in' " als " ing " (Alleen Engels)</TreatINQuoteAsING>
     <ImageText>Afbeelding tekst</ImageText>
     <SpellCheckCompleted>Spellingcontrole voltooid.</SpellCheckCompleted>
     <SpellCheckAborted>Spellingcontrole afgebroken</SpellCheckAborted>
