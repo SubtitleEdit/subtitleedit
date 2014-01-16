@@ -184,7 +184,44 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     return;
                 }
             }
-            return;
+
+            foreach (var culture in CultureInfo.GetCultures(CultureTypes.AllCultures))
+            {
+                if (culture.ThreeLetterISOLanguageName == threeLetterIsoLanguageName)
+                {
+
+                    string dictionaryFileName = null;
+                    foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
+                    {
+                        string name = Path.GetFileNameWithoutExtension(dic);
+                        if (!name.StartsWith("hyph"))
+                        {
+                            try
+                            {
+                                name = name.Replace("_", "-");
+                                if (name.Length > 5)
+                                    name = name.Substring(0, 5);
+                                var ci = new CultureInfo(name);
+                                if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName || string.Compare(ci.ThreeLetterWindowsLanguageName, threeLetterIsoLanguageName, true) == 0)
+                                {
+                                    dictionaryFileName = dic;
+                                    break;
+                                }
+                            }
+                            catch (Exception exception)
+                            {
+                                System.Diagnostics.Debug.WriteLine(exception.Message);
+                            }
+                        }
+                    }
+
+                    if (dictionaryFileName == null)
+                        return;
+
+                    LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, culture, dictionaryFileName, true);
+                    return;
+                }
+            }
         }
 
         private void LoadSpellingDictionariesViaDictionaryFileName(string threeLetterIsoLanguageName, CultureInfo culture, string dictionaryFileName, bool resetSkipList)
