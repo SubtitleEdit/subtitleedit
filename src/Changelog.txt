@@ -2,7 +2,7 @@
 
 3.3.13 (xth February 2013)
 * NEW:
-   * Compare window now has an option to 'ignore line breaks' - thx Krystian
+   * Compare window now has an option to "ignore line breaks" - thx Krystian
 * IMPROVED:
    * Updated Korean language file - thx domddol
    * Updated Chinese language file - thx Leon
@@ -12,8 +12,8 @@
   * Timed Text - List view context menu "Set language" had wrong text
   * Subtitle preview can now show both font and italic for same text - thx Drago
   * Fixed bug decoding dvb sub - thx aMvEL
-  * Fixed possible crash in ocr window (if no language is available) 
-  * Fixed transparent background in "Ocr window" regarding transport streams 
+  * Fixed possible crash in OCR window (if no language is available)
+  * Fixed transparent background in "OCR window" regarding transport streams
   * Waveform/spectrogram: Moving start/end with ALT down now always works - thx Leon
   * Waveform/spectrogram: Move border left/right now also always works even when it's 
     near next/prev border
