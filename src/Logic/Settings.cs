@@ -120,6 +120,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string ExportVobSubVideoResolution { get; set; }
         public string ExportBluRayFontName { get; set; }
         public int ExportBluRayFontSize { get; set; }
+        public string ExportFcpFontName { get; set; }
+        public int ExportFcpFontSize { get; set; }
         public int ExportLastFontSize { get; set; }
         public int ExportLastLineHeight { get; set; }
         public string ExportBluRayVideoResolution { get; set; }
@@ -1516,6 +1518,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportBluRayFontSize");
             if (subNode != null)
                 settings.Tools.ExportBluRayFontSize = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportFcpFontName");
+            if (subNode != null)
+                settings.Tools.ExportFcpFontName = subNode.InnerText;
+            subNode = node.SelectSingleNode("ExportFcpFontSize");
+            if (subNode != null)
+                settings.Tools.ExportFcpFontSize = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportLastFontSize");
             if (subNode != null)
                 settings.Tools.ExportLastFontSize = Convert.ToInt32(subNode.InnerText);
@@ -2525,6 +2533,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ExportVobSubVideoResolution", settings.Tools.ExportVobSubVideoResolution);
             textWriter.WriteElementString("ExportBluRayFontName", settings.Tools.ExportBluRayFontName);
             textWriter.WriteElementString("ExportBluRayFontSize", settings.Tools.ExportBluRayFontSize.ToString());
+            textWriter.WriteElementString("ExportFcpFontName", settings.Tools.ExportFcpFontName);
+            textWriter.WriteElementString("ExportFcpFontSize", settings.Tools.ExportFcpFontSize.ToString());
             textWriter.WriteElementString("ExportLastFontSize", settings.Tools.ExportLastFontSize.ToString());
             textWriter.WriteElementString("ExportLastLineHeight", settings.Tools.ExportLastLineHeight.ToString());
             textWriter.WriteElementString("ExportBluRayVideoResolution", settings.Tools.ExportBluRayVideoResolution);

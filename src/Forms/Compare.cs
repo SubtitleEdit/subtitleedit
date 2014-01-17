@@ -208,14 +208,15 @@ namespace Nikse.SubtitleEdit.Forms
             index = 0;
             p1 = sub1.GetParagraphOrDefault(index);
             p2 = sub2.GetParagraphOrDefault(index);
-
+            int totalWords = 0;
+            int wordsChanged = 0;
             if (checkBoxOnlyListDifferencesInText.Checked)
             {
                 while (index < sub1.Paragraphs.Count || index < sub2.Paragraphs.Count)
                 {
                     if (p1 != null && p2 != null)
                     {
-
+                        Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked);
                         if (FixWhitespace(p1.ToString()) == FixWhitespace(p2.ToString()) && p1.Number == p2.Number)
                         { // no differences
                         }
@@ -237,6 +238,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
+                        if (p1 != null && p1.Text != null)
+                            totalWords += p1.Text.Split().Length;
+                        else if (p2 != null && p2.Text != null)
+                            totalWords += p2.Text.Split().Length;
                         _differences.Add(index);
                     }
                     index++;
@@ -250,6 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (p1 != null && p2 != null)
                     {
+                        Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked);
                         if (FixWhitespace(p1.ToString()) != FixWhitespace(p2.ToString()))
                             _differences.Add(index);
 
@@ -310,6 +316,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
+                        if (p1 != null && p1.Text != null)
+                            totalWords += p1.Text.Split().Length;
+                        else if (p2 != null && p2.Text != null)
+                            totalWords += p2.Text.Split().Length;
                         _differences.Add(index);
                     }
                     index++;
@@ -326,7 +336,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                labelStatus.Text = string.Format(Configuration.Settings.Language.CompareSubtitles.XNumberOfDifference, _differences.Count);
+                if (wordsChanged != totalWords && wordsChanged > 0 && !string.IsNullOrEmpty(Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentChanged))
+                {
+                    labelStatus.Text = string.Format(Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentChanged, _differences.Count, wordsChanged * 100 / totalWords);
+                }
+                else
+                {
+                    labelStatus.Text = string.Format(Configuration.Settings.Language.CompareSubtitles.XNumberOfDifference, _differences.Count);
+                }
                 labelStatus.Font = new Font(labelStatus.Font.FontFamily, labelStatus.Font.Size);
             }
 
