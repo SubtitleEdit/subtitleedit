@@ -2181,6 +2181,12 @@ namespace Nikse.SubtitleEdit.Forms
             OpenSubtitle(fileName, encoding, null, null);
         }
 
+        private void ResetHistory()
+        {
+            _undoIndex = -1;
+            _subtitle.HistoryItems.Clear();
+        }
+
         private void OpenSubtitle(string fileName, Encoding encoding, string videoFileName, string originalFileName)
         {
             if (File.Exists(fileName))
@@ -2840,6 +2846,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _sourceViewChange = false;
                     _changeSubtitleToString = SerializeSubtitle(_subtitle);
                     _converted = false;
+                    ResetHistory();
 
                     SetUndockedWindowsTitle();
 
@@ -2947,9 +2954,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
-
-
-
 
                         ShowUnknownSubtitle();
                         return;
@@ -5410,8 +5414,8 @@ namespace Nikse.SubtitleEdit.Forms
                     string oldFileName = _fileName;
                     DateTime oldFileDateTime = _fileDateTime;
 
-                    _fileName = _subtitle.UndoHistory(_undoIndex, out subtitleFormatFriendlyName, out _fileDateTime,
-                                                      out _subtitleAlternate, out _subtitleAlternateFileName);
+                    //DO NOT CHANGE FILE NAME?? _fileName = _subtitle.UndoHistory(_undoIndex, out subtitleFormatFriendlyName, out _fileDateTime, out _subtitleAlternate, out _subtitleAlternateFileName);
+                    _subtitle.UndoHistory(_undoIndex, out subtitleFormatFriendlyName, out _fileDateTime, out _subtitleAlternate, out _subtitleAlternateFileName);
                     if (!undo)
                     {
                         if (_subtitle.HistoryItems[_undoIndex].RedoParagraphs != null)
