@@ -364,6 +364,7 @@ namespace Nikse.SubtitleEdit.Logic
                 NextDifference = "&Next difference",
                 SubtitlesNotAlike = "Subtitles have no similarities",
                 XNumberOfDifference = "Number of differences: {0}",
+                XNumberOfDifferenceAndPercentChanged = "Number of differences: {0}  ({1}% of text changed)",
                 ShowOnlyDifferences = "Show only differences",
                 IgnoreLineBreaks = "Ignore line breaks",
                 OnlyLookForDifferencesInText = "Only look for differences in text",

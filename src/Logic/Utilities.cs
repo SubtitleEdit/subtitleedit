@@ -3185,5 +3185,80 @@ namespace Nikse.SubtitleEdit.Logic
             return defaultColor;
         }
 
+        public static void GetTotalAndChangedWords(string s1, string s2, ref int total, ref int change, bool ignoreLineBreaks)
+        {
+            if (ignoreLineBreaks)
+            {
+                s1 = s1.Replace(Environment.NewLine, " ").Replace("  ", " ").Replace("  ", " ").Replace("  ", " ");
+                s2 = s2.Replace(Environment.NewLine, " ").Replace("  ", " ").Replace("  ", " ").Replace("  ", " ");
+            }
+            else
+            {
+                s1 = s1.Replace(Environment.NewLine, "\n").Replace("  ", " ").Replace("  ", " ").Replace("  ", " ");
+                s2 = s2.Replace(Environment.NewLine, "\n").Replace("  ", " ").Replace("  ", " ").Replace("  ", " ");
+            }
+
+            var parts1 = s1.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var parts2 = s2.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            int t = Math.Max(parts1.Length, parts2.Length);
+            total += t;
+            int c = GetChangesAdvanced(parts1, parts2);
+            change += c;
+        }
+
+        private static int GetChangesAdvanced(string[] parts1, string[] parts2)
+        {
+            int i1 = 0;
+            int i2 = 0;
+            int i = 0;
+            int c = 0;
+            while (i < Math.Max(parts2.Length, parts2.Length) && i1 < parts1.Length && i2 < parts2.Length)
+            {
+                if (parts1[i1] == parts2[i2])
+                {
+                    i1++;
+                    i2++;
+                }
+                else
+                {
+                    int i1Next = FindNext(parts2[i2], parts1, i1);
+                    int i2Next = FindNext(parts1[i1], parts2, i2);
+                    if (i1Next < i2Next)
+                    {
+                        c += i1Next - i1;
+                        i1 = i1Next + 1;
+                        i2++;
+                    }
+                    else if (i2Next < i1Next)
+                    {
+                        c += i2Next - i2;
+                        i1++;
+                        i2 = i2Next + 1;
+                    }
+                    else
+                    {
+                        i1++;
+                        i2++;
+                        c++;
+                    }
+                }
+                i++;
+            }
+            if (i1 == parts1.Length && i2 == parts2.Length)
+                return c;
+
+            return c + Math.Abs(parts1.Length - parts2.Length);
+        }
+
+        private static int FindNext(string s, string[] parts, int startIndex)
+        {
+            for (int i = startIndex; i < parts.Length; i++)
+            {
+                if (s == parts[i])
+                    return i;
+            }
+            return int.MaxValue;
+        }
+
     }
 }
