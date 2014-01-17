@@ -532,15 +532,18 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (_exportType == "FCP")
                 {
+                    string fileNameNoPath = Path.GetFileName(saveFileDialog1.FileName);
+                    string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
+
                     int duration = 0;
                     if (_subtitle.Paragraphs.Count > 0)
                         duration = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * 25.0);
                     string s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
 "<!DOCTYPE xmeml[]>" + Environment.NewLine +
 "<xmeml version=\"4\">" + Environment.NewLine +
-"  <sequence id=\"Sequence 1\">" + Environment.NewLine +
-@"    <updatebehavior>add</updatebehavior>
-    <name>Sequence 1</name>
+"  <sequence id=\"" + fileNameNoExt  + "\">" + Environment.NewLine +
+"    <updatebehavior>add</updatebehavior>" + Environment.NewLine +
+"    <name>" + fileNameNoExt  + @"</name>
     <duration>" + duration.ToString(CultureInfo.InvariantCulture) + @"</duration>
     <rate>
       <ntsc>FALSE</ntsc>
@@ -1925,10 +1928,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 _subtitleFontName = Configuration.Settings.Tools.ExportVobSubFontName;
             else if ((_exportType == "BLURAYSUP" || _exportType == "DOST") && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayFontName))
                 _subtitleFontName = Configuration.Settings.Tools.ExportBluRayFontName;
+            else if (_exportType == "FCP" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportFcpFontName))
+                _subtitleFontName = Configuration.Settings.Tools.ExportFcpFontName;
             if (_exportType == "VOBSUB" && Configuration.Settings.Tools.ExportVobSubFontSize > 0)
                 _subtitleFontSize = Configuration.Settings.Tools.ExportVobSubFontSize;
             else if ((_exportType == "BLURAYSUP" || _exportType == "DOST") && Configuration.Settings.Tools.ExportBluRayFontSize > 0)
                 _subtitleFontSize = Configuration.Settings.Tools.ExportBluRayFontSize;
+            else if (_exportType == "FCP" && Configuration.Settings.Tools.ExportFcpFontSize > 0)
+                _subtitleFontSize = Configuration.Settings.Tools.ExportFcpFontSize;
 
             if (_exportType == "VOBSUB")
             {
@@ -1942,7 +1949,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 checkBoxSimpleRender.Checked = true;
             }
-            else if (_exportType == "BLURAYSUP" || _exportType == "DOST")
+            else if (_exportType == "BLURAYSUP" || _exportType == "DOST" || _exportType == "FCP")
             {
                 comboBoxSubtitleFontSize.SelectedIndex = 16;
                 int i = 0;
@@ -2041,11 +2048,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (IfoParser.ArrayOfLanguageCode[i] == languageCode)
                         comboBoxLanguage.SelectedIndex = i;
                 }
-                comboBoxLanguage.SelectedIndex = 25;
+                if (comboBoxLanguage.Items.Count > 25)
+                    comboBoxLanguage.SelectedIndex = 25;
             }
 
-            comboBoxImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL";
-            labelImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP";
+            bool showImageFormat = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL"; // || exportType == "FCP";
+            comboBoxImageFormat.Visible = showImageFormat;
+            labelImageFormat.Visible = showImageFormat;
             labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
             comboBoxFramerate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
             if (exportType == "BDNXML")
@@ -2100,10 +2109,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFramerate.SelectedIndex = 1;
                 comboBoxFramerate.DropDownStyle = ComboBoxStyle.DropDownList;
             }
-            if (Configuration.Settings.General.CurrentFrameRate == 24)
-                comboBoxFramerate.SelectedIndex = 1;
-            else if (Configuration.Settings.General.CurrentFrameRate == 25)
-                comboBoxFramerate.SelectedIndex = 2;
+            if (comboBoxFramerate.Items.Count >= 2)
+            {
+                if (Configuration.Settings.General.CurrentFrameRate == 24)
+                    comboBoxFramerate.SelectedIndex = 1;
+                else if (Configuration.Settings.General.CurrentFrameRate == 25)
+                    comboBoxFramerate.SelectedIndex = 2;
+            }
 
             for (int i=0; i<1000; i++)
                 comboBoxBottomMargin.Items.Add(i);
@@ -2167,7 +2179,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 for (int i = 0; i < comboBoxLanguage.Items.Count; i++)
                 {
                     string l = comboBoxLanguage.Items[i].ToString();
-                    if (l == languageString)
+                    if (l == languageString && i < comboBoxLanguage.Items.Count)
                         comboBoxLanguage.SelectedIndex = i;
                 }
             }
@@ -2339,7 +2351,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             labelShadowWidth.Visible = shadowVisible;
             buttonShadowColor.Visible = shadowVisible;
             comboBoxShadowWidth.Visible = shadowVisible;
-            if (comboBoxShadowWidth.Visible)
+            if (comboBoxShadowWidth.Visible && Configuration.Settings.Tools.ExportBluRayShadow < comboBoxShadowWidth.Items.Count)
                 comboBoxShadowWidth.SelectedIndex = Configuration.Settings.Tools.ExportBluRayShadow;
             panelShadowColor.Visible = shadowVisible;
             labelShadowTransparency.Visible = shadowVisible;
@@ -2411,6 +2423,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportBluRayFontName = _subtitleFontName;
                 Configuration.Settings.Tools.ExportBluRayFontSize = (int)_subtitleFontSize;
                 Configuration.Settings.Tools.ExportBluRayVideoResolution = res;
+            }
+            else if (_exportType == "FCP")
+            {
+                Configuration.Settings.Tools.ExportFcpFontName = _subtitleFontName;
+                Configuration.Settings.Tools.ExportFcpFontSize = (int)_subtitleFontSize;
             }
             Configuration.Settings.Tools.ExportFontColor = _subtitleColor;
             Configuration.Settings.Tools.ExportBorderColor = _borderColor;
