@@ -1469,6 +1469,8 @@ namespace Nikse.SubtitleEdit.Logic
                 EndsWith = "Ends with",
                 NoContains = "Not contains",
                 RegEx = "Regular expression",
+                UnequalLines = "Unequal lines",
+                EqualLines = "Equal lines",
             };
 
             MultipleReplace = new LanguageStructure.MultipleReplace
