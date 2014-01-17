@@ -918,20 +918,27 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                         fileName = Path.Combine(Path.GetDirectoryName(param.SavDialogFileName), fileName);
 
-                        foreach (var encoder in ImageCodecInfo.GetImageEncoders())
+                        if (comboBoxImageFormat.Text == "8-bit png")
                         {
-                            if (encoder.FormatID == ImageFormat.Png.Guid)
+                            foreach (var encoder in ImageCodecInfo.GetImageEncoders())
                             {
-                                var parameters = new EncoderParameters();
-                                parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
+                                if (encoder.FormatID == ImageFormat.Png.Guid)
+                                {
+                                    var parameters = new EncoderParameters();
+                                    parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
 
-                                var nbmp = new NikseBitmap(param.Bitmap);
-                                var b = nbmp.ConverTo8BitsPerPixel();
-                                b.Save(fileName, encoder, parameters);
-                                b.Dispose();
+                                    var nbmp = new NikseBitmap(param.Bitmap);
+                                    var b = nbmp.ConverTo8BitsPerPixel();
+                                    b.Save(fileName, encoder, parameters);
+                                    b.Dispose();
 
-                                break;
+                                    break;
+                                }
                             }
+                        }
+                        else
+                        { 
+                            param.Bitmap.Save(fileName, ImageFormat);
                         }
                         imagesSavedCount++;
 
@@ -1937,6 +1944,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             else if (_exportType == "FCP" && Configuration.Settings.Tools.ExportFcpFontSize > 0)
                 _subtitleFontSize = Configuration.Settings.Tools.ExportFcpFontSize;
 
+            if (_exportType == "FCP")
+            {
+                comboBoxImageFormat.Items.Add("8-bit png");
+            }
+
             if (_exportType == "VOBSUB")
             {
                 comboBoxSubtitleFontSize.SelectedIndex = 7;
@@ -2052,7 +2064,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     comboBoxLanguage.SelectedIndex = 25;
             }
 
-            bool showImageFormat = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL"; // || exportType == "FCP";
+            bool showImageFormat = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP";
             comboBoxImageFormat.Visible = showImageFormat;
             labelImageFormat.Visible = showImageFormat;
             labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
