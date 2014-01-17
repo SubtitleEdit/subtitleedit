@@ -46,6 +46,10 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.EndsWith);
                 comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.NoContains);
                 comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.RegEx);
+                if (!string.IsNullOrEmpty(Configuration.Settings.Language.ModifySelection.UnequalLines))
+                    comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.UnequalLines);
+                if (!string.IsNullOrEmpty(Configuration.Settings.Language.ModifySelection.EqualLines))
+                    comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.EqualLines);
             }
 
             checkBoxCaseSensitive.Checked = Configuration.Settings.Tools.ModifySelectionCaseSensitive;
@@ -132,14 +136,15 @@ namespace Nikse.SubtitleEdit.Forms
             string text = textBox1.Text;
             if (comboBoxRule.SelectedIndex != 4)
                 text = text.Replace("\\r\\n", Environment.NewLine);
-            if (text.Length > 0)
+
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
-                for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                if ((radioButtonSubtractFromSelection.Checked || radioButtonIntersect.Checked) && _subtitleListView.Items[i].Selected ||
+                    !radioButtonSubtractFromSelection.Checked && !radioButtonIntersect.Checked)
                 {
-                    if ((radioButtonSubtractFromSelection.Checked || radioButtonIntersect.Checked) && _subtitleListView.Items[i].Selected ||
-                        !radioButtonSubtractFromSelection.Checked && !radioButtonIntersect.Checked)
+                    Paragraph p = _subtitle.Paragraphs[i];
+                    if (text.Length > 0)
                     {
-                        Paragraph p = _subtitle.Paragraphs[i];
                         if (comboBoxRule.SelectedIndex == 0) // Contains
                         {
                             if (checkBoxCaseSensitive.Checked && p.Text.Contains(text) || !checkBoxCaseSensitive.Checked && p.Text.ToLower().Contains(text.ToLower()))
@@ -179,8 +184,19 @@ namespace Nikse.SubtitleEdit.Forms
                                 AddToListView(p, i);
                         }
                     }
+                    if (comboBoxRule.SelectedIndex == 5) // select unequal lines
+                    {
+                        if (i % 2 == 0)
+                            AddToListView(p, i);
+                    }
+                    else if (comboBoxRule.SelectedIndex == 6) // select equal lines
+                    {
+                        if (i % 2 == 1)
+                            AddToListView(p, i);
+                    }
                 }
             }
+
             listViewFixes.EndUpdate();
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.ModifySelection.MatchingLinesX))
                 groupBoxPreview.Text = string.Format(Configuration.Settings.Language.ModifySelection.MatchingLinesX, listViewFixes.Items.Count);

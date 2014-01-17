@@ -1366,6 +1366,8 @@
             public string EndsWith { get; set; }
             public string NoContains { get; set; }
             public string RegEx { get; set; }
+            public string UnequalLines { get; set; }
+            public string EqualLines { get; set; }
         }
 
         public class MultipleReplace
