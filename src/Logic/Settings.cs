@@ -124,6 +124,8 @@ namespace Nikse.SubtitleEdit.Logic
         public int ExportFcpFontSize { get; set; }
         public int ExportLastFontSize { get; set; }
         public int ExportLastLineHeight { get; set; }
+        public int ExportLastBorderWidth { get; set; }
+        public bool ExportLastFontBold { get; set; }
         public string ExportBluRayVideoResolution { get; set; }
         public Color ExportFontColor { get; set; }
         public Color ExportBorderColor { get; set; }
@@ -179,6 +181,7 @@ namespace Nikse.SubtitleEdit.Logic
             ExportBottomMargin = 15;
             ExportBluRayBottomMargin = 20;
             ExportBluRayShadow = 1;
+            ExportLastBorderWidth = 2;
             BridgeGapMilliseconds = 100;
             ExportCustomTemplates = "SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]ÆæMicroDvdÆÆ{{start}}{{end}}{text}\r\nÆffÆ||Æ";
         }
@@ -1530,6 +1533,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportLastLineHeight");
             if (subNode != null)
                 settings.Tools.ExportLastLineHeight = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportLastBorderWidth");
+            if (subNode != null)
+                settings.Tools.ExportLastBorderWidth = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportLastFontBold");
+            if (subNode != null)
+                settings.Tools.ExportLastFontBold = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportBluRayVideoResolution");
             if (subNode != null)
                 settings.Tools.ExportBluRayVideoResolution = subNode.InnerText;
@@ -2537,6 +2546,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ExportFcpFontSize", settings.Tools.ExportFcpFontSize.ToString());
             textWriter.WriteElementString("ExportLastFontSize", settings.Tools.ExportLastFontSize.ToString());
             textWriter.WriteElementString("ExportLastLineHeight", settings.Tools.ExportLastLineHeight.ToString());
+            textWriter.WriteElementString("ExportLastBorderWidth", settings.Tools.ExportLastBorderWidth.ToString());
+            textWriter.WriteElementString("ExportLastFontBold", settings.Tools.ExportLastFontBold.ToString());                        
             textWriter.WriteElementString("ExportBluRayVideoResolution", settings.Tools.ExportBluRayVideoResolution);
             textWriter.WriteElementString("ExportFontColor", settings.Tools.ExportFontColor.ToArgb().ToString());
             textWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString());

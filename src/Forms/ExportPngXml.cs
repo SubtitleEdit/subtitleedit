@@ -2162,6 +2162,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 numericUpDownLineSpacing.Value = Configuration.Settings.Tools.ExportLastLineHeight;
             }
 
+            if (Configuration.Settings.Tools.ExportLastBorderWidth >= 0 && Configuration.Settings.Tools.ExportLastBorderWidth < comboBoxBorderWidth.Items.Count)
+            {
+                try
+                {
+                    comboBoxBorderWidth.SelectedIndex = Configuration.Settings.Tools.ExportLastBorderWidth;
+                }
+                catch
+                { 
+                }
+            }
+            checkBoxBold.Checked = Configuration.Settings.Tools.ExportLastFontBold;
+
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
@@ -2441,6 +2453,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             Configuration.Settings.Tools.ExportLastFontSize = (int)_subtitleFontSize;
             Configuration.Settings.Tools.ExportLastLineHeight = (int)numericUpDownLineSpacing.Value;
+            Configuration.Settings.Tools.ExportLastBorderWidth = (int)comboBoxBorderWidth.SelectedIndex;
+            Configuration.Settings.Tools.ExportLastFontBold = checkBoxBold.Checked;
         }
 
         private void numericUpDownDepth3D_ValueChanged(object sender, EventArgs e)
