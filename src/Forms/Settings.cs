@@ -296,6 +296,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxWaveFormShowGrid.Text = language.WaveFormShowGridLines;
             checkBoxReverseMouseWheelScrollDirection.Text = language.ReverseMouseWheelScrollDirection;
             checkBoxAllowOverlap.Text = language.WaveFormAllowOverlap;
+            checkBoxWaveformHoverFocus.Text = language.WaveFormFocusMouseOver;
             labelWaveformBorderHitMs1.Text = language.WaveformBorderHitMs1;
             labelWaveformBorderHitMs2.Text = language.WaveformBorderHitMs2;
             numericUpDownWaveformBorderHitMs.Left = labelWaveformBorderHitMs1.Left + labelWaveformBorderHitMs1.Width;
@@ -534,6 +535,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxSpectrogramAppearance.SelectedIndex = 1;
             checkBoxReverseMouseWheelScrollDirection.Checked = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
             checkBoxAllowOverlap.Checked = Configuration.Settings.VideoControls.WaveFormAllowOverlap;
+            checkBoxWaveformHoverFocus.Checked = Configuration.Settings.VideoControls.WaveFormFocusOnMouseOver;
             if (Configuration.Settings.VideoControls.WaveformBorderHitMs >= numericUpDownWaveformBorderHitMs.Minimum &&
                 Configuration.Settings.VideoControls.WaveformBorderHitMs <= numericUpDownWaveformBorderHitMs.Maximum)
                 numericUpDownWaveformBorderHitMs.Value = Configuration.Settings.VideoControls.WaveformBorderHitMs;
@@ -1088,6 +1090,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.VideoControls.SpectrogramAppearance = "Classic";
             Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward = checkBoxReverseMouseWheelScrollDirection.Checked;
             Configuration.Settings.VideoControls.WaveFormAllowOverlap = checkBoxAllowOverlap.Checked;
+            Configuration.Settings.VideoControls.WaveFormFocusOnMouseOver = checkBoxWaveformHoverFocus.Checked;            
             Configuration.Settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(numericUpDownWaveformBorderHitMs.Value);
             Configuration.Settings.General.UseFFMPEGForWaveExtraction = checkBoxUseFFMPEG.Checked;
             Configuration.Settings.General.FFMPEGLocation = textBoxFFMPEGPath.Text;

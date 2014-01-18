@@ -577,6 +577,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string LastActiveTab { get; set; }
         public bool WaveFormDrawGrid { get; set; }
         public bool WaveFormAllowOverlap { get; set; }
+        public bool WaveFormFocusOnMouseOver { get; set; }        
         public int WaveformBorderHitMs { get; set; }
         public Color WaveFormGridColor { get; set; }
         public Color WaveFormColor { get; set; }
@@ -1818,6 +1819,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("WaveFormAllowOverlap");
             if (subNode != null)
                 settings.VideoControls.WaveFormAllowOverlap = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("WaveFormFocusOnMouseOver");
+            if (subNode != null)
+                settings.VideoControls.WaveFormFocusOnMouseOver = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("WaveformBorderHitMs");
             if (subNode != null)
                 settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(subNode.InnerText);
@@ -2650,6 +2654,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("LastActiveTab", settings.VideoControls.LastActiveTab);
             textWriter.WriteElementString("WaveFormDrawGrid", settings.VideoControls.WaveFormDrawGrid.ToString());
             textWriter.WriteElementString("WaveFormAllowOverlap", settings.VideoControls.WaveFormAllowOverlap.ToString());
+            textWriter.WriteElementString("WaveFormFocusOnMouseOver", settings.VideoControls.WaveFormFocusOnMouseOver.ToString());            
             textWriter.WriteElementString("WaveformBorderHitMs", settings.VideoControls.WaveformBorderHitMs.ToString());
             textWriter.WriteElementString("WaveFormGridColor", settings.VideoControls.WaveFormGridColor.ToArgb().ToString());
             textWriter.WriteElementString("WaveFormColor", settings.VideoControls.WaveFormColor.ToArgb().ToString());

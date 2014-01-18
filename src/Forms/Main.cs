@@ -18584,5 +18584,11 @@ namespace Nikse.SubtitleEdit.Forms
             _formPositionsAndSizes.SavePositionAndSize(form);
         }
 
+        private void audioVisualizer_MouseEnter(object sender, EventArgs e)
+        {
+            if (Configuration.Settings.VideoControls.WaveFormFocusOnMouseOver && !audioVisualizer.Focused && audioVisualizer.CanFocus)
+                audioVisualizer.Focus();
+        }
+
     }
 }

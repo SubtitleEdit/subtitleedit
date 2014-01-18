@@ -4,6 +4,7 @@
 * NEW:
    * Compare window now has an option to "ignore line breaks" - thx Krystian
    * Bridge gap in durations now have minimum display time - thx Krystian
+   * Option for "Focus on mouse-over" for waveform/spectrogram - thx lansing
 * IMPROVED:
    * Updated Korean language file - thx domddol
    * Updated Chinese language file - thx Leon
