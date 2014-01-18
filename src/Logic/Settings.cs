@@ -122,6 +122,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int ExportBluRayFontSize { get; set; }
         public string ExportFcpFontName { get; set; }
         public int ExportFcpFontSize { get; set; }
+        public string ExportFcpImageType { get; set; }
         public int ExportLastFontSize { get; set; }
         public int ExportLastLineHeight { get; set; }
         public int ExportLastBorderWidth { get; set; }
@@ -181,6 +182,7 @@ namespace Nikse.SubtitleEdit.Logic
             ExportBottomMargin = 15;
             ExportBluRayBottomMargin = 20;
             ExportBluRayShadow = 1;
+            ExportFcpImageType = "Bmp";
             ExportLastBorderWidth = 2;
             BridgeGapMilliseconds = 100;
             ExportCustomTemplates = "SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]ÆæMicroDvdÆÆ{{start}}{{end}}{text}\r\nÆffÆ||Æ";
@@ -1528,6 +1530,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportFcpFontSize");
             if (subNode != null)
                 settings.Tools.ExportFcpFontSize = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportFcpImageType");
+            if (subNode != null)
+                settings.Tools.ExportFcpImageType = subNode.InnerText;            
             subNode = node.SelectSingleNode("ExportLastFontSize");
             if (subNode != null)
                 settings.Tools.ExportLastFontSize = Convert.ToInt32(subNode.InnerText);
@@ -2548,6 +2553,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ExportBluRayFontSize", settings.Tools.ExportBluRayFontSize.ToString());
             textWriter.WriteElementString("ExportFcpFontName", settings.Tools.ExportFcpFontName);
             textWriter.WriteElementString("ExportFcpFontSize", settings.Tools.ExportFcpFontSize.ToString());
+            textWriter.WriteElementString("ExportFcpImageType", settings.Tools.ExportFcpImageType);            
             textWriter.WriteElementString("ExportLastFontSize", settings.Tools.ExportLastFontSize.ToString());
             textWriter.WriteElementString("ExportLastLineHeight", settings.Tools.ExportLastLineHeight.ToString());
             textWriter.WriteElementString("ExportLastBorderWidth", settings.Tools.ExportLastBorderWidth.ToString());
