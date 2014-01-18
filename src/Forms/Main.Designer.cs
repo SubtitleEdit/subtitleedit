@@ -94,6 +94,7 @@
             this.matroskaImportStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemManualAnsi = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportText = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportImages = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportTimeCodes = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemExport = new System.Windows.Forms.ToolStripMenuItem();
@@ -443,7 +444,6 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemImportImages = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1090,6 +1090,13 @@
             this.toolStripMenuItemImportText.Size = new System.Drawing.Size(337, 22);
             this.toolStripMenuItemImportText.Text = "Import text...";
             this.toolStripMenuItemImportText.Click += new System.EventHandler(this.ToolStripMenuItemImportTextClick);
+            // 
+            // toolStripMenuItemImportImages
+            // 
+            this.toolStripMenuItemImportImages.Name = "toolStripMenuItemImportImages";
+            this.toolStripMenuItemImportImages.Size = new System.Drawing.Size(337, 22);
+            this.toolStripMenuItemImportImages.Text = "Import images...";
+            this.toolStripMenuItemImportImages.Click += new System.EventHandler(this.toolStripMenuItemImportImages_Click);
             // 
             // toolStripMenuItemImportTimeCodes
             // 
@@ -2711,6 +2718,7 @@
             this.audioVisualizer.Click += new System.EventHandler(this.AudioWaveForm_Click);
             this.audioVisualizer.DragDrop += new System.Windows.Forms.DragEventHandler(this.AudioWaveFormDragDrop);
             this.audioVisualizer.DragEnter += new System.Windows.Forms.DragEventHandler(this.AudioWaveFormDragEnter);
+            this.audioVisualizer.MouseEnter += new System.EventHandler(this.audioVisualizer_MouseEnter);
             // 
             // tabControlButtons
             // 
@@ -4347,13 +4355,6 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
-            // 
-            // toolStripMenuItemImportImages
-            // 
-            this.toolStripMenuItemImportImages.Name = "toolStripMenuItemImportImages";
-            this.toolStripMenuItemImportImages.Size = new System.Drawing.Size(337, 22);
-            this.toolStripMenuItemImportImages.Text = "Import images...";
-            this.toolStripMenuItemImportImages.Click += new System.EventHandler(this.toolStripMenuItemImportImages_Click);
             // 
             // Main
             // 

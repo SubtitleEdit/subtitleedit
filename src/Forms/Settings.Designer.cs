@@ -266,6 +266,7 @@
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFMPEG = new System.Windows.Forms.OpenFileDialog();
+            this.checkBoxWaveformHoverFocus = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1843,6 +1844,7 @@
             // 
             // groupBoxWaveFormAppearence
             // 
+            this.groupBoxWaveFormAppearence.Controls.Add(this.checkBoxWaveformHoverFocus);
             this.groupBoxWaveFormAppearence.Controls.Add(this.labelWaveformBorderHitMs2);
             this.groupBoxWaveFormAppearence.Controls.Add(this.numericUpDownWaveformBorderHitMs);
             this.groupBoxWaveFormAppearence.Controls.Add(this.labelWaveformBorderHitMs1);
@@ -1869,7 +1871,7 @@
             // labelWaveformBorderHitMs2
             // 
             this.labelWaveformBorderHitMs2.AutoSize = true;
-            this.labelWaveformBorderHitMs2.Location = new System.Drawing.Point(454, 93);
+            this.labelWaveformBorderHitMs2.Location = new System.Drawing.Point(454, 115);
             this.labelWaveformBorderHitMs2.Name = "labelWaveformBorderHitMs2";
             this.labelWaveformBorderHitMs2.Size = new System.Drawing.Size(62, 13);
             this.labelWaveformBorderHitMs2.TabIndex = 14;
@@ -1877,7 +1879,7 @@
             // 
             // numericUpDownWaveformBorderHitMs
             // 
-            this.numericUpDownWaveformBorderHitMs.Location = new System.Drawing.Point(392, 91);
+            this.numericUpDownWaveformBorderHitMs.Location = new System.Drawing.Point(392, 113);
             this.numericUpDownWaveformBorderHitMs.Minimum = new decimal(new int[] {
             10,
             0,
@@ -1895,7 +1897,7 @@
             // labelWaveformBorderHitMs1
             // 
             this.labelWaveformBorderHitMs1.AutoSize = true;
-            this.labelWaveformBorderHitMs1.Location = new System.Drawing.Point(259, 93);
+            this.labelWaveformBorderHitMs1.Location = new System.Drawing.Point(259, 115);
             this.labelWaveformBorderHitMs1.Name = "labelWaveformBorderHitMs1";
             this.labelWaveformBorderHitMs1.Size = new System.Drawing.Size(127, 13);
             this.labelWaveformBorderHitMs1.TabIndex = 13;
@@ -3086,6 +3088,16 @@
             // 
             this.openFileDialogFFMPEG.FileName = "openFileDialog1";
             // 
+            // checkBoxWaveformHoverFocus
+            // 
+            this.checkBoxWaveformHoverFocus.AutoSize = true;
+            this.checkBoxWaveformHoverFocus.Location = new System.Drawing.Point(262, 78);
+            this.checkBoxWaveformHoverFocus.Name = "checkBoxWaveformHoverFocus";
+            this.checkBoxWaveformHoverFocus.Size = new System.Drawing.Size(143, 17);
+            this.checkBoxWaveformHoverFocus.TabIndex = 15;
+            this.checkBoxWaveformHoverFocus.Text = "Set focus at mouse over";
+            this.checkBoxWaveformHoverFocus.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3427,5 +3439,6 @@
         private System.Windows.Forms.Label labelFFMPEGPath;
         private System.Windows.Forms.CheckBox checkBoxUseFFMPEG;
         private System.Windows.Forms.OpenFileDialog openFileDialogFFMPEG;
+        private System.Windows.Forms.CheckBox checkBoxWaveformHoverFocus;
     }
 }
