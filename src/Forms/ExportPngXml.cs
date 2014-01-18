@@ -1947,6 +1947,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (_exportType == "FCP")
             {
                 comboBoxImageFormat.Items.Add("8-bit png");
+                int i = 0;
+                foreach (string item in comboBoxImageFormat.Items)
+                {
+                    if (item.ToString() == Configuration.Settings.Tools.ExportFcpImageType)
+                        comboBoxImageFormat.SelectedIndex = i;
+                    i++;
+                }                
             }
 
             if (_exportType == "VOBSUB")
@@ -2452,6 +2459,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 Configuration.Settings.Tools.ExportFcpFontName = _subtitleFontName;
                 Configuration.Settings.Tools.ExportFcpFontSize = (int)_subtitleFontSize;
+                if (comboBoxImageFormat.SelectedItem != null)
+                    Configuration.Settings.Tools.ExportFcpImageType = comboBoxImageFormat.SelectedItem.ToString();
+                
             }
             Configuration.Settings.Tools.ExportFontColor = _subtitleColor;
             Configuration.Settings.Tools.ExportBorderColor = _borderColor;
