@@ -223,7 +223,9 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Næste ændring</NextDifference>
     <SubtitlesNotAlike>Undertekster har ingen ligheder</SubtitlesNotAlike>
     <XNumberOfDifference>Antal forskelle: {0}</XNumberOfDifference>
+    <XNumberOfDifferenceAndPercentChanged>Antal forskelle: {0} ({1}% tekst ændret)</XNumberOfDifferenceAndPercentChanged>
     <ShowOnlyDifferences>Vis kun forskelle</ShowOnlyDifferences>
+    <IgnoreLineBreaks>Ignorer linjeskift</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Vis kun forskelle i teksten</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Kan ikke sammenligne med billede baseret undertekster</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -255,6 +257,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Gap til næste</GapToNext>
     <BridgeGapsSmallerThanXPart1>Lap huller mindre end</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>millisekunder</BridgeGapsSmallerThanXPart2>
+    <MinMsBetweenLines>Min. millisekunder mellem linjer</MinMsBetweenLines>
     <ProlongEndTime>Forrige tekst tager alle tiden</ProlongEndTime>
     <DivideEven>Tid deles</DivideEven>
   </DurationsBridgeGaps>
@@ -1227,6 +1230,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <EndsWith>Ender med</EndsWith>
     <NoContains>Indeholder ikke</NoContains>
     <RegEx>Regulært udtryk</RegEx>
+    <UnequalLines>Ulige linjer</UnequalLines>
+    <EqualLines>Lige linjer</EqualLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Multi søg og erstat</Title>
@@ -1438,6 +1443,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <WaveFormShowGridLines>Vis gitterlinjer</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Skift musehjul rulle retning</ReverseMouseWheelScrollDirection>
     <WaveFormAllowOverlap>Tillad overlapning (når du flytter/resizing)</WaveFormAllowOverlap>
+    <WaveFormFocusMouseEnter>Sæt fokus ved mus over</WaveFormFocusMouseEnter>
+    <WaveFormListViewFocusMouseEnter>Set focus i listevisning ved mus over listevisning</WaveFormListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Grænse-markør ved flyt er aktiv inden for</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>millisekunder</WaveformBorderHitMs2>
     <WaveFormColor>Farve</WaveFormColor>
@@ -1529,6 +1536,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <WaveformAddTextHere>Tilføj tekst her (for ny selektion)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Spil ny markering</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Spil første valgte undertekst</WaveformPlayFirstSelectedSubtitle>
+    <WaveformFocusListView>Fokuser listevisning</WaveformFocusListView>
     <GoBack1Frame>En frame tilbage</GoBack1Frame>
     <GoForward1Frame>En frame frem</GoForward1Frame>
     <GoBack100Milliseconds>100 ms tilbage</GoBack100Milliseconds>
@@ -1565,6 +1573,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <ListViewColumnDelete>Kolonne, slet tekst</ListViewColumnDelete>
     <ListViewColumnInsert>Column, indsæt tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Column, indsæt fra udklipsholder</ListViewColumnPaste>
+    <ListViewFocusWaveform>Fokuser bølgeform/spectrogram</ListViewFocusWaveform>
     <ShowBeamer>Start undertekst fremviser (fuldskærm)</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Flyt sidste ord ned til næste linje</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Flyt første ord fra næste linje op</MainTextBoxMoveFirstWordFromNextUp>
@@ -1768,6 +1777,11 @@ Fortsæt?</SubtitleAppendPrompt>
     <Info>Et synkronisering punkt vil justere positioner, to eller flere synkroniserings punkter vil justere position og hastighed</Info>
     <ApplySync>Anvend</ApplySync>
   </PointSync>
+  <TransportStreamSubtitleChooser>
+    <Title>Transport Stream undertikst vælger - {0}</Title>
+    <PidLine>Transport Packet Identifier (PID) = {0}, antal undertekster = {1}</PidLine>
+    <SubLine>{0}: {1} -&gt; {2} {3} billede(r)</SubLine>
+  </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Ukendt undertekst type</Title>
     <Message>Hvis du ønsker, at denne undertekst type skal kunne indlæses, bedes du sende en mail til mailto: niksedk@gmail.com og vedhæfte en kopi af underteksten.</Message>
@@ -1828,6 +1842,10 @@ Fortsæt?</SubtitleAppendPrompt>
     <ImagePalette>Palette</ImagePalette>
     <UseCustomColors>Vælg selv farver</UseCustomColors>
     <Transparent>Gennemsigtig</Transparent>
+    <TransparentMinAlpha>Min. alfa-værdi (0 = transparent, 255 = fuldt synlig)</TransparentMinAlpha>
+    <TransportStream>Transport stream</TransportStream>
+    <TransportStreamGrayscale>Gråtone</TransportStreamGrayscale>
+    <TransportStreamGetColor>Brug farve (vil omfatte nogle opdeling af linjer)</TransportStreamGetColor>
     <PromptForUnknownWords>Spørg om ukendte ord</PromptForUnknownWords>
     <TryToGuessUnkownWords>Prøv at gætte ukendte ord</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Autoombryd afsnit, hvis mere end to linjer</AutoBreakSubtitleIfMoreThanTwoLines>
