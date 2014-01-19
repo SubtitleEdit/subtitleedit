@@ -298,6 +298,11 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAllowOverlap.Text = language.WaveFormAllowOverlap;
             checkBoxWaveformHoverFocus.Text = language.WaveFormFocusMouseEnter;
             checkBoxListViewMouseEnterFocus.Text = language.WaveFormListViewFocusMouseEnter;
+            if (string.IsNullOrEmpty(language.WaveFormListViewFocusMouseEnter)) //TODO: Remove in SE 3.4
+            {
+                checkBoxWaveformHoverFocus.Visible = false;
+                checkBoxListViewMouseEnterFocus.Visible = false;
+            }
             labelWaveformBorderHitMs1.Text = language.WaveformBorderHitMs1;
             labelWaveformBorderHitMs2.Text = language.WaveformBorderHitMs2;
             numericUpDownWaveformBorderHitMs.Left = labelWaveformBorderHitMs1.Left + labelWaveformBorderHitMs1.Width;
