@@ -140,14 +140,14 @@ cs.types_default=Výchozí instalace
 
 ; Deutsch
 de.comp_translations=Übersetzungen
-de.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-de.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-de.msg_AskToDownNET=Subtitle Edit benötigt .NET Framework 2.0 oder höher. Bitte laden und installieren Sie .NET Framework und starten Sie die Installation erneut.%n%nMöchten Sie .NET Framework jetzt herunterladen?
-de.msg_DeleteSettings=Möchten Sie ihre Einstellungen und die benutzerdefinierten Wörterbücher ebenfalls löschen?%n%nWenn Sie Subtitle Edit erneut installieren möchten, können Sie Ihre Einstellungen behalten.
+de.msg_AppIsRunning=Subtitle Edit ist noch aktiv.%n%nBitte beenden Sie jetzt alle Instanzen und klicken Sie dann auf OK oder Abbrechen.
+de.msg_AppIsRunningUninstall=Subtitle Edit ist noch aktiv.%n%nBitte beenden Sie jetzt alle Instanzen und klicken Sie dann auf OK oder Abbrechen.
+de.msg_AskToDownNET=Subtitle Edit benötigt .NET Framework 2.0. Bitte installieren Sie .NET Framework und starten Sie die Installation erneut.%n%nMöchten Sie .NET Framework 2.0 jetzt herunterladen?
+de.msg_DeleteSettings=Möchten Sie die Einstellungen und Änderungen der Wörterbücher ebenfalls löschen?%n%nWenn Sie Subtitle Edit erneut installieren wollen, müssen Sie nichts löschen.
 de.msg_OptimizingPerformance=Leistungsoptimierung...
 de.msg_SetupIsRunningWarning=Subtitle Edit Setup läuft bereits!
 de.run_VisitWebsite=Besuchen Sie die Subtitle Edit Webseite
-de.sm_com_Changelog=Änderungsliste von Subtitle Edit
+de.sm_com_Changelog=Subtitle Edit Änderungen
 de.tsk_AllUsers=Für alle Benutzer
 de.tsk_CurrentUser=Nur für mich
 de.tsk_Other=Andere:
