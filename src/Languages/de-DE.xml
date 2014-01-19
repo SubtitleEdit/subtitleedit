@@ -5,7 +5,7 @@
     <Version>3.3.13</Version>
     <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Nobody.</TranslatedBy>
     <CultureName>de-DE</CultureName>
-    <HelpFile />
+    <HelpFile></HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>&amp;Abbrechen</Cancel>
     <Apply>Übernehmen</Apply>
@@ -223,6 +223,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitlesNotAlike>Untertitel haben keine Übereinstimmungen</SubtitlesNotAlike>
     <XNumberOfDifference>Unterschiede: {0}</XNumberOfDifference>
     <ShowOnlyDifferences>Nur Unterschiede anzeigen</ShowOnlyDifferences>
+    <IgnoreLineBreaks>Umbrüche ignorieren</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Nur nach Unterschieden im Text suchen</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Kann bildbasierten Untertitel nicht vergleichen</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -251,9 +252,10 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <DurationsBridgeGaps>
     <Title>Kurze Zeitabstände überbrücken</Title>
     <GapsBridgedX>Zeitabstände überbrückt: {0}</GapsBridgedX>
-    <GapToNext>Nächster Zeitabstand</GapToNext>
+    <GapToNext>Nächster Abstand in Sekunden</GapToNext>
     <BridgeGapsSmallerThanXPart1>Überbrücke Abstände kleiner als</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>Millisekunden</BridgeGapsSmallerThanXPart2>
+    <MinMsBetweenLines>Min. Millisekunden zwischen Text</MinMsBetweenLines>
     <ProlongEndTime>Vorheriger Text nutzt Abstandszeit</ProlongEndTime>
     <DivideEven>Texte teilen Abstandszeit</DivideEven>
   </DurationsBridgeGaps>
@@ -522,7 +524,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <XUppercaseIsFoundInsideLowercaseWords>{0} große i's in klein geschriebene Wörter gefunden</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Verfügbare Korrekturen aktualisieren</RefreshFixes>
     <ApplyFixes>Ausgewählte Korrekturen anwenden</ApplyFixes>
-    <AutoBreak>&amp;Auto Umbruch</AutoBreak>
+    <AutoBreak>Auto &amp;Umbruch</AutoBreak>
     <Unbreak>&amp;Umbruch entfernen</Unbreak>
     <FixDoubleDash>Korrigiere '--' -&gt; '...' </FixDoubleDash>
     <FixDoubleGreaterThan>Entferne &gt;&gt; </FixDoubleGreaterThan>
@@ -877,7 +879,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
       <UndoChangesInEditPanel>Rückgängig</UndoChangesInEditPanel>
       <Previous>Zurück</Previous>
       <Next>Weiter</Next>
-      <AutoBreak>Auto&amp;Umbruch</AutoBreak>
+      <AutoBreak>Auto &amp;Umbruch</AutoBreak>
       <Unbreak>Umbruch entfernen</Unbreak>
     </Controls>
     <VideoControls>
@@ -1765,6 +1767,11 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Info>Ein Sync Punkt passt die Position an, zwei oder mehr Punkte passen Position und Geschwindigkeit an.</Info>
     <ApplySync>Übernehmen</ApplySync>
   </PointSync>
+  <TransportStreamSubtitleChooser>
+    <Title>Transport Stream Untertitelauswahl - {0}</Title>
+    <PidLine>Transport Packet Identifier (PID) = {0}, Anzahl Untertitel = {1}</PidLine>
+    <SubLine>{0}:  {1} --&gt; {2},  {3} Bild(er)</SubLine>
+  </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Unbekannter Dateityp</Title>
     <Message>Wenn dieses Problem behoben werden soll, eine E-Mail an mailto:niksedk@gmail.com schicken und eine Kopie des Untertitels anhängen.</Message>
@@ -1826,7 +1833,11 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <SubtitleImageXofY>Untertitel Bild {0} von {1}</SubtitleImageXofY>
     <ImagePalette>Bildpalette</ImagePalette>
     <UseCustomColors>Spezielle Farben</UseCustomColors>
-    <Transparent>Transparent</Transparent>
+    <Transparent>Transparenz</Transparent>
+    <TransparentMinAlpha>Min. Alpha Wert (0=durchsichtig, 255=undurchsichtig)</TransparentMinAlpha>
+    <TransportStream>Transport Stream</TransportStream>
+    <TransportStreamGrayscale>Graustufen</TransportStreamGrayscale>
+    <TransportStreamGetColor>Farbe verwenden (bei einigen Zeilentrennungen)</TransportStreamGetColor>
     <PromptForUnknownWords>Frage nach unbekannten Wörtern</PromptForUnknownWords>
     <TryToGuessUnkownWords>Unbekannte Wörter versuchen zu erraten</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Text automatisch trennen bei mehr als zwei Zeilen</AutoBreakSubtitleIfMoreThanTwoLines>
