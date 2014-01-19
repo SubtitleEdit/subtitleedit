@@ -9,6 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     /// <summary>
     /// http://www.theneitherworld.com/mcpoodle/SCC_TOOLS/DOCS/SCC_FORMAT.HTML
+    /// § 15.119 47 CFR Ch. I (10–1–10 Edition) (pdf)
     /// Maxinum four lines + max 32 characters on each line
     /// </summary>
     public class ScenaristClosedCaptions : SubtitleFormat
@@ -133,10 +134,24 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                                          "",
                                                          "",
                                                          "Ñ",
-                                                         "ñ",
+                                                         "ñ", // "fe"
+                                                         "■", // "7f"
+                                                         "ç", // "7b"
+                                                         "c", // 63
+                                                         "e", // 65
+                                                         "f", // 66
+                                                         "i", // 69
+                                                         "j", // 6a
+                                                         "l", // 6c
+                                                         "n", // 6e
+                                                         "o", // 6f
+                                                         "q", // 71
+                                                         "r", // 72
+                                                         "t", // 74
+                                                         "w", // 77
+                                                         "x", // 78
                                                          "",
-                                                         "",
-                                                         "",
+                                                         "°",
                                                          "½",
                                                          "",
                                                          "",
@@ -238,6 +253,41 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                                          "", //136e=?
                                                          "", //94ce=?
                                                          "", //2c2f=?
+
+                                                         "®", //9130
+                                                         "°", //9131
+                                                         "½", //9132
+                                                         "¿", //9133
+                                                         "TM",//9134
+                                                         "¢", //9135
+                                                         "£", //9136
+                                                         "♪", //9137
+                                                         "à", //9138
+                                                         " ", //9138
+                                                         "è", //913a
+                                                         "â", //913b
+                                                         "ê", //913c
+                                                         "î", //913d
+                                                         "ô", //913e
+                                                         "û", //913f
+
+                                                         "®", //1130
+                                                         "°", //1131
+                                                         "½", //1132
+                                                         "¿", //1133
+                                                         "TM",//1134
+                                                         "¢", //1135
+                                                         "£", //1136
+                                                         "♪", //1137
+                                                         "à", //1138
+                                                         " ", //1138
+                                                         "è", //113a
+                                                         "â", //113b
+                                                         "ê", //113c
+                                                         "î", //113d
+                                                         "ô", //113e
+                                                         "û", //113f
+
                                                      };
 
         private static  readonly List<string> _letterCodes = new List<string>
@@ -335,12 +385,26 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                                              "79",    //  "y",
                                                              "7a",    //  "z",
                                                              "fb",    //  "",
-                                                             "7c",    //  "",
+                                                             "7c",    //  "÷",
                                                              "fd",    //  "Ñ",
                                                              "fe",    //  "ñ",
-                                                             "7f",    //  "",
+                                                             "7f",    //  "■",
+                                                             "7b",    //  "ç",
+                                                             "63", // "c"
+                                                             "65", // "e"
+                                                             "66", // "f"
+                                                             "69", // "i"
+                                                             "6a", // "j"
+                                                             "6c", // "l"
+                                                             "6e", // "n"
+                                                             "6f", // "o"
+                                                             "71", // "q"
+                                                             "72", // "r"
+                                                             "74", // "t"
+                                                             "77", // "w"
+                                                             "78", // "x"
                                                              "91b0",  //  "",
-                                                             "9131",  //  "",
+                                                             "9131",  //  "°",
                                                              "9132",  //  "½",
                                                              "91b3",  //  "",
                                                              "9134",  //  "",
@@ -442,6 +506,41 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                                              "136e", //136e=?
                                                              "94ce", //94ce=?
                                                              "2c2f", //?
+                                                             
+                                                             "1130", // ®
+                                                             "1131", // °
+                                                             "1132", // ½
+                                                             "1133", // ¿
+                                                             "1134", // TM
+                                                             "1135", // ¢
+                                                             "1136", // £
+                                                             "1137", // ♪
+                                                             "1138", // à
+                                                             "1138", // transparent space
+                                                             "113a", // è
+                                                             "113b", // â
+                                                             "113c", // ê
+                                                             "113d", // î
+                                                             "113e", // ô
+                                                             "113f", // û
+                                                             
+                                                             "9130", // ®
+                                                             "9131", // °
+                                                             "9132", // ½
+                                                             "9133", // ¿
+                                                             "9134", // TM
+                                                             "9135", // ¢
+                                                             "9136", // £
+                                                             "9137", // ♪
+                                                             "9138", // à
+                                                             "9138", // transparent space
+                                                             "913a", // è
+                                                             "913b", // â
+                                                             "913c", // ê
+                                                             "913d", // î
+                                                             "913e", // ô
+                                                             "913f", // û
+
                                                          };
 
         public override string Extension
@@ -615,8 +714,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private string ToSccText(string text)
         {
             text = FixMax4LinesAndMax32CharsPerLine(text);
-            text = text.Replace("ã", "aã");
-            text = text.Replace("õ", "oõ");
+            //text = text.Replace("ã", "aã");
+            //text = text.Replace("õ", "oõ");
 
             var lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int italic = 0;
@@ -661,6 +760,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (code.Length == 4)
                     {
                         sb.Append(code + " ");
+                        if (code.StartsWith("9") || code.StartsWith("8")) // control codes must be double
+                            sb.Append(code + " ");
                         code = string.Empty;
                     }
 
@@ -746,6 +847,267 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             switch (code.ToLower())
             {
+
+                //NO x-coordinate?
+                case "1140": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 1, 0);
+                case "1160": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 2, 0);
+                case "1240": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 3, 0);
+                case "1260": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 4, 0);
+                case "1540": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 5, 0);
+                case "1560": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 6, 0);
+                case "1640": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 7, 0);
+                case "1660": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 8, 0);
+                case "1740": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 9, 0);
+                case "1760": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 10, 0);
+                case "1040": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 11, 0);
+                case "1340": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 12, 0);
+                case "1360": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 13, 0);
+                case "1440": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 14, 0);
+                case "1460": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 15, 0);
+
+                case "1141": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 1, 0);
+                case "1161": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 2, 0);
+                case "1241": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 3, 0);
+                case "1261": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 4, 0);
+                case "1541": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 5, 0);
+                case "1561": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 6, 0);
+                case "1641": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 7, 0);
+                case "1661": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 8, 0);
+                case "1741": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 9, 0);
+                case "1761": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 10, 0);
+                case "1041": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 11, 0);
+                case "1341": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 12, 0);
+                case "1361": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 13, 0);
+                case "1441": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 14, 0);
+                case "1461": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 15, 0);
+
+                case "1142": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 1, 0);
+                case "1162": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 2, 0);
+                case "1242": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 3, 0);
+                case "1262": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 4, 0);
+                case "1542": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 5, 0);
+                case "1562": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 6, 0);
+                case "1642": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 7, 0);
+                case "1662": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 8, 0);
+                case "1742": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 9, 0);
+                case "1762": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 10, 0);
+                case "1042": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 11, 0);
+                case "1342": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 12, 0);
+                case "1362": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 13, 0);
+                case "1442": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 14, 0);
+                case "1462": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 15, 0);
+
+                case "1143": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 1, 0);
+                case "1163": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 2, 0);
+                case "1243": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 3, 0);
+                case "1263": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 4, 0);
+                case "1543": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 5, 0);
+                case "1563": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 6, 0);
+                case "1643": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 7, 0);
+                case "1663": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 8, 0);
+                case "1743": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 9, 0);
+                case "1763": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 10, 0);
+                case "1043": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 11, 0);
+                case "1343": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 12, 0);
+                case "1363": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 13, 0);
+                case "1443": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 14, 0);
+                case "1463": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 15, 0);
+
+                case "1144": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 1, 0);
+                case "1164": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 2, 0);
+                case "1244": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 3, 0);
+                case "1264": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 4, 0);
+                case "1544": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 5, 0);
+                case "1564": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 6, 0);
+                case "1644": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 7, 0);
+                case "1664": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 8, 0);
+                case "1744": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 9, 0);
+                case "1764": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 10, 0);
+                case "1044": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 11, 0);
+                case "1344": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 12, 0);
+                case "1364": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 13, 0);
+                case "1444": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 14, 0);
+                case "1464": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 15, 0);
+
+                case "1145": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 1, 0);
+                case "1165": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 2, 0);
+                case "1245": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 3, 0);
+                case "1265": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 4, 0);
+                case "1545": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 5, 0);
+                case "1565": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 6, 0);
+                case "1645": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 7, 0);
+                case "1665": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 8, 0);
+                case "1745": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 9, 0);
+                case "1765": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 10, 0);
+                case "1045": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 11, 0);
+                case "1345": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 12, 0);
+                case "1365": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 13, 0);
+                case "1445": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 14, 0);
+                case "1465": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 15, 0);
+
+                case "1146": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 1, 0);
+                case "1166": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 2, 0);
+                case "1246": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 3, 0);
+                case "1266": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 4, 0);
+                case "1546": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 5, 0);
+                case "1566": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 6, 0);
+                case "1646": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 7, 0);
+                case "1666": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 8, 0);
+                case "1746": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 9, 0);
+                case "1766": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 10, 0);
+                case "1046": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 11, 0);
+                case "1346": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 12, 0);
+                case "1366": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 13, 0);
+                case "1446": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 14, 0);
+                case "1466": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 15, 0);
+
+                case "1147": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 1, 0);
+                case "1167": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 2, 0);
+                case "1247": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 3, 0);
+                case "1267": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 4, 0);
+                case "1547": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 5, 0);
+                case "1567": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 6, 0);
+                case "1647": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 7, 0);
+                case "1667": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 8, 0);
+                case "1747": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 9, 0);
+                case "1767": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 10, 0);
+                case "1047": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 11, 0);
+                case "1347": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 12, 0);
+                case "1367": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 13, 0);
+                case "1447": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 14, 0);
+                case "1467": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 15, 0);
+
+                case "1148": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 1, 0);
+                case "1168": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 2, 0);
+                case "1248": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 3, 0);
+                case "1268": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 4, 0);
+                case "1548": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 5, 0);
+                case "1568": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 6, 0);
+                case "1648": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 7, 0);
+                case "1668": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 8, 0);
+                case "1748": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 9, 0);
+                case "1768": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 10, 0);
+                case "1048": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 11, 0);
+                case "1348": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 12, 0);
+                case "1368": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 13, 0);
+                case "1448": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 14, 0);
+                case "1468": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 15, 0);
+
+                case "1149": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 1, 0);
+                case "1169": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 2, 0);
+                case "1249": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 3, 0);
+                case "1269": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 4, 0);
+                case "1549": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 5, 0);
+                case "1569": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 6, 0);
+                case "1649": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 7, 0);
+                case "1669": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 8, 0);
+                case "1749": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 9, 0);
+                case "1769": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 10, 0);
+                case "1049": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 11, 0);
+                case "1349": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 12, 0);
+                case "1369": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 13, 0);
+                case "1449": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 14, 0);
+                case "1469": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 15, 0);
+
+                case "114a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 1, 0);
+                case "116a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 2, 0);
+                case "124a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 3, 0);
+                case "126a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 4, 0);
+                case "154a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 5, 0);
+                case "156a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 6, 0);
+                case "164a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 7, 0);
+                case "166a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 8, 0);
+                case "174a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 9, 0);
+                case "176a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 10, 0);
+                case "104a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 11, 0);
+                case "134a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 12, 0);
+                case "136a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 13, 0);
+                case "144a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 14, 0);
+                case "146a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 15, 0);
+
+                case "114b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 1, 0);
+                case "116b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 2, 0);
+                case "124b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 3, 0);
+                case "126b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 4, 0);
+                case "154b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 5, 0);
+                case "156b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 6, 0);
+                case "164b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 7, 0);
+                case "166b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 8, 0);
+                case "174b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 9, 0);
+                case "176b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 10, 0);
+                case "104b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 11, 0);
+                case "134b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 12, 0);
+                case "136b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 13, 0);
+                case "144b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 14, 0);
+                case "146b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 15, 0);
+
+                case "114c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 1, 0);
+                case "116c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 2, 0);
+                case "124c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 3, 0);
+                case "126c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 4, 0);
+                case "154c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 5, 0);
+                case "156c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 6, 0);
+                case "164c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 7, 0);
+                case "166c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 8, 0);
+                case "174c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 9, 0);
+                case "176c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 10, 0);
+                case "104c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 11, 0);
+                case "134c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 12, 0);
+                case "136c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 13, 0);
+                case "144c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 14, 0);
+                case "146c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 15, 0);
+
+                case "114d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 1, 0);
+                case "116d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 2, 0);
+                case "124d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 3, 0);
+                case "126d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 4, 0);
+                case "154d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 5, 0);
+                case "156d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 6, 0);
+                case "164d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 7, 0);
+                case "166d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 8, 0);
+                case "174d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 9, 0);
+                case "176d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 10, 0);
+                case "104d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 11, 0);
+                case "134d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 12, 0);
+                case "136d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 13, 0);
+                case "144d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 14, 0);
+                case "146d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 15, 0);
+
+                case "114e": return new SCCPositionAndStyle(Color.White, FontStyle.Italic, 1, 0);
+                case "116e": return new SCCPositionAndStyle(Color.White, FontStyle.Italic, 2, 0);
+                case "124e": return new SCCPositionAndStyle(Color.White, FontStyle.Italic, 3, 0);
+                case "126e": return new SCCPositionAndStyle(Color.White, FontStyle.Italic, 4, 0);
+                case "154e": return new SCCPositionAndStyle(Color.White, FontStyle.Italic, 5, 0);
+                case "156e": return new SCCPositionAndStyle(Color.White, FontStyle.Italic, 6, 0);
+                case "164e": return new SCCPositionAndStyle(Color.White, FontStyle.Italic, 7, 0);
+                case "166e": return new SCCPositionAndStyle(Color.White, FontStyle.Italic, 8, 0);
+                case "174e": return new SCCPositionAndStyle(Color.White, FontStyle.Italic, 9, 0);
+                case "176e": return new SCCPositionAndStyle(Color.White, FontStyle.Italic, 10, 0);
+                case "104e": return new SCCPositionAndStyle(Color.White, FontStyle.Italic, 11, 0);
+                case "134e": return new SCCPositionAndStyle(Color.White, FontStyle.Italic, 12, 0);
+                case "136e": return new SCCPositionAndStyle(Color.White, FontStyle.Italic, 13, 0);
+                case "144e": return new SCCPositionAndStyle(Color.White, FontStyle.Italic, 14, 0);
+                case "146e": return new SCCPositionAndStyle(Color.White, FontStyle.Italic, 15, 0);
+
+                case "114f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 1, 0);
+                case "116f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 2, 0);
+                case "124f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 3, 0);
+                case "126f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 4, 0);
+                case "154f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 5, 0);
+                case "156f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 6, 0);
+                case "164f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 7, 0);
+                case "166f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 8, 0);
+                case "174f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 9, 0);
+                case "176f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 10, 0);
+                case "104f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 11, 0);
+                case "134f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 12, 0);
+                case "136f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 13, 0);
+                case "144f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 14, 0);
+                case "146f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 15, 0);
+
+
+
+
                 case "91d0": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 1, 0);
                 case "9151": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 1, 0);
                 case "91c2": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 1, 0);
@@ -811,63 +1173,63 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 case "15d0": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 5, 0);
                 case "1551": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 5, 0);
                 case "15c2": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 5, 0);
-                case "1543": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 5, 0);
+//                case "1543": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 5, 0);
                 case "15c4": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 5, 0);
-                case "1545": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 5, 0);
-                case "1546": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 5, 0);
+                //                case "1545": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 5, 0);
+                //                case "1546": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 5, 0);
                 case "15c7": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 5, 0);
                 case "15c8": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 5, 0);
-                case "1549": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 5, 0);
-                case "154a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 5, 0);
+                //case "1549": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 5, 0);
+                //case "154a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 5, 0);
                 case "15cb": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 5, 0);
-                case "154c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 5, 0);
+                //case "154c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 5, 0);
                 case "15cd": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 5, 0);
 
                 case "1570": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 6, 0);
                 case "15f1": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 6, 0);
-                case "1562": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 6, 0);
-                case "15e3": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 6, 0);
-                case "1564": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 6, 0);
+                //case "1562": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 6, 0);
+                //case "15e3": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 6, 0);
+                //case "1564": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 6, 0);
                 case "15e5": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 6, 0);
                 case "15e6": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 6, 0);
-                case "1567": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 6, 0);
-                case "1568": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 6, 0);
+                //case "1567": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 6, 0);
+                //case "1568": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 6, 0);
                 case "15e9": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 6, 0);
                 case "15ea": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 6, 0);
-                case "156b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 6, 0);
+                //case "156b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 6, 0);
                 case "15ec": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 6, 0);
-                case "156d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 6, 0);
+                //case "156d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 6, 0);
 
 
                 case "16d0": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 7, 0);
                 case "1651": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 7, 0);
                 case "16c2": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 7, 0);
-                case "1643": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 7, 0);
+                //case "1643": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 7, 0);
                 case "16c4": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 7, 0);
-                case "1645": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 7, 0);
-                case "1646": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 7, 0);
+                //case "1645": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 7, 0);
+                //case "1646": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 7, 0);
                 case "16c7": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 7, 0);
                 case "16c8": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 7, 0);
-                case "1649": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 7, 0);
-                case "164a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 7, 0);
+                //case "1649": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 7, 0);
+                //case "164a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 7, 0);
                 case "16cb": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 7, 0);
-                case "164c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 7, 0);
+                //case "164c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 7, 0);
                 case "16cd": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 7, 0);
 
                 case "1670": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 8, 0);
                 case "16f1": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 8, 0);
-                case "1662": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 8, 0);
+                //case "1662": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 8, 0);
                 case "16e3": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 8, 0);
-                case "1664": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 8, 0);
+                //case "1664": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 8, 0);
                 case "16e5": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 8, 0);
                 case "16e6": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 8, 0);
-                case "1667": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 8, 0);
-                case "1668": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 8, 0);
+                //case "1667": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 8, 0);
+                //case "1668": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 8, 0);
                 case "16e9": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 8, 0);
                 case "16ea": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 8, 0);
-                case "166b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 8, 0);
+                //case "166b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 8, 0);
                 case "16ec": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 8, 0);
-                case "166d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 8, 0);
+                //case "166d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 8, 0);
 
 
                 case "97d0": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 9, 0);
@@ -904,48 +1266,48 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 case "10d0": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 11, 0);
                 case "1051": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 11, 0);
                 case "10c2": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 11, 0);
-                case "1043": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 11, 0);
+                //case "1043": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 11, 0);
                 case "10c4": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 11, 0);
-                case "1045": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 11, 0);
-                case "1046": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 11, 0);
+                //case "1045": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 11, 0);
+                //case "1046": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 11, 0);
                 case "10c7": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 11, 0);
                 case "10c8": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 11, 0);
-                case "1049": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 11, 0);
-                case "104a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 11, 0);
+                //case "1049": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 11, 0);
+                //case "104a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 11, 0);
                 case "10cb": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 11, 0);
-                case "104c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 11, 0);
+                //case "104c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 11, 0);
                 case "10cd": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 11, 0);
 
 
                 case "13d0": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 12, 0);
                 case "1351": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 12, 0);
                 case "13c2": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 12, 0);
-                case "1343": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 12, 0);
+                //case "1343": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 12, 0);
                 case "13c4": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 12, 0);
-                case "1345": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 12, 0);
-                case "1346": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 12, 0);
+                //case "1345": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 12, 0);
+                //case "1346": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 12, 0);
                 case "13c7": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 12, 0);
                 case "13c8": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 12, 0);
-                case "1349": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 12, 0);
-                case "134a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 12, 0);
+                //case "1349": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 12, 0);
+                //case "134a": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 12, 0);
                 case "13cb": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 12, 0);
-                case "134c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 12, 0);
+                //case "134c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 12, 0);
                 case "13cd": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 12, 0);
 
                 case "1370": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 13, 0);
                 case "13f1": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 13, 0);
-                case "1362": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 13, 0);
+                //case "1362": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 13, 0);
                 case "13e3": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, 13, 0);
-                case "1364": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 13, 0);
+                //case "1364": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, 13, 0);
                 case "13e5": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, 13, 0);
                 case "13e6": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, 13, 0);
-                case "1367": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 13, 0);
-                case "1368": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 13, 0);
+                //case "1367": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Underline, 13, 0);
+                //case "1368": return new SCCPositionAndStyle(Color.Red, FontStyle.Regular, 13, 0);
                 case "13e9": return new SCCPositionAndStyle(Color.Red, FontStyle.Underline, 13, 0);
                 case "13ea": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Regular, 13, 0);
-                case "136b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 13, 0);
+                //case "136b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 13, 0);
                 case "13ec": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 13, 0);
-                case "136d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 13, 0);
+                //case "136d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 13, 0);
 
 
                 case "94d0": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 14, 0);
@@ -1286,8 +1648,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             bool first = true;
             bool italicOn = false;
-            foreach (var part in parts)
+            int k = 0;
+            while (k < parts.Length)
             {
+                string part = parts[k];
                 if (part.Length == 4)
                 {
                     if (part == "94ae" || part == "9420")
@@ -1295,10 +1659,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else
                     {
+                        string nextPart = string.Empty;
+                        if (part.StartsWith("9") || part.StartsWith("8"))
+                        {
+                            if (k + 1 < parts.Length && parts[k + 1] == part)
+                                k++;
+                        }
+
                         var cp = GetColorAndPosition(part);
                         if (cp != null)
                         {
-                            if (cp.Y > 0 && y > 0 && cp.Y > y)
+                            if (cp.Y > 0 && y >= 0 && cp.Y > y && !sb.ToString().EndsWith(Environment.NewLine) && sb.ToString().Trim().Length > 0)
                                 sb.AppendLine();
                             if (cp.Y > 0)
                                 y = cp.Y;
@@ -1316,12 +1687,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         else
                         {
                             string result = GetLetter(part);
-                            if (part == "94e0")
+                            if (part == "94e0" || part == "9440")
                             {
                                 if (!sb.ToString().EndsWith(Environment.NewLine))
                                     sb.AppendLine();
                             }
-                            else if (part == "2c94" || part == "2c52")
+                            else if (part == "2c61" || part == "2c62" || part == "2c63" || part == "2c64" || part == "2c65" || part == "2c66" || part == "2c67" || part == "2c68" ||
+                                     part == "2c69" || part == "2c6a" || part == "2c6b" || part == "2c6c" || part == "2c6d" || part == "2c6e" || part == "2c6f" ||
+                                     part == "2cf2" || part == "2c75")
+                            {
+                                sb.Append(GetLetter(part.Substring(2, 2)));
+                            }
+                            else if (part == "2c94" || part == "2c52") // || part == "2c61")
                             {
                             }
                             else if (result == null)
@@ -1342,14 +1719,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         errorCount++;
                 }
                 first = false;
+                k++;
             }
             string res = sb.ToString().Replace("<i></i>", string.Empty).Replace("</i><i>", string.Empty);
-            res = res.Replace("♪♪", "♪");
+//            res = res.Replace("♪♪", "♪");
             res = res.Replace("  ", " ").Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
             if (res.Contains("<i>") && !res.Contains("</i>"))
                 res += "</i>";
-            res = res.Replace("aã", "ã");
-            res = res.Replace("oõ", "õ");
+            //res = res.Replace("aã", "ã");
+            //res = res.Replace("oõ", "õ");
             return Utilities.FixInvalidItalicTags(res);
         }
 
