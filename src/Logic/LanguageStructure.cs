@@ -1605,7 +1605,8 @@
             public string WaveFormShowGridLines { get; set; }
             public string ReverseMouseWheelScrollDirection { get; set; }
             public string WaveFormAllowOverlap { get; set; }
-            public string WaveFormFocusMouseOver { get; set; }            
+            public string WaveFormFocusMouseEnter { get; set; }
+            public string WaveFormListViewFocusMouseEnter { get; set; }
             public string WaveformBorderHitMs1 { get; set; }
             public string WaveformBorderHitMs2 { get; set; }
             public string WaveFormColor { get; set; }
