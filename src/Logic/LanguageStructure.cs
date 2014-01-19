@@ -1697,6 +1697,7 @@
             public string WaveformAddTextHere { get; set; }
             public string WaveformPlayNewSelection { get; set; }
             public string WaveformPlayFirstSelectedSubtitle { get; set; }
+            public string WaveformFocusListView { get; set; }            
             public string GoBack1Frame { get; set; }
             public string GoForward1Frame { get; set; }
             public string GoBack100Milliseconds { get; set; }
@@ -1732,6 +1733,7 @@
             public string ListViewColumnDelete { get; set; }
             public string ListViewColumnInsert { get; set; }
             public string ListViewColumnPaste { get; set; }
+            public string ListViewFocusWaveform { get; set; }
             public string ShowBeamer { get; set; }
             public string MainTextBoxMoveLastWordDown { get; set; }
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }

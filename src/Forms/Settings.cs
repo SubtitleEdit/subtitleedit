@@ -632,6 +632,8 @@ namespace Nikse.SubtitleEdit.Forms
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewColumnDelete + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewColumnInsert + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewColumnInsertText));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewColumnPaste + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewColumnPaste));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.ListViewFocusWaveform))
+                listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewFocusWaveform + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewFocusWaveform));
             treeViewShortcuts.Nodes.Add(listViewNode);
 
             var textBoxNode = new TreeNode(Configuration.Settings.Language.Settings.TextBox);
@@ -695,8 +697,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformPlayFirstSelectedSubtitle))
                 audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformPlayFirstSelectedSubtitle + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlayFirstSelected));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition + GetShortcutText(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformFocusListView))
+                audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformFocusListView + GetShortcutText(Configuration.Settings.Shortcuts.WaveformFocusListView));                        
             treeViewShortcuts.Nodes.Add(audioVisualizerNode);
-
 
             foreach (TreeNode node in treeViewShortcuts.Nodes)
             {
@@ -1288,6 +1291,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainListViewColumnInsertText = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.ListViewColumnPaste.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewColumnPaste = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.ListViewFocusWaveform != null && text == Configuration.Settings.Language.Settings.ListViewFocusWaveform.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainListViewFocusWaveform = GetShortcut(node.Text);
                 }
             }
 
@@ -1414,6 +1419,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.WaveformAddTextHere = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition != null && text == Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition = GetShortcut(node.Text);
+
+                    else if (Configuration.Settings.Language.Settings.WaveformFocusListView != null && text == Configuration.Settings.Language.Settings.WaveformFocusListView.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.WaveformFocusListView = GetShortcut(node.Text);
+                    
                 }
             }
 

@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int RedoLinePositionAlternate { get; set; }
         public string RedoFileName { get; set; }
         public DateTime RedoFileModified { get; set; }
+        public string RedoOriginalFileName { get; set; }
         public int LineIndex { get; set; }
         public int LinePosition { get; set; }
         public int LinePositionAlternate { get; set; }
