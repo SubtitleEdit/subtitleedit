@@ -757,6 +757,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainListViewColumnDeleteText { get; set; }
         public string MainListViewColumnInsertText { get; set; }
         public string MainListViewColumnPaste { get; set; }
+        public string MainListViewFocusWaveform { get; set; }
         public string MainTextBoxItalic { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxMoveLastWordDown { get; set; }
@@ -795,6 +796,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string WaveformSearchSilenceForward { get; set; }
         public string WaveformSearchSilenceBack { get; set; }
         public string WaveformAddTextHere { get; set; }
+        public string WaveformFocusListView { get; set; }
         public string MainTranslateCustomSearch1 { get; set; }
         public string MainTranslateCustomSearch2 { get; set; }
         public string MainTranslateCustomSearch3 { get; set; }
@@ -2168,6 +2170,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainListViewColumnPaste");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewColumnPaste = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewFocusWaveform");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewFocusWaveform = subNode.InnerText;               
                 subNode = node.SelectSingleNode("MainEditReverseStartAndEndingForRTL");
                 if (subNode != null)
                     settings.Shortcuts.MainEditReverseStartAndEndingForRTL = subNode.InnerText;
@@ -2285,6 +2290,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("WaveformAddTextHere");
                 if (subNode != null)
                     settings.Shortcuts.WaveformAddTextHere = subNode.InnerText;
+                subNode = node.SelectSingleNode("WaveformFocusListView");
+                if (subNode != null)
+                    settings.Shortcuts.WaveformFocusListView = subNode.InnerText;                
                 subNode = node.SelectSingleNode("MainTranslateCustomSearch1");
                 if (subNode != null)
                     settings.Shortcuts.MainTranslateCustomSearch1 = subNode.InnerText;
@@ -2785,6 +2793,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainListViewColumnDeleteText", settings.Shortcuts.MainListViewColumnDeleteText);
             textWriter.WriteElementString("MainListViewColumnInsertText", settings.Shortcuts.MainListViewColumnInsertText);
             textWriter.WriteElementString("MainListViewColumnPaste", settings.Shortcuts.MainListViewColumnPaste);
+            textWriter.WriteElementString("MainListViewFocusWaveform", settings.Shortcuts.MainListViewFocusWaveform);            
             textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);
@@ -2824,6 +2833,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("WaveformSearchSilenceForward", settings.Shortcuts.WaveformSearchSilenceForward);
             textWriter.WriteElementString("WaveformSearchSilenceBack", settings.Shortcuts.WaveformSearchSilenceBack);
             textWriter.WriteElementString("WaveformAddTextHere", settings.Shortcuts.WaveformAddTextHere);
+            textWriter.WriteElementString("WaveformFocusListView", settings.Shortcuts.WaveformFocusListView);            
             textWriter.WriteElementString("MainTranslateCustomSearch1", settings.Shortcuts.MainTranslateCustomSearch1);
             textWriter.WriteElementString("MainTranslateCustomSearch2", settings.Shortcuts.MainTranslateCustomSearch2);
             textWriter.WriteElementString("MainTranslateCustomSearch3", settings.Shortcuts.MainTranslateCustomSearch3);

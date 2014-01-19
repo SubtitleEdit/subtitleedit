@@ -151,6 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainToggleFocus = Keys.None;
         Keys _mainListViewToggleDashes = Keys.None;
         Keys _mainListViewAutoDuration = Keys.None;
+        Keys _mainListViewFocusWaveform = Keys.None;
         Keys _mainListViewCopyText = Keys.None;
         Keys _mainEditReverseStartAndEndingForRTL = Keys.None;
         Keys _waveformVerticalZoom = Keys.None;
@@ -161,6 +162,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _waveformSearchSilenceForward = Keys.None;
         Keys _waveformSearchSilenceBack = Keys.None;
         Keys _waveformAddTextAtHere = Keys.None;
+        Keys _waveformFocusListView = Keys.None;        
         Keys _mainTranslateCustomSearch1 = Keys.None;
         Keys _mainTranslateCustomSearch2 = Keys.None;
         Keys _mainTranslateCustomSearch3 = Keys.None;
@@ -2026,6 +2028,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.HistoryItems.RemoveAt(_subtitle.HistoryItems.Count - 1);
             }
 
+            _subtitle.FileName = _fileName;
             _subtitle.MakeHistoryForUndo(description, GetCurrentSubtitleFormat(), _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName, _subtitleListViewIndex, textBoxListViewText.SelectionStart, textBoxListViewTextAlternate.SelectionStart);
             _undoIndex++;
 
@@ -3333,10 +3336,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
                 _converted = false;
-                _fileName = saveFileDialog1.FileName;
-
+                _fileName = saveFileDialog1.FileName;                
                 _fileDateTime = File.GetLastWriteTime(_fileName);
                 SetTitle();
+                MakeHistoryForUndo(_language.Menu.File.SaveAs);
                 Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
                 Configuration.Settings.Save();
 
@@ -3513,7 +3516,8 @@ namespace Nikse.SubtitleEdit.Forms
             SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
 
             _subtitle = new Subtitle(_subtitle.HistoryItems);
-            _subtitleAlternate = new Subtitle();
+            _changeAlternateSubtitleToString = string.Empty;
+            _changeSubtitleToString = string.Empty;
             _subtitleAlternateFileName = null;
             textBoxSource.Text = string.Empty;
             SubtitleListview1.Items.Clear();
@@ -5219,7 +5223,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SetupAlternateEdit();
                     }
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-
+                    ResetHistory();
                     RestoreSubtitleListviewIndexes();
                     _converted = true;
                     SetTitle();
@@ -5380,6 +5384,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         _subtitle.HistoryItems[_undoIndex].RedoFileName = _fileName;
                         _subtitle.HistoryItems[_undoIndex].RedoFileModified = _fileDateTime;
+                        _subtitle.HistoryItems[_undoIndex].RedoOriginalFileName = _subtitleAlternateFileName;
 
                         if (selectedIndex >= 0)
                         {
@@ -5391,8 +5396,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     textBoxListViewTextAlternate.Text;
                             _subtitle.HistoryItems[_undoIndex].RedoLineIndex = selectedIndex;
                             _subtitle.HistoryItems[_undoIndex].RedoLinePosition = textBoxListViewText.SelectionStart;
-                            _subtitle.HistoryItems[_undoIndex].RedoLinePositionAlternate =
-                                textBoxListViewTextAlternate.SelectionStart;
+                            _subtitle.HistoryItems[_undoIndex].RedoLinePositionAlternate = textBoxListViewTextAlternate.SelectionStart;
                         }
                         else
                         {
@@ -5414,8 +5418,18 @@ namespace Nikse.SubtitleEdit.Forms
                     string oldFileName = _fileName;
                     DateTime oldFileDateTime = _fileDateTime;
 
-                    //DO NOT CHANGE FILE NAME?? _fileName = _subtitle.UndoHistory(_undoIndex, out subtitleFormatFriendlyName, out _fileDateTime, out _subtitleAlternate, out _subtitleAlternateFileName);
-                    _subtitle.UndoHistory(_undoIndex, out subtitleFormatFriendlyName, out _fileDateTime, out _subtitleAlternate, out _subtitleAlternateFileName);
+                    string oldAlternameFileName = _subtitleAlternateFileName;
+                    _fileName = _subtitle.UndoHistory(_undoIndex, out subtitleFormatFriendlyName, out _fileDateTime, out _subtitleAlternate, out _subtitleAlternateFileName);
+                    if (string.IsNullOrEmpty(oldAlternameFileName) && !string.IsNullOrEmpty(_subtitleAlternateFileName))
+                    {
+                        SubtitleListview1.ShowAlternateTextColumn(Configuration.Settings.Language.General.OriginalText);
+                        SubtitleListview1.AutoSizeAllColumns(this);
+                    }
+                    else if (SubtitleListview1.IsAlternateTextColumnVisible && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count == 0)
+                    { 
+                        RemoveAlternate(true);
+                    }
+
                     if (!undo)
                     {
                         if (_subtitle.HistoryItems[_undoIndex].RedoParagraphs != null)
@@ -5438,6 +5452,10 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         _subtitle.HistoryItems[_undoIndex].RedoParagraphs = null;
                         _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate = null;
+                        if (SubtitleListview1.IsAlternateTextColumnVisible && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count == 0)
+                        { 
+                            RemoveAlternate(true);
+                        }
                     }
 
                     if (string.Compare(oldFileName, _fileName, true) == 0)
@@ -5482,6 +5500,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (string.Compare(_subtitle.HistoryItems[_undoIndex].RedoFileName, _fileName, true) == 0)
                             _fileDateTime = _subtitle.HistoryItems[_undoIndex].RedoFileModified;
                         _fileName = _subtitle.HistoryItems[_undoIndex].RedoFileName;
+                        _subtitleAlternateFileName = _subtitle.HistoryItems[_undoIndex].RedoFileName;
                         ShowStatus(_language.UndoPerformed);
                     }
 
@@ -10607,6 +10626,11 @@ namespace Nikse.SubtitleEdit.Forms
                 addParagraphHereToolStripMenuItem_Click(null, null);
                 e.SuppressKeyPress = true;
             }
+            else if (audioVisualizer.Focused && e.KeyData == _waveformFocusListView)
+            {
+                SubtitleListview1.Focus();
+                e.SuppressKeyPress = true;
+            }                
             else if (audioVisualizer.Focused && e.KeyCode == Keys.Delete)
             {
                 ToolStripMenuItemDeleteClick(null, null);
@@ -11122,6 +11146,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MakeAutoDurationSelectedLines();
             }
+            else if (e.KeyData == _mainListViewFocusWaveform)
+            {
+                if (audioVisualizer.CanFocus)
+                {
+                    audioVisualizer.Focus();
+                    e.SuppressKeyPress = true;
+                }
+            }                
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+vPaste from clipboard
             {
                 if (Clipboard.ContainsText())
@@ -13907,6 +13939,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainListViewToggleDashes = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleDashes);
             toolStripMenuItemAlignment.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignment);
             _mainListViewAutoDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewAutoDuration);
+            _mainListViewFocusWaveform = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewFocusWaveform);
             _mainEditReverseStartAndEndingForRTL = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             _mainListViewCopyText = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
             toolStripMenuItemColumnDeleteText.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText);
@@ -13949,6 +13982,7 @@ namespace Nikse.SubtitleEdit.Forms
             _waveformSearchSilenceForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward);
             _waveformSearchSilenceBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack);
             _waveformAddTextAtHere = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHere);
+            _waveformFocusListView = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformFocusListView);
             _mainTranslateCustomSearch1 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1);
             _mainTranslateCustomSearch2 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2);
             _mainTranslateCustomSearch3 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3);
@@ -16577,6 +16611,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleAlternateFileName = _fileName;
                 _fileName = null;
                 SetupAlternateEdit();
+                ResetHistory();
             }
         }
 
