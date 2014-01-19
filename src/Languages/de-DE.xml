@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.13</Version>
     <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Nobody.</TranslatedBy>
     <CultureName>de-DE</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile />
     <OK>&amp;OK</OK>
     <Cancel>&amp;Abbrechen</Cancel>
     <Apply>Übernehmen</Apply>
@@ -222,6 +222,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Nächster Unterschied</NextDifference>
     <SubtitlesNotAlike>Untertitel haben keine Übereinstimmungen</SubtitlesNotAlike>
     <XNumberOfDifference>Unterschiede: {0}</XNumberOfDifference>
+    <XNumberOfDifferenceAndPercentChanged>Unterschiede: {0}  ({1}% vom Text verändert)</XNumberOfDifferenceAndPercentChanged>
     <ShowOnlyDifferences>Nur Unterschiede anzeigen</ShowOnlyDifferences>
     <IgnoreLineBreaks>Umbrüche ignorieren</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Nur nach Unterschieden im Text suchen</OnlyLookForDifferencesInText>
@@ -1227,6 +1228,8 @@ Fortfahren?</SubtitleAppendPrompt>
     <EndsWith>Endet mit</EndsWith>
     <NoContains>Beinhaltet nicht</NoContains>
     <RegEx>Regulärer Ausdruck</RegEx>
+    <UnequalLines>Ungleiche Texte</UnequalLines>
+    <EqualLines>Gleiche Texte</EqualLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Mehrfach ersetzem</Title>
@@ -1438,6 +1441,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveFormShowGridLines>Raster anzeigen</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Scrollen mit Mausrad umkehren</ReverseMouseWheelScrollDirection>
     <WaveFormAllowOverlap>Überlappung erlauben (beim Verschieben/Skalieren)</WaveFormAllowOverlap>
+    <WaveFormFocusMouseEnter>Fokus auf Mauseingabe setzen</WaveFormFocusMouseEnter>
+    <WaveFormListViewFocusMouseEnter>Auch Listenansicht fokussieren bei Mauseingabe in Listenansicht</WaveFormListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Randmarke erreicht in</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>Millisekunden</WaveformBorderHitMs2>
     <WaveFormColor>Farbe</WaveFormColor>
@@ -1529,6 +1534,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformAddTextHere>Text hier ergänzen (für neue Auswahl)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Neue Auswahl abspielen</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Ersten gewählten untertitel abspielen</WaveformPlayFirstSelectedSubtitle>
+    <WaveformFocusListView>Listenansicht fokussieren</WaveformFocusListView>
     <GoBack1Frame>Ein Bild zurück</GoBack1Frame>
     <GoForward1Frame>Ein Bild vor</GoForward1Frame>
     <GoBack100Milliseconds>100 ms zurück</GoBack100Milliseconds>
@@ -1564,6 +1570,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ListViewColumnDelete>Zeile, Text löschen</ListViewColumnDelete>
     <ListViewColumnInsert>Zeile, Text einfügen</ListViewColumnInsert>
     <ListViewColumnPaste>Zeile, Einfügen</ListViewColumnPaste>
+    <ListViewFocusWaveform>Wellenform/Spektrogram fokussieren</ListViewFocusWaveform>
     <ShowBeamer>Starte Untertitel Vollbildbeamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Letzes Wort zur nächsten Zeile</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Erstes Wort der nächsten Zeile nach oben</MainTextBoxMoveFirstWordFromNextUp>
