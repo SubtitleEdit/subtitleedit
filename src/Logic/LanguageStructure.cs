@@ -255,7 +255,8 @@
             public string NextDifference { get; set; }
             public string SubtitlesNotAlike { get; set; }
             public string XNumberOfDifference { get; set; }
-            public string XNumberOfDifferenceAndPercentChanged { get; set; }            
+            public string XNumberOfDifferenceAndPercentChanged { get; set; }
+            public string XNumberOfDifferenceAndPercentLettersChanged { get; set; }
             public string ShowOnlyDifferences { get; set; }
             public string IgnoreLineBreaks { get; set; }            
             public string OnlyLookForDifferencesInText { get; set; }
