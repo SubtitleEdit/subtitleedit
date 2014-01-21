@@ -1090,6 +1090,29 @@ namespace Nikse.SubtitleEdit.Logic
             return count;
         }
 
+        private static int GetCountContains(string text,
+                            string word1,
+                            string word2,
+                            string word3,
+                            string word4,
+                            string word5,
+                            string word6)
+        {
+            var regEx1 = new Regex(word1);
+            var regEx2 = new Regex(word2);
+            var regEx3 = new Regex(word3);
+            var regEx4 = new Regex(word4);
+            var regEx5 = new Regex(word5);
+            var regEx6 = new Regex(word6);
+            int count = regEx1.Matches(text).Count;
+            count += regEx2.Matches(text).Count;
+            count += regEx3.Matches(text).Count;
+            count += regEx4.Matches(text).Count;
+            count += regEx5.Matches(text).Count;
+            count += regEx6.Matches(text).Count;
+            return count;
+        }
+
         public static string AutoDetectGoogleLanguage(Encoding encoding)
         {
             if (encoding.CodePage == 949)
@@ -1267,11 +1290,7 @@ namespace Nikse.SubtitleEdit.Logic
             count = GetCount(text, "không", "tôi", "anh", "đó", "Tôi", "ông");
             if (count > bestCount)
                 return "vi"; // Vietnamese
-
-            count = GetCount(text, "是的", "是啊", "好吧", "好的", "亲爱的", "早上好");
-            if (count > bestCount)
-                return "zh"; // Chinese (simplified) - not tested...
-
+         
             count = GetCount(text, "hogy", "lesz", "tudom", "vagy", "mondtam", "még");
             if (count > bestCount)
                 return "hu"; // Hungarian
@@ -1307,6 +1326,20 @@ namespace Nikse.SubtitleEdit.Logic
                     GetCount(text, "vrea", "atunci", "Poate", "Acum", "memoria", "soarele");
             if (count > bestCount)
                 return "ro"; // Romanian
+
+            count = GetCountContains(text, "シ", "ュ", "シン", "シ", "ン", "ユ");
+            count += GetCountContains(text, "イ", "ン", "チ", "ェ", "ク", "ハ");
+            count += GetCountContains(text, "シ", "ュ", "う", "シ", "ン", "サ");
+            count += GetCountContains(text, "シ", "ュ", "シ", "ン", "だ", "う");
+            if (count > bestCount * 2)
+                return "jp"; // Japanese - not tested...
+
+            count = GetCountContains(text, "是", "是早", "吧", "的", "爱", "上好");
+            count += GetCountContains(text, "的", "啊", "好", "好", "亲", "的");
+            count += GetCountContains(text, "谢", "走", "吧", "晚", "上", "好");
+            count += GetCountContains(text, "来", "卡", "拉", "吐", "滚", "他");
+            if (count > bestCount * 2)
+                return "zh"; // Chinese (simplified) - not tested...
 
             return string.Empty;
         }
@@ -3185,21 +3218,74 @@ namespace Nikse.SubtitleEdit.Logic
             return defaultColor;
         }
 
-        public static void GetTotalAndChangedWords(string s1, string s2, ref int total, ref int change, bool ignoreLineBreaks)
+        public static string[] SplitForChangedCalc(string s, bool ignoreLineBreaks, bool breakToLetters)
         {
-            if (ignoreLineBreaks)
+
+            const string endChars = "!?.:;,#%$£";
+            var list = new List<string>();
+
+            if (breakToLetters)
             {
-                s1 = s1.Replace(Environment.NewLine, " ").Replace("  ", " ").Replace("  ", " ").Replace("  ", " ");
-                s2 = s2.Replace(Environment.NewLine, " ").Replace("  ", " ").Replace("  ", " ").Replace("  ", " ");
+                foreach (char ch in s.ToCharArray())
+                    list.Add(ch.ToString());
             }
             else
             {
-                s1 = s1.Replace(Environment.NewLine, "\n").Replace("  ", " ").Replace("  ", " ").Replace("  ", " ");
-                s2 = s2.Replace(Environment.NewLine, "\n").Replace("  ", " ").Replace("  ", " ").Replace("  ", " ");
+                var word = new StringBuilder();
+                int i = 0;
+                while (i < s.Length)
+                {
+                    if (ignoreLineBreaks && s.Substring(i).StartsWith(Environment.NewLine))
+                    {
+                        if (word.Length > 0)
+                            list.Add(word.ToString());
+                        word = new StringBuilder();
+                        i += Environment.NewLine.Length;
+                    }
+                    else if (s.Substring(i).StartsWith(Environment.NewLine))
+                    {
+                        if (word.Length > 0)
+                            list.Add(word.ToString());
+                        word = new StringBuilder();
+                        list.Add(Environment.NewLine);
+                        i += Environment.NewLine.Length;
+                    }
+                    else if (s.Substring(i, 1) == " ")
+                    {
+                        if (word.Length > 0)
+                            list.Add(word.ToString());
+                        word = new StringBuilder();
+                        i++;
+                    }
+                    else if (endChars.Contains(s.Substring(i, 1)) && (word.Length == 0 || endChars.Contains(word.ToString().Substring(0, 1))))
+                    {
+                        word.Append(s.Substring(i, 1));
+                        i++;
+                    }
+                    else if (endChars.Contains(s.Substring(i, 1)))
+                    {
+                        if (word.Length > 0)
+                            list.Add(word.ToString());
+                        word = new StringBuilder();
+                        word.Append(s.Substring(i, 1));
+                        i++;
+                    }
+                    else
+                    {
+                        word.Append(s.Substring(i, 1));
+                        i++;
+                    }
+                }
+                if (word.Length > 0)
+                    list.Add(word.ToString());
             }
+            return list.ToArray();
+        }
 
-            var parts1 = s1.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            var parts2 = s2.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+        public static void GetTotalAndChangedWords(string s1, string s2, ref int total, ref int change, bool ignoreLineBreaks, bool breakToLetters)
+        {
+            var parts1 = SplitForChangedCalc(s1, ignoreLineBreaks, breakToLetters);
+            var parts2 = SplitForChangedCalc(s2, ignoreLineBreaks, breakToLetters);
             int t = Math.Max(parts1.Length, parts2.Length);
             total += t;
             int c = GetChangesAdvanced(parts1, parts2);

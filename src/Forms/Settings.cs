@@ -1044,8 +1044,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.StartSceneIndex = comboBoxToolsStartSceneIndex.SelectedIndex;
             toolsSettings.EndSceneIndex = comboBoxToolsEndSceneIndex.SelectedIndex;
             toolsSettings.MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 10;
-            if (toolsSettings.MergeLinesShorterThan >= gs.SubtitleLineMaximumLength)
-                toolsSettings.MergeLinesShorterThan = gs.SubtitleLineMaximumLength - 1;
+            if (toolsSettings.MergeLinesShorterThan > gs.SubtitleLineMaximumLength + 1)
+                toolsSettings.MergeLinesShorterThan = gs.SubtitleLineMaximumLength;
             toolsSettings.MusicSymbol = comboBoxToolsMusicSymbol.SelectedItem.ToString();
             toolsSettings.MusicSymbolToReplace = textBoxMusicSymbolsToReplace.Text;
             toolsSettings.SpellCheckAutoChangeNames = checkBoxSpellCheckAutoChangeNames.Checked;

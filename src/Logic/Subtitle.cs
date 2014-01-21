@@ -51,6 +51,9 @@ namespace Nikse.SubtitleEdit.Logic
         /// <param name="subtitle">Subtitle to copy</param>
         public Subtitle(Subtitle subtitle) : this()
         {
+            if (subtitle == null)
+                return;
+
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 _paragraphs.Add(new Paragraph(p));
