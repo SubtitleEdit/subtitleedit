@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -6,7 +7,6 @@ using System.IO.Compression;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -47,9 +47,12 @@ namespace Nikse.SubtitleEdit.Forms
                 var rdr = new StreamReader(strm);
                 using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
                 {
-                    byte[] data = new byte[175000];
-                    zip.Read(data, 0, 175000);
-                    doc.LoadXml(System.Text.Encoding.UTF8.GetString(data));
+                    byte[] data = new byte[275000];
+                    int read = zip.Read(data, 0, 275000);
+                    byte[] data2 = new byte[read];
+                    Buffer.BlockCopy(data, 0, data2, 0, read);
+                    string s = System.Text.Encoding.UTF8.GetString(data2).Trim();
+                    doc.LoadXml(s);
                 }
                 rdr.Close();
 
@@ -164,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Error != null)
             {
-                MessageBox.Show("Download failed!");
+                MessageBox.Show("Download failed: " + e.Error.Message);
                 DialogResult = DialogResult.Cancel;
                 return;
             }
