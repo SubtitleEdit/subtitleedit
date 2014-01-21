@@ -1068,7 +1068,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
 
                 string s = Utilities.RemoveHtmlTags(p.Text);
-                if (s.Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
+                if (s.Replace(Environment.NewLine," ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
                 {
                     s = s.TrimEnd().TrimEnd(".?!:;".ToCharArray());
                     s = s.TrimStart('-');
@@ -1107,7 +1107,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
 
                 string s = Utilities.RemoveHtmlTags(p.Text);
-                if (s.Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
+                if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
                 {
                     s = Utilities.AutoBreakLine(p.Text);
                     if (s != p.Text)
