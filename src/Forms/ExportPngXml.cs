@@ -1326,6 +1326,223 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return bmp;
         }
 
+        private static int CalcWidthViaDraw(string text, MakeBitmapParameter parameter)
+        {
+            var path = new GraphicsPath();
+            var sb = new StringBuilder();
+            int i = 0;
+            bool isItalic = false;
+            bool isBold = parameter.SubtitleFontBold;
+            float top = 5;
+            bool newLine = false;
+            float left = 1.0f;
+            float leftMargin = left;
+            int newLinePathPoint = -1;
+            Color c = parameter.SubtitleColor;
+            var colorStack = new Stack<Color>();
+            var lastText = new StringBuilder();
+            var sf = new StringFormat();
+            sf.Alignment = StringAlignment.Near;
+            sf.LineAlignment = StringAlignment.Near;// draw the text to a path
+            Bitmap bmp = new Bitmap(1024, 100);
+            var g = Graphics.FromImage(bmp);
+
+            g.CompositingQuality = CompositingQuality.HighSpeed;
+            g.SmoothingMode = SmoothingMode.HighSpeed;
+            g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+
+            var fontSize = g.DpiY * parameter.SubtitleFontSize / 72;
+            Font font = SetFont(parameter, parameter.SubtitleFontSize);
+            var lineHeight = parameter.LineHeight; // (textSize.Height * 0.64f);
+            while (i < text.Length)
+            {
+                if (text.Substring(i).ToLower().StartsWith("<font "))
+                {
+                    float addLeft = 0;
+                    int oldPathPointIndex = path.PointCount;
+                    if (oldPathPointIndex < 0)
+                        oldPathPointIndex = 0;
+
+                    if (sb.Length > 0)
+                    {
+                        lastText.Append(sb.ToString());
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    }
+                    if (path.PointCount > 0)
+                    {
+                        PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
+                        for (int k = oldPathPointIndex; k < list.Length; k++)
+                        {
+                            if (list[k].X > addLeft)
+                                addLeft = list[k].X;
+                        }
+                    }
+                    if (path.PointCount == 0)
+                        addLeft = left;
+                    else if (addLeft < 0.01)
+                        addLeft = left + 2;
+                    left = addLeft;
+
+                    DrawShadowAndPAth(parameter, g, path);
+                    var p2 = new SolidBrush(c);
+                    g.FillPath(p2, path);
+                    p2.Dispose();
+                    path.Reset();
+                    path = new GraphicsPath();
+                    sb = new StringBuilder();
+
+                    int endIndex = text.Substring(i).IndexOf(">");
+                    if (endIndex == -1)
+                    {
+                        i += 9999;
+                    }
+                    else
+                    {
+                        string fontContent = text.Substring(i, endIndex);
+                        if (fontContent.Contains(" color="))
+                        {
+                            string[] arr = fontContent.Substring(fontContent.IndexOf(" color=") + 7).Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            if (arr.Length > 0)
+                            {
+                                string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
+                                try
+                                {
+                                    colorStack.Push(c); // save old color
+                                    if (fontColor.StartsWith("rgb("))
+                                    {
+                                        arr = fontColor.Remove(0, 4).TrimEnd(')').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                        c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                                    }
+                                    else
+                                    {
+                                        c = ColorTranslator.FromHtml(fontColor);
+                                    }
+                                }
+                                catch
+                                {
+                                    c = parameter.SubtitleColor;
+                                }
+                            }
+                        }
+                        i += endIndex;
+                    }
+                }
+                else if (text.Substring(i).ToLower().StartsWith("</font>"))
+                {
+                    if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
+                    {
+                        if (lastText.ToString().EndsWith(" ") && !sb.ToString().StartsWith(" "))
+                        {
+                            string t = sb.ToString();
+                            sb = new StringBuilder();
+                            sb.Append(" " + t);
+                        }
+
+                        float addLeft = 0;
+                        int oldPathPointIndex = path.PointCount - 1;
+                        if (oldPathPointIndex < 0)
+                            oldPathPointIndex = 0;
+                        if (sb.Length > 0)
+                        {
+                            if (lastText.Length > 0 && left > 2)
+                                left -= 1.5f;
+
+                            lastText.Append(sb.ToString());
+
+                            TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                        }
+                        if (path.PointCount > 0)
+                        {
+                            PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
+                            for (int k = oldPathPointIndex; k < list.Length; k++)
+                            {
+                                if (list[k].X > addLeft)
+                                    addLeft = list[k].X;
+                            }
+                        }
+                        if (addLeft < 0.01)
+                            addLeft = left + 2;
+                        left = addLeft;
+
+                        DrawShadowAndPAth(parameter, g, path);
+                        g.FillPath(new SolidBrush(c), path);
+                        path.Reset();
+                        sb = new StringBuilder();
+                        if (colorStack.Count > 0)
+                            c = colorStack.Pop();
+                        if (left >= 3)
+                            left -= 2.5f;
+                    }
+                    i += 6;
+                }
+                else if (text.Substring(i).ToLower().StartsWith("<i>"))
+                {
+                    if (sb.Length > 0)
+                    {
+                        lastText.Append(sb);
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    }
+                    isItalic = true;
+                    i += 2;
+                }
+                else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
+                {
+                    if (lastText.ToString().EndsWith(" ") && !sb.ToString().StartsWith(" "))
+                    {
+                        string t = sb.ToString();
+                        sb = new StringBuilder();
+                        sb.Append(" " + t);
+                    }
+                    lastText.Append(sb);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    isItalic = false;
+                    i += 3;
+                }
+                else if (text.Substring(i).ToLower().StartsWith("<b>"))
+                {
+                    if (sb.Length > 0)
+                    {
+                        lastText.Append(sb);
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    }
+                    isBold = true;
+                    i += 2;
+                }
+                else if (text.Substring(i).ToLower().StartsWith("</b>") && isBold)
+                {
+                    if (lastText.ToString().EndsWith(" ") && !sb.ToString().StartsWith(" "))
+                    {
+                        string t = sb.ToString();
+                        sb = new StringBuilder();
+                        sb.Append(" " + t);
+                    }
+                    lastText.Append(sb);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    isBold = false;
+                    i += 3;
+                }
+                else
+                {
+                    sb.Append(text.Substring(i, 1));
+                }
+                i++;
+            }
+            if (sb.Length > 0)
+                TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+
+            DrawShadowAndPAth(parameter, g, path);
+            g.FillPath(new SolidBrush(c), path);
+            g.Dispose();
+
+            var nbmp = new NikseBitmap(bmp);
+//            nbmp.CropTopTransparent(0);
+            nbmp.CropSidesAndBottom(0, Color.Transparent, false);
+            nbmp.CropTransparentSidesAndBottom(0, false);
+            bmp.Dispose();
+            return nbmp.Width;
+        }
+
+
         private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
         {
             string text = parameter.P.Text;
@@ -1432,14 +1649,30 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             //baseLinePadding = (int)Math.Round(baselineOffsetPixels);
 
             var lefts = new List<float>();
-            foreach (string line in Utilities.RemoveHtmlFontTag(text.Replace("<i>", string.Empty).Replace("</i>", string.Empty)).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            if (text.ToLower().Contains("<font") || text.ToLower().Contains("<i>"))
+            { 
+                foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                {
+                    string lineNoHtml = Utilities.RemoveHtmlFontTag(line.Replace("<i>", string.Empty).Replace("</i>", string.Empty));
+                    if (parameter.AlignLeft)
+                        lefts.Add(5);
+                    else if (parameter.AlignRight)
+                        lefts.Add(bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) + 15); // calculate via drawing+crop
+                    else
+                        lefts.Add((bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) + 15) / 2); // calculate via drawing+crop
+                }
+            }
+            else
             {
-                if (parameter.AlignLeft)
-                    lefts.Add(5);
-                else if (parameter.AlignRight)
-                    lefts.Add(bmp.Width - (TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15));
-                else
-                    lefts.Add((bmp.Width - TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15) / 2);
+                foreach (string line in Utilities.RemoveHtmlFontTag(text.Replace("<i>", string.Empty).Replace("</i>", string.Empty)).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                {
+                    if (parameter.AlignLeft)
+                        lefts.Add(5);
+                    else if (parameter.AlignRight)
+                        lefts.Add(bmp.Width - (TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15));
+                    else
+                        lefts.Add((bmp.Width - TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15) / 2);
+                }
             }
 
             g.CompositingQuality = CompositingQuality.HighQuality;
@@ -1479,7 +1712,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     x = parameter.ScreenWidth / 2;
                 }
 
-                bmp = new Bitmap(parameter.ScreenWidth, sizeY); // parameter.ScreenHeight / 3);
+                bmp = new Bitmap(parameter.ScreenWidth, sizeY); 
 
                 Graphics surface = Graphics.FromImage(bmp);
                 surface.CompositingQuality = CompositingQuality.HighSpeed;
@@ -1966,7 +2199,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         comboBoxSubtitleFontSize.SelectedIndex = i;
                     i++;
                 }
-                checkBoxSimpleRender.Checked = true;
+                checkBoxSimpleRender.Checked = Configuration.Settings.Tools.ExportVobSubSimpleRendering;                
             }
             else if (_exportType == "BLURAYSUP" || _exportType == "DOST" || _exportType == "FCP")
             {
@@ -2060,14 +2293,16 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 labelLanguage.Visible = true;
                 comboBoxLanguage.Visible = true;
                 comboBoxLanguage.Items.Clear();
-                string languageCode = Utilities.AutoDetectGoogleLanguage(subtitle);
+                string languageCode = Utilities.AutoDetectGoogleLanguageOrNull(subtitle);
+                if (languageCode == null)
+                    languageCode = Configuration.Settings.Tools.ExportVobSubLanguage;
                 for (int i = 0; i < IfoParser.ArrayOfLanguage.Count; i++)
                 {
                     comboBoxLanguage.Items.Add(IfoParser.ArrayOfLanguage[i]);
-                    if (IfoParser.ArrayOfLanguageCode[i] == languageCode)
+                    if (IfoParser.ArrayOfLanguageCode[i] == languageCode || IfoParser.ArrayOfLanguage[i] == languageCode)
                         comboBoxLanguage.SelectedIndex = i;
                 }
-                if (comboBoxLanguage.Items.Count > 25)
+                if (comboBoxLanguage.SelectedIndex == -1 && comboBoxLanguage.Items.Count > 25)
                     comboBoxLanguage.SelectedIndex = 25;
             }
 
@@ -2448,6 +2683,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportVobSubFontName = _subtitleFontName;
                 Configuration.Settings.Tools.ExportVobSubFontSize = (int)_subtitleFontSize;
                 Configuration.Settings.Tools.ExportVobSubVideoResolution = res;
+                Configuration.Settings.Tools.ExportVobSubLanguage = comboBoxLanguage.Text;
+                Configuration.Settings.Tools.ExportVobSubSimpleRendering = checkBoxSimpleRender.Checked;
             }
             else if (_exportType == "BLURAYSUP")
             {
