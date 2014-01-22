@@ -14357,6 +14357,28 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
+                    try
+                    {
+                        var fi = new FileInfo(fileName);
+                        if (fi.Length < 1024 * 500)
+                        {
+                            var lines = new List<string>();
+                            foreach (string line in File.ReadAllLines(fileName))
+                                lines.Add(line);
+                            foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+                            {
+                                if (format.IsMine(lines, fileName))
+                                {
+                                    OpenSubtitle(fileName, null);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    { 
+                    }
+
                     MessageBox.Show(string.Format(_language.DropFileXNotAccepted, fileName));
                 }
             }
@@ -14763,47 +14785,69 @@ namespace Nikse.SubtitleEdit.Forms
         private void AudioWaveFormDragDrop(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            string ext = string.Empty;
-            if (files.Length == 1)
-                ext = Path.GetExtension(files[0]).ToLower();
-            if (files.Length == 1 && audioVisualizer.WavePeaks == null && Utilities.GetMovieFileExtensions().Contains(ext))
+            string fileName = files[0];
+            if (files.Length != 1)
             {
-                _videoFileName = files[0];
-                AudioWaveForm_Click(null, null);
-                OpenVideo(_videoFileName);                
+                MessageBox.Show(_language.DropOnlyOneFile);
                 return;
             }
+
+            string ext = Path.GetExtension(fileName).ToLower();
+            if (ext != ".wav")
+            {
+                if (audioVisualizer.WavePeaks == null && Utilities.GetMovieFileExtensions().Contains(ext))
+                {
+                    _videoFileName = fileName;
+                    AudioWaveForm_Click(null, null);
+                    OpenVideo(_videoFileName);
+                    return;
+                }
+                try
+                {
+                    var fi = new FileInfo(fileName);
+                    if (fi.Length < 1024 * 500)
+                    {
+                        var lines = new List<string>();
+                        foreach (string line in File.ReadAllLines(fileName))
+                            lines.Add(line);
+                        foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+                        {
+                            if (format.IsMine(lines, fileName))
+                            {
+                                OpenSubtitle(fileName, null);
+                                return;
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                }
+            }
+
 
             if (string.IsNullOrEmpty(_videoFileName))            
                 buttonOpenVideo_Click(null, null);
             if (_videoFileName == null)
                 return;
 
-            if (files.Length == 1)
-            {
-                string fileName = files[0];
-                if (ext != ".wav")
-                {                 
-                    MessageBox.Show(string.Format(".Wav only!", fileName));
-                    return;
-                }
-
-                var addWaveForm = new AddWareForm();
-                string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
-                addWaveForm.InitializeViaWaveFile(fileName, spectrogramFolder);
-                if (addWaveForm.ShowDialog() == DialogResult.OK)
-                {
-                    string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
-                    addWaveForm.WavePeak.WritePeakSamples(peakWaveFileName);
-                    var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
-                    audioPeakWave.GenerateAllSamples();
-                    audioVisualizer.WavePeaks = audioPeakWave;
-                    timerWaveForm.Start();
-                }
+            if (ext != ".wav")
+            {                 
+                MessageBox.Show(string.Format(".Wav only!", fileName));
+                return;
             }
-            else
+
+            var addWaveForm = new AddWareForm();
+            string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
+            addWaveForm.InitializeViaWaveFile(fileName, spectrogramFolder);
+            if (addWaveForm.ShowDialog() == DialogResult.OK)
             {
-                MessageBox.Show(_language.DropOnlyOneFile);
+                string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
+                addWaveForm.WavePeak.WritePeakSamples(peakWaveFileName);
+                var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
+                audioPeakWave.GenerateAllSamples();
+                audioVisualizer.WavePeaks = audioPeakWave;
+                timerWaveForm.Start();
             }
         }
 
