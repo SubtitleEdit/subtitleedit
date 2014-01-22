@@ -8,12 +8,12 @@
 * IMPROVED:
    * Updated Korean language file - thx domddol
    * Updated Chinese language file - thx Leon
-   * Updated German language file - thx Siegwarth 
+   * Updated German language file - thx Siegwarth
    * Updated Dutch language file - thx Quetsbeek
 * FIXED:
   * Waveform/spectrogram: Moving start/end with ALT down now always works - thx Leon
-  * Waveform/spectrogram: Move border left/right now also always works even when it's 
-    near next/prev border
+  * Waveform/spectrogram: Move border left/right now also always works even 
+    when it's near next/prev border
   * Fixed transparent background in "OCR window" regarding transport streams
   * Now Viewnamese language actually shows in the "Choose language" dialog
   * Timed Text - List view context menu "Set language" had wrong text
