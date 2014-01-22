@@ -1361,6 +1361,24 @@ namespace Nikse.SubtitleEdit.Logic
             return languageId;
         }
 
+        public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle)
+        {
+            int bestCount = subtitle.Paragraphs.Count / 14;
+
+            var sb = new StringBuilder();
+            foreach (Paragraph p in subtitle.Paragraphs)
+                sb.AppendLine(p.Text);
+            string text = sb.ToString();
+
+            string languageId = AutoDetectGoogleLanguage(text, bestCount);
+
+            if (string.IsNullOrEmpty(languageId))
+                return null;
+
+            return languageId;
+        }
+
+
         public static string AutoDetectLanguageName(string languageName, Subtitle subtitle)
         {
             if (string.IsNullOrEmpty(languageName))
