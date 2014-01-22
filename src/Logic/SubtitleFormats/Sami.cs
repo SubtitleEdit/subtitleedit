@@ -376,6 +376,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p2 in subtitle.Paragraphs)
                 p2.Text = Utilities.HtmlDecode(p2.Text);
             subtitle.Renumber(1);
+
+            if (subtitle.Paragraphs.Count > 0 &&
+                (subtitle.Paragraphs[subtitle.Paragraphs.Count-1].Text.ToUpper().Trim() == "</BODY>" ||
+                subtitle.Paragraphs[subtitle.Paragraphs.Count-1].Text.ToUpper().Trim() == "<BODY>"))
+                subtitle.Paragraphs.RemoveAt(subtitle.Paragraphs.Count - 1);
         }
 
         public override bool HasStyleSupport
