@@ -995,7 +995,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (AllowFix(p, fixAction))
                     {
                         string oldCurrent = p.ToString();
-                        displayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                         _totalFixes++;
                         noOfLongDisplayTimes++;
