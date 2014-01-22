@@ -14762,18 +14762,28 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AudioWaveFormDragDrop(object sender, DragEventArgs e)
         {
-            if (string.IsNullOrEmpty(_videoFileName))
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            string ext = string.Empty;
+            if (files.Length == 1)
+                ext = Path.GetExtension(files[0]).ToLower();
+            if (files.Length == 1 && audioVisualizer.WavePeaks == null && Utilities.GetMovieFileExtensions().Contains(ext))
+            {
+                _videoFileName = files[0];
+                AudioWaveForm_Click(null, null);
+                OpenVideo(_videoFileName);                
+                return;
+            }
+
+            if (string.IsNullOrEmpty(_videoFileName))            
                 buttonOpenVideo_Click(null, null);
             if (_videoFileName == null)
                 return;
 
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (files.Length == 1)
             {
                 string fileName = files[0];
-                string ext = Path.GetExtension(fileName).ToLower();
                 if (ext != ".wav")
-                {
+                {                 
                     MessageBox.Show(string.Format(".Wav only!", fileName));
                     return;
                 }
