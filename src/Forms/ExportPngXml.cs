@@ -1344,7 +1344,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var sf = new StringFormat();
             sf.Alignment = StringAlignment.Near;
             sf.LineAlignment = StringAlignment.Near;// draw the text to a path
-            Bitmap bmp = new Bitmap(1024, 100);
+            Bitmap bmp = new Bitmap(parameter.ScreenWidth, 200);
             var g = Graphics.FromImage(bmp);
 
             g.CompositingQuality = CompositingQuality.HighSpeed;
@@ -1535,9 +1535,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             g.Dispose();
 
             var nbmp = new NikseBitmap(bmp);
-//            nbmp.CropTopTransparent(0);
-            nbmp.CropSidesAndBottom(0, Color.Transparent, false);
-            nbmp.CropTransparentSidesAndBottom(0, false);
+            //nbmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), false);
+            nbmp.CropTransparentSidesAndBottom(0, true);
             bmp.Dispose();
             return nbmp.Width;
         }
