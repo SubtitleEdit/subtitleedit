@@ -930,6 +930,7 @@
             public string TimeCodeImportedFromXY { get; set; }
             public string BeforeInsertSubtitleAtVideoPosition { get; set; }
             public string BeforeSetStartTimeAndOffsetTheRest { get; set; }
+            public string BeforeSetEndTimeAndOffsetTheRest { get; set; }
             public string BeforeSetEndAndVideoPosition { get; set; }
             public string ContinueWithCurrentSpellCheck { get; set; }
             public string CharactersPerSecond { get; set; }
@@ -1680,6 +1681,8 @@
             public string AdjustSelected100MsForward { get; set; }
             public string AdjustSelected100MsBack { get; set; }
             public string AdjustSetStartTimeKeepDuration { get; set; }
+            public string AdjustSetEndAndOffsetTheRest { get; set; }
+            public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
             public string MainCreateStartDownEndUp { get; set; }
             public string MergeDialogue { get; set; }
             public string GoToNext { get; set; }

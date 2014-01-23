@@ -132,6 +132,8 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainCreateStartDownEndUp = Keys.None;
         Keys _mainCreateSetEndAddNewAndGoToNew = Keys.None;
         Keys _mainAdjustSetStartAndOffsetTheRest = Keys.None;
+        Keys _mainAdjustSetEndAndOffsetTheRest = Keys.None;
+        Keys _mainAdjustSetEndAndOffsetTheRestAndGoToNext = Keys.None;        
         Keys _mainAdjustSetEndAndGotoNext = Keys.None;
         Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
         Keys _mainAdjustSetStartAutoDurationAndGoToNext = Keys.None;
@@ -10668,12 +10670,22 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (mediaPlayer.VideoPlayer != null)
                 {
-                    if (_mainAdjustSetStartAndOffsetTheRest == e.KeyData) // ((e.Modifiers == Keys.Control && e.KeyCode == Keys.Space))
+                    if (_mainAdjustSetStartAndOffsetTheRest == e.KeyData) 
                     {
                         ButtonSetStartAndOffsetRestClick(null, null);
                         e.SuppressKeyPress = true;
                     }
-                    else if (_mainAdjustSetEndAndGotoNext == e.KeyData) // e.Modifiers == Keys.Shift && e.KeyCode == Keys.Space)
+                    else if (_mainAdjustSetEndAndOffsetTheRest == e.KeyData) 
+                    {
+                        SetEndAndOffsetTheRest(false);
+                        e.SuppressKeyPress = true;
+                    }
+                    else if (_mainAdjustSetEndAndOffsetTheRestAndGoToNext == e.KeyData) 
+                    {
+                        SetEndAndOffsetTheRest(true);
+                        e.SuppressKeyPress = true;
+                    }                        
+                    else if (_mainAdjustSetEndAndGotoNext == e.KeyData)
                     {
                         ButtonSetEndAndGoToNextClick(null, null);
                         e.SuppressKeyPress = true;
@@ -10846,6 +10858,73 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             // put new entries above tabs
+        }
+
+        private void SetEndAndOffsetTheRest(bool goToNext)
+        {
+            if (SubtitleListview1.SelectedItems.Count == 1)
+            {
+                bool oldSync = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
+                checkBoxSyncListViewWithVideoWhilePlaying.Checked = false;
+
+                int index = SubtitleListview1.SelectedItems[0].Index;
+                double videoPosition = mediaPlayer.CurrentPosition;
+                var tc = new TimeCode(TimeSpan.FromSeconds(videoPosition));
+
+                double offset = tc.TotalMilliseconds - _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
+                if (_subtitle.Paragraphs[index].StartTime.TotalMilliseconds + 100 > tc.TotalMilliseconds || offset > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                    return;
+
+                MakeHistoryForUndo(_language.BeforeSetEndTimeAndOffsetTheRest + "  " + _subtitle.Paragraphs[index].Number.ToString() + " - " + tc.ToString());
+
+                numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
+                _subtitle.Paragraphs[index].EndTime.TotalSeconds = videoPosition;
+                SubtitleListview1.SetDuration(index, _subtitle.Paragraphs[index]);
+                checkBoxSyncListViewWithVideoWhilePlaying.Checked = oldSync;
+                numericUpDownDuration.Value = (decimal)_subtitle.Paragraphs[index].Duration.TotalSeconds;
+                numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
+
+                for (int i = index + 1; i < SubtitleListview1.Items.Count; i++)
+                {
+                    if (!_subtitle.Paragraphs[i].StartTime.IsMaxTime)
+                    {
+                        _subtitle.Paragraphs[i].StartTime = new TimeCode(TimeSpan.FromMilliseconds(_subtitle.Paragraphs[i].StartTime.TotalMilliseconds + offset));
+                        _subtitle.Paragraphs[i].EndTime = new TimeCode(TimeSpan.FromMilliseconds(_subtitle.Paragraphs[i].EndTime.TotalMilliseconds + offset));
+                        SubtitleListview1.SetDuration(i, _subtitle.Paragraphs[i]);
+                    }
+                }
+
+                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                {
+                    Paragraph original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        index = _subtitleAlternate.GetIndex(original);
+                        for (int i = index; i < _subtitleAlternate.Paragraphs.Count; i++)
+                        {
+                            if (!_subtitleAlternate.Paragraphs[i].StartTime.IsMaxTime)
+                            {
+                                _subtitleAlternate.Paragraphs[i].StartTime = new TimeCode(TimeSpan.FromMilliseconds(_subtitleAlternate.Paragraphs[i].StartTime.TotalMilliseconds + offset));
+                                _subtitleAlternate.Paragraphs[i].EndTime = new TimeCode(TimeSpan.FromMilliseconds(_subtitleAlternate.Paragraphs[i].EndTime.TotalMilliseconds + offset));
+                            }
+                        }
+                    }
+                }
+                if (IsFramesRelevant && CurrentFrameRate > 0)
+                {
+                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                        ShowSource();
+                }
+
+                checkBoxSyncListViewWithVideoWhilePlaying.Checked = oldSync;
+                numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
+
+                if (goToNext)
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(index + 1);
+                }
+            }
         }
 
         private void MoveVideoSeconds(double seconds)
@@ -13957,6 +14036,8 @@ namespace Nikse.SubtitleEdit.Forms
             _mainCreateStartDownEndUp = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp);
             _mainCreateSetEndAddNewAndGoToNew = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
             _mainAdjustSetStartAndOffsetTheRest = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
+            _mainAdjustSetEndAndOffsetTheRest = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest);
+            _mainAdjustSetEndAndOffsetTheRestAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
             _mainAdjustSetEndAndGotoNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
             _mainAdjustInsertViaEndAutoStartAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
             _mainAdjustSetStartAutoDurationAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
@@ -14795,7 +14876,7 @@ namespace Nikse.SubtitleEdit.Forms
             string ext = Path.GetExtension(fileName).ToLower();
             if (ext != ".wav")
             {
-                if (audioVisualizer.WavePeaks == null && Utilities.GetMovieFileExtensions().Contains(ext))
+                if (audioVisualizer.WavePeaks == null && (Utilities.GetMovieFileExtensions().Contains(ext) || ext == ".mp3"))
                 {
                     _videoFileName = fileName;
                     AudioWaveForm_Click(null, null);
