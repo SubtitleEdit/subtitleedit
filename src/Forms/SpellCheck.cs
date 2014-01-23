@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Enums;
+using Nikse.SubtitleEdit.Logic.SpellCheck;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Enums;
-using Nikse.SubtitleEdit.Logic.SpellCheck;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -650,10 +649,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfCorrectWords++;
                     }
+                    else if ((_currentWord.EndsWith("'") || _currentWord.StartsWith("'")) && _userWordList.IndexOf(_currentWord.Trim("'".ToCharArray()).ToLower()) >= 0)
+                    {
+                        _noOfCorrectWords++;
+                    }
                     else if (_changeAllDictionary.ContainsKey(_currentWord))
                     {
                         _noOfChangedWords++;
                         _mainWindow.CorrectWord(_changeAllDictionary[_currentWord], _currentParagraph, _currentWord, ref _firstChange);
+                    }
+                    else if (_changeAllDictionary.ContainsKey(_currentWord.Trim("'".ToCharArray())))
+                    {
+                        _noOfChangedWords++;
+                        _mainWindow.CorrectWord(_changeAllDictionary[_currentWord], _currentParagraph, _currentWord.Trim("'".ToCharArray()), ref _firstChange);
                     }
                     else if (_namesEtcListUppercase.IndexOf(_currentWord) >= 0)
                     {
@@ -797,7 +805,6 @@ namespace Nikse.SubtitleEdit.Forms
             List<string> replaceNames = new List<string>();
             s = Utilities.RemoveHtmlTags(s);
             s = GetTextWithoutUserWordsAndNames(replaceIds, replaceNames, s);
-            //_words = s.Split(.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             _words = Split(s);
             _words = FixWordsInserUserWordAndNames(replaceIds, replaceNames, _words);
             return s;
