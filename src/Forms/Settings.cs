@@ -689,6 +689,10 @@ namespace Nikse.SubtitleEdit.Forms
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetEndTime + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEnd));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSelected100MsForward + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSelected100MsBack + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRest))
+                adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRest + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRestAndGoToNext))
+                adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRestAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext));
             treeViewShortcuts.Nodes.Add(adjustNode);
 
             var audioVisualizerNode = new TreeNode(Configuration.Settings.Language.Settings.WaveformAndSpectrogram);
@@ -1399,6 +1403,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Settings.AdjustSelected100MsBack != null && text == Configuration.Settings.Language.Settings.AdjustSelected100MsBack.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRest != null && text == Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRest.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRestAndGoToNext != null && text == Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRestAndGoToNext.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext = GetShortcut(node.Text);
                 }
             }
 

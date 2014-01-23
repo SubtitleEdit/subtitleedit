@@ -773,6 +773,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainCreateSetEndAddNewAndGoToNew { get; set; }
         public string MainCreateStartDownEndUp { get; set; }
         public string MainAdjustSetStartAndOffsetTheRest { get; set; }
+        public string MainAdjustSetEndAndOffsetTheRest { get; set; }
+        public string MainAdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
         public string MainAdjustSetEndAndGotoNext { get; set; }
         public string MainAdjustViaEndAutoStartAndGoToNext { get; set; }
         public string MainAdjustSetStartAutoDurationAndGoToNext { get; set; }
@@ -869,6 +871,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainCreateSetEndAddNewAndGoToNew = string.Empty;
             MainCreateStartDownEndUp = string.Empty;
             MainAdjustSetStartAndOffsetTheRest = "Control+Space";
+            MainAdjustSetEndAndOffsetTheRest = string.Empty;
+            MainAdjustSetEndAndOffsetTheRestAndGoToNext = string.Empty;
             MainAdjustSetEndAndGotoNext = string.Empty;
             MainAdjustViaEndAutoStartAndGoToNext = string.Empty;
             MainAdjustSetStartAutoDurationAndGoToNext = string.Empty;
@@ -2222,6 +2226,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainAdjustSetStartAndOffsetTheRest");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustSetEndAndOffsetTheRest");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustSetEndAndOffsetTheRestAndGoToNext");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainAdjustSetEndAndGotoNext");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustSetEndAndGotoNext = subNode.InnerText;
@@ -2822,6 +2832,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainCreateSetEndAddNewAndGoToNew", settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
             textWriter.WriteElementString("MainCreateStartDownEndUp", settings.Shortcuts.MainCreateStartDownEndUp);
             textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest", settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
+            textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRest", settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest);
+            textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRestAndGoToNext", settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
             textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", settings.Shortcuts.MainAdjustSetEndAndGotoNext);
             textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
             textWriter.WriteElementString("MainAdjustSetStartAutoDurationAndGoToNext", settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
