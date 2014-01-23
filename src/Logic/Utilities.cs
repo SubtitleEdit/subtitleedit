@@ -2848,26 +2848,7 @@ namespace Nikse.SubtitleEdit.Logic
             // plus literals are encoded as %2b normally so this should be safe
             text = text.Replace("+", " ");
             return System.Uri.UnescapeDataString(text);
-        }
-
-        public static bool IsWordInUserPhrases(List<string> userPhraseList, int index, string[] words)
-        {
-            string current = words[index];
-            string prev = "-";
-            if (index > 0)
-                prev = words[index-1];
-            string next = "-";
-            if (index < words.Length-1)
-                next = words[index+1];
-            foreach (string userPhrase in userPhraseList)
-            {
-                if (userPhrase == current + " " + next)
-                    return true;
-                if (userPhrase == prev + " " + current)
-                    return true;
-            }
-            return false;
-        }
+        }       
 
         public static void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
         {

@@ -3,6 +3,7 @@
 3.3.13 (xth February 2014)
 * NEW:
    * Compare window now has an option to "ignore line breaks" - thx Krystian
+   * Compare window now has a "text change percent" - thx Krystian
    * Bridge gap in durations now have minimum display time - thx Krystian
    * Option for "Focus on mouse-over" for waveform/spectrogram - thx lansing
 * IMPROVED:
@@ -12,6 +13,7 @@
    * Updated Dutch language file - thx Quetsbeek
    * Many settings now remembered from "Export to image based foramt"
    * Dropping a video file on empty waveform will now start extraction of waveform - thx Leon
+   * Better reading of SCC files
 * FIXED:
   * Waveform/spectrogram: Moving start/end with ALT down now always works - thx Leon
   * Waveform/spectrogram: Move border left/right now also always works even 
@@ -24,6 +26,8 @@
   * Fixed possible crash in OCR window (if no language is available)
   * "OCR window" - Norweigan bokmål now works as spell check language
   * Disabled saving of empty files
+  * Fixed bug in centering of exported images - thx minhjirachi
+  * Fixed crash in Spell check - Get dictionaries (if not internet connection) - thx Krystian :) 
 
 
 3.3.12 (12th January 2014)

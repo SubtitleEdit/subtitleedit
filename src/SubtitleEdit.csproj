@@ -838,6 +838,7 @@
     <Compile Include="Logic\Enums\SpellCheckAction.cs" />
     <Compile Include="Logic\FindReplaceDialogHelper.cs" />
     <Compile Include="Logic\HistoryItem.cs" />
+    <Compile Include="Logic\SpellCheckWord.cs" />
     <Compile Include="Logic\SpellCheck\Hunspell.cs" />
     <Compile Include="Logic\SpellCheck\LinuxHunspell.cs" />
     <Compile Include="Logic\SpellCheck\MacHunspell.cs" />

@@ -8,6 +8,7 @@ using System.Xml;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Enums;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -43,7 +44,8 @@ namespace Nikse.SubtitleEdit.Forms
         Paragraph _currentParagraph;
         int _currentIndex;
         string _currentWord;
-        string[] _words;
+        SpellCheckWord _currentSpellCheckWord;
+        List<SpellCheckWord> _words;
         int _wordsIndex;
         Subtitle _subtitle;
         string _originalWord;
@@ -130,14 +132,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void Initialize(string languageName, string word, List<string> suggestions, string paragraph, string progress)
+        public void Initialize(string languageName, SpellCheckWord word, List<string> suggestions, string paragraph, string progress)
         {
-            _originalWord = word;
+            _originalWord = word.Text;
             _suggestions = suggestions;
             groupBoxWordNotFound.Visible = true;
             groupBoxEditWholeText.Visible = false;
             Text = Configuration.Settings.Language.SpellCheck.Title + " [" + languageName + "] - " + progress;
-            textBoxWord.Text = word;
+            textBoxWord.Text = word.Text;
             textBoxWholeText.Text = paragraph;
             listBoxSuggestions.Items.Clear();
             foreach (string suggestion in suggestions)
@@ -168,51 +170,58 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxDictionaries.SelectedIndexChanged += ComboBoxDictionariesSelectedIndexChanged;
         }
 
-        private void ShowActiveWordWithColor(string word)
+        private void ShowActiveWordWithColor(SpellCheckWord word)
         {
             richTextBoxParagraph.SelectAll();
             richTextBoxParagraph.SelectionColor = Color.Black;
             richTextBoxParagraph.SelectionLength = 0;
 
-            var regEx = Utilities.MakeWordSearchRegex(word);
-            Match match = regEx.Match(richTextBoxParagraph.Text);
-            if (match.Success)
+            int newLine1 = int.MaxValue;
+            int newLine2 = int.MaxValue;
+            if (word.Text.Contains(Environment.NewLine))
             {
-                richTextBoxParagraph.SelectionStart = match.Index;
-                richTextBoxParagraph.SelectionLength = word.Length;
-                while (richTextBoxParagraph.SelectedText != word && richTextBoxParagraph.SelectionStart > 0)
-                {
-                    richTextBoxParagraph.SelectionStart = richTextBoxParagraph.SelectionStart - 1;
-                    richTextBoxParagraph.SelectionLength = word.Length;
-                }
+                newLine1 = word.Text.IndexOf(Environment.NewLine);
+                if (word.Text.IndexOf(Environment.NewLine, newLine1 + 1) > 0)
+                    newLine2 = word.Text.IndexOf(Environment.NewLine, newLine1 + 1);
+            }
+
+            int idx = word.Index;
+            if (idx > 0 && !richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
+                idx--;
+
+            if (richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
+            {
+                if (idx > newLine1)
+                    idx--;
+                if (idx > newLine2)
+                    idx--;
+                richTextBoxParagraph.SelectionStart = idx;
+                richTextBoxParagraph.SelectionLength = word.Text.Length;
                 richTextBoxParagraph.SelectionColor = Color.Red;
             }
-            else if (richTextBoxParagraph.Text.Length > 0)
+            else if (richTextBoxParagraph.Text.Substring(idx + 1).StartsWith(word.Text))
             {
-                int idx = richTextBoxParagraph.Text.IndexOf(word);
-                while (idx >= 0)
-                {
-                    bool ok = idx == 0 || richTextBoxParagraph.Text[idx - 1] == ' ' || richTextBoxParagraph.Text[idx - 1] == '"' || idx == richTextBoxParagraph.Text.Length - word.Length ||
-                                       Environment.NewLine.EndsWith(richTextBoxParagraph.Text[idx - 1].ToString());
-
-                    if (ok)
-                    {
-                        richTextBoxParagraph.SelectionStart = idx;
-                        richTextBoxParagraph.SelectionLength = word.Length;
-                        while (richTextBoxParagraph.SelectedText != word && richTextBoxParagraph.SelectionStart > 0)
-                        {
-                            richTextBoxParagraph.SelectionStart = richTextBoxParagraph.SelectionStart - 1;
-                            richTextBoxParagraph.SelectionLength = word.Length;
-                        }
-                        richTextBoxParagraph.SelectionColor = Color.Red;
-                    }
-
-                    idx += word.Length;
-                    if (idx < richTextBoxParagraph.Text.Length)
-                        idx = richTextBoxParagraph.Text.IndexOf(word, idx);
-                    else
-                        idx = -1;
-                }
+                if (idx > newLine1)
+                    idx--;
+                if (idx > newLine2)
+                    idx--;
+                richTextBoxParagraph.SelectionStart = idx + 1;
+                richTextBoxParagraph.SelectionLength = word.Text.Length;
+                richTextBoxParagraph.SelectionColor = Color.Red;
+            }
+            else if (richTextBoxParagraph.Text.Substring(idx + 2).StartsWith(word.Text))
+            {
+                if (idx > newLine1)
+                    idx--;
+                if (idx > newLine2)
+                    idx--;
+                richTextBoxParagraph.SelectionStart = idx + 2;
+                richTextBoxParagraph.SelectionLength = word.Text.Length;
+                richTextBoxParagraph.SelectionColor = Color.Red;
+            }
+            else
+            {
+                MessageBox.Show("Test");
             }
         }
 
@@ -452,7 +461,9 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case SpellCheckAction.SkipAll:
                     _noOfSkippedWords++;
-                    _skipAllList.Add(_currentWord.ToUpper());
+                    _skipAllList.Add(ChangeWord.ToUpper());
+                    if (ChangeWord.EndsWith("'") || ChangeWord.StartsWith("'"))
+                        _skipAllList.Add(ChangeWord.ToUpper().Trim("'".ToCharArray()));
                     break;
                 case SpellCheckAction.AddToDictionary:
                     if (_userWordList.IndexOf(ChangeWord) < 0)
@@ -516,14 +527,34 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowActionInfo(_currentAction, textBoxWord.Text);
         }
 
+        public static bool IsWordInUserPhrases(List<string> userPhraseList, int index, List<SpellCheckWord> words)
+        {
+            string current = words[index].Text;
+            string prev = "-";
+            if (index > 0)
+                prev = words[index - 1].Text;
+            string next = "-";
+            if (index < words.Count - 1)
+                next = words[index + 1].Text;
+            foreach (string userPhrase in userPhraseList)
+            {
+                if (userPhrase == current + " " + next)
+                    return true;
+                if (userPhrase == prev + " " + current)
+                    return true;
+            }
+            return false;
+        }
+
         private void PrepareNextWord()
         {
             while (true)
             {
-                if (_wordsIndex + 1 < _words.Length)
+                if (_wordsIndex + 1 < _words.Count)
                 {
                     _wordsIndex++;
-                    _currentWord = _words[_wordsIndex];
+                    _currentWord = _words[_wordsIndex].Text;
+                    _currentSpellCheckWord = _words[_wordsIndex];
                 }
                 else
                 {
@@ -536,13 +567,14 @@ namespace Nikse.SubtitleEdit.Forms
                         SetWords(s);
 
                         _wordsIndex = 0;
-                        if (_words.Length == 0)
+                        if (_words.Count == 0)
                         {
                             _currentWord = string.Empty;
                         }
                         else
                         {
-                            _currentWord = _words[_wordsIndex];
+                            _currentWord = _words[_wordsIndex].Text;
+                            _currentSpellCheckWord = _words[_wordsIndex];
                         }
                     }
                     else
@@ -598,25 +630,19 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                     }
-                    if (_currentWord.Length > 1)
-                    {
-                        //if (_currentWord.EndsWith("'"))
-                        //{
-                        //    _postfix = "'";
-                        //    _currentWord = _currentWord.Substring(0, _currentWord.Length - 1);
-                        //}
-                        //if (_currentWord.EndsWith("`"))
-                        //{
-                        //    _postfix = "`";
-                        //    _currentWord = _currentWord.Substring(0, _currentWord.Length - 1);
-                        //}
-                    }
-
                     if (_namesEtcList.IndexOf(_currentWord) >= 0)
                     {
                         _noOfNamesEtc++;
                     }
+                    else if ((_currentWord.EndsWith("'") || _currentWord.StartsWith("'")) && _namesEtcList.IndexOf(_currentWord.Trim("'".ToCharArray())) >= 0)
+                    {
+                        _noOfNamesEtc++;
+                    }
                     else if (_skipAllList.IndexOf(_currentWord.ToUpper()) >= 0)
+                    {
+                        _noOfSkippedWords++;
+                    }
+                    else if ((_currentWord.EndsWith("'") || _currentWord.StartsWith("'")) && _skipAllList.IndexOf(_currentWord.ToUpper().Trim("'".ToCharArray())) >= 0)
                     {
                         _noOfSkippedWords++;
                     }
@@ -641,7 +667,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfNamesEtc++;
                     }
-                    else if (Utilities.IsWordInUserPhrases(_userPhraseList, _wordsIndex, _words))
+                    else if (IsWordInUserPhrases(_userPhraseList, _wordsIndex, _words))
                     {
                         _noOfCorrectWords++;
                     }
@@ -649,13 +675,22 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         bool correct;
 
-                        if (_currentWord.Length > 1)
+                        if (_prefix == "'" && _currentWord.Length >= 1 && (DoSpell(_prefix + _currentWord) || _userWordList.Contains(_prefix + _currentWord)))
+                        {
+                            correct = true;
+                        }
+                        else if (_currentWord.Length > 1)
                         {
                             correct = DoSpell(_currentWord);
                             if (!correct && (_currentWord.EndsWith("'") || _currentWord.EndsWith("`")))
                                 correct = DoSpell(_currentWord.TrimEnd('\'').TrimEnd('`'));
                             if (!correct && _currentWord.EndsWith("'s") && _currentWord.Length > 4)
                                 correct = DoSpell(_currentWord.TrimEnd('s').TrimEnd('\''));
+                            if (!correct && _currentWord.EndsWith("'") && DoSpell(_currentWord.TrimEnd("'".ToCharArray())))
+                            {
+                                _currentWord = _currentWord.TrimEnd("'".ToCharArray());
+                                correct = true;
+                            }
                         }
                         else
                         {
@@ -711,10 +746,17 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
+                                
                                 if (_postfix != null && _postfix == "'")
-                                    Initialize(_languageName, _currentWord + _postfix, suggestions, _currentParagraph.Text, string.Format(Configuration.Settings.Language.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
+                                {
+                                    _currentSpellCheckWord.Text = _currentWord + _postfix;
+                                    Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, string.Format(Configuration.Settings.Language.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
+                                }
                                 else
-                                    Initialize(_languageName, _currentWord, suggestions, _currentParagraph.Text, string.Format(Configuration.Settings.Language.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
+                                {
+                                    _currentSpellCheckWord.Text = _currentWord;
+                                    Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, string.Format(Configuration.Settings.Language.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
+                                }
                                 if (!this.Visible)
                                     this.ShowDialog(_mainWindow);
                                 return; // wait for user input
@@ -726,13 +768,37 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private static List<SpellCheckWord> Split(string s)
+        {
+            const string SplitChars = " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“";
+            var list = new List<SpellCheckWord>();
+            var sb = new StringBuilder();
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (SplitChars.Contains(s.Substring(i, 1)))
+                {
+                    if (sb.Length > 0)
+                        list.Add(new SpellCheckWord() { Text = sb.ToString(), Index = i-sb.Length } );
+                    sb = new StringBuilder ();
+                }
+                else
+                {
+                    sb.Append(s.Substring(i, 1));
+                }
+            }
+            if (sb.Length > 0)
+                list.Add(new SpellCheckWord() { Text = sb.ToString(), Index = s.Length - 1 - sb.Length });
+            return list;
+        }
+
         private string SetWords(string s)
         {
             List<string> replaceIds = new List<string>();
             List<string> replaceNames = new List<string>();
             s = Utilities.RemoveHtmlTags(s);
             s = GetTextWithoutUserWordsAndNames(replaceIds, replaceNames, s);
-            _words = s.Split(" -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            //_words = s.Split(.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            _words = Split(s);
             _words = FixWordsInserUserWordAndNames(replaceIds, replaceNames, _words);
             return s;
         }
@@ -793,15 +859,15 @@ namespace Nikse.SubtitleEdit.Forms
             return text;
         }
 
-        private string[] FixWordsInserUserWordAndNames(List<string> replaceIds, List<string> replaceNames, string[] words)
+        private List<SpellCheckWord> FixWordsInserUserWordAndNames(List<string> replaceIds, List<string> replaceNames, List<SpellCheckWord> words)
         {
             if (replaceIds.Count == 0)
                 return words;
 
-            for (int i = 0; i < words.Length; i++)
+            for (int i = 0; i < words.Count; i++)
             {
-                if (replaceIds.Contains(words[i]))
-                    words[i] = replaceNames[replaceIds.IndexOf(words[i])];
+                if (replaceIds.Contains(words[i].Text))
+                    words[i].Text = replaceNames[replaceIds.IndexOf(words[i].Text)];
             }
             return words;
         }
