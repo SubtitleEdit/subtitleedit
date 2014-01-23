@@ -1328,6 +1328,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static int CalcWidthViaDraw(string text, MakeBitmapParameter parameter)
         {
+            text = Utilities.RemoveHtmlTags(text, true).Trim();
             var path = new GraphicsPath();
             var sb = new StringBuilder();
             int i = 0;
