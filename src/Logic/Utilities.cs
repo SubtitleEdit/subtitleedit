@@ -353,6 +353,9 @@ namespace Nikse.SubtitleEdit.Logic
             if (s2.EndsWith(" Mrs.") || s2.EndsWith(" Ms.") || s2.EndsWith(" Mr.") || s2.EndsWith(" Dr."))
                 return false;
 
+            if (s2.EndsWith("? -") || s2.EndsWith("! -") || s2.EndsWith(". -"))
+                return false;
+
             return true;
         }
 
@@ -474,7 +477,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoBreakLine(string text, int mininumLength, int maximumLength, int mergeLinesShorterThan)
         {
-            if (text == null || text.Length <3)
+            if (text == null || text.Length < 3)
                 return text;
 
             string s = text;
@@ -569,8 +572,14 @@ namespace Nikse.SubtitleEdit.Logic
                             string rest = s.Substring(mid - j + 1).TrimStart();
                             if (rest.Length > 0 && (rest.Substring(0, 1) == rest.Substring(0, 1).ToUpper()))
                             {
-                                splitPos = mid - j;
-                                break;
+                                if (mid - j > 5 && s[mid - j - 1] == ' ' && "!?.".Contains(s[mid - j - 2].ToString()))
+                                {
+                                }
+                                else
+                                {
+                                    splitPos = mid - j;
+                                    break;
+                                }
                             }
                         }
                     }
