@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Brazilian Portuguese">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.13</Version>
     <TranslatedBy>Tradução (Português do Brasil): Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile />
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
@@ -222,7 +222,10 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>Diferennça segui&amp;nte</NextDifference>
     <SubtitlesNotAlike>As legendas não são parecidas</SubtitlesNotAlike>
     <XNumberOfDifference>Número de diferenças: {0}</XNumberOfDifference>
+    <XNumberOfDifferenceAndPercentChanged>Número de diferenças: {0} ({1}% de palavras alteradas)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Número de diferenças: {0} ({1}% de letras alteradas)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Mostrar somente diferenças</ShowOnlyDifferences>
+    <IgnoreLineBreaks>Ignorar quebras de linha</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Buscar somente diferenças no texto</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Não é possível comparar com legendas baseadas em imagem</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -254,6 +257,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>No próximo intervalo</GapToNext>
     <BridgeGapsSmallerThanXPart1>Ligar intervalos menores que</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisegundos</BridgeGapsSmallerThanXPart2>
+    <MinMsBetweenLines>Mín. milisegundos entre linhas</MinMsBetweenLines>
     <ProlongEndTime>Texto anterior assume todo o intervalo</ProlongEndTime>
     <DivideEven>Texto divide o intervalo</DivideEven>
   </DurationsBridgeGaps>
@@ -609,11 +613,14 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </ImportSceneChanges>
   <ImportText>
     <Title>Importar texto simples</Title>
+    <OneSubtitleIsOneFile>Vários arquivos - um arquivo é uma legenda</OneSubtitleIsOneFile>
     <OpenTextFile>Abrir arquivo de texto...</OpenTextFile>
+    <OpenTextFiles>Abrir arquivos de texto...</OpenTextFiles>
     <ImportOptions>Opções de importação</ImportOptions>
     <Splitting>Divsão</Splitting>
     <AutoSplitText>Auto-dividir texto</AutoSplitText>
     <OneLineIsOneSubtitle>Uma linha é uma legenda</OneLineIsOneSubtitle>
+    <LineBreak>Quebra de linha</LineBreak>
     <SplitAtBlankLines>Dividir em linhas em branco</SplitAtBlankLines>
     <MergeShortLines>Combinar linhas curtas com continuação</MergeShortLines>
     <RemoveEmptyLines>Remover linhas em branco</RemoveEmptyLines>
@@ -1168,6 +1175,10 @@ Deseja continuar?</SubtitleAppendPrompt>
     <PluginXExecuted>Plugin '{0}' executado.</PluginXExecuted>
     <NotAValidXSubFile>Não é um arquivo xsub válido!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Antes de unir linhas com o mesmo texto</BeforeMergeLinesWithSameText>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>A legenda com códigos de tempo possui um númnero de linhas ({0}) diferente que a legenda atual ({1}). Continuar assim mesmo?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ErrorLoadIdx>Impossível ler/editar arquivos. idx. Arquivos idx são parte de um par de arquivos idx/sub (também chamado VobSub), e o SE pode abrir o arquivo .sub.</ErrorLoadIdx>
+    <ErrorLoadRar>Este arquivo parece ser um arquivo RAR compactado. O SE não consegue abrir arquivos compactados.</ErrorLoadRar>
+    <ErrorLoadZip>Este arquivo parece ser um arquivo ZIP compactado. O SE não consegue abrir arquivos compactados</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Selecionar legenda a partir do arquivo Matroska</Title>
@@ -1218,6 +1229,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <EndsWith>Termina com</EndsWith>
     <NoContains>Não contém</NoContains>
     <RegEx>Expressão regular</RegEx>
+    <UnequalLines>Linhas não iguais</UnequalLines>
+    <EqualLines>Linhas iguais</EqualLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Múltipla substituição</Title>
@@ -1429,6 +1442,8 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <WaveFormShowGridLines>Mostrar quadriculado</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Invertir direção da roda do mouse</ReverseMouseWheelScrollDirection>
     <WaveFormAllowOverlap>Permitir sobrepor (ao mover/redimensionar)</WaveFormAllowOverlap>
+    <WaveFormFocusMouseEnter>Definir foco na entrada do mouse</WaveFormFocusMouseEnter>
+    <WaveFormListViewFocusMouseEnter>Também definir foco da visualização em lista na entrada do mouse</WaveFormListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Marcador da borda deve ser entre</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milisegundos</WaveformBorderHitMs2>
     <WaveFormColor>Cor</WaveFormColor>
@@ -1520,6 +1535,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <WaveformAddTextHere>Adicionar texto aqui (para nova seleção)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Tocar nova seleção</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Tocar primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
+    <WaveformFocusListView>Foco da visualização em lista</WaveformFocusListView>
     <GoBack1Frame>Um quadro para trás</GoBack1Frame>
     <GoForward1Frame>Um quadro para frente</GoForward1Frame>
     <GoBack100Milliseconds>100 ms atrás</GoBack100Milliseconds>
@@ -1555,6 +1571,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <ListViewColumnDelete>Coluna, apagar texto</ListViewColumnDelete>
     <ListViewColumnInsert>Coluna, inserir texto</ListViewColumnInsert>
     <ListViewColumnPaste>Coluna, colar</ListViewColumnPaste>
+    <ListViewFocusWaveform>Foco da forma de onda/espectrograma</ListViewFocusWaveform>
     <ShowBeamer>Iniciar projeção da legenda em tela cheia</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mover última palavra para baixo na próxima linha</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Mover primeira palavra da próxima linha para cima</MainTextBoxMoveFirstWordFromNextUp>
@@ -1758,6 +1775,11 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <Info>Um ponto de sincronização ajustará a posicão, dois ou mais pontos ajustam aposição e velocidade</Info>
     <ApplySync>Aplicar</ApplySync>
   </PointSync>
+  <TransportStreamSubtitleChooser>
+    <Title>Escolha da legenda do fluxo de transporte - {0}</Title>
+    <PidLine>Idntificador do Pacote de Transporte (PID) = {0}, número de legendas = {1}</PidLine>
+    <SubLine>{0}:  {1} --&gt; {2},  {3} imagem(ns)</SubLine>
+  </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tipo de legenda desconhecido</Title>
     <Message>Se desejar corrigir isto, por favor envie um e-mail para mailto: niksedk@gmail.com e inclua uma cópia das legendas.</Message>
@@ -1820,6 +1842,10 @@ Manter as alterações?</KeepChangesMessage>
     <ImagePalette>Paleta de imagens</ImagePalette>
     <UseCustomColors>Usar cores personalizadas</UseCustomColors>
     <Transparent>Transparente</Transparent>
+    <TransparentMinAlpha>Valor alpha mín. (0 = transparente, 255 = totalmente visível)</TransparentMinAlpha>
+    <TransportStream>Fluxo de transporte</TransportStream>
+    <TransportStreamGrayscale>Escala de cinza</TransportStreamGrayscale>
+    <TransportStreamGetColor>Usar cor (irá incluir alguma divisão de linhas)</TransportStreamGetColor>
     <PromptForUnknownWords>Confirmar palavras desconhecidas</PromptForUnknownWords>
     <TryToGuessUnkownWords>Tentar adivinhar palavras desconhecidas</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Quebra de parágrafo automático se forem mais que duas linhas</AutoBreakSubtitleIfMoreThanTwoLines>
