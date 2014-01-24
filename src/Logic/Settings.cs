@@ -523,7 +523,7 @@ namespace Nikse.SubtitleEdit.Logic
             MininumMillisecondsBetweenLines = 25;
             AutoWrapLineWhileTyping = false;
             SubtitleMaximumCharactersPerSeconds = 25.0;
-            SubtitleOptimalCharactersPerSeconds = 14.7;
+            SubtitleOptimalCharactersPerSeconds = 15.0;
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 75;
@@ -549,7 +549,7 @@ namespace Nikse.SubtitleEdit.Logic
             UndockedVideoControlsPosition = "-32000;-32000";
             SmallDelayMilliseconds = 500;
             LargeDelayMilliseconds = 5000;
-            OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;"; // matroska/mp4/m4v files (can contain subtitles)
+            OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;*.ts"; // matroska/mp4/m4v files (can contain subtitles)
             ListViewColumsRememberSize = true;
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
             UseTimeFormatHHMMSSFF = false;
