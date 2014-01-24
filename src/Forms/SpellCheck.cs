@@ -218,9 +218,25 @@ namespace Nikse.SubtitleEdit.Forms
                 richTextBoxParagraph.SelectionLength = word.Text.Length;
                 richTextBoxParagraph.SelectionColor = Color.Red;
             }
-            else
+            else if (richTextBoxParagraph.Text.Substring(idx + 3).StartsWith(word.Text))
             {
-                MessageBox.Show("Test");
+                if (idx > newLine1)
+                    idx--;
+                if (idx > newLine2)
+                    idx--;
+                richTextBoxParagraph.SelectionStart = idx + 3;
+                richTextBoxParagraph.SelectionLength = word.Text.Length;
+                richTextBoxParagraph.SelectionColor = Color.Red;
+            }
+            else if (idx > 2 && richTextBoxParagraph.Text.Substring(idx -2).StartsWith(word.Text))
+            {
+                if (idx > newLine1)
+                    idx--;
+                if (idx > newLine2)
+                    idx--;
+                richTextBoxParagraph.SelectionStart = idx -2;
+                richTextBoxParagraph.SelectionLength = word.Text.Length;
+                richTextBoxParagraph.SelectionColor = Color.Red;
             }
         }
 
@@ -754,6 +770,18 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
+                                if (_prefix != null && _prefix == "''" && _currentWord.EndsWith("''"))
+                                {
+                                    _prefix = string.Empty;
+                                    _currentSpellCheckWord.Index += 2;
+                                    _currentWord = _currentWord.Trim("'".ToCharArray());
+                                }
+                                if (_prefix != null && _prefix == "'" && _currentWord.EndsWith("'"))
+                                {
+                                    _prefix = string.Empty;
+                                    _currentSpellCheckWord.Index++;
+                                    _currentWord = _currentWord.Trim("'".ToCharArray());
+                                }
                                 
                                 if (_postfix != null && _postfix == "'")
                                 {

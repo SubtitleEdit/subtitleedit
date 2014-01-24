@@ -11,6 +11,7 @@
    * Updated Chinese language file - thx Leon
    * Updated German language file - thx Siegwarth
    * Updated Dutch language file - thx Quetsbeek
+   * Updated Brazilian Portuguese language file - thx Igor Rücker
    * Many settings now remembered from "Export to image based foramt"
    * Dropping a video file on empty waveform will now start extraction of waveform - thx Leon
    * Better reading of SCC files
