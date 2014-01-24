@@ -29,7 +29,8 @@
   * "OCR window" - Norweigan bokmål now works as spell check language
   * Disabled saving of empty files
   * Fixed bug in centering of exported images - thx minhjirachi
-  * Fixed crash in Spell check - Get dictionaries (if not internet connection) - thx Krystian :) 
+  * Fixed crash in Spell check - Get dictionaries (if no internet connection) - thx Krystian
+  * Fixed (sometimes) missing highlighting of word in spell check dialog - thx Betsy25
 
 
 3.3.12 (12th January 2014)
