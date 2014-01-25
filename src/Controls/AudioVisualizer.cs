@@ -925,9 +925,9 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
                 if (prev != null)
-                    _wholeParagraphMinMilliseconds = prev.EndTime.TotalMilliseconds;
+                    _wholeParagraphMinMilliseconds = prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines; ;
                 if (next != null)
-                    _wholeParagraphMaxMilliseconds = next.StartTime.TotalMilliseconds;
+                    _wholeParagraphMaxMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
             }
         }
 
@@ -942,11 +942,11 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (curIdx > 0)
                     {
-                        _wholeParagraphMinMilliseconds = _subtitle.Paragraphs[curIdx - 1].EndTime.TotalMilliseconds;
+                        _wholeParagraphMinMilliseconds = _subtitle.Paragraphs[curIdx - 1].EndTime.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines;
                     }
                     if (curIdx < _subtitle.Paragraphs.Count - 1)
                     {
-                        _wholeParagraphMaxMilliseconds = _subtitle.Paragraphs[curIdx + 1].StartTime.TotalMilliseconds;
+                        _wholeParagraphMaxMilliseconds = _subtitle.Paragraphs[curIdx + 1].StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
                     }
                 }
             }
