@@ -427,6 +427,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int SubtitleMinimumDisplayMilliseconds { get; set; }
         public int SubtitleMaximumDisplayMilliseconds { get; set; }
         public int MininumMillisecondsBetweenLines { get; set; }
+        public int SetStartEndHumanDelay { get; set; }
         public bool AutoWrapLineWhileTyping { get; set; }
         public double SubtitleMaximumCharactersPerSeconds { get; set; }
         public double SubtitleOptimalCharactersPerSeconds { get; set; }
@@ -521,6 +522,7 @@ namespace Nikse.SubtitleEdit.Logic
             SubtitleMinimumDisplayMilliseconds = 500;
             SubtitleMaximumDisplayMilliseconds = 8 * 1000;
             MininumMillisecondsBetweenLines = 25;
+            SetStartEndHumanDelay = 100;
             AutoWrapLineWhileTyping = false;
             SubtitleMaximumCharactersPerSeconds = 25.0;
             SubtitleOptimalCharactersPerSeconds = 15.0;
@@ -1231,6 +1233,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("MininumMillisecondsBetweenLines");
             if (subNode != null)
                 settings.General.MininumMillisecondsBetweenLines = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("SetStartEndHumanDelay");
+            if (subNode != null)
+                settings.General.SetStartEndHumanDelay = Convert.ToInt32(subNode.InnerText);            
             subNode = node.SelectSingleNode("AutoWrapLineWhileTyping");
             if (subNode != null)
                 settings.General.AutoWrapLineWhileTyping = Convert.ToBoolean(subNode.InnerText);
@@ -2477,6 +2482,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", settings.General.SubtitleMinimumDisplayMilliseconds.ToString());
             textWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", settings.General.SubtitleMaximumDisplayMilliseconds.ToString());
             textWriter.WriteElementString("MininumMillisecondsBetweenLines", settings.General.MininumMillisecondsBetweenLines.ToString());
+            textWriter.WriteElementString("SetStartEndHumanDelay", settings.General.SetStartEndHumanDelay.ToString());            
             textWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString());
             textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
             textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
