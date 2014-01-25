@@ -155,6 +155,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Converted>Przekonwerotwano</Converted>
     <ConvertedX>Przekonwertowano ({0})</ConvertedX>
     <Settings>Ustawienia</Settings>
+    <SplitLongLines>Podziel długie linie</SplitLongLines>
     <AutoBalance>Automatyczny równoważenie linii</AutoBalance>
     <ScanFolder>Skanuj folder...</ScanFolder>
     <ScanningFolder>Przeskanowano {0} i podfolderów z plikami napisów...</ScanningFolder>
@@ -193,6 +194,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Regulacja prędkości w procentach</Title>
     <Info>Zmień szybkość napisów w procentach</Info>
   </ChangeSpeedInPercent>
+  <ChooseAudioTrack>
+    <Title>Wybór ścieżki audio</Title>
+  </ChooseAudioTrack>
   <ChooseEncoding>
     <Title>Wybór kodowania napisów</Title>
     <CodePage>Strona kodowa</CodePage>
@@ -219,7 +223,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Następna różnica</NextDifference>
     <SubtitlesNotAlike>Napisy nie mają żadnych podobieństw</SubtitlesNotAlike>
     <XNumberOfDifference>Ilość różnic: {0}</XNumberOfDifference>
+    <XNumberOfDifferenceAndPercentChanged>Ilość różnic: {0}  ({1}% zmienionych wyrazów)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Ilość różnic: {0}  ({1}% zmienionych liter)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Pokaż tylko różnice w czasach</ShowOnlyDifferences>
+    <IgnoreLineBreaks>Ignoruj łamanie linii</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Pokaż tylko różnice w tekście</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Nie można porównać napisów opartych na obrazach</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -251,6 +258,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Odstęp do następnego</GapToNext>
     <BridgeGapsSmallerThanXPart1>Mostkuj odstępy mniejsze niż</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisekund</BridgeGapsSmallerThanXPart2>
+    <MinMsBetweenLines>Minimum milisekund między liniami</MinMsBetweenLines>
     <ProlongEndTime>Poprzedni tekst widoczny przez cały czas trwania odstępu</ProlongEndTime>
     <DivideEven>Teksty rozdzielane są czasem trwania odstępu</DivideEven>
   </DurationsBridgeGaps>
@@ -353,6 +361,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Kolor czcionki:</FontColor>
     <BorderColor>Kolor obramowania:</BorderColor>
     <BorderWidth>Szerokość obramowania:</BorderWidth>
+    <ShadowColor>Kolor cienia</ShadowColor>
+    <ShadowWidth>Szerokość cienia</ShadowWidth>
+    <Transparency>Alfa</Transparency>
     <ImageFormat>Format obrazu</ImageFormat>
     <SimpleRendering>Proste renderowanie</SimpleRendering>
     <Text3D>3D</Text3D>
@@ -372,6 +383,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveFabImageScriptAs>Wybierz nazwę pliku Blu-ray sup</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Wybierz nazwę pliku DVD Studio Pro STL</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>Niektóre linie były zbyt długie:{0}</SomeLinesWereTooLongX>
+    <LineHeight>Wysokość linii</LineHeight>
   </ExportPngXml>
   <ExportText>
     <Title>Eksport tekstu</Title>
@@ -586,6 +598,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 
 Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
   </GoToLine>
+  <ImportImages>
+    <Title>Import obrazków</Title>
+    <ImageFiles>Pliki obrazków</ImageFiles>
+    <Input>Wejście</Input>
+    <InputDescription>Wybierz pliki wejściowe (przeglądaj lub przeciągnij i upuść)</InputDescription>
+  </ImportImages>
   <ImportSceneChanges>
     <Title>Import zmian w scenach</Title>
     <OpenTextFile>Otwórz plik tekstowy...</OpenTextFile>
@@ -598,11 +616,14 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
   </ImportSceneChanges>
   <ImportText>
     <Title>Import tekstu</Title>
+    <OneSubtitleIsOneFile>Wiele plików - jeden plik to jedne napisy</OneSubtitleIsOneFile>
     <OpenTextFile>Otwórz plik tekstowy...</OpenTextFile>
+    <OpenTextFiles>Otwórz pliki tekstowe...</OpenTextFiles>
     <ImportOptions>Opcje importu</ImportOptions>
     <Splitting>Podział</Splitting>
     <AutoSplitText>Automatycznie dziel tekst</AutoSplitText>
     <OneLineIsOneSubtitle>Jedna linia - jeden napis</OneLineIsOneSubtitle>
+    <LineBreak>Linia podziału</LineBreak>
     <SplitAtBlankLines>Podziel na pustych liniach</SplitAtBlankLines>
     <MergeShortLines>Połącz krótkie linie przed kontynuacją</MergeShortLines>
     <RemoveEmptyLines>Usuń puste linie</RemoveEmptyLines>
@@ -656,6 +677,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <ImportSubtitleFromMatroskaFile>Importuj napisy z pliku Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importuj napisy z ręcznym wyborem kodowania...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importuj tekst...</ImportText>
+        <ImportImages>Importuj obrazki...</ImportImages>
         <ImportTimecodes>Importuj kody czasowe...</ImportTimecodes>
         <Export>Eksport</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
@@ -688,6 +710,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <MultipleReplace>&amp;Wielokrotna zamiana...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Przejź do linii o numerze...</GoToSubtitleNumber>
         <RightToLeftMode>Tryb od prawej do lewej (PDL)</RightToLeftMode>
+        <FixTrlViaUnicodeControlCharacters>Napraw tryb PDL za pomocą kontroli znaków Unicode</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Odwróć początek/koniec PDL (dla wybranych linii)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Pokaż oryginalny tekst w podglądzie audio/wideo</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modyfikuj zaznaczone...</ModifySelection>
@@ -803,8 +826,9 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <SubStationAlphaSetStyle>Sub Station Alpha - ustaw styl</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Style Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Style Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
-        <TimedTextSetStyle>Tymczasowy tekst - ustaw styl</TimedTextSetStyle>
-        <TimedTextStyles>Style tymczasowego tekstu...</TimedTextStyles>
+        <TimedTextSetStyle>Tekst w określonym czasie - ustaw styl</TimedTextSetStyle>
+        <TimedTextStyles>Style tekstu w określonym czasie...</TimedTextStyles>
+        <TimedTextSetLanguage>Tekst w określonym czasie - ustaw język</TimedTextSetLanguage>
         <SamiSetStyle>Sami - ustaw klasę</SamiSetStyle>
         <Cut>Wytnij</Cut>
         <Copy>Kopiuj</Copy>
@@ -867,7 +891,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
       <Translate>Tłumaczenie</Translate>
       <Create>Tworzenie</Create>
       <Adjust>Dostosowanie</Adjust>
-      <SelectCurrentElementWhilePlaying>podczas odtwarzania zaznacz aktualną linię napisów</SelectCurrentElementWhilePlaying>
+      <SelectCurrentElementWhilePlaying>Podczas odtwarzania zaznacz aktualną linię napisów</SelectCurrentElementWhilePlaying>
       <AutoRepeat>Powtarzanie napisów</AutoRepeat>
       <AutoRepeatOn>Włącz powtarzanie</AutoRepeatOn>
       <AutoRepeatCount>Ilość powtórzeń (razy)</AutoRepeatCount>
@@ -1114,6 +1138,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <TimeCodeImportedFromXY>Wykonano import kodów czasowych z {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Przed wstawieniem napisów w pozycji wideo</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Przed ustawieniem czasu rozpoczęcia i przesunięciem pozostałych</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndTimeAndOffsetTheRest>Przed ustawieniem czasu zakończenia i przesunięciem pozostałych</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Przed ustawieniem czasu zakończenia w pozycji wideo i automatycznym wyliczeniem rozpoczęcia</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Kontynuować aktualne sprawdzanie pisowni?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Znaki/sek.: {0:0.00}</CharactersPerSecond>
@@ -1155,6 +1180,12 @@ Chcesz zapisać?</NegativeTimeWarning>
     <StatusLog>Status Dziennika zdarzeń</StatusLog>
     <XSceneChangesImported>Zaimportowano {0} zmian w scenach</XSceneChangesImported>
     <PluginXExecuted>Wtyczka '{0}' wykonana.</PluginXExecuted>
+    <NotAValidXSubFile>Niepoprawny plik xsub!</NotAValidXSubFile>
+    <BeforeMergeLinesWithSameText>Przed połączeniem linii z takim samym tekstem</BeforeMergeLinesWithSameText>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>Napisy z kodami czasowymi różnią się ilością linii ({0}) od aktualnych napisów ({1}) - Chcesz kontynuować?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ErrorLoadIdx>Nie można odczytać/edytować plików .idx. Pliki Idx są częścią składową dwóch plików idx/sub (zwane są również VobSub), a SE może otworzyć plik .sub.</ErrorLoadIdx>
+    <ErrorLoadRar>Ten plik wydaje się być skompresowanym plikiem .rar. SE nie otwiera plików skompresowanych.</ErrorLoadRar>
+    <ErrorLoadZip>Ten plik wydaje się być skompresowanym plikiem .zip. SE nie otwiera plików skompresowanych.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Wybór napisów z pliku Matroska</Title>
@@ -1179,6 +1210,8 @@ Chcesz zapisać?</NegativeTimeWarning>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Połącz linie z takim samym tekstem</Title>
+    <MaxMillisecondsBetweenLines>Maks. mlisekund pomiędzy liniami</MaxMillisecondsBetweenLines>
+    <IncludeIncrementing>Zawiera zwiększające się linie</IncludeIncrementing>
   </MergeDoubleLines>
   <MergedShortLines>
     <Title>Łączenie krótkich linii</Title>
@@ -1203,6 +1236,8 @@ Chcesz zapisać?</NegativeTimeWarning>
     <EndsWith>Kończy się na</EndsWith>
     <NoContains>Nie zawiera</NoContains>
     <RegEx>Wyrażenie regularne</RegEx>
+    <UnequalLines>Nierównych linii</UnequalLines>
+    <EqualLines>Równych linii</EqualLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Wielokrotna zamiana</Title>
@@ -1414,6 +1449,10 @@ Chcesz zapisać?</NegativeTimeWarning>
     <WaveFormShowGridLines>Pokaż linie siatki</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Odwróć kierunek obrotu rolki myszki</ReverseMouseWheelScrollDirection>
     <WaveFormAllowOverlap>Zezwalaj na nakładanie (podczas przenoszenia/zmiany rozmiaru)</WaveFormAllowOverlap>
+    <WaveFormFocusMouseEnter>Skoncentruj uwagę na wejście myszki</WaveFormFocusMouseEnter>
+    <WaveFormListViewFocusMouseEnter>Skoncentruj uwagę na widoku listy po wejściu myszki w widok listy</WaveFormListViewFocusMouseEnter>
+    <WaveformBorderHitMs1>Oznakowanie granic musi być w</WaveformBorderHitMs1>
+    <WaveformBorderHitMs2>milisek.</WaveformBorderHitMs2>
     <WaveFormColor>Kolor wykresu</WaveFormColor>
     <WaveFormSelectedColor>Kolor zaznaczenia</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Kolor tła</WaveFormBackgroundColor>
@@ -1425,10 +1464,15 @@ Chcesz zapisać?</NegativeTimeWarning>
     <SpectrogramAppearance>Wygląd zewnętrzny spektrogramu</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Wypełnienie gradientem w jednym kolorze</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klasyczny</SpectrogramClassic>
+    <WaveformUseFFMPEG>Użyj FFMPEG do ekstrakcji audio</WaveformUseFFMPEG>
+    <WaveformFFMPEGPath>Ścieżka do FFMPEG</WaveformFFMPEGPath>
+    <WaveformBrowseToFFMPEG>Przejdź do FFMPEG</WaveformBrowseToFFMPEG>
     <SubStationAlphaStyle>Styl Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Wybierz czcionkę</ChooseFont>
     <ChooseColor>Wybierz kolor</ChooseColor>
-    <Example>Przykład:</Example>
+    <SsaOutline>Kontur</SsaOutline>
+    <SsaShadow>Cień</SsaShadow>
+    <SsaOpaqueBox>Pole nieprzezroczyste</SsaOpaqueBox>
     <Testing123>Daum PotPlayer  po polsku - potplayer.pl</Testing123>
     <Language>Język:</Language>
     <NamesIgnoreLists>Lista nazw własnych (z dużej litery)</NamesIgnoreLists>
@@ -1479,6 +1523,8 @@ Chcesz zapisać?</NegativeTimeWarning>
     <AdjustSelected100MsForward>Przesuń wybrane linie 100 ms do przodu</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Przesuń wybrane linie 100 ms do tyłu</AdjustSelected100MsBack>
     <AdjustSetStartTimeKeepDuration>Ustaw czas startu, zachowaj czas trwania</AdjustSetStartTimeKeepDuration>
+    <AdjustSetEndAndOffsetTheRest>Ustaw koniec, przesuń pozostałe</AdjustSetEndAndOffsetTheRest>
+    <AdjustSetEndAndOffsetTheRestAndGoToNext>Ustaw koniec, przesuń pozostałe i przejdź do następnego</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Klawisz-Down utwórz nowy, Klawisz Up ustaw czas zakończenia</MainCreateStartDownEndUp>
     <MergeDialogue>Połącz dialogi (wstaw myślniki)</MergeDialogue>
     <GoToNext>Przejdź do następnej linii</GoToNext>
@@ -1492,13 +1538,21 @@ Chcesz zapisać?</NegativeTimeWarning>
     <AutoDurationSelectedLines>Automatyczny czas trwania (wybrane linie)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Odwróć start/koniec PDL</ReverseStartAndEndingForRTL>
     <VerticalZoom>Powiększ w pionie</VerticalZoom>
+    <VerticalZoomOut>Pomniejsz w pionie</VerticalZoomOut>
     <WaveformSeekSilenceForward>Znajdź ciszę z przodu</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Znajdź ciszę z tyłu</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Dodaj tutaj tekst (do nowego zaznaczenia)</WaveformAddTextHere>
+    <WaveformPlayNewSelection>Odtwarzaj nowy wybór</WaveformPlayNewSelection>
+    <WaveformPlayFirstSelectedSubtitle>Odtwarzaj pierwsze wybrane napisy</WaveformPlayFirstSelectedSubtitle>
+    <WaveformFocusListView>Skupienie na widoku listy</WaveformFocusListView>
+    <GoBack1Frame>Jedna klatka do tyłu</GoBack1Frame>
+    <GoForward1Frame>Jedna klatka do przodu</GoForward1Frame>
     <GoBack100Milliseconds>100 ms do tyłu</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms do przodu</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms do tyłu</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 ms do przodu</GoForward500Milliseconds>
+    <GoBack1Second>1 sekunda do tyłu</GoBack1Second>
+    <GoForward1Second>1 sekunda do przodu</GoForward1Second>
     <TogglePlayPause>Odtwarzaj/Pauza</TogglePlayPause>
     <Pause>Pauza</Pause>
     <Fullscreen>Pełny ekran</Fullscreen>
@@ -1528,7 +1582,12 @@ Chcesz zapisać?</NegativeTimeWarning>
     <ListViewColumnDelete>Kolumna, usuń tekst</ListViewColumnDelete>
     <ListViewColumnInsert>Kolumna, wstaw tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Kolumna, wklej</ListViewColumnPaste>
+    <ListViewFocusWaveform>Skupienie na waveform/spectrogram</ListViewFocusWaveform>
     <ShowBeamer>Uruchom projekcję napisów na pełnym ekranie</ShowBeamer>
+    <MainTextBoxMoveLastWordDown>Przenieś ostatnie słowo w dół do następnej linii napisów</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>Przenieś pierwsze słowo z następnej linii napisów do góry</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxAutoBreak>Automatyczne łamanie tekstu</MainTextBoxAutoBreak>
+    <MainTextBoxUnbreak>Cofnij łamanie tekstu</MainTextBoxUnbreak>
   </Settings>
   <ShowEarlierLater>
     <Title>Ukazywanie się wybranych linii wcześniej/później</Title>
@@ -1570,6 +1629,8 @@ Chcesz zapisać?</NegativeTimeWarning>
     <EditWordOnly>Edytuj tylko wyraz</EditWordOnly>
     <AddXToNamesEtc>Dodaj "{0}" do nazw własnych</AddXToNamesEtc>
     <AutoFixNames>Popraw tylko wtedy, jeśli różnią się wielkością liter</AutoFixNames>
+    <CheckOneLetterWords>Pytaj o nieznaną pojedynczą literę wyrazu</CheckOneLetterWords>
+    <TreatINQuoteAsING>Traktuj słowo kończące " in' " jako " ing " (tylko angielski)</TreatINQuoteAsING>
     <ImageText>Obraz tekstu</ImageText>
     <SpellCheckCompleted>Ukończono sprawdzanie pisowni.</SpellCheckCompleted>
     <SpellCheckAborted>Przerwano sprawdzanie pisowni.</SpellCheckAborted>
@@ -1725,6 +1786,11 @@ Chcesz zapisać?</NegativeTimeWarning>
     <Info>Jeden punkt synchronizacji dostosuje pozycję, dwa lub więcej punktów synchronizacji dostosuje pozycję i prędkość</Info>
     <ApplySync>Zastosuj</ApplySync>
   </PointSync>
+  <TransportStreamSubtitleChooser>
+    <Title>Wybrane napisy strumienia transportowego - {0}</Title>
+    <PidLine>Identyfikator Pakietu Transportowego (PID) = {0}, ilość dostępnych napisów = {1}</PidLine>
+    <SubLine>{0}:  {1} --&gt; {2},  {3} obrazek(i)</SubLine>
+  </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Nieznany typ napisów</Title>
     <Message>Jeżeli chcesz to naprawić, wyślij email na mailto:niksedk@gmail.com i dołącz kopię pliku napisów.</Message>
@@ -1776,6 +1842,8 @@ Chcesz zapisać?</NegativeTimeWarning>
     <Stop>Stop</Stop>
     <StartOcrFrom>Start OCR od napisu nr:</StartOcrFrom>
     <LoadingVobSubImages>Wczytuję obrazy VobSub...</LoadingVobSubImages>
+    <LoadingImageCompareDatabase>Wczytywanie obrazu porównania bazy danych...</LoadingImageCompareDatabase>
+    <ConvertingImageCompareDatabase>Konwertowanie obrazu porównania bazy danych do nowego formatu (images.db/images.xml)...</ConvertingImageCompareDatabase>
     <SubtitleImage>Obraz napisu</SubtitleImage>
     <SubtitleText>Tekst napisu</SubtitleText>
     <UnableToCreateCharacterDatabaseFolder>Nie mogę utworzyć 'Folderu bazy danych znaków': {0}</UnableToCreateCharacterDatabaseFolder>
@@ -1783,6 +1851,10 @@ Chcesz zapisać?</NegativeTimeWarning>
     <ImagePalette>Paleta obrazu</ImagePalette>
     <UseCustomColors>Użyj podstawowych kolorów</UseCustomColors>
     <Transparent>Przezroczyste</Transparent>
+    <TransparentMinAlpha>Min. wartość alpha (0=przezroczystość, 255=pełna widoczność)</TransparentMinAlpha>
+    <TransportStream>Strumień transportowy</TransportStream>
+    <TransportStreamGrayscale>Skala szarości</TransportStreamGrayscale>
+    <TransportStreamGetColor>Użyj koloru (będzie również obejmować podział linii)</TransportStreamGetColor>
     <PromptForUnknownWords>Powiadom o nieznanych wyrazach</PromptForUnknownWords>
     <TryToGuessUnkownWords>Próbuj odgadnąć nieznane wyrazy</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Automat. znak łamania, jeśli więcej, niż dwie linie</AutoBreakSubtitleIfMoreThanTwoLines>
