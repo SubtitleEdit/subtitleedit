@@ -5,8 +5,7 @@
     <Version>3.3.13</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <OK>&amp;OK</OK>
     <Cancel>&amp;Fortryd</Cancel>
     <Apply>Anvend</Apply>
@@ -223,7 +222,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Næste ændring</NextDifference>
     <SubtitlesNotAlike>Undertekster har ingen ligheder</SubtitlesNotAlike>
     <XNumberOfDifference>Antal forskelle: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Antal forskelle: {0} ({1}% tekst ændret)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentChanged>Antal forskelle: {0} ({1}% af ord ændret)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Antal forskelle: {0} ({1}% af bogstaver ændret)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Vis kun forskelle</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorer linjeskift</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Vis kun forskelle i teksten</OnlyLookForDifferencesInText>
@@ -1133,6 +1133,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <TimeCodeImportedFromXY>Tidskoder importeret fra {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Før ny tekst ved aktuel video position</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Før sæt start tid og juster resten</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndTimeAndOffsetTheRest>Før sæt sluttid og juster resten</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Før indsæt video via sluttid +  automatisk starttid</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Fortsæt med aktuelle stavekontrol?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Bogstav/sek: {0:0.00}</CharactersPerSecond>
@@ -1517,6 +1518,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <AdjustSelected100MsForward>Flyt valgte linjer 100 ms frem</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Flyt valgte linjer 100 ms tilbage</AdjustSelected100MsBack>
     <AdjustSetStartTimeKeepDuration>Sæt starttid, behold varighed</AdjustSetStartTimeKeepDuration>
+    <AdjustSetEndAndOffsetTheRest>Set sluttid, juster resten</AdjustSetEndAndOffsetTheRest>
+    <AdjustSetEndAndOffsetTheRestAndGoToNext>Set sluttid, juster resten og gå til næste</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Opret ny på tast-ned, sæt sluttid ved tast-op</MainCreateStartDownEndUp>
     <MergeDialogue>Flet dialog (indsæt tankestreger)</MergeDialogue>
     <GoToNext>Gå til næste linje</GoToNext>
