@@ -175,68 +175,24 @@ namespace Nikse.SubtitleEdit.Forms
             richTextBoxParagraph.SelectionColor = Color.Black;
             richTextBoxParagraph.SelectionLength = 0;
 
-            int newLine1 = int.MaxValue;
-            int newLine2 = int.MaxValue;
-            if (word.Text.Contains(Environment.NewLine))
+            for (int i = 0; i < 10; i++)
             {
-                newLine1 = word.Text.IndexOf(Environment.NewLine);
-                if (word.Text.IndexOf(Environment.NewLine, newLine1 + 1) > 0)
-                    newLine2 = word.Text.IndexOf(Environment.NewLine, newLine1 + 1);
-            }
-
-            int idx = word.Index;
-            if (idx > 0 && !richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
-                idx--;
-
-            if (richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
-            {
-                if (idx > newLine1)
-                    idx--;
-                if (idx > newLine2)
-                    idx--;
-                richTextBoxParagraph.SelectionStart = idx;
-                richTextBoxParagraph.SelectionLength = word.Text.Length;
-                richTextBoxParagraph.SelectionColor = Color.Red;
-            }
-            else if (richTextBoxParagraph.Text.Substring(idx + 1).StartsWith(word.Text))
-            {
-                if (idx > newLine1)
-                    idx--;
-                if (idx > newLine2)
-                    idx--;
-                richTextBoxParagraph.SelectionStart = idx + 1;
-                richTextBoxParagraph.SelectionLength = word.Text.Length;
-                richTextBoxParagraph.SelectionColor = Color.Red;
-            }
-            else if (richTextBoxParagraph.Text.Substring(idx + 2).StartsWith(word.Text))
-            {
-                if (idx > newLine1)
-                    idx--;
-                if (idx > newLine2)
-                    idx--;
-                richTextBoxParagraph.SelectionStart = idx + 2;
-                richTextBoxParagraph.SelectionLength = word.Text.Length;
-                richTextBoxParagraph.SelectionColor = Color.Red;
-            }
-            else if (richTextBoxParagraph.Text.Substring(idx + 3).StartsWith(word.Text))
-            {
-                if (idx > newLine1)
-                    idx--;
-                if (idx > newLine2)
-                    idx--;
-                richTextBoxParagraph.SelectionStart = idx + 3;
-                richTextBoxParagraph.SelectionLength = word.Text.Length;
-                richTextBoxParagraph.SelectionColor = Color.Red;
-            }
-            else if (idx > 2 && richTextBoxParagraph.Text.Substring(idx -2).StartsWith(word.Text))
-            {
-                if (idx > newLine1)
-                    idx--;
-                if (idx > newLine2)
-                    idx--;
-                richTextBoxParagraph.SelectionStart = idx -2;
-                richTextBoxParagraph.SelectionLength = word.Text.Length;
-                richTextBoxParagraph.SelectionColor = Color.Red;
+                int idx = word.Index - i;
+                if (i >= 0 && i < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
+                {
+                    richTextBoxParagraph.SelectionStart = idx;
+                    richTextBoxParagraph.SelectionLength = word.Text.Length;
+                    richTextBoxParagraph.SelectionColor = Color.Red;
+                    break;
+                }
+                idx = word.Index + i;
+                if (i >= 0 && i < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
+                {
+                    richTextBoxParagraph.SelectionStart = idx;
+                    richTextBoxParagraph.SelectionLength = word.Text.Length;
+                    richTextBoxParagraph.SelectionColor = Color.Red;
+                    break;
+                }
             }
         }
 
