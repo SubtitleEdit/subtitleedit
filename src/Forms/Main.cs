@@ -5645,11 +5645,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SpellCheck(bool autoDetect, int startFromLine)
         {
-            if (Configuration.Settings.General.SpellChecker.ToLower().Contains("word"))
-            {
-                SpellCheckViaWord();
-                return;
-            }
+            //if (Configuration.Settings.General.SpellChecker.ToLower().Contains("word"))
+            //{
+            //    SpellCheckViaWord();
+            //    return;
+            //}
 
             try
             {
@@ -10794,6 +10794,8 @@ namespace Nikse.SubtitleEdit.Forms
                     if (SubtitleListview1.SelectedItems.Count == 1)
                     {
                         double videoPosition = mediaPlayer.CurrentPosition;
+                        if (!mediaPlayer.IsPaused)
+                            videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0;
                         int index = SubtitleListview1.SelectedItems[0].Index;
                         MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
 
@@ -10869,6 +10871,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                 int index = SubtitleListview1.SelectedItems[0].Index;
                 double videoPosition = mediaPlayer.CurrentPosition;
+                if (!mediaPlayer.IsPaused)
+                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0; 
+
                 var tc = new TimeCode(TimeSpan.FromSeconds(videoPosition));
 
                 double offset = tc.TotalMilliseconds - _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
@@ -12964,6 +12969,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (oldParagraph.StartTime.IsMaxTime || oldParagraph.EndTime.IsMaxTime)
                     adjustEndTime = true;
                 double videoPosition = mediaPlayer.CurrentPosition;
+                if (!mediaPlayer.IsPaused)
+                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0;
+
                 MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + p.Number + " " + p.Text));
 
                 timeUpDownStartTime.TimeCode = new TimeCode(TimeSpan.FromSeconds(videoPosition));
@@ -13001,6 +13009,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int index = SubtitleListview1.SelectedItems[0].Index;
                 double videoPosition = mediaPlayer.CurrentPosition;
+                if (!mediaPlayer.IsPaused)
+                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0;
+
                 MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
 
                 _subtitle.Paragraphs[index].EndTime = new TimeCode(TimeSpan.FromSeconds(videoPosition));
@@ -13033,6 +13044,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (SubtitleListview1.SelectedItems.Count == 1)
             {
                 double videoPosition = mediaPlayer.CurrentPosition;
+                if (!mediaPlayer.IsPaused)
+                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0;
+
                 int index = SubtitleListview1.SelectedItems[0].Index;
                 MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
 
@@ -13050,6 +13064,8 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     _subtitle.Paragraphs[index].EndTime = new TimeCode(TimeSpan.FromSeconds(videoPosition));
+                    if (_subtitle.Paragraphs[index].Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                        _subtitle.Paragraphs[index].Duration.TotalMilliseconds = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
                 }
                 SubtitleListview1.SetStartTime(index, _subtitle.Paragraphs[index]);
                 SubtitleListview1.SetDuration(index, _subtitle.Paragraphs[index]);
@@ -13072,22 +13088,24 @@ namespace Nikse.SubtitleEdit.Forms
         private Paragraph InsertNewTextAtVideoPosition()
         {
             // current movie pos
-            double totalMilliseconds = mediaPlayer.CurrentPosition * 1000.0;
+            double videoPositionInMilliseconds = mediaPlayer.CurrentPosition * 1000.0;
+            if (!mediaPlayer.IsPaused)
+                videoPositionInMilliseconds -= Configuration.Settings.General.SetStartEndHumanDelay;
 
-            var tc = new TimeCode(TimeSpan.FromMilliseconds(totalMilliseconds));
+            var tc = new TimeCode(TimeSpan.FromMilliseconds(videoPositionInMilliseconds));
             MakeHistoryForUndo(_language.BeforeInsertSubtitleAtVideoPosition + "  " + tc.ToString());
 
             // find index where to insert
             int index = 0;
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
-                if (p.StartTime.TotalMilliseconds > totalMilliseconds)
+                if (p.StartTime.TotalMilliseconds > videoPositionInMilliseconds)
                     break;
                 index++;
             }
 
             // create and insert
-            var newParagraph = new Paragraph("", totalMilliseconds, totalMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs);
+            var newParagraph = new Paragraph("", videoPositionInMilliseconds, videoPositionInMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs);
             if (GetCurrentSubtitleFormat().IsFrameBased)
             {
                 newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
@@ -13703,6 +13721,8 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
                 int index = SubtitleListview1.SelectedItems[0].Index;
                 double videoPosition = mediaPlayer.CurrentPosition;
+                if (!mediaPlayer.IsPaused)
+                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0;
                 var tc = new TimeCode(TimeSpan.FromSeconds(videoPosition));
                 timeUpDownStartTime.TimeCode = tc;
 
@@ -13768,6 +13788,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int index = SubtitleListview1.SelectedItems[0].Index;
                 double videoPosition = mediaPlayer.CurrentPosition;
+                if (!mediaPlayer.IsPaused)
+                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0;
 
                 string oldDuration = _subtitle.Paragraphs[index].Duration.ToString();
                 var temp = new Paragraph(_subtitle.Paragraphs[index]);
@@ -16327,13 +16349,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemSpellCheckMainDropDownOpening(object sender, EventArgs e)
         {
-            if (Configuration.Settings.General.SpellChecker.ToLower().Contains("word"))
-            {
-                toolStripSeparator9.Visible = false;
-                GetDictionariesToolStripMenuItem.Visible = false;
-                addWordToNamesetcListToolStripMenuItem.Visible = false;
-            }
-            else
+            //if (Configuration.Settings.General.SpellChecker.ToLower().Contains("word"))
+            //{
+            //    toolStripSeparator9.Visible = false;
+            //    GetDictionariesToolStripMenuItem.Visible = false;
+            //    addWordToNamesetcListToolStripMenuItem.Visible = false;
+            //}
+            //else
             {
                 toolStripSeparator9.Visible = true;
                 GetDictionariesToolStripMenuItem.Visible = true;
@@ -16483,6 +16505,8 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
             var oldParagraph = new Paragraph(_subtitle.Paragraphs[index]);
             double videoPosition = mediaPlayer.CurrentPosition;
+            if (!mediaPlayer.IsPaused)
+                videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0;
 
             timeUpDownStartTime.TimeCode = new TimeCode(TimeSpan.FromSeconds(videoPosition));
 
@@ -16524,6 +16548,8 @@ namespace Nikse.SubtitleEdit.Forms
 
 
             double videoPosition = mediaPlayer.CurrentPosition;
+            if (!mediaPlayer.IsPaused)
+                videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0;
 
             p.EndTime = new TimeCode(TimeSpan.FromSeconds(videoPosition));
             if (p.StartTime.IsMaxTime)
