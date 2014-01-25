@@ -75,7 +75,7 @@
   <About>
     <Title>O aplikaci Subtitle Edit</Title>
     <AboutText1>Subtitle Edit je svobodný software pod veřejnou licencí GNU.
-Můžete ho volně šířit, upravovat a používat.
+Můžete ho volně šířit, měnit a používat.
 
 Zdrojový kód C# je dostupný na http://code.google.com/p/subtitleedit
 
@@ -222,7 +222,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Další rozdíl</NextDifference>
     <SubtitlesNotAlike>itulky nemajpodobnost</SubtitlesNotAlike>
     <XNumberOfDifference>Počet rozdílů: {0}</XNumberOfDifference>
+    <XNumberOfDifferenceAndPercentChanged>Počet rozdílů: {0}  ({1} % slov změněno)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Počet rozdílů: {0}  ({1} % písmen změněno)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Zobrazit pouze rozdíly</ShowOnlyDifferences>
+    <IgnoreLineBreaks>Ignorovat zalomení řádků</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Hledat rozdíly pouze v textu</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Nelze porovnat s titulky na základě obrázku</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -251,9 +254,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <DurationsBridgeGaps>
     <Title>Překlenout malé mezery v trvání</Title>
     <GapsBridgedX>Počet překlenutých malých mezer: {0}</GapsBridgedX>
-    <GapToNext>Mezera do dalšího</GapToNext>
+    <GapToNext>Mezera do dalšího v sekundách</GapToNext>
     <BridgeGapsSmallerThanXPart1>Překlenout mezery menší než</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisekund</BridgeGapsSmallerThanXPart2>
+    <MinMsBetweenLines>Min. milisekund mezi řádky</MinMsBetweenLines>
     <ProlongEndTime>Předchozí text zabere celý čas mezery</ProlongEndTime>
     <DivideEven>Texty si rozdělí čas mezery</DivideEven>
   </DurationsBridgeGaps>
@@ -628,7 +632,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Fixed>Opraveno</Fixed>
     <Refresh>&amp;Obnovit</Refresh>
     <TextFiles>Textové soubory</TextFiles>
-    <PreviewLinesModifiedX>Náhled - upraveno odstavců: {0}</PreviewLinesModifiedX>
+    <PreviewLinesModifiedX>Náhled - změněno titulků: {0}</PreviewLinesModifiedX>
     <TimeCodes>Časové kódy</TimeCodes>
   </ImportText>
   <Interjections>
@@ -724,7 +728,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MergeShortLines>Sloučit krátké řádky...</MergeShortLines>
         <MergeDuplicateText>Sloučit řádky se stejným textem...</MergeDuplicateText>
         <SplitLongLines>Rozdělit dlouhé řádky...</SplitLongLines>
-        <MinimumDisplayTimeBetweenParagraphs>Minimální čas zobrazení mezi odstavci...</MinimumDisplayTimeBetweenParagraphs>
+        <MinimumDisplayTimeBetweenParagraphs>Minimální čas zobrazení mezi titulky...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Seřadit podle</SortBy>
         <Number>Čísla</Number>
         <StartTime>Začátku</StartTime>
@@ -1119,8 +1123,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <BeforeMergeShortLines>Před sloučením krátkých řádků</BeforeMergeShortLines>
     <BeforeSplitLongLines>Před rozdělením dlouhých řádků</BeforeSplitLongLines>
     <MergedShortLinesX>Počet sloučených řádků: {0}</MergedShortLinesX>
-    <BeforeSetMinimumDisplayTimeBetweenParagraphs>Před nastavením minimálního času zobrazení mezi odstavci</BeforeSetMinimumDisplayTimeBetweenParagraphs>
-    <XMinimumDisplayTimeBetweenParagraphsChanged>Počet změněných řádků s minimálním časem zobrazení mezi odstavci: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
+    <BeforeSetMinimumDisplayTimeBetweenParagraphs>Před nastavením minimálního času zobrazení mezi titulky</BeforeSetMinimumDisplayTimeBetweenParagraphs>
+    <XMinimumDisplayTimeBetweenParagraphsChanged>Počet změněných řádků s minimálním časem zobrazení mezi titulky: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Před importováním prostého textu</BeforeImportText>
     <TextImported>Text byl importován</TextImported>
     <BeforePointSynchronization>Před bodovou synchronizací</BeforePointSynchronization>
@@ -1129,6 +1133,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <TimeCodeImportedFromXY>Časové kódy importovány z {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Před vložením titulku na pozici videa</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Před nastavením času začátku a vyrovnáním zbytku</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndTimeAndOffsetTheRest>Před nastavením času konce a vyrovnáním zbytku</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Před nastavením času konce na pozici videa a automatickým výpočtem začátku</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Pokračovat v aktuální kontrole pravopisu?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Znaků za sekundu: {0:0.00}</CharactersPerSecond>
@@ -1145,8 +1150,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <XStartedSessionYAtZ>{0}: Zahájena relace {1} v {2}</XStartedSessionYAtZ>
     <SpellChekingViaWordXLineYOfX>Kontrola pravopisu pomocí programu Word {0} - řádek {1} / {2}</SpellChekingViaWordXLineYOfX>
     <UnableToStartWord>Nelze spustit Microsoft Word</UnableToStartWord>
-    <SpellCheckAbortedXCorrections>Kontrola pravopisu přerušena. {0} řádků bylo upraveno.</SpellCheckAbortedXCorrections>
-    <SpellCheckCompletedXCorrections>Kontrola pravopisu dokončena. {0} řádků bylo upraveno.</SpellCheckCompletedXCorrections>
+    <SpellCheckAbortedXCorrections>Kontrola pravopisu přerušena. {0} řádků bylo změněno.</SpellCheckAbortedXCorrections>
+    <SpellCheckCompletedXCorrections>Kontrola pravopisu dokončena. {0} řádků bylo změněno.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Otevřít jiné titulky</OpenOtherSubtitle>
     <BeforeToggleDialogueDashes>Před přepnutím dialogových pomlček</BeforeToggleDialogueDashes>
     <ExportPlainTextAs>Exportovat prostý text jako</ExportPlainTextAs>
@@ -1172,6 +1177,10 @@ Pokračovat?</SubtitleAppendPrompt>
     <PluginXExecuted>Spuštěn doplněk '{0}'.</PluginXExecuted>
     <NotAValidXSubFile>Není platný soubor xsub!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Před sloučením řádků se stejným textem</BeforeMergeLinesWithSameText>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>Titulek se stejnými časovými kódy má jiné číslo řádku ({0}) než aktuální titulek ({1}) - přesto pokračovat?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ErrorLoadIdx>Nelze přečíst nebo upravit soubory .idx. Soubory .idx jsou součástí páru souborů idx/sub (tzv. VobSub) a SE může otevřít soubor .sub.</ErrorLoadIdx>
+    <ErrorLoadRar>Soubor se zdá být komprimovaný soubor .rar. SE neumí otvírat komprimované soubory.</ErrorLoadRar>
+    <ErrorLoadZip>Soubor se zdá být komprimovaný soubor .zip. SE neumí otvírat komprimované soubory.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vybrat titulky ze souboru Matroska</Title>
@@ -1222,6 +1231,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <EndsWith>Končí</EndsWith>
     <NoContains>Neobsahuje</NoContains>
     <RegEx>Regulární výraz</RegEx>
+    <UnequalLines>Nestejné řádky</UnequalLines>
+    <EqualLines>Stejné řádky</EqualLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Hromadné nahrazení</Title>
@@ -1336,9 +1347,9 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <MaxVolume>Hlasitost musí být pod</MaxVolume>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
-    <Title>Nastavit minimální čas zobrazení mezi odstavci</Title>
-    <PreviewLinesModifiedX>Náhled - upraveno odstavců: {0}</PreviewLinesModifiedX>
-    <ShowOnlyModifiedLines>Zobrazit pouze upravené řádky</ShowOnlyModifiedLines>
+    <Title>Nastavit minimální čas zobrazení mezi titulky</Title>
+    <PreviewLinesModifiedX>Náhled - změněno titulků: {0}</PreviewLinesModifiedX>
+    <ShowOnlyModifiedLines>Zobrazit pouze změněné řádky</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimálně milisekund mezi řádky</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Informace o snímkové frekvenci</FrameInfo>
     <OneFrameXisYMilliseconds>Jeden snímek při {0:0.00} fps je {1} milisekund</OneFrameXisYMilliseconds>
@@ -1433,6 +1444,8 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <WaveFormShowGridLines>Zobrazit mřížku</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Obrátit směr posouvání kolečkem myši</ReverseMouseWheelScrollDirection>
     <WaveFormAllowOverlap>Povolit překrývání (při přesouvání nebo změně velikosti)</WaveFormAllowOverlap>
+    <WaveFormFocusMouseEnter>Nastavit zaměření na potvrzení myší</WaveFormFocusMouseEnter>
+    <WaveFormListViewFocusMouseEnter>Také nastavit zaměření zobrazení seznamu na potvrzení myší v zobrazení seznamu</WaveFormListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Označení hranice musí být v rámci</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milisekund</WaveformBorderHitMs2>
     <WaveFormColor>Barva</WaveFormColor>
@@ -1483,7 +1496,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <FirstPlusX>První + {0}</FirstPlusX>
     <LastMinusX>Poslední - {0}</LastMinusX>
     <FixCommonerrors>Opravit běžné chyby</FixCommonerrors>
-    <MergeLinesShorterThan>Sloučit řádky kratší než</MergeLinesShorterThan>
+    <MergeLinesShorterThan>Zrušit zalomení titulků kratších než</MergeLinesShorterThan>
     <MusicSymbol>Hudební symbol</MusicSymbol>
     <MusicSymbolsToReplace>Hudební symboly, které nahradit (oddělené mezerou)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Opravit běžné chyby OCR (použít také pravidla kódování)</FixCommonOcrErrorsUseHardcodedRules>
@@ -1505,6 +1518,8 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AdjustSelected100MsForward>Posunout vybrané řádky o 100 ms vpřed</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Posunout vybrané řádky o 100 ms zpět</AdjustSelected100MsBack>
     <AdjustSetStartTimeKeepDuration>Nastavit čas začátku, ponechat trvání</AdjustSetStartTimeKeepDuration>
+    <AdjustSetEndAndOffsetTheRest>Nastavit konec, vyrovnat zbytek</AdjustSetEndAndOffsetTheRest>
+    <AdjustSetEndAndOffsetTheRestAndGoToNext>Nastavit konec, vyrovnat zbytek a přejít na další</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Vytvořit nový šipkou dolů, nastavit čas konce šipkou nahoru</MainCreateStartDownEndUp>
     <MergeDialogue>Sloučit dialog (vložit pomlčky)</MergeDialogue>
     <GoToNext>Přejít na další řádek</GoToNext>
@@ -1524,6 +1539,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <WaveformAddTextHere>Přidat text sem (pro nový výběr)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Přehrát nový výběr</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Přehrát první vybraný titulek</WaveformPlayFirstSelectedSubtitle>
+    <WaveformFocusListView>Zaměření zobrazení seznamu</WaveformFocusListView>
     <GoBack1Frame>Jeden snímek zpět</GoBack1Frame>
     <GoForward1Frame>Jeden snímek vpřed</GoForward1Frame>
     <GoBack100Milliseconds>100 ms zpět</GoBack100Milliseconds>
@@ -1559,6 +1575,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ListViewColumnDelete>Sloupec, odstranit text</ListViewColumnDelete>
     <ListViewColumnInsert>Sloupec, vložit text</ListViewColumnInsert>
     <ListViewColumnPaste>Sloupec, vložit</ListViewColumnPaste>
+    <ListViewFocusWaveform>Zaměření křivky/spektrogramu</ListViewFocusWaveform>
     <ShowBeamer>Spustit beamer titulků na celou obrazovku</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Přesunout poslední slovo dolů do dalšího řádku titulku</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Přesunout první slovo z dalšího řádku titulku nahoru</MainTextBoxMoveFirstWordFromNextUp>
@@ -1762,6 +1779,11 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <Info>Jeden bod synchronizace upraví pozici, dva nebo více bodů synchronizace upraví pozici a rychlost</Info>
     <ApplySync>Použít</ApplySync>
   </PointSync>
+  <TransportStreamSubtitleChooser>
+    <Title>Volba datového proudu přenosu titulků - {0}</Title>
+    <PidLine>Identifikátor paketu přenosu (PID) = {0}, počet titulků = {1}</PidLine>
+    <SubLine>{0}:  {1} --&gt; {2},  {3} obrázků</SubLine>
+  </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Neznámý typ titulků</Title>
     <Message>Pokud chctete toto opravit, pošlete email na mailto:niksedk@gmail.com a přiložte kopii titulků.</Message>
@@ -1823,7 +1845,11 @@ Zachovat změny?</KeepChangesMessage>
     <SubtitleImageXofY>Snímek titulku {0} z {1}</SubtitleImageXofY>
     <ImagePalette>Sada barev snímku</ImagePalette>
     <UseCustomColors>Použít vlastní barvy</UseCustomColors>
-    <Transparent>Průhledný</Transparent>
+    <Transparent>Průhlednost</Transparent>
+    <TransparentMinAlpha>Min. hodnota alfa (0=průhledný, 255=plně viditelný)</TransparentMinAlpha>
+    <TransportStream>Datový proud přenosu</TransportStream>
+    <TransportStreamGrayscale>Stupně šedé</TransportStreamGrayscale>
+    <TransportStreamGetColor>Použít barvu (bude obsahovat nějaké rozdělení řádků)</TransportStreamGetColor>
     <PromptForUnknownWords>Dotázat se na neznámá slova</PromptForUnknownWords>
     <TryToGuessUnkownWords>Pokusit se odhadnout neznámá slova</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Automaticky zalamovat odstavce při více než dvou řádcích</AutoBreakSubtitleIfMoreThanTwoLines>
