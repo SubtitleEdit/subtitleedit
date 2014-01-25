@@ -12,6 +12,7 @@
    * Updated German language file - thx Siegwarth
    * Updated Dutch language file - thx Quetsbeek
    * Updated Brazilian Portuguese language file - thx Igor Rücker
+   * Updated Portuguese language file - thx moob
    * Many settings now remembered from "Export to image based format"
    * Dropping a video file on empty waveform will now start extraction of waveform - thx Leon
    * Better reading of SCC files
