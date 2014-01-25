@@ -19,6 +19,7 @@
    * Dropping a video file on empty waveform will now start extraction of waveform - thx Leon
    * Better reading of SCC files
    * Better handling of apostrophe in spell check - thx Betsy25
+   * Better grouping of general settings in options
 * FIXED:
   * Waveform/spectrogram: Moving start/end with ALT down now always works - thx Leon
   * Waveform/spectrogram: Move border left/right now also always works even 
