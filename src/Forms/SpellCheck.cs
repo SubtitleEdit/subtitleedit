@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < 10; i++)
             {
                 int idx = word.Index - i;
-                if (i >= 0 && i < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
+                if (idx >= 0 && idx < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
                 {
                     richTextBoxParagraph.SelectionStart = idx;
                     richTextBoxParagraph.SelectionLength = word.Text.Length;
@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 }
                 idx = word.Index + i;
-                if (i >= 0 && i < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
+                if (idx >= 0 && idx < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
                 {
                     richTextBoxParagraph.SelectionStart = idx;
                     richTextBoxParagraph.SelectionLength = word.Text.Length;
@@ -533,10 +533,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _currentIndex++;
                         _currentParagraph = _subtitle.Paragraphs[_currentIndex];
-                        string s = Utilities.RemoveHtmlTags(_currentParagraph.Text);
-
-                        SetWords(s);
-
+                        SetWords(_currentParagraph.Text);
                         _wordsIndex = 0;
                         if (_words.Count == 0)
                         {
@@ -785,13 +782,57 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string SetWords(string s)
         {
+            s = ReplaceHtmlTagsWithBlanks(s);
+            s = ReplaceKnownWordsOrNamesWithBlanks(s);            
+            _words = Split(s);
+            return s;
+        }
+
+        private string ReplaceKnownWordsOrNamesWithBlanks(string s)
+        {
             List<string> replaceIds = new List<string>();
             List<string> replaceNames = new List<string>();
-            s = Utilities.RemoveHtmlTags(s);
-            s = GetTextWithoutUserWordsAndNames(replaceIds, replaceNames, s);
-            _words = Split(s);
-            _words = FixWordsInserUserWordAndNames(replaceIds, replaceNames, _words);
+            GetTextWithoutUserWordsAndNames(replaceIds, replaceNames, s);
+            foreach (string name in replaceNames)
+            {
+                int start = s.IndexOf(name);
+                while (start >= 0)
+                {
+                    bool startOk = start == 0 || " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“".Contains(s.Substring(start - 1, 1));
+                    if (startOk)
+                    {
+                        int end = start + name.Length;
+                        bool endOk = end >= s.Length || " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“".Contains(s.Substring(end, 1));
+                        if (endOk)
+                            s = s.Remove(start, name.Length).Insert(start, string.Empty.PadLeft(name.Length));
+                    }
+
+                    if (start + 1 < s.Length)
+                        start = s.IndexOf(name, start + 1);
+                    else
+                        start = -1;
+                }
+            }
             return s;
+        }
+
+        private string ReplaceHtmlTagsWithBlanks(string s)
+        {
+            int start = s.IndexOf("<");
+            while (start >= 0)
+            {
+                int end = s.IndexOf(">", start);
+                if (end > 0)
+                {
+                    int l = end - start + 1;
+                    s = s.Remove(start, l).Insert(start, string.Empty.PadLeft(l));
+                    if (start + 1 < s.Length)
+                        start = s.IndexOf("<", start + 1);
+                    else
+                        start = -1;
+                }
+            }
+            return s;            
         }
 
         /// <summary>
@@ -825,7 +866,7 @@ namespace Nikse.SubtitleEdit.Forms
                             int endIndexPlus = indexStart + wordWithDashesOrPeriods.Length;
                             bool startOk = indexStart == 0 || (" ['\"" + Environment.NewLine).Contains(text.Substring(indexStart - 1, 1));
                             bool endOk = endIndexPlus == text.Length;
-                            if (!endOk && endIndexPlus < text.Length && ("!?:;. ]").Contains(text.Substring(endIndexPlus, 1)))
+                            if (!endOk && endIndexPlus < text.Length && (",!?:;. ]").Contains(text.Substring(endIndexPlus, 1)))
                                 endOk = true;
                             if (startOk && endOk)
                             {
@@ -848,19 +889,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return text;
-        }
-
-        private List<SpellCheckWord> FixWordsInserUserWordAndNames(List<string> replaceIds, List<string> replaceNames, List<SpellCheckWord> words)
-        {
-            if (replaceIds.Count == 0)
-                return words;
-
-            for (int i = 0; i < words.Count; i++)
-            {
-                if (replaceIds.Contains(words[i].Text))
-                    words[i].Text = replaceNames[replaceIds.IndexOf(words[i].Text)];
-            }
-            return words;
         }
 
         private void ShowEndStatusMessage(string completedMessage)
@@ -952,6 +980,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!namesItem.EndsWith("s"))
                         _namesEtcListWithApostrophe.Add(namesItem + "'s");
+                    if (!namesItem.EndsWith("s"))
+                        _namesEtcListWithApostrophe.Add(namesItem + "’s");                        
                     else if (!namesItem.EndsWith("'"))
                         _namesEtcListWithApostrophe.Add(namesItem + "'");
                 }
