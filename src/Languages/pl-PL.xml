@@ -22,7 +22,7 @@
     <NoVideoLoaded>Nie wczytano wideo</NoVideoLoaded>
     <VideoInformation>Informacje o wideo</VideoInformation>
     <PositionX>Pozycja / Czas trwania: {0}</PositionX>
-    <StartTime>Czas ropoczęcia</StartTime>
+    <StartTime>Czas rozpoczęcia</StartTime>
     <EndTime>Czas zakończenia</EndTime>
     <Duration>Czas trwania</Duration>
     <NumberSymbol>Nr</NumberSymbol>
@@ -495,7 +495,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MergeShortLineAll>Połącz krótkie linie (wszystkie z wyjątkiem dialogów)</MergeShortLineAll>
     <XLineBreaksAdded>Dodano linii łamania: {0}</XLineBreaksAdded>
     <BreakLongLine>Przełam długą linię</BreakLongLine>
-    <FixLongDisplayTime>Popraw zbyt długi czas wświetlania napisów</FixLongDisplayTime>
+    <FixLongDisplayTime>Popraw zbyt długi czas wyświetlania napisów</FixLongDisplayTime>
     <FixInvalidItalicTag>Popraw błędne tagi kursywy</FixInvalidItalicTag>
     <FixShortDisplayTime>Popraw zbyt krótki czas wyświetlania napisów</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Popraw częściowe nakładanie się czasu wyświetlania napisów</FixOverlappingDisplayTime>
@@ -539,7 +539,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStarts>Usuń znajdujące się na początku linii znaki wielokropku "..."</FixEllipsesStarts>
     <FixMissingOpenBrackets>Popraw brakujące symbole "[" w linii</FixMissingOpenBrackets>
     <FixMusicNotations>Zamień âTª's na *'s</FixMusicNotations>
-    <XFixDoubleDash>Poprawiono symboli myślinka "--": {0} </XFixDoubleDash>
+    <XFixDoubleDash>Poprawiono symboli myślnika "--": {0} </XFixDoubleDash>
     <XFixDoubleGreaterThan>Usunięto znaków "&gt;&gt;": {0} </XFixDoubleGreaterThan>
     <XFixEllipsesStart>Usunięto wielokropków "..." znajdujących się na początku linii: {0}</XFixEllipsesStart>
     <XFixMissingOpenBracket>Dodano "[" brakujących w linii: {0}</XFixMissingOpenBracket>
@@ -629,7 +629,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
     <RemoveEmptyLines>Usuń puste linie</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Usuń linie bez liter</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Generuj kody czasowe</GenerateTimeCodes>
-    <GapBetweenSubtitles>Przerwa między napisami (w milisek.)</GapBetweenSubtitles>
+    <GapBetweenSubtitles>Przerwa między napisami (w ms)</GapBetweenSubtitles>
     <Auto>Automatycznie</Auto>
     <Fixed>Popraw</Fixed>
     <Refresh>&amp;Odśwież</Refresh>
@@ -847,7 +847,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <ColumnDeleteTextAndShiftCellsUp>Usuń tekst i przesuń komórki do góry</ColumnDeleteTextAndShiftCellsUp>
         <ColumnInsertEmptyTextAndShiftCellsDown>Wstaw pusty tekst i przesuń komórki w dół</ColumnInsertEmptyTextAndShiftCellsDown>
         <ColumnInsertTextFromSubtitle>Wstaw teks z napisów...</ColumnInsertTextFromSubtitle>
-        <ColumnImportTextAndShiftCellsDown>Imoportuj tekst i przesuń komórki w dół</ColumnImportTextAndShiftCellsDown>
+        <ColumnImportTextAndShiftCellsDown>Importuj tekst i przesuń komórki w dół</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Wklej ze schowka...</ColumnPasteFromClipboard>
         <ColumnCopyOriginalTextToCurrent>Kopiuj tekst z oryginału do aktualnego</ColumnCopyOriginalTextToCurrent>
         <Split>Podziel</Split>
@@ -856,7 +856,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <MergeWithLineBefore>Połącz z linią przed</MergeWithLineBefore>
         <MergeWithLineAfter>Połącz z linią po</MergeWithLineAfter>
         <Normal>Normalne</Normal>
-        <Underline>Podkreślnie</Underline>
+        <Underline>Podkreślenie</Underline>
         <Color>Kolor czcionki...</Color>
         <FontName>Nazwa czcionki...</FontName>
         <Alignment>Wyrównanie...</Alignment>
@@ -947,8 +947,8 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
     <VisualSyncSelectedLines>Synchronizacja wizualna - wybrane linie</VisualSyncSelectedLines>
     <VisualSyncTitle>Synchronizacja wizualna</VisualSyncTitle>
     <BeforeVisualSync>Przed synchronizacją wizualną</BeforeVisualSync>
-    <VisualSyncPerformedOnSelectedLines>Wykonano sychronizację wizualną wybranych linii</VisualSyncPerformedOnSelectedLines>
-    <VisualSyncPerformed>Wykonano sychronizację wizualną</VisualSyncPerformed>
+    <VisualSyncPerformedOnSelectedLines>Wykonano synchronizację wizualną wybranych linii</VisualSyncPerformedOnSelectedLines>
+    <VisualSyncPerformed>Wykonano synchronizację wizualną</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Importować wybrane napisy VobSub?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10Mb>Rozmiar pliku {0} jest większy, niż 10 MB</FileXIsLargerThan10Mb>
     <ContinueAnyway>Kontynuować pomimo to?</ContinueAnyway>
@@ -1003,13 +1003,13 @@ Chcesz zacząć od początku dokumentu i kontynuować wyszukiwanie i zamianę?</
     <CommonErrorsFixedInSelectedLines>Poprawione pospolite błędy w wybranych liniach</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Poprawione pospolite błędy</CommonErrorsFixed>
     <BeforeRenumbering>Przed przenumerowaniem</BeforeRenumbering>
-    <RenumberedStartingFromX>Przenumerowanie rozpoczęte od: {0}</RenumberedStartingFromX>
+    <RenumberedStartingFromX>Rozpoczęto przenumerowanie od: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Przed usunięciem tekstu dialogów dla niesłyszących</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Usunięty tekst dla niesłyszących : Jedna linia</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Usunięto tekst dla niesłyszących : {0} linii</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Dzielenie napisów</SubtitleSplitted>
     <SubtitleAppendPrompt>Opcja ta połączy drugi plik napisów z aktualnie wczytanymi napisami,
-które powinnny już być zsynchronizowane z plikiem wideo.
+które powinny już być zsynchronizowane z plikiem wideo.
 
 Kontynuować?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Połącz napisy</SubtitleAppendPromptTitle>
@@ -1108,7 +1108,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <BeforeSortX>Przed sortowaniem: {0}</BeforeSortX>
     <SortedByX>Wykonano sortowanie wg: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Przed automatycznym równoważeniem wybranych linii</BeforeAutoBalanceSelectedLines>
-    <NumberOfLinesAutoBalancedX>Ilość linii z automatomatycznym równoważeniem: {0}</NumberOfLinesAutoBalancedX>
+    <NumberOfLinesAutoBalancedX>Ilość linii z automatycznym równoważeniem: {0}</NumberOfLinesAutoBalancedX>
     <BeforeRemoveLineBreaksInSelectedLines>Przed usunięciem linii łamania w wybranych liniach</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Ilość linii z usuniętą linią łamania: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Przed wielokrotną zamianą</BeforeMultipleReplace>
@@ -1165,7 +1165,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <LineNumberXErrorReadingFromSourceLineY>Linia {0} - błąd odczytu: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Linia {0} - błąd odczytu kodu czasowego: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Linia {0} - oczekiwany numer napisu: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <BeforeGuessingTimeCodes>Przed ogadnięciem kodów czasowych</BeforeGuessingTimeCodes>
+    <BeforeGuessingTimeCodes>Przed odgadnięciem kodów czasowych</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Przed automatycznym czasem trwania wybranych linii</BeforeAutoDuration>
     <BeforeColumnPaste>Przed wklejaniem kolumn</BeforeColumnPaste>
     <BeforeColumnDelete>Przed usuwaniem kolumn</BeforeColumnDelete>
@@ -1175,7 +1175,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <BeforeRunningPluginXVersionY>Przed uruchomieniem wtyczki: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Nie można odczytać wynikowych napisów z wtyczką!</UnableToReadPluginResult>
     <UnableToCreateBackupDirectory>Nie można utworzyć katalogu kopii zapasowej {0}: {1}</UnableToCreateBackupDirectory>
-    <BeforeDisplaySubtitleJoin>Przed dołaczeniem napisów</BeforeDisplaySubtitleJoin>
+    <BeforeDisplaySubtitleJoin>Przed dołączeniem napisów</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Dołączanie napisów</SubtitlesJoined>
     <StatusLog>Status Dziennika zdarzeń</StatusLog>
     <XSceneChangesImported>Zaimportowano {0} zmian w scenach</XSceneChangesImported>
@@ -1210,7 +1210,7 @@ Chcesz zapisać?</NegativeTimeWarning>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Połącz linie z takim samym tekstem</Title>
-    <MaxMillisecondsBetweenLines>Maks. mlisekund pomiędzy liniami</MaxMillisecondsBetweenLines>
+    <MaxMillisecondsBetweenLines>Maks. milisekund pomiędzy liniami</MaxMillisecondsBetweenLines>
     <IncludeIncrementing>Zawiera zwiększające się linie</IncludeIncrementing>
   </MergeDoubleLines>
   <MergedShortLines>
@@ -1395,8 +1395,9 @@ Chcesz zapisać?</NegativeTimeWarning>
     <SubtitleLineMaximumLength>Maksymalna długość linii napisów</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Maks. znaków/sek.</MaximumCharactersPerSecond>
     <AutoWrapWhileTyping>Automatycznie zawijaj podczas pisania</AutoWrapWhileTyping>
-    <DurationMinimumMilliseconds>Minimalny czas trwania w msek.</DurationMinimumMilliseconds>
-    <DurationMaximumMilliseconds>Maksymalny czas trwania w msek.</DurationMaximumMilliseconds>
+    <DurationMinimumMilliseconds>Minimalny czas trwania w ms</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>Maksymalny czas trwania w ms</DurationMaximumMilliseconds>
+    <MinimumGapMilliseconds>Min. odstęp między napisami w ms</MinimumGapMilliseconds>
     <SubtitleFont>Czcionka napisów</SubtitleFont>
     <SubtitleFontSize>Rozmiar czcionki napisów</SubtitleFontSize>
     <SubtitleBold>Pogrubienie</SubtitleBold>
@@ -1411,7 +1412,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <StartInSourceView>Po uruchomieniu pokaż napisy źródłowe</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Podczas otwierania napisów usuwaj puste linie</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Widok linii łamania w liście napisów:</ShowLineBreaksAs>
-    <MainListViewDoubleClickAction>Akcja po dwukliku na linii w głównym oknie</MainListViewDoubleClickAction>
+    <MainListViewDoubleClickAction>Działanie po dwukrotnym kliknięciu na linii w głównym oknie</MainListViewDoubleClickAction>
     <MainListViewNothing>Nic nie rób</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Przejdź do czasu napisów w filmie i pauza</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Przejdź do czasu napisów w filmie i odtwarzaj</MainListViewVideoGoToPositionAndPlay>
@@ -1452,7 +1453,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <WaveFormFocusMouseEnter>Skoncentruj uwagę na wejście myszki</WaveFormFocusMouseEnter>
     <WaveFormListViewFocusMouseEnter>Skoncentruj uwagę na widoku listy po wejściu myszki w widok listy</WaveFormListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Oznakowanie granic musi być w</WaveformBorderHitMs1>
-    <WaveformBorderHitMs2>milisek.</WaveformBorderHitMs2>
+    <WaveformBorderHitMs2>ms</WaveformBorderHitMs2>
     <WaveFormColor>Kolor wykresu</WaveFormColor>
     <WaveFormSelectedColor>Kolor zaznaczenia</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Kolor tła</WaveFormBackgroundColor>
@@ -1473,7 +1474,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <SsaOutline>Kontur</SsaOutline>
     <SsaShadow>Cień</SsaShadow>
     <SsaOpaqueBox>Pole nieprzezroczyste</SsaOpaqueBox>
-    <Testing123>Daum PotPlayer  po polsku - potplayer.pl</Testing123>
+    <Testing123>Daum PotPlayer po polsku - potplayer.pl</Testing123>
     <Language>Język:</Language>
     <NamesIgnoreLists>Lista nazw własnych (z dużej litery)</NamesIgnoreLists>
     <AddNameEtc>Dodaj nazwę</AddNameEtc>
@@ -1600,7 +1601,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <SelectedLinesAndForward>Wybrane linie i przesunięte do przodu</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
-    <Title>Lista zmian (do cofanięcia dokonanych zmian)</Title>
+    <Title>Lista zmian (do cofnięcia dokonanych zmian)</Title>
     <SelectRollbackPoint>Wybierz czas/opis do cofnięcia zmian</SelectRollbackPoint>
     <Time>Czas</Time>
     <Description>Opis</Description>
@@ -1671,7 +1672,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <Part1>Część1</Part1>
     <Part2>Część2</Part2>
     <UnableToSaveFileX>Nie można zapisać {0}</UnableToSaveFileX>
-    <OverwriteExistingFiles>Nadpisać istniejśce pliki?</OverwriteExistingFiles>
+    <OverwriteExistingFiles>Nadpisać istniejące pliki?</OverwriteExistingFiles>
     <FolderNotFoundX>Nie znaleziono folderu: {0}</FolderNotFoundX>
     <Untitled>Bez tytułu</Untitled>
   </SplitSubtitle>
@@ -1806,7 +1807,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <FindText>Znajdź</FindText>
     <GoToSubPosition>Przejdź</GoToSubPosition>
     <KeepChangesTitle>Utrzymać zmiany?</KeepChangesTitle>
-    <KeepChangesMessage>Zmiany z synchronizacji wizualneji zostały zastosowane do napisów.</KeepChangesMessage>
+    <KeepChangesMessage>Zmiany z synchronizacji wizualnej zostały zastosowane do napisów.</KeepChangesMessage>
     <SynchronizationDone>Wykonano synchronizację!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Scena początkowa musi być przed sceną końcową!</StartSceneMustComeBeforeEndScene>
     <Tip>Tip: Klawisze &lt;ctrl+arrow left/right&gt; przesuwają do przodu/tyłu o 100 ms</Tip>
@@ -1880,7 +1881,7 @@ Chcesz zapisać?</NegativeTimeWarning>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Ręcznie obrazy do tekstu</Title>
-    <ShrinkSelection>Zawęż wybór</ShrinkSelection>
+    <ShrinkSelection>Zawęź wybór</ShrinkSelection>
     <ExpandSelection>Rozszerz wybór</ExpandSelection>
     <SubtitleImage>Obraz napisu</SubtitleImage>
     <Characters>Znak(i)</Characters>
