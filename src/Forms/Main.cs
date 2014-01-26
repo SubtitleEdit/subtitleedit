@@ -4327,6 +4327,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ReplaceListView(ReplaceDialog replaceDialog)
         {
+            SaveSubtitleListviewIndexes();
             int firstIndex = FirstSelectedIndex;
             bool isFirst = true;
             string selectedText = textBoxListViewText.SelectedText;
@@ -4563,6 +4564,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     ShowStatus(string.Format(_language.ReplaceCountX, replaceCount));
             }
+            RestoreSubtitleListviewIndexes();
             if (_makeHistoryPaused)
                 RestartHistory();
             replaceDialog.Dispose();
