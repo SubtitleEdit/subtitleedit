@@ -254,14 +254,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Generate>Gerar</Generate>	
   </DCinemaProperties>
   <DurationsBridgeGaps>
-    <Title>Unir pequenas brechas entre durações</Title>
-    <GapsBridgedX>Número de pequenas brechas unidas: {0}</GapsBridgedX>
-	<GapToNext>Ir para a próxima brecha em segundos</GapToNext>
-    <BridgeGapsSmallerThanXPart1>Colmatar as brechas menores do que</BridgeGapsSmallerThanXPart1>
+    <Title>Unir pequenos intervalos entre durações</Title>
+    <GapsBridgedX>Número de pequenos intervalos unidos: {0}</GapsBridgedX>
+	<GapToNext>Ir para o próximo intervalo em segundos</GapToNext>
+    <BridgeGapsSmallerThanXPart1>Colmatar os intervalos menores do que</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milissegundos</BridgeGapsSmallerThanXPart2>
     <MinMsBetweenLines>Min. milissegundos entre as linhas</MinMsBetweenLines>	
-    <ProlongEndTime>Texto anterior com todos os tempos da brecha</ProlongEndTime>
-    <DivideEven>Texto divide o tempo da brecha</DivideEven>	
+    <ProlongEndTime>Texto anterior com todos os tempos de intervalo</ProlongEndTime>
+    <DivideEven>Texto divide o tempo do intervalo</DivideEven>	
   </DurationsBridgeGaps>
   <DvdSubrip>
     <Title>Extrair legendas de IFO/VOBs (DVD)</Title>
@@ -719,7 +719,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Ferramentas</Title>
         <AdjustDisplayDuration>&amp;Ajustar durações...</AdjustDisplayDuration>
         <ApplyDurationLimits>Aplicar limites de duração...</ApplyDurationLimits>
-        <DurationsBridgeGap>Unir as brechas nas durações...</DurationsBridgeGap>		
+        <DurationsBridgeGap>Unir os intervalos nas durações...</DurationsBridgeGap>		
         <FixCommonErrors>&amp;Corrigir erros comuns...</FixCommonErrors>
         <StartNumberingFrom>Renumerar...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Eliminar texto para surdos...</RemoveTextForHearingImpaired>
@@ -1352,8 +1352,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <PreviewLinesModifiedX>Pré-visualizar - legendas modificadas: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Mostrar só linhas modificadas</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milissegundos mínimos entre linhas</MinimumMillisecondsBetweenParagraphs>
-    <FrameInfo>Taxa de frames info</FrameInfo>
-    <OneFrameXisYMilliseconds>Um fotograma de {0:0.00} fps é {1} milissegundos</OneFrameXisYMilliseconds>	
+    <FrameInfo>Informação da taxa de frames</FrameInfo>
+    <OneFrameXisYMilliseconds>Um fotograma de {0:0.00} fps é de {1} milissegundos</OneFrameXisYMilliseconds>	
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Estabelecer ponto de sincronia para a linha {0}</Title>
@@ -1393,6 +1393,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AutoWrapWhileTyping>Auto-ajustar linha durante digitação</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Duração Mínima milissegundos</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Duração Máxima milissegundos</DurationMaximumMilliseconds>
+	<MinimumGapMilliseconds>Min. de intervalo entre legendas em ms</MinimumGapMilliseconds>
     <SubtitleFont>Tipo de letra</SubtitleFont>
     <SubtitleFontSize>Tamanho</SubtitleFontSize>
     <SubtitleBold>Negrito</SubtitleBold>

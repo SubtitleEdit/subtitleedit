@@ -35,6 +35,7 @@
   * Fixed bug in centering of exported images - thx minhjirachi
   * Fixed crash in Spell check - Get dictionaries (if no internet connection) - thx Krystian
   * Fixed (sometimes) missing highlighting of word in spell check dialog - thx Betsy25
+  * Fixed bug where textbox lost connection with subtitle after "Replace" - thx HodoreeSubs
 
 
 3.3.12 (12th January 2014)
