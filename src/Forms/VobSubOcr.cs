@@ -2298,7 +2298,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return new CompareMatch(result.Text, result.Italic, 0, null, result);
         }
 
-        private CompareMatch GetCompareMatch(ImageSplitterItem targetItem, NikseBitmap parentBitmap, out CompareMatch secondBestGuess)
+        private CompareMatch GetCompareMatch(ImageSplitterItem targetItem, NikseBitmap parentBitmap, out CompareMatch secondBestGuess, List<ImageSplitterItem> list, int listIndex)
         {
             secondBestGuess = null;
             int index = 0;
@@ -2315,22 +2315,30 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 // check for expand match!
                 if (compareItem.ExpandCount > 0 && compareItem.Bitmap.Width > target.Width &&
-                    parentBitmap.Width >= compareItem.Bitmap.Width + targetItem.X &&
-                    parentBitmap.Height >= compareItem.Bitmap.Height + targetItem.Y)
+                    parentBitmap.Width >= compareItem.Bitmap.Width + targetItem.X) // &&   parentBitmap.Height >= compareItem.Bitmap.Height + targetItem.Y) //NIXE-debug-test- what not correct?
                 {
-                    var cutBitmap = parentBitmap.CopyRectangle(new Rectangle(targetItem.X, targetItem.Y, compareItem.Bitmap.Width, compareItem.Bitmap.Height));
-                    int dif = NikseBitmapImageSplitter.IsBitmapsAlike(compareItem.Bitmap, cutBitmap);
-                    if (dif < smallestDifference)
+                    int minY = targetItem.Y;
+                    for (int j = 1; j < compareItem.ExpandCount; j++)
                     {
-                        bool allow = true;
-                        if (Math.Abs(target.Height - compareItem.Bitmap.Height) > 5 && compareItem.Text == "\"")
-                            allow = false;
-                        if (allow)
+                        if (list != null && list.Count > listIndex + j && list[listIndex + j].Y < minY)
+                            minY = list[listIndex + j].Y;
+                    }
+                    if (parentBitmap.Height >= compareItem.Bitmap.Height + minY)
+                    {
+                        var cutBitmap = parentBitmap.CopyRectangle(new Rectangle(targetItem.X, minY, compareItem.Bitmap.Width, compareItem.Bitmap.Height));
+                        int dif = NikseBitmapImageSplitter.IsBitmapsAlike(compareItem.Bitmap, cutBitmap);
+                        if (dif < smallestDifference)
                         {
-                            smallestDifference = dif;
-                            smallestIndex = index;
-                            if (dif == 0)
-                                break; // foreach ending
+                            bool allow = true;
+                            if (Math.Abs(target.Height - compareItem.Bitmap.Height) > 5 && compareItem.Text == "\"")
+                                allow = false;
+                            if (allow)
+                            {
+                                smallestDifference = dif;
+                                smallestIndex = index;
+                                if (dif == 0)
+                                    break; // foreach ending
+                            }
                         }
                     }
                 }
@@ -2840,7 +2848,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (threadText == null)
             {
                 var matches = new List<CompareMatch>();
-                NikseBitmap parentBitmap = new NikseBitmap(bitmap);
+                var parentBitmap = new NikseBitmap(bitmap);
                 List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLetters(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom);
                 int index = 0;
                 bool expandSelection = false;
@@ -2905,7 +2913,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         CompareMatch bestGuess;
-                        CompareMatch match = GetCompareMatch(item, parentBitmap, out bestGuess);
+                        CompareMatch match = GetCompareMatch(item, parentBitmap, out bestGuess, list, index);
                         if (match == null)
                         {
                             _vobSubOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, false, bestGuess, _lastAdditions, this);
@@ -6414,7 +6422,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     CompareMatch bestGuess;
-                    CompareMatch match = GetCompareMatch(item, parentBitmap, out bestGuess);
+                    CompareMatch match = GetCompareMatch(item, parentBitmap, out bestGuess, list, index);
                     if (match == null)
                     {
                         matches.Add(new CompareMatch(Configuration.Settings.Language.VobSubOcr.NoMatch, false, 0, null));
