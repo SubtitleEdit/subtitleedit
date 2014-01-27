@@ -5695,6 +5695,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _vobSubOcrSettings.LastImageCompareFolder = newFolder.FolderName;
                 LoadImageCompareCharacterDatabaseList();
+                LoadImageCompareBitmaps();
             }
         }
 
