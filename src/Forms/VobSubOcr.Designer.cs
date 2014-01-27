@@ -133,6 +133,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxCustomFourColors = new System.Windows.Forms.CheckBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.groupBoxSubtitleImage = new System.Windows.Forms.GroupBox();
+            this.labelMinAlpha = new System.Windows.Forms.Label();
+            this.numericUpDownAutoTransparentAlphaMax = new System.Windows.Forms.NumericUpDown();
             this.groupBoxTransportStream = new System.Windows.Forms.GroupBox();
             this.checkBoxTransportStreamGetColorAndSplit = new System.Windows.Forms.CheckBox();
             this.checkBoxTransportStreamGrayscale = new System.Windows.Forms.CheckBox();
@@ -143,11 +145,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.splitContainerBottom = new System.Windows.Forms.SplitContainer();
-            this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
-            this.numericUpDownAutoTransparentAlphaMax = new System.Windows.Forms.NumericUpDown();
-            this.labelMinAlpha = new System.Windows.Forms.Label();
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.GroupBoxTesseractMethod.SuspendLayout();
@@ -173,12 +173,12 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEmphasis1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPattern)).BeginInit();
             this.groupBoxSubtitleImage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutoTransparentAlphaMax)).BeginInit();
             this.groupBoxTransportStream.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.splitContainerBottom.Panel1.SuspendLayout();
             this.splitContainerBottom.Panel2.SuspendLayout();
             this.splitContainerBottom.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutoTransparentAlphaMax)).BeginInit();
             this.SuspendLayout();
             // 
             // contextMenuStripListview
@@ -392,11 +392,11 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxOcrMethod
             // 
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
             this.groupBoxOcrMethod.Size = new System.Drawing.Size(392, 192);
@@ -1277,6 +1277,38 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSubtitleImage.TabStop = false;
             this.groupBoxSubtitleImage.Text = "Subtitle image";
             // 
+            // labelMinAlpha
+            // 
+            this.labelMinAlpha.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelMinAlpha.AutoSize = true;
+            this.labelMinAlpha.Location = new System.Drawing.Point(176, 171);
+            this.labelMinAlpha.Name = "labelMinAlpha";
+            this.labelMinAlpha.Size = new System.Drawing.Size(252, 13);
+            this.labelMinAlpha.TabIndex = 40;
+            this.labelMinAlpha.Text = "Min. alpha value (0=transparent, 255=fully visible)";
+            this.labelMinAlpha.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.labelMinAlpha.Visible = false;
+            // 
+            // numericUpDownAutoTransparentAlphaMax
+            // 
+            this.numericUpDownAutoTransparentAlphaMax.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAutoTransparentAlphaMax.Location = new System.Drawing.Point(432, 169);
+            this.numericUpDownAutoTransparentAlphaMax.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDownAutoTransparentAlphaMax.Name = "numericUpDownAutoTransparentAlphaMax";
+            this.numericUpDownAutoTransparentAlphaMax.Size = new System.Drawing.Size(44, 21);
+            this.numericUpDownAutoTransparentAlphaMax.TabIndex = 37;
+            this.numericUpDownAutoTransparentAlphaMax.Value = new decimal(new int[] {
+            140,
+            0,
+            0,
+            0});
+            this.numericUpDownAutoTransparentAlphaMax.Visible = false;
+            this.numericUpDownAutoTransparentAlphaMax.ValueChanged += new System.EventHandler(this.numericUpDownAutoTransparentAlphaMax_ValueChanged);
+            // 
             // groupBoxTransportStream
             // 
             this.groupBoxTransportStream.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1392,43 +1424,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom.SplitterDistance = 658;
             this.splitContainerBottom.TabIndex = 39;
             // 
-            // timerHideStatus
-            // 
-            this.timerHideStatus.Interval = 2000;
-            this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
-            // 
-            // numericUpDownAutoTransparentAlphaMax
-            // 
-            this.numericUpDownAutoTransparentAlphaMax.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownAutoTransparentAlphaMax.Location = new System.Drawing.Point(432, 169);
-            this.numericUpDownAutoTransparentAlphaMax.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numericUpDownAutoTransparentAlphaMax.Name = "numericUpDownAutoTransparentAlphaMax";
-            this.numericUpDownAutoTransparentAlphaMax.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownAutoTransparentAlphaMax.TabIndex = 37;
-            this.numericUpDownAutoTransparentAlphaMax.Value = new decimal(new int[] {
-            140,
-            0,
-            0,
-            0});
-            this.numericUpDownAutoTransparentAlphaMax.Visible = false;
-            this.numericUpDownAutoTransparentAlphaMax.ValueChanged += new System.EventHandler(this.numericUpDownAutoTransparentAlphaMax_ValueChanged);
-            // 
-            // labelMinAlpha
-            // 
-            this.labelMinAlpha.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelMinAlpha.AutoSize = true;
-            this.labelMinAlpha.Location = new System.Drawing.Point(176, 171);
-            this.labelMinAlpha.Name = "labelMinAlpha";
-            this.labelMinAlpha.Size = new System.Drawing.Size(252, 13);
-            this.labelMinAlpha.TabIndex = 40;
-            this.labelMinAlpha.Text = "Min. alpha value (0=transparent, 255=fully visible)";
-            this.labelMinAlpha.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.labelMinAlpha.Visible = false;
-            // 
             // textBoxCurrentText
             // 
             this.textBoxCurrentText.AllowDrop = true;
@@ -1465,6 +1460,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
+            // 
+            // timerHideStatus
+            // 
+            this.timerHideStatus.Interval = 2000;
+            this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
             // 
             // VobSubOcr
             // 
@@ -1524,6 +1524,7 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPattern)).EndInit();
             this.groupBoxSubtitleImage.ResumeLayout(false);
             this.groupBoxSubtitleImage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutoTransparentAlphaMax)).EndInit();
             this.groupBoxTransportStream.ResumeLayout(false);
             this.groupBoxTransportStream.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
@@ -1531,7 +1532,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom.Panel1.PerformLayout();
             this.splitContainerBottom.Panel2.ResumeLayout(false);
             this.splitContainerBottom.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutoTransparentAlphaMax)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
