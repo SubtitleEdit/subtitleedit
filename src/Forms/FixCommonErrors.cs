@@ -2798,18 +2798,54 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-
-                    if (oldText != text)
+                }
+                
+                if ((text.Contains(". -") || text.Contains("! -") || text.Contains("? -")) && Utilities.CountTagInText(text, Environment.NewLine) == 1)
+                {
+                    string temp = Utilities.AutoBreakLine(text);
+                    var arr = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    var arrTemp = temp.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].Trim().StartsWith("-") && arrTemp[1].Trim().StartsWith("-"))
+                        text = temp;
+                    else if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].Trim().StartsWith("<i>-") && arrTemp[1].Trim().StartsWith("<i>-"))
+                        text = temp;
+                }
+                else if ((text.Contains(". -") || text.Contains("! -") || text.Contains("? -")) && !text.Contains(Environment.NewLine))
+                {
+                    string temp = Utilities.AutoBreakLine(text);
+                    var arrTemp = temp.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (arrTemp.Length == 2)
                     {
-                        if (AllowFix(p, fixAction))
+                        if (arrTemp[1].Trim().StartsWith("-") || arrTemp[1].Trim().StartsWith("<i>-"))
+                            text = temp;
+                    }
+                    else
+                    {
+                        int index = text.IndexOf(". -");
+                        if (index < 0)
+                            index = text.IndexOf("! -");
+                        if (index < 0)
+                            index = text.IndexOf("? -");
+                        if (index > 0)
                         {
-                            p.Text = text;
-                            noOfFixes++;
-                            _totalFixes++;
-                            AddFixToListView(p, fixAction, oldText, p.Text);
+                            text = text.Remove(index + 1, 1).Insert(index + 1, Environment.NewLine);
+                            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                            text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                         }
                     }
                 }
+
+                if (oldText != text)
+                {
+                    if (AllowFix(p, fixAction))
+                    {
+                        p.Text = text;
+                        noOfFixes++;
+                        _totalFixes++;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
+                }
+                
             }
             if (noOfFixes > 0)
                 LogStatus(_language.FixCommonOcrErrors, string.Format(_language.RemoveSpaceBetweenNumbersFixed, noOfFixes));
