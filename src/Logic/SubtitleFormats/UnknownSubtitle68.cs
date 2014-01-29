@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             const string paragraphWriteFormat = "{0}{1}  {2}   {3}{1}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(paragraphWriteFormat, p.Text, Environment.NewLine, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
+                sb.AppendLine(string.Format(paragraphWriteFormat, p.Text.Replace("♪","|"), Environment.NewLine, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
             }
             return sb.ToString().Trim();
         }
@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (line.Trim().Length > 0)
                 {
-                    text.AppendLine(line.Trim());
+                    text.AppendLine(line.Trim().Replace("|", "♪"));
                     if (text.Length > 5000)
                         return;
                 }
