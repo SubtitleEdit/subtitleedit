@@ -69,16 +69,19 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             if (PresentationTimeStampDecodeTimeStampFlags == Helper.B00000010 ||
                 PresentationTimeStampDecodeTimeStampFlags == Helper.B00000011)
             {
-                string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
-                bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
-                PresentationTimeStamp = Convert.ToUInt64(bString, 2);
-                tempIndex += 5;
+                PresentationTimeStamp = (ulong)buffer[tempIndex + 4] >> 1;
+                PresentationTimeStamp += (ulong)buffer[tempIndex + 3] << 7;
+                PresentationTimeStamp += (ulong)(buffer[tempIndex + 2] & Helper.B11111110) << 14;
+                PresentationTimeStamp += (ulong)buffer[tempIndex + 1] << 22;
+                PresentationTimeStamp += (ulong)(buffer[tempIndex + 0] & Helper.B00001110) << 29;
             }
             if (PresentationTimeStampDecodeTimeStampFlags == Helper.B00000011)
             {
-                string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
-                bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
-                DecodeTimeStamp = Convert.ToUInt64(bString, 2);
+                DecodeTimeStamp = (ulong)buffer[tempIndex + 4] >> 1;
+                DecodeTimeStamp += (ulong)buffer[tempIndex + 3] << 7;
+                DecodeTimeStamp += (ulong)(buffer[tempIndex + 2] & Helper.B11111110) << 14;
+                DecodeTimeStamp += (ulong)buffer[tempIndex + 1] << 22;
+                DecodeTimeStamp += (ulong)(buffer[tempIndex + 0] & Helper.B00001110) << 29;
             }
 
             int dataIndex = index + HeaderDataLength + 24 - Mpeg2HeaderLength;

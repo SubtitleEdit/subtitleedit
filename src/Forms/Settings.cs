@@ -239,6 +239,18 @@ namespace Nikse.SubtitleEdit.Forms
                 labelMinGapMs.Visible = false;
                 numericUpDownMinGapMs.Visible = false;
             }
+            if (labelSubMaxLen.Left + labelSubMaxLen.Width > numericUpDownSubtitleLineMaximumLength.Left)
+                numericUpDownSubtitleLineMaximumLength.Left = labelSubMaxLen.Left + labelSubMaxLen.Width + 3;
+            if (labelMaxCharsPerSecond.Left + labelMaxCharsPerSecond.Width > numericUpDownMaxCharsSec.Left)
+                numericUpDownMaxCharsSec.Left = labelMaxCharsPerSecond.Left + labelMaxCharsPerSecond.Width + 3;
+            if (labelMinDuration.Left + labelMinDuration.Width > numericUpDownDurationMin.Left)
+                numericUpDownDurationMin.Left = labelMinDuration.Left + labelMinDuration.Width + 3;
+            if (labelMaxDuration.Left + labelMaxDuration.Width > numericUpDownDurationMax.Left)
+                numericUpDownDurationMax.Left = labelMaxDuration.Left + labelMaxDuration.Width + 3;
+            if (labelMinGapMs.Left + labelMinGapMs.Width > numericUpDownMinGapMs.Left)
+                numericUpDownMinGapMs.Left = labelMinGapMs.Left + labelMinGapMs.Width + 3;
+            if (labelMergeShortLines.Left + labelMergeShortLines.Width > comboBoxMergeShortLineLength.Left)
+                comboBoxMergeShortLineLength.Left = labelMergeShortLines.Left + labelMergeShortLines.Width + 3;
 
             labelSubtitleFont.Text = language.SubtitleFont;
             labelSubtitleFontSize.Text = language.SubtitleFontSize;

@@ -519,7 +519,7 @@ namespace Nikse.SubtitleEdit.Logic
             StartLoadLastFile = true;
             StartRememberPositionAndSize = true;
             SubtitleLineMaximumLength = 43;
-            SubtitleMinimumDisplayMilliseconds = 500;
+            SubtitleMinimumDisplayMilliseconds = 1000;
             SubtitleMaximumDisplayMilliseconds = 8 * 1000;
             MininumMillisecondsBetweenLines = 25;
             SetStartEndHumanDelay = 100;

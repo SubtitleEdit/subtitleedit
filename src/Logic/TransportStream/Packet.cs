@@ -93,6 +93,21 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             }
         }
 
+        public bool IsVideoStream
+        {
+            get
+            {
+                if (Payload == null || Payload.Length < 4)
+                    return false;
+
+                return Payload[0] == 0 &&
+                       Payload[1] == 0 &&
+                       Payload[2] == 1 &&
+                       Payload[3] >= 0xE0 &&
+                       Payload[3] < 0xF0;
+            }
+        }
+
         public ProgramAssociationTable ProgramAssociationTable { get; private set; }
 
         public Packet(byte[] packetBuffer)
