@@ -39,6 +39,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         readonly OcrSpellCheck _spellCheck;
         readonly Form _parentForm;
         private string _spellCheckDictionaryName;
+        private string _threeLetterIsoLanguageName;
 
         static readonly Regex RegexAloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
         static readonly Regex RegexAloneIasL = new Regex(@"\bl\b", RegexOptions.Compiled);
@@ -67,6 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         /// <param name="parentForm">Used for centering/show spellcheck dialog</param>
         public OcrFixEngine(string threeLetterIsoLanguageName, string hunspellName, Form parentForm)
         {
+            _threeLetterIsoLanguageName = threeLetterIsoLanguageName;
             _parentForm = parentForm;
 
             _spellCheck = new OcrSpellCheck {StartPosition = FormStartPosition.Manual};
@@ -443,13 +445,53 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
                 text = FixLowercaseIToUppercaseI(text, lastLine);
-                if (SpellCheckDictionaryName.StartsWith("en_"))
+                if (SpellCheckDictionaryName.StartsWith("en_") || _threeLetterIsoLanguageName == "eng")
                 {
                     string oldText = text;
                     text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(RegexAloneI, oldText, text, 'i');
                     text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(RegexAloneIasL, oldText, text, 'l');
                 }
+                else if (_threeLetterIsoLanguageName == "fra")
+                {
+                    text = FixFrenchLApostrophe(text, " I'");
+                    text = FixFrenchLApostrophe(text, " L'");
+                    text = FixFrenchLApostrophe(text, " l'");
+                    text = FixFrenchLApostrophe(text, " I’");
+                    text = FixFrenchLApostrophe(text, " L’");
+                    text = FixFrenchLApostrophe(text, " l’");
+                }
+
                 text = RemoveSpaceBetweenNumbers(text);
+            }
+            return text;
+        }
+
+        private static string FixFrenchLApostrophe(string text, string tag)
+        {
+            if (text.StartsWith(tag.TrimStart()))
+            {
+                if (text.Length > 3 && Utilities.UppercaseLetters.Contains(text.Substring(2, 1)))
+                {
+                    text = text.Remove(0, 1).Insert(0, "L");
+                }
+                else if (text.Length > 3 && Utilities.LowercaseLetters.Contains(text.Substring(2, 1)))
+                {
+                    text = text.Remove(0, 1).Insert(0, "l");
+                }
+            }
+
+            int start = text.IndexOf(tag);
+            while (start > 0)
+            {
+                if (start < text.Length - 4 && Utilities.UppercaseLetters.Contains(text.Substring(start + 3, 1)))
+                {
+                    text = text.Remove(start + 1, 1).Insert(start + 1, "L");
+                }
+                else if (start < text.Length - 4 && Utilities.LowercaseLetters.Contains(text.Substring(start + 3, 1)))
+                {
+                    text = text.Remove(start + 1, 1).Insert(start + 1, "l");
+                }
+                start = text.IndexOf(tag, start + 1);
             }
             return text;
         }
@@ -1282,7 +1324,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             foreach (string from in _partialLineReplaceList.Keys)
             {
                 if (newText.Contains(from))
-                    newText = ReplaceWord(newText, from, _partialLineReplaceList[from]);
+                    newText = newText.Replace(from, _partialLineReplaceList[from]); // ReplaceWord(newText, from, _partialLineReplaceList[from]);
             }
 
             foreach (string findWhat in _regExList.Keys)
