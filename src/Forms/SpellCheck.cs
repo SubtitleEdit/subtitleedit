@@ -704,6 +704,17 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 if (_currentWord.ToUpper() != "LT'S" && _currentWord.ToUpper() != "SOX'S") //TODO: get fixed nhunspell
                                     suggestions = DoSuggest(_currentWord); //TODO: 0.9.6 fails on "Lt'S"
+                                if (_languageName.StartsWith("fr_") && (_currentWord.StartsWith("I'") || _currentWord.StartsWith("I’")))
+                                {
+                                    if (_currentWord.Length > 3 && Utilities.LowercaseLetters.Contains(_currentWord[2].ToString()))
+                                    {
+                                        for (int i = 0; i < suggestions.Count; i++)
+                                        {
+                                            if (suggestions[i].StartsWith("L'") || suggestions[i].StartsWith("L’"))
+                                                suggestions[i] = suggestions[i].Remove(0, 1).Insert(0, "l");
+                                        }
+                                    }
+                                }
                             }
 
                             if (AutoFixNames && _currentWord.Length > 1 && suggestions.Contains(_currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1)))
