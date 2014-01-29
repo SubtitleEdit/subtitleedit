@@ -868,6 +868,7 @@
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle68.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProXml13.cs" />
     <Compile Include="Logic\SubtitleFormats\DCinemaSmpte2007.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProImage.cs" />
@@ -1058,6 +1059,8 @@
     <Compile Include="Logic\TransportStream\ClutDefinitionSegment.cs" />
     <Compile Include="Logic\TransportStream\DisplayDefinitionSegment.cs" />
     <Compile Include="Logic\TransportStream\DvbSubPes.cs" />
+    <Compile Include="Logic\TransportStream\EbuPesDataField.cs" />
+    <Compile Include="Logic\TransportStream\EbuPesDataFieldText.cs" />
     <Compile Include="Logic\TransportStream\TransportStreamSubtitle.cs" />
     <Compile Include="Logic\TransportStream\Helper.cs" />
     <Compile Include="Logic\TransportStream\HummingDecoder.cs" />
