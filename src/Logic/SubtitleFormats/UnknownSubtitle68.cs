@@ -87,7 +87,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             const string paragraphWriteFormat = "{0}{1}  {2}   {3}{1}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(paragraphWriteFormat, p.Text.Replace("♪","|"), Environment.NewLine, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
+                string text = p.Text.Replace("♪", "|");
+                if (text.StartsWith("<i>"))
+                    text = ",b" + Environment.NewLine + text;
+                if (text.StartsWith("{\\an8}"))
+                    text = ",12" + Environment.NewLine + text;
+                text = Utilities.RemoveHtmlTags(text, true);
+                sb.AppendLine(string.Format(paragraphWriteFormat, text, Environment.NewLine, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
             }
             return sb.ToString().Trim();
         }
@@ -117,7 +123,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             if (p != null && p.EndTime.TotalMilliseconds == 0)
                                 p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
                             TimeCode end = new TimeCode(0, 0, 0, 0);
-                            p = new Paragraph(start, end, text.ToString().Trim());
+                            p = MakeTextParagraph(text, p, start, end);
                             subtitle.Paragraphs.Add(p);
                             text = new StringBuilder();
                         }
@@ -134,7 +140,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             if (p != null && p.EndTime.TotalMilliseconds == 0)
                                 p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
                             TimeCode end = DecodeTimeCode(timeParts[1]);
-                            p = new Paragraph(start, end, text.ToString().Trim());
+                            p = MakeTextParagraph(text, p, start, end);
                             subtitle.Paragraphs.Add(p);
                             text = new StringBuilder();
                         }
@@ -157,6 +163,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             subtitle.Header = header.ToString();
             subtitle.Renumber(1);
+        }
+
+        private static Paragraph MakeTextParagraph(StringBuilder text, Paragraph p, TimeCode start, TimeCode end)
+        {
+            p = new Paragraph(start, end, text.ToString().Trim());
+            if (p.Text.StartsWith(",b" + Environment.NewLine))
+                p.Text = "<i>" + p.Text.Remove(0, 2).Trim() + "</i>";
+            else if (p.Text.StartsWith(",1" + Environment.NewLine))
+                p.Text = "{\\an8}" + p.Text.Remove(0, 2).Trim();
+            else if (p.Text.StartsWith(",12" + Environment.NewLine))
+                p.Text = "{\\an8}" + p.Text.Remove(0, 3).Trim();
+            return p;
         }
 
         private string EncodeTimeCode(TimeCode time)
