@@ -5,7 +5,10 @@
    * Compare window now has an option to "ignore line breaks" - thx Krystian
    * Compare window now has a "text change percent" - thx Krystian
    * Bridge gap in durations now have minimum display time - thx Krystian
-   * Option for "Focus on mouse-over" for waveform/spectrogram - thx lansing
+   * New option for "Focus on mouse-over" for waveform/spectrogram - thx lansing
+   * New setting "Gap between subtitles"
+   * New subtitle format
+   * French rules regarding L and apostrophe in spell check + OCR fix - thx René
 * IMPROVED:
    * Updated Korean language file - thx domddol
    * Updated Chinese language file - thx Leon
@@ -36,6 +39,8 @@
   * Fixed crash in Spell check - Get dictionaries (if no internet connection) - thx Krystian
   * Fixed (sometimes) missing highlighting of word in spell check dialog - thx Betsy25
   * Fixed bug where textbox lost connection with subtitle after "Replace" - thx HodoreeSubs
+  * Fixed issue in OCR regarding expand selection - thx Thomas
+  * Reset loaded image compare bitmaps after creating new ocr image set
 
 
 3.3.12 (12th January 2014)

@@ -77,9 +77,9 @@ namespace Nikse.SubtitleEdit.Logic
             switch (FindType)
             {
                 case FindType.Normal:
-                    return (text.ToLower().IndexOf(_findText.ToLower(), startIndex));
+                    return (text.IndexOf(_findText, startIndex, System.StringComparison.OrdinalIgnoreCase));
                 case FindType.CaseSensitive:
-                    return (text.IndexOf(_findText, startIndex));
+                    return (text.IndexOf(_findText, startIndex, System.StringComparison.Ordinal));
                 case FindType.RegEx:
                     {
                         Match match = _regEx.Match(text, startIndex);

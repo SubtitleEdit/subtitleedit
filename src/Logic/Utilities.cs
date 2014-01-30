@@ -2489,7 +2489,7 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
-        /// <summary>
+ /// <summary>
         /// HTML-encodes a string
         /// </summary>
         /// <param name="text">Text string to encode</param>
@@ -2498,7 +2498,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (text == null)
                 return string.Empty;
-            StringBuilder sb = new StringBuilder(text.Length);
+            var sb = new StringBuilder(text.Length);
             int len = text.Length;
             for (int i = 0; i < len; i++)
             {
@@ -2519,6 +2519,289 @@ namespace Nikse.SubtitleEdit.Logic
                     default:
                         if (text[i] > 127)
                           sb.Append("&#" + (int)text[i] + ";");
+                        else
+                            sb.Append(text[i]);
+                        break;
+                }
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// HTML-encodes a string
+        /// </summary>
+        /// <param name="text">Text string to encode</param>
+        /// <returns>HTML-encoded text</returns>
+        public static string HtmlEncodeFull(string text)
+        {
+            if (text == null)
+                return string.Empty;
+            var sb = new StringBuilder(text.Length);
+            int len = text.Length;
+            for (int i = 0; i < len; i++)
+            {
+                switch (text[i])
+                {
+                    case '<':
+                        sb.Append("&lt;");
+                        break;
+                    case '>':
+                        sb.Append("&gt;");
+                        break;
+                    case '"':
+                        sb.Append("&quot;");
+                        break;
+                    case '&':
+                        sb.Append("&amp;");
+                        break;
+                    case '\'':
+                        sb.Append("&apos;");
+                        break;
+                    case ' ':
+                        sb.Append("&nbsp;");
+                        break;
+                    case '–':
+                        sb.Append("&ndash;");
+                        break;
+                    case '—':
+                        sb.Append("&mdash;");
+                        break;
+                    case '¡':
+                        sb.Append("&iexcl;");
+                        break;
+                    case '¿':
+                        sb.Append("&iquest;");
+                        break;
+                    case '“':
+                        sb.Append("&ldquo;");
+                        break;
+                    case '”':
+                        sb.Append("&rdquo;");
+                        break;
+                    case '‘':
+                        sb.Append("&lsquo;");
+                        break;
+                    case '’':
+                        sb.Append("&rsquo;");
+                        break;
+                    case '«':
+                        sb.Append("&laquo;");
+                        break;
+                    case '»':
+                        sb.Append("&raquo;");
+                        break;
+                    case '¢':
+                        sb.Append("&cent;");
+                        break;
+                    case '©':
+                        sb.Append("&copy;");
+                        break;
+                    case '÷':
+                        sb.Append("&divide;");
+                        break;
+                    case 'µ':
+                        sb.Append("&micro;");
+                        break;
+                    case '·':
+                        sb.Append("&middot;");
+                        break;
+                    case '¶':
+                        sb.Append("&para;");
+                        break;
+                    case '±':
+                        sb.Append("&plusmn;");
+                        break;
+                    case '€':
+                        sb.Append("&euro;");
+                        break;
+                    case '£':
+                        sb.Append("&pound;");
+                        break;
+                    case '®':
+                        sb.Append("&reg;");
+                        break;
+                    case '§':
+                        sb.Append("&sect;");
+                        break;
+                    case '™':
+                        sb.Append("&trade;");
+                        break;
+                    case '¥':
+                        sb.Append("&yen;");
+                        break;
+                    case 'á':
+                        sb.Append("&aacute;");
+                        break;
+                    case 'Á':
+                        sb.Append("&Aacute;");
+                        break;
+                    case 'à':
+                        sb.Append("&agrave;");
+                        break;
+                    case 'À':
+                        sb.Append("&Agrave;");
+                        break;
+                    case 'â':
+                        sb.Append("&acirc;");
+                        break;
+                    case 'Â':
+                        sb.Append("&Acirc;");
+                        break;
+                    case 'å':
+                        sb.Append("&aring;");
+                        break;
+                    case 'Å':
+                        sb.Append("&Aring;");
+                        break;
+                    case 'ã':
+                        sb.Append("&atilde;");
+                        break;
+                    case 'Ã':
+                        sb.Append("&Atilde;");
+                        break;
+                    case 'ä':
+                        sb.Append("&auml;");
+                        break;
+                    case 'Ä':
+                        sb.Append("&Auml;");
+                        break;
+                    case 'æ':
+                        sb.Append("&aelig;");
+                        break;
+                    case 'Æ':
+                        sb.Append("&AElig;");
+                        break;
+                    case 'ç':
+                        sb.Append("&ccedil;");
+                        break;
+                    case 'Ç':
+                        sb.Append("&Ccedil;");
+                        break;
+                    case 'é':
+                        sb.Append("&eacute;");
+                        break;
+                    case 'É':
+                        sb.Append("&Eacute;");
+                        break;
+                    case 'è':
+                        sb.Append("&egrave;");
+                        break;
+                    case 'È':
+                        sb.Append("&Egrave;");
+                        break;
+                    case 'ê':
+                        sb.Append("&ecirc;");
+                        break;
+                    case 'Ê':
+                        sb.Append("&Ecirc;");
+                        break;
+                    case 'ë':
+                        sb.Append("&euml;");
+                        break;
+                    case 'Ë':
+                        sb.Append("&Euml;");
+                        break;
+                    case 'í':
+                        sb.Append("&iacute;");
+                        break;
+                    case 'Í':
+                        sb.Append("&Iacute;");
+                        break;
+                    case 'ì':
+                        sb.Append("&igrave;");
+                        break;
+                    case 'Ì':
+                        sb.Append("&Igrave;");
+                        break;
+                    case 'î':
+                        sb.Append("&icirc;");
+                        break;
+                    case 'Î':
+                        sb.Append("&Icirc;");
+                        break;
+                    case 'ï':
+                        sb.Append("&iuml;");
+                        break;
+                    case 'Ï':
+                        sb.Append("&Iuml;");
+                        break;
+                    case 'ñ':
+                        sb.Append("&ntilde;");
+                        break;
+                    case 'Ñ':
+                        sb.Append("&Ntilde;");
+                        break;
+                    case 'ó':
+                        sb.Append("&oacute;");
+                        break;
+                    case 'Ó':
+                        sb.Append("&Oacute;");
+                        break;
+                    case 'ò':
+                        sb.Append("&ograve;");
+                        break;
+                    case 'Ò':
+                        sb.Append("&Ograve;");
+                        break;
+                    case 'ô':
+                        sb.Append("&ocirc;");
+                        break;
+                    case 'Ô':
+                        sb.Append("&Ocirc;");
+                        break;
+                    case 'ø':
+                        sb.Append("&oslash;");
+                        break;
+                    case 'Ø':
+                        sb.Append("&Oslash;");
+                        break;
+                    case 'õ':
+                        sb.Append("&otilde;");
+                        break;
+                    case 'Õ':
+                        sb.Append("&Otilde;");
+                        break;
+                    case 'ö':
+                        sb.Append("&ouml;");
+                        break;
+                    case 'Ö':
+                        sb.Append("&Ouml;");
+                        break;
+                    case 'ß':
+                        sb.Append("&szlig;");
+                        break;
+                    case 'ú':
+                        sb.Append("&uacute;");
+                        break;
+                    case 'Ú':
+                        sb.Append("&Uacute;");
+                        break;
+                    case 'ù':
+                        sb.Append("&ugrave;");
+                        break;
+                    case 'Ù':
+                        sb.Append("&Ugrave;");
+                        break;
+                    case 'û':
+                        sb.Append("&ucirc;");
+                        break;
+                    case 'Û':
+                        sb.Append("&Ucirc;");
+                        break;
+                    case 'ü':
+                        sb.Append("&uuml;");
+                        break;
+                    case 'Ü':
+                        sb.Append("&Uuml;");
+                        break;
+                    case 'ÿ':
+                        sb.Append("&yuml;");
+                        break;
+
+
+                    default:
+                        if (text[i] > 127)
+                            sb.Append("&#" + (int)text[i] + ";");
                         else
                             sb.Append(text[i]);
                         break;
@@ -2587,7 +2870,7 @@ namespace Nikse.SubtitleEdit.Logic
                         case "rdquo":
                             sb.Append("”");
                             break;
-                        case "&lsquo;":
+                        case "lsquo":
                             sb.Append("‘");
                             break;
                         case "rsquo":
@@ -2729,7 +3012,7 @@ namespace Nikse.SubtitleEdit.Logic
                             sb.Append("Î");
                             break;
                         case "iuml":
-                            sb.Append("iuml");
+                            sb.Append("ï ");
                             break;
                         case "Iuml":
                             sb.Append("Ï");
