@@ -453,12 +453,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 }
                 else if (_threeLetterIsoLanguageName == "fra")
                 {
-                    text = FixFrenchLApostrophe(text, " I'");
-                    text = FixFrenchLApostrophe(text, " L'");
-                    text = FixFrenchLApostrophe(text, " l'");
-                    text = FixFrenchLApostrophe(text, " I’");
-                    text = FixFrenchLApostrophe(text, " L’");
-                    text = FixFrenchLApostrophe(text, " l’");
+                    text = FixFrenchLApostrophe(text, " I'", lastLine);
+                    text = FixFrenchLApostrophe(text, " L'", lastLine);
+                    text = FixFrenchLApostrophe(text, " l'", lastLine);
+                    text = FixFrenchLApostrophe(text, " I’", lastLine);
+                    text = FixFrenchLApostrophe(text, " L’", lastLine);
+                    text = FixFrenchLApostrophe(text, " l’", lastLine);
                 }
 
                 text = RemoveSpaceBetweenNumbers(text);
@@ -466,15 +466,16 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return text;
         }
 
-        private static string FixFrenchLApostrophe(string text, string tag)
+        private static string FixFrenchLApostrophe(string text, string tag, string lastLine)
         {
-            if (text.StartsWith(tag.TrimStart()))
+            bool endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith(".") || lastLine.EndsWith("!") || lastLine.EndsWith("?") || lastLine.EndsWith(".</i>");
+            if (text.StartsWith(tag.TrimStart()) && text.Length > 3)
             {
-                if (text.Length > 3 && Utilities.UppercaseLetters.Contains(text.Substring(2, 1)))
+                if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text.Substring(2, 1)))
                 {
                     text = text.Remove(0, 1).Insert(0, "L");
                 }
-                else if (text.Length > 3 && Utilities.LowercaseLetters.Contains(text.Substring(2, 1)))
+                else if (Utilities.LowercaseLetters.Contains(text.Substring(2, 1)))
                 {
                     text = text.Remove(0, 1).Insert(0, "l");
                 }
@@ -483,13 +484,41 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             int start = text.IndexOf(tag);
             while (start > 0)
             {
-                if (start < text.Length - 4 && Utilities.UppercaseLetters.Contains(text.Substring(start + 3, 1)))
+                lastLine = text.Substring(0, start).TrimEnd().TrimEnd('-').TrimEnd();
+                endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith(".") || lastLine.EndsWith("!") || lastLine.EndsWith("?") || lastLine.EndsWith(".</i>");
+                if (start < text.Length - 4)
                 {
-                    text = text.Remove(start + 1, 1).Insert(start + 1, "L");
+                    if (start == 1 && text.StartsWith("-"))
+                        endingBeforeThis = true;
+
+                    if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text.Substring(start + 3, 1)))
+                    {
+                        text = text.Remove(start + 1, 1).Insert(start + 1, "L");
+                    }
+                    else if (Utilities.LowercaseLetters.Contains(text.Substring(start + 3, 1)))
+                    {
+                        text = text.Remove(start + 1, 1).Insert(start + 1, "l");
+                    }
                 }
-                else if (start < text.Length - 4 && Utilities.LowercaseLetters.Contains(text.Substring(start + 3, 1)))
+                start = text.IndexOf(tag, start + 1);
+            }
+
+            tag = Environment.NewLine + tag.Trim();
+            start = text.IndexOf(tag);
+            while (start > 0)
+            {
+                lastLine = text.Substring(0, start).TrimEnd().TrimEnd('-').TrimEnd();
+                endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith(".") || lastLine.EndsWith("!") || lastLine.EndsWith("?") || lastLine.EndsWith(".</i>");
+                if (start < text.Length - 5)
                 {
-                    text = text.Remove(start + 1, 1).Insert(start + 1, "l");
+                    if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text.Substring(start + 2 + Environment.NewLine.Length, 1)))
+                    {
+                        text = text.Remove(start + Environment.NewLine.Length, 1).Insert(start + Environment.NewLine.Length, "L");
+                    }
+                    else if (Utilities.LowercaseLetters.Contains(text.Substring(start + 2 + Environment.NewLine.Length, 1)))
+                    {
+                        text = text.Remove(start + Environment.NewLine.Length, 1).Insert(start + Environment.NewLine.Length, "l");
+                    }
                 }
                 start = text.IndexOf(tag, start + 1);
             }
