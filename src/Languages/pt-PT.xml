@@ -448,7 +448,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixOverlappingDisplayTimes>Corrigir sobreposições de tempo</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Corrigir tempos curtos</FixShortDisplayTimes>
     <FixLongDisplayTimes>Corrigir tempos longos</FixLongDisplayTimes>
-    <FixInvalidItalicTags>Corrigir tags itálicas inválidas</FixInvalidItalicTags>
+    <FixInvalidItalicTags>Corrigir etiquetas itálicas inválidas</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Remover espaços desnecessários</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Remover períodos desnecessários</RemoveUnneededPeriods>
     <FixMissingSpaces>Corrigir espaços em falta</FixMissingSpaces>
@@ -512,7 +512,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixTextXY>Impossível corrigir o número do texto {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} sobreposições de tempo corrigidas</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} durações prolongadas</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} tags HTML inválidas corrigidas</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} etiquetas HTML inválidas corrigidas</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} duração encurtada</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} linhas unidas</XLinesUnbreaked>
     <UnneededSpace>Espaço desnecessário</UnneededSpace>
@@ -594,7 +594,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MicrosoftTranslate>Tradutor da Microsoft</MicrosoftTranslate>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
-    <Title>Ir para linha número</Title>
+    <Title>Ir para a linha número</Title>
     <XIsNotAValidNumber>{0} não é um número válido</XIsNotAValidNumber>
   </GoToLine>
   <ImportImages>
@@ -624,9 +624,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OneLineIsOneSubtitle>Uma linha é uma legenda</OneLineIsOneSubtitle>
     <LineBreak>Quebra de linha</LineBreak>	
     <SplitAtBlankLines>Dividir nas linhas em branco</SplitAtBlankLines>
-    <MergeShortLines>Combinar linhas curtas continuadas</MergeShortLines>
-    <RemoveEmptyLines>Remover linhas em branco</RemoveEmptyLines>
-    <RemoveLinesWithoutLetters>Remover linhas sem letras</RemoveLinesWithoutLetters>
+    <MergeShortLines>Combinar as linhas curtas continuadas</MergeShortLines>
+    <RemoveEmptyLines>Remover as linhas em branco</RemoveEmptyLines>
+    <RemoveLinesWithoutLetters>Remover as linhas sem letras</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Gerar códigos de tempo</GenerateTimeCodes>	
     <GapBetweenSubtitles>Espaço entre legendas (milissegundos)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
@@ -707,7 +707,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindNext>Localizar &amp;seguinte</FindNext>
         <Replace>&amp;Substituir</Replace>
         <MultipleReplace>&amp;Substituição múltipla...</MultipleReplace>
-        <GoToSubtitleNumber>&amp;Ir para linha número...</GoToSubtitleNumber>
+        <GoToSubtitleNumber>&amp;Ir para a linha número...</GoToSubtitleNumber>
         <RightToLeftMode>Modo Direita-para-esquerda</RightToLeftMode>
         <FixTrlViaUnicodeControlCharacters>Corrigir RTL via controle de caracteres Unicode (para linhas seleccionadas)</FixTrlViaUnicodeControlCharacters>		
         <ReverseRightToLeftStartEnd>Reverter RTL inicio/fim (para linhas seleccionadas)</ReverseRightToLeftStartEnd>
@@ -717,18 +717,18 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       </Edit>
       <Tools>
         <Title>Ferramentas</Title>
-        <AdjustDisplayDuration>&amp;Ajustar durações...</AdjustDisplayDuration>
+        <AdjustDisplayDuration>&amp;Ajustar as durações...</AdjustDisplayDuration>
         <ApplyDurationLimits>Aplicar limites de duração...</ApplyDurationLimits>
         <DurationsBridgeGap>Unir os intervalos nas durações...</DurationsBridgeGap>		
         <FixCommonErrors>&amp;Corrigir erros comuns...</FixCommonErrors>
         <StartNumberingFrom>Renumerar...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Eliminar texto para surdos...</RemoveTextForHearingImpaired>
-        <ChangeCasing>Alterar maiúsculas...</ChangeCasing>
+        <ChangeCasing>Alterar maiúsculas ou minúsculas...</ChangeCasing>
         <ChangeFrameRate>Alterar taxa de frames...</ChangeFrameRate>
         <ChangeSpeedInPercent>Alterar a velocidade (percentagem)...</ChangeSpeedInPercent>
-        <MergeShortLines>Combinar linhas curtas...</MergeShortLines>
-		<MergeDuplicateText>Combinar linhas com o mesmo texto...</MergeDuplicateText>
-        <SplitLongLines>Dividir linhas longas...</SplitLongLines>
+        <MergeShortLines>Combinar as linhas curtas...</MergeShortLines>
+		<MergeDuplicateText>Combinar as linhas com o mesmo texto...</MergeDuplicateText>
+        <SplitLongLines>Dividir as linhas longas...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Duração mínima entre legendas...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>
         <Number>Ordem numérica</Number>
@@ -771,7 +771,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>&amp;Verificar ortografia...</SpellCheck>
         <SpellCheckFromCurrentLine>Verificar ortografia desde da linha corrente...</SpellCheckFromCurrentLine>		
         <FindDoubleWords>Localizar palavras duplicadas</FindDoubleWords>
-        <FindDoubleLines>Localizar linhas duplas</FindDoubleLines>
+        <FindDoubleLines>Localizar linhas repetidas</FindDoubleLines>
         <GetDictionaries>Obter dicionários...</GetDictionaries>
         <AddToNamesEtcList>Adicionar palavra à lista de nomes</AddToNamesEtcList>
       </SpellCheck>
@@ -850,8 +850,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnPasteFromClipboard>Colar da área de transferência...</ColumnPasteFromClipboard>
         <ColumnCopyOriginalTextToCurrent>Copiar texto do original para o actual</ColumnCopyOriginalTextToCurrent>		
         <Split>Dividir</Split>
-        <MergeSelectedLines>Combinar linhas seleccionadas</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Combinar linhas seleccionadas como dialogo</MergeSelectedLinesASDialogue>
+        <MergeSelectedLines>Combinar as linhas seleccionadas</MergeSelectedLines>
+        <MergeSelectedLinesASDialogue>Combinar as linhas seleccionadas como dialogo</MergeSelectedLinesASDialogue>
         <MergeWithLineBefore>Combinar com a linha anterior</MergeWithLineBefore>
         <MergeWithLineAfter>Combinar com a linha seguinte</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -991,7 +991,7 @@ Gostaria de começar do início do documento a localizar e substituir?</ReplaceX
     <OneReplacementMade>Uma substituição concluída.</OneReplacementMade>
     <BeforeChangesMadeInSourceView>Antes de concluir alterações na visualização de origem</BeforeChangesMadeInSourceView>
     <UnableToParseSourceView>Não foi possível analisar no texto original!</UnableToParseSourceView>
-    <GoToLineNumberX>Ir para linha {0}</GoToLineNumberX>
+    <GoToLineNumberX>Ir para a linha {0}</GoToLineNumberX>
     <CreateAdjustChangesApplied>Alterações aplicadas por Criar/Ajustar linhas</CreateAdjustChangesApplied>
     <SelectedLines>Linhas seleccionadas</SelectedLines>
     <BeforeDisplayTimeAdjustment>Antes do ajuste de duração</BeforeDisplayTimeAdjustment>
@@ -1059,7 +1059,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <BeforeSettingFontToNormal>Antes de definir o tipo de letra para normal</BeforeSettingFontToNormal>
     <BeforeSplitLine>Antes de dividir a linha</BeforeSplitLine>
     <LineSplitted>Linha foi dividida</LineSplitted>
-    <BeforeMergeLines>Antes de combinar linhas</BeforeMergeLines>
+    <BeforeMergeLines>Antes de combinar as linhas</BeforeMergeLines>
     <LinesMerged>Linhas combinadas</LinesMerged>
     <BeforeSettingColor>Antes de definir a cor</BeforeSettingColor>
     <BeforeSettingFontName>Antes de definir o tipo de letra</BeforeSettingFontName>
@@ -1121,7 +1121,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <XLinesSelected>{0} linhas seleccionadas</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>A legenda contém notas musicais em Unicode. Guardar como ANSI irá removê-las. Deseja continuar?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>A legenda contém códigos de tempo negativos. Deseja continuar?</NegativeTimeWarning>
-    <BeforeMergeShortLines>Antes de combinar linhas curtas</BeforeMergeShortLines>
+    <BeforeMergeShortLines>Antes de combinar as linhas curtas</BeforeMergeShortLines>
     <BeforeSplitLongLines>Antes de dividir linhas longas</BeforeSplitLongLines>
     <MergedShortLinesX>Número de linhas combinadas: {0}</MergedShortLinesX>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Antes de estabelecer o tempo de visualização mínimo entre legendas</BeforeSetMinimumDisplayTimeBetweenParagraphs>
@@ -1177,7 +1177,7 @@ Deseja continuar?</SubtitleAppendPrompt>
 	<XSceneChangesImported>{0} mudanças de cena importados</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' executado.</PluginXExecuted>
     <NotAValidXSubFile>Ficheiro xsub invalido!</NotAValidXSubFile>
-    <BeforeMergeLinesWithSameText>Antes de combinar linhas com o mesmo texto</BeforeMergeLinesWithSameText>
+    <BeforeMergeLinesWithSameText>Antes de combinar as linhas com o mesmo texto</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Legenda com códigos de tempo tem um número diferente de linhas ({0}) do que as legendas actuais ({1}) - mesmo assim deseja continuar?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ErrorLoadIdx>Não foi possível ler/editar o ficheiro idx. Os ficheiros idx são parte de um par de ficheiros idx/sub (também conhecidos como VobSub) e o SE pode abrir o ficheiro sub.</ErrorLoadIdx>
     <ErrorLoadRar>Este ficheiro parece ser um ficheiro comprimido .rar. O SE não pode abrir ficheiros comprimidos.</ErrorLoadRar>
@@ -1205,17 +1205,17 @@ Deseja continuar?</SubtitleAppendPrompt>
     <Kilos>Quilogramas</Kilos>
   </MeasurementConverter>
   <MergeDoubleLines>
-    <Title>Combinar linhas com o mesmo texto</Title>
+    <Title>Combinar as linhas com o mesmo texto</Title>
     <MaxMillisecondsBetweenLines>Max. milissegundos entre linhas</MaxMillisecondsBetweenLines>
     <IncludeIncrementing>Incluir linhas adicionais</IncludeIncrementing>	
   </MergeDoubleLines>  
   <MergedShortLines>
-    <Title>Combinar linhas curtas</Title>
+    <Title>Combinar as linhas curtas</Title>
     <MaximumCharacters>Máximo de caracteres num parágrafo</MaximumCharacters>
     <MaximumMillisecondsBetween>Máximo de milissegundos entre linhas</MaximumMillisecondsBetween>
     <NumberOfMergesX>Número de combinações: {0}</NumberOfMergesX>
     <MergedText>Texto combinado</MergedText>
-    <OnlyMergeContinuationLines>Só combinar linhas continuadas</OnlyMergeContinuationLines>
+    <OnlyMergeContinuationLines>Só combinar as linhas continuadas</OnlyMergeContinuationLines>
   </MergedShortLines>
   <ModifySelection>
     <Title>Modificar a selecção</Title>
@@ -1523,7 +1523,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AdjustSetEndAndOffsetTheRest>Defenir o fim, compensar o resto</AdjustSetEndAndOffsetTheRest>
 	<AdjustSetEndAndOffsetTheRestAndGoToNext>Definir o fim, compensar o resto e ir para a próxima</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Criar novo na tecla para baixo, definir tempo final na tecla para cima</MainCreateStartDownEndUp>
-    <MergeDialogue>Combinar diálogos (inserir hífens)</MergeDialogue>
+    <MergeDialogue>Combinar os diálogos (inserir hífens)</MergeDialogue>
     <GoToNext>Ir para a linha seguinte</GoToNext>
     <GoToPrevious>Ir para a linha anterior</GoToPrevious>
     <GoToCurrentSubtitleStart>Ir para o início da linha actual</GoToCurrentSubtitleStart>
@@ -1568,10 +1568,10 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SyntaxColorOverlap>Cor do código de tempo sobreposto</SyntaxColorOverlap>
     <SyntaxErrorColor>Cor dos erros</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ir para a primeira linha seleccionada</GoToFirstSelectedLine>
-    <MergeSelectedLines>Combinar linhas seleccionadas</MergeSelectedLines>
+    <MergeSelectedLines>Combinar as linhas seleccionadas</MergeSelectedLines>
     <ToggleTranslationMode>Alternar o modo de tradução</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Mudar entre original e tradução</SwitchOriginalAndTranslation>
-    <MergeOriginalAndTranslation>Combinar orginal e traduzido</MergeOriginalAndTranslation>
+    <MergeOriginalAndTranslation>Combinar o orginal com o traduzido</MergeOriginalAndTranslation>
     <ShortcutIsAlreadyDefinedX>Atalho já definido: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Alternar tradução e original na pré-visualização vídeo/áudio</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Coluna, eliminar texto</ListViewColumnDelete>
