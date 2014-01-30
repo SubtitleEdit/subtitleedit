@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             string language = Utilities.AutoDetectLanguageName("en_US", subtitle);
-            CultureInfo ci = CultureInfo.GetCultureInfo(language.Replace("_", "-"));
+            var ci = CultureInfo.GetCultureInfo(language.Replace("_", "-"));
             string languageTag = string.Format("{0}CC", language.Replace("_", string.Empty).ToUpper());
             string languageName = ci.EnglishName;
             if (ci.Parent != null)
@@ -119,44 +119,57 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 Paragraph next = subtitle.GetParagraphOrDefault(count);
                 string text = p.Text;
-                //var cleanTextBuilder = new StringBuilder();
-                //bool tagOn = false;
-                //int skipCount = 0;
-                //for (int i = 0; i < text.Length; i++)
-                //{ // Remove html tags from text
-                //    if (skipCount > 0)
-                //        skipCount--;
-                //    else if (text.Substring(i).StartsWith("<font color="))
-                //    {
-                //        int endPos = text.Substring(i).IndexOf(">");
-                //        if (endPos > 0)
-                //        {
-                //            skipCount = endPos;
-                //            string fontTag = text.Substring(i, endPos);
-                //            string color = fontTag.Remove(0, 12).Split(' ')[0];
-                //            color = color.Replace("\"", string.Empty).Replace("'", string.Empty);
-                //            if (Name == new SamiModern().Name)
-                //                cleanTextBuilder.Append("<font color=\"" + color + "\">");
-                //            else
-                //                cleanTextBuilder.Append("<font color=" + color + ">");
-                //        }
-                //        else
-                //        {
-                //            tagOn = true;
-                //        }
-                //    }
-                //    else if (text.Substring(i).StartsWith("</font>") && Name == new SamiModern().Name)
-                //    {
-                //        cleanTextBuilder.Append("</font>");
-                //        skipCount = 6;
-                //    }
-                //    else if (text[i] == '<')
-                //        tagOn = true;
-                //    else if (text[i] == '>')
-                //        tagOn = false;
-                //    else if (!tagOn)
-                //        cleanTextBuilder.Append(text[i]);
-                //}
+
+                if (text.Contains("<") && text.Contains(">"))
+                {
+                    var total = new StringBuilder();
+                    var partial = new StringBuilder();
+                    bool tagOn = false;
+                    for (int i = 0; i < text.Length; i++)
+                    {
+                        if (text.Substring(i).StartsWith("<font") ||
+                            text.Substring(i).StartsWith("<div") ||
+                            text.Substring(i).StartsWith("<i") ||
+                            text.Substring(i).StartsWith("<b") ||
+                            text.Substring(i).StartsWith("<s") ||
+                            text.Substring(i).StartsWith("</"))
+                        {
+                            if (Configuration.Settings.SubtitleSettings.SamiFullHtmlEncode)
+                                total.Append(Utilities.HtmlEncodeFull(partial.ToString()));
+                            else
+                                total.Append(Utilities.HtmlEncode(partial.ToString()));
+                            partial = new StringBuilder();
+                            tagOn = true;
+                            total.Append("<");
+                        }
+                        else if (text.Substring(i).StartsWith(">") && tagOn)
+                        {
+                            tagOn = false;
+                            total.Append(">");
+                        }
+                        else if (!tagOn)
+                        {
+                            partial.Append(text.Substring(i, 1));
+                        }
+                        else if (tagOn)
+                        {
+                            total.Append(text.Substring(i, 1));
+                        }
+                    }
+                    if (Configuration.Settings.SubtitleSettings.SamiFullHtmlEncode)
+                        total.Append(Utilities.HtmlEncodeFull(partial.ToString()));
+                    else
+                        total.Append(Utilities.HtmlEncode(partial.ToString()));
+                    text = total.ToString();
+                }
+                else
+                {
+                    if (Configuration.Settings.SubtitleSettings.SamiFullHtmlEncode)
+                        text = Utilities.HtmlEncodeFull(text);
+                    else
+                        text = Utilities.HtmlEncode(text);
+                }
+
                 if (Name == new SamiModern().Name)
                     text = text.Replace(Environment.NewLine, "<br />");
                 else
@@ -290,37 +303,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text = text.Replace("<br />", Environment.NewLine);
                 while (text.Contains("  "))
                     text = text.Replace("  ", " ");
-                //var cleanTextBuilder = new StringBuilder();
-                //bool tagOn = false;
-                //int skipCount = 0;
-                //for (int i = 0; i < text.Length; i++)
-                //{ // Remove html tags from text
-                //    if (skipCount > 0)
-                //        skipCount--;
-                //    else if (text.Substring(i).StartsWith("<font color="))
-                //    {
-                //        int endPos = text.Substring(i).IndexOf(">");
-                //        if (endPos > 0)
-                //        {
-                //            skipCount = endPos;
-                //            string fontTag = text.Substring(i, endPos);
-                //            string color = fontTag.Remove(0, 12).Split(' ')[0];
-                //            color = color.Replace("\"", string.Empty).Replace("'", string.Empty);
-                //            cleanTextBuilder.Append("<font color=\"" + color + "\">");
-                //        }
-                //        else
-                //        {
-                //            tagOn = true;
-                //        }
-                //    }
-                //    else if (text[i] == '<')
-                //        tagOn = true;
-                //    else if (text[i] == '>')
-                //        tagOn = false;
-                //    else if (!tagOn)
-                //        cleanTextBuilder.Append(text[i]);
-                //}
-
                 text = text.Replace("</BODY>", string.Empty).Replace("</SAMI>", string.Empty).TrimEnd();
 
                 if (text.IndexOf(">") > 0)
@@ -332,8 +314,57 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 if (text.EndsWith("</p>") || text.EndsWith("</P>"))
                     text = text.Substring(0, text.Length - 4).TrimEnd();
+
+                text = text.Replace("&nbsp;", " ").Replace("&NBSP;", " ");
+
+                if (text.Contains("<font color=") && !text.Contains("</font>"))
+                    text += "</font>";
+                if (text.StartsWith("<FONT COLOR=") && !text.Contains("</font>") && !text.Contains("</FONT>"))
+                    text += "</FONT>";
+
+
+                if (text.Contains("<") && text.Contains(">"))
+                {
+                    var total = new StringBuilder();
+                    var partial = new StringBuilder();
+                    bool tagOn = false;
+                    for (int i = 0; i < text.Length; i++)
+                    {
+                        if (text.Substring(i).StartsWith("<font") ||
+                            text.Substring(i).StartsWith("<div") ||
+                            text.Substring(i).StartsWith("<i") ||
+                            text.Substring(i).StartsWith("<b") ||
+                            text.Substring(i).StartsWith("<s") ||
+                            text.Substring(i).StartsWith("</"))
+                        {
+                            total.Append(Utilities.HtmlDecode(partial.ToString()));
+                            partial = new StringBuilder();
+                            tagOn = true;
+                            total.Append("<");
+                        }
+                        else if (text.Substring(i).StartsWith(">") && tagOn)
+                        {
+                            tagOn = false;
+                            total.Append(">");
+                        }
+                        else if (!tagOn)
+                        {
+                            partial.Append(text.Substring(i, 1));
+                        }
+                        else if (tagOn)
+                        {
+                            total.Append(text.Substring(i, 1));
+                        }
+                    }
+                    total.Append(Utilities.HtmlDecode(partial.ToString()));
+                    text = total.ToString();
+                }
+                else
+                {
+                    text = Utilities.HtmlDecode(text);
+                }
+
                 string cleanText = text;
-                cleanText = cleanText.Replace("&nbsp;", " ").Replace("&NBSP;", " ");
                 while (cleanText.Contains("  "))
                     cleanText = cleanText.Replace("  ", " ");
                 while (cleanText.Contains(Environment.NewLine + " "))
@@ -341,10 +372,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 while (cleanText.Contains(" " + Environment.NewLine))
                     cleanText = cleanText.Replace(" " + Environment.NewLine, Environment.NewLine);
                 cleanText = cleanText.Trim();
-                if (cleanText.Contains("<font color=") && !cleanText.Contains("</font>"))
-                    cleanText += "</font>";
-                if (cleanText.StartsWith("<FONT COLOR=") && !cleanText.Contains("</font>") && !cleanText.Contains("</FONT>"))
-                    cleanText += "</FONT>";
 
                 if (!string.IsNullOrEmpty(p.Text) && !string.IsNullOrEmpty(millisecAsString))
                 {
@@ -373,8 +400,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds +  Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 subtitle.Paragraphs.Add(p);
             }
-            foreach (Paragraph p2 in subtitle.Paragraphs)
-                p2.Text = Utilities.HtmlDecode(p2.Text);
             subtitle.Renumber(1);
 
             if (subtitle.Paragraphs.Count > 0 &&
