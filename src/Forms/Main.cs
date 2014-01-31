@@ -2276,6 +2276,25 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (fi.Length > 1024 * 1024 * 10) // max 10 mb
                 {
+
+                    // retry bluray sup (file with wrong extension)
+                    if (IsBluRaySupFile(fileName))
+                    {
+                        ImportAndOcrBluRaySup(fileName, _loading);
+                        return;
+                    }
+
+                    // retry vobsub (file with wrong extension)
+                    if (IsVobSubFile(fileName, false))
+                    {
+                        if (MessageBox.Show(this, _language.ImportThisVobSubSubtitle, _title, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            ImportAndOcrVobSubSubtitleNew(fileName, _loading);
+                        }
+                        return;
+                    }
+
+
                     if (MessageBox.Show(this, string.Format(_language.FileXIsLargerThan10Mb + Environment.NewLine +
                                                       Environment.NewLine +
                                                       _language.ContinueAnyway,
@@ -2667,7 +2686,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                // retry vobsub (file with wrong extension)
+                // retry bluray (file with wrong extension)
                 if (format == null && fi.Length > 500 && IsBluRaySupFile(fileName))
                 {
                     ImportAndOcrBluRaySup(fileName, _loading);
