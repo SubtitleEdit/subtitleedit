@@ -238,7 +238,8 @@ namespace Nikse.SubtitleEdit.Logic
         public int CurrentCavena890LanguageId { get; set; }
 
         public bool SamiDisplayTwoClassesAsTwoSubtitles { get; set; }
-        public bool SamiFullHtmlEncode { get; set; }
+        public bool SamiFullHtmlEncodeNumeric { get; set; }
+        public bool SamiFullHtmlEncodeShortName { get; set; }
 
         public string TimedText10TimeCodeFormat { get; set; }
 
@@ -263,7 +264,8 @@ namespace Nikse.SubtitleEdit.Logic
             DCinemaFadeUpDownTime = 5;
 
             SamiDisplayTwoClassesAsTwoSubtitles = true;
-            SamiFullHtmlEncode = true;
+            SamiFullHtmlEncodeShortName = false;
+            SamiFullHtmlEncodeNumeric = true;
 
             TimedText10TimeCodeFormat = "Default";
 
@@ -1648,9 +1650,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("SamiDisplayTwoClassesAsTwoSubtitles");
                 if (subNode != null)
                     settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles = Convert.ToBoolean(subNode.InnerText);
-                subNode = node.SelectSingleNode("SamiFullHtmlEncode");
+                subNode = node.SelectSingleNode("SamiFullHtmlEncodeShortName");
                 if (subNode != null)
-                    settings.SubtitleSettings.SamiFullHtmlEncode = Convert.ToBoolean(subNode.InnerText);
+                    settings.SubtitleSettings.SamiFullHtmlEncodeShortName = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("SamiFullHtmlEncodeNumeric");
+                if (subNode != null)
+                    settings.SubtitleSettings.SamiFullHtmlEncodeNumeric = Convert.ToBoolean(subNode.InnerText);                
                 subNode = node.SelectSingleNode("TimedText10TimeCodeFormat");
                 if (subNode != null)
                     settings.SubtitleSettings.TimedText10TimeCodeFormat = subNode.InnerText;
@@ -2631,7 +2636,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("DCinemaBottomMargin", settings.SubtitleSettings.DCinemaBottomMargin.ToString());
             textWriter.WriteElementString("DCinemaFadeUpDownTime", settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString());
             textWriter.WriteElementString("SamiDisplayTwoClassesAsTwoSubtitles", settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles.ToString());
-            textWriter.WriteElementString("SamiFullHtmlEncode", settings.SubtitleSettings.SamiFullHtmlEncode.ToString());
+            textWriter.WriteElementString("SamiFullHtmlEncodeShortName", settings.SubtitleSettings.SamiFullHtmlEncodeShortName.ToString());
+            textWriter.WriteElementString("SamiFullHtmlEncodeNumeric", settings.SubtitleSettings.SamiFullHtmlEncodeNumeric.ToString());
             textWriter.WriteElementString("TimedText10TimeCodeFormat", settings.SubtitleSettings.TimedText10TimeCodeFormat);
             textWriter.WriteElementString("FcpFontSize", settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("FcpFontName", settings.SubtitleSettings.FcpFontName);

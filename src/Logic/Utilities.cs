@@ -2811,6 +2811,288 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         /// <summary>
+        /// HTML-encodes a string
+        /// </summary>
+        /// <param name="text">Text string to encode</param>
+        /// <returns>HTML-encoded text</returns>
+        public static string HtmlEncodeFullNumeric(string text)
+        {
+            if (text == null)
+                return string.Empty;
+            var sb = new StringBuilder(text.Length);
+            int len = text.Length;
+            for (int i = 0; i < len; i++)
+            {
+                switch (text[i])
+                {                    
+                    case '<':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '>':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '"':                        
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '&':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '\'':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case ' ':
+                        sb.Append("&#160;");
+                        break;
+                    case '–':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '—':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '¡':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '¿':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '“':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '”':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '‘':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '’':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '«':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '»':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '¢':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '©':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '÷':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'µ':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '·':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '¶':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '±':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '€':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '£':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '®':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '§':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '™':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case '¥':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'á':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Á':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'à':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'À':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'â':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Â':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'å':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Å':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ã':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ã':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ä':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ä':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'æ':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Æ':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ç':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ç':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'é':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'É':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'è':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'È':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ê':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ê':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ë':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ë':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'í':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Í':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ì':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ì':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'î':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Î':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ï':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ï':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ñ':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ñ':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ó':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ó':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ò':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ò':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ô':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ô':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ø':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ø':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'õ':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Õ':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ö':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ö':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ß':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ú':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ú':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ù':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ù':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'û':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Û':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ü':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'Ü':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    case 'ÿ':
+                        sb.Append("&#" + (int)text[i] + ";");
+                        break;
+                    default:
+                        if (text[i] > 127)
+                            sb.Append("&#" + (int)text[i] + ";");
+                        else
+                            sb.Append(text[i]);
+                        break;
+                }
+            }
+            return sb.ToString();
+        }
+
+
+        /// <summary>
         /// HTML-decodes a string
         /// </summary>
         /// <param name="text">Text string to encode</param>
