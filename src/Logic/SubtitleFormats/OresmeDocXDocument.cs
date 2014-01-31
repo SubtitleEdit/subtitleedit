@@ -71,62 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
   </w:body>
 </w:document>";
 
-        private string LayoutParagraph = @"<w:tr w:rsidR='00D56C9E' w:rsidTr='002E456A'>
-        <w:tc>
-          <w:tcPr>
-            <w:tcW w:w='1240' w:type='dxa'/>
-          </w:tcPr>
-          <w:p w:rsidR='00D56C9E' w:rsidRDefault='00D56C9E'>
-            <w:pPr>
-              <w:pStyle w:val='TimeCode'/>
-            </w:pPr>
-            <w:r>
-              <w:t>[TIMECODE]</w:t>
-            </w:r>
-          </w:p>
-        </w:tc>
-        <w:tc>
-          <w:tcPr>
-            <w:tcW w:w='5560' w:type='dxa'/>
-            <w:vAlign w:val='bottom'/>
-          </w:tcPr>
-          <w:p w:rsidR='00D56C9E' w:rsidRDefault='00D56C9E'>
-            <w:pPr>
-              <w:pStyle w:val='PopOn'/>
-            </w:pPr>
-            <w:proofErr w:type='spellStart'/>
-          </w:p>
-        </w:tc>
-      </w:tr>";
-
-        private string LayoutParagraph2 = @"<w:tr w:rsidR='00D56C9E' w:rsidTr='002E456A'>
-        <w:tc>
-          <w:tcPr>
-            <w:tcW w:w='1240' w:type='dxa'/>
-          </w:tcPr>
-          <w:p w:rsidR='00D56C9E' w:rsidRDefault='00D56C9E'>
-            <w:pPr>
-              <w:pStyle w:val='TimeCode'/>
-            </w:pPr>
-            <w:r>
-              <w:t>[TIMECODE]</w:t>
-            </w:r>
-          </w:p>
-        </w:tc>
-        <w:tc>
-          <w:tcPr>
-            <w:tcW w:w='5560' w:type='dxa'/>
-            <w:vAlign w:val='bottom'/>
-          </w:tcPr>
-          <w:p w:rsidR='00D56C9E' w:rsidRDefault='00D56C9E'>
-            <w:pPr>
-              <w:pStyle w:val='PopOn'/>
-            </w:pPr>
-            <w:proofErr w:type='spellStart'/>
-          </w:p>
-        </w:tc>
-      </w:tr>";
-
+        
         public override string ToText(Subtitle subtitle, string title)
         {
             string xmlStructure = Layout.Replace("'", "\"");
@@ -136,21 +81,139 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
             XmlNode div = xml.DocumentElement.SelectSingleNode("w:body/w:tbl", nsmgr);
-            int no = 0;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                XmlNode paragraph = xml.CreateElement("w:tr", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
-                paragraph.InnerXml = LayoutParagraph.Replace("'", "\"").Replace("w:", string.Empty).Replace("[TIMECODE]", ToTimeCode(p.StartTime));
+                Paragraph p = subtitle.Paragraphs[i];
+                div.AppendChild(CreateXmlParagraph(xml, p));
 
-                string text = Utilities.RemoveHtmlTags(p.Text);
-                //paragraph.InnerText = text;
-
-                div.AppendChild(paragraph);
-                no++;
+                if (i < subtitle.Paragraphs.Count - 1 && Math.Abs(p.EndTime.TotalMilliseconds - subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds) > 100)
+                {
+                    var endP = new Paragraph(string.Empty, p.EndTime.TotalMilliseconds, 0);
+                    div.AppendChild(CreateXmlParagraph(xml, p));
+                }
             }
 
             string s = ToUtf8XmlString(xml);
             return s;
+        }
+
+        private XmlNode CreateXmlParagraph(XmlDocument xml, Paragraph p)
+        {
+            XmlNode paragraph = xml.CreateElement("w:tr", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            var tc1 = xml.CreateElement("w:tc", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            paragraph.AppendChild(tc1);
+
+            //<w:tcPr>
+            //  <w:tcW w:w='1240' w:type='dxa'/>
+            //</w:tcPr>
+            var n1 = xml.CreateElement("w:tcPr", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            var n1sub = xml.CreateElement("w:tcW", "http://schemas.openxmlformats.org/wordprocessingml/2006/main"); // <w:tcW w:w='1240' w:type='dxa'/>
+            n1.AppendChild(n1sub);
+            var n1suba1 = xml.CreateAttribute("w:w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            n1suba1.InnerText = "1240";
+            n1sub.Attributes.Append(n1suba1);
+            var n1suba2 = xml.CreateAttribute("w:type", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            n1suba2.InnerText = "dxa";
+            n1sub.Attributes.Append(n1suba2);
+            tc1.AppendChild(n1);
+
+            //<w:p w:rsidR='00D56C9E' w:rsidRDefault='00D56C9E'>
+            //  <w:pPr>
+            //    <w:pStyle w:val='TimeCode'/>
+            //  </w:pPr>
+            //  <w:r>
+            //    <w:t>[TIMECODE]</w:t>
+            //  </w:r>
+            //</w:p>
+            var n2 = xml.CreateElement("w:p", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            var n1a1 = xml.CreateAttribute("w:rsidR", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            n1a1.InnerText = "00D56C9E";
+            n2.Attributes.Append(n1a1);
+            var n1a2 = xml.CreateAttribute("w:rsidRDefault", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            n1a2.InnerText = "00D56C9E";
+            n2.Attributes.Append(n1a2);
+
+            var n2sub1 = xml.CreateElement("w:pPr", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            var n2sub1sub = xml.CreateElement("w:pStyle", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            n2sub1.AppendChild(n2sub1sub);
+            var n2sub1Suba1 = xml.CreateAttribute("w:val", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            n2sub1Suba1.InnerText = "TimeCode";
+            n2sub1sub.Attributes.Append(n2sub1Suba1);
+            n2.AppendChild(n2sub1);
+
+            var n2sub2 = xml.CreateElement("w:r", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            var n2sub2sub = xml.CreateElement("w:t", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            n2sub2sub.InnerText = ToTimeCode(p.StartTime);
+            n2sub2.AppendChild(n2sub2sub);
+            n2.AppendChild(n2sub2);
+            tc1.AppendChild(n2);
+
+
+            //<w:tc>
+            //  <w:tcPr>
+            //    <w:tcW w:w='5560' w:type='dxa'/>
+            //    <w:vAlign w:val='bottom'/>
+            //  </w:tcPr>
+            //  <w:p w:rsidR='00D56C9E' w:rsidRDefault='00D56C9E'>
+            //    <w:pPr>
+            //      <w:pStyle w:val='PopOn'/>
+            //    </w:pPr>
+            //    <w:proofErr w:type='spellStart'/>
+            //  </w:p>
+            //</w:tc>
+            var tc2 = xml.CreateElement("w:tc", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            paragraph.AppendChild(tc2);
+            
+            var n3sub1 = xml.CreateElement("w:tcPr", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            tc2.AppendChild(n3sub1);
+
+            var n3sub1sub1 = xml.CreateElement("w:tcW", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            var n3suba1 = xml.CreateAttribute("w:w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            n3suba1.InnerText = "5560";
+            n3sub1sub1.Attributes.Append(n3suba1);
+            var n3suba2 = xml.CreateAttribute("w:type", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            n3suba2.InnerText = "dxa";
+            n3sub1sub1.Attributes.Append(n3suba2);
+            n3sub1.AppendChild(n3sub1sub1);
+
+            var n3sub1sub2 = xml.CreateElement("w:vAlign", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            var n3sub1sub2a1 = xml.CreateAttribute("w:val", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            n3sub1sub2a1.InnerText = "bottom";
+            n3sub1sub2.Attributes.Append(n3sub1sub2a1);
+            n3sub1.AppendChild(n3sub1sub2);
+
+            var n3sub1sub3 = xml.CreateElement("w:p", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            var n3sub1sub3a1 = xml.CreateAttribute("w:rsidR", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            n3sub1sub3a1.InnerText = "00D56C9E";
+            n3sub1sub3.Attributes.Append(n3sub1sub3a1);
+            var n3sub1sub3a2 = xml.CreateAttribute("w:rsidRDefault", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            n3sub1sub3a2.InnerText = "00D56C9E";
+            n3sub1sub3.Attributes.Append(n3sub1sub3a2);
+            var n3sub1sub3sub1 = xml.CreateElement("w:pPr", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            n3sub1sub3.AppendChild(n3sub1sub3sub1);
+            var n3sub1sub3sub1sub = xml.CreateElement("w:pStyle", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            var n3sub1sub3sub1suba1 = xml.CreateAttribute("w:val", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            n3sub1sub3sub1suba1.InnerText = "PopOn";
+            n3sub1sub3sub1sub.Attributes.Append(n3sub1sub3sub1suba1);
+            n3sub1sub3sub1.AppendChild(n3sub1sub3sub1sub);
+
+            var lines = Utilities.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, "\n").Split('\n');
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var n3sub1sub3sub2 = xml.CreateElement("w:r", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+                n3sub1sub3.AppendChild(n3sub1sub3sub2);
+                if (i > 0)
+                {
+                    var lineBreak = xml.CreateElement("w:br", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+                    n3sub1sub3sub2.AppendChild(lineBreak);
+                }
+                var text = xml.CreateElement("w:t", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+                text.InnerText = lines[i];
+                n3sub1sub3sub2.AppendChild(text);
+            }
+            tc2.AppendChild(n3sub1sub3);
+            
+            return paragraph;
         }
 
         private string ToTimeCode(TimeCode timeCode)

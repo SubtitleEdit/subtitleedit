@@ -708,10 +708,17 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     if (_currentWord.Length > 3 && Utilities.LowercaseLetters.Contains(_currentWord[2].ToString()))
                                     {
-                                        for (int i = 0; i < suggestions.Count; i++)
+                                        if (_currentSpellCheckWord.Index > 3)
                                         {
-                                            if (suggestions[i].StartsWith("L'") || suggestions[i].StartsWith("L’"))
-                                                suggestions[i] = suggestions[i].Remove(0, 1).Insert(0, "l");
+                                            string ending = _currentParagraph.Text.Substring(0, _currentSpellCheckWord.Index - 1).Trim();
+                                            if (!ending.EndsWith(".") && !ending.EndsWith("!") && !ending.EndsWith("?"))
+                                            {
+                                                for (int i = 0; i < suggestions.Count; i++)
+                                                {
+                                                    if (suggestions[i].StartsWith("L'") || suggestions[i].StartsWith("L’"))
+                                                        suggestions[i] = suggestions[i].Remove(0, 1).Insert(0, "l");
+                                                }
+                                            }
                                         }
                                     }
                                 }
