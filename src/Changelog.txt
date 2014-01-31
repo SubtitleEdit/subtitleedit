@@ -7,7 +7,7 @@
    * Bridge gap in durations now have minimum display time - thx Krystian
    * New option for "Focus on mouse-over" for waveform/spectrogram - thx lansing
    * New setting "Gap between subtitles"
-   * New subtitle format
+   * New subtitle formats
    * French rules regarding L and apostrophe in spell check + OCR fix - thx René
 * IMPROVED:
    * Updated Korean language file - thx domddol
