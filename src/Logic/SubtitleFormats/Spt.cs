@@ -114,24 +114,33 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int index = buffer[0]; // go to first subtitle paragraph
             while (index < buffer.Length)
             {
-                Paragraph p = GetPacParagraph(ref index, buffer);
+                Paragraph p = GetSptParagraph(ref index, buffer);
                 if (p != null)
                     subtitle.Paragraphs.Add(p);
             }
             subtitle.Renumber(1);
         }
 
-        private Paragraph GetPacParagraph(ref int index, byte[] buffer)
+        private Paragraph GetSptParagraph(ref int index, byte[] buffer)
         {
             if (index + 16 + 20 + 4 >= buffer.Length)
+            {
+                index = index + 16 + 20 + 4;
                 return null;
+            }
 
             int textLengthFirstLine = buffer[index + 16 + 20];
             int textLengthSecondLine = buffer[index + 16 + 20 + 4];
 
+            if (textLengthFirstLine == 0 && textLengthSecondLine == 0)
+            {
+                index += (16 + 20 + 16);
+                _errorCount++;
+                return null;
+            }
+
             try
             {
-
                 var p = new Paragraph();
                 p.StartTime = GetTimeCode(Encoding.Default.GetString(buffer, index, 8));
                 p.EndTime = GetTimeCode(Encoding.Default.GetString(buffer, index + 8, 8));
