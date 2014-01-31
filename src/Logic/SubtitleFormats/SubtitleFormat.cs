@@ -79,6 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new MPlayer2(),
                     new OpenDvt(),
                     new Oresme(),
+                    new OresmeDocXDocument(),
                     new PE2(),
                     new PinnacleImpression(),
                     new PListCaption(),

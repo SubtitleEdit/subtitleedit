@@ -868,6 +868,7 @@
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
+    <Compile Include="Logic\SubtitleFormats\OresmeDocXDocument.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle68.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProXml13.cs" />
     <Compile Include="Logic\SubtitleFormats\DCinemaSmpte2007.cs" />
