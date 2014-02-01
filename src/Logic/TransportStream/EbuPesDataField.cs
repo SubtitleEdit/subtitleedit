@@ -9,9 +9,9 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public int FramingCode { get; set; }
         public int MagazineAndPacketAddress { get; set; }
         public byte[] DataBlock { get; set; }
-       
+
         public EbuPesDataFieldText(byte[] buffer, int index, int length)
-        { 
+        {
             FieldParity = (buffer[index] & Helper.B00100000) > 0;
             LineOffset = buffer[index] & Helper.B00011111;
             FramingCode = buffer[index + 1];

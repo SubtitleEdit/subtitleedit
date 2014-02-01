@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNextDifference.Text = Configuration.Settings.Language.CompareSubtitles.NextDifference;
             checkBoxShowOnlyDifferences.Text = Configuration.Settings.Language.CompareSubtitles.ShowOnlyDifferences;
             checkBoxIgnoreLineBreaks.Text = Configuration.Settings.Language.CompareSubtitles.IgnoreLineBreaks;
-            checkBoxIgnoreLineBreaks.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.CompareSubtitles.ShowOnlyDifferences); // TODO: Remove in SE 3.4            
+            checkBoxIgnoreLineBreaks.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.CompareSubtitles.ShowOnlyDifferences); // TODO: Remove in SE 3.4
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText))
                 checkBoxOnlyListDifferencesInText.Text = Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText;
             else
@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string formatString = Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentChanged;
                     if (GetBreakToLetter() && !string.IsNullOrEmpty(Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentLettersChanged))
                         formatString = Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentLettersChanged;
-                        
+
                     labelStatus.Text = string.Format(formatString, _differences.Count, wordsChanged * 100 / totalWords);
                 }
                 else
@@ -719,7 +719,7 @@ namespace Nikse.SubtitleEdit.Forms
                 activeListView = 'L';
             else if (p.X >= subtitleListView2.Left && p.X <= subtitleListView2.Left + subtitleListView2.Width + 2)
                 activeListView = 'R';
-            else 
+            else
                 return;
 
             if (subtitleListView1.SelectedItems.Count > 0 && activeListView == 'L')

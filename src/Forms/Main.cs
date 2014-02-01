@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainCreateSetEndAddNewAndGoToNew = Keys.None;
         Keys _mainAdjustSetStartAndOffsetTheRest = Keys.None;
         Keys _mainAdjustSetEndAndOffsetTheRest = Keys.None;
-        Keys _mainAdjustSetEndAndOffsetTheRestAndGoToNext = Keys.None;        
+        Keys _mainAdjustSetEndAndOffsetTheRestAndGoToNext = Keys.None;
         Keys _mainAdjustSetEndAndGotoNext = Keys.None;
         Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
         Keys _mainAdjustSetStartAutoDurationAndGoToNext = Keys.None;
@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _waveformSearchSilenceForward = Keys.None;
         Keys _waveformSearchSilenceBack = Keys.None;
         Keys _waveformAddTextAtHere = Keys.None;
-        Keys _waveformFocusListView = Keys.None;        
+        Keys _waveformFocusListView = Keys.None;
         Keys _mainTranslateCustomSearch1 = Keys.None;
         Keys _mainTranslateCustomSearch2 = Keys.None;
         Keys _mainTranslateCustomSearch3 = Keys.None;
@@ -3035,7 +3035,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        
+
 
         private void SetUndockedWindowsTitle()
         {
@@ -3357,7 +3357,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
                 _converted = false;
-                _fileName = saveFileDialog1.FileName;                
+                _fileName = saveFileDialog1.FileName;
                 _fileDateTime = File.GetLastWriteTime(_fileName);
                 SetTitle();
                 MakeHistoryForUndo(_language.Menu.File.SaveAs);
@@ -5449,7 +5449,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.AutoSizeAllColumns(this);
                     }
                     else if (SubtitleListview1.IsAlternateTextColumnVisible && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count == 0)
-                    { 
+                    {
                         RemoveAlternate(true);
                     }
 
@@ -5476,7 +5476,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.HistoryItems[_undoIndex].RedoParagraphs = null;
                         _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate = null;
                         if (SubtitleListview1.IsAlternateTextColumnVisible && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count == 0)
-                        { 
+                        {
                             RemoveAlternate(true);
                         }
                     }
@@ -10653,7 +10653,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SubtitleListview1.Focus();
                 e.SuppressKeyPress = true;
-            }                
+            }
             else if (audioVisualizer.Focused && e.KeyCode == Keys.Delete)
             {
                 ToolStripMenuItemDeleteClick(null, null);
@@ -10691,21 +10691,21 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (mediaPlayer.VideoPlayer != null)
                 {
-                    if (_mainAdjustSetStartAndOffsetTheRest == e.KeyData) 
+                    if (_mainAdjustSetStartAndOffsetTheRest == e.KeyData)
                     {
                         ButtonSetStartAndOffsetRestClick(null, null);
                         e.SuppressKeyPress = true;
                     }
-                    else if (_mainAdjustSetEndAndOffsetTheRest == e.KeyData) 
+                    else if (_mainAdjustSetEndAndOffsetTheRest == e.KeyData)
                     {
                         SetEndAndOffsetTheRest(false);
                         e.SuppressKeyPress = true;
                     }
-                    else if (_mainAdjustSetEndAndOffsetTheRestAndGoToNext == e.KeyData) 
+                    else if (_mainAdjustSetEndAndOffsetTheRestAndGoToNext == e.KeyData)
                     {
                         SetEndAndOffsetTheRest(true);
                         e.SuppressKeyPress = true;
-                    }                        
+                    }
                     else if (_mainAdjustSetEndAndGotoNext == e.KeyData)
                     {
                         ButtonSetEndAndGoToNextClick(null, null);
@@ -10893,7 +10893,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = SubtitleListview1.SelectedItems[0].Index;
                 double videoPosition = mediaPlayer.CurrentPosition;
                 if (!mediaPlayer.IsPaused)
-                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0; 
+                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0;
 
                 var tc = new TimeCode(TimeSpan.FromSeconds(videoPosition));
 
@@ -11258,7 +11258,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.Focus();
                     e.SuppressKeyPress = true;
                 }
-            }                
+            }
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+vPaste from clipboard
             {
                 if (Clipboard.ContainsText())
@@ -14500,7 +14500,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                     catch
-                    { 
+                    {
                     }
 
                     MessageBox.Show(string.Format(_language.DropFileXNotAccepted, fileName));
@@ -14950,13 +14950,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
 
-            if (string.IsNullOrEmpty(_videoFileName))            
+            if (string.IsNullOrEmpty(_videoFileName))
                 buttonOpenVideo_Click(null, null);
             if (_videoFileName == null)
                 return;
 
             if (ext != ".wav")
-            {                 
+            {
                 MessageBox.Show(string.Format(".Wav only!", fileName));
                 return;
             }
@@ -18810,7 +18810,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SubtitleListview1_MouseEnter(object sender, EventArgs e)
         {
 
-            if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused &&  Configuration.Settings.VideoControls.WaveFormFocusOnMouseEnter && 
+            if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused &&  Configuration.Settings.VideoControls.WaveFormFocusOnMouseEnter &&
                 Configuration.Settings.VideoControls.WaveFormListViewFocusOnMouseEnter && !SubtitleListview1.Focused && SubtitleListview1.CanFocus)
                 SubtitleListview1.Focus();
         }

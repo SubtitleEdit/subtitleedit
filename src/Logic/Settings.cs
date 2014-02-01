@@ -1239,7 +1239,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.General.MininumMillisecondsBetweenLines = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("SetStartEndHumanDelay");
             if (subNode != null)
-                settings.General.SetStartEndHumanDelay = Convert.ToInt32(subNode.InnerText);            
+                settings.General.SetStartEndHumanDelay = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("AutoWrapLineWhileTyping");
             if (subNode != null)
                 settings.General.AutoWrapLineWhileTyping = Convert.ToBoolean(subNode.InnerText);
@@ -1542,7 +1542,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.ExportVobSubSimpleRendering = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportVobSubLanguage");
             if (subNode != null)
-                settings.Tools.ExportVobSubLanguage = subNode.InnerText;            
+                settings.Tools.ExportVobSubLanguage = subNode.InnerText;
             subNode = node.SelectSingleNode("ExportBluRayFontName");
             if (subNode != null)
                 settings.Tools.ExportBluRayFontName = subNode.InnerText;
@@ -1557,7 +1557,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.ExportFcpFontSize = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportFcpImageType");
             if (subNode != null)
-                settings.Tools.ExportFcpImageType = subNode.InnerText;            
+                settings.Tools.ExportFcpImageType = subNode.InnerText;
             subNode = node.SelectSingleNode("ExportLastFontSize");
             if (subNode != null)
                 settings.Tools.ExportLastFontSize = Convert.ToInt32(subNode.InnerText);
@@ -1655,7 +1655,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.SubtitleSettings.SamiFullHtmlEncode = Convert.ToBoolean(subNode.InnerText);
                 subNode = node.SelectSingleNode("SamiFullHtmlEncodeNumeric");
                 if (subNode != null)
-                    settings.SubtitleSettings.SamiFullHtmlEncodeNumeric = Convert.ToBoolean(subNode.InnerText);                
+                    settings.SubtitleSettings.SamiFullHtmlEncodeNumeric = Convert.ToBoolean(subNode.InnerText);
                 subNode = node.SelectSingleNode("TimedText10TimeCodeFormat");
                 if (subNode != null)
                     settings.SubtitleSettings.TimedText10TimeCodeFormat = subNode.InnerText;
@@ -1860,7 +1860,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.VideoControls.WaveFormFocusOnMouseEnter = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("WaveFormListViewFocusOnMouseEnter");
             if (subNode != null)
-                settings.VideoControls.WaveFormListViewFocusOnMouseEnter = Convert.ToBoolean(subNode.InnerText);           
+                settings.VideoControls.WaveFormListViewFocusOnMouseEnter = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("WaveformBorderHitMs");
             if (subNode != null)
                 settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(subNode.InnerText);
@@ -2204,7 +2204,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.Shortcuts.MainListViewColumnPaste = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainListViewFocusWaveform");
                 if (subNode != null)
-                    settings.Shortcuts.MainListViewFocusWaveform = subNode.InnerText;               
+                    settings.Shortcuts.MainListViewFocusWaveform = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainEditReverseStartAndEndingForRTL");
                 if (subNode != null)
                     settings.Shortcuts.MainEditReverseStartAndEndingForRTL = subNode.InnerText;
@@ -2330,7 +2330,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.Shortcuts.WaveformAddTextHere = subNode.InnerText;
                 subNode = node.SelectSingleNode("WaveformFocusListView");
                 if (subNode != null)
-                    settings.Shortcuts.WaveformFocusListView = subNode.InnerText;                
+                    settings.Shortcuts.WaveformFocusListView = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainTranslateCustomSearch1");
                 if (subNode != null)
                     settings.Shortcuts.MainTranslateCustomSearch1 = subNode.InnerText;
@@ -2492,7 +2492,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", settings.General.SubtitleMinimumDisplayMilliseconds.ToString());
             textWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", settings.General.SubtitleMaximumDisplayMilliseconds.ToString());
             textWriter.WriteElementString("MininumMillisecondsBetweenLines", settings.General.MininumMillisecondsBetweenLines.ToString());
-            textWriter.WriteElementString("SetStartEndHumanDelay", settings.General.SetStartEndHumanDelay.ToString());            
+            textWriter.WriteElementString("SetStartEndHumanDelay", settings.General.SetStartEndHumanDelay.ToString());
             textWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString());
             textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
             textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
@@ -2602,17 +2602,17 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ExportBluRayFontSize", settings.Tools.ExportBluRayFontSize.ToString());
             textWriter.WriteElementString("ExportFcpFontName", settings.Tools.ExportFcpFontName);
             textWriter.WriteElementString("ExportFcpFontSize", settings.Tools.ExportFcpFontSize.ToString());
-            textWriter.WriteElementString("ExportFcpImageType", settings.Tools.ExportFcpImageType);            
+            textWriter.WriteElementString("ExportFcpImageType", settings.Tools.ExportFcpImageType);
             textWriter.WriteElementString("ExportLastFontSize", settings.Tools.ExportLastFontSize.ToString());
             textWriter.WriteElementString("ExportLastLineHeight", settings.Tools.ExportLastLineHeight.ToString());
             textWriter.WriteElementString("ExportLastBorderWidth", settings.Tools.ExportLastBorderWidth.ToString());
-            textWriter.WriteElementString("ExportLastFontBold", settings.Tools.ExportLastFontBold.ToString());                        
+            textWriter.WriteElementString("ExportLastFontBold", settings.Tools.ExportLastFontBold.ToString());
             textWriter.WriteElementString("ExportBluRayVideoResolution", settings.Tools.ExportBluRayVideoResolution);
             textWriter.WriteElementString("ExportFontColor", settings.Tools.ExportFontColor.ToArgb().ToString());
             textWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString());
             textWriter.WriteElementString("ExportBottomMargin", settings.Tools.ExportBottomMargin.ToString());
             textWriter.WriteElementString("ExportBluRayBottomMargin", settings.Tools.ExportBluRayBottomMargin.ToString());
-            textWriter.WriteElementString("ExportBluRayShadow", settings.Tools.ExportBluRayShadow.ToString());            
+            textWriter.WriteElementString("ExportBluRayShadow", settings.Tools.ExportBluRayShadow.ToString());
             textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
             textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
             textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
@@ -2712,7 +2712,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("WaveFormDrawGrid", settings.VideoControls.WaveFormDrawGrid.ToString());
             textWriter.WriteElementString("WaveFormAllowOverlap", settings.VideoControls.WaveFormAllowOverlap.ToString());
             textWriter.WriteElementString("WaveFormFocusOnMouseEnter", settings.VideoControls.WaveFormFocusOnMouseEnter.ToString());
-            textWriter.WriteElementString("WaveFormListViewFocusOnMouseEnter", settings.VideoControls.WaveFormListViewFocusOnMouseEnter.ToString());                        
+            textWriter.WriteElementString("WaveFormListViewFocusOnMouseEnter", settings.VideoControls.WaveFormListViewFocusOnMouseEnter.ToString());
             textWriter.WriteElementString("WaveformBorderHitMs", settings.VideoControls.WaveformBorderHitMs.ToString());
             textWriter.WriteElementString("WaveFormGridColor", settings.VideoControls.WaveFormGridColor.ToArgb().ToString());
             textWriter.WriteElementString("WaveFormColor", settings.VideoControls.WaveFormColor.ToArgb().ToString());
@@ -2837,7 +2837,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainListViewColumnDeleteText", settings.Shortcuts.MainListViewColumnDeleteText);
             textWriter.WriteElementString("MainListViewColumnInsertText", settings.Shortcuts.MainListViewColumnInsertText);
             textWriter.WriteElementString("MainListViewColumnPaste", settings.Shortcuts.MainListViewColumnPaste);
-            textWriter.WriteElementString("MainListViewFocusWaveform", settings.Shortcuts.MainListViewFocusWaveform);            
+            textWriter.WriteElementString("MainListViewFocusWaveform", settings.Shortcuts.MainListViewFocusWaveform);
             textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);
@@ -2879,7 +2879,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("WaveformSearchSilenceForward", settings.Shortcuts.WaveformSearchSilenceForward);
             textWriter.WriteElementString("WaveformSearchSilenceBack", settings.Shortcuts.WaveformSearchSilenceBack);
             textWriter.WriteElementString("WaveformAddTextHere", settings.Shortcuts.WaveformAddTextHere);
-            textWriter.WriteElementString("WaveformFocusListView", settings.Shortcuts.WaveformFocusListView);            
+            textWriter.WriteElementString("WaveformFocusListView", settings.Shortcuts.WaveformFocusListView);
             textWriter.WriteElementString("MainTranslateCustomSearch1", settings.Shortcuts.MainTranslateCustomSearch1);
             textWriter.WriteElementString("MainTranslateCustomSearch2", settings.Shortcuts.MainTranslateCustomSearch2);
             textWriter.WriteElementString("MainTranslateCustomSearch3", settings.Shortcuts.MainTranslateCustomSearch3);
