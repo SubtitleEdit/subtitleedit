@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveEmptyLines.Text = Configuration.Settings.Language.ImportText.RemoveEmptyLines;
             checkBoxRemoveLinesWithoutLetters.Text = Configuration.Settings.Language.ImportText.RemoveLinesWithoutLetters;
             checkBoxGenerateTimeCodes.Text = Configuration.Settings.Language.ImportText.GenerateTimeCodes;
+            checkBoxAutoBreak.Text = Configuration.Settings.Language.Settings.MainTextBoxAutoBreak;
             labelGapBetweenSubtitles.Text = Configuration.Settings.Language.ImportText.GapBetweenSubtitles;
             numericUpDownGapBetweenLines.Left = labelGapBetweenSubtitles.Left + labelGapBetweenSubtitles.Width + 3;
             groupBoxDuration.Text = Configuration.Settings.Language.General.Duration;
@@ -139,6 +140,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreview()
         {
+            if (radioButtonSplitAtBlankLines.Checked || radioButtonLineMode.Checked)
+            {
+                checkBoxAutoBreak.Enabled = true;
+            }
+            else
+            {
+                checkBoxAutoBreak.Enabled = false;
+            }
+
+
             if (_refreshTimer.Enabled)
             {
                 _refreshTimer.Stop();
@@ -317,7 +328,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    _subtitle.Paragraphs.Add(new Paragraph(0, 0, line.Trim()));
+                    string text = line.Trim();
+                    if (checkBoxAutoBreak.Enabled && checkBoxAutoBreak.Checked)
+                        text = Utilities.AutoBreakLine(text);
+                    _subtitle.Paragraphs.Add(new Paragraph(0, 0, text));
                 }
             }
         }
@@ -332,7 +346,10 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (sb.Length > 0)
                     {
-                        _subtitle.Paragraphs.Add(new Paragraph() { Text = Utilities.AutoBreakLine(sb.ToString()) });
+                        string text = sb.ToString().Trim();
+                        if (checkBoxAutoBreak.Enabled && checkBoxAutoBreak.Checked)
+                            text = Utilities.AutoBreakLine(text);
+                        _subtitle.Paragraphs.Add(new Paragraph() { Text = text });
                     }
                     sb = new StringBuilder();
                 }
@@ -782,6 +799,11 @@ namespace Nikse.SubtitleEdit.Forms
             catch
             {
             }
+        }
+
+        private void checkBoxAutoBreak_CheckedChanged(object sender, EventArgs e)
+        {
+            GeneratePreview();
         }
 
     }

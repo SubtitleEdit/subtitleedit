@@ -30,6 +30,9 @@
         {
             this.buttonOpenText = new System.Windows.Forms.Button();
             this.groupBoxImportText = new System.Windows.Forms.GroupBox();
+            this.listViewInputFiles = new System.Windows.Forms.ListView();
+            this.columnHeaderFName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.checkBoxMultipleFiles = new System.Windows.Forms.CheckBox();
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.groupBoxImportOptions = new System.Windows.Forms.GroupBox();
@@ -55,10 +58,8 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
+            this.checkBoxAutoBreak = new System.Windows.Forms.CheckBox();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.listViewInputFiles = new System.Windows.Forms.ListView();
-            this.columnHeaderFName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxImportText.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
             this.groupBoxTimeCodes.SuspendLayout();
@@ -90,10 +91,40 @@
             this.groupBoxImportText.Controls.Add(this.buttonOpenText);
             this.groupBoxImportText.Location = new System.Drawing.Point(12, 12);
             this.groupBoxImportText.Name = "groupBoxImportText";
-            this.groupBoxImportText.Size = new System.Drawing.Size(517, 351);
+            this.groupBoxImportText.Size = new System.Drawing.Size(517, 365);
             this.groupBoxImportText.TabIndex = 0;
             this.groupBoxImportText.TabStop = false;
             this.groupBoxImportText.Text = "Import text";
+            // 
+            // listViewInputFiles
+            // 
+            this.listViewInputFiles.AllowDrop = true;
+            this.listViewInputFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewInputFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderFName,
+            this.columnHeaderSize});
+            this.listViewInputFiles.FullRowSelect = true;
+            this.listViewInputFiles.HideSelection = false;
+            this.listViewInputFiles.Location = new System.Drawing.Point(6, 48);
+            this.listViewInputFiles.Name = "listViewInputFiles";
+            this.listViewInputFiles.Size = new System.Drawing.Size(505, 311);
+            this.listViewInputFiles.TabIndex = 6;
+            this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
+            this.listViewInputFiles.View = System.Windows.Forms.View.Details;
+            this.listViewInputFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragDrop);
+            this.listViewInputFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragEnter);
+            // 
+            // columnHeaderFName
+            // 
+            this.columnHeaderFName.Text = "File name";
+            this.columnHeaderFName.Width = 420;
+            // 
+            // columnHeaderSize
+            // 
+            this.columnHeaderSize.Text = "Size";
+            this.columnHeaderSize.Width = 81;
             // 
             // checkBoxMultipleFiles
             // 
@@ -126,6 +157,7 @@
             // groupBoxImportOptions
             // 
             this.groupBoxImportOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImportOptions.Controls.Add(this.checkBoxAutoBreak);
             this.groupBoxImportOptions.Controls.Add(this.checkBoxGenerateTimeCodes);
             this.groupBoxImportOptions.Controls.Add(this.groupBoxTimeCodes);
             this.groupBoxImportOptions.Controls.Add(this.checkBoxMergeShortLines);
@@ -135,7 +167,7 @@
             this.groupBoxImportOptions.Controls.Add(this.checkBoxRemoveEmptyLines);
             this.groupBoxImportOptions.Location = new System.Drawing.Point(535, 12);
             this.groupBoxImportOptions.Name = "groupBoxImportOptions";
-            this.groupBoxImportOptions.Size = new System.Drawing.Size(341, 351);
+            this.groupBoxImportOptions.Size = new System.Drawing.Size(341, 365);
             this.groupBoxImportOptions.TabIndex = 1;
             this.groupBoxImportOptions.TabStop = false;
             this.groupBoxImportOptions.Text = "Import options";
@@ -143,7 +175,7 @@
             // checkBoxGenerateTimeCodes
             // 
             this.checkBoxGenerateTimeCodes.AutoSize = true;
-            this.checkBoxGenerateTimeCodes.Location = new System.Drawing.Point(19, 167);
+            this.checkBoxGenerateTimeCodes.Location = new System.Drawing.Point(19, 163);
             this.checkBoxGenerateTimeCodes.Name = "checkBoxGenerateTimeCodes";
             this.checkBoxGenerateTimeCodes.Size = new System.Drawing.Size(125, 17);
             this.checkBoxGenerateTimeCodes.TabIndex = 4;
@@ -157,7 +189,7 @@
             this.groupBoxTimeCodes.Controls.Add(this.numericUpDownGapBetweenLines);
             this.groupBoxTimeCodes.Controls.Add(this.groupBoxDuration);
             this.groupBoxTimeCodes.Enabled = false;
-            this.groupBoxTimeCodes.Location = new System.Drawing.Point(6, 192);
+            this.groupBoxTimeCodes.Location = new System.Drawing.Point(6, 206);
             this.groupBoxTimeCodes.Name = "groupBoxTimeCodes";
             this.groupBoxTimeCodes.Size = new System.Drawing.Size(329, 126);
             this.groupBoxTimeCodes.TabIndex = 5;
@@ -260,7 +292,7 @@
             this.checkBoxMergeShortLines.AutoSize = true;
             this.checkBoxMergeShortLines.Checked = true;
             this.checkBoxMergeShortLines.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxMergeShortLines.Location = new System.Drawing.Point(19, 98);
+            this.checkBoxMergeShortLines.Location = new System.Drawing.Point(19, 94);
             this.checkBoxMergeShortLines.Name = "checkBoxMergeShortLines";
             this.checkBoxMergeShortLines.Size = new System.Drawing.Size(193, 17);
             this.checkBoxMergeShortLines.TabIndex = 1;
@@ -271,7 +303,7 @@
             // buttonRefresh
             // 
             this.buttonRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRefresh.Location = new System.Drawing.Point(6, 324);
+            this.buttonRefresh.Location = new System.Drawing.Point(6, 338);
             this.buttonRefresh.Name = "buttonRefresh";
             this.buttonRefresh.Size = new System.Drawing.Size(102, 21);
             this.buttonRefresh.TabIndex = 6;
@@ -284,7 +316,7 @@
             this.checkBoxRemoveLinesWithoutLetters.AutoSize = true;
             this.checkBoxRemoveLinesWithoutLetters.Checked = true;
             this.checkBoxRemoveLinesWithoutLetters.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxRemoveLinesWithoutLetters.Location = new System.Drawing.Point(19, 144);
+            this.checkBoxRemoveLinesWithoutLetters.Location = new System.Drawing.Point(19, 140);
             this.checkBoxRemoveLinesWithoutLetters.Name = "checkBoxRemoveLinesWithoutLetters";
             this.checkBoxRemoveLinesWithoutLetters.Size = new System.Drawing.Size(162, 17);
             this.checkBoxRemoveLinesWithoutLetters.TabIndex = 3;
@@ -299,7 +331,7 @@
             this.groupBoxSplitting.Controls.Add(this.radioButtonSplitAtBlankLines);
             this.groupBoxSplitting.Controls.Add(this.radioButtonAutoSplit);
             this.groupBoxSplitting.Controls.Add(this.radioButtonLineMode);
-            this.groupBoxSplitting.Location = new System.Drawing.Point(6, 19);
+            this.groupBoxSplitting.Location = new System.Drawing.Point(6, 17);
             this.groupBoxSplitting.Name = "groupBoxSplitting";
             this.groupBoxSplitting.Size = new System.Drawing.Size(329, 68);
             this.groupBoxSplitting.TabIndex = 0;
@@ -365,7 +397,7 @@
             this.checkBoxRemoveEmptyLines.AutoSize = true;
             this.checkBoxRemoveEmptyLines.Checked = true;
             this.checkBoxRemoveEmptyLines.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxRemoveEmptyLines.Location = new System.Drawing.Point(19, 121);
+            this.checkBoxRemoveEmptyLines.Location = new System.Drawing.Point(19, 117);
             this.checkBoxRemoveEmptyLines.Name = "checkBoxRemoveEmptyLines";
             this.checkBoxRemoveEmptyLines.Size = new System.Drawing.Size(122, 17);
             this.checkBoxRemoveEmptyLines.TabIndex = 2;
@@ -379,9 +411,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxImportResult.Controls.Add(this.SubtitleListview1);
-            this.groupBoxImportResult.Location = new System.Drawing.Point(12, 369);
+            this.groupBoxImportResult.Location = new System.Drawing.Point(12, 383);
             this.groupBoxImportResult.Name = "groupBoxImportResult";
-            this.groupBoxImportResult.Size = new System.Drawing.Size(864, 228);
+            this.groupBoxImportResult.Size = new System.Drawing.Size(864, 245);
             this.groupBoxImportResult.TabIndex = 2;
             this.groupBoxImportResult.TabStop = false;
             this.groupBoxImportResult.Text = "Preview";
@@ -394,7 +426,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(795, 605);
+            this.buttonCancel.Location = new System.Drawing.Point(795, 636);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 4;
@@ -406,13 +438,24 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(714, 605);
+            this.buttonOK.Location = new System.Drawing.Point(714, 636);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "&Next >";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
+            // 
+            // checkBoxAutoBreak
+            // 
+            this.checkBoxAutoBreak.AutoSize = true;
+            this.checkBoxAutoBreak.Location = new System.Drawing.Point(19, 186);
+            this.checkBoxAutoBreak.Name = "checkBoxAutoBreak";
+            this.checkBoxAutoBreak.Size = new System.Drawing.Size(104, 17);
+            this.checkBoxAutoBreak.TabIndex = 7;
+            this.checkBoxAutoBreak.Text = "Auto-break lines";
+            this.checkBoxAutoBreak.UseVisualStyleBackColor = true;
+            this.checkBoxAutoBreak.CheckedChanged += new System.EventHandler(this.checkBoxAutoBreak_CheckedChanged);
             // 
             // SubtitleListview1
             // 
@@ -430,47 +473,17 @@
             this.SubtitleListview1.MultiSelect = false;
             this.SubtitleListview1.Name = "SubtitleListview1";
             this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(852, 187);
+            this.SubtitleListview1.Size = new System.Drawing.Size(852, 204);
             this.SubtitleListview1.TabIndex = 0;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.UseSyntaxColoring = true;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             // 
-            // listViewInputFiles
-            // 
-            this.listViewInputFiles.AllowDrop = true;
-            this.listViewInputFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewInputFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderFName,
-            this.columnHeaderSize});
-            this.listViewInputFiles.FullRowSelect = true;
-            this.listViewInputFiles.HideSelection = false;
-            this.listViewInputFiles.Location = new System.Drawing.Point(6, 48);
-            this.listViewInputFiles.Name = "listViewInputFiles";
-            this.listViewInputFiles.Size = new System.Drawing.Size(505, 297);
-            this.listViewInputFiles.TabIndex = 6;
-            this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
-            this.listViewInputFiles.View = System.Windows.Forms.View.Details;
-            this.listViewInputFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragDrop);
-            this.listViewInputFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragEnter);
-            // 
-            // columnHeaderFName
-            // 
-            this.columnHeaderFName.Text = "File name";
-            this.columnHeaderFName.Width = 420;
-            // 
-            // columnHeaderSize
-            // 
-            this.columnHeaderSize.Text = "Size";
-            this.columnHeaderSize.Width = 81;
-            // 
             // ImportText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(888, 642);
+            this.ClientSize = new System.Drawing.Size(888, 673);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxImportResult);
@@ -536,5 +549,6 @@
         private System.Windows.Forms.ListView listViewInputFiles;
         private System.Windows.Forms.ColumnHeader columnHeaderFName;
         private System.Windows.Forms.ColumnHeader columnHeaderSize;
+        private System.Windows.Forms.CheckBox checkBoxAutoBreak;
     }
 }
