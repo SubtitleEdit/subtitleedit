@@ -2799,7 +2799,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
-                
+
                 if ((text.Contains(". -") || text.Contains("! -") || text.Contains("? -")) && Utilities.CountTagInText(text, Environment.NewLine) == 1)
                 {
                     string temp = Utilities.AutoBreakLine(text);
@@ -2845,7 +2845,7 @@ namespace Nikse.SubtitleEdit.Forms
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
-                
+
             }
             if (noOfFixes > 0)
                 LogStatus(_language.FixCommonOcrErrors, string.Format(_language.RemoveSpaceBetweenNumbersFixed, noOfFixes));

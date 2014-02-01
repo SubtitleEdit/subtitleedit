@@ -1299,7 +1299,7 @@ namespace Nikse.SubtitleEdit.Logic
             count = GetCount(text, "không", "tôi", "anh", "đó", "Tôi", "ông");
             if (count > bestCount)
                 return "vi"; // Vietnamese
-         
+
             count = GetCount(text, "hogy", "lesz", "tudom", "vagy", "mondtam", "még");
             if (count > bestCount)
                 return "hu"; // Hungarian
@@ -2824,14 +2824,14 @@ namespace Nikse.SubtitleEdit.Logic
             for (int i = 0; i < len; i++)
             {
                 switch (text[i])
-                {                    
+                {
                     case '<':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
                     case '>':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
-                    case '"':                        
+                    case '"':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
                     case '&':
@@ -3422,7 +3422,7 @@ namespace Nikse.SubtitleEdit.Logic
             // plus literals are encoded as %2b normally so this should be safe
             text = text.Replace("+", " ");
             return System.Uri.UnescapeDataString(text);
-        }       
+        }
 
         public static void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
         {

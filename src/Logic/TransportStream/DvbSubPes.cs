@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
                 return DataBuffer[1];
             }
-        }       
+        }
 
         public List<SubtitleSegment> SubtitleSegments { get; set; }
         public List<ClutDefinitionSegment> ClutDefinitions { get; set; }

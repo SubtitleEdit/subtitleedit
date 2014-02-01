@@ -9,7 +9,7 @@
         public EbuPesDataFieldText FieldText;
 
         public EbuPesDataField()
-        { 
+        {
         }
 
     }

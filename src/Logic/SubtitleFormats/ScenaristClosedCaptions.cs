@@ -506,7 +506,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                                              "136e", //136e=?
                                                              "94ce", //94ce=?
                                                              "2c2f", //?
-                                                             
+
                                                              "1130", // ®
                                                              "1131", // °
                                                              "1132", // ½
@@ -523,7 +523,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                                              "113d", // î
                                                              "113e", // ô
                                                              "113f", // û
-                                                             
+
                                                              "9130", // ®
                                                              "9131", // °
                                                              "9132", // ½

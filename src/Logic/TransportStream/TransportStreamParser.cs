@@ -210,7 +210,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                         }
                         DvbSubtitlesLookup.Add(pid, subList);
                     }
-                }                
+                }
                 SubtitlePacketIds.Clear();
                 foreach (int key in DvbSubtitlesLookup.Keys)
                     SubtitlePacketIds.Add(key);

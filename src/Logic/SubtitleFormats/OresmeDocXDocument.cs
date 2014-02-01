@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
   </w:body>
 </w:document>";
 
-        
+
         public override string ToText(Subtitle subtitle, string title)
         {
             string xmlStructure = Layout.Replace("'", "\"");
@@ -163,7 +163,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //</w:tc>
             var tc2 = xml.CreateElement("w:tc", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
             paragraph.AppendChild(tc2);
-            
+
             var n3sub1 = xml.CreateElement("w:tcPr", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
             tc2.AppendChild(n3sub1);
 
@@ -212,7 +212,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 n3sub1sub3sub2.AppendChild(text);
             }
             tc2.AppendChild(n3sub1sub3);
-            
+
             return paragraph;
         }
 
@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
-        {        
+        {
             _errorCount = 0;
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));

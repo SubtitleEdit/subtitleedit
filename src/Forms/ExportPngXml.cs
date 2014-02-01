@@ -937,7 +937,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             }
                         }
                         else
-                        { 
+                        {
                             param.Bitmap.Save(fileName, ImageFormat);
                         }
                         imagesSavedCount++;
@@ -1650,7 +1650,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             var lefts = new List<float>();
             if (text.ToLower().Contains("<font") || text.ToLower().Contains("<i>"))
-            { 
+            {
                 foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 {
                     string lineNoHtml = Utilities.RemoveHtmlFontTag(line.Replace("<i>", string.Empty).Replace("</i>", string.Empty));
@@ -1712,7 +1712,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     x = parameter.ScreenWidth / 2;
                 }
 
-                bmp = new Bitmap(parameter.ScreenWidth, sizeY); 
+                bmp = new Bitmap(parameter.ScreenWidth, sizeY);
 
                 Graphics surface = Graphics.FromImage(bmp);
                 surface.CompositingQuality = CompositingQuality.HighSpeed;
@@ -2186,7 +2186,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (item.ToString() == Configuration.Settings.Tools.ExportFcpImageType)
                         comboBoxImageFormat.SelectedIndex = i;
                     i++;
-                }                
+                }
             }
 
             if (_exportType == "VOBSUB")
@@ -2199,7 +2199,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         comboBoxSubtitleFontSize.SelectedIndex = i;
                     i++;
                 }
-                checkBoxSimpleRender.Checked = Configuration.Settings.Tools.ExportVobSubSimpleRendering;                
+                checkBoxSimpleRender.Checked = Configuration.Settings.Tools.ExportVobSubSimpleRendering;
             }
             else if (_exportType == "BLURAYSUP" || _exportType == "DOST" || _exportType == "FCP")
             {
@@ -2423,7 +2423,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     comboBoxBorderWidth.SelectedIndex = Configuration.Settings.Tools.ExportLastBorderWidth;
                 }
                 catch
-                { 
+                {
                 }
             }
             checkBoxBold.Checked = Configuration.Settings.Tools.ExportLastFontBold;
@@ -2698,7 +2698,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportFcpFontSize = (int)_subtitleFontSize;
                 if (comboBoxImageFormat.SelectedItem != null)
                     Configuration.Settings.Tools.ExportFcpImageType = comboBoxImageFormat.SelectedItem.ToString();
-                
+
             }
             Configuration.Settings.Tools.ExportFontColor = _subtitleColor;
             Configuration.Settings.Tools.ExportBorderColor = _borderColor;

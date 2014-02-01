@@ -952,7 +952,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (IsColorClose(Color.Black, brightest, 10))
                 return Color.Transparent;
             return brightest;
-        }       
+        }
 
         private bool IsColorClose(Color color1, Color color2, int maxDiff)
         {

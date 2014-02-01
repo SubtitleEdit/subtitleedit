@@ -753,7 +753,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     _currentSpellCheckWord.Index++;
                                     _currentWord = _currentWord.Trim("'".ToCharArray());
                                 }
-                                
+
                                 if (_postfix != null && _postfix == "'")
                                 {
                                     _currentSpellCheckWord.Text = _currentWord + _postfix;
@@ -801,7 +801,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string SetWords(string s)
         {
             s = ReplaceHtmlTagsWithBlanks(s);
-            s = ReplaceKnownWordsOrNamesWithBlanks(s);            
+            s = ReplaceKnownWordsOrNamesWithBlanks(s);
             _words = Split(s);
             return s;
         }
@@ -850,7 +850,7 @@ namespace Nikse.SubtitleEdit.Forms
                         start = -1;
                 }
             }
-            return s;            
+            return s;
         }
 
         /// <summary>
@@ -999,7 +999,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!namesItem.EndsWith("s"))
                         _namesEtcListWithApostrophe.Add(namesItem + "'s");
                     if (!namesItem.EndsWith("s"))
-                        _namesEtcListWithApostrophe.Add(namesItem + "’s");                        
+                        _namesEtcListWithApostrophe.Add(namesItem + "’s");
                     else if (!namesItem.EndsWith("'"))
                         _namesEtcListWithApostrophe.Add(namesItem + "'");
                 }

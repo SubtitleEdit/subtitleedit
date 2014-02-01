@@ -1274,7 +1274,7 @@ namespace Nikse.SubtitleEdit.Forms
                     nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
                 if (checkBoxTransportStreamGrayscale.Checked)
                     nDvbBmp.GrayScale();
-                dvbBmp.Dispose();                
+                dvbBmp.Dispose();
                 return nDvbBmp.GetBitmap();
             }
 
@@ -7136,7 +7136,7 @@ namespace Nikse.SubtitleEdit.Forms
                         newDbvSub.Pes = dvbSub.Pes;
                         newDbvSub.ActiveImageIndex = i;
                         newDbvSub.StartMilliseconds = dvbSub.StartMilliseconds;
-                        newDbvSub.EndMilliseconds = dvbSub.EndMilliseconds;                        
+                        newDbvSub.EndMilliseconds = dvbSub.EndMilliseconds;
                         if (newDbvSub.Pes.ObjectDataList[i].TopFieldDataBlockLength > 8)
                             list.Add(newDbvSub);
                     }

@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 ;» Sticky mode: OFF
 ;» Right justification ragged left: OFF
 ;» Parallelogram filter: OFF
-;» Coding standard: EIA-608" + Environment.NewLine + 
+;» Coding standard: EIA-608" + Environment.NewLine +
 ";» \"Bottom\" row: 15" + @"
 ;» Lines per caption: 15
 ;» Characters per line: 32
@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (timeParts.Length == 1)
                     {
                         try
-                        {                            
+                        {
                             TimeCode start = DecodeTimeCode(timeParts[0]);
                             if (p != null && p.EndTime.TotalMilliseconds == 0)
                                 p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;

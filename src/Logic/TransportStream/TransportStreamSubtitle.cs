@@ -5,7 +5,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
     public class TransportStreamSubtitle
     {
         private ulong _startMilliseconds;
-        public ulong StartMilliseconds 
+        public ulong StartMilliseconds
         {
             get
             {
@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     return 0;
                 return _startMilliseconds - OffsetMilliseconds;
             }
-            set 
+            set
             {
                 _startMilliseconds = value + OffsetMilliseconds;
             }
@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 else
                     return _bdSup.BitmapObjects.Count;
             }
-        }       
+        }
 
     }
 }

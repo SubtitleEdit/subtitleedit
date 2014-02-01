@@ -732,7 +732,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformPlayFirstSelectedSubtitle + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlayFirstSelected));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition + GetShortcutText(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformFocusListView))
-                audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformFocusListView + GetShortcutText(Configuration.Settings.Shortcuts.WaveformFocusListView));                        
+                audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformFocusListView + GetShortcutText(Configuration.Settings.Shortcuts.WaveformFocusListView));
             treeViewShortcuts.Nodes.Add(audioVisualizerNode);
 
             foreach (TreeNode node in treeViewShortcuts.Nodes)
@@ -1462,7 +1462,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     else if (Configuration.Settings.Language.Settings.WaveformFocusListView != null && text == Configuration.Settings.Language.Settings.WaveformFocusListView.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformFocusListView = GetShortcut(node.Text);
-                    
+
                 }
             }
 

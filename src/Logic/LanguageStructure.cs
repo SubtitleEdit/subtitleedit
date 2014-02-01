@@ -258,7 +258,7 @@
             public string XNumberOfDifferenceAndPercentChanged { get; set; }
             public string XNumberOfDifferenceAndPercentLettersChanged { get; set; }
             public string ShowOnlyDifferences { get; set; }
-            public string IgnoreLineBreaks { get; set; }            
+            public string IgnoreLineBreaks { get; set; }
             public string OnlyLookForDifferencesInText { get; set; }
             public string CannotCompareWithImageBasedSubtitles { get; set; }
         }
@@ -294,7 +294,7 @@
             public string GapToNext { get; set; }
             public string BridgeGapsSmallerThanXPart1 { get; set; }
             public string BridgeGapsSmallerThanXPart2 { get; set; }
-            public string MinMsBetweenLines { get; set; }            
+            public string MinMsBetweenLines { get; set; }
             public string ProlongEndTime { get; set; }
             public string DivideEven { get; set; }
         }
@@ -1703,7 +1703,7 @@
             public string WaveformAddTextHere { get; set; }
             public string WaveformPlayNewSelection { get; set; }
             public string WaveformPlayFirstSelectedSubtitle { get; set; }
-            public string WaveformFocusListView { get; set; }            
+            public string WaveformFocusListView { get; set; }
             public string GoBack1Frame { get; set; }
             public string GoForward1Frame { get; set; }
             public string GoBack100Milliseconds { get; set; }
