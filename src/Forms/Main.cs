@@ -9139,7 +9139,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ImportSubtitleFromTransportStream(string fileName)
         {
-            ShowStatus("Parsing transport stream - please wait...");
+            if (string.IsNullOrEmpty(_language.ParsingTransportStream))
+                ShowStatus("Parsing transport stream - please wait...");
+            else
+                ShowStatus(_language.ParsingTransportStream);
+            Refresh();
             var tsParser = new Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamParser();
             tsParser.ParseTsFile(fileName);
             ShowStatus(string.Empty);
