@@ -1088,6 +1088,7 @@ namespace Nikse.SubtitleEdit.Logic
                 NotAValidXSubFile = "Not a valid xsub file!",
                 BeforeMergeLinesWithSameText = "Before merging lines with same text",
                 ImportTimeCodesDifferentNumberOfLinesWarning = "Subtitle with time codes has a different number of lines ({0}) than current subtitle ({1}) - continue anyway?",
+                ParsingTransportStream = "Parsing transport stream - please wait...",
                 ErrorLoadIdx = "Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and SE can open the .sub file.",
                 ErrorLoadRar = "This file seems to be a compressed .rar file. SE cannot open compressed files.",
                 ErrorLoadZip = "This file seems to be a compressed .zip file. SE cannot open compressed files.",
