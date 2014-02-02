@@ -3327,13 +3327,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void SaveAsToolStripMenuItemClick(object sender, EventArgs e)
         {
             ReloadFromSourceView();
-            FileSaveAs();
+            FileSaveAs(true);
         }
 
-        private DialogResult FileSaveAs()
+        private DialogResult FileSaveAs(bool allowUsingLastSaveAsFormat)
         {
             SubtitleFormat currentFormat = null;
-            if (!string.IsNullOrEmpty(Configuration.Settings.General.LastSaveAsFormat))
+            if (allowUsingLastSaveAsFormat && !string.IsNullOrEmpty(Configuration.Settings.General.LastSaveAsFormat))
                 currentFormat = Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.LastSaveAsFormat);
             if (currentFormat == null)
                 currentFormat = GetCurrentSubtitleFormat();
@@ -3394,7 +3394,7 @@ namespace Nikse.SubtitleEdit.Forms
         private DialogResult SaveSubtitle(SubtitleFormat format)
         {
             if (string.IsNullOrEmpty(_fileName) || _converted)
-                return FileSaveAs();
+                return FileSaveAs(false);
 
             try
             {
@@ -3994,7 +3994,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripButtonSaveAsClick(object sender, EventArgs e)
         {
             ReloadFromSourceView();
-            FileSaveAs();
+            FileSaveAs(true);
         }
 
         private void ToolStripButtonFindClick(object sender, EventArgs e)
