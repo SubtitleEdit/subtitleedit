@@ -517,7 +517,7 @@ namespace Nikse.SubtitleEdit.Logic
             DefaultSubtitleFormat = "SubRip";
             DefaultEncoding = Encoding.UTF8.EncodingName;
             AutoConvertToUtf8 = false;
-            AutoGuessAnsiEncoding = false;
+            AutoGuessAnsiEncoding = true;
             ShowRecentFiles = true;
             RememberSelectedLine = true;
             StartLoadLastFile = true;
