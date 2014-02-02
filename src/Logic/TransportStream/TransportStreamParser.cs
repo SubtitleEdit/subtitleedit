@@ -52,6 +52,14 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             var packetBuffer = new byte[packetLength];
             var m2tsTimeCodeBuffer = new byte[4];
             long position = 0;
+
+            // check for Topfield .rec file
+            ms.Seek(position, SeekOrigin.Begin);
+            ms.Read(m2tsTimeCodeBuffer, 0, 3);
+            if (m2tsTimeCodeBuffer[0] == 0x54 && m2tsTimeCodeBuffer[1] == 0x46 && m2tsTimeCodeBuffer[2] == 0x72)
+                position = 3760;
+
+
             while (position < ms.Length)
             {
                 ms.Seek(position, SeekOrigin.Begin);

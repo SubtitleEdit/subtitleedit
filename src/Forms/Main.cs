@@ -2254,7 +2254,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var fi = new FileInfo(fileName);
 
-                if ((ext == ".ts" || ext == ".mpeg" || ext == ".mpg") && fi.Length > 10000 && IsTransportStream(fileName))
+                if ((ext == ".ts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg") && fi.Length > 10000 && IsTransportStream(fileName))
                 {
                     ImportSubtitleFromTransportStream(fileName);
                     return;
@@ -3001,11 +3001,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                var buffer = new byte[193];
+                var buffer = new byte[3761];
                 var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite) { Position = 0 };
                 fs.Read(buffer, 0, buffer.Length);
                 fs.Close();
-                return buffer[0] == 0x47 && buffer[188] == 0x47; // 47hex (71 dec or 'G') == TS sync byte
+                if (buffer[0] == 0x47 && buffer[188] == 0x47) // 47hex (71 dec or 'G') == TS sync byte
+                    return true;
+                return buffer[0] == 0x54 && buffer[1] == 0x46 && buffer[2] == 0x72 && buffer[3760] == 0x47; // Topfield REC TS file
             }
             catch (Exception ex)
             {
@@ -9653,7 +9655,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         OpenSubtitle(fileName, null);
                     }
-                    else if ((ext == ".ts" || ext == ".mpg" || ext == ".mpeg") && IsTransportStream(fileName))
+                    else if ((ext == ".ts" || ext == ".rec" || ext == ".mpg" || ext == ".mpeg") && IsTransportStream(fileName))
                     {
                         OpenSubtitle(fileName, null);
                     }
