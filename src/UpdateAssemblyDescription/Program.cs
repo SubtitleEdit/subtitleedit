@@ -1,0 +1,86 @@
+﻿using System;
+using System.IO;
+
+namespace UpdateAssemblyDescription
+{
+    class Program
+    {
+
+        private static string GetGitPath()
+        { 
+            string p = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles"), @"Git\bin\git.exe");
+            if (File.Exists(p))
+                return p;
+
+            p = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles(x86)"), @"Git\bin\git.exe");
+            if (File.Exists(p))
+                return p;
+
+            p = @"C:\Program Files\Git\bin\git.exe";
+            if (File.Exists(p))
+                return p;
+
+            p = @"C:\Program Files (x86)\Git\bin\git.exe";
+            if (File.Exists(p))
+                return p;
+
+            p = @"C:\Git\bin\git.exe";
+            if (File.Exists(p))
+                return p;
+
+            return "git";       
+        }
+
+        private static void DoUpdateAssemblyDescription(string gitHash, string template, string target)
+        {
+            string templateData = File.ReadAllText(template);
+            string fixedData = templateData.Replace("[GITHASH]", gitHash);
+            File.WriteAllText(target, fixedData);
+        }
+
+        static int Main(string[] args)
+        {
+            string errorFileName = System.Reflection.Assembly.GetEntryAssembly().Location.Replace(".exe", "_error.txt");
+
+            if (args.Length != 2)
+            {
+                Console.WriteLine("UpdateAssemblyDescription 0.9");
+                Console.WriteLine("UpdateAssemblyDescription <template with [GITHASH]> <target file>");
+                File.WriteAllText(errorFileName, "Wrong number of arguments: " + args.Length);
+                return 1;
+            }
+
+            string workingFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            string template = args[0];
+            string target = args[1];
+
+            var clr = new CommandLineRunner();
+            var rc = clr.RunCommandAndGetOutput(GetGitPath(), "rev-parse --verify HEAD", workingFolder);
+            if (rc)
+            {
+                try
+                {
+                    DoUpdateAssemblyDescription(clr.Result, template, target);
+                    return 0;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    File.WriteAllText(errorFileName, e.Message);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Error running Git");
+                Console.WriteLine(" - git folder: " + workingFolder);
+                Console.WriteLine(" - template: " + template);
+                Console.WriteLine(" - target: " + target);
+                File.WriteAllText(errorFileName, " - git folder: " + workingFolder + Environment.NewLine +
+                                                 " - template: " + template + Environment.NewLine +
+                                                 " - target: " + target);
+            }
+            return 1;            
+        }
+            
+    }
+}
