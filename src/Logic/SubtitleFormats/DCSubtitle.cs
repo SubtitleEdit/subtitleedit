@@ -8,7 +8,7 @@ using System.Xml;
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
 
-// http://code.google.com/p/subtitleedit/issues/detail?id=18
+// https://github.com/SubtitleEdit/subtitleedit/issues/detail?id=18
 //<?xml version="1.0" encoding="UTF-8"?>
 //<DCSubtitle Version="1.0">
 //  <SubtitleID>4EB245B8-4D3A-4158-9516-95DD20E8322E</SubtitleID>
