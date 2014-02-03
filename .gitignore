@@ -1,0 +1,9 @@
+/installer/SubtitleEdit-*-setup.exe
+/src/bin
+/src/obj
+/src/*.suo
+/src/Properties/AssemblyInfo.cs
+/src/Test/bin
+/src/Test/obj
+/SE*.zip
+/SubtitleEdit-*-setup.exe
