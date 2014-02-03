@@ -1642,6 +1642,24 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static string AssemblyDescription
+        {
+            get
+            {
+                Assembly assy = Assembly.GetExecutingAssembly();
+                String assyName = assy.GetName().Name;
+                bool isdef = Attribute.IsDefined(assy, typeof(AssemblyDescriptionAttribute));
+                if (isdef)
+                {
+                    Console.WriteLine(assyName);
+                    AssemblyDescriptionAttribute adAttr = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(assy, typeof(AssemblyDescriptionAttribute));
+                    if (adAttr != null)
+                        return adAttr.Description;
+                }
+                return null;
+            }
+        }
+
         private static void AddExtension(StringBuilder sb, string extension)
         {
             if (!sb.ToString().ToLower().Contains("*" + extension.ToLower() + ";"))
