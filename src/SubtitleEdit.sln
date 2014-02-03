@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateAssemblyDescription", "UpdateAssemblyDescription\UpdateAssemblyDescription.csproj", "{DBD4656C-5F40-4067-A70B-C4460DE20F77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateAssemblyInfo", "UpdateAssemblyInfo\UpdateAssemblyInfo.csproj", "{DBD4656C-5F40-4067-A70B-C4460DE20F77}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
