@@ -3,7 +3,7 @@ SETLOCAL
 
 PUSHD %~dp0
 
-"src\UpdateAssemblyDescription\bin\Release\UpdateAssemblyDescription.exe" "src\Properties\AssemblyInfo.cs.template" "src\Properties\AssemblyInfo.cs"
+"src\UpdateAssemblyInfo\bin\Release\UpdateAssemblyInfo.exe" "src\Properties\AssemblyInfo.cs.template" "src\Properties\AssemblyInfo.cs"
 IF %ERRORLEVEL% NEQ 0 GOTO SubError
 
 

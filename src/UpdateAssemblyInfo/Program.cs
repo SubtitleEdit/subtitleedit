@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace UpdateAssemblyDescription
+namespace UpdateAssemblyInfo
 {
     class Program
     {
@@ -31,10 +31,10 @@ namespace UpdateAssemblyDescription
             return "git";       
         }
 
-        private static void DoUpdateAssemblyDescription(string gitHash, string template, string target)
+        private static void DoUpdateAssembly(string source, string gitHash, string template, string target)
         {
             string templateData = File.ReadAllText(template);
-            string fixedData = templateData.Replace("[GITHASH]", gitHash);
+            string fixedData = templateData.Replace(source, gitHash);
             File.WriteAllText(target, fixedData);
         }
 
@@ -54,13 +54,18 @@ namespace UpdateAssemblyDescription
             string template = args[0];
             string target = args[1];
 
-            var clr = new CommandLineRunner();
-            var rc = clr.RunCommandAndGetOutput(GetGitPath(), "rev-parse --verify HEAD", workingFolder);
-            if (rc)
+            var clrHash = new CommandLineRunner();
+            var rcGitHash = clrHash.RunCommandAndGetOutput(GetGitPath(), "rev-parse --verify HEAD", workingFolder);
+            var clrTags = new CommandLineRunner();
+            var rcGitTags = clrTags.RunCommandAndGetOutput(GetGitPath(), "describe --tags", workingFolder);
+            if (rcGitHash && rcGitTags)
             {
                 try
                 {
-                    DoUpdateAssemblyDescription(clr.Result, template, target);
+                    DoUpdateAssembly("[GITHASH]", clrHash.Result, template, target);
+                    File.WriteAllText(errorFileName, "GIT TAGS: " + clrTags.Result);
+
+                    DoUpdateAssembly("[REVNO]", clrTags.Result.Split('-')[1] , target, target);
                     return 0;
                 }
                 catch (Exception e)

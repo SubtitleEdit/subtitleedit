@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace UpdateAssemblyDescription
+namespace UpdateAssemblyInfo
 {
     public class CommandLineRunner
     {
@@ -16,7 +16,7 @@ namespace UpdateAssemblyDescription
             p.StartInfo.RedirectStandardInput = true;
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.CreateNoWindow = true;
-            p.OutputDataReceived += _mplayer_OutputDataReceived;
+            p.OutputDataReceived += OutputDataReceived;
 
             try
             {
@@ -34,7 +34,7 @@ namespace UpdateAssemblyDescription
             return false;
         }
 
-        void _mplayer_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        void OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (e != null && e.Data != null)
                 Result = e.Data;
