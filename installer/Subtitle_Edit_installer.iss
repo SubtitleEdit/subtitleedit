@@ -91,7 +91,7 @@ VersionInfoProductTextVersion={#app_ver_full}
 VersionInfoTextVersion={#app_ver_full}
 VersionInfoVersion={#app_ver_full}
 MinVersion=5.1
-LicenseFile=..\src\gpl.txt
+LicenseFile=..\gpl.txt
 InfoAfterFile=..\src\Changelog.txt
 SetupIconFile=..\src\Icons\SE.ico
 WizardImageFile=Icons\WizardImageFile.bmp
@@ -250,7 +250,7 @@ Source: {#bindir}\Languages\zh-tw.xml;             DestDir: {app}\Languages;    
 Source: {#bindir}\NHunspell.dll;                   DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\SubtitleEdit.exe;                DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\src\Changelog.txt;                      DestDir: {app};                                    Flags: ignoreversion; Components: main
-Source: ..\src\gpl.txt;                            DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: ..\gpl.txt;                                DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\Tesseract\msvcp90.dll;                  DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
 Source: ..\Tesseract\msvcr90.dll;                  DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
 Source: ..\Tesseract\tessdata\configs\hocr;        DestDir: {app}\Tesseract\tessdata\configs;         Flags: ignoreversion; Components: main
