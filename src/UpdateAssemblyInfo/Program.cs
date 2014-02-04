@@ -63,8 +63,6 @@ namespace UpdateAssemblyInfo
                 try
                 {
                     DoUpdateAssembly("[GITHASH]", clrHash.Result, template, target);
-                    File.WriteAllText(errorFileName, "GIT TAGS: " + clrTags.Result);
-
                     DoUpdateAssembly("[REVNO]", clrTags.Result.Split('-')[1] , target, target);
                     return 0;
                 }
@@ -76,6 +74,16 @@ namespace UpdateAssemblyInfo
             }
             else
             {
+                try
+                {
+                    // allow for compile without git
+                    DoUpdateAssembly("[GITHASH]", string.Empty, template, target);
+                    DoUpdateAssembly("[REVNO]", "0", template, target);
+                }
+                catch
+                { 
+                }
+
                 Console.WriteLine("Error running Git");
                 Console.WriteLine(" - git folder: " + workingFolder);
                 Console.WriteLine(" - template: " + template);

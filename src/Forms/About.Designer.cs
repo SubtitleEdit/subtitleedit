@@ -33,6 +33,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.richTextBoxAbout1 = new System.Windows.Forms.RichTextBox();
             this.buttonDonate = new System.Windows.Forms.Button();
+            this.linkLabelGitBuildHash = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -97,11 +98,24 @@
             this.buttonDonate.UseVisualStyleBackColor = false;
             this.buttonDonate.Click += new System.EventHandler(this.buttonDonate_Click);
             // 
+            // linkLabelGitBuildHash
+            // 
+            this.linkLabelGitBuildHash.AutoSize = true;
+            this.linkLabelGitBuildHash.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkLabelGitBuildHash.Location = new System.Drawing.Point(148, 15);
+            this.linkLabelGitBuildHash.Name = "linkLabelGitBuildHash";
+            this.linkLabelGitBuildHash.Size = new System.Drawing.Size(90, 20);
+            this.linkLabelGitBuildHash.TabIndex = 43;
+            this.linkLabelGitBuildHash.TabStop = true;
+            this.linkLabelGitBuildHash.Text = "linkLabel1";
+            this.linkLabelGitBuildHash.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelGitBuildHash_LinkClicked);
+            // 
             // About
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(457, 372);
+            this.Controls.Add(this.linkLabelGitBuildHash);
             this.Controls.Add(this.buttonDonate);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.pictureBox1);
@@ -131,6 +145,7 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.RichTextBox richTextBoxAbout1;
         private System.Windows.Forms.Button buttonDonate;
+        private System.Windows.Forms.LinkLabel linkLabelGitBuildHash;
 
     }
 }

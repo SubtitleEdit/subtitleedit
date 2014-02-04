@@ -2,10 +2,10 @@
 /src/*.suo
 /src/bin
 /src/obj
-/src/Properties/AssemblyInfo.cs
 /src/Test/bin
 /src/Test/obj
-/src/UpdateAssemblyDescription/bin
-/src/UpdateAssemblyDescription/obj
+/src/UpdateAssemblyInfo/bin
+/src/UpdateAssemblyInfo/obj
+/src/Properties/AssemblyInfo.cs
 /SE*.zip
 /SubtitleEdit-*-setup.exe
