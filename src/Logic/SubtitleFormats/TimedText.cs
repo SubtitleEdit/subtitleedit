@@ -215,13 +215,26 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 break;
                         }
                     }
-                    string start = node.Attributes["begin"].InnerText;
+
+                    string start = null; // = node.Attributes["begin"].InnerText;
+                    string end = null; // = node.Attributes["begin"].InnerText;
+                    string dur = null; // = node.Attributes["begin"].InnerText;
+                    foreach (XmlAttribute attr in node.Attributes)
+                    {
+                        if (attr.Name.EndsWith("begin"))
+                            start = attr.InnerText;
+                        else if (attr.Name.EndsWith("end"))
+                            end = attr.InnerText;
+                        else if (attr.Name.EndsWith("duration"))
+                            dur = attr.InnerText;
+                    }
+                    //string start = node.Attributes["begin"].InnerText;
                     string text = pText.ToString();
                     text = text.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
-                    text = text.Replace("<i></i>", string.Empty);
-                    if (node.Attributes["end"] != null)
+                    text = text.Replace("<i></i>", string.Empty).Trim();
+                    if (end != null)
                     {
-                        string end = node.Attributes["end"].InnerText;
+                        //string end = node.Attributes["end"].InnerText;
                         double dBegin, dEnd;
                         if (!start.Contains(":") && Utilities.CountTagInText(start, ".") == 1 && !start.Contains(":") && Utilities.CountTagInText(start, ".") == 1 &&
                             double.TryParse(start, out dBegin) && double.TryParse(end, out dEnd))
@@ -247,9 +260,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
                     }
-                    else if (node.Attributes["dur"] != null)
+                    else if (dur != null)
                     {
-                        TimeCode duration = TimedText10.GetTimeCode(node.Attributes["dur"].InnerText, false);
+                        TimeCode duration = TimedText10.GetTimeCode(dur, false);
                         TimeCode startTime = TimedText10.GetTimeCode(start, false);
                         TimeCode endTime = new TimeCode(TimeSpan.FromMilliseconds(startTime.TotalMilliseconds + duration.TotalMilliseconds));
                         subtitle.Paragraphs.Add(new Paragraph(startTime, endTime, text));
@@ -261,6 +274,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
+            subtitle.RemoveEmptyLines();
             subtitle.Renumber(1);
         }
 
