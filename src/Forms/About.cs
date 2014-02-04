@@ -23,7 +23,11 @@ namespace Nikse.SubtitleEdit.Forms
             string minorMinorVersion = string.Empty;
             if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                 minorMinorVersion = "." + versionInfo[2];
-            labelProduct.Text = String.Format("{0} {1}.{2}{3}, build {4}", _languageGeneral.Title, versionInfo[0], versionInfo[1], minorMinorVersion, Utilities.AssemblyDescription.Substring(0, 10)); //versionInfo[3]);
+            labelProduct.Text = String.Format("{0} {1}.{2}{3}, build", _languageGeneral.Title, versionInfo[0], versionInfo[1], minorMinorVersion);
+            string buildHash = Utilities.AssemblyDescription;
+            linkLabelGitBuildHash.Left = labelProduct.Left + labelProduct.Width - 5;
+            if (buildHash != null && buildHash.Length > 6)
+                linkLabelGitBuildHash.Text = String.Format("{0}", Utilities.AssemblyDescription.Substring(0, 7));
             richTextBoxAbout1.Text = _language.AboutText1.TrimEnd() + Environment.NewLine +
                                      Environment.NewLine +
                                      _languageGeneral.TranslatedBy.Trim();
@@ -63,6 +67,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonDonate_Click(object sender, EventArgs e)
         {
             Process.Start("http://www.nikse.dk/Donate");
+        }
+
+        private void linkLabelGitBuildHash_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://github.com/SubtitleEdit/subtitleedit/commit/" + Utilities.AssemblyDescription);
         }
 
     }
