@@ -1546,6 +1546,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
         {
             string text = parameter.P.Text;
+            text = Utilities.FixInvalidItalicTags(text);
 
             // remove styles for display text (except italic)
             text = RemoveSubStationAlphaFormatting(text);
