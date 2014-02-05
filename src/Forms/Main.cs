@@ -3413,12 +3413,21 @@ namespace Nikse.SubtitleEdit.Forms
                 // Seungki end
 
                 var currentEncoding = GetCurrentEncoding();
-                if (currentEncoding == Encoding.Default && (allText.Contains("♪") || allText.Contains("♫") || allText.Contains("♥") || allText.Contains("—") || allText.Contains("…"))) // ANSI & music/unicode symbols
+                bool isUnicode = currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8;
+                if (currentEncoding == Encoding.Default && (allText.Contains("♪") || allText.Contains("♫") || allText.Contains("♥") || allText.Contains("—") || allText.Contains("―") || allText.Contains("…"))) // ANSI & music/unicode symbols
                 {
                     if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNo) == DialogResult.No)
                         return DialogResult.No;
                 }
 
+                if (!isUnicode)
+                {
+                    allText = allText.Replace("—", "-"); // mdash, code 8212
+                    allText = allText.Replace("―", "-"); // mdash, code 8213
+                    allText = allText.Replace("…", "...");
+                    allText = allText.Replace("♪", "#");
+                    allText = allText.Replace("♫", "#");
+                }
 
                 bool containsNegativeTime = false;
                 foreach (var p in _subtitle.Paragraphs)
