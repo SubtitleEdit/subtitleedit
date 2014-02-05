@@ -1128,6 +1128,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ShowToolbarReplace");
             if (subNode != null)
                 settings.General.ShowToolbarReplace = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ShowToolbarFixCommonErrors");
+            if (subNode != null)
+                settings.General.ShowToolbarFixCommonErrors = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ShowToolbarVisualSync");
             if (subNode != null)
                 settings.General.ShowToolbarVisualSync = Convert.ToBoolean(subNode.InnerText);
@@ -2458,6 +2461,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ShowToolbarSaveAs", settings.General.ShowToolbarSaveAs.ToString());
             textWriter.WriteElementString("ShowToolbarFind", settings.General.ShowToolbarFind.ToString());
             textWriter.WriteElementString("ShowToolbarReplace", settings.General.ShowToolbarReplace.ToString());
+            textWriter.WriteElementString("ShowToolbarFixCommonErrors", settings.General.ShowToolbarFixCommonErrors.ToString());
             textWriter.WriteElementString("ShowToolbarVisualSync", settings.General.ShowToolbarVisualSync.ToString());
             textWriter.WriteElementString("ShowToolbarSpellCheck", settings.General.ShowToolbarSpellCheck.ToString());
             textWriter.WriteElementString("ShowToolbarSettings", settings.General.ShowToolbarSettings.ToString());
