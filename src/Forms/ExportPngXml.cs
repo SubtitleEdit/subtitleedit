@@ -1546,62 +1546,24 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
         {
             string text = parameter.P.Text;
-            text = Utilities.FixInvalidItalicTags(text);
 
-            // remove styles for display text (except italic)
             text = RemoveSubStationAlphaFormatting(text);
 
             text = text.Replace("<I>", "<i>");
             text = text.Replace("</I>", "</i>");
+            text = Utilities.FixInvalidItalicTags(text);
 
             text = text.Replace("<B>", "<b>");
             text = text.Replace("</B>", "</b>");
 
+            // no support for underline
             text = text.Replace("<u>", string.Empty);
             text = text.Replace("</u>", string.Empty);
             text = text.Replace("<U>", string.Empty);
             text = text.Replace("</U>", string.Empty);
 
-            //var bmp = new Bitmap(400, 200);
-            //var g = Graphics.FromImage(bmp);
-            //if (!parameter.SimpleRendering)
-            //    parameter.SubtitleFontSize = g.DpiY * parameter.SubtitleFontSize / 72;
-            //Font font;
-            //try
-            //{
-            //    var fontStyle = FontStyle.Regular;
-            //    if (parameter.SubtitleFontBold)
-            //        fontStyle = FontStyle.Bold;
-            //    font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize, fontStyle);
-            //}
-            //catch (Exception exception)
-            //{
-            //    try
-            //    {
-            //        var fontStyle = FontStyle.Regular;
-            //        if (!parameter.SubtitleFontBold)
-            //            fontStyle = FontStyle.Bold;
-            //        font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize, fontStyle);
-            //    }
-            //    catch
-            //    {
-            //        MessageBox.Show(exception.Message);
 
-            //        if (FontFamily.Families[0].IsStyleAvailable(FontStyle.Regular))
-            //            font = new Font(FontFamily.Families[0].Name, parameter.SubtitleFontSize);
-            //        else if (FontFamily.Families.Length > 1 && FontFamily.Families[1].IsStyleAvailable(FontStyle.Regular))
-            //            font = new Font(FontFamily.Families[1].Name, parameter.SubtitleFontSize);
-            //        else if (FontFamily.Families.Length > 2 && FontFamily.Families[1].IsStyleAvailable(FontStyle.Regular))
-            //            font = new Font(FontFamily.Families[2].Name, parameter.SubtitleFontSize);
-            //        else
-            //            font = new Font("Arial", parameter.SubtitleFontSize);
-            //    }
-            //}
-
-
-            //SizeF textSize = g.MeasureString("Hj!", font);
-            //var lineHeight = (textSize.Height * 0.64f);
-            var bmp = new Bitmap(400, 200);
+            var bmp = new Bitmap(1, 1);
             var g = Graphics.FromImage(bmp);
             var fontSize = g.DpiY * parameter.SubtitleFontSize / 72;
             Font font = SetFont(parameter, parameter.SubtitleFontSize);
