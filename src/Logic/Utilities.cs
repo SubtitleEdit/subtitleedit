@@ -2428,7 +2428,7 @@ namespace Nikse.SubtitleEdit.Logic
                     else if (firstIndex == 0)
                         text = text.Remove(0, 4);
                     else
-                        text = text.Substring(0, firstIndex - 1) + text.Substring(firstIndex + endTag.Length);
+                        text = text.Substring(0, firstIndex) + text.Substring(firstIndex + endTag.Length);
                 }
 
                 if (italicBeginTagCount == 2 && italicEndTagCount == 1)
