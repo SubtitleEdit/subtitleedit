@@ -1255,8 +1255,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle.Paragraphs[index] = paragraph;
                 _makeHistoryPaused = true;
 
-                MovePrevNext(e, paragraph, beforeParagraph, index);
-
                 Paragraph original = null;
                 if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
                     original = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitleAlternate.Paragraphs);
@@ -1284,6 +1282,8 @@ namespace Nikse.SubtitleEdit.Forms
                 decimal durationInSeconds = (decimal) (paragraph.Duration.TotalSeconds);
                 if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
                     SetDurationInSeconds((double)durationInSeconds);
+
+                MovePrevNext(e, paragraph, beforeParagraph, index);
 
                 if (original != null)
                 {
