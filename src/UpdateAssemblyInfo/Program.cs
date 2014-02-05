@@ -57,8 +57,7 @@ namespace UpdateAssemblyInfo
             var clrHash = new CommandLineRunner();
             var rcGitHash = clrHash.RunCommandAndGetOutput(GetGitPath(), "rev-parse --verify HEAD", workingFolder);
             var clrTags = new CommandLineRunner();
-            var rcGitTags = clrTags.RunCommandAndGetOutput(GetGitPath(), "describe --tags", workingFolder);
-            if (rcGitHash && rcGitTags)
+            if (rcGitHash && clrTags.RunCommandAndGetOutput(GetGitPath(), "describe --tags", workingFolder))
             {
                 try
                 {
@@ -78,7 +77,7 @@ namespace UpdateAssemblyInfo
                 {
                     // allow for compile without git
                     DoUpdateAssembly("[GITHASH]", string.Empty, template, target);
-                    DoUpdateAssembly("[REVNO]", "0", template, target);
+                    DoUpdateAssembly("[REVNO]", "0", target, target);
                 }
                 catch
                 { 

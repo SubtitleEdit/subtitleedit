@@ -27,7 +27,7 @@ namespace UpdateAssemblyInfo
                 return false;
             }
             p.BeginOutputReadLine(); // Async reading of output to prevent deadlock
-            if (p.WaitForExit(9000))
+            if (p.WaitForExit(5000))
             {
                 return true;
             }
