@@ -18822,5 +18822,10 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Focus();
         }
 
+        private void toolStripButtonFixCommonErrors_Click(object sender, EventArgs e)
+        {
+            FixCommonErrors(false);
+        }
+
     }
 }
