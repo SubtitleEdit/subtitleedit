@@ -50,6 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxToolbarSaveAs.Checked = gs.ShowToolbarSaveAs;
             checkBoxToolbarFind.Checked = gs.ShowToolbarFind;
             checkBoxReplace.Checked = gs.ShowToolbarReplace;
+            checkBoxTBFixCommonErrors.Checked = gs.ShowToolbarFixCommonErrors;
             checkBoxVisualSync.Checked = gs.ShowToolbarVisualSync;
             checkBoxSettings.Checked = gs.ShowToolbarSettings;
             checkBoxSpellCheck.Checked = gs.ShowToolbarSpellCheck;
@@ -207,6 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelTBSaveAs.Text = language.SaveAs;
             labelTBFind.Text = language.Find;
             labelTBReplace.Text = language.Replace;
+            labelTBFixCommonErrors.Text = language.FixCommonerrors;
             labelTBVisualSync.Text = language.VisualSync;
             labelTBSpellCheck.Text = language.SpellCheck;
             labelTBSettings.Text = language.SettingsName;
@@ -217,6 +219,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxToolbarSaveAs.Text = Configuration.Settings.Language.General.Visible;
             checkBoxToolbarFind.Text = Configuration.Settings.Language.General.Visible;
             checkBoxReplace.Text = Configuration.Settings.Language.General.Visible;
+            checkBoxTBFixCommonErrors.Text = Configuration.Settings.Language.General.Visible;
             checkBoxVisualSync.Text = Configuration.Settings.Language.General.Visible;
             checkBoxSpellCheck.Text = Configuration.Settings.Language.General.Visible;
             checkBoxSettings.Text = Configuration.Settings.Language.General.Visible;
@@ -861,7 +864,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image SaveFileAs, Image find, Image replace,
+        public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image SaveFileAs, Image find, Image replace, Image fixCommonErrors,
                                Image visualSync, Image spellCheck, Image settings, Image help)
         {
             this.Icon = (Icon)icon.Clone();
@@ -871,6 +874,7 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxSaveAs.Image = (Image)SaveFileAs.Clone();
             pictureBoxFind.Image = (Image)find.Clone();
             pictureBoxReplace.Image = (Image)replace.Clone();
+            pictureBoxTBFixCommonErrors.Image = (Image)fixCommonErrors.Clone();
             pictureBoxVisualSync.Image = (Image)visualSync.Clone();
             pictureBoxSpellCheck.Image = (Image)spellCheck.Clone();
             pictureBoxSettings.Image = (Image)settings.Clone();
@@ -965,6 +969,7 @@ namespace Nikse.SubtitleEdit.Forms
             gs.ShowToolbarSaveAs = checkBoxToolbarSaveAs.Checked;
             gs.ShowToolbarFind = checkBoxToolbarFind.Checked;
             gs.ShowToolbarReplace = checkBoxReplace.Checked;
+            gs.ShowToolbarFixCommonErrors = checkBoxTBFixCommonErrors.Checked;
             gs.ShowToolbarVisualSync = checkBoxVisualSync.Checked;
             gs.ShowToolbarSettings = checkBoxSettings.Checked;
             gs.ShowToolbarSpellCheck = checkBoxSpellCheck.Checked;
@@ -2574,6 +2579,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonBrowseToFFMPEG_Click(object sender, EventArgs e)
         {
+            openFileDialogFFMPEG.FileName = string.Empty;
             openFileDialogFFMPEG.Title = Configuration.Settings.Language.Settings.WaveformBrowseToFFMPEG;
             if (!Utilities.IsRunningOnLinux() && !Utilities.IsRunningOnMac())
             {

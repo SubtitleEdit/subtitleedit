@@ -394,6 +394,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool ShowToolbarSaveAs { get; set; }
         public bool ShowToolbarFind { get; set; }
         public bool ShowToolbarReplace { get; set; }
+        public bool ShowToolbarFixCommonErrors { get; set; }
         public bool ShowToolbarVisualSync { get; set; }
         public bool ShowToolbarSpellCheck { get; set; }
         public bool ShowToolbarSettings { get; set; }

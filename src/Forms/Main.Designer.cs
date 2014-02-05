@@ -444,6 +444,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.toolStripButtonFixCommonErrors = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -538,6 +539,7 @@
             this.toolStripButtonFind,
             this.toolStripButtonReplace,
             this.toolStripSeparator4,
+            this.toolStripButtonFixCommonErrors,
             this.toolStripButtonVisualSync,
             this.toolStripButtonSpellCheck,
             this.toolStripButtonSettings,
@@ -4357,6 +4359,17 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
+            // toolStripButtonFixCommonErrors
+            // 
+            this.toolStripButtonFixCommonErrors.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonFixCommonErrors.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonFixCommonErrors.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFixCommonErrors.Image")));
+            this.toolStripButtonFixCommonErrors.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonFixCommonErrors.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonFixCommonErrors.Name = "toolStripButtonFixCommonErrors";
+            this.toolStripButtonFixCommonErrors.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonFixCommonErrors.Text = "Visual sync";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4851,6 +4864,7 @@
         private System.Windows.Forms.ToolStripMenuItem startOfRighttoleftOverrideRLOToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRtlUnicodeControlChars;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportImages;
+        private System.Windows.Forms.ToolStripButton toolStripButtonFixCommonErrors;
     }
 }
 

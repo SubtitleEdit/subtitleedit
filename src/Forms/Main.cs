@@ -3748,7 +3748,7 @@ namespace Nikse.SubtitleEdit.Forms
             var oldAllowEditOfOriginalSubtitle = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
             var settings = new Settings();
             settings.Initialize(this.Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image,
-                                toolStripButtonFind.Image, toolStripButtonReplace.Image, toolStripButtonVisualSync.Image, toolStripButtonSpellCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
+                                toolStripButtonFind.Image, toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonVisualSync.Image, toolStripButtonSpellCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
             _formPositionsAndSizes.SetPositionAndSize(settings);
             settings.ShowDialog(this);
             _formPositionsAndSizes.SavePositionAndSize(settings);
@@ -3947,6 +3947,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonFind.Visible = gs.ShowToolbarFind;
             toolStripButtonReplace.Visible = gs.ShowToolbarReplace;
             toolStripButtonVisualSync.Visible = gs.ShowToolbarVisualSync;
+            toolStripButtonFixCommonErrors.Visible = gs.ShowToolbarFixCommonErrors;
             toolStripButtonSettings.Visible = gs.ShowToolbarSettings;
             toolStripButtonSpellCheck.Visible = gs.ShowToolbarSpellCheck;
             toolStripButtonHelp.Visible = gs.ShowToolbarHelp;
