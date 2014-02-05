@@ -9,6 +9,7 @@
    * New setting "Gap between subtitles"
    * New subtitle formats
    * French rules regarding L and apostrophe in spell check + OCR fix - thx René
+   * "Fix common errors" toolbar button - thx Betsy25
 * IMPROVED:
    * Updated Korean language file - thx domddol
    * Updated Chinese language file - thx Leon
@@ -43,6 +44,8 @@
   * Fixed issue in OCR regarding expand selection - thx Thomas
   * Reset loaded image compare bitmaps after creating new ocr image set
   * Freeze fix for subtitle format "spt" - thx Leif
+  * Fix a bug in "Fix invalid italic tags" - thx rebawest
+  * Fix a bug in waveform regarding ALT + mouse end/start move in frame mode - thx rebawest
 
 
 3.3.12 (12th January 2014)
