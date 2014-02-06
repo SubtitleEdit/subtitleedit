@@ -1278,6 +1278,7 @@ namespace Nikse.SubtitleEdit.Logic
                         SaveAs = "Save as",
                         Find = "Find",
                         Replace = "Replace",
+                        FixCommonErrors = "Fix common errors",
                         VisualSync = "Visual sync",
                         SpellCheck = "Spell check",
                         Settings = "Settings",
