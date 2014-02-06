@@ -660,7 +660,7 @@
             this.toolStripButtonFixCommonErrors.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonFixCommonErrors.Name = "toolStripButtonFixCommonErrors";
             this.toolStripButtonFixCommonErrors.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonFixCommonErrors.Text = "Visual sync";
+            this.toolStripButtonFixCommonErrors.Text = "Fix common errors";
             this.toolStripButtonFixCommonErrors.ToolTipText = "Fix common errors";
             this.toolStripButtonFixCommonErrors.Click += new System.EventHandler(this.toolStripButtonFixCommonErrors_Click);
             // 
