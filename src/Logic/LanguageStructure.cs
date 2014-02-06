@@ -1158,6 +1158,7 @@
                     public string SaveAs { get; set; }
                     public string Find { get; set; }
                     public string Replace { get; set; }
+                    public string FixCommonErrors { get; set; }
                     public string VisualSync { get; set; }
                     public string SpellCheck { get; set; }
                     public string Settings { get; set; }
