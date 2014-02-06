@@ -916,6 +916,7 @@
             public string OcrReplacePairXNotAdded { get; set; }
             public string XLinesSelected { get; set; }
             public string UnicodeMusicSymbolsAnsiWarning { get; set; }
+            public string UnicodeCharactersAnsiWarning { get; set; }
             public string NegativeTimeWarning { get; set; }
             public string BeforeMergeShortLines { get; set; }
             public string BeforeSplitLongLines { get; set; }
