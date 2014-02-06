@@ -1029,6 +1029,7 @@ namespace Nikse.SubtitleEdit.Logic
                 OcrReplacePairXNotAdded = "The ocr replace list pair '{0} -> {1}' was NOT added to the ocr replace list",
                 XLinesSelected = "{0} lines selected",
                 UnicodeMusicSymbolsAnsiWarning = "Subtitle contains unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?",
+                UnicodeCharactersAnsiWarning = "Subtitle contains unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?",
                 NegativeTimeWarning = "Subtitle contains negative time codes. Continue with saving?",
                 BeforeMergeShortLines = "Before merge short lines",
                 BeforeSplitLongLines = "Before split long lines",
