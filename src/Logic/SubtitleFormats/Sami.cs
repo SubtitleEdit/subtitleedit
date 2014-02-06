@@ -412,6 +412,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 (subtitle.Paragraphs[subtitle.Paragraphs.Count-1].Text.ToUpper().Trim() == "</BODY>" ||
                 subtitle.Paragraphs[subtitle.Paragraphs.Count-1].Text.ToUpper().Trim() == "<BODY>"))
                 subtitle.Paragraphs.RemoveAt(subtitle.Paragraphs.Count - 1);
+
+            foreach (Paragraph p2 in subtitle.Paragraphs)
+            {
+                p2.Text = p2.Text.Replace(Convert.ToChar(160), ' '); // non-breaking space to normal space
+            }
         }
 
         public override bool HasStyleSupport
