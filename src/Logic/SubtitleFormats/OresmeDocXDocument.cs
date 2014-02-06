@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (i < subtitle.Paragraphs.Count - 1 && Math.Abs(p.EndTime.TotalMilliseconds - subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds) > 100)
                 {
                     var endP = new Paragraph(string.Empty, p.EndTime.TotalMilliseconds, 0);
-                    div.AppendChild(CreateXmlParagraph(xml, p));
+                    div.AppendChild(CreateXmlParagraph(xml, endP));
                 }
             }
 
