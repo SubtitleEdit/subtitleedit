@@ -4,6 +4,7 @@
 /src/obj
 /src/Test/bin
 /src/Test/obj
+/src/TestResults/*
 /src/UpdateAssemblyInfo/bin
 /src/UpdateAssemblyInfo/obj
 /src/Properties/AssemblyInfo.cs
