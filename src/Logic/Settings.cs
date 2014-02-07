@@ -526,7 +526,7 @@ namespace Nikse.SubtitleEdit.Logic
             SubtitleLineMaximumLength = 43;
             SubtitleMinimumDisplayMilliseconds = 1000;
             SubtitleMaximumDisplayMilliseconds = 8 * 1000;
-            MininumMillisecondsBetweenLines = 25;
+            MininumMillisecondsBetweenLines = 24;
             SetStartEndHumanDelay = 100;
             AutoWrapLineWhileTyping = false;
             SubtitleMaximumCharactersPerSeconds = 25.0;

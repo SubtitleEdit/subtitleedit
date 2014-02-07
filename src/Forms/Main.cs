@@ -540,7 +540,7 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 0;
             foreach (string s in comboBoxEncoding.Items)
             {
-                if (s == encodingName)
+                if (s == encodingName || s.StartsWith(encodingName + ":"))
                 {
                     comboBoxEncoding.SelectedIndex = i;
                     return;
