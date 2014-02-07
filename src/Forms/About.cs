@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -26,6 +27,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelProduct.Text = String.Format("{0} {1}.{2}{3}, build", _languageGeneral.Title, versionInfo[0], versionInfo[1], minorMinorVersion);
             string buildHash = Utilities.AssemblyDescription;
             linkLabelGitBuildHash.Left = labelProduct.Left + labelProduct.Width - 5;
+            linkLabelGitBuildHash.LinkColor = Color.FromArgb(0, 102, 204);
+            linkLabelGitBuildHash.VisitedLinkColor = Color.FromArgb(0, 102, 204);
             if (buildHash != null && buildHash.Length > 6)
                 linkLabelGitBuildHash.Text = String.Format("{0}", Utilities.AssemblyDescription.Substring(0, 7));
             richTextBoxAbout1.Text = _language.AboutText1.TrimEnd() + Environment.NewLine +

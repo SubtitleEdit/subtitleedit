@@ -102,12 +102,14 @@
             // 
             this.linkLabelGitBuildHash.AutoSize = true;
             this.linkLabelGitBuildHash.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkLabelGitBuildHash.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.linkLabelGitBuildHash.Location = new System.Drawing.Point(148, 15);
             this.linkLabelGitBuildHash.Name = "linkLabelGitBuildHash";
             this.linkLabelGitBuildHash.Size = new System.Drawing.Size(90, 20);
             this.linkLabelGitBuildHash.TabIndex = 43;
             this.linkLabelGitBuildHash.TabStop = true;
             this.linkLabelGitBuildHash.Text = "linkLabel1";
+            this.linkLabelGitBuildHash.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.linkLabelGitBuildHash.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelGitBuildHash_LinkClicked);
             // 
             // About
