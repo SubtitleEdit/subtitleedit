@@ -78,7 +78,7 @@
 Zuk banatu, aldatu eta askatasunez erabili dezakezu.
 
 
-C# iturburu kodea eskuragarri dago hemen: https://github.com/SubtitleEdit/subtitleedit
+C# iturburu kodea eskuragarri dago hemen: http://code.google.com/p/subtitleedit
 Ikusi www.nikse.dk azken bertsioa eskuratzeko.
 
 Iradokizunak ongi etorriak dira.
@@ -223,7 +223,10 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Hurrengo ezberdintasuna</NextDifference>
     <SubtitlesNotAlike>Azpidatziek ez dute antzekotasunik</SubtitlesNotAlike>
     <XNumberOfDifference>Ezberdintasun zenbatekoa: {0}</XNumberOfDifference>
+    <XNumberOfDifferenceAndPercentChanged>Ezberdintasun zenbatekoa: {0}  ({1}% hitz aldatuta)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Ezberdintasun zenbatekoa: {0}  ({1}% hizkirri aldatuta)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Erakutsi ezberdintasunak bakarrik</ShowOnlyDifferences>
+    <IgnoreLineBreaks>Ezikusi lerro hausteak</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Idatzizko ezberdintasunak bakarrik behatu</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Ezin dira irudi ohinarriko azpidatziak alderatu</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -255,6 +258,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Hutsartetu hurrengora</GapToNext>
     <BridgeGapsSmallerThanXPart1>Zubitu hutsarte txikiagoak:</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>segundumilaen</BridgeGapsSmallerThanXPart2>
+    <MinMsBetweenLines>Gutx. segundumilaen lerroen artean</MinMsBetweenLines>
     <ProlongEndTime>Aurreko idazkiak hutsarte denbora guztia hartzen du</ProlongEndTime>
     <DivideEven>Idazkiak hutsarte denbora zatitzen du</DivideEven>
   </DurationsBridgeGaps>
@@ -610,7 +614,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
   </ImportSceneChanges>
   <ImportText>
     <Title>Inportatu idatzi laua</Title>
-    <OneSubtitleIsOneFile>Agiri anitz - agiri bat azpidatzi bat da</OneSubtitleIsOneFile>
+    <OneSubtitleIsOneFile>Agiri anitz - agiri bat azpidatzi bat</OneSubtitleIsOneFile>
     <OpenTextFile>&amp;Ireki idatzi agiria...</OpenTextFile>
     <OpenTextFiles>Ireki idatzi agiriak...</OpenTextFiles>
     <ImportOptions>Inportatu aukerak</ImportOptions>
@@ -704,7 +708,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>Ordezte &amp;anitza...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Joan azpidatzi zenbakira...</GoToSubtitleNumber>
         <RightToLeftMode>Eskuin-ezker &amp;modua</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Zurendu ESEZ Unicode hizki agitearen bidez (hautaturiko lerroetan)</FixTrlViaUnicodeControlCharacters>
+        <FixTrlViaUnicodeControlCharacters>Zuzendu ESEZ Unicode hizki agintearen bidez (hautaturiko lerroetan)</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Aldera&amp;ntzizkatu ESEZ hasiera/amaiera (hautaturiko lerroetan)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Erakutsi jatorrizko idatzia audio/bideo aurreikuspenetan</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Aldatu hautapena...</ModifySelection>
@@ -1127,6 +1131,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <TimeCodeImportedFromXY>Denbora kodeak hemendik inportatuta {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Azpidatzia bideo kokapenari gehitu aurretik</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Hasiera denbora ezarri eta gainontzekoa orekatu aurretik</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndTimeAndOffsetTheRest>Amaiera denbora ezarri eta gainontzekoa orekatu aurretik</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Bideo kokapenari amaiera denbora ezarri eta hasiera berez kalkulatu aurretik</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Jarraitu oraingo idaz-egiaztapenarekin?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Hizk/seg: {0:0.00}</CharactersPerSecond>
@@ -1168,8 +1173,12 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <StatusLog>Egoera oharra</StatusLog>
     <XSceneChangesImported>{0} agerraldi aldaketa inportaturik</XSceneChangesImported>
     <PluginXExecuted>'{0}' plugin exekutaturik.</PluginXExecuted>
-    <NotAValidXSubFile>Ez da baliozko xsub agiria!</NotAValidXSubFile>
+    <NotAValidXSubFile>Ez da xsub agiri baliozko bat!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Idatzi bera duten lerroak batu aurretik</BeforeMergeLinesWithSameText>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>Denbora-kodea duen azpidatziak lerro zenbateko ezberdina du ({0}) oraingo azpidatziarekin alderatuta ({1}) - jarraitu horrela ere?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ErrorLoadIdx>Ezinezkoa da .idx agiriak irakurtzea/editatzea. Idx agiriak idx/sub agiri bikote baten atal dira (VobSub deitua ere), eta SE-ek ireki dezake .sub agiria.</ErrorLoadIdx>
+    <ErrorLoadRar>Agiri honek .rar agiri konprimitu bat dela dirudi. SE-ek ezin du agiri konprimiturik ireki.</ErrorLoadRar>
+    <ErrorLoadZip>Agiri honek .zip agiri konprimitu bat dela dirudi. SE-ek ezin du agiri konprimiturik ireki.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Hautatu azpidatzia Matroska agiritik</Title>
@@ -1220,6 +1229,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <EndsWith>Amaitzen da</EndsWith>
     <NoContains>Ez du</NoContains>
     <RegEx>Esaera arrunta</RegEx>
+    <UnequalLines>Lerro ezberdinak</UnequalLines>
+    <EqualLines>Lerro berdinak</EqualLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Ordezte anitza</Title>
@@ -1377,6 +1388,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <AutoWrapWhileTyping>Berez-bildu idazterakoan</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Gutx. iraupena segundumilaenetan:</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Geh. iraupena segundumilaenetan:</DurationMaximumMilliseconds>
+    <MinimumGapMilliseconds>Gutx. tartea azpidatzi artean sm-etan</MinimumGapMilliseconds>
     <SubtitleFont>Azpidatzi hizkia:</SubtitleFont>
     <SubtitleFontSize>Azpidatzi hizki neurria:</SubtitleFontSize>
     <SubtitleBold>Lodia</SubtitleBold>
@@ -1391,7 +1403,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <StartInSourceView>Hasi iturburu ikuspenean</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Kendu lerro hutsak azpidatzia irekitzerakoan</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Erakutsi lerro hautsiak zerrenda ikuspegian honela:</ShowLineBreaksAs>
-    <MainListViewDoubleClickAction>Klik bikoitza lerroan leiho nagusian zerrenda ikuspenean izango da:</MainListViewDoubleClickAction>
+    <MainListViewDoubleClickAction>Klik bikoitza lerroan leiho nagusian zerrenda ikuspegian izango da:</MainListViewDoubleClickAction>
     <MainListViewNothing>Ezer ez</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Joan bideo kokapenera eta pausatu</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Joan bideo kokapenera eta irakurri</MainListViewVideoGoToPositionAndPlay>
@@ -1429,6 +1441,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <WaveFormShowGridLines>Erakutsi saretxo lerroak</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Alderantzizkatu sagu-gurpilaren irriskari norabidea</ReverseMouseWheelScrollDirection>
     <WaveFormAllowOverlap>Ahalbidetu gainjarpena (mugitzean/birneurriratzean)</WaveFormAllowOverlap>
+    <WaveFormFocusMouseEnter>Ezarri fokua sagua sartzean</WaveFormFocusMouseEnter>
+    <WaveFormListViewFocusMouseEnter>Ezarri ere zerrenda ikuspegia fokua sagua sartzean zerrenda ikuspegian</WaveFormListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Hertz markatzailea izan behar da</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>segundumilaen</WaveformBorderHitMs2>
     <WaveFormColor>Margoa</WaveFormColor>
@@ -1501,6 +1515,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <AdjustSelected100MsForward>Mugitu hautaturiko lerroa 100 sm aurrera</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Mugitu hautaturiko lerroa 100 sm atzera</AdjustSelected100MsBack>
     <AdjustSetStartTimeKeepDuration>Ezarri hasiera denbora, heutsi iraupenari</AdjustSetStartTimeKeepDuration>
+    <AdjustSetEndAndOffsetTheRest>Ezarri amaiera, orekatu gainontzekoa</AdjustSetEndAndOffsetTheRest>
+    <AdjustSetEndAndOffsetTheRestAndGoToNext>Ezarri amaiera, orekatu gainontzekoa eta joan hurrengora </AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Sortu berria behera-tekla, ezarri amaiera denbora gora-tekla</MainCreateStartDownEndUp>
     <MergeDialogue>Batu elkarrizketa (txertatu marratxoak)</MergeDialogue>
     <GoToNext>Joan hurrengo lerrora</GoToNext>
@@ -1520,6 +1536,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <WaveformAddTextHere>Gehitu idatzia hemen (hautapen berrirako)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Irakurri hautapen berria</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Irakurri lehenik hautaturiko azpidatzia</WaveformPlayFirstSelectedSubtitle>
+    <WaveformFocusListView>Fokutu zerrenda ikuspegia</WaveformFocusListView>
     <GoBack1Frame>Frame bat atzera</GoBack1Frame>
     <GoForward1Frame>Frame bat aurrera</GoForward1Frame>
     <GoBack100Milliseconds>100 sm atzera</GoBack100Milliseconds>
@@ -1538,7 +1555,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <CustomSearch5>Itzulpena, norbere bilaketa 5</CustomSearch5>
     <CustomSearch6>Itzulpena, norbere bilaketa 6</CustomSearch6>
     <SyntaxColoring>Joskera margoa</SyntaxColoring>
-    <ListViewSyntaxColoring>Zerrenda ikuspeneko joskera margoa</ListViewSyntaxColoring>
+    <ListViewSyntaxColoring>Zerrenda ikuspegiko joskera margoa</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>Marg. iraup. labur. bada</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Margotu iraupena luzeegia bada</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Margotu idatzia luzeegia bada</SyntaxColorTextIfTooLong>
@@ -1555,6 +1572,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <ListViewColumnDelete>Zutabea, ezabatu idatzia</ListViewColumnDelete>
     <ListViewColumnInsert>Zutabea, txertatu idatzia</ListViewColumnInsert>
     <ListViewColumnPaste>Zutabea, itsatsi</ListViewColumnPaste>
+    <ListViewFocusWaveform>Fokutu uhinera/argilitzaera</ListViewFocusWaveform>
     <ShowBeamer>Hasi azpidatzia ikusleiho-osoko beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mugitu azken hitza behera hurrengo azpidatzi lerrora</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Mugitu hurrengo azpidatziko lehen hitza lerroan gora</MainTextBoxMoveFirstWordFromNextUp>
@@ -1722,9 +1740,9 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <MiddleLeft>Erdi/ezkerrean</MiddleLeft>
     <MiddleCenter>Erdi/erdian</MiddleCenter>
     <MiddleRight>Erdi/eskuinean</MiddleRight>
-    <BottomLeft>Behe/ezkerrean</BottomLeft>
+    <BottomLeft>Beh/ezkerrean</BottomLeft>
     <BottomCenter>Behe/erdian</BottomCenter>
-    <BottomRight>Behe/eskuinean</BottomRight>
+    <BottomRight>Beh/eskuinean</BottomRight>
     <Colors>Margoak</Colors>
     <Margins>Bazterrak</Margins>
     <MarginLeft>Ezk. bazterra</MarginLeft>
@@ -1758,6 +1776,11 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <Info>Aldiberetze gune batek kokapena zehaztuko du, aldiberetze gune bik edo gehiagok kokapena eta abiadura zehaztuko dute</Info>
     <ApplySync>Ezarri</ApplySync>
   </PointSync>
+  <TransportStreamSubtitleChooser>
+    <Title>Garraio jario azpidatzi hautatzailea - {0}</Title>
+    <PidLine>Garraio Pakete Ezagutarazlea (PID) = {0}, azpidatzi zenbatekoa = {1}</PidLine>
+    <SubLine>{0}:  {1} --&gt; {2},  {3} irudi</SubLine>
+  </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Azpidatzi mota ezezaguna</Title>
     <Message>Zuzenketa hau nahi baduzu mesedez bidali mezu bat:niksedk@gmail.com-era eta gehitu azpidatziaren kopia bat.</Message>
@@ -1819,6 +1842,10 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <ImagePalette>Irudi erretilua</ImagePalette>
     <UseCustomColors>Norbere margoak</UseCustomColors>
     <Transparent>Gardena</Transparent>
+    <TransparentMinAlpha>Gutx. alfa balioa (0=gardena, 255=osoki ikusgarria)</TransparentMinAlpha>
+    <TransportStream>Garraio Jarioa</TransportStream>
+    <TransportStreamGrayscale>Urdinabar-neurria</TransportStreamGrayscale>
+    <TransportStreamGetColor>Erabili margoa (lerro banaketa batzuk barneratuko ditu)</TransportStreamGetColor>
     <PromptForUnknownWords>Galdetu hitz ezezagunak</PromptForUnknownWords>
     <TryToGuessUnkownWords>Saiatu hitz ezezagunen adiera asmatzen</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Berez hautsi esaldia bi lerro baino gehiagokoa bada</AutoBreakSubtitleIfMoreThanTwoLines>
