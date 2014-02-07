@@ -7234,7 +7234,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan);
+                        string s = currentParagraph.Text;
+                        var arr = Utilities.RemoveHtmlTags(s, true).Replace(Environment.NewLine, "\n").Split('\n');
+                        if (arr.Length != 2 || arr[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || arr[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                            s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan);
+
                         lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         if (lines.Length == 1)
                         {
@@ -7795,10 +7799,15 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
+                    string old1 = currentParagraph.Text;
+                    string old2 = nextParagraph.Text;
                     currentParagraph.Text = currentParagraph.Text.Replace(Environment.NewLine, " ");
                     currentParagraph.Text += Environment.NewLine + nextParagraph.Text.Replace(Environment.NewLine, " ");
                     currentParagraph.Text = ChangeAllLinesItalictoSingleItalic(currentParagraph.Text);
-                    currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text);
+
+                    if (old1.Contains(Environment.NewLine) || old2.Contains(Environment.NewLine) || 
+                        old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                        currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text);
                 }
 
                 //currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + nextParagraph.Duration.TotalMilliseconds; //nextParagraph.EndTime;
