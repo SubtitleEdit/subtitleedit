@@ -961,7 +961,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (!param.Saved)
                     {
                         string numberString = string.Format("{0:0000}", i);
-                        string fileName = Path.Combine(Path.GetDirectoryName(saveFileDialog1.FileName), Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)) + "_" + numberString + ".png";
+                        string fileName = Path.Combine(Path.GetDirectoryName(saveFileDialog1.FileName), Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)).Replace(" ", "_") + "_" + numberString + ".png";
 
                         foreach (var encoder in ImageCodecInfo.GetImageEncoders())
                         {
