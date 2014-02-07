@@ -789,10 +789,34 @@ namespace Nikse.SubtitleEdit.Controls
                     if (_mouseDownParagraph != null)
                         oldMouseDownParagraph = new Paragraph(_mouseDownParagraph);
                     NewSelectionParagraph = null;
+
+                    int curIdx = _subtitle.Paragraphs.IndexOf(_mouseDownParagraph);
                     if (_mouseDownParagraphType == MouseDownParagraphType.Start)
-                        _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
+                    {                        
+                        if (curIdx > 0)
+                        {
+                            var prev = _subtitle.Paragraphs[curIdx - 1];
+                            if (prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines < milliseconds)
+                                _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;                            
+                        }
+                        else
+                        {
+                            _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
+                        }
+                    }
                     else
-                        _mouseDownParagraph.EndTime.TotalMilliseconds = milliseconds;
+                    {
+                        if (curIdx < _subtitle.Paragraphs.Count -1)
+                        {
+                            var next = _subtitle.Paragraphs[curIdx + 1];
+                            if (milliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
+                                _mouseDownParagraph.EndTime.TotalMilliseconds = milliseconds;
+                        }
+                        else
+                        {
+                            _mouseDownParagraph.EndTime.TotalMilliseconds = milliseconds;
+                        }
+                    }
                     SetMinAndMax();
                 }
                 else
@@ -925,7 +949,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
                 if (prev != null)
-                    _wholeParagraphMinMilliseconds = prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines; ;
+                    _wholeParagraphMinMilliseconds = prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines; 
                 if (next != null)
                     _wholeParagraphMaxMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
             }
@@ -1131,6 +1155,9 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         double seconds = XPositionToSeconds(e.X);
                         int milliseconds = (int)(seconds * 1000.0);
+                        
+                        if (_firstMove && Math.Abs(oldMouseMoveLastX - e.X) < Configuration.Settings.General.MininumMillisecondsBetweenLines && GetParagraphAtMilliseconds(milliseconds) == null)
+                            return; // do not decide which paragraph to move yet
 
                         var subtitleIndex = _subtitle.GetIndex(_mouseDownParagraph);
                         _prevParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex - 1);
