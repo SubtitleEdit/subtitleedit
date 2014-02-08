@@ -7,7 +7,7 @@ namespace UpdateAssemblyInfo
     {
 
         private static string GetGitPath()
-        { 
+        {
             string p = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles"), @"Git\bin\git.exe");
             if (File.Exists(p))
                 return p;
@@ -28,7 +28,7 @@ namespace UpdateAssemblyInfo
             if (File.Exists(p))
                 return p;
 
-            return "git";       
+            return "git";
         }
 
         private static void DoUpdateAssembly(string source, string gitHash, string template, string target)
@@ -80,7 +80,7 @@ namespace UpdateAssemblyInfo
                     DoUpdateAssembly("[REVNO]", "0", target, target);
                 }
                 catch
-                { 
+                {
                 }
 
                 Console.WriteLine("Error running Git");
@@ -91,8 +91,8 @@ namespace UpdateAssemblyInfo
                                                  " - template: " + template + Environment.NewLine +
                                                  " - target: " + target);
             }
-            return 1;            
+            return 1;
         }
-            
+
     }
 }
