@@ -7800,7 +7800,7 @@ namespace Nikse.SubtitleEdit.Forms
                     currentParagraph.Text += Environment.NewLine + nextParagraph.Text.Replace(Environment.NewLine, " ");
                     currentParagraph.Text = ChangeAllLinesItalictoSingleItalic(currentParagraph.Text);
 
-                    if (old1.Contains(Environment.NewLine) || old2.Contains(Environment.NewLine) || 
+                    if (old1.Contains(Environment.NewLine) || old2.Contains(Environment.NewLine) ||
                         old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                         currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text);
                 }
