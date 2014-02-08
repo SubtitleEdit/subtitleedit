@@ -255,9 +255,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 InitializeComponent();
 
-                //if (Configuration.Settings.General.UseTimeFormatHHMMSSFF) nixe harboe
-                //    timeUpDownStartTime.Mode = Configuration.Settings.
-
                 textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
                 labelAlternateCharactersPerSecond.Visible = false;
@@ -314,8 +311,6 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.TextAlign = HorizontalAlignment.Center;
                     textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Center;
                 }
-
-                //SubtitleListview1.AutoSizeAllColumns(this);
 
                 tabControlSubtitle.SelectTab(TabControlSourceView); // AC
                 ShowSourceLineNumber();                             // AC
