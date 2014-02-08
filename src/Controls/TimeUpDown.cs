@@ -17,10 +17,21 @@ namespace Nikse.SubtitleEdit.Controls
 
         public EventHandler TimeCodeChanged;
 
+        private bool _forceHHMMSSFF = false;
+
+        internal void ForceHHMMSSFF()
+        {
+            _forceHHMMSSFF = true;
+            maskedTextBox1.Mask = "00:00:00:00";
+        }
+
         public TimeMode Mode
         {
             get
             {
+                if (_forceHHMMSSFF)
+                    return TimeMode.HHMMSSFF;
+
                 if (Configuration.Settings == null)
                     return TimeMode.HHMMSSMS;
                 if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)

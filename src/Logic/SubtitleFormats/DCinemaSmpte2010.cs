@@ -512,7 +512,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 node = xml.DocumentElement.SelectSingleNode("TimeCodeRate");
                 if (node != null)
+                {
                     ss.CurrentDCinemaTimeCodeRate = node.InnerText;
+                    if (ss.CurrentDCinemaEditRate == "24")
+                        Configuration.Settings.General.CurrentFrameRate = 24;
+                    else if (ss.CurrentDCinemaEditRate == "25")
+                        Configuration.Settings.General.CurrentFrameRate = 24;
+                }
 
                 node = xml.DocumentElement.SelectSingleNode("StartTime");
                 if (node != null)
