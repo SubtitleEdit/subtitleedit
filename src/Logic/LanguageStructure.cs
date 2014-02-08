@@ -975,7 +975,7 @@
             public string PluginXExecuted { get; set; }
             public string NotAValidXSubFile { get; set; }
             public string BeforeMergeLinesWithSameText { get; set; }
-            public string ImportTimeCodesDifferentNumberOfLinesWarning { get; set; }            
+            public string ImportTimeCodesDifferentNumberOfLinesWarning { get; set; }
             public string ParsingTransportStream { get; set; }
             public string ErrorLoadIdx { get; set; }
             public string ErrorLoadRar { get; set; }
