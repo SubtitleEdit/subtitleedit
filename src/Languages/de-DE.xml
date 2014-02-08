@@ -77,7 +77,7 @@
     <AboutText1>Subtitle Edit ist Freie Software unter der GNU Public License.
 Sie dürfen Sie frei verbreiten, verändern und verwenden.
 
-Der C# Quelltext ist erhältlich unter https://github.com/SubtitleEdit/subtitleedit
+Der C# Quelltext ist erhältlich unter http://code.google.com/p/subtitleedit
 
 Besuchen Sie www.nikse.dk für die neueste Version.
 
@@ -190,8 +190,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FrameRateNotChanged>Bildfrequenz ist gleich - nichts zu konvertieren</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
-    <Title>Geschwindigkeit prozentual verändern</Title>
-    <Info>Geschwindigeit der Untertitel prozentual verändern</Info>
+    <Title>Geschwindigkeit prozentual ändern</Title>
+    <Info>Geschwindigeit der Untertitel prozentual ändern</Info>
   </ChangeSpeedInPercent>
   <ChooseAudioTrack>
     <Title>Audiospur wählen</Title>
@@ -222,7 +222,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Nächster Unterschied</NextDifference>
     <SubtitlesNotAlike>Untertitel haben keine Übereinstimmungen</SubtitlesNotAlike>
     <XNumberOfDifference>Unterschiede: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Unterschiede: {0}  ({1}% vom Text verändert)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentChanged>Unterschiede: {0}  ({1}% Worte geändert)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Unterschiede: {0}  ({1}% Buchstaben geändert)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Nur Unterschiede anzeigen</ShowOnlyDifferences>
     <IgnoreLineBreaks>Umbrüche ignorieren</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Nur nach Unterschieden im Text suchen</OnlyLookForDifferencesInText>
@@ -349,7 +350,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <TimeCode>Zeitstempel</TimeCode>
     <NewLine>Neue Zeile</NewLine>
     <Footer>Fußzeile</Footer>
-    <DoNotModify>[Nicht verändern]</DoNotModify>
+    <DoNotModify>[Nicht ändern]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportPngXml>
     <Title>BDN XML/PNG exportieren</Title>
@@ -630,7 +631,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Fixed>Fest</Fixed>
     <Refresh>&amp;Aktualisieren</Refresh>
     <TextFiles>Textdateien</TextFiles>
-    <PreviewLinesModifiedX>Vorschau - Veränderungen: {0}</PreviewLinesModifiedX>
+    <PreviewLinesModifiedX>Vorschau - Änderungen: {0}</PreviewLinesModifiedX>
     <TimeCodes>Zeitstempel</TimeCodes>
   </ImportText>
   <Interjections>
@@ -955,7 +956,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FileNotFound>Datei nicht gefunden: {0}</FileNotFound>
     <SavedSubtitleX>Untertitel {0} gespeichert</SavedSubtitleX>
     <SavedOriginalSubtitleX>Original Untertitel {0} gespeichert</SavedOriginalSubtitleX>
-    <FileOnDiskModified>Datei auf Disk wurde verändert</FileOnDiskModified>
+    <FileOnDiskModified>Datei auf Disk wurde geändert</FileOnDiskModified>
     <OverwriteModifiedFile>Soll die Datei {0} bearbeitet am {1} {2}{3} überschrieben werden mit aktueller Datei, geladen am {4} {5}?</OverwriteModifiedFile>
     <UnableToSaveSubtitleX>Konnte Untertiteldatei {0} nicht speichern</UnableToSaveSubtitleX>
     <BeforeNew>Vor Neu</BeforeNew>
@@ -1131,6 +1132,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <TimeCodeImportedFromXY>Zeitstempel importiert aus {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Vor Untertitel an Videoposition einfügen</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Vor Startzeit setzen und Rest verschieben</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndTimeAndOffsetTheRest>Vor Endzeit setzen und Rest verschieben</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Vor Endzeit bei Videoposition setzen und Start automatisch berechnen</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Aktuelle Rechtschreibprüfung fortsetzen?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Zeichen/Sek: {0:0.00}</CharactersPerSecond>
@@ -1147,8 +1149,8 @@ Fortfahren?</SubtitleAppendPrompt>
     <XStartedSessionYAtZ>{0}: Sitzung {1} begonnen um {2}</XStartedSessionYAtZ>
     <SpellChekingViaWordXLineYOfX>Rechtschreibprüfung mit Word {0} - Text {1} / {2}</SpellChekingViaWordXLineYOfX>
     <UnableToStartWord>Microsoft Word starten fehlgeschlagen</UnableToStartWord>
-    <SpellCheckAbortedXCorrections>Rechtschreibprüfung abgebrochen. {0} Texte verändert.</SpellCheckAbortedXCorrections>
-    <SpellCheckCompletedXCorrections>Rechtschreibprüfung abgeschlossen. {0} Texte verändert.</SpellCheckCompletedXCorrections>
+    <SpellCheckAbortedXCorrections>Rechtschreibprüfung abgebrochen. {0} Texte geändert.</SpellCheckAbortedXCorrections>
+    <SpellCheckCompletedXCorrections>Rechtschreibprüfung abgeschlossen. {0} Texte geändert.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Anderen Untertitel öffnen</OpenOtherSubtitle>
     <BeforeToggleDialogueDashes>Vor Änderung der Dialogstriche</BeforeToggleDialogueDashes>
     <ExportPlainTextAs>Als Text exportieren</ExportPlainTextAs>
@@ -1345,8 +1347,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Minimale Anzeigezeit zwischen Texten setzen</Title>
-    <PreviewLinesModifiedX>Vorschau - veränderte Texte: {0}</PreviewLinesModifiedX>
-    <ShowOnlyModifiedLines>Nur veränderte Texte anzeigen</ShowOnlyModifiedLines>
+    <PreviewLinesModifiedX>Vorschau - geänderte Texte: {0}</PreviewLinesModifiedX>
+    <ShowOnlyModifiedLines>Nur geänderte Texte anzeigen</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimale Millisekunden zwischen Texten</MinimumMillisecondsBetweenParagraphs>
    <FrameInfo />
     <OneFrameXisYMilliseconds>Ein Bild mit {0:0.00} fps sind {1} Millisekunden</OneFrameXisYMilliseconds>
@@ -1389,6 +1391,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <AutoWrapWhileTyping>Auto Umbruch beim Tippen</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. Länge, Millisekunden</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. Länge, Millisekunden</DurationMaximumMilliseconds>
+    <MinimumGapMilliseconds>Min. Abstand zwischen Texten in Ms</MinimumGapMilliseconds>
     <SubtitleFont>Untertitel Schriftart</SubtitleFont>
     <SubtitleFontSize>Untertitel Schriftgröße</SubtitleFontSize>
     <SubtitleBold>Fett</SubtitleBold>
@@ -1515,6 +1518,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <AdjustSelected100MsForward>Ausgewählte Texte 100 ms vor bewegen</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Ausgewählte Texte 100 ms zurück bewegen</AdjustSelected100MsBack>
     <AdjustSetStartTimeKeepDuration>Startzeit anpassen, behalte Dauer</AdjustSetStartTimeKeepDuration>
+    <AdjustSetEndAndOffsetTheRest>Ende setzen, Rest verschieben</AdjustSetEndAndOffsetTheRest>
+    <AdjustSetEndAndOffsetTheRestAndGoToNext>Ende setzen, Rest verschieben und zum Nächsten</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Neue Startzeit mit Pfeil unten, Endzeit mit Pfeil hoch setzen</MainCreateStartDownEndUp>
     <MergeDialogue>Dialoge verbinden ('-' einfügen)</MergeDialogue>
     <GoToNext>Zum nächsten Text</GoToNext>
