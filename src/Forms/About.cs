@@ -24,13 +24,16 @@ namespace Nikse.SubtitleEdit.Forms
             string minorMinorVersion = string.Empty;
             if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                 minorMinorVersion = "." + versionInfo[2];
-            labelProduct.Text = String.Format("{0} {1}.{2}{3}, build", _languageGeneral.Title, versionInfo[0], versionInfo[1], minorMinorVersion);
-            string buildHash = Utilities.AssemblyDescription;
+            labelProduct.Text = String.Format("{0} {1}.{2}{3}, build", _languageGeneral.Title, versionInfo[0], versionInfo[1], minorMinorVersion);            
             linkLabelGitBuildHash.Left = labelProduct.Left + labelProduct.Width - 5;
             linkLabelGitBuildHash.LinkColor = Color.FromArgb(0, 102, 204);
             linkLabelGitBuildHash.VisitedLinkColor = Color.FromArgb(0, 102, 204);
-            if (buildHash != null && buildHash.Length > 6)
-                linkLabelGitBuildHash.Text = String.Format("{0}", Utilities.AssemblyDescription.Substring(0, 7));
+
+            string revisionNumber = "0";
+            if (versionInfo.Length >= 4)
+                revisionNumber = versionInfo[3];
+            linkLabelGitBuildHash.Text = revisionNumber; // String.Format("{0}", Utilities.AssemblyDescription.Substring(0, 7));
+
             richTextBoxAbout1.Text = _language.AboutText1.TrimEnd() + Environment.NewLine +
                                      Environment.NewLine +
                                      _languageGeneral.TranslatedBy.Trim();
