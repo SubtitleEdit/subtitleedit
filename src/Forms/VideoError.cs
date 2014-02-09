@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
             sb.AppendLine("");
 
             sb.AppendLine("Other useful utilities:");
-            sb.AppendLine(" - http://mediainfo.sourceforge.net/");
+            sb.AppendLine(" - http://mediaarea.net/MediaInfo");
             sb.AppendLine(" - http://www.free-codecs.com/download/Codec_Tweak_Tool.htm");
             sb.AppendLine(" - http://www.free-codecs.com/download/DirectShow_Filter_Manager.htm");
             sb.AppendLine(" - http://www.headbands.com/gspot/");
