@@ -1557,6 +1557,7 @@ can edit in same subtitle file (collaboration)",
                 UnableToDownloadPluginListX = "Unable to download plug list: {0}",
                 NewVersionOfSubtitleEditRequired = "Newer version of Subtitle Edit required!",
                 UpdateAvailable = "[Update available!]",
+                UpdateAll = "Update all",
             };
 
             RemoveTextFromHearImpaired = new LanguageStructure.RemoveTextFromHearImpaired
