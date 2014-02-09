@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
             string revisionNumber = "0";
             if (versionInfo.Length >= 4)
                 revisionNumber = versionInfo[3];
-            linkLabelGitBuildHash.Text = revisionNumber; // String.Format("{0}", Utilities.AssemblyDescription.Substring(0, 7));
+            linkLabelGitBuildHash.Text = revisionNumber;
 
             richTextBoxAbout1.Text = _language.AboutText1.TrimEnd() + Environment.NewLine +
                                      Environment.NewLine +
