@@ -1452,6 +1452,7 @@
             public string UnableToDownloadPluginListX { get; set; }
             public string NewVersionOfSubtitleEditRequired { get; set; }
             public string UpdateAvailable { get; set; }
+            public string UpdateAll { get; set; }
         }
 
         public class RemoveTextFromHearImpaired
