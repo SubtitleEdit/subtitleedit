@@ -1155,13 +1155,18 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         double seconds = XPositionToSeconds(e.X);
                         int milliseconds = (int)(seconds * 1000.0);
-
-                        if (_firstMove && Math.Abs(oldMouseMoveLastX - e.X) < Configuration.Settings.General.MininumMillisecondsBetweenLines && GetParagraphAtMilliseconds(milliseconds) == null)
-                            return; // do not decide which paragraph to move yet
-
                         var subtitleIndex = _subtitle.GetIndex(_mouseDownParagraph);
                         _prevParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex - 1);
                         _nextParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex + 1);
+
+                        if (_firstMove && Math.Abs(oldMouseMoveLastX - e.X) < Configuration.Settings.General.MininumMillisecondsBetweenLines && GetParagraphAtMilliseconds(milliseconds) == null)
+                        {
+                            if (_mouseDownParagraphType == MouseDownParagraphType.Start && _prevParagraph != null && Math.Abs(_mouseDownParagraph.StartTime.TotalMilliseconds - _prevParagraph.EndTime.TotalMilliseconds) <= ClosenessForBorderSelection + 10)
+                                return; // do not decide which paragraph to move yet
+                            else if (_mouseDownParagraphType == MouseDownParagraphType.End && _nextParagraph != null && Math.Abs(_mouseDownParagraph.EndTime.TotalMilliseconds - _nextParagraph.StartTime.TotalMilliseconds) <= ClosenessForBorderSelection + 10)
+                                return; // do not decide which paragraph to move yet
+                        }
+                            
                         if (Control.ModifierKeys != Keys.Alt)
                         {
                             if (_firstMove && e.X > oldMouseMoveLastX && _nextParagraph != null && _mouseDownParagraphType == MouseDownParagraphType.End)
