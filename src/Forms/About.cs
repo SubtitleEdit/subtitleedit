@@ -33,6 +33,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (versionInfo.Length >= 4)
                 revisionNumber = versionInfo[3];
             linkLabelGitBuildHash.Text = revisionNumber;
+            System.Windows.Forms.ToolTip ToolTip1 = new System.Windows.Forms.ToolTip();
+            ToolTip1.SetToolTip(linkLabelGitBuildHash, GetGitHubHashLink());
 
             richTextBoxAbout1.Text = _language.AboutText1.TrimEnd() + Environment.NewLine +
                                      Environment.NewLine +
@@ -77,7 +79,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelGitBuildHash_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://github.com/SubtitleEdit/subtitleedit/commit/" + Utilities.AssemblyDescription);
+            Process.Start(GetGitHubHashLink());
+        }
+
+        private string GetGitHubHashLink()
+        {
+            try
+            {
+                return "https://github.com/SubtitleEdit/subtitleedit/commit/" + Utilities.AssemblyDescription.Substring(0, 7);
+            }
+            catch
+            {
+                return "https://github.com/SubtitleEdit/subtitleedit";
+            }
         }
 
     }
