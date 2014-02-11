@@ -849,6 +849,10 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         start = -1;
                 }
+                else
+                {
+                    return s;
+                }
             }
             return s;
         }
