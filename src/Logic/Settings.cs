@@ -508,7 +508,7 @@ namespace Nikse.SubtitleEdit.Logic
             CurrentFrameRate = DefaultFrameRate;
             SubtitleFontName = "Tahoma";
             if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
-                SubtitleFontName = Utilities.WinXp2kUnicodeFontName;
+                SubtitleFontName = "Times New Roman";
 
             SubtitleFontSize = 8;
             SubtitleFontBold = false;

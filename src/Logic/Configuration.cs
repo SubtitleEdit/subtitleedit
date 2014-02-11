@@ -3,12 +3,30 @@ using System;
 
 namespace Nikse.SubtitleEdit.Logic
 {
+
+    /// <summary>
+    /// Configuration settings via Singleton pattern
+    /// </summary>
     public class Configuration
-    {
-        static readonly Configuration Instance = new Configuration();
+    {        
         string _baseDir;
         string _dataDir;
         Settings _settings;
+
+        public static Configuration Instance
+        {
+            get { return Nested.instance; }
+        }
+
+        private Configuration()
+        {
+        }
+
+        private class Nested
+        {
+            static Nested() { }
+            internal static readonly Configuration instance = new Configuration();
+        }
 
         public static string SettingsFileName
         {
@@ -34,11 +52,21 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static bool IsRunningOnLinux()
+        {
+            return Environment.OSVersion.Platform == PlatformID.Unix;
+        }
+
+        public static bool IsRunningOnMac()
+        {
+            return Environment.OSVersion.Platform == PlatformID.MacOSX;
+        }
+
         public static string TesseractDataFolder
         {
             get
             {
-                if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
+                if (IsRunningOnLinux() || IsRunningOnMac())
                 {
                     if (System.IO.Directory.Exists("/usr/share/tesseract-ocr/tessdata"))
                         return "/usr/share/tesseract-ocr/tessdata";
@@ -113,7 +141,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (Instance._dataDir == null)
                 {
-                    if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
+                    if (IsRunningOnLinux() || IsRunningOnMac())
                     {
                         Instance._dataDir = BaseDirectory;
                     }
