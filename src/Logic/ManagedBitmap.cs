@@ -10,32 +10,40 @@ namespace Nikse.SubtitleEdit.Logic
         public int Height { get; private set; }
 
         private Color[] _colors;
+        public bool LoadedOK { get; private set; }
 
         public ManagedBitmap(string fileName)
         {
-            byte[] buffer = new byte[1024];
-            using (MemoryStream fd = new MemoryStream())
-            using (Stream fs = File.OpenRead(fileName))
-            using (Stream csStream = new GZipStream(fs, CompressionMode.Decompress))
+            try
             {
-                int nRead;
-                while ((nRead = csStream.Read(buffer, 0, buffer.Length)) > 0)
+                byte[] buffer = new byte[1024];
+                using (MemoryStream fd = new MemoryStream())
+                using (Stream fs = File.OpenRead(fileName))
+                using (Stream csStream = new GZipStream(fs, CompressionMode.Decompress))
                 {
-                    fd.Write(buffer, 0, nRead);
+                    int nRead;
+                    while ((nRead = csStream.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        fd.Write(buffer, 0, nRead);
+                    }
+                    csStream.Flush();
+                    csStream.Close();
+                    buffer = fd.ToArray();
                 }
-                csStream.Flush();
-                csStream.Close();
-                buffer = fd.ToArray();
-            }
 
-            Width = buffer[4] << 8 | buffer[5];
-            Height = buffer[6] << 8 | buffer[7];
-            _colors = new Color[Width * Height];
-            int start = 8;
-            for (int i = 0; i < _colors.Length; i++)
+                Width = buffer[4] << 8 | buffer[5];
+                Height = buffer[6] << 8 | buffer[7];
+                _colors = new Color[Width * Height];
+                int start = 8;
+                for (int i = 0; i < _colors.Length; i++)
+                {
+                    _colors[i] = Color.FromArgb(buffer[start], buffer[start + 1], buffer[start + 2], buffer[start + 3]);
+                    start += 4;
+                }
+            }
+            catch
             {
-                _colors[i] = Color.FromArgb(buffer[start], buffer[start + 1], buffer[start + 2], buffer[start + 3]);
-                start += 4;
+                LoadedOK = false;
             }
         }
 

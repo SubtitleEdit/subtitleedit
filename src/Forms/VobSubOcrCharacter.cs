@@ -34,6 +34,15 @@ namespace Nikse.SubtitleEdit.Forms
             germanToolStripMenuItem.Text = language.German;
             checkBoxAutoSubmitOfFirstChar.Text = language.AutoSubmitOnFirstChar;
 
+            
+
+
+            string[] row0 = { "♪", "á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű" };
+            string[] row1 = { "♫", "Á", "É", "Í", "Ó", "Ö", "Ő", "Ú", "Ü", "Ű" };
+
+            dataGridView1.Rows.Add(row0);
+            dataGridView1.Rows.Add(row1);
+
             FixLargeFonts();
         }
 
@@ -251,6 +260,11 @@ namespace Nikse.SubtitleEdit.Forms
                 ButtonExpandSelectionClick(null, null);
                 e.SuppressKeyPress = true;
             }
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            textBoxCharacters.Text = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
         }
     }
 }
