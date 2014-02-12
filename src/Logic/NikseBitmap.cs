@@ -990,5 +990,26 @@ namespace Nikse.SubtitleEdit.Logic
                     Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
             }
         }
+
+        internal void MakeTwoColor(int minAlpha, int minRgb)
+        {
+            byte[] buffer = new byte[4];
+            buffer[0] = 0; // B
+            buffer[1] = 0; // G
+            buffer[2] = 0; // R
+            buffer[3] = 0; // A
+            byte[] bufferWhite = new byte[4];
+            bufferWhite[0] = 255; // B
+            bufferWhite[1] = 255; // G
+            bufferWhite[2] = 255; // R
+            bufferWhite[3] = 255; // A
+            for (int i = 0; i < _bitmapData.Length; i += 4)
+            {
+                if (_bitmapData[i + 3] < 1 || (_bitmapData[i + 0] + _bitmapData[i + 1] + _bitmapData[i + 2] < minRgb))
+                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
+                else
+                    Buffer.BlockCopy(bufferWhite, 0, _bitmapData, i, 4);
+            }
+        }
     }
 }

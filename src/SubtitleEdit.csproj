@@ -824,6 +824,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Logic\NikseBitmap.cs" />
+    <Compile Include="Logic\OCR\Binary\BinaryOcrBitmap.cs" />
+    <Compile Include="Logic\OCR\Binary\BinaryOcrDb.cs" />
+    <Compile Include="Logic\OCR\Binary\MurMurHash3.cs" />
     <Compile Include="Logic\OCR\ModiLanguage.cs" />
     <Compile Include="Logic\OCR\OcrAlphabet.cs" />
     <Compile Include="Logic\OCR\NOcrChar.cs" />
