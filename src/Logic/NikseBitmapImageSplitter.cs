@@ -240,7 +240,7 @@ namespace Nikse.SubtitleEdit.Logic
             return parts;
         }
 
-        public static List<ImageSplitterItem> SplitVertical(NikseBitmap bmp, int lineMinHeight)
+        public static List<ImageSplitterItem> SplitVertical(NikseBitmap bmp, int minLineHeight)
         { // split into lines
             int startY = 0;
             int size = 0;
@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 if (allTransparent)
                 {
-                    if (size > 2 && size <= lineMinHeight)
+                    if (size > 2 && size <= minLineHeight)
                     {
                         size++; // at least 'lineMinHeight' pixels, like top of 'i'
                     }
@@ -287,7 +287,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (size == bmp.Height)
                 {
                     if (size > 100)
-                        return SplitVerticalTransparentOrBlack(bmp, lineMinHeight);
+                        return SplitVerticalTransparentOrBlack(bmp, minLineHeight);
                     else
                         parts.Add(new ImageSplitterItem(0, startY, bmp));
                 }
@@ -601,6 +601,39 @@ namespace Nikse.SubtitleEdit.Logic
             return list;
         }
 
+        public static List<ImageSplitterItem> SplitBitmapToLettersNew(NikseBitmap bmp, int xOrMorePixelsMakesSpace, bool rightToLeft, bool topToBottom, int minLineHeight)
+        {
+            var list = new List<ImageSplitterItem>();
+
+            // split into seperate lines
+            List<ImageSplitterItem> verticalBitmaps = SplitVertical(bmp, minLineHeight);
+
+            if (!topToBottom)
+                verticalBitmaps.Reverse();
+
+            // split into letters
+            int lineCount = 0;
+            foreach (ImageSplitterItem b in verticalBitmaps)
+            {
+                if (lineCount > 0)
+                    list.Add(new ImageSplitterItem(Environment.NewLine));
+                var line = new List<ImageSplitterItem>();
+                foreach (ImageSplitterItem item in SplitHorizontal(b, xOrMorePixelsMakesSpace))
+                {
+                    item.ParentY = item.Y;
+                    line.Add(item);
+                }
+                if (rightToLeft)
+                    line.Reverse();
+                foreach (ImageSplitterItem item in line)
+                    list.Add(item);
+                lineCount++;
+            }
+
+            return list;
+        }
+
+
         public static List<ImageSplitterItem> SplitBitmapToLetters(List<ImageSplitterItem> verticalBitmaps, int xOrMorePixelsMakesSpace, bool rightToLeft, bool topToBottom)
         {
             var list = new List<ImageSplitterItem>();
@@ -683,5 +716,42 @@ namespace Nikse.SubtitleEdit.Logic
             return different;
         }
 
+
+        internal static unsafe int IsBitmapsAlike(OCR.Binary.BinaryOcrBitmap bmp1, NikseBitmap bmp2)
+        {
+            int different = 0;
+            int maxDiff = bmp1.Width * bmp1.Height / 5;
+
+            for (int x = 1; x < bmp1.Width; x++)
+            {
+                for (int y = 1; y < bmp1.Height; y++)
+                {
+                    //if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
+                    if (bmp1.GetPixel(x, y) && bmp2.GetAlpha(x, y) < 100)                    
+                        different++;
+                }
+                if (different > maxDiff)
+                    return different + 10;
+            }
+            return different;
+        }
+
+        internal static unsafe int IsBitmapsAlike(NikseBitmap bmp1, OCR.Binary.BinaryOcrBitmap bmp2)
+        {
+            int different = 0;
+            int maxDiff = bmp1.Width * bmp1.Height / 5;
+
+            for (int x = 1; x < bmp1.Width; x++)
+            {
+                for (int y = 1; y < bmp1.Height; y++)
+                {
+                    if (bmp1.GetAlpha(x, y) < 100 && bmp2.GetPixel(x, y))
+                        different++;
+                }
+                if (different > maxDiff)
+                    return different + 10;
+            }
+            return different;
+        }
     }
 }

@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.OCR.Binary;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -14,6 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
         string _directoryPath;
         List<bool> _italics = new List<bool>();
         internal List<VobSubOcr.ImageCompareAddition> Additions { get; private set; }
+        BinaryOcrDb _binOcrDb = null;
 
         public XmlDocument ImageCompareDocument
         {
@@ -23,8 +25,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal VobSubEditCharacters(string databaseFolderName, List<VobSubOcr.ImageCompareAddition> additions)
+        internal VobSubEditCharacters(string databaseFolderName, List<VobSubOcr.ImageCompareAddition> additions, BinaryOcrDb binOcrDb)
         {
+            _binOcrDb = binOcrDb;
             InitializeComponent();
             labelCount.Text = string.Empty;
             if (additions != null)
@@ -84,20 +87,39 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _italics = new List<bool>();
             listBoxFileNames.Items.Clear();
-            foreach (XmlNode node in _compareDoc.DocumentElement.ChildNodes)
+            if (_binOcrDb != null)
             {
-                if (node.Attributes["Text"] != null)
+                foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImages)
                 {
-                    string text = node.Attributes["Text"].InnerText;
-                    string name = node.InnerText;
+                    string text = bob.Text;
+                    string name = bob.Text + "_" + bob.Hash;
                     foreach (VobSubOcr.ImageCompareAddition a in additions)
                     {
-                        if (name == a.Name)
+                        if (name == a.Name && text != null)
                         {
-                            listBoxFileNames.Items.Add("[" + text +"] " + node.InnerText);
-                            _italics.Add(node.Attributes["Italic"] != null);
+                            listBoxFileNames.Items.Add("[" + text + "] " + name);
+                            _italics.Add(bob.Italic);
                         }
+                    }
+                }
+            }
+            else
+            {
+                foreach (XmlNode node in _compareDoc.DocumentElement.ChildNodes)
+                {
+                    if (node.Attributes["Text"] != null)
+                    {
+                        string text = node.Attributes["Text"].InnerText;
+                        string name = node.InnerText;
+                        foreach (VobSubOcr.ImageCompareAddition a in additions)
+                        {
+                            if (name == a.Name && text != null)
+                            {
+                                listBoxFileNames.Items.Add("[" + text + "] " + node.InnerText);
+                                _italics.Add(node.Attributes["Italic"] != null);
+                            }
 
+                        }
                     }
                 }
             }
@@ -121,14 +143,28 @@ namespace Nikse.SubtitleEdit.Forms
         {
             int count = 0;
             List<string> texts = new List<string>();
-            foreach (XmlNode node in _compareDoc.DocumentElement.SelectNodes("Item"))
+
+            if (_binOcrDb != null)
             {
-                if (node.Attributes.Count >= 1)
+                foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImages)
                 {
-                    string text = node.Attributes["Text"].InnerText;
-                    if (!texts.Contains(text))
+                    string text = bob.Text;
+                    if (!texts.Contains(text) && text != null)
                         texts.Add(text);
                     count++;
+                }
+            }
+            else
+            {
+                foreach (XmlNode node in _compareDoc.DocumentElement.SelectNodes("Item"))
+                {
+                    if (node.Attributes.Count >= 1)
+                    {
+                        string text = node.Attributes["Text"].InnerText;
+                        if (!texts.Contains(text))
+                            texts.Add(text);
+                        count++;
+                    }
                 }
             }
             texts.Sort();
@@ -150,15 +186,31 @@ namespace Nikse.SubtitleEdit.Forms
             string target = comboBoxTexts.SelectedItem.ToString();
             textBoxText.Text = target;
             listBoxFileNames.Items.Clear();
-            foreach (XmlNode node in _compareDoc.DocumentElement.ChildNodes)
+
+            if (_binOcrDb != null)
             {
-                if (node.Attributes["Text"] != null)
+                foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImages)
                 {
-                    string text = node.Attributes["Text"].InnerText;
+                    string text = bob.Text;
                     if (text == target)
+                    {                        
+                        listBoxFileNames.Items.Add(bob.Text + "_" + bob.Hash);
+                        _italics.Add(bob.Italic);
+                    }
+                }
+            }
+            else
+            {
+                foreach (XmlNode node in _compareDoc.DocumentElement.ChildNodes)
+                {
+                    if (node.Attributes["Text"] != null)
                     {
-                        listBoxFileNames.Items.Add(node.InnerText);
-                        _italics.Add(node.Attributes["Italic"] != null);
+                        string text = node.Attributes["Text"].InnerText;
+                        if (text == target)
+                        {
+                            listBoxFileNames.Items.Add(node.InnerText);
+                            _italics.Add(node.Attributes["Italic"] != null);
+                        }
                     }
                 }
             }
@@ -191,7 +243,20 @@ namespace Nikse.SubtitleEdit.Forms
             string posAsString = GetSelectedFileName();
             Bitmap bmp = null;
 
-            if (File.Exists(databaseName))
+            if (_binOcrDb != null)
+            {
+                if (name.Contains("]"))
+                    name = name.Substring(name.IndexOf("]") + 1).Trim();
+                foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImages)
+                {
+                    if (name == bob.Text   + "_" + bob.Hash)
+                    {
+                        bmp = bob.ToOldBitmap();
+                        break;
+                    }
+                }
+            }
+            else  if (File.Exists(databaseName))
             {
                 using (var f = new FileStream(databaseName, FileMode.Open))
                 {
@@ -238,10 +303,40 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             string target = GetSelectedFileName();
+            string newText = textBoxText.Text;
+
+            if (_binOcrDb != null)
+            {
+                foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImages)
+                {
+                    if (target == bob.Text + "_" + bob.Hash)
+                    {
+                        bob.Text = newText;
+                        bob.Italic = checkBoxItalic.Checked;
+
+                        if (Additions != null && Additions.Count > 0)
+                        {
+                            for (int i = Additions.Count - 1; i >= 0; i--)
+                            {
+                                if (Additions[i].Name == target)
+                                {
+                                    Additions.RemoveAt(i);
+                                    Refill(Additions);
+                                    break;
+                                }
+                            }
+                        }
+                        Refill(Additions);
+                        return;
+                    }
+                }
+                return;
+            }
+
+
             XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + target + "']");
             if (node != null)
             {
-                string newText = textBoxText.Text;
                 node.Attributes["Text"].InnerText = newText;
 
                 if (Additions != null && Additions.Count > 0)
@@ -312,6 +407,34 @@ namespace Nikse.SubtitleEdit.Forms
 
             int oldComboBoxIndex = comboBoxTexts.SelectedIndex;
             string target = GetSelectedFileName();
+
+            if (_binOcrDb != null)
+            {
+                foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImages)
+                {
+                    if (target == bob.Text + "_" + bob.Hash)
+                    {
+                        _binOcrDb.CompareImages.Remove(bob);
+
+                        if (Additions != null && Additions.Count > 0)
+                        {
+                            for (int i = Additions.Count - 1; i >= 0; i--)
+                            {
+                                if (Additions[i].Name == target)
+                                {
+                                    Additions.RemoveAt(i);
+                                    Refill(Additions);
+                                    break;
+                                }
+                            }
+                        }
+                        Refill(Additions);
+                        return;
+                    }
+                }
+                return;
+            }
+
             XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + target + "']");
             if (node != null)
             {
@@ -373,5 +496,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+
+        public bool ChangesMade { get; set; }
     }
 }
