@@ -757,6 +757,7 @@
     <Compile Include="Logic\BluRaySup\ToolBox.cs" />
     <Compile Include="Logic\BmpReader.cs" />
     <Compile Include="Logic\Forms\SplitLongLinesHelper.cs" />
+    <Compile Include="Logic\MurMurHash3.cs" />
     <Compile Include="Logic\NikseBitmapImageSplitter.cs" />
     <Compile Include="Logic\DetectEncoding\EncodingTools.cs" />
     <Compile Include="Logic\DetectEncoding\Multilang\CMLangConvertCharset.cs" />
@@ -826,7 +827,6 @@
     <Compile Include="Logic\NikseBitmap.cs" />
     <Compile Include="Logic\OCR\Binary\BinaryOcrBitmap.cs" />
     <Compile Include="Logic\OCR\Binary\BinaryOcrDb.cs" />
-    <Compile Include="Logic\OCR\Binary\MurMurHash3.cs" />
     <Compile Include="Logic\OCR\ModiLanguage.cs" />
     <Compile Include="Logic\OCR\OcrAlphabet.cs" />
     <Compile Include="Logic\OCR\NOcrChar.cs" />
