@@ -220,7 +220,10 @@ Suggesties zijn van harte welkom
     <NextDifference>&amp;Volgende verschil</NextDifference>
     <SubtitlesNotAlike>Ondertitels hebben geen overeenkomsten</SubtitlesNotAlike>
     <XNumberOfDifference>Aantal verschillen: {0}</XNumberOfDifference>
+    <XNumberOfDifferenceAndPercentChanged>Aantal verschillen: {0}  ({1}% woorden gewijzigd)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Aantal verschillen: {0}  ({1}% letters gewijzigd)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Toon alleen verschillen</ShowOnlyDifferences>
+    <IgnoreLineBreaks>Vergeet regel afbrekingen</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Zoek alleen verschillen in tekst</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Kan niet vergelijken met op beeld gebaseerde ondertitels</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -252,6 +255,7 @@ Suggesties zijn van harte welkom
     <GapToNext>Hiaat naar volgende</GapToNext>
     <BridgeGapsSmallerThanXPart1>Overbrug hiaten kleiner dan</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milliseconden</BridgeGapsSmallerThanXPart2>
+    <MinMsBetweenLines>Min. milliseconden tussen regels</MinMsBetweenLines>
     <ProlongEndTime>Eerdere tekst gebruikt de gehele hiaattijd.</ProlongEndTime>
     <DivideEven>Tekst verdeeld hiaattijd</DivideEven>
   </DurationsBridgeGaps>
@@ -376,6 +380,7 @@ Suggesties zijn van harte welkom
     <SaveFabImageScriptAs>Kies Blu-ray-sup bestandsnaam</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Kies DVD Studio Pro STL bestandsnaam</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>Enkele regels waren te lang: {0}</SomeLinesWereTooLongX>
+    <LineHeight>Regel hoogte</LineHeight>
   </ExportPngXml>
   <ExportText>
     <Title>Tekst exporteren</Title>
@@ -588,6 +593,12 @@ Suggesties zijn van harte welkom
     <Title>Ga naar ondertitelnummer</Title>
     <XIsNotAValidNumber>{0} is geen geldig nummer</XIsNotAValidNumber>
   </GoToLine>
+  <ImportImages>
+    <Title>Importeer beelden</Title>
+    <ImageFiles>Beeld bestanden</ImageFiles>
+    <Input>Invoer</Input>
+    <InputDescription>Kies invoer bestanden (browse of versleep)</InputDescription>
+  </ImportImages>
   <ImportSceneChanges>
     <Title>Inporteer scene wijzigingen</Title>
     <OpenTextFile>Open tekstbestand</OpenTextFile>
@@ -600,11 +611,14 @@ Suggesties zijn van harte welkom
   </ImportSceneChanges>
   <ImportText>
     <Title>Importeer platte tekst</Title>
+    <OneSubtitleIsOneFile>Meerdere bestanden - een bestand is een ondertitel</OneSubtitleIsOneFile>
     <OpenTextFile>Open tekstbestand...</OpenTextFile>
+    <OpenTextFiles>Open tekstbestand...</OpenTextFiles>
     <ImportOptions>Importopties</ImportOptions>
     <Splitting>Splitsen</Splitting>
     <AutoSplitText>Auto splits tekst</AutoSplitText>
     <OneLineIsOneSubtitle>Een regel is een ondertitel</OneLineIsOneSubtitle>
+    <LineBreak>Regel afbreking</LineBreak>
     <SplitAtBlankLines>Splits op lege regels</SplitAtBlankLines>
     <MergeShortLines>Samenvoegen korte regels met voortzetting</MergeShortLines>
     <RemoveEmptyLines>Verwijder lege regels</RemoveEmptyLines>
@@ -658,6 +672,7 @@ Suggesties zijn van harte welkom
         <ImportSubtitleFromMatroskaFile>Import ondertitel van Matroska-bestand...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Import ondertiteling met handmatige gekozen codering...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Import platte tekst...</ImportText>
+        <ImportImages>Importeer beelden</ImportImages>
         <ImportTimecodes>Import tijdcodes...</ImportTimecodes>
         <Export>Exporteer</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
@@ -690,6 +705,7 @@ Suggesties zijn van harte welkom
         <MultipleReplace>&amp;Meerdere vervangen...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Ga naar ondertitel nummer...</GoToSubtitleNumber>
         <RightToLeftMode>Rechts-naar-links-modus</RightToLeftMode>
+        <FixTrlViaUnicodeControlCharacters>Herstel  RTL via Unicode control karacters (alleen geselecteerde regels)</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Omgekeerde RNL begin/einde (voor geselecteerde regels)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Originele tekst weergeven in audio/video previews</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modificeer selectie</ModifySelection>
@@ -793,6 +809,7 @@ Suggesties zijn van harte welkom
         <SaveAs>Opslaan als</SaveAs>
         <Find>Zoeken</Find>
         <Replace>Vervangen</Replace>
+        <FixCommonErrors>Herstel gebruikelijke fouten</FixCommonErrors>
         <VisualSync>Visual sync</VisualSync>
         <SpellCheck>Spellingcontrole</SpellCheck>
         <Settings>Instellingen</Settings>
@@ -1094,6 +1111,7 @@ Suggesties zijn van harte welkom
     <OcrReplacePairXNotAdded>De ocr vervangen lijst paar '{0} -&gt; {1}' is NIET toegevoegd aan de ocr vervangen lijst</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} geselecteerde regels</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Ondertitel bevat unicode muziek noten. Bij opslaan met behulp van ANSI-codering gaan deze verloren. Verder gaan met opslaan?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeCharactersAnsiWarning>Ondertitel bevat unicode karacters. Opslaan als ANSI bestand codering laat deze vervallen. Verder gaan met opslaan?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Ondertitel bevat negatieve tijdcodes. Verder gaan met opslaan?</NegativeTimeWarning>
     <BeforeMergeShortLines>Voor samenvoegen korte regels</BeforeMergeShortLines>
     <BeforeSplitLongLines>Voor splitsen lange regels</BeforeSplitLongLines>
@@ -1108,6 +1126,7 @@ Suggesties zijn van harte welkom
     <TimeCodeImportedFromXY>Tijd codes geïmporteerd uit {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Voor ondertitel invoegen op video positie</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Voor ingestelde starttijd en pas de rest aan</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndTimeAndOffsetTheRest>Voor ingestelde eindtijd en pas de rest aan.</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Voor ingesteld eindtijd op video positie en automatisch berekenen start</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Doorgaan met de huidige spellingcontrole?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Karakters/sec: {0:0.00}</CharactersPerSecond>
@@ -1149,6 +1168,13 @@ Suggesties zijn van harte welkom
     <StatusLog>Status logboek</StatusLog>
     <XSceneChangesImported>{0} scene wijzigingen geïmporteerd</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' uitgevoerd.</PluginXExecuted>
+    <NotAValidXSubFile>Geen valide xsub bestand</NotAValidXSubFile>
+    <BeforeMergeLinesWithSameText>Voor samenvoeging regels met dezelfde tekst</BeforeMergeLinesWithSameText>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>Ondertitel met tijdcodes heeft een ander aantal regels ({0}) dan huidige ondertitel ({1}) - Toch doorgaan?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ParsingTransportStream>Analyseer transport stroom - even geduld aub...</ParsingTransportStream>
+    <ErrorLoadIdx>Kan IDX-bestanden niet bewerken. Idx-bestanden zijn een onderdeel van een idx/sub bestand paar (ook wel VobSub) en SE kan het sub-bestand openen.</ErrorLoadIdx>
+    <ErrorLoadRar>Dit bestand lijkt een gecomprimeerd Rar bestand. SE kan gecomprimeerde bestanden niet openen.</ErrorLoadRar>
+    <ErrorLoadZip>Dit bestand lijkt een gecomprimeerd Zip bestand. SE kan gecomprimeerde bestanden niet openen.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Kies ondertiteling uit Matroska bestand</Title>
@@ -1173,6 +1199,8 @@ Suggesties zijn van harte welkom
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Voeg regels met dezelfde tekst samen</Title>
+    <MaxMillisecondsBetweenLines>Max. milliseconden tussen de regels</MaxMillisecondsBetweenLines>
+    <IncludeIncrementing>Bevat verhoogde regels.</IncludeIncrementing>
   </MergeDoubleLines>
   <MergedShortLines>
     <Title>Samenvoegen korte regels</Title>
@@ -1197,6 +1225,8 @@ Suggesties zijn van harte welkom
     <EndsWith>Eindigt met</EndsWith>
     <NoContains>Bevat niet</NoContains>
     <RegEx>Reguliere expressie</RegEx>
+    <UnequalLines>Ongelijke regels</UnequalLines>
+    <EqualLines>Gelijke regels</EqualLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Meerdere vervangen</Title>
@@ -1262,6 +1292,7 @@ Suggesties zijn van harte welkom
     <UnableToDownloadPluginListX>Kan plug lijst niet downloaden: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Nieuwere versie van Subtitle Edit nodig!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Update beschikbaar!]</UpdateAvailable>
+    <UpdateAll>Update alles</UpdateAll>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Verwijder tekst voor slechthorenden</Title>
@@ -1354,6 +1385,7 @@ Suggesties zijn van harte welkom
     <AutoWrapWhileTyping>Auto-wrap tijdens het typen</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. duur, milliseconden</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. duur, milliseconden</DurationMaximumMilliseconds>
+    <MinimumGapMilliseconds>Min. verschil tussen ondertiteling in ms</MinimumGapMilliseconds>
     <SubtitleFont>Ondertitel lettertype</SubtitleFont>
     <SubtitleFontSize>Ondertitel lettergrootte</SubtitleFontSize>
     <SubtitleBold>Vet</SubtitleBold>
@@ -1406,6 +1438,8 @@ Suggesties zijn van harte welkom
     <WaveFormShowGridLines>Toon rasterlijnen</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Omgekeerd muiswiel scroll richting</ReverseMouseWheelScrollDirection>
     <WaveFormAllowOverlap>Sta overlap toe (bij verplaatsen/ aanpassing)</WaveFormAllowOverlap>
+    <WaveFormFocusMouseEnter>Leg de focus op de muis invoer</WaveFormFocusMouseEnter>
+    <WaveFormListViewFocusMouseEnter>Stel ook lijstweergave focus op de muis invoer in de lijstweergave</WaveFormListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Laat herpositionering toe binnen</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milliseconden</WaveformBorderHitMs2>
     <WaveFormColor>Kleur</WaveFormColor>
@@ -1478,6 +1512,8 @@ Suggesties zijn van harte welkom
     <AdjustSelected100MsForward>Verplaats geselecteerde regels 100 ms naar voren</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Verplaats geselecteerde regels 100 ms terug</AdjustSelected100MsBack>
     <AdjustSetStartTimeKeepDuration>Bepaal starttijd, behoud duur</AdjustSetStartTimeKeepDuration>
+    <AdjustSetEndAndOffsetTheRest>Stel einde in, compenseer de rest</AdjustSetEndAndOffsetTheRest>
+    <AdjustSetEndAndOffsetTheRestAndGoToNext>Stel einde in, compenseer de rest en naar volgende</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Maak nieuwe met pijl omlaag , bepaal eindtijd met pijl omhoog</MainCreateStartDownEndUp>
     <MergeDialogue>samenvoegen dialoog (voeg koppelteken in)</MergeDialogue>
     <GoToNext>Ga naar volgende regel</GoToNext>
@@ -1491,15 +1527,21 @@ Suggesties zijn van harte welkom
     <AutoDurationSelectedLines>Auto-duur (geselecteerde regels)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Omgekeerde RNL start/einde</ReverseStartAndEndingForRTL>
     <VerticalZoom>Verticale zoom</VerticalZoom>
+    <VerticalZoomOut>Verticale zoom out</VerticalZoomOut>
     <WaveformSeekSilenceForward>Zoek stilte vooruit</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Zoek stilte terug</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Voeg hier tekst toe (voor nieuwe selectie)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Speel nieuwe selectie</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Speel eerste geselecteerde ondertitel</WaveformPlayFirstSelectedSubtitle>
+    <WaveformFocusListView>Focus lijstweergave</WaveformFocusListView>
+    <GoBack1Frame>Een frame terug</GoBack1Frame>
+    <GoForward1Frame>Een frame vooruit</GoForward1Frame>
     <GoBack100Milliseconds>100 ms terug</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms naar voren</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms terug</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 ms naar voren</GoForward500Milliseconds>
+    <GoBack1Second>Een seconde terug</GoBack1Second>
+    <GoForward1Second>Een seconde vooruit</GoForward1Second>
     <TogglePlayPause>Verander tussen afspelen/pauze</TogglePlayPause>
     <Pause>Pauze</Pause>
     <Fullscreen>Volledig Scherm</Fullscreen>
@@ -1527,6 +1569,7 @@ Suggesties zijn van harte welkom
     <ListViewColumnDelete>Kolom, verwijderen tekst</ListViewColumnDelete>
     <ListViewColumnInsert>Kolom, tekst invoegen</ListViewColumnInsert>
     <ListViewColumnPaste>Kolom, samenvoegen</ListViewColumnPaste>
+    <ListViewFocusWaveform>Focus golfvorm/spectrogram</ListViewFocusWaveform>
     <ShowBeamer>Start ondertiteling volledig scherm beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>verplaats laatste woord naar beneden naar volgende ondertitel</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>verplaats eerste woord naar boven van volgende ondertitel</MainTextBoxMoveFirstWordFromNextUp>
@@ -1730,6 +1773,11 @@ Suggesties zijn van harte welkom
     <Info>Een sync punt zal positie aanpassen, twee of meer sync punten zullen positie en snelheid aanpassen</Info>
     <ApplySync>Pas toe</ApplySync>
   </PointSync>
+  <TransportStreamSubtitleChooser>
+    <Title>Transport Stroom ondertitel kiezer  - {0}</Title>
+    <PidLine>Transport Pakket Identificatie (PID) = {0}, aantal ondertitels = {1}</PidLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} afbeelding (en)</SubLine>
+  </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Onbekende ondertitel soort</Title>
     <Message>Als u wilt dat dit wordt hersteld, stuur dan een e-mail naar mailto: niksedk@gmail.com en stuur een kopie van de ondertiteling mee.</Message>
@@ -1790,6 +1838,10 @@ Suggesties zijn van harte welkom
     <ImagePalette>Afbeelding palet</ImagePalette>
     <UseCustomColors>Aangepaste kleuren gebruiken</UseCustomColors>
     <Transparent>Transparant</Transparent>
+    <TransparentMinAlpha>Min. alpha-waarde (0 = transparant, 255 = volledig zichtbaar)</TransparentMinAlpha>
+    <TransportStream>Transport Stroom</TransportStream>
+    <TransportStreamGrayscale>Grijswaarden</TransportStreamGrayscale>
+    <TransportStreamGetColor>Kleur gebruiken (zal ook een enkele splitsing van regels bevatten)</TransportStreamGetColor>
     <PromptForUnknownWords>Vragen om onbekende woorden</PromptForUnknownWords>
     <TryToGuessUnkownWords>Probeer onbekende woorden te raden</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Auto einde paragraaf als er meer dan twee regels zijn</AutoBreakSubtitleIfMoreThanTwoLines>
