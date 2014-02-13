@@ -1,5 +1,12 @@
 ﻿Subtitle Edit Changelog
 
+
+3.3.14 (xth February 2014)
+* NEW:
+* IMPROVED:
+* FIXED:
+
+
 3.3.13 (8th February 2014)
 * NEW:
    * Compare window now has an option to "ignore line breaks" - thx Krystian
