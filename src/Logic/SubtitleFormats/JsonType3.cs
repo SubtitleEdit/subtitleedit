@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append("{\"duration\":");
                 sb.Append(p.Duration.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"content\":\"");
-                sb.Append(Json.EncodeJsonText(p.Text));
+                sb.Append(Json.EncodeJsonText(p.Text) + "\"");
                 sb.Append(",\"startOfParagraph\":false");
                 sb.Append(",\"startTime\":");
                 sb.Append(p.StartTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
