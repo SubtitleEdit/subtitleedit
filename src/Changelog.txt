@@ -4,8 +4,11 @@
 3.3.14 (xth February 2014)
 * NEW:
 * IMPROVED:
+   * Updated Korean language file - thx domddol
+   * Updated Dutch language file - thx Quetsbeek
 * FIXED:
-
+   * Fixed crash in spell check - thx e257496 
+   * Fixed issue where it was not possible to move border in waveform
 
 3.3.13 (8th February 2014)
 * NEW:

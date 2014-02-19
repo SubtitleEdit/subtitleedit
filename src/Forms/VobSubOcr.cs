@@ -127,6 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
             public int ExpandCount { get; set; }
             public string Name { get; set; }
             public NOcrChar NOcrCharacter { get; set; }
+            
             public CompareMatch(string text, bool italic, int expandCount, string name)
             {
                 Text = text;
@@ -134,6 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ExpandCount = expandCount;
                 Name = name;
             }
+            
             public CompareMatch(string text, bool italic, int expandCount, string name, NOcrChar character)
             {
                 Text = text;
@@ -141,6 +143,13 @@ namespace Nikse.SubtitleEdit.Forms
                 ExpandCount = expandCount;
                 Name = name;
                 NOcrCharacter = character;
+            }
+
+            public override string ToString()
+            {
+                if (Italic)
+                    return Text + " (italic)";
+                return Text;
             }
         }
 
@@ -160,6 +169,15 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = text;
                 Italic = italic;
                 Index = index;
+            }
+
+            public override string ToString()
+            {
+                if (Image == null)
+                    return Text;
+                if (Italic)
+                    return Text + " (" + Image.Width + "x" + Image.Height + ", italic)";
+                return Text + " (" + Image.Width + "x" + Image.Height + ")";
             }
         }
 
@@ -393,6 +411,7 @@ namespace Nikse.SubtitleEdit.Forms
             italicToolStripMenuItem.Text = Configuration.Settings.Language.General.Italic;
             importTextWithMatchingTimeCodesToolStripMenuItem.Text = language.ImportTextWithMatchingTimeCodes;
             saveImageAsToolStripMenuItem.Text = language.SaveSubtitleImageAs;
+            toolStripMenuItemImageSaveAs.Text = language.SaveSubtitleImageAs;
             saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = language.SaveAllSubtitleImagesWithHtml;
             inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Text = language.InspectCompareMatchesForCurrentImage;
             EditLastAdditionsToolStripMenuItem.Text = language.EditLastAdditions;
@@ -770,31 +789,57 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                comboBoxCharacterDatabase.SelectedIndexChanged -= ComboBoxCharacterDatabaseSelectedIndexChanged;
-                string characterDatabasePath = Configuration.VobSubCompareFolder.TrimEnd(Path.DirectorySeparatorChar);
-                if (!Directory.Exists(characterDatabasePath))
-                    Directory.CreateDirectory(characterDatabasePath);
-
-                comboBoxCharacterDatabase.Items.Clear();
-
-                foreach (string dir in Directory.GetDirectories(characterDatabasePath))
-                    comboBoxCharacterDatabase.Items.Add(Path.GetFileName(dir));
-
-                if (comboBoxCharacterDatabase.Items.Count == 0)
+                if (comboBoxOcrMethod.SelectedIndex == 4)
                 {
-                    Directory.CreateDirectory(characterDatabasePath + Path.DirectorySeparatorChar + _vobSubOcrSettings.LastImageCompareFolder);
-                    comboBoxCharacterDatabase.Items.Add(_vobSubOcrSettings.LastImageCompareFolder);
-                }
+                    string characterDatabasePath = Configuration.OcrFolder.TrimEnd(Path.DirectorySeparatorChar);
+                    if (!Directory.Exists(characterDatabasePath))
+                        Directory.CreateDirectory(characterDatabasePath);
 
-                for (int i = 0; i < comboBoxCharacterDatabase.Items.Count; i++)
+                    comboBoxCharacterDatabase.Items.Clear();
+
+                    foreach (string dir in Directory.GetFiles(characterDatabasePath, "*.db"))
+                    {
+                        comboBoxCharacterDatabase.Items.Add(Path.GetFileNameWithoutExtension(dir));
+                    }
+
+                    if (comboBoxCharacterDatabase.Items.Count == 0)
+                    {
+
+                    }
+                    else
+                    { 
+                    }
+
+                    if (comboBoxCharacterDatabase.SelectedIndex < 0 && comboBoxCharacterDatabase.Items.Count > 0)
+                        comboBoxCharacterDatabase.SelectedIndex = 0;
+                }
+                else if (comboBoxOcrMethod.SelectedIndex == 1)
                 {
-                    if (string.Compare(comboBoxCharacterDatabase.Items[i].ToString(), _vobSubOcrSettings.LastImageCompareFolder, true) == 0)
-                        comboBoxCharacterDatabase.SelectedIndex = i;
-                }
-                if (comboBoxCharacterDatabase.SelectedIndex < 0)
-                    comboBoxCharacterDatabase.SelectedIndex = 0;
-                comboBoxCharacterDatabase.SelectedIndexChanged += ComboBoxCharacterDatabaseSelectedIndexChanged;
+                    comboBoxCharacterDatabase.SelectedIndexChanged -= ComboBoxCharacterDatabaseSelectedIndexChanged;
+                    string characterDatabasePath = Configuration.VobSubCompareFolder.TrimEnd(Path.DirectorySeparatorChar);
+                    if (!Directory.Exists(characterDatabasePath))
+                        Directory.CreateDirectory(characterDatabasePath);
 
+                    comboBoxCharacterDatabase.Items.Clear();
+
+                    foreach (string dir in Directory.GetDirectories(characterDatabasePath))
+                        comboBoxCharacterDatabase.Items.Add(Path.GetFileName(dir));
+
+                    if (comboBoxCharacterDatabase.Items.Count == 0)
+                    {
+                        Directory.CreateDirectory(characterDatabasePath + Path.DirectorySeparatorChar + _vobSubOcrSettings.LastImageCompareFolder);
+                        comboBoxCharacterDatabase.Items.Add(_vobSubOcrSettings.LastImageCompareFolder);
+                    }
+
+                    for (int i = 0; i < comboBoxCharacterDatabase.Items.Count; i++)
+                    {
+                        if (string.Compare(comboBoxCharacterDatabase.Items[i].ToString(), _vobSubOcrSettings.LastImageCompareFolder, true) == 0)
+                            comboBoxCharacterDatabase.SelectedIndex = i;
+                    }
+                    if (comboBoxCharacterDatabase.SelectedIndex < 0)
+                        comboBoxCharacterDatabase.SelectedIndex = 0;
+                    comboBoxCharacterDatabase.SelectedIndexChanged += ComboBoxCharacterDatabaseSelectedIndexChanged;
+                }
             }
             catch (Exception ex)
             {
@@ -805,7 +850,21 @@ namespace Nikse.SubtitleEdit.Forms
         private void LoadImageCompareBitmaps()
         {
             DisposeImageCompareBitmaps();
+            _binaryOcrDb = null;
 
+            if (comboBoxOcrMethod.SelectedIndex == 1)
+            {
+                LoadOldCompareImages();
+            }
+            else if (comboBoxOcrMethod.SelectedIndex == 4)
+            {
+                string db = Configuration.OcrFolder + comboBoxCharacterDatabase.SelectedItem + ".db";
+                _binaryOcrDb = new BinaryOcrDb(db, true);
+            }            
+        }
+
+        private void LoadOldCompareImages()
+        {
             _compareBitmaps = new List<CompareItem>();
             string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
             if (!File.Exists(path + "CompareDescription.xml"))
@@ -1310,7 +1369,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return returnBmp;
 
             var n = new NikseBitmap(returnBmp);
-            n.MakeTwoColor(210, 80);
+            n.MakeTwoColor(210, 280);
             returnBmp.Dispose();
             return n.GetBitmap();
         }
@@ -2543,27 +2602,30 @@ namespace Nikse.SubtitleEdit.Forms
 
 
                     string text = hit.Text;
-                    int h = hit.Height;
-                    if (text == "V" || text == "W" || text == "U" || text == "S" || text == "Z" || text == "O" || text == "X" || text == "Ø" || text == "C")
+                    if (smallestDifference > 0)
                     {
-                        if (_binOcrLastLowercaseHeight > 3 && h - _nocrLastLowercaseHeight < 2)
-                            text = text.ToLower();
+                        int h = hit.Height;
+                        if (text == "V" || text == "W" || text == "U" || text == "S" || text == "Z" || text == "O" || text == "X" || text == "Ø" || text == "C")
+                        {
+                            if (_binOcrLastLowercaseHeight > 3 && h - _binOcrLastLowercaseHeight < 2)
+                                text = text.ToLower();
+                        }
+                        else if (text == "v" || text == "w" || text == "u" || text == "s" || text == "z" || text == "o" || text == "x" || text == "ø" || text == "c")
+                        {
+                            if (_binOcrLastUppercaseHeight > 3 && _binOcrLastUppercaseHeight - h < 2)
+                                text = text.ToUpper();
+                        }
                     }
-                    else if (text == "v" || text == "w" || text == "u" || text == "s" || text == "z" || text == "o" || text == "x" || text == "ø" || text == "c")
+                    else
                     {
-                        if (_binOcrLastUppercaseHeight > 3 && _binOcrLastUppercaseHeight - h < 2)
-                            text = text.ToUpper();
+                        SetBinOcrLowercaseUppercase(hit.Height, text);
                     }
-                    hit.Text = text;
 
-                    if (smallestDifference < 0.1)
-                        SetBinOcrLowercaseUppercase(hit.Height, hit.Text);
-                    
-                    return new CompareMatch(hit.Text, hit.Italic, hit.ExpandCount, hit.Text + "_" + hit.Hash.ToString());
+                    return new CompareMatch(text, hit.Italic, hit.ExpandCount, hit.Key);
                 }
 
                 var guess = _binaryOcrDb.CompareImages[smallestIndex];
-                secondBestGuess = new CompareMatch(guess.Text, guess.Italic, guess.ExpandCount, guess.Text + "_" + guess.Hash.ToString());
+                secondBestGuess = new CompareMatch(guess.Text, guess.Italic, guess.ExpandCount, guess.Key);
             }
 
             return null;
@@ -3297,7 +3359,7 @@ namespace Nikse.SubtitleEdit.Forms
             BinaryOcrBitmap bob = new BinaryOcrBitmap(newTarget, isItalic, expandCount, text);
             _binaryOcrDb.CompareImages.Add(bob);
             _binaryOcrDb.Save();
-            return text + "_" +  bob.Hash.ToString();
+            return bob.Key;
         }
 
         /// <summary>
@@ -3695,12 +3757,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetBinOcrLowercaseUppercase(int height, string text)
         {
-            if (text == "e")
+            if (text == "e" && (height < _binOcrLastLowercaseHeight || _binOcrLastLowercaseHeight < 0))
                 _binOcrLastLowercaseHeight = height;
-            else if (_binOcrLastLowercaseHeight == -1 && text == "a")
+            else if (_binOcrLastLowercaseHeight == -1 && text == "a" && (height < _binOcrLastLowercaseHeight || _binOcrLastLowercaseHeight < 0))
                 _binOcrLastLowercaseHeight = height;
 
-            if (text == "E" || text == "H" || text == "R" || text == "D" || text == "T")
+            if (text == "E" || text == "H" || text == "R" || text == "D" || text == "T" && height > _binOcrLastUppercaseHeight)
                 _binOcrLastUppercaseHeight = height;
             else if (_binOcrLastUppercaseHeight == -1 && text == "M")
                 _binOcrLastUppercaseHeight = height;
@@ -4300,26 +4362,31 @@ namespace Nikse.SubtitleEdit.Forms
             bool allItalic = true;
             for (int i = 0; i < matches.Count; i++)
             {
-                if (matches[i].Text == " ")
+                string text = matches[i].Text;
+                if (text != null)
                 {
-                    ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, " ");
-                }
-                else if (matches[i].Text == Environment.NewLine)
-                {
-                    ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, "");
-                    ItalianLine(paragraph, ref line, ref allItalic, ref wordItalics, ref wordNonItalics, ref isItalic, Environment.NewLine, lineLettersNonItalics);
-                    lineLettersNonItalics = 0;
-                }
-                else if (matches[i].Italic)
-                {
-                    word.Append(matches[i].Text);
-                    lettersItalics += matches[i].Text.Length;
-                    lineLettersNonItalics += matches[i].Text.Length;
-                }
-                else
-                {
-                    word.Append(matches[i].Text);
-                    lettersNonItalics += matches[i].Text.Length;
+                    bool italic = matches[i].Italic;
+                    if (text == " ")
+                    {
+                        ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, " ");
+                    }
+                    else if (text == Environment.NewLine)
+                    {
+                        ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, "");
+                        ItalianLine(paragraph, ref line, ref allItalic, ref wordItalics, ref wordNonItalics, ref isItalic, Environment.NewLine, lineLettersNonItalics);
+                        lineLettersNonItalics = 0;
+                    }
+                    else if (italic)
+                    {
+                        word.Append(text);
+                        lettersItalics += text.Length;
+                        lineLettersNonItalics += text.Length;
+                    }
+                    else
+                    {
+                        word.Append(text);
+                        lettersNonItalics += text.Length;
+                    }
                 }
             }
 
@@ -5067,7 +5134,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_binaryOcrDb == null)
                 {
-                    _binaryOcrDbFileName = Configuration.VobSubCompareFolder + "OcrBinaryCompareImages.db";
+                    _binaryOcrDbFileName = Configuration.OcrFolder + "Latin.db";
                     _binaryOcrDb = new BinaryOcrDb(_binaryOcrDbFileName, true);
                 }
             }
@@ -6386,17 +6453,45 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonNewCharacterDatabaseClick(object sender, EventArgs e)
         {
-            var newFolder = new VobSubOcrNewFolder();
+            var newFolder = new VobSubOcrNewFolder(comboBoxOcrMethod.SelectedIndex == 1);
             if (newFolder.ShowDialog(this) == DialogResult.OK)
             {
-                _vobSubOcrSettings.LastImageCompareFolder = newFolder.FolderName;
-                LoadImageCompareCharacterDatabaseList();
-                LoadImageCompareBitmaps();
+                if (comboBoxOcrMethod.SelectedIndex == 4)
+                {
+                    try
+                    {
+                        string fileName = Path.Combine(Configuration.OcrFolder, newFolder.FolderName + ".db");
+                        if (System.IO.File.Exists(fileName))
+                        {
+                            MessageBox.Show("OCR db already exists!");
+                            return;
+                        }
+                        comboBoxCharacterDatabase.Items.Add(newFolder.FolderName);
+                        comboBoxCharacterDatabase.SelectedIndex = comboBoxCharacterDatabase.Items.Count - 1;
+                        _binaryOcrDb = new BinaryOcrDb(fileName);
+                        _binaryOcrDb.Save();
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show(exception.Message);
+                    }
+                }
+                else
+                {
+                    _vobSubOcrSettings.LastImageCompareFolder = newFolder.FolderName;
+                    LoadImageCompareCharacterDatabaseList();
+                    LoadImageCompareBitmaps();
+                }
             }
         }
 
         private void ComboBoxCharacterDatabaseSelectedIndexChanged(object sender, EventArgs e)
         {
+            if (comboBoxOcrMethod.SelectedIndex == 4)
+            {
+                _binaryOcrDbFileName = Configuration.OcrFolder + comboBoxCharacterDatabase.SelectedItem.ToString() + ".db";
+            }
+
             LoadImageCompareBitmaps();
             _vobSubOcrSettings.LastImageCompareFolder = comboBoxCharacterDatabase.SelectedItem.ToString();
         }
@@ -6564,8 +6659,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (comboBoxOcrMethod.SelectedIndex == 1)
             {
-                comboBoxCharacterDatabase.Enabled = true;
-                buttonNewCharacterDatabase.Enabled = true;
                 ShowOcrMethodGroupBox(groupBoxImageCompareMethod);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "BitmapCompare";
                 checkBoxPromptForUnknownWords.Checked = false;
@@ -6604,10 +6697,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowOcrMethodGroupBox(groupBoxImageCompareMethod);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "BitmapCompare";
                 checkBoxPromptForUnknownWords.Checked = false;
-                numericUpDownMaxErrorPct.Minimum = 0;
-                comboBoxCharacterDatabase.Enabled = false;
-                buttonNewCharacterDatabase.Enabled = false;
-                _binaryOcrDbFileName = Configuration.VobSubCompareFolder + "OcrBinaryCompareImages.db";
+                numericUpDownMaxErrorPct.Minimum = 0;               
                 _binaryOcrDb = new BinaryOcrDb(_binaryOcrDbFileName, true);
             }
             SubtitleListView1SelectedIndexChanged(null, null);
@@ -7192,6 +7282,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (_binaryOcrDb != null)
                 _binaryOcrDb.LoadCompareImages();
+            Cursor = Cursors.Default;
         }
 
         private void inspectLastAdditionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -7731,7 +7822,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonLineOcrNewLanguage_Click(object sender, EventArgs e)
         {
-            var newFolder = new VobSubOcrNewFolder();
+            var newFolder = new VobSubOcrNewFolder(comboBoxOcrMethod.SelectedIndex == 1);
             if (newFolder.ShowDialog(this) == DialogResult.OK)
             {
                 string s = newFolder.FolderName;
@@ -7914,6 +8005,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void numericUpDownAutoTransparentAlphaMax_ValueChanged(object sender, EventArgs e)
         {
             SubtitleListView1SelectedIndexChanged(null, null);
+        }
+
+        private void toolStripMenuItemImageSaveAs_Click(object sender, EventArgs e)
+        {
+            SaveImageAsToolStripMenuItemClick(sender, e);
         }
 
     }

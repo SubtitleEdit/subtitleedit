@@ -167,9 +167,10 @@
             // 
             // textBoxText
             // 
+            this.textBoxText.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxText.Location = new System.Drawing.Point(14, 35);
             this.textBoxText.Name = "textBoxText";
-            this.textBoxText.Size = new System.Drawing.Size(100, 20);
+            this.textBoxText.Size = new System.Drawing.Size(100, 21);
             this.textBoxText.TabIndex = 1;
             // 
             // pictureBoxCompareBitmap
@@ -195,10 +196,11 @@
             // 
             // listBoxInspectItems
             // 
+            this.listBoxInspectItems.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxInspectItems.FormattingEnabled = true;
             this.listBoxInspectItems.Location = new System.Drawing.Point(6, 19);
             this.listBoxInspectItems.Name = "listBoxInspectItems";
-            this.listBoxInspectItems.Size = new System.Drawing.Size(240, 238);
+            this.listBoxInspectItems.Size = new System.Drawing.Size(240, 251);
             this.listBoxInspectItems.TabIndex = 12;
             this.listBoxInspectItems.SelectedIndexChanged += new System.EventHandler(this.listBoxInspectItems_SelectedIndexChanged);
             // 
