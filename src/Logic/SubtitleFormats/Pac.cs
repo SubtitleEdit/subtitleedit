@@ -143,9 +143,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xE75A, // Ž
             0xE753, // Š
             0xE743, // Č
+            0xE744, // Đ
+
             0xE77A, // ž
             0xE773, // š
             0xE763, // č
+            0xE764, // đ
 
             0xA8,  // ¿
             0xAD,  // ¡
@@ -289,9 +292,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "Ž", // 0xE75A
             "Š", // 0xE753
             "Č", // 0xE743
+            "Đ", // 0xE744
             "ž", // 0xE77A
             "š", // 0xE773
             "č", // 0xE763
+            "đ", // 0xE764
 
             "¿", // 0xA8
             "¡", // 0xAD
