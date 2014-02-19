@@ -804,10 +804,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (comboBoxCharacterDatabase.Items.Count == 0)
                     {
-
-                    }
-                    else
-                    { 
+                        comboBoxCharacterDatabase.Items.Add("Latin"); // if no database, create an empty one called "Latin"
                     }
 
                     if (comboBoxCharacterDatabase.SelectedIndex < 0 && comboBoxCharacterDatabase.Items.Count > 0)
