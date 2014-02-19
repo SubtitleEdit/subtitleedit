@@ -3,6 +3,7 @@
 
 3.3.14 (xth February 2014)
 * NEW:
+  * Added Slovenian translation - thx Hawk
 * IMPROVED:
    * Updated Korean language file - thx domddol
    * Updated Dutch language file - thx Quetsbeek
