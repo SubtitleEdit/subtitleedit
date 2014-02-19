@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append(",\"guid\":\"" + guid + "\",\"segmentTypeId\":\"" + segmentTypeId + "\",\"endTime\":");
                 sb.Append(p.EndTime.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"id\":\"" + id + "\",\"metadata\":{\"Text\":\"");
-                sb.Append(p.Text.Replace("\\", string.Empty).Replace("{", string.Empty).Replace("{", string.Empty).Replace("\"", "\\\"").Replace(Environment.NewLine, "\\n") + "\"");
+                sb.Append(Json.EncodeJsonText(p.Text));
 
                 sb.Append(",\"ID\":\"\",\"Language\":\"en\"}}");
                 count++;
@@ -82,11 +82,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out endSeconds) &&
                         content != null)
                     {
-                        content = content.Replace("<br />", Environment.NewLine);
-                        content = content.Replace("<br>", Environment.NewLine);
-                        content = content.Replace("<br/>", Environment.NewLine);
-                        content = content.Replace("\\n", Environment.NewLine);
-                        subtitle.Paragraphs.Add(new Paragraph(content, startSeconds * 1000.0, endSeconds * 1000.0));
+                        subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(content), startSeconds * 1000.0, endSeconds * 1000.0));
                     }
                     else
                     {
