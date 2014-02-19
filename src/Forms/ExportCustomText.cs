@@ -64,7 +64,10 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeader2.Text = Configuration.Settings.Language.General.Text;
             buttonNew.Text = l.New;
             buttonEdit.Text = l.Edit;
+            buttonDelete.Text = l.Delete;
             deleteToolStripMenuItem.Text = l.Delete;
+            editToolStripMenuItem.Text = l.Edit;
+            newToolStripMenuItem.Text = l.New;
         }
 
         private void ShowTemplates(List<string> templates)
@@ -86,15 +89,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonNew_Click(object sender, EventArgs e)
         {
-            if (listViewTemplates.SelectedItems.Count == 1)
+            New();
+        }
+
+        private void New()
+        {
+            var form = new ExportCustomTextFormat("NewÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]Æ");
+            if (form.ShowDialog(this) == DialogResult.OK)
             {
-                var form = new ExportCustomTextFormat("NewÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]Æ");
-                if (form.ShowDialog(this) == DialogResult.OK)
-                {
-                    _templates.Add(form.FormatOK);
-                    ShowTemplates(_templates);
-                    listViewTemplates.Items[listViewTemplates.Items.Count - 1].Selected = true;
-                }
+                _templates.Add(form.FormatOK);
+                ShowTemplates(_templates);
+                listViewTemplates.Items[listViewTemplates.Items.Count - 1].Selected = true;
             }
             SaveTemplates();
         }
@@ -110,6 +115,11 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void buttonEdit_Click(object sender, EventArgs e)
+        {
+            Edit();
+        }
+
+        private void Edit()
         {
             if (listViewTemplates.SelectedItems.Count == 1)
             {
@@ -221,6 +231,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Delete();
+        }
+
+        private void Delete()
+        {
             if (listViewTemplates.SelectedItems.Count != 1)
                 return;
 
@@ -243,6 +258,39 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
         }
+
+        private void buttonDelete_Click(object sender, EventArgs e)
+        {
+            Delete();
+        }
+
+        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Edit();
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            New();
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (listViewTemplates.SelectedItems.Count == 0)
+            {
+                toolStripMenuItem2.Visible = false;
+                editToolStripMenuItem.Visible = false;
+                deleteToolStripMenuItem.Visible = false;
+            }
+            else
+            {
+                toolStripMenuItem2.Visible = true;
+                editToolStripMenuItem.Visible = true;
+                deleteToolStripMenuItem.Visible = true;
+            }
+        }
+
+      
 
     }
 }
