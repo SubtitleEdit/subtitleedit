@@ -28,6 +28,52 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
+        public static string EncodeJsonText(string text)
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < text.Length; i++)
+            {
+                string s = text.Substring(i, 1);
+                if (s == "\"")
+                {
+                    sb.Append("\\\"");
+                }
+                else if (s == "\\")
+                {
+                    sb.Append("\\\\");
+                }
+                else
+                {
+                    sb.Append(s);
+                }
+            }
+            return sb.ToString().Replace(Environment.NewLine, "<br />");
+        }
+
+        public static string DecodeJsonText(string text)
+        {
+            var sb = new StringBuilder();
+            text = text.Replace("<br />", Environment.NewLine);
+            text = text.Replace("<br>", Environment.NewLine);
+            text = text.Replace("<br/>", Environment.NewLine);
+            text = text.Replace("\\n", Environment.NewLine);
+            bool keepNext = false;
+            for (int i = 0; i < text.Length; i++)
+            {
+                string s = text.Substring(i, 1);
+                if (s == "\\" && !keepNext)
+                {
+                    keepNext = true;
+                }
+                else
+                {
+                    sb.Append(s);
+                    keepNext = false;
+                }
+            }
+            return sb.ToString();
+        }
+
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
@@ -42,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append(",\"end\":");
                 sb.Append(p.EndTime.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"text\":\"");
-                sb.Append(p.Text.Replace("\\", string.Empty).Replace("{", string.Empty).Replace("{", string.Empty).Replace("\"", "\\\"").Replace(Environment.NewLine, "<br />"));
+                sb.Append(EncodeJsonText(p.Text));
                 sb.Append("\"}");
                 count++;
             }
@@ -74,11 +120,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out endSeconds) &&
                         text != null)
                     {
-                        text = text.Replace("<br />", Environment.NewLine);
-                        text = text.Replace("<br>", Environment.NewLine);
-                        text = text.Replace("<br/>", Environment.NewLine);
-                        text = text.Replace("\\n", Environment.NewLine);
-                        subtitle.Paragraphs.Add(new Paragraph(text, startSeconds * 1000.0, endSeconds * 1000.0));
+                      
+                        subtitle.Paragraphs.Add(new Paragraph(DecodeJsonText(text), startSeconds * 1000.0, endSeconds * 1000.0));
                     }
                     else
                     {
@@ -128,7 +171,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (endIndex == -1)
                     return null;
                 if (res.Length > 1)
-                    return res.Substring(1, endIndex - 1).Replace("@__1", "\"");
+                    return res.Substring(1, endIndex - 1).Replace("@__1", "\\\"");
                 return string.Empty;
             }
             else
