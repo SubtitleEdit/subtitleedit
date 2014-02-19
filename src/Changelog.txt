@@ -6,6 +6,9 @@
 * IMPROVED:
    * Updated Korean language file - thx domddol
    * Updated Dutch language file - thx Quetsbeek
+   * Updated Bulgarian language file - thx Iavor
+   * Added Serbo-Croatian letter "đ" to file format PAC - thx nenad
+   * Export to custom text format - Added "Delete" button - thx Leon
 * FIXED:
    * Fixed crash in spell check - thx e257496 
    * Fixed issue where it was not possible to move border in waveform
