@@ -12,6 +12,7 @@
 * FIXED:
    * Fixed crash in spell check - thx e257496 
    * Fixed issue where it was not possible to move border in waveform
+   * Fixed issue regarding alignment tags (like {\an8}) in Json - thx zatch
 
 3.3.13 (8th February 2014)
 * NEW:
