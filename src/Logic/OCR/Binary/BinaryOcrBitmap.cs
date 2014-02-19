@@ -27,6 +27,21 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
         public int ExpandCount { get; set; }
         public bool LoadedOK { get; private set; }
         public string Text { get; set; }
+       
+        public string Key
+        {
+            get
+            {
+                return Text + "|#|" + Hash.ToString() + "_" + Width + "x" + Height + "_" + NumberOfColoredPixels;
+            }
+        }
+
+        public override string ToString()
+        {
+            if (Italic)
+                return Text + " (" + Width + "x" + Height + ", italic)";
+            return Text + " (" + Width + "x" + Height + ")";
+        }
 
         public BinaryOcrBitmap(Stream stream)
         {

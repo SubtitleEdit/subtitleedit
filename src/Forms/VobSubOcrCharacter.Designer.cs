@@ -1008,7 +1008,7 @@
             // 
             this.buttonGuess.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonGuess.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGuess.Location = new System.Drawing.Point(207, 363);
+            this.buttonGuess.Location = new System.Drawing.Point(211, 365);
             this.buttonGuess.Name = "buttonGuess";
             this.buttonGuess.Size = new System.Drawing.Size(112, 21);
             this.buttonGuess.TabIndex = 24;
@@ -1032,11 +1032,11 @@
             // 
             this.labelItalicOn.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.labelItalicOn.AutoSize = true;
-            this.labelItalicOn.Font = new System.Drawing.Font("Tahoma", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelItalicOn.Font = new System.Drawing.Font("Tahoma", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelItalicOn.ForeColor = System.Drawing.Color.Red;
             this.labelItalicOn.Location = new System.Drawing.Point(193, 10);
             this.labelItalicOn.Name = "labelItalicOn";
-            this.labelItalicOn.Size = new System.Drawing.Size(36, 13);
+            this.labelItalicOn.Size = new System.Drawing.Size(40, 16);
             this.labelItalicOn.TabIndex = 26;
             this.labelItalicOn.Text = "Italic";
             // 

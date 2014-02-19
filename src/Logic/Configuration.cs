@@ -103,6 +103,14 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static string OcrFolder
+        {
+            get
+            {
+                return DataDirectory + "Ocr" + Path.DirectorySeparatorChar;
+            }
+        }
+
         public static string WaveFormsFolder
         {
             get

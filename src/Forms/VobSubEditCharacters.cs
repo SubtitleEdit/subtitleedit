@@ -16,7 +16,8 @@ namespace Nikse.SubtitleEdit.Forms
         List<bool> _italics = new List<bool>();
         internal List<VobSubOcr.ImageCompareAddition> Additions { get; private set; }
         BinaryOcrDb _binOcrDb = null;
-
+        List<BinaryOcrBitmap> _binOcrListLookups = null;
+        
         public XmlDocument ImageCompareDocument
         {
             get
@@ -87,17 +88,17 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _italics = new List<bool>();
             listBoxFileNames.Items.Clear();
+
             if (_binOcrDb != null)
             {
                 foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImages)
                 {
-                    string text = bob.Text;
-                    string name = bob.Text + "_" + bob.Hash;
+                    string name = bob.Key;
                     foreach (VobSubOcr.ImageCompareAddition a in additions)
                     {
-                        if (name == a.Name && text != null)
+                        if (name == a.Name && bob.Text != null)
                         {
-                            listBoxFileNames.Items.Add("[" + text + "] " + name);
+                            listBoxFileNames.Items.Add(bob);
                             _italics.Add(bob.Italic);
                         }
                     }
@@ -193,8 +194,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string text = bob.Text;
                     if (text == target)
-                    {                        
-                        listBoxFileNames.Items.Add(bob.Text + "_" + bob.Hash);
+                    {
+                        listBoxFileNames.Items.Add(bob);
                         _italics.Add(bob.Italic);
                     }
                 }
@@ -227,6 +228,15 @@ namespace Nikse.SubtitleEdit.Forms
             return fileName.Trim();
         }
 
+        private BinaryOcrBitmap GetSelectedBinOcrBitmap()
+        {
+            int idx = listBoxFileNames.SelectedIndex;
+            if (idx < 0 || _binOcrDb == null)
+                return null;
+
+            return listBoxFileNames.Items[idx] as BinaryOcrBitmap;
+        }
+
         private string GetFileName(int index)
         {
             string fileName = listBoxFileNames.Items[index].ToString();
@@ -245,16 +255,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_binOcrDb != null)
             {
-                if (name.Contains("]"))
-                    name = name.Substring(name.IndexOf("]") + 1).Trim();
-                foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImages)
-                {
-                    if (name == bob.Text   + "_" + bob.Hash)
-                    {
-                        bmp = bob.ToOldBitmap();
-                        break;
-                    }
-                }
+                var bob = GetSelectedBinOcrBitmap();
+                if (bob != null)
+                    bmp = bob.ToOldBitmap();
             }
             else  if (File.Exists(databaseName))
             {
@@ -279,13 +282,29 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Additions != null && Additions.Count > 0)
             {
-                string target = GetSelectedFileName();
-                foreach (var a in Additions)
+                if (_binOcrDb != null)
                 {
-                    if (target.StartsWith(a.Name))
+                    var bob = GetSelectedBinOcrBitmap();
+                    foreach (var a in Additions)
                     {
-                        textBoxText.Text = a.Text;
-                        break;
+                        if (bob != null && bob.Text != null && bob.Key == a.Name)
+                        {
+                            textBoxText.Text = a.Text;
+                            checkBoxItalic.Checked = a.Italic;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    string target = GetSelectedFileName();
+                    foreach (var a in Additions)
+                    {
+                        if (target.StartsWith(a.Name))
+                        {
+                            textBoxText.Text = a.Text;
+                            break;
+                        }
                     }
                 }
             }
@@ -304,35 +323,68 @@ namespace Nikse.SubtitleEdit.Forms
 
             string target = GetSelectedFileName();
             string newText = textBoxText.Text;
+            int oldTextItem = comboBoxTexts.SelectedIndex;
+            int oldListBoxFileNamesIndex = listBoxFileNames.SelectedIndex;
 
             if (_binOcrDb != null)
             {
-                foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImages)
-                {
-                    if (target == bob.Text + "_" + bob.Hash)
-                    {
-                        bob.Text = newText;
-                        bob.Italic = checkBoxItalic.Checked;
+                var bob = GetSelectedBinOcrBitmap();
+                if (bob == null)
+                    return;
 
-                        if (Additions != null && Additions.Count > 0)
+                string oldText = bob.Text;
+                bob.Text = newText;
+                bob.Italic = checkBoxItalic.Checked;
+
+                if (Additions != null && Additions.Count > 0)
+                {
+                    for (int i = Additions.Count - 1; i >= 0; i--)
+                    {
+                        if (Additions[i].Name == bob.Key)
                         {
-                            for (int i = Additions.Count - 1; i >= 0; i--)
+                            Additions[i].Italic = bob.Italic;
+                            Additions[i].Text = bob.Text;
+                            break;
+                        }
+                    }
+                }
+                Refill(Additions);
+
+                if (oldText == newText)
+                {
+                    if (oldTextItem >= 0 && oldTextItem < comboBoxTexts.Items.Count)
+                        comboBoxTexts.SelectedIndex = oldTextItem;
+                    if (oldListBoxFileNamesIndex >= 0 && oldListBoxFileNamesIndex < listBoxFileNames.Items.Count)
+                        listBoxFileNames.SelectedIndex = oldListBoxFileNamesIndex;
+                }
+                else
+                {
+                    int i = 0;
+                    foreach (var item in comboBoxTexts.Items)
+                    {
+                        if (item.ToString() == newText)
+                        {
+                            comboBoxTexts.SelectedIndexChanged -= ComboBoxTextsSelectedIndexChanged;
+                            comboBoxTexts.SelectedIndex = i;
+                            ComboBoxTextsSelectedIndexChanged(sender, e);
+                            comboBoxTexts.SelectedIndexChanged += ComboBoxTextsSelectedIndexChanged;
+                            int k = 0;
+                            foreach (var inner in listBoxFileNames.Items)
                             {
-                                if (Additions[i].Name == target)
+                                if ((inner as BinaryOcrBitmap) == bob)
                                 {
-                                    Additions.RemoveAt(i);
-                                    Refill(Additions);
+                                    listBoxFileNames.SelectedIndex = k;
                                     break;
                                 }
+                                k++;
                             }
+                            break;
                         }
-                        Refill(Additions);
-                        return;
+                        i++;
                     }
                 }
                 return;
             }
-
 
             XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + target + "']");
             if (node != null)
@@ -410,28 +462,27 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_binOcrDb != null)
             {
-                foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImages)
+                BinaryOcrBitmap bob = GetSelectedBinOcrBitmap();
+                if (bob != null)
                 {
-                    if (target == bob.Text + "_" + bob.Hash)
-                    {
-                        _binOcrDb.CompareImages.Remove(bob);
+                    _binOcrDb.CompareImages.Remove(bob);
 
-                        if (Additions != null && Additions.Count > 0)
+                    if (Additions != null && Additions.Count > 0)
+                    {
+                        for (int i = Additions.Count - 1; i >= 0; i--)
                         {
-                            for (int i = Additions.Count - 1; i >= 0; i--)
+                            if (Additions[i].Name == bob.Key)
                             {
-                                if (Additions[i].Name == target)
-                                {
-                                    Additions.RemoveAt(i);
-                                    Refill(Additions);
-                                    break;
-                                }
+                                Additions.RemoveAt(i);
+                                Refill(Additions);
+                                break;
                             }
                         }
-                        Refill(Additions);
-                        return;
                     }
+                    Refill(Additions);
                 }
+                if (oldComboBoxIndex >= 0 && oldComboBoxIndex < comboBoxTexts.Items.Count)
+                    comboBoxTexts.SelectedIndex = oldComboBoxIndex;
                 return;
             }
 
@@ -470,10 +521,21 @@ namespace Nikse.SubtitleEdit.Forms
                     if (comboBoxTexts.Items[i].ToString() == text)
                     {
                         comboBoxTexts.SelectedIndex = i;
-                        for (int j = 0; j < listBoxFileNames.Items.Count; j++)
+                        if (_binOcrDb != null)
                         {
-                            if (GetFileName(j).StartsWith(name))
-                                listBoxFileNames.SelectedIndex = j;
+                            for (int j = 0; j < listBoxFileNames.Items.Count; j++)
+                            {
+                                if ((listBoxFileNames.Items[j] as BinaryOcrBitmap).Key == name)
+                                    listBoxFileNames.SelectedIndex = j;
+                            }                            
+                        }
+                        else
+                        {
+                            for (int j = 0; j < listBoxFileNames.Items.Count; j++)
+                            {
+                                if (GetFileName(j).StartsWith(name))
+                                    listBoxFileNames.SelectedIndex = j;
+                            }
                         }
                         return;
                     }

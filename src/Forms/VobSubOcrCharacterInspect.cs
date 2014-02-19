@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             for (int i = 0; i < _matches.Count; i++)
-                listBoxInspectItems.Items.Add(_matches[i].Text);
+                listBoxInspectItems.Items.Add(_matches[i]);
             if (listBoxInspectItems.Items.Count > 0)
                 listBoxInspectItems.SelectedIndex = 0;
         }
@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImages)
                     {
-                        if (match.Name == bob.Text + "_" + bob.Hash)
+                        if (match.Name == bob.Key)
                         {
                             textBoxText.Text = bob.Text;
                             checkBoxItalic.Checked = bob.Italic;
@@ -187,21 +187,36 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_selectedCompareBinaryOcrBitmap != null)
             {
+                foreach (var match in _matches) 
+                {
+                    if (match.Name == _selectedCompareBinaryOcrBitmap.Key)
+                    {
+                        _selectedCompareBinaryOcrBitmap.Text = newText;
+                        _selectedCompareBinaryOcrBitmap.Italic = checkBoxItalic.Checked;
+                        match.Text = newText;
+                        match.Italic = checkBoxItalic.Checked;
+                        match.Name = _selectedCompareBinaryOcrBitmap.Key;
+                        break;
+                    }
+                }
+
                 _selectedCompareBinaryOcrBitmap.Text = newText;
                 _selectedCompareBinaryOcrBitmap.Italic = checkBoxItalic.Checked;
                 listBoxInspectItems.SelectedIndexChanged -= listBoxInspectItems_SelectedIndexChanged;
                 listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex] = newText;
                 listBoxInspectItems.SelectedIndexChanged += listBoxInspectItems_SelectedIndexChanged;
-                return;
+            }
+            else
+            {
+                XmlNode node = _selectedCompareNode;
+                listBoxInspectItems.SelectedIndexChanged -= listBoxInspectItems_SelectedIndexChanged;
+                listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex] = newText;
+                listBoxInspectItems.SelectedIndexChanged += listBoxInspectItems_SelectedIndexChanged;
+                node.Attributes["Text"].InnerText = newText;
+                SetItalic(node);
             }
 
-            XmlNode node = _selectedCompareNode;
-            listBoxInspectItems.SelectedIndexChanged -= listBoxInspectItems_SelectedIndexChanged;
-            listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex] = newText;
-            listBoxInspectItems.SelectedIndexChanged += listBoxInspectItems_SelectedIndexChanged;
-            node.Attributes["Text"].InnerText = newText;
 
-            SetItalic(node);
             listBoxInspectItems_SelectedIndexChanged(null, null);
         }
 
@@ -309,7 +324,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _binOcrDb.CompareImages.Add(bob);
 
                 int index = listBoxInspectItems.SelectedIndex;
-                _matches[index].Name = bob.Text + "_" + bob.Hash;
+                _matches[index].Name = bob.Key;
                 _matches[index].ExpandCount = 0;
                 _matches[index].Italic = checkBoxItalic.Checked;
                 _matches[index].Text = textBoxText.Text;
