@@ -65,7 +65,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
 
         public int FindExactMatch(BinaryOcrBitmap bob)
         {
-            //foreach (var b in CompareImages)
             for (int i=0; i<CompareImages.Count; i++)
             {
                 var b = CompareImages[i];
