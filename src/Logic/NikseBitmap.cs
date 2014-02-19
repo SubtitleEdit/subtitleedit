@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private byte[] _bitmapData;
         private int _pixelAddress = 0;
+        private unsafe NikseBitmap nikseBitmap;
 
         public NikseBitmap(int width, int height)
         {
@@ -59,6 +60,14 @@ namespace Nikse.SubtitleEdit.Logic
             //Buffer.BlockCopy(buffer, dataIndex, DataBuffer, 0, dataSize);
             System.Runtime.InteropServices.Marshal.Copy(bitmapdata.Scan0, _bitmapData, 0, _bitmapData.Length);
             inputBitmap.UnlockBits(bitmapdata);
+        }
+
+        public NikseBitmap(NikseBitmap input)
+        {
+            Width = input.Width;
+            Height = input.Height;
+            _bitmapData = new byte[input._bitmapData.Length];
+            Buffer.BlockCopy(input._bitmapData, 0, _bitmapData, 0, _bitmapData.Length);
         }
 
         public void ReplaceNotDarkWithWhite()
@@ -1011,5 +1020,22 @@ namespace Nikse.SubtitleEdit.Logic
                     Buffer.BlockCopy(bufferWhite, 0, _bitmapData, i, 4);
             }
         }
+
+        internal void MakeVerticalLinePartTransparent(int xStart, int xEnd, int y)
+        {
+            if (xEnd > Width - 1)
+                xEnd = Width - 1;
+            if (xStart < 0)
+                xStart = 0;
+
+            int i = (xStart * 4) + (y * 4 * Width);
+            int end = (xEnd * 4) + (y * 4 * Width) + 4;
+            while (i < end)
+            {
+                _bitmapData[i] = 0;
+                i++;
+            }
+        }
+
     }
 }

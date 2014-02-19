@@ -618,7 +618,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (lineCount > 0)
                     list.Add(new ImageSplitterItem(Environment.NewLine));
                 var line = new List<ImageSplitterItem>();
-                foreach (ImageSplitterItem item in SplitHorizontal(b, xOrMorePixelsMakesSpace))
+                foreach (ImageSplitterItem item in SplitHorizontalNew(b, xOrMorePixelsMakesSpace))
                 {
                     item.ParentY = item.Y;
                     line.Add(item);
@@ -633,6 +633,147 @@ namespace Nikse.SubtitleEdit.Logic
             return list;
         }
 
+        private static IEnumerable<ImageSplitterItem> SplitHorizontalNew(ImageSplitterItem lineSplitterItem, int xOrMorePixelsMakesSpace)
+        {
+            var bmp = new NikseBitmap(lineSplitterItem.NikseBitmap);
+            var parts = new List<ImageSplitterItem>();
+            int startX = 0;
+            int width = 0;
+            int spacePixels = 0;
+            int subtractSpacePixels = 0;
+            for (int x = 0; x < bmp.Width; x++)
+            {
+                bool right;
+                bool clean;
+                List<Point> points = IsVerticalLineTransparetNew(bmp, x, out right, out clean);
+
+                if (points != null && clean)
+                {
+                    spacePixels++;
+                }
+
+                if (right && points != null)
+                {
+                    int add = FindMaxX(points, x) - x;
+                    width = width + add;
+                    subtractSpacePixels = add;
+                }
+
+                if (points == null)
+                {
+                    width++;
+                }
+                else if (width > 1)
+                {
+                    var bmp0 = new NikseBitmap(bmp);
+                    // remove pixels after current;
+                    int k = 0;
+                    foreach (Point p in points)
+                    {
+                        bmp0.MakeVerticalLinePartTransparent(p.X, p.X + k, p.Y);
+                        k++;
+                    }
+                    width = FindMaxX(points, x) - startX;
+                    width++;
+                    NikseBitmap b1 = bmp0.CopyRectangle(new Rectangle(startX, 0, width, bmp.Height));
+                    //  b1.GetBitmap().Save(@"C:\data\" +  x.ToString().PadLeft(3, '0') + ".bmp");
+
+                    int addY;
+                    b1 = CropTopAndBottom(b1, out addY);
+
+                    if (spacePixels >= xOrMorePixelsMakesSpace && parts.Count > 0)
+                        parts.Add(new ImageSplitterItem(" "));
+
+                    parts.Add(new ImageSplitterItem(startX + lineSplitterItem.X, addY + lineSplitterItem.Y, b1)); //y is what?
+                    // remove pixels before next letter;
+                    int begin = 0;
+                    foreach (Point p in points)
+                    {
+                        bmp.MakeVerticalLinePartTransparent(begin, p.X, p.Y);
+                    }
+                    width = 1;
+                    startX = FindMinX(points, x);
+                    spacePixels = -subtractSpacePixels;
+                    subtractSpacePixels = 0;
+                }
+                else
+                {
+                    width = 1;
+                    startX = FindMinX(points, x);
+                }
+            }
+            return parts;
+        }
+
+        private static int FindMinX(List<Point> points, int x)
+        {
+            foreach (Point p in points)
+            {
+                if (p.X < x)
+                    x = p.X;
+            }
+            return x;
+        }
+        private static int FindMaxX(List<Point> points, int x)
+        {
+            foreach (Point p in points)
+            {
+                if (p.X > x)
+                    x = p.X;
+            }
+            return x;
+        }
+
+        private static List<Point> IsVerticalLineTransparetNew(NikseBitmap bmp, int x, out bool right, out bool clean)
+        {
+            right = false;
+            clean = true;
+            var points = new List<Point>();
+            int y = 0;
+            while (y < bmp.Height)
+            {
+                if (bmp.GetAlpha(x, y) > 100)
+                {
+                    clean = false;
+                    if (x == 0)
+                        return null;
+
+                    if (x < bmp.Width - 1 && y < bmp.Height - 1 && bmp.GetAlpha(x + 1, y) == 0 && bmp.GetAlpha(x + 1, y + 1) == 0)
+                    {
+                        //if pixels to the left - move right?
+                        if (bmp.GetAlpha(x - 1, y) > 0)
+                            x++; //(requires search for min/max x in points                         
+                        else
+                            return null;
+                        right = true;
+                    }
+                    else if (bmp.GetAlpha(x - 1, y) == 0)
+                    {
+                        x--;
+                    }
+                    else if (y > 5 && bmp.GetAlpha(x - 1, y - 1) == 0)
+                    {
+                        x--;
+                        y--;
+                    }
+                    else if (y > 5 && bmp.GetAlpha(x - 1, y - 2) == 0)
+                    {
+                        x--;
+                        y -= 2;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    points.Add(new Point(x, y));
+                    y++;
+                }
+            }
+            return points;
+        }
 
         public static List<ImageSplitterItem> SplitBitmapToLetters(List<ImageSplitterItem> verticalBitmaps, int xOrMorePixelsMakesSpace, bool rightToLeft, bool topToBottom)
         {
