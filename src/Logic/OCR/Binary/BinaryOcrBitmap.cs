@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 
@@ -27,6 +28,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
         public int ExpandCount { get; set; }
         public bool LoadedOK { get; private set; }
         public string Text { get; set; }
+        public List<BinaryOcrBitmap> ExpandedList { get; set; }
        
         public string Key
         {

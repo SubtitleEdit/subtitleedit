@@ -2501,61 +2501,36 @@ namespace Nikse.SubtitleEdit.Forms
                 return null;
             }
 
+            var bob = new BinaryOcrBitmap(target);
 
-            // build merged items - for expanded match search
-            var mergedItems = new List<ImageSplitterItem>();
-            List<ImageSplitterItem> expandSelectionList = new List<ImageSplitterItem>();
-            for (int j = listIndex; j < list.Count; j++)
+            for (int k = 0; k < _binaryOcrDb.CompareImagesExpanded.Count; k++)
             {
-                ImageSplitterItem item = list[j];
-                if (item.NikseBitmap == null)
+                var b = _binaryOcrDb.CompareImagesExpanded[k];
+                if (bob.Hash == b.Hash && bob.Width == b.Width && bob.Height == b.Height && bob.NumberOfColoredPixels == b.NumberOfColoredPixels)
                 {
-                    break;
-                }
-                else
-                {
-                    expandSelectionList.Add(item);
-                    if (expandSelectionList.Count > 1 && expandSelectionList.Count < 10)
-                        mergedItems.Add(GetExpandedSelectionNew(parentBitmap, expandSelectionList));
-                }
-            }
-
-            // check for expand match!
-            foreach (BinaryOcrBitmap compareItem in _binaryOcrDb.CompareImages)
-            {                
-                if (compareItem.ExpandCount > 0 &&
-                    mergedItems.Count > 0 &&
-                    compareItem.Width > target.Width &&
-                    parentBitmap.Width >= compareItem.Width + targetItem.X &&
-                    parentBitmap.Height >= compareItem.Height)
-                {
-                    foreach (ImageSplitterItem merged in mergedItems)
+                    bool ok = false;
+                    for (int i = 0; i < b.ExpandedList.Count; i++)
                     {
-                        if (merged.NikseBitmap.Width == compareItem.Width && merged.NikseBitmap.Height == compareItem.Height)
+                        if (listIndex + i + 1 < list.Count && list[listIndex + i + 1].NikseBitmap != null && b.ExpandedList[i].Hash == new BinaryOcrBitmap(list[listIndex + i + 1].NikseBitmap).Hash)
                         {
-                            int dif = NikseBitmapImageSplitter.IsBitmapsAlike(compareItem, merged.NikseBitmap);
-                            if (dif < smallestDifference)
-                            {
-                                bool allow = true;
-                                if (Math.Abs(target.Height - compareItem.Height) > 5 && compareItem.Text == "\"")
-                                    allow = false;
-                                if (allow)
-                                {
-                                    smallestDifference = dif;
-                                    smallestIndex = index;
-                                    if (dif == 0)
-                                        break; // foreach ending
-                                }
-                            }
+                            ok = true;
+                        }
+                        else
+                        {
+                            ok = false;
+                            break;
                         }
                     }
+                    if (ok)
+                    {
+                        secondBestGuess = null;
+                        return new CompareMatch(b.Text, b.Italic, b.ExpandCount, b.Key);
+                    }
                 }
-                index++;
             }
-                
 
             // Search images with minor location changes
-            FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, target, _binaryOcrDb);
+            FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, target, _binaryOcrDb, bob);
             if (maxDiff > 0)
             {
                 if (smallestDifference * 100.0 / (target.Width * target.Height) > _vobSubOcrSettings.AllowDifferenceInPercent && target.Width < 70)
@@ -2563,20 +2538,20 @@ namespace Nikse.SubtitleEdit.Forms
                     if (smallestDifference > 2 && target.Width > 25)
                     {
                         var cutBitmap = target.CopyRectangle(new Rectangle(4, 0, target.Width - 4, target.Height));
-                        FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap, _binaryOcrDb);
+                        FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap, _binaryOcrDb, bob);
                         double differencePercentage = smallestDifference * 100.0 / (target.Width * target.Height);
                     }
 
                     if (smallestDifference > 2 && target.Width > 12)
                     {
                         var cutBitmap = target.CopyRectangle(new Rectangle(1, 0, target.Width - 2, target.Height));
-                        FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap, _binaryOcrDb);
+                        FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap, _binaryOcrDb, bob);
                     }
 
                     if (smallestDifference > 2 && target.Width > 12)
                     {
                         var cutBitmap = target.CopyRectangle(new Rectangle(0, 0, target.Width - 2, target.Height));
-                        FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap, _binaryOcrDb);
+                        FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap, _binaryOcrDb, bob);
                     }
 
                     if (smallestDifference > 2 && target.Width > 12)
@@ -2585,7 +2560,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int topCrop = 0;
                         var cutBitmap2 = NikseBitmapImageSplitter.CropTopAndBottom(cutBitmap, out topCrop, 2);
                         if (cutBitmap2.Height != target.Height)
-                            FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2, _binaryOcrDb);
+                            FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2, _binaryOcrDb, bob);
                     }
 
                     if (smallestDifference > 2 && target.Width > 15)
@@ -2594,7 +2569,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int topCrop = 0;
                         var cutBitmap2 = NikseBitmapImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
                         if (cutBitmap2.Height != target.Height)
-                            FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2, _binaryOcrDb);
+                            FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2, _binaryOcrDb, bob);
                     }
 
                     if (smallestDifference > 2 && target.Width > 15)
@@ -2603,7 +2578,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int topCrop = 0;
                         var cutBitmap2 = NikseBitmapImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
                         if (cutBitmap2.Height != target.Height)
-                            FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2, _binaryOcrDb);
+                            FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2, _binaryOcrDb, bob);
                     }
                 }
             }
@@ -2655,9 +2630,8 @@ namespace Nikse.SubtitleEdit.Forms
             return bmp;
         }
 
-        private static void FindBestMatchNew(ref int index, ref int smallestDifference, ref int smallestIndex, NikseBitmap target, BinaryOcrDb binOcrDb)
+        private static void FindBestMatchNew(ref int index, ref int smallestDifference, ref int smallestIndex, NikseBitmap target, BinaryOcrDb binOcrDb, BinaryOcrBitmap bob)
         {
-            var bob = new BinaryOcrBitmap(target);
             var bobExactMatch = binOcrDb.FindExactMatch(bob);
             if (bobExactMatch >= 0)
             {
@@ -3369,12 +3343,29 @@ namespace Nikse.SubtitleEdit.Forms
             return name;
         }
 
-        private string SaveCompareItemNew(NikseBitmap newTarget, string text, bool isItalic, int expandCount)
+        private string SaveCompareItemNew(NikseBitmap newTarget, string text, bool isItalic, List<ImageSplitterItem> expandList)
         {
-            BinaryOcrBitmap bob = new BinaryOcrBitmap(newTarget, isItalic, expandCount, text);
-            _binaryOcrDb.Add(bob);
-            _binaryOcrDb.Save();
-            return bob.Key;
+            int expandCount = 0;
+            if (expandList != null)
+                expandCount = expandList.Count;
+            
+            if (expandCount > 0)
+            {
+                var bob = new BinaryOcrBitmap(expandList[0].NikseBitmap, isItalic, expandCount, text);
+                bob.ExpandedList = new List<BinaryOcrBitmap>();
+                for (int j = 1; j < expandList.Count; j++)
+                    bob.ExpandedList.Add(new BinaryOcrBitmap(expandList[j].NikseBitmap));
+                _binaryOcrDb.Add(bob);
+                _binaryOcrDb.Save();
+                return bob.Key;
+            }
+            else
+            {
+                var bob = new BinaryOcrBitmap(newTarget, isItalic, expandCount, text);
+                _binaryOcrDb.Add(bob);
+                _binaryOcrDb.Save();
+                return bob.Key;
+            }            
         }
 
         /// <summary>
@@ -3632,7 +3623,7 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (result == DialogResult.OK)
                         {
                             string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
-                            string name = SaveCompareItemNew(item.NikseBitmap, text, _vobSubOcrCharacter.IsItalic, expandSelectionList.Count);
+                            string name = SaveCompareItemNew(item.NikseBitmap, text, _vobSubOcrCharacter.IsItalic, expandSelectionList);
                             var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrCharacter.IsItalic, listViewIndex);
                             _lastAdditions.Add(addition);
                             matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, expandSelectionList.Count, null));
@@ -3670,7 +3661,7 @@ namespace Nikse.SubtitleEdit.Forms
                             else if (result == DialogResult.OK)
                             {
                                 string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
-                                string name = SaveCompareItemNew(item.NikseBitmap, text, _vobSubOcrCharacter.IsItalic, 0);
+                                string name = SaveCompareItemNew(item.NikseBitmap, text, _vobSubOcrCharacter.IsItalic, null);
                                 var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrCharacter.IsItalic, listViewIndex);
                                 _lastAdditions.Add(addition);
                                 matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0, null));
