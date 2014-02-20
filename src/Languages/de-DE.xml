@@ -2,10 +2,10 @@
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.3.13</Version>
+    <Version>3.3.14</Version>
     <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Nobody.</TranslatedBy>
     <CultureName>de-DE</CultureName>
-    <HelpFile />
+    <HelpFile></HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>&amp;Abbrechen</Cancel>
     <Apply>Übernehmen</Apply>
@@ -667,11 +667,11 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>&amp;Vergleichen...</Compare>
         <Statistics>Statisti&amp;k...</Statistics>
         <Plugins>Plugins...</Plugins>
-        <ImportOcrFromDvd>Importiere/OCR Untertitel aus VOB/IFO (DVD) ...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Importiere/OCR Untertitel von VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importiere/OCR VobSub (sub/idx) Untertitel...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Importiere/OCR Blu-ray SUP Datei...</ImportBluRaySupFile>
+        <ImportBluRaySupFile>Importiere/OCR Blu-ray (.sup) Datei...</ImportBluRaySupFile>
         <ImportXSub>Importiere/OCR xSub von DivX/AVI...</ImportXSub>
-        <ImportSubtitleFromMatroskaFile>Importiere Untertitel aus Matroska Datei...</ImportSubtitleFromMatroskaFile>
+        <ImportSubtitleFromMatroskaFile>Importiere Untertitel von Matroska (.mkv) Datei...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importiere Untertitel mit manuell gewählter Kodierung...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importiere Text...</ImportText>
         <ImportImages>Importiere Bilder...</ImportImages>
@@ -811,6 +811,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <SaveAs>Speichern als</SaveAs>
         <Find>Suchen</Find>
         <Replace>Ersetzen</Replace>
+        <FixCommonErrors>Fehler korrigieren</FixCommonErrors>
         <VisualSync>Anpassung</VisualSync>
         <SpellCheck>Rechtschreibung</SpellCheck>
         <Settings>Einstellungen</Settings>
@@ -1118,6 +1119,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <OcrReplacePairXNotAdded>OCR Korrekturlisten Paar '{0} -&gt; {1}' wurde NICHT zur OCR Korrekturliste hinzugefügt</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} Texte ausgewählt</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Untertitel enthält Unicode Zeichen. Beim Speichern als ANSI gehen diese verloren. Speichern fortfahren?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeCharactersAnsiWarning>Untertitel enthält Unicode Zeichen. Beim Speichern als ANSI gehen diese verloren. Speichern fortfahren?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Untertitel enthält negative Zeitstempel. Mit Speichern fortfahren?</NegativeTimeWarning>
     <BeforeMergeShortLines>Vor Verbinden kurzer Texte</BeforeMergeShortLines>
     <BeforeSplitLongLines>Vor Trennen langer Texte</BeforeSplitLongLines>
@@ -1177,6 +1179,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <NotAValidXSubFile>Keine gültige xSub Datei!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Vor Zeilenverbinden mit gleichen Text</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Untertitel mit Zeitstempel hat eine andere Zeilenanzahl ({0}) als der aktuelle ({1}) - Trotzdem fortfahren?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ParsingTransportStream>Untersuche Transport Stream - Bitte warten...</ParsingTransportStream>
     <ErrorLoadIdx>SE kann keine .idx Dateien lesen. Sie sind Teile von idx/sub Dateipaaren (auch VobSub genannt). SE kann die .sub Datei öffnen.</ErrorLoadIdx>
     <ErrorLoadRar>Diese Datei ist ein .rar Archiv. SE kann keine komprimierten Dateien öffnen.</ErrorLoadRar>
     <ErrorLoadZip>Diese Datei ist ein .zip Archiv. SE kann keine komprimierten Dateien öffnen.</ErrorLoadZip>
@@ -1299,6 +1302,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <UnableToDownloadPluginListX>Kann Pluginliste nicht runterladen: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Neuere Subtitle Edit Version erforderlich!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Update verfügbar!]</UpdateAvailable>
+    <UpdateAll>Update alle</UpdateAll>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Untertitel für Hörgeschädigte entfernen</Title>
@@ -1495,11 +1499,11 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <EndSceneIndex>Endszenen Text ist</EndSceneIndex>
     <FirstPlusX>Erstes + {0}</FirstPlusX>
     <LastMinusX>Letztes - {0}</LastMinusX>
-    <FixCommonerrors>Häufige Fehler beheben</FixCommonerrors>
+    <FixCommonerrors>Fehler korrigieren</FixCommonerrors>
     <MergeLinesShorterThan>Verbinde Texte die kürzer sind als</MergeLinesShorterThan>
     <MusicSymbol>Musik Symbol</MusicSymbol>
     <MusicSymbolsToReplace>Zu ersetzende Musik Symbole (durch Leerzeichen trennen)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Häufige OCR Fehler beheben - auch Hardcoded Regeln verwenden</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonOcrErrorsUseHardcodedRules>Häufige OCR Fehler korrigieren - auch Hardcoded Regeln verwenden</FixCommonOcrErrorsUseHardcodedRules>
     <Shortcuts>Kurzbefehle</Shortcuts>
     <Shortcut>Kurzbefehl</Shortcut>
     <Control>Steuerung</Control>
