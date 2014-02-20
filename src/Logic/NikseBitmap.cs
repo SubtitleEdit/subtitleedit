@@ -554,7 +554,7 @@ namespace Nikse.SubtitleEdit.Logic
                         if (alpha != 0)
                         {
                             done = true;
-                            newHeight = y + maximumCropping;
+                            newHeight = y + maximumCropping + 1;
                             if (newHeight > Height)
                                 newHeight = Height;
                         }

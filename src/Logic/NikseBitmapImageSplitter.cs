@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
                 if (allTransparent == false)
-                    return bmp.CopyRectangle(new Rectangle(0, startTop, bmp.Width - 1, y-startTop+1));
+                    return bmp.CopyRectangle(new Rectangle(0, startTop, bmp.Width, y-startTop+1));
             }
             return bmp;
         }
@@ -676,15 +676,17 @@ namespace Nikse.SubtitleEdit.Logic
                     width = FindMaxX(points, x) - startX;
                     width++;
                     NikseBitmap b1 = bmp0.CopyRectangle(new Rectangle(startX, 0, width, bmp.Height));
-                    //  b1.GetBitmap().Save(@"C:\data\" +  x.ToString().PadLeft(3, '0') + ".bmp");
+                    
 
-                    int addY;
-                    b1 = CropTopAndBottom(b1, out addY);
+
 
                     if (spacePixels >= xOrMorePixelsMakesSpace && parts.Count > 0)
                         parts.Add(new ImageSplitterItem(" "));
 
+                    int addY;
+                    b1 = CropTopAndBottom(b1, out addY);
                     parts.Add(new ImageSplitterItem(startX + lineSplitterItem.X, addY + lineSplitterItem.Y, b1)); //y is what?
+
                     // remove pixels before next letter;
                     int begin = 0;
                     foreach (Point p in points)
@@ -755,11 +757,15 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         x--;
                         y--;
+                        while (points.Count > 0 && points[points.Count - 1].Y > y)
+                            points.RemoveAt(points.Count - 1);
                     }
                     else if (y > 5 && bmp.GetAlpha(x - 1, y - 2) == 0)
                     {
                         x--;
                         y -= 2;
+                        while (points.Count > 0 && points[points.Count - 1].Y > y)
+                            points.RemoveAt(points.Count - 1);
                     }
                     else
                     {
