@@ -16,7 +16,6 @@ namespace Nikse.SubtitleEdit.Forms
         List<bool> _italics = new List<bool>();
         internal List<VobSubOcr.ImageCompareAddition> Additions { get; private set; }
         BinaryOcrDb _binOcrDb = null;
-        List<BinaryOcrBitmap> _binOcrListLookups = null;
         
         public XmlDocument ImageCompareDocument
         {
@@ -103,6 +102,18 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+                foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImagesExpanded)
+                {
+                    string name = bob.Key;
+                    foreach (VobSubOcr.ImageCompareAddition a in additions)
+                    {
+                        if (name == a.Name && bob.Text != null)
+                        {
+                            listBoxFileNames.Items.Add(bob);
+                            _italics.Add(bob.Italic);
+                        }
+                    }
+                }
             }
             else
             {
@@ -154,6 +165,13 @@ namespace Nikse.SubtitleEdit.Forms
                         texts.Add(text);
                     count++;
                 }
+                foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImagesExpanded)
+                {
+                    string text = bob.Text;
+                    if (!texts.Contains(text) && text != null)
+                        texts.Add(text);
+                    count++;
+                }
             }
             else
             {
@@ -191,6 +209,15 @@ namespace Nikse.SubtitleEdit.Forms
             if (_binOcrDb != null)
             {
                 foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImages)
+                {
+                    string text = bob.Text;
+                    if (text == target)
+                    {
+                        listBoxFileNames.Items.Add(bob);
+                        _italics.Add(bob.Italic);
+                    }
+                }
+                foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImagesExpanded)
                 {
                     string text = bob.Text;
                     if (text == target)
@@ -257,7 +284,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var bob = GetSelectedBinOcrBitmap();
                 if (bob != null)
+                {
                     bmp = bob.ToOldBitmap();
+                }
             }
             else  if (File.Exists(databaseName))
             {
