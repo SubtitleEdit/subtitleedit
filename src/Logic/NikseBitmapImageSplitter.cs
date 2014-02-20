@@ -41,26 +41,28 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 startTop++;
             }
-            if (startTop > 9)
-                startTop -= 5; // if top space > 9, then allways leave blank 5 pixels on top (so . is not confused with ').
+            //if (startTop > 9)
+            //startTop -= 5; // if top space > 9, then allways leave blank 5 pixels on top (so . is not confused with ').
             topCropping = startTop;
 
+            int h = bmp.Height;
+            bool bottomCroppingDone = false;
             for (int y = bmp.Height-1; y > 3; y--)
             {
-                bool allTransparent = true;
                 for (int x = 1; x < bmp.Width-1; x++)
                 {
                     int a = bmp.GetAlpha(x, y);
                     if (a != 0)
                     {
-                        allTransparent = false;
+                        bottomCroppingDone = true;
                         break;
                     }
                 }
-                if (allTransparent == false)
-                    return bmp.CopyRectangle(new Rectangle(0, startTop, bmp.Width, y-startTop+1));
+                h = y;
+                if (bottomCroppingDone)
+                    break;
             }
-            return bmp;
+            return bmp.CopyRectangle(new Rectangle(0, startTop, bmp.Width, h - startTop + 1)); 
         }
 
         public static NikseBitmap CropTopAndBottom(NikseBitmap bmp, out int topCropping, int maxDifferentPixelsOnLine)
@@ -675,10 +677,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     width = FindMaxX(points, x) - startX;
                     width++;
-                    NikseBitmap b1 = bmp0.CopyRectangle(new Rectangle(startX, 0, width, bmp.Height));
-                    
-
-
+                    NikseBitmap b1 = bmp0.CopyRectangle(new Rectangle(startX, 0, width, bmp.Height));                    
 
                     if (spacePixels >= xOrMorePixelsMakesSpace && parts.Count > 0)
                         parts.Add(new ImageSplitterItem(" "));
