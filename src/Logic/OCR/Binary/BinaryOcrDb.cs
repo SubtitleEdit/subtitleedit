@@ -79,6 +79,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
             int index = FindExactMatch(bob);
             if (index == -1)
                 CompareImages.Add(bob);
+            else
+                System.Windows.Forms.MessageBox.Show("Image already in db!");
             return index;
         }
 
