@@ -3,11 +3,12 @@
 
 3.3.14 (xth February 2014)
 * NEW:
-  * Added Slovenian translation - thx Hawk
+   * Added Slovenian translation - thx Hawk
 * IMPROVED:
    * Updated Korean language file - thx domddol
    * Updated Dutch language file - thx Quetsbeek
    * Updated Bulgarian language file - thx Iavor
+   * Updated German language file - thx Siegwarth
    * Added Serbo-Croatian letter "đ" to file format PAC - thx nenad
    * Export to custom text format - Added "Delete" button - thx Leon
 * FIXED:
