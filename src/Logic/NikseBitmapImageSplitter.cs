@@ -743,6 +743,22 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         //if pixels to the left - move right?
                         if (bmp.GetAlpha(x - 1, y) > 0)
+                        {
+                            x++; //(requires search for min/max x in points                         
+                            right = true;
+                        }
+                        else if (x > 0 && bmp.GetAlpha(x - 1, y) == 0)
+                        {
+                            x--; //(requires search for min/max x in points                         
+                        }
+                        else
+                            return null;
+                        
+                    }
+                    else if (x < bmp.Width - 1 && y == bmp.Height - 1 && bmp.GetAlpha(x + 1, y) == 0 && bmp.GetAlpha(x + 1, y - 1) == 0)
+                    {
+                        //if pixels to the left - move right?
+                        if (bmp.GetAlpha(x - 1, y) > 0)
                             x++; //(requires search for min/max x in points                         
                         else
                             return null;

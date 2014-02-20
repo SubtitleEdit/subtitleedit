@@ -258,7 +258,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex] = Configuration.Settings.Language.VobSubOcr.NoMatch;
-            if (_selectedCompareBinaryOcrBitmap == null)
+            if (_selectedCompareBinaryOcrBitmap != null)
             {
                 _binOcrDb.CompareImages.Remove(_selectedCompareBinaryOcrBitmap);
                 _selectedCompareBinaryOcrBitmap = null;

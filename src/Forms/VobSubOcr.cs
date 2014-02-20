@@ -4391,8 +4391,7 @@ namespace Nikse.SubtitleEdit.Forms
             nbmp = NikseBitmapImageSplitter.CropTopAndBottom(nbmp, out topCropping);
 
             return new ImageSplitterItem(minimumX, minimumY, nbmp);
-        }
-
+        }       
 
         private static string GetStringWithItalicTags(List<CompareMatch> matches)
         {
@@ -7313,8 +7312,23 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else // found image match
                     {
-                        matches.Add(new CompareMatch(match.Text, match.Italic, 0, match.Name));
-                        imageSources.Add(item.NikseBitmap.GetBitmap());
+                        if (match.ExpandCount > 0)
+                        {
+                            List<ImageSplitterItem> expandSelectionList = new List<ImageSplitterItem>();
+                            for (int i = 0; i < match.ExpandCount; i++)
+                            {
+                                expandSelectionList.Add(list[index + i]);
+                            }
+                            item = GetExpandedSelectionNew(parentBitmap, expandSelectionList);
+                            matches.Add(new CompareMatch(match.Text, match.Italic, 0, match.Name));
+                            imageSources.Add(item.NikseBitmap.GetBitmap());
+                        }
+                        else
+                        {
+                            matches.Add(new CompareMatch(match.Text, match.Italic, 0, match.Name));
+                            imageSources.Add(item.NikseBitmap.GetBitmap());
+                        }
+                        
                         if (match.ExpandCount > 0)
                             index += match.ExpandCount - 1;
                     }
