@@ -107,6 +107,17 @@ namespace Nikse.SubtitleEdit.Forms
                             pictureBoxCompareBitmapDouble.Width = bitmap.Width * 2;
                             pictureBoxCompareBitmapDouble.Height = bitmap.Height * 2;
                             pictureBoxCompareBitmapDouble.Image = bitmap;
+
+                            var matchBob = new BinaryOcrBitmap(new NikseBitmap(_imageSources[listBoxInspectItems.SelectedIndex]));
+                            if (matchBob.Hash == bob.Hash && matchBob.Width == bob.Width && matchBob.Height == bob.Height && matchBob.NumberOfColoredPixels == bob.NumberOfColoredPixels)
+                            {
+                                buttonAddBetterMatch.Enabled = false; // exact match
+                            }
+                            else
+                            {
+                                buttonAddBetterMatch.Enabled = true;
+                            }
+                            break;
                         }
                     }
                 }
@@ -172,7 +183,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonUpdate.Enabled = true;
                 buttonDelete.Enabled = true;
-                buttonAddBetterMatch.Enabled = true;
+                if (_selectedCompareNode != null)
+                    buttonAddBetterMatch.Enabled = true;
                 textBoxText.Enabled = true;
                 checkBoxItalic.Enabled = true;
             }
@@ -321,7 +333,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var nbmp = new NikseBitmap((pictureBoxInspectItem.Image as Bitmap));
                 BinaryOcrBitmap bob = new BinaryOcrBitmap(nbmp, checkBoxItalic.Checked, 0, textBoxText.Text);
-                _binOcrDb.CompareImages.Add(bob);
+                _binOcrDb.Add(bob);
 
                 int index = listBoxInspectItems.SelectedIndex;
                 _matches[index].Name = bob.Key;

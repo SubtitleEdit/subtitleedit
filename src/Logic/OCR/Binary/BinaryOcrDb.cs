@@ -74,6 +74,14 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
             return -1;
         }
 
+        public int Add(BinaryOcrBitmap bob)
+        {
+            int index = FindExactMatch(bob);
+            if (index == -1)
+                CompareImages.Add(bob);
+            return index;
+        }
+
 
     }
 }
