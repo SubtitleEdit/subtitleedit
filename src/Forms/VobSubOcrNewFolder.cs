@@ -59,6 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!_vobSub)
             {
+                FolderName = folderName;
                 DialogResult = DialogResult.OK;
                 return;
             }

@@ -19,12 +19,14 @@ namespace Nikse.SubtitleEdit.Forms
         private string _directoryPath;
         private XmlNode _selectedCompareNode = null;
         private BinaryOcrBitmap _selectedCompareBinaryOcrBitmap = null;
+        private VobSubOcr.CompareMatch _selectedMatch = null;
         BinaryOcrDb _binOcrDb = null;
 
         public VobSubOcrCharacterInspect()
         {
             InitializeComponent();
 
+            labelExpandCount.Text = string.Empty;
             Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.Title;
             groupBoxInspectItems.Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.InspectItems;
             labelImageInfo.Text = string.Empty;
@@ -76,24 +78,28 @@ namespace Nikse.SubtitleEdit.Forms
         private void listBoxInspectItems_SelectedIndexChanged(object sender, EventArgs e)
         {
             labelImageInfo.Text = string.Empty;
+            labelExpandCount.Text = string.Empty;
 
             if (listBoxInspectItems.SelectedIndex < 0)
                 return;
 
             _selectedCompareNode = null;
             _selectedCompareBinaryOcrBitmap = null;
+            
             pictureBoxInspectItem.Image = _imageSources[listBoxInspectItems.SelectedIndex];
             pictureBoxCompareBitmap.Image = null;
             pictureBoxCompareBitmapDouble.Image = null;
 
             int index = (listBoxInspectItems.SelectedIndex);
             var match = _matches[index];
+            _selectedMatch = match;
             if (!string.IsNullOrEmpty(match.Name))
             {
                 Bitmap bitmap = new Bitmap(1,1);
 
                 if (_binOcrDb != null)
                 {
+                    bool bobFound = false;
                     foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImages)
                     {
                         if (match.Name == bob.Key)
@@ -117,7 +123,31 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 buttonAddBetterMatch.Enabled = true;
                             }
+
+                            bobFound = true;
                             break;
+                        }
+                    }
+                    if (!bobFound)
+                    {
+                        foreach (BinaryOcrBitmap bob in _binOcrDb.CompareImagesExpanded)
+                        {
+                            if (match.Name == bob.Key)
+                            {
+                                textBoxText.Text = bob.Text;
+                                checkBoxItalic.Checked = bob.Italic;
+                                _selectedCompareBinaryOcrBitmap = bob;
+
+                                bitmap = bob.ToOldBitmap();
+                                pictureBoxCompareBitmap.Image = bitmap;
+                                pictureBoxCompareBitmapDouble.Width = bitmap.Width * 2;
+                                pictureBoxCompareBitmapDouble.Height = bitmap.Height * 2;
+                                pictureBoxCompareBitmapDouble.Image = bitmap;
+                                var matchBob = new BinaryOcrBitmap(new NikseBitmap(_imageSources[listBoxInspectItems.SelectedIndex]));
+                                buttonAddBetterMatch.Enabled = false; // exact match                                
+                                labelExpandCount.Text = string.Format("Expand count: {0}", bob.ExpandCount);
+                                break;
+                            }
                         }
                     }
                 }
@@ -260,7 +290,10 @@ namespace Nikse.SubtitleEdit.Forms
             listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex] = Configuration.Settings.Language.VobSubOcr.NoMatch;
             if (_selectedCompareBinaryOcrBitmap != null)
             {
-                _binOcrDb.CompareImages.Remove(_selectedCompareBinaryOcrBitmap);
+                if (_selectedCompareBinaryOcrBitmap.ExpandCount > 0)
+                    _binOcrDb.CompareImagesExpanded.Remove(_selectedCompareBinaryOcrBitmap);
+                else
+                    _binOcrDb.CompareImages.Remove(_selectedCompareBinaryOcrBitmap);
                 _selectedCompareBinaryOcrBitmap = null;
             }
             else
@@ -332,7 +365,14 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_selectedCompareBinaryOcrBitmap != null)
             {
                 var nbmp = new NikseBitmap((pictureBoxInspectItem.Image as Bitmap));
-                BinaryOcrBitmap bob = new BinaryOcrBitmap(nbmp, checkBoxItalic.Checked, 0, textBoxText.Text);
+                int x = 0;
+                int y = 0;
+                if (_selectedMatch != null && _selectedMatch.ImageSplitterItem != null)
+                {
+                    x = _selectedMatch.X;
+                    y = _selectedMatch.Y;
+                }
+                var bob = new BinaryOcrBitmap(nbmp, checkBoxItalic.Checked, 0, textBoxText.Text, x, y);
                 _binOcrDb.Add(bob);
 
                 int index = listBoxInspectItems.SelectedIndex;
