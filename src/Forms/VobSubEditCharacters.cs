@@ -27,8 +27,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal VobSubEditCharacters(string databaseFolderName, List<VobSubOcr.ImageCompareAddition> additions, BinaryOcrDb binOcrDb)
         {
-            _binOcrDb = binOcrDb;
             InitializeComponent();
+            labelExpandCount.Text = string.Empty;
+            _binOcrDb = binOcrDb;
             labelCount.Text = string.Empty;
             if (additions != null)
             {
@@ -279,13 +280,17 @@ namespace Nikse.SubtitleEdit.Forms
             string databaseName = _directoryPath + "Images.db";
             string posAsString = GetSelectedFileName();
             Bitmap bmp = null;
-
+            labelExpandCount.Text = string.Empty;
             if (_binOcrDb != null)
             {
                 var bob = GetSelectedBinOcrBitmap();
                 if (bob != null)
                 {
                     bmp = bob.ToOldBitmap();
+                    if (bob.ExpandCount > 0)
+                    {
+                        labelExpandCount.Text = string.Format("Expand count: {0}", bob.ExpandCount);
+                    }
                 }
             }
             else  if (File.Exists(databaseName))
@@ -494,7 +499,10 @@ namespace Nikse.SubtitleEdit.Forms
                 BinaryOcrBitmap bob = GetSelectedBinOcrBitmap();
                 if (bob != null)
                 {
-                    _binOcrDb.CompareImages.Remove(bob);
+                    if (bob.ExpandCount > 0)
+                        _binOcrDb.CompareImagesExpanded.Remove(bob);
+                    else
+                        _binOcrDb.CompareImages.Remove(bob);
 
                     if (Additions != null && Additions.Count > 0)
                     {

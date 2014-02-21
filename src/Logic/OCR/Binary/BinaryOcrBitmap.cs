@@ -12,6 +12,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
         //-------------
         //2bytes=width
         //2bytes=height
+        //2bytes=x
+        //2bytes=y
         //2bytes=numberOfColoredPixels
         //1byte=flags (1 bit = italic, next 7 bits = ExpandCount)
         //4bytes=hash
@@ -21,6 +23,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
 
         public int Width { get; private set; }
         public int Height { get; private set; }
+        public int X { get; set; }
+        public int Y { get; set; }
         public int NumberOfColoredPixels { get; private set; }
         public UInt32 Hash { get; private set; }
         private byte[] _colors;
@@ -45,11 +49,20 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
             return Text + " (" + Width + "x" + Height + ")";
         }
 
+        public BinaryOcrBitmap(int width, int height)
+        {
+            Width = width;
+            Height = height;
+            _colors = new byte[Width * Height];
+            Hash = MurMurHash3.Hash(_colors);
+            CalcuateNumberOfColoredPixels();
+        }
+
         public BinaryOcrBitmap(Stream stream)
         {
             try
             {
-                byte[] buffer = new byte[12];
+                byte[] buffer = new byte[16];
                 int read = stream.Read(buffer, 0, buffer.Length);
                 if (read < buffer.Length)
                 {
@@ -58,11 +71,13 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
                 }
                 Width = buffer[0] << 8 | buffer[1];
                 Height = buffer[2] << 8 | buffer[3];
-                NumberOfColoredPixels = buffer[4] << 8 | buffer[5];
-                Italic = (buffer[6] & Nikse.SubtitleEdit.Logic.VobSub.Helper.B10000000) > 0;
-                ExpandCount = buffer[6] & Nikse.SubtitleEdit.Logic.VobSub.Helper.B01111111;
-                Hash = (uint)(buffer[7] << 24 | buffer[8] << 16 | buffer[9] << 8 | buffer[10]);
-                int textLen = buffer[11];
+                X = buffer[4] << 8 | buffer[5];
+                Y = buffer[6] << 8 | buffer[7];
+                NumberOfColoredPixels = buffer[8] << 8 | buffer[9];
+                Italic = (buffer[10] & Nikse.SubtitleEdit.Logic.VobSub.Helper.B10000000) > 0;
+                ExpandCount = buffer[10] & Nikse.SubtitleEdit.Logic.VobSub.Helper.B01111111;
+                Hash = (uint)(buffer[11] << 24 | buffer[12] << 16 | buffer[13] << 8 | buffer[14]);
+                int textLen = buffer[15];
                 if (textLen > 0)
                 {
                     buffer = new byte[textLen];
@@ -85,12 +100,14 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
             InitializeViaNikseBmp(nbmp);
         }
 
-        public BinaryOcrBitmap(NikseBitmap nbmp, bool italic, int expandCount, string text)
+        public BinaryOcrBitmap(NikseBitmap nbmp, bool italic, int expandCount, string text, int x, int y)
         {
             InitializeViaNikseBmp(nbmp);
             Italic = italic;
             ExpandCount = expandCount;
             Text = text;
+            X = x;
+            Y = y;
         }
 
         private void InitializeViaNikseBmp(NikseBitmap nbmp)
@@ -124,6 +141,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
             WriteInt16(stream, (short)Width);
             WriteInt16(stream, (short)Height);
 
+            WriteInt16(stream, (short)X);
+            WriteInt16(stream, (short)Y);
+
             WriteInt16(stream, (short)NumberOfColoredPixels);
             
             byte flags = (byte)(ExpandCount & Nikse.SubtitleEdit.Logic.VobSub.Helper.B01111111);
@@ -147,14 +167,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
             stream.Write(_colors, 0, _colors.Length);
         }      
 
-        private int ReadInt16(Stream stream)
-        {
-            byte b0 = (byte)stream.ReadByte();
-            byte b1 = (byte)stream.ReadByte();
-            return b0 << 8 | b1;
-        }
-
-        private void WriteInt16(Stream stream, short val)
+        private static void WriteInt16(Stream stream, short val)
         {
             byte[] buffer = new byte[2];
             buffer[0] = (byte)((val & 0xFF00) >> 8);
@@ -162,7 +175,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
             stream.Write(buffer, 0, buffer.Length);
         }
 
-        private void WriteInt32(Stream stream, UInt32 val)
+        private static void WriteInt32(Stream stream, UInt32 val)
         {
             System.ComponentModel.ByteConverter bc = new System.ComponentModel.ByteConverter();
             
@@ -173,10 +186,15 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
             buffer[3] = (byte)(val & 0xFF);
             stream.Write(buffer, 0, buffer.Length);
         }
-        
-        public bool GetPixel(int x, int y)
+
+        public int GetPixel(int x, int y)
         {
-            return _colors[Width * y + x] > 0;
+            return _colors[Width * y + x];
+        }
+
+        public void SetPixel(int x, int y, int c)
+        {
+            _colors[Width * y + x] = (byte)c;
         }
 
         public void SetPixel(int x, int y, Color c)
@@ -203,7 +221,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
                 for (int x = section.Left; x < section.Left + section.Width; x++)
                 {
                     Color c = Color.Transparent;
-                    if (this.GetPixel(x, y))
+                    if (this.GetPixel(x, y) > 0)
                         c = Color.White;
                     newRectangle.SetPixel(rectx, recty, c);
                     rectx++;
@@ -215,18 +233,57 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
 
         public Bitmap ToOldBitmap()
         {
-            var nbmp = new NikseBitmap(Width, Height);
-            for (int y = 0; y < Height; y++)
+            if (ExpandedList != null && ExpandedList.Count > 0)
             {
-                for (int x = 0; x < Width; x++)
+                int minX = X;
+                int minY = Y;
+                int maxX = X + Width;
+                int maxY = Y + Height;
+                var list = new List<BinaryOcrBitmap>();
+                list.Add(this);
+                foreach (BinaryOcrBitmap bob in ExpandedList)
                 {
-                    Color c = Color.Transparent;
-                    if (this.GetPixel(x, y))
-                        c = Color.White;
-                    nbmp.SetPixel(x, y, c);
+                    if (bob.X < minX)
+                        minX = bob.X;
+                    if (bob.Y < minY)
+                        minY = bob.Y;
+                    if (bob.X + bob.Width > maxX)
+                        maxX = bob.X + bob.Width;
+                    if (bob.Y + bob.Height > maxY)
+                        maxY = bob.Y + bob.Height;
+                    list.Add(bob);
                 }
+                var nbmp = new BinaryOcrBitmap(maxX - minX, maxY - minY);
+                foreach (BinaryOcrBitmap bob in list)
+                {
+                    for (int y = 0; y < bob.Height; y++)
+                    {
+                        for (int x = 0; x < bob.Width; x++)
+                        {
+                            int c = bob.GetPixel(x, y);
+                            if (c > 0)
+                                nbmp.SetPixel(bob.X - minX + x, bob.Y - minY + y, 1);
+                        }
+                    }
+                }
+
+                return nbmp.ToOldBitmap(); // Resursive
             }
-            return nbmp.GetBitmap();
+            else
+            {
+                var nbmp = new NikseBitmap(Width, Height);
+                for (int y = 0; y < Height; y++)
+                {
+                    for (int x = 0; x < Width; x++)
+                    {
+                        Color c = Color.Transparent;
+                        if (this.GetPixel(x, y) > 0)
+                            c = Color.White;
+                        nbmp.SetPixel(x, y, c);
+                    }
+                }
+                return nbmp.GetBitmap();
+            }
         }
 
         internal void DrawImage(ManagedBitmap bmp, Point point)
