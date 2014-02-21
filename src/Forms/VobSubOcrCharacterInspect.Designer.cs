@@ -44,6 +44,7 @@
             this.listBoxInspectItems = new System.Windows.Forms.ListBox();
             this.groupBoxInspectItems = new System.Windows.Forms.GroupBox();
             this.pictureBoxInspectItem = new System.Windows.Forms.PictureBox();
+            this.labelExpandCount = new System.Windows.Forms.Label();
             this.groupBoxCurrentCompareImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmapDouble)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmap)).BeginInit();
@@ -208,6 +209,7 @@
             // 
             this.groupBoxInspectItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxInspectItems.Controls.Add(this.labelExpandCount);
             this.groupBoxInspectItems.Controls.Add(this.pictureBoxInspectItem);
             this.groupBoxInspectItems.Controls.Add(this.listBoxInspectItems);
             this.groupBoxInspectItems.Location = new System.Drawing.Point(12, 12);
@@ -225,6 +227,15 @@
             this.pictureBoxInspectItem.Size = new System.Drawing.Size(52, 52);
             this.pictureBoxInspectItem.TabIndex = 23;
             this.pictureBoxInspectItem.TabStop = false;
+            // 
+            // labelExpandCount
+            // 
+            this.labelExpandCount.AutoSize = true;
+            this.labelExpandCount.Location = new System.Drawing.Point(252, 98);
+            this.labelExpandCount.Name = "labelExpandCount";
+            this.labelExpandCount.Size = new System.Drawing.Size(93, 13);
+            this.labelExpandCount.TabIndex = 29;
+            this.labelExpandCount.Text = "labelExpandCount";
             // 
             // VobSubOcrCharacterInspect
             // 
@@ -248,6 +259,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmapDouble)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmap)).EndInit();
             this.groupBoxInspectItems.ResumeLayout(false);
+            this.groupBoxInspectItems.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).EndInit();
             this.ResumeLayout(false);
 
@@ -271,5 +283,6 @@
         private System.Windows.Forms.GroupBox groupBoxInspectItems;
         private System.Windows.Forms.PictureBox pictureBoxInspectItem;
         private System.Windows.Forms.Button buttonAddBetterMatch;
+        private System.Windows.Forms.Label labelExpandCount;
     }
 }

@@ -1178,7 +1178,7 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("AutoGuessAnsiEncoding");
             if (subNode != null)
                 settings.General.AutoGuessAnsiEncoding = Convert.ToBoolean(subNode.InnerText);
-            subNode = node.SelectSingleNode("SubtitleFontName");
+            subNode = node.SelectSingleNode("_subtitleFontName");
             if (subNode != null)
                 settings.General.SubtitleFontName = subNode.InnerText;
             subNode = node.SelectSingleNode("SubtitleFontSize");
@@ -2476,7 +2476,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("DefaultEncoding", settings.General.DefaultEncoding);
             textWriter.WriteElementString("AutoConvertToUtf8", settings.General.AutoConvertToUtf8.ToString());
             textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString());
-            textWriter.WriteElementString("SubtitleFontName", settings.General.SubtitleFontName);
+            textWriter.WriteElementString("_subtitleFontName", settings.General.SubtitleFontName);
             textWriter.WriteElementString("SubtitleFontSize", settings.General.SubtitleFontSize.ToString());
             textWriter.WriteElementString("SubtitleFontBold", settings.General.SubtitleFontBold.ToString());
             textWriter.WriteElementString("SubtitleFontColor", settings.General.SubtitleFontColor.ToArgb().ToString());

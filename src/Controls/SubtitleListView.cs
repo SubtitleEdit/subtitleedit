@@ -19,9 +19,51 @@ namespace Nikse.SubtitleEdit.Controls
 
         private int _firstVisibleIndex = -1;
         private string _lineSeparatorString = " || ";
-        public string SubtitleFontName = "Tahoma";
-        public bool SubtitleFontBold;
-        public int SubtitleFontSize = 8;
+
+        private Font _subtitleFont = new Font("Tahoma", 8.25F);
+
+        private string _subtitleFontName = "Tahoma";
+        public string SubtitleFontName
+        {
+            get { return _subtitleFontName; }
+            set 
+            { 
+                _subtitleFontName = value;
+                if (SubtitleFontBold)
+                    _subtitleFont = new System.Drawing.Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold);
+                else
+                    _subtitleFont = new System.Drawing.Font(_subtitleFontName, SubtitleFontSize);               
+            }
+        }
+
+        private bool _subtitleFontBold;
+        public bool SubtitleFontBold
+        {
+            get { return _subtitleFontBold; }
+            set
+            {
+                _subtitleFontBold = value;
+                if (SubtitleFontBold)
+                    _subtitleFont = new System.Drawing.Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold);
+                else
+                    _subtitleFont = new System.Drawing.Font(_subtitleFontName, SubtitleFontSize);
+            }
+        }
+
+        private int _subtitleFontSize = 8;
+        public int SubtitleFontSize
+        {
+            get { return _subtitleFontSize; }
+            set
+            {
+                _subtitleFontSize = value;
+                if (SubtitleFontBold)
+                    _subtitleFont = new System.Drawing.Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold);
+                else
+                    _subtitleFont = new System.Drawing.Font(_subtitleFontName, SubtitleFontSize);
+            }
+        }
+
         public bool IsAlternateTextColumnVisible { get; private set; }
         public bool IsExtraColumnVisible { get; private set; }
         public bool DisplayExtraFromExtra { get; set; }
@@ -46,7 +88,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _lineSeparatorString = settings.General.ListViewLineSeparatorString;
 
             if (!string.IsNullOrEmpty(settings.General.SubtitleFontName))
-                SubtitleFontName = settings.General.SubtitleFontName;
+                _subtitleFontName = settings.General.SubtitleFontName;
             SubtitleFontBold = settings.General.SubtitleFontBold;
             if (settings.General.SubtitleFontSize > 6 && settings.General.SubtitleFontSize < 72)
                 SubtitleFontSize = settings.General.SubtitleFontSize;
@@ -159,9 +201,7 @@ namespace Nikse.SubtitleEdit.Controls
                         e.Graphics.FillRectangle(Brushes.LightBlue, rect);
                     }
                     rect = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top+2, e.Bounds.Width - 3, e.Bounds.Height);
-                    Font f = new System.Drawing.Font(SubtitleFontName, SubtitleFontSize, e.Item.Font.Style);
-                    //e.Graphics.DrawString(e.SubItem.Text, f, new SolidBrush(e.Item.ForeColor), rect, sf);
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, f, new Point(e.Bounds.Left + 3, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Left + 3, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
                 }
                 else
                 {
@@ -176,7 +216,6 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 //Rectangle r = new Rectangle(e.Bounds.Left + 1, e.Bounds.Top + 1, e.Bounds.Width - 2, e.Bounds.Height - 2);
                 //e.Graphics.FillRectangle(Brushes.LightGoldenrodYellow, r);
-
                 if (e.Item.Focused)
                     e.DrawFocusRectangle();
             }
@@ -534,9 +573,9 @@ namespace Nikse.SubtitleEdit.Controls
 
             subItem = new ListViewItem.ListViewSubItem(item, paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString));
             if (SubtitleFontBold)
-                subItem.Font = new Font(SubtitleFontName, SubtitleFontSize , FontStyle.Bold);
+                subItem.Font = new Font(_subtitleFontName, SubtitleFontSize , FontStyle.Bold);
             else
-                subItem.Font = new Font(SubtitleFontName, SubtitleFontSize);
+                subItem.Font = new Font(_subtitleFontName, SubtitleFontSize);
 
             item.UseItemStyleForSubItems = false;
             item.SubItems.Add(subItem);

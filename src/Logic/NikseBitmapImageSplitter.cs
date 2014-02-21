@@ -728,6 +728,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static List<Point> IsVerticalLineTransparetNew(NikseBitmap bmp, int x, out bool right, out bool clean)
         {
             right = false;
+            bool left = false;
             clean = true;
             var points = new List<Point>();
             int y = 0;
@@ -749,29 +750,39 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else if (x > 0 && bmp.GetAlpha(x - 1, y) == 0)
                         {
-                            x--; //(requires search for min/max x in points                         
+                            x--; //(requires search for min/max x in points  
+                            left = true;
                         }
                         else
+                        {
                             return null;
+                        }
                         
                     }
                     else if (x < bmp.Width - 1 && y == bmp.Height - 1 && bmp.GetAlpha(x + 1, y) == 0 && bmp.GetAlpha(x + 1, y - 1) == 0)
                     {
                         //if pixels to the left - move right?
                         if (bmp.GetAlpha(x - 1, y) > 0)
+                        {
                             x++; //(requires search for min/max x in points                         
+                            right = true;
+                        }
                         else
+                        {
                             return null;
+                        }
                         right = true;
                     }
                     else if (bmp.GetAlpha(x - 1, y) == 0)
                     {
                         x--;
+                        left = true;
                     }
                     else if (y > 5 && bmp.GetAlpha(x - 1, y - 1) == 0)
                     {
                         x--;
                         y--;
+                        left = true;
                         while (points.Count > 0 && points[points.Count - 1].Y > y)
                             points.RemoveAt(points.Count - 1);
                     }
@@ -779,6 +790,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         x--;
                         y -= 2;
+                        left = true;
                         while (points.Count > 0 && points[points.Count - 1].Y > y)
                             points.RemoveAt(points.Count - 1);
                     }
@@ -786,6 +798,9 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         return null;
                     }
+
+                    if (left && right)
+                        return null;
                 }
                 else
                 {
@@ -889,7 +904,7 @@ namespace Nikse.SubtitleEdit.Logic
                 for (int y = 1; y < bmp1.Height; y++)
                 {
                     //if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
-                    if (bmp1.GetPixel(x, y) && bmp2.GetAlpha(x, y) < 100)                    
+                    if (bmp1.GetPixel(x, y) > 0 && bmp2.GetAlpha(x, y) < 100)                    
                         different++;
                 }
                 if (different > maxDiff)
@@ -907,7 +922,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 for (int y = 1; y < bmp1.Height; y++)
                 {
-                    if (bmp1.GetAlpha(x, y) < 100 && bmp2.GetPixel(x, y))
+                    if (bmp1.GetAlpha(x, y) < 100 && bmp2.GetPixel(x, y) > 0)
                         different++;
                 }
                 if (different > maxDiff)
