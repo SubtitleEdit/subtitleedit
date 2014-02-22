@@ -480,6 +480,15 @@ namespace Nikse.SubtitleEdit.Logic
             if (text == null || text.Length < 3)
                 return text;
 
+            // do not autobreak dialogues
+            if (text.Contains("-") && text.Contains(Environment.NewLine))
+            {
+                string dialogS = Utilities.RemoveHtmlTags(text);
+                var arr = text.Replace(Environment.NewLine, "\n").Split('\n');
+                if (arr.Length == 2 && arr[0].Trim().StartsWith("-") && arr[1].Trim().StartsWith("-"))
+                    return text;
+            }
+
             string s = text;
             s = s.Replace("</i> " + Environment.NewLine + "<i>", " ");
             s = s.Replace("</i>" + Environment.NewLine + " <i>", " ");
