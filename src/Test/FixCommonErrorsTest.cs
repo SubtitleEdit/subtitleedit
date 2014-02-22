@@ -382,6 +382,17 @@ namespace Test
             target.FixOcrErrorsViaReplaceList("eng");
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The clock is 12 a.m.");
         }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixCommonOcrErrorsNoStartWithLargeAfterThreePeriods()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "- I'll ring her." + Environment.NewLine + "- ...in a lot of trouble.");
+            target.FixOcrErrorsViaReplaceList("eng");
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- I'll ring her." + Environment.NewLine + "- ...in a lot of trouble.");
+        }
+
         #endregion
 
         #region Fix missingspaces
@@ -545,6 +556,30 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Uh-huh.");
         }
         #endregion
+
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUppercaseIInsideWords1()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "This is no troubIe!");
+            target.FixUppercaseIInsideWords();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "This is no trouble!");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUppercaseIInsideWords2()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "- I'll ring her." + Environment.NewLine + "- ...In a lot of trouble.");
+            target.FixUppercaseIInsideWords();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- I'll ring her." + Environment.NewLine + "- ...In a lot of trouble.");
+        }
+
+      
+
 
     }
 }
