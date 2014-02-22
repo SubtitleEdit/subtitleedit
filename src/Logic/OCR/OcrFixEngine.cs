@@ -1084,7 +1084,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     lastLine.EndsWith("?"))
                 {
                     var st = new StripableText(l);
-                    if (st.StrippedText.StartsWith("i") && !st.Pre.EndsWith("[") && !st.Pre.EndsWith("("))
+                    if (st.StrippedText.StartsWith("i") && !st.Pre.EndsWith("[") && !st.Pre.EndsWith("(") && !st.Pre.EndsWith("..."))
                     {
                         if (string.IsNullOrEmpty(lastLine) || (!lastLine.EndsWith("...") && !EndsWithAbbreviation(lastLine, _abbreviationList)))
                             l = st.Pre + "I" + st.StrippedText.Remove(0, 1) + st.Post;
