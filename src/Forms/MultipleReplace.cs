@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
         Subtitle _subtitle;
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
+        private List<MultipleSearchAndReplaceSetting> oldMultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
 
         public MultipleReplace()
         {
@@ -82,6 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var item in Configuration.Settings.MultipleSearchAndReplaceList)
             {
                 AddToReplaceListView(item.Enabled, item.FindWhat, item.ReplaceWith, EnglishSearchTypeToLocal(item.SearchType));
+                oldMultipleSearchAndReplaceList.Add(item);
             }
 
             GeneratePreview();
@@ -527,12 +529,23 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonRemoveAll_Click(object sender, EventArgs e)
         {
             listViewReplaceList.Items.Clear();
+            Configuration.Settings.MultipleSearchAndReplaceList.Clear();
         }
 
         private void MultipleReplace_Shown(object sender, EventArgs e)
         {
             listViewReplaceList.ItemChecked +=ListViewReplaceListItemChecked;
             GeneratePreview();
+        }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            Configuration.Settings.MultipleSearchAndReplaceList.Clear();
+            foreach (var item in oldMultipleSearchAndReplaceList)
+            {
+                Configuration.Settings.MultipleSearchAndReplaceList.Add(item);
+            }
+            DialogResult = DialogResult.Cancel;
         }
 
 

@@ -17,6 +17,7 @@
    * Fixed issue regarding alignment tags (like {\an8}) in Json - thx zatch
    * Do not auto-break dialogues - thx pson
    * Fix bug in "Fix ocr errors" regarding "...i" - thx another-user
+   * Fixed bug in "Multiple replace" regarding remembering old rules - thx Alberto
 
 
 3.3.13 (8th February 2014)
