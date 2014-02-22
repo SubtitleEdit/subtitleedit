@@ -10,7 +10,7 @@ namespace Test
     public class BinaryOcrTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void TestMethodBinOcrSaveLoad()
         {
             string tempFileName = System.IO.Path.GetTempFileName();
             var db = new BinaryOcrDb(tempFileName);
@@ -22,18 +22,23 @@ namespace Test
             
             var bob = new BinaryOcrBitmap(nbmp);
             bob.Text = "Debug";
-            db.CompareImages.Add(bob);
+            db.Add(bob);
 
             nbmp.SetPixel(0, 0, Color.White);
             var bob2 = new BinaryOcrBitmap(nbmp);
+            bob2.X = 2;
+            bob2.Y = 4;
             bob2.Text = "tt";
             bob2.Italic = true;
             bob2.ExpandCount = 2;
-            db.CompareImages.Add(bob2);
+            bob2.ExpandedList = new System.Collections.Generic.List<BinaryOcrBitmap>();
+            bob2.ExpandedList.Add(bob2);
+            db.Add(bob2);
             db.Save();
 
             db = new BinaryOcrDb(tempFileName, true);
-            Assert.IsTrue(db.CompareImages.Count == 2);
+            Assert.IsTrue(db.CompareImages.Count == 1);
+            Assert.IsTrue(db.CompareImagesExpanded.Count == 1);
 
             Assert.IsTrue(bob.Width == db.CompareImages[0].Width);
             Assert.IsTrue(bob.Height == db.CompareImages[0].Height);
@@ -43,13 +48,15 @@ namespace Test
             Assert.IsTrue(bob.ExpandCount == db.CompareImages[0].ExpandCount);
             Assert.IsTrue(bob.Text == db.CompareImages[0].Text);
 
-            Assert.IsTrue(bob2.Width == db.CompareImages[1].Width);
-            Assert.IsTrue(bob2.Height == db.CompareImages[1].Height);
-            Assert.IsTrue(bob2.NumberOfColoredPixels == db.CompareImages[1].NumberOfColoredPixels);
-            Assert.IsTrue(bob2.Hash == db.CompareImages[1].Hash);
-            Assert.IsTrue(bob2.Italic == db.CompareImages[1].Italic);
-            Assert.IsTrue(bob2.ExpandCount == db.CompareImages[1].ExpandCount);
-            Assert.IsTrue(bob2.Text == db.CompareImages[1].Text);
+            Assert.IsTrue(bob2.Width == db.CompareImagesExpanded[0].Width);
+            Assert.IsTrue(bob2.Height == db.CompareImagesExpanded[0].Height);
+            Assert.IsTrue(bob2.NumberOfColoredPixels == db.CompareImagesExpanded[0].NumberOfColoredPixels);
+            Assert.IsTrue(bob2.Hash == db.CompareImagesExpanded[0].Hash);
+            Assert.IsTrue(bob2.Italic == db.CompareImagesExpanded[0].Italic);
+            Assert.IsTrue(bob2.ExpandCount == db.CompareImagesExpanded[0].ExpandCount);
+            Assert.IsTrue(bob2.Text == db.CompareImagesExpanded[0].Text);
+            Assert.IsTrue(bob2.X == db.CompareImagesExpanded[0].X);
+            Assert.IsTrue(bob2.Y == db.CompareImagesExpanded[0].Y);
 
             try
             {
@@ -57,8 +64,8 @@ namespace Test
             }
             catch
             {
-                System.IO.File.Delete(tempFileName);
             }
         }
+
     }
 }
