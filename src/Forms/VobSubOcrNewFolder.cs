@@ -64,7 +64,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-
             if (folderName.Length >= 0 && _vobSub)
             {
                 try
