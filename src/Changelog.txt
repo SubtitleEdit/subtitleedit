@@ -12,11 +12,11 @@
    * Added Serbo-Croatian letter "đ" to file format PAC - thx nenad
    * Export to custom text format - Added "Delete" button - thx Leon
 * FIXED:
-   * Fixed crash in spell check - thx e257496 
+   * Fixed crash in spell check - thx e257496
    * Fixed issue where it was not possible to move border in waveform
    * Fixed issue regarding alignment tags (like {\an8}) in Json - thx zatch
    * Do not auto-break dialogues - thx pson
-   * Fix bug in "Fix ocr errors" regarding "...i" - thx another-user
+   * Fix bug in "Fix OCR errors" regarding "...i" - thx another-user
    * Fixed bug in "Multiple replace" regarding remembering old rules - thx Alberto
 
 
