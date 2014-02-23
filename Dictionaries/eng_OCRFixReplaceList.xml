@@ -1714,6 +1714,26 @@
     <Word from="forpleasure" to="for pleasure" />
     <Word from="ourpower" to="our power" />
     <Word from="Yourpiece" to="Your piece" />
+    <Word from="Offioers" to="Officers" />
+    <Word from="oondesoended" to="condescended" />
+    <Word from="myseif" to="myself" />
+    <Word from="let'sjust" to="let’s just" />
+    <Word from="yourway" to="your way" />
+    <Word from="An9TY" to="Angry" />
+    <Word from="ourjourney" to="our journey" />
+    <Word from="LuCY" to="Lucy" />
+    <Word from="\'m" to="I’m" />
+    <Word from="CEDR/C" to="CEDRIC" />
+    <Word from="lsaac" to="Isaac" />
+    <Word from="FIy" to="Fly" />
+    <Word from="Ionger" to="longer" />
+    <Word from="Iousy" to="lousy" />
+    <Word from="Iosing" to="losing" />
+    <Word from="They'II" to="They'll" />
+    <Word from="yourpaws" to="your paws" />
+    <Word from="littie" to="little" />
+    <Word from="It'lljust" to="It'll just" />
+    <Word from="AIso" to="Also" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -2093,6 +2113,7 @@
     <Line from="SQMEWH ERE ELSE" to="SOMEWHERE ELSE" />
     <Line from="Hil‘ it!" to="Hit it!" />
     <Line from="&lt;i&gt;Hil‘ it!&lt;/i&gt;" to="&lt;i&gt;Hit it!&lt;/i&gt;" />
+    <Line from="ISIGHS]" to="[SIGHS]" />
   </WholeLines>
   <RegularExpressions>
     <!--    <RegEx find="\bi\b" replaceWith="I" /> just an example - do not use this regex -->
