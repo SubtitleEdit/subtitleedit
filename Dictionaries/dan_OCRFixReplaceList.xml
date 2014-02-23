@@ -537,6 +537,7 @@
     <Word from="10O" to="100" />
     <Word from="besluttedejeg" to="besluttede jeg" />
     <Word from="varsket" to="var sket" />
+    <Word from="uadskillige" to="uadskillelige" />
     <Word from="harjetlag" to="har jetlag" />
     <Word from="lkke" to="Ikke" />
     <Word from="lntet" to="Intet" />
@@ -570,6 +571,19 @@
     <Word from="FBl" to="FBI" />
     <Word from="viljo" to="vil jo" />
     <Word from="detpå" to="det på" />
+    <Word from="KIar" to="Klar" />
+    <Word from="PIan" to="Plan" />
+    <Word from="EIIer" to="Eller" />
+    <Word from="FIot" to="Flot" />
+    <Word from="AIIe" to="Alle" />
+    <Word from="AIt" to="Alt" />
+    <Word from="KIap" to="Klap" />
+    <Word from="PIaza" to="Plaza" />
+    <Word from="SIap" to="Slap" />
+    <Word from="Iå" to="lå" />
+    <Word from="BIing" to="Bling" />
+    <Word from="GIade" to="Glade" />
+    <Word from="Iejrbålssange" to="lejrbålssange" />
   </WholeWords>
   <PartialWordsAlways>
     <WordPart from="¤" to="o" />
