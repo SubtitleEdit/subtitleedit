@@ -62,6 +62,8 @@ namespace UpdateAssemblyInfo
                 try
                 {
                     DoUpdateAssembly("[GITHASH]", clrHash.Result, template, target);
+                    if (!clrTags.Result.Contains("-"))
+                        clrTags.Result += "-0";
                     DoUpdateAssembly("[REVNO]", clrTags.Result.Split('-')[1] , target, target);
                     return 0;
                 }
