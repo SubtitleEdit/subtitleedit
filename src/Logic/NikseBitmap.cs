@@ -21,7 +21,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         private byte[] _bitmapData;
         private int _pixelAddress = 0;
-        private unsafe NikseBitmap nikseBitmap;
 
         public NikseBitmap(int width, int height)
         {
