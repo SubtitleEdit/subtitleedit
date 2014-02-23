@@ -332,7 +332,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             }
             return (Bitmap)bmpImage.Clone();
         }
-      
+
         private static bool IsBackgroundColor(Color c, int backgroundArgb)
         {
             return c.A == 0 || c.ToArgb() == backgroundArgb;

@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out endSeconds) &&
                         text != null)
                     {
-                      
+
                         subtitle.Paragraphs.Add(new Paragraph(DecodeJsonText(text), startSeconds * 1000.0, endSeconds * 1000.0));
                     }
                     else

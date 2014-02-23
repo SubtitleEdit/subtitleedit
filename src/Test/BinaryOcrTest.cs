@@ -19,7 +19,7 @@ namespace Test
             nbmp.SetPixel(1, 0, Color.Transparent);
             nbmp.SetPixel(1, 0, Color.Transparent);
             nbmp.SetPixel(1, 1, Color.White);
-            
+
             var bob = new BinaryOcrBitmap(nbmp);
             bob.Text = "Debug";
             db.Add(bob);

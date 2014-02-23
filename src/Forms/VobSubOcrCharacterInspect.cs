@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _selectedCompareNode = null;
             _selectedCompareBinaryOcrBitmap = null;
-            
+
             pictureBoxInspectItem.Image = _imageSources[listBoxInspectItems.SelectedIndex];
             pictureBoxCompareBitmap.Image = null;
             pictureBoxCompareBitmapDouble.Image = null;
@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 pictureBoxCompareBitmapDouble.Height = bitmap.Height * 2;
                                 pictureBoxCompareBitmapDouble.Image = bitmap;
                                 var matchBob = new BinaryOcrBitmap(new NikseBitmap(_imageSources[listBoxInspectItems.SelectedIndex]));
-                                buttonAddBetterMatch.Enabled = false; // exact match                                
+                                buttonAddBetterMatch.Enabled = false; // exact match
                                 labelExpandCount.Text = string.Format("Expand count: {0}", bob.ExpandCount);
                                 break;
                             }
@@ -229,7 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_selectedCompareBinaryOcrBitmap != null)
             {
-                foreach (var match in _matches) 
+                foreach (var match in _matches)
                 {
                     if (match.Name == _selectedCompareBinaryOcrBitmap.Key)
                     {
