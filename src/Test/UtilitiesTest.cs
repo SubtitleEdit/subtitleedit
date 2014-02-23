@@ -22,7 +22,7 @@ namespace Test
         public void AutoBreakLine2()
         {
             const int maxLength = 43;
-            var s = Utilities.AutoBreakLine("We're gonna lose him." + Environment.NewLine + "He's left him four signals in the last week.", 5, maxLength, 33);           
+            var s = Utilities.AutoBreakLine("We're gonna lose him." + Environment.NewLine + "He's left him four signals in the last week.", 5, maxLength, 33);
             Assert.IsFalse(s == "We're gonna lose him." + Environment.NewLine + "He's left him four signals in the last week.");
         }
 
@@ -33,7 +33,7 @@ namespace Test
             string s1 = "- We're gonna lose him." + Environment.NewLine + "- He's left him four signals in the last week.";
             string s2 = Utilities.AutoBreakLine(s1);
             Assert.AreEqual(s1, s2);
-        }      
-      
+        }
+
     }
 }

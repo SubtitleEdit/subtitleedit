@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
             germanToolStripMenuItem.Text = language.German;
             checkBoxAutoSubmitOfFirstChar.Text = language.AutoSubmitOnFirstChar;
 
-            
+
 
 
             string[] row0 = { "♪", "á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű" };
