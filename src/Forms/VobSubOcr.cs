@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Forms
                 NOcrCharacter = character;
             }
 
-            public CompareMatch(string text, bool italic, int expandCount, string name, ImageSplitterItem imageSplitterItem) 
+            public CompareMatch(string text, bool italic, int expandCount, string name, ImageSplitterItem imageSplitterItem)
                 : this(text, italic, expandCount, name)
             {
                 ImageSplitterItem = imageSplitterItem;
@@ -535,7 +535,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                subtitleListView1.SelectIndexAndEnsureVisible(i);                
+                subtitleListView1.SelectIndexAndEnsureVisible(i);
 
                 string text = OcrViaTesseract(GetSubtitleBitmap(i), i);
 
@@ -865,7 +865,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string db = Configuration.OcrFolder + comboBoxCharacterDatabase.SelectedItem + ".db";
                 _binaryOcrDb = new BinaryOcrDb(db, true);
-            }            
+            }
         }
 
         private void LoadOldCompareImages()
@@ -3358,7 +3358,7 @@ namespace Nikse.SubtitleEdit.Forms
             int expandCount = 0;
             if (expandList != null)
                 expandCount = expandList.Count;
-            
+
             if (expandCount > 0)
             {
                 var bob = new BinaryOcrBitmap(expandList[0].NikseBitmap, isItalic, expandCount, text, expandList[0].X, expandList[0].Y);
@@ -3380,7 +3380,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _binaryOcrDb.Add(bob);
                 _binaryOcrDb.Save();
                 return bob.Key;
-            }            
+            }
         }
 
         /// <summary>
@@ -4397,7 +4397,7 @@ namespace Nikse.SubtitleEdit.Forms
             nbmp = NikseBitmapImageSplitter.CropTopAndBottom(nbmp, out topCropping);
 
             return new ImageSplitterItem(minimumX, minimumY, nbmp);
-        }       
+        }
 
         private static string GetStringWithItalicTags(List<CompareMatch> matches)
         {
@@ -5255,7 +5255,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _mainOcrBitmap = bmp;
 
-            int j = i;            
+            int j = i;
             subtitleListView1.Items[j].Selected = true;
             if (j < max -1)
                 j++;
@@ -6761,7 +6761,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowOcrMethodGroupBox(groupBoxImageCompareMethod);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "BitmapCompare";
                 checkBoxPromptForUnknownWords.Checked = false;
-                numericUpDownMaxErrorPct.Minimum = 0;               
+                numericUpDownMaxErrorPct.Minimum = 0;
                 _binaryOcrDb = new BinaryOcrDb(_binaryOcrDbFileName, true);
                 LoadImageCompareCharacterDatabaseList();
             }
@@ -7345,7 +7345,7 @@ namespace Nikse.SubtitleEdit.Forms
                             matches.Add(new CompareMatch(match.Text, match.Italic, 0, match.Name, item));
                             imageSources.Add(item.NikseBitmap.GetBitmap());
                         }
-                        
+
                         if (match.ExpandCount > 0)
                             index += match.ExpandCount - 1;
                     }

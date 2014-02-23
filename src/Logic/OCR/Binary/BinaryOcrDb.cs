@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
                     CompareImages.Add(bob);
                 else
                     System.Windows.Forms.MessageBox.Show("Image already in db!");
-            }            
+            }
             return index;
         }
 

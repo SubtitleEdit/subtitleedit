@@ -26,13 +26,13 @@ namespace Nikse.SubtitleEdit.Controls
         public string SubtitleFontName
         {
             get { return _subtitleFontName; }
-            set 
-            { 
+            set
+            {
                 _subtitleFontName = value;
                 if (SubtitleFontBold)
                     _subtitleFont = new System.Drawing.Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold);
                 else
-                    _subtitleFont = new System.Drawing.Font(_subtitleFontName, SubtitleFontSize);               
+                    _subtitleFont = new System.Drawing.Font(_subtitleFontName, SubtitleFontSize);
             }
         }
 

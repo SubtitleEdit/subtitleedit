@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         List<bool> _italics = new List<bool>();
         internal List<VobSubOcr.ImageCompareAddition> Additions { get; private set; }
         BinaryOcrDb _binOcrDb = null;
-        
+
         public XmlDocument ImageCompareDocument
         {
             get
@@ -564,7 +564,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 if ((listBoxFileNames.Items[j] as BinaryOcrBitmap).Key == name)
                                     listBoxFileNames.SelectedIndex = j;
-                            }                            
+                            }
                         }
                         else
                         {

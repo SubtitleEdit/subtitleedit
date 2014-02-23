@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
         public bool LoadedOK { get; private set; }
         public string Text { get; set; }
         public List<BinaryOcrBitmap> ExpandedList { get; set; }
-       
+
         public string Key
         {
             get
@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
         {
             NumberOfColoredPixels = 0;
             for (int i = 0; i < _colors.Length; i++)
-            { 
+            {
                 if (_colors[i] > 0)
                     NumberOfColoredPixels++;
             }
@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
             WriteInt16(stream, (short)Y);
 
             WriteInt16(stream, (short)NumberOfColoredPixels);
-            
+
             byte flags = (byte)(ExpandCount & Nikse.SubtitleEdit.Logic.VobSub.Helper.B01111111);
             if (Italic)
                 flags = (byte)(flags + Nikse.SubtitleEdit.Logic.VobSub.Helper.B10000000);
@@ -158,14 +158,14 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
                 stream.WriteByte(0);
             }
             else
-            {                
+            {
                 var textBuffer = System.Text.Encoding.UTF8.GetBytes(Text);
                 stream.WriteByte((byte)textBuffer.Length);
                 stream.Write(textBuffer, 0, textBuffer.Length);
             }
 
             stream.Write(_colors, 0, _colors.Length);
-        }      
+        }
 
         private static void WriteInt16(Stream stream, short val)
         {
@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
         private static void WriteInt32(Stream stream, UInt32 val)
         {
             System.ComponentModel.ByteConverter bc = new System.ComponentModel.ByteConverter();
-            
+
             byte[] buffer = new byte[4];
             buffer[0] = (byte)((val & 0xFF000000) >> 24);
             buffer[1] = (byte)((val & 0xFF0000) >> 16);

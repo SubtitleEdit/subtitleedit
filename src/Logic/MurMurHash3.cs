@@ -1,7 +1,7 @@
 ﻿namespace Nikse.SubtitleEdit.Logic
 {
     // The MurmurHash3 algorithm was created by Austin Appleby and put into the public domain.  See http://code.google.com/p/smhasher
-    // This code is based on https://gist.github.com/automatonic/3725443 
+    // This code is based on https://gist.github.com/automatonic/3725443
     public class MurMurHash3
     {
 
@@ -25,7 +25,7 @@
                 int idx = i * 4;
                 k1 = (uint) (arr[idx] | arr[idx + 1] << 8 | arr[idx + 2] << 16 | arr[idx + 3] << 24);
 
-                // bitmagic hash 
+                // bitmagic hash
                 k1 *= c1;
                 k1 = rotl32(k1, 15);
                 k1 *= c2;
@@ -58,7 +58,7 @@
                     k1 *= c2;
                     h1 ^= k1;
                     break;
-            }            
+            }
 
             // finalization, magic chants to wrap it all up
             h1 ^= (uint)arr.Length;

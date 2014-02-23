@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic
     /// Configuration settings via Singleton pattern
     /// </summary>
     public class Configuration
-    {        
+    {
         string _baseDir;
         string _dataDir;
         Settings _settings;

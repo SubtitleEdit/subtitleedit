@@ -1166,7 +1166,7 @@ namespace Nikse.SubtitleEdit.Controls
                             else if (_mouseDownParagraphType == MouseDownParagraphType.End && _nextParagraph != null && Math.Abs(_mouseDownParagraph.EndTime.TotalMilliseconds - _nextParagraph.StartTime.TotalMilliseconds) <= ClosenessForBorderSelection + 10)
                                 return; // do not decide which paragraph to move yet
                         }
-                            
+
                         if (Control.ModifierKeys != Keys.Alt)
                         {
                             if (_firstMove && e.X > oldMouseMoveLastX && _nextParagraph != null && _mouseDownParagraphType == MouseDownParagraphType.End)

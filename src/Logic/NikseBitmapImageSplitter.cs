@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (bottomCroppingDone)
                     break;
             }
-            return bmp.CopyRectangle(new Rectangle(0, startTop, bmp.Width, h - startTop + 1)); 
+            return bmp.CopyRectangle(new Rectangle(0, startTop, bmp.Width, h - startTop + 1));
         }
 
         public static NikseBitmap CropTopAndBottom(NikseBitmap bmp, out int topCropping, int maxDifferentPixelsOnLine)
@@ -677,7 +677,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     width = FindMaxX(points, x) - startX;
                     width++;
-                    NikseBitmap b1 = bmp0.CopyRectangle(new Rectangle(startX, 0, width, bmp.Height));                    
+                    NikseBitmap b1 = bmp0.CopyRectangle(new Rectangle(startX, 0, width, bmp.Height));
 
                     if (spacePixels >= xOrMorePixelsMakesSpace && parts.Count > 0)
                         parts.Add(new ImageSplitterItem(" "));
@@ -745,26 +745,26 @@ namespace Nikse.SubtitleEdit.Logic
                         //if pixels to the left - move right?
                         if (bmp.GetAlpha(x - 1, y) > 0)
                         {
-                            x++; //(requires search for min/max x in points                         
+                            x++; //(requires search for min/max x in points
                             right = true;
                         }
                         else if (x > 0 && bmp.GetAlpha(x - 1, y) == 0)
                         {
-                            x--; //(requires search for min/max x in points  
+                            x--; //(requires search for min/max x in points
                             left = true;
                         }
                         else
                         {
                             return null;
                         }
-                        
+
                     }
                     else if (x < bmp.Width - 1 && y == bmp.Height - 1 && bmp.GetAlpha(x + 1, y) == 0 && bmp.GetAlpha(x + 1, y - 1) == 0)
                     {
                         //if pixels to the left - move right?
                         if (bmp.GetAlpha(x - 1, y) > 0)
                         {
-                            x++; //(requires search for min/max x in points                         
+                            x++; //(requires search for min/max x in points
                             right = true;
                         }
                         else
@@ -904,7 +904,7 @@ namespace Nikse.SubtitleEdit.Logic
                 for (int y = 1; y < bmp1.Height; y++)
                 {
                     //if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
-                    if (bmp1.GetPixel(x, y) > 0 && bmp2.GetAlpha(x, y) < 100)                    
+                    if (bmp1.GetPixel(x, y) > 0 && bmp2.GetAlpha(x, y) < 100)
                         different++;
                 }
                 if (different > maxDiff)

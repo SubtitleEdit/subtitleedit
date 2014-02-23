@@ -578,7 +578,7 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- I'll ring her." + Environment.NewLine + "- ...In a lot of trouble.");
         }
 
-      
+
 
 
     }
