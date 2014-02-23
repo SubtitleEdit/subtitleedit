@@ -484,8 +484,9 @@ namespace Nikse.SubtitleEdit.Logic
             if (text.Contains("-") && text.Contains(Environment.NewLine))
             {
                 string dialogS = Utilities.RemoveHtmlTags(text);
-                var arr = text.Replace(Environment.NewLine, "\n").Split('\n');
-                if (arr.Length == 2 && arr[0].Trim().StartsWith("-") && arr[1].Trim().StartsWith("-"))
+                var arr = dialogS.Replace(Environment.NewLine, "\n").Split('\n');
+                if (arr.Length == 2 && arr[0].Trim().StartsWith("-") && arr[1].Trim().StartsWith("-") &&
+                   (arr[0].Trim().EndsWith(".") || arr[0].Trim().EndsWith("!") || arr[0].Trim().EndsWith("?")))
                     return text;
             }
 
