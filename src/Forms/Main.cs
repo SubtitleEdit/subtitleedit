@@ -8912,7 +8912,7 @@ namespace Nikse.SubtitleEdit.Forms
                         comments.Paragraphs.RemoveAt(commentIndex);
                 }
 
-                string text = mp.Text;
+                string text = mp.Text.Replace(Environment.NewLine, "\\N");
                 int idx = text.IndexOf(',') + 1;
                 if (idx > 0 && idx < text.Length)
                 {
