@@ -7805,11 +7805,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listBoxCopyToClipboard_KeyDown(object sender, KeyEventArgs e)
         {
-            ListBox lb = sender as ListBox;
-            if (lb != null && lb.Items.Count > 0 && lb.SelectedItems.Count > 0)
+            if (e.KeyCode == Keys.C && e.Modifiers == Keys.Control)
             {
-                string text = lb.SelectedItems[0].ToString();
-                Clipboard.SetText(text);
+                ListBox lb = sender as ListBox;
+                if (lb != null && lb.Items.Count > 0 && lb.SelectedItems.Count > 0)
+                {
+                    try
+                    {
+                        string text = lb.SelectedItems[0].ToString();
+                        Clipboard.SetText(text);
+                    }
+                    catch
+                    {
+                    }
+                }
             }
         }
 
