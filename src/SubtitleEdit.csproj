@@ -828,6 +828,7 @@
     <Compile Include="Logic\OCR\Binary\BinaryOcrBitmap.cs" />
     <Compile Include="Logic\OCR\Binary\BinaryOcrDb.cs" />
     <Compile Include="Logic\OCR\ModiLanguage.cs" />
+    <Compile Include="Logic\OCR\NOcrDb.cs" />
     <Compile Include="Logic\OCR\OcrAlphabet.cs" />
     <Compile Include="Logic\OCR\NOcrChar.cs" />
     <Compile Include="Logic\OCR\OcrCharacter.cs" />
@@ -887,6 +888,7 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle67.cs" />
     <Compile Include="Logic\SubtitleFormats\SwiftTextLineNumber .cs" />
     <Compile Include="Logic\SubtitleFormats\Titra.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle69.cs" />
     <Compile Include="Logic\SubtitleFormats\WebVTTFileWithLineNumber.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProXmlGap.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle66.cs" />

@@ -16,7 +16,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
     {
         // Dictionaries/spellchecking/fixing
         Dictionary<string, string> _wordReplaceList;
-        Dictionary<string, string> _partialLineReplaceList;
+        Dictionary<string, string> _partialLineWordBoundaryReplaceList;
+        Dictionary<string, string> _partialLineAlwaysReplaceList;
         Dictionary<string, string> _beginLineReplaceList;
         Dictionary<string, string> _endLineReplaceList;
         Dictionary<string, string> _wholeLineReplaceList;
@@ -85,7 +86,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         private void LoadReplaceLists(string languageId)
         {
             _wordReplaceList = new Dictionary<string, string>();
-            _partialLineReplaceList = new Dictionary<string, string>();
+            _partialLineWordBoundaryReplaceList = new Dictionary<string, string>();
+            _partialLineAlwaysReplaceList = new Dictionary<string, string>();
             _beginLineReplaceList = new Dictionary<string, string>();
             _endLineReplaceList = new Dictionary<string, string>();
             _wholeLineReplaceList = new Dictionary<string, string>();
@@ -109,7 +111,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 _wordReplaceList = LoadReplaceList(doc, "WholeWords");
                 _partialWordReplaceListAlways = LoadReplaceList(doc, "PartialWordsAlways");
                 _partialWordReplaceList = LoadReplaceList(doc, "PartialWords");
-                _partialLineReplaceList = LoadReplaceList(doc, "PartialLines");
+                _partialLineWordBoundaryReplaceList = LoadReplaceList(doc, "PartialLines");
+                _partialLineAlwaysReplaceList = LoadReplaceList(doc, "PartialAlwaysLines");
                 _beginLineReplaceList = LoadReplaceList(doc, "BeginLines");
                 _endLineReplaceList = LoadReplaceList(doc, "EndLines");
                 _wholeLineReplaceList = LoadReplaceList(doc, "WholeLines");
@@ -1383,10 +1386,16 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
             newText += post;
 
-            foreach (string from in _partialLineReplaceList.Keys)
+            foreach (string from in _partialLineWordBoundaryReplaceList.Keys)
             {
                 if (newText.Contains(from))
-                    newText = newText.Replace(from, _partialLineReplaceList[from]); // ReplaceWord(newText, from, _partialLineReplaceList[from]);
+                    newText = ReplaceWord(newText, from, _partialLineWordBoundaryReplaceList[from]);
+            }
+
+            foreach (string from in _partialLineAlwaysReplaceList.Keys)
+            {
+                if (newText.Contains(from))
+                    newText = newText.Replace(from, _partialLineAlwaysReplaceList[from]); 
             }
 
             foreach (string findWhat in _regExList.Keys)
