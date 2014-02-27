@@ -140,6 +140,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxTransportStreamGrayscale = new System.Windows.Forms.CheckBox();
             this.checkBoxAutoTransparentBackground = new System.Windows.Forms.CheckBox();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
+            this.contextMenuStripImage = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemImageSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxShowOnlyForced = new System.Windows.Forms.CheckBox();
             this.checkBoxUseTimeCodesFromIdx = new System.Windows.Forms.CheckBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -148,8 +150,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
-            this.contextMenuStripImage = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItemImageSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.groupBoxImageCompareMethod.SuspendLayout();
@@ -178,10 +178,10 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutoTransparentAlphaMax)).BeginInit();
             this.groupBoxTransportStream.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
+            this.contextMenuStripImage.SuspendLayout();
             this.splitContainerBottom.Panel1.SuspendLayout();
             this.splitContainerBottom.Panel2.SuspendLayout();
             this.splitContainerBottom.SuspendLayout();
-            this.contextMenuStripImage.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuStripListview
@@ -395,11 +395,11 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxOcrMethod
             // 
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
             this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
             this.groupBoxOcrMethod.Size = new System.Drawing.Size(392, 192);
@@ -1374,6 +1374,20 @@ namespace Nikse.SubtitleEdit.Forms
             this.pictureBoxSubtitleImage.TabIndex = 3;
             this.pictureBoxSubtitleImage.TabStop = false;
             // 
+            // contextMenuStripImage
+            // 
+            this.contextMenuStripImage.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemImageSaveAs});
+            this.contextMenuStripImage.Name = "contextMenuStripUnknownWords";
+            this.contextMenuStripImage.Size = new System.Drawing.Size(158, 26);
+            // 
+            // toolStripMenuItemImageSaveAs
+            // 
+            this.toolStripMenuItemImageSaveAs.Name = "toolStripMenuItemImageSaveAs";
+            this.toolStripMenuItemImageSaveAs.Size = new System.Drawing.Size(157, 22);
+            this.toolStripMenuItemImageSaveAs.Text = "Save image as...";
+            this.toolStripMenuItemImageSaveAs.Click += new System.EventHandler(this.toolStripMenuItemImageSaveAs_Click);
+            // 
             // checkBoxShowOnlyForced
             // 
             this.checkBoxShowOnlyForced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -1458,6 +1472,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.Name = "subtitleListView1";
             this.subtitleListView1.OwnerDraw = true;
             this.subtitleListView1.Size = new System.Drawing.Size(631, 183);
+            this.subtitleListView1.SubtitleFontBold = false;
+            this.subtitleListView1.SubtitleFontName = "Tahoma";
+            this.subtitleListView1.SubtitleFontSize = 8;
             this.subtitleListView1.TabIndex = 0;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.UseSyntaxColoring = true;
@@ -1469,20 +1486,6 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.timerHideStatus.Interval = 2000;
             this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
-            // 
-            // contextMenuStripImage
-            // 
-            this.contextMenuStripImage.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemImageSaveAs});
-            this.contextMenuStripImage.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripImage.Size = new System.Drawing.Size(158, 26);
-            // 
-            // toolStripMenuItemImageSaveAs
-            // 
-            this.toolStripMenuItemImageSaveAs.Name = "toolStripMenuItemImageSaveAs";
-            this.toolStripMenuItemImageSaveAs.Size = new System.Drawing.Size(157, 22);
-            this.toolStripMenuItemImageSaveAs.Text = "Save image as...";
-            this.toolStripMenuItemImageSaveAs.Click += new System.EventHandler(this.toolStripMenuItemImageSaveAs_Click);
             // 
             // VobSubOcr
             // 
@@ -1546,11 +1549,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxTransportStream.ResumeLayout(false);
             this.groupBoxTransportStream.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
+            this.contextMenuStripImage.ResumeLayout(false);
             this.splitContainerBottom.Panel1.ResumeLayout(false);
             this.splitContainerBottom.Panel1.PerformLayout();
             this.splitContainerBottom.Panel2.ResumeLayout(false);
             this.splitContainerBottom.ResumeLayout(false);
-            this.contextMenuStripImage.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

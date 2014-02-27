@@ -578,8 +578,18 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- I'll ring her." + Environment.NewLine + "- ...In a lot of trouble.");
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixOcrErrorsNoChange()
+        {
+            var target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "Yeah, see, that's not mine.");
+            target.FixOcrErrorsViaReplaceList("eng");
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Yeah, see, that's not mine.");
+        }
 
 
+        
 
     }
 }
