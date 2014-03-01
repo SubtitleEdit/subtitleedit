@@ -283,6 +283,9 @@
             public string FontEffect { get; set; }
             public string FontEffectColor { get; set; }
             public string FontSize { get; set; }
+            public string TopBottomMargin { get; set; }
+            public string ZPosition { get; set; }
+            public string ZPositionHelp { get; set; }
             public string ChooseColor { get; set; }
             public string Generate { get; set; }
         }

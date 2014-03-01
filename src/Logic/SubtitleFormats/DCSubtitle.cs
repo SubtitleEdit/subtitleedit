@@ -210,6 +210,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         vPosition.InnerText = vPos.ToString();
                         textNode.Attributes.Append(vPosition);
 
+                        if (Configuration.Settings.SubtitleSettings.DCinemaZPosition != 0)
+                        {
+                            XmlAttribute zPosition = xml.CreateAttribute("ZPosition");
+                            zPosition.InnerText = string.Format(CultureInfo.InvariantCulture, "{0:0.00}", Configuration.Settings.SubtitleSettings.DCinemaZPosition);
+                            textNode.Attributes.Append(zPosition);
+                        }
+
                         XmlAttribute vAlign = xml.CreateAttribute("VAlign");
                         if (alignVTop)
                             vAlign.InnerText = "top";
