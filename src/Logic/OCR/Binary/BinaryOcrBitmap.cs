@@ -138,13 +138,13 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
 
         public void Save(Stream stream)
         {
-            WriteInt16(stream, (short)Width);
-            WriteInt16(stream, (short)Height);
+            WriteInt16(stream, (ushort)Width);
+            WriteInt16(stream, (ushort)Height);
 
-            WriteInt16(stream, (short)X);
-            WriteInt16(stream, (short)Y);
+            WriteInt16(stream, (ushort)X);
+            WriteInt16(stream, (ushort)Y);
 
-            WriteInt16(stream, (short)NumberOfColoredPixels);
+            WriteInt16(stream, (ushort)NumberOfColoredPixels);
 
             byte flags = (byte)(ExpandCount & Nikse.SubtitleEdit.Logic.VobSub.Helper.B01111111);
             if (Italic)
@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
             stream.Write(_colors, 0, _colors.Length);
         }
 
-        private static void WriteInt16(Stream stream, short val)
+        private static void WriteInt16(Stream stream, ushort val)
         {
             byte[] buffer = new byte[2];
             buffer[0] = (byte)((val & 0xFF00) >> 8);

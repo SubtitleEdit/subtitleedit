@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         {
             try
             {
-                var buffer = new byte[8];
+                var buffer = new byte[9];
                 int read = stream.Read(buffer, 0, buffer.Length);
                 if (read < buffer.Length)
                 {
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 var point = new NOcrPoint
                 {
                     Start = new Point(buffer[0] << 8 | buffer[1], buffer[2] << 8 | buffer[3]),
-                    End = new Point(buffer[4] << 8 | buffer[5], buffer[2] << 8 | buffer[3])
+                    End = new Point(buffer[4] << 8 | buffer[5], buffer[6] << 8 | buffer[7])
                 };
                 list.Add(point);
             }
@@ -146,8 +146,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 stream.WriteByte((byte)textBuffer.Length);
                 stream.Write(textBuffer, 0, textBuffer.Length);
             }
-            WritePoints(stream, LinesBackground);
             WritePoints(stream, LinesForeground);
+            WritePoints(stream, LinesBackground);
         }
 
         private void WritePoints(Stream stream, List<NOcrPoint> points)
