@@ -35,6 +35,10 @@
             this.numericUpDownReelNumber = new System.Windows.Forms.NumericUpDown();
             this.buttonGenerateID = new System.Windows.Forms.Button();
             this.groupBoxFont = new System.Windows.Forms.GroupBox();
+            this.numericUpDownZPosition = new System.Windows.Forms.NumericUpDown();
+            this.labelZPosition = new System.Windows.Forms.Label();
+            this.numericUpDownTopBottomMargin = new System.Windows.Forms.NumericUpDown();
+            this.labelTopBottomMargin = new System.Windows.Forms.Label();
             this.buttonFontEffectColor = new System.Windows.Forms.Button();
             this.panelFontColor = new System.Windows.Forms.Panel();
             this.buttonFontColor = new System.Windows.Forms.Button();
@@ -56,13 +60,13 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.numericUpDownTopBottomMargin = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelZPositionHelp = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).BeginInit();
             this.groupBoxFont.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownZPosition)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.SuspendLayout();
             // 
             // panelFontEffectColor
@@ -91,7 +95,7 @@
             this.groupBox1.Controls.Add(this.labelSubtitleID);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(537, 364);
+            this.groupBox1.Size = new System.Drawing.Size(597, 419);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             // 
@@ -150,8 +154,11 @@
             this.groupBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFont.Controls.Add(this.labelZPositionHelp);
+            this.groupBoxFont.Controls.Add(this.numericUpDownZPosition);
+            this.groupBoxFont.Controls.Add(this.labelZPosition);
             this.groupBoxFont.Controls.Add(this.numericUpDownTopBottomMargin);
-            this.groupBoxFont.Controls.Add(this.label2);
+            this.groupBoxFont.Controls.Add(this.labelTopBottomMargin);
             this.groupBoxFont.Controls.Add(this.panelFontEffectColor);
             this.groupBoxFont.Controls.Add(this.buttonFontEffectColor);
             this.groupBoxFont.Controls.Add(this.panelFontColor);
@@ -168,10 +175,73 @@
             this.groupBoxFont.Controls.Add(this.labelFontUri);
             this.groupBoxFont.Location = new System.Drawing.Point(6, 141);
             this.groupBoxFont.Name = "groupBoxFont";
-            this.groupBoxFont.Size = new System.Drawing.Size(525, 217);
+            this.groupBoxFont.Size = new System.Drawing.Size(585, 272);
             this.groupBoxFont.TabIndex = 5;
             this.groupBoxFont.TabStop = false;
             this.groupBoxFont.Text = "Font";
+            // 
+            // numericUpDownZPosition
+            // 
+            this.numericUpDownZPosition.DecimalPlaces = 2;
+            this.numericUpDownZPosition.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            this.numericUpDownZPosition.Location = new System.Drawing.Point(133, 207);
+            this.numericUpDownZPosition.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownZPosition.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownZPosition.Name = "numericUpDownZPosition";
+            this.numericUpDownZPosition.Size = new System.Drawing.Size(112, 20);
+            this.numericUpDownZPosition.TabIndex = 33;
+            // 
+            // labelZPosition
+            // 
+            this.labelZPosition.AutoSize = true;
+            this.labelZPosition.Location = new System.Drawing.Point(9, 210);
+            this.labelZPosition.Name = "labelZPosition";
+            this.labelZPosition.Size = new System.Drawing.Size(53, 13);
+            this.labelZPosition.TabIndex = 32;
+            this.labelZPosition.Text = "Z-position";
+            // 
+            // numericUpDownTopBottomMargin
+            // 
+            this.numericUpDownTopBottomMargin.Location = new System.Drawing.Point(133, 181);
+            this.numericUpDownTopBottomMargin.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownTopBottomMargin.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownTopBottomMargin.Name = "numericUpDownTopBottomMargin";
+            this.numericUpDownTopBottomMargin.Size = new System.Drawing.Size(112, 20);
+            this.numericUpDownTopBottomMargin.TabIndex = 31;
+            this.numericUpDownTopBottomMargin.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // labelTopBottomMargin
+            // 
+            this.labelTopBottomMargin.AutoSize = true;
+            this.labelTopBottomMargin.Location = new System.Drawing.Point(9, 184);
+            this.labelTopBottomMargin.Name = "labelTopBottomMargin";
+            this.labelTopBottomMargin.Size = new System.Drawing.Size(97, 13);
+            this.labelTopBottomMargin.TabIndex = 30;
+            this.labelTopBottomMargin.Text = "Top/bottom margin";
             // 
             // buttonFontEffectColor
             // 
@@ -344,7 +414,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(474, 382);
+            this.buttonCancel.Location = new System.Drawing.Point(534, 437);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 2;
@@ -356,7 +426,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(393, 382);
+            this.buttonOK.Location = new System.Drawing.Point(453, 437);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 1;
@@ -364,42 +434,22 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // numericUpDownTopBottomMargin
+            // labelZPositionHelp
             // 
-            this.numericUpDownTopBottomMargin.Location = new System.Drawing.Point(133, 181);
-            this.numericUpDownTopBottomMargin.Maximum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numericUpDownTopBottomMargin.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownTopBottomMargin.Name = "numericUpDownTopBottomMargin";
-            this.numericUpDownTopBottomMargin.Size = new System.Drawing.Size(112, 20);
-            this.numericUpDownTopBottomMargin.TabIndex = 31;
-            this.numericUpDownTopBottomMargin.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 184);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(97, 13);
-            this.label2.TabIndex = 30;
-            this.label2.Text = "Top/bottom margin";
+            this.labelZPositionHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelZPositionHelp.ForeColor = System.Drawing.Color.Gray;
+            this.labelZPositionHelp.Location = new System.Drawing.Point(252, 213);
+            this.labelZPositionHelp.Name = "labelZPositionHelp";
+            this.labelZPositionHelp.Size = new System.Drawing.Size(327, 47);
+            this.labelZPositionHelp.TabIndex = 34;
+            this.labelZPositionHelp.Text = "Positive numbers moves text away, negative numbers moves text closer, if z-positi" +
+    "on zeo then it\'s normal \r\n2D";
             // 
             // DCinemaPropertiesInterop
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(561, 415);
+            this.ClientSize = new System.Drawing.Size(621, 470);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -417,8 +467,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).EndInit();
             this.groupBoxFont.ResumeLayout(false);
             this.groupBoxFont.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownZPosition)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -454,6 +505,9 @@
         private System.Windows.Forms.ComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelLanguage;
         private System.Windows.Forms.NumericUpDown numericUpDownTopBottomMargin;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelTopBottomMargin;
+        private System.Windows.Forms.NumericUpDown numericUpDownZPosition;
+        private System.Windows.Forms.Label labelZPosition;
+        private System.Windows.Forms.Label labelZPositionHelp;
     }
 }

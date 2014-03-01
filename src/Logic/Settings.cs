@@ -75,6 +75,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int EndSceneIndex { get; set; }
         public int VerifyPlaySeconds { get; set; }
         public int MergeLinesShorterThan { get; set; }
+        public bool FixShortDisplayTimesAllowMoveStartTime { get; set; }
         public string MusicSymbol { get; set; }
         public string MusicSymbolToReplace { get; set; }
         public string UnicodeSymbolsToInsert { get; set; }
@@ -150,6 +151,7 @@ namespace Nikse.SubtitleEdit.Logic
             EndSceneIndex = 1;
             VerifyPlaySeconds = 2;
             MergeLinesShorterThan = 33;
+            FixShortDisplayTimesAllowMoveStartTime = true;
             MusicSymbol = "♪";
             MusicSymbolToReplace = "âª â¶ â™ª âTª ã¢â™âª ?t×3 ?t¤3 #";
             UnicodeSymbolsToInsert = "♪;♫;☺;☹;♥;©;☮;☯;Σ;∞;≡;⇒;π";
@@ -218,6 +220,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string DCinemaLoadFontResource { get; set; }
         public int DCinemaFontSize { get; set; }
         public int DCinemaBottomMargin { get; set; }
+        public double DCinemaZPosition { get; set; }
         public int DCinemaFadeUpDownTime { get; set; }
 
         public string CurrentDCinemaSubtitleId { get; set; }
@@ -261,6 +264,7 @@ namespace Nikse.SubtitleEdit.Logic
             DCinemaLoadFontResource = "urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391";
             DCinemaFontSize = 42;
             DCinemaBottomMargin = 8;
+            DCinemaZPosition = 0;
             DCinemaFadeUpDownTime = 5;
 
             SamiDisplayTwoClassesAsTwoSubtitles = true;
@@ -1415,6 +1419,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("MergeLinesShorterThan");
             if (subNode != null)
                 settings.Tools.MergeLinesShorterThan = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("FixShortDisplayTimesAllowMoveStartTime");
+            if (subNode != null)
+                settings.Tools.FixShortDisplayTimesAllowMoveStartTime = Convert.ToBoolean(subNode.InnerText);           
             subNode = node.SelectSingleNode("MusicSymbol");
             if (subNode != null)
                 settings.Tools.MusicSymbol = subNode.InnerText;
@@ -1647,7 +1654,10 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.SubtitleSettings.DCinemaFontSize = Convert.ToInt32(subNode.InnerText);
                 subNode = node.SelectSingleNode("DCinemaBottomMargin");
                 if (subNode != null)
-                    settings.SubtitleSettings.DCinemaBottomMargin = Convert.ToInt32(subNode.InnerText);
+                    settings.SubtitleSettings.DCinemaBottomMargin = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                subNode = node.SelectSingleNode("DCinemaZPosition");
+                if (subNode != null)
+                    settings.SubtitleSettings.DCinemaZPosition = Convert.ToDouble(subNode.InnerText);
                 subNode = node.SelectSingleNode("DCinemaFadeUpDownTime");
                 if (subNode != null)
                     settings.SubtitleSettings.DCinemaFadeUpDownTime = Convert.ToInt32(subNode.InnerText);
@@ -2559,6 +2569,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("EndSceneIndex", settings.Tools.EndSceneIndex.ToString());
             textWriter.WriteElementString("VerifyPlaySeconds", settings.Tools.VerifyPlaySeconds.ToString());
             textWriter.WriteElementString("MergeLinesShorterThan", settings.Tools.MergeLinesShorterThan.ToString());
+            textWriter.WriteElementString("FixShortDisplayTimesAllowMoveStartTime", settings.Tools.FixShortDisplayTimesAllowMoveStartTime.ToString());            
             textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
             textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.MusicSymbolToReplace);
             textWriter.WriteElementString("UnicodeSymbolsToInsert", settings.Tools.UnicodeSymbolsToInsert);
@@ -2639,6 +2650,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("DCinemaFontFile", settings.SubtitleSettings.DCinemaFontFile);
             textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString());
             textWriter.WriteElementString("DCinemaBottomMargin", settings.SubtitleSettings.DCinemaBottomMargin.ToString());
+            textWriter.WriteElementString("DCinemaZPosition", settings.SubtitleSettings.DCinemaZPosition.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("DCinemaFadeUpDownTime", settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString());
             textWriter.WriteElementString("SamiDisplayTwoClassesAsTwoSubtitles", settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles.ToString());
             textWriter.WriteElementString("SamiFullHtmlEncode", settings.SubtitleSettings.SamiFullHtmlEncode.ToString());

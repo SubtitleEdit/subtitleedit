@@ -393,6 +393,9 @@ namespace Nikse.SubtitleEdit.Logic
                 FontEffect = "Effect",
                 FontEffectColor = "Effect color",
                 FontSize = "Size",
+                TopBottomMargin = "Top/bottom margin",
+                ZPosition = "Z-position",
+                ZPositionHelp = "Positive numbers moves text away, negative numbers moves text closer, if z-position is zero then it's 2D",
                 ChooseColor = "Choose color...",
                 Generate = "Generate",
             };
