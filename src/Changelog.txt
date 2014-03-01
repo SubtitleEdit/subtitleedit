@@ -1,6 +1,15 @@
 ﻿Subtitle Edit Changelog
 
 
+3.3.15 (x March 2014)
+* NEW:
+   * Added new subtitle format
+* IMPROVED:
+   * Updated French language file - thx JM GBT
+* FIXED:
+   * Minor fix for ass import in Matroska (mkv) files
+
+
 3.3.14 (23rd February 2014)
 * NEW:
    * Added Slovenian translation - thx Hawk

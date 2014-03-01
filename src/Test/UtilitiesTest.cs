@@ -35,5 +35,16 @@ namespace Test
             Assert.AreEqual(s1, s2);
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixInvalidItalicTags2()
+        {
+            string s1 = "Gledaj prema kameri i rici <i>zdravo!";
+            string s2 = Utilities.FixInvalidItalicTags(s1);
+            Assert.AreEqual(s1.Replace("<i>", string.Empty), s2);
+        }
+
+
+        
     }
 }
