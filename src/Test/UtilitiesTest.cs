@@ -41,7 +41,16 @@ namespace Test
         {
             string s1 = "Gledaj prema kameri i rici <i>zdravo!";
             string s2 = Utilities.FixInvalidItalicTags(s1);
-            Assert.AreEqual(s1.Replace("<i>", string.Empty), s2);
+            Assert.AreEqual(s2, "Gledaj prema kameri i rici zdravo!");
+        }
+        
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixInvalidItalicTags3()
+        {
+            string s1 = "<i>Line 1.</i>" + Environment.NewLine + "<i>Line 2.";
+            string s2 = Utilities.FixInvalidItalicTags(s1);
+            Assert.AreEqual(s2, "<i>Line 1." + Environment.NewLine + "Line 2.</i>");
         }
 
 
