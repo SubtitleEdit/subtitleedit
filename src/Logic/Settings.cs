@@ -268,8 +268,8 @@ namespace Nikse.SubtitleEdit.Logic
             DCinemaFadeUpDownTime = 5;
 
             SamiDisplayTwoClassesAsTwoSubtitles = true;
-            SamiFullHtmlEncode = true;
-            SamiFullHtmlEncodeNumeric = true;
+            SamiFullHtmlEncode = false;
+            SamiFullHtmlEncodeNumeric = false;
 
             TimedText10TimeCodeFormat = "Default";
 
