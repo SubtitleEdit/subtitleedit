@@ -244,12 +244,21 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ListViewItem item = listViewTemplates.Items[i];
                 if (item.Selected)
+                {
+                    string name = item.Text;
+                    for (int j = _templates.Count-1; j > 0; j--)
+                    {
+                        if (_templates[j].StartsWith(name + "ÆÆ"))
+                            _templates.RemoveAt(j);
+                    }
                     item.Remove();
+                }
             }
             if (idx >= listViewTemplates.Items.Count)
                 idx--;
             if (idx >= 0)
                 listViewTemplates.Items[idx].Selected = true;
+            
             SaveTemplates();
         }
 
