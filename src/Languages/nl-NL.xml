@@ -1497,6 +1497,7 @@ Suggesties zijn van harte welkom
     <MusicSymbol>Muziek symbolen</MusicSymbol>
     <MusicSymbolsToReplace>Muziek symbolen te vervangen (gescheiden door spatie)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Herstel gemeenschappelijke OCR fouten - maak ook gebruik van hardgecodeerde regels</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Herstel korte weergavetijd-Sta verplaatsen starttijd toe.</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Snelkoppelingen</Shortcuts>
     <Shortcut>Snelkoppeling</Shortcut>
     <Control>Controle</Control>
