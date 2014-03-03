@@ -9,18 +9,15 @@ namespace Nikse.SubtitleEdit.Logic.OCR
     {
         public Point Start { get; set; }
         public Point End { get; set; }
-        public string Id { get; set; }
 
         public NOcrPoint()
         {
-            Id = Guid.NewGuid().ToString();
             Start = new Point();
             End = new Point();
         }
 
         public NOcrPoint(Point start, Point end)
         {
-            Id = Guid.NewGuid().ToString();
             Start = new Point(start.X, start.Y);
             End = new Point(end.X, end.Y);
         }

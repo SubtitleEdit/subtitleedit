@@ -74,6 +74,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, VobSubOcr.CompareMatch bestGuess, List<VobSubOcr.ImageCompareAddition> additions, VobSubOcr vobSubForm)
         {
+            listBoxLinesForeground.Items.Clear();
+            listBoxlinesBackground.Items.Clear();
             NikseBitmap nbmp = new NikseBitmap(vobSubImage);
             nbmp.ReplaceTransparentWith(Color.Black);
             vobSubImage = nbmp.GetBitmap();
@@ -118,6 +120,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             _history = new List<NOcrChar>();
             _historyIndex = -1;
+
+            _nocrChar.Width = _imageWidth;
+            _nocrChar.Height = _imageHeight;
+            GenerateLineSegments(150, false, _nocrChar, new NikseBitmap(pictureBoxCharacter.Image as Bitmap));
+            ShowOcrPoints();
+            pictureBoxCharacter.Invalidate();
         }
 
         private void buttonExpandSelection_Click(object sender, EventArgs e)
@@ -401,11 +409,292 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 Undo();
             }
+            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.A)
+            {
+                _nocrChar.Width = _imageWidth;
+                _nocrChar.Height = _imageHeight;
+                GenerateLineSegments(150, false, _nocrChar, new NikseBitmap(pictureBoxCharacter.Image as Bitmap));
+                ShowOcrPoints();
+                pictureBoxCharacter.Invalidate();
+                Redo();
+            }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Y)
             {
                 e.SuppressKeyPress = true;
                 Redo();
             }
+            if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Left && buttonShrinkSelection.Visible)
+            {
+                buttonShrinkSelection_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Right && buttonExpandSelection.Visible)
+            {
+                buttonExpandSelection_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Subtract && buttonShrinkSelection.Visible)
+            {
+                buttonShrinkSelection_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Add && buttonExpandSelection.Visible)
+            {
+                buttonExpandSelection_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private static bool IsMatchPointForeGround(NOcrPoint op, bool loose, NikseBitmap nbmp, NOcrChar nOcrChar)
+        {
+            if (Math.Abs(op.Start.X - op.End.X) < 2 && Math.Abs(op.End.Y - op.Start.Y) < 2)
+                return false;
+
+            foreach (Point point in op.ScaledGetPoints(nOcrChar, nbmp.Width, nbmp.Height))
+            {
+                if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+                {
+                    Color c = nbmp.GetPixel(point.X, point.Y);
+                    if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                    {
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                    if (loose)
+                    {
+                        if (nbmp.Width > 10 && point.X + 1 < nbmp.Width)
+                        {
+                            c = nbmp.GetPixel(point.X + 1, point.Y);
+                            if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                            {
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+
+                        if (nbmp.Width > 10 && point.X >= 1)
+                        {
+                            c = nbmp.GetPixel(point.X - 1, point.Y);
+                            if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                            {
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+
+                        if (nbmp.Height > 10 && point.Y + 1 < nbmp.Height)
+                        {
+                            c = nbmp.GetPixel(point.X, point.Y + 1);
+                            if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                            {
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+
+                        if (nbmp.Height > 10 && point.Y >= 1)
+                        {
+                            c = nbmp.GetPixel(point.X, point.Y - 1);
+                            if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                            {
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                    }
+
+                }
+            }
+            return true;
+        }
+
+        private static bool IsMatchPointBackGround(NOcrPoint op, bool loose, NikseBitmap nbmp, NOcrChar nOcrChar)
+        {
+            foreach (Point point in op.ScaledGetPoints(nOcrChar, nbmp.Width, nbmp.Height))
+            {
+                if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+                {
+                    Color c = nbmp.GetPixel(point.X, point.Y);
+                    if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                    {
+                        return false;
+                    }
+
+                    if (nbmp.Width > 10 && point.X + 1 < nbmp.Width)
+                    {
+                        c = nbmp.GetPixel(point.X + 1, point.Y);
+                        if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                        {
+                            return false;
+                        }
+                    }
+
+                    if (loose)
+                    {
+                        if (nbmp.Width > 10 && point.X >= 1)
+                        {
+                            c = nbmp.GetPixel(point.X - 1, point.Y);
+                            if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                            {
+                                return false;
+                            }
+                        }
+
+                        if (nbmp.Height > 10 && point.Y + 1 < nbmp.Height)
+                        {
+                            c = nbmp.GetPixel(point.X, point.Y + 1);
+                            if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                            {
+                                return false;
+                            }
+                        }
+
+                        if (nbmp.Height > 10 && point.Y >= 1)
+                        {
+                            c = nbmp.GetPixel(point.X, point.Y - 1);
+                            if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+
+                }
+            }
+            return true;
+        }
+
+        public static void GenerateLineSegments(int numberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap nbmp)
+        {
+            int giveUpCount = 10000;
+            var r = new Random();
+            int count = 0;
+            int hits = 0;
+            bool tempVeryPrecise = veryPrecise;
+            while (hits < numberOfLines && count < giveUpCount)
+            {
+                var start = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
+                var end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
+
+                if (hits < 5 && count < 100) // a few large lines
+                {
+                    for (int k = 0; k < 500; k++)
+                    {
+                        if (Math.Abs(start.X - end.X) + Math.Abs(start.Y - end.Y) > nOcrChar.Height / 2)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
+                        }
+                    }
+                }
+                else // and a lot of small lines
+                {
+                    for (int k = 0; k < 500; k++)
+                    {
+                        if (Math.Abs(start.X - end.X) + Math.Abs(start.Y - end.Y) < 5)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
+                        }
+                    }
+                }
+
+                var op = new NOcrPoint(start, end);
+                bool ok = true;
+                foreach (NOcrPoint existingOp in nOcrChar.LinesForeground)
+                {
+                    if (existingOp.Start.X == op.Start.X && existingOp.Start.Y == op.Start.Y &&
+                        existingOp.End.X == op.End.X && existingOp.End.Y == op.End.Y)
+                        ok = false;
+                }
+                if (ok && IsMatchPointForeGround(op, !tempVeryPrecise, nbmp, nOcrChar))
+                {
+                    nOcrChar.LinesForeground.Add(op);
+                    //AddHistoryItem(nOcrChar);
+                    hits++;
+                }
+                count++;
+                if (count > giveUpCount - 100 && !tempVeryPrecise)
+                    tempVeryPrecise = true;
+            }
+
+            count = 0;
+            hits = 0;
+            tempVeryPrecise = veryPrecise;
+            while (hits < numberOfLines && count < giveUpCount)
+            {
+                var start = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
+                var end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
+
+
+                if (hits < 5 && count < 100) // a few large lines
+                {
+                    for (int k = 0; k < 500; k++)
+                    {
+                        if (Math.Abs(start.X - end.X) + Math.Abs(start.Y - end.Y) > nOcrChar.Height / 2)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
+                        }
+                    }
+                }
+                else // and a lot of small lines
+                {
+                    for (int k = 0; k < 500 ; k++)
+                    {
+                        if (Math.Abs(start.X - end.X) + Math.Abs(start.Y - end.Y) < 5)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
+                        }
+                    }
+                }
+
+                var op = new NOcrPoint(start, end);
+                bool ok = true;
+                foreach (NOcrPoint existingOp in nOcrChar.LinesBackground)
+                {
+                    if (existingOp.Start.X == op.Start.X && existingOp.Start.Y == op.Start.Y &&
+                        existingOp.End.X == op.End.X && existingOp.End.Y == op.End.Y)
+                        ok = false;
+                }
+                if (ok && IsMatchPointBackGround(op, !tempVeryPrecise, nbmp, nOcrChar))
+                {
+                    nOcrChar.LinesBackground.Add(op);
+                    //AddHistoryItem(nOcrChar);
+                    hits++;
+                }
+                count++;
+
+                if (count > giveUpCount - 100 && !tempVeryPrecise)
+                    tempVeryPrecise = true;
+
+            }
+
+          
         }
 
         private void removeForegroundToolStripMenuItem_Click(object sender, EventArgs e)
