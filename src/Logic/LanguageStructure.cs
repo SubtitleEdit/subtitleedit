@@ -1671,6 +1671,7 @@
             public string MusicSymbol { get; set; }
             public string MusicSymbolsToReplace { get; set; }
             public string FixCommonOcrErrorsUseHardcodedRules { get; set; }
+            public string FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime { get; set; }            
             public string Shortcuts { get; set; }
             public string Shortcut { get; set; }
             public string Control { get; set; }
