@@ -250,6 +250,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffect>Efeito</FontEffect>
     <FontEffectColor>Cor do efeito</FontEffectColor>
     <FontSize>Tamanho</FontSize>
+    <TopBottomMargin>Margem superior/inferior</TopBottomMargin>
+    <ZPosition>Posição-Z</ZPosition>
+    <ZPositionHelp>Números positivos afasta o texto, números negativos aproxima o texto, se a posição-Z for zero, então é 2D</ZPositionHelp>	
     <ChooseColor>Seleccionar a cor...</ChooseColor>
     <Generate>Gerar</Generate>	
   </DCinemaProperties>
@@ -671,9 +674,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 		<Plugins>Plugins...</Plugins>
         <ImportOcrFromDvd>Importar legenda /OCR de VOB/IFO (DVD) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importar legenda /OCR VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Importar legenda /OCR Blu-ray (sup)...</ImportBluRaySupFile>
+        <ImportBluRaySupFile>Importar legenda /OCR Blu-ray (.sup)...</ImportBluRaySupFile>
         <ImportXSub>Importar /OCR xsub de ficheiros divx/avi...</ImportXSub>		
-        <ImportSubtitleFromMatroskaFile>Importar legenda de ficheiro Matroska (mkv)...</ImportSubtitleFromMatroskaFile>
+        <ImportSubtitleFromMatroskaFile>Importar legenda de ficheiro Matroska (.mkv)...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importar legenda seleccionando codificação manualmente...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importar texto simples...</ImportText>
         <ImportImages>Importar imagens...</ImportImages>		
@@ -813,6 +816,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SaveAs>Guardar como</SaveAs>
         <Find>Procurar</Find>
         <Replace>Substituir</Replace>
+		<FixCommonErrors>Corrigir erros comuns</FixCommonErrors>
         <VisualSync>Sincronia visual</VisualSync>
         <SpellCheck>Verificação ortográfica</SpellCheck>
         <Settings>Configurações</Settings>
@@ -1119,7 +1123,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <OcrReplacePairXAdded>O par OCR lista de substituição '{0} -&gt; {1}' foi adicionado à lista de substituição OCR</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>O par OCR lista de substituição '{0} -&gt; {1}' NÃO foi adicionado à lista de substituição OCR</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} linhas seleccionadas</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>A legenda contém notas musicais em Unicode. Guardar como ANSI irá removê-las. Deseja continuar?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeMusicSymbolsAnsiWarning>A legenda contém caracteres em Unicode. Guardar como ANSI irá removê-las. Deseja continuar?</UnicodeMusicSymbolsAnsiWarning>
+	<UnicodeCharactersAnsiWarning>A legenda contém caracteres Unicode. Guardar a legenda com a codificação ANSI perde estes caracteres. Deseja continuar?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>A legenda contém códigos de tempo negativos. Deseja continuar?</NegativeTimeWarning>
     <BeforeMergeShortLines>Antes de combinar as linhas curtas</BeforeMergeShortLines>
     <BeforeSplitLongLines>Antes de dividir linhas longas</BeforeSplitLongLines>
@@ -1179,6 +1184,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <NotAValidXSubFile>Ficheiro xsub invalido!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Antes de combinar as linhas com o mesmo texto</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Legenda com códigos de tempo tem um número diferente de linhas ({0}) do que as legendas actuais ({1}) - mesmo assim deseja continuar?</ImportTimeCodesDifferentNumberOfLinesWarning>
+	<ParsingTransportStream>A analisar o fluxo de transporte - por favor aguarde...</ParsingTransportStream>
     <ErrorLoadIdx>Não foi possível ler/editar o ficheiro idx. Os ficheiros idx são parte de um par de ficheiros idx/sub (também conhecidos como VobSub) e o SE pode abrir o ficheiro sub.</ErrorLoadIdx>
     <ErrorLoadRar>Este ficheiro parece ser um ficheiro comprimido .rar. O SE não pode abrir ficheiros comprimidos.</ErrorLoadRar>
     <ErrorLoadZip>Este ficheiro parece ser um ficheiro comprimido .zip. O SE não pode abrir ficheiros comprimidos.</ErrorLoadZip>	
@@ -1225,7 +1231,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <MakeNewSelection>Fazer nova selecção</MakeNewSelection>
     <AddToCurrentSelection>Adicionar à selecção corrente</AddToCurrentSelection>
     <SubtractFromCurrentSelection>Extrair da selecção corrente</SubtractFromCurrentSelection>
-    <IntersectWithCurrentSelection>Intersectar com a corrente selecção</IntersectWithCurrentSelection>
+    <IntersectWithCurrentSelection>Intersectar com a selecção corrente</IntersectWithCurrentSelection>
     <MatchingLinesX>Linhas com correspondência: {0}</MatchingLinesX>
     <Contains>Contém</Contains>
     <StartsWith>Começa com</StartsWith>
@@ -1301,6 +1307,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <UnableToDownloadPluginListX>Impossível de tansferir a lista de plugins: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>É necessário uma versão mais recente do Subtitle Edit</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Actualização disponível!]</UpdateAvailable>
+	<UpdateAll>Actualizar todos</UpdateAll>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Eliminar texto para surdos</Title>
@@ -1408,7 +1415,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <StartInSourceView>Iniciar na aba (Original) da janela principal</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Eliminar linhas em branco ao abrir a legenda</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Ver quebras de linha na aba (Lista) da janela principal como</ShowLineBreaksAs>
-    <MainListViewDoubleClickAction>Duplo clique na linha de texto na janela principal irá...</MainListViewDoubleClickAction>
+    <MainListViewDoubleClickAction>Ao clicar duas vezes na linha de texto na janela principal irá...</MainListViewDoubleClickAction>
     <MainListViewNothing>Não faz nada</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>... para posição do vídeo e pausar</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>... para posição do vídeo e reproduzir</MainListViewVideoGoToPositionAndPlay>
@@ -1498,10 +1505,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <FirstPlusX>Primeiro + {0}</FirstPlusX>
     <LastMinusX>Último - {0}</LastMinusX>
     <FixCommonerrors>Corrigir erros comuns</FixCommonerrors>
-    <MergeLinesShorterThan>Remover quebras em linhas menores que...</MergeLinesShorterThan>
+    <MergeLinesShorterThan>Remover quebra em linha menor que...</MergeLinesShorterThan>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsToReplace>Símbolos musicais para substituir (separados por espaços)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros comuns de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Corrigir o tempo curto de exibição - permitir o movimento do tempo inicial</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>	
     <Shortcuts>Atalhos</Shortcuts>
     <Shortcut>Atalho</Shortcut>
     <Control>Ctrl</Control>
