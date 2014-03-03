@@ -638,6 +638,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static IEnumerable<ImageSplitterItem> SplitHorizontalNew(ImageSplitterItem lineSplitterItem, int xOrMorePixelsMakesSpace)
         {
             var bmp = new NikseBitmap(lineSplitterItem.NikseBitmap);
+            bmp.AddTransparentLineRight();
             var parts = new List<ImageSplitterItem>();
             int startX = 0;
             int width = 0;
@@ -702,7 +703,7 @@ namespace Nikse.SubtitleEdit.Logic
                     width = 1;
                     startX = FindMinX(points, x);
                 }
-            }
+            }            
             return parts;
         }
 
