@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Nikse.SubtitleEdit.Forms;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 
@@ -9,6 +12,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         public string FileName { get; private set; }
         public List<NOcrChar> OcrCharacters = new List<NOcrChar>();
+        public List<NOcrChar> OcrCharactersExpanded = new List<NOcrChar>();
 
         public NOcrDb(string fileName)
         {
@@ -24,6 +28,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 {
                     foreach (var ocrChar in OcrCharacters)
                         ocrChar.Save(gz);
+                    foreach (var ocrChar in OcrCharactersExpanded)
+                        ocrChar.Save(gz);
                 }
             }
         }
@@ -31,10 +37,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         public void LoadOcrCharacters()
         {
             var list = new List<NOcrChar>();
+            var listExpanded = new List<NOcrChar>();
 
             if (!File.Exists(FileName))
             {
                 OcrCharacters = list;
+                OcrCharactersExpanded = listExpanded;
                 return;
             }
 
@@ -48,7 +56,10 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         var ocrChar = new NOcrChar(gz);
                         if (ocrChar.LoadedOk)
                         {
-                            list.Add(ocrChar);
+                            if (ocrChar.ExpandCount > 0)
+                                listExpanded.Add(ocrChar);
+                            else
+                                list.Add(ocrChar);
                         }
                         else
                         {
@@ -58,6 +69,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 }
             }
             OcrCharacters = list;
+            OcrCharactersExpanded = listExpanded;
         }
 
         public int FindExactMatch(NOcrChar ocrChar)
@@ -67,9 +79,91 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         public void Add(NOcrChar ocrChar)
         {
-            OcrCharacters.Add(ocrChar);
+            if (ocrChar.ExpandCount > 0)
+                OcrCharactersExpanded.Insert(0, ocrChar);
+            else
+                OcrCharacters.Insert(0, ocrChar);
+        }
+
+        public NOcrChar GetMatch(NikseBitmap nbmp)
+        {
+            const int NocrMinColor = 300;
+            int topMargin = 1;
+            int index = 0;
+            double widthPercent = nbmp.Height * 100.0 / nbmp.Width;
+
+            foreach (NOcrChar oc in OcrCharacters)
+            {
+                if (Math.Abs(widthPercent - oc.WidthPercent) < 20 && Math.Abs(oc.MarginTop - topMargin) < 5)
+                { // only very accurate matches
+
+                    bool ok = true;
+                    index = 0;
+                    while (index < oc.LinesForeground.Count && ok)
+                    {
+                        NOcrPoint op = oc.LinesForeground[index];
+                        foreach (Point point in op.ScaledGetPoints(oc, nbmp.Width, nbmp.Height))
+                        {
+                            if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+                            {
+                                Color c = nbmp.GetPixel(point.X, point.Y);
+                                if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                {
+                                }
+                                else
+                                {
+                                    Point p = new Point(point.X - 1, point.Y);
+                                    if (p.X < 0)
+                                        p.X = 1;
+                                    c = nbmp.GetPixel(p.X, p.Y);
+                                    if (nbmp.Width > 20 && c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                    {
+                                    }
+                                    else
+                                    {
+                                        ok = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        index++;
+                    }
+                    index = 0;
+                    while (index < oc.LinesBackground.Count && ok)
+                    {
+                        NOcrPoint op = oc.LinesBackground[index];
+                        foreach (Point point in op.ScaledGetPoints(oc, nbmp.Width, nbmp.Height))
+                        {
+                            if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+                            {
+                                Color c = nbmp.GetPixel(point.X, point.Y);
+                                if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                {
+                                    Point p = new Point(point.X, point.Y);
+                                    if (oc.Width > 19 && point.X > 0)
+                                        p.X = p.X - 1;
+                                    c = nbmp.GetPixel(p.X, p.Y);
+                                    if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                    {
+                                        ok = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        index++;
+                    }
+                    if (ok)
+                        return oc;
+                }
+            }
+
+            return null;
         }
 
 
     }
 }
+
+
