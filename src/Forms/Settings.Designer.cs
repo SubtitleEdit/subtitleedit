@@ -84,6 +84,9 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxShowFrameRate = new System.Windows.Forms.CheckBox();
             this.groupBoxShowToolBarButtons = new System.Windows.Forms.GroupBox();
+            this.labelTBFixCommonErrors = new System.Windows.Forms.Label();
+            this.pictureBoxTBFixCommonErrors = new System.Windows.Forms.PictureBox();
+            this.checkBoxTBFixCommonErrors = new System.Windows.Forms.CheckBox();
             this.labelTBHelp = new System.Windows.Forms.Label();
             this.pictureBoxHelp = new System.Windows.Forms.PictureBox();
             this.checkBoxHelp = new System.Windows.Forms.CheckBox();
@@ -270,9 +273,7 @@
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFMPEG = new System.Windows.Forms.OpenFileDialog();
-            this.labelTBFixCommonErrors = new System.Windows.Forms.Label();
-            this.pictureBoxTBFixCommonErrors = new System.Windows.Forms.PictureBox();
-            this.checkBoxTBFixCommonErrors = new System.Windows.Forms.CheckBox();
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -284,6 +285,7 @@
             this.tabPageToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHelp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSettings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSpellCheck)).BeginInit();
@@ -328,7 +330,6 @@
             this.tabPageSyntaxColoring.SuspendLayout();
             this.groupBoxListViewSyntaxColoring.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSyntaxColorTextMoreThanXLines)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -1042,6 +1043,33 @@
             this.groupBoxShowToolBarButtons.TabIndex = 0;
             this.groupBoxShowToolBarButtons.TabStop = false;
             this.groupBoxShowToolBarButtons.Text = "Show toolbar buttons";
+            // 
+            // labelTBFixCommonErrors
+            // 
+            this.labelTBFixCommonErrors.AutoSize = true;
+            this.labelTBFixCommonErrors.Location = new System.Drawing.Point(9, 136);
+            this.labelTBFixCommonErrors.Name = "labelTBFixCommonErrors";
+            this.labelTBFixCommonErrors.Size = new System.Drawing.Size(95, 13);
+            this.labelTBFixCommonErrors.TabIndex = 36;
+            this.labelTBFixCommonErrors.Text = "Fix common errors";
+            // 
+            // pictureBoxTBFixCommonErrors
+            // 
+            this.pictureBoxTBFixCommonErrors.Location = new System.Drawing.Point(22, 155);
+            this.pictureBoxTBFixCommonErrors.Name = "pictureBoxTBFixCommonErrors";
+            this.pictureBoxTBFixCommonErrors.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxTBFixCommonErrors.TabIndex = 35;
+            this.pictureBoxTBFixCommonErrors.TabStop = false;
+            // 
+            // checkBoxTBFixCommonErrors
+            // 
+            this.checkBoxTBFixCommonErrors.AutoSize = true;
+            this.checkBoxTBFixCommonErrors.Location = new System.Drawing.Point(25, 195);
+            this.checkBoxTBFixCommonErrors.Name = "checkBoxTBFixCommonErrors";
+            this.checkBoxTBFixCommonErrors.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBFixCommonErrors.TabIndex = 17;
+            this.checkBoxTBFixCommonErrors.Text = "Visible";
+            this.checkBoxTBFixCommonErrors.UseVisualStyleBackColor = true;
             // 
             // labelTBHelp
             // 
@@ -2109,9 +2137,9 @@
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxTreatINQuoteAsING);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckOneLetterWords);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
-            this.groupBoxSpellCheck.Location = new System.Drawing.Point(6, 283);
+            this.groupBoxSpellCheck.Location = new System.Drawing.Point(6, 314);
             this.groupBoxSpellCheck.Name = "groupBoxSpellCheck";
-            this.groupBoxSpellCheck.Size = new System.Drawing.Size(813, 155);
+            this.groupBoxSpellCheck.Size = new System.Drawing.Size(813, 124);
             this.groupBoxSpellCheck.TabIndex = 4;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
@@ -2148,6 +2176,7 @@
             // 
             // groupBoxFixCommonErrors
             // 
+            this.groupBoxFixCommonErrors.Controls.Add(this.checkBoxFixShortDisplayTimesAllowMoveStartTime);
             this.groupBoxFixCommonErrors.Controls.Add(this.checkBoxFixCommonOcrErrorsUsingHardcodedRules);
             this.groupBoxFixCommonErrors.Controls.Add(this.comboBoxToolsMusicSymbol);
             this.groupBoxFixCommonErrors.Controls.Add(this.textBoxMusicSymbolsToReplace);
@@ -2155,7 +2184,7 @@
             this.groupBoxFixCommonErrors.Controls.Add(this.labelToolsMusicSymbol);
             this.groupBoxFixCommonErrors.Location = new System.Drawing.Point(7, 129);
             this.groupBoxFixCommonErrors.Name = "groupBoxFixCommonErrors";
-            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(813, 148);
+            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(813, 179);
             this.groupBoxFixCommonErrors.TabIndex = 3;
             this.groupBoxFixCommonErrors.TabStop = false;
             this.groupBoxFixCommonErrors.Text = "Fix common errors";
@@ -3151,32 +3180,15 @@
             // 
             this.openFileDialogFFMPEG.FileName = "openFileDialog1";
             // 
-            // labelTBFixCommonErrors
+            // checkBoxFixShortDisplayTimesAllowMoveStartTime
             // 
-            this.labelTBFixCommonErrors.AutoSize = true;
-            this.labelTBFixCommonErrors.Location = new System.Drawing.Point(9, 136);
-            this.labelTBFixCommonErrors.Name = "labelTBFixCommonErrors";
-            this.labelTBFixCommonErrors.Size = new System.Drawing.Size(95, 13);
-            this.labelTBFixCommonErrors.TabIndex = 36;
-            this.labelTBFixCommonErrors.Text = "Fix common errors";
-            // 
-            // pictureBoxTBFixCommonErrors
-            // 
-            this.pictureBoxTBFixCommonErrors.Location = new System.Drawing.Point(22, 155);
-            this.pictureBoxTBFixCommonErrors.Name = "pictureBoxTBFixCommonErrors";
-            this.pictureBoxTBFixCommonErrors.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxTBFixCommonErrors.TabIndex = 35;
-            this.pictureBoxTBFixCommonErrors.TabStop = false;
-            // 
-            // checkBoxTBFixCommonErrors
-            // 
-            this.checkBoxTBFixCommonErrors.AutoSize = true;
-            this.checkBoxTBFixCommonErrors.Location = new System.Drawing.Point(25, 195);
-            this.checkBoxTBFixCommonErrors.Name = "checkBoxTBFixCommonErrors";
-            this.checkBoxTBFixCommonErrors.Size = new System.Drawing.Size(55, 17);
-            this.checkBoxTBFixCommonErrors.TabIndex = 17;
-            this.checkBoxTBFixCommonErrors.Text = "Visible";
-            this.checkBoxTBFixCommonErrors.UseVisualStyleBackColor = true;
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.AutoSize = true;
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Location = new System.Drawing.Point(15, 138);
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Name = "checkBoxFixShortDisplayTimesAllowMoveStartTime";
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Size = new System.Drawing.Size(252, 17);
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.TabIndex = 35;
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Text = "Fix short display time - allow move of start time";
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
@@ -3211,6 +3223,7 @@
             this.groupBox2.PerformLayout();
             this.groupBoxShowToolBarButtons.ResumeLayout(false);
             this.groupBoxShowToolBarButtons.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHelp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSettings)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSpellCheck)).EndInit();
@@ -3275,7 +3288,6 @@
             this.groupBoxListViewSyntaxColoring.ResumeLayout(false);
             this.groupBoxListViewSyntaxColoring.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSyntaxColorTextMoreThanXLines)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3528,5 +3540,6 @@
         private System.Windows.Forms.Label labelTBFixCommonErrors;
         private System.Windows.Forms.PictureBox pictureBoxTBFixCommonErrors;
         private System.Windows.Forms.CheckBox checkBoxTBFixCommonErrors;
+        private System.Windows.Forms.CheckBox checkBoxFixShortDisplayTimesAllowMoveStartTime;
     }
 }
