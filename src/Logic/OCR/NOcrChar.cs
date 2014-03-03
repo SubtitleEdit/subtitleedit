@@ -14,7 +14,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         public bool Italic { get; set; }
         public List<NOcrPoint> LinesForeground { get; private set; }
         public List<NOcrPoint> LinesBackground { get; private set; }
-        public string Id { get; set; }
         public int ExpandCount { get; set; }
         public bool LoadedOk { get; private set; }
 
@@ -28,7 +27,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         public NOcrChar()
         {
-            Id = Guid.NewGuid().ToString();
             LinesForeground = new List<NOcrPoint>();
             LinesBackground = new List<NOcrPoint>();
             Text = string.Empty;
@@ -36,7 +34,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         public NOcrChar(NOcrChar old)
         {
-            Id = Guid.NewGuid().ToString();
             LinesForeground = new List<NOcrPoint>();
             LinesBackground = new List<NOcrPoint>();
             Text = old.Text;
