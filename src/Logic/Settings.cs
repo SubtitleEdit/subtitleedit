@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Logic
             EndSceneIndex = 1;
             VerifyPlaySeconds = 2;
             MergeLinesShorterThan = 33;
-            FixShortDisplayTimesAllowMoveStartTime = true;
+            FixShortDisplayTimesAllowMoveStartTime = false;
             MusicSymbol = "♪";
             MusicSymbolToReplace = "âª â¶ â™ª âTª ã¢â™âª ?t×3 ?t¤3 #";
             UnicodeSymbolsToInsert = "♪;♫;☺;☹;♥;©;☮;☯;Σ;∞;≡;⇒;π";
