@@ -1036,5 +1036,26 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+
+        internal void AddTransparentLineRight()
+        {
+            int newWidth = Width + 1;
+
+            var newBitmapData = new byte[newWidth * Height * 4];
+            int index = 0;
+            for (int y = 0; y < Height; y++)
+            {
+                int pixelAddress = (0 * 4) + (y * 4 * Width);
+                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * Width);
+                index += 4 * newWidth;
+            }
+            Width = newWidth;
+            _bitmapData = newBitmapData;
+            for (int y = 0; y < Height; y++)
+            {
+                SetPixel(Width - 1, y, Color.Transparent);
+            }
+        }
+
     }
 }
