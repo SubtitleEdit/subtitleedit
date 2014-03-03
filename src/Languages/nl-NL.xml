@@ -246,6 +246,9 @@ Suggesties zijn van harte welkom
     <FontEffect>Effect</FontEffect>
     <FontEffectColor>Effect kleur</FontEffectColor>
     <FontSize>Grootte</FontSize>
+    <TopBottomMargin>Boven/onder marge</TopBottomMargin>
+    <ZPosition>Z- positie</ZPosition>
+    <ZPositionHelp>Positieve cijfers verplaatsen tekst verder weg, negatieve dichterbij, Als Z-positie is nul dan is het 2D</ZPositionHelp>
     <ChooseColor>Kies kleur...</ChooseColor>
     <Generate>Genereer</Generate>
   </DCinemaProperties>
@@ -818,8 +821,8 @@ Suggesties zijn van harte welkom
         <ShowHideVideo>Toon/verberg video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
-        <AdvancedSubStationAlphaSetStyle>Geavanceerde Sub Station Alpha - set stijl</AdvancedSubStationAlphaSetStyle>
-        <SubStationAlphaSetStyle>Sub Station Alpha - set stijl</SubStationAlphaSetStyle>
+        <AdvancedSubStationAlphaSetStyle>Geavanceerde Sub Station Alpha - bepaal stijl</AdvancedSubStationAlphaSetStyle>
+        <SubStationAlphaSetStyle>Sub Station Alpha - bepaal stijl</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Sub Station Alpha stijlen...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Geavanceerde Sub Station Alpha stijlen...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Getimede tekst - instellen stijl</TimedTextSetStyle>
