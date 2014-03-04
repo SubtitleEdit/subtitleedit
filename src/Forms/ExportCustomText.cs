@@ -258,7 +258,7 @@ namespace Nikse.SubtitleEdit.Forms
                 idx--;
             if (idx >= 0)
                 listViewTemplates.Items[idx].Selected = true;
-            
+
             SaveTemplates();
         }
 

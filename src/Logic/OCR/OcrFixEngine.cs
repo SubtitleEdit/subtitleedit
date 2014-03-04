@@ -1395,7 +1395,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             foreach (string from in _partialLineAlwaysReplaceList.Keys)
             {
                 if (newText.Contains(from))
-                    newText = newText.Replace(from, _partialLineAlwaysReplaceList[from]); 
+                    newText = newText.Replace(from, _partialLineAlwaysReplaceList[from]);
             }
 
             foreach (string findWhat in _regExList.Keys)
