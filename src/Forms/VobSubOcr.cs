@@ -2965,57 +2965,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, target, _binaryOcrDb, bob, maxDiff);
-            //if (maxDiff > 0.1)
-            //{
-            //    if (smallestDifference * 100.0 / (target.Width * target.Height) > _vobSubOcrSettings.AllowDifferenceInPercent && target.Width < 70)
-            //    {
-            //        if (smallestDifference > 2 && target.Width > 25)
-            //        {
-            //            var cutBitmap = target.CopyRectangle(new Rectangle(4, 0, target.Width - 4, target.Height));
-            //            FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap, _binaryOcrDb, new BinaryOcrBitmap(cutBitmap), maxDiff);
-            //            double differencePercentage = smallestDifference * 100.0 / (target.Width * target.Height);
-            //        }
-
-            //        if (smallestDifference > 2 && target.Width > 12)
-            //        {
-            //            var cutBitmap = target.CopyRectangle(new Rectangle(1, 0, target.Width - 2, target.Height));
-            //            FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap, _binaryOcrDb, bob, maxDiff);
-            //        }
-
-            //        if (smallestDifference > 2 && target.Width > 12)
-            //        {
-            //            var cutBitmap = target.CopyRectangle(new Rectangle(0, 0, target.Width - 2, target.Height));
-            //            FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap, _binaryOcrDb, bob, maxDiff);
-            //        }
-
-            //        if (smallestDifference > 2 && target.Width > 12)
-            //        {
-            //            var cutBitmap = target.CopyRectangle(new Rectangle(1, 0, target.Width - 2, target.Height));
-            //            int topCrop = 0;
-            //            var cutBitmap2 = NikseBitmapImageSplitter.CropTopAndBottom(cutBitmap, out topCrop, 2);
-            //            if (cutBitmap2.Height != target.Height)
-            //                FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2, _binaryOcrDb, bob, maxDiff);
-            //        }
-
-            //        if (smallestDifference > 2 && target.Width > 15)
-            //        {
-            //            var cutBitmap = target.CopyRectangle(new Rectangle(1, 0, target.Width - 2, target.Height));
-            //            int topCrop = 0;
-            //            var cutBitmap2 = NikseBitmapImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
-            //            if (cutBitmap2.Height != target.Height)
-            //                FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2, _binaryOcrDb, bob, maxDiff);
-            //        }
-
-            //        if (smallestDifference > 2 && target.Width > 15)
-            //        {
-            //            var cutBitmap = target.CopyRectangle(new Rectangle(1, 0, target.Width - 2, target.Height));
-            //            int topCrop = 0;
-            //            var cutBitmap2 = NikseBitmapImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
-            //            if (cutBitmap2.Height != target.Height)
-            //                FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2, _binaryOcrDb, bob, maxDiff);
-            //        }
-            //    }
-            //}
 
             if (smallestIndex >= 0)
             {
@@ -3958,7 +3907,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxRightToLeft.Checked)
                 line = ReverseNumberStrings(line);
 
-
             //ocr fix engine
             string textWithOutFixes = line;
             if (_ocrFixEngine.IsDictionaryLoaded)
@@ -4012,7 +3960,6 @@ namespace Nikse.SubtitleEdit.Forms
             return line;
         }
 
-
         /// <summary>
         /// Ocr via image compare
         /// </summary>
@@ -4032,7 +3979,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var parentBitmap = new NikseBitmap(bitmap);
                 int minLineHeight = _binOcrLastLowercaseHeight - 3;
                 if (minLineHeight < 5)
-                    minLineHeight = 5;
+                    minLineHeight = _nocrLastLowercaseHeight;
+                if (minLineHeight < 5)
+                    minLineHeight = 6;
                 List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
                 int index = 0;
                 bool expandSelection = false;
@@ -4236,44 +4185,6 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 _nOcrDb.Save();
-                //return;
-
-
-                //var textWriter = new XmlTextWriter(fileName, null) { Formatting = Formatting.Indented };
-                //textWriter.WriteStartDocument();
-                //textWriter.WriteStartElement("NOCR", "");
-                //textWriter.WriteAttributeString("Language", "en");
-                //foreach (NOcrChar oc in _nocrChars)
-                //{
-                //    textWriter.WriteStartElement("Char", "");
-                //    textWriter.WriteAttributeString("Text", oc.Text);
-                //    textWriter.WriteAttributeString("Width", oc.Width.ToString(CultureInfo.InvariantCulture));
-                //    textWriter.WriteAttributeString("Height", oc.Height.ToString(CultureInfo.InvariantCulture));
-                //    textWriter.WriteAttributeString("MarginTop", oc.MarginTop.ToString(CultureInfo.InvariantCulture));
-                //    if (oc.Italic)
-                //        textWriter.WriteAttributeString("Italic", oc.Italic.ToString(CultureInfo.InvariantCulture));
-                //    if (oc.ExpandCount > 1)
-                //        textWriter.WriteAttributeString("ExpandCount", oc.ExpandCount.ToString(CultureInfo.InvariantCulture));
-                //    foreach (NOcrPoint op in oc.LinesForeground)
-                //    {
-                //        textWriter.WriteStartElement("Point", "");
-                //        textWriter.WriteAttributeString("On", true.ToString());
-                //        textWriter.WriteAttributeString("Start", op.Start.X.ToString(CultureInfo.InvariantCulture) + "," + op.Start.Y.ToString(CultureInfo.InvariantCulture));
-                //        textWriter.WriteAttributeString("End", op.End.X.ToString(CultureInfo.InvariantCulture) + "," + op.End.Y.ToString(CultureInfo.InvariantCulture));
-                //        textWriter.WriteEndElement();
-                //    }
-                //    foreach (NOcrPoint op in oc.LinesBackground)
-                //    {
-                //        textWriter.WriteStartElement("Point", "");
-                //        textWriter.WriteAttributeString("Start", op.Start.X.ToString(CultureInfo.InvariantCulture) + "," + op.Start.Y.ToString(CultureInfo.InvariantCulture));
-                //        textWriter.WriteAttributeString("End", op.End.X.ToString(CultureInfo.InvariantCulture) + "," + op.End.Y.ToString(CultureInfo.InvariantCulture));
-                //        textWriter.WriteEndElement();
-                //    }
-                //    textWriter.WriteEndElement();
-                //}
-                //textWriter.WriteEndElement();
-                //textWriter.WriteEndDocument();
-                //textWriter.Close();
             }
             catch (Exception exception)
             {
@@ -4281,28 +4192,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-
         private void LoadNOcr(string fileName, bool clear)
         {
             _nOcrDb = new NOcrDb(fileName);
-            return;
-
-
-            //if (clear || _nocrChars == null)
-            //    _nocrChars = new List<NOcrChar>();
-
-            //if (File.Exists(fileName))
-            //{
-            //    try
-            //    {
-            //        foreach (NOcrChar c in LoadNOcr(fileName))
-            //            _nocrChars.Add(c);
-            //    }
-            //    catch (Exception exception)
-            //    {
-            //        MessageBox.Show(exception.Message);
-            //    }
-            //}
         }
 
         public static List<NOcrChar> LoadNOcr(string fileName)
@@ -4430,7 +4322,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(line))
             {
                 var nbmpInput = new NikseBitmap(bitmap);
-              //  nbmpInput.ReplaceNonWhiteWithTransparent();
 
                 var matches = new List<CompareMatch>();
 
@@ -4445,8 +4336,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (item.NikseBitmap != null)
                     {
-                        item.Y += item.NikseBitmap.CropTopTransparent(0);
-                        item.NikseBitmap.CropTransparentSidesAndBottom(0, true);
                         item.NikseBitmap.ReplaceTransparentWith(Color.Black);
                     }
                 }
@@ -4473,9 +4362,6 @@ namespace Nikse.SubtitleEdit.Forms
                         item = GetExpandedSelection(nbmpInput, expandSelectionList, checkBoxRightToLeft.Checked);
                         if (item.NikseBitmap != null)
                         {
-                            item.NikseBitmap.ReplaceNonWhiteWithTransparent();
-                            item.Y += item.NikseBitmap.CropTopTransparent(0);
-                            item.NikseBitmap.CropTransparentSidesAndBottom(0, true);
                             item.NikseBitmap.ReplaceTransparentWith(Color.Black);
                         }
 
@@ -4524,7 +4410,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-//                        CompareMatch match = GetNOcrCompareMatch(item, bitmap, _nocrChars, _unItalicFactor, checkBoxNOcrItalic.Checked, !checkBoxNOcrCorrect.Checked);
                         CompareMatch match = GetNOcrCompareMatchNew(item, nbmpInput, _nOcrDb, _unItalicFactor, checkBoxNOcrItalic.Checked, !checkBoxNOcrCorrect.Checked);
                         if (match == null)
                         {
@@ -5313,9 +5198,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (item.NikseBitmap != null)
                 {
-//                    item.NikseBitmap.ReplaceNonWhiteWithTransparent();
-                    item.Y += item.NikseBitmap.CropTopTransparent(0);
-                    item.NikseBitmap.CropTransparentSidesAndBottom(0, true);
                     item.NikseBitmap.ReplaceTransparentWith(Color.Black);
                 }
             }
@@ -5362,9 +5244,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (item.NikseBitmap != null)
                 {
-//                    item.NikseBitmap.ReplaceNonWhiteWithTransparent();
-                    item.Y += item.NikseBitmap.CropTopTransparent(0);
-                    item.NikseBitmap.CropTransparentSidesAndBottom(0, true);
                     item.NikseBitmap.ReplaceTransparentWith(Color.Black);
                 }
             }
