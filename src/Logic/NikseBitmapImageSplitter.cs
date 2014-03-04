@@ -703,7 +703,7 @@ namespace Nikse.SubtitleEdit.Logic
                     width = 1;
                     startX = FindMinX(points, x);
                 }
-            }            
+            }
             return parts;
         }
 

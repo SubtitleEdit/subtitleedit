@@ -879,7 +879,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-                    else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && 
+                    else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime &&
                              prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                     {
                         if (AllowFix(p, fixAction))
