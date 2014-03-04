@@ -694,7 +694,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             }
 
-          
+
         }
 
         private void removeForegroundToolStripMenuItem_Click(object sender, EventArgs e)
