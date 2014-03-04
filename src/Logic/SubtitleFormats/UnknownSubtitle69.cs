@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (p != null)
                 p.Text = text.ToString().Trim();
             subtitle.Renumber(1);
-        }       
+        }
 
         private TimeCode DecodeTimeCode(string timePart)
         {

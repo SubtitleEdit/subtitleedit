@@ -2455,7 +2455,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            
+
 
             if (deepSeek) // if we do now draw then just try anything...
             {
@@ -4232,7 +4232,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SaveNOcr(string fileName)
         {
-            
+
             try
             {
                 _nOcrDb.Save();
