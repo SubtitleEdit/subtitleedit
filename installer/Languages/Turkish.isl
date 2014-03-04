@@ -1,5 +1,5 @@
 ; *** Inno Setup version 5.5.3+ Turkish messages ***
-; Language	"Turkce" Turkish Translate by "Ceviren"	Adil YILDIZ	adilyildiz@gmail.com
+; Language	"Turkce" Turkish Translate by "Ceviren"	Kaya Zeren kayazeren@gmail.com
 ; To download user-contributed translations of this file, go to:
 ;   http://www.jrsoftware.org/files/istrans/
 ;
@@ -9,7 +9,7 @@
 ; two periods being displayed).
 
 [LangOptions]
-; The following three entries are very important. Be sure to read and 
+; The following three entries are very important. Be sure to read and
 ; understand the '[LangOptions] section' topic in the help file.
 LanguageName=T<00FC>rk<00E7>e
 LanguageID=$041f
@@ -28,290 +28,290 @@ LanguageCodePage=1254
 [Messages]
 
 ; *** Application titles
-SetupAppTitle=Kur
-SetupWindowTitle=%1 - Kur
-UninstallAppTitle=Kaldýr
-UninstallAppFullTitle=%1 Kaldýr
+SetupAppTitle=Kurulum
+SetupWindowTitle=%1 - Kurulumu
+UninstallAppTitle=Kaldýrma
+UninstallAppFullTitle=%1 Kaldýrma
 
 ; *** Misc. common
 InformationTitle=Bilgi
-ConfirmTitle=Sorgu
+ConfirmTitle=Onay
 ErrorTitle=Hata
 
 ; *** SetupLdr messages
-SetupLdrStartupMessage=Bu kurulum %1 programýný yükleyecektir. Devam etmek istiyor musunuz?
+SetupLdrStartupMessage=%1 yazýlýmý kurulacak. Devam etmek istiyor musunuz?
 LdrCannotCreateTemp=Geçici bir dosya oluþturulamadý. Kurulum iptal edildi
-LdrCannotExecTemp=Geçici dizindeki dosya çalýþtýrýlamadý. Kurulum iptal edildi
+LdrCannotExecTemp=Geçici klasördeki dosya çalýþtýrýlamadýðýndan kurulum iptal edildi
 
 ; *** Startup error messages
 LastErrorMessage=%1.%n%nHata %2: %3
-SetupFileMissing=%1 adlý dosya kurulum dizininde bulunamadý. Lütfen problemi düzeltiniz veya programýn yeni bir kopyasýný edininiz.
-SetupFileCorrupt=Kurulum dosyalarý bozulmuþ. Lütfen programýn yeni bir kopyasýný edininiz.
-SetupFileCorruptOrWrongVer=Kurulum dosyalarý bozulmuþ veya kurulumun bu sürümü ile uyuþmuyor olabilir. Lütfen problemi düzeltiniz veya Programýn yeni bir kopyasýný edininiz.
-InvalidParameter=Komut satýrýna geçersiz bir parametre girildi:%n%n%1
-SetupAlreadyRunning=Kur zaten çalýþýyor.
-WindowsVersionNotSupported=Bu program bilgisayarýnýzda çalýþan Windows sürümünü desteklemiyor.
-WindowsServicePackRequired=Bu program için %1 Service Pack %2 veya sonrasý gerekmektedir.
-NotOnThisPlatform=Bu program %1 üzerinde çalýþtýrýlamaz.
-OnlyOnThisPlatform=Bu program sadece %1 üzerinde çalýþtýrýlmalýdýr.
-OnlyOnTheseArchitectures=Bu program sadece aþaðýdaki mimarilere sahip Windows sürümlerinde çalýþýr:%n%n%1
-MissingWOW64APIs=Kullandýðýnýz Windows sürümü Kur'un 64-bit yükleme yapabilmesi için gerekli olan özelliklere sahip deðildir. Bu problemi ortadan kaldýrmak için lütfen Service Pack %1 yükleyiniz.
-WinVersionTooLowError=Bu programý çalýþtýrabilmek için %1 %2 sürümü veya daha sonrasý yüklü olmalýdýr.
-WinVersionTooHighError=Bu program %1 %2 sürümü veya sonrasýnda çalýþmaz.
-AdminPrivilegesRequired=Bu program kurulurken yönetici olarak oturum açýlmýþ olmak gerekmektedir.
-PowerUserPrivilegesRequired=Bu program kurulurken Yönetici veya Güç Yöneticisi Grubu üyesi olarak giriþ yapýlmýþ olmasý gerekmektedir.
-SetupAppRunningError=Kur %1 programýnýn çalýþtýðýný tespit etti.%n%nLütfen bu programýn çalýþan bütün parçalarýný þimdi kapatýnýz, daha sonra devam etmek için Tamam'a veya çýkmak için Ýptal'e basýnýz.
-UninstallAppRunningError=Kaldýr %1 programýnýn çalýþtýðýný tespit etti.%n%nLütfen bu programýn çalýþan bütün parçalarýný þimdi kapatýnýz, daha sonra devam etmek için Tamam'a veya çýkmak için Ýptal'e basýnýz.
+SetupFileMissing=Kurulum klasöründeki %1 dosyasý eksik. Lütfen sorunu çözün ya da yazýlýmýn yeni bir kopyasýyla yeniden deneyin.
+SetupFileCorrupt=Kurulum dosyalarý bozuk. Lütfen yazýlýmýn yeni bir kopyasýyla yeniden deneyin.
+SetupFileCorruptOrWrongVer=Kurulum dosyalarý bozulmuþ ya da bu kurulum sürümü ile uyumlu deðil. Lütfen sorunu çözün ya da yazýlýmýn yeni bir kopyasýyla yeniden deneyin.
+InvalidParameter=Komut satýrýndan geçersiz bir parametre gönderildi:%n%n%1
+SetupAlreadyRunning=Kurulum zaten çalýþýyor.
+WindowsVersionNotSupported=Bu yazýlým, bilgisayarýnýzda yüklü olan Windows sürümü ile uyumlu deðil.
+WindowsServicePackRequired=Bu yazýlým, %1 Service Pack %2 ve üzerindeki sürümlerle çalýþýr.
+NotOnThisPlatform=Bu yazýlým, %1 üzerinde çalýþmaz.
+OnlyOnThisPlatform=Bu yazýlým, %1 üzerinde çalýþtýrýlmalýdýr.
+OnlyOnTheseArchitectures=Bu yazýlým, yalnýz þu iþlemci mimarileri için tasarlanmýþ Windows sürümleriyle çalýþýr:%n%n%1
+MissingWOW64APIs=Kullandýðýnýz Windows sürümü 64-bit kurulumu için gerekli iþlevlere sahip deðil. Bu sorunu çözmek için lütfen Hizmet Paketi %1 yükleyin.
+WinVersionTooLowError=Bu yazýlým için %1 sürüm %2 ya da üzeri gereklidir.
+WinVersionTooHighError=Bu yazýlým, '%1' sürüm '%2' ya da üzerine kurulamaz.
+AdminPrivilegesRequired=Bu yazýlýmý kurmak için Yönetici olarak oturum açmýþ olmanýz gerekir.
+PowerUserPrivilegesRequired=Bu yazýlýmý kurarken, Yönetici ya da Güçlü Kullanýcýlar grubunun bir üyesi olarak oturum açmýþ olmanýz gerekir.
+SetupAppRunningError=Kurulum, %1 yazýlýmýnýn çalýþmakta olduðunu algýladý.%n%nLütfen yazýlýmýn çalýþan tüm kopyalarýný kapatýp, devam etmek için Tamam ya da kurulumdan çýkmak için Ýptal düðmesine týklayýn.
+UninstallAppRunningError=Kaldýrma, %1 yazýlýmýnýn çalýþmakta olduðunu algýladý.%n%nLütfen yazýlýmýn çalýþan tüm kopyalarýný kapatýp, devam etmek için Tamam ya da  kurulumdan çýkmak için Ýptal düðmesine týklayýn.
 
 ; *** Misc. errors
-ErrorCreatingDir=Kur " %1 " dizinini oluþturamadý.
-ErrorTooManyFilesInDir=" %1 " dizininde bir dosya oluþturulamadý. Çünkü dizin çok fazla dosya içeriyor
+ErrorCreatingDir=Kurulum "%1" klasörünü oluþturamadý.
+ErrorTooManyFilesInDir="%1" klasörü içinde çok sayýda dosya olduðundan bir dosya oluþturulamadý
 
 ; *** Setup common messages
-ExitSetupTitle=Kur'dan Çýk
-ExitSetupMessage=Kurulum tamamlanmadý. Þimdi çýkarsanýz program kurulmuþ olmayacak.%n%nDaha sonra Kur'u tekrar çalýþtýrarak kurulumu tamamlayabilirsiniz.%n%nKur'dan çýkmak istediðinizden emin misiniz?
-AboutSetupMenuItem=Kur H&akkýnda...
-AboutSetupTitle=Kur Hakkýnda
-AboutSetupMessage=%1 %2 sürümü%n%3%n%n%1 internet:%n%4
+ExitSetupTitle=Kurulumdan Çýkýn
+ExitSetupMessage=Kurulum tamamlanmadý. Þimdi çýkarsanýz, yazýlým yüklenmeyecek.%n%nYüklemeyi tamamlamak için istediðiniz zaman kurulum programýný yeniden çalýþtýrabilirsiniz.%n%nKurulumdan çýkýlsýn mý?
+AboutSetupMenuItem=Kurulum H&akkýnda...
+AboutSetupTitle=Kurulum Hakkýnda
+AboutSetupMessage=%1 %2 sürümü%n%3%n%n%1 anasayfa:%n%4
 AboutSetupNote=
 TranslatorNote=
 
 ; *** Buttons
 ButtonBack=< G&eri
 ButtonNext=Ý&leri >
-ButtonInstall=&Kur
+ButtonInstall=&Kurun
 ButtonOK=Tamam
 ButtonCancel=Ýptal
 ButtonYes=E&vet
-ButtonYesToAll=Tümüne E&vet
+ButtonYesToAll=&Tümüne Evet
 ButtonNo=&Hayýr
 ButtonNoToAll=Tümüne Ha&yýr
-ButtonFinish=&Son
-ButtonBrowse=&Gözat...
-ButtonWizardBrowse=Göza&t...
-ButtonNewFolder=Ye&ni Dizin Oluþtur
+ButtonFinish=&Bitti
+ButtonBrowse=&Gözatýn...
+ButtonWizardBrowse=Göza&týn...
+ButtonNewFolder=Ye&ni Klasör Oluþturun
 
 ; *** "Select Language" dialog messages
-SelectLanguageTitle=Kur Dilini Seçiniz
-SelectLanguageLabel=Lütfen kurulum sýrasýnda kullanacaðýnýz dili seçiniz:
+SelectLanguageTitle=Kurulum Dilini Seçin
+SelectLanguageLabel=Kurulum süresince kullanýlacak dili seçin:
 
 ; *** Common wizard text
-ClickNext=Devam etmek için Ýleri'ye , çýkmak için Ýptal 'e basýnýz.
+ClickNext=Devam etmek için Ýleri, çýkmak için Ýptal düðmesine basýn.
 BeveledLabel=
-BrowseDialogTitle=Dizine Gözat
-BrowseDialogLabel=Aþaðýdaki listeden bir dizin seçip, daha sonra Tamam tuþuna basýnýz.
-NewFolderName=Yeni Dizin
+BrowseDialogTitle=Klasöre Gözatýn
+BrowseDialogLabel=Aþaðýdaki listeden bir klasör seçip, Tamam düðmesine týklayýn.
+NewFolderName=Yeni Klasör
 
 ; *** "Welcome" wizard page
-WelcomeLabel1=[name] Kurulum Sihirbazýna Hoþgeldiniz.
-WelcomeLabel2=Kur þimdi [name/ver] programýný bilgisayarýnýza yükleyecektir.%n%nDevam etmeden önce çalýþan diðer bütün programlarý kapatmanýz tavsiye edilir.
+WelcomeLabel1=[name] Kurulum Yardýmcýsýna Hoþgeldiniz.
+WelcomeLabel2=Bilgisayarýnýza [name/ver] yazýlýmý kurulacak.%n%nDevam etmeden önce çalýþan diðer tüm programlarý kapatmanýz önerilir.
 
 ; *** "Password" wizard page
-WizardPassword=Þifre
-PasswordLabel1=Bu kurulum þifre korumalýdýr.
-PasswordLabel3=Lütfen þifreyi giriniz. Daha sonra devam etmek için Ýleri'ye basýnýz. Lütfen þifreyi girerken Büyük-Küçük harflere dikkat ediniz.
-PasswordEditLabel=&Þifre:
-IncorrectPassword=Girdiðiniz þifre hatalý. Lütfen tekrar deneyiniz.
+WizardPassword=Parola
+PasswordLabel1=Bu kurulum parola korumalýdýr.
+PasswordLabel3=Lütfen parolayý yazýn ve devam etmek için Ýleri düðmesine týklayýn. Parolalar büyük küçük harflere duyarlýdýr.
+PasswordEditLabel=&Parola:
+IncorrectPassword=Yazdýðýnýz parola doðru deðil. Lütfen yeniden deneyin.
 
 ; *** "License Agreement" wizard page
 WizardLicense=Lisans Anlaþmasý
-LicenseLabel=Lütfen devam etmeden önce aþaðýdaki önemli bilgileri okuyunuz.
-LicenseLabel3=Lütfen Aþaðýdaki Lisans Anlaþmasýný okuyunuz. Kuruluma devam edebilmek için bu anlaþmanýn koþullarýný kabul etmiþ olmalýsýnýz.
-LicenseAccepted=Anlaþmayý Kabul &Ediyorum.
-LicenseNotAccepted=Anlaþmayý Kabul Et&miyorum.
+LicenseLabel=Lütfen devam etmeden önce aþaðýdaki önemli bilgileri okuyun.
+LicenseLabel3=Lütfen Aþaðýdaki Lisans Anlaþmasýný okuyun. Kuruluma devam edebilmek için bu anlaþmayý kabul etmelisiniz.
+LicenseAccepted=Anlaþmayý kabul &ediyorum.
+LicenseNotAccepted=Anlaþmayý kabul et&miyorum.
 
 ; *** "Information" wizard pages
-WizardInfoBefore=Bilgi
-InfoBeforeLabel=Lütfen devam etmeden önce aþaðýdaki önemli bilgileri okuyunuz.
-InfoBeforeClickLabel=Kur ile devam etmeye hazýr olduðunuzda Ýleri'yi týklayýnýz.
-WizardInfoAfter=Bilgi
-InfoAfterLabel=Lütfen devam etmeden önce aþaðýdaki önemli bilgileri okuyunuz.
-InfoAfterClickLabel=Kur ile devam etmeye hazýr olduðunuzda Ýleri'yi týklayýnýz.
+WizardInfoBefore=Bilgiler
+InfoBeforeLabel=Lütfen devam etmeden önce aþaðýdaki önemli bilgileri okuyun.
+InfoBeforeClickLabel=Kuruluma devam etmeye hazýr olduðunuzda Ýleri düðmesine týklayýn.
+WizardInfoAfter=Bilgiler
+InfoAfterLabel=Lütfen devam etmeden önce aþaðýdaki önemli bilgileri okuyun.
+InfoAfterClickLabel=Kuruluma devam etmeye hazýr olduðunuzda Ýleri düðmesine týklayýn.
 
 ; *** "User Information" wizard page
 WizardUserInfo=Kullanýcý Bilgileri
-UserInfoDesc=Lütfen bilgilerinizi giriniz.
+UserInfoDesc=Lütfen bilgilerinizi yazýn.
 UserInfoName=K&ullanýcý Adý:
-UserInfoOrg=Þi&rket:
+UserInfoOrg=Ku&rum:
 UserInfoSerial=&Seri Numarasý:
-UserInfoNameRequired=Bir isim girmelisiniz.
+UserInfoNameRequired=Bir ad yazmalýsýnýz.
 
 ; *** "Select Destination Directory" wizard page
-WizardSelectDir=Kurulacak Dizini Seçiniz
-SelectDirDesc=[name] hangi dizine kurulsun?
-SelectDirLabel3=Kur [name] programýný aþaðýdaki dizine kuracaktýr.
-SelectDirBrowseLabel=Devam etmek için Ýleri'ye basýnýz. Baþka bir dizin seçmek istiyorsanýz, Gözat'a basýnýz.
-DiskSpaceMBLabel=Bu program en az [mb] MB disk alaný gerektirmektedir.
-CannotInstallToNetworkDrive=Kur bir að sürücüsüne kurulum yapamaz.
-CannotInstallToUNCPath=Kur UNC tipindeki dizin yollarýna (Örnek: \\yol vb.) kurulum yapamaz.
-InvalidPath=Sürücü ismi ile birlikte tam yolu girmelisiniz; Örneðin %nC:\APP%n%n veya bir UNC yolunu %n%n\\sunucu\paylaþým%n%n þeklinde girmelisiniz.
-InvalidDrive=Seçtiðiniz sürücü bulunamadý veya ulaþýlamýyor. Lütfen baþka bir sürücü seçiniz.
-DiskSpaceWarningTitle=Yetersiz Disk Alaný
-DiskSpaceWarning=Kur en az %1 KB kullanýlabilir disk alaný gerektirmektedir. Ancak seçili diskte %2 KB boþ alan bulunmaktadýr.%n%nYine de devam etmek istiyor musunuz?
-DirNameTooLong=Dizin adý veya yolu çok uzun.
-InvalidDirName=Dizin adý geçersiz.
-BadDirName32=Dizin adý takib eden karakterlerden her hangi birini içeremez:%n%n%1
-DirExistsTitle=Dizin Bulundu
-DirExists=Dizin:%n%n%1%n%n zaten var. Yine de bu dizine kurmak istediðinizden emin misiniz?
-DirDoesntExistTitle=Dizin Bulunamadý
-DirDoesntExist=Dizin:%n%n%1%n%nbulunmamaktadýr. Bu dizini oluþturmak ister misiniz?
+WizardSelectDir=Hedef Klasörü Seçin
+SelectDirDesc=[name] nereye kurulsun?
+SelectDirLabel3=[name] yazýlýmý þu klasöre kurulacak.
+SelectDirBrowseLabel=Devam etmek icin Ýleri düðmesine týklayýn. Farklý bir klasör seçmek için Gözatýn düðmesine týklayýn.
+DiskSpaceMBLabel=En az [mb] MB disk alaný gereklidir.
+CannotInstallToNetworkDrive=Yazýlým bir að sürücüsü üzerine kurulamaz.
+CannotInstallToUNCPath=Yazýlým bir UNC yolu üzerine (\\yol gibi) kurulamaz.
+InvalidPath=Sürücü adý ile tam yolu yazmalýsýnýz; örneðin: %n%nC:\APP%n%n ya da þu biçimde bir UNC yolu:%n%n\\sunucu\paylaþým
+InvalidDrive=Sürücü ya da UNC paylaþýmý yok ya da eriþilemiyor. Lütfen baþka bir tane seçin.
+DiskSpaceWarningTitle=Yeterli Disk Alaný Yok
+DiskSpaceWarning=Kurulum için %1 KB boþ alan gerekli, ancak seçilmiþ sürücüde yalnýz %2 KB boþ alan var.%n%nGene de devam etmek istiyor musunuz?
+DirNameTooLong=Klasör adý ya da yol çok uzun.
+InvalidDirName=Klasör adý geçersiz.
+BadDirName32=Klasör adlarýnda þu karakterler bulunamaz:%n%n%1
+DirExistsTitle=Klasör Zaten Var"
+DirExists=Klasör:%n%n%1%n%zaten var. Kurulum için bu klasörü kullanmak ister misiniz?
+DirDoesntExistTitle=Klasör Bulunamadý
+DirDoesntExist=Klasör:%n%n%1%n%nbulunamadý.Klasörün oluþturmasýný ister misiniz?
 
 ; *** "Select Components" wizard page
-WizardSelectComponents=Bileþen Seç
-SelectComponentsDesc=Hangi bileþenler kurulsun?
-SelectComponentsLabel2=Kurmak istediðiniz bileþenleri seçiniz; istemediklerinizi temizleyiniz.Devam etmeye hazýr olduðunuz zaman Ýleri'ye týklayýnýz.
+WizardSelectComponents=Bileþenleri Seçin
+SelectComponentsDesc=Hangi bileþenler kurulacak?
+SelectComponentsLabel2=Kurmak istediðiniz bileþenleri seçin; kurmak istemediðiniz bileþenlerin iþaretini kaldýrýn. Devam etmeye hazýr olduðunuzda Ýleri düðmesine týklayýn.
 FullInstallation=Tam Kurulum
 ; if possible don't translate 'Compact' as 'Minimal' (I mean 'Minimal' in your language)
-CompactInstallation=Normal Kurulum
-CustomInstallation=Özel Kurulum
-NoUninstallWarningTitle=Mevcut Bileþenler
-NoUninstallWarning=Kur aþaðýdaki bileþenlerin kurulu olduðunu tespit etti:%n%n%1%n%nBu bileþenlerin seçimini kaldýrmak bileþenleri silmeyecek.%n%nYine de devam etmek istiyor musunuz?
+CompactInstallation=Normal kurulum
+CustomInstallation=Özel kurulum
+NoUninstallWarningTitle=Varolan Bileþenler
+NoUninstallWarning=Kur þu bileþenlerin bilgisayarýnýza zaten kurulmuþ olduðunu algýladý:%n%n%1%n%n Bu bileþenlerin iþaretlerinin kaldýrýlmasý bileþenleri kaldýrmaz.%n%nGene de devam etmek istiyor musunuz?
 ComponentSize1=%1 KB
 ComponentSize2=%1 MB
-ComponentsDiskSpaceMBLabel=Seçili bileþenler için en az [mb] MB disk alaný gerekmektedir.
+ComponentsDiskSpaceMBLabel=Seçili bileþenler için diskte en az [mb] MB bos alan gerekli.
 
 ; *** "Select Additional Tasks" wizard page
-WizardSelectTasks=Ek Görevleri Seçiniz
-SelectTasksDesc=Hangi görevler yerine getirilsin?
-SelectTasksLabel2=[name] kurulurken istediðiniz ek görevleri seçip Ýleri'ye týklayýnýz.
+WizardSelectTasks=Ek Ýþlemleri Seçin
+SelectTasksDesc=Baþka hangi ek iþlemler yapýlsýn?
+SelectTasksLabel2=[name] kurulurken yapýlmasýný istediðiniz ek iþleri seçin ve Ýleri düðmesine týklayýn.
 
 ; *** "Baþlat Menüsü Dizini Seç" sihirbaz sayfasý
-WizardSelectProgramGroup=Baþlat Menüsü Dizinini Seçiniz
-SelectStartMenuFolderDesc=Kur program kýsayollarýný nereye yerleþtirsin?
-SelectStartMenuFolderLabel3=Kur programýn kýsayollarýný aþaðýdaki Baþlat Menüsü dizinine kuracak.
-SelectStartMenuFolderBrowseLabel=Devam etmek için, Ýleri'ye basýnýz. Baþka bir dizin seçmek istiyorsanýz, Gözat'a basýnýz.
-MustEnterGroupName=Bir dizin ismi girmelisiniz.
-GroupNameTooLong=Dizin adý veya yolu çok uzun.
-InvalidGroupName=Dizin adý geçersiz.
-BadGroupName=Dizin adý, takip eden karakterlerden her hangi birini içeremez:%n%n%1
-NoProgramGroupCheck2=&Baþlat menüsünde kýsayol oluþturma
+WizardSelectProgramGroup=Baþlat Menüsü Klasörünü Seçin
+SelectStartMenuFolderDesc=Yazýlýmýn kýsayollarý nereye kurulsun?
+SelectStartMenuFolderLabel3=Kur yazýlým kýsayollarýný aþaðýdaki Baþlat Menüsü klasöründe oluþturacak.
+SelectStartMenuFolderBrowseLabel=Devam etmek için Ýleri düðmesine týklayýn. Farklý bir klasör seçmek için Gözatýn düðmesine týklayýn.
+MustEnterGroupName=Bir klasör adý yazmalýsýnýz.
+GroupNameTooLong=Klasör adý ya da yol çok uzun.
+InvalidGroupName=Klasör adý geçersiz.
+BadGroupName=Klasör adýnda þu karakterler bulunamaz:%n%n%1
+NoProgramGroupCheck2=Baþlat Menüsü klasörü &oluþturulmasýn
 
 ; *** "Ready to Install" wizard page
-WizardReady=Yükleme için Hazýr
-ReadyLabel1=Kur [name] programýný bilgisayarýnýza kurmak için hazýr.
-ReadyLabel2a=Kuruluma devam etmek için Kur'a , ayarlarýnýzý kontrol etmek veya deðiþtirmek için Geri'ye týklayýnýz.
-ReadyLabel2b=Kuruluma devam etmek için Kur'a týklayýnýz.
-ReadyMemoUserInfo=Kullanýcý bilgisi:
-ReadyMemoDir=Hedef dizin:
+WizardReady=Kurulmaya Hazýr
+ReadyLabel1=[name] bilgisayarýnýza kurulmaya hazýr.
+ReadyLabel2a=Kuruluma devam etmek için Ýleri düðmesine, ayarlarý gözden geçirip deðiþtirmek için Geri düðmesine týklayýn.
+ReadyLabel2b=Kuruluma devam etmek için Ýleri düðmesine týklayýn.
+ReadyMemoUserInfo=Kullanýcý bilgileri:
+ReadyMemoDir=Hedef konumu:
 ReadyMemoType=Kurulum tipi:
-ReadyMemoComponents=Seçili bileþenler:
-ReadyMemoGroup=Baþlat Menüsü :
-ReadyMemoTasks=Ek görevler:
+ReadyMemoComponents=Seçilmiþ bileþenler:
+ReadyMemoGroup=Baþlat Menüsü klasörü:
+ReadyMemoTasks=Ek iþlemler:
 
-; *** "Kur Hazýlanýyor" sihirbaz sayfasý
-WizardPreparing=Kurulum Hazýrlanýyor
-PreparingDesc=Kur [name] programýný bilgisayarýnýza kurmak için hazýrlanýyor.
-PreviousInstallNotCompleted=Bir önceki Kurulum/Kaldýr programýna ait iþlem tamamlanmamýþ.Önceki kurulum iþleminin tamamlanmasý için bilgisayarýnýzý yeniden baþlatmalýsýnýz.%n%nBilgisayarýnýz tekrar baþladýktan sonra,Kurulum'u tekrar çalýþtýrarak [name] programýný kurma iþlemine devam edebilirsiniz.
-CannotContinue=Kur devam edemiyor. Lütfen Ýptal'e týklayýp Çýkýn.
-ApplicationsFound=Aþaðýdaki uygulamalar, Kur tarafýndan güncelleþtirilmesi gereken dosyalarý kullanýyor. Kur tarafýndan, bu uygulamalarýn otomatik kapatýlmasýna izin vermenizi öneririz.
-ApplicationsFound2=Aþaðýdaki uygulamalar, Kur tarafýndan güncelleþtirilmesi gereken dosyalarý kullanýyor. Kur tarafýndan, bu uygulamalarýn otomatik kapatýlmasýna izin vermenizi öneririz. Yükleme tamamlandýktan sonra, Kur uygulamalarý yeniden baþlatmaya çalýþacaktýr.
-CloseApplications=&Uygulamalarý otomatik kapat
-DontCloseApplications=Uygulamalarý &kapatma
-ErrorCloseApplications=Kurulum otomatik olarak tüm programlarý kapatmakta baþarýsýz oldu. Devam etmeden önce Kurulum tarafýndan güncellenmesi gereken dosyalarý kullanan uygulamalarý kapatmanýz önerilir.
+; *** "Kurulmaya Hazýr" sihirbaz sayfasý
+WizardPreparing=Kuruluma Hazýrlanýlýyor
+PreparingDesc=[name] bilgisayarýnýza kurulmaya hazýrlanýyor.
+PreviousInstallNotCompleted=Önceki yazýlým kurulumu ya da kaldýrýlmasý tamamlanmamýþ. Bu kurulumun tamamlanmasý için bilgisayarýnýzý yeniden baþlatmalýsýnýz.%n%nBilgisayarýnýzý yeniden baþlattýktan sonra iþlemi tamamlamak için [name] kurulumunu yeniden çalýþtýrýn.
+CannotContinue=Kuruluma devam edilemiyor. Çýkmak için Ýptal düðmesine týklayýn.
+ApplicationsFound=Þu uygulamalar, kurulum tarafýndan güncellenmesi gereken dosyalarý kullanýyor. Kurulumun bu uygulamalarý kendiliðinden kapatmasýna izin vermeniz önerilir.
+ApplicationsFound2=Þu uygulamalar, kurulum tarafýndan güncellenmesi gereken dosyalarý kullanýyor. Kurulumun bu uygulamalarý kendiliðinden kapatmasýna izin vermeniz önerilir. Tamamlandýktan sonra kurulum, uygulamalarý yeniden baþlatmayý deneyecek.
+CloseApplications=&Uygulamalar kapatýlsýn
+DontCloseApplications=Uygulamalar &kapatýlmasýn
+ErrorCloseApplications=Kurulum, uygulamalarý kapatamadý. Kurulum tarafýndan güncellenmesi gereken dosyalarý kullanan uygulamalarý el ile kapatmanýz önerilir.
 
 ; *** "Kuruluyor" sihirbaz
 WizardInstalling=Kuruluyor
-InstallingLabel=Lütfen [name] bilgisayarýnýza kurulurken bekleyiniz.
+InstallingLabel=Lütfen [name] bilgisayarýnýza kurulurken bekleyin.
 
 ; *** "Setup Completed" wizard page
-FinishedHeadingLabel=[name] Kur Sihirbazý tamamlanýyor
-FinishedLabelNoIcons=Kur [name] programýný bilgisayarýnýza kurma iþlemini tamamladý.
-FinishedLabel=Kur [name] programýný bilgisayarýnýza kurma iþlemini tamamladý. Program yüklenen kýsayol simgesine týklanarak çalýþtýrýlabilir.
-ClickFinish=Kur'dan çýkmak için Son'a týklayýnýz.
-FinishedRestartLabel=[name] programýnýn kurulumunu bitirmek için, Kur bilgisayarýnýzý yeniden baþlatacak. Bilgisayarýnýz yeniden baþlatýlsýn mý?
-FinishedRestartMessage=[name] kurulumunu bitirmek için, bilgisayarýnýzýn yeniden baþlatýlmasý gerekmektedir. %n%nBiligisayarýnýz yeniden baþlatýlsýn mý?
-ShowReadmeCheck=Beni Oku dosyasýný okumak istiyorum.
-YesRadio=&Evet , bilgisayar yeniden baþlatýlsýn.
-NoRadio=&Hayýr, daha sonra yeniden baþlatýrým.
+FinishedHeadingLabel=[name] kurulum yardýmcýsý tamamlanýyor
+FinishedLabelNoIcons=Bilgisayarýnýza [name] kurulumu tamamlandý.
+FinishedLabel=Bilgisayarýnýza [name] kurulumu tamamlandý. Simgeleri yüklemeyi seçtiyseniz, uygulamayý simgelere týklayarak baþlatabilirsiniz.
+ClickFinish=Kurulumdan çýkmak için Bitti düðmesine týklayýn.
+FinishedRestartLabel=[name] kurulumunun tamamlanmasý için, bilgisayarýnýz yeniden baþlatýlmalý. Þimdi yeniden baþlatmak ister misiniz?
+FinishedRestartMessage=[name] kurulumunun tamamlanmasý için, bilgisayarýnýz yeniden baþlatýlmalý.%n%nÞimdi yeniden baþlatmak ister misiniz?
+ShowReadmeCheck=Evet README dosyasýna bakmak istiyorum
+YesRadio=&Evet, bilgisayar þimdi yeniden baþlatýlsýn
+NoRadio=&Hayýr, bilgisayarý daha sonra yeniden baþlatacaðým
 ; used for example as 'Run MyProg.exe'
-RunEntryExec=%1 uygulamasýný Çalýþtýr
+RunEntryExec=%1 çalýþtýrýlsýn
 ; used for example as 'View Readme.txt'
-RunEntryShellExec=%1 dosyasýný görüntüle
+RunEntryShellExec=%1 görüntülensin
 
 ; *** "Setup Needs the Next Disk" stuff
-ChangeDiskTitle=Bir Sonraki Diski Takýnýz
-SelectDiskLabel2=%1 numaralý diski takýp, Tamam'ý týklayýnýz.%n%nEðer dosyalar baþka bir yerde bulunuyor ise doðru yolu yazýnýz veya Gözat'ý týklayýnýz.
+ChangeDiskTitle=Kurulum için Sýradaki Disk Gerekli
+SelectDiskLabel2=Lütfen %1. diski takýp Tamam düðmesine týklayýn.%n%nDiskteki dosyalar aþaðýdakinden farklý bir klasörde bulunuyorsa, doðru yolu yazýn ya da Gözatýn düðmesine týklayarak doðru klasörü seçin.
 PathLabel=&Yol:
-FileNotInDir2=" %1 " adlý dosya " %2 " dizininde bulunamadý. Lütfen doðru diski veya dosyayý seçiniz.
-SelectDirectoryLabel=Lütfen sonraki diskin yerini belirleyiniz.
+FileNotInDir2="%1" dosyasý "%2" içinde yok. Lütfen doðru diski takýn ya da baþka bir klasör seçin.
+SelectDirectoryLabel=Lütfen sonraki diskin konumunu belirtin.
 
 ; *** Installation phase messages
-SetupAborted=Kurulum tamamlanamadý.%n%nLütfen problemi düzeltiniz veya Kurulum'u tekrar çalýþtýrýnýz.
-EntryAbortRetryIgnore=Tekrar denemek için "Tekrar Dene" ye , yine de devam etmek için Yoksay'a , kurulumu iptal etmek için ise Ýptal'e týklayýnýz.
+SetupAborted=Kurulum tamamlanamadý.%n%nLütfen sorunu düzelterek kurulumu yeniden çalýþtýrýn.
+EntryAbortRetryIgnore=Yeniden denemek için Yeniden Deneyin düðmesine, devam etmek için Yoksayýn düðmesine, kurulumu iptal etmek için Vazgeçin düðmesine týklayýn.
 
 ; *** Installation status messages
 StatusClosingApplications=Uygulamalar kapatýlýyor...
-StatusCreateDirs=Dizinler oluþturuluyor...
-StatusExtractFiles=Dosyalar çýkartýlýyor...
-StatusCreateIcons=Program kýsayollarý oluþturuluyor...
-StatusCreateIniEntries=INI girdileri oluþturuluyor...
-StatusCreateRegistryEntries=Kayýt Defteri girdileri oluþturuluyor...
-StatusRegisterFiles=Dosyalar sisteme kaydediliyor...
-StatusSavingUninstall=Kaldýr bilgileri kaydediliyor...
-StatusRunProgram=Kurulum sonlandýrýlýyor...
-StatusRestartingApplications=Uygulamalar baþlatýlýyor...
+StatusCreateDirs=Klasörler oluþturuluyor...
+StatusExtractFiles=Dosyalar ayýklanýyor...
+StatusCreateIcons=Kýsayollar oluþturuluyor...
+StatusCreateIniEntries=INI kayýtlarý oluþturuluyor...
+StatusCreateRegistryEntries=Kayýt Defteri kayýtlarý oluþturuluyor...
+StatusRegisterFiles=Dosyalar kaydediliyor...
+StatusSavingUninstall=Kaldýrma bilgileri kaydediliyor...
+StatusRunProgram=Kurulum tamamlanýyor...
+StatusRestartingApplications=Uygulamalar yeniden baþlatýlýyor...
 StatusRollback=Deðiþiklikler geri alýnýyor...
 
 ; *** Misc. errors
 ErrorInternal2=Ýç hata: %1
-ErrorFunctionFailedNoCode=%1 baþarýsýz oldu.
-ErrorFunctionFailed=%1 baþarýsýz oldu; kod  %2
-ErrorFunctionFailedWithMessage=%1 baþarýsýz oldu ; kod  %2.%n%3
-ErrorExecutingProgram=%1 adlý dosya çalýþtýrýlamadý.
+ErrorFunctionFailedNoCode=%1 tamamlanamadý.
+ErrorFunctionFailed=%1 tamamlanamadý; kod %2
+ErrorFunctionFailedWithMessage=%1 tamamlanamadý; kod %2.%n%3
+ErrorExecutingProgram=Þu dosya yürütülemedi:%n%1
 
 ; *** Registry errors
-ErrorRegOpenKey=Aþaðýdaki Kayýt Defteri anahtarý açýlýrken hata oluþtu:%n%1\%2
-ErrorRegCreateKey=Aþaðýdaki Kayýt Defteri anahtarý oluþturulurken hata oluþtu:%n%1\%2
-ErrorRegWriteKey=Aþaðýdaki Kayýt Defteri anahtarýna yazýlýrken hata oluþtu:%n%1\%2
+ErrorRegOpenKey=Kayýt defteri anahtarý açýlýrken bir hata oluþtu:%n%1%2
+ErrorRegCreateKey=Kayýt defteri anahtarý oluþturulurken bir hata oluþtu:%n%1%2
+ErrorRegWriteKey=Kayýt defteri anahtarý yazýlýrken bir hata oluþtu:%n%1%2
 
 ; *** INI errors
-ErrorIniEntry=" %1 " adlý dosyada INI girdisi yazma hatasý.
+ErrorIniEntry="%1" dosyasýna INI kaydý eklenirken bir hata oluþtu.
 
 ; *** File copying errors
-FileAbortRetryIgnore=Yeniden denemek için "Yeniden Dene" ye, dosyayý atlamak için Yoksay'a (önerilmez), Kurulumu iptal etmek için Ýptal'e týklayýnýz.
-FileAbortRetryIgnore2=Yeniden denemek için "Yeniden Dene" ye , yine de devam etmek için Yoksay'a (önerilmez), Kurulumu Ýptal etmek için Ýptal'e týklayýnýz.
-SourceIsCorrupted=Kaynak dosya bozulmuþ
-SourceDoesntExist=%1 adlý kaynak dosya bulunamadý.
-ExistingFileReadOnly=Dosya Salt Okunur.%n%nSalt Okunur özelliðini kaldýrýp yeniden denemek için Yeniden Dene'yi , dosyasý atlamak için Yoksay'ý , Kurulumu iptal etmek için Ýptal'i týklayýnýz.
-ErrorReadingExistingDest=Dosyayý okurken bir hata oluþtu :
-FileExists=Dosya zaten var.%n%nKurulum'un üzerine yazmasýný ister misiniz?
-ExistingFileNewer=Zaten var olan dosya Kurulum'un yüklemek istediði dosyadan daha yeni. Var olan dosyayý saklamanýz önerilir.%n%nVar olan dosya saklansýn mý?
-ErrorChangingAttr=Zaten var olan dosyanýn özelliði deðiþtirilirken bir hata oluþtu:
-ErrorCreatingTemp=Hedef dizinde dosya oluþturulurken bir hata oluþtu:
+FileAbortRetryIgnore=Yeniden denemek için Yeniden Deneyin düðmesine, bu dosyayý atlamak için (önerilmez) Yoksayýn düðmesine, kurulumu iptal etmek için Vazgeçin düðmesine týklayýn.
+FileAbortRetryIgnore2=Yeniden denemek için Yeniden Deneyin düðmesine, devam etmek için (önerilmez) Yoksayýn düðmesine, kurulumu iptal etmek için Vazgeçin düðmesine týklayýn.
+SourceIsCorrupted=Kaynak dosya bozuk
+SourceDoesntExist="%1" kaynak dosyasý bulunamadý
+ExistingFileReadOnly=Varolan dosya salt okunabilir olarak iþaretlenmiþ.%n%nSalt okunur özniteliðini kaldýrýp yeniden denemek için Yeniden Deneyin düðmesine, bu dosyayý atlamak için Yoksayýn düðmesine, kurulumunu iptal etmek için Vazgeçin düðmesine týklayýn.
+ErrorReadingExistingDest=Varolan dosya okunmaya çalýþýlýrken bir hata oluþtu.
+FileExists=Dosya zaten var.%n%nKurulum bu dosyanýn üzerine yazsýn mý?
+ExistingFileNewer=Varolan dosya, kurulum tarafýndan yazýlmaya çalýþýlandan daha yeni.Varolan dosyayý korumanýz önerilir %n%nVarolan dosya korunsun mu?
+ErrorChangingAttr=Varolan dosyanýn öznitelikleri deðiþtirilirken bir hata oluþtu:
+ErrorCreatingTemp=Hedef klasörde dosya oluþturulurken bir hata oluþtu:
 ErrorReadingSource=Kaynak dosya okunurken bir hata oluþtu:
-ErrorCopying=Bir dosya kopyalanýrken bir hata oluþtu:
-ErrorReplacingExistingFile=Zaten var olan dosya deðiþtirilirken bir hata oluþtu:
-ErrorRestartReplace=RestartReplace baþarýsýz oldu:
-ErrorRenamingTemp=Hedef dizinde bulunan dosyanýn adý deðiþtirilirken hata oldu:
-ErrorRegisterServer=%1 adlý DLL/OCX sisteme tanýtýlamadý.
-ErrorRegSvr32Failed=RegSvr32 çýkýþ hatasý %1 ile baþarýsýz oldu
-ErrorRegisterTypeLib=%1 adlý tip kütüphanesi (Type Library) sisteme tanýtýlamadý
+ErrorCopying=Dosya kopyalanýrken bir hata oluþtu:
+ErrorReplacingExistingFile=Varolan dosya deðiþtirilirken bir hata oluþtu.
+ErrorRestartReplace=Yeniden baþlatmada deðiþtirme tamamlanamadý:
+ErrorRenamingTemp=Hedef klasördeki dosyanýn adý deðiþtirilirken bir hata oluþtu:
+ErrorRegisterServer=DLL/OCX kayýt edilemedi: %1
+ErrorRegSvr32Failed=RegSvr32 þu kod ile iþlemi tamamlayamadý: %1
+ErrorRegisterTypeLib=Tip kitaplýðý kaydedilemedi: %1
 
 ; *** Post-installation errors
-ErrorOpeningReadme=Beni Oku dosyasý açýlýrken hata oluþtu.
-ErrorRestartingComputer=Kurulum bilgisayarý yeniden baþlatamadý. Lütfen kendiniz kapatýnýz.
+ErrorOpeningReadme=README dosyasý açýlýrken bir hata oluþtu.
+ErrorRestartingComputer=Kurulum bilgisayarýnýzý yeniden baþlatamýyor. Lütfen bilgisayarýnýzý yeniden baþlatýn.
 
 ; *** Uninstaller messages
-UninstallNotFound=%1 adlý dosya bulunamadý. Kaldýrma programý çalýþtýrýlamadý.
-UninstallOpenError="%1" dosyasý açýlamýyor. Kaldýrma programý çalýþtýrýlamadý.
-UninstallUnsupportedVer=%1 adlý Kaldýr bilgi dosyasý kaldýrma programýnýn bu sürümü ile uyuþmuyor. Kaldýrma programý çalýþtýrýlamadý.
-UninstallUnknownEntry=Kaldýr Bilgi dosyasýndaki %1 adlý satýr anlaþýlamadý
-ConfirmUninstall=%1 ve bileþenlerini kaldýrmak istediðinizden emin misiniz?
-UninstallOnlyOnWin64=Bu kurulum sadece 64-bit Windows'lardan kaldýrýlabilir.
-OnlyAdminCanUninstall=Bu kurulum sadece yönetici yetkisine sahip kullanýcýlar tarafýndan kaldýrabilir.
-UninstallStatusLabel=Lütfen %1 programý bilgisayarýnýzdan kaldýrýlýrken bekleyin...
-UninstalledAll=%1 programý bilgisayarýnýzdan tamamen kaldýrýldý.
-UninstalledMost=%1 programýnýn kaldýrýlma iþlemi sona erdi.%n%nBazý bileþenler kaldýrýlamadý. Bu dosyalarý kendiniz silebilirsiniz.
-UninstalledAndNeedsRestart=%1 programýnýn kaldýrýlmasý tamamlandý, Bilgisayarýnýzý yeniden baþlatmalýsýnýz.%n%nÞimdi yeniden baþlatýlsýn mý?
-UninstallDataCorrupted="%1" adlý dosya bozuk. . Kaldýrma programý çalýþtýrýlamadý.
+UninstallNotFound="%1" dosyasý bulunamadý. Yazýlým kaldýrýlamýyor.
+UninstallOpenError="%1" dosyasý açýlamadý. Yazýlým kaldýrýlamýyor.
+UninstallUnsupportedVer="%1" kaldýrma günlük dosyasýnýn biçimi, bu kaldýrýcý sürümü tarafýndan anlaþýlamadý. Yazýlým kaldýrýlamýyor.
+UninstallUnknownEntry=Kaldýrma günlüðünde bilinmeyen bir kayýt (%1) bulundu.
+ConfirmUninstall=%1 yazýlýmýný tüm bileþenleri ile birlikte tamamen kaldýrmak istediðinize emin misiniz?
+UninstallOnlyOnWin64=Bu kurulum yalnýz 64-bit Windows üzerinden kaldýrýlabilir.
+OnlyAdminCanUninstall=Bu kurulum yalnýz yönetici haklarýna sahip bir kullanýcý tarafýndan kaldýrýlabilir.
+UninstallStatusLabel=Lütfen %1 yazýlýmý bilgisayarýnýzdan kaldýrýlýrken bekleyin.
+UninstalledAll=%1 yazýlýmý bilgisayarýnýzdan kaldýrýldý.
+UninstalledMost=%1 yazýlýmý kaldýrýldý.%n%nBazý bileþenler kaldýrýlamadý. Bunlarý el ile silebilirsiniz.
+UninstalledAndNeedsRestart=%1 kaldýrma iþlemini tamamlamak için bilgisayarýnýz yeniden baþlatýlmalý.%n%nÞimdi yeniden baþlatmak ister misiniz?
+UninstallDataCorrupted="%1" dosyasý bozulmuþ. Kaldýrýlamýyor.
 
 ; *** Uninstallation phase messages
-ConfirmDeleteSharedFileTitle=Paylaþýlan Dosya Kaldýrýlsýn Mý?
-ConfirmDeleteSharedFile2=Sistemde paylaþýlan bazý dosyalarýn artýk hiçbir program tarafýndan kullanýlmadýðýný belirtiyor. Kaldýr bu paylaþýlan dosyalarý silsin mi?%n%n Bu dosya bazý programlar tafarýndan kullanýlýyorsa ve silinmesini isterseniz, bu programalar düzgün çalýþmayabilir. Emin deðilseniz, Hayýr'a týklayýnýz. Dosyanýn sisteminizde durmasý hiçbir zarar vermez.
+ConfirmDeleteSharedFileTitle=Paylaþýlan Dosya Silinsin mi?
+ConfirmDeleteSharedFile2=Sisteme göre, paylaþýlan þu dosya baþka bir program tarafýndan kullanýlmýyor ve kaldýrýlabilir. Bu paylaþýlmýþ dosyayý silmek ister misiniz?%n%nBaþka herhangi bir yazýlým bu dosyayý halen kullanýyor ise, sildiðinizde diðer yazýlým düzgün çalýþmayabilir. Emin deðilseniz Hayýr düðmesine týklayýn. Dosyayý sisteminizde býrakmanýn bir zararý olmaz.
 SharedFileNameLabel=Dosya adý:
-SharedFileLocationLabel=Yol:
+SharedFileLocationLabel=Konum:
 WizardUninstalling=Kaldýrma Durumu
-StatusUninstalling=%1 Kaldýrýlýyor...
+StatusUninstalling=%1 kaldýrýlýyor...
 
 ; *** Shutdown block reasons
 ShutdownBlockReasonInstallingApp=%1 kuruluyor.
@@ -324,13 +324,13 @@ ShutdownBlockReasonUninstallingApp=%1 kaldýrýlýyor.
 
 NameAndVersion=%1 %2 sürümü
 AdditionalIcons=Ek simgeler:
-CreateDesktopIcon=Masaüstü simg&esi oluþtur
-CreateQuickLaunchIcon=Hýzlý Baþlat simgesi &oluþtur
+CreateDesktopIcon=Masaüstü simg&esi oluþturulsun
+CreateQuickLaunchIcon=Hýzlý Baþlat simgesi &oluþturulsun
 ProgramOnTheWeb=%1 Web Sitesi
-UninstallProgram=%1 Programýný Kaldýr
-LaunchProgram=%1 Programýný Çalýþtýr
-AssocFileExtension=%2 dosya uzantýlarýný %1 ile iliþkilendir
-AssocingFileExtension=%2 dosya uzantýlarý %1 ile iliþkilendiriliyor...
+UninstallProgram=%1 Yazýlýmýný Kaldýrýn
+LaunchProgram=%1 Yazýlýmý Çalýþtýrýlsýn
+AssocFileExtension=%1 y&azýlýmý ile %2 dosya uzantýsý iliþkilendirilsin
+AssocingFileExtension=%1 y&azýlýmý ile %2 dosya uzantýsý iliþkilendiriliyor...
 AutoStartProgramGroupDescription=Baþlangýç:
-AutoStartProgram=%1 otomatik baþlat
+AutoStartProgram=%1 kendiliðinden baþlatýlsýn
 AddonHostProgramNotFound=%1 seçtiðiniz klasörde bulunamadý.%n%nYine de devam etmek istiyor musunuz?

@@ -13,7 +13,7 @@
 ; two periods being displayed).
 
 [LangOptions]
-; The following three entries are very important. Be sure to read and
+; The following three entries are very important. Be sure to read and 
 ; understand the '[LangOptions] section' topic in the help file.
 LanguageName=Vietnam
 LanguageID=$042A
@@ -142,6 +142,7 @@ SelectDirDesc=[name] seŞ ğıõòc caÌi ğãòt õÒ ğâu ?
 SelectDirLabel3=TriÌnh caÌi ğãòt seŞ caÌi ğãòt [name] vaÌo thı muòc sau.
 SelectDirBrowseLabel=ĞêÒ tiêìp tuòc, nhâìn Ği tiêìp. Nêìu baòn muôìn choòn thı muòc khaìc, nhâìn Duyêòt.
 DiskSpaceMBLabel=CâÌn tôìi thiêÒu [mb] MB trôìng trên ğiŞa cıìng.
+ToUNCPathname=TriÌnh caÌi ğãòt không thêÒ caÌi ğãòt lên ğıõÌng dâŞn UNC. Nêìu muôìn caÌi ğãòt lên maòng, baòn phaÒi taòo ôÒ ğiŞa maòng.
 InvalidPath=Baòn phaÒi nhâòp tên ğıõÌng dâŞn ğâÌy ğuÒ keÌm theo tên ôÒ ğiŞa; thiì duò:%n%nC:\APP%n%nhoãòc ğıõÌng dâŞn UNC dıõìi daòng:%n%n\\server\share
 InvalidDrive=ÔÒ ğiŞa hoãòc ğıõÌng dâŞn UNC baòn choòn không tôÌn taòi hoãòc không thêÒ truy xuâìt. ĞêÌ nghiò choòn caìi khaìc.
 DiskSpaceWarningTitle=Không ğuÒ ğiŞa trôìng
@@ -189,6 +190,7 @@ WizardReady=SãŞn saÌng caÌi ğãòt
 ReadyLabel1=TriÌnh caÌi ğãòt ğaŞ sãŞn saÌng caÌi ğãòt [name] lên maìy tiình cuÒa baòn.
 ReadyLabel2a=Nhâìn CaÌi ğãòt ğêÒ tiêìp tuòc caÌi ğãòt, hoãòc nhâìn Lui laòi nêìu baòn muôìn xem laòi hoãòc thay ğôÒi bâìt cıì thiêìt lâòp naÌo.
 ReadyLabel2b=Nhâìn CaÌi ğãòt ğêÒ tiêìp tuòc caÌi ğãòt.
+ReadyMemoUser=Thông tin ngıõÌi duÌng:
 ReadyMemoDir=Viò triì caÌi ğãòt:
 ReadyMemoType=KiêÒu caÌi ğãòt:
 ReadyMemoComponents=Caìc thaÌnh phâÌn ğıõòc choòn:
