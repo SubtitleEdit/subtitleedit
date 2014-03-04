@@ -247,6 +247,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FontEffect>글꼴 효과</FontEffect>
     <FontEffectColor>색상 효과</FontEffectColor>
     <FontSize>크기</FontSize>
+    <TopBottomMargin>위/아래 여백</TopBottomMargin>
+    <ZPosition>Z-포지션</ZPosition>
+    <ZPositionHelp>양수는 텍스트를 멀리 이동, 음수는 텍스트를 가까이 이동.  만약 Z-포지션이 0 이면 그때가 2D 이다.</ZPositionHelp>
     <ChooseColor>색상 선택...</ChooseColor>
     <Generate>생성</Generate>
   </DCinemaProperties>
@@ -1506,6 +1509,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MusicSymbol>음표</MusicSymbol>
     <MusicSymbolsToReplace>대체 음표 (공백으로 구분)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>일반적인 OCR 오류 해결 - 하드 코딩 규칙 포함</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>짧은 표시시간 수정 - 시작 시간 이동을 허용</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>단축키</Shortcuts>
     <Shortcut>단축키</Shortcut>
     <Control>Ctrl</Control>
