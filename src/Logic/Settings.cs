@@ -1421,7 +1421,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.MergeLinesShorterThan = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("FixShortDisplayTimesAllowMoveStartTime");
             if (subNode != null)
-                settings.Tools.FixShortDisplayTimesAllowMoveStartTime = Convert.ToBoolean(subNode.InnerText);           
+                settings.Tools.FixShortDisplayTimesAllowMoveStartTime = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("MusicSymbol");
             if (subNode != null)
                 settings.Tools.MusicSymbol = subNode.InnerText;
@@ -2569,7 +2569,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("EndSceneIndex", settings.Tools.EndSceneIndex.ToString());
             textWriter.WriteElementString("VerifyPlaySeconds", settings.Tools.VerifyPlaySeconds.ToString());
             textWriter.WriteElementString("MergeLinesShorterThan", settings.Tools.MergeLinesShorterThan.ToString());
-            textWriter.WriteElementString("FixShortDisplayTimesAllowMoveStartTime", settings.Tools.FixShortDisplayTimesAllowMoveStartTime.ToString());            
+            textWriter.WriteElementString("FixShortDisplayTimesAllowMoveStartTime", settings.Tools.FixShortDisplayTimesAllowMoveStartTime.ToString());
             textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
             textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.MusicSymbolToReplace);
             textWriter.WriteElementString("UnicodeSymbolsToInsert", settings.Tools.UnicodeSymbolsToInsert);

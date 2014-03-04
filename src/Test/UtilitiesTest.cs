@@ -43,7 +43,7 @@ namespace Test
             string s2 = Utilities.FixInvalidItalicTags(s1);
             Assert.AreEqual(s2, "Gledaj prema kameri i rici zdravo!");
         }
-        
+
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixInvalidItalicTags3()
@@ -54,6 +54,6 @@ namespace Test
         }
 
 
-        
+
     }
 }

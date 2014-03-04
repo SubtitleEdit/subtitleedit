@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
         internal void Initialize(Logic.OCR.NOcrDb _nOcrDb)
         {
             if (_nOcrDb != null)
-            { 
+            {
 
             }
         }
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
-       
+
 
 
         private void buttonTrain_Click(object sender, EventArgs e)
