@@ -247,6 +247,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string italicsOff = encoding.GetString(new byte[] { 0x81 });
                 string underlineOn = encoding.GetString(new byte[] { 0x82 });
                 string underlineOff = encoding.GetString(new byte[] { 0x83 });
+                if (Utilities.CountTagInText(TextField, "<i>") == 1 && TextField.StartsWith("<i>") && TextField.EndsWith("</i>")) // italic on all lines
+                    TextField = TextField.Replace(Environment.NewLine, Environment.NewLine + "<i>");
                 TextField = TextField.Replace("<i>", italicsOn);
                 TextField = TextField.Replace("<I>", italicsOn);
                 TextField = TextField.Replace("</i>", italicsOff);
