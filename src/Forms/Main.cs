@@ -14203,6 +14203,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemModifySelection.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditModifySelection);
 
             fixToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors);
+            toolStripMenuItemAutoSplitLongLines.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsSplitLongLines);
             startNumberingFromToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsRenumber);
             removeTextForHearImparedToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI);
             ChangeCasingToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsChangeCasing);
