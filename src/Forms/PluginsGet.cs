@@ -18,6 +18,13 @@ namespace Nikse.SubtitleEdit.Forms
         readonly LanguageStructure.PluginsGet _language;
         bool _firstTry = true;
 
+        private string GetPluginXmlFileUrl()
+        {
+            if (Environment.Version.Major < 4)
+                return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins2.xml";
+            return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins4.xml";
+        }
+
         public PluginsGet()
         {
             InitializeComponent();
@@ -48,7 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
                 this.Refresh();
                 ShowInstalledPlugins();
-                string url = "http://www.nikse.dk/Content/SubtitleEdit/Plugins/Plugins.xml";
+                string url = GetPluginXmlFileUrl();
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.Encoding = System.Text.Encoding.UTF8;
                 wc.Headers.Add("Accept-Encoding", "");
@@ -70,7 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.Error != null && _firstTry)
             {
                 _firstTry = false;
-                string url = "http://subtitleedit.googlecode.com/files/Plugins.xml"; // retry with alternate download url
+                string url = "http://www.nikse.dk/Content/SubtitleEdit/Plugins/Plugins.xml"; // retry with alternate download url
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.Encoding = System.Text.Encoding.UTF8;
                 wc.Headers.Add("Accept-Encoding", "");
