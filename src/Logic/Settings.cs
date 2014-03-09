@@ -739,6 +739,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainEditModifySelection { get; set; }
         public string MainToolsFixCommonErrors { get; set; }
         public string MainToolsFixCommonErrorsPreview { get; set; }
+        public string MainToolsSplitLongLines { get; set; }        
         public string MainToolsRenumber { get; set; }
         public string MainToolsRemoveTextForHI { get; set; }
         public string MainToolsChangeCasing { get; set; }
@@ -848,6 +849,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainEditInverseSelection = "Control+Shift+I";
             MainToolsFixCommonErrors = "Control+Shift+F";
             MainToolsFixCommonErrorsPreview = "Control+P";
+            MainToolsSplitLongLines = string.Empty;
             MainToolsRenumber = "Control+Shift+N";
             MainToolsRemoveTextForHI = "Control+Shift+H";
             MainToolsChangeCasing = "Control+Shift+C";
@@ -2108,6 +2110,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainToolsFixCommonErrorsPreview");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsFixCommonErrorsPreview = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainToolsSplitLongLines");
+                if (subNode != null)
+                    settings.Shortcuts.MainToolsSplitLongLines= subNode.InnerText;
                 subNode = node.SelectSingleNode("MainToolsRenumber");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsRenumber = subNode.InnerText;
@@ -2818,6 +2823,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainEditRightToLeft", settings.Shortcuts.MainEditRightToLeft);
             textWriter.WriteElementString("MainToolsFixCommonErrors", settings.Shortcuts.MainToolsFixCommonErrors);
             textWriter.WriteElementString("MainToolsFixCommonErrorsPreview", settings.Shortcuts.MainToolsFixCommonErrorsPreview);
+            textWriter.WriteElementString("MainToolsSplitLongLines", settings.Shortcuts.MainToolsSplitLongLines);
             textWriter.WriteElementString("MainToolsRenumber", settings.Shortcuts.MainToolsRenumber);
             textWriter.WriteElementString("MainToolsRemoveTextForHI", settings.Shortcuts.MainToolsRemoveTextForHI);
             textWriter.WriteElementString("MainToolsChangeCasing", settings.Shortcuts.MainToolsChangeCasing);
