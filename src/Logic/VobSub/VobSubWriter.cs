@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             var ms = new MemoryStream();
 
             // sup picture datasize
-            WriteEndianWord(twoPartBuffer.Length + 33, ms);
+            WriteEndianWord(twoPartBuffer.Length + 34, ms);
 
             // first display control sequence table address
             int startDisplayControlSequenceTableAddress = twoPartBuffer.Length + 4;
@@ -328,6 +328,9 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
             // Control command 2 = StopDisplay
             ms.WriteByte(2);
+
+            // Control command exit (extra - for compatability with gpac/MP4BOX)
+            ms.WriteByte(255); // 1 bytes
 
             return ms.ToArray();
         }
