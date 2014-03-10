@@ -317,7 +317,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             WritePixelDataAddress(ms, imageTopFieldDataAddress, imageBottomFieldDataAddress); // 5 bytes
 
             // Control command exit
-            ms.WriteByte(255); // 1 bytes
+            ms.WriteByte(255); // 1 byte
 
             // Control Sequence Table
             // Write delay - subtitle duration
@@ -329,8 +329,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             // Control command 2 = StopDisplay
             ms.WriteByte(2);
 
-            // Control command exit (extra - for compatability with gpac/MP4BOX)
-            ms.WriteByte(255); // 1 bytes
+            // extra byte - for compatability with gpac/MP4BOX
+            ms.WriteByte(255); // 1 byte
 
             return ms.ToArray();
         }

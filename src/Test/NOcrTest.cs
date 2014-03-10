@@ -40,17 +40,17 @@ namespace Test
             db = new NOcrDb(tempFileName);
             Assert.IsTrue(db.OcrCharacters.Count == 2);
 
-            Assert.IsTrue(db.OcrCharacters[0].Text == nOcrChar.Text);
-            Assert.IsTrue(db.OcrCharacters[0].Italic == nOcrChar.Italic);
-            Assert.IsTrue(db.OcrCharacters[0].MarginTop == nOcrChar.MarginTop);
-            Assert.IsTrue(db.OcrCharacters[0].LinesForeground.Count == nOcrChar.LinesForeground.Count);
-            Assert.IsTrue(db.OcrCharacters[0].LinesForeground[0].Start.X == nOcrChar.LinesForeground[0].Start.X);
-            Assert.IsTrue(db.OcrCharacters[0].LinesForeground[0].Start.Y == nOcrChar.LinesForeground[0].Start.Y);
-            Assert.IsTrue(db.OcrCharacters[0].LinesBackground.Count == nOcrChar.LinesBackground.Count);
-            Assert.IsTrue(db.OcrCharacters[0].LinesBackground[0].Start.X == nOcrChar.LinesBackground[0].Start.X);
-            Assert.IsTrue(db.OcrCharacters[0].LinesBackground[0].Start.Y == nOcrChar.LinesBackground[0].Start.Y);
+            Assert.IsTrue(db.OcrCharacters[0].Text == nOcrChar2.Text);
+            Assert.IsTrue(db.OcrCharacters[0].Italic == nOcrChar2.Italic);
+            Assert.IsTrue(db.OcrCharacters[0].MarginTop == nOcrChar2.MarginTop);
+            Assert.IsTrue(db.OcrCharacters[0].LinesForeground.Count == nOcrChar2.LinesForeground.Count);
+            Assert.IsTrue(db.OcrCharacters[0].LinesForeground[0].Start.X == nOcrChar2.LinesForeground[0].Start.X);
+            Assert.IsTrue(db.OcrCharacters[0].LinesForeground[0].Start.Y == nOcrChar2.LinesForeground[0].Start.Y);
+            Assert.IsTrue(db.OcrCharacters[0].LinesBackground.Count == nOcrChar2.LinesBackground.Count);
+            Assert.IsTrue(db.OcrCharacters[0].LinesBackground[0].Start.X == nOcrChar2.LinesBackground[0].Start.X);
+            Assert.IsTrue(db.OcrCharacters[0].LinesBackground[0].Start.Y == nOcrChar2.LinesBackground[0].Start.Y);
 
-            Assert.IsTrue(db.OcrCharacters[1].Text == nOcrChar2.Text);
+            Assert.IsTrue(db.OcrCharacters[1].Text == nOcrChar.Text);
 
             try
             {
