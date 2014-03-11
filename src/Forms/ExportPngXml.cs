@@ -364,7 +364,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_exportType == "BLURAYSUP")
                     binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
                 else if (_exportType == "VOBSUB")
-                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, comboBoxBottomMargin.SelectedIndex, 32, _subtitleColor, _borderColor, GetOutlineColor(_borderColor), IfoParser.ArrayOfLanguage[comboBoxLanguage.SelectedIndex], IfoParser.ArrayOfLanguageCode[comboBoxLanguage.SelectedIndex]);
+                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, comboBoxBottomMargin.SelectedIndex, 32, _subtitleColor, _borderColor, IfoParser.ArrayOfLanguage[comboBoxLanguage.SelectedIndex], IfoParser.ArrayOfLanguageCode[comboBoxLanguage.SelectedIndex]);
 
                 progressBar1.Value = 0;
                 progressBar1.Maximum = _subtitle.Paragraphs.Count-1;
@@ -1208,13 +1208,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             _borderWidth = float.Parse(comboBoxBorderWidth.SelectedItem.ToString());
         }
 
-        private static Color GetOutlineColor(Color borderColor)
-        {
-            if (borderColor.R + borderColor.G + borderColor.B < 30)
-                return Color.FromArgb(200, 75, 75, 75);
-            return Color.FromArgb(150, borderColor.R, borderColor.G, borderColor.B);
-        }
-
         private static Font SetFont(MakeBitmapParameter parameter, float fontSize)
         {
             Font font;
@@ -1320,7 +1313,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (_exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
             {
                 var nbmp = new NikseBitmap(bmp);
-                nbmp.ConverToFourColors(Color.Transparent, _subtitleColor, _borderColor, GetOutlineColor(_borderColor));
+                nbmp.ConverToFourColors(Color.Transparent, _subtitleColor, _borderColor, true);
                 bmp = nbmp.GetBitmap();
             }
             return bmp;
