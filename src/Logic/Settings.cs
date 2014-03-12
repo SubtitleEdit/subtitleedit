@@ -765,6 +765,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainSynchronizationAdjustTimes { get; set; }
         public string MainSynchronizationVisualSync { get; set; }
         public string MainSynchronizationPointSync { get; set; }
+        public string MainSynchronizationChangeFrameRate { get; set; }        
         public string MainListViewItalic { get; set; }
         public string MainListViewToggleDashes { get; set; }
         public string MainListViewAlignment { get; set; }
@@ -871,6 +872,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainSynchronizationAdjustTimes = "Control+Shift+A";
             MainSynchronizationVisualSync = "Control+Shift+V";
             MainSynchronizationPointSync = "Control+Shift+P";
+            MainSynchronizationChangeFrameRate = string.Empty;
             MainListViewItalic = "Control+I";
             MainEditReverseStartAndEndingForRTL = string.Empty;
             MainTextBoxItalic = "Control+I";
@@ -2197,6 +2199,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainSynchronizationPointSync");
                 if (subNode != null)
                     settings.Shortcuts.MainSynchronizationPointSync = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainSynchronizationChangeFrameRate");
+                if (subNode != null)
+                    settings.Shortcuts.MainSynchronizationChangeFrameRate = subNode.InnerText;               
                 subNode = node.SelectSingleNode("MainListViewItalic");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewItalic = subNode.InnerText;
@@ -2852,6 +2857,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainSynchronizationAdjustTimes", settings.Shortcuts.MainSynchronizationAdjustTimes);
             textWriter.WriteElementString("MainSynchronizationVisualSync", settings.Shortcuts.MainSynchronizationVisualSync);
             textWriter.WriteElementString("MainSynchronizationPointSync", settings.Shortcuts.MainSynchronizationPointSync);
+            textWriter.WriteElementString("MainSynchronizationChangeFrameRate", settings.Shortcuts.MainSynchronizationChangeFrameRate);            
             textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainListViewItalic);
             textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
             textWriter.WriteElementString("MainListViewAlignment", settings.Shortcuts.MainListViewAlignment);

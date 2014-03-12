@@ -655,6 +655,7 @@ namespace Nikse.SubtitleEdit.Forms
             syncNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes + GetShortcutText(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes));
             syncNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Synchronization.VisualSync + GetShortcutText(Configuration.Settings.Shortcuts.MainSynchronizationVisualSync));
             syncNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Synchronization.PointSync + GetShortcutText(Configuration.Settings.Shortcuts.MainSynchronizationPointSync));
+            syncNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.ChangeFrameRate + GetShortcutText(Configuration.Settings.Shortcuts.MainSynchronizationChangeFrameRate));            
             treeViewShortcuts.Nodes.Add(syncNode);
 
             var listViewNode = new TreeNode(Configuration.Settings.Language.Main.Controls.ListView);
@@ -1307,6 +1308,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainSynchronizationVisualSync = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.Synchronization.PointSync.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainSynchronizationPointSync = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.Tools.ChangeFrameRate.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainSynchronizationChangeFrameRate = GetShortcut(node.Text);
                 }
             }
 

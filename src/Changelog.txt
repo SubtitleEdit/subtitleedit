@@ -12,10 +12,12 @@
    * Updated Argentinian Spanish language file - thx walterh78
    * Added ZPosition setting for Dcinema interop - thx Joseph
    * Added shortcut for Tools -> "Split long lines" - thx John
+   * Added shortcut for Sync -> "Change frame rate" - thx Alfonso
    * Added setting regarding "Fix short display times" - thx S1l3nc0r
    * Html encoding of sami files is now again default false
 * FIXED:
    * Fixed VobSub writing compatability with gpac - thx Ryan
+   * Switched VobSub aa to inside letter (no border transparency) - thx CoOoL_BoY
    * Minor fix for ass import in Matroska (mkv) files
    * Some fixes for move word up/down - thx rebawest
    * Delete custom export format now works - thx Leon
