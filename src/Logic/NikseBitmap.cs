@@ -240,7 +240,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
 
                     int emphasis1Diff = Math.Abs(emphasis1Buffer[0] - _bitmapData[i]) + Math.Abs(emphasis1Buffer[1] - _bitmapData[i + 1]) + Math.Abs(emphasis1Buffer[2] - _bitmapData[i + 2]) + Math.Abs(emphasis1Buffer[3] - _bitmapData[i + 3]);
-                    if (emphasis1Diff < smallestDiff)
+                    if (emphasis1Diff - 20 < smallestDiff)
                     {
                         smallestDiff = emphasis1Diff;
                         buffer = emphasis1Buffer;
