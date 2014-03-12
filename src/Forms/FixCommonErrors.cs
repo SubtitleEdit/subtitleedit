@@ -1208,7 +1208,9 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p.Text.Contains(" ?"))
                         p.Text = p.Text.Replace(" ?", "?");
                 }
-
+                
+                while (p.Text.Contains("¿ "))
+                    p.Text = p.Text.Replace("¿ ", "¿");
 
                 if (p.Text.Contains("! </i>" + Environment.NewLine))
                     p.Text = p.Text.Replace("! </i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
