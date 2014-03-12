@@ -14231,6 +14231,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAdjustAllTimes.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
             visualSyncToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationVisualSync);
             toolStripMenuItemPointSync.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationPointSync);
+            toolStripMenuItemChangeFrameRate2.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationChangeFrameRate);
             italicToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             _mainToolsAutoDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsAutoDuration);
             _mainToolsBeamer = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsBeamer);
