@@ -364,7 +364,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_exportType == "BLURAYSUP")
                     binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
                 else if (_exportType == "VOBSUB")
-                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, comboBoxBottomMargin.SelectedIndex, 32, _subtitleColor, _borderColor, IfoParser.ArrayOfLanguage[comboBoxLanguage.SelectedIndex], IfoParser.ArrayOfLanguageCode[comboBoxLanguage.SelectedIndex]);
+                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, comboBoxBottomMargin.SelectedIndex, 32, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked, IfoParser.ArrayOfLanguage[comboBoxLanguage.SelectedIndex], IfoParser.ArrayOfLanguageCode[comboBoxLanguage.SelectedIndex]);
 
                 progressBar1.Value = 0;
                 progressBar1.Maximum = _subtitle.Paragraphs.Count-1;
@@ -1313,7 +1313,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (_exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
             {
                 var nbmp = new NikseBitmap(bmp);
-                nbmp.ConverToFourColors(Color.Transparent, _subtitleColor, _borderColor, true);
+                nbmp.ConverToFourColors(Color.Transparent, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked);
                 bmp = nbmp.GetBitmap();
             }
             return bmp;
@@ -2179,6 +2179,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             labelResolution.Text = Configuration.Settings.Language.ExportPngXml.VideoResolution;
             buttonColor.Text = Configuration.Settings.Language.ExportPngXml.FontColor;
             checkBoxSimpleRender.Text = Configuration.Settings.Language.ExportPngXml.SimpleRendering;
+            checkBoxTransAntiAliase.Text = Configuration.Settings.Language.ExportPngXml.AntiAliasingWithTransparency;
 
             comboBox3D.Items.Clear();
             comboBox3D.Items.Add(Configuration.Settings.Language.General.None);
@@ -2267,6 +2268,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             labelImageFormat.Visible = showImageFormat;
             labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
             comboBoxFramerate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
+            checkBoxTransAntiAliase.Visible = exportType == "VOBSUB";
             if (exportType == "BDNXML")
             {
                 labelFrameRate.Top = labelLanguage.Top;
