@@ -1565,7 +1565,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string newText = p.Text;
                         int indexOfFontTag = newText.ToLower().IndexOf("<font ");
-                        if (start > 0 && !(Environment.NewLine + " >[(♪♫").Contains(p.Text[start - 1].ToString()))
+                        if (start > 0 && !(Environment.NewLine + " >[(♪♫¿").Contains(p.Text[start - 1].ToString()))
                         {
                             if (indexOfFontTag == -1 || start > newText.IndexOf('>', indexOfFontTag)) // font tags can contain "
                             {
@@ -1573,7 +1573,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 end++;
                             }
                         }
-                        if (end < newText.Length - 2 && !(Environment.NewLine + " <,.!?:;])♪♫").Contains(p.Text[end + 1].ToString()))
+                        if (end < newText.Length - 2 && !(Environment.NewLine + " <,.!?:;])♪♫¿").Contains(p.Text[end + 1].ToString()))
                         {
                             if (indexOfFontTag == -1 || end > newText.IndexOf('>', indexOfFontTag)) // font tags can contain "
                             {
