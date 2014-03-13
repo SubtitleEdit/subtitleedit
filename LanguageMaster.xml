@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.3.13</Version>
+    <Version>3.3.14</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -248,6 +248,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffect>Effect</FontEffect>
     <FontEffectColor>Effect color</FontEffectColor>
     <FontSize>Size</FontSize>
+    <TopBottomMargin>Top/bottom margin</TopBottomMargin>
+    <ZPosition>Z-position</ZPosition>
+    <ZPositionHelp>Positive numbers moves text away, negative numbers moves text closer, if z-position is zero then it's 2D</ZPositionHelp>
     <ChooseColor>Choose color...</ChooseColor>
     <Generate>Generate</Generate>
   </DCinemaProperties>
@@ -365,6 +368,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Image format</ImageFormat>
     <SimpleRendering>Simple rendering</SimpleRendering>
+    <AntiAliasingWithTransparency>Anti-aliasing with transparency</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
     <SideBySide3D>Half-side-by-side</SideBySide3D>
     <HalfTopBottom3D>Half-Top/Bottom</HalfTopBottom3D>
@@ -1505,6 +1509,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MusicSymbol>Music symbol</MusicSymbol>
     <MusicSymbolsToReplace>Music symbols to replace (separate by space)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Fix common OCR errors - also use hardcoded rules</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix short display time - allow move of start time</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Shortcuts</Shortcuts>
     <Shortcut>Shortcut</Shortcut>
     <Control>Control</Control>
