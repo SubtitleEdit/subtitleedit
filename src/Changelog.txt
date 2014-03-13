@@ -4,20 +4,20 @@
 3.3.15 (x March 2014)
 * NEW:
    * Added new subtitle formats (200+ formats supported!)
+   * Export to VobSub option "Anti-alising with transparency" thx CoOoL_BoY/moob
+   * Added ZPosition setting for Dcinema interop - thx Joseph
+   * Added shortcut for Tools -> "Split long lines" - thx John
+   * Added shortcut for Sync -> "Change frame rate" - thx Alfonso
+   * Added setting regarding "Fix short display times" - thx S1l3nc0r
 * IMPROVED:
    * Updated French language file - thx JM GBT
    * Updated Dutch language file - thx Quetsbeek
    * Updated Portuguese language file - thx moob
    * Updated Korean language file - thx domddol
    * Updated Argentinian Spanish language file - thx walterh78
-   * Added ZPosition setting for Dcinema interop - thx Joseph
-   * Added shortcut for Tools -> "Split long lines" - thx John
-   * Added shortcut for Sync -> "Change frame rate" - thx Alfonso
-   * Added setting regarding "Fix short display times" - thx S1l3nc0r
    * Html encoding of sami files is now again default false
 * FIXED:
-   * Fixed VobSub writing compatability with gpac - thx Ryan
-   * Switched VobSub aa to inside letter (no border transparency) - thx CoOoL_BoY
+   * Fixed VobSub writing compatability with gpac/mp4box + handbrake - thx Ryan
    * Minor fix for ass import in Matroska (mkv) files
    * Some fixes for move word up/down - thx rebawest
    * Delete custom export format now works - thx Leon
