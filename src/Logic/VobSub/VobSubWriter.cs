@@ -250,11 +250,12 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         Color _background = Color.Transparent;
         Color _pattern = Color.White;
         Color _emphasis1 = Color.Black;
+        bool _useInnerAA = true;
         Color _emphasis2 = Color.FromArgb(240, Color.Black);
         readonly string _languageName = "English";
         readonly string _languageNameShort = "en";
 
-        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int languageStreamId, Color pattern, Color emphasis1, string languageName, string languageNameShort)
+        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int languageStreamId, Color pattern, Color emphasis1, bool useInnerAA, string languageName, string languageNameShort)
         {
             _subFileName = subFileName;
             _screenWidth = screenWidth;
@@ -263,6 +264,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             _languageStreamId = languageStreamId;
             _pattern = pattern;
             _emphasis1 = emphasis1;
+            _useInnerAA = useInnerAA;
             _languageName = languageName;
             _languageNameShort = languageNameShort;
             _idx = CreateIdxHeader();
@@ -339,7 +341,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             _idx.AppendLine(string.Format("timestamp: {0:00}:{1:00}:{2:00}:{3:000}, filepos: {4}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds, _subFile.Position.ToString("X").PadLeft(9, '0').ToLower()));
 
             var nbmp = new NikseBitmap(bmp);
-            nbmp.ConverToFourColors(_background, _pattern, _emphasis1, true);
+            _emphasis2 = nbmp.ConverToFourColors(_background, _pattern, _emphasis1, true);
             var twoPartBuffer = nbmp.RunLengthEncodeForDvd(_background, _pattern, _emphasis1, _emphasis2);
             var imageBuffer = GetSubImageBuffer(twoPartBuffer, nbmp, p, alignment);
 

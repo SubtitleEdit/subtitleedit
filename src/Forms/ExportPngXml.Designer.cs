@@ -37,6 +37,7 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.checkBoxTransAntiAliase = new System.Windows.Forms.CheckBox();
             this.labelLineHeight = new System.Windows.Forms.Label();
             this.numericUpDownLineSpacing = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownShadowTransparency = new System.Windows.Forms.NumericUpDown();
@@ -150,6 +151,7 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.checkBoxTransAntiAliase);
             this.groupBoxImageSettings.Controls.Add(this.labelLineHeight);
             this.groupBoxImageSettings.Controls.Add(this.numericUpDownLineSpacing);
             this.groupBoxImageSettings.Controls.Add(this.numericUpDownShadowTransparency);
@@ -194,6 +196,17 @@
             this.groupBoxImageSettings.TabIndex = 3;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // checkBoxTransAntiAliase
+            // 
+            this.checkBoxTransAntiAliase.AutoSize = true;
+            this.checkBoxTransAntiAliase.Location = new System.Drawing.Point(276, 92);
+            this.checkBoxTransAntiAliase.Name = "checkBoxTransAntiAliase";
+            this.checkBoxTransAntiAliase.Size = new System.Drawing.Size(162, 17);
+            this.checkBoxTransAntiAliase.TabIndex = 55;
+            this.checkBoxTransAntiAliase.Text = "Anti-alising with transparency";
+            this.checkBoxTransAntiAliase.UseVisualStyleBackColor = true;
+            this.checkBoxTransAntiAliase.CheckedChanged += new System.EventHandler(this.checkBoxAntiAlias_CheckedChanged);
             // 
             // labelLineHeight
             // 
@@ -778,6 +791,9 @@
             this.subtitleListView1.Name = "subtitleListView1";
             this.subtitleListView1.OwnerDraw = true;
             this.subtitleListView1.Size = new System.Drawing.Size(937, 200);
+            this.subtitleListView1.SubtitleFontBold = false;
+            this.subtitleListView1.SubtitleFontName = "Tahoma";
+            this.subtitleListView1.SubtitleFontSize = 8;
             this.subtitleListView1.TabIndex = 1;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.UseSyntaxColoring = true;
@@ -873,5 +889,6 @@
         private System.Windows.Forms.Label labelShadowTransparency;
         private System.Windows.Forms.Label labelLineHeight;
         private System.Windows.Forms.NumericUpDown numericUpDownLineSpacing;
+        private System.Windows.Forms.CheckBox checkBoxTransAntiAliase;
     }
 }

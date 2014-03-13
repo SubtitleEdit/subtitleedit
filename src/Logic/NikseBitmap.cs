@@ -195,6 +195,12 @@ namespace Nikse.SubtitleEdit.Logic
             return count;
         }
 
+        private static Color GetOutlineColor(Color borderColor)
+        {
+            if (borderColor.R + borderColor.G + borderColor.B < 30)
+                return Color.FromArgb(200, 75, 75, 75);
+            return Color.FromArgb(150, borderColor.R, borderColor.G, borderColor.B);
+        }
 
         /// <summary>
         /// Convert a x-color image to four colors, for e.g. dvd sub pictures.
@@ -202,7 +208,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <param name="background">Background color</param>
         /// <param name="pattern">Pattern color, normally white or yellow</param>
         /// <param name="emphasis1">Emphasis 1, normally black or near black (border)</param>
-        public void ConverToFourColors(Color background, Color pattern, Color emphasis1, bool useInnerAntialize)
+        public Color ConverToFourColors(Color background, Color pattern, Color emphasis1, bool useInnerAntialize)
         {
             byte[] backgroundBuffer = new byte[4];
             backgroundBuffer[0] = (byte)background.B;
@@ -222,6 +228,16 @@ namespace Nikse.SubtitleEdit.Logic
             emphasis1Buffer[2] = (byte)emphasis1.R;
             emphasis1Buffer[3] = (byte)emphasis1.A;
 
+            byte[] emphasis2Buffer = new byte[4];
+            var emphasis2 = GetOutlineColor(emphasis1);
+            if (!useInnerAntialize)
+            {
+                emphasis2Buffer[0] = (byte)emphasis2.B;
+                emphasis2Buffer[1] = (byte)emphasis2.G;
+                emphasis2Buffer[2] = (byte)emphasis2.R;
+                emphasis2Buffer[3] = (byte)emphasis2.A;
+            }
+
             for (int i = 0; i < _bitmapData.Length; i += 4)
             {
                 int smallestDiff = 10000;
@@ -240,24 +256,49 @@ namespace Nikse.SubtitleEdit.Logic
                     }
 
                     int emphasis1Diff = Math.Abs(emphasis1Buffer[0] - _bitmapData[i]) + Math.Abs(emphasis1Buffer[1] - _bitmapData[i + 1]) + Math.Abs(emphasis1Buffer[2] - _bitmapData[i + 2]) + Math.Abs(emphasis1Buffer[3] - _bitmapData[i + 3]);
-                    if (emphasis1Diff - 20 < smallestDiff)
+                    if (useInnerAntialize)
                     {
-                        smallestDiff = emphasis1Diff;
-                        buffer = emphasis1Buffer;
+                        if (emphasis1Diff - 20 < smallestDiff)
+                        {
+                            smallestDiff = emphasis1Diff;
+                            buffer = emphasis1Buffer;
+                        }
+                    }
+                    else
+                    {
+                        if (emphasis1Diff < smallestDiff)
+                        {
+                            smallestDiff = emphasis1Diff;
+                            buffer = emphasis1Buffer;
+                        }
+
+                        int emphasis2Diff = Math.Abs(emphasis2Buffer[0] - _bitmapData[i]) + Math.Abs(emphasis2Buffer[1] - _bitmapData[i + 1]) + Math.Abs(emphasis2Buffer[2] - _bitmapData[i + 2]) + Math.Abs(emphasis2Buffer[3] - _bitmapData[i + 3]);
+                        if (emphasis2Diff < smallestDiff)
+                        {
+                            smallestDiff = emphasis2Diff;
+                            buffer = emphasis2Buffer;
+                        }
+                        else if (_bitmapData[i + 3] >= 10 && _bitmapData[i + 3] < 90) // anti-alias
+                        {
+                            smallestDiff = emphasis2Diff;
+                            buffer = emphasis2Buffer;
+                        }
                     }
                 }
                 Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
             }
 
             if (useInnerAntialize)
-                VobSubAntialize(pattern, emphasis1);
+                return VobSubAntialize(pattern, emphasis1);
+
+            return emphasis2;
         }
 
-        private void VobSubAntialize(Color pattern, Color emphasis1)
+        private Color VobSubAntialize(Color pattern, Color emphasis1)
         {
-            int r = (int) Math.Round(((pattern.R * 3.0 + emphasis1.R) / 4.0));
-            int g = (int) Math.Round(((pattern.G * 3.0 + emphasis1.G) / 4.0));
-            int b = (int)Math.Round(((pattern.B * 3.0 + emphasis1.B) / 4.0));
+            int r = (int) Math.Round(((pattern.R * 2.0 + emphasis1.R) / 3.0));
+            int g = (int) Math.Round(((pattern.G * 2.0 + emphasis1.G) / 3.0));
+            int b = (int)Math.Round(((pattern.B * 2.0 + emphasis1.B) / 3.0));
             Color antializeColor = Color.FromArgb(r, g, b);
 
             for (int y = 1; y < Height-1; y++)
@@ -277,6 +318,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
             }
+            return antializeColor;
         }
 
         public RunLengthTwoParts RunLengthEncodeForDvd(Color background, Color pattern, Color emphasis1, Color emphasis2)
