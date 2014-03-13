@@ -18,7 +18,7 @@
    * Html encoding of sami files is now again default false
 * FIXED:
    * Fixed VobSub writing compatability with gpac/mp4box + handbrake - thx Ryan
-   * Minor fix for ass import in Matroska (mkv) files
+   * Minor fix for ass import from Matroska (mkv) files
    * Some fixes for move word up/down - thx rebawest
    * Delete custom export format now works - thx Leon
    * Possible crash in OCR window - thx grfilho
