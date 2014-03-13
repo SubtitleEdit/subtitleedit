@@ -341,7 +341,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             _idx.AppendLine(string.Format("timestamp: {0:00}:{1:00}:{2:00}:{3:000}, filepos: {4}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds, _subFile.Position.ToString("X").PadLeft(9, '0').ToLower()));
 
             var nbmp = new NikseBitmap(bmp);
-            _emphasis2 = nbmp.ConverToFourColors(_background, _pattern, _emphasis1, true);
+            _emphasis2 = nbmp.ConverToFourColors(_background, _pattern, _emphasis1, _useInnerAA);
             var twoPartBuffer = nbmp.RunLengthEncodeForDvd(_background, _pattern, _emphasis1, _emphasis2);
             var imageBuffer = GetSubImageBuffer(twoPartBuffer, nbmp, p, alignment);
 
