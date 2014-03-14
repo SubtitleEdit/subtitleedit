@@ -63,9 +63,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string startTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
-                string timeOut = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
-                string timeDuration = string.Format("{0:00}:{1:00}", p.Duration.Seconds, p.Duration.Milliseconds / 10);
+                string startTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
+                string timeOut = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
+                string timeDuration = string.Format("{0:00}:{1:00}", p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds));
                 sb.AppendLine(string.Format(paragraphWriteFormat, startTime, count, timeOut, p.Text, timeDuration));
                 count++;
             }
@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int startHours = int.Parse(parts[1]);
                     int startMinutes = int.Parse(parts[2]);
                     int startSeconds = int.Parse(parts[3]);
-                    int startMilliseconds = int.Parse(parts[4]) * 10;
+                    int startMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[4]));
 
                     int endHours = 0;
                     if (parts[5+2] != "--")
@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         endSeconds = int.Parse(parts[7 + 2]);
                     int endMilliseconds = 0;
                     if (parts[8 + 2] != "--")
-                        endMilliseconds = int.Parse(parts[8 + 2]) * 10;
+                        endMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[8 + 2]));
 
                     paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
                     paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);

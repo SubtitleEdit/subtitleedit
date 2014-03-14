@@ -63,8 +63,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string startTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
-                string timeOut = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
+                string startTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
+                string timeOut = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
                 sb.AppendLine(string.Format(paragraphWriteFormat, startTime, count, timeOut, p.Text));
                 count++;
             }
@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int startHours = int.Parse(parts[1]);
                     int startMinutes = int.Parse(parts[2]);
                     int startSeconds = int.Parse(parts[3]);
-                    int startMilliseconds = int.Parse(parts[4]) * 10;
+                    int startMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[4]));
 
                     int endHours = 0;
                     if (parts[5] != "--")
@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         endSeconds = int.Parse(parts[7]);
                     int endMilliseconds = 0;
                     if (parts[8] != "--")
-                        endMilliseconds = int.Parse(parts[8]) * 10;
+                        endMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[8]));
 
                     paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
                     paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);

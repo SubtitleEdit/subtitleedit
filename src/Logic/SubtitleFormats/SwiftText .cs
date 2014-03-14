@@ -57,10 +57,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string startTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
-                string duration = string.Format("{0:00}:{1:00}", p.Duration.Seconds, p.Duration.Milliseconds / 10);
-                string timeOut = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
-                sb.AppendLine(string.Format(paragraphWriteFormat, startTime, duration, timeOut, p.Text));
+                string startTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
+                string timeOut = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
+                string timeDuration = string.Format("{0:00}:{1:00}", p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds));
+                sb.AppendLine(string.Format(paragraphWriteFormat, startTime, timeDuration, timeOut, p.Text));
             }
             return sb.ToString().Trim();
         }
@@ -137,14 +137,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int startHours = int.Parse(parts[0]);
                     int startMinutes = int.Parse(parts[1]);
                     int startSeconds = int.Parse(parts[2]);
-                    int startMilliseconds = int.Parse(parts[3]) * 10;
+                    int startMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[3]));
 
                     int durationSeconds = 0;
                     if (parts[4] != "-")
                         durationSeconds = int.Parse(parts[4]);
                     int durationMilliseconds = 0;
                     if (parts[5] != "--")
-                        durationMilliseconds = int.Parse(parts[5]) * 10;
+                        durationMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[5]));
 
                     int endHours = 0;
                     if (parts[6] != "--")
@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         endSeconds = int.Parse(parts[8]);
                     int endMilliseconds = 0;
                     if (parts[9] != "--")
-                        endMilliseconds = int.Parse(parts[9]) * 10;
+                        endMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[9]));
 
                     paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
 
