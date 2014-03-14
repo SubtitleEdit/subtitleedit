@@ -12,12 +12,7 @@ namespace Nikse.SubtitleEdit.Logic
             _positionsAndSizes.Add(pAndS);
         }
 
-        public bool SetPositionAndSize(Form form)
-        {
-            return SetPositionAndSize(form, false);
-        }
-
-        public bool SetPositionAndSize(Form form, bool ignoreSize)
+        public bool SetPositionAndSize(Form form, bool ignoreSize = false)
         {
             if (form == null)
                 return false;

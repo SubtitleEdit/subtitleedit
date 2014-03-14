@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
-using System.Text.RegularExpressions;
 using System.Drawing;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChangeCasing : Form
     {
         private int _noOfLinesChanged;
-        Regex aloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
+        private Regex aloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
 
         public ChangeCasing()
         {
@@ -112,7 +112,6 @@ namespace Nikse.SubtitleEdit.Forms
                         match = match.NextMatch();
                     }
                 }
-
                 lastLine = p.Text;
             }
         }
@@ -129,10 +128,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     // first all to lower
                     text = text.ToLower().Trim();
-                    while (text.Contains("  "))
-                        text = text.Replace("  ", " ");
-                    text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-                    text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                    text = Regex.Replace(text, "\\s{2,}", " ");
+                    text = Regex.Replace(text, "\\s+" + Environment.NewLine, Environment.NewLine);
+                    text = Regex.Replace(text, Environment.NewLine + "\\s+", Environment.NewLine);
 
                     var st = new StripableText(text);
                     st.FixCasing(namesEtc, false, true, true, lastLine); // fix all casing but names (that's a seperate option)

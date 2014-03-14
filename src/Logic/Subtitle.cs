@@ -40,7 +40,8 @@ namespace Nikse.SubtitleEdit.Logic
             FileName = "Untitled";
         }
 
-        public Subtitle(List<HistoryItem> historyItems) : this()
+        public Subtitle(List<HistoryItem> historyItems)
+            : this()
         {
             _history = historyItems;
         }
@@ -49,7 +50,8 @@ namespace Nikse.SubtitleEdit.Logic
         /// Copy constructor (only paragraphs)
         /// </summary>
         /// <param name="subtitle">Subtitle to copy</param>
-        public Subtitle(Subtitle subtitle) : this()
+        public Subtitle(Subtitle subtitle)
+            : this()
         {
             if (subtitle == null)
                 return;
@@ -377,7 +379,7 @@ namespace Nikse.SubtitleEdit.Logic
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
                     while (Utilities.GetCharactersPerSecond(p) > maxCharactersPerSecond)
                     {
-                        duration ++;
+                        duration++;
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
                     }
 
@@ -416,8 +418,8 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (p.ID == _paragraphs[i].ID)
                     return i;
-                if (i < _paragraphs.Count -1 && p.ID == _paragraphs[i + 1].ID)
-                    return i+1;
+                if (i < _paragraphs.Count - 1 && p.ID == _paragraphs[i + 1].ID)
+                    return i + 1;
                 if (p.StartTime.TotalMilliseconds == _paragraphs[i].StartTime.TotalMilliseconds &&
                     p.EndTime.TotalMilliseconds == _paragraphs[i].EndTime.TotalMilliseconds)
                     return i;
@@ -462,9 +464,10 @@ namespace Nikse.SubtitleEdit.Logic
                 for (int i = _paragraphs.Count - 1; i >= 0; i--)
                 {
                     Paragraph p = _paragraphs[i];
-                    string s = p.Text.Trim();
+                    string s = Utilities.RemoveHtmlTags(p.Text).Trim();
+                    s = System.Text.RegularExpressions.Regex.Replace(s, "\\W", string.Empty);
 
-                    if (s.Length == 0)
+                    if (string.IsNullOrEmpty(s))
                     {
                         _paragraphs.RemoveAt(i);
                         count++;
@@ -558,7 +561,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void InsertParagraphInCorrectTimeOrder(Paragraph newParagraph)
         {
-            for (int i=0; i<Paragraphs.Count; i++)
+            for (int i = 0; i < Paragraphs.Count; i++)
             {
                 Paragraph p = Paragraphs[i];
                 if (newParagraph.StartTime.TotalMilliseconds < p.StartTime.TotalMilliseconds)

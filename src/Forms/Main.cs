@@ -9922,7 +9922,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         foreach (Paragraph p in _subtitle.Paragraphs)
-                            selectedLines.Paragraphs.Add(new Paragraph(p));
+                            selectedLines.Paragraphs.Add(p); // was like: new Paragraph(p) => is the any difference?!
                     }
 
                     bool saveChangeCaseChanges = true;

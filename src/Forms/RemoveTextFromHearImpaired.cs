@@ -1,17 +1,17 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class FormRemoveTextForHearImpaired : Form
     {
-        Subtitle _subtitle;
-        readonly LanguageStructure.RemoveTextFromHearImpaired _language;
+        private Subtitle _subtitle;
+        private readonly LanguageStructure.RemoveTextFromHearImpaired _language;
         private List<string> _interjectionList;
         private List<int> _warnings;
         private int _warningIndex;
@@ -91,17 +91,17 @@ namespace Nikse.SubtitleEdit.Forms
                 s = s.Substring(3);
 
             if (s.EndsWith("</b>") && s.Length > 4)
-                s = s.Substring(0, s.Length-4);
+                s = s.Substring(0, s.Length - 4);
             if (s.EndsWith("</i>") && s.Length > 4)
-                s = s.Substring(0, s.Length-4);
+                s = s.Substring(0, s.Length - 4);
             if (s.EndsWith("</u>") && s.Length > 4)
-                s = s.Substring(0, s.Length-4);
+                s = s.Substring(0, s.Length - 4);
             if (s.EndsWith("</B>") && s.Length > 4)
-                s = s.Substring(0, s.Length-4);
+                s = s.Substring(0, s.Length - 4);
             if (s.EndsWith("</I>") && s.Length > 4)
-                s = s.Substring(0, s.Length-4);
+                s = s.Substring(0, s.Length - 4);
             if (s.EndsWith("</U>") && s.Length > 4)
-                s = s.Substring(0, s.Length-4);
+                s = s.Substring(0, s.Length - 4);
 
             if (s.StartsWith("-") && s.Length > 2)
                 s = s.TrimStart('-');
@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
             int end = text.IndexOf(endTag, start + 1);
             while (start >= 0 && end > start)
             {
-                text = text.Remove(start, (end - start)+1);
+                text = text.Remove(start, (end - start) + 1);
                 start = text.IndexOf(startTag);
                 if (start >= 0 && start < text.Length - 1)
                     end = text.IndexOf(endTag, start);
@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (HasHearImpariedTagsAtStart(s))
                         {
                             s = RemoveStartEndTags(s);
-                            newText = newText.Substring(0, i+1) + pre + " " + s;
+                            newText = newText.Substring(0, i + 1) + pre + " " + s;
                             newText = newText.Replace("<i></i>", string.Empty);
                             newText = newText.Replace("<i> </i>", " ");
                             newText = newText.Replace("  ", " ");
@@ -331,64 +331,64 @@ namespace Nikse.SubtitleEdit.Forms
             int count = 0;
             bool removedInFirstLine = false;
             bool removedInSecondLine = false;
-            foreach (string s in parts)
+            foreach (string part in parts)
             {
-                int indexOfColon = s.IndexOf(":");
+                int indexOfColon = part.IndexOf(":");
                 if (indexOfColon > 0)
                 {
-                    string pre = s.Substring(0, indexOfColon);
+                    string pre = part.Substring(0, indexOfColon);
                     if (checkBoxRemoveTextBeforeColonOnlyUppercase.Checked && pre.Replace("<i>", string.Empty) != pre.Replace("<i>", string.Empty).ToUpper())
                     {
-                        newText = newText + Environment.NewLine + s;
+                        newText = newText + Environment.NewLine + part;
                         newText = newText.Trim();
                     }
                     else
                     {
                         StripableText st = new StripableText(pre);
-                        if (count == 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1 && removedInFirstLine && Utilities.CountTagInText(s, ":") == 1 &&
+                        if (count == 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1 && removedInFirstLine && Utilities.CountTagInText(part, ":") == 1 &&
                             !newText.EndsWith(".") && !newText.EndsWith("!") && !newText.EndsWith("?") && !newText.EndsWith(".</i>") && !newText.EndsWith("!</i>") && !newText.EndsWith("?</i>") &&
-                            s != s.ToUpper())
+                            part != part.ToUpper())
                         {
-                            if (pre.Contains("<i>") && s.Contains("</i>"))
-                                newText = newText + Environment.NewLine + "<i>" + s;
-                            else if (pre.Contains("<b>") && s.Contains("</b>"))
-                                newText = newText + Environment.NewLine + "<b>" + s;
-                            else if (pre.Contains("[") && s.Contains("]"))
-                                newText = newText + Environment.NewLine + "[" + s;
-                            else if (pre.Contains("(") && s.EndsWith(")"))
-                                newText = newText + Environment.NewLine + "(" + s;
+                            if (pre.Contains("<i>") && part.Contains("</i>"))
+                                newText = newText + Environment.NewLine + "<i>" + part;
+                            else if (pre.Contains("<b>") && part.Contains("</b>"))
+                                newText = newText + Environment.NewLine + "<b>" + part;
+                            else if (pre.Contains("[") && part.Contains("]"))
+                                newText = newText + Environment.NewLine + "[" + part;
+                            else if (pre.Contains("(") && part.EndsWith(")"))
+                                newText = newText + Environment.NewLine + "(" + part;
                             else
-                                newText = newText + Environment.NewLine + s;
+                                newText = newText + Environment.NewLine + part;
                         }
-                        else if (count == 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1 && indexOfColon > 15 && s.Substring(0, indexOfColon).Contains(" ") && Utilities.CountTagInText(s, ":") == 1 &&
+                        else if (count == 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1 && indexOfColon > 15 && part.Substring(0, indexOfColon).Contains(" ") && Utilities.CountTagInText(part, ":") == 1 &&
                             !newText.EndsWith(".") && !newText.EndsWith("!") && !newText.EndsWith("?") && !newText.EndsWith(".</i>") && !newText.EndsWith("!</i>") && !newText.EndsWith("?</i>") &&
-                            s != s.ToUpper())
+                            part != part.ToUpper())
                         {
-                            if (pre.Contains("<i>") && s.Contains("</i>"))
-                                newText = newText + Environment.NewLine + "<i>" + s;
-                            else if (pre.Contains("<b>") && s.Contains("</b>"))
-                                newText = newText + Environment.NewLine + "<b>" + s;
-                            else if (pre.Contains("[") && s.Contains("]"))
-                                newText = newText + Environment.NewLine + "[" + s;
-                            else if (pre.Contains("(") && s.EndsWith(")"))
-                                newText = newText + Environment.NewLine + "(" + s;
+                            if (pre.Contains("<i>") && part.Contains("</i>"))
+                                newText = newText + Environment.NewLine + "<i>" + part;
+                            else if (pre.Contains("<b>") && part.Contains("</b>"))
+                                newText = newText + Environment.NewLine + "<b>" + part;
+                            else if (pre.Contains("[") && part.Contains("]"))
+                                newText = newText + Environment.NewLine + "[" + part;
+                            else if (pre.Contains("(") && part.EndsWith(")"))
+                                newText = newText + Environment.NewLine + "(" + part;
                             else
-                                newText = newText + Environment.NewLine + s;
+                                newText = newText + Environment.NewLine + part;
                         }
-                        else if (Utilities.CountTagInText(s, ":") == 1)
+                        else if (Utilities.CountTagInText(part, ":") == 1)
                         {
                             bool remove = true;
-                            if (indexOfColon > 0 && indexOfColon < s.Length - 1)
+                            if (indexOfColon > 0 && indexOfColon < part.Length - 1)
                             {
-                                if ("1234567890".Contains(s.Substring(indexOfColon - 1, 1)) && "1234567890".Contains(s.Substring(indexOfColon + 1, 1)))
+                                if ("1234567890".Contains(part.Substring(indexOfColon - 1, 1)) && "1234567890".Contains(part.Substring(indexOfColon + 1, 1)))
                                     remove = false;
                             }
-                            if (s.StartsWith("Previously on") || s.StartsWith("<i>Previously on"))
+                            if (part.StartsWith("Previously on") || part.StartsWith("<i>Previously on"))
                                 remove = false;
 
                             if (remove && checkBoxColonSeparateLine.Checked)
                             {
-                                if (indexOfColon == s.Length - 1 || s.Substring(indexOfColon + 1).StartsWith(Environment.NewLine))
+                                if (indexOfColon == part.Length - 1 || part.Substring(indexOfColon + 1).StartsWith(Environment.NewLine))
                                     remove = true;
                                 else
                                     remove = false;
@@ -396,7 +396,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (remove)
                             {
-                                string content = s.Substring(indexOfColon + 1).Trim();
+                                string content = part.Substring(indexOfColon + 1).Trim();
                                 if (content.Length > 0)
                                 {
                                     if (pre.Contains("<i>") && content.Contains("</i>"))
@@ -429,7 +429,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                newText = newText + Environment.NewLine + s;
+                                newText = newText + Environment.NewLine + part;
                                 newText = newText.Trim();
                                 if (newText.EndsWith("</i>") && text.StartsWith("<i>") && !newText.StartsWith("<i>"))
                                     newText = "<i>" + newText;
@@ -439,7 +439,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            string s2 = s;
+                            string s2 = part;
                             for (int k = 0; k < 2; k++)
                             {
                                 if (s2.Contains(":"))
@@ -452,7 +452,6 @@ namespace Nikse.SubtitleEdit.Forms
                                         doContinue = false;
                                     if (doContinue)
                                     {
-
                                         int periodIndex = start.LastIndexOf(". ");
                                         int questIndex = start.LastIndexOf("? ");
                                         int exclaIndex = start.LastIndexOf("! ");
@@ -485,7 +484,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    newText = newText + Environment.NewLine + s;
+                    newText = newText + Environment.NewLine + part;
                     newText = newText.Trim();
 
                     if (newText.EndsWith("</i>") && text.StartsWith("<i>") && !newText.StartsWith("<i>"))
@@ -657,7 +656,6 @@ namespace Nikse.SubtitleEdit.Forms
                 text = RemoveStartEndTags(text);
             }
 
-
             text = RemoveHearImpairedTags(text);
 
             // fix 3 lines to two liners - if only two lines
@@ -792,7 +790,7 @@ namespace Nikse.SubtitleEdit.Forms
             return result;
         }
 
-        static int CompareLength(string a, string b)
+        private static int CompareLength(string a, string b)
         {
             return b.Length.CompareTo(a.Length);
         }
@@ -934,7 +932,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 return string.Empty;
 
                             if (!temp.Contains(Environment.NewLine) && text.Contains(Environment.NewLine) && temp.StartsWith("-"))
-                                temp = temp.Remove(0,1).Trim();
+                                temp = temp.Remove(0, 1).Trim();
 
                             text = temp;
                         }
@@ -992,7 +990,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddToListView(Paragraph p, string newText)
         {
-            var item = new ListViewItem(string.Empty) {Tag = p, Checked = true};
+            var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
             if (_warnings != null && _warnings.Contains(_warningIndex))
             {
                 item.UseItemStyleForSubItems = true;
@@ -1154,6 +1152,5 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
             Cursor = Cursors.Default;
         }
-
     }
 }
