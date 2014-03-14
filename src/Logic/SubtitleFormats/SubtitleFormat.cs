@@ -109,6 +109,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new SwiftInterchange2(),
                     new SwiftText(),
                     new SwiftTextLineNumber(),
+                    new SwiftTextLineNOAndDur(),
                     new Tek(),
                     new TimeXml(),
                     new TimeXml2(),
