@@ -2332,7 +2332,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             for (int i=0; i<1000; i++)
                 comboBoxBottomMargin.Items.Add(i);
             if (Configuration.Settings.Tools.ExportBottomMargin >= 0 && Configuration.Settings.Tools.ExportBottomMargin < comboBoxBottomMargin.Items.Count)
-                comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBottomMargin;
+                comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBottomMargin;            
 
             if (exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME" && Configuration.Settings.Tools.ExportBluRayBottomMargin >= 0 && Configuration.Settings.Tools.ExportBluRayBottomMargin < comboBoxBottomMargin.Items.Count)
                 comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBluRayBottomMargin;
@@ -2385,6 +2385,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
             }
             checkBoxBold.Checked = Configuration.Settings.Tools.ExportLastFontBold;
+
+            if (Configuration.Settings.Tools.Export3DType >= 0 && Configuration.Settings.Tools.Export3DType < comboBox3D.Items.Count)
+                comboBox3D.SelectedIndex = Configuration.Settings.Tools.Export3DType;
+            if (Configuration.Settings.Tools.Export3DDepth >= numericUpDownDepth3D.Minimum && Configuration.Settings.Tools.Export3DDepth <= numericUpDownDepth3D.Maximum)
+                numericUpDownDepth3D.Value = Configuration.Settings.Tools.Export3DDepth;                          
+
+            if (Configuration.Settings.Tools.ExportHorizontalAlignment >= 0 && Configuration.Settings.Tools.ExportHorizontalAlignment < comboBoxHAlign.Items.Count)
+                comboBoxHAlign.SelectedIndex = Configuration.Settings.Tools.ExportHorizontalAlignment;            
 
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
@@ -2665,6 +2673,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             else
                 Configuration.Settings.Tools.ExportBottomMargin = comboBoxBottomMargin.SelectedIndex;
 
+            Configuration.Settings.Tools.ExportHorizontalAlignment = comboBoxHAlign.SelectedIndex;
+            Configuration.Settings.Tools.Export3DType = comboBox3D.SelectedIndex;
+            Configuration.Settings.Tools.Export3DDepth = (int)numericUpDownDepth3D.Value;
+
             if (comboBoxShadowWidth.Visible)
                 Configuration.Settings.Tools.ExportBluRayShadow = comboBoxShadowWidth.SelectedIndex;
 
@@ -2682,6 +2694,16 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void comboBox3D_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (comboBox3D.SelectedIndex == 0)
+            {
+                labelDepth.Enabled = false;
+                numericUpDownDepth3D.Enabled = false;
+            }
+            else
+            {
+                labelDepth.Enabled = true;
+                numericUpDownDepth3D.Enabled = true;
+            }
             subtitleListView1_SelectedIndexChanged(null, null);
         }
 
