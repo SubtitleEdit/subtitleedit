@@ -265,7 +265,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <DivideEven>Texte teilen Abstandszeit</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubrip>
-    <Title>Untertitel aus IFO/VOB (DVD) extrahieren</Title>
+    <Title>Untertitel aus DVD (IFO/VOB) extrahieren</Title>
     <DvdGroupTitle>DVD Dateien/Info</DvdGroupTitle>
     <IfoFile>IFO Datei</IfoFile>
     <IfoFiles>IFO Dateien</IfoFiles>
@@ -671,7 +671,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>&amp;Vergleichen...</Compare>
         <Statistics>Statisti&amp;k...</Statistics>
         <Plugins>Plugins...</Plugins>
-        <ImportOcrFromDvd>Importiere/OCR VOB/IFO (DVD) Untertitel...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Importiere/OCR DVD (IFO/VOB) Untertitel...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importiere/OCR VobSub (sub/idx) Untertitel...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importiere/OCR Blu-ray (sup) Untertitel...</ImportBluRaySupFile>
         <ImportXSub>Importiere/OCR DivX/AVI (xSub) Untertitel...</ImportXSub>
