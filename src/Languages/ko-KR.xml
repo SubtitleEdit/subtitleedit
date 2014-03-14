@@ -3,8 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.14</Version>
-    <TranslatedBy>☞ 한글화: 도움돌 (domddol@gmail.com)
-☞ 피드백: http://aav639.blog.me/150142070038</TranslatedBy>
+    <TranslatedBy>☞ 한글화: 도움돌 (domddol@gmail.com)</TranslatedBy>
     <CultureName>ko-KR</CultureName>
     <HelpFile />
     <OK>확인(&amp;O)</OK>
@@ -367,6 +366,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Transparency>투명도</Transparency>
     <ImageFormat>이미지 형식</ImageFormat>
     <SimpleRendering>간단한 렌더링</SimpleRendering>
+    <AntiAliasingWithTransparency>투명하게 앤티 앨리어싱</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
     <SideBySide3D>Half-side-by-side</SideBySide3D>
     <HalfTopBottom3D>Half-Top/Bottom</HalfTopBottom3D>
@@ -554,7 +554,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixedOkXY>수정이 완료됐습니다. - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
-    <Title>* 사전 다운로드....</Title>
+    <Title>* 사전 다운로드</Title>
     <DescriptionLine1>Subtitle Edit 맞춤법 검사는 Open Office의 맞춤법 검사용 엔진인</DescriptionLine1>
     <DescriptionLine2>"NHunspell" 엔진을 기반으로 하고 있습니다.</DescriptionLine2>
     <GetDictionariesHere>사전 가져올 곳:</GetDictionariesHere>
@@ -1838,8 +1838,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Language>언어</Language>
     <OcrViaImageCompare>이미지 비교에 의한 OCR...</OcrViaImageCompare>
     <ImageDatabase>이미지 데이터베이스</ImageDatabase>
-    <NoOfPixelsIsSpace>공간 픽셀</NoOfPixelsIsSpace>
-    <MaxErrorPercent>최대. 오류 %</MaxErrorPercent>
+    <NoOfPixelsIsSpace>공간의 픽셀 수</NoOfPixelsIsSpace>
+    <MaxErrorPercent>오류 허용(%)</MaxErrorPercent>
     <New>신규</New>
     <Edit>편집</Edit>
     <StartOcr>OCR 시작</StartOcr>
