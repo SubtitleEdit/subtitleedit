@@ -248,6 +248,9 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffect>Effekt</FontEffect>
     <FontEffectColor>Effektfarbe</FontEffectColor>
     <FontSize>Größe</FontSize>
+    <TopBottomMargin>Oben/Unten Rand</TopBottomMargin>
+    <ZPosition>Z-Position</ZPosition>
+    <ZPositionHelp>Positive Zahlen bewegen Text weg, negative Zahlen bewegen Text heran. Wenn Z-Position Null, ist er in 2D</ZPositionHelp>
     <ChooseColor>Farbe wählen...</ChooseColor>
     <Generate>Erstellen</Generate>
   </DCinemaProperties>
@@ -365,6 +368,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Bildformat</ImageFormat>
     <SimpleRendering>Einfaches Rendern</SimpleRendering>
+    <AntiAliasingWithTransparency>Antialiasing bei Transparenz</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
     <SideBySide3D>Halb Nebeneinander</SideBySide3D>
     <HalfTopBottom3D>Halb oben/unten</HalfTopBottom3D>
@@ -377,9 +381,9 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Rechts</Right>
     <Center>Zentriert</Center>
     <BottomMargin>Unten</BottomMargin>
-    <SaveBluRraySupAs>Blu-ray SUP Dateiname wählen</SaveBluRraySupAs>
+    <SaveBluRraySupAs>Blu-ray sup Dateiname wählen</SaveBluRraySupAs>
     <SaveVobSubAs>VobSub Dateiname wählen</SaveVobSubAs>
-    <SaveFabImageScriptAs>Blu-ray SUP Dateiname wählen</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>Blu-ray sup Dateiname wählen</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL Dateiname wählen</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>Einige Zeilen sind zu lang: {0}</SomeLinesWereTooLongX>
     <LineHeight>Zeilenhöhe</LineHeight>
@@ -504,8 +508,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Hey.Du. -&gt; Hey. Du.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>Die Erde ist fIach. -&gt; Die Erde ist flach.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Textnummer {0}: Anfangszeit kommt nach Endzeit: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
-    <UnableToFixStartTimeLaterThanEndTime>Konnte Textnummer {0} nicht korrigieren: Anfangszeit kommt nach Endzeit: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Textnummer {0}: Startzeit kommt nach Endzeit: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>Konnte Textnummer {0} nicht korrigieren: Startzeit kommt nach Endzeit: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} korrigiert zu: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Konnte Textnummer nicht korrigieren {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} Überlappende Zeitstempel korrigiert</XOverlappingTimestampsFixed>
@@ -667,18 +671,18 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>&amp;Vergleichen...</Compare>
         <Statistics>Statisti&amp;k...</Statistics>
         <Plugins>Plugins...</Plugins>
-        <ImportOcrFromDvd>Importiere/OCR Untertitel von VOB/IFO (DVD)...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Importiere/OCR VOB/IFO (DVD) Untertitel...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importiere/OCR VobSub (sub/idx) Untertitel...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Importiere/OCR Blu-ray (.sup) Datei...</ImportBluRaySupFile>
-        <ImportXSub>Importiere/OCR xSub von DivX/AVI...</ImportXSub>
-        <ImportSubtitleFromMatroskaFile>Importiere Untertitel von Matroska (.mkv) Datei...</ImportSubtitleFromMatroskaFile>
+        <ImportBluRaySupFile>Importiere/OCR Blu-ray (sup) Untertitel...</ImportBluRaySupFile>
+        <ImportXSub>Importiere/OCR DivX/AVI (xSub) Untertitel...</ImportXSub>
+        <ImportSubtitleFromMatroskaFile>Importiere Untertitel aus Matroska (mkv) Datei...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importiere Untertitel mit manuell gewählter Kodierung...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importiere Text...</ImportText>
         <ImportImages>Importiere Bilder...</ImportImages>
         <ImportTimecodes>Importiere Zeitstempel...</ImportTimecodes>
         <Export>Exportiere</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
-        <ExportBluRaySup>Blu-ray SUP...</ExportBluRaySup>
+        <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
         <ExportEbu>EBU stl...</ExportEbu>
@@ -730,7 +734,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <MinimumDisplayTimeBetweenParagraphs>Minimale Anzeigezeit zwischen Untertitel...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sortieren nach</SortBy>
         <Number>Nummer</Number>
-        <StartTime>Anfangszeit</StartTime>
+        <StartTime>Startzeit</StartTime>
         <EndTime>Endzeit</EndTime>
         <Duration>Länge</Duration>
         <TextAlphabetically>Text - alphabetsch</TextAlphabetically>
@@ -911,8 +915,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Kurz vor &amp;Text wiedergeben</PlayFromJustBeforeText>
       <Pause>Pause</Pause>
-      <GoToSubtitlePositionAndPause>Zur Anfangszeit und Pause</GoToSubtitlePositionAndPause>
-      <SetStartTime>Als &amp;Anfangszeit setzen</SetStartTime>
+      <GoToSubtitlePositionAndPause>Zur Startzeit und Pause</GoToSubtitlePositionAndPause>
+      <SetStartTime>Als &amp;Startzeit setzen</SetStartTime>
       <SetEndTimeAndGoToNext>&amp;Endzeit setzen und weiter</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Angepasst mit Endzeit {0}</AdjustedViaEndTime>
       <SetEndTime>Als E&amp;ndzeit setzen</SetEndTime>
@@ -1087,12 +1091,12 @@ Fortfahren?</SubtitleAppendPrompt>
     <InvalidVobSubHeader>Ungültiger Header für VobSub Datei: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>VobSub (sub/idx) Datei öffnen...</OpenVobSubFile>
     <VobSubFiles>VobSub Untertitel Dateien</VobSubFiles>
-    <OpenBluRaySupFile>Blu-ray SUP Datei öffnen...</OpenBluRaySupFile>
-    <BluRaySupFiles>Blu-ray SUP Dateien</BluRaySupFiles>
+    <OpenBluRaySupFile>Blu-ray .sup Datei öffnen...</OpenBluRaySupFile>
+    <BluRaySupFiles>Blu-ray .sup Dateien</BluRaySupFiles>
     <OpenXSubFiles>xSub Dateien öffnen...</OpenXSubFiles>
     <XSubFiles>xSub Dateien</XSubFiles>
     <BeforeImportingVobSubFile>Vor Import eines VobSub Untertitels</BeforeImportingVobSubFile>
-    <BeforeImportingBluRaySupFile>Vor Import einer Blu-ray SUP Datei</BeforeImportingBluRaySupFile>
+    <BeforeImportingBluRaySupFile>Vor Import einer Blu-ray sup Datei</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Vor Import einer BDN xml Datei</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>Vor früher/später Anzeigen</BeforeShowSelectedLinesEarlierLater>
     <ShowAllLinesXSecondsLinesEarlier>Alle Texte {0:0.0##} s eher anzeigen</ShowAllLinesXSecondsLinesEarlier>
@@ -1504,6 +1508,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MusicSymbol>Musik Symbol</MusicSymbol>
     <MusicSymbolsToReplace>Zu ersetzende Musik Symbole (durch Leerzeichen trennen)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Häufige OCR Fehler korrigieren - auch Hardcoded Regeln verwenden</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Kurze Anzeigezeit korrigieren - Startzeitanpassung zulassen</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Kurzbefehle</Shortcuts>
     <Shortcut>Kurzbefehl</Shortcut>
     <Control>Steuerung</Control>
