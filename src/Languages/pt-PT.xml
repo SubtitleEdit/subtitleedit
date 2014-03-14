@@ -370,7 +370,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Transparency>Opacidade</Transparency>	
 	<ImageFormat>Formato de Imagem</ImageFormat>
     <SimpleRendering>Renderização simples</SimpleRendering>
-    <Text3D>3D</Text3D>	
+    <AntiAliasingWithTransparency>Anti-aliasing com transparência</AntiAliasingWithTransparency>	
+    <Text3D>3D</Text3D>
     <SideBySide3D>Lado-a-lado parcial</SideBySide3D>
     <HalfTopBottom3D>Superior/inferior parcial</HalfTopBottom3D>	
     <Depth>Profundidade</Depth>	
