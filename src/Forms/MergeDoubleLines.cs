@@ -9,10 +9,10 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class MergeDoubleLines : Form
     {
-        Subtitle _subtitle;
+        private Subtitle _subtitle;
         private Subtitle _mergedSubtitle;
-        bool loading = true;
-        Timer previewTimer = new Timer();
+        private bool loading = true;
+        private Timer previewTimer = new Timer();
 
         public int NumberOfMerges { get; private set; }
 
@@ -96,11 +96,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             SubtitleListview1.Fill(_subtitle);
 
-            foreach(var index in mergedIndexes)
+            foreach (var index in mergedIndexes)
             {
                 SubtitleListview1.SetBackgroundColor(index, Color.Green);
             }
-
 
             SubtitleListview1.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergedShortLines.NumberOfMergesX, NumberOfMerges);
@@ -338,7 +337,7 @@ namespace Nikse.SubtitleEdit.Forms
             previewTimer.Start();
         }
 
-        void previewTimer_Tick(object sender, EventArgs e)
+        private void previewTimer_Tick(object sender, EventArgs e)
         {
             previewTimer.Stop();
             Cursor = Cursors.WaitCursor;
@@ -350,6 +349,5 @@ namespace Nikse.SubtitleEdit.Forms
         {
             columnHeaderText.Width = -2;
         }
-
     }
 }

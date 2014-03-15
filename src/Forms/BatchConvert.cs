@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.BluRaySup;
+using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.BluRaySup;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -48,19 +48,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        string _assStyle;
-        string _ssaStyle;
-        FormRemoveTextForHearImpaired _removeForHI = new FormRemoveTextForHearImpaired();
-        ChangeCasing _changeCasing = new ChangeCasing();
-        ChangeCasingNames _changeCasingNames = new ChangeCasingNames();
-        bool _converting = false;
-        int _count = 0;
-        int _converted = 0;
-        int _errors = 0;
-        IList<SubtitleFormat> _allFormats = SubtitleFormat.AllSubtitleFormats;
-        bool _abort = false;
-        Main _main;
-        ListViewItem _matroskaListViewItem;
+        private string _assStyle;
+        private string _ssaStyle;
+        private FormRemoveTextForHearImpaired _removeForHI = new FormRemoveTextForHearImpaired();
+        private ChangeCasing _changeCasing = new ChangeCasing();
+        private ChangeCasingNames _changeCasingNames = new ChangeCasingNames();
+        private bool _converting = false;
+        private int _count = 0;
+        private int _converted = 0;
+        private int _errors = 0;
+        private IList<SubtitleFormat> _allFormats = SubtitleFormat.AllSubtitleFormats;
+        private bool _abort = false;
+        private Main _main;
+        private ListViewItem _matroskaListViewItem;
 
         public BatchConvert(Icon icon, Main main)
         {
@@ -102,7 +102,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelToFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.ToFrameRate;
             labelHoursMinSecsMilliSecs.Text = Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
 
-
             comboBoxFrameRateFrom.Left = labelFromFrameRate.Left + labelFromFrameRate.Width + 3;
             comboBoxFrameRateTo.Left = labelToFrameRate.Left + labelToFrameRate.Width + 3;
             if (comboBoxFrameRateFrom.Left > comboBoxFrameRateTo.Left)
@@ -134,14 +133,12 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFrameRateTo.Items.Add((25.0).ToString());
             comboBoxFrameRateTo.Items.Add((29.97).ToString());
 
-
             FixLargeFonts();
 
             foreach (SubtitleFormat f in SubtitleFormat.AllSubtitleFormats)
             {
                 if (!f.IsVobSubIndexFile)
                     comboBoxSubtitleFormats.Items.Add(f.Name);
-
             }
             comboBoxSubtitleFormats.SelectedIndex = 0;
 
@@ -343,7 +340,6 @@ namespace Nikse.SubtitleEdit.Forms
                             format = avidStl;
                         }
                     }
-
                 }
 
                 if (format == null)
@@ -663,7 +659,6 @@ namespace Nikse.SubtitleEdit.Forms
                                     sub.Paragraphs.RemoveAt(0);
                             }
                         }
-
                     }
 
                     List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> bluRaySubtitles = new List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData>();
@@ -843,7 +838,6 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (!worker3.IsBusy)
                             worker3.RunWorkerAsync(parameter);
                     }
-
                 }
                 catch
                 {
@@ -882,7 +876,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Application.DoEvents();
         }
 
-        void DoThreadWork(object sender, DoWorkEventArgs e)
+        private void DoThreadWork(object sender, DoWorkEventArgs e)
         {
             ThreadDoWorkParameter p = (ThreadDoWorkParameter)e.Argument;
             if (p.FixCommonErrors)
@@ -952,7 +946,7 @@ namespace Nikse.SubtitleEdit.Forms
             e.Result = p;
         }
 
-        void ThreadWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void ThreadWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             var p = (ThreadDoWorkParameter)e.Result;
             if (p.Item.Index + 2 < listViewInputFiles.Items.Count)
@@ -1059,7 +1053,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_converting)
                 return;
 
-            for (int i = listViewInputFiles.SelectedIndices.Count-1; i>=0; i--)
+            for (int i = listViewInputFiles.SelectedIndices.Count - 1; i >= 0; i--)
             {
                 listViewInputFiles.Items.RemoveAt(listViewInputFiles.SelectedIndices[i]);
             }
@@ -1152,7 +1146,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SearchFolder(string path)
         {
-
             foreach (string fileName in Directory.GetFiles(path))
             {
                 try
@@ -1181,9 +1174,7 @@ namespace Nikse.SubtitleEdit.Forms
                             return;
                     }
                 }
-                catch
-                {
-                }
+                catch { }
             }
             if (checkBoxScanFolderRecursive.Checked)
             {
@@ -1209,7 +1200,5 @@ namespace Nikse.SubtitleEdit.Forms
             form.InitializeSettingsOnly();
             form.ShowDialog(this);
         }
-
     }
 }
-

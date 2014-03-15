@@ -141,12 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 StripableText st = new StripableText(text);
                 text = st.Pre + st.StrippedText.ToUpper() + st.Post;
-                text = text.Replace("<I>", "<i>");
-                text = text.Replace("</I>", "</i>");
-                text = text.Replace("<B>", "<b>");
-                text = text.Replace("</B>", "</b>");
-                text = text.Replace("<U>", "<u>");
-                text = text.Replace("<U>", "</u>");
+                text = Regex.Replace(text, "(?i)</?[ibu]>", string.Empty);
                 text = text.Replace("<FONT COLOR>", "<font color>");
                 text = text.Replace("</FONT>", "</font>");
             }

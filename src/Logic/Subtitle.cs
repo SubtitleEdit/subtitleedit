@@ -1,24 +1,36 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic.Enums;
+using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.Enums;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic
 {
     public class Subtitle
     {
-        List<Paragraph> _paragraphs;
-        List<HistoryItem> _history;
-        SubtitleFormat _format;
-        bool _wasLoadedWithFrameNumbers;
-        public string Header { get; set; }
-        public string Footer { get; set; }
-
-        public string FileName { get; set; }
+        private List<Paragraph> _paragraphs;
+        private List<HistoryItem> _history;
+        private SubtitleFormat _format;
+        private bool _wasLoadedWithFrameNumbers;
+        private string RawText;
 
         public const int MaximumHistoryItems = 100;
+        public string Header { get; set; }
+        public string Footer { get; set; }
+        public string FileName { get; set; }
+
+        public bool IsHearingImpaired { private set; get; }
+
+        public void CheckForHearingImpaired()
+        {
+            if (Regex.Replace(RawText, @"[\(\[\[\)\]\}]|:\B", string.Empty, RegexOptions.Compiled).Length + 18 < RawText.Length)
+            {
+                IsHearingImpaired = true;
+            }
+            IsHearingImpaired = false;
+        }
 
         public SubtitleFormat OriginalFormat
         {
@@ -94,7 +106,6 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
-
         public SubtitleFormat ReloadLoadSubtitle(List<string> lines, string fileName)
         {
             Paragraphs.Clear();
@@ -161,6 +172,11 @@ namespace Nikse.SubtitleEdit.Logic
             encoding = sr.CurrentEncoding;
             while (!sr.EndOfStream)
                 lines.Add(sr.ReadLine());
+            RawText = sr.ReadToEnd();
+            if (RawText.Length > 20)
+            {
+                CheckForHearingImpaired();
+            }
             sr.Close();
 
             foreach (SubtitleFormat subtitleFormat in SubtitleFormat.AllSubtitleFormats)
@@ -390,7 +406,6 @@ namespace Nikse.SubtitleEdit.Logic
                         if (p.Duration.TotalMilliseconds <= 0)
                             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
                     }
-
                 }
             }
         }
@@ -398,6 +413,8 @@ namespace Nikse.SubtitleEdit.Logic
         public void Renumber(int startNumber)
         {
             int i = startNumber;
+            if (i < 0)
+                i = 1;
             foreach (Paragraph p in _paragraphs)
             {
                 p.Number = i;
@@ -465,8 +482,6 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     Paragraph p = _paragraphs[i];
                     string s = Utilities.RemoveHtmlTags(p.Text).Trim();
-                    s = System.Text.RegularExpressions.Regex.Replace(s, "\\W", string.Empty);
-
                     if (string.IsNullOrEmpty(s))
                     {
                         _paragraphs.RemoveAt(i);
@@ -492,60 +507,70 @@ namespace Nikse.SubtitleEdit.Logic
                         return p1.Number.CompareTo(p2.Number);
                     });
                     break;
+
                 case SubtitleSortCriteria.StartTime:
                     _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
                     {
                         return p1.StartTime.TotalMilliseconds.CompareTo(p2.StartTime.TotalMilliseconds);
                     });
                     break;
+
                 case SubtitleSortCriteria.EndTime:
                     _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
                     {
                         return p1.EndTime.TotalMilliseconds.CompareTo(p2.EndTime.TotalMilliseconds);
                     });
                     break;
+
                 case SubtitleSortCriteria.Duration:
                     _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
                     {
                         return p1.Duration.TotalMilliseconds.CompareTo(p2.Duration.TotalMilliseconds);
                     });
                     break;
+
                 case SubtitleSortCriteria.Text:
                     _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
                     {
                         return p1.Text.CompareTo(p2.Text);
                     });
                     break;
+
                 case SubtitleSortCriteria.TextMaxLineLength:
                     _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
                     {
                         return Utilities.GetMaxLineLength(p1.Text).CompareTo(Utilities.GetMaxLineLength(p2.Text));
                     });
                     break;
+
                 case SubtitleSortCriteria.TextTotalLength:
                     _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
                     {
                         return p1.Text.Length.CompareTo(p2.Text.Length);
                     });
                     break;
+
                 case SubtitleSortCriteria.TextNumberOfLines:
                     _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
                     {
                         return p1.NumberOfLines.CompareTo(p2.NumberOfLines);
                     });
                     break;
+
                 case SubtitleSortCriteria.TextCharactersPerSeconds:
                     _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
                     {
                         return Utilities.GetCharactersPerSecond(p1).CompareTo(Utilities.GetCharactersPerSecond(p2));
                     });
                     break;
+
                 case SubtitleSortCriteria.WordsPerMinute:
                     _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
                     {
                         return p1.WordsPerMinute.CompareTo(p2.WordsPerMinute);
                     });
                     break;
+
                 case SubtitleSortCriteria.Style:
                     _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
                     {
@@ -553,8 +578,6 @@ namespace Nikse.SubtitleEdit.Logic
                             return 1;
                         return p1.Extra.CompareTo(p2.Extra);
                     });
-                    break;
-                default:
                     break;
             }
         }

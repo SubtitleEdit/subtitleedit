@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Enums;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Enums;
-using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -182,6 +182,5 @@ namespace Nikse.SubtitleEdit.Forms
                 this.Icon = System.Drawing.Icon.FromHandle(Hicon);
             }
         }
-
     }
 }

@@ -5,43 +5,28 @@ namespace Nikse.SubtitleEdit.Logic
     public class Paragraph
     {
         public int Number { get; set; }
-
         public string Text { get; set; }
-
         public TimeCode StartTime { get; set; }
-
         public TimeCode EndTime { get; set; }
-
         public TimeCode Duration
         {
             get
             {
                 var timeCode = new TimeCode(EndTime.TimeSpan);
-                timeCode.AddTime(- StartTime.TotalMilliseconds);
+                timeCode.AddTime(-StartTime.TotalMilliseconds);
                 return timeCode;
             }
         }
-
         public int StartFrame { get; set; }
-
         public int EndFrame { get; set; }
-
         public bool Forced { get; set; }
-
         public string Extra { get; set; }
-
         public bool IsComment { get; set; }
-
         public string Actor { get; set; }
-
         public string Effect { get; set; }
-
         public string Layer { get; set; }
-
         public string ID { get; set; }
-
         public string Language { get; set; }
-
         public string Style { get; set; }
 
         public Paragraph()
@@ -108,14 +93,14 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void CalculateFrameNumbersFromTimeCodes(double frameRate)
         {
-            StartFrame = (int) Math.Round((StartTime.TotalMilliseconds / 1000.0 * frameRate));
-            EndFrame = (int) Math.Round((EndTime.TotalMilliseconds / 1000.0 * frameRate));
+            StartFrame = (int)Math.Round((StartTime.TotalMilliseconds / 1000.0 * frameRate));
+            EndFrame = (int)Math.Round((EndTime.TotalMilliseconds / 1000.0 * frameRate));
         }
 
         public void CalculateTimeCodesFromFrameNumbers(double frameRate)
         {
-           StartTime.TotalMilliseconds = StartFrame * (1000.0 / frameRate);
-           EndTime.TotalMilliseconds = EndFrame * (1000.0 / frameRate);
+            StartTime.TotalMilliseconds = StartFrame * (1000.0 / frameRate);
+            EndTime.TotalMilliseconds = EndFrame * (1000.0 / frameRate);
         }
 
         public override string ToString()
