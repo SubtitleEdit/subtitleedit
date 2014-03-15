@@ -2156,6 +2156,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     i++;
                 }
                 checkBoxSimpleRender.Checked = Configuration.Settings.Tools.ExportVobSubSimpleRendering;
+                checkBoxTransAntiAliase.Checked = Configuration.Settings.Tools.ExportVobAntiAliasingWithTransparency;
             }
             else if (_exportType == "BLURAYSUP" || _exportType == "DOST" || _exportType == "FCP")
             {
@@ -2651,6 +2652,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportVobSubVideoResolution = res;
                 Configuration.Settings.Tools.ExportVobSubLanguage = comboBoxLanguage.Text;
                 Configuration.Settings.Tools.ExportVobSubSimpleRendering = checkBoxSimpleRender.Checked;
+                Configuration.Settings.Tools.ExportVobAntiAliasingWithTransparency = checkBoxTransAntiAliase.Checked;
             }
             else if (_exportType == "BLURAYSUP")
             {

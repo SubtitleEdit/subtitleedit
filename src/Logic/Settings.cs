@@ -121,6 +121,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string ExportVobSubVideoResolution { get; set; }
         public string ExportVobSubLanguage { get; set; }
         public bool ExportVobSubSimpleRendering { get; set; }
+        public bool ExportVobAntiAliasingWithTransparency { get; set; }
         public string ExportBluRayFontName { get; set; }
         public int ExportBluRayFontSize { get; set; }
         public string ExportFcpFontName { get; set; }
@@ -187,8 +188,9 @@ namespace Nikse.SubtitleEdit.Logic
             ExportFontColor = Color.White;
             ExportBorderColor = Color.Black;
             ExportBottomMargin = 15;
-            ExportHorizontalAlignment = 0;
+            ExportHorizontalAlignment = 1; // 1=center (0=left, 2=right)
             ExportVobSubSimpleRendering = true;
+            ExportVobAntiAliasingWithTransparency = true;
             ExportBluRayBottomMargin = 20;
             ExportBluRayShadow = 1;
             Export3DType = 0;
@@ -1561,6 +1563,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportVobSubSimpleRendering");
             if (subNode != null)
                 settings.Tools.ExportVobSubSimpleRendering = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportVobAntiAliasingWithTransparency");
+            if (subNode != null)
+                settings.Tools.ExportVobAntiAliasingWithTransparency = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportVobSubLanguage");
             if (subNode != null)
                 settings.Tools.ExportVobSubLanguage = subNode.InnerText;
@@ -2639,6 +2644,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ExportVobSubVideoResolution", settings.Tools.ExportVobSubVideoResolution);
             textWriter.WriteElementString("ExportVobSubLanguage", settings.Tools.ExportVobSubLanguage);
             textWriter.WriteElementString("ExportVobSubSimpleRendering", settings.Tools.ExportVobSubSimpleRendering.ToString());
+            textWriter.WriteElementString("ExportVobAntiAliasingWithTransparency", settings.Tools.ExportVobAntiAliasingWithTransparency.ToString());            
             textWriter.WriteElementString("ExportBluRayFontName", settings.Tools.ExportBluRayFontName);
             textWriter.WriteElementString("ExportBluRayFontSize", settings.Tools.ExportBluRayFontSize.ToString());
             textWriter.WriteElementString("ExportFcpFontName", settings.Tools.ExportFcpFontName);
