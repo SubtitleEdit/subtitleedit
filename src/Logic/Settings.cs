@@ -484,6 +484,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int ListViewTextWidth { get; set; }
         public string VlcWaveTranscodeSettings { get; set; }
         public string VlcLocation { get; set; }
+        public string VlcLocationRelative { get; set; }
         public bool UseFFMPEGForWaveExtraction { get; set; }
         public string FFMPEGLocation { get; set; }
         public bool UseTimeFormatHHMMSSFF { get; set; }
@@ -1381,6 +1382,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("VlcLocation");
             if (subNode != null)
                 settings.General.VlcLocation = subNode.InnerText.Trim();
+            subNode = node.SelectSingleNode("VlcLocationRelative");
+            if (subNode != null)
+                settings.General.VlcLocationRelative = subNode.InnerText.Trim();
             subNode = node.SelectSingleNode("UseFFMPEGForWaveExtraction");
             if (subNode != null)
                 settings.General.UseFFMPEGForWaveExtraction = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -2574,6 +2578,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ListViewTextWidth", settings.General.ListViewTextWidth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
             textWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
+            textWriter.WriteElementString("VlcLocationRelative", settings.General.VlcLocationRelative);
             textWriter.WriteElementString("UseFFMPEGForWaveExtraction", settings.General.UseFFMPEGForWaveExtraction.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("FFMPEGLocation", settings.General.FFMPEGLocation);
             textWriter.WriteElementString("UseTimeFormatHHMMSSFF", settings.General.UseTimeFormatHHMMSSFF.ToString(CultureInfo.InvariantCulture));

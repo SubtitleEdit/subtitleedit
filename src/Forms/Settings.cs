@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -8,8 +10,6 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.VideoPlayers;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -21,6 +21,8 @@ namespace Nikse.SubtitleEdit.Forms
         bool _starting = true;
         private string _listBoxSearchString = string.Empty;
         private DateTime _listBoxSearchStringLastUsed = DateTime.Now;
+        string oldVlcLocation;
+        string oldVlcLocationRelative;
 
         List<string> _wordListNamesEtc = new List<string>();
         List<string> _userWordList = new List<string>();
@@ -34,6 +36,20 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return CultureInfo.NativeName;
             }
+        }
+
+        string GetRelativePath(string fileName)
+        {
+            string folder = Configuration.BaseDirectory;
+
+            if (string.IsNullOrEmpty(fileName) || !fileName.ToUpper().StartsWith(folder.Substring(0,2)))
+                return string.Empty;
+
+            Uri pathUri = new Uri(fileName);
+            if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                folder += Path.DirectorySeparatorChar;
+            Uri folderUri = new Uri(folder);
+            return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
         }
 
         public Settings()
@@ -120,6 +136,10 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonVideoPlayerMPlayer.Enabled = false;
             if (!Utilities.IsQuartsDllInstalled)
                 radioButtonVideoPlayerDirectShow.Enabled = false;
+
+            textBoxVlcPath.Text = Configuration.Settings.General.VlcLocation;
+            textBoxVlcPath.Left = labelVideoPlayerVLC.Left + labelVideoPlayerVLC.Width + 5;
+            textBoxVlcPath.Width = buttonVlcPathBrowse.Left - textBoxVlcPath.Left - 5;
 
             checkBoxVideoPlayerShowStopButton.Checked = gs.VideoPlayerShowStopButton;
             checkBoxVideoPlayerShowMuteButton.Checked = gs.VideoPlayerShowMuteButton;
@@ -306,6 +326,9 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonVideoPlayerVLC.Text = language.VlcMediaPlayer;
                 labelVideoPlayerVLC.Text = language.VlcMediaPlayerDescription;
             }
+            if (!string.IsNullOrEmpty(language.VlcMediaPlayer))
+
+            Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
 
             checkBoxVideoPlayerShowStopButton.Text = language.ShowStopButton;
             checkBoxVideoPlayerShowMuteButton.Text = language.ShowMuteButton;
@@ -786,6 +809,9 @@ namespace Nikse.SubtitleEdit.Forms
             labelShortcutKey.Left = checkBoxShortcutsShift.Left + checkBoxShortcutsShift.Width + 9;
             comboBoxShortcutKey.Left = labelShortcutKey.Left + labelShortcutKey.Width + 2;
             buttonUpdateShortcut.Left = comboBoxShortcutKey.Left + comboBoxShortcutKey.Width + 15;
+
+            oldVlcLocation = Configuration.Settings.General.VlcLocation;
+            oldVlcLocationRelative = Configuration.Settings.General.VlcLocationRelative;
         }
 
         private string GetShortcutText(string shortcut)
@@ -1044,6 +1070,9 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.VideoPlayer = "VLC";
             else
                 gs.VideoPlayer = "DirectShow";
+
+            gs.VlcLocation = textBoxVlcPath.Text;
+
             gs.VideoPlayerShowStopButton = checkBoxVideoPlayerShowStopButton.Checked;
             gs.VideoPlayerShowMuteButton = checkBoxVideoPlayerShowMuteButton.Checked;
             gs.VideoPlayerShowFullscreenButton = checkBoxVideoPlayerShowFullscreenButton.Checked;
@@ -2603,6 +2632,31 @@ namespace Nikse.SubtitleEdit.Forms
         private void checkBoxWaveformHoverFocus_CheckedChanged(object sender, EventArgs e)
         {
             checkBoxListViewMouseEnterFocus.Enabled = checkBoxWaveformHoverFocus.Checked;
+        }
+
+        private void buttonVlcPathBrowse_Click(object sender, EventArgs e)
+        {
+            openFileDialogFFMPEG.FileName = string.Empty;
+            openFileDialogFFMPEG.Title = Configuration.Settings.Language.Settings.WaveformBrowseToVLC;
+            if (!Utilities.IsRunningOnLinux() && !Utilities.IsRunningOnMac())
+            {
+                openFileDialogFFMPEG.Filter = "vlc.exe|vlc.exe";
+            }
+            if (openFileDialogFFMPEG.ShowDialog(this) == DialogResult.OK)
+            {
+                textBoxVlcPath.Text = Path.GetDirectoryName(openFileDialogFFMPEG.FileName);
+                Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
+                Configuration.Settings.General.VlcLocationRelative = GetRelativePath(textBoxVlcPath.Text);
+                radioButtonVideoPlayerVLC.Enabled = LibVlc11xDynamic.IsInstalled;
+            }
+        }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            Configuration.Settings.General.VlcLocation = oldVlcLocation;
+            Configuration.Settings.General.VlcLocationRelative = oldVlcLocationRelative;
+
+            DialogResult = DialogResult.Cancel;
         }
 
     }

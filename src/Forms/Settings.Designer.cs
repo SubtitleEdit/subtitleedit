@@ -191,6 +191,7 @@
             this.checkBoxSpellCheckOneLetterWords = new System.Windows.Forms.CheckBox();
             this.checkBoxSpellCheckAutoChangeNames = new System.Windows.Forms.CheckBox();
             this.groupBoxFixCommonErrors = new System.Windows.Forms.GroupBox();
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime = new System.Windows.Forms.CheckBox();
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules = new System.Windows.Forms.CheckBox();
             this.comboBoxToolsMusicSymbol = new System.Windows.Forms.ComboBox();
             this.textBoxMusicSymbolsToReplace = new System.Windows.Forms.TextBox();
@@ -273,7 +274,9 @@
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFMPEG = new System.Windows.Forms.OpenFileDialog();
-            this.checkBoxFixShortDisplayTimesAllowMoveStartTime = new System.Windows.Forms.CheckBox();
+            this.buttonVlcPathBrowse = new System.Windows.Forms.Button();
+            this.textBoxVlcPath = new System.Windows.Forms.TextBox();
+            this.labelVlcPath = new System.Windows.Forms.Label();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -352,6 +355,7 @@
             this.buttonCancel.TabIndex = 1;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // tabControlSettings
             // 
@@ -1672,6 +1676,9 @@
             // 
             // groupBoxVideoEngine
             // 
+            this.groupBoxVideoEngine.Controls.Add(this.buttonVlcPathBrowse);
+            this.groupBoxVideoEngine.Controls.Add(this.textBoxVlcPath);
+            this.groupBoxVideoEngine.Controls.Add(this.labelVlcPath);
             this.groupBoxVideoEngine.Controls.Add(this.labelVideoPlayerVLC);
             this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerVLC);
             this.groupBoxVideoEngine.Controls.Add(this.labelVideoPlayerMPlayer);
@@ -2188,6 +2195,16 @@
             this.groupBoxFixCommonErrors.TabIndex = 3;
             this.groupBoxFixCommonErrors.TabStop = false;
             this.groupBoxFixCommonErrors.Text = "Fix common errors";
+            // 
+            // checkBoxFixShortDisplayTimesAllowMoveStartTime
+            // 
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.AutoSize = true;
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Location = new System.Drawing.Point(15, 138);
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Name = "checkBoxFixShortDisplayTimesAllowMoveStartTime";
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Size = new System.Drawing.Size(252, 17);
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.TabIndex = 35;
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Text = "Fix short display time - allow move of start time";
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.UseVisualStyleBackColor = true;
             // 
             // checkBoxFixCommonOcrErrorsUsingHardcodedRules
             // 
@@ -3180,15 +3197,32 @@
             // 
             this.openFileDialogFFMPEG.FileName = "openFileDialog1";
             // 
-            // checkBoxFixShortDisplayTimesAllowMoveStartTime
+            // buttonVlcPathBrowse
             // 
-            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.AutoSize = true;
-            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Location = new System.Drawing.Point(15, 138);
-            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Name = "checkBoxFixShortDisplayTimesAllowMoveStartTime";
-            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Size = new System.Drawing.Size(252, 17);
-            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.TabIndex = 35;
-            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Text = "Fix short display time - allow move of start time";
-            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.UseVisualStyleBackColor = true;
+            this.buttonVlcPathBrowse.Location = new System.Drawing.Point(778, 44);
+            this.buttonVlcPathBrowse.Name = "buttonVlcPathBrowse";
+            this.buttonVlcPathBrowse.Size = new System.Drawing.Size(29, 21);
+            this.buttonVlcPathBrowse.TabIndex = 26;
+            this.buttonVlcPathBrowse.Text = "...";
+            this.buttonVlcPathBrowse.UseVisualStyleBackColor = true;
+            this.buttonVlcPathBrowse.Click += new System.EventHandler(this.buttonVlcPathBrowse_Click);
+            // 
+            // textBoxVlcPath
+            // 
+            this.textBoxVlcPath.Location = new System.Drawing.Point(382, 45);
+            this.textBoxVlcPath.MaxLength = 1000;
+            this.textBoxVlcPath.Name = "textBoxVlcPath";
+            this.textBoxVlcPath.Size = new System.Drawing.Size(390, 21);
+            this.textBoxVlcPath.TabIndex = 25;
+            // 
+            // labelVlcPath
+            // 
+            this.labelVlcPath.AutoSize = true;
+            this.labelVlcPath.Location = new System.Drawing.Point(379, 29);
+            this.labelVlcPath.Name = "labelVlcPath";
+            this.labelVlcPath.Size = new System.Drawing.Size(315, 13);
+            this.labelVlcPath.TabIndex = 24;
+            this.labelVlcPath.Text = "VLC path (only needed if you using the  portable version of VLC)";
             // 
             // Settings
             // 
@@ -3541,5 +3575,8 @@
         private System.Windows.Forms.PictureBox pictureBoxTBFixCommonErrors;
         private System.Windows.Forms.CheckBox checkBoxTBFixCommonErrors;
         private System.Windows.Forms.CheckBox checkBoxFixShortDisplayTimesAllowMoveStartTime;
+        private System.Windows.Forms.Button buttonVlcPathBrowse;
+        private System.Windows.Forms.TextBox textBoxVlcPath;
+        private System.Windows.Forms.Label labelVlcPath;
     }
 }

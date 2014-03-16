@@ -1605,6 +1605,7 @@
             public string MPlayerDescription { get; set; }
             public string VlcMediaPlayer { get; set; }
             public string VlcMediaPlayerDescription { get; set; }
+            public string VlcBrowseToLabel { get; set; }
             public string ShowStopButton { get; set; }
             public string ShowMuteButton { get; set; }
             public string ShowFullscreenButton { get; set; }
@@ -1634,6 +1635,7 @@
             public string WaveformUseFFMPEG { get; set; }
             public string WaveformFFMPEGPath { get; set; }
             public string WaveformBrowseToFFMPEG { get; set; }
+            public string WaveformBrowseToVLC { get; set; }
             public string SubStationAlphaStyle { get; set; }
             public string ChooseFont { get; set; }
             public string ChooseColor { get; set; }
