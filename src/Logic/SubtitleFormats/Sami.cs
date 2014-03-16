@@ -134,12 +134,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             text.Substring(i).StartsWith("<s") ||
                             text.Substring(i).StartsWith("</"))
                         {
-                            if (Configuration.Settings.SubtitleSettings.SamiFullHtmlEncode && Configuration.Settings.SubtitleSettings.SamiFullHtmlEncodeNumeric)
-                                total.Append(Utilities.HtmlEncodeFullNumeric(partial.ToString()));
-                            else if (Configuration.Settings.SubtitleSettings.SamiFullHtmlEncode)
-                                total.Append(Utilities.HtmlEncodeFull(partial.ToString()));
-                            else
-                                total.Append(Utilities.HtmlEncode(partial.ToString()));
+                            total.Append(EncodeText(partial.ToString()));
                             partial = new StringBuilder();
                             tagOn = true;
                             total.Append("<");
@@ -158,22 +153,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             total.Append(text.Substring(i, 1));
                         }
                     }
-                    if (Configuration.Settings.SubtitleSettings.SamiFullHtmlEncode && Configuration.Settings.SubtitleSettings.SamiFullHtmlEncodeNumeric)
-                        total.Append(Utilities.HtmlEncodeFullNumeric(partial.ToString()));
-                    else if (Configuration.Settings.SubtitleSettings.SamiFullHtmlEncode)
-                        total.Append(Utilities.HtmlEncodeFull(partial.ToString()));
-                    else
-                        total.Append(Utilities.HtmlEncode(partial.ToString()));
+                    
+                    total.Append(EncodeText(partial.ToString()));
                     text = total.ToString();
                 }
                 else
                 {
-                    if (Configuration.Settings.SubtitleSettings.SamiFullHtmlEncode && Configuration.Settings.SubtitleSettings.SamiFullHtmlEncodeNumeric)
-                        text = Utilities.HtmlEncodeFullNumeric(text);
-                    else if (Configuration.Settings.SubtitleSettings.SamiFullHtmlEncode)
-                        text = Utilities.HtmlEncodeFull(text);
-                    else
-                        text = Utilities.HtmlEncode(text);
+                    text = EncodeText(text);
                 }
 
                 if (Name == new SamiModern().Name)
@@ -193,6 +179,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb.AppendLine("</BODY>");
             sb.AppendLine("</SAMI>");
             return sb.ToString().Trim();
+        }
+
+        private string EncodeText(string text)
+        {
+            if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 1)
+                return Utilities.HtmlEncode(text);
+            else if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 2)
+                return Utilities.HtmlEncodeFull(text);
+            else if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 3)
+                return Utilities.HtmlEncodeFullNumeric(text);
+            return text;
         }
 
         public static List<string> GetStylesFromHeader(string header)
