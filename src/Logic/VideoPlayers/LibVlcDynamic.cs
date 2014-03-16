@@ -510,9 +510,39 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.VlcLocation))
             {
+                if (Configuration.Settings.General.VlcLocation.ToUpper().EndsWith(".exe"))
+                    Configuration.Settings.General.VlcLocation = Path.GetDirectoryName(Configuration.Settings.General.VlcLocation);
+
                 path = Path.Combine(Configuration.Settings.General.VlcLocation, fileName);
                 if (File.Exists(path))
                     return path;
+            }
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.VlcLocationRelative))
+            {
+                try
+                {
+                    path = Configuration.Settings.General.VlcLocationRelative;
+                    if (path.ToUpper().EndsWith(".exe"))
+                        path = Path.GetDirectoryName(path);
+
+                    path = Path.Combine(path, fileName);
+
+                    string path2 = Path.GetFullPath(path);
+                    if (File.Exists(path2))
+                        return path2;
+
+                    while (path.StartsWith(".."))
+                    {
+                        path = path.Remove(0, 3);
+                        path2 = Path.GetFullPath(path);
+                        if (File.Exists(path2))
+                            return path2;
+                    }
+                }
+                catch
+                { 
+                }
             }
 
             // XP via registry path
