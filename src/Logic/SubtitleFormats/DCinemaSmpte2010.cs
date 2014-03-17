@@ -774,10 +774,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return new TimeCode(ts);
         }
 
+        public static int MsToFramesMaxFrameRate(double milliseconds, double frameRate)
+        {
+            int frames = (int)System.Math.Round(milliseconds / (1000.0 / frameRate));
+            if (frames >= Configuration.Settings.General.CurrentFrameRate)
+                frames = (int)(frameRate - 0.01);
+            return frames;
+        }
+
         private string ConvertToTimeString(TimeCode time)
         {
-            int frames = (int)System.Math.Round(time.Milliseconds / (1000.0 / frameRate));
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MsToFramesMaxFrameRate(time.Milliseconds, frameRate));
         }
 
     }
