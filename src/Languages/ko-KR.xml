@@ -1442,6 +1442,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC 미디어 플레이어</VlcMediaPlayer>
     <VlcMediaPlayerDescription>VLC 미디어 플레이어 1.1.0 이후의 libvlc.dll</VlcMediaPlayerDescription>
+    <VlcBrowseToLabel>VLC 경로 (VLC 포터블 버전을 사용하는 경우)</VlcBrowseToLabel>
     <ShowStopButton>정지 버튼 표시</ShowStopButton>
     <ShowMuteButton>음소거 버튼 표시</ShowMuteButton>
     <ShowFullscreenButton>전체 화면 버튼 표시</ShowFullscreenButton>
@@ -1470,7 +1471,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SpectrogramClassic>클래식</SpectrogramClassic>
     <WaveformUseFFMPEG>파형 추출을 위해 FFMPEG 사용</WaveformUseFFMPEG>
     <WaveformFFMPEGPath>- FFMPEG 경로</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>FFMPEG 찾아보기</WaveformBrowseToFFMPEG>
+    <WaveformBrowseToFFMPEG>FFMPEG 찾기...</WaveformBrowseToFFMPEG>
+    <WaveformBrowseToVLC>VLC 포터블 찾기...</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha 스타일</SubStationAlphaStyle>
     <ChooseFont>글꼴 선택</ChooseFont>
     <ChooseColor>색상 선택</ChooseColor>
