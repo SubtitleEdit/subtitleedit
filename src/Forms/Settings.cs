@@ -141,6 +141,8 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxVlcPath.Left = labelVideoPlayerVLC.Left + labelVideoPlayerVLC.Width + 5;
             textBoxVlcPath.Width = buttonVlcPathBrowse.Left - textBoxVlcPath.Left - 5;
 
+            labelVlcPath.Text = Configuration.Settings.Language.Settings.VlcBrowseToLabel;
+
             checkBoxVideoPlayerShowStopButton.Checked = gs.VideoPlayerShowStopButton;
             checkBoxVideoPlayerShowMuteButton.Checked = gs.VideoPlayerShowMuteButton;
             checkBoxVideoPlayerShowFullscreenButton.Checked = gs.VideoPlayerShowFullscreenButton;
