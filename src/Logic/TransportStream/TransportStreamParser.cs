@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public long TotalNumberOfPrivateStream1Continuation0 { get; private set; }
         public List<int> SubtitlePacketIds { get; private set; }
         public List<Packet> SubtitlePackets { get; private set; }
-        public List<Packet> ProgramAssociationTables { get; private set; }
+//        public List<Packet> ProgramAssociationTables { get; private set; }
         private Dictionary<int, List<DvbSubPes>> SubtitlesLookup { get; set; }
         private Dictionary<int, List<TransportStreamSubtitle>> DvbSubtitlesLookup { get; set; }
         public bool IsM2TransportStream { get; private set; }
@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             TotalNumberOfPrivateStream1Continuation0 = 0;
             SubtitlePacketIds = new List<int>();
             SubtitlePackets = new List<Packet>();
-            ProgramAssociationTables = new List<Packet>();
+//            ProgramAssociationTables = new List<Packet>();
             ms.Position = 0;
             int packetLength = 188;
             DetectFormat(ms);
@@ -147,20 +147,20 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                         {
                             TotalNumberOfPrivateStream1Continuation0++;
 
-                            int pesExtensionlength = 0;
-                            if (12 + packet.AdaptionFieldLength < packetBuffer.Length)
-                                pesExtensionlength = 0xFF & packetBuffer[12 + packet.AdaptionFieldLength];
-                            int pesOffset = 13 + packet.AdaptionFieldLength + pesExtensionlength;
-                            bool isTeletext = (pesExtensionlength == 0x24 && (0xFF & packetBuffer[pesOffset]) >> 4 == 1);
+                            //int pesExtensionlength = 0;
+                            //if (12 + packet.AdaptionFieldLength < packetBuffer.Length)
+                            //    pesExtensionlength = 0xFF & packetBuffer[12 + packet.AdaptionFieldLength];
+                            //int pesOffset = 13 + packet.AdaptionFieldLength + pesExtensionlength;
+                            //bool isTeletext = (pesExtensionlength == 0x24 && (0xFF & packetBuffer[pesOffset]) >> 4 == 1);
 
-                            // workaround uk freesat teletext
-                            if (!isTeletext)
-                                isTeletext = (pesExtensionlength == 0x24 && (0xFF & packetBuffer[pesOffset]) == 0x99);
+                            //// workaround uk freesat teletext
+                            //if (!isTeletext)
+                            //    isTeletext = (pesExtensionlength == 0x24 && (0xFF & packetBuffer[pesOffset]) == 0x99);
 
-                            if (!isTeletext)
-                            {
+                            //if (!isTeletext)
+                            //{
 
-                            }
+                            //}
                         }
                     }
                     TotalNumberOfPackets++;
