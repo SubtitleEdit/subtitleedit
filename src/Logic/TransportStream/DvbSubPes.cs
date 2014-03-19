@@ -98,6 +98,74 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             Buffer.BlockCopy(buffer, dataIndex - 1, DataBuffer, 0, DataBuffer.Length); // why subtract one from  dataIndex ?????
         }
 
+        public DvbSubPes(int index, byte[] buffer)
+        {
+            int start = index;
+            Length = index + 1;
+
+            if (index + 9 >= buffer.Length)
+                return;
+
+            if (buffer[0 + index] != 0x20)
+                return;
+
+            if (buffer[1 + index] != 0)
+                return;
+
+            SubtitleSegments = new List<SubtitleSegment>();
+            ClutDefinitions = new List<ClutDefinitionSegment>();
+            RegionCompositions = new List<RegionCompositionSegment>();
+            PageCompositions = new List<PageCompositionSegment>();
+            ObjectDataList = new List<ObjectDataSegment>();
+
+            // Find length of segments
+            index = start + 2;
+            var ss = new SubtitleSegment(buffer, index);
+            while (ss.SyncByte == Helper.B00001111)
+            {
+                SubtitleSegments.Add(ss);              
+                index += 6 + ss.SegmentLength;
+                if (index + 6 < buffer.Length)
+                    ss = new SubtitleSegment(buffer, index);
+                else
+                    ss.SyncByte = Helper.B11111111;
+            }
+            Length = index;
+            int size = index - start;
+            DataBuffer = new byte[size];
+            Buffer.BlockCopy(buffer, start, DataBuffer, 0, DataBuffer.Length); 
+
+            // Parse segments
+            index = 2;
+            ss = new SubtitleSegment(DataBuffer, index);
+            while (ss.SyncByte == Helper.B00001111)
+            {
+                SubtitleSegments.Add(ss);
+                if (ss.ClutDefinition != null)
+                {
+                    ClutDefinitions.Add(ss.ClutDefinition);
+                }
+                else if (ss.RegionComposition != null)
+                {
+                    RegionCompositions.Add(ss.RegionComposition);
+                }
+                else if (ss.PageComposition != null)
+                {
+                    PageCompositions.Add(ss.PageComposition);
+                }
+                else if (ss.ObjectData != null)
+                {
+                    ObjectDataList.Add(ss.ObjectData);
+                }
+
+                index += 6 + ss.SegmentLength;
+                if (index + 6 < DataBuffer.Length)
+                    ss = new SubtitleSegment(DataBuffer, index);
+                else
+                    ss.SyncByte = Helper.B11111111;
+            }
+        }
+
         public bool IsDvbSubpicture
         {
             get { return SubPictureStreamId.HasValue && SubPictureStreamId.Value == 32; }
@@ -144,13 +212,11 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
             int index = 2;
             var ss = new SubtitleSegment(DataBuffer, index);
-            ClutDefinitionSegment cds = null;
             while (ss.SyncByte == Helper.B00001111)
             {
                 SubtitleSegments.Add(ss);
                 if (ss.ClutDefinition != null)
                 {
-                    cds = ss.ClutDefinition;
                     ClutDefinitions.Add(ss.ClutDefinition);
                 }
                 else if (ss.RegionComposition != null)
@@ -239,23 +305,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             if (ods.Image != null)
                 return ods.Image;
 
-            int width = 720;
-            int height = 576;
-
             ClutDefinitionSegment cds = GetClutDefinitionSegment(ods);
-            var segments = SubtitleSegments;
-            foreach (SubtitleSegment ss in segments)
-            {
-                if (ss.DisplayDefinition != null)
-                {
-                    width = ss.DisplayDefinition.DisplayWith;
-                    height = ss.DisplayDefinition.DisplayHeight;
-                }
-            }
-
-            if (ods == null)
-                return new Bitmap(1, 1);
-
             ods.DecodeImage(DataBuffer, ods.BufferIndex, cds);
             return ods.Image;
         }

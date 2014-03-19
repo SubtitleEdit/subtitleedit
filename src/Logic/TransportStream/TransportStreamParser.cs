@@ -290,7 +290,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     SubtitlePacketIds.Add(key);
             }
             SubtitlePacketIds.Sort();
-        }
+        }        
 
         public List<TransportStreamSubtitle> GetDvbSubtitles(int packetId)
         {
@@ -374,6 +374,61 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     IsM2TransportStream = true;
                 }
             }
+        }
+
+        public static bool IsDvbSup(string fileName)
+        {
+            try
+            {
+                byte[] pesData = File.ReadAllBytes(fileName);
+                if (pesData[0] != 0x20 || pesData[1] != 0 || pesData[2] != 0x0F)
+                    return false;
+
+                var pes = new DvbSubPes(0, pesData);
+                return pes.SubtitleSegments.Count > 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static List<TransportStreamSubtitle> GetDvbSup(string fileName)
+        {
+            byte[] pesData = File.ReadAllBytes(fileName);
+            var list = new List<DvbSubPes>();
+            int index = 0;
+            while (index < pesData.Length - 10)
+            {
+                var pes = new DvbSubPes(index, pesData);
+                index = pes.Length + 1;
+                list.Add(pes);
+            }
+
+            var subtitles = new List<TransportStreamSubtitle>();
+            int seconds = 0;
+            for (int i = 0; i < list.Count; i++)
+            {                
+                var pes = list[i];
+                pes.ParseSegments();
+                if (pes.ObjectDataList.Count > 0)
+                {
+                    var sub = new TransportStreamSubtitle();
+                    sub.StartMilliseconds = (ulong)(seconds * 1000);
+                    seconds += pes.PageCompositions[0].PageTimeOut;
+                    if (pes.PageCompositions.Count > 0)
+                        sub.EndMilliseconds = (ulong)(sub.StartMilliseconds + (ulong)(pes.PageCompositions[0].PageTimeOut * 1000));
+                    else
+                        sub.EndMilliseconds = sub.StartMilliseconds + 2500;
+                    sub.Pes = pes;
+                    subtitles.Add(sub);
+                }
+                if (pes.PageCompositions.Count > 0)
+                {
+                    seconds += pes.PageCompositions[0].PageTimeOut;
+                }
+            }
+            return subtitles;
         }
 
     }
