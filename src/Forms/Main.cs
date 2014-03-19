@@ -2260,7 +2260,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     ImportSubtitleFromTransportStream(fileName);
                     return;
-                }
+                }               
 
                 if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp")
                     && fi.Length > 10000)
@@ -2723,6 +2723,12 @@ namespace Nikse.SubtitleEdit.Forms
                         MessageBox.Show("This file seems to be a compressed .zip file. SE cannot open compressed files.");
                     else
                         MessageBox.Show(_language.ErrorLoadZip);
+                    return;
+                }
+
+                if (format == null && fi.Length < 100 * 1000000 && Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamParser.IsDvbSup(fileName))
+                {
+                    ImportSubtitleFromDvbSupFile(fileName);
                     return;
                 }
 
@@ -9304,6 +9310,43 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 _formPositionsAndSizes.SavePositionAndSize(formSubOcr);
             }
+        }
+
+        private bool ImportSubtitleFromDvbSupFile(string fileName)
+        {
+            var subtitles = Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamParser.GetDvbSup(fileName);
+
+            var formSubOcr = new VobSubOcr();
+            _formPositionsAndSizes.SetPositionAndSize(formSubOcr);
+            formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName);
+            if (formSubOcr.ShowDialog(this) == DialogResult.OK)
+            {
+                MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
+
+                _subtitle.Paragraphs.Clear();
+                SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                _subtitle.WasLoadedWithFrameNumbers = false;
+                _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
+                {
+                    _subtitle.Paragraphs.Add(p);
+                }
+
+                ShowSource();
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                _subtitleListViewIndex = -1;
+                SubtitleListview1.FirstVisibleIndex = -1;
+                SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
+                _fileName = string.Empty;
+                Text = Title;
+
+                Configuration.Settings.Save();
+                _formPositionsAndSizes.SavePositionAndSize(formSubOcr);
+                return true;
+            }
+            _formPositionsAndSizes.SavePositionAndSize(formSubOcr);
+            return false;
         }
 
         private bool ImportSubtitleFromTransportStream(string fileName)
