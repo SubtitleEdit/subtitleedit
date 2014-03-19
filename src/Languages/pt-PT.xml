@@ -1305,10 +1305,12 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <PluginXDownloaded>Plugin {0} transferido</PluginXDownloaded>
     <Download>&amp;Transferir</Download>
     <Remove>&amp;Remover</Remove>
+    <UpdateAllX>Actualizar todos ({0})</UpdateAllX>	
     <UnableToDownloadPluginListX>Impossível de tansferir a lista de plugins: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>É necessário uma versão mais recente do Subtitle Edit</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Actualização disponível!]</UpdateAvailable>
 	<UpdateAll>Actualizar todos</UpdateAll>
+    <XPluginsUpdated>{0} plugin(s) actualizados</XPluginsUpdated>	
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Eliminar texto para surdos</Title>
@@ -1443,6 +1445,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll do VLC Media Player 1.1.0 ou superior</VlcMediaPlayerDescription>
+    <VlcBrowseToLabel>Directoria do VLC (só é necessário se estiver a usar a versão portátil do VLC)</VlcBrowseToLabel>	
     <ShowStopButton>Mostrar botão parar</ShowStopButton>
     <ShowMuteButton>Mostrar botão (Sem som)</ShowMuteButton>
     <ShowFullscreenButton>Mostrar botão (Ecrã inteiro)</ShowFullscreenButton>
@@ -1471,7 +1474,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SpectrogramClassic>Clássico</SpectrogramClassic>
     <WaveformUseFFMPEG>Usar o FFMPEG para extrair o áudio no formato "wav"</WaveformUseFFMPEG>
     <WaveformFFMPEGPath>Directoria do FFMPEG</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Procurar por FFMPEG</WaveformBrowseToFFMPEG>	
+    <WaveformBrowseToFFMPEG>Procurar por FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformBrowseToVLC>Procurar por VLC portátil</WaveformBrowseToVLC>	
     <SubStationAlphaStyle>Sub Station Alpha estilo (Avançado)</SubStationAlphaStyle>
     <ChooseFont>Tipo de letra</ChooseFont>
     <ChooseColor>Escolher cor</ChooseColor>

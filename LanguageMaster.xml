@@ -1304,6 +1304,7 @@ can edit in same subtitle file (collaboration)</Information>
     <PluginXDownloaded>Plugin {0} downloaded</PluginXDownloaded>
     <Download>&amp;Download</Download>
     <Remove>&amp;Remove</Remove>
+    <UpdateAllX>Update all ({0})</UpdateAllX>
     <UnableToDownloadPluginListX>Unable to download plug list: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Newer version of Subtitle Edit required!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Update available!]</UpdateAvailable>
@@ -1442,6 +1443,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll from VLC Media Player 1.1.0 or newer</VlcMediaPlayerDescription>
+    <VlcBrowseToLabel>VLC path (only needed if you're using the portable version of VLC)</VlcBrowseToLabel>
     <ShowStopButton>Show stop button</ShowStopButton>
     <ShowMuteButton>Show mute button</ShowMuteButton>
     <ShowFullscreenButton>Show fullscreen button</ShowFullscreenButton>
@@ -1471,6 +1473,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformUseFFMPEG>Use FFMPEG for wave extraction</WaveformUseFFMPEG>
     <WaveformFFMPEGPath>Path to FFMPEG</WaveformFFMPEGPath>
     <WaveformBrowseToFFMPEG>Browse to FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformBrowseToVLC>Browse to VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>(Advanced) Sub Station Alpha style</SubStationAlphaStyle>
     <ChooseFont>Choose font</ChooseFont>
     <ChooseColor>Choose color</ChooseColor>
