@@ -9,6 +9,7 @@
    * Added shortcut for Tools -> "Split long lines" - thx John
    * Added shortcut for Sync -> "Change frame rate" - thx Alfonso
    * Added setting regarding "Fix short display times" - thx S1l3nc0r
+   * Added an "Update all" button for the plugin window
 * IMPROVED:
    * Updated French language file - thx JM GBT
    * Updated Dutch language file - thx Quetsbeek
@@ -22,6 +23,7 @@
    * Some fixes for move word up/down - thx rebawest
    * Delete custom export format now works - thx Leon
    * Possible crash in OCR window - thx grfilho
+   * Dcinema smpte sometimes generated illegal frame numbers - thx knut
 
 
 3.3.14 (23rd February 2014)

@@ -48,6 +48,7 @@
             this.columnHeaderInsType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPageGetPlugins = new System.Windows.Forms.TabPage();
             this.labelPleaseWait = new System.Windows.Forms.Label();
+            this.buttonUpdateAll = new System.Windows.Forms.Button();
             this.tabControlPlugins.SuspendLayout();
             this.tabPageInstalledPlugins.SuspendLayout();
             this.tabPageGetPlugins.SuspendLayout();
@@ -160,6 +161,7 @@
             // 
             // tabPageInstalledPlugins
             // 
+            this.tabPageInstalledPlugins.Controls.Add(this.buttonUpdateAll);
             this.tabPageInstalledPlugins.Controls.Add(this.buttonRemove);
             this.tabPageInstalledPlugins.Controls.Add(this.listViewInstalledPlugins);
             this.tabPageInstalledPlugins.Location = new System.Drawing.Point(4, 22);
@@ -246,6 +248,17 @@
             this.labelPleaseWait.TabIndex = 28;
             this.labelPleaseWait.Text = "Please wait...";
             // 
+            // buttonUpdateAll
+            // 
+            this.buttonUpdateAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonUpdateAll.Location = new System.Drawing.Point(510, 375);
+            this.buttonUpdateAll.Name = "buttonUpdateAll";
+            this.buttonUpdateAll.Size = new System.Drawing.Size(134, 25);
+            this.buttonUpdateAll.TabIndex = 30;
+            this.buttonUpdateAll.Text = "Updata all";
+            this.buttonUpdateAll.UseVisualStyleBackColor = true;
+            this.buttonUpdateAll.Click += new System.EventHandler(this.buttonUpdateAll_Click);
+            // 
             // PluginsGet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -295,5 +308,6 @@
         private System.Windows.Forms.ColumnHeader columnHeaderInsType;
         private System.Windows.Forms.TabPage tabPageGetPlugins;
         private System.Windows.Forms.Label labelPleaseWait;
+        private System.Windows.Forms.Button buttonUpdateAll;
     }
 }
