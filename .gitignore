@@ -12,3 +12,5 @@
 /SubtitleEdit-*-setup.exe
 /src/SubtitleEdit.csproj.user
 /src/Languages/Language.xml
+/src/Languages/LanguageMaster.xml
+/src/Languages/XmlContentTranslator.exe

@@ -248,6 +248,9 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffect>Effekt</FontEffect>
     <FontEffectColor>Effekt farve</FontEffectColor>
     <FontSize>Str.</FontSize>
+    <TopBottomMargin>Top/bund margin</TopBottomMargin>
+    <ZPosition>Z-position</ZPosition>
+    <ZPositionHelp>positive tal flytter tekst væk, negative tal flytter tekst tættere på, hvis z-position er nul så er det 2D</ZPositionHelp>
     <ChooseColor>Vælg farve...</ChooseColor>
     <Generate>Generer</Generate>
   </DCinemaProperties>
@@ -365,6 +368,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Billed format</ImageFormat>
     <SimpleRendering>Simpel rendering</SimpleRendering>
+    <AntiAliasingWithTransparency>Anti-aliasing med gennemsigtighed</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
     <SideBySide3D>Half-Side-by-side</SideBySide3D>
     <HalfTopBottom3D>Half-Top/Bottom</HalfTopBottom3D>
@@ -812,6 +816,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <SaveAs>Gem som</SaveAs>
         <Find>Find</Find>
         <Replace>Erstat</Replace>
+        <FixCommonErrors>Fix almindelige fejl</FixCommonErrors>
         <VisualSync>Visuel synkroniser</VisualSync>
         <SpellCheck>Stavekontrol</SpellCheck>
         <Settings>Indstillinger</Settings>
@@ -1119,6 +1124,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <OcrReplacePairXNotAdded>'{0} -&gt; {1}' blev IKKE tilføjet til OCR erstat listen</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} linjer valgt</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Undertekst indeholder unicode tegn. Gemmes i ANSI filformat vil disse gå tabt. Fortsæt?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeCharactersAnsiWarning>Undertekst indeholder Unicode-tegn. Ved gem i ANSI filkodning vil disse gå tabt. Fortsæt gem?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Undertekst indeholder negative tidskoder. Gem?</NegativeTimeWarning>
     <BeforeMergeShortLines>Før fusionere korte linjer</BeforeMergeShortLines>
     <BeforeSplitLongLines>Før split lange linjer</BeforeSplitLongLines>
@@ -1178,6 +1184,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <NotAValidXSubFile>Ikke en valid xsub fil!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Før fusioner linjer med samme tekst</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Undertekst med tidskoder har et forskelligt antal linier ({0}) end nuværende undertekst ({1}) - fortsæt alligevel?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ParsingTransportStream>Læser transport stream - vent venligst...</ParsingTransportStream>
     <ErrorLoadIdx>Subtitle Edit kan ikke læse/redigere .idx filer. Idx filer er en del af et idx/sub fil par (også kaldet VobSub), og SE kan kun åbne .sub filen.</ErrorLoadIdx>
     <ErrorLoadRar>Denne fil er sandsynligvis en komprimeret .rar fil. SE kan ikke åbne komprimerede filer.</ErrorLoadRar>
     <ErrorLoadZip>Denne fil er sandsynligvis en komprimeret .zip fil. SE kan ikke åbne komprimerede filer.</ErrorLoadZip>
@@ -1297,9 +1304,11 @@ Fortsæt?</SubtitleAppendPrompt>
     <PluginXDownloaded>Plugin {0} downloadet</PluginXDownloaded>
     <Download>&amp;Download</Download>
     <Remove>&amp;Fjern</Remove>
+    <UpdateAllX>Opdater alle ({0})</UpdateAllX>
     <UnableToDownloadPluginListX>Kunne ikke downloade plug liste: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Nyere version af Subtitle Edit kræves!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Ny version findes!]</UpdateAvailable>
+    <UpdateAll>Opdater alle</UpdateAll>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Fjern tekst for hørehæmmede</Title>
@@ -1392,6 +1401,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <AutoWrapWhileTyping>Auto-ombryd tekst mens du skriver</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. varighed, millisekunder</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. varighed, millisekunder</DurationMaximumMilliseconds>
+    <MinimumGapMilliseconds>
+    </MinimumGapMilliseconds>
     <SubtitleFont>undertekst skrifttype</SubtitleFont>
     <SubtitleFontSize>undertekst skriftstørrelse</SubtitleFontSize>
     <SubtitleBold>Fed</SubtitleBold>
@@ -1433,6 +1444,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll fra VLC Media Player 1.1.0 eller nyere</VlcMediaPlayerDescription>
+    <VlcBrowseToLabel>
+    </VlcBrowseToLabel>
     <ShowStopButton>Vis stop-knap</ShowStopButton>
     <ShowMuteButton>Vis mute-knap</ShowMuteButton>
     <ShowFullscreenButton>Vis fuldskærm knap</ShowFullscreenButton>
@@ -1462,6 +1475,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <WaveformUseFFMPEG>Benyt FFMPEG til at udtrække lydfiler</WaveformUseFFMPEG>
     <WaveformFFMPEGPath>Sti til FFMPEG</WaveformFFMPEGPath>
     <WaveformBrowseToFFMPEG>Vælg sti stil FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformBrowseToVLC>
+    </WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha Style</SubStationAlphaStyle>
     <ChooseFont>Vælg skrifttype</ChooseFont>
     <ChooseColor>Vælg farve</ChooseColor>
@@ -1500,6 +1515,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <MusicSymbol>Musik symbol</MusicSymbol>
     <MusicSymbolsToReplace>Musik symboler der skal erstattes (adskilt af mellemrum)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Ret normale OCR fejl - Inkluder hardcodede regler</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    </FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Genveje</Shortcuts>
     <Shortcut>Genvej</Shortcut>
     <Control>Control</Control>

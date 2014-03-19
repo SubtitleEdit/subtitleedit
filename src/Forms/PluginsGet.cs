@@ -16,13 +16,17 @@ namespace Nikse.SubtitleEdit.Forms
         private XmlDocument _pluginDoc = new XmlDocument();
         private string _downloadedPluginName;
         readonly LanguageStructure.PluginsGet _language;
-        bool _firstTry = true;
+//        bool _firstTry = true;
+        List<string> _updateAllListUrls;
+        List<string> _updateAllListNames;
+        bool _updatingAllPlugins = false;
+        int _updatingAllPluginsCount = 0;
 
         private string GetPluginXmlFileUrl()
         {
             if (Environment.Version.Major < 4)
-                return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins2.xml";
-            return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins4.xml";
+                return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins2.xml"; // .net 2-3.5
+            return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins4.xml"; // .net 4-?
         }
 
         public PluginsGet()
@@ -34,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             tabPageGetPlugins.Text = _language.GetPlugins;
 
             buttonDownload.Text = _language.Download;
-            buttonRemove.Text = _language.Remove;
+            buttonRemove.Text = _language.Remove;            
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             linkLabelOpenPluginFolder.Text = _language.OpenPluginsFolder;
             labelDescription1.Text = _language.GetPluginsInfo1;
@@ -50,6 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderInsVersion.Text = _language.Version;
             columnHeaderInsType.Text = _language.Type;
 
+            buttonUpdateAll.Visible = false;
             try
             {
                 labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
@@ -74,17 +79,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         void wc_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
-            if (e.Error != null && _firstTry)
-            {
-                _firstTry = false;
-                string url = "http://www.nikse.dk/Content/SubtitleEdit/Plugins/Plugins.xml"; // retry with alternate download url
-                var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                wc.Encoding = System.Text.Encoding.UTF8;
-                wc.Headers.Add("Accept-Encoding", "");
-                wc.DownloadStringCompleted += new DownloadStringCompletedEventHandler(wc_DownloadStringCompleted);
-                wc.DownloadStringAsync(new Uri(url));
-                return;
-            }
+            //if (e.Error != null && _firstTry)
+            //{
+            //    _firstTry = false;
+            //    string url = "http://www.nikse.dk/Content/SubtitleEdit/Plugins/Plugins.xml"; // retry with alternate download url
+            //    var wc = new WebClient { Proxy = Utilities.GetProxy() };
+            //    wc.Encoding = System.Text.Encoding.UTF8;
+            //    wc.Headers.Add("Accept-Encoding", "");
+            //    wc.DownloadStringCompleted += new DownloadStringCompletedEventHandler(wc_DownloadStringCompleted);
+            //    wc.DownloadStringAsync(new Uri(url));
+            //    return;
+            //}
 
             labelPleaseWait.Text = string.Empty;
             if (e.Error != null)
@@ -96,6 +101,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 return;
             }
+            _updateAllListUrls = new List<string>();
+            _updateAllListNames = new List<string>();
             try
             {
                 _pluginDoc.LoadXml(e.Result);
@@ -125,9 +132,12 @@ namespace Nikse.SubtitleEdit.Forms
                         if (installed.Text.TrimEnd('.') == node.SelectSingleNode("Name").InnerText.TrimEnd('.') &&
                             installed.SubItems[2].Text.Replace(",", ".") != node.SelectSingleNode("Version").InnerText.Replace(",", "."))
                         {
-                            item.BackColor = Color.LightGreen;
+//                            item.BackColor = Color.LightGreen;
                             installed.BackColor = Color.LightPink;
                             installed.SubItems[1].Text = _language.UpdateAvailable + " " + installed.SubItems[1].Text;
+                            buttonUpdateAll.Visible = true;
+                            _updateAllListUrls.Add(node.SelectSingleNode("Url").InnerText);
+                            _updateAllListNames.Add(node.SelectSingleNode("Name").InnerText);
                         }
                     }
                 }
@@ -135,6 +145,20 @@ namespace Nikse.SubtitleEdit.Forms
             catch (Exception exception)
             {
                 MessageBox.Show(string.Format(_language.UnableToDownloadPluginListX, exception.Source + ": " + exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace));
+            }
+            if (_updateAllListUrls.Count > 0)
+            {
+                buttonUpdateAll.BackColor = Color.LightGreen;
+                if (!string.IsNullOrEmpty(Configuration.Settings.Language.PluginsGet.UpdateAllX))
+                {
+                    buttonUpdateAll.Text = string.Format(Configuration.Settings.Language.PluginsGet.UpdateAllX, _updateAllListUrls.Count);
+                    buttonUpdateAll.Visible = true;
+                }
+                else if (!string.IsNullOrEmpty(Configuration.Settings.Language.PluginsGet.UpdateAll))
+                {
+                    buttonUpdateAll.Text = Configuration.Settings.Language.PluginsGet.UpdateAll;
+                    buttonUpdateAll.Visible = true;
+                }                
             }
         }
 
@@ -264,7 +288,18 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Enabled = true;
             buttonDownload.Enabled = true;
             listViewGetPlugins.Enabled = true;
-            MessageBox.Show(string.Format(_language.PluginXDownloaded, _downloadedPluginName));
+            if (_updatingAllPlugins)
+            {
+                _updatingAllPluginsCount++;
+                if (_updatingAllPluginsCount == _updateAllListUrls.Count)
+                {
+                    MessageBox.Show(string.Format(_language.XPluginsUpdated, _updatingAllPluginsCount));
+                }
+            }
+            else
+            {
+                MessageBox.Show(string.Format(_language.PluginXDownloaded, _downloadedPluginName));
+            }
             ShowInstalledPlugins();
         }
 
@@ -332,6 +367,39 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 listViewInstalledPlugins.Items[index].Selected = true;
                 listViewInstalledPlugins.Items[index].Focused = true;
+            }
+        }
+
+        private void buttonUpdateAll_Click(object sender, EventArgs e)
+        {
+            buttonUpdateAll.Enabled = false;
+            buttonUpdateAll.BackColor = Control.DefaultBackColor;
+            try
+            {
+                labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
+                buttonOK.Enabled = false;
+                buttonDownload.Enabled = false;
+                listViewGetPlugins.Enabled = false;
+                this.Refresh();
+                Cursor = Cursors.WaitCursor;
+                _updatingAllPluginsCount = 0;
+                _updatingAllPlugins = true;
+                for (int i = 0; i < _updateAllListUrls.Count; i++)
+                {
+                    var wc = new WebClient { Proxy = Utilities.GetProxy() };
+                    wc.DownloadDataCompleted += new DownloadDataCompletedEventHandler(wc_DownloadDataCompleted);
+                    wc.DownloadDataAsync(new Uri(_updateAllListUrls[i]));
+                }
+                Cursor = Cursors.Default;
+            }
+            catch (Exception exception)
+            {
+                labelPleaseWait.Text = string.Empty;
+                buttonOK.Enabled = true;
+                buttonDownload.Enabled = true;
+                listViewGetPlugins.Enabled = true;
+                Cursor = Cursors.Default;
+                MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
             }
         }
 
