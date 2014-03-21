@@ -55,6 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new F4Rtf(),
                     new F4Xml(),
                     new FabSubtitler(),
+                    new FilmEditXml(),
                     new FinalCutProXml(),
                     new FinalCutProXXml(),
                     new FinalCutProXmlGap(),
