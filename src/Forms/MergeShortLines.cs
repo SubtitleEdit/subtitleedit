@@ -125,6 +125,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (clearFixes)
                 listViewFixes.Items.Clear();
             numberOfMerges = 0;
+            string language = Utilities.AutoDetectGoogleLanguage(subtitle);
             Subtitle mergedSubtitle = new Subtitle();
             bool lastMerged = false;
             Paragraph p = null;
@@ -148,11 +149,11 @@ namespace Nikse.SubtitleEdit.Forms
                             s1 = s1.Substring(0, s1.Length - GetEndTag(s1).Length);
                             string s2 = next.Text.Trim();
                             s2 = s2.Substring(GetStartTag(s2).Length);
-                            p.Text = Utilities.AutoBreakLine(s1 + Environment.NewLine + s2);
+                            p.Text = Utilities.AutoBreakLine(s1 + Environment.NewLine + s2, language);
                         }
                         else
                         {
-                            p.Text = Utilities.AutoBreakLine(p.Text + Environment.NewLine + next.Text);
+                            p.Text = Utilities.AutoBreakLine(p.Text + Environment.NewLine + next.Text, language);
                         }
                         p.EndTime = next.EndTime;
 

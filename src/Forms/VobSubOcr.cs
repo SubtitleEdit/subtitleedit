@@ -7135,7 +7135,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void ContextMenuStripListviewOpening(object sender, CancelEventArgs e)
-        {
+        {            
             if (subtitleListView1.SelectedItems.Count == 0)
                 e.Cancel = true;
 
@@ -7172,13 +7172,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripMenuItemInspectNOcrMatches.Visible = true;
                 toolStripSeparatorImageCompare.Visible = true;
+                nOcrTrainingToolStripMenuItem.Visible = true;
             }
             else
             {
                 toolStripMenuItemInspectNOcrMatches.Visible = false;
                 toolStripSeparatorImageCompare.Visible = false;
-            }
-
+                nOcrTrainingToolStripMenuItem.Visible = false;
+            }            
         }
 
         private void SaveImageAsToolStripMenuItemClick(object sender, EventArgs e)

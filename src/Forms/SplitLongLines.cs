@@ -160,6 +160,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (clearFixes)
                 listViewFixes.Items.Clear();
             numberOfSplits = 0;
+            string language = Utilities.AutoDetectGoogleLanguage(subtitle);
             Subtitle splittedSubtitle = new Subtitle();
             Paragraph p = null;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -171,10 +172,10 @@ namespace Nikse.SubtitleEdit.Forms
                     string oldText = Utilities.RemoveHtmlTags(p.Text);
                     if (SplitLongLinesHelper.QualifiesForSplit(p.Text, singleLineMaxCharacters, totalLineMaxCharacters) && IsFixAllowed(p))
                     {
-                        if (!SplitLongLinesHelper.QualifiesForSplit(Utilities.AutoBreakLine(p.Text), singleLineMaxCharacters, totalLineMaxCharacters))
+                        if (!SplitLongLinesHelper.QualifiesForSplit(Utilities.AutoBreakLine(p.Text, language), singleLineMaxCharacters, totalLineMaxCharacters))
                         {
                             Paragraph newParagraph = new Paragraph(p);
-                            newParagraph.Text = Utilities.AutoBreakLine(p.Text);
+                            newParagraph.Text = Utilities.AutoBreakLine(p.Text, language);
                             if (clearFixes)
                                 AddToListView(p, (splittedSubtitle.Paragraphs.Count + 1).ToString(), oldText);
                             autoBreakedIndexes.Add(splittedSubtitle.Paragraphs.Count);
@@ -184,7 +185,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            string text = Utilities.AutoBreakLine(p.Text);
+                            string text = Utilities.AutoBreakLine(p.Text, language);
                             if (text.Contains(Environment.NewLine))
                             {
                                 string[] arr = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -198,9 +199,9 @@ namespace Nikse.SubtitleEdit.Forms
                                     double duration = p.Duration.TotalMilliseconds / 2.0;
                                     Paragraph newParagraph1 = new Paragraph(p);
                                     Paragraph newParagraph2 = new Paragraph(p);
-                                    newParagraph1.Text = Utilities.AutoBreakLine(arr[0]);
+                                    newParagraph1.Text = Utilities.AutoBreakLine(arr[0], language);
                                     newParagraph1.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration - spacing1;
-                                    newParagraph2.Text = Utilities.AutoBreakLine(arr[1]);
+                                    newParagraph2.Text = Utilities.AutoBreakLine(arr[1], language);
                                     newParagraph2.StartTime.TotalMilliseconds = newParagraph1.EndTime.TotalMilliseconds + spacing2;
 
                                     if (clearFixes)

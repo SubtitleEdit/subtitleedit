@@ -1041,7 +1041,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (AllowFix(p, fixAction))
                     {
                         string oldText = p.Text;
-                        p.Text = Utilities.AutoBreakLine(p.Text);
+                        p.Text = Utilities.AutoBreakLine(p.Text, Language);
                         if (oldText != p.Text)
                         {
                             _totalFixes++;
@@ -1110,7 +1110,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string s = Utilities.RemoveHtmlTags(p.Text);
                 if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
                 {
-                    s = Utilities.AutoBreakLine(p.Text);
+                    s = Utilities.AutoBreakLine(p.Text, Language);
                     if (s != p.Text)
                     {
                         if (AllowFix(p, fixAction))
@@ -2809,7 +2809,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if ((text.Contains(". -") || text.Contains("! -") || text.Contains("? -")) && Utilities.CountTagInText(text, Environment.NewLine) == 1)
                 {
-                    string temp = Utilities.AutoBreakLine(text);
+                    string temp = Utilities.AutoBreakLine(text, Language);
                     var arr = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     var arrTemp = temp.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].Trim().StartsWith("-") && arrTemp[1].Trim().StartsWith("-"))
@@ -2819,7 +2819,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if ((text.Contains(". -") || text.Contains("! -") || text.Contains("? -")) && !text.Contains(Environment.NewLine))
                 {
-                    string temp = Utilities.AutoBreakLine(text);
+                    string temp = Utilities.AutoBreakLine(text, Language);
                     var arrTemp = temp.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (arrTemp.Length == 2)
                     {
@@ -5057,11 +5057,11 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void ButtonAutoBreakClick(object sender, EventArgs e)
-        {
+        {            
             if (textBoxListViewText.Text.Length > 0)
             {
                 string oldText = textBoxListViewText.Text;
-                textBoxListViewText.Text = Utilities.AutoBreakLine(textBoxListViewText.Text);
+                textBoxListViewText.Text = Utilities.AutoBreakLine(textBoxListViewText.Text, Language);
                 if (oldText != textBoxListViewText.Text)
                     EnableOKButton();
             }
@@ -5280,17 +5280,17 @@ namespace Nikse.SubtitleEdit.Forms
                 string[] lines = currentParagraph.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (lines.Length == 2 && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")))
                 {
-                    currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
-                    newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
+                    currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
+                    newParagraph.Text = Utilities.AutoBreakLine(lines[1], Language);
                 }
                 else
                 {
-                    string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan);
+                    string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan, Language);
                     lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (lines.Length == 2)
                     {
-                        currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
-                        newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
+                        currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
+                        newParagraph.Text = Utilities.AutoBreakLine(lines[1], Language);
                     }
                 }
 

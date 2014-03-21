@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        private string FixMax4LinesAndMax32CharsPerLine(string text)
+        private string FixMax4LinesAndMax32CharsPerLine(string text, string language)
         {
             var lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             bool allOk = true;
@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (allOk)
                 return text;
 
-            text = Utilities.AutoBreakLine(text, 1, 32, 4);
+            text = Utilities.AutoBreakLine(text, 1, 32, 4, language);
             lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             allOk = true;
             foreach (string line in lines)
