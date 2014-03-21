@@ -110,13 +110,19 @@ namespace Nikse.SubtitleEdit.Forms
         {
             int minLength = MininumLength;
             Text = Configuration.Settings.Language.AutoBreakUnbreakLines.TitleAutoBreak;
+
+            Subtitle sub = new Subtitle();
+            foreach (Paragraph p in _paragraphs)
+                sub.Paragraphs.Add(p);
+            string language = Utilities.AutoDetectGoogleLanguage(sub);
+
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             foreach (Paragraph p in _paragraphs)
             {
                 if (p.Text.Length > minLength || p.Text.Contains(Environment.NewLine))
                 {
-                    string text = Utilities.AutoBreakLine(p.Text, 5, minLength, MergeLinesShorterThan);
+                    string text = Utilities.AutoBreakLine(p.Text, 5, minLength, MergeLinesShorterThan, language);
                     if (text != p.Text)
                     {
                         AddToListView(p, text);

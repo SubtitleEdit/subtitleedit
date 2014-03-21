@@ -565,7 +565,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        private string FixMax4LinesAndMax32CharsPerLine(string text)
+        private string FixMax4LinesAndMax32CharsPerLine(string text, string language)
         {
             var lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             bool allOk = true;
@@ -580,7 +580,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (allOk)
                 return text;
 
-            text = Utilities.AutoBreakLine(text, 1, 32, 4);
+            text = Utilities.AutoBreakLine(text, 1, 32, 4, language);
             lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             allOk = true;
             foreach (string line in lines)
@@ -694,11 +694,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             sb.AppendLine("Scenarist_SCC V1.0");
             sb.AppendLine();
-
+            string language = Utilities.AutoDetectGoogleLanguage(subtitle);
             for (int i=0; i<subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                sb.AppendLine(string.Format("{0}\t94ae 94ae 9420 9420 {1} 942f 942f", ToTimeCode(p.StartTime.TotalMilliseconds), ToSccText(p.Text)));
+                sb.AppendLine(string.Format("{0}\t94ae 94ae 9420 9420 {1} 942f 942f", ToTimeCode(p.StartTime.TotalMilliseconds), ToSccText(p.Text, language)));
                 sb.AppendLine();
 
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
@@ -711,9 +711,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString();
         }
 
-        private string ToSccText(string text)
+        private string ToSccText(string text, string language)
         {
-            text = FixMax4LinesAndMax32CharsPerLine(text);
+            text = FixMax4LinesAndMax32CharsPerLine(text, language);
             //text = text.Replace("ã", "aã");
             //text = text.Replace("õ", "oõ");
 

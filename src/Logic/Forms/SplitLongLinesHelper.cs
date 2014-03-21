@@ -27,6 +27,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             List<int> autoBreakedIndexes = new List<int>();
             int numberOfSplits = 0;
             Subtitle splittedSubtitle = new Subtitle();
+            string language = Utilities.AutoDetectGoogleLanguage(subtitle);
             Paragraph p = null;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -37,10 +38,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     string oldText = Utilities.RemoveHtmlTags(p.Text);
                     if (QualifiesForSplit(p.Text, singleLineMaxCharacters, totalLineMaxCharacters))
                     {
-                        if (!QualifiesForSplit(Utilities.AutoBreakLine(p.Text), singleLineMaxCharacters, totalLineMaxCharacters))
+                        if (!QualifiesForSplit(Utilities.AutoBreakLine(p.Text, language), singleLineMaxCharacters, totalLineMaxCharacters))
                         {
                             Paragraph newParagraph = new Paragraph(p);
-                            newParagraph.Text = Utilities.AutoBreakLine(p.Text);
+                            newParagraph.Text = Utilities.AutoBreakLine(p.Text, language);
                             autoBreakedIndexes.Add(splittedSubtitle.Paragraphs.Count);
                             splittedSubtitle.Paragraphs.Add(newParagraph);
                             added = true;
@@ -48,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                         }
                         else
                         {
-                            string text = Utilities.AutoBreakLine(p.Text);
+                            string text = Utilities.AutoBreakLine(p.Text, language);
                             if (text.Contains(Environment.NewLine))
                             {
                                 string[] arr = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -62,9 +63,9 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                     double duration = p.Duration.TotalMilliseconds / 2.0;
                                     Paragraph newParagraph1 = new Paragraph(p);
                                     Paragraph newParagraph2 = new Paragraph(p);
-                                    newParagraph1.Text = Utilities.AutoBreakLine(arr[0]);
+                                    newParagraph1.Text = Utilities.AutoBreakLine(arr[0], language);
                                     newParagraph1.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration - spacing1;
-                                    newParagraph2.Text = Utilities.AutoBreakLine(arr[1]);
+                                    newParagraph2.Text = Utilities.AutoBreakLine(arr[1], language);
                                     newParagraph2.StartTime.TotalMilliseconds = newParagraph1.EndTime.TotalMilliseconds + spacing2;
 
                                     splittedIndexes.Add(splittedSubtitle.Paragraphs.Count);

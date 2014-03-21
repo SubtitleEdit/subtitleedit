@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
+            labelCount.Text = string.Empty;
             labelExpandCount.Text = string.Empty;
             Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.Title;
             groupBoxInspectItems.Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.InspectItems;
@@ -73,6 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
                 listBoxInspectItems.Items.Add(_matches[i]);
             if (listBoxInspectItems.Items.Count > 0)
                 listBoxInspectItems.SelectedIndex = 0;
+            ShowCount();
         }
 
         private void listBoxInspectItems_SelectedIndexChanged(object sender, EventArgs e)
@@ -359,7 +361,7 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = 0; i < _matches.Count; i++)
                     listBoxInspectItems.Items.Add(_matches[i].Text);
                 listBoxInspectItems.SelectedIndex = index;
-
+                ShowCount();
                 listBoxInspectItems_SelectedIndexChanged(null, null);
             }
             else if (_selectedCompareBinaryOcrBitmap != null)
@@ -385,7 +387,16 @@ namespace Nikse.SubtitleEdit.Forms
                     listBoxInspectItems.Items.Add(_matches[i].Text);
                 listBoxInspectItems.SelectedIndex = index;
                 listBoxInspectItems_SelectedIndexChanged(null, null);
+                ShowCount();
             }
+        }
+
+        private void ShowCount()
+        {
+            if (listBoxInspectItems.Items.Count > 1)
+                labelCount.Text = listBoxInspectItems.Items.Count.ToString();
+            else
+                labelCount.Text = string.Empty;
         }
 
     }

@@ -148,6 +148,8 @@ namespace Nikse.SubtitleEdit.Logic
         public int BridgeGapMilliseconds { get; set; }
         public string ExportCustomTemplates { get; set; }
         public string ChangeCasingChoice { get; set; }
+        public string NoLineBreakAfter { get; set; }
+        public bool UseNoLineBreakAfter { get; set; }
 
         public ToolsSettings()
         {
@@ -199,6 +201,7 @@ namespace Nikse.SubtitleEdit.Logic
             ExportLastBorderWidth = 2;
             BridgeGapMilliseconds = 100;
             ExportCustomTemplates = "SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]ÆæMicroDvdÆÆ{{start}}{{end}}{text}\r\nÆffÆ||Æ";
+            NoLineBreakAfter = " Mrs.; Ms.; Mr.; Dr.; a; an; the; my; my own; your; his; our; their; it's; is; are;'s; 're; would;'ll;'ve;'d; will; that; which; who; whom; whose; whichever; whoever; wherever; each; either; every; all; both; few; many; sevaral; all; any; most; been; been doing";
         }
 
     }
@@ -1649,6 +1652,10 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ChangeCasingChoice");
             if (subNode != null)
                 settings.Tools.ChangeCasingChoice = subNode.InnerText;
+            subNode = node.SelectSingleNode("UseNoLineBreakAfter");
+            if (subNode != null)
+                settings.Tools.UseNoLineBreakAfter = Convert.ToBoolean(subNode.InnerText);
+            
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -2671,6 +2678,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("BridgeGapMilliseconds", settings.Tools.BridgeGapMilliseconds.ToString());
             textWriter.WriteElementString("ExportCustomTemplates", settings.Tools.ExportCustomTemplates);
             textWriter.WriteElementString("ChangeCasingChoice", settings.Tools.ChangeCasingChoice);
+            textWriter.WriteElementString("UseNoLineBreakAfter", settings.Tools.UseNoLineBreakAfter.ToString());
 
             textWriter.WriteEndElement();
 

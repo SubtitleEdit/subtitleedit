@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text = text.Replace("</i>", "@Italic@");
                 text = Utilities.RemoveHtmlTags(text);
                 if (Utilities.CountTagInText(Environment.NewLine, text) > 1)
-                            text = Utilities.AutoBreakLineMoreThanTwoLines(text, Configuration.Settings.General.SubtitleLineMaximumLength);
+                            text = Utilities.AutoBreakLineMoreThanTwoLines(text, Configuration.Settings.General.SubtitleLineMaximumLength, string.Empty);
                 text = text.Replace(Environment.NewLine, Environment.NewLine + "\t\t\t\t");
                 sb.AppendLine(string.Format("{0:0000} {1} {2}\t{3}", index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), text));
             }

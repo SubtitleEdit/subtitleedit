@@ -6840,17 +6840,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAutoBreakClick(object sender, EventArgs e)
         {
+            string language = Utilities.AutoDetectGoogleLanguage(_subtitle);
+            string languageOriginal = string.Empty;
+            if (_subtitleAlternate != null)
+                Utilities.AutoDetectGoogleLanguage(_subtitleAlternate);
+
             if (SubtitleListview1.SelectedItems.Count > 1)
             {
                 MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
-
                 SubtitleListview1.BeginUpdate();
                 foreach (int index in SubtitleListview1.SelectedIndices)
                 {
                     Paragraph p = _subtitle.GetParagraphOrDefault(index);
                     if (p != null)
                     {
-                        p.Text = Utilities.AutoBreakLine(p.Text);
+                        p.Text = Utilities.AutoBreakLine(p.Text, language);
                         SubtitleListview1.SetText(index, p.Text);
                     }
 
@@ -6859,7 +6863,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
                         if (original != null)
                         {
-                            original.Text = Utilities.AutoBreakLine(p.Text);
+                            original.Text = Utilities.AutoBreakLine(p.Text, languageOriginal);
                             SubtitleListview1.SetAlternateText(index, original.Text);
                         }
                     }
@@ -6870,9 +6874,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                textBoxListViewText.Text = Utilities.AutoBreakLine(textBoxListViewText.Text);
+                textBoxListViewText.Text = Utilities.AutoBreakLine(textBoxListViewText.Text, language);
                 if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
-                    textBoxListViewTextAlternate.Text = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text);
+                    textBoxListViewTextAlternate.Text = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text, languageOriginal);
             }
         }
 
@@ -7276,6 +7280,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SplitSelectedParagraph(double? splitSeconds, int? textIndex)
         {
+            string language = Utilities.AutoDetectGoogleLanguage(_subtitle);
+
             int? alternateTextIndex = null;
             if (textBoxListViewTextAlternate.Focused)
             {
@@ -7327,15 +7333,15 @@ namespace Nikse.SubtitleEdit.Forms
                         b = b.Remove(3, 1).Replace("  ", " ");
                     }
 
-                    currentParagraph.Text = Utilities.AutoBreakLine(a);
-                    newParagraph.Text = Utilities.AutoBreakLine(b);
+                    currentParagraph.Text = Utilities.AutoBreakLine(a, language);
+                    newParagraph.Text = Utilities.AutoBreakLine(b, language);
                 }
                 else
                 {
                     if (lines.Length == 2 && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")))
                     {
-                        currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
-                        newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
+                        currentParagraph.Text = Utilities.AutoBreakLine(lines[0], language);
+                        newParagraph.Text = Utilities.AutoBreakLine(lines[1], language);
                         if (lines[0].Length > 2 && lines[0][0] == '-' && lines[0][1] != '-' &&
                             lines[1].Length > 2 && lines[1][0] == '-' && lines[1][1] != '-')
                         {
@@ -7363,8 +7369,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (lines.Length == 2 && (lines[0].EndsWith(".</i>") || lines[0].EndsWith("!</i>") || lines[0].EndsWith("?</i>")))
                     {
-                        currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
-                        newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
+                        currentParagraph.Text = Utilities.AutoBreakLine(lines[0], language);
+                        newParagraph.Text = Utilities.AutoBreakLine(lines[1], language);
                         if (lines[0].Length > 5 && lines[0].StartsWith("<i>-") && lines[0][4] != '-' &&
                             lines[1].Length > 5 && lines[1].StartsWith("<i>-") && lines[1][4] != '-')
                         {
@@ -7382,22 +7388,22 @@ namespace Nikse.SubtitleEdit.Forms
                         string s = currentParagraph.Text;
                         var arr = Utilities.RemoveHtmlTags(s, true).Replace(Environment.NewLine, "\n").Split('\n');
                         if (arr.Length != 2 || arr[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || arr[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                            s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan);
+                            s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan, language);
 
                         lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         if (lines.Length == 1)
                         {
-                            s = Utilities.AutoBreakLine(currentParagraph.Text, 3, Configuration.Settings.General.SubtitleLineMaximumLength, 20);
+                            s = Utilities.AutoBreakLine(currentParagraph.Text, 3, Configuration.Settings.General.SubtitleLineMaximumLength, 20, language);
                             lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         }
                         if (lines.Length == 1)
                         {
-                            s = Utilities.AutoBreakLine(currentParagraph.Text, 3, Convert.ToInt32(Configuration.Settings.General.SubtitleLineMaximumLength * 0.7), 18);
+                            s = Utilities.AutoBreakLine(currentParagraph.Text, 3, Convert.ToInt32(Configuration.Settings.General.SubtitleLineMaximumLength * 0.7), 18, language);
                             lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         }
                         if (lines.Length == 1)
                         {
-                            s = Utilities.AutoBreakLine(currentParagraph.Text, 3, Convert.ToInt32(Configuration.Settings.General.SubtitleLineMaximumLength * 0.5), 15);
+                            s = Utilities.AutoBreakLine(currentParagraph.Text, 3, Convert.ToInt32(Configuration.Settings.General.SubtitleLineMaximumLength * 0.5), 15, language);
                             lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         }
 
@@ -7408,12 +7414,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 lines[0] += "</i>";
                                 lines[1] = "<i>" + lines[1];
                             }
-                            currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
-                            newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
+                            currentParagraph.Text = Utilities.AutoBreakLine(lines[0], language);
+                            newParagraph.Text = Utilities.AutoBreakLine(lines[1], language);
                         }
                         else if (lines.Length == 1)
                         {
-                            currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
+                            currentParagraph.Text = Utilities.AutoBreakLine(lines[0], language);
                             newParagraph.Text = string.Empty;
                         }
 
@@ -7482,6 +7488,8 @@ namespace Nikse.SubtitleEdit.Forms
                     Paragraph originalCurrent = Utilities.GetOriginalParagraph(firstSelectedIndex, currentParagraph, _subtitleAlternate.Paragraphs);
                     if (originalCurrent != null)
                     {
+                        string languageOriginal = Utilities.AutoDetectGoogleLanguage(_subtitleAlternate);
+
                         originalCurrent.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
                         Paragraph originalNew = new Paragraph(newParagraph);
 
@@ -7490,8 +7498,8 @@ namespace Nikse.SubtitleEdit.Forms
                         oldText = originalCurrent.Text;
                         if (alternateTextIndex != null && alternateTextIndex.Value > 2 && alternateTextIndex.Value < oldText.Length - 2)
                         {
-                            originalCurrent.Text = Utilities.AutoBreakLine(oldText.Substring(0, alternateTextIndex.Value).Trim());
-                            originalNew.Text = Utilities.AutoBreakLine(oldText.Substring(alternateTextIndex.Value).Trim());
+                            originalCurrent.Text = Utilities.AutoBreakLine(oldText.Substring(0, alternateTextIndex.Value).Trim(), language);
+                            originalNew.Text = Utilities.AutoBreakLine(oldText.Substring(alternateTextIndex.Value).Trim(), language);
                             if (originalCurrent.Text.StartsWith("<i>") && !originalCurrent.Text.Contains("</i>") &&
                                 originalNew.Text.EndsWith("</i>") && !originalNew.Text.Contains("<i>"))
                             {
@@ -7560,23 +7568,23 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            string s = Utilities.AutoBreakLine(originalCurrent.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan);
+                            string s = Utilities.AutoBreakLine(originalCurrent.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan, languageOriginal);
                             lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         }
 
                         if (lines.Length == 1)
                         {
-                            string s = Utilities.AutoBreakLine(lines[0], 3, Configuration.Settings.General.SubtitleLineMaximumLength, 20);
+                            string s = Utilities.AutoBreakLine(lines[0], 3, Configuration.Settings.General.SubtitleLineMaximumLength, 20, languageOriginal);
                             lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         }
                         if (lines.Length == 1)
                         {
-                            string s = Utilities.AutoBreakLine(lines[0], 3, Convert.ToInt32(Configuration.Settings.General.SubtitleLineMaximumLength * 0.7), 18);
+                            string s = Utilities.AutoBreakLine(lines[0], 3, Convert.ToInt32(Configuration.Settings.General.SubtitleLineMaximumLength * 0.7), 18, languageOriginal);
                             lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         }
                         if (lines.Length == 1)
                         {
-                            string s = Utilities.AutoBreakLine(lines[0], 3, Convert.ToInt32(Configuration.Settings.General.SubtitleLineMaximumLength * 0.5), 15);
+                            string s = Utilities.AutoBreakLine(lines[0], 3, Convert.ToInt32(Configuration.Settings.General.SubtitleLineMaximumLength * 0.5), 15, languageOriginal);
                             lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         }
                         if (lines.Length == 2)
@@ -7664,6 +7672,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeBeforeToolStripMenuItemClick(object sender, EventArgs e)
         {
+            string language = Utilities.AutoDetectGoogleLanguage(_subtitle);
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
                 int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
@@ -7703,7 +7712,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     prevParagraph.Text = prevParagraph.Text.Replace(Environment.NewLine, " ");
                     prevParagraph.Text += Environment.NewLine + currentParagraph.Text.Replace(Environment.NewLine, " ");
-                    prevParagraph.Text = Utilities.AutoBreakLine(prevParagraph.Text);
+                    prevParagraph.Text = Utilities.AutoBreakLine(prevParagraph.Text, language);
 
 //                    prevParagraph.EndTime.TotalMilliseconds = prevParagraph.EndTime.TotalMilliseconds + currentParagraph.Duration.TotalMilliseconds;
                     prevParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
@@ -7770,7 +7779,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = sb.ToString();
                 text = Utilities.FixInvalidItalicTags(text);
                 text = ChangeAllLinesItalictoSingleItalic(text);
-                text = Utilities.AutoBreakLine(text);
+                text = Utilities.AutoBreakLine(text, Utilities.AutoDetectGoogleLanguage(_subtitle));
                 currentParagraph.Text = text;
 
                 //display time
@@ -7952,7 +7961,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (old1.Contains(Environment.NewLine) || old2.Contains(Environment.NewLine) ||
                         old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                        currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text);
+                        currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text, Utilities.AutoDetectGoogleLanguage(_subtitle));
                 }
 
                 //currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + nextParagraph.Duration.TotalMilliseconds; //nextParagraph.EndTime;
@@ -11617,13 +11626,16 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
                 MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines);
-
+                string language = Utilities.AutoDetectGoogleLanguage(_subtitle);
+                string languageOriginal = string.Empty;
+                if (_subtitleAlternate != null)
+                    Utilities.AutoDetectGoogleLanguage(_subtitleAlternate);
                 foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                 {
                     Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
                     if (p != null)
                     {
-                        string s = Utilities.AutoBreakLineMoreThanTwoLines(p.Text, Configuration.Settings.General.SubtitleLineMaximumLength);
+                        string s = Utilities.AutoBreakLineMoreThanTwoLines(p.Text, Configuration.Settings.General.SubtitleLineMaximumLength, language);
                         if (s != p.Text)
                         {
                             p.Text = s;
@@ -11634,7 +11646,7 @@ namespace Nikse.SubtitleEdit.Forms
                             Paragraph original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
                             if (original != null)
                             {
-                                string s2 = Utilities.AutoBreakLineMoreThanTwoLines(original.Text, Configuration.Settings.General.SubtitleLineMaximumLength);
+                                string s2 = Utilities.AutoBreakLineMoreThanTwoLines(original.Text, Configuration.Settings.General.SubtitleLineMaximumLength, languageOriginal);
                                 if (s2 != original.Text)
                                 {
                                     original.Text = s;
@@ -11810,7 +11822,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (autoBreakUnbreakLines.ShowDialog() == DialogResult.OK && autoBreakUnbreakLines.FixedParagraphs.Count > 0)
                 {
                     MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines);
-
+                    string language = Utilities.AutoDetectGoogleLanguage(_subtitle);
                     SubtitleListview1.BeginUpdate();
                     foreach (int index in SubtitleListview1.SelectedIndices)
                     {
@@ -11819,7 +11831,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int indexFixed = autoBreakUnbreakLines.FixedParagraphs.IndexOf(p);
                         if (indexFixed >= 0)
                         {
-                            p.Text = Utilities.AutoBreakLine(p.Text, 5, autoBreakUnbreakLines.MininumLength, autoBreakUnbreakLines.MergeLinesShorterThan);
+                            p.Text = Utilities.AutoBreakLine(p.Text, 5, autoBreakUnbreakLines.MininumLength, autoBreakUnbreakLines.MergeLinesShorterThan, language);
                             SubtitleListview1.SetText(index, p.Text);
                         }
                     }
