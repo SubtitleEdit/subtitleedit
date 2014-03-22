@@ -762,6 +762,8 @@
     <Compile Include="Logic\BluRaySup\PaletteInfo.cs" />
     <Compile Include="Logic\BluRaySup\ToolBox.cs" />
     <Compile Include="Logic\BmpReader.cs" />
+    <Compile Include="Logic\Forms\RemoveTextForHISettings.cs" />
+    <Compile Include="Logic\Forms\RemoveTextForHI.cs" />
     <Compile Include="Logic\Forms\SplitLongLinesHelper.cs" />
     <Compile Include="Logic\MurMurHash3.cs" />
     <Compile Include="Logic\NikseBitmapImageSplitter.cs" />
