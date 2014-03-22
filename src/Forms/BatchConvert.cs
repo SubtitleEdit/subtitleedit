@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         string _assStyle;
         string _ssaStyle;
-        FormRemoveTextForHearImpaired _removeForHI = new FormRemoveTextForHearImpaired();
+        Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHI _removeForHI;
         ChangeCasing _changeCasing = new ChangeCasing();
         ChangeCasingNames _changeCasingNames = new ChangeCasingNames();
         bool _converting = false;
@@ -198,6 +198,10 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxOverwriteOriginalFiles.Checked = false;
                 checkBoxOverwriteOriginalFiles.Visible = false;
             }
+
+            var hiSettings = new Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHISettings();
+            hiSettings.LoadFromConfiguration();
+            _removeForHI = new Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHI(hiSettings);
         }
 
         private void FixLargeFonts()
