@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             var ss = new SubtitleSegment(buffer, index);
             while (ss.SyncByte == Helper.B00001111)
             {
-                SubtitleSegments.Add(ss);              
+                SubtitleSegments.Add(ss);
                 index += 6 + ss.SegmentLength;
                 if (index + 6 < buffer.Length)
                     ss = new SubtitleSegment(buffer, index);
@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             Length = index;
             int size = index - start;
             DataBuffer = new byte[size];
-            Buffer.BlockCopy(buffer, start, DataBuffer, 0, DataBuffer.Length); 
+            Buffer.BlockCopy(buffer, start, DataBuffer, 0, DataBuffer.Length);
 
             // Parse segments
             index = 2;
