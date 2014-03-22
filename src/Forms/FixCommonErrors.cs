@@ -5057,7 +5057,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void ButtonAutoBreakClick(object sender, EventArgs e)
-        {            
+        {
             if (textBoxListViewText.Text.Length > 0)
             {
                 string oldText = textBoxListViewText.Text;

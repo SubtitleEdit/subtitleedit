@@ -301,7 +301,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             // next display control sequence table address (use current is last)
             WriteEndianWord(startDisplayControlSequenceTableAddress + 24, ms); // start of display control sequence table address
 
-            // Control command start 
+            // Control command start
             if (p.Forced)
                 ms.WriteByte(0); // ForcedStartDisplay==0
             else
