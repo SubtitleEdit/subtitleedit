@@ -19,14 +19,19 @@ namespace Test
         ///</summary>
         public TestContext TestContext { get; set; }
 
-        private static void InitializeFixCommonErrorsLine(FixCommonErrors_Accessor target, string line)
+        private Nikse.SubtitleEdit.Forms.FixCommonErrors GetFixCommonErrorsLib()
+        {
+            return new Nikse.SubtitleEdit.Forms.FixCommonErrors();
+        }       
+
+        private static void InitializeFixCommonErrorsLine(Nikse.SubtitleEdit.Forms.FixCommonErrors target, string line)
         {
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph(line, 100, 10000));
             target.Initialize(subtitle, new Nikse.SubtitleEdit.Logic.SubtitleFormats.SubRip(), System.Text.Encoding.UTF8);
         }
 
-        private static void InitializeFixCommonErrorsLine(FixCommonErrors_Accessor target, string line, string line2)
+        private static void InitializeFixCommonErrorsLine(Nikse.SubtitleEdit.Forms.FixCommonErrors target, string line, string line2)
         {
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph(line, 100, 10000));
@@ -93,7 +98,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesNormal()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "This is" + Environment.NewLine + "short!");
             target.FixShortLines();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "This is short!");
@@ -103,7 +108,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesLong()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "This I'm pretty sure is not a" + Environment.NewLine + "short line, that should be merged!!!");
             target.FixShortLines();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "This I'm pretty sure is not a" + Environment.NewLine + "short line, that should be merged!!!");
@@ -113,7 +118,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesNormalItalic()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "<i>This is" + Environment.NewLine + "short!</i>");
             target.FixShortLines();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>This is short!</i>");
@@ -123,7 +128,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesDialogue()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "- Hallo!" + Environment.NewLine + "- Hi");
             target.FixShortLines();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- Hallo!" + Environment.NewLine + "- Hi");
@@ -133,7 +138,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesDialogueItalic()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "<i>- Hallo!" + Environment.NewLine + "- Hi</i>");
             target.FixShortLines();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>- Hallo!" + Environment.NewLine + "- Hi</i>");
@@ -147,7 +152,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesDialogueItalicTwo()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "<i>- Hallo!</i>" + Environment.NewLine + "<i>- Hi<i>");
             target.FixShortLines();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>- Hallo!</i>" + Environment.NewLine + "<i>- Hi<i>");
@@ -159,7 +164,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsBeginOnly()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "<i>Hey!" + Environment.NewLine + "<i>Boy!");
             target.FixInvalidItalicTags();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>Hey!</i>" + Environment.NewLine + "<i>Boy!</i>");
@@ -169,7 +174,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsFirstLineEndMissing()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "<i>(jones) seems their attackers headed north." + Environment.NewLine + "<i>Hi!</i>");
             target.FixInvalidItalicTags();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>(jones) seems their attackers headed north." + Environment.NewLine + "Hi!</i>");
@@ -179,7 +184,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsStartInMiddle()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "Seems their <i>attackers headed north.");
             target.FixInvalidItalicTags();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Seems their attackers headed north.");
@@ -189,7 +194,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsEmptyStart()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "<i></i>test");
             target.FixInvalidItalicTags();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "test");
@@ -199,7 +204,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsSecondLineMissingEnd()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "- And..." + Environment.NewLine + "<i>Awesome it is!");
             target.FixInvalidItalicTags();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- And..." + Environment.NewLine + "<i>Awesome it is!</i>");
@@ -209,7 +214,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsBadEnding()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "Awesome it is!</i>");
             target.FixInvalidItalicTags();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Awesome it is!");
@@ -219,7 +224,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsBadEnding2()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "Awesome it is!<i></i>");
             target.FixInvalidItalicTags();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Awesome it is!");
@@ -229,7 +234,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsBadEnding3()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "Awesome it is!<i>");
             target.FixInvalidItalicTags();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Awesome it is!");
@@ -239,7 +244,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsBadEnding4()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "Awesome it is!</i><i>");
             target.FixInvalidItalicTags();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Awesome it is!");
@@ -249,7 +254,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsLine1BadEnding()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "</i>What do i care.</i>");
             target.FixInvalidItalicTags();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>What do i care.</i>");
@@ -259,7 +264,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsLine1BadEndingDouble()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "<i>To be a life-changing weekend</i>" + Environment.NewLine + "<i>for all of us.");
             target.FixInvalidItalicTags();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>To be a life-changing weekend" + Environment.NewLine + "for all of us.</i>");
@@ -272,7 +277,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingPeriodsAtEndOfLineNone()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "This is line one!" + Environment.NewLine + "<i>Boy!</i>", "This is line one!" + Environment.NewLine + "<i>Boy!</i>");
             target.FixMissingPeriodsAtEndOfLine();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "This is line one!" + Environment.NewLine + "<i>Boy!</i>");
@@ -282,7 +287,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingPeriodsAtEndOfLineItalicAndMissing()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "This is line one!" + Environment.NewLine + "<i>Boy</i>", "This is line one!" + Environment.NewLine + "<i>Boy!</i>");
             target.FixMissingPeriodsAtEndOfLine();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "This is line one!" + Environment.NewLine + "<i>Boy.</i>");
@@ -292,7 +297,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingPeriodsAtEndOfLineItalicAndMissing2()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "<i>This is line one!" + Environment.NewLine + "Boy</i>", "This is line one!" + Environment.NewLine + "<i>Boy!</i>");
             target.FixMissingPeriodsAtEndOfLine();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>This is line one!" + Environment.NewLine + "Boy.</i>");
@@ -304,7 +309,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensAddDash1()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "Hi Joe!" + Environment.NewLine + "- Hi Pete!");
             target.FixHyphensAdd();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
@@ -314,7 +319,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensAddDash2()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "- Hi Joe!" + Environment.NewLine + "Hi Pete!");
             target.FixHyphensAdd();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
@@ -324,7 +329,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensAddDash2italic()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "<i>- Hi Joe!" + Environment.NewLine + "Hi Pete!</i>");
             target.FixHyphensAdd();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>- Hi Joe!" + Environment.NewLine + "- Hi Pete!</i>");
@@ -334,7 +339,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensAddDash3NoChange()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
             target.FixHyphensAdd();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
@@ -344,7 +349,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensAddDash4NoChange()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "- Hi!" + Environment.NewLine + "- Hi Pete!");
             target.FixHyphensAdd();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- Hi!" + Environment.NewLine + "- Hi Pete!");
@@ -357,7 +362,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixCommonOcrErrorsSlashMakesTwoWords()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "(laughing/clapping)");
             target.FixOcrErrorsViaReplaceList("eng");
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "(laughing/clapping)");
@@ -367,7 +372,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixCommonOcrErrorsSlashIsL()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "The font is ita/ic!");
             target.FixOcrErrorsViaReplaceList("eng");
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The font is italic!"); // will fail if English dictionary is not found
@@ -377,7 +382,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixCommonOcrErrorsDashedWords()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "The clock is 12 a.m.");
             target.FixOcrErrorsViaReplaceList("eng");
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The clock is 12 a.m.");
@@ -387,7 +392,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixCommonOcrErrorsNoStartWithLargeAfterThreePeriods()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "- I'll ring her." + Environment.NewLine + "- ...in a lot of trouble.");
             target.FixOcrErrorsViaReplaceList("eng");
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- I'll ring her." + Environment.NewLine + "- ...in a lot of trouble.");
@@ -400,7 +405,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesItalicBegin()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "The<i>Bombshell</i> will gone.");
             target.FixMissingSpaces();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The <i>Bombshell</i> will gone.");
@@ -410,7 +415,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesItalicEnd()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "The <i>Bombshell</i>will gone.");
             target.FixMissingSpaces();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The <i>Bombshell</i> will gone.");
@@ -423,7 +428,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphMusic1()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "♪ you like to move it...");
             target.FixStartWithUppercaseLetterAfterParagraph();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "♪ You like to move it...");
@@ -436,7 +441,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixSpanishNormalQuestion1()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "Cómo estás?");
             target.FixSpanishInvertedQuestionAndExclamationMarks();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¿Cómo estás?");
@@ -446,7 +451,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixSpanishNormalExclamationMark1()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "Cómo estás!");
             target.FixSpanishInvertedQuestionAndExclamationMarks();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¡Cómo estás!");
@@ -456,7 +461,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixSpanishExclamationMarkDouble()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "¡¡PARA!!");
             target.FixSpanishInvertedQuestionAndExclamationMarks();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¡¡PARA!!");
@@ -466,7 +471,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixSpanishExclamationMarkTriple()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "¡¡¡PARA!!!");
             target.FixSpanishInvertedQuestionAndExclamationMarks();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¡¡¡PARA!!!");
@@ -476,7 +481,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixSpanishExclamationMarkAndQuestionMark()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "¿Cómo estás?!");
             target.FixSpanishInvertedQuestionAndExclamationMarks();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¡¿Cómo estás?!");
@@ -486,7 +491,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixSpanishExclamationMarkAndQuestionMarkManyTagsDoubleExcl()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "<i>Chanchita, ¡¿copias?! Chanchita!!</i>");
             target.FixSpanishInvertedQuestionAndExclamationMarks();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>Chanchita, ¡¿copias?! ¡¡Chanchita!!</i>");
@@ -496,7 +501,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixSpanishExclamationMarkAndQuestionMarkOneOfEach()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "¡Cómo estás?");
             target.FixSpanishInvertedQuestionAndExclamationMarks();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¿¡Cómo estás!?");
@@ -510,7 +515,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixSingleLineDash1Italic()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "<i>- Mm-hmm.</i>");
             target.FixHyphens();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>Mm-hmm.</i>");
@@ -520,7 +525,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixSingleLineDash1Font()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "<font color='red'>- Mm-hmm.</font>");
             target.FixHyphens();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<font color='red'>Mm-hmm.</font>");
@@ -530,7 +535,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixSingleLineDash1()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "- Mm-hmm.");
             target.FixHyphens();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Mm-hmm.");
@@ -540,7 +545,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixSingleLineDash3()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "- I-I never thought of that.");
             target.FixHyphens();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "I-I never thought of that.");
@@ -550,7 +555,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixSingleLineDash4()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "- Uh-huh.");
             target.FixHyphens();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Uh-huh.");
@@ -562,7 +567,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixUppercaseIInsideWords1()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "This is no troubIe!");
             target.FixUppercaseIInsideWords();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "This is no trouble!");
@@ -572,7 +577,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixUppercaseIInsideWords2()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "- I'll ring her." + Environment.NewLine + "- ...In a lot of trouble.");
             target.FixUppercaseIInsideWords();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- I'll ring her." + Environment.NewLine + "- ...In a lot of trouble.");
@@ -582,7 +587,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixOcrErrorsNoChange()
         {
-            var target = new FixCommonErrors_Accessor();
+            var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "Yeah, see, that's not mine.");
             target.FixOcrErrorsViaReplaceList("eng");
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Yeah, see, that's not mine.");

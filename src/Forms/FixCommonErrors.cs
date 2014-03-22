@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Forms
             public bool Descending { get; set; }
         }
 
-        Subtitle _subtitle;
+        public Subtitle _subtitle;
         SubtitleFormat _format;
         Encoding _encoding = Encoding.UTF8;
         Subtitle _originalSubtitle;
@@ -2303,7 +2303,7 @@ namespace Nikse.SubtitleEdit.Forms
             return _abbreviationList;
         }
 
-        private void FixStartWithUppercaseLetterAfterParagraph()
+        public void FixStartWithUppercaseLetterAfterParagraph()
         {
             string fixAction1 = _language.FixFirstLetterToUppercaseAfterParagraph + " ";
             string fixAction2 = _language.FixFirstLetterToUppercaseAfterParagraph;
@@ -2718,7 +2718,7 @@ namespace Nikse.SubtitleEdit.Forms
             return abbreviations.Contains(word + ".");
         }
 
-        private void FixOcrErrorsViaReplaceList(string threeLetterISOLanguageName)
+        public void FixOcrErrorsViaReplaceList(string threeLetterISOLanguageName)
         {
             OcrFixEngine ocrFixEngine = new OcrFixEngine(threeLetterISOLanguageName, null, this);
             string fixAction = _language.FixCommonOcrErrors;
@@ -2973,7 +2973,7 @@ namespace Nikse.SubtitleEdit.Forms
             return s;
         }
 
-        private void FixHyphens()
+        public void FixHyphens()
         {
             string fixAction = _language.FixHyphen;
             int iFixes = 0;
@@ -3108,7 +3108,7 @@ namespace Nikse.SubtitleEdit.Forms
                 LogStatus(_language.FixHyphens, string.Format(_language.XHyphensFixed, iFixes));
         }
 
-        private void FixHyphensAdd()
+        public void FixHyphensAdd()
         {
             string fixAction = _language.FixHyphen;
             int iFixes = 0;
@@ -4132,7 +4132,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// Sentences ending with "?" must start with "¿".
         /// Sentences ending with "!" must start with "¡".
         /// </summary>
-        private void FixSpanishInvertedQuestionAndExclamationMarks()
+        public void FixSpanishInvertedQuestionAndExclamationMarks()
         {
             string fixAction = _language.FixSpanishInvertedQuestionAndExclamationMarks;
             int fixCount = 0;

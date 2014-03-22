@@ -66,9 +66,6 @@
     <Compile Include="UtilitiesTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Shadow Include="Test References\SubtitleEdit.accessor" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\SubtitleEdit.csproj">
       <Project>{511A5B59-1C35-4719-8536-23B19AF9B21A}</Project>
       <Name>SubtitleEdit</Name>
