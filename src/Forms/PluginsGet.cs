@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             tabPageGetPlugins.Text = _language.GetPlugins;
 
             buttonDownload.Text = _language.Download;
-            buttonRemove.Text = _language.Remove;            
+            buttonRemove.Text = _language.Remove;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             linkLabelOpenPluginFolder.Text = _language.OpenPluginsFolder;
             labelDescription1.Text = _language.GetPluginsInfo1;
@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     buttonUpdateAll.Text = Configuration.Settings.Language.PluginsGet.UpdateAll;
                     buttonUpdateAll.Visible = true;
-                }                
+                }
             }
         }
 

@@ -290,7 +290,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     SubtitlePacketIds.Add(key);
             }
             SubtitlePacketIds.Sort();
-        }        
+        }
 
         public List<TransportStreamSubtitle> GetDvbSubtitles(int packetId)
         {
@@ -408,7 +408,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             var subtitles = new List<TransportStreamSubtitle>();
             int seconds = 0;
             for (int i = 0; i < list.Count; i++)
-            {                
+            {
                 var pes = list[i];
                 pes.ParseSegments();
                 if (pes.ObjectDataList.Count > 0)

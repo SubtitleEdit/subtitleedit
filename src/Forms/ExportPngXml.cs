@@ -2333,7 +2333,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             for (int i=0; i<1000; i++)
                 comboBoxBottomMargin.Items.Add(i);
             if (Configuration.Settings.Tools.ExportBottomMargin >= 0 && Configuration.Settings.Tools.ExportBottomMargin < comboBoxBottomMargin.Items.Count)
-                comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBottomMargin;            
+                comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBottomMargin;
 
             if (exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME" && Configuration.Settings.Tools.ExportBluRayBottomMargin >= 0 && Configuration.Settings.Tools.ExportBluRayBottomMargin < comboBoxBottomMargin.Items.Count)
                 comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBluRayBottomMargin;
@@ -2390,10 +2390,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (Configuration.Settings.Tools.Export3DType >= 0 && Configuration.Settings.Tools.Export3DType < comboBox3D.Items.Count)
                 comboBox3D.SelectedIndex = Configuration.Settings.Tools.Export3DType;
             if (Configuration.Settings.Tools.Export3DDepth >= numericUpDownDepth3D.Minimum && Configuration.Settings.Tools.Export3DDepth <= numericUpDownDepth3D.Maximum)
-                numericUpDownDepth3D.Value = Configuration.Settings.Tools.Export3DDepth;                          
+                numericUpDownDepth3D.Value = Configuration.Settings.Tools.Export3DDepth;
 
             if (Configuration.Settings.Tools.ExportHorizontalAlignment >= 0 && Configuration.Settings.Tools.ExportHorizontalAlignment < comboBoxHAlign.Items.Count)
-                comboBoxHAlign.SelectedIndex = Configuration.Settings.Tools.ExportHorizontalAlignment;            
+                comboBoxHAlign.SelectedIndex = Configuration.Settings.Tools.ExportHorizontalAlignment;
 
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);

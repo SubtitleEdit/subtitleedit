@@ -2260,7 +2260,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     ImportSubtitleFromTransportStream(fileName);
                     return;
-                }               
+                }
 
                 if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp")
                     && fi.Length > 10000)
@@ -7072,7 +7072,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 // Remove the dialogue marker from the next subtitle.
                                 next.Text = next.Text.Remove(0, dialogueMarker.Length);
                             }
-                            
+
                             // If the second subtitle starts with "...":
                             Boolean nextSubtitleStartsWithEllipsis = next.Text.StartsWith("...");
                             if (nextSubtitleStartsWithEllipsis)
@@ -7118,7 +7118,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             // Undo
                             MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
-                            
+
                             // Define firstWord. If idx > 0, there is a first word.
                             // If not, firstWord is the whole text of the next subtitle.
                             string firstWord = ( idx > 0 ? s.Substring(0,idx).Trim() : next.Text);
@@ -7154,7 +7154,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 // Remove the position tag from the first word.
                                 firstWord = firstWord.Remove(0, firstWord.IndexOf("}") + 1);
                             }
-                            
+
                             // If the second subtitle (next) starts with a tag:
                             String startTag = "";
                             if (firstWord.StartsWith("<") && firstWord.Contains(">"))
@@ -7193,10 +7193,10 @@ namespace Nikse.SubtitleEdit.Forms
                             // Add positionTag + startTag + dialogueMarker + "..." + text to 'next'.
                             if (idx > 0)
                                 next.Text = positionTag + startTag + dialogueMarker + (nextSubtitleStartsWithEllipsis ? "..." : "") + Utilities.AutoBreakLine(next.Text.Trim());
-                            
+
                             // Add text + firstWord + "..." + endTag to First line.
                             p.Text = (idx == 0 ? startTag : "") + Utilities.AutoBreakLine(p.Text.Trim() + " " + firstWord.Trim()) + (idx > 0 && firstSubtitleEndsWithEllipsis ? "..." : "") + endTag;
- 
+
                         }
 
                         SubtitleListview1.SetText(firstIndex, p.Text);

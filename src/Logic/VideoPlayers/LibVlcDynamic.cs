@@ -541,7 +541,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     }
                 }
                 catch
-                { 
+                {
                 }
             }
 
