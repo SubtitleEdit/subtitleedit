@@ -148,8 +148,8 @@ namespace Nikse.SubtitleEdit.Logic
         public int BridgeGapMilliseconds { get; set; }
         public string ExportCustomTemplates { get; set; }
         public string ChangeCasingChoice { get; set; }
-        public string NoLineBreakAfter { get; set; }
         public bool UseNoLineBreakAfter { get; set; }
+        public string NoLineBreakAfterEnglish { get; set; }
 
         public ToolsSettings()
         {
@@ -201,7 +201,8 @@ namespace Nikse.SubtitleEdit.Logic
             ExportLastBorderWidth = 2;
             BridgeGapMilliseconds = 100;
             ExportCustomTemplates = "SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]ÆæMicroDvdÆÆ{{start}}{{end}}{text}\r\nÆffÆ||Æ";
-            NoLineBreakAfter = " Mrs.; Ms.; Mr.; Dr.; a; an; the; my; my own; your; his; our; their; it's; is; are;'s; 're; would;'ll;'ve;'d; will; that; which; who; whom; whose; whichever; whoever; wherever; each; either; every; all; both; few; many; sevaral; all; any; most; been; been doing";
+            UseNoLineBreakAfter = true;
+            NoLineBreakAfterEnglish = " Mrs.; Ms.; Mr.; Dr.; a; an; the; my; my own; your; his; our; their; it's; is; are;'s; 're; would;'ll;'ve;'d; will; that; which; who; whom; whose; whichever; whoever; wherever; each; either; every; all; both; few; many; sevaral; all; any; most; been; been doing; none; some; my own; your own; his own; her own; our own; their own; I; she; he; as per; as regards; into; onto; than; where as; abaft; aboard; about; above; across; afore; after; against; along; alongside; amid; amidst; among; amongst; anenst; apropos; apud; around; as; aside; astride; at; athwart; atop; barring; before; behind; below; beneath; beside; besides; between; betwixt; beyond; but; by; circa; ca; concerning; despite; down; during; except; excluding; following; for; forenenst; from; given; in; including; inside; into; lest; like; minus; modulo; near; next; of; off; on; onto; opposite; out; outside; over; pace; past; per; plus; pro; qua; regarding; round; sans; save; since; than; through; thru; throughout; thruout; till; to; toward; towards; under; underneath; unlike; until; unto; up; upon; versus; vs; via; vice; with; within; without; considering; respecting; one; two; another; three; our; five; six; seven; eight; nine; ten; eleven; twelve; thirteen; fourteen; fifteen; sixteen; seventeen; eighteen; nineteen; twenty; thirty; forty; fifty; sixty; seventy; eighty; ninety; hundred; thousand; million; billion; trillion; while; however; what; zero; little; enough; after; although; and; as; if; though; although; because; before; both; but; even; how; than; nor; or; only; unless; until; yet; was; were";
         }
 
     }
@@ -1655,6 +1656,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("UseNoLineBreakAfter");
             if (subNode != null)
                 settings.Tools.UseNoLineBreakAfter = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("NoLineBreakAfterEnglish");
+            if (subNode != null)
+                settings.Tools.NoLineBreakAfterEnglish = subNode.InnerText.Replace("  ", " ");
 
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
@@ -2679,6 +2683,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ExportCustomTemplates", settings.Tools.ExportCustomTemplates);
             textWriter.WriteElementString("ChangeCasingChoice", settings.Tools.ChangeCasingChoice);
             textWriter.WriteElementString("UseNoLineBreakAfter", settings.Tools.UseNoLineBreakAfter.ToString());
+            textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.NoLineBreakAfterEnglish.ToString());
 
             textWriter.WriteEndElement();
 
