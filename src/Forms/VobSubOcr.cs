@@ -4191,45 +4191,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }      
 
-        public static List<NOcrChar> LoadNOcr(string fileName)
-        {
-            var nocrChars = new List<NOcrChar>();
-            if (File.Exists(fileName))
-            {
-                try
-                {
-                    var doc = new XmlDocument();
-                    doc.Load(fileName);
-                    foreach (XmlNode node in doc.DocumentElement.SelectNodes("Char"))
-                    {
-                        var oc = new NOcrChar(node.Attributes["Text"].Value);
-                        oc.Width = Convert.ToInt32(node.Attributes["Width"].Value, CultureInfo.InvariantCulture);
-                        oc.Height = Convert.ToInt32(node.Attributes["Height"].Value, CultureInfo.InvariantCulture);
-                        oc.MarginTop = Convert.ToInt32(node.Attributes["MarginTop"].Value, CultureInfo.InvariantCulture);
-                        if (node.Attributes["Italic"] != null)
-                            oc.Italic = Convert.ToBoolean(node.Attributes["Italic"].Value, CultureInfo.InvariantCulture);
-                        if (node.Attributes["ExpandCount"] != null)
-                            oc.ExpandCount = Convert.ToInt32(node.Attributes["ExpandCount"].Value, CultureInfo.InvariantCulture);
-                        foreach (XmlNode pointNode in node.SelectNodes("Point"))
-                        {
-                            var op = new NOcrPoint(DecodePoint(pointNode.Attributes["Start"].Value), DecodePoint(pointNode.Attributes["End"].Value));
-                            XmlAttribute a = pointNode.Attributes["On"];
-                            if (a != null && Convert.ToBoolean(a.Value))
-                                oc.LinesForeground.Add(op);
-                            else
-                                oc.LinesBackground.Add(op);
-                        }
-                        nocrChars.Add(oc);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(exception.Message);
-                }
-            }
-            return nocrChars;
-        }
-
         public static List<NOcrChar> LoadNOcrForTesseract(string xmlRessourceName)
         {
             var nocrChars = new List<NOcrChar>();
@@ -5683,7 +5644,7 @@ namespace Nikse.SubtitleEdit.Forms
             string fileName = GetNOcrLanguageFileName();
             if (!string.IsNullOrEmpty(fileName))
             {
-                LoadNOcr(fileName);
+                _nOcrDb = new NOcrDb(fileName);
             }
         }
 

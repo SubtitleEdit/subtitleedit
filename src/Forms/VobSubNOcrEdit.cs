@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.OCR;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.OCR;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
 
         private List<NOcrChar> _nocrChars;
-        private NOcrChar _nocrChar = null;
+        private NOcrChar _nocrChar;
         private double _zoomFactor = 5.0;
         bool _drawLineOn;
         bool _startDone;
@@ -127,7 +127,6 @@ namespace Nikse.SubtitleEdit.Forms
         private bool IsMatch()
         {
             NikseBitmap nbmp = new NikseBitmap(pictureBoxCharacter.Image as Bitmap);
-            var bmp = pictureBoxCharacter.Image as Bitmap;
             foreach (NOcrPoint op in _nocrChar.LinesForeground)
             {
                 foreach (Point point in op.ScaledGetPoints(_nocrChar, nbmp.Width, nbmp.Height))
@@ -453,13 +452,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             int importedCount = 0;
             int notImportedCount = 0;
-            openFileDialog1.Filter = "nOCR files|nOCR_*.xml";
+            openFileDialog1.Filter = "nOCR files|*.nocr";
             openFileDialog1.InitialDirectory = Configuration.DataDirectory;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Title = "Import existing nOCR database into current";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                foreach (NOcrChar newChar in VobSubOcr.LoadNOcr(openFileDialog1.FileName))
+                NOcrDb newDb = new NOcrDb(openFileDialog1.FileName);
+                foreach (NOcrChar newChar in newDb.OcrCharacters)
                 {
                     bool found = false;
                     foreach (NOcrChar oldChar in _nocrChars)
