@@ -288,7 +288,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Paragraph p = Paragraphs[i];
                 Paragraph next = Paragraphs[i + 1];
-                if (next != null && p.EndFrame == next.StartFrame || p.EndFrame == next.StartFrame + 1)
+                if (next != null && (p.EndFrame == next.StartFrame || p.EndFrame == next.StartFrame + 1))
                     p.EndFrame = next.StartFrame - 1;
             }
         }
@@ -510,7 +510,7 @@ namespace Nikse.SubtitleEdit.Logic
                 case SubtitleSortCriteria.Text:
                     _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
                     {
-                        return p1.Text.CompareTo(p2.Text);
+                        return String.Compare(p1.Text, p2.Text, StringComparison.Ordinal);
                     });
                     break;
                 case SubtitleSortCriteria.TextMaxLineLength:
@@ -548,10 +548,8 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         if (p1.Extra == null)
                             return 1;
-                        return p1.Extra.CompareTo(p2.Extra);
+                        return String.Compare(p1.Extra, p2.Extra, StringComparison.Ordinal);
                     });
-                    break;
-                default:
                     break;
             }
         }
@@ -569,5 +567,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
             Paragraphs.Add(newParagraph);
         }
+
     }
 }

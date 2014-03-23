@@ -30,9 +30,9 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _subtitleFontName = value;
                 if (SubtitleFontBold)
-                    _subtitleFont = new System.Drawing.Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold);
+                    _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold);
                 else
-                    _subtitleFont = new System.Drawing.Font(_subtitleFontName, SubtitleFontSize);
+                    _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize);
             }
         }
 
@@ -44,9 +44,9 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _subtitleFontBold = value;
                 if (SubtitleFontBold)
-                    _subtitleFont = new System.Drawing.Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold);
+                    _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold);
                 else
-                    _subtitleFont = new System.Drawing.Font(_subtitleFontName, SubtitleFontSize);
+                    _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize);
             }
         }
 
@@ -58,9 +58,9 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _subtitleFontSize = value;
                 if (SubtitleFontBold)
-                    _subtitleFont = new System.Drawing.Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold);
+                    _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold);
                 else
-                    _subtitleFont = new System.Drawing.Font(_subtitleFontName, SubtitleFontSize);
+                    _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize);
             }
         }
 
@@ -142,9 +142,9 @@ namespace Nikse.SubtitleEdit.Controls
             GridLines = true;
             ColumnWidthChanged += SubtitleListViewColumnWidthChanged;
             OwnerDraw = true;
-            DrawItem += new DrawListViewItemEventHandler(SubtitleListView_DrawItem);
-            DrawSubItem += new DrawListViewSubItemEventHandler(SubtitleListView_DrawSubItem);
-            DrawColumnHeader += new DrawListViewColumnHeaderEventHandler(SubtitleListView_DrawColumnHeader);
+            DrawItem += SubtitleListView_DrawItem;
+            DrawSubItem += SubtitleListView_DrawSubItem;
+            DrawColumnHeader += SubtitleListView_DrawColumnHeader;
         }
 
         void SubtitleListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            using (StringFormat sf = new StringFormat())
+            using (var sf = new StringFormat())
             {
                 switch (e.Header.TextAlign)
                 {
@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         e.Graphics.FillRectangle(Brushes.LightBlue, rect);
                     }
-                    rect = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top+2, e.Bounds.Width - 3, e.Bounds.Height);
+                    //rect = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top+2, e.Bounds.Width - 3, e.Bounds.Height);
                     TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Left + 3, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
                 }
                 else
@@ -533,7 +533,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void Add(Paragraph paragraph)
         {
-            var item = new ListViewItem(paragraph.Number.ToString()) {Tag = paragraph };
+            var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) {Tag = paragraph };
             ListViewItem.ListViewSubItem subItem;
 
             if (Configuration.Settings != null  && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
