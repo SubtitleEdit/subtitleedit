@@ -460,6 +460,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(Configuration.Settings.Language.SpellCheck.TreatINQuoteAsING)) // TODO: remove in SE 3.4
                 checkBoxTreatINQuoteAsING.Visible = false;
 
+            groupBoxToolsMisc.Text = language.Miscellaneous;
+            checkBoxUseDoNotBreakAfterList.Text = language.UseDoNotBreakAfterList;
+
             comboBoxListViewDoubleClickEvent.Items.Clear();
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewNothing);
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewVideoGoToPositionAndPause);
@@ -575,6 +578,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSpellCheckAutoChangeNames.Checked = toolsSettings.SpellCheckAutoChangeNames;
             checkBoxSpellCheckOneLetterWords.Checked = toolsSettings.SpellCheckOneLetterWords;
             checkBoxTreatINQuoteAsING.Checked = toolsSettings.SpellCheckEnglishAllowInQuoteAsIng;
+            checkBoxUseDoNotBreakAfterList.Checked = toolsSettings.UseNoLineBreakAfter;
 
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -1120,6 +1124,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.SpellCheckAutoChangeNames = checkBoxSpellCheckAutoChangeNames.Checked;
             toolsSettings.SpellCheckOneLetterWords = checkBoxSpellCheckOneLetterWords.Checked;
             toolsSettings.SpellCheckEnglishAllowInQuoteAsIng = checkBoxTreatINQuoteAsING.Checked;
+            toolsSettings.UseNoLineBreakAfter = checkBoxUseDoNotBreakAfterList.Checked;
             toolsSettings.OcrFixUseHardcodedRules = checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked;
             toolsSettings.FixShortDisplayTimesAllowMoveStartTime = checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked;
 
