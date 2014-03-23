@@ -850,7 +850,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
                         s = RemoveTag(s, "t(");
                         s = RemoveTag(s, "move(");
-                        s = RemoveTag(s, "pos(");
+                        s = RemoveTag(s, "Position(");
                         s = RemoveTag(s, "org(");
                         s = RemoveTag(s, "fade(");
                         s = RemoveTag(s, "fad(");

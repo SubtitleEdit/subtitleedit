@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Nikse.SubtitleEdit.Logic
+namespace Nikse.SubtitleEdit.Logic.VideoFormats
 {
     public class SubtitleSequence
     {
@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic
     public class MatroskaTrackInfo
     {
         public int TrackNumber { get; set; }
-        public string UID { get; set; }
+        public string Uid { get; set; }
         public bool IsVideo { get; set; }
         public bool IsAudio { get; set; }
         public bool IsSubtitle { get; set; }
@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Logic
 
     public class Matroska
     {
-        private const uint EBML = 0x1A45DFA3;
+        private const uint Ebml = 0x1A45DFA3;
 
         public delegate void LoadMatroskaCallback(long position, long total);
 
@@ -125,18 +125,18 @@ namespace Nikse.SubtitleEdit.Logic
             public Double FloatData64; //64-bit
         }
 
-        string _fileName;
-        FileStream f;
-        int _pixelWidth, _pixelHeight;
-        double _frameRate;
-        string _videoCodecId;
-        double _durationInMilliseconds;
+        private string _fileName;
+        private FileStream _f;
+        private int _pixelWidth, _pixelHeight;
+        private double _frameRate;
+        private string _videoCodecId;
+        private double _durationInMilliseconds;
 
-        List<MatroskaSubtitleInfo> _subtitleList;
-        int _subtitleRipTrackNumber = 0;
-        List<SubtitleSequence> _subtitleRip = new List<SubtitleSequence>();
+        private List<MatroskaSubtitleInfo> _subtitleList;
+        private int _subtitleRipTrackNumber;
+        private List<SubtitleSequence> _subtitleRip = new List<SubtitleSequence>();
         private long _timeCodeScale = 1000000; // Timestamp scale in nanoseconds (1.000.000 means all timestamps in the segment are expressed in milliseconds).
-        List<MatroskaTrackInfo> _tracks;
+        private List<MatroskaTrackInfo> _tracks;
 
         public Matroska(string fileName)
         {
@@ -150,9 +150,9 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                using (f = new FileStream(_fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (_f = new FileStream(_fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    return GetMatroskaId() == EBML; // matroska file must start with ebml header
+                    return GetMatroskaId() == Ebml; // matroska file must start with ebml header
                 }
             }
         }
@@ -168,14 +168,14 @@ namespace Nikse.SubtitleEdit.Logic
             bool endOfFile;
 
             _tracks = new List<MatroskaTrackInfo>();
-            using (f = new FileStream(_fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (_f = new FileStream(_fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 matroskaId = GetMatroskaId();
-                b = (byte)f.ReadByte();
+                b = (byte)_f.ReadByte();
                 sizeOfSize = GetMatroskaVariableIntLength(b);
                 dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
-                f.Seek(dataSize, SeekOrigin.Current);
+                _f.Seek(dataSize, SeekOrigin.Current);
 
                 done = false;
                 endOfFile = false;
@@ -188,30 +188,30 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     else
                     {
-                        b = (byte)f.ReadByte();
+                        b = (byte)_f.ReadByte();
                         sizeOfSize = GetMatroskaVariableIntLength(b);
                         dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                         if (matroskaId == 0x1549A966) // segment info
                         {
-                            afterPosition = f.Position + dataSize;
+                            afterPosition = _f.Position + dataSize;
                             AnalyzeMatroskaSegmentInformation(afterPosition);
-                            f.Seek(afterPosition, SeekOrigin.Begin);
+                            _f.Seek(afterPosition, SeekOrigin.Begin);
                         }
                         else if (matroskaId == 0x1654AE6B)  // tracks
                         {
-                            afterPosition = f.Position + dataSize;
+                            afterPosition = _f.Position + dataSize;
                             AnalyzeMatroskaTracks();
-                            f.Seek(afterPosition, SeekOrigin.Begin);
+                            _f.Seek(afterPosition, SeekOrigin.Begin);
                             done = true;
                         }
                         else if (matroskaId != 0x18538067) // segment
                         {
-                            f.Seek(dataSize, SeekOrigin.Current);
+                            _f.Seek(dataSize, SeekOrigin.Current);
                         }
                     }
 
-                    endOfFile = f.Position >= f.Length;
+                    endOfFile = _f.Position >= _f.Length;
                 }
             }
             return _tracks;
@@ -233,14 +233,14 @@ namespace Nikse.SubtitleEdit.Logic
             bool endOfFile;
 
             _tracks = new List<MatroskaTrackInfo>();
-            using (f = new FileStream(_fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (_f = new FileStream(_fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 matroskaId = GetMatroskaId();
-                b = (byte)f.ReadByte();
+                b = (byte)_f.ReadByte();
                 sizeOfSize = GetMatroskaVariableIntLength(b);
                 dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
-                f.Seek(dataSize, SeekOrigin.Current);
+                _f.Seek(dataSize, SeekOrigin.Current);
 
                 done = false;
                 endOfFile = false;
@@ -253,34 +253,34 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     else
                     {
-                        b = (byte)f.ReadByte();
+                        b = (byte)_f.ReadByte();
                         sizeOfSize = GetMatroskaVariableIntLength(b);
                         dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                         if (matroskaId == 0x1549A966) // segment info
                         {
-                            afterPosition = f.Position + dataSize;
+                            afterPosition = _f.Position + dataSize;
                             AnalyzeMatroskaSegmentInformation(afterPosition);
-                            f.Seek(afterPosition, SeekOrigin.Begin);
+                            _f.Seek(afterPosition, SeekOrigin.Begin);
                         }
                         else if (matroskaId == 0x1654AE6B)  // tracks
                         {
-                            afterPosition = f.Position + dataSize;
+                            afterPosition = _f.Position + dataSize;
                             AnalyzeMatroskaTracks();
-                            f.Seek(afterPosition, SeekOrigin.Begin);
+                            _f.Seek(afterPosition, SeekOrigin.Begin);
                         }
                         else if (matroskaId == 0x1F43B675) // cluster
                         {
-                            afterPosition = f.Position + dataSize;
+                            afterPosition = _f.Position + dataSize;
                             return FindTrackStartInCluster(trackNumber);
                         }
                         else if (matroskaId != 0x18538067) // segment
                         {
-                            f.Seek(dataSize, SeekOrigin.Current);
+                            _f.Seek(dataSize, SeekOrigin.Current);
                         }
                     }
 
-                    endOfFile = f.Position >= f.Length;
+                    endOfFile = _f.Position >= _f.Length;
                 }
             }
             return 0;
@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Logic
             long clusterTimeCode = 0;
             int trackStartTime = -1;
 
-            while (f.Position < f.Length && done == false)
+            while (_f.Position < _f.Length && done == false)
             {
                 matroskaId = GetMatroskaClusterId();
 
@@ -305,27 +305,27 @@ namespace Nikse.SubtitleEdit.Logic
                     done = true;
                 else
                 {
-                    b = (byte)f.ReadByte();
+                    b = (byte)_f.ReadByte();
                     sizeOfSize = GetMatroskaVariableIntLength(b);
                     dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                     if (matroskaId == 0xE7) // Timecode
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
                         clusterTimeCode = GetMatroskaVariableSizeUnsignedInt(dataSize); // Absolute timestamp of the cluster (based on TimecodeScale).
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else if (matroskaId == 0xA0) // BlockGroup
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
                         AnalyzeMatroskaBlock(clusterTimeCode);
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else if (matroskaId == 0xA3) // SimpleBlock
                     {
-                        afterPosition = f.Position + dataSize;
-                        long before = f.Position;
-                        b = (byte)f.ReadByte();
+                        afterPosition = _f.Position + dataSize;
+                        long before = _f.Position;
+                        b = (byte)_f.ReadByte();
                         int sizeOftrackNumber = GetMatroskaVariableIntLength(b);
                         int trackNumber = (int)GetMatroskaDataSize(sizeOftrackNumber, b);
 
@@ -335,10 +335,10 @@ namespace Nikse.SubtitleEdit.Logic
                             trackStartTime = timeCode;
                             done = true;
                         }
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else
-                        f.Seek(dataSize, SeekOrigin.Current);
+                        _f.Seek(dataSize, SeekOrigin.Current);
                 }
             }
             return (clusterTimeCode + trackStartTime) * _timeCodeScale / 1000000;
@@ -396,23 +396,23 @@ namespace Nikse.SubtitleEdit.Logic
             var floatLayout = new FloatLayout32();
 
             floatLayout.B4 = firstByte;
-            floatLayout.B3 = (byte)f.ReadByte();
-            floatLayout.B2 = (byte)f.ReadByte();
-            floatLayout.B1 = (byte)f.ReadByte();
+            floatLayout.B3 = (byte)_f.ReadByte();
+            floatLayout.B2 = (byte)_f.ReadByte();
+            floatLayout.B1 = (byte)_f.ReadByte();
 
             return floatLayout.UintData32;
         }
 
         private UInt32 GetMatroskaId()
         {
-            byte b = (byte)f.ReadByte();
+            byte b = (byte)_f.ReadByte();
 
             if (b == 0xEC || // Void
                 b == 0xBF)   // CRC-32
                 return b;
 
             UInt32 x = GetUInt32(b);
-            if (x == EBML || // ebml header
+            if (x == Ebml || // ebml header
                 x == 0x18538067 || // segment
                 x == 0x114D9B74 || // seekhead
                 x == 0x1549A966 || // segment info
@@ -434,64 +434,64 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (sizeOfSize == 8)
             {
-                long i = (long)f.ReadByte() << 48;
-                i += (long)f.ReadByte() << 40;
-                i += (long)f.ReadByte() << 32;
-                i += (long)f.ReadByte() << 24;
-                i += (long)f.ReadByte() << 16;
-                i += (long)f.ReadByte() << 8;
-                i += f.ReadByte();
+                long i = (long)_f.ReadByte() << 48;
+                i += (long)_f.ReadByte() << 40;
+                i += (long)_f.ReadByte() << 32;
+                i += (long)_f.ReadByte() << 24;
+                i += (long)_f.ReadByte() << 16;
+                i += (long)_f.ReadByte() << 8;
+                i += _f.ReadByte();
                 return i;
             }
             else if (sizeOfSize == 7)
             {
                 long i = firstByte << 48;
-                i += (long)f.ReadByte() << 40;
-                i += (long)f.ReadByte() << 32;
-                i += (long)f.ReadByte() << 24;
-                i += (long)f.ReadByte() << 16;
-                i += (long)f.ReadByte() << 8;
-                i += f.ReadByte();
+                i += (long)_f.ReadByte() << 40;
+                i += (long)_f.ReadByte() << 32;
+                i += (long)_f.ReadByte() << 24;
+                i += (long)_f.ReadByte() << 16;
+                i += (long)_f.ReadByte() << 8;
+                i += _f.ReadByte();
                 return i;
             }
             else if (sizeOfSize == 6)
             {
                 firstByte = (byte)(firstByte & 3); // 00000011
-                b4 = (byte)f.ReadByte();
-                b5 = (byte)f.ReadByte();
-                b6 = (byte)f.ReadByte();
-                b7 = (byte)f.ReadByte();
-                b8 = (byte)f.ReadByte();
+                b4 = (byte)_f.ReadByte();
+                b5 = (byte)_f.ReadByte();
+                b6 = (byte)_f.ReadByte();
+                b7 = (byte)_f.ReadByte();
+                b8 = (byte)_f.ReadByte();
                 result = b8 + (b7 * 256) + (b6 * 65536) + (b5 * 16777216) + (b4 * 4294967296) + (firstByte * 1099511627776);
             }
             else if (sizeOfSize == 5)
             {
                 firstByte = (byte)(firstByte & 7); // 00000111
-                b5 = (byte)f.ReadByte();
-                b6 = (byte)f.ReadByte();
-                b7 = (byte)f.ReadByte();
-                b8 = (byte)f.ReadByte();
+                b5 = (byte)_f.ReadByte();
+                b6 = (byte)_f.ReadByte();
+                b7 = (byte)_f.ReadByte();
+                b8 = (byte)_f.ReadByte();
                 result = b8 + (b7 * 256) + (b6 * 65536) + (b5 * 16777216) + (firstByte * 4294967296);
             }
             else if (sizeOfSize == 4)
             {
                 firstByte = (byte)(firstByte & 15); // 00001111
-                b6 = (byte)f.ReadByte();
-                b7 = (byte)f.ReadByte();
-                b8 = (byte)f.ReadByte();
-                return(long)( b8 + (b7 << 8) + (b6 << 16) + (firstByte << 24));
+                b6 = (byte)_f.ReadByte();
+                b7 = (byte)_f.ReadByte();
+                b8 = (byte)_f.ReadByte();
+                return b8 + (b7 << 8) + (b6 << 16) + (firstByte << 24);
             }
             else if (sizeOfSize == 3)
             {
                 firstByte = (byte)(firstByte & 31); // 00011111
-                b7 = (byte)f.ReadByte();
-                b8 = (byte)f.ReadByte();
-                return (long) (b8 + (b7 << 8) + (firstByte << 16));
+                b7 = (byte)_f.ReadByte();
+                b8 = (byte)_f.ReadByte();
+                return b8 + (b7 << 8) + (firstByte << 16);
             }
             else if (sizeOfSize == 2)
             {
                 firstByte = (byte)(firstByte & 63); // 00111111
-                b8 = (byte)f.ReadByte();
+                b8 = (byte)_f.ReadByte();
                 return b8 + (firstByte << 8);
             }
             else if (sizeOfSize == 1)
@@ -504,7 +504,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private long GetMatroskaVariableSizeUnsignedInt(long sizeOfSize)
         {
-            byte firstByte = (byte)f.ReadByte();
+            byte firstByte = (byte)_f.ReadByte();
             byte b3, b4, b5, b6, b7, b8;
             long result = 0;
 
@@ -514,49 +514,49 @@ namespace Nikse.SubtitleEdit.Logic
             }
             else if (sizeOfSize == 7)
             {
-                b3 = (byte)f.ReadByte();
-                b4 = (byte)f.ReadByte();
-                b5 = (byte)f.ReadByte();
-                b6 = (byte)f.ReadByte();
-                b7 = (byte)f.ReadByte();
-                b8 = (byte)f.ReadByte();
+                b3 = (byte)_f.ReadByte();
+                b4 = (byte)_f.ReadByte();
+                b5 = (byte)_f.ReadByte();
+                b6 = (byte)_f.ReadByte();
+                b7 = (byte)_f.ReadByte();
+                b8 = (byte)_f.ReadByte();
                 result = b8 + (b7 * 256) + (b6 * 65536) + (b5 * 16777216) + (b4 * 4294967296) + (b3 * 1099511627776) +
                          (firstByte * 281474976710656);
 
             }
             else if (sizeOfSize == 6)
             {
-                b4 = (byte)f.ReadByte();
-                b5 = (byte)f.ReadByte();
-                b6 = (byte)f.ReadByte();
-                b7 = (byte)f.ReadByte();
-                b8 = (byte)f.ReadByte();
+                b4 = (byte)_f.ReadByte();
+                b5 = (byte)_f.ReadByte();
+                b6 = (byte)_f.ReadByte();
+                b7 = (byte)_f.ReadByte();
+                b8 = (byte)_f.ReadByte();
                 result = b8 + (b7 * 256) + (b6 * 65536) + (b5 * 16777216) + (b4 * 4294967296) + (firstByte * 1099511627776);
             }
             else if (sizeOfSize == 5)
             {
-                b5 = (byte)f.ReadByte();
-                b6 = (byte)f.ReadByte();
-                b7 = (byte)f.ReadByte();
-                b8 = (byte)f.ReadByte();
+                b5 = (byte)_f.ReadByte();
+                b6 = (byte)_f.ReadByte();
+                b7 = (byte)_f.ReadByte();
+                b8 = (byte)_f.ReadByte();
                 result = b8 + (b7 * 256) + (b6 * 65536) + (b5 * 16777216) + (firstByte * 4294967296);
             }
             else if (sizeOfSize == 4)
             {
-                b6 = (byte)f.ReadByte();
-                b7 = (byte)f.ReadByte();
-                b8 = (byte)f.ReadByte();
+                b6 = (byte)_f.ReadByte();
+                b7 = (byte)_f.ReadByte();
+                b8 = (byte)_f.ReadByte();
                 result = b8 + (b7 * 256) + (b6 * 65536) + (firstByte * 16777216);
             }
             else if (sizeOfSize == 3)
             {
-                b7 = (byte)f.ReadByte();
-                b8 = (byte)f.ReadByte();
+                b7 = (byte)_f.ReadByte();
+                b8 = (byte)_f.ReadByte();
                 result = b8 + (b7 * 256) + (firstByte * 65536);
             }
             else if (sizeOfSize == 2)
             {
-                b8 = (byte)f.ReadByte();
+                b8 = (byte)_f.ReadByte();
                 result = b8 + (firstByte * 256);
             }
             else if (sizeOfSize == 1)
@@ -569,7 +569,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private UInt32 GetMatroskaTracksId()
         {
-            byte b = (byte)f.ReadByte();
+            byte b = (byte)_f.ReadByte();
 
             if (b == 0xEC || // Void
                 b == 0xBF || // CRC-32
@@ -581,7 +581,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private UInt32 GetMatroskaTrackEntryId()
         {
-            UInt32 s = (UInt32)f.ReadByte();
+            UInt32 s = (UInt32)_f.ReadByte();
 
             if (s == 0xEC || // Void
                 s == 0xBF || // CRC-32
@@ -599,7 +599,7 @@ namespace Nikse.SubtitleEdit.Logic
                 return s;
             }
 
-            s = s * 256 + (byte)f.ReadByte();
+            s = s * 256 + (byte)_f.ReadByte();
             if (s == 0x73C5 || // TrackUID
                 s == 0x55AA || // FlagForced
                 s == 0x6DE7 || // MinCache
@@ -619,7 +619,7 @@ namespace Nikse.SubtitleEdit.Logic
                 return s;
             }
 
-            s = s * 256 + (byte)f.ReadByte();
+            s = s * 256 + (byte)_f.ReadByte();
             if (s == 0x23E383 || // Default Duration
                 s == 0x22B59C || // Language
                 s == 0x258688 || // CodecName
@@ -631,7 +631,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private UInt32 GetMatroskaTrackVideoId()
         {
-            UInt32 s = (byte)f.ReadByte();
+            UInt32 s = (byte)_f.ReadByte();
 
             if (s == 0xEC || // Void
                 s == 0xBF || // CRC-32
@@ -642,7 +642,7 @@ namespace Nikse.SubtitleEdit.Logic
                 return s;
             }
 
-            s = s * 256 + (byte)f.ReadByte();
+            s = s * 256 + (byte)_f.ReadByte();
             if (s == 0x54B0 || // DisplayWidth
                 s == 0x54BA || // DisplayHeight
                 s == 0x54BA || // DisplayHeight
@@ -654,7 +654,7 @@ namespace Nikse.SubtitleEdit.Logic
                 s == 0x54B2 || // DisplayUnit
                 s == 0x54B3)   // AspectRatioType
                 return s;
-            s = s * 256 + (byte)f.ReadByte();
+            s = s * 256 + (byte)_f.ReadByte();
 
             if (s == 0x2EB524)// ColourSpace
                 return s;
@@ -664,7 +664,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private UInt32 GetMatroskaSegmentId()
         {
-            byte b = (byte)f.ReadByte();
+            byte b = (byte)_f.ReadByte();
 
             if (b == 0xEC)// Void
                 return b;
@@ -672,7 +672,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (b == 0xBF)// CRC-32
                 return b;
 
-            UInt32 s = (UInt32)b * 256 + (byte)f.ReadByte();
+            UInt32 s = (UInt32)b * 256 + (byte)_f.ReadByte();
             if (s == 0x73A4 || // SegmentUID
                 s == 0x7384 || // SegmentFilename
                 s == 0x4444 || // SegmentFamily
@@ -689,7 +689,7 @@ namespace Nikse.SubtitleEdit.Logic
                 return s;
             }
 
-            s = (UInt32)b * 256 + (byte)f.ReadByte();
+            s = (UInt32)b * 256 + (byte)_f.ReadByte();
 
             if (s == 0x3CB923 || // PrevUID
                 s == 0x3C83AB || // PrevFilename
@@ -710,35 +710,35 @@ namespace Nikse.SubtitleEdit.Logic
             long dataSize;
             long afterPosition;
 
-            while (f.Position < endPosition && done == false)
+            while (_f.Position < endPosition && done == false)
             {
                 matroskaId = GetMatroskaTrackVideoId();
                 if (matroskaId == 0)
                     done = true;
                 else
                 {
-                    b = (byte)f.ReadByte();
+                    b = (byte)_f.ReadByte();
                     sizeOfSize = GetMatroskaVariableIntLength(b);
                     dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                     if (matroskaId == 0xB0) //// PixelWidth
                     {
-                        afterPosition = f.Position + dataSize;
-                        b = (byte)f.ReadByte();
+                        afterPosition = _f.Position + dataSize;
+                        b = (byte)_f.ReadByte();
                         dataSize = GetMatroskaDataSize(dataSize, b);
                         _pixelWidth = (int)dataSize;
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else if (matroskaId == 0xBA) // // PixelHeight
                     {
-                        afterPosition = f.Position + dataSize;
-                        b = (byte)f.ReadByte();
+                        afterPosition = _f.Position + dataSize;
+                        b = (byte)_f.ReadByte();
                         dataSize = GetMatroskaDataSize(dataSize, b);
                         _pixelHeight = (int)dataSize;
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else
-                        f.Seek(dataSize, SeekOrigin.Current);
+                        _f.Seek(dataSize, SeekOrigin.Current);
                 }
             }
         }
@@ -748,7 +748,7 @@ namespace Nikse.SubtitleEdit.Logic
             try
             {
                 byte[] buffer = new byte[size];
-                f.Read(buffer, 0, (int)size);
+                _f.Read(buffer, 0, (int)size);
                 return System.Text.Encoding.UTF8.GetString(buffer);
             }
             catch
@@ -779,73 +779,73 @@ namespace Nikse.SubtitleEdit.Logic
             int contentEncodingType = -1;
 
 
-            while (f.Position < f.Length && done == false)
+            while (_f.Position < _f.Length && done == false)
             {
                 matroskaId = GetMatroskaTrackEntryId();
                 if (matroskaId == 0)
                     done = true;
                 else
                 {
-                    b = (byte)f.ReadByte();
+                    b = (byte)_f.ReadByte();
                     sizeOfSize = GetMatroskaVariableIntLength(b);
                     dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                     if (matroskaId == 0x23E383)// Default Duration
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
 
-                        b = (byte)f.ReadByte();
+                        b = (byte)_f.ReadByte();
                         defaultDuration = GetMatroskaDataSize(dataSize, b);
 
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else if (matroskaId == 0xE0)// Video settings
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
                         AnalyzeMatroskaTrackVideo(afterPosition);
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                         isVideo = true;
                     }
                     else if (matroskaId == 0xE1)// Audio settings
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
                         AnalyzeMatroskaTrackVideo(afterPosition);
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                         isAudio = true;
                     }
                     else if (matroskaId == 0xD7) // Track number
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
                         if (dataSize == 1)
                         {
-                            trackNumber = (byte)f.ReadByte();
+                            trackNumber = (byte)_f.ReadByte();
                         }
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else if (matroskaId == 0x536E) // Name
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
                         name = GetMatroskaString(dataSize);
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else if (matroskaId == 0x22B59C) // Language
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
                         language = GetMatroskaString(dataSize);
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else if (matroskaId == 0x86) // CodecId
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
                         codecId = GetMatroskaString(dataSize);
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else if (matroskaId == 0x83) // Track type
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
                         if (dataSize == 1)
                         {
-                            byte trackType = (byte)f.ReadByte();
+                            byte trackType = (byte)_f.ReadByte();
                             if (trackType == 0x11) // subtitle
                                 isSubtitle = true;
                             if (trackType == 1)
@@ -853,35 +853,35 @@ namespace Nikse.SubtitleEdit.Logic
                             if (trackType == 2)
                                 isAudio = true;
                         }
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else if (matroskaId == 0x63A2) // CodecPrivate
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
                         codecPrivate = GetMatroskaString(dataSize);
                         if (codecPrivate.Length > 20)
                             biCompression = codecPrivate.Substring(16, 4);
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else if (matroskaId == 0x6D80) // ContentEncodings
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
 
                         contentCompressionAlgorithm = 0; // default value
                         contentEncodingType = 0; // default value
 
-                        int contentEncoding1  = f.ReadByte();
-                        int contentEncoding2  = f.ReadByte();
+                        int contentEncoding1  = _f.ReadByte();
+                        int contentEncoding2  = _f.ReadByte();
 
                         if (contentEncoding1 == 0x62 && contentEncoding2 == 0x40)
                         {
                             AnalyzeMatroskaContentEncoding(afterPosition, ref contentCompressionAlgorithm, ref contentEncodingType);
                         }
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
 
                     else
-                        f.Seek(dataSize, SeekOrigin.Current);
+                        _f.Seek(dataSize, SeekOrigin.Current);
                 }
             }
             if (_tracks != null)
@@ -921,9 +921,9 @@ namespace Nikse.SubtitleEdit.Logic
         {
             bool done = false;
 
-            while (f.Position < endPosition && done == false)
+            while (_f.Position < endPosition && done == false)
             {
-                int ebmlId = f.ReadByte() * 256 + f.ReadByte();
+                int ebmlId = _f.ReadByte() * 256 + _f.ReadByte();
 
                 if (ebmlId == 0)
                     done = true;
@@ -931,39 +931,39 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (ebmlId == 0x5031)// ContentEncodingOrder
                     {
-                        int contentEncodingOrder = f.ReadByte() * 256 + f.ReadByte();
+                        int contentEncodingOrder = _f.ReadByte() * 256 + _f.ReadByte();
                         System.Diagnostics.Debug.WriteLine("ContentEncodingOrder: " + contentEncodingOrder.ToString());
                     }
                     else if (ebmlId == 0x5032)// ContentEncodingScope
                     {
-                        int contentEncodingScope = f.ReadByte() * 256 + f.ReadByte();
+                        int contentEncodingScope = _f.ReadByte() * 256 + _f.ReadByte();
                         System.Diagnostics.Debug.WriteLine("ContentEncodingScope: " + contentEncodingScope.ToString());
                     }
                     else if (ebmlId == 0x5033)// ContentEncodingType
                     {
-                        contentEncodingType = f.ReadByte() * 256 + f.ReadByte();
+                        contentEncodingType = _f.ReadByte() * 256 + _f.ReadByte();
                     }
                     else if (ebmlId == 0x5034)// ContentCompression
                     {
-                        byte b = (byte)f.ReadByte();
+                        byte b = (byte)_f.ReadByte();
                         long sizeOfSize = GetMatroskaVariableIntLength(b);
                         long dataSize = GetMatroskaDataSize(sizeOfSize, b);
-                        long afterPosition = f.Position + dataSize;
-                        while (f.Position < afterPosition)
+                        long afterPosition = _f.Position + dataSize;
+                        while (_f.Position < afterPosition)
                         {
-                            int contentCompressionId = f.ReadByte() * 256 + f.ReadByte();
+                            int contentCompressionId = _f.ReadByte() * 256 + _f.ReadByte();
                             if (contentCompressionId == 0x4254)
                             {
-                                contentCompressionAlgorithm = f.ReadByte() * 256 + f.ReadByte();
+                                contentCompressionAlgorithm = _f.ReadByte() * 256 + _f.ReadByte();
                             }
                             else if (contentCompressionId == 0x4255)
                             {
-                                int contentCompSettings = f.ReadByte() * 256 + f.ReadByte();
+                                int contentCompSettings = _f.ReadByte() * 256 + _f.ReadByte();
                                 System.Diagnostics.Debug.WriteLine("contentCompSettings: " + contentCompSettings.ToString());
                             }
 
                         }
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                 }
             }
@@ -981,28 +981,28 @@ namespace Nikse.SubtitleEdit.Logic
             long timeCodeScale = 0;
             double duration8b = 0;
 
-            while (f.Position < endPosition && done == false)
+            while (_f.Position < endPosition && done == false)
             {
                 matroskaId = GetMatroskaSegmentId();
                 if (matroskaId == 0)
                     done = true;
                 else
                 {
-                    b = (byte)f.ReadByte();
+                    b = (byte)_f.ReadByte();
                     sizeOfSize = GetMatroskaVariableIntLength(b);
                     dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                     if (matroskaId == 0x2AD7B1)// TimecodeScale - u-integer     Timecode scale in nanoseconds (1.000.000 means all timecodes in the segment are expressed in milliseconds).
                     {
-                        afterPosition = f.Position + dataSize;
-                        b = (byte)f.ReadByte();
+                        afterPosition = _f.Position + dataSize;
+                        b = (byte)_f.ReadByte();
                         timeCodeScale = GetMatroskaDataSize(dataSize, b);
                         _timeCodeScale = timeCodeScale;
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else if (matroskaId == 0x4489)// Duration (float)
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
 
                         if (dataSize == 4)
                         {
@@ -1013,10 +1013,10 @@ namespace Nikse.SubtitleEdit.Logic
                             duration8b = GetFloat64();
                         }
 
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else
-                        f.Seek(dataSize, SeekOrigin.Current);
+                        _f.Seek(dataSize, SeekOrigin.Current);
                 }
             }
             if (timeCodeScale > 0 && duration8b > 0)
@@ -1030,10 +1030,10 @@ namespace Nikse.SubtitleEdit.Logic
             FloatLayout32 floatLayout = new FloatLayout32();
 
             // reverse byte ordering
-            floatLayout.B4 = (byte)f.ReadByte();
-            floatLayout.B3 = (byte)f.ReadByte();
-            floatLayout.B2 = (byte)f.ReadByte();
-            floatLayout.B1 = (byte)f.ReadByte();
+            floatLayout.B4 = (byte)_f.ReadByte();
+            floatLayout.B3 = (byte)_f.ReadByte();
+            floatLayout.B2 = (byte)_f.ReadByte();
+            floatLayout.B1 = (byte)_f.ReadByte();
 
             return floatLayout.FloatData32;
         }
@@ -1043,14 +1043,14 @@ namespace Nikse.SubtitleEdit.Logic
             FloatLayout64 floatLayout = new FloatLayout64();
 
             // reverse byte ordering
-            floatLayout.B8 = (byte)f.ReadByte();
-            floatLayout.B7 = (byte)f.ReadByte();
-            floatLayout.B6 = (byte)f.ReadByte();
-            floatLayout.B5 = (byte)f.ReadByte();
-            floatLayout.B4 = (byte)f.ReadByte();
-            floatLayout.B3 = (byte)f.ReadByte();
-            floatLayout.B2 = (byte)f.ReadByte();
-            floatLayout.B1 = (byte)f.ReadByte();
+            floatLayout.B8 = (byte)_f.ReadByte();
+            floatLayout.B7 = (byte)_f.ReadByte();
+            floatLayout.B6 = (byte)_f.ReadByte();
+            floatLayout.B5 = (byte)_f.ReadByte();
+            floatLayout.B4 = (byte)_f.ReadByte();
+            floatLayout.B3 = (byte)_f.ReadByte();
+            floatLayout.B2 = (byte)_f.ReadByte();
+            floatLayout.B1 = (byte)_f.ReadByte();
 
             return floatLayout.FloatData64;
         }
@@ -1065,25 +1065,25 @@ namespace Nikse.SubtitleEdit.Logic
             long afterPosition;
             _subtitleList = new List<MatroskaSubtitleInfo>();
 
-            while (f.Position < f.Length && done == false)
+            while (_f.Position < _f.Length && done == false)
             {
                 matroskaId = GetMatroskaTracksId();
                 if (matroskaId == 0)
                     done = true;
                 else
                 {
-                    b = (byte)f.ReadByte();
+                    b = (byte)_f.ReadByte();
                     sizeOfSize = GetMatroskaVariableIntLength(b);
                     dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                     if (matroskaId == 0xAE)
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
                         AnalyzeMatroskaTrackEntry();
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else
-                        f.Seek(dataSize, SeekOrigin.Current);
+                        _f.Seek(dataSize, SeekOrigin.Current);
                 }
             }
         }
@@ -1107,7 +1107,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             _durationInMilliseconds = 0;
 
-            f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            _f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
             matroskaId = GetMatroskaId();
             if (matroskaId != 0x1A45DFA3) // matroska file must start with ebml header
@@ -1117,11 +1117,11 @@ namespace Nikse.SubtitleEdit.Logic
             else
             {
                 isValid = true;
-                b = (byte)f.ReadByte();
+                b = (byte)_f.ReadByte();
                 sizeOfSize = GetMatroskaVariableIntLength(b);
                 dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
-                f.Seek(dataSize, SeekOrigin.Current);
+                _f.Seek(dataSize, SeekOrigin.Current);
 
                 done = false;
                 endOfFile = false;
@@ -1134,44 +1134,44 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     else
                     {
-                        b = (byte)f.ReadByte();
+                        b = (byte)_f.ReadByte();
                         sizeOfSize = GetMatroskaVariableIntLength(b);
                         dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                         if (matroskaId == 0x1549A966) // segment info
                         {
-                            afterPosition = f.Position + dataSize;
+                            afterPosition = _f.Position + dataSize;
                             AnalyzeMatroskaSegmentInformation(afterPosition);
-                            f.Seek(afterPosition, SeekOrigin.Begin);
+                            _f.Seek(afterPosition, SeekOrigin.Begin);
                         }
                         else if (matroskaId == 0x1654AE6B)  // tracks
                         {
-                            afterPosition = f.Position + dataSize;
+                            afterPosition = _f.Position + dataSize;
                             AnalyzeMatroskaTracks();
-                            f.Seek(afterPosition, SeekOrigin.Begin);
+                            _f.Seek(afterPosition, SeekOrigin.Begin);
                             done = true;
                         }
                         else if (matroskaId == 0x1F43B675) // cluster
                         {
-                            afterPosition = f.Position + dataSize;
+                            afterPosition = _f.Position + dataSize;
                             //if (f.Position > 8000000)
                             //    System.Windows.Forms.MessageBox.Show("8mb");
                             AnalyzeMatroskaCluster();
-                            f.Seek(afterPosition, SeekOrigin.Begin);
+                            _f.Seek(afterPosition, SeekOrigin.Begin);
                         }
                         else if (matroskaId != 0x18538067) // segment
                         {
-                            f.Seek(dataSize, SeekOrigin.Current);
+                            _f.Seek(dataSize, SeekOrigin.Current);
                         }
                     }
 
-                    endOfFile = f.Position >= f.Length;
+                    endOfFile = _f.Position >= _f.Length;
                 }
 
             }
-            f.Close();
-            f.Dispose();
-            f = null;
+            _f.Close();
+            _f.Dispose();
+            _f = null;
 
             pixelWidth = _pixelWidth;
             pixelHeight = _pixelHeight;
@@ -1183,7 +1183,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private UInt32 GetMatroskaClusterId()
         {
-            UInt32 s = (byte)f.ReadByte();
+            UInt32 s = (byte)_f.ReadByte();
 
             if (s == 0xE7 || // TimeCode
                 s == 0xA7 || // Position
@@ -1211,7 +1211,7 @@ namespace Nikse.SubtitleEdit.Logic
                 return s;
             }
 
-            s = s * 256 + (byte)f.ReadByte();
+            s = s * 256 + (byte)_f.ReadByte();
 
             if (s == 0x5854 || // SilentTracks
                 s == 0x58D7 || // SilentTrackNumber
@@ -1232,7 +1232,7 @@ namespace Nikse.SubtitleEdit.Logic
             long clusterTimeCode = 0;
             long duration = 0;
 
-            while (f.Position < f.Length && done == false)
+            while (_f.Position < _f.Length && done == false)
             {
                 matroskaId = GetMatroskaClusterId();
 
@@ -1240,27 +1240,27 @@ namespace Nikse.SubtitleEdit.Logic
                     done = true;
                 else
                 {
-                    b = (byte)f.ReadByte();
+                    b = (byte)_f.ReadByte();
                     sizeOfSize = GetMatroskaVariableIntLength(b);
                     dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                     if (matroskaId == 0xE7) // Timecode
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
                         clusterTimeCode = GetMatroskaVariableSizeUnsignedInt(dataSize);
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else if (matroskaId == 0xA0) // BlockGroup
                     {
-                        afterPosition = f.Position + dataSize;
+                        afterPosition = _f.Position + dataSize;
                         AnalyzeMatroskaBlock(clusterTimeCode);
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else if (matroskaId == 0xA3) // SimpleBlock
                     {
-                        afterPosition = f.Position + dataSize;
-                        long before = f.Position;
-                        b = (byte)f.ReadByte();
+                        afterPosition = _f.Position + dataSize;
+                        long before = _f.Position;
+                        b = (byte)_f.ReadByte();
                         int sizeOftrackNumber = GetMatroskaVariableIntLength(b);
                         long trackNumber = GetMatroskaDataSize(sizeOftrackNumber, b);
 
@@ -1269,37 +1269,37 @@ namespace Nikse.SubtitleEdit.Logic
                             int timeCode = GetInt16();
 
                             // lacing
-                            byte flags = (byte)f.ReadByte();
+                            byte flags = (byte)_f.ReadByte();
                             byte numberOfFrames = 0;
                             switch ((flags & 6))  // 6 = 00000110
                             {
                                 case 0: System.Diagnostics.Debug.Print("No lacing");   // No lacing
                                     break;
                                 case 2: System.Diagnostics.Debug.Print("Xiph lacing"); // 2 = 00000010 = Xiph lacing
-                                    numberOfFrames = (byte)f.ReadByte();
+                                    numberOfFrames = (byte)_f.ReadByte();
                                     numberOfFrames++;
                                     break;
                                 case 4: System.Diagnostics.Debug.Print("fixed-size");  // 4 = 00000100 = Fixed-size lacing
-                                    numberOfFrames = (byte)f.ReadByte();
+                                    numberOfFrames = (byte)_f.ReadByte();
                                     numberOfFrames++;
                                     for (int i = 1; i <= numberOfFrames; i++)
-                                        b = (byte)f.ReadByte(); // frames
+                                        b = (byte)_f.ReadByte(); // frames
                                     break;
                                 case 6: System.Diagnostics.Debug.Print("EBML");        // 6 = 00000110 = EMBL
-                                    numberOfFrames = (byte)f.ReadByte();
+                                    numberOfFrames = (byte)_f.ReadByte();
                                     numberOfFrames++;
                                     break;
                             }
 
-                            byte[] buffer = new byte[dataSize - (f.Position - before)];
-                            f.Read(buffer, 0, buffer.Length);
+                            byte[] buffer = new byte[dataSize - (_f.Position - before)];
+                            _f.Read(buffer, 0, buffer.Length);
                             _subtitleRip.Add(new SubtitleSequence(buffer, timeCode + clusterTimeCode, timeCode + clusterTimeCode + duration));
 
                         }
-                        f.Seek(afterPosition, SeekOrigin.Begin);
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else
-                        f.Seek(dataSize, SeekOrigin.Current);
+                        _f.Seek(dataSize, SeekOrigin.Current);
                 }
             }
         }
@@ -1307,17 +1307,17 @@ namespace Nikse.SubtitleEdit.Logic
         private void AnalyzeMatroskaBlock(long clusterTimeCode)
         {
             long duration = 0;
-            byte b = (byte)f.ReadByte();
+            byte b = (byte)_f.ReadByte();
             if (b == 0xA1) // Block
             {
-                b = (byte)f.ReadByte();
+                b = (byte)_f.ReadByte();
                 int sizeOfSize = GetMatroskaVariableIntLength(b);
                 long dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
-                long afterPosition = f.Position + dataSize;
+                long afterPosition = _f.Position + dataSize;
 
                 // track number
-                b = (byte)f.ReadByte();
+                b = (byte)_f.ReadByte();
                 int sizeOfTrackNo = GetMatroskaVariableIntLength(b);
                 long trackNo = GetMatroskaDataSize(sizeOfTrackNo, b);
 
@@ -1325,24 +1325,24 @@ namespace Nikse.SubtitleEdit.Logic
                 Int16 timeCode = GetInt16();
 
                 // lacing
-                byte flags = (byte)f.ReadByte();
+                byte flags = (byte)_f.ReadByte();
                 byte numberOfFrames = 0;
                 switch ((flags & 6))  // 6 = 00000110
                 {
                     case 0: System.Diagnostics.Debug.Print("No lacing");   // No lacing
                      break;
                     case 2: System.Diagnostics.Debug.Print("Xiph lacing"); // 2 = 00000010 = Xiph lacing
-                     numberOfFrames = (byte)f.ReadByte();
+                     numberOfFrames = (byte)_f.ReadByte();
                      numberOfFrames++;
                      break;
                     case 4: System.Diagnostics.Debug.Print("fixed-size");  // 4 = 00000100 = Fixed-size lacing
-                     numberOfFrames = (byte)f.ReadByte();
+                     numberOfFrames = (byte)_f.ReadByte();
                      numberOfFrames++;
                      for (int i = 1; i <= numberOfFrames; i++)
-                         b = (byte)f.ReadByte(); // frames
+                         b = (byte)_f.ReadByte(); // frames
                      break;
                     case 6: System.Diagnostics.Debug.Print("EBML");        // 6 = 00000110 = EMBL
-                     numberOfFrames = (byte)f.ReadByte();
+                     numberOfFrames = (byte)_f.ReadByte();
                      numberOfFrames++;
                      break;
                 }
@@ -1350,20 +1350,20 @@ namespace Nikse.SubtitleEdit.Logic
                 // save subtitle data
                 if (trackNo == _subtitleRipTrackNumber)
                 {
-                    long sublength = afterPosition - f.Position;
+                    long sublength = afterPosition - _f.Position;
                     if (sublength > 0)
                     {
                         byte[] buffer = new byte[sublength];
-                        f.Read(buffer, 0, (int)sublength);
+                        _f.Read(buffer, 0, (int)sublength);
 
                         //string s = GetMatroskaString(sublength);
                         //s = s.Replace("\\N", Environment.NewLine);
 
-                        f.Seek(afterPosition, SeekOrigin.Begin);
-                        b = (byte)f.ReadByte();
+                        _f.Seek(afterPosition, SeekOrigin.Begin);
+                        b = (byte)_f.ReadByte();
                         if (b == 0x9B) // BlockDuration
                         {
-                            b = (byte)f.ReadByte();
+                            b = (byte)_f.ReadByte();
                             sizeOfSize = GetMatroskaVariableIntLength(b);
                             dataSize = GetMatroskaDataSize(sizeOfSize, b);
                             duration = GetMatroskaVariableSizeUnsignedInt(dataSize);
@@ -1379,8 +1379,8 @@ namespace Nikse.SubtitleEdit.Logic
         private Int16 GetInt16()
         {
             ByteLayout16 l16 = new ByteLayout16();
-            l16.B2 = (byte)f.ReadByte();
-            l16.B1 = (byte)f.ReadByte();
+            l16.B2 = (byte)_f.ReadByte();
+            l16.B1 = (byte)_f.ReadByte();
             return l16.IntData16;
         }
 
@@ -1394,7 +1394,7 @@ namespace Nikse.SubtitleEdit.Logic
             long afterPosition;
             bool endOfFile;
 
-            f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            _f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
             matroskaId = GetMatroskaId();
             if (matroskaId != 0x1A45DFA3) // matroska file must start with ebml header
@@ -1404,11 +1404,11 @@ namespace Nikse.SubtitleEdit.Logic
             else
             {
                 isValid = true;
-                b = (byte)f.ReadByte();
+                b = (byte)_f.ReadByte();
                 sizeOfSize = GetMatroskaVariableIntLength(b);
                 dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
-                f.Seek(dataSize, SeekOrigin.Current);
+                _f.Seek(dataSize, SeekOrigin.Current);
 
                 done = false;
                 endOfFile = false;
@@ -1421,41 +1421,41 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     else
                     {
-                        b = (byte)f.ReadByte();
+                        b = (byte)_f.ReadByte();
                         sizeOfSize = GetMatroskaVariableIntLength(b);
                         dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                         if (matroskaId == 0x1549A966) // segment info
                         {
-                            afterPosition = f.Position + dataSize;
+                            afterPosition = _f.Position + dataSize;
                             AnalyzeMatroskaSegmentInformation(afterPosition);
-                            f.Seek(afterPosition, SeekOrigin.Begin);
+                            _f.Seek(afterPosition, SeekOrigin.Begin);
                         }
                         else if (matroskaId == 0x1654AE6B)  // tracks
                         {
-                            afterPosition = f.Position + dataSize;
+                            afterPosition = _f.Position + dataSize;
                             AnalyzeMatroskaTracks();
-                            f.Seek(afterPosition, SeekOrigin.Begin);
+                            _f.Seek(afterPosition, SeekOrigin.Begin);
                             done = true;
                         }
                         else if (matroskaId != 0x18538067) // segment
                         {
-                            f.Seek(dataSize, SeekOrigin.Current);
+                            _f.Seek(dataSize, SeekOrigin.Current);
                         }
                     }
 
-                    endOfFile = f.Position >= f.Length;
+                    endOfFile = _f.Position >= _f.Length;
                 }
 
             }
-            f.Close();
-            f.Dispose();
-            f = null;
+            _f.Close();
+            _f.Dispose();
+            _f = null;
 
             return _subtitleList;
         }
 
-        public List<SubtitleSequence> GetMatroskaSubtitle(string fileName, int trackNumber, out bool isValid, Matroska.LoadMatroskaCallback callback)
+        public List<SubtitleSequence> GetMatroskaSubtitle(string fileName, int trackNumber, out bool isValid, LoadMatroskaCallback callback)
         {
             byte b;
             bool done;
@@ -1466,7 +1466,7 @@ namespace Nikse.SubtitleEdit.Logic
             bool endOfFile;
             _subtitleRipTrackNumber = trackNumber;
 
-            f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            _f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
             matroskaId = GetMatroskaId();
             if (matroskaId != 0x1A45DFA3) // matroska file must start with ebml header
@@ -1476,11 +1476,11 @@ namespace Nikse.SubtitleEdit.Logic
             else
             {
                 isValid = true;
-                b = (byte)f.ReadByte();
+                b = (byte)_f.ReadByte();
                 sizeOfSize = GetMatroskaVariableIntLength(b);
                 dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
-                f.Seek(dataSize, SeekOrigin.Current);
+                _f.Seek(dataSize, SeekOrigin.Current);
 
                 done = false;
                 endOfFile = false;
@@ -1493,41 +1493,41 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     else
                     {
-                        b = (byte)f.ReadByte();
+                        b = (byte)_f.ReadByte();
                         sizeOfSize = GetMatroskaVariableIntLength(b);
                         dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                         if (matroskaId == 0x1549A966) // segment info
                         {
-                            afterPosition = f.Position + dataSize;
+                            afterPosition = _f.Position + dataSize;
                             AnalyzeMatroskaSegmentInformation(afterPosition);
-                            f.Seek(afterPosition, SeekOrigin.Begin);
+                            _f.Seek(afterPosition, SeekOrigin.Begin);
                         }
                         else if (matroskaId == 0x1654AE6B)  // tracks
                         {
-                            afterPosition = f.Position + dataSize;
+                            afterPosition = _f.Position + dataSize;
                             AnalyzeMatroskaTracks();
-                            f.Seek(afterPosition, SeekOrigin.Begin);
+                            _f.Seek(afterPosition, SeekOrigin.Begin);
                         }
                         else if (matroskaId == 0x1F43B675) // cluster
                         {
-                            afterPosition = f.Position + dataSize;
+                            afterPosition = _f.Position + dataSize;
                             AnalyzeMatroskaCluster();
-                            f.Seek(afterPosition, SeekOrigin.Begin);
+                            _f.Seek(afterPosition, SeekOrigin.Begin);
                         }
                         else if (matroskaId != 0x18538067) // segment
                         {
-                            f.Seek(dataSize, SeekOrigin.Current);
+                            _f.Seek(dataSize, SeekOrigin.Current);
                         }
                     }
                     if (callback != null)
-                        callback.Invoke(f.Position, f.Length);
-                    endOfFile = f.Position >= f.Length;
+                        callback.Invoke(_f.Position, _f.Length);
+                    endOfFile = _f.Position >= _f.Length;
                 }
             }
-            f.Close();
-            f.Dispose();
-            f = null;
+            _f.Close();
+            _f.Dispose();
+            _f = null;
 
             return _subtitleRip;
         }

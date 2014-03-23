@@ -34,7 +34,6 @@ namespace Test
         private Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHI GetRemoveTextForHiLib()
         {
             var hiSettings = new Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHISettings();
-            hiSettings.LoadFromConfiguration();
             return new Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHI(hiSettings);
         }
 
@@ -76,12 +75,12 @@ namespace Test
         public void RemoveColonTest()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveTextBeforeColon = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.ColonSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             string text = "Man over P.A.:\r\nGive back our homes.";
             string expected = "Give back our homes.";
             string actual = target.RemoveColon(text, string.Empty);
@@ -94,12 +93,12 @@ namespace Test
         public void RemoveColonTest2a()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveTextBeforeColon = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.ColonSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             string text = "GIOVANNI: <i>Number 9: I never look for a scapegoat.</i>";
             string expected = "<i>I never look for a scapegoat.</i>";
             string actual = target.RemoveColon(text, string.Empty);
@@ -112,12 +111,12 @@ namespace Test
         public void RemoveColonTest2b()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveTextBeforeColon = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.ColonSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = true;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
             string text = "GIOVANNI: <i>Number 9: I never look for a scapegoat.</i>";
             string expected = "<i>Number 9: I never look for a scapegoat.</i>";
             string actual = target.RemoveColon(text, string.Empty);
@@ -134,12 +133,12 @@ namespace Test
         public void RemoveHIInsideLine()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveTextBeforeColon = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBetweenParentheses = true;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBetweenParentheses = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "Be quiet. (SHUSHING) It's okay.";
             string expected = "Be quiet. It's okay.";
             string actual = target.RemoveHearImpairedtagsInsideLine(text);
@@ -154,11 +153,11 @@ namespace Test
         public void RemoveHI1()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBetweenSquares = true;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBetweenSquares = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "- Aw, save it. Storm?\r\n- [Storm]\r\nWe're outta here.";
             string expected = "- Aw, save it. Storm?\r\n- We're outta here.";
             string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
@@ -173,11 +172,11 @@ namespace Test
         public void RemoveHI2()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBetweenSquares = true;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBetweenSquares = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "[Chuckles,\r\nCoughing]\r\nBut we lived through it.";
             string expected = "But we lived through it.";
             string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
@@ -192,10 +191,10 @@ namespace Test
         public void RemoveHINot()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "is the body of a mutant kid\r\non the 6:00 news.";
             string expected = "is the body of a mutant kid\r\non the 6:00 news.";
             string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
@@ -211,11 +210,11 @@ namespace Test
         public void RemoveHIMultilineItalic()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveTextBeforeColon = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "<i>NARRATOR:" + Environment.NewLine +
                           "Previously on NCIS</i>";
             string expected = "<i>Previously on NCIS</i>";
@@ -231,11 +230,11 @@ namespace Test
         public void RemoveHIMultilineBold()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveTextBeforeColon = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "<b>NARRATOR:" + Environment.NewLine +
                           "Previously on NCIS</b>";
             string expected = "<b>Previously on NCIS</b>";
@@ -251,11 +250,11 @@ namespace Test
         public void RemoveHISecondLineDelay()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveTextBeforeColon = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "- JOHN: Hey." + Environment.NewLine +
                           "- ...hey.";
             string expected = "- Hey."+ Environment.NewLine +"- ...hey.";
@@ -268,10 +267,10 @@ namespace Test
         public void RemoveHIQuotes()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "- Where?!" + Environment.NewLine + "- Ow!";
             string expected = "Where?!";
             string actual = target.RemoveInterjections(text);
@@ -283,11 +282,11 @@ namespace Test
         public void RemoveHIDouble()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBetweenSquares = true;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBetweenSquares = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "[MAN]Where?![MAN]";
             string expected = "Where?!";
             string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
@@ -299,12 +298,12 @@ namespace Test
         public void RemoveRemoveNameOfFirstLine()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = false;
-            target.settings.RemoveTextBeforeColon = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "HECTOR: Hi." + Environment.NewLine + "-Oh, hey, Hector.";
             string expected = "- Hi." + Environment.NewLine + "- Oh, hey, Hector.";
             string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
@@ -316,12 +315,12 @@ namespace Test
         public void RemoveRemoveNameOfFirstLineBold()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = false;
-            target.settings.RemoveTextBeforeColon = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "<b>HECTOR: Hi.</b>";
             string expected = "<b>Hi.</b>";
             string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
@@ -333,11 +332,11 @@ namespace Test
         public void RemoveInterjections()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "-Ballpark." + Environment.NewLine + "-Hmm.";
             string expected = "Ballpark.";
             string actual = target.RemoveInterjections(text);
@@ -349,11 +348,11 @@ namespace Test
         public void RemoveInterjections2()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "-Ballpark." + Environment.NewLine + "-Mm-hm.";
             string expected = "Ballpark.";
             string actual = target.RemoveInterjections(text);
@@ -365,11 +364,11 @@ namespace Test
         public void RemoveInterjections3()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "-Mm-hm." + Environment.NewLine + "-Ballpark.";
             string expected = "Ballpark.";
             string actual = target.RemoveInterjections(text);
@@ -381,11 +380,11 @@ namespace Test
         public void RemoveInterjections4()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "- Mm-hm." + Environment.NewLine + "- Ballpark.";
             string expected = "Ballpark.";
             string actual = target.RemoveInterjections(text);
@@ -397,11 +396,11 @@ namespace Test
         public void RemoveInterjections5()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "- Ballpark." + Environment.NewLine + "- Hmm.";
             string expected = "Ballpark.";
             string actual = target.RemoveInterjections(text);
@@ -413,11 +412,11 @@ namespace Test
         public void RemoveInterjections6a()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "Ballpark, mm-hm.";
             string expected = "Ballpark.";
             string actual = target.RemoveInterjections(text);
@@ -429,11 +428,11 @@ namespace Test
         public void RemoveInterjections6b()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "Mm-hm, Ballpark.";
             string expected = "Ballpark.";
             string actual = target.RemoveInterjections(text);
@@ -445,11 +444,11 @@ namespace Test
         public void RemoveInterjections6bItalic()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "<i>Mm-hm, Ballpark.</i>";
             string expected = "<i>Ballpark.</i>";
             string actual = target.RemoveInterjections(text);
@@ -461,11 +460,11 @@ namespace Test
         public void RemoveInterjections7()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "You like her, huh?";
             string expected = "You like her?";
             string actual = target.RemoveInterjections(text);
@@ -477,11 +476,11 @@ namespace Test
         public void RemoveInterjections8()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "You like her, huh!";
             string expected = "You like her!";
             string actual = target.RemoveInterjections(text);
@@ -493,11 +492,11 @@ namespace Test
         public void RemoveInterjections9()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "You like her, huh.";
             string expected = "You like her.";
             string actual = target.RemoveInterjections(text);
@@ -509,11 +508,11 @@ namespace Test
         public void RemoveInterjections10()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "- You like her, huh." + Environment.NewLine + "- I do";
             string expected = "- You like her." + Environment.NewLine + "- I do";
             string actual = target.RemoveInterjections(text);
@@ -525,11 +524,11 @@ namespace Test
         public void RemoveInterjections10Italic()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "<i>- You like her, huh." + Environment.NewLine + "- I do</i>";
             string expected = "<i>- You like her." + Environment.NewLine + "- I do</i>";
             string actual = target.RemoveInterjections(text);
@@ -542,11 +541,11 @@ namespace Test
         public void RemoveInterjections11()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "- Ballpark, mm-hm." + Environment.NewLine + "- Oh yes!";
             string expected = "- Ballpark." + Environment.NewLine + "- Yes!";
             string actual = target.RemoveInterjections(text);
@@ -558,12 +557,12 @@ namespace Test
         public void RemoveColonOnlyOnSeparateLine()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = false;
-            target.settings.RemoveTextBeforeColon = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = true;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = true;
             string text = "HECTOR: Hi.";
             string expected = "HECTOR: Hi.";
             string actual = target.RemoveColon(text, string.Empty);
@@ -575,12 +574,12 @@ namespace Test
         public void RemoveLineIfAllUppercase1()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = true;
-            target.settings.RemoveInterjections = false;
-            target.settings.RemoveTextBeforeColon = false;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = true;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "HECTOR " + Environment.NewLine + "Hi.";
             string expected = "Hi.";
             string actual = target.RemoveLineIfAllUppercase(text);
@@ -592,12 +591,12 @@ namespace Test
         public void RemoveLineIfAllUppercase2()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = true;
-            target.settings.RemoveInterjections = false;
-            target.settings.RemoveTextBeforeColon = false;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = true;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "Please, Mr Krook." + Environment.NewLine + "SHOP DOOR BELL CLANGS";
             string expected = "Please, Mr Krook.";
             string actual = target.RemoveLineIfAllUppercase(text);
@@ -609,13 +608,13 @@ namespace Test
         public void RemoveLineIfAllUppercase3()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = true;
-            target.settings.RemoveInterjections = false;
-            target.settings.RemoveTextBeforeColon = false;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
-            target.settings.RemoveTextBetweenParentheses = true;
+            target.Settings.RemoveIfAllUppercase = true;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBetweenParentheses = true;
             string text = "(<i>GOIN' BACK TO INDIANA</i>" + Environment.NewLine + "CONTINUES PLAYING)";
             string expected = "";
             string actual = target.RemoveLineIfAllUppercase(text);
@@ -627,13 +626,13 @@ namespace Test
         public void RemoveLineIfParentheses3()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = false;
-            target.settings.RemoveTextBeforeColon = false;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
-            target.settings.RemoveTextBetweenParentheses = true;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBetweenParentheses = true;
             string text = "(<i>GOIN' BACK TO INDIANA</i>" + Environment.NewLine + "CONTINUES PLAYING)";
             string expected = "";
             string actual = target.RemoveHearImpairedTags(text);
@@ -646,12 +645,12 @@ namespace Test
         public void RemoveTextBeforeColonSecondLine()
         {
             var target = GetRemoveTextForHiLib();
-            target.settings.RemoveIfAllUppercase = false;
-            target.settings.RemoveInterjections = false;
-            target.settings.RemoveTextBeforeColon = true;
-            target.settings.OnlyIfInSeparateLine = false;
-            target.settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.settings.ColonSeparateLine = false;
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
             string text = "- even if it was one week." + Environment.NewLine  + "CANNING: Objection.";
             string expected = "- even if it was one week." + Environment.NewLine + "- Objection.";
             string actual = target.RemoveColon(text, string.Empty);

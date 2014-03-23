@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
@@ -15,10 +16,10 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 
         public Mdhd(FileStream fs, ulong size)
         {
-            buffer = new byte[size - 4];
-            fs.Read(buffer, 0, buffer.Length);
+            Buffer = new byte[size - 4];
+            fs.Read(Buffer, 0, Buffer.Length);
             int languageIndex = 20;
-            int version = buffer[0];
+            int version = Buffer[0];
             if (version == 0)
             {
                 CreationTime = GetUInt(4);
@@ -38,13 +39,13 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
             }
 
             // language code = skip first byte, 5 bytes + 5 bytes + 5 bytes (add 0x60 to get ascii value)
-            int languageByte = ((buffer[languageIndex] << 1) >> 3) + 0x60;
-            int languageByte2 = ((buffer[languageIndex] & 0x3) << 3) + (buffer[languageIndex + 1] >> 5) + 0x60;
-            int languageByte3 = (buffer[languageIndex + 1] & 0x1f) + 0x60;
+            int languageByte = ((Buffer[languageIndex] << 1) >> 3) + 0x60;
+            int languageByte2 = ((Buffer[languageIndex] & 0x3) << 3) + (Buffer[languageIndex + 1] >> 5) + 0x60;
+            int languageByte3 = (Buffer[languageIndex + 1] & 0x1f) + 0x60;
             char x = (char)languageByte;
             char x2 = (char)languageByte2;
             char x3 = (char)languageByte3;
-            Iso639ThreeLetterCode = x.ToString() + x2.ToString() + x3.ToString();
+            Iso639ThreeLetterCode = x.ToString(CultureInfo.InvariantCulture) + x2.ToString(CultureInfo.InvariantCulture) + x3.ToString(CultureInfo.InvariantCulture);
         }
 
         public string LanguageString

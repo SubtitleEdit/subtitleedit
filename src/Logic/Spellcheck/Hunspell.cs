@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         {
             if (Utilities.IsRunningOnLinux())
                 return new LinuxHunspell(dictionary + ".aff", dictionary + ".dic");
-            else if (Utilities.IsRunningOnMac())
+            if (Utilities.IsRunningOnMac())
                 return new MacHunspell(dictionary + ".aff", dictionary + ".dic");
 
             // Finnish is uses Voikko (not available via hunspell)

@@ -39,10 +39,10 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         private delegate IntPtr VoikkoFreeCstrArray(IntPtr array);
         VoikkoFreeCstrArray _voikkoFreeCstrArray;
 
-        private IntPtr _libDLL = IntPtr.Zero;
-        private IntPtr _libVoikko = IntPtr.Zero;
+        private IntPtr _libDll = IntPtr.Zero;
+        private readonly IntPtr _libVoikko = IntPtr.Zero;
 
-        private static string n2s(IntPtr ptr)
+        private static string N2S(IntPtr ptr)
         {
             if (ptr == IntPtr.Zero)
                 return null;
@@ -52,27 +52,27 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
                 for (byte* p = (byte*)ptr; *p != 0; p++)
                     bytes.Add(*p);
             }
-            return n2s(bytes.ToArray());
+            return N2S(bytes.ToArray());
         }
 
-        private static string n2s(byte[] bytes)
+        private static string N2S(byte[] bytes)
         {
             if (bytes == null)
                 return null;
             return Encoding.UTF8.GetString(bytes);
         }
 
-        private static byte[] s2n(string str)
+        private static byte[] S2N(string str)
         {
-            return s2encoding(str, Encoding.UTF8);
+            return S2Encoding(str, Encoding.UTF8);
         }
 
-        private static byte[] s2ansi(string str)
+        private static byte[] S2Ansi(string str)
         {
-            return s2encoding(str, Encoding.Default);
+            return S2Encoding(str, Encoding.Default);
         }
 
-        private static byte[] s2encoding(string str, Encoding encoding)
+        private static byte[] S2Encoding(string str, Encoding encoding)
         {
             if (str == null)
                 return null;
@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         private object GetDllType(Type type, string name)
         {
-            IntPtr address = GetProcAddress(_libDLL, name);
+            IntPtr address = GetProcAddress(_libDll, name);
             if (address != IntPtr.Zero)
             {
                 return Marshal.GetDelegateForFunctionPointer(address, type);
@@ -92,16 +92,16 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         /// <summary>
         /// Load dll dynamic + set pointers to needed methods
         /// </summary>
-        /// <param name="dllFile">Voikko lib</param>
+        /// <param name="baseFolder"></param>
         private void LoadLibVoikkoDynamic(string baseFolder)
         {
-            string dllFile = System.IO.Path.Combine(baseFolder, "Voikkox86.dll");
+            string dllFile = Path.Combine(baseFolder, "Voikkox86.dll");
             if (IntPtr.Size == 8)
-                dllFile = System.IO.Path.Combine(baseFolder, "Voikkox64.dll");
+                dllFile = Path.Combine(baseFolder, "Voikkox64.dll");
             if (!File.Exists(dllFile))
                 throw new FileNotFoundException(dllFile);
-            _libDLL = LoadLibrary(dllFile);
-            if (_libDLL == IntPtr.Zero)
+            _libDll = LoadLibrary(dllFile);
+            if (_libDll == IntPtr.Zero)
                 throw new FileLoadException("Unable to load " + dllFile);
 
             _voikkoInit = (VoikkoInit)GetDllType(typeof(VoikkoInit), "voikkoInit");
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             if (string.IsNullOrEmpty(word))
                 return false;
 
-            return Convert.ToBoolean(_voikkoSpell(_libVoikko, s2n(word)));
+            return Convert.ToBoolean(_voikkoSpell(_libVoikko, S2N(word)));
         }
 
         public override List<string> Suggest(string word)
@@ -127,13 +127,13 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             var suggestions = new List<string>();
             if (string.IsNullOrEmpty(word))
                 return suggestions;
-            IntPtr voikkoSuggestCstr = _voikkoSuggest(_libVoikko, s2n(word));
+            IntPtr voikkoSuggestCstr = _voikkoSuggest(_libVoikko, S2N(word));
             if (voikkoSuggestCstr == IntPtr.Zero)
                 return suggestions;
             unsafe
             {
                 for (byte** cStr = (byte**)voikkoSuggestCstr; *cStr != (byte*)0; cStr++)
-                    suggestions.Add(n2s(new IntPtr(*cStr)));
+                    suggestions.Add(N2S(new IntPtr(*cStr)));
             }
             _voikkoFreeCstrArray(voikkoSuggestCstr);
             return suggestions;
@@ -143,10 +143,10 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         {
             LoadLibVoikkoDynamic(baseFolder);
 
-            IntPtr error = new IntPtr();
-            _libVoikko = _voikkoInit(ref error, s2n("fi"), s2ansi(dictionaryFolder));
+            var error = new IntPtr();
+            _libVoikko = _voikkoInit(ref error, S2N("fi"), S2Ansi(dictionaryFolder));
             if (_libVoikko == IntPtr.Zero && error != IntPtr.Zero)
-                throw new Exception(n2s(error));
+                throw new Exception(N2S(error));
         }
 
         ~VoikkoSpellCheck()
@@ -156,8 +156,8 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
                 if (_libVoikko != IntPtr.Zero)
                     _voikkoTerminate(_libVoikko);
 
-                if (_libDLL != IntPtr.Zero)
-                    FreeLibrary(_libDLL);
+                if (_libDll != IntPtr.Zero)
+                    FreeLibrary(_libDll);
             }
             catch
             {

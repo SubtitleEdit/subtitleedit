@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     0,
                     0,
                     0,
-                    0xC0, // vertical pos: C0=bottom, 0=top
+                    0xC0, // vertical Position: C0=bottom, 0=top
                     2, //justification, 1=left, 2=center
                     0,
                     1, //1=normal font, 3=italic

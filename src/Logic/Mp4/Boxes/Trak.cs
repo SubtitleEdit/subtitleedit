@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 {
@@ -11,19 +10,20 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 
         public Trak(FileStream fs, ulong maximumLength)
         {
-            pos = (ulong)fs.Position;
+            Position = (ulong)fs.Position;
             while (fs.Position < (long)maximumLength)
             {
                 if (!InitializeSizeAndName(fs))
                     return;
 
-                if (name == "mdia")
-                    Mdia = new Mdia(fs, pos);
-                else if (name == "tkhd")
-                    Tkhd = new Tkhd(fs, pos);
+                if (Name == "mdia")
+                    Mdia = new Mdia(fs, Position);
+                else if (Name == "tkhd")
+                    Tkhd = new Tkhd(fs);
 
-                fs.Seek((long)pos, SeekOrigin.Begin);
+                fs.Seek((long)Position, SeekOrigin.Begin);
             }
         }
+
     }
 }

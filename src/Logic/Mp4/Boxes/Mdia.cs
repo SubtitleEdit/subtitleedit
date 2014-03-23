@@ -37,32 +37,32 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 
         public Mdia(FileStream fs, ulong maximumLength)
         {
-            pos = (ulong)fs.Position;
+            Position = (ulong)fs.Position;
             while (fs.Position < (long)maximumLength)
             {
                 if (!InitializeSizeAndName(fs))
                     return;
 
-                if (name == "minf" && IsTextSubtitle || IsVobSubSubtitle || IsClosedCaption)
+                if (Name == "minf" && IsTextSubtitle || IsVobSubSubtitle || IsClosedCaption)
                 {
                     UInt32 timeScale = 90000;
                     if (Mdhd != null)
                         timeScale = Mdhd.TimeScale;
-                    Minf = new Minf(fs, pos, timeScale, HandlerType, this);
+                    Minf = new Minf(fs, Position, timeScale, HandlerType, this);
                 }
-                else if (name == "hdlr")
+                else if (Name == "hdlr")
                 {
-                    buffer = new byte[size - 4];
-                    fs.Read(buffer, 0, buffer.Length);
+                    Buffer = new byte[Size - 4];
+                    fs.Read(Buffer, 0, Buffer.Length);
                     HandlerType = GetString(8, 4);
-                    if (size > 25)
-                        HandlerName = GetString(24, buffer.Length - (24 + 5)); // TODO: how to find this?
+                    if (Size > 25)
+                        HandlerName = GetString(24, Buffer.Length - (24 + 5)); // TODO: how to find this?
                 }
-                else if (name == "mdhd")
+                else if (Name == "mdhd")
                 {
-                    Mdhd = new Mdhd(fs, size);
+                    Mdhd = new Mdhd(fs, Size);
                 }
-                fs.Seek((long)pos, SeekOrigin.Begin);
+                fs.Seek((long)Position, SeekOrigin.Begin);
             }
         }
 

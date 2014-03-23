@@ -4,7 +4,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 {
     public class WindowsHunspell: Hunspell
     {
-        private NHunspell.Hunspell _hunspell;
+        private readonly NHunspell.Hunspell _hunspell;
 
         public WindowsHunspell (string affDictionary, string dicDictionary)
         {

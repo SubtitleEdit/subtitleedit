@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class BatchConvert
+    sealed partial class BatchConvert
     {
         /// <summary>
         /// Required designer variable.
