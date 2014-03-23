@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
@@ -85,9 +86,9 @@ namespace Nikse.SubtitleEdit.Controls
         private List<Bitmap> _spectrogramBitmaps = new List<Bitmap>();
         private string _spectrogramDirectory;
         private double _sampleDuration;
-        private double _imageWidth = 0;
-        private int _nfft = 0;
-        private double _secondsPerImage = 0;
+        private double _imageWidth;
+        private int _nfft;
+        private double _secondsPerImage;
 
         public delegate void ParagraphEventHandler(object sender, ParagraphEventArgs e);
         public event ParagraphEventHandler OnNewSelectionRightClicked;
@@ -105,7 +106,7 @@ namespace Nikse.SubtitleEdit.Controls
         public event EventHandler InsertAtVideoPosition;
         public event EventHandler PlayFirstSelectedSubtitle;
 
-        double _wholeParagraphMinMilliseconds = 0;
+        double _wholeParagraphMinMilliseconds;
         double _wholeParagraphMaxMilliseconds = double.MaxValue;
 
         public Keys InsertAtVideoPositionShortcut = Keys.None;
@@ -577,7 +578,6 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     brush.Dispose();
                 }
-                pen = null;
                 penNormal.Dispose();
                 penSelected.Dispose();
             }
@@ -681,7 +681,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             TimeSpan ts = TimeSpan.FromSeconds(seconds);
             if (ts.Minutes == 0 && ts.Hours == 0)
-                return ts.Seconds.ToString();
+                return ts.Seconds.ToString(CultureInfo.InvariantCulture);
             if (ts.Hours == 0)
                 return string.Format("{0:00}:{1:00}", ts.Minutes, ts.Seconds);
             return string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
@@ -1163,7 +1163,7 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             if (_mouseDownParagraphType == MouseDownParagraphType.Start && _prevParagraph != null && Math.Abs(_mouseDownParagraph.StartTime.TotalMilliseconds - _prevParagraph.EndTime.TotalMilliseconds) <= ClosenessForBorderSelection + 10)
                                 return; // do not decide which paragraph to move yet
-                            else if (_mouseDownParagraphType == MouseDownParagraphType.End && _nextParagraph != null && Math.Abs(_mouseDownParagraph.EndTime.TotalMilliseconds - _nextParagraph.StartTime.TotalMilliseconds) <= ClosenessForBorderSelection + 10)
+                            if (_mouseDownParagraphType == MouseDownParagraphType.End && _nextParagraph != null && Math.Abs(_mouseDownParagraph.EndTime.TotalMilliseconds - _nextParagraph.StartTime.TotalMilliseconds) <= ClosenessForBorderSelection + 10)
                                 return; // do not decide which paragraph to move yet
                         }
 
@@ -1785,8 +1785,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private double GetAverageVolumeForNextMilliseconds(int sampleIndex, int milliseconds)
         {
-            milliseconds = 150;
-            int length = SecondsToXPosition(milliseconds / 1000.0); // min length
+            int length = SecondsToXPosition(milliseconds / 1000.0);
             if (length < 9)
                 length = 9;
             double v = 0;
@@ -1812,13 +1811,10 @@ namespace Nikse.SubtitleEdit.Controls
             average = average / (_wavePeaks.AllSamples.Count - begin);
 
             int maxThresshold = (int)(_wavePeaks.DataMaxValue * (maximumVolumePercent / 100.0));
-            int silenceThresshold = 390;
-            silenceThresshold = (int)(average * (mininumVolumePercent / 100.0));
+            int silenceThresshold = (int)(average * (mininumVolumePercent / 100.0));
 
-            int length = SecondsToXPosition(0.1); // min length
             int length50Ms = SecondsToXPosition(0.050);
             double secondsPerParagraph = defaultMilliseconds / 1000.0;
-            int searchExtra = SecondsToXPosition(1.5); // search extra too see if subtitle ends.
             int minBetween = SecondsToXPosition(Configuration.Settings.General.MininumMillisecondsBetweenLines / 1000.0);
             bool subtitleOn = false;
             int i = begin;
@@ -1829,7 +1825,7 @@ namespace Nikse.SubtitleEdit.Controls
                     var currentLengthInSeconds = XPositionToSeconds(i - begin) - StartPositionSeconds;
                     if (currentLengthInSeconds > 1.0)
                     {
-                        subtitleOn = EndParagraphDueToLowVolume(silenceThresshold, begin, subtitleOn, i, subtitle);
+                        subtitleOn = EndParagraphDueToLowVolume(silenceThresshold, begin, subtitleOn, i);
                         if (!subtitleOn)
                         {
                             begin = i + minBetween;
@@ -1840,7 +1836,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         for (int j = 0; j < 20; j++)
                         {
-                            subtitleOn = EndParagraphDueToLowVolume(silenceThresshold, begin, subtitleOn, i + (j * length50Ms), subtitle);
+                            subtitleOn = EndParagraphDueToLowVolume(silenceThresshold, begin, subtitleOn, i + (j * length50Ms));
                             if (!subtitleOn)
                             {
                                 i += (j * length50Ms);
@@ -1869,17 +1865,17 @@ namespace Nikse.SubtitleEdit.Controls
                             subtitleOn = true;
                             begin = i;
                         }
-                        else
-                        {
+//                        else
+//                        {
 //                            MessageBox.Show("Too much");
-                        }
+//                        }
                     }
                 }
                 i++;
             }
         }
 
-        private bool EndParagraphDueToLowVolume(double silenceThresshold, int begin, bool subtitleOn, int i, Subtitle subtitle)
+        private bool EndParagraphDueToLowVolume(double silenceThresshold, int begin, bool subtitleOn, int i)
         {
             double avgVol = GetAverageVolumeForNextMilliseconds(i, 100);
             if (avgVol < silenceThresshold)
@@ -1890,7 +1886,6 @@ namespace Nikse.SubtitleEdit.Controls
             }
             return subtitleOn;
         }
-
 
     }
 }

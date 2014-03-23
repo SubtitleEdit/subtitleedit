@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
         public Mp4Parser(string fileName)
         {
             FileName = fileName;
-            FileStream fs = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var fs = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             ParseMp4(fs);
             fs.Close();
         }

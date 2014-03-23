@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -25,8 +26,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
-            this.LoadSubtitle(subtitle, lines, fileName);
+            var subtitle = new Subtitle();
+            LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > 0;
         }
 
@@ -44,15 +45,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("Paragraph");
 
                 XmlNode number = xml.CreateElement("Number");
-                number.InnerText = p.Number.ToString();
+                number.InnerText = p.Number.ToString(CultureInfo.InvariantCulture);
                 paragraph.AppendChild(number);
 
                 XmlNode start = xml.CreateElement("StartMilliseconds");
-                start.InnerText = p.StartTime.TotalMilliseconds.ToString();
+                start.InnerText = p.StartTime.TotalMilliseconds.ToString(CultureInfo.InvariantCulture);
                 paragraph.AppendChild(start);
 
                 XmlNode end = xml.CreateElement("EndMilliseconds");
-                end.InnerText = p.EndTime.TotalMilliseconds.ToString();
+                end.InnerText = p.EndTime.TotalMilliseconds.ToString(CultureInfo.InvariantCulture);
                 paragraph.AppendChild(end);
 
                 XmlNode text = xml.CreateElement("Text");
@@ -124,11 +125,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string frames = parts[3];
 
             return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames))).TotalMilliseconds;
-        }
-
-        private static string ConvertToTimeString(TimeCode time)
-        {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
     }

@@ -35,12 +35,12 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex, string videoFileName, string originalFileName)
         {
-            var newList = new List<RecentFileEntry> { new RecentFileEntry() { FileName = fileName, FirstVisibleIndex = firstVisibleIndex, FirstSelectedIndex = firstSelectedIndex, VideoFileName = videoFileName, OriginalFileName = originalFileName } };
+            var newList = new List<RecentFileEntry> { new RecentFileEntry { FileName = fileName, FirstVisibleIndex = firstVisibleIndex, FirstSelectedIndex = firstSelectedIndex, VideoFileName = videoFileName, OriginalFileName = originalFileName } };
             int index = 0;
             foreach (var oldRecentFile in Files)
             {
-                if (string.Compare(fileName, oldRecentFile.FileName, true) != 0 && index < MaxRecentFiles)
-                    newList.Add(new RecentFileEntry() { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName });
+                if (String.Compare(fileName, oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) != 0 && index < MaxRecentFiles)
+                    newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName });
                 index++;
             }
             Files = newList;
@@ -51,17 +51,17 @@ namespace Nikse.SubtitleEdit.Logic
             var newList = new List<RecentFileEntry>();
             foreach (var oldRecentFile in Files)
             {
-                if (string.Compare(fileName, oldRecentFile.FileName, true) == 0)
-                    newList.Add(new RecentFileEntry() { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName });
+                if (String.Compare(fileName, oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) == 0)
+                    newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName });
             }
             if (newList.Count == 0)
-                newList.Add(new RecentFileEntry() { FileName = fileName, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, OriginalFileName = originalFileName });
+                newList.Add(new RecentFileEntry { FileName = fileName, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, OriginalFileName = originalFileName });
 
             int index = 0;
             foreach (var oldRecentFile in Files)
             {
-                if (string.Compare(fileName, oldRecentFile.FileName, true) != 0 && index < MaxRecentFiles)
-                    newList.Add(new RecentFileEntry() { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName });
+                if (String.Compare(fileName, oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) != 0 && index < MaxRecentFiles)
+                    newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName });
                 index++;
             }
             Files = newList;
@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             SsaFontName = "Arial";
             SsaFontSize = 20;
-            SsaFontColorArgb = System.Drawing.Color.FromArgb(255, 255, 255).ToArgb();
+            SsaFontColorArgb = Color.FromArgb(255, 255, 255).ToArgb();
             SsaOutline = 2;
             SsaShadow = 1;
             SsaOpaqueBox = false;
@@ -527,8 +527,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             SubtitleFontSize = 8;
             SubtitleFontBold = false;
-            SubtitleFontColor = System.Drawing.Color.Black;
-            SubtitleBackgroundColor = System.Drawing.Color.White;
+            SubtitleFontColor = Color.Black;
+            SubtitleBackgroundColor = Color.White;
             CenterSubtitleInTextBox = false;
             DefaultSubtitleFormat = "SubRip";
             DefaultEncoding = Encoding.UTF8.EncodingName;
@@ -1009,7 +1009,7 @@ namespace Nikse.SubtitleEdit.Logic
             CommonErrors = new FixCommonErrorsSettings();
             VobSubOcr = new VobSubOcrSettings();
             VideoControls = new VideoControlsSettings();
-            NetworkSettings = new Logic.NetworkSettings();
+            NetworkSettings = new NetworkSettings();
             MultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
             Language = new Language();
             Shortcuts = new Shortcuts();
@@ -1102,9 +1102,9 @@ namespace Nikse.SubtitleEdit.Logic
             doc.PreserveWhitespace = true;
             doc.Load(fileName);
 
-            Settings settings = new Settings();
+            var settings = new Settings();
 
-            settings.RecentFiles = new Nikse.SubtitleEdit.Logic.RecentFilesSettings();
+            settings.RecentFiles = new RecentFilesSettings();
             XmlNode node = doc.DocumentElement.SelectSingleNode("RecentFiles");
             foreach (XmlNode listNode in node.SelectNodes("FileNames/FileName"))
             {
@@ -1268,10 +1268,10 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.General.AutoWrapLineWhileTyping = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SubtitleMaximumCharactersPerSeconds");
             if (subNode != null)
-                settings.General.SubtitleMaximumCharactersPerSeconds = Convert.ToDouble(subNode.InnerText, System.Globalization.CultureInfo.InvariantCulture);
+                settings.General.SubtitleMaximumCharactersPerSeconds = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
             subNode = node.SelectSingleNode("SubtitleOptimalCharactersPerSeconds");
             if (subNode != null)
-                settings.General.SubtitleOptimalCharactersPerSeconds = Convert.ToDouble(subNode.InnerText, System.Globalization.CultureInfo.InvariantCulture);
+                settings.General.SubtitleOptimalCharactersPerSeconds = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
             subNode = node.SelectSingleNode("SpellCheckLanguage");
             if (subNode != null)
                 settings.General.SpellCheckLanguage = subNode.InnerText;
@@ -1661,7 +1661,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.NoLineBreakAfterEnglish = subNode.InnerText.Replace("  ", " ");
 
 
-            settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
+            settings.SubtitleSettings = new SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
             if (node != null)
             {
@@ -1718,7 +1718,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.SubtitleSettings.NuendoCharacterListFile = subNode.InnerText;
             }
 
-            settings.Proxy = new Nikse.SubtitleEdit.Logic.ProxySettings();
+            settings.Proxy = new ProxySettings();
             node = doc.DocumentElement.SelectSingleNode("Proxy");
             subNode = node.SelectSingleNode("ProxyAddress");
             if (subNode != null)
@@ -1733,7 +1733,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (subNode != null)
                 settings.Proxy.Domain = subNode.InnerText;
 
-            settings.WordLists = new Nikse.SubtitleEdit.Logic.WordListSettings();
+            settings.WordLists = new WordListSettings();
             node = doc.DocumentElement.SelectSingleNode("WordLists");
             subNode = node.SelectSingleNode("LastLanguage");
             if (subNode != null)
@@ -1745,7 +1745,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (subNode != null)
                 settings.WordLists.UseOnlineNamesEtc = Convert.ToBoolean(subNode.InnerText);
 
-            settings.CommonErrors = new Nikse.SubtitleEdit.Logic.FixCommonErrorsSettings();
+            settings.CommonErrors = new FixCommonErrorsSettings();
             node = doc.DocumentElement.SelectSingleNode("CommonErrors");
             subNode = node.SelectSingleNode("StartPosition");
             if (subNode != null)
@@ -1947,7 +1947,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.VideoControls.WaveFormMininumSampleRate = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("WaveformSeeksSilenceDurationSeconds");
             if (subNode != null)
-                settings.VideoControls.WaveformSeeksSilenceDurationSeconds = Convert.ToDouble(subNode.InnerText, System.Globalization.CultureInfo.InvariantCulture);
+                settings.VideoControls.WaveformSeeksSilenceDurationSeconds = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
             subNode = node.SelectSingleNode("WaveformSeeksSilenceMaxVolume");
             if (subNode != null)
                 settings.VideoControls.WaveformSeeksSilenceMaxVolume = Convert.ToInt32(subNode.InnerText);
@@ -1970,7 +1970,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.NetworkSettings.PollIntervalSeconds = Convert.ToInt32(subNode.InnerText);
             }
 
-            settings.VobSubOcr = new Nikse.SubtitleEdit.Logic.VobSubOcrSettings();
+            settings.VobSubOcr = new VobSubOcrSettings();
             node = doc.DocumentElement.SelectSingleNode("VobSubOcr");
             subNode = node.SelectSingleNode("XOrMorePixelsMakesSpace");
             if (subNode != null)
@@ -2496,8 +2496,8 @@ namespace Nikse.SubtitleEdit.Logic
                     textWriter.WriteAttributeString("OriginalFileName", item.OriginalFileName);
                 if (item.VideoFileName != null)
                     textWriter.WriteAttributeString("VideoFileName", item.VideoFileName);
-                textWriter.WriteAttributeString("FirstVisibleIndex", item.FirstVisibleIndex.ToString());
-                textWriter.WriteAttributeString("FirstSelectedIndex", item.FirstSelectedIndex.ToString());
+                textWriter.WriteAttributeString("FirstVisibleIndex", item.FirstVisibleIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteAttributeString("FirstSelectedIndex", item.FirstSelectedIndex.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteString(item.FileName);
                 textWriter.WriteEndElement();
             }
@@ -2527,10 +2527,10 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("AutoConvertToUtf8", settings.General.AutoConvertToUtf8.ToString());
             textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString());
             textWriter.WriteElementString("_subtitleFontName", settings.General.SubtitleFontName);
-            textWriter.WriteElementString("SubtitleFontSize", settings.General.SubtitleFontSize.ToString());
+            textWriter.WriteElementString("SubtitleFontSize", settings.General.SubtitleFontSize.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("SubtitleFontBold", settings.General.SubtitleFontBold.ToString());
-            textWriter.WriteElementString("SubtitleFontColor", settings.General.SubtitleFontColor.ToArgb().ToString());
-            textWriter.WriteElementString("SubtitleBackgroundColor", settings.General.SubtitleBackgroundColor.ToArgb().ToString());
+            textWriter.WriteElementString("SubtitleFontColor", settings.General.SubtitleFontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("SubtitleBackgroundColor", settings.General.SubtitleBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("CenterSubtitleInTextBox", settings.General.CenterSubtitleInTextBox.ToString());
             textWriter.WriteElementString("ShowRecentFiles", settings.General.ShowRecentFiles.ToString());
             textWriter.WriteElementString("RememberSelectedLine", settings.General.RememberSelectedLine.ToString());
@@ -2538,36 +2538,36 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("StartRememberPositionAndSize", settings.General.StartRememberPositionAndSize.ToString());
             textWriter.WriteElementString("StartPosition", settings.General.StartPosition);
             textWriter.WriteElementString("StartSize", settings.General.StartSize);
-            textWriter.WriteElementString("SplitContainerMainSplitterDistance", settings.General.SplitContainerMainSplitterDistance.ToString());
-            textWriter.WriteElementString("SplitContainer1SplitterDistance", settings.General.SplitContainer1SplitterDistance.ToString());
-            textWriter.WriteElementString("SplitContainerListViewAndTextSplitterDistance", settings.General.SplitContainerListViewAndTextSplitterDistance.ToString());
+            textWriter.WriteElementString("SplitContainerMainSplitterDistance", settings.General.SplitContainerMainSplitterDistance.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("SplitContainer1SplitterDistance", settings.General.SplitContainer1SplitterDistance.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("SplitContainerListViewAndTextSplitterDistance", settings.General.SplitContainerListViewAndTextSplitterDistance.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString());
             textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString());
-            textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString());
-            textWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", settings.General.SubtitleMinimumDisplayMilliseconds.ToString());
-            textWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", settings.General.SubtitleMaximumDisplayMilliseconds.ToString());
-            textWriter.WriteElementString("MininumMillisecondsBetweenLines", settings.General.MininumMillisecondsBetweenLines.ToString());
-            textWriter.WriteElementString("SetStartEndHumanDelay", settings.General.SetStartEndHumanDelay.ToString());
+            textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", settings.General.SubtitleMinimumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", settings.General.SubtitleMaximumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("MininumMillisecondsBetweenLines", settings.General.MininumMillisecondsBetweenLines.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("SetStartEndHumanDelay", settings.General.SetStartEndHumanDelay.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString());
-            textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
             textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
-            textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString());
-            textWriter.WriteElementString("VideoPlayerPreviewFontSize", settings.General.VideoPlayerPreviewFontSize.ToString());
+            textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("VideoPlayerPreviewFontSize", settings.General.VideoPlayerPreviewFontSize.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("VideoPlayerShowStopButton", settings.General.VideoPlayerShowStopButton.ToString());
             textWriter.WriteElementString("VideoPlayerShowStopMute", settings.General.VideoPlayerShowMuteButton.ToString());
             textWriter.WriteElementString("VideoPlayerShowStopFullscreen", settings.General.VideoPlayerShowFullscreenButton.ToString());
             textWriter.WriteElementString("Language", settings.General.Language);
             textWriter.WriteElementString("ListViewLineSeparatorString", settings.General.ListViewLineSeparatorString);
-            textWriter.WriteElementString("ListViewDoubleClickAction", settings.General.ListViewDoubleClickAction.ToString());
+            textWriter.WriteElementString("ListViewDoubleClickAction", settings.General.ListViewDoubleClickAction.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("UppercaseLetters", settings.General.UppercaseLetters);
-            textWriter.WriteElementString("DefaultAdjustMilliseconds", settings.General.DefaultAdjustMilliseconds.ToString());
+            textWriter.WriteElementString("DefaultAdjustMilliseconds", settings.General.DefaultAdjustMilliseconds.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("AutoRepeatOn", settings.General.AutoRepeatOn.ToString());
-            textWriter.WriteElementString("AutoRepeatCount", settings.General.AutoRepeatCount.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("AutoRepeatCount", settings.General.AutoRepeatCount.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("AutoContinueOn", settings.General.AutoContinueOn.ToString());
             textWriter.WriteElementString("SyncListViewWithVideoWhilePlaying", settings.General.SyncListViewWithVideoWhilePlaying.ToString());
-            textWriter.WriteElementString("AutoBackupSeconds", settings.General.AutoBackupSeconds.ToString());
+            textWriter.WriteElementString("AutoBackupSeconds", settings.General.AutoBackupSeconds.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("SpellChecker", settings.General.SpellChecker);
             textWriter.WriteElementString("AllowEditOfOriginalSubtitle", settings.General.AllowEditOfOriginalSubtitle.ToString());
             textWriter.WriteElementString("PromptDeleteLines", settings.General.PromptDeleteLines.ToString());
@@ -2576,10 +2576,10 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("UndockedWaveformPosition", settings.General.UndockedWaveformPosition);
             textWriter.WriteElementString("UndockedVideoControlsPosition", settings.General.UndockedVideoControlsPosition);
             textWriter.WriteElementString("WaveFormCenter", settings.General.WaveFormCenter.ToString());
-            textWriter.WriteElementString("SmallDelayMilliseconds", settings.General.SmallDelayMilliseconds.ToString());
-            textWriter.WriteElementString("LargeDelayMilliseconds", settings.General.LargeDelayMilliseconds.ToString());
+            textWriter.WriteElementString("SmallDelayMilliseconds", settings.General.SmallDelayMilliseconds.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("LargeDelayMilliseconds", settings.General.LargeDelayMilliseconds.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ShowOriginalAsPreviewIfAvailable", settings.General.ShowOriginalAsPreviewIfAvailable.ToString());
-            textWriter.WriteElementString("LastPacCodePage", settings.General.LastPacCodePage.ToString());
+            textWriter.WriteElementString("LastPacCodePage", settings.General.LastPacCodePage.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("OpenSubtitleExtraExtensions", settings.General.OpenSubtitleExtraExtensions);
             textWriter.WriteElementString("ListViewColumsRememberSize", settings.General.ListViewColumsRememberSize.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ListViewNumberWidth", settings.General.ListViewNumberWidth.ToString(CultureInfo.InvariantCulture));
@@ -2606,10 +2606,10 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Tools", "");
-            textWriter.WriteElementString("StartSceneIndex", settings.Tools.StartSceneIndex.ToString());
-            textWriter.WriteElementString("EndSceneIndex", settings.Tools.EndSceneIndex.ToString());
-            textWriter.WriteElementString("VerifyPlaySeconds", settings.Tools.VerifyPlaySeconds.ToString());
-            textWriter.WriteElementString("MergeLinesShorterThan", settings.Tools.MergeLinesShorterThan.ToString());
+            textWriter.WriteElementString("StartSceneIndex", settings.Tools.StartSceneIndex.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("EndSceneIndex", settings.Tools.EndSceneIndex.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("VerifyPlaySeconds", settings.Tools.VerifyPlaySeconds.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("MergeLinesShorterThan", settings.Tools.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("FixShortDisplayTimesAllowMoveStartTime", settings.Tools.FixShortDisplayTimesAllowMoveStartTime.ToString());
             textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
             textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.MusicSymbolToReplace);
@@ -2627,13 +2627,13 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString());
             textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString());
             textWriter.WriteElementString("ListViewSyntaxMoreThanXLines", settings.Tools.ListViewSyntaxMoreThanXLines.ToString());
-            textWriter.WriteElementString("ListViewSyntaxMoreThanXLinesX", settings.Tools.ListViewSyntaxMoreThanXLinesX.ToString());
+            textWriter.WriteElementString("ListViewSyntaxMoreThanXLinesX", settings.Tools.ListViewSyntaxMoreThanXLinesX.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString());
-            textWriter.WriteElementString("ListViewSyntaxErrorColor", settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString());
-            textWriter.WriteElementString("ListViewUnfocusedSelectedColor", settings.Tools.ListViewUnfocusedSelectedColor.ToArgb().ToString());
+            textWriter.WriteElementString("ListViewSyntaxErrorColor", settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ListViewUnfocusedSelectedColor", settings.Tools.ListViewUnfocusedSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("SplitAdvanced", settings.Tools.SplitAdvanced.ToString());
             textWriter.WriteElementString("SplitOutputFolder", settings.Tools.SplitOutputFolder);
-            textWriter.WriteElementString("SplitNumberOfParts", settings.Tools.SplitNumberOfParts.ToString());
+            textWriter.WriteElementString("SplitNumberOfParts", settings.Tools.SplitNumberOfParts.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("SplitVia", settings.Tools.SplitVia);
             textWriter.WriteElementString("NewEmptyTranslationText", settings.Tools.NewEmptyTranslationText);
             textWriter.WriteElementString("BatchConvertOutputFolder", settings.Tools.BatchConvertOutputFolder);
@@ -2651,54 +2651,54 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
             textWriter.WriteElementString("ModifySelectionCaseSensitive", settings.Tools.ModifySelectionCaseSensitive.ToString());
             textWriter.WriteElementString("ExportVobSubFontName", settings.Tools.ExportVobSubFontName);
-            textWriter.WriteElementString("ExportVobSubFontSize", settings.Tools.ExportVobSubFontSize.ToString());
+            textWriter.WriteElementString("ExportVobSubFontSize", settings.Tools.ExportVobSubFontSize.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ExportVobSubVideoResolution", settings.Tools.ExportVobSubVideoResolution);
             textWriter.WriteElementString("ExportVobSubLanguage", settings.Tools.ExportVobSubLanguage);
             textWriter.WriteElementString("ExportVobSubSimpleRendering", settings.Tools.ExportVobSubSimpleRendering.ToString());
             textWriter.WriteElementString("ExportVobAntiAliasingWithTransparency", settings.Tools.ExportVobAntiAliasingWithTransparency.ToString());
             textWriter.WriteElementString("ExportBluRayFontName", settings.Tools.ExportBluRayFontName);
-            textWriter.WriteElementString("ExportBluRayFontSize", settings.Tools.ExportBluRayFontSize.ToString());
+            textWriter.WriteElementString("ExportBluRayFontSize", settings.Tools.ExportBluRayFontSize.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ExportFcpFontName", settings.Tools.ExportFcpFontName);
-            textWriter.WriteElementString("ExportFcpFontSize", settings.Tools.ExportFcpFontSize.ToString());
+            textWriter.WriteElementString("ExportFcpFontSize", settings.Tools.ExportFcpFontSize.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ExportFcpImageType", settings.Tools.ExportFcpImageType);
-            textWriter.WriteElementString("ExportLastFontSize", settings.Tools.ExportLastFontSize.ToString());
-            textWriter.WriteElementString("ExportLastLineHeight", settings.Tools.ExportLastLineHeight.ToString());
-            textWriter.WriteElementString("ExportLastBorderWidth", settings.Tools.ExportLastBorderWidth.ToString());
+            textWriter.WriteElementString("ExportLastFontSize", settings.Tools.ExportLastFontSize.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ExportLastLineHeight", settings.Tools.ExportLastLineHeight.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ExportLastBorderWidth", settings.Tools.ExportLastBorderWidth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ExportLastFontBold", settings.Tools.ExportLastFontBold.ToString());
             textWriter.WriteElementString("ExportBluRayVideoResolution", settings.Tools.ExportBluRayVideoResolution);
-            textWriter.WriteElementString("ExportFontColor", settings.Tools.ExportFontColor.ToArgb().ToString());
-            textWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString());
-            textWriter.WriteElementString("ExportBottomMargin", settings.Tools.ExportBottomMargin.ToString());
-            textWriter.WriteElementString("ExportHorizontalAlignment", settings.Tools.ExportHorizontalAlignment.ToString());
-            textWriter.WriteElementString("ExportBluRayBottomMargin", settings.Tools.ExportBluRayBottomMargin.ToString());
-            textWriter.WriteElementString("ExportBluRayShadow", settings.Tools.ExportBluRayShadow.ToString());
-            textWriter.WriteElementString("Export3DType", settings.Tools.Export3DType.ToString());
-            textWriter.WriteElementString("Export3DDepth", settings.Tools.Export3DDepth.ToString());
+            textWriter.WriteElementString("ExportFontColor", settings.Tools.ExportFontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ExportBottomMargin", settings.Tools.ExportBottomMargin.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ExportHorizontalAlignment", settings.Tools.ExportHorizontalAlignment.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ExportBluRayBottomMargin", settings.Tools.ExportBluRayBottomMargin.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ExportBluRayShadow", settings.Tools.ExportBluRayShadow.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("Export3DType", settings.Tools.Export3DType.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("Export3DDepth", settings.Tools.Export3DDepth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
             textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
             textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
             textWriter.WriteElementString("GenerateTimeCodePatterns", settings.Tools.GenerateTimeCodePatterns);
             textWriter.WriteElementString("MusicSymbolStyle", settings.Tools.MusicSymbolStyle);
-            textWriter.WriteElementString("BridgeGapMilliseconds", settings.Tools.BridgeGapMilliseconds.ToString());
+            textWriter.WriteElementString("BridgeGapMilliseconds", settings.Tools.BridgeGapMilliseconds.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ExportCustomTemplates", settings.Tools.ExportCustomTemplates);
             textWriter.WriteElementString("ChangeCasingChoice", settings.Tools.ChangeCasingChoice);
             textWriter.WriteElementString("UseNoLineBreakAfter", settings.Tools.UseNoLineBreakAfter.ToString());
-            textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.NoLineBreakAfterEnglish.ToString());
+            textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.NoLineBreakAfterEnglish);
 
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");
             textWriter.WriteElementString("SsaFontName", settings.SubtitleSettings.SsaFontName);
             textWriter.WriteElementString("SsaFontSize", settings.SubtitleSettings.SsaFontSize.ToString(CultureInfo.InvariantCulture));
-            textWriter.WriteElementString("SsaFontColorArgb", settings.SubtitleSettings.SsaFontColorArgb.ToString());
-            textWriter.WriteElementString("SsaOutline", settings.SubtitleSettings.SsaOutline.ToString());
-            textWriter.WriteElementString("SsaShadow", settings.SubtitleSettings.SsaShadow.ToString());
+            textWriter.WriteElementString("SsaFontColorArgb", settings.SubtitleSettings.SsaFontColorArgb.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("SsaOutline", settings.SubtitleSettings.SsaOutline.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("SsaShadow", settings.SubtitleSettings.SsaShadow.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("SsaOpaqueBox", settings.SubtitleSettings.SsaOpaqueBox.ToString());
             textWriter.WriteElementString("DCinemaFontFile", settings.SubtitleSettings.DCinemaFontFile);
-            textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString());
-            textWriter.WriteElementString("DCinemaBottomMargin", settings.SubtitleSettings.DCinemaBottomMargin.ToString());
+            textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("DCinemaBottomMargin", settings.SubtitleSettings.DCinemaBottomMargin.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("DCinemaZPosition", settings.SubtitleSettings.DCinemaZPosition.ToString(CultureInfo.InvariantCulture));
-            textWriter.WriteElementString("DCinemaFadeUpDownTime", settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString());
+            textWriter.WriteElementString("DCinemaFadeUpDownTime", settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("SamiDisplayTwoClassesAsTwoSubtitles", settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles.ToString());
             textWriter.WriteElementString("SamiFullHtmlEncode", settings.SubtitleSettings.SamiHtmlEncodeMode.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("TimedText10TimeCodeFormat", settings.SubtitleSettings.TimedText10TimeCodeFormat);
@@ -2776,35 +2776,35 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("WaveFormAllowOverlap", settings.VideoControls.WaveFormAllowOverlap.ToString());
             textWriter.WriteElementString("WaveFormFocusOnMouseEnter", settings.VideoControls.WaveFormFocusOnMouseEnter.ToString());
             textWriter.WriteElementString("WaveFormListViewFocusOnMouseEnter", settings.VideoControls.WaveFormListViewFocusOnMouseEnter.ToString());
-            textWriter.WriteElementString("WaveformBorderHitMs", settings.VideoControls.WaveformBorderHitMs.ToString());
-            textWriter.WriteElementString("WaveFormGridColor", settings.VideoControls.WaveFormGridColor.ToArgb().ToString());
-            textWriter.WriteElementString("WaveFormColor", settings.VideoControls.WaveFormColor.ToArgb().ToString());
-            textWriter.WriteElementString("WaveFormSelectedColor", settings.VideoControls.WaveFormSelectedColor.ToArgb().ToString());
-            textWriter.WriteElementString("WaveFormBackgroundColor", settings.VideoControls.WaveFormBackgroundColor.ToArgb().ToString());
-            textWriter.WriteElementString("WaveFormTextColor", settings.VideoControls.WaveFormTextColor.ToArgb().ToString());
+            textWriter.WriteElementString("WaveformBorderHitMs", settings.VideoControls.WaveformBorderHitMs.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("WaveFormGridColor", settings.VideoControls.WaveFormGridColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("WaveFormColor", settings.VideoControls.WaveFormColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("WaveFormSelectedColor", settings.VideoControls.WaveFormSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("WaveFormBackgroundColor", settings.VideoControls.WaveFormBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("WaveFormTextColor", settings.VideoControls.WaveFormTextColor.ToArgb().ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("WaveFormDoubleClickOnNonParagraphAction", settings.VideoControls.WaveFormDoubleClickOnNonParagraphAction);
             textWriter.WriteElementString("WaveFormRightClickOnNonParagraphAction", settings.VideoControls.WaveFormRightClickOnNonParagraphAction);
             textWriter.WriteElementString("WaveFormMouseWheelScrollUpIsForward", settings.VideoControls.WaveFormMouseWheelScrollUpIsForward.ToString());
             textWriter.WriteElementString("GenerateSpectrogram", settings.VideoControls.GenerateSpectrogram.ToString());
             textWriter.WriteElementString("SpectrogramAppearance", settings.VideoControls.SpectrogramAppearance);
-            textWriter.WriteElementString("WaveFormMininumSampleRate", settings.VideoControls.WaveFormMininumSampleRate.ToString());
-            textWriter.WriteElementString("WaveformSeeksSilenceDurationSeconds", settings.VideoControls.WaveformSeeksSilenceDurationSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            textWriter.WriteElementString("WaveformSeeksSilenceMaxVolume", settings.VideoControls.WaveformSeeksSilenceMaxVolume.ToString());
+            textWriter.WriteElementString("WaveFormMininumSampleRate", settings.VideoControls.WaveFormMininumSampleRate.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("WaveformSeeksSilenceDurationSeconds", settings.VideoControls.WaveformSeeksSilenceDurationSeconds.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("WaveformSeeksSilenceMaxVolume", settings.VideoControls.WaveformSeeksSilenceMaxVolume.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("NetworkSettings", "");
             textWriter.WriteElementString("SessionKey", settings.NetworkSettings.SessionKey);
             textWriter.WriteElementString("UserName", settings.NetworkSettings.UserName);
             textWriter.WriteElementString("WebServiceUrl", settings.NetworkSettings.WebServiceUrl);
-            textWriter.WriteElementString("PollIntervalSeconds", settings.NetworkSettings.PollIntervalSeconds.ToString());
+            textWriter.WriteElementString("PollIntervalSeconds", settings.NetworkSettings.PollIntervalSeconds.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("VobSubOcr", "");
-            textWriter.WriteElementString("XOrMorePixelsMakesSpace", settings.VobSubOcr.XOrMorePixelsMakesSpace.ToString());
+            textWriter.WriteElementString("XOrMorePixelsMakesSpace", settings.VobSubOcr.XOrMorePixelsMakesSpace.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("AllowDifferenceInPercent", settings.VobSubOcr.AllowDifferenceInPercent.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("BlurayAllowDifferenceInPercent", settings.VobSubOcr.BlurayAllowDifferenceInPercent.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("LastImageCompareFolder", settings.VobSubOcr.LastImageCompareFolder);
-            textWriter.WriteElementString("LastModiLanguageId", settings.VobSubOcr.LastModiLanguageId.ToString());
+            textWriter.WriteElementString("LastModiLanguageId", settings.VobSubOcr.LastModiLanguageId.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("LastOcrMethod", settings.VobSubOcr.LastOcrMethod);
             textWriter.WriteElementString("TesseractLastLanguage", settings.VobSubOcr.TesseractLastLanguage);
             textWriter.WriteElementString("UseModiInTesseractForUnknownWords", settings.VobSubOcr.UseModiInTesseractForUnknownWords.ToString());
@@ -2812,7 +2812,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("UseMusicSymbolsInTesseract", settings.VobSubOcr.UseMusicSymbolsInTesseract.ToString());
             textWriter.WriteElementString("RightToLeft", settings.VobSubOcr.RightToLeft.ToString());
             textWriter.WriteElementString("TopToBottom", settings.VobSubOcr.TopToBottom.ToString());
-            textWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString());
+            textWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("PromptForUnknownWords", settings.VobSubOcr.PromptForUnknownWords.ToString());
             textWriter.WriteElementString("GuessUnknownWords", settings.VobSubOcr.GuessUnknownWords.ToString());
             textWriter.WriteElementString("AutoBreakSubtitleIfMoreThanTwoLines", settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines.ToString());
@@ -2973,10 +2973,10 @@ namespace Nikse.SubtitleEdit.Logic
 
             textWriter.WriteStartElement("SubtitleBeaming", "");
             textWriter.WriteElementString("FontName", settings.SubtitleBeaming.FontName);
-            textWriter.WriteElementString("FontColor", settings.SubtitleBeaming.FontColor.ToArgb().ToString());
-            textWriter.WriteElementString("FontSize", settings.SubtitleBeaming.FontSize.ToString());
-            textWriter.WriteElementString("BorderColor", settings.SubtitleBeaming.BorderColor.ToArgb().ToString());
-            textWriter.WriteElementString("BorderWidth", settings.SubtitleBeaming.BorderWidth.ToString());
+            textWriter.WriteElementString("FontColor", settings.SubtitleBeaming.FontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("FontSize", settings.SubtitleBeaming.FontSize.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("BorderColor", settings.SubtitleBeaming.BorderColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("BorderWidth", settings.SubtitleBeaming.BorderWidth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteEndElement();
 
             textWriter.WriteEndElement();
