@@ -1,17 +1,15 @@
-﻿using System;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class AddToNamesList : Form
     {
-        LanguageStructure.Main _language;
-        Subtitle _subtitle;
-
-        public string NewName { get; private set; }
+        private LanguageStructure.Main _language;
+        private Subtitle _subtitle;
 
         public AddToNamesList()
         {
@@ -24,16 +22,18 @@ namespace Nikse.SubtitleEdit.Forms
             FixLargeFonts();
         }
 
+        public string NewName { get; private set; }
+
         private void FixLargeFonts()
         {
             if (labelDescription.Left + labelDescription.Width + 5 > Width)
                 Width = labelDescription.Left + labelDescription.Width + 5;
 
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            Graphics graphics = CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                var newButtonHeight = (int) (textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
         }
@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Initialize(Subtitle subtitle, string hunspellName, string text)
         {
-             _subtitle = subtitle;
+            _subtitle = subtitle;
 
             if (!string.IsNullOrEmpty(text))
             {
@@ -71,7 +71,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             comboBoxDictionaries.Items.Clear();
-            string languageName = Utilities.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle);
             foreach (string name in Utilities.GetDictionaryLanguages())
             {
                 comboBoxDictionaries.Items.Add(name);
@@ -99,8 +98,8 @@ namespace Nikse.SubtitleEdit.Forms
                     if (list.Count > 0)
                     {
                         string name = list[0];
-                        int start = name.LastIndexOf("[");
-                        int end = name.LastIndexOf("]");
+                        int start = name.LastIndexOf("[", StringComparison.Ordinal);
+                        int end = name.LastIndexOf("]", StringComparison.Ordinal);
                         if (start > 0 && end > start)
                         {
                             start++;
@@ -119,8 +118,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (comboBoxDictionaries.Items.Count > 0)
                 {
                     string name = comboBoxDictionaries.SelectedItem.ToString();
-                    int start = name.LastIndexOf("[");
-                    int end = name.LastIndexOf("]");
+                    int start = name.LastIndexOf("[", StringComparison.Ordinal);
+                    int end = name.LastIndexOf("]", StringComparison.Ordinal);
                     if (start >= 0 && end > start)
                     {
                         start++;
