@@ -1,7 +1,7 @@
 @ECHO OFF
 SETLOCAL
 
-SET "VERSION=3.3.8"
+SET "VERSION=3.3.14"
 SET "SEVENZIP_PATH=%PROGRAMFILES%\7-Zip\7z.exe"
 
 CD /D %~dp0
@@ -13,8 +13,8 @@ IF /I "%~1" == "-help"  GOTO SHOWHELP
 IF /I "%~1" == "--help" GOTO SHOWHELP
 IF /I "%~1" == "/?"     GOTO SHOWHELP
 
-IF NOT DEFINED VS110COMNTOOLS (
-  ECHO Visual Studio 2012 wasn't found
+IF NOT DEFINED VS120COMNTOOLS (
+  ECHO Visual Studio 2013 wasn't found
   GOTO EndWithError
 )
 
@@ -42,7 +42,7 @@ IF "%~1" == "" (
 :START
 PUSHD "src"
 
-CALL "%VS110COMNTOOLS%vsvars32.bat" x86
+CALL "%VS120COMNTOOLS%vsvars32.bat" x86
 TITLE %BUILDTYPE%ing SubtitleEdit - Release^|Any CPU...
 
 "MSBuild.exe" SubtitleEdit.sln /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="Any CPU"^
