@@ -357,9 +357,9 @@ namespace Nikse.SubtitleEdit.Logic
             string s2 = s.Substring(0, index);
             if (Configuration.Settings.Tools.UseNoLineBreakAfter &&  language == "en")
             {
-                foreach (string ending in Configuration.Settings.Tools.NoLineBreakAfter.Split(';'))
+                foreach (string ending in Configuration.Settings.Tools.NoLineBreakAfterEnglish.Split(';'))
                 {
-                    if (s2.EndsWith(ending))
+                    if (ending.Length > 0 && s2.EndsWith(ending))
                         return false;
                 }
             }
