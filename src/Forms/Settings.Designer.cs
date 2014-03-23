@@ -145,6 +145,9 @@
             this.comboBoxlVideoPlayerPreviewFontSize = new System.Windows.Forms.ComboBox();
             this.checkBoxVideoPlayerShowStopButton = new System.Windows.Forms.CheckBox();
             this.groupBoxVideoEngine = new System.Windows.Forms.GroupBox();
+            this.buttonVlcPathBrowse = new System.Windows.Forms.Button();
+            this.textBoxVlcPath = new System.Windows.Forms.TextBox();
+            this.labelVlcPath = new System.Windows.Forms.Label();
             this.labelVideoPlayerVLC = new System.Windows.Forms.Label();
             this.radioButtonVideoPlayerVLC = new System.Windows.Forms.RadioButton();
             this.labelVideoPlayerMPlayer = new System.Windows.Forms.Label();
@@ -274,9 +277,8 @@
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFMPEG = new System.Windows.Forms.OpenFileDialog();
-            this.buttonVlcPathBrowse = new System.Windows.Forms.Button();
-            this.textBoxVlcPath = new System.Windows.Forms.TextBox();
-            this.labelVlcPath = new System.Windows.Forms.Label();
+            this.groupBoxToolsMisc = new System.Windows.Forms.GroupBox();
+            this.checkBoxUseDoNotBreakAfterList = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -333,6 +335,7 @@
             this.tabPageSyntaxColoring.SuspendLayout();
             this.groupBoxListViewSyntaxColoring.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSyntaxColorTextMoreThanXLines)).BeginInit();
+            this.groupBoxToolsMisc.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -1694,6 +1697,33 @@
             this.groupBoxVideoEngine.TabStop = false;
             this.groupBoxVideoEngine.Text = "Video engine";
             // 
+            // buttonVlcPathBrowse
+            // 
+            this.buttonVlcPathBrowse.Location = new System.Drawing.Point(778, 44);
+            this.buttonVlcPathBrowse.Name = "buttonVlcPathBrowse";
+            this.buttonVlcPathBrowse.Size = new System.Drawing.Size(29, 21);
+            this.buttonVlcPathBrowse.TabIndex = 26;
+            this.buttonVlcPathBrowse.Text = "...";
+            this.buttonVlcPathBrowse.UseVisualStyleBackColor = true;
+            this.buttonVlcPathBrowse.Click += new System.EventHandler(this.buttonVlcPathBrowse_Click);
+            // 
+            // textBoxVlcPath
+            // 
+            this.textBoxVlcPath.Location = new System.Drawing.Point(382, 45);
+            this.textBoxVlcPath.MaxLength = 1000;
+            this.textBoxVlcPath.Name = "textBoxVlcPath";
+            this.textBoxVlcPath.Size = new System.Drawing.Size(390, 21);
+            this.textBoxVlcPath.TabIndex = 25;
+            // 
+            // labelVlcPath
+            // 
+            this.labelVlcPath.AutoSize = true;
+            this.labelVlcPath.Location = new System.Drawing.Point(379, 29);
+            this.labelVlcPath.Name = "labelVlcPath";
+            this.labelVlcPath.Size = new System.Drawing.Size(315, 13);
+            this.labelVlcPath.TabIndex = 24;
+            this.labelVlcPath.Text = "VLC path (only needed if you using the  portable version of VLC)";
+            // 
             // labelVideoPlayerVLC
             // 
             this.labelVideoPlayerVLC.AutoSize = true;
@@ -2128,6 +2158,7 @@
             // 
             // tabPageTools
             // 
+            this.tabPageTools.Controls.Add(this.groupBoxToolsMisc);
             this.tabPageTools.Controls.Add(this.groupBoxSpellCheck);
             this.tabPageTools.Controls.Add(this.groupBoxFixCommonErrors);
             this.tabPageTools.Controls.Add(this.groupBoxToolsVisualSync);
@@ -2146,7 +2177,7 @@
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
             this.groupBoxSpellCheck.Location = new System.Drawing.Point(6, 314);
             this.groupBoxSpellCheck.Name = "groupBoxSpellCheck";
-            this.groupBoxSpellCheck.Size = new System.Drawing.Size(813, 124);
+            this.groupBoxSpellCheck.Size = new System.Drawing.Size(362, 124);
             this.groupBoxSpellCheck.TabIndex = 4;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
@@ -2191,7 +2222,7 @@
             this.groupBoxFixCommonErrors.Controls.Add(this.labelToolsMusicSymbol);
             this.groupBoxFixCommonErrors.Location = new System.Drawing.Point(7, 129);
             this.groupBoxFixCommonErrors.Name = "groupBoxFixCommonErrors";
-            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(813, 179);
+            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(361, 179);
             this.groupBoxFixCommonErrors.TabIndex = 3;
             this.groupBoxFixCommonErrors.TabStop = false;
             this.groupBoxFixCommonErrors.Text = "Fix common errors";
@@ -3197,32 +3228,25 @@
             // 
             this.openFileDialogFFMPEG.FileName = "openFileDialog1";
             // 
-            // buttonVlcPathBrowse
+            // groupBoxToolsMisc
             // 
-            this.buttonVlcPathBrowse.Location = new System.Drawing.Point(778, 44);
-            this.buttonVlcPathBrowse.Name = "buttonVlcPathBrowse";
-            this.buttonVlcPathBrowse.Size = new System.Drawing.Size(29, 21);
-            this.buttonVlcPathBrowse.TabIndex = 26;
-            this.buttonVlcPathBrowse.Text = "...";
-            this.buttonVlcPathBrowse.UseVisualStyleBackColor = true;
-            this.buttonVlcPathBrowse.Click += new System.EventHandler(this.buttonVlcPathBrowse_Click);
+            this.groupBoxToolsMisc.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
+            this.groupBoxToolsMisc.Location = new System.Drawing.Point(374, 129);
+            this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
+            this.groupBoxToolsMisc.Size = new System.Drawing.Size(445, 309);
+            this.groupBoxToolsMisc.TabIndex = 5;
+            this.groupBoxToolsMisc.TabStop = false;
+            this.groupBoxToolsMisc.Text = "Misc";
             // 
-            // textBoxVlcPath
+            // checkBoxUseDoNotBreakAfterList
             // 
-            this.textBoxVlcPath.Location = new System.Drawing.Point(382, 45);
-            this.textBoxVlcPath.MaxLength = 1000;
-            this.textBoxVlcPath.Name = "textBoxVlcPath";
-            this.textBoxVlcPath.Size = new System.Drawing.Size(390, 21);
-            this.textBoxVlcPath.TabIndex = 25;
-            // 
-            // labelVlcPath
-            // 
-            this.labelVlcPath.AutoSize = true;
-            this.labelVlcPath.Location = new System.Drawing.Point(379, 29);
-            this.labelVlcPath.Name = "labelVlcPath";
-            this.labelVlcPath.Size = new System.Drawing.Size(315, 13);
-            this.labelVlcPath.TabIndex = 24;
-            this.labelVlcPath.Text = "VLC path (only needed if you using the  portable version of VLC)";
+            this.checkBoxUseDoNotBreakAfterList.AutoSize = true;
+            this.checkBoxUseDoNotBreakAfterList.Location = new System.Drawing.Point(15, 20);
+            this.checkBoxUseDoNotBreakAfterList.Name = "checkBoxUseDoNotBreakAfterList";
+            this.checkBoxUseDoNotBreakAfterList.Size = new System.Drawing.Size(218, 17);
+            this.checkBoxUseDoNotBreakAfterList.TabIndex = 0;
+            this.checkBoxUseDoNotBreakAfterList.Text = "Use \'do-not-beak-after\' list (for auto-br)";
+            this.checkBoxUseDoNotBreakAfterList.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
@@ -3322,6 +3346,8 @@
             this.groupBoxListViewSyntaxColoring.ResumeLayout(false);
             this.groupBoxListViewSyntaxColoring.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSyntaxColorTextMoreThanXLines)).EndInit();
+            this.groupBoxToolsMisc.ResumeLayout(false);
+            this.groupBoxToolsMisc.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3578,5 +3604,7 @@
         private System.Windows.Forms.Button buttonVlcPathBrowse;
         private System.Windows.Forms.TextBox textBoxVlcPath;
         private System.Windows.Forms.Label labelVlcPath;
+        private System.Windows.Forms.GroupBox groupBoxToolsMisc;
+        private System.Windows.Forms.CheckBox checkBoxUseDoNotBreakAfterList;
     }
 }

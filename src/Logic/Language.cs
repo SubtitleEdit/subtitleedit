@@ -1863,6 +1863,8 @@ can edit in same subtitle file (collaboration)",
                 MainTextBoxMoveFirstWordFromNextUp = "Move first word from next subtitle line up",
                 MainTextBoxAutoBreak = "Auto break text",
                 MainTextBoxUnbreak = "Unbreak text",
+                Miscellaneous = "Misc.",
+                UseDoNotBreakAfterList = "Use do-not-break-after list (for auto-br)",
             };
 
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater
