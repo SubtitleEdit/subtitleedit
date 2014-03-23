@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VobSub
 {
@@ -29,7 +28,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         private readonly byte[] _data;
         public Rectangle ImageDisplayArea;
         public bool Forced { get; private set; }
-        private int _pixelDataAddressOffset = 0;
+        private int _pixelDataAddressOffset;
         private int _startDisplayControlSequenceTableAddress;
 
         public SubPicture(byte[] data)
@@ -63,6 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         /// <param name="pattern">Color</param>
         /// <param name="emphasis1">Color</param>
         /// <param name="emphasis2">Color</param>
+        /// <param name="useCustomColors">Use custom colors instead of lookup table</param>
         /// <returns>Subtitle image</returns>
         public Bitmap GetBitmap(List<Color> colorLookupTable, Color background, Color pattern, Color emphasis1, Color emphasis2, bool useCustomColors)
         {
@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                         case (int)DisplayControlCommand.SetColor: // 3
                             if (colorLookUpTable != null && fourColors.Count == 4)
                             {
-                                byte[] imageColor = new[] { _data[commandIndex + 1], _data[commandIndex + 2] };
+                                byte[] imageColor = { _data[commandIndex + 1], _data[commandIndex + 2] };
                                 if (!useCustomColors)
                                 {
                                     SetColor(fourColors, 3, imageColor[0] >> 4, colorLookUpTable);

@@ -33,8 +33,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
                     foreach (var bob in CompareImagesExpanded)
                     {
                         bob.Save(gz);
-                        foreach (var ExpandedBob in bob.ExpandedList)
-                            ExpandedBob.Save(gz);
+                        foreach (var expandedBob in bob.ExpandedList)
+                            expandedBob.Save(gz);
                     }
                     gz.Flush();
                     gz.Close();
@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
                     while (!done)
                     {
                         var bob = new BinaryOcrBitmap(gz);
-                        if (bob.LoadedOK)
+                        if (bob.LoadedOk)
                         {
                             if (bob.ExpandCount > 0)
                             {
@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
                                 for (int i = 1; i < bob.ExpandCount; i++)
                                 {
                                     var expandedBob = new BinaryOcrBitmap(gz);
-                                    if (expandedBob.LoadedOK)
+                                    if (expandedBob.LoadedOk)
                                         bob.ExpandedList.Add(expandedBob);
                                     else
                                         break;

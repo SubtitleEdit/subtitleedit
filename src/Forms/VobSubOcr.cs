@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Forms
             public int Language { get; set; }
         }
 
-        private Nikse.SubtitleEdit.Forms.Main _main;
+        private Main _main;
         public string FileName { get; set; }
         Subtitle _subtitle = new Subtitle();
         List<CompareItem> _compareBitmaps;
@@ -588,7 +588,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetButtonsEnabledAfterOcrDone();
         }
 
-        internal bool Initialize(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool useNewSubIdxCode, Nikse.SubtitleEdit.Forms.Main main)
+        internal bool Initialize(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool useNewSubIdxCode, Main main)
         {
             _main = main;
             _useNewSubIdxCode = useNewSubIdxCode;
@@ -2688,8 +2688,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (checkBoxNOcrCorrect.Checked)
                     return null;
-                else
-                    return new CompareMatch("*", false, 0, null);
+                return new CompareMatch("*", false, 0, null);
             }
 
             // Fix uppercase/lowercase issues (not I/l)
@@ -3686,7 +3685,7 @@ namespace Nikse.SubtitleEdit.Forms
             string path = Configuration.OcrFolder + comboBoxCharacterDatabase.SelectedItem + "_";
             string databaseName = path + "Images.db";
             FileStream f;
-            long pos = 0;
+            long pos;
             if (!File.Exists(databaseName))
             {
                 using (f = new FileStream(databaseName, FileMode.Create))
@@ -4190,12 +4189,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(exception.Message);
             }
-        }
-
-        private void LoadNOcr(string fileName, bool clear)
-        {
-            _nOcrDb = new NOcrDb(fileName);
-        }
+        }      
 
         public static List<NOcrChar> LoadNOcr(string fileName)
         {
@@ -5030,7 +5024,7 @@ namespace Nikse.SubtitleEdit.Forms
             List<ImageSplitterItem> lines = NikseBitmapImageSplitter.SplitVertical(bitmap);
             List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLetters(lines, p.NumberOfPixelsIsSpace, p.RightToLeft, Configuration.Settings.VobSubOcr.TopToBottom);
 
-            int index = 0;
+            int index;
             int outerIndex = 0;
             while (outerIndex < list.Count)
             {
@@ -5127,7 +5121,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    CompareMatch match = null;
+                    CompareMatch match;
                     double differencePercentage = smallestDifference * 100.0 / (item.NikseBitmap.Width * item.NikseBitmap.Height);
                     double maxDiff = (double)p.MaxErrorPercent;
                     if (differencePercentage <= maxDiff && smallestIndex >= 0)
@@ -5689,7 +5683,7 @@ namespace Nikse.SubtitleEdit.Forms
             string fileName = GetNOcrLanguageFileName();
             if (!string.IsNullOrEmpty(fileName))
             {
-                LoadNOcr(fileName, true);
+                LoadNOcr(fileName);
             }
         }
 
@@ -8402,14 +8396,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SplitDvbForEachSubImage()
         {
-            var list = new List<Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamSubtitle>();
+            var list = new List<Logic.TransportStream.TransportStreamSubtitle>();
             foreach (var dvbSub in _dvbSubtitles)
             {
                 if (dvbSub.ActiveImageIndex == null)
                 {
                     for (int i = 0; i < dvbSub.Pes.ObjectDataList.Count; i++)
                     {
-                        var newDbvSub = new Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamSubtitle();
+                        var newDbvSub = new Logic.TransportStream.TransportStreamSubtitle();
                         newDbvSub.Pes = dvbSub.Pes;
                         newDbvSub.ActiveImageIndex = i;
                         newDbvSub.StartMilliseconds = dvbSub.StartMilliseconds;

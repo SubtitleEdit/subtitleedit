@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Logic
         public WaveHeader(Stream stream)
         {
             stream.Position = 0;
-            byte[] buffer = new byte[ConstantHeaderSize];
+            var buffer = new byte[ConstantHeaderSize];
             int bytesRead = stream.Read(buffer, 0, buffer.Length);
             if (bytesRead < buffer.Length)
                 throw new ArgumentException("Stream is too small");
@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Logic
             // load data
             _data = new byte[Header.DataChunkSize];
             _stream.Position = Header.DataStartPosition;
-            int bytesRead = _stream.Read(_data, 0, _data.Length);
+            _stream.Read(_data, 0, _data.Length);
 
             // read sample values
             DataMinValue = int.MaxValue;
@@ -288,7 +288,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void WritePeakSamples(string fileName)
         {
-            FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+            var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
             WritePeakSamples(fs);
             fs.Close();
         }
@@ -331,7 +331,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private int ReadValue24Bit(ref int index)
         {
-            byte[] buffer = new byte[4];
+            var buffer = new byte[4];
             buffer[0] = 0;
             buffer[1] = _data[index];
             buffer[2] = _data[index + 1];
@@ -391,11 +391,11 @@ namespace Nikse.SubtitleEdit.Logic
 
         public List<Bitmap> GenerateFourierData(int nfft, string spectrogramDirectory, int delayInMilliseconds)
         {
-            const int BitmapWidth = 1024;
+            const int bitmapWidth = 1024;
             var bitmaps = new List<Bitmap>();
 
             // setup fourier transformation
-            Fourier f = new Fourier(nfft, true);
+            var f = new Fourier(nfft, true);
             double divider = 2.0;
             for (int k = 0; k < Header.BitsPerSample - 2; k++)
                 divider *= 2;
@@ -404,7 +404,7 @@ namespace Nikse.SubtitleEdit.Logic
             ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataRerader();
 
             // set up one column of the spectrogram
-            Color[] palette = new Color[nfft];
+            var palette = new Color[nfft];
             if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Classic")
             {
                 for (int colorIndex = 0; colorIndex < nfft; colorIndex++)
@@ -424,7 +424,7 @@ namespace Nikse.SubtitleEdit.Logic
             DataMaxValue = int.MinValue;
             var samples = new List<int>();
             int index = 0;
-            int sampleSize = nfft * BitmapWidth;
+            int sampleSize = nfft * bitmapWidth;
             int count = 0;
             long totalSamples = 0;
 
@@ -501,7 +501,7 @@ namespace Nikse.SubtitleEdit.Logic
             doc.DocumentElement.SelectSingleNode("AudioFormat").InnerText = Header.AudioFormat.ToString(CultureInfo.InvariantCulture);
             doc.DocumentElement.SelectSingleNode("ChunkId").InnerText = Header.ChunkId.ToString(CultureInfo.InvariantCulture);
             doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)(sampleSize / (double)Header.SampleRate)).ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = BitmapWidth.ToString(CultureInfo.InvariantCulture);
+            doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = bitmapWidth.ToString(CultureInfo.InvariantCulture);
             doc.DocumentElement.SelectSingleNode("NFFT").InnerText = nfft.ToString(CultureInfo.InvariantCulture);
             doc.Save(Path.Combine(spectrogramDirectory, "Info.xml"));
 
