@@ -8,8 +8,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     partial class About : Form
     {
-        LanguageStructure.About _language = Configuration.Settings.Language.About;
-        LanguageStructure.General _languageGeneral = Configuration.Settings.Language.General;
+        private readonly LanguageStructure.About _language = Configuration.Settings.Language.About;
+        private readonly LanguageStructure.General _languageGeneral = Configuration.Settings.Language.General;
 
         public About()
         {
@@ -33,14 +33,14 @@ namespace Nikse.SubtitleEdit.Forms
             if (versionInfo.Length >= 4)
                 revisionNumber = versionInfo[3];
             linkLabelGitBuildHash.Text = revisionNumber;
-            System.Windows.Forms.ToolTip ToolTip1 = new System.Windows.Forms.ToolTip();
-            ToolTip1.SetToolTip(linkLabelGitBuildHash, GetGitHubHashLink());
+            var toolTip1 = new ToolTip();
+            toolTip1.SetToolTip(linkLabelGitBuildHash, GetGitHubHashLink());
 
             richTextBoxAbout1.Text = _language.AboutText1.TrimEnd() + Environment.NewLine +
                                      Environment.NewLine +
                                      _languageGeneral.TranslatedBy.Trim();
-            var height = TextDraw.MeasureTextHeight(richTextBoxAbout1.Font, richTextBoxAbout1.Text, false) * 1.4 + 80;
-            richTextBoxAbout1.Height = (int)height;
+            double height = TextDraw.MeasureTextHeight(richTextBoxAbout1.Font, richTextBoxAbout1.Text, false)*1.4 + 80;
+            richTextBoxAbout1.Height = (int) height;
             Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 90;
         }
 

@@ -1,17 +1,17 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
-using System.Text.RegularExpressions;
 using System.Drawing;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChangeCasing : Form
     {
-        private int _noOfLinesChanged;
         private static readonly Regex AloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
+        private int _noOfLinesChanged;
 
         public ChangeCasing()
         {
@@ -38,26 +38,9 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonLowercase.Checked = true;
         }
 
-        private void FixLargeFonts()
-        {
-            if (radioButtonNormal.Left + radioButtonNormal.Width + 40 > Width)
-                Width = radioButtonNormal.Left + radioButtonNormal.Width + 40;
-
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
-        }
-
         public int LinesChanged
         {
-            get
-            {
-                return _noOfLinesChanged;
-            }
+            get { return _noOfLinesChanged; }
         }
 
         public bool ChangeNamesToo
@@ -69,12 +52,26 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void FixLargeFonts()
+        {
+            if (radioButtonNormal.Left + radioButtonNormal.Width + 40 > Width)
+                Width = radioButtonNormal.Left + radioButtonNormal.Width + 40;
+
+            Graphics graphics = CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
+            if (textSize.Height > buttonOK.Height - 4)
+            {
+                var newButtonHeight = (int) (textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
+        }
+
         internal void FixCasing(Subtitle subtitle, string language)
         {
             var namesEtc = new List<string>();
             var tmp = new List<string>();
             Utilities.LoadNamesEtcWordLists(tmp, tmp, language);
-            foreach (var s in tmp)
+            foreach (string s in tmp)
             {
                 if (s.Contains("."))
                     namesEtc.Add(s);
@@ -180,5 +177,6 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.Tools.ChangeCasingChoice = "Lowercase";
             DialogResult = DialogResult.OK;
         }
+
     }
 }

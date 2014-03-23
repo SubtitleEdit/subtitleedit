@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -9,9 +10,9 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChangeCasingNames : Form
     {
-        readonly List<string> _usedNames = new List<string>();
-        Subtitle _subtitle;
-        int _noOfLinesChanged;
+        private readonly List<string> _usedNames = new List<string>();
+        private int _noOfLinesChanged;
+        private Subtitle _subtitle;
 
         public ChangeCasingNames()
         {
@@ -35,13 +36,18 @@ namespace Nikse.SubtitleEdit.Forms
             FixLargeFonts();
         }
 
+        public int LinesChanged
+        {
+            get { return _noOfLinesChanged; }
+        }
+
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            Graphics graphics = CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                var newButtonHeight = (int) (textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
         }
@@ -88,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (item.Checked && text != null && text.ToLower().Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
                         {
                             var st = new StripableText(text);
-                            st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
+                            st.FixCasing(new List<string> {name}, true, false, false, string.Empty);
                             text = st.MergedString;
                         }
                     }
@@ -105,7 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = new ListViewItem(string.Empty) {Tag = p, Checked = true};
 
-            var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString());
+            var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(subItem);
             subItem = new ListViewItem.ListViewSubItem(item, p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             item.SubItems.Add(subItem);
@@ -147,20 +153,20 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textToLower.Contains(name.ToLower())) // Optimization - Contains is much faster than IndexOf
                 {
-                    int startIndex = textToLower.IndexOf(name.ToLower());
+                    int startIndex = textToLower.IndexOf(name.ToLower(), StringComparison.Ordinal);
                     while (startIndex >= 0 && startIndex < text.Length &&
                            textToLower.Substring(startIndex).Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
                     {
                         bool startOk = (startIndex == 0) || (text[startIndex - 1] == ' ') || (text[startIndex - 1] == '-') ||
                                        (text[startIndex - 1] == '"') || (text[startIndex - 1] == '\'') || (text[startIndex - 1] == '>') ||
-                                       (Environment.NewLine.EndsWith(text[startIndex - 1].ToString()));
+                                       (Environment.NewLine.EndsWith(text[startIndex - 1].ToString(CultureInfo.InvariantCulture)));
 
                         if (startOk)
                         {
                             int end = startIndex + name.Length;
                             bool endOk = end <= text.Length;
                             if (endOk)
-                                endOk = (end == text.Length) || ((" ,.!?:;')-<\"" + Environment.NewLine).Contains(text[end].ToString()));
+                                endOk = (end == text.Length) || ((" ,.!?:;')-<\"" + Environment.NewLine).Contains(text[end].ToString(CultureInfo.InvariantCulture)));
 
                             if (endOk && text.Substring(startIndex, name.Length) != name) // do not add names where casing already is correct
                             {
@@ -173,7 +179,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
-                        startIndex = textToLower.IndexOf(name.ToLower(), startIndex + 2);
+                        startIndex = textToLower.IndexOf(name.ToLower(), startIndex + 2, StringComparison.Ordinal);
                     }
                 }
             }
@@ -197,18 +203,18 @@ namespace Nikse.SubtitleEdit.Forms
                 string lower = text.ToLower();
                 if (lower.Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
                 {
-                    int start = lower.IndexOf(name.ToLower());
+                    int start = lower.IndexOf(name.ToLower(), StringComparison.Ordinal);
                     if (start >= 0)
                     {
                         bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') || (lower[start - 1] == '"') ||
-                                       (lower[start - 1] == '\'') || (lower[start - 1] == '>') || (Environment.NewLine.EndsWith(lower[start - 1].ToString()));
+                                       (lower[start - 1] == '\'') || (lower[start - 1] == '>') || (Environment.NewLine.EndsWith(lower[start - 1].ToString(CultureInfo.InvariantCulture)));
 
                         if (startOk)
                         {
                             int end = start + name.Length;
                             bool endOk = end <= lower.Length;
                             if (endOk)
-                                endOk = end == lower.Length || (" ,.!?:;')<-\"" + Environment.NewLine).Contains(lower[end].ToString());
+                                endOk = end == lower.Length || (" ,.!?:;')<-\"" + Environment.NewLine).Contains(lower[end].ToString(CultureInfo.InvariantCulture));
 
                             item.Selected = endOk;
                         }
@@ -246,14 +252,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public int LinesChanged
-        {
-            get
-            {
-                return _noOfLinesChanged;
-            }
-        }
-
         private void ButtonOkClick(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
@@ -288,5 +286,6 @@ namespace Nikse.SubtitleEdit.Forms
             listViewNames.ItemChecked += ListViewNamesItemChecked;
             GeneratePreview();
         }
+
     }
 }
