@@ -196,7 +196,9 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                     int colonIndex = s2.IndexOf(":", StringComparison.Ordinal);
                                     string start = s2.Substring(0, colonIndex);
 
-                                    bool doContinue = !Settings.RemoveTextBeforeColonOnlyUppercase && start != start.ToUpper();
+                                    bool doContinue = true;
+                                    if (Settings.RemoveTextBeforeColonOnlyUppercase && start != start.ToUpper())
+                                        doContinue = false;
                                     if (doContinue)
                                     {
 
