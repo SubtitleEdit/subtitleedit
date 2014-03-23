@@ -9,11 +9,11 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
         public readonly uint Duration;
         public readonly uint TimeScale;
 
-        public Mvhd(FileStream fs, ulong maximumLength)
+        public Mvhd(FileStream fs)
         {
-            buffer = new byte[20];
-            int bytesRead = fs.Read(buffer, 0, buffer.Length);
-            if (bytesRead < buffer.Length)
+            Buffer = new byte[20];
+            int bytesRead = fs.Read(Buffer, 0, Buffer.Length);
+            if (bytesRead < Buffer.Length)
                 return;
 
             CreationTime = GetUInt(4);

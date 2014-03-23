@@ -104,25 +104,25 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
         private void ParseMp4(FileStream fs)
         {
             int count = 0;
-            pos = 0;
+            Position = 0;
             fs.Seek(0, SeekOrigin.Begin);
             bool moreBytes = true;
             while (moreBytes)
             {
                 moreBytes = InitializeSizeAndName(fs);
-                if (size < 8)
+                if (Size < 8)
                     return;
 
-                if (name == "moov")
-                    Moov = new Moov(fs, pos);
+                if (Name == "moov")
+                    Moov = new Moov(fs, Position);
 
                 count++;
                 if (count > 100)
                     break;
 
-                if (pos > (ulong)fs.Length)
+                if (Position > (ulong)fs.Length)
                     break;
-                fs.Seek((long)pos, SeekOrigin.Begin);
+                fs.Seek((long)Position, SeekOrigin.Begin);
             }
             fs.Close();
         }

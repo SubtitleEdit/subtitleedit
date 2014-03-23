@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -7,15 +8,15 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 {
     public class RemoveTextForHI
     {
-        public RemoveTextForHISettings settings { get; set; }
+        public RemoveTextForHISettings Settings { get; set; }
 
         private List<string> _interjectionList;
-        public List<int> _warnings;
-        public int _warningIndex;
+        public List<int> Warnings;
+        public int WarningIndex;
 
         public RemoveTextForHI(RemoveTextForHISettings removeTextForHISettings)
         {
-            settings = removeTextForHISettings;
+            Settings = removeTextForHISettings;
         }
 
         public string RemoveHearImpairedtagsInsideLine(string newText)
@@ -62,10 +63,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public string RemoveColon(string text, string prevText)
         {
-            if (!settings.RemoveTextBeforeColon)
+            if (!Settings.RemoveTextBeforeColon)
                 return text;
 
-            if (text.IndexOf(":") < 0)
+            if (text.IndexOf(":", StringComparison.Ordinal) < 0)
                 return text;
 
             // House 7x01 line 52: and she would like you to do three things:
@@ -81,11 +82,11 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             bool removedInSecondLine = false;
             foreach (string s in parts)
             {
-                int indexOfColon = s.IndexOf(":");
+                int indexOfColon = s.IndexOf(":", StringComparison.Ordinal);
                 if (indexOfColon > 0)
                 {
                     string pre = s.Substring(0, indexOfColon);
-                    if (settings.RemoveTextBeforeColonOnlyUppercase && pre.Replace("<i>", string.Empty) != pre.Replace("<i>", string.Empty).ToUpper())
+                    if (Settings.RemoveTextBeforeColonOnlyUppercase && pre.Replace("<i>", string.Empty) != pre.Replace("<i>", string.Empty).ToUpper())
                     {
                         newText = newText + Environment.NewLine + s;
                         newText = newText.Trim();
@@ -134,7 +135,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             if (s.StartsWith("Previously on") || s.StartsWith("<i>Previously on"))
                                 remove = false;
 
-                            if (remove && settings.ColonSeparateLine)
+                            if (remove && Settings.ColonSeparateLine)
                             {
                                 if (indexOfColon == s.Length - 1 || s.Substring(indexOfColon + 1).StartsWith(Environment.NewLine))
                                     remove = true;
@@ -192,18 +193,16 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             {
                                 if (s2.Contains(":"))
                                 {
-                                    int colonIndex = s2.IndexOf(":");
+                                    int colonIndex = s2.IndexOf(":", StringComparison.Ordinal);
                                     string start = s2.Substring(0, colonIndex);
 
-                                    bool doContinue = true;
-                                    if (settings.RemoveTextBeforeColonOnlyUppercase && start != start.ToUpper())
-                                        doContinue = false;
+                                    bool doContinue = !Settings.RemoveTextBeforeColonOnlyUppercase && start != start.ToUpper();
                                     if (doContinue)
                                     {
 
-                                        int periodIndex = start.LastIndexOf(". ");
-                                        int questIndex = start.LastIndexOf("? ");
-                                        int exclaIndex = start.LastIndexOf("! ");
+                                        int periodIndex = start.LastIndexOf(". ", StringComparison.Ordinal);
+                                        int questIndex = start.LastIndexOf("? ", StringComparison.Ordinal);
+                                        int exclaIndex = start.LastIndexOf("! ", StringComparison.Ordinal);
                                         int endIndex = periodIndex;
                                         if (endIndex == -1 || questIndex > endIndex)
                                             endIndex = questIndex;
@@ -285,7 +284,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                         newText = st.Pre + "- " + st.StrippedText + st.Post;
                     }
 
-                    int indexOfNewLine = newText.IndexOf(Environment.NewLine);
+                    int indexOfNewLine = newText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                     string second = newText.Substring(indexOfNewLine).Trim();
                     indexOfDialogChar = second.IndexOf('-');
                     if (indexOfDialogChar < 0 || indexOfDialogChar > 6)
@@ -302,7 +301,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 if (st.Pre.Contains("-"))
                     newText = st.Pre.Replace("-", string.Empty) + st.StrippedText + st.Post;
             }
-            else if (Utilities.CountTagInText(newText, Environment.NewLine) == 1 && removedInFirstLine == false && removedInSecondLine == true)
+            else if (Utilities.CountTagInText(newText, Environment.NewLine) == 1 && removedInFirstLine == false && removedInSecondLine)
             {
                 string noTags = Utilities.RemoveHtmlTags(newText, true).Trim();
                 bool insertDash = noTags.StartsWith("-") && Utilities.CountTagInText(noTags, "-") == 1;
@@ -321,7 +320,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public string RemoveTextFromHearImpaired(string text, string prevText)
         {
-            if (settings.RemoveWhereContains && settings.RemoveIfTextContains.Length > 0 && text.Contains(settings.RemoveIfTextContains))
+            if (Settings.RemoveWhereContains && Settings.RemoveIfTextContains.Length > 0 && text.Contains(Settings.RemoveIfTextContains))
             {
                 return string.Empty;
             }
@@ -330,10 +329,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             text = RemoveColon(text, prevText);
             string pre = " >-\"'‘`´♪¿¡.…—";
             string post = " -\"'`´♪.!?:…—";
-            if (settings.RemoveTextBetweenCustomTags)
+            if (Settings.RemoveTextBetweenCustomTags)
             {
-                pre = pre.Replace(settings.CustomStart, string.Empty);
-                post = post.Replace(settings.CustomEnd, string.Empty);
+                pre = pre.Replace(Settings.CustomStart, string.Empty);
+                post = post.Replace(Settings.CustomEnd, string.Empty);
             }
             var st = new StripableText(text, pre, post);
             var sb = new StringBuilder();
@@ -395,7 +394,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             text = RemoveColon(text, prevText);
             text = RemoveLineIfAllUppercase(text);
             text = RemoveHearImpairedtagsInsideLine(text);
-            if (settings.RemoveInterjections)
+            if (Settings.RemoveInterjections)
                 text = RemoveInterjections(text);
 
             st = new StripableText(text, " >-\"'‘`´♪¿¡.…—", " -\"'`´♪.!?:…—");
@@ -416,11 +415,11 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 {
                     StripableText temp = new StripableText(text);
                     temp.StrippedText = temp.StrippedText.Replace(Environment.NewLine, " ");
-                    int splitIndex = temp.StrippedText.LastIndexOf("!");
+                    int splitIndex = temp.StrippedText.LastIndexOf("!", StringComparison.Ordinal);
                     if (splitIndex == -1)
-                        splitIndex = temp.StrippedText.LastIndexOf("?");
+                        splitIndex = temp.StrippedText.LastIndexOf("?", StringComparison.Ordinal);
                     if (splitIndex == -1)
-                        splitIndex = temp.StrippedText.LastIndexOf(".");
+                        splitIndex = temp.StrippedText.LastIndexOf(".", StringComparison.Ordinal);
                     if (splitIndex > 0)
                     {
                         text = temp.Pre + temp.StrippedText.Insert(splitIndex + 1, Environment.NewLine) + temp.Post;
@@ -468,13 +467,13 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     text = text.Insert(4, " ");
                 if (text.Contains(Environment.NewLine + "-"))
                 {
-                    int index = text.IndexOf(Environment.NewLine + "-");
+                    int index = text.IndexOf(Environment.NewLine + "-", StringComparison.Ordinal);
                     if (index + 4 < text.Length && text[index + Environment.NewLine.Length + 1] != ' ' && text[index + Environment.NewLine.Length + 1] != '-')
                         text = text.Insert(index + Environment.NewLine.Length + 1, " ");
                 }
                 if (text.Contains(Environment.NewLine + "<i>-"))
                 {
-                    int index = text.IndexOf(Environment.NewLine + "<i>-");
+                    int index = text.IndexOf(Environment.NewLine + "<i>-", StringComparison.Ordinal);
                     if (index + 5 < text.Length && text[index + Environment.NewLine.Length + 4] != ' ' && text[index + Environment.NewLine.Length + 4] != '-')
                         text = text.Insert(index + Environment.NewLine.Length + 4, " ");
                 }
@@ -484,10 +483,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         private void AddWarning()
         {
-            if (_warnings == null || _warningIndex < 0)
+            if (Warnings == null || WarningIndex < 0)
                 return;
 
-            _warnings.Add(_warningIndex);
+            Warnings.Add(WarningIndex);
         }
 
         private bool IsHIDescription(string text)
@@ -537,7 +536,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         {
             oldText = oldText.ToLower();
             newText = newText.ToLower();
-            int start = oldText.IndexOf(newText);
+            int start = oldText.IndexOf(newText, StringComparison.Ordinal);
             string result;
             if (start > 0)
                 result = oldText.Substring(0, oldText.Length - newText.Length);
@@ -674,9 +673,9 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                     temp = temp.Remove(0, 1);
                                     doRepeat = true;
                                 }
-                                if (temp.Length > 0 && s[0].ToString() != s[0].ToString().ToLower())
+                                if (temp.Length > 0 && s[0].ToString(CultureInfo.InvariantCulture) != s[0].ToString(CultureInfo.InvariantCulture).ToLower())
                                 {
-                                    temp = temp.Remove(0, 1).Insert(0, temp[0].ToString().ToUpper());
+                                    temp = temp.Remove(0, 1).Insert(0, temp[0].ToString(CultureInfo.InvariantCulture).ToUpper());
                                     doRepeat = true;
                                 }
                                 temp = pre + temp;
@@ -721,26 +720,26 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         {
             string newText = text;
             string s = text;
-            if (s.StartsWith("[") && s.IndexOf("]") > 0 && settings.RemoveTextBetweenSquares)
-                newText = s.Remove(0, s.IndexOf("]") + 1);
-            else if (s.StartsWith("{") && s.IndexOf("}") > 0 && settings.RemoveTextBetweenBrackets)
-                newText = s.Remove(0, s.IndexOf("}") + 1);
-            else if (s.StartsWith("?") && s.IndexOf("?", 1) > 0 && settings.RemoveTextBetweenQuestionMarks)
-                newText = s.Remove(0, s.IndexOf("?", 1) + 1);
-            else if (s.StartsWith("(") && s.IndexOf(")") > 0 && settings.RemoveTextBetweenParentheses)
-                newText = s.Remove(0, s.IndexOf(")") + 1);
-            else if (s.StartsWith("[") && s.IndexOf("]:") > 0 && settings.RemoveTextBetweenSquares)
-                newText = s.Remove(0, s.IndexOf("]:") + 2);
-            else if (s.StartsWith("{") && s.IndexOf("}:") > 0 && settings.RemoveTextBetweenBrackets)
-                newText = s.Remove(0, s.IndexOf("}:") + 2);
-            else if (s.StartsWith("?") && s.IndexOf("?:", 1) > 0 && settings.RemoveTextBetweenQuestionMarks)
-                newText = s.Remove(0, s.IndexOf("?:") + 2);
-            else if (s.StartsWith("(") && s.IndexOf("):") > 0 && settings.RemoveTextBetweenParentheses)
-                newText = s.Remove(0, s.IndexOf("):") + 2);
-            else if (settings.RemoveTextBetweenCustomTags &&
-                     s.Length > 0 && settings.CustomEnd.Length > 0 && settings.CustomStart.Length > 0 &&
-                     s.StartsWith(settings.CustomStart) && s.LastIndexOf(settings.CustomEnd) > 0)
-                newText = s.Remove(0, s.LastIndexOf(settings.CustomEnd) + settings.CustomEnd.Length);
+            if (s.StartsWith("[") && s.IndexOf("]", StringComparison.Ordinal) > 0 && Settings.RemoveTextBetweenSquares)
+                newText = s.Remove(0, s.IndexOf("]", StringComparison.Ordinal) + 1);
+            else if (s.StartsWith("{") && s.IndexOf("}", StringComparison.Ordinal) > 0 && Settings.RemoveTextBetweenBrackets)
+                newText = s.Remove(0, s.IndexOf("}", StringComparison.Ordinal) + 1);
+            else if (s.StartsWith("?") && s.IndexOf("?", 1, StringComparison.Ordinal) > 0 && Settings.RemoveTextBetweenQuestionMarks)
+                newText = s.Remove(0, s.IndexOf("?", 1, StringComparison.Ordinal) + 1);
+            else if (s.StartsWith("(") && s.IndexOf(")", StringComparison.Ordinal) > 0 && Settings.RemoveTextBetweenParentheses)
+                newText = s.Remove(0, s.IndexOf(")", StringComparison.Ordinal) + 1);
+            else if (s.StartsWith("[") && s.IndexOf("]:", StringComparison.Ordinal) > 0 && Settings.RemoveTextBetweenSquares)
+                newText = s.Remove(0, s.IndexOf("]:", StringComparison.Ordinal) + 2);
+            else if (s.StartsWith("{") && s.IndexOf("}:", StringComparison.Ordinal) > 0 && Settings.RemoveTextBetweenBrackets)
+                newText = s.Remove(0, s.IndexOf("}:", StringComparison.Ordinal) + 2);
+            else if (s.StartsWith("?") && s.IndexOf("?:", 1, StringComparison.Ordinal) > 0 && Settings.RemoveTextBetweenQuestionMarks)
+                newText = s.Remove(0, s.IndexOf("?:", StringComparison.Ordinal) + 2);
+            else if (s.StartsWith("(") && s.IndexOf("):", StringComparison.Ordinal) > 0 && Settings.RemoveTextBetweenParentheses)
+                newText = s.Remove(0, s.IndexOf("):", StringComparison.Ordinal) + 2);
+            else if (Settings.RemoveTextBetweenCustomTags &&
+                     s.Length > 0 && Settings.CustomEnd.Length > 0 && Settings.CustomStart.Length > 0 &&
+                     s.StartsWith(Settings.CustomStart) && s.LastIndexOf(Settings.CustomEnd, StringComparison.Ordinal) > 0)
+                newText = s.Remove(0, s.LastIndexOf(Settings.CustomEnd, StringComparison.Ordinal) + Settings.CustomEnd.Length);
             if (newText != text)
                 newText = newText.TrimStart(' ');
             return newText;
@@ -748,33 +747,33 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public string RemoveHearImpairedTags(string text)
         {
-            if (settings.RemoveTextBetweenSquares)
+            if (Settings.RemoveTextBetweenSquares)
             {
                 text = RemoveTextBetweenTags("[", "]:", text);
                 text = RemoveTextBetweenTags("[", "]", text);
             }
 
-            if (settings.RemoveTextBetweenBrackets)
+            if (Settings.RemoveTextBetweenBrackets)
             {
                 text = RemoveTextBetweenTags("{", "}:", text);
                 text = RemoveTextBetweenTags("{", "}", text);
             }
 
-            if (settings.RemoveTextBetweenQuestionMarks)
+            if (Settings.RemoveTextBetweenQuestionMarks)
             {
                 text = RemoveTextBetweenTags("?", "?:", text);
                 text = RemoveTextBetweenTags("?", "?", text);
             }
 
-            if (settings.RemoveTextBetweenParentheses)
+            if (Settings.RemoveTextBetweenParentheses)
             {
                 text = RemoveTextBetweenTags("(", "):", text);
                 text = RemoveTextBetweenTags("(", ")", text);
             }
 
-            if (settings.RemoveTextBetweenCustomTags && settings.CustomStart.Length > 0 && settings.CustomEnd.Length > 0)
+            if (Settings.RemoveTextBetweenCustomTags && Settings.CustomStart.Length > 0 && Settings.CustomEnd.Length > 0)
             {
-                text = RemoveTextBetweenTags(settings.CustomStart, settings.CustomEnd, text);
+                text = RemoveTextBetweenTags(Settings.CustomStart, Settings.CustomEnd, text);
             }
 
             return text;
@@ -787,7 +786,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public bool HasHearImpariedTagsAtStart(string text)
         {
-            if (settings.OnlyIfInSeparateLine)
+            if (Settings.OnlyIfInSeparateLine)
                 return StartAndEndsWithHearImpariedTags(text);
 
             return HasHearImpairedText(text);
@@ -795,7 +794,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public bool HasHearImpariedTagsAtEnd(string text)
         {
-            if (settings.OnlyIfInSeparateLine)
+            if (Settings.OnlyIfInSeparateLine)
                 return StartAndEndsWithHearImpariedTags(text);
 
             return HasHearImpairedText(text);
@@ -803,17 +802,17 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         private bool StartAndEndsWithHearImpariedTags(string text)
         {
-            return (text.StartsWith("[") && text.EndsWith("]") && !text.Trim('[').Contains("[") && settings.RemoveTextBetweenSquares) ||
-                   (text.StartsWith("{") && text.EndsWith("}") && !text.Trim('{').Contains("{") && settings.RemoveTextBetweenBrackets) ||
-                   (text.StartsWith("?") && text.EndsWith("?") && !text.Trim('?').Contains("?") && settings.RemoveTextBetweenQuestionMarks) ||
-                   (text.StartsWith("(") && text.EndsWith(")") && !text.Trim('(').Contains("(") && settings.RemoveTextBetweenParentheses) ||
-                   (text.StartsWith("[") && text.EndsWith("]:") && !text.Trim('[').Contains("[") && settings.RemoveTextBetweenSquares) ||
-                   (text.StartsWith("{") && text.EndsWith("}:") && !text.Trim('{').Contains("{") && settings.RemoveTextBetweenBrackets) ||
-                   (text.StartsWith("?") && text.EndsWith("?:") && !text.Trim('?').Contains("?") && settings.RemoveTextBetweenQuestionMarks) ||
-                   (text.StartsWith("(") && text.EndsWith("):") && !text.Trim('(').Contains("(") && settings.RemoveTextBetweenParentheses) ||
-                   (settings.RemoveTextBetweenCustomTags &&
-                    settings.CustomStart.Length > 0 && settings.CustomEnd.Length > 0 &&
-                    text.StartsWith(settings.CustomStart) && text.EndsWith(settings.CustomEnd));
+            return (text.StartsWith("[") && text.EndsWith("]") && !text.Trim('[').Contains("[") && Settings.RemoveTextBetweenSquares) ||
+                   (text.StartsWith("{") && text.EndsWith("}") && !text.Trim('{').Contains("{") && Settings.RemoveTextBetweenBrackets) ||
+                   (text.StartsWith("?") && text.EndsWith("?") && !text.Trim('?').Contains("?") && Settings.RemoveTextBetweenQuestionMarks) ||
+                   (text.StartsWith("(") && text.EndsWith(")") && !text.Trim('(').Contains("(") && Settings.RemoveTextBetweenParentheses) ||
+                   (text.StartsWith("[") && text.EndsWith("]:") && !text.Trim('[').Contains("[") && Settings.RemoveTextBetweenSquares) ||
+                   (text.StartsWith("{") && text.EndsWith("}:") && !text.Trim('{').Contains("{") && Settings.RemoveTextBetweenBrackets) ||
+                   (text.StartsWith("?") && text.EndsWith("?:") && !text.Trim('?').Contains("?") && Settings.RemoveTextBetweenQuestionMarks) ||
+                   (text.StartsWith("(") && text.EndsWith("):") && !text.Trim('(').Contains("(") && Settings.RemoveTextBetweenParentheses) ||
+                   (Settings.RemoveTextBetweenCustomTags &&
+                    Settings.CustomStart.Length > 0 && Settings.CustomEnd.Length > 0 &&
+                    text.StartsWith(Settings.CustomStart) && text.EndsWith(Settings.CustomEnd));
         }
 
         private static string RemoveTextBetweenTags(string startTag, string endTag, string text)
@@ -826,17 +825,17 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 return text;
             }
 
-            int start = text.IndexOf(startTag);
+            int start = text.IndexOf(startTag, StringComparison.Ordinal);
             if (start == -1 || start == text.Length - 1)
                 return text;
 
-            int end = text.IndexOf(endTag, start + 1);
+            int end = text.IndexOf(endTag, start + 1, StringComparison.Ordinal);
             while (start >= 0 && end > start)
             {
                 text = text.Remove(start, (end - start) + 1);
-                start = text.IndexOf(startTag);
+                start = text.IndexOf(startTag, StringComparison.Ordinal);
                 if (start >= 0 && start < text.Length - 1)
-                    end = text.IndexOf(endTag, start);
+                    end = text.IndexOf(endTag, start, StringComparison.Ordinal);
                 else
                     end = -1;
             }
@@ -845,7 +844,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public string RemoveLineIfAllUppercase(string text)
         {
-            if (!settings.RemoveIfAllUppercase)
+            if (!Settings.RemoveIfAllUppercase)
                 return text;
 
             string[] lines = text.Replace(Environment.NewLine, "\n").Replace("\r", "\n").Split('\n');
@@ -853,7 +852,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             foreach (string line in lines)
             {
                 string lineNoHtml = Utilities.RemoveHtmlTags(line);
-                string tmp = lineNoHtml.TrimEnd(new char[] { '.', '!', '?', ':', }).Trim();
+                string tmp = lineNoHtml.TrimEnd(new[] { '.', '!', '?', ':', }).Trim();
                 if (lineNoHtml != lineNoHtml.ToLower() && lineNoHtml == lineNoHtml.ToUpper())
                 {
                     if (tmp == "YES" || tmp == "NO" || tmp == "WHY" || tmp == "HI" || tmp.Length == 1)

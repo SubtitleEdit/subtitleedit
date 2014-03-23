@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.VideoFormats;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -276,10 +277,10 @@ namespace Nikse.SubtitleEdit.Forms
                         foreach (var track in tracks)
                         {
                             i++;
-                            if (track.name != null && track.Mdia != null && track.Mdia.Mdhd != null && track.Mdia.Mdhd.LanguageString != null)
-                                audioTrackNames.Add(i + ":  " + track.name + " - " + track.Mdia.Mdhd.LanguageString);
-                            else if (track.name != null)
-                                audioTrackNames.Add(i + ":  " + track.name);
+                            if (track.Name != null && track.Mdia != null && track.Mdia.Mdhd != null && track.Mdia.Mdhd.LanguageString != null)
+                                audioTrackNames.Add(i + ":  " + track.Name + " - " + track.Mdia.Mdhd.LanguageString);
+                            else if (track.Name != null)
+                                audioTrackNames.Add(i + ":  " + track.Name);
                             else
                                 audioTrackNames.Add(i.ToString());
                         }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
+﻿using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 {
@@ -12,14 +9,14 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
         public readonly uint Width;
         public readonly uint Height;
 
-        public Tkhd(FileStream fs, ulong maximumLength)
+        public Tkhd(FileStream fs)
         {
-            buffer = new byte[84];
-            int bytesRead = fs.Read(buffer, 0, buffer.Length);
-            if (bytesRead < buffer.Length)
+            Buffer = new byte[84];
+            int bytesRead = fs.Read(Buffer, 0, Buffer.Length);
+            if (bytesRead < Buffer.Length)
                 return;
 
-            int version = buffer[0];
+            int version = Buffer[0];
             int addToIndex64Bit = 0;
             if (version == 1)
                 addToIndex64Bit = 8;

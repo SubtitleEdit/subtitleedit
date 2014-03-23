@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonGotoStartSubtitlePosition.Name = "buttonGotoStartSubtitlePosition";
             this.buttonGotoStartSubtitlePosition.Size = new System.Drawing.Size(90, 21);
             this.buttonGotoStartSubtitlePosition.TabIndex = 4;
-            this.buttonGotoStartSubtitlePosition.Text = "Goto sub pos";
+            this.buttonGotoStartSubtitlePosition.Text = "Goto sub Position";
             this.buttonGotoStartSubtitlePosition.UseVisualStyleBackColor = true;
             this.buttonGotoStartSubtitlePosition.Click += new System.EventHandler(this.ButtonGotoStartSubtitlePositionClick);
             // 
@@ -262,7 +262,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonGotoEndSubtitlePosition.Name = "buttonGotoEndSubtitlePosition";
             this.buttonGotoEndSubtitlePosition.Size = new System.Drawing.Size(90, 21);
             this.buttonGotoEndSubtitlePosition.TabIndex = 4;
-            this.buttonGotoEndSubtitlePosition.Text = "Goto sub pos";
+            this.buttonGotoEndSubtitlePosition.Text = "Goto sub Position";
             this.buttonGotoEndSubtitlePosition.UseVisualStyleBackColor = true;
             this.buttonGotoEndSubtitlePosition.Click += new System.EventHandler(this.ButtonGotoEndSubtitlePositionClick);
             // 

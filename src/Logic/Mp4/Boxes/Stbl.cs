@@ -17,17 +17,17 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
         public Stbl(FileStream fs, ulong maximumLength, UInt32 timeScale, string handlerType, Mdia mdia)
         {
             _mdia = mdia;
-            pos = (ulong)fs.Position;
+            Position = (ulong)fs.Position;
             while (fs.Position < (long)maximumLength)
             {
                 if (!InitializeSizeAndName(fs))
                     return;
 
-                if (name == "stco") // 32-bit
+                if (Name == "stco") // 32-bit
                 {
-                    buffer = new byte[size - 4];
-                    fs.Read(buffer, 0, buffer.Length);
-                    int version = buffer[0];
+                    Buffer = new byte[Size - 4];
+                    fs.Read(Buffer, 0, Buffer.Length);
+                    int version = Buffer[0];
                     uint totalEntries = GetUInt(4);
 
                     uint lastOffset = 0;
@@ -39,11 +39,11 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                         lastOffset = offset;
                     }
                 }
-                else if (name == "co64") // 64-bit
+                else if (Name == "co64") // 64-bit
                 {
-                    buffer = new byte[size - 4];
-                    fs.Read(buffer, 0, buffer.Length);
-                    int version = buffer[0];
+                    Buffer = new byte[Size - 4];
+                    fs.Read(Buffer, 0, Buffer.Length);
+                    int version = Buffer[0];
                     uint totalEntries = GetUInt(4);
 
                     ulong lastOffset = 0;
@@ -55,28 +55,28 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                         lastOffset = offset;
                     }
                 }
-                else if (name == "stsz") // sample sizes
+                else if (Name == "stsz") // sample sizes
                 {
-                    buffer = new byte[size - 4];
-                    fs.Read(buffer, 0, buffer.Length);
-                    int version = buffer[0];
+                    Buffer = new byte[Size - 4];
+                    fs.Read(Buffer, 0, Buffer.Length);
+                    int version = Buffer[0];
                     uint uniformSizeOfEachSample = GetUInt(4);
                     uint numberOfSampleSizes = GetUInt(8);
                     for (int i = 0; i < numberOfSampleSizes; i++)
                     {
-                        if (12 + i * 4 + 4 < buffer.Length)
+                        if (12 + i * 4 + 4 < Buffer.Length)
                         {
                             uint sampleSize = GetUInt(12 + i * 4);
                         }
                     }
                 }
-                else if (name == "stts") // sample table time to sample map
+                else if (Name == "stts") // sample table time to sample map
                 {
                     //https://developer.apple.com/library/mac/#documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-SW1
 
-                    buffer = new byte[size - 4];
-                    fs.Read(buffer, 0, buffer.Length);
-                    int version = buffer[0];
+                    Buffer = new byte[Size - 4];
+                    fs.Read(Buffer, 0, Buffer.Length);
+                    int version = Buffer[0];
                     uint numberOfSampleTimes = GetUInt(4);
                     double totalTime = 0;
                     if (_mdia.IsClosedCaption)
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                             uint sampleDelta = GetUInt(12 + i * 8);
                             for (int j = 0; j < sampleCount; j++)
                             {
-                                totalTime += (double)(sampleDelta / (double)timeScale);
+                                totalTime += sampleDelta / (double)timeScale;
                                 if (StartTimeCodes.Count > 0)
                                     EndTimeCodes[EndTimeCodes.Count - 1] = totalTime - 0.001;
                                 StartTimeCodes.Add(totalTime);
@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 
                             uint sampleCount = GetUInt(8 + i * 8);
                             uint sampleDelta = GetUInt(12 + i * 8);
-                            totalTime += (double)(sampleDelta / (double)timeScale);
+                            totalTime += sampleDelta / (double)timeScale;
                             if (StartTimeCodes.Count <= EndTimeCodes.Count)
                                 StartTimeCodes.Add(totalTime);
                             else
@@ -110,15 +110,15 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                         }
                     }
                 }
-                else if (name == "stsc") // sample table sample to chunk map
+                else if (Name == "stsc") // sample table sample to chunk map
                 {
-                    buffer = new byte[size - 4];
-                    fs.Read(buffer, 0, buffer.Length);
-                    int version = buffer[0];
+                    Buffer = new byte[Size - 4];
+                    fs.Read(Buffer, 0, Buffer.Length);
+                    int version = Buffer[0];
                     uint numberOfSampleTimes = GetUInt(4);
                     for (int i = 0; i < numberOfSampleTimes; i++)
                     {
-                        if (16 + i * 12 + 4 < buffer.Length)
+                        if (16 + i * 12 + 4 < Buffer.Length)
                         {
                             uint firstChunk = GetUInt(8 + i * 12);
                             uint samplesPerChunk = GetUInt(12 + i * 12);
@@ -127,14 +127,14 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                     }
                 }
 
-                fs.Seek((long)pos, SeekOrigin.Begin);
+                fs.Seek((long)Position, SeekOrigin.Begin);
             }
         }
 
         private void ReadText(FileStream fs, ulong offset, string  handlerType)
         {
             fs.Seek((long)offset, SeekOrigin.Begin);
-            byte[] data = new byte[4];
+            var data = new byte[4];
             fs.Read(data, 0, 2);
             uint textSize = (uint)GetWord(data, 0);
 
@@ -175,7 +175,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                         }
                         string hex = sb.ToString();
                         int errorCount = 0;
-                        text = Nikse.SubtitleEdit.Logic.SubtitleFormats.ScenaristClosedCaptions.GetSccText(hex, ref errorCount);
+                        text = SubtitleFormats.ScenaristClosedCaptions.GetSccText(hex, ref errorCount);
                         if (text.StartsWith("n") && text.Length > 1)
                             text = "<i>" + text.Substring(1) + "</i>";
                         if (text.StartsWith("-n"))

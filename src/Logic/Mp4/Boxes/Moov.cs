@@ -11,18 +11,18 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
         public Moov(FileStream fs, ulong maximumLength)
         {
             Tracks = new List<Trak>();
-            pos = (ulong) fs.Position;
+            Position = (ulong) fs.Position;
             while (fs.Position < (long)maximumLength)
             {
                 if (!InitializeSizeAndName(fs))
                     return;
 
-                if (name == "trak")
-                    Tracks.Add(new Trak(fs, pos));
-                else if (name == "mvhd")
-                    Mvhd = new Mvhd(fs, pos);
+                if (Name == "trak")
+                    Tracks.Add(new Trak(fs, Position));
+                else if (Name == "mvhd")
+                    Mvhd = new Mvhd(fs);
 
-                fs.Seek((long)pos, SeekOrigin.Begin);
+                fs.Seek((long)Position, SeekOrigin.Begin);
             }
         }
     }

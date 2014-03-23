@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         public string CustomStart { get; set; }
         public string CustomEnd { get; set; }
 
-        public void LoadFromConfiguration()
+        public RemoveTextForHISettings()
         {
             OnlyIfInSeparateLine = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeperateLines;
             RemoveIfAllUppercase = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase;

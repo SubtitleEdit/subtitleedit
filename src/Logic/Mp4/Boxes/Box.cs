@@ -5,10 +5,10 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 {
     public class Box
     {
-        internal byte[] buffer;
-        internal ulong pos;
-        internal string name;
-        internal UInt64 size;
+        internal byte[] Buffer;
+        internal ulong Position;
+        internal string Name;
+        internal UInt64 Size;
 
         public uint GetUInt(byte[] buffer, int index)
         {
@@ -17,19 +17,19 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 
         public uint GetUInt(int index)
         {
-            return (uint)((buffer[index] << 24) + (buffer[index + 1] << 16) + (buffer[index + 2] << 8) + buffer[index + 3]);
+            return (uint)((Buffer[index] << 24) + (Buffer[index + 1] << 16) + (Buffer[index + 2] << 8) + Buffer[index + 3]);
         }
 
         public UInt64 GetUInt64(int index)
         {
-            return (UInt64)buffer[index] << 56 | (UInt64)buffer[index + 1] << 48 | (UInt64)buffer[index + 2] << 40 | (UInt64)buffer[index+3] << 32 |
-                   (UInt64)buffer[index + 4] << 24 | (UInt64)buffer[index + 5] << 16 | (UInt64)buffer[index + 6] << 8 | (UInt64)buffer[index+7];
+            return (UInt64)Buffer[index] << 56 | (UInt64)Buffer[index + 1] << 48 | (UInt64)Buffer[index + 2] << 40 | (UInt64)Buffer[index+3] << 32 |
+                   (UInt64)Buffer[index + 4] << 24 | (UInt64)Buffer[index + 5] << 16 | (UInt64)Buffer[index + 6] << 8 | Buffer[index+7];
         }
 
         public UInt64 GetUInt64(byte[] buffer, int index)
         {
             return (UInt64)buffer[index] << 56 | (UInt64)buffer[index + 1] << 48 | (UInt64)buffer[index + 2] << 40 | (UInt64)buffer[index + 3] << 32 |
-                   (UInt64)buffer[index + 4] << 24 | (UInt64)buffer[index + 5] << 16 | (UInt64)buffer[index + 6] << 8 | (UInt64)buffer[index + 7];
+                   (UInt64)buffer[index + 4] << 24 | (UInt64)buffer[index + 5] << 16 | (UInt64)buffer[index + 6] << 8 | buffer[index + 7];
         }
 
         public int GetWord(byte[] buffer, int index)
@@ -39,12 +39,12 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 
         public int GetWord(int index)
         {
-            return (buffer[index] << 8) + buffer[index + 1];
+            return (Buffer[index] << 8) + Buffer[index + 1];
         }
 
         public string GetString(int index, int count)
         {
-            return Encoding.UTF8.GetString(buffer, index, count);
+            return Encoding.UTF8.GetString(Buffer, index, count);
         }
 
         public string GetString(byte[] buffer, int index, int count)
@@ -56,25 +56,25 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 
         internal bool InitializeSizeAndName(System.IO.FileStream fs)
         {
-            buffer = new byte[8];
-            var bytesRead = fs.Read(buffer, 0, buffer.Length);
-            if (bytesRead < buffer.Length)
+            Buffer = new byte[8];
+            var bytesRead = fs.Read(Buffer, 0, Buffer.Length);
+            if (bytesRead < Buffer.Length)
                 return false;
-            size = GetUInt(0);
-            name = GetString(4, 4);
+            Size = GetUInt(0);
+            Name = GetString(4, 4);
 
-            if (size == 0)
+            if (Size == 0)
             {
-                size = (UInt64)(fs.Length - fs.Position);
+                Size = (UInt64)(fs.Length - fs.Position);
             }
-            if (size == 1)
+            if (Size == 1)
             {
-                bytesRead = fs.Read(buffer, 0, buffer.Length);
-                if (bytesRead < buffer.Length)
+                bytesRead = fs.Read(Buffer, 0, Buffer.Length);
+                if (bytesRead < Buffer.Length)
                     return false;
-                size = GetUInt64(0) - 8;
+                Size = GetUInt64(0) - 8;
             }
-            pos = ((ulong)(fs.Position)) + size - 8;
+            Position = ((ulong)(fs.Position)) + Size - 8;
             return true;
         }
 

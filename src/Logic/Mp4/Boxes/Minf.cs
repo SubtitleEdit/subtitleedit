@@ -10,16 +10,16 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 
         public Minf(FileStream fs, ulong maximumLength, UInt32 timeScale, string handlerType, Mdia mdia)
         {
-            pos = (ulong)fs.Position;
+            Position = (ulong)fs.Position;
             while (fs.Position < (long)maximumLength)
             {
                 if (!InitializeSizeAndName(fs))
                     return;
 
-                if (name == "stbl")
-                    Stbl = new Stbl(fs, pos, timeScale, handlerType, mdia);
+                if (Name == "stbl")
+                    Stbl = new Stbl(fs, Position, timeScale, handlerType, mdia);
 
-                fs.Seek((long)pos, SeekOrigin.Begin);
+                fs.Seek((long)Position, SeekOrigin.Begin);
             }
         }
 

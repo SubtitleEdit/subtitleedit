@@ -138,8 +138,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitle == null)
                 return;
 
-            _removeTextForHILib.settings = GetSettings();
-            _removeTextForHILib._warnings = new List<int>();
+            _removeTextForHILib.Settings = GetSettings();
+            _removeTextForHILib.Warnings = new List<int>();
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             int count = 0;
@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
                     prevText = prev.Text;
                 prevIndex++;
 
-                _removeTextForHILib._warningIndex = prevIndex;
+                _removeTextForHILib.WarningIndex = prevIndex;
                 string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text, prevText);
                 bool hit = p.Text.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty);
                 if (hit)
@@ -171,7 +171,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddToListView(Paragraph p, string newText)
         {
             var item = new ListViewItem(string.Empty) {Tag = p, Checked = true};
-            if (_removeTextForHILib._warnings != null && _removeTextForHILib._warnings.Contains(_removeTextForHILib._warningIndex))
+            if (_removeTextForHILib.Warnings != null && _removeTextForHILib.Warnings.Contains(_removeTextForHILib.WarningIndex))
             {
                 item.UseItemStyleForSubItems = true;
                 item.BackColor = Color.PeachPuff;
@@ -211,7 +211,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (prev != null)
                         prevText = prev.Text;
 
-                    _removeTextForHILib.settings = GetSettings();
+                    _removeTextForHILib.Settings = GetSettings();
                     string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text, prevText);
                     if (string.IsNullOrEmpty(newText))
                     {

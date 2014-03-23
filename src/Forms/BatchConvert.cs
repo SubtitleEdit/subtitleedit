@@ -1,17 +1,19 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.BluRaySup;
+using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.VideoFormats;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.BluRaySup;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class BatchConvert : Form
+    public sealed partial class BatchConvert : Form
     {
         public class ThreadDoWorkParameter
         {
@@ -50,23 +52,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         string _assStyle;
         string _ssaStyle;
-        Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHI _removeForHI;
+        Logic.Forms.RemoveTextForHI _removeForHI;
         ChangeCasing _changeCasing = new ChangeCasing();
         ChangeCasingNames _changeCasingNames = new ChangeCasingNames();
-        bool _converting = false;
-        int _count = 0;
-        int _converted = 0;
-        int _errors = 0;
+        bool _converting;
+        int _count;
+        int _converted;
+        int _errors;
         IList<SubtitleFormat> _allFormats = SubtitleFormat.AllSubtitleFormats;
-        bool _abort = false;
-        Main _main;
+        bool _abort;
         ListViewItem _matroskaListViewItem;
 
-        public BatchConvert(Icon icon, Main main)
+        public BatchConvert(Icon icon)
         {
             InitializeComponent();
-            this.Icon = (Icon)icon.Clone();
-            _main = main;
+            Icon = (Icon)icon.Clone();
 
             progressBar1.Visible = false;
             labelStatus.Text = string.Empty;
@@ -124,20 +124,20 @@ namespace Nikse.SubtitleEdit.Forms
 
             timeUpDownAdjust.MaskedTextBox.Text = "000000000";
 
-            comboBoxFrameRateFrom.Items.Add((23.976).ToString());
-            comboBoxFrameRateFrom.Items.Add((24.0).ToString());
-            comboBoxFrameRateFrom.Items.Add((25.0).ToString());
-            comboBoxFrameRateFrom.Items.Add((29.97).ToString());
+            comboBoxFrameRateFrom.Items.Add((23.976).ToString(CultureInfo.InvariantCulture));
+            comboBoxFrameRateFrom.Items.Add((24.0).ToString(CultureInfo.InvariantCulture));
+            comboBoxFrameRateFrom.Items.Add((25.0).ToString(CultureInfo.InvariantCulture));
+            comboBoxFrameRateFrom.Items.Add((29.97).ToString(CultureInfo.InvariantCulture));
 
-            comboBoxFrameRateTo.Items.Add((23.976).ToString());
-            comboBoxFrameRateTo.Items.Add((24.0).ToString());
-            comboBoxFrameRateTo.Items.Add((25.0).ToString());
-            comboBoxFrameRateTo.Items.Add((29.97).ToString());
+            comboBoxFrameRateTo.Items.Add((23.976).ToString(CultureInfo.InvariantCulture));
+            comboBoxFrameRateTo.Items.Add((24.0).ToString(CultureInfo.InvariantCulture));
+            comboBoxFrameRateTo.Items.Add((25.0).ToString(CultureInfo.InvariantCulture));
+            comboBoxFrameRateTo.Items.Add((29.97).ToString(CultureInfo.InvariantCulture));
 
 
             FixLargeFonts();
 
-            foreach (SubtitleFormat f in SubtitleFormat.AllSubtitleFormats)
+            foreach (var f in SubtitleFormat.AllSubtitleFormats)
             {
                 if (!f.IsVobSubIndexFile)
                     comboBoxSubtitleFormats.Items.Add(f.Name);
@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             comboBoxEncoding.SelectedIndex = encodingSelectedIndex;
 
-            if (string.IsNullOrEmpty(Configuration.Settings.Tools.BatchConvertOutputFolder) || !System.IO.Directory.Exists(Configuration.Settings.Tools.BatchConvertOutputFolder))
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.BatchConvertOutputFolder) || !Directory.Exists(Configuration.Settings.Tools.BatchConvertOutputFolder))
                 textBoxOutputFolder.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             else
                 textBoxOutputFolder.Text = Configuration.Settings.Tools.BatchConvertOutputFolder;
@@ -199,15 +199,13 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxOverwriteOriginalFiles.Visible = false;
             }
 
-            var hiSettings = new Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHISettings();
-            hiSettings.LoadFromConfiguration();
-            _removeForHI = new Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHI(hiSettings);
+            _removeForHI = new Logic.Forms.RemoveTextForHI(new Logic.Forms.RemoveTextForHISettings());
         }
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonCancel.Text, this.Font);
+            Graphics graphics = CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonCancel.Text, Font);
             if (textSize.Height > buttonCancel.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
@@ -222,14 +220,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxOutputFolder.Text = folderBrowserDialog1.SelectedPath;
             }
-        }
-
-        private void buttonOpenOutputFolder_Click(object sender, EventArgs e)
-        {
-            if (System.IO.Directory.Exists(textBoxOutputFolder.Text))
-                System.Diagnostics.Process.Start(textBoxOutputFolder.Text);
-            else
-                MessageBox.Show(string.Format(Configuration.Settings.Language.SplitSubtitle.FolderNotFoundX, textBoxOutputFolder.Text));
         }
 
         private void buttonInputBrowse_Click(object sender, EventArgs e)
@@ -254,16 +244,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                FileInfo fi = new FileInfo(fileName);
+                var fi = new FileInfo(fileName);
                 var item = new ListViewItem(fileName);
                 item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
 
                 SubtitleFormat format = null;
-                Encoding encoding;
                 var sub = new Subtitle();
-                var _subtitle = new Subtitle();
                 if (fi.Length < 1024 * 1024) // max 1 mb
                 {
+                    Encoding encoding;
                     format = sub.LoadSubtitle(fileName, out encoding, null);
 
                     if (format == null)
@@ -362,7 +351,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (Path.GetExtension(fileName).ToLower() == ".mkv" || Path.GetExtension(fileName).ToLower() == ".mks")
                     {
-                        Matroska mkv = new Matroska();
+                        var mkv = new Matroska();
                         bool isValid = false;
                         bool hasConstantFrameRate = false;
                         double frameRate = 0;
@@ -524,12 +513,12 @@ namespace Nikse.SubtitleEdit.Forms
             BackgroundWorker worker1 = new BackgroundWorker();
             BackgroundWorker worker2 = new BackgroundWorker();
             BackgroundWorker worker3 = new BackgroundWorker();
-            worker1.DoWork += new DoWorkEventHandler(DoThreadWork);
-            worker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ThreadWorkerCompleted);
-            worker2.DoWork += new DoWorkEventHandler(DoThreadWork);
-            worker2.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ThreadWorkerCompleted);
-            worker3.DoWork += new DoWorkEventHandler(DoThreadWork);
-            worker3.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ThreadWorkerCompleted);
+            worker1.DoWork += DoThreadWork;
+            worker1.RunWorkerCompleted += ThreadWorkerCompleted;
+            worker2.DoWork += DoThreadWork;
+            worker2.RunWorkerCompleted += ThreadWorkerCompleted;
+            worker3.DoWork += DoThreadWork;
+            worker3.RunWorkerCompleted += ThreadWorkerCompleted;
 
             listViewInputFiles.BeginUpdate();
             foreach (ListViewItem item in listViewInputFiles.Items)
@@ -542,7 +531,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ListViewItem item = listViewInputFiles.Items[index];
                 string fileName = item.Text;
-                string friendlyName = item.SubItems[1].Text;
 
                 try
                 {
@@ -670,7 +658,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     }
 
-                    List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> bluRaySubtitles = new List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData>();
+                    var bluRaySubtitles = new List<BluRaySupParser.PcsData>();
                     bool isVobSub = false;
                     bool isMatroska = false;
                     if (format == null && fileName.ToLower().EndsWith(".sup") && Main.IsBluRaySupFile(fileName))
@@ -923,7 +911,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    p.Subtitle = Nikse.SubtitleEdit.Logic.Forms.SplitLongLinesHelper.SplitLongLinesInSubtitle(p.Subtitle, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.General.SubtitleLineMaximumLength);
+                    p.Subtitle = Logic.Forms.SplitLongLinesHelper.SplitLongLinesInSubtitle(p.Subtitle, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.General.SubtitleLineMaximumLength);
                 }
                 catch (Exception exception)
                 {
@@ -975,7 +963,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool success;
                 if (checkBoxOverwriteOriginalFiles.Checked)
                 {
-                    success = Main.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), System.IO.Path.GetDirectoryName(p.FileName), _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, true, string.Empty);
+                    success = Main.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), Path.GetDirectoryName(p.FileName), _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, true, string.Empty);
                 }
                 else
                 {
@@ -1037,13 +1025,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LinkLabelOpenOutputFolderLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (System.IO.Directory.Exists(textBoxOutputFolder.Text))
+            if (Directory.Exists(textBoxOutputFolder.Text))
                 System.Diagnostics.Process.Start(textBoxOutputFolder.Text);
             else
                 MessageBox.Show(string.Format(Configuration.Settings.Language.SplitSubtitle.FolderNotFoundX, textBoxOutputFolder.Text));
         }
 
-        private void ContextMenuStripFilesOpening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenuStripFilesOpening(object sender, CancelEventArgs e)
         {
             if (listViewInputFiles.Items.Count == 0 || _converting)
             {

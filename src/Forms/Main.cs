@@ -1,4 +1,12 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.BluRaySup;
+using Nikse.SubtitleEdit.Logic.Enums;
+using Nikse.SubtitleEdit.Logic.Networking;
+using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.VideoFormats;
+using Nikse.SubtitleEdit.Logic.VobSub;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -6,13 +14,6 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.BluRaySup;
-using Nikse.SubtitleEdit.Logic.Enums;
-using Nikse.SubtitleEdit.Logic.Networking;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.VobSub;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -2226,7 +2227,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (ext == ".mkv" || ext == ".mks")
                 {
-                    Matroska mkv = new Matroska();
+                    var mkv = new Matroska();
                     bool isValid = false;
                     bool hasConstantFrameRate = false;
                     double frameRate = 0;
@@ -2743,7 +2744,7 @@ namespace Nikse.SubtitleEdit.Forms
                         // check for RTF file
                         if (fileName.ToLower().EndsWith(".rtf") && !s.Trim().StartsWith("{\\rtf"))
                         {
-                            var rtBox = new System.Windows.Forms.RichTextBox();
+                            var rtBox = new RichTextBox();
                             rtBox.Rtf = s;
                             s = rtBox.Text;
                         }
@@ -3700,10 +3701,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return NuendoProperties.LoadCharacters(Configuration.Settings.SubtitleSettings.NuendoCharacterListFile);
             }
-            else
-            {
-                return new List<string>();
-            }
+            return new List<string>();
         }
 
         private void ComboBoxSubtitleFormatsEnter(object sender, EventArgs e)
@@ -8120,7 +8118,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (frames >= 99)
                                 numericUpDownDuration.Value = (decimal)(seconds + ((Math.Round((Configuration.Settings.General.CurrentFrameRate - 1))) / 100.0));
                             else
-                                numericUpDownDuration.Value = (decimal)(seconds + 1);
+                                numericUpDownDuration.Value = seconds + 1;
                             numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
                         }
                     }
@@ -8980,13 +8978,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static Subtitle LoadMatroskaSSa(MatroskaSubtitleInfo matroskaSubtitleInfo, string fileName, SubtitleFormat format, List<SubtitleSequence> sub)
         {
-            Subtitle subtitle = new Subtitle();
+            var subtitle = new Subtitle();
             subtitle.Header = matroskaSubtitleInfo.CodecPrivate;
             var lines = new List<string>();
             foreach (string l in subtitle.Header.Trim().Replace(Environment.NewLine, "\n").Split('\n'))
                 lines.Add(l);
-            StringBuilder footer = new StringBuilder();
-            Subtitle comments = new Subtitle();
+            var footer = new StringBuilder();
+            var comments = new Subtitle();
             if (!string.IsNullOrEmpty(matroskaSubtitleInfo.CodecPrivate))
             {
                 bool footerOn = false;
@@ -9289,7 +9287,7 @@ namespace Nikse.SubtitleEdit.Forms
                 formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName);
                 if (_loading)
                 {
-                    formSubOcr.Icon = (Icon)this.Icon.Clone();
+                    formSubOcr.Icon = (Icon)Icon.Clone();
                     formSubOcr.ShowInTaskbar = true;
                     formSubOcr.ShowIcon = true;
                 }
@@ -13338,7 +13336,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Paragraph InsertNewTextAtVideoPosition()
         {
-            // current movie pos
+            // current movie Position
             double videoPositionInMilliseconds = mediaPlayer.CurrentPosition * 1000.0;
             if (!mediaPlayer.IsPaused)
                 videoPositionInMilliseconds -= Configuration.Settings.General.SetStartEndHumanDelay;
@@ -14365,7 +14363,7 @@ namespace Nikse.SubtitleEdit.Forms
             System.Reflection.Assembly assembly;
             try
             {
-                assembly = System.Reflection.Assembly.Load(System.IO.File.ReadAllBytes(pluginFileName));
+                assembly = System.Reflection.Assembly.Load(File.ReadAllBytes(pluginFileName));
             }
             catch
             {
@@ -14380,9 +14378,7 @@ namespace Nikse.SubtitleEdit.Forms
                 object pluginObject = Activator.CreateInstance(pluginType);
 
                 // IPlugin
-                System.Reflection.PropertyInfo[] pis = pluginType.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
                 Type[] tt = pluginType.GetInterfaces();
-                System.Reflection.PropertyInfo[] pis2 = tt[0].GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
                 Type t = null;
                 foreach (Type t2 in tt)
                 {
@@ -14476,7 +14472,7 @@ namespace Nikse.SubtitleEdit.Forms
                     GetPropertiesAndDoAction(pluginFileName, out name, out text, out version, out description, out actionType, out shortcut, out mi);
                     if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
                     {
-                        ToolStripMenuItem item = new ToolStripMenuItem();
+                        var item = new ToolStripMenuItem();
                         item.Name = "Plugin" + toolsPluginCount.ToString();
                         item.Text = text;
                         item.Tag = pluginFileName;
@@ -14484,7 +14480,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!string.IsNullOrEmpty(shortcut))
                             item.ShortcutKeys = Utilities.GetKeys(shortcut);
 
-                        if (string.Compare(actionType, "File", true) == 0)
+                        if (String.Compare(actionType, "File", StringComparison.OrdinalIgnoreCase) == 0)
                         {
                             if (filePluginCount == 0)
                             {
@@ -14496,7 +14492,7 @@ namespace Nikse.SubtitleEdit.Forms
                             fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, item);
                             filePluginCount++;
                         }
-                        else if (string.Compare(actionType, "Tool", true) == 0)
+                        else if (String.Compare(actionType, "Tool", StringComparison.OrdinalIgnoreCase) == 0)
                         {
                             if (toolsPluginCount == 0)
                             {
@@ -14508,7 +14504,7 @@ namespace Nikse.SubtitleEdit.Forms
                             toolsToolStripMenuItem.DropDownItems.Add(item);
                             toolsPluginCount++;
                         }
-                        else if (string.Compare(actionType, "Sync", true) == 0)
+                        else if (String.Compare(actionType, "Sync", StringComparison.OrdinalIgnoreCase) == 0)
                         {
                             if (syncPluginCount == 0)
                             {
@@ -14520,7 +14516,7 @@ namespace Nikse.SubtitleEdit.Forms
                             toolStripMenuItemSyncronization.DropDownItems.Add(item);
                             syncPluginCount++;
                         }
-                        else if (string.Compare(actionType, "Translate", true) == 0)
+                        else if (String.Compare(actionType, "Translate", StringComparison.OrdinalIgnoreCase) == 0)
                         {
                             if (syncPluginCount == 0)
                             {
@@ -14533,7 +14529,7 @@ namespace Nikse.SubtitleEdit.Forms
                             syncPluginCount++;
                         }
 
-                        else if (string.Compare(actionType, "SpellCheck", true) == 0)
+                        else if (String.Compare(actionType, "SpellCheck", StringComparison.OrdinalIgnoreCase) == 0)
                         {
                             if (syncPluginCount == 0)
                             {
@@ -14883,7 +14879,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void addParagraphHereToolStripMenuItem_Click(object sender, EventArgs e)
         {
             audioVisualizer.ClearSelection();
-            Paragraph newParagraph = new Paragraph(audioVisualizer.NewSelectionParagraph);
+            var newParagraph = new Paragraph(audioVisualizer.NewSelectionParagraph);
             if (newParagraph == null)
                 return;
 
@@ -15230,7 +15226,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var vobSubOcr = new VobSubOcr();
                 if (showInTaskbar)
                 {
-                    vobSubOcr.Icon = (Icon)this.Icon.Clone();
+                    vobSubOcr.Icon = (Icon)Icon.Clone();
                     vobSubOcr.ShowInTaskbar = true;
                     vobSubOcr.ShowIcon = true;
                 }
@@ -16710,7 +16706,7 @@ namespace Nikse.SubtitleEdit.Forms
             //    //TODO: search for start via wave file (must only be minor adjustment)
             //}
 
-            // current movie pos
+            // current movie Position
             double durationTotalMilliseconds = p.Duration.TotalMilliseconds;
             double totalMillisecondsEnd = mediaPlayer.CurrentPosition * 1000.0;
 
@@ -18118,7 +18114,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemStatistics_Click(object sender, EventArgs e)
         {
-            Statistics stats = new Statistics(_subtitle, _fileName, GetCurrentSubtitleFormat());
+            var stats = new Statistics(_subtitle, _fileName, GetCurrentSubtitleFormat());
             _formPositionsAndSizes.SetPositionAndSize(stats);
             stats.ShowDialog(this);
             _formPositionsAndSizes.SavePositionAndSize(stats);
@@ -18657,7 +18653,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemBatchConvert_Click(object sender, EventArgs e)
         {
             this.Visible = false;
-            var form = new BatchConvert(this.Icon, this);
+            var form = new BatchConvert(this.Icon);
             _formPositionsAndSizes.SetPositionAndSize(form);
             form.ShowDialog(this);
             _formPositionsAndSizes.SavePositionAndSize(form);
