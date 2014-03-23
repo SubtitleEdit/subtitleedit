@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System.Text.RegularExpressions;
@@ -10,7 +11,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class ChangeCasing : Form
     {
         private int _noOfLinesChanged;
-        Regex aloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
+        private static readonly Regex AloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
 
         public ChangeCasing()
         {
@@ -42,8 +43,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (radioButtonNormal.Left + radioButtonNormal.Width + 40 > Width)
                 Width = radioButtonNormal.Left + radioButtonNormal.Width + 40;
 
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            Graphics graphics = CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
@@ -90,7 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // fix casing of English alone i to I
                 if (radioButtonNormal.Checked && language.StartsWith("en") && p.Text.Contains("i"))
                 {
-                    Match match = aloneI.Match(p.Text);
+                    Match match = AloneI.Match(p.Text);
                     while (match.Success)
                     {
                         if (p.Text[match.Index] == 'i')
@@ -98,9 +99,9 @@ namespace Nikse.SubtitleEdit.Forms
                             string prev = string.Empty;
                             string next = string.Empty;
                             if (match.Index > 0)
-                                prev = p.Text[match.Index - 1].ToString();
+                                prev = p.Text[match.Index - 1].ToString(CultureInfo.InvariantCulture);
                             if (match.Index + 1 < p.Text.Length)
-                                next = p.Text[match.Index + 1].ToString();
+                                next = p.Text[match.Index + 1].ToString(CultureInfo.InvariantCulture);
                             if (prev != ">" && next != ">")
                             {
                                 string oldText = p.Text;
@@ -141,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (radioButtonUppercase.Checked)
             {
-                StripableText st = new StripableText(text);
+                var st = new StripableText(text);
                 text = st.Pre + st.StrippedText.ToUpper() + st.Post;
                 text = text.Replace("<I>", "<i>");
                 text = text.Replace("</I>", "</i>");

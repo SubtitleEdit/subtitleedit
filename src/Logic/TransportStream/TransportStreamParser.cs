@@ -47,16 +47,16 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             SubtitlePackets = new List<Packet>();
 //            ProgramAssociationTables = new List<Packet>();
             ms.Position = 0;
-            int packetLength = 188;
+            const int packetLength = 188;
             DetectFormat(ms);
             var packetBuffer = new byte[packetLength];
-            var m2tsTimeCodeBuffer = new byte[4];
+            var m2TsTimeCodeBuffer = new byte[4];
             long position = 0;
 
             // check for Topfield .rec file
             ms.Seek(position, SeekOrigin.Begin);
-            ms.Read(m2tsTimeCodeBuffer, 0, 3);
-            if (m2tsTimeCodeBuffer[0] == 0x54 && m2tsTimeCodeBuffer[1] == 0x46 && m2tsTimeCodeBuffer[2] == 0x72)
+            ms.Read(m2TsTimeCodeBuffer, 0, 3);
+            if (m2TsTimeCodeBuffer[0] == 0x54 && m2TsTimeCodeBuffer[1] == 0x46 && m2TsTimeCodeBuffer[2] == 0x72)
                 position = 3760;
 
 
@@ -66,9 +66,9 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
                 if (IsM2TransportStream)
                 {
-                    ms.Read(m2tsTimeCodeBuffer, 0, m2tsTimeCodeBuffer.Length);
-                    var tc = (m2tsTimeCodeBuffer[0]<< 24) | (m2tsTimeCodeBuffer[1] << 16) | (m2tsTimeCodeBuffer[2] << 8) | (m2tsTimeCodeBuffer[3]);
-                    position += m2tsTimeCodeBuffer.Length;
+                    ms.Read(m2TsTimeCodeBuffer, 0, m2TsTimeCodeBuffer.Length);
+                    //var tc = (m2tsTimeCodeBuffer[0]<< 24) | (m2tsTimeCodeBuffer[1] << 16) | (m2tsTimeCodeBuffer[2] << 8) | (m2tsTimeCodeBuffer[3]);
+                    position += m2TsTimeCodeBuffer.Length;
                 }
 
                 ms.Read(packetBuffer, 0, packetLength);
@@ -254,7 +254,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
             // Merge packets and set start/end time
             DvbSubtitlesLookup = new Dictionary<int, List<TransportStreamSubtitle>>();
-            ulong firstVideoMs = (ulong)((FirstVideoPts + 45) / 90.0);
+            var firstVideoMs = (ulong)((FirstVideoPts + 45) / 90.0);
             foreach (int pid in SubtitlePacketIds)
             {
                 var subtitles = new List<TransportStreamSubtitle>();
@@ -417,7 +417,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     sub.StartMilliseconds = (ulong)(seconds * 1000);
                     seconds += pes.PageCompositions[0].PageTimeOut;
                     if (pes.PageCompositions.Count > 0)
-                        sub.EndMilliseconds = (ulong)(sub.StartMilliseconds + (ulong)(pes.PageCompositions[0].PageTimeOut * 1000));
+                        sub.EndMilliseconds = sub.StartMilliseconds + (ulong)(pes.PageCompositions[0].PageTimeOut * 1000);
                     else
                         sub.EndMilliseconds = sub.StartMilliseconds + 2500;
                     sub.Pes = pes;

@@ -10,235 +10,35 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
         private class MemWriter
         {
-            private byte BitPointer;
-            private byte[] BitSet = { 0, 0, 0 };
-            private byte[] buf;
-            private long pos;
-            private long size;
+            private readonly byte[] _buf;
+            private long _pos;
 
-            public MemWriter(long Size)
+            public MemWriter(long size)
             {
-                buf = new byte[Size];
-                size = Size;
-                pos = 0;
-            }
-
-            private void Write2bits(byte val)
-            {
-                // Write 2 bits, when full write a byte to the memory buffer
-                if (BitPointer < 3)
-                {
-                    BitSet[BitPointer++] = (byte)(val & 0x3);
-                }
-                else
-                {
-                    BitPointer = 0;
-                    buf[pos++] = (byte)((BitSet[0] << 6) | (BitSet[1] << 4) | (BitSet[2] << 2) | (val & 0x3));
-                }
-            }
-
-            private void Write2bits(bool EndOfLine)
-            {
-                if (EndOfLine)
-                {
-                    // Write all bits, and let the position pointer start at a new byte
-                    switch (BitPointer)
-                    {
-                        case 0:
-                            break;
-                        case 1:
-                            buf[pos++] = (byte)(BitSet[0] << 6);
-                            break;
-                        case 2:
-                            buf[pos++] = (byte)((BitSet[0] << 6) | (BitSet[1] << 4));
-                            break;
-                        case 3:
-                            buf[pos++] = (byte)((BitSet[0] << 6) | (BitSet[1] << 4) | (BitSet[2] << 2));
-                            break;
-                    }
-                    BitPointer = 0;
-                    // Start new line at next even position
-                    //if (pos % 2 != 0)
-                    //    WriteByte(0);
-                }
+                _buf = new byte[size];
+                _pos = 0;
             }
 
             public byte[] GetBuf()
             {
-                return buf;
+                return _buf;
             }
 
             public long GetPosition()
             {
-                return pos;
+                return _pos;
             }
 
-            public bool GotoBegin()
+            public void GotoBegin()
             {
-                pos = 0;
-                return true;
-            }
-
-            public bool GotoEnd()
-            {
-                pos = size;
-                return true;
-            }
-
-            public byte ReadByte()
-            {
-                return buf[pos++];
-            }
-
-            public UInt16 ReadInt16()
-            {
-                return (UInt16)(
-                    ((UInt16)buf[pos++] << 8) |
-                    ((UInt16)buf[pos++]));
-            }
-
-            public int ReadInt32()
-            {
-                return (
-                    ((int)buf[pos++] << 24) |
-                    ((int)buf[pos++] << 16) |
-                    ((int)buf[pos++] << 8) |
-                    ((int)buf[pos++]));
-            }
-
-            public bool Seek(long position)
-            {
-                if (pos < size)
-                {
-                    pos = Math.Max(0, position);
-                    return true;
-                }
-                else
-                    return false;
+                _pos = 0;
             }
 
             public void WriteByte(byte val)
             {
-                buf[pos++] = val;
-            }
-
-            public void WriteInt16(ushort val)
-            {
-                buf[pos++] = (byte)((val & 0xFF00) >> 8);
-                buf[pos++] = (byte)(val & 0x00FF);
-            }
-
-            public void WriteInt32(uint val)
-            {
-                buf[pos++] = (byte)(val & 0x000000FF);
-                buf[pos++] = (byte)((val & 0x0000FF00) >> 8);
-                buf[pos++] = (byte)((val & 0x00FF0000) >> 16);
-                buf[pos++] = (byte)((val & 0xFF000000) >> 24);
-            }
-
-            public void WriteRLE(uint RunLength, byte Color, bool EndOfLine)
-            {
-                // If end of line, add a carriage (two empty bytes) after writing the last run sequence
-                if (EndOfLine)
-                {
-                    if (Color == 0)
-                    {
-                        Write2bits(true);       // Flush buffer and write
-                        WriteInt16(0);
-                    }
-                    else
-                    {
-                        Write2bits(0);
-                        Write2bits(0);
-                        Write2bits(0);
-                        Write2bits(0);
-                        Write2bits(0);
-                        Write2bits(0);
-                        Write2bits(0); // 7x
-                        Write2bits(Color);
-                        Write2bits(true);       // Flush buffer and write
-                    }
-                    return;
-                }
-
-                // Create the RLE code - use a max RL of 255
-                while (RunLength > 255)
-                {
-                    RunLength -= 255;
-                    WriteRLE(255, Color, false);
-                }
-                if (RunLength < 4)
-                    Write2bits((byte)RunLength);
-                else
-                {
-                    // Run length is longer than 4: Count number of 00 (2 zero bits) we need to add to the code
-                    ushort Counter = 0;
-                    while ((RunLength >> (++Counter * 2)) > 0)
-                    {
-                        // Write 00 bits
-                        Write2bits((byte)0);
-                    }
-                    // Write RunLength
-                    for (--Counter; Counter > 0; Counter--)
-                    {
-                        Write2bits((byte)(RunLength >> (Counter * 2)));
-                    }
-                    Write2bits((byte)(RunLength >> (Counter * 2)));
-                }
-                Write2bits((byte)Color);
+                _buf[_pos++] = val;
             }
         }
-
-        /// <summary>
-        /// 14 bytes Mpeg 2 pack header
-        /// </summary>
-        private static readonly byte[] Mpeg2PackHeaderBuffer =
-        {
-            0x00, 0x00, 0x01,       // Start code
-            0xba,                   // MPEG-2 Pack ID
-            0x44, 0x02, 0xec, 0xdf, // System clock reference
-            0xfe, 0x57,
-            0x01, 0x89, 0xc3,       // Program mux rate
-            0xf8                    // stuffing byte
-        };
-
-        /// <summary>
-        /// 9 bytes packetized elementary stream header (PES)
-        /// </summary>
-        private static readonly byte[] PacketizedElementaryStreamHeaderBufferFirst =
-        {
-            0x00, 0x00, 0x01,       // Start code
-            0xbd,                   // bd = Private stream 1 (non MPEG audio, subpictures)
-            0x00, 0x00,             // 18-19=PES packet length
-            0x81,                   // 20=Flags: PES scrambling control, PES priority, data alignment indicator, copyright, original or copy
-            0x81,                   // 21=Flags: PTS DTS flags, ESCR flag, ES rate flag, DSM trick mode flag, additional copy info flag, PES CRC flag, PES extension flag
-            0x08                    // 22=PES header data length
-        };
-
-        /// <summary>
-        /// 9 bytes packetized elementary stream header (PES)
-        /// </summary>
-        private static readonly byte[] PacketizedElementaryStreamHeaderBufferNext =
-        {
-            0x00, 0x00, 0x01,       // Start code
-            0xbd,                   // bd = Private stream 1 (non MPEG audio, subpictures)
-            0x00, 0x00,             // PES packet length
-            0x81,                   // 20=Flags: PES scrambling control, PES priority, data alignment indicator, copyright, original or copy
-            0x00,                   // 21=Flags: PTS DTS flags, ESCR flag, ES rate flag, DSM trick mode flag, additional copy info flag, PES CRC flag, PES extension flag
-            0x00                    // 22=PES header data length
-        };
-
-        /// <summary>
-        /// 5 bytes presentation time stamp (PTS)
-        /// </summary>
-        private static readonly byte[] PresentationTimeStampBuffer =
-        {
-            0x21,                   // 0010 3=PTS 32..30 1
-            0x00, 0x01,             // 15=PTS 29..15 1
-            0x00, 0x01              // 15=PTS 14..00 1
-        };
-
-        private const int PacketizedElementaryStreamMaximumLength = 2028;
 
         private readonly string _subFileName;
         private FileStream _subFile;
@@ -246,16 +46,16 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         readonly int _screenWidth = 720;
         readonly int _screenHeight = 480;
         readonly int _bottomMargin = 15;
-        readonly int _languageStreamId = 32;
+        private readonly int _languageStreamId;
         Color _background = Color.Transparent;
         Color _pattern = Color.White;
         Color _emphasis1 = Color.Black;
-        bool _useInnerAA = true;
+        readonly bool _useInnerAntialiasing = true;
         Color _emphasis2 = Color.FromArgb(240, Color.Black);
         readonly string _languageName = "English";
         readonly string _languageNameShort = "en";
 
-        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int languageStreamId, Color pattern, Color emphasis1, bool useInnerAA, string languageName, string languageNameShort)
+        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int languageStreamId, Color pattern, Color emphasis1, bool useInnerAntialiasing, string languageName, string languageNameShort)
         {
             _subFileName = subFileName;
             _screenWidth = screenWidth;
@@ -264,7 +64,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             _languageStreamId = languageStreamId;
             _pattern = pattern;
             _emphasis1 = emphasis1;
-            _useInnerAA = useInnerAA;
+            _useInnerAntialiasing = useInnerAntialiasing;
             _languageName = languageName;
             _languageNameShort = languageNameShort;
             _idx = CreateIdxHeader();
@@ -344,65 +144,61 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             _idx.AppendLine(string.Format("timestamp: {0:00}:{1:00}:{2:00}:{3:000}, filepos: {4}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds, _subFile.Position.ToString("X").PadLeft(9, '0').ToLower()));
 
             var nbmp = new NikseBitmap(bmp);
-            _emphasis2 = nbmp.ConverToFourColors(_background, _pattern, _emphasis1, _useInnerAA);
+            _emphasis2 = nbmp.ConverToFourColors(_background, _pattern, _emphasis1, _useInnerAntialiasing);
             var twoPartBuffer = nbmp.RunLengthEncodeForDvd(_background, _pattern, _emphasis1, _emphasis2);
             var imageBuffer = GetSubImageBuffer(twoPartBuffer, nbmp, p, alignment);
 
             int bufferIndex = 0;
-            byte VobSubID = 32;
+            byte vobSubId = (byte)_languageStreamId;
             var mwsub = new MemWriter(200000);
-            long header_size;
-            byte[] SubHeader = new byte[30];
+            byte[] subHeader = new byte[30];
             byte[] ts = new byte[4];
-            byte[] b = new byte[4];
-            long filepos = 0;
 
             // Lended from "Son2VobSub" by Alain Vielle and Petr Vyskocil
             // And also from Sup2VobSub by Emmel
-            SubHeader[0] = 0x00; // MPEG 2 PACK HEADER
-            SubHeader[1] = 0x00;
-            SubHeader[2] = 0x01;
-            SubHeader[3] = 0xba;
-            SubHeader[4] = 0x44;
-            SubHeader[5] = 0x02;
-            SubHeader[6] = 0xc4;
-            SubHeader[7] = 0x82;
-            SubHeader[8] = 0x04;
-            SubHeader[9] = 0xa9;
-            SubHeader[10] = 0x01;
-            SubHeader[11] = 0x89;
-            SubHeader[12] = 0xc3;
-            SubHeader[13] = 0xf8;
+            subHeader[0] = 0x00; // MPEG 2 PACK HEADER
+            subHeader[1] = 0x00;
+            subHeader[2] = 0x01;
+            subHeader[3] = 0xba;
+            subHeader[4] = 0x44;
+            subHeader[5] = 0x02;
+            subHeader[6] = 0xc4;
+            subHeader[7] = 0x82;
+            subHeader[8] = 0x04;
+            subHeader[9] = 0xa9;
+            subHeader[10] = 0x01;
+            subHeader[11] = 0x89;
+            subHeader[12] = 0xc3;
+            subHeader[13] = 0xf8;
 
-            SubHeader[14] = 0x00; // PES
-            SubHeader[15] = 0x00;
-            SubHeader[16] = 0x01;
-            SubHeader[17] = 0xbd;
+            subHeader[14] = 0x00; // PES
+            subHeader[15] = 0x00;
+            subHeader[16] = 0x01;
+            subHeader[17] = 0xbd;
 
             int packetSize = imageBuffer.Length;
             long toWrite = packetSize;  // Image buffer + control sequence length
             bool header0 = true;
-            long blockSize = 0;
-            long paddingsize;
 
             while (toWrite > 0)
             {
+                long headerSize;
                 if (header0)
                 {
                     header0 = false;
 
                     // This is only for first packet
-                    SubHeader[20] = 0x81;   // mark as original
-                    SubHeader[21] = 0x80;   // first packet: PTS
-                    SubHeader[22] = 0x05;   // PES header data length
+                    subHeader[20] = 0x81;   // mark as original
+                    subHeader[21] = 0x80;   // first packet: PTS
+                    subHeader[22] = 0x05;   // PES header data length
 
                     // PTS (90kHz):
                     //--------------
-                    SubHeader[23] = (byte)((ts[3] & 0xc0) >> 5 | 0x21);
-                    SubHeader[24] = (byte)((ts[3] & 0x3f) << 2 | (ts[2] & 0xc0) >> 6);
-                    SubHeader[25] = (byte)((ts[2] & 0x3f) << 2 | (ts[1] & 0x80) >> 6 | 0x01);
-                    SubHeader[26] = (byte)((ts[1] & 0x7f) << 1 | (ts[0] & 0x80) >> 7);
-                    SubHeader[27] = (byte)((ts[0] & 0x7f) << 1 | 0x01);
+                    subHeader[23] = (byte)((ts[3] & 0xc0) >> 5 | 0x21);
+                    subHeader[24] = (byte)((ts[3] & 0x3f) << 2 | (ts[2] & 0xc0) >> 6);
+                    subHeader[25] = (byte)((ts[2] & 0x3f) << 2 | (ts[1] & 0x80) >> 6 | 0x01);
+                    subHeader[26] = (byte)((ts[1] & 0x7f) << 1 | (ts[0] & 0x80) >> 7);
+                    subHeader[27] = (byte)((ts[0] & 0x7f) << 1 | 0x01);
 
                     const string pre = "0010"; // 0011 or 0010 ? (KMPlayer will not understand 0011!!!)
                     long newPts = (long)(p.StartTime.TotalSeconds * 90000.0 + 0.5);
@@ -410,39 +206,39 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                     string fiveBytesString = pre + bString.Substring(0, 3) + "1" + bString.Substring(3, 15) + "1" + bString.Substring(18, 15) + "1";
                     for (int i = 0; i < 5; i++)
                     {
-                        SubHeader[23 + i] = Convert.ToByte(fiveBytesString.Substring((i * 8), 8), 2);
+                        subHeader[23 + i] = Convert.ToByte(fiveBytesString.Substring((i * 8), 8), 2);
                     }
-                    SubHeader[28] = VobSubID;
-                    header_size = 29;
+                    subHeader[28] = vobSubId;
+                    headerSize = 29;
                 }
                 else
                 {
-                    SubHeader[20] = 0x81; // mark as original
-                    SubHeader[21] = 0x00; // no PTS
-                    SubHeader[22] = 0x00; // header data length
-                    SubHeader[23] = VobSubID;
-                    header_size = 24;
+                    subHeader[20] = 0x81; // mark as original
+                    subHeader[21] = 0x00; // no PTS
+                    subHeader[22] = 0x00; // header data length
+                    subHeader[23] = vobSubId;
+                    headerSize = 24;
                 }
 
-                if ((toWrite + header_size) <= 0x800)
+                if ((toWrite + headerSize) <= 0x800)
                 {
                     // write whole image in one 0x800 part
 
-                    long j = (header_size - 20) + toWrite;
-                    SubHeader[18] = (byte)(j / 0x100);
-                    SubHeader[19] = (byte)(j % 0x100);
+                    long j = (headerSize - 20) + toWrite;
+                    subHeader[18] = (byte)(j / 0x100);
+                    subHeader[19] = (byte)(j % 0x100);
 
                     // First Write header
-                    for (int x = 0; x < header_size; x++)
-                        mwsub.WriteByte(SubHeader[x]);
+                    for (int x = 0; x < headerSize; x++)
+                        mwsub.WriteByte(subHeader[x]);
 
                     // Write Image Data
                     for (int x = 0; x < toWrite; x++)
-                        mwsub.WriteByte((byte)imageBuffer[bufferIndex++]);
+                        mwsub.WriteByte(imageBuffer[bufferIndex++]);
 
                     // Pad remaining space
-                    paddingsize = 0x800 - header_size - toWrite;
-                    for (int x = 0; x < paddingsize; x++)
+                    long paddingSize = 0x800 - headerSize - toWrite;
+                    for (int x = 0; x < paddingSize; x++)
                         mwsub.WriteByte(0xff);
 
                     toWrite = 0;
@@ -451,43 +247,27 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 {
                     // write multiple parts
 
-                    blockSize = 0x800 - header_size;
-                    long j = (header_size - 20) + blockSize;
-                    SubHeader[18] = (byte)(j / 0x100);
-                    SubHeader[19] = (byte)(j % 0x100);
+                    long blockSize = 0x800 - headerSize;
+                    long j = (headerSize - 20) + blockSize;
+                    subHeader[18] = (byte)(j / 0x100);
+                    subHeader[19] = (byte)(j % 0x100);
 
                     // First Write header
-                    for (int x = 0; x < header_size; x++)
-                        mwsub.WriteByte(SubHeader[x]);
+                    for (int x = 0; x < headerSize; x++)
+                        mwsub.WriteByte(subHeader[x]);
 
                     // Write Image Data
                     for (int x = 0; x < blockSize; x++)
-                        mwsub.WriteByte((byte)imageBuffer[bufferIndex++]);
+                        mwsub.WriteByte(imageBuffer[bufferIndex++]);
 
                     toWrite -= blockSize;
                 }
             }
 
             // Write whole memory stream to file
-            long EndPosition = mwsub.GetPosition();
-            filepos += EndPosition;
+            long endPosition = mwsub.GetPosition();
             mwsub.GotoBegin();
-            _subFile.Write(mwsub.GetBuf(), 0, (int)EndPosition);
-        }
-
-        private static void WritePesSize(int subtract, byte[] imageBuffer, byte[] writeBuffer)
-        {
-            int length = Mpeg2PackHeaderBuffer.Length + imageBuffer.Length - subtract;
-            if (length > PacketizedElementaryStreamMaximumLength)
-            {
-                writeBuffer[4] = PacketizedElementaryStreamMaximumLength / 256;
-                writeBuffer[5] = PacketizedElementaryStreamMaximumLength % 256;
-            }
-            else
-            {
-                writeBuffer[4] = (byte)(length / 256);
-                writeBuffer[5] = (byte)(length % 256);
-            }
+            _subFile.Write(mwsub.GetBuf(), 0, (int)endPosition);
         }
 
         private void WritePixelDataAddress(Stream stream, int imageTopFieldDataAddress, int imageBottomFieldDataAddress)
@@ -554,23 +334,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             stream.WriteByte(3);
             stream.WriteByte((emphasis2 << 4) | emphasis1); // emphasis2 + emphasis1
             stream.WriteByte((pattern << 4) | background); // pattern + background
-        }
-
-        /// <summary>
-        /// Write the 5 PTS bytes to buffer
-        /// </summary>
-        private void FillPTS(TimeCode timeCode)
-        {
-            const string pre = "0010"; // 0011 or 0010 ? // use 0010 - KMPlayer does not understand 0011
-            long newPts = (long)(timeCode.TotalSeconds * 90000.0 + 0.5);
-            string bString = Convert.ToString(newPts, 2).PadLeft(33, '0');
-            string fiveBytesString = pre + bString.Substring(0, 3) + "1" + bString.Substring(3, 15) + "1" + bString.Substring(18, 15) + "1";
-            for (int i = 0; i < 5; i++)
-            {
-                byte b = Convert.ToByte(fiveBytesString.Substring((i * 8), 8), 2);
-                PresentationTimeStampBuffer[i] = b;
-            }
-        }
+        }       
 
         public void CloseSubFile()
         {

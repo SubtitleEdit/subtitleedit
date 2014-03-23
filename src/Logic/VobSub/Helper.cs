@@ -303,7 +303,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
         public static int GetLittleEndian32(byte[] buffer, int index)
         {
-            return ((int)buffer[index + 3] << 24 | (int)buffer[index + 2] << 16 | (int)buffer[index + 1] << 8 | (int)buffer[index + 0]);
+            return (buffer[index + 3] << 24 | (int)buffer[index + 2] << 16 | (int)buffer[index + 1] << 8 | (int)buffer[index + 0]);
         }
 
         public static string GetBinaryString(byte[] buffer, int index, int count)
