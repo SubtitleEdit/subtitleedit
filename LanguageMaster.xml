@@ -1309,6 +1309,7 @@ can edit in same subtitle file (collaboration)</Information>
     <NewVersionOfSubtitleEditRequired>Newer version of Subtitle Edit required!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Update available!]</UpdateAvailable>
     <UpdateAll>Update all</UpdateAll>
+    <XPluginsUpdated>{0} plugin(s) updated</XPluginsUpdated>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Remove text for hearing impaired</Title>
@@ -1594,6 +1595,8 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Move first word from next subtitle line up</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxAutoBreak>Auto break text</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Unbreak text</MainTextBoxUnbreak>
+    <Miscellaneous>Misc.</Miscellaneous>
+    <UseDoNotBreakAfterList>Use do-not-break-after list (for auto-br)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>Show selected lines earlier/later</Title>
