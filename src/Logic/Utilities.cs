@@ -875,15 +875,15 @@ namespace Nikse.SubtitleEdit.Logic
                     encoding = Encoding.UTF32;
                 else if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76 && (bom[3] == 0x38 || bom[3] == 0x39 ||bom[3] == 0x2b ||bom[3] == 0x2f)) // utf-7
                     encoding = Encoding.UTF7;
-                else if (encoding == Encoding.Default && file.Length > 12)
+                else if (file.Length > 12)
                 {
-                    int length = (int)file.Length;
+                    long length = file.Length;
                     if (length > 500000)
                         length = 500000;
 
                     file.Position = 0;
                     var buffer = new byte[length];
-                    file.Read(buffer, 0, length);
+                    file.Read(buffer, 0, (int)length);
 
                     bool couldBeUtf8;
                     if (IsUtf8(buffer, out couldBeUtf8))
@@ -927,7 +927,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 return hewbrewEncoding;
                             return arabicEncoding;
                         }
-                        else if (GetCount(hewbrewEncoding.GetString(buffer), "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב") > 5)
+                        if (GetCount(hewbrewEncoding.GetString(buffer), "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב") > 5)
                             return hewbrewEncoding;
 
                         Encoding romanianEncoding = Encoding.GetEncoding(1250); // Romanian
@@ -1030,7 +1030,7 @@ namespace Nikse.SubtitleEdit.Logic
                         return hewbrewEncoding;
                     return arabicEncoding;
                 }
-                else if (GetCount(hewbrewEncoding.GetString(buffer), "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב") > 5)
+                if (GetCount(hewbrewEncoding.GetString(buffer), "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב") > 5)
                     return hewbrewEncoding;
 
                 return encoding;
@@ -3839,7 +3839,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (breakToLetters)
             {
-                foreach (char ch in s.ToCharArray())
+                foreach (char ch in s)
                     list.Add(ch.ToString());
             }
             else
