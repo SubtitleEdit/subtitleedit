@@ -5,7 +5,8 @@
     <Version>3.3.14</Version>
     <TranslatedBy>Tradução (Português do Brasil): Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
-    <HelpFile />
+    <HelpFile>
+    </HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
@@ -77,7 +78,7 @@
     <AboutText1>Subtitle Edit é um Software Livre sob a licença pública GNU.
 Você pode distribuir, modificar e usar ele livremente.
 
-Código fonte em C# disponível em https://github.com/SubtitleEdit/subtitleedit
+Código fonte em C# disponível em http://code.google.com/p/subtitleedit
 
 Visite www.nikse.dk para a última versão.
 
@@ -248,6 +249,9 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffect>Efeito</FontEffect>
     <FontEffectColor>Cor do efeito</FontEffectColor>
     <FontSize>Tamanho</FontSize>
+    <TopBottomMargin>Margem superior/inferior</TopBottomMargin>
+    <ZPosition>Posição-Z</ZPosition>
+    <ZPositionHelp>Números positivos afastam o texto; negativos aproximam o texto, se a posição-z for zero então é 2D</ZPositionHelp>
     <ChooseColor>Escolher cor...</ChooseColor>
     <Generate>Gerar</Generate>
   </DCinemaProperties>
@@ -365,6 +369,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Formato de imagem</ImageFormat>
     <SimpleRendering>Renderização simples</SimpleRendering>
+    <AntiAliasingWithTransparency>Suavização com transparência</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
     <SideBySide3D>3D lado-a-lado</SideBySide3D>
     <HalfTopBottom3D>Metade-Superior/Inferior</HalfTopBottom3D>
@@ -811,6 +816,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <SaveAs>Salvar como</SaveAs>
         <Find>Localizar</Find>
         <Replace>Substituir</Replace>
+        <FixCommonErrors>Corrigir erros comuns</FixCommonErrors>
         <VisualSync>Sincronização visual</VisualSync>
         <SpellCheck>Ortografia</SpellCheck>
         <Settings>Ajustes</Settings>
@@ -1118,6 +1124,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <OcrReplacePairXNotAdded>O par da lista de substituição OCR '{0} -&gt; {1}' NÃO foi adicionado à lista de substituição OCR</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} linhas selecionadas</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>A legenda contém notas musicais em unicode. Salvar como ANSI irá removê-las. Continuar?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeCharactersAnsiWarning>A legenda contém notas musicais em unicode. Salvar como ANSI irá removê-las. Continuar?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>A legenda contém códigos de tempo negativos. Continuar?</NegativeTimeWarning>
     <BeforeMergeShortLines>Antes de combinar linhas curtas</BeforeMergeShortLines>
     <BeforeSplitLongLines>Antes de dividir linhas longas</BeforeSplitLongLines>
@@ -1132,6 +1139,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <TimeCodeImportedFromXY>Códigos de tempo importados de {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Antes de inserir a legenda na posição do vídeo</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Antes de ajustar o tempo inicial e compensar o resto</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndTimeAndOffsetTheRest>Antes de ajustar o tempo final e compensar o resto</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Antes de ajustar o tempo final e auto calcular o início</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Continuar com a revisão ortográfica atual?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Caracteres/seg: {0:0.00}</CharactersPerSecond>
@@ -1176,6 +1184,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <NotAValidXSubFile>Não é um arquivo xsub válido!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Antes de unir linhas com o mesmo texto</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>A legenda com códigos de tempo possui um númnero de linhas ({0}) diferente que a legenda atual ({1}). Continuar assim mesmo?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ParsingTransportStream>Analisando fluxo de transporte - aguarde...</ParsingTransportStream>
     <ErrorLoadIdx>Impossível ler/editar arquivos. idx. Arquivos idx são parte de um par de arquivos idx/sub (também chamado VobSub), e o SE pode abrir o arquivo .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Este arquivo parece ser um arquivo RAR compactado. O SE não consegue abrir arquivos compactados.</ErrorLoadRar>
     <ErrorLoadZip>Este arquivo parece ser um arquivo ZIP compactado. O SE não consegue abrir arquivos compactados</ErrorLoadZip>
@@ -1295,9 +1304,11 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <PluginXDownloaded>Plugin {0} baixado</PluginXDownloaded>
     <Download>&amp;Baixar</Download>
     <Remove>&amp;Remover</Remove>
+    <UpdateAllX>Atualizar tudo ({0})</UpdateAllX>
     <UnableToDownloadPluginListX>Não foi possível baixar lista de plugins: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Nova versão do Subtitle Edit necessária!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Atualização disponível!]</UpdateAvailable>
+    <UpdateAll>Atualizar tudo</UpdateAll>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Eliminar texto para surdos</Title>
@@ -1390,6 +1401,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <AutoWrapWhileTyping>Auto-ajustar linha durante digitação</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Duração mín., milisegundos</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Duração máx., milisegundos</DurationMaximumMilliseconds>
+    <MinimumGapMilliseconds>Diferença mínima entre legendas (em ms)</MinimumGapMilliseconds>
     <SubtitleFont>Fonte da legenda</SubtitleFont>
     <SubtitleFontSize>Tamanho da fonte da legenda</SubtitleFontSize>
     <SubtitleBold>Negrito</SubtitleBold>
@@ -1431,6 +1443,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll do VLC Media Player 1.1.0 ou superior</VlcMediaPlayerDescription>
+    <VlcBrowseToLabel>Caminho do VLC (somente se estiver usando a versão portable)</VlcBrowseToLabel>
     <ShowStopButton>Mostrar botão parar</ShowStopButton>
     <ShowMuteButton>Exibir botão Mudo</ShowMuteButton>
     <ShowFullscreenButton>Exibir botão Tela Cheia</ShowFullscreenButton>
@@ -1460,6 +1473,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <WaveformUseFFMPEG>Usar FFmepg para extração Wave</WaveformUseFFMPEG>
     <WaveformFFMPEGPath>Caminho para FFmepg</WaveformFFMPEGPath>
     <WaveformBrowseToFFMPEG>Procurar FFmpeg</WaveformBrowseToFFMPEG>
+    <WaveformBrowseToVLC>Procurar VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Estilo Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Escolher fonte</ChooseFont>
     <ChooseColor>Escolher cor</ChooseColor>
@@ -1498,6 +1512,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsToReplace>Símbolos musicais para substituir (separados por espaços)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros comuns de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Corrigir exibição curta - permitir mover tempo inicial</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Atalhos</Shortcuts>
     <Shortcut>Atalho</Shortcut>
     <Control>Ctrl</Control>
@@ -1516,6 +1531,8 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <AdjustSelected100MsForward>Mover linhas selecionadas 100 ms adiante</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Mover linhas selecionadas 100 ms atrás</AdjustSelected100MsBack>
     <AdjustSetStartTimeKeepDuration>Definir tempo inicial, manter duração</AdjustSetStartTimeKeepDuration>
+    <AdjustSetEndAndOffsetTheRest>Definir final, deslocar o resto</AdjustSetEndAndOffsetTheRest>
+    <AdjustSetEndAndOffsetTheRestAndGoToNext>Definir final, deslocar o resto e ir para próximo</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Criar novo (seta abaixo), definir tempo final (seta acima)</MainCreateStartDownEndUp>
     <MergeDialogue>Combinar diálogo (inserir traços)</MergeDialogue>
     <GoToNext>Ir para próxima linha</GoToNext>
