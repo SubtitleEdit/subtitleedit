@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using Nikse.SubtitleEdit.Forms;
@@ -1121,6 +1122,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.Text = "{\\an3}" + p.Text;
             }
 
+            p.Text = p.Text.Replace(Convert.ToChar(0).ToString(CultureInfo.InvariantCulture), string.Empty);
+            p.Text = p.Text.Replace(Convert.ToChar(1).ToString(CultureInfo.InvariantCulture), string.Empty);
+            p.Text = p.Text.Replace(Convert.ToChar(2).ToString(CultureInfo.InvariantCulture), string.Empty);
+            p.Text = p.Text.Replace(Convert.ToChar(3).ToString(CultureInfo.InvariantCulture), string.Empty);
+            p.Text = p.Text.Replace(Convert.ToChar(4).ToString(CultureInfo.InvariantCulture), string.Empty);
+            p.Text = p.Text.Replace(Convert.ToChar(5).ToString(CultureInfo.InvariantCulture), string.Empty);
+            p.Text = p.Text.Replace(Convert.ToChar(6).ToString(CultureInfo.InvariantCulture), string.Empty);
+            p.Text = p.Text.Replace(Convert.ToChar(7).ToString(CultureInfo.InvariantCulture), string.Empty);
+            p.Text = p.Text.Replace(Convert.ToChar(8).ToString(CultureInfo.InvariantCulture), string.Empty);
+            p.Text = p.Text.Replace(Convert.ToChar(10).ToString(CultureInfo.InvariantCulture), string.Empty);
+            p.Text = p.Text.Replace(Convert.ToChar(11).ToString(CultureInfo.InvariantCulture), string.Empty);
+            p.Text = p.Text.Replace(Convert.ToChar(12).ToString(CultureInfo.InvariantCulture), string.Empty);
+
             return p;
         }
 
@@ -1186,7 +1200,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private void GetCodePage( byte[] buffer, int index, int endDelimiter)
+        private void GetCodePage(byte[] buffer, int index, int endDelimiter)
         {
             if (BatchMode)
             {
