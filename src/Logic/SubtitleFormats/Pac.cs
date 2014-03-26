@@ -1131,7 +1131,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             p.Text = p.Text.Replace(Convert.ToChar(6).ToString(CultureInfo.InvariantCulture), string.Empty);
             p.Text = p.Text.Replace(Convert.ToChar(7).ToString(CultureInfo.InvariantCulture), string.Empty);
             p.Text = p.Text.Replace(Convert.ToChar(8).ToString(CultureInfo.InvariantCulture), string.Empty);
-            p.Text = p.Text.Replace(Convert.ToChar(10).ToString(CultureInfo.InvariantCulture), string.Empty);
             p.Text = p.Text.Replace(Convert.ToChar(11).ToString(CultureInfo.InvariantCulture), string.Empty);
             p.Text = p.Text.Replace(Convert.ToChar(12).ToString(CultureInfo.InvariantCulture), string.Empty);
 
