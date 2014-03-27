@@ -214,18 +214,17 @@ namespace Nikse.SubtitleEdit.Forms
         int _selectedIndex = -1;
         VobSubOcrSettings _vobSubOcrSettings;
         bool _italicCheckedLast;
-        bool _useNewSubIdxCode;
         double _unItalicFactor = 0.33;
 
-        BinaryOcrDb _binaryOcrDb = null;
-        string _binaryOcrDbFileName = null;
+        BinaryOcrDb _binaryOcrDb;
+        string _binaryOcrDbFileName;
         int _binOcrLastLowercaseHeight = -1;
         int _binOcrLastUppercaseHeight = -1;
 
 
         Timer _mainOcrTimer;
-        int _mainOcrTimerMax = 0;
-        int _mainOcrIndex = 0;
+        int _mainOcrTimerMax;
+        int _mainOcrIndex;
         bool _mainOcrRunning = false;
         Bitmap _mainOcrBitmap= null;
 
@@ -239,8 +238,8 @@ namespace Nikse.SubtitleEdit.Forms
         List<Color> _palette;
 
         // BluRay sup
-        List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> _bluRaySubtitlesOriginal;
-        List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> _bluRaySubtitles;
+        List<Logic.BluRaySup.BluRaySupParser.PcsData> _bluRaySubtitlesOriginal;
+        List<Logic.BluRaySup.BluRaySupParser.PcsData> _bluRaySubtitles;
 
         // SP list
         List<SpHeader> _spList;
@@ -285,9 +284,9 @@ namespace Nikse.SubtitleEdit.Forms
         bool _icThreadsStop = false;
         string[] _icThreadResults = null;
 
-        Keys _italicShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
-        Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        readonly Keys _italicShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+        readonly Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        readonly Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         private string[] _tesseractAsyncStrings = null;
         private int _tesseractAsyncIndex = 0;
@@ -591,7 +590,6 @@ namespace Nikse.SubtitleEdit.Forms
         internal bool Initialize(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool useNewSubIdxCode, Main main)
         {
             _main = main;
-            _useNewSubIdxCode = useNewSubIdxCode;
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
             buttonStartOcr.Enabled = false;
@@ -992,7 +990,7 @@ namespace Nikse.SubtitleEdit.Forms
                 languageString = languageString.ToLower();
                 for (int i = 0; i < comboBoxTesseractLanguages.Items.Count; i++)
                 {
-                    TesseractLanguage tl = (comboBoxTesseractLanguages.Items[i] as TesseractLanguage);
+                    var tl = (comboBoxTesseractLanguages.Items[i] as TesseractLanguage);
                     if (tl.Text.StartsWith("Chinese") && (languageString.StartsWith("chinese") || languageString.StartsWith("中文")))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
@@ -5379,10 +5377,14 @@ namespace Nikse.SubtitleEdit.Forms
         void TesseractThreadDoWork(object sender, DoWorkEventArgs e)
         {
             var bitmap = (Bitmap)e.Argument;
-            if (_tesseractAsyncIndex >= 0 && _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
+            if (bitmap != null)
             {
-                if (string.IsNullOrEmpty(_tesseractAsyncStrings[_tesseractAsyncIndex]) && bitmap != null)
-                    _tesseractAsyncStrings[_tesseractAsyncIndex] = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.);
+                if (_tesseractAsyncIndex >= 0 && _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
+                {
+                    if (string.IsNullOrEmpty(_tesseractAsyncStrings[_tesseractAsyncIndex]))
+                        _tesseractAsyncStrings[_tesseractAsyncIndex] = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.);
+                }
+                bitmap.Dispose();
             }
         }
 
@@ -7702,7 +7704,6 @@ namespace Nikse.SubtitleEdit.Forms
         internal void Initialize(string fileName, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, List<SpHeader> spList)
         {
             _spList = spList;
-            _useNewSubIdxCode = false;
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
             buttonStartOcr.Enabled = false;
@@ -7768,7 +7769,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _mp4List = subPicturesWithTimeCodes;
 
-            _useNewSubIdxCode = false;
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
             buttonStartOcr.Enabled = false;
@@ -7807,7 +7807,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _xSubList = subPictures;
 
-            _useNewSubIdxCode = false;
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
             buttonStartOcr.Enabled = false;
