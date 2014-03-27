@@ -10,13 +10,17 @@
    * Added shortcut for Sync -> "Change frame rate" - thx Alfonso
    * Added setting regarding "Fix short display times" - thx S1l3nc0r
    * Added an "Update all" button for the plugin window
+   * Added UI setting for path to VLC portable
 * IMPROVED:
    * Updated French language file - thx JM GBT
    * Updated Dutch language file - thx Quetsbeek
    * Updated Portuguese language file - thx moob
    * Updated Korean language file - thx domddol
+   * Updated Brazilian Portuguese language file - thx Igor
+   * Updated Polish language file - thx Admas
    * Updated Argentinian Spanish language file - thx walterh78
    * Html encoding of sami files is now again default false
+   * Better reading of time codes of bd sup in mkv - thx Rach78
 * FIXED:
    * Fixed VobSub writing compatability with gpac/mp4box + handbrake - thx Ryan
    * Minor fix for ass import from Matroska (mkv) files
@@ -24,6 +28,9 @@
    * Delete custom export format now works - thx Leon
    * Possible crash in OCR window - thx grfilho
    * Dcinema smpte sometimes generated illegal frame numbers - thx knut
+   * Fixed possible crash when converting pac to ttml - thx Dan
+   * Fixed memory leak when running OCR via Tesseract
+	
 
 
 3.3.14 (23rd February 2014)
