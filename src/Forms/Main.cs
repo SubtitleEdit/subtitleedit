@@ -9265,8 +9265,8 @@ namespace Nikse.SubtitleEdit.Forms
                         var list = BluRaySupParser.ParseBluRaySup(ms, log, true);
                         foreach (var sup in list)
                         {
-                            sup.StartTime = (long)((p.StartMilliseconds - 45) * 90.0);
-                            sup.EndTime = (long)((p.EndMilliseconds - 45) * 90.0);
+                            sup.StartTime = (long) ((p.StartMilliseconds - 1)*90.0);
+                            sup.EndTime = (long) ((p.EndMilliseconds - 1)*90.0);
                             subtitles.Add(sup);
 
                             // fix overlapping
@@ -9274,6 +9274,16 @@ namespace Nikse.SubtitleEdit.Forms
                                 subtitles[subtitles.Count - 2].EndTime = subtitles[subtitles.Count - 1].StartTime - 1;
                         }
                         ms.Close();
+                    }
+                    else if (subtitles.Count > 0)
+                    {
+                        var lastSub = subtitles[subtitles.Count - 1];
+                        if (lastSub.StartTime == lastSub.EndTime)
+                        {
+                            lastSub.EndTime = (long)((p.StartMilliseconds - 1) * 90.0);
+                            if (lastSub.EndTime - lastSub.StartTime > 1000000)
+                                lastSub.EndTime = lastSub.StartTime;
+                        }
                     }
                 }
 

@@ -884,6 +884,7 @@
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
+    <Compile Include="Logic\SubtitleFormats\Csv3.cs" />
     <Compile Include="Logic\SubtitleFormats\FilmEditXml.cs" />
     <Compile Include="Logic\SubtitleFormats\SwiftTextLineNoAndDur .cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle70.cs" />
