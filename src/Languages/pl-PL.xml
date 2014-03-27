@@ -249,6 +249,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffect>Efekt</FontEffect>
     <FontEffectColor>Kolor efektu</FontEffectColor>
     <FontSize>Rozmiar</FontSize>
+    <TopBottomMargin>Górny/dolny margines</TopBottomMargin>
+    <ZPosition>Pozycja Z</ZPosition>
+    <ZPositionHelp>Dodatnie cyfry odsuwają tekst dalej, a cyfry ujemne przysuwają tekst bliżej, Jeśli pozyca-zi jest zero, to jest to 2D.</ZPositionHelp>
     <ChooseColor>Wybierz kolor...</ChooseColor>
     <Generate>Generuj</Generate>
   </DCinemaProperties>
@@ -366,6 +369,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Transparency>Alfa</Transparency>
     <ImageFormat>Format obrazu</ImageFormat>
     <SimpleRendering>Proste renderowanie</SimpleRendering>
+    <AntiAliasingWithTransparency>Antyaliasing z przezroczystością</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
     <SideBySide3D>Połowa-Side-by-Side</SideBySide3D>
     <HalfTopBottom3D>Połowa-Góra/Dół</HalfTopBottom3D>
@@ -814,6 +818,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <SaveAs>Zapisz jako</SaveAs>
         <Find>Znajdź</Find>
         <Replace>Zamień</Replace>
+        <FixCommonErrors>Popraw pospolite błędy</FixCommonErrors>
         <VisualSync>Synchronizacja wizualna</VisualSync>
         <SpellCheck>Sprawdzanie pisowni</SpellCheck>
         <Settings>Ustawienia</Settings>
@@ -1120,9 +1125,12 @@ Kontynuować?</SubtitleAppendPrompt>
     <OcrReplacePairXAdded>Lista par zamienników OCR '{0} -&gt; {1}' dodano do listy zamienników OCR</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>Lista par zamienników OCR '{0} -&gt; {1}' NIE dodano do listy zamienników OCR</OcrReplacePairXNotAdded>
     <XLinesSelected>Wybrano linii: {0}</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Napis zawiera notację muzyczną Unicode.
-Zapisanie pliku z kodowaniem ANSI rozwiąże ten problem.
+    <UnicodeMusicSymbolsAnsiWarning>Napisy zawierają notację muzyczną Unicode.
+Utracisz ją zapisując plik przy użyciu kodowania ANSI.
 Czy chcesz zapisać?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeCharactersAnsiWarning>Napisy zawierają znaki Unicode.
+Utracisz je zapisując plik przy użyciu kodowania ANSI.
+Czy na pewno chesz zapisać?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Napisy zawierają błędne kody czasowe.
 Chcesz zapisać?</NegativeTimeWarning>
     <BeforeMergeShortLines>Przed połączeniem krótkich linii</BeforeMergeShortLines>
@@ -1183,6 +1191,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <NotAValidXSubFile>Niepoprawny plik xsub!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Przed połączeniem linii z takim samym tekstem</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Napisy z kodami czasowymi różnią się ilością linii ({0}) od aktualnych napisów ({1}) - Chcesz kontynuować?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ParsingTransportStream>Parsuję strumień transportowy - proszę czekać...</ParsingTransportStream>
     <ErrorLoadIdx>Nie można odczytać/edytować plików .idx. Pliki Idx są częścią składową dwóch plików idx/sub (zwane są również VobSub), a SE może otworzyć plik .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Ten plik wydaje się być skompresowanym plikiem .rar. SE nie otwiera plików skompresowanych.</ErrorLoadRar>
     <ErrorLoadZip>Ten plik wydaje się być skompresowanym plikiem .zip. SE nie otwiera plików skompresowanych.</ErrorLoadZip>
@@ -1302,9 +1311,12 @@ Chcesz zapisać?</NegativeTimeWarning>
     <PluginXDownloaded>Wtyczka {0} została pobrana</PluginXDownloaded>
     <Download>Po&amp;bierz</Download>
     <Remove>U&amp;suń</Remove>
+    <UpdateAllX>Aktualizuj wszystkol ({0})</UpdateAllX>
     <UnableToDownloadPluginListX>Lista wtyczek, których nie można pobrać: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Wymagana jest nowsza wersja Subtitle Edit!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Dostępna jest aktualizacja!]</UpdateAvailable>
+    <UpdateAll>Aktualizuj wszystko</UpdateAll>
+    <XPluginsUpdated>{0} wtyczek zaktualizowano</XPluginsUpdated>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Usuwanie tekstu dla niesłyszących</Title>
@@ -1439,6 +1451,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll z VLC Media Player 1.1.0 lub nowszy</VlcMediaPlayerDescription>
+    <VlcBrowseToLabel>Ścieżka VLC (potrzebna, jeśli używasz wersję portable VLC)</VlcBrowseToLabel>
     <ShowStopButton>Pokaż przycisk Stop</ShowStopButton>
     <ShowMuteButton>Pokaż przycisk wyciszenia</ShowMuteButton>
     <ShowFullscreenButton>Pokaż przycisk pełnego ekranu</ShowFullscreenButton>
@@ -1468,6 +1481,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <WaveformUseFFMPEG>Użyj FFMPEG do ekstrakcji audio</WaveformUseFFMPEG>
     <WaveformFFMPEGPath>Ścieżka do FFMPEG</WaveformFFMPEGPath>
     <WaveformBrowseToFFMPEG>Przejdź do FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformBrowseToVLC>Przejdź do VLC Portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Styl Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Wybierz czcionkę</ChooseFont>
     <ChooseColor>Wybierz kolor</ChooseColor>
@@ -1506,6 +1520,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <MusicSymbol>Zamiana symboli muzycznych:</MusicSymbol>
     <MusicSymbolsToReplace>Symbole muzyczne do zamiany (oddzielone spacją)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw pospolite błędy OCR - także używające sztywnych zasad</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania - zezwól na przesunięcie czasu startu</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Skróty klawiaturowe</Shortcuts>
     <Shortcut>Polecenie:</Shortcut>
     <Control>Ctrl</Control>
@@ -1589,6 +1604,8 @@ Chcesz zapisać?</NegativeTimeWarning>
     <MainTextBoxMoveFirstWordFromNextUp>Przenieś pierwsze słowo z następnej linii napisów do góry</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxAutoBreak>Automatyczne łamanie tekstu</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Cofnij łamanie tekstu</MainTextBoxUnbreak>
+    <Miscellaneous>Inne</Miscellaneous>
+    <UseDoNotBreakAfterList>Włącz "bez-linii-łamania-po liście" (dla automatycznego łamania)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>Ukazywanie się wybranych linii wcześniej/później</Title>
