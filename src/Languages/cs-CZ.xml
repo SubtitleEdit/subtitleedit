@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.14</Version>
-    <TranslatedBy>Translated by Trottel</TranslatedBy>
+    <TranslatedBy>Překlad do češtiny: Trottel</TranslatedBy>
     <CultureName>cs-CZ</CultureName>
     <HelpFile />
     <OK>&amp;OK</OK>
@@ -248,6 +248,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffect>Efekt</FontEffect>
     <FontEffectColor>Barva efektu</FontEffectColor>
     <FontSize>Velikost</FontSize>
+    <TopBottomMargin>Horní a dolní okraj</TopBottomMargin>
+    <ZPosition>Hodnota Z</ZPosition>
+    <ZPositionHelp>Kladné hodnoty posouvají text pryč, záporné blíže, pokud je hodnota Z nula, pak je to 2D</ZPositionHelp>
     <ChooseColor>Vyberte barvu...</ChooseColor>
     <Generate>Generovat</Generate>
   </DCinemaProperties>
@@ -365,6 +368,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Transparency>Alfa</Transparency>
     <ImageFormat>Formát obrázku</ImageFormat>
     <SimpleRendering>Jendoduché vykreslování</SimpleRendering>
+    <AntiAliasingWithTransparency>Vyhlazování s průhledností</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
     <SideBySide3D>Poloviční vedle sebe</SideBySide3D>
     <HalfTopBottom3D>Poloviční nad sebou</HalfTopBottom3D>
@@ -670,9 +674,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Plugins>Doplňky...</Plugins>
         <ImportOcrFromDvd>Importovat/OCR titulky z vob/ifo (DVD) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importovat/OCR titulky VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Importovat/OCR soubor Blu-ray .sup...</ImportBluRaySupFile>
+        <ImportBluRaySupFile>Importovat/OCR soubor titulků Blu-ray (.sup)...</ImportBluRaySupFile>
         <ImportXSub>Importovat/OCR xsub z divx/avi...</ImportXSub>
-        <ImportSubtitleFromMatroskaFile>Importovat titlky ze souboru Matroska...</ImportSubtitleFromMatroskaFile>
+        <ImportSubtitleFromMatroskaFile>Importovat titulky ze souboru Matroska (.mkv)...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importovat titulky s ručně vybraným kódováním...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importovat prostý text...</ImportText>
         <ImportImages>Importovat obrázky...</ImportImages>
@@ -812,6 +816,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SaveAs>Uložit jako</SaveAs>
         <Find>Najít</Find>
         <Replace>Nahradit</Replace>
+        <FixCommonErrors>Opravit běžné chyby</FixCommonErrors>
         <VisualSync>Vizuální synchronizace</VisualSync>
         <SpellCheck>Kontrola pravopisu</SpellCheck>
         <Settings>Nastavení</Settings>
@@ -1118,7 +1123,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <OcrReplacePairXAdded>Dvojice seznamu náhrad OCR '{0} -&gt; {1}' byla přidána do seznamu náhrad OCR</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>Dvojice seznamu náhrad OCR '{0} -&gt; {1}' NEBYLA přidána do seznamu náhrad OCR</OcrReplacePairXNotAdded>
     <XLinesSelected>Vybráno {0} řádků</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Titulky obsahují hudební značky v unicode. Uložením souboru s kódováním ANSI se ztratí. Pokračovat v ukládání?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeMusicSymbolsAnsiWarning>Titulky obsahují znaky unicode. Uložením pomocí kódování ANSI se ztratí. Pokračovat v ukládání?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeCharactersAnsiWarning>Titulky obsahují znaky unicode. Uložením pomocí kódování ANSI se ztratí. Pokračovat v ukládání?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Titulky obsahují záporné časové kódy. Pokračovat v ukládání?</NegativeTimeWarning>
     <BeforeMergeShortLines>Před sloučením krátkých řádků</BeforeMergeShortLines>
     <BeforeSplitLongLines>Před rozdělením dlouhých řádků</BeforeSplitLongLines>
@@ -1178,6 +1184,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <NotAValidXSubFile>Není platný soubor xsub!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Před sloučením řádků se stejným textem</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Titulek se stejnými časovými kódy má jiné číslo řádku ({0}) než aktuální titulek ({1}) - přesto pokračovat?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ParsingTransportStream>Analýza datového proudu přenosu - čekejte...</ParsingTransportStream>
     <ErrorLoadIdx>Nelze přečíst nebo upravit soubory .idx. Soubory .idx jsou součástí páru souborů idx/sub (tzv. VobSub) a SE může otevřít soubor .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Soubor se zdá být komprimovaný soubor .rar. SE neumí otvírat komprimované soubory.</ErrorLoadRar>
     <ErrorLoadZip>Soubor se zdá být komprimovaný soubor .zip. SE neumí otvírat komprimované soubory.</ErrorLoadZip>
@@ -1297,9 +1304,12 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <PluginXDownloaded>Doplněk {0} stažen</PluginXDownloaded>
     <Download>&amp;Stáhnout</Download>
     <Remove>&amp;Odebrat</Remove>
+    <UpdateAllX>Aktualizovat vše ({0})</UpdateAllX>
     <UnableToDownloadPluginListX>Nelze stáhnout seznam doplňků: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Je vyžadována novější verze Subtitle Edit!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Je dostupná aktualizace!]</UpdateAvailable>
+    <UpdateAll>Aktualizovat vše</UpdateAll>
+    <XPluginsUpdated>Aktualizováno {0} doplňků</XPluginsUpdated>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Odebrat text pro sluchově postižené</Title>
@@ -1392,6 +1402,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AutoWrapWhileTyping>Automaticky zalamovat během psaní</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. trvání, milisekundy</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. trvání, milisekundy</DurationMaximumMilliseconds>
+    <MinimumGapMilliseconds>Min. mezera mezi titulky v ms</MinimumGapMilliseconds>
     <SubtitleFont>Písmo titulků</SubtitleFont>
     <SubtitleFontSize>Velikost písma titulků</SubtitleFontSize>
     <SubtitleBold>Tučné</SubtitleBold>
@@ -1433,6 +1444,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll z VLC Media Player 1.1.0 nebo novějšího</VlcMediaPlayerDescription>
+    <VlcBrowseToLabel>Cesta k VLC (potřeba, pouze pokud používáte přenosnou verzi VLC)</VlcBrowseToLabel>
     <ShowStopButton>Zobrazit tlačítko zastavení</ShowStopButton>
     <ShowMuteButton>Zobrazit tlačítko ztlumení</ShowMuteButton>
     <ShowFullscreenButton>Zobrazit tlačítko na celou obrazovku</ShowFullscreenButton>
@@ -1462,6 +1474,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <WaveformUseFFMPEG>Použít FFMPEG pro extrahování křivky</WaveformUseFFMPEG>
     <WaveformFFMPEGPath>Cesta k FFMPEG</WaveformFFMPEGPath>
     <WaveformBrowseToFFMPEG>Najít FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformBrowseToVLC>Najít přenosné VLC</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Styl (Advanced) Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Vyberte písmo</ChooseFont>
     <ChooseColor>Vyberte barvu</ChooseColor>
@@ -1500,6 +1513,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <MusicSymbol>Hudební symbol</MusicSymbol>
     <MusicSymbolsToReplace>Hudební symboly, které nahradit (oddělené mezerou)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Opravit běžné chyby OCR (použít také pravidla kódování)</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Opravit krátké časy zobrazení - povolit posun času začátku</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Klávesové zkratky</Shortcuts>
     <Shortcut>Klávesová zkratka</Shortcut>
     <Control>Ctrl</Control>
@@ -1581,6 +1595,8 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Přesunout první slovo z dalšího řádku titulku nahoru</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxAutoBreak>Automaticky zalomit text</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Zrušit zalomení textu</MainTextBoxUnbreak>
+    <Miscellaneous>Různé</Miscellaneous>
+    <UseDoNotBreakAfterList>Použít seznam nezalamování (pro automatické zalamování)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>Zobrazit vybrané řádky dříve nebo později</Title>
