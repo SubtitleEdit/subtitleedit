@@ -19,7 +19,7 @@
     <OpenSubtitle>자막 열기</OpenSubtitle>
     <OpenVideoFile>비디오 열기</OpenVideoFile>
     <OpenVideoFileTitle>비디오 파일 열기</OpenVideoFileTitle>
-    <NoVideoLoaded>로드된 비디오가 없습니다..!</NoVideoLoaded>
+    <NoVideoLoaded>로드된 비디오가 없습니다! </NoVideoLoaded>
     <VideoInformation>비디오 정보</VideoInformation>
     <PositionX>위치 / 시간: {0}</PositionX>
     <StartTime>시작</StartTime>
@@ -661,8 +661,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <Save>저장...</Save>
         <SaveAs>다른 이름으로 저장(&amp;A)...</SaveAs>
         <RestoreAutoBackup>자동 백업된 자막 불러오기</RestoreAutoBackup>
-        <AdvancedSubStationAlphaProperties>고급 Sub Station Alpha의 속성...</AdvancedSubStationAlphaProperties>
-        <SubStationAlphaProperties>Sub Station Alpha 속성...</SubStationAlphaProperties>
+        <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha(.ass)의 속성...</AdvancedSubStationAlphaProperties>
+        <SubStationAlphaProperties>Sub Station Alpha(.ssa)의 속성...</SubStationAlphaProperties>
         <OpenOriginal>원본 자막 열기 (번역 모드)...</OpenOriginal>
         <SaveOriginal>원본 자막 저장...</SaveOriginal>
         <CloseOriginal>원본 자막 닫기</CloseOriginal>
@@ -823,10 +823,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <ShowHideVideo>비디오 표시 | 숨김</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
-        <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - 스타일 설정</AdvancedSubStationAlphaSetStyle>
-        <SubStationAlphaSetStyle>Sub Station Alpha - 스타일 설정</SubStationAlphaSetStyle>
-        <SubStationAlphaStyles>Sub Station Alpha 스타일...</SubStationAlphaStyles>
-        <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha 스타일...</AdvancedSubStationAlphaStyles>
+        <AdvancedSubStationAlphaSetStyle>ASS의 스타일 설정</AdvancedSubStationAlphaSetStyle>
+        <SubStationAlphaSetStyle>SSA의 스타일 설정</SubStationAlphaSetStyle>
+        <SubStationAlphaStyles>SSA의 스타일...</SubStationAlphaStyles>
+        <AdvancedSubStationAlphaStyles>ASS의 스타일...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>시간 제한 텍스트 - 스타일 설정</TimedTextSetStyle>
         <TimedTextStyles>시간 제한 텍스트 스타일...</TimedTextStyles>
         <TimedTextSetLanguage>시간 제한 텍스트 - 언어 설정</TimedTextSetLanguage>
@@ -1301,13 +1301,15 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <OpenPluginsFolder>'Plugins' 폴더 열기</OpenPluginsFolder>
     <GetPluginsInfo1>※ Subtitle Edit 플러그인은 반드시 'Plugins' 폴더에 다운로드해야 됩니다.</GetPluginsInfo1>
     <GetPluginsInfo2>플러그인을 선택하고 '다운로드'를 클릭하십시오!</GetPluginsInfo2>
-    <PluginXDownloaded>플러그인 {0}을 다운로드했습니다!</PluginXDownloaded>
+    <PluginXDownloaded>플러그인 {0}을(를) 다운로드했습니다!</PluginXDownloaded>
     <Download>다운로드(&amp;D)</Download>
     <Remove>삭제(&amp;R)</Remove>
-    <UnableToDownloadPluginListX>다운로드가 불가능한 플러그 목록: {0}</UnableToDownloadPluginListX>
-    <NewVersionOfSubtitleEditRequired>Subtitle Edit의 최신 버전을 받으십시오!</NewVersionOfSubtitleEditRequired>
+    <UpdateAllX>({0})개 모두 업데이트</UpdateAllX>
+    <UnableToDownloadPluginListX>다운로드할 수 없는 플러그인 목록: {0}</UnableToDownloadPluginListX>
+    <NewVersionOfSubtitleEditRequired>Subtitle Edit의 최신 버전이 필요합니다!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[ 업데이트 있음! ]</UpdateAvailable>
     <UpdateAll>모두 업데이트</UpdateAll>
+    <XPluginsUpdated>플러그인 {0}개를 업데이트했습니다!</XPluginsUpdated>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>* 청각 장애인용 텍스트 삭제</Title>
@@ -1473,7 +1475,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <WaveformFFMPEGPath>- FFMPEG 경로</WaveformFFMPEGPath>
     <WaveformBrowseToFFMPEG>FFMPEG 찾기...</WaveformBrowseToFFMPEG>
     <WaveformBrowseToVLC>VLC 포터블 찾기...</WaveformBrowseToVLC>
-    <SubStationAlphaStyle>Sub Station Alpha 스타일</SubStationAlphaStyle>
+    <SubStationAlphaStyle>Sub Station Alpha의 스타일</SubStationAlphaStyle>
     <ChooseFont>글꼴 선택</ChooseFont>
     <ChooseColor>색상 선택</ChooseColor>
     <SsaOutline>윤곽선</SsaOutline>
@@ -1593,6 +1595,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MainTextBoxMoveFirstWordFromNextUp>다음 줄의 첫 단어를 위로 이동</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxAutoBreak>자동 줄바꿈</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>줄바꿈 제거</MainTextBoxUnbreak>
+    <Miscellaneous>기타</Miscellaneous>
+    <UseDoNotBreakAfterList>자동 줄바꿈 시 '뒤에 줄바꿈을 배제하는 목록' 사용 (예: Mr. Ms. Dr. a an…)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>* 선택한 줄 빠르게/느리게 표시</Title>
@@ -1714,8 +1718,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <DurationAvarage>표시시간 - 평균: {0:0.000}초</DurationAvarage>
   </Statistics>
   <SubStationAlphaProperties>
-    <Title>Advanced Sub Station Alpha 속성</Title>
-    <TitleSubstationAlpha>Sub Station Alpha 속성</TitleSubstationAlpha>
+    <Title>* Advanced Sub Station Alpha(.ass)의 속성</Title>
+    <TitleSubstationAlpha>* Sub Station Alpha(.ssa)의 속성</TitleSubstationAlpha>
     <Script>스크립트</Script>
     <ScriptTitle>제목</ScriptTitle>
     <OriginalScript>원본 스크립트</OriginalScript>
@@ -1733,8 +1737,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ScaleBorderAndShadow>테두리 및 그림자 손질</ScaleBorderAndShadow>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
-    <Title>Advanced Sub Station Alpha 스타일</Title>
-    <TitleSubstationAlpha>Sub Station Alpha 스타일</TitleSubstationAlpha>
+    <Title>* Advanced Sub Station Alpha의 스타일</Title>
+    <TitleSubstationAlpha>* Sub Station Alpha의 스타일</TitleSubstationAlpha>
     <Styles>스타일</Styles>
     <Properties>속성</Properties>
     <Name>이름</Name>
@@ -1748,7 +1752,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Outline>윤곽선</Outline>
     <Shadow>그림자</Shadow>
     <Back>뒤로</Back>
-    <Alignment>자막의 표시 위치를 조정합니다.</Alignment>
+    <Alignment>표시 위치 조정</Alignment>
     <TopLeft>상/좌</TopLeft>
     <TopCenter>상/중</TopCenter>
     <TopRight>상/우</TopRight>
@@ -1762,10 +1766,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Margins>여백</Margins>
     <MarginLeft>왼쪽 여백</MarginLeft>
     <MarginRight>오른쪽 여백</MarginRight>
-    <MarginVertical>세로 여백</MarginVertical>
+    <MarginVertical>수직 여백</MarginVertical>
     <Border>테두리</Border>
-    <PlusShadow>+ 그림자</PlusShadow>
-    <OpaqueBox>불투명 상자 (테두리 색상 사용)</OpaqueBox>
+    <PlusShadow>+  그림자</PlusShadow>
+    <OpaqueBox>불투명 상자 (테두리 색 사용)</OpaqueBox>
     <Import>가져오기...</Import>
     <Export>내보내기...</Export>
     <Copy>복사</Copy>
