@@ -73,6 +73,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     line1 = arr[0];
                 if (arr.Length > 1)
                     line2 = arr[1];
+                line1 = line1.Replace("\"", "\"\"");
+                line2 = line2.Replace("\"", "\"\"");
                 sb.AppendLine(string.Format(format, Seperator, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), line1, line2));
             }
             return sb.ToString().Trim();
@@ -120,6 +122,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (string.IsNullOrEmpty(csv))
                 return string.Empty;
 
+            csv = csv.Replace("\"\"", "\"");
+
             var sb = new StringBuilder();
             csv = csv.Trim();
             if (csv.StartsWith("\""))
@@ -140,9 +144,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         isBreak = false;
                     }
-                    else
+                    else if (i == 0 || i == csv.Length - 1 || sb.ToString().EndsWith(Environment.NewLine))
                     {
-                        sb.Append(Environment.NewLine);
+                        sb.Append("\"");
+                    }
+                    else
+                    {                        
                         isBreak = true;
                     }
                 }
@@ -153,6 +160,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else if (isBreak && s == ",")
                     {
+                        sb.Append(Environment.NewLine);
                     }
                     else
                     {

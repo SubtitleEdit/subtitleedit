@@ -8171,7 +8171,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewTextAlternate.TextChanged -= TextBoxListViewTextAlternateTextChanged;
                     textBoxListViewTextAlternate.Text = original.Text;
                     textBoxListViewTextAlternate.TextChanged += TextBoxListViewTextAlternateTextChanged;
-                    UpdateListViewTextCharactersPerSeconds(labelAlternateCharactersPerSecond, p);
+                    UpdateListViewTextCharactersPerSeconds(labelAlternateCharactersPerSecond, original);
                     _listViewAlternateTextUndoLast = original.Text;
                 }
             }

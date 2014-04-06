@@ -661,7 +661,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Reopen>&amp;Erneut öffnen</Reopen>
         <Save>&amp;Speichern</Save>
         <SaveAs>Speichern &amp;als...</SaveAs>
-        <RestoreAutoBackup>Auto Backup wiederherstellen...</RestoreAutoBackup>
+        <RestoreAutoBackup>Auto Sicherung wiederherstellen...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Erweiterte SSA Eigenschaften...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>SSA Eigenschaften...</SubStationAlphaProperties>
         <OpenOriginal>Original Untertitel öffnen (Übersetzer Modus)...</OpenOriginal>
@@ -1174,7 +1174,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <ErrorLoadingPluginXErrorY>Ladefehler des Plugins: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Vor Ausführen des Plugins: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Untertitel Lesefehler vom Plugin!</UnableToReadPluginResult>
-    <UnableToCreateBackupDirectory>Fehler beim Erzeugen von Backup Ordner {0}: {1}</UnableToCreateBackupDirectory>
+    <UnableToCreateBackupDirectory>Fehler beim Erzeugen vom Sicherungsordner {0}: {1}</UnableToCreateBackupDirectory>
     <BeforeDisplaySubtitleJoin>Vor Untertitel verbinden</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Untertitel Verbunden</SubtitlesJoined>
     <StatusLog>Status Log</StatusLog>
@@ -1203,9 +1203,9 @@ Fortfahren?</SubtitleAppendPrompt>
     <Miles>Meilen</Miles>
     <Kilometers>Kilometer</Kilometers>
     <Meters>Meter</Meters>
-    <Yards>Yards</Yards>
+    <Yards>Yard</Yards>
     <Feet>Feet</Feet>
-    <Inches>Inches</Inches>
+    <Inches>Inch</Inches>
     <Pounds>Pfund</Pounds>
     <Kilos>Kilo</Kilos>
   </MeasurementConverter>
@@ -1303,10 +1303,12 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <PluginXDownloaded>Plugin {0} runtergeladen</PluginXDownloaded>
     <Download>&amp;Download</Download>
     <Remove>&amp;Löschen</Remove>
+    <UpdateAllX>Alle Aktualisieren ({0})</UpdateAllX>
     <UnableToDownloadPluginListX>Kann Pluginliste nicht runterladen: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Neuere Subtitle Edit Version erforderlich!</NewVersionOfSubtitleEditRequired>
-    <UpdateAvailable>[Update verfügbar!]</UpdateAvailable>
-    <UpdateAll>Update alle</UpdateAll>
+    <UpdateAvailable>[Aktualisierung verfügbar!]</UpdateAvailable>
+    <UpdateAll>Alle Aktualisieren</UpdateAll>
+    <XPluginsUpdated>{0} Plugin(s) aktualisiert</XPluginsUpdated>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Untertitel für Hörgeschädigte entfernen</Title>
@@ -1338,12 +1340,12 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ReplaceAll>&amp;Alle Ersetzen</ReplaceAll>
   </ReplaceDialog>
   <RestoreAutoBackup>
-    <Title>Auto Backup wiederherstellen</Title>
-    <Information>Auto Backup öffnen</Information>
+    <Title>Auto Sicherung wiederherstellen</Title>
+    <Information>Auto Sicherung öffnen</Information>
     <DateAndTime>Datum und Zeit</DateAndTime>
     <FileName>Dateiname</FileName>
     <Extension>Erweiterung</Extension>
-    <NoBackedUpFilesFound>Keine Backupdateien gefunden!</NoBackedUpFilesFound>
+    <NoBackedUpFilesFound>Keine Sicherungsdateien gefunden!</NoBackedUpFilesFound>
   </RestoreAutoBackup>
   <SeekSilence>
     <Title>Stille suchen</Title>
@@ -1441,6 +1443,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll aus VLC Media Player 1.1.0 oder höher</VlcMediaPlayerDescription>
+    <VlcBrowseToLabel>VLC Pfad (nur bei Verwendung der portablen VLC Version benötigt)</VlcBrowseToLabel>
     <ShowStopButton>Stop Knopf anzeigen</ShowStopButton>
     <ShowMuteButton>Ton aus Knopf anzeigen</ShowMuteButton>
     <ShowFullscreenButton>Vollbild Knopf anzeigen</ShowFullscreenButton>
@@ -1470,6 +1473,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformUseFFMPEG>FFMPEG für Wellenformdaten verwenden</WaveformUseFFMPEG>
     <WaveformFFMPEGPath>FFMPEG Pfad</WaveformFFMPEGPath>
     <WaveformBrowseToFFMPEG>FFMPEG suchen</WaveformBrowseToFFMPEG>
+    <WaveformBrowseToVLC>VLC Portable suchen</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Substation Alpha Formatierung</SubStationAlphaStyle>
     <ChooseFont>Schriftart wählen</ChooseFont>
     <ChooseColor>Farbe wählen</ChooseColor>
@@ -1590,6 +1594,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Erstes Wort der nächsten Zeile nach oben</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxAutoBreak>Auto Umbruch</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Umbruch entfernen</MainTextBoxUnbreak>
+    <Miscellaneous>Sonstiges</Miscellaneous>
+    <UseDoNotBreakAfterList>Nicht nach Liste umbrechen (für Auto Umbruch)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>Ausgewählte Texte früher/später anzeigen</Title>
