@@ -189,6 +189,8 @@
             this.buttonWaveFormSelectedColor = new System.Windows.Forms.Button();
             this.checkBoxWaveFormShowGrid = new System.Windows.Forms.CheckBox();
             this.tabPageTools = new System.Windows.Forms.TabPage();
+            this.groupBoxToolsMisc = new System.Windows.Forms.GroupBox();
+            this.checkBoxUseDoNotBreakAfterList = new System.Windows.Forms.CheckBox();
             this.groupBoxSpellCheck = new System.Windows.Forms.GroupBox();
             this.checkBoxTreatINQuoteAsING = new System.Windows.Forms.CheckBox();
             this.checkBoxSpellCheckOneLetterWords = new System.Windows.Forms.CheckBox();
@@ -277,8 +279,6 @@
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFMPEG = new System.Windows.Forms.OpenFileDialog();
-            this.groupBoxToolsMisc = new System.Windows.Forms.GroupBox();
-            this.checkBoxUseDoNotBreakAfterList = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -312,6 +312,7 @@
             this.groupBoxWaveFormAppearence.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaveformBorderHitMs)).BeginInit();
             this.tabPageTools.SuspendLayout();
+            this.groupBoxToolsMisc.SuspendLayout();
             this.groupBoxSpellCheck.SuspendLayout();
             this.groupBoxFixCommonErrors.SuspendLayout();
             this.groupBoxToolsVisualSync.SuspendLayout();
@@ -335,7 +336,6 @@
             this.tabPageSyntaxColoring.SuspendLayout();
             this.groupBoxListViewSyntaxColoring.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSyntaxColorTextMoreThanXLines)).BeginInit();
-            this.groupBoxToolsMisc.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -2170,6 +2170,26 @@
             this.tabPageTools.Text = "Tools";
             this.tabPageTools.UseVisualStyleBackColor = true;
             // 
+            // groupBoxToolsMisc
+            // 
+            this.groupBoxToolsMisc.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
+            this.groupBoxToolsMisc.Location = new System.Drawing.Point(374, 129);
+            this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
+            this.groupBoxToolsMisc.Size = new System.Drawing.Size(445, 309);
+            this.groupBoxToolsMisc.TabIndex = 5;
+            this.groupBoxToolsMisc.TabStop = false;
+            this.groupBoxToolsMisc.Text = "Misc";
+            // 
+            // checkBoxUseDoNotBreakAfterList
+            // 
+            this.checkBoxUseDoNotBreakAfterList.AutoSize = true;
+            this.checkBoxUseDoNotBreakAfterList.Location = new System.Drawing.Point(15, 20);
+            this.checkBoxUseDoNotBreakAfterList.Name = "checkBoxUseDoNotBreakAfterList";
+            this.checkBoxUseDoNotBreakAfterList.Size = new System.Drawing.Size(218, 17);
+            this.checkBoxUseDoNotBreakAfterList.TabIndex = 0;
+            this.checkBoxUseDoNotBreakAfterList.Text = "Use \'do-not-beak-after\' list (for auto-br)";
+            this.checkBoxUseDoNotBreakAfterList.UseVisualStyleBackColor = true;
+            // 
             // groupBoxSpellCheck
             // 
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxTreatINQuoteAsING);
@@ -2965,6 +2985,7 @@
             "Subtract",
             "Decimal",
             "Divide",
+            "CapsLock",
             "NumLock",
             "Scroll",
             "VolumeMute",
@@ -3228,26 +3249,6 @@
             // 
             this.openFileDialogFFMPEG.FileName = "openFileDialog1";
             // 
-            // groupBoxToolsMisc
-            // 
-            this.groupBoxToolsMisc.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
-            this.groupBoxToolsMisc.Location = new System.Drawing.Point(374, 129);
-            this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
-            this.groupBoxToolsMisc.Size = new System.Drawing.Size(445, 309);
-            this.groupBoxToolsMisc.TabIndex = 5;
-            this.groupBoxToolsMisc.TabStop = false;
-            this.groupBoxToolsMisc.Text = "Misc";
-            // 
-            // checkBoxUseDoNotBreakAfterList
-            // 
-            this.checkBoxUseDoNotBreakAfterList.AutoSize = true;
-            this.checkBoxUseDoNotBreakAfterList.Location = new System.Drawing.Point(15, 20);
-            this.checkBoxUseDoNotBreakAfterList.Name = "checkBoxUseDoNotBreakAfterList";
-            this.checkBoxUseDoNotBreakAfterList.Size = new System.Drawing.Size(218, 17);
-            this.checkBoxUseDoNotBreakAfterList.TabIndex = 0;
-            this.checkBoxUseDoNotBreakAfterList.Text = "Use \'do-not-beak-after\' list (for auto-br)";
-            this.checkBoxUseDoNotBreakAfterList.UseVisualStyleBackColor = true;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3310,6 +3311,8 @@
             this.groupBoxWaveFormAppearence.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaveformBorderHitMs)).EndInit();
             this.tabPageTools.ResumeLayout(false);
+            this.groupBoxToolsMisc.ResumeLayout(false);
+            this.groupBoxToolsMisc.PerformLayout();
             this.groupBoxSpellCheck.ResumeLayout(false);
             this.groupBoxSpellCheck.PerformLayout();
             this.groupBoxFixCommonErrors.ResumeLayout(false);
@@ -3346,8 +3349,6 @@
             this.groupBoxListViewSyntaxColoring.ResumeLayout(false);
             this.groupBoxListViewSyntaxColoring.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSyntaxColorTextMoreThanXLines)).EndInit();
-            this.groupBoxToolsMisc.ResumeLayout(false);
-            this.groupBoxToolsMisc.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

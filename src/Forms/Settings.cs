@@ -2560,9 +2560,14 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.ShortcutIsNotValid, sb));
                     return;
                 }
+                else if (sb.ToString() == "[CapsLock]")
+                {
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.ShortcutIsNotValid, sb));
+                    return;
+                }
                 treeViewShortcuts.SelectedNode.Text = text + " " + sb;
 
-                StringBuilder existsIn = new StringBuilder();
+                var existsIn = new StringBuilder();
                 foreach (TreeNode node in treeViewShortcuts.Nodes)
                 {
                     foreach (TreeNode subNode in node.Nodes)

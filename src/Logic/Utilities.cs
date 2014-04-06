@@ -3516,6 +3516,8 @@ namespace Nikse.SubtitleEdit.Logic
                     AllKeys.Add("pagedown", Keys.RButton | Keys.Space);
                 if (!AllKeys.ContainsKey("home"))
                     AllKeys.Add("home", Keys.MButton | Keys.Space);
+                if (!AllKeys.ContainsKey("capslock"))
+                    AllKeys.Add("capslock", Keys.CapsLock);
             }
 
             string[] parts = keysInString.ToLower().Split("+".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
