@@ -19058,5 +19058,12 @@ namespace Nikse.SubtitleEdit.Forms
             FixCommonErrors(false);
         }
 
+        private void toolStripMenuItemExportDcinemaInteropClick(object sender, EventArgs e)
+        {            
+            var exportBdnXmlPng = new ExportPngXml();
+            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "DCINEMA_INTEROP", _fileName, _videoInfo);
+            exportBdnXmlPng.ShowDialog(this);
+        }
+
     }
 }

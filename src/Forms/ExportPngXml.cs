@@ -251,7 +251,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     BackgroundColor = Color.Transparent,
                                     SavDialogFileName = saveFileDialog1.FileName,
                                     ShadowColor = panelShadowColor.BackColor,
-                                    ShadowWidth = (int)comboBoxShadowWidth.SelectedIndex,
+                                    ShadowWidth = comboBoxShadowWidth.SelectedIndex,
                                     ShadowAlpha = (int)numericUpDownShadowTransparency.Value,
                                     LineHeight = (int)numericUpDownLineSpacing.Value,
                                 };
@@ -295,7 +295,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonExportClick(object sender, EventArgs e)
         {
-            List<string> errors = new List<string>();
+            var errors = new List<string>();
             buttonExport.Enabled = false;
             SetupImageParameters();
 
@@ -344,6 +344,13 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Dost files|*.dost";
             }
+            else if (_exportType == "DCINEMA_INTEROP")
+            {
+                saveFileDialog1.Title = "Save D-Cinema interop as..."; //TODO: Configuration.Settings.Language.ExportPngXml.SaveDostAs;
+                saveFileDialog1.DefaultExt = "*.xml";
+                saveFileDialog1.AddExtension = true;
+                saveFileDialog1.Filter = "Xml files|*.xml";
+            }
 
             if (_exportType == "BLURAYSUP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "VOBSUB" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
@@ -353,7 +360,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _exportType == "STL" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "SPUMUX" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "FCP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "DOST" && saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+                _exportType == "DOST" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == "DCINEMA_INTEROP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 int width = 1920;
                 int height = 1080;
@@ -476,16 +484,16 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (errors.Count > 0)
                 {
-                    var errorSB = new StringBuilder();
+                    var errorSb = new StringBuilder();
                     for (int i = 0; i < 20; i++)
                     {
                         if (i < errors.Count)
-                            errorSB.AppendLine(errors[i]);
+                            errorSb.AppendLine(errors[i]);
                     }
                     if (errors.Count > 20)
-                        errorSB.AppendLine("...");
+                        errorSb.AppendLine("...");
                     if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.SomeLinesWereTooLongX)) //TODO: Fix in 3.4
-                        MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.SomeLinesWereTooLongX, errorSB.ToString()));
+                        MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.SomeLinesWereTooLongX, errorSb));
                 }
 
                 progressBar1.Visible = false;
@@ -628,6 +636,23 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     File.WriteAllText(saveFileDialog1.FileName, header + Environment.NewLine + sb);
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
                 }
+                else if (_exportType == "DCINEMA_INTEROP")
+                {
+                    var doc = new XmlDocument();
+                    string title = "unknown";
+                    if (!string.IsNullOrEmpty(_fileName))
+                        title = Path.GetFileNameWithoutExtension(_fileName);
+                    doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
+                                "<DCSubtitle Version=\"1.1\">" + Environment.NewLine +
+                                "<SubtitleID>681F2F0B-1C8C-4993-AAC4-9BF9B204A41D</SubtitleID>" + Environment.NewLine +
+                                "<MovieTitle>" + title + "</MovieTitle>" + Environment.NewLine +
+                                "<ReelNumber>1</ReelNumber>" + Environment.NewLine +
+                                "<Language>English</Language>" + Environment.NewLine +
+                                sb +
+                                "</DCSubtitle>");
+                    File.WriteAllText(saveFileDialog1.FileName, doc.OuterXml);
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
+                }
                 else
                 {
                     string videoFormat = "1080p";
@@ -654,7 +679,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 "<Description>" + Environment.NewLine +
                                 "<Name Title=\"subtitle_exp\" Content=\"\"/>" + Environment.NewLine +
                                 "<Language Code=\"eng\"/>" + Environment.NewLine +
-                                "<Format VideoFormat=\""+videoFormat + "\" FrameRate=\""+  FrameRate.ToString(CultureInfo.InvariantCulture) +  "\" DropFrame=\"False\"/>" + Environment.NewLine +
+                                "<Format VideoFormat=\"" + videoFormat + "\" FrameRate=\"" + FrameRate.ToString(CultureInfo.InvariantCulture) + "\" DropFrame=\"False\"/>" + Environment.NewLine +
                                 "<Events Type=\"Graphic\" FirstEventInTC=\"" + BdnXmlTimeCode(first.StartTime) + "\" LastEventOutTC=\"" + BdnXmlTimeCode(last.EndTime) + "\" NumberofEvents=\"" + imagesSavedCount.ToString(CultureInfo.InvariantCulture) + "\"/>" + Environment.NewLine +
                                 "</Description>" + Environment.NewLine +
                                 "<Events>" + Environment.NewLine +
@@ -897,8 +922,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 <timebase>25</timebase>
               </rate>
               <duration>[DURATION]</duration>
-              <width>" + param.ScreenWidth.ToString() + @"</width>
-              <height>" + param.ScreenHeight.ToString() + @"</height>
+              <width>" + param.ScreenWidth + @"</width>
+              <height>" + param.ScreenHeight + @"</height>
               <media>
                 <video>
                   <duration>[DURATION]</duration>
@@ -1044,6 +1069,20 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         fullSize.Dispose();
                         param.Saved = true;
+                    }
+                }
+                else if (_exportType == "DCINEMA_INTEROP")
+                {
+                    if (!param.Saved)
+                    {
+                        string numberString = string.Format("{0:0000}", i);
+                        string fileName = Path.Combine(Path.GetDirectoryName(saveFileDialog1.FileName), numberString + ".png");
+                        param.Bitmap.Save(fileName, ImageFormat.Png);
+                        imagesSavedCount++;
+                        param.Saved = true;
+                        sb.AppendLine("<Subtitle FadeDownTime=\"" + 0 + "\" FadeUpTime=\"" + 0 + "\" TimeOut=\"" + param.P.EndTime + "\" TimeIn=\"" + param.P.StartTime + "\" SpotNumber=\"" + param.P.Number + "\">");
+                        sb.AppendLine("<Image VPosition=\"9.7\" VAlign=\"bottom\" HAlign=\"center\">" + fileName + "</Image>");
+                        sb.AppendLine("</Subtitle>");
                     }
                 }
                 else
@@ -1441,7 +1480,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             if (lastText.Length > 0 && left > 2)
                                 left -= 1.5f;
 
-                            lastText.Append(sb.ToString());
+                            lastText.Append(sb);
 
                             TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                         }
@@ -1649,7 +1688,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
 
                 text = Utilities.RemoveHtmlTags(text, true); //TODO: Perhaps check single color...
-                System.Drawing.SolidBrush brush = new SolidBrush(parameter.BorderColor);
+                var brush = new SolidBrush(parameter.BorderColor);
                 int x = 3;
                 int y = 3;
                 sf.Alignment = StringAlignment.Near;
@@ -1776,7 +1815,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                         if (sb.Length > 0)
                         {
-                            lastText.Append(sb.ToString());
+                            lastText.Append(sb);
                             TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                         }
                         if (path.PointCount > 0)
@@ -1802,7 +1841,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         path = new GraphicsPath();
                         sb = new StringBuilder();
 
-                        int endIndex = text.Substring(i).IndexOf(">");
+                        int endIndex = text.Substring(i).IndexOf(">", StringComparison.Ordinal);
                         if (endIndex == -1)
                         {
                             i += 9999;
@@ -1812,7 +1851,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             string fontContent = text.Substring(i, endIndex);
                             if (fontContent.Contains(" color="))
                             {
-                                string[] arr = fontContent.Substring(fontContent.IndexOf(" color=") + 7).Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                string[] arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                                 if (arr.Length > 0)
                                 {
                                     string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
@@ -1858,7 +1897,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 if (lastText.Length > 0  && left > 2)
                                     left -= 1.5f;
 
-                                lastText.Append(sb.ToString());
+                                lastText.Append(sb);
 
                                 TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                             }
@@ -2088,7 +2127,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static string RemoveSubStationAlphaFormatting(string s)
         {
-            int indexOfBegin = s.IndexOf("{");
+            int indexOfBegin = s.IndexOf("{", StringComparison.Ordinal);
             while (indexOfBegin >= 0 && s.IndexOf("}") > indexOfBegin)
             {
                 int indexOfEnd = s.IndexOf("}");
@@ -2139,7 +2178,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 int i = 0;
                 foreach (string item in comboBoxImageFormat.Items)
                 {
-                    if (item.ToString() == Configuration.Settings.Tools.ExportFcpImageType)
+                    if (item == Configuration.Settings.Tools.ExportFcpImageType)
                         comboBoxImageFormat.SelectedIndex = i;
                     i++;
                 }
@@ -2356,7 +2395,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (x.IsStyleAvailable(FontStyle.Regular) || x.IsStyleAvailable(FontStyle.Bold))
                 {
                     comboBoxSubtitleFont.Items.Add(x.Name);
-                    if (string.Compare(x.Name, _subtitleFontName, true) == 0)
+                    if (String.Compare(x.Name, _subtitleFontName, StringComparison.OrdinalIgnoreCase) == 0)
                         comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
                 }
             }
@@ -2408,7 +2447,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (!string.IsNullOrEmpty(languageString))
             {
                 if (languageString.Contains("(") && !languageString.StartsWith("("))
-                    languageString = languageString.Substring(0, languageString.IndexOf("(") - 1).Trim();
+                    languageString = languageString.Substring(0, languageString.IndexOf("(", StringComparison.Ordinal) - 1).Trim();
                 for (int i = 0; i < comboBoxLanguage.Items.Count; i++)
                 {
                     string l = comboBoxLanguage.Items[i].ToString();
@@ -2623,11 +2662,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             subtitleListView1_SelectedIndexChanged(null, null);
         }
 
-        private void checkBoxSideBySide3D_CheckedChanged(object sender, EventArgs e)
-        {
-            subtitleListView1_SelectedIndexChanged(null, null);
-        }
-
         private void comboBoxResolution_SelectedIndexChanged(object sender, EventArgs e)
         {
             subtitleListView1_SelectedIndexChanged(null, null);
@@ -2684,7 +2718,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             Configuration.Settings.Tools.ExportLastFontSize = (int)_subtitleFontSize;
             Configuration.Settings.Tools.ExportLastLineHeight = (int)numericUpDownLineSpacing.Value;
-            Configuration.Settings.Tools.ExportLastBorderWidth = (int)comboBoxBorderWidth.SelectedIndex;
+            Configuration.Settings.Tools.ExportLastBorderWidth = comboBoxBorderWidth.SelectedIndex;
             Configuration.Settings.Tools.ExportLastFontBold = checkBoxBold.Checked;
         }
 
@@ -2741,13 +2775,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 try
                 {
                     if (saveFileDialog1.FilterIndex == 0)
-                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                        bmp.Save(saveFileDialog1.FileName, ImageFormat.Png);
                     else if (saveFileDialog1.FilterIndex == 1)
                         bmp.Save(saveFileDialog1.FileName);
                     else if (saveFileDialog1.FilterIndex == 2)
-                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                        bmp.Save(saveFileDialog1.FileName, ImageFormat.Gif);
                     else
-                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
+                        bmp.Save(saveFileDialog1.FileName, ImageFormat.Tiff);
                 }
                 catch (Exception exception)
                 {
