@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Controls
             double? millisecs = GetTotalMilliseconds();
             if (millisecs.HasValue)
             {
-                if (millisecs.Value == TimeCode.MaxTime.TotalMilliseconds)
+                if (millisecs.Value >= TimeCode.MaxTime.TotalMilliseconds - 0.1)
                     millisecs = 0;
 
                 if (Mode == TimeMode.HHMMSSMS)
@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (value.TotalMilliseconds == TimeCode.MaxTime.TotalMilliseconds)
+                if (value.TotalMilliseconds >= TimeCode.MaxTime.TotalMilliseconds - 0.1)
                 {
                     maskedTextBox1.Text = string.Empty;
                     return;

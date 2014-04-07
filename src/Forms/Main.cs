@@ -8082,14 +8082,20 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
             {
                 int wholeSeconds = (int)seconds;
-                int frames = SubtitleFormat.MillisecondsToFrames(seconds % 1.0 * 1000);
+                int frames = SubtitleFormat.MillisecondsToFrames(seconds % 1.0 * 1000.0);
                 int extraSeconds = (int)(frames / Configuration.Settings.General.CurrentFrameRate);
                 int restFrames = (int)(frames % Configuration.Settings.General.CurrentFrameRate);
                 numericUpDownDuration.Value = (decimal)(wholeSeconds + extraSeconds + restFrames / 100.0);
             }
             else
             {
-                numericUpDownDuration.Value = (decimal)seconds;
+                var d = (decimal) seconds;
+                if (d > numericUpDownDuration.Maximum)
+                    numericUpDownDuration.Value = numericUpDownDuration.Maximum;
+                else if (d < numericUpDownDuration.Minimum)
+                    numericUpDownDuration.Value = numericUpDownDuration.Minimum;
+                else                    
+                    numericUpDownDuration.Value = d;
             }
         }
 
