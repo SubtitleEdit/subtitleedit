@@ -1,16 +1,18 @@
 ﻿Subtitle Edit Changelog
 
 
-3.3.15 (x March 2014)
+3.3.15 (x April 2014)
 * NEW:
    * Added new subtitle formats (200+ formats supported!)
    * Export to VobSub option "Anti-alising with transparency" thx CoOoL_BoY/moob
-   * Added ZPosition setting for Dcinema interop - thx Joseph
+   * Added ZPosition setting for DCinema interop - thx Joseph
+   * Added fade up/down to DCinema interop properties - thx Raul
    * Added shortcut for Tools -> "Split long lines" - thx John
    * Added shortcut for Sync -> "Change frame rate" - thx Alfonso
    * Added setting regarding "Fix short display times" - thx S1l3nc0r
    * Added an "Update all" button for the plugin window
    * Added UI setting for path to VLC portable
+   * Added export to DCinema interop/png - thx Joseph
 * IMPROVED:
    * Updated French language file - thx JM GBT
    * Updated Dutch language file - thx Quetsbeek
@@ -19,6 +21,7 @@
    * Updated Brazilian Portuguese language file - thx Igor
    * Updated Polish language file - thx Admas
    * Updated Argentinian Spanish language file - thx walterh78
+   * Updated Spanish (Mexico) language file - thx pakitonaranjo
    * Html encoding of sami files is now again default false
    * Better reading of time codes of bd sup in mkv - thx Rach78
 * FIXED:
@@ -30,6 +33,7 @@
    * Dcinema smpte sometimes generated illegal frame numbers - thx knut
    * Fixed possible crash when converting pac to ttml - thx Dan
    * Fixed memory leak when running OCR via Tesseract
+   * Fixed possible error/crash when loading bad time codes - thx Jucá 
 	
 
 

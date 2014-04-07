@@ -327,12 +327,12 @@
             // 
             // labelDepth
             // 
-            this.labelDepth.AutoSize = true;
-            this.labelDepth.Location = new System.Drawing.Point(304, 137);
+            this.labelDepth.Location = new System.Drawing.Point(236, 134);
             this.labelDepth.Name = "labelDepth";
-            this.labelDepth.Size = new System.Drawing.Size(36, 13);
+            this.labelDepth.Size = new System.Drawing.Size(100, 18);
             this.labelDepth.TabIndex = 18;
             this.labelDepth.Text = "Depth";
+            this.labelDepth.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label3D
             // 

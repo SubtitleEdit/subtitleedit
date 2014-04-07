@@ -642,16 +642,21 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     string title = "unknown";
                     if (!string.IsNullOrEmpty(_fileName))
                         title = Path.GetFileNameWithoutExtension(_fileName);
+
+                    string guid = Guid.NewGuid().ToString().Replace("-", string.Empty).Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
                     doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
                                 "<DCSubtitle Version=\"1.1\">" + Environment.NewLine +
-                                "<SubtitleID>681F2F0B-1C8C-4993-AAC4-9BF9B204A41D</SubtitleID>" + Environment.NewLine +
+                                "<SubtitleID>" + guid + "</SubtitleID>" + Environment.NewLine +
                                 "<MovieTitle>" + title + "</MovieTitle>" + Environment.NewLine +
                                 "<ReelNumber>1</ReelNumber>" + Environment.NewLine +
                                 "<Language>English</Language>" + Environment.NewLine +
                                 sb +
                                 "</DCSubtitle>");
-                    File.WriteAllText(saveFileDialog1.FileName, doc.OuterXml);
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
+                    string fName = saveFileDialog1.FileName;
+                    if (!fName.ToLower().EndsWith(".xml"))
+                        fName += ".xml";
+                    File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName)));
                 }
                 else
                 {
@@ -1080,8 +1085,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         param.Bitmap.Save(fileName, ImageFormat.Png);
                         imagesSavedCount++;
                         param.Saved = true;
-                        sb.AppendLine("<Subtitle FadeDownTime=\"" + 0 + "\" FadeUpTime=\"" + 0 + "\" TimeOut=\"" + param.P.EndTime + "\" TimeIn=\"" + param.P.StartTime + "\" SpotNumber=\"" + param.P.Number + "\">");
-                        sb.AppendLine("<Image VPosition=\"9.7\" VAlign=\"bottom\" HAlign=\"center\">" + fileName + "</Image>");
+                        sb.AppendLine("<Subtitle FadeDownTime=\"" + 0 + "\" FadeUpTime=\"" + 0 + "\" TimeOut=\"" + param.P.EndTime.ToString().Replace(",", ":") + "\" TimeIn=\"" + param.P.StartTime.ToString().Replace(",", ":") + "\" SpotNumber=\"" + param.P.Number + "\">");
+                        if (param.Depth3D == 0)
+                            sb.AppendLine("<Image VPosition=\"9.7\" VAlign=\"bottom\" HAlign=\"center\">" + numberString + ".png" + "</Image>");
+                        else
+                            sb.AppendLine("<Image VPosition=\"9.7\" ZPosition=\"" + param.Depth3D + "\" VAlign=\"bottom\" HAlign=\"center\">" + numberString + ".png" + "</Image>");
                         sb.AppendLine("</Subtitle>");
                     }
                 }
@@ -2434,6 +2442,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (Configuration.Settings.Tools.ExportHorizontalAlignment >= 0 && Configuration.Settings.Tools.ExportHorizontalAlignment < comboBoxHAlign.Items.Count)
                 comboBoxHAlign.SelectedIndex = Configuration.Settings.Tools.ExportHorizontalAlignment;
 
+            if (exportType == "DCINEMA_INTEROP")
+            {
+                comboBox3D.Visible = false;
+                numericUpDownDepth3D.Enabled = true;
+                labelDepth.Enabled = true;
+                if (!string.IsNullOrEmpty(Configuration.Settings.Language.DCinemaProperties.ZPosition))
+                    labelDepth.Text = Configuration.Settings.Language.DCinemaProperties.ZPosition;
+            }
+
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
@@ -2619,7 +2636,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             comboBoxShadowWidth.SelectedIndex = 0;
             panelShadowColor.BackColor = Color.Black;
-            bool shadowVisible = _exportType == "BDNXML" || _exportType == "BLURAYSUP" || _exportType == "DOST" || _exportType == "IMAGE/FRAME" || _exportType == "FCP";
+            bool shadowVisible = _exportType == "BDNXML" || _exportType == "BLURAYSUP" || _exportType == "DOST" || _exportType == "IMAGE/FRAME" || _exportType == "FCP" || _exportType == "DCINEMA_INTEROP";
             labelShadowWidth.Visible = shadowVisible;
             buttonShadowColor.Visible = shadowVisible;
             comboBoxShadowWidth.Visible = shadowVisible;

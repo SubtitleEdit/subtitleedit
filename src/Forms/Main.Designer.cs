@@ -103,6 +103,7 @@
             this.toolStripMenuItemAvidStl = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportPngXml = new System.Windows.Forms.ToolStripMenuItem();
             this.bluraySupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportDcinemaInterop = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemDost = new System.Windows.Forms.ToolStripMenuItem();
             this.DvdStudioProStl = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportCapMakerPlus = new System.Windows.Forms.ToolStripMenuItem();
@@ -445,7 +446,6 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemExportDcinemaInterop = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1182,6 +1182,13 @@
             this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.bluraySupToolStripMenuItem.Text = "Blu-ray sup...";
             this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.BluraySupToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemExportDcinemaInterop
+            // 
+            this.toolStripMenuItemExportDcinemaInterop.Name = "toolStripMenuItemExportDcinemaInterop";
+            this.toolStripMenuItemExportDcinemaInterop.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemExportDcinemaInterop.Text = "D-Cinema interop/png...";
+            this.toolStripMenuItemExportDcinemaInterop.Click += new System.EventHandler(this.toolStripMenuItemExportDcinemaInteropClick);
             // 
             // toolStripMenuItemDost
             // 
@@ -4376,13 +4383,6 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
-            // 
-            // toolStripMenuItemExportDcinemaInterop
-            // 
-            this.toolStripMenuItemExportDcinemaInterop.Name = "toolStripMenuItemExportDcinemaInterop";
-            this.toolStripMenuItemExportDcinemaInterop.Size = new System.Drawing.Size(258, 22);
-            this.toolStripMenuItemExportDcinemaInterop.Text = "D-Cinema interop...";
-            this.toolStripMenuItemExportDcinemaInterop.Click += new System.EventHandler(this.toolStripMenuItemExportDcinemaInteropClick);
             // 
             // Main
             // 
