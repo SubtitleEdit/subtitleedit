@@ -233,7 +233,8 @@ namespace Nikse.SubtitleEdit.Logic
         public int DCinemaFontSize { get; set; }
         public int DCinemaBottomMargin { get; set; }
         public double DCinemaZPosition { get; set; }
-        public int DCinemaFadeUpDownTime { get; set; }
+        public int DCinemaFadeUpTime { get; set; }
+        public int DCinemaFadeDownTime { get; set; }
 
         public string CurrentDCinemaSubtitleId { get; set; }
         public string CurrentDCinemaMovieTitle { get; set; }
@@ -276,7 +277,8 @@ namespace Nikse.SubtitleEdit.Logic
             DCinemaFontSize = 42;
             DCinemaBottomMargin = 8;
             DCinemaZPosition = 0;
-            DCinemaFadeUpDownTime = 5;
+            DCinemaFadeUpTime = 5;
+            DCinemaFadeDownTime = 5;
 
             SamiDisplayTwoClassesAsTwoSubtitles = true;
             SamiHtmlEncodeMode = 0;
@@ -1695,9 +1697,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("DCinemaZPosition");
                 if (subNode != null)
                     settings.SubtitleSettings.DCinemaZPosition = Convert.ToDouble(subNode.InnerText);
-                subNode = node.SelectSingleNode("DCinemaFadeUpDownTime");
+                subNode = node.SelectSingleNode("DCinemaFadeUpTime");
                 if (subNode != null)
-                    settings.SubtitleSettings.DCinemaFadeUpDownTime = Convert.ToInt32(subNode.InnerText);
+                    settings.SubtitleSettings.DCinemaFadeUpTime = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("DCinemaFadeDownTime");
+                if (subNode != null)
+                    settings.SubtitleSettings.DCinemaFadeDownTime = Convert.ToInt32(subNode.InnerText);
                 subNode = node.SelectSingleNode("SamiDisplayTwoClassesAsTwoSubtitles");
                 if (subNode != null)
                     settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles = Convert.ToBoolean(subNode.InnerText);
@@ -2698,7 +2703,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("DCinemaBottomMargin", settings.SubtitleSettings.DCinemaBottomMargin.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("DCinemaZPosition", settings.SubtitleSettings.DCinemaZPosition.ToString(CultureInfo.InvariantCulture));
-            textWriter.WriteElementString("DCinemaFadeUpDownTime", settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("DCinemaFadeUpTime", settings.SubtitleSettings.DCinemaFadeUpTime.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("DCinemaFadeDownTime", settings.SubtitleSettings.DCinemaFadeDownTime.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("SamiDisplayTwoClassesAsTwoSubtitles", settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles.ToString());
             textWriter.WriteElementString("SamiFullHtmlEncode", settings.SubtitleSettings.SamiHtmlEncodeMode.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("TimedText10TimeCodeFormat", settings.SubtitleSettings.TimedText10TimeCodeFormat);

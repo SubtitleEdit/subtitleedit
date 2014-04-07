@@ -151,11 +151,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     subNode.Attributes.Append(id);
 
                     XmlAttribute fadeUpTime = xml.CreateAttribute("FadeUpTime");
-                    fadeUpTime.InnerText = Configuration.Settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString();
+                    fadeUpTime.InnerText = Configuration.Settings.SubtitleSettings.DCinemaFadeUpTime.ToString();
                     subNode.Attributes.Append(fadeUpTime);
 
                     XmlAttribute fadeDownTime = xml.CreateAttribute("FadeDownTime");
-                    fadeDownTime.InnerText = Configuration.Settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString();
+                    fadeDownTime.InnerText = Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime.ToString();
                     subNode.Attributes.Append(fadeDownTime);
 
                     XmlAttribute start = xml.CreateAttribute("TimeIn");
