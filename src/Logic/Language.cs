@@ -394,6 +394,8 @@ namespace Nikse.SubtitleEdit.Logic
                 FontEffectColor = "Effect color",
                 FontSize = "Size",
                 TopBottomMargin = "Top/bottom margin",
+                FadeUpTime = "Fade up time",
+                FadeDownTime = "Fade down time",
                 ZPosition = "Z-position",
                 ZPositionHelp = "Positive numbers moves text away, negative numbers moves text closer, if z-position is zero then it's 2D",
                 ChooseColor = "Choose color...",

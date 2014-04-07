@@ -35,6 +35,9 @@
             this.numericUpDownReelNumber = new System.Windows.Forms.NumericUpDown();
             this.buttonGenerateID = new System.Windows.Forms.Button();
             this.groupBoxFont = new System.Windows.Forms.GroupBox();
+            this.numericUpDownFadeUp = new System.Windows.Forms.NumericUpDown();
+            this.labelFadeUpTime = new System.Windows.Forms.Label();
+            this.labelZPositionHelp = new System.Windows.Forms.Label();
             this.numericUpDownZPosition = new System.Windows.Forms.NumericUpDown();
             this.labelZPosition = new System.Windows.Forms.Label();
             this.numericUpDownTopBottomMargin = new System.Windows.Forms.NumericUpDown();
@@ -60,13 +63,16 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.labelZPositionHelp = new System.Windows.Forms.Label();
+            this.numericUpDownFadeDown = new System.Windows.Forms.NumericUpDown();
+            this.labelFadeDownTime = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).BeginInit();
             this.groupBoxFont.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeUp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownZPosition)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeDown)).BeginInit();
             this.SuspendLayout();
             // 
             // panelFontEffectColor
@@ -95,7 +101,7 @@
             this.groupBox1.Controls.Add(this.labelSubtitleID);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(597, 419);
+            this.groupBox1.Size = new System.Drawing.Size(660, 463);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             // 
@@ -154,6 +160,10 @@
             this.groupBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFont.Controls.Add(this.numericUpDownFadeDown);
+            this.groupBoxFont.Controls.Add(this.labelFadeDownTime);
+            this.groupBoxFont.Controls.Add(this.numericUpDownFadeUp);
+            this.groupBoxFont.Controls.Add(this.labelFadeUpTime);
             this.groupBoxFont.Controls.Add(this.labelZPositionHelp);
             this.groupBoxFont.Controls.Add(this.numericUpDownZPosition);
             this.groupBoxFont.Controls.Add(this.labelZPosition);
@@ -175,10 +185,47 @@
             this.groupBoxFont.Controls.Add(this.labelFontUri);
             this.groupBoxFont.Location = new System.Drawing.Point(6, 141);
             this.groupBoxFont.Name = "groupBoxFont";
-            this.groupBoxFont.Size = new System.Drawing.Size(585, 272);
+            this.groupBoxFont.Size = new System.Drawing.Size(648, 316);
             this.groupBoxFont.TabIndex = 5;
             this.groupBoxFont.TabStop = false;
             this.groupBoxFont.Text = "Font";
+            // 
+            // numericUpDownFadeUp
+            // 
+            this.numericUpDownFadeUp.Location = new System.Drawing.Point(133, 207);
+            this.numericUpDownFadeUp.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownFadeUp.Name = "numericUpDownFadeUp";
+            this.numericUpDownFadeUp.Size = new System.Drawing.Size(112, 20);
+            this.numericUpDownFadeUp.TabIndex = 32;
+            this.numericUpDownFadeUp.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // labelFadeUpTime
+            // 
+            this.labelFadeUpTime.AutoSize = true;
+            this.labelFadeUpTime.Location = new System.Drawing.Point(9, 210);
+            this.labelFadeUpTime.Name = "labelFadeUpTime";
+            this.labelFadeUpTime.Size = new System.Drawing.Size(68, 13);
+            this.labelFadeUpTime.TabIndex = 35;
+            this.labelFadeUpTime.Text = "Fade up time";
+            // 
+            // labelZPositionHelp
+            // 
+            this.labelZPositionHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelZPositionHelp.ForeColor = System.Drawing.Color.Gray;
+            this.labelZPositionHelp.Location = new System.Drawing.Point(252, 265);
+            this.labelZPositionHelp.Name = "labelZPositionHelp";
+            this.labelZPositionHelp.Size = new System.Drawing.Size(327, 47);
+            this.labelZPositionHelp.TabIndex = 34;
+            this.labelZPositionHelp.Text = "Positive numbers moves text away, negative numbers moves text closer, if z-positi" +
+    "on zeo then it\'s normal \r\n2D";
             // 
             // numericUpDownZPosition
             // 
@@ -188,7 +235,7 @@
             0,
             0,
             131072});
-            this.numericUpDownZPosition.Location = new System.Drawing.Point(133, 207);
+            this.numericUpDownZPosition.Location = new System.Drawing.Point(133, 259);
             this.numericUpDownZPosition.Maximum = new decimal(new int[] {
             10,
             0,
@@ -201,12 +248,12 @@
             -2147483648});
             this.numericUpDownZPosition.Name = "numericUpDownZPosition";
             this.numericUpDownZPosition.Size = new System.Drawing.Size(112, 20);
-            this.numericUpDownZPosition.TabIndex = 33;
+            this.numericUpDownZPosition.TabIndex = 34;
             // 
             // labelZPosition
             // 
             this.labelZPosition.AutoSize = true;
-            this.labelZPosition.Location = new System.Drawing.Point(9, 210);
+            this.labelZPosition.Location = new System.Drawing.Point(9, 262);
             this.labelZPosition.Name = "labelZPosition";
             this.labelZPosition.Size = new System.Drawing.Size(53, 13);
             this.labelZPosition.TabIndex = 32;
@@ -414,7 +461,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(534, 437);
+            this.buttonCancel.Location = new System.Drawing.Point(597, 481);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 2;
@@ -426,7 +473,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(453, 437);
+            this.buttonOK.Location = new System.Drawing.Point(516, 481);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 1;
@@ -434,22 +481,37 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // labelZPositionHelp
+            // numericUpDownFadeDown
             // 
-            this.labelZPositionHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelZPositionHelp.ForeColor = System.Drawing.Color.Gray;
-            this.labelZPositionHelp.Location = new System.Drawing.Point(252, 213);
-            this.labelZPositionHelp.Name = "labelZPositionHelp";
-            this.labelZPositionHelp.Size = new System.Drawing.Size(327, 47);
-            this.labelZPositionHelp.TabIndex = 34;
-            this.labelZPositionHelp.Text = "Positive numbers moves text away, negative numbers moves text closer, if z-positi" +
-    "on zeo then it\'s normal \r\n2D";
+            this.numericUpDownFadeDown.Location = new System.Drawing.Point(133, 233);
+            this.numericUpDownFadeDown.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownFadeDown.Name = "numericUpDownFadeDown";
+            this.numericUpDownFadeDown.Size = new System.Drawing.Size(112, 20);
+            this.numericUpDownFadeDown.TabIndex = 33;
+            this.numericUpDownFadeDown.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // labelFadeDownTime
+            // 
+            this.labelFadeDownTime.AutoSize = true;
+            this.labelFadeDownTime.Location = new System.Drawing.Point(9, 236);
+            this.labelFadeDownTime.Name = "labelFadeDownTime";
+            this.labelFadeDownTime.Size = new System.Drawing.Size(82, 13);
+            this.labelFadeDownTime.TabIndex = 37;
+            this.labelFadeDownTime.Text = "Fade down time";
             // 
             // DCinemaPropertiesInterop
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(621, 470);
+            this.ClientSize = new System.Drawing.Size(684, 514);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -467,9 +529,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).EndInit();
             this.groupBoxFont.ResumeLayout(false);
             this.groupBoxFont.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeUp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownZPosition)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -509,5 +573,9 @@
         private System.Windows.Forms.NumericUpDown numericUpDownZPosition;
         private System.Windows.Forms.Label labelZPosition;
         private System.Windows.Forms.Label labelZPositionHelp;
+        private System.Windows.Forms.NumericUpDown numericUpDownFadeUp;
+        private System.Windows.Forms.Label labelFadeUpTime;
+        private System.Windows.Forms.NumericUpDown numericUpDownFadeDown;
+        private System.Windows.Forms.Label labelFadeDownTime;
     }
 }

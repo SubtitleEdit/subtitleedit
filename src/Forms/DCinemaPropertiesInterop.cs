@@ -38,6 +38,11 @@ namespace Nikse.SubtitleEdit.Forms
                 labelZPosition.Text = l.ZPosition;
                 labelZPositionHelp.Text = l.ZPositionHelp;
             }
+            if (!string.IsNullOrEmpty(l.FadeUpTime)) //TODO: Remove in SE 3.4
+            {
+                labelFadeUpTime.Text = l.FadeUpTime;
+                labelFadeDownTime.Text = l.FadeDownTime;
+            }            
 
             this._subtitle = _subtitle;
             this._videoFileName = _videoFileName;
@@ -76,6 +81,18 @@ namespace Nikse.SubtitleEdit.Forms
                     numericUpDownTopBottomMargin.Value = Configuration.Settings.SubtitleSettings.DCinemaBottomMargin;
                 else
                     numericUpDownTopBottomMargin.Value = 8;
+
+                if (numericUpDownFadeUp.Minimum <= Configuration.Settings.SubtitleSettings.DCinemaFadeUpTime &&
+                   numericUpDownFadeUp.Maximum >= Configuration.Settings.SubtitleSettings.DCinemaFadeUpTime)
+                    numericUpDownFadeUp.Value = Configuration.Settings.SubtitleSettings.DCinemaFadeUpTime;
+                else
+                    numericUpDownFadeUp.Value = 5;
+
+                if (numericUpDownFadeDown.Minimum <= Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime &&
+                   numericUpDownFadeDown.Maximum >= Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime)
+                    numericUpDownFadeDown.Value = Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime;
+                else
+                    numericUpDownFadeUp.Value = 5;                
 
                 decimal zPosition = (decimal)Configuration.Settings.SubtitleSettings.DCinemaZPosition;
                 if (numericUpDownZPosition.Minimum <= zPosition &&
@@ -146,6 +163,8 @@ namespace Nikse.SubtitleEdit.Forms
             ss.CurrentDCinemaFontEffectColor = panelFontEffectColor.BackColor;
             ss.CurrentDCinemaFontSize = (int)numericUpDownFontSize.Value;
             Configuration.Settings.SubtitleSettings.DCinemaBottomMargin = (int)numericUpDownTopBottomMargin.Value;
+            Configuration.Settings.SubtitleSettings.DCinemaFadeUpTime = (int)numericUpDownFadeUp.Value;
+            Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime = (int)numericUpDownFadeDown.Value;
             Configuration.Settings.SubtitleSettings.DCinemaZPosition = (double)numericUpDownZPosition.Value;
 
             DialogResult = DialogResult.OK;
