@@ -74,6 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _preview = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrorsPreview);
         Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        Keys _mainListViewGoToNextError = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
 
         class FixItem
         {
@@ -4463,6 +4464,33 @@ namespace Nikse.SubtitleEdit.Forms
                     selectedIndex--;
                 }
                 subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
+            }
+            else if (_mainListViewGoToNextError == e.KeyData)
+            {
+                 GoToNextSynaxError();
+                e.SuppressKeyPress = true;
+            }
+            
+        }
+
+        private void GoToNextSynaxError()
+        {
+ 	        int idx = 0;
+            try
+            {
+                if (listViewFixes.SelectedItems.Count > 0)
+                    idx = listViewFixes.SelectedItems[0].Index;
+                idx++;
+                if (listViewFixes.Items.Count > idx)
+                {
+                    listViewFixes.Items[idx].Selected = true;
+                    listViewFixes.Items[idx].EnsureVisible(); 
+                    if (idx > 0)
+                        listViewFixes.Items[idx-1].Selected = false;
+                }
+            }
+            catch
+            { 
             }
         }
 
