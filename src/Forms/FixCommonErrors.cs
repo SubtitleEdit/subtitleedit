@@ -879,7 +879,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-                    else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime &&
+                    else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds >  Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
                              prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                     {
                         if (AllowFix(p, fixAction))
@@ -923,7 +923,7 @@ namespace Nikse.SubtitleEdit.Forms
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
-                    else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime &&
+                    else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
                              temp.Duration.TotalMilliseconds - p.Duration.TotalMilliseconds < 1500 && (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds ))
                     {
                         if (AllowFix(p, fixAction))
