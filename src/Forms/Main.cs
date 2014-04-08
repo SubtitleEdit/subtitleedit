@@ -13526,6 +13526,8 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.Invalidate();
                 }
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
+                if (!showhideVideoToolStripMenuItem.Checked)
+                    toolStripButtonToggleVideo_Click(null, null);
                 OpenVideo(openFileDialog1.FileName);
             }
         }
