@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainListViewToggleDashes = Keys.None;
         Keys _mainListViewAutoDuration = Keys.None;
         Keys _mainListViewFocusWaveform = Keys.None;
-        Keys _mainListViewGoToNextError = Keys.None;        
+        Keys _mainListViewGoToNextError = Keys.None;
         Keys _mainListViewCopyText = Keys.None;
         Keys _mainEditReverseStartAndEndingForRTL = Keys.None;
         Keys _waveformVerticalZoom = Keys.None;
@@ -7209,6 +7209,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _mainListViewGoToNextError)
             {
                 GoToNextSynaxError();
+                e.SuppressKeyPress = true;
             }                
 
             // last key down in text
@@ -11508,6 +11509,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _mainListViewGoToNextError)
             {
                 GoToNextSynaxError();
+                e.SuppressKeyPress = true;
             }                
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+vPaste from clipboard
             {
