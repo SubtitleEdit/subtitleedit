@@ -788,6 +788,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainListViewColumnInsertText { get; set; }
         public string MainListViewColumnPaste { get; set; }
         public string MainListViewFocusWaveform { get; set; }
+        public string MainListViewGoToNextError { get; set; }
         public string MainTextBoxItalic { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxMoveLastWordDown { get; set; }
@@ -2264,6 +2265,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainListViewFocusWaveform");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewFocusWaveform = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewGoToNextError");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewGoToNextError = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainEditReverseStartAndEndingForRTL");
                 if (subNode != null)
                     settings.Shortcuts.MainEditReverseStartAndEndingForRTL = subNode.InnerText;
@@ -2909,6 +2913,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainListViewColumnInsertText", settings.Shortcuts.MainListViewColumnInsertText);
             textWriter.WriteElementString("MainListViewColumnPaste", settings.Shortcuts.MainListViewColumnPaste);
             textWriter.WriteElementString("MainListViewFocusWaveform", settings.Shortcuts.MainListViewFocusWaveform);
+            textWriter.WriteElementString("MainListViewGoToNextError", settings.Shortcuts.MainListViewGoToNextError);
             textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);
