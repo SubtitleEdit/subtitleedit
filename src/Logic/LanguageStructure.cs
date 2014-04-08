@@ -1755,6 +1755,7 @@
             public string ListViewColumnInsert { get; set; }
             public string ListViewColumnPaste { get; set; }
             public string ListViewFocusWaveform { get; set; }
+            public string ListViewGoToNextError { get; set; }
             public string ShowBeamer { get; set; }
             public string MainTextBoxMoveLastWordDown { get; set; }
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }

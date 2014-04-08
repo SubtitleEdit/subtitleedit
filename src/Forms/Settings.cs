@@ -702,6 +702,8 @@ namespace Nikse.SubtitleEdit.Forms
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewColumnPaste + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewColumnPaste));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.ListViewFocusWaveform))
                 listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewFocusWaveform + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewFocusWaveform));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.ListViewGoToNextError))
+                listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewGoToNextError + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewGoToNextError));
             treeViewShortcuts.Nodes.Add(listViewNode);
 
             var textBoxNode = new TreeNode(Configuration.Settings.Language.Settings.TextBox);
@@ -1381,6 +1383,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainListViewColumnPaste = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Settings.ListViewFocusWaveform != null && text == Configuration.Settings.Language.Settings.ListViewFocusWaveform.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewFocusWaveform = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.ListViewGoToNextError != null && text == Configuration.Settings.Language.Settings.ListViewGoToNextError.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainListViewGoToNextError = GetShortcut(node.Text);
                 }
             }
 

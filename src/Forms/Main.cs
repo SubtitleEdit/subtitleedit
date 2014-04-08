@@ -155,6 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainListViewToggleDashes = Keys.None;
         Keys _mainListViewAutoDuration = Keys.None;
         Keys _mainListViewFocusWaveform = Keys.None;
+        Keys _mainListViewGoToNextError = Keys.None;        
         Keys _mainListViewCopyText = Keys.None;
         Keys _mainEditReverseStartAndEndingForRTL = Keys.None;
         Keys _waveformVerticalZoom = Keys.None;
@@ -7205,6 +7206,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _mainListViewGoToNextError)
+            {
+                GoToNextSynaxError();
+            }                
 
             // last key down in text
             _lastTextKeyDownTicks = DateTime.Now.Ticks;
@@ -11500,6 +11505,10 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
+            else if (e.KeyData == _mainListViewGoToNextError)
+            {
+                GoToNextSynaxError();
+            }                
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+vPaste from clipboard
             {
                 if (Clipboard.ContainsText())
@@ -11621,6 +11630,28 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter)
             {
                 SubtitleListview1_MouseDoubleClick(null, null);
+            }
+        }
+
+        private void GoToNextSynaxError()
+        {
+            int idx = FirstSelectedIndex + 1;
+            try
+            {
+                for (int i = idx; i < _subtitle.Paragraphs.Count - 1; i++)
+                {
+                    ListViewItem item = SubtitleListview1.Items[i];
+                    if (item.SubItems[SubtitleListView.ColumnIndexDuration].BackColor == Configuration.Settings.Tools.ListViewSyntaxErrorColor ||
+                        item.SubItems[SubtitleListView.ColumnIndexText].BackColor == Configuration.Settings.Tools.ListViewSyntaxErrorColor ||
+                        item.SubItems[SubtitleListView.ColumnIndexStart].BackColor == Configuration.Settings.Tools.ListViewSyntaxErrorColor)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(i, true);
+                        return;
+                    }
+                }
+            }
+            catch
+            { 
             }
         }
 
@@ -14308,6 +14339,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAlignment.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignment);
             _mainListViewAutoDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewAutoDuration);
             _mainListViewFocusWaveform = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewFocusWaveform);
+            _mainListViewGoToNextError = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
             _mainEditReverseStartAndEndingForRTL = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             _mainListViewCopyText = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
             toolStripMenuItemColumnDeleteText.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText);
