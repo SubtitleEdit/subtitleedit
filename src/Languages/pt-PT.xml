@@ -251,6 +251,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffectColor>Cor do efeito</FontEffectColor>
     <FontSize>Tamanho</FontSize>
     <TopBottomMargin>Margem superior/inferior</TopBottomMargin>
+    <FadeUpTime>Desvanecer o tempo ascendente</FadeUpTime>
+    <FadeDownTime>Desvanecer o tempo descendente</FadeDownTime>	
     <ZPosition>Posição-Z</ZPosition>
     <ZPositionHelp>Números positivos afasta o texto, números negativos aproxima o texto, se a posição-Z for zero, então é 2D</ZPositionHelp>	
     <ChooseColor>Seleccionar a cor...</ChooseColor>
@@ -532,7 +534,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XUppercaseIsFoundInsideLowercaseWords>{0} maiúsculas 'i's encontradas palavras minúsculas</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Actualizar correcções disponíveis</RefreshFixes>
     <ApplyFixes>Aplicar correcções seleccionadas</ApplyFixes>
-    <AutoBreak>Auto ajuste da &amp;linha</AutoBreak>
+    <AutoBreak>Ajuste auto da &amp;linha</AutoBreak>
     <Unbreak>&amp;Combinar</Unbreak>
     <FixDoubleDash>Corrigir '--' -&gt; '...' </FixDoubleDash>
     <FixDoubleGreaterThan>Remover &gt;&gt; </FixDoubleGreaterThan>
@@ -913,7 +915,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <AutoContinueInOneSecond>Auto continuar num segundo</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>Auto continuar em {0} segundos</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Escrever automático parado</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>&amp;Inserir legenda na posição vídeo</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPosition>&amp;Inserir legenda na posição do vídeo</InsertNewSubtitleAtVideoPosition>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Reproduzir antes do &amp;texto</PlayFromJustBeforeText>
       <Pause>Pausar</Pause>
@@ -1591,11 +1593,14 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ListViewColumnInsert>Coluna, inserir texto</ListViewColumnInsert>
     <ListViewColumnPaste>Coluna, colar</ListViewColumnPaste>
 	<ListViewFocusWaveform>Evidenciar forma de onda/espectrograma</ListViewFocusWaveform>
+    <ListViewGoToNextError>Ir para o próximo erro</ListViewGoToNextError>	
     <ShowBeamer>Iniciar a legenda em ecrã inteiro</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mover a última palavra para baixo para a próxima linha de legendas</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Mover a primeira palavra a partir da próxima linha acima das legendas</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxAutoBreak>Quebra de texto automática</MainTextBoxAutoBreak>
-    <MainTextBoxUnbreak>Remover quebra de texto</MainTextBoxUnbreak>	
+    <MainTextBoxUnbreak>Remover quebra de texto</MainTextBoxUnbreak>
+    <Miscellaneous>Diversos</Miscellaneous>
+    <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista" para o ajuste-auto (só legenda em inglês)</UseDoNotBreakAfterList>	
   </Settings>
   <ShowEarlierLater>
     <Title>Mostrar linhas seleccionadas antes/depois</Title>
