@@ -2675,5 +2675,11 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.Cancel;
         }
 
+        private void buttonEditDoNotBreakAfterList_Click(object sender, EventArgs e)
+        {
+            var form = new DoNotBreakAfterListEdit();
+            form.ShowDialog(this);
+        }
+
     }
 }
