@@ -5,7 +5,8 @@
     <Version>3.3.14</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
-    <HelpFile />
+    <HelpFile>
+    </HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>&amp;Fortryd</Cancel>
     <Apply>Anvend</Apply>
@@ -1309,6 +1310,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <NewVersionOfSubtitleEditRequired>Nyere version af Subtitle Edit kræves!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Ny version findes!]</UpdateAvailable>
     <UpdateAll>Opdater alle</UpdateAll>
+    <XPluginsUpdated>{0} plugin(s) opdateret</XPluginsUpdated>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Fjern tekst for hørehæmmede</Title>
@@ -1401,8 +1403,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <AutoWrapWhileTyping>Auto-ombryd tekst mens du skriver</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. varighed, millisekunder</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. varighed, millisekunder</DurationMaximumMilliseconds>
-    <MinimumGapMilliseconds>
-    </MinimumGapMilliseconds>
+    <MinimumGapMilliseconds>Min. mellemrum mellem undertekster i ms</MinimumGapMilliseconds>
     <SubtitleFont>undertekst skrifttype</SubtitleFont>
     <SubtitleFontSize>undertekst skriftstørrelse</SubtitleFontSize>
     <SubtitleBold>Fed</SubtitleBold>
@@ -1444,8 +1445,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll fra VLC Media Player 1.1.0 eller nyere</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>
-    </VlcBrowseToLabel>
+    <VlcBrowseToLabel>VLC sti (kun nødvendig, hvis du bruger den portable version af VLC)</VlcBrowseToLabel>
     <ShowStopButton>Vis stop-knap</ShowStopButton>
     <ShowMuteButton>Vis mute-knap</ShowMuteButton>
     <ShowFullscreenButton>Vis fuldskærm knap</ShowFullscreenButton>
@@ -1475,8 +1475,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <WaveformUseFFMPEG>Benyt FFMPEG til at udtrække lydfiler</WaveformUseFFMPEG>
     <WaveformFFMPEGPath>Sti til FFMPEG</WaveformFFMPEGPath>
     <WaveformBrowseToFFMPEG>Vælg sti stil FFMPEG</WaveformBrowseToFFMPEG>
-    <WaveformBrowseToVLC>
-    </WaveformBrowseToVLC>
+    <WaveformBrowseToVLC>Gå til VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha Style</SubStationAlphaStyle>
     <ChooseFont>Vælg skrifttype</ChooseFont>
     <ChooseColor>Vælg farve</ChooseColor>
@@ -1515,8 +1514,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <MusicSymbol>Musik symbol</MusicSymbol>
     <MusicSymbolsToReplace>Musik symboler der skal erstattes (adskilt af mellemrum)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Ret normale OCR fejl - Inkluder hardcodede regler</FixCommonOcrErrorsUseHardcodedRules>
-    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
-    </FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix kort visningstid - tillad flytning af starttidspunkt</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Genveje</Shortcuts>
     <Shortcut>Genvej</Shortcut>
     <Control>Control</Control>
@@ -1599,6 +1597,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <MainTextBoxMoveFirstWordFromNextUp>Flyt første ord fra næste linje op</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxAutoBreak>Auto-ombryd tekst</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Fjern linjeskift</MainTextBoxUnbreak>
+    <Miscellaneous>Diverse</Miscellaneous>
+    <UseDoNotBreakAfterList>Benyt skift-ikke-efter-liste (for auto-ombrydning)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>Vis valgte linjer tidligere/senere</Title>
