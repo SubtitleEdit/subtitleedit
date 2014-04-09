@@ -17074,6 +17074,13 @@ namespace Nikse.SubtitleEdit.Forms
                 _fileName = null;
                 SetupAlternateEdit();
                 ResetHistory();
+
+                if (toolStripMenuItemShowOriginalInPreview.Checked)
+                {
+                    toolStripMenuItemShowOriginalInPreview.Checked = false;
+                    Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable = false;
+                    audioVisualizer.Invalidate();
+                }
             }
         }
 
