@@ -85,37 +85,26 @@
             this.checkBoxShowFrameRate = new System.Windows.Forms.CheckBox();
             this.groupBoxShowToolBarButtons = new System.Windows.Forms.GroupBox();
             this.labelTBFixCommonErrors = new System.Windows.Forms.Label();
-            this.pictureBoxTBFixCommonErrors = new System.Windows.Forms.PictureBox();
             this.checkBoxTBFixCommonErrors = new System.Windows.Forms.CheckBox();
             this.labelTBHelp = new System.Windows.Forms.Label();
-            this.pictureBoxHelp = new System.Windows.Forms.PictureBox();
             this.checkBoxHelp = new System.Windows.Forms.CheckBox();
             this.labelTBSettings = new System.Windows.Forms.Label();
-            this.pictureBoxSettings = new System.Windows.Forms.PictureBox();
             this.checkBoxSettings = new System.Windows.Forms.CheckBox();
             this.labelTBSpellCheck = new System.Windows.Forms.Label();
-            this.pictureBoxSpellCheck = new System.Windows.Forms.PictureBox();
             this.checkBoxSpellCheck = new System.Windows.Forms.CheckBox();
             this.labelTBVisualSync = new System.Windows.Forms.Label();
-            this.pictureBoxVisualSync = new System.Windows.Forms.PictureBox();
             this.checkBoxVisualSync = new System.Windows.Forms.CheckBox();
             this.labelTBReplace = new System.Windows.Forms.Label();
-            this.pictureBoxReplace = new System.Windows.Forms.PictureBox();
             this.checkBoxReplace = new System.Windows.Forms.CheckBox();
             this.labelTBFind = new System.Windows.Forms.Label();
-            this.pictureBoxFind = new System.Windows.Forms.PictureBox();
             this.checkBoxToolbarFind = new System.Windows.Forms.CheckBox();
             this.labelTBSaveAs = new System.Windows.Forms.Label();
-            this.pictureBoxSaveAs = new System.Windows.Forms.PictureBox();
             this.checkBoxToolbarSaveAs = new System.Windows.Forms.CheckBox();
             this.labelTBSave = new System.Windows.Forms.Label();
-            this.pictureBoxSave = new System.Windows.Forms.PictureBox();
             this.checkBoxToolbarSave = new System.Windows.Forms.CheckBox();
             this.labelTBOpen = new System.Windows.Forms.Label();
-            this.pictureBoxOpen = new System.Windows.Forms.PictureBox();
             this.checkBoxToolbarOpen = new System.Windows.Forms.CheckBox();
             this.labelTBNew = new System.Windows.Forms.Label();
-            this.pictureBoxNew = new System.Windows.Forms.PictureBox();
             this.checkBoxToolbarNew = new System.Windows.Forms.CheckBox();
             this.tabPageVideoPlayer = new System.Windows.Forms.TabPage();
             this.groupBoxMainWindowVideoControls = new System.Windows.Forms.GroupBox();
@@ -236,7 +225,6 @@
             this.groupBoxSsaStyle = new System.Windows.Forms.GroupBox();
             this.checkBoxSsaOpaqueBox = new System.Windows.Forms.CheckBox();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
-            this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.labelSsaOutline = new System.Windows.Forms.Label();
             this.numericUpDownSsaShadow = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownSsaOutline = new System.Windows.Forms.NumericUpDown();
@@ -279,6 +267,19 @@
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFMPEG = new System.Windows.Forms.OpenFileDialog();
+            this.pictureBoxTBFixCommonErrors = new System.Windows.Forms.PictureBox();
+            this.pictureBoxHelp = new System.Windows.Forms.PictureBox();
+            this.pictureBoxSettings = new System.Windows.Forms.PictureBox();
+            this.pictureBoxSpellCheck = new System.Windows.Forms.PictureBox();
+            this.pictureBoxVisualSync = new System.Windows.Forms.PictureBox();
+            this.pictureBoxReplace = new System.Windows.Forms.PictureBox();
+            this.pictureBoxFind = new System.Windows.Forms.PictureBox();
+            this.pictureBoxSaveAs = new System.Windows.Forms.PictureBox();
+            this.pictureBoxSave = new System.Windows.Forms.PictureBox();
+            this.pictureBoxOpen = new System.Windows.Forms.PictureBox();
+            this.pictureBoxNew = new System.Windows.Forms.PictureBox();
+            this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
+            this.buttonEditDoNotBreakAfterList = new System.Windows.Forms.Button();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -290,17 +291,6 @@
             this.tabPageToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHelp)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSettings)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSpellCheck)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxVisualSync)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxReplace)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFind)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSaveAs)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSave)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOpen)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNew)).BeginInit();
             this.tabPageVideoPlayer.SuspendLayout();
             this.groupBoxMainWindowVideoControls.SuspendLayout();
             this.groupBoxVideoPlayerDefault.SuspendLayout();
@@ -325,7 +315,6 @@
             this.tabPageSsaStyle.SuspendLayout();
             this.groupBoxSsaStyle.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaShadow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaOutline)).BeginInit();
             this.tabPageProxy.SuspendLayout();
@@ -336,6 +325,18 @@
             this.tabPageSyntaxColoring.SuspendLayout();
             this.groupBoxListViewSyntaxColoring.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSyntaxColorTextMoreThanXLines)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHelp)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSettings)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSpellCheck)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxVisualSync)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxReplace)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFind)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSaveAs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSave)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOpen)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNew)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -1060,14 +1061,6 @@
             this.labelTBFixCommonErrors.TabIndex = 36;
             this.labelTBFixCommonErrors.Text = "Fix common errors";
             // 
-            // pictureBoxTBFixCommonErrors
-            // 
-            this.pictureBoxTBFixCommonErrors.Location = new System.Drawing.Point(22, 155);
-            this.pictureBoxTBFixCommonErrors.Name = "pictureBoxTBFixCommonErrors";
-            this.pictureBoxTBFixCommonErrors.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxTBFixCommonErrors.TabIndex = 35;
-            this.pictureBoxTBFixCommonErrors.TabStop = false;
-            // 
             // checkBoxTBFixCommonErrors
             // 
             this.checkBoxTBFixCommonErrors.AutoSize = true;
@@ -1086,14 +1079,6 @@
             this.labelTBHelp.Size = new System.Drawing.Size(28, 13);
             this.labelTBHelp.TabIndex = 33;
             this.labelTBHelp.Text = "Help";
-            // 
-            // pictureBoxHelp
-            // 
-            this.pictureBoxHelp.Location = new System.Drawing.Point(423, 155);
-            this.pictureBoxHelp.Name = "pictureBoxHelp";
-            this.pictureBoxHelp.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxHelp.TabIndex = 32;
-            this.pictureBoxHelp.TabStop = false;
             // 
             // checkBoxHelp
             // 
@@ -1114,14 +1099,6 @@
             this.labelTBSettings.TabIndex = 30;
             this.labelTBSettings.Text = "Settings";
             // 
-            // pictureBoxSettings
-            // 
-            this.pictureBoxSettings.Location = new System.Drawing.Point(322, 155);
-            this.pictureBoxSettings.Name = "pictureBoxSettings";
-            this.pictureBoxSettings.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxSettings.TabIndex = 29;
-            this.pictureBoxSettings.TabStop = false;
-            // 
             // checkBoxSettings
             // 
             this.checkBoxSettings.AutoSize = true;
@@ -1140,14 +1117,6 @@
             this.labelTBSpellCheck.Size = new System.Drawing.Size(59, 13);
             this.labelTBSpellCheck.TabIndex = 27;
             this.labelTBSpellCheck.Text = "Spell check";
-            // 
-            // pictureBoxSpellCheck
-            // 
-            this.pictureBoxSpellCheck.Location = new System.Drawing.Point(224, 155);
-            this.pictureBoxSpellCheck.Name = "pictureBoxSpellCheck";
-            this.pictureBoxSpellCheck.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxSpellCheck.TabIndex = 26;
-            this.pictureBoxSpellCheck.TabStop = false;
             // 
             // checkBoxSpellCheck
             // 
@@ -1168,14 +1137,6 @@
             this.labelTBVisualSync.TabIndex = 21;
             this.labelTBVisualSync.Text = "Visual sync";
             // 
-            // pictureBoxVisualSync
-            // 
-            this.pictureBoxVisualSync.Location = new System.Drawing.Point(123, 155);
-            this.pictureBoxVisualSync.Name = "pictureBoxVisualSync";
-            this.pictureBoxVisualSync.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxVisualSync.TabIndex = 20;
-            this.pictureBoxVisualSync.TabStop = false;
-            // 
             // checkBoxVisualSync
             // 
             this.checkBoxVisualSync.AutoSize = true;
@@ -1194,14 +1155,6 @@
             this.labelTBReplace.Size = new System.Drawing.Size(45, 13);
             this.labelTBReplace.TabIndex = 18;
             this.labelTBReplace.Text = "Replace";
-            // 
-            // pictureBoxReplace
-            // 
-            this.pictureBoxReplace.Location = new System.Drawing.Point(526, 41);
-            this.pictureBoxReplace.Name = "pictureBoxReplace";
-            this.pictureBoxReplace.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxReplace.TabIndex = 17;
-            this.pictureBoxReplace.TabStop = false;
             // 
             // checkBoxReplace
             // 
@@ -1222,14 +1175,6 @@
             this.labelTBFind.TabIndex = 15;
             this.labelTBFind.Text = "Find";
             // 
-            // pictureBoxFind
-            // 
-            this.pictureBoxFind.Location = new System.Drawing.Point(423, 41);
-            this.pictureBoxFind.Name = "pictureBoxFind";
-            this.pictureBoxFind.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxFind.TabIndex = 14;
-            this.pictureBoxFind.TabStop = false;
-            // 
             // checkBoxToolbarFind
             // 
             this.checkBoxToolbarFind.AutoSize = true;
@@ -1248,14 +1193,6 @@
             this.labelTBSaveAs.Size = new System.Drawing.Size(45, 13);
             this.labelTBSaveAs.TabIndex = 12;
             this.labelTBSaveAs.Text = "Save as";
-            // 
-            // pictureBoxSaveAs
-            // 
-            this.pictureBoxSaveAs.Location = new System.Drawing.Point(322, 41);
-            this.pictureBoxSaveAs.Name = "pictureBoxSaveAs";
-            this.pictureBoxSaveAs.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxSaveAs.TabIndex = 11;
-            this.pictureBoxSaveAs.TabStop = false;
             // 
             // checkBoxToolbarSaveAs
             // 
@@ -1276,14 +1213,6 @@
             this.labelTBSave.TabIndex = 9;
             this.labelTBSave.Text = "Save";
             // 
-            // pictureBoxSave
-            // 
-            this.pictureBoxSave.Location = new System.Drawing.Point(224, 41);
-            this.pictureBoxSave.Name = "pictureBoxSave";
-            this.pictureBoxSave.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxSave.TabIndex = 8;
-            this.pictureBoxSave.TabStop = false;
-            // 
             // checkBoxToolbarSave
             // 
             this.checkBoxToolbarSave.AutoSize = true;
@@ -1303,14 +1232,6 @@
             this.labelTBOpen.TabIndex = 6;
             this.labelTBOpen.Text = "Open";
             // 
-            // pictureBoxOpen
-            // 
-            this.pictureBoxOpen.Location = new System.Drawing.Point(123, 41);
-            this.pictureBoxOpen.Name = "pictureBoxOpen";
-            this.pictureBoxOpen.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxOpen.TabIndex = 5;
-            this.pictureBoxOpen.TabStop = false;
-            // 
             // checkBoxToolbarOpen
             // 
             this.checkBoxToolbarOpen.AutoSize = true;
@@ -1329,14 +1250,6 @@
             this.labelTBNew.Size = new System.Drawing.Size(28, 13);
             this.labelTBNew.TabIndex = 3;
             this.labelTBNew.Text = "New";
-            // 
-            // pictureBoxNew
-            // 
-            this.pictureBoxNew.Location = new System.Drawing.Point(22, 41);
-            this.pictureBoxNew.Name = "pictureBoxNew";
-            this.pictureBoxNew.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxNew.TabIndex = 2;
-            this.pictureBoxNew.TabStop = false;
             // 
             // checkBoxToolbarNew
             // 
@@ -2172,6 +2085,7 @@
             // 
             // groupBoxToolsMisc
             // 
+            this.groupBoxToolsMisc.Controls.Add(this.buttonEditDoNotBreakAfterList);
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
             this.groupBoxToolsMisc.Location = new System.Drawing.Point(374, 129);
             this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
@@ -2683,15 +2597,6 @@
             this.groupBoxPreview.TabIndex = 10;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
-            // 
-            // pictureBoxPreview
-            // 
-            this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBoxPreview.Location = new System.Drawing.Point(3, 17);
-            this.pictureBoxPreview.Name = "pictureBoxPreview";
-            this.pictureBoxPreview.Size = new System.Drawing.Size(784, 292);
-            this.pictureBoxPreview.TabIndex = 0;
-            this.pictureBoxPreview.TabStop = false;
             // 
             // labelSsaOutline
             // 
@@ -3249,6 +3154,113 @@
             // 
             this.openFileDialogFFMPEG.FileName = "openFileDialog1";
             // 
+            // pictureBoxTBFixCommonErrors
+            // 
+            this.pictureBoxTBFixCommonErrors.Location = new System.Drawing.Point(22, 155);
+            this.pictureBoxTBFixCommonErrors.Name = "pictureBoxTBFixCommonErrors";
+            this.pictureBoxTBFixCommonErrors.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxTBFixCommonErrors.TabIndex = 35;
+            this.pictureBoxTBFixCommonErrors.TabStop = false;
+            // 
+            // pictureBoxHelp
+            // 
+            this.pictureBoxHelp.Location = new System.Drawing.Point(423, 155);
+            this.pictureBoxHelp.Name = "pictureBoxHelp";
+            this.pictureBoxHelp.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxHelp.TabIndex = 32;
+            this.pictureBoxHelp.TabStop = false;
+            // 
+            // pictureBoxSettings
+            // 
+            this.pictureBoxSettings.Location = new System.Drawing.Point(322, 155);
+            this.pictureBoxSettings.Name = "pictureBoxSettings";
+            this.pictureBoxSettings.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxSettings.TabIndex = 29;
+            this.pictureBoxSettings.TabStop = false;
+            // 
+            // pictureBoxSpellCheck
+            // 
+            this.pictureBoxSpellCheck.Location = new System.Drawing.Point(224, 155);
+            this.pictureBoxSpellCheck.Name = "pictureBoxSpellCheck";
+            this.pictureBoxSpellCheck.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxSpellCheck.TabIndex = 26;
+            this.pictureBoxSpellCheck.TabStop = false;
+            // 
+            // pictureBoxVisualSync
+            // 
+            this.pictureBoxVisualSync.Location = new System.Drawing.Point(123, 155);
+            this.pictureBoxVisualSync.Name = "pictureBoxVisualSync";
+            this.pictureBoxVisualSync.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxVisualSync.TabIndex = 20;
+            this.pictureBoxVisualSync.TabStop = false;
+            // 
+            // pictureBoxReplace
+            // 
+            this.pictureBoxReplace.Location = new System.Drawing.Point(526, 41);
+            this.pictureBoxReplace.Name = "pictureBoxReplace";
+            this.pictureBoxReplace.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxReplace.TabIndex = 17;
+            this.pictureBoxReplace.TabStop = false;
+            // 
+            // pictureBoxFind
+            // 
+            this.pictureBoxFind.Location = new System.Drawing.Point(423, 41);
+            this.pictureBoxFind.Name = "pictureBoxFind";
+            this.pictureBoxFind.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxFind.TabIndex = 14;
+            this.pictureBoxFind.TabStop = false;
+            // 
+            // pictureBoxSaveAs
+            // 
+            this.pictureBoxSaveAs.Location = new System.Drawing.Point(322, 41);
+            this.pictureBoxSaveAs.Name = "pictureBoxSaveAs";
+            this.pictureBoxSaveAs.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxSaveAs.TabIndex = 11;
+            this.pictureBoxSaveAs.TabStop = false;
+            // 
+            // pictureBoxSave
+            // 
+            this.pictureBoxSave.Location = new System.Drawing.Point(224, 41);
+            this.pictureBoxSave.Name = "pictureBoxSave";
+            this.pictureBoxSave.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxSave.TabIndex = 8;
+            this.pictureBoxSave.TabStop = false;
+            // 
+            // pictureBoxOpen
+            // 
+            this.pictureBoxOpen.Location = new System.Drawing.Point(123, 41);
+            this.pictureBoxOpen.Name = "pictureBoxOpen";
+            this.pictureBoxOpen.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxOpen.TabIndex = 5;
+            this.pictureBoxOpen.TabStop = false;
+            // 
+            // pictureBoxNew
+            // 
+            this.pictureBoxNew.Location = new System.Drawing.Point(22, 41);
+            this.pictureBoxNew.Name = "pictureBoxNew";
+            this.pictureBoxNew.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxNew.TabIndex = 2;
+            this.pictureBoxNew.TabStop = false;
+            // 
+            // pictureBoxPreview
+            // 
+            this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxPreview.Location = new System.Drawing.Point(3, 17);
+            this.pictureBoxPreview.Name = "pictureBoxPreview";
+            this.pictureBoxPreview.Size = new System.Drawing.Size(784, 292);
+            this.pictureBoxPreview.TabIndex = 0;
+            this.pictureBoxPreview.TabStop = false;
+            // 
+            // buttonEditDoNotBreakAfterList
+            // 
+            this.buttonEditDoNotBreakAfterList.Location = new System.Drawing.Point(34, 43);
+            this.buttonEditDoNotBreakAfterList.Name = "buttonEditDoNotBreakAfterList";
+            this.buttonEditDoNotBreakAfterList.Size = new System.Drawing.Size(75, 23);
+            this.buttonEditDoNotBreakAfterList.TabIndex = 23;
+            this.buttonEditDoNotBreakAfterList.Text = "Edit";
+            this.buttonEditDoNotBreakAfterList.UseVisualStyleBackColor = true;
+            this.buttonEditDoNotBreakAfterList.Click += new System.EventHandler(this.buttonEditDoNotBreakAfterList_Click);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3282,17 +3294,6 @@
             this.groupBox2.PerformLayout();
             this.groupBoxShowToolBarButtons.ResumeLayout(false);
             this.groupBoxShowToolBarButtons.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHelp)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSettings)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSpellCheck)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxVisualSync)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxReplace)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFind)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSaveAs)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSave)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOpen)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNew)).EndInit();
             this.tabPageVideoPlayer.ResumeLayout(false);
             this.groupBoxMainWindowVideoControls.ResumeLayout(false);
             this.groupBoxMainWindowVideoControls.PerformLayout();
@@ -3334,7 +3335,6 @@
             this.groupBoxSsaStyle.ResumeLayout(false);
             this.groupBoxSsaStyle.PerformLayout();
             this.groupBoxPreview.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaShadow)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaOutline)).EndInit();
             this.tabPageProxy.ResumeLayout(false);
@@ -3349,6 +3349,18 @@
             this.groupBoxListViewSyntaxColoring.ResumeLayout(false);
             this.groupBoxListViewSyntaxColoring.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSyntaxColorTextMoreThanXLines)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHelp)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSettings)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSpellCheck)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxVisualSync)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxReplace)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFind)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSaveAs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSave)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOpen)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNew)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3607,5 +3619,6 @@
         private System.Windows.Forms.Label labelVlcPath;
         private System.Windows.Forms.GroupBox groupBoxToolsMisc;
         private System.Windows.Forms.CheckBox checkBoxUseDoNotBreakAfterList;
+        private System.Windows.Forms.Button buttonEditDoNotBreakAfterList;
     }
 }

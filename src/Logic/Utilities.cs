@@ -398,7 +398,7 @@ namespace Nikse.SubtitleEdit.Logic
                         if (node.Attributes["RegEx"] != null && node.Attributes["RegEx"].InnerText.ToLower() == "true")
                         {
                             Regex r = new Regex(node.InnerText, RegexOptions.Compiled);
-                            _lastNoBreakAfterList.Add(new NoBreakAfterItem(r));
+                            _lastNoBreakAfterList.Add(new NoBreakAfterItem(r, node.InnerText));
                         }
                         else
                         {
