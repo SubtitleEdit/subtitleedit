@@ -356,12 +356,14 @@ namespace Nikse.SubtitleEdit.Logic
 
             // Some words we don't like breaking after
             string s2 = s.Substring(0, index);
-            if (Configuration.Settings.Tools.UseNoLineBreakAfter &&  language == "en")
+            if (Configuration.Settings.Tools.UseNoLineBreakAfter)
             {
-                foreach (string ending in Configuration.Settings.Tools.NoLineBreakAfterEnglish.Split(';'))
+
+                foreach (NoBreakAfterItem ending in NoBreakAfterList(language)) 
                 {
-                    if (ending.Length > 0 && s2.EndsWith(ending))
+                    if (ending.IsMatch(s2))
                         return false;
+
                 }
             }
 
@@ -369,6 +371,46 @@ namespace Nikse.SubtitleEdit.Logic
                 return false;
 
             return true;
+        }
+
+        private static string _lastNoBreakAfterListLanguage = null;
+        private static List<NoBreakAfterItem> _lastNoBreakAfterList = new List<NoBreakAfterItem>();
+        private static IEnumerable<NoBreakAfterItem> NoBreakAfterList(string languageName)
+        {
+            if (string.IsNullOrEmpty(languageName))
+                return new List<NoBreakAfterItem>();
+
+            if (languageName == _lastNoBreakAfterListLanguage)
+                return _lastNoBreakAfterList;
+
+            _lastNoBreakAfterList = new List<NoBreakAfterItem>();
+
+            //load words via xml
+            string noBreakAfterFileName = DictionaryFolder + languageName + "_NoBreakAfterList.xml";
+            var doc = new XmlDocument();
+            if (File.Exists(noBreakAfterFileName))
+            {
+                doc.Load(noBreakAfterFileName);
+                foreach (XmlNode node in doc.DocumentElement)
+                {
+                    if (!string.IsNullOrEmpty(node.InnerText))
+                    {
+                        if (node.Attributes["RegEx"] != null && node.Attributes["RegEx"].InnerText.ToLower() == "true")
+                        {
+                            Regex r = new Regex(node.InnerText, RegexOptions.Compiled);
+                            _lastNoBreakAfterList.Add(new NoBreakAfterItem(r));
+                        }
+                        else
+                        {
+                            _lastNoBreakAfterList.Add(new NoBreakAfterItem(node.InnerText));
+                        }
+                    }
+                }
+            }
+            _lastNoBreakAfterListLanguage = languageName;
+
+            return _lastNoBreakAfterList;
+
         }
 
         public static string AutoBreakLineMoreThanTwoLines(string text, int maximumLineLength, string language)
