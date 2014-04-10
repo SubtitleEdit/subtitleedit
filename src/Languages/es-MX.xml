@@ -22,13 +22,13 @@
     <NoVideoLoaded>Ningún video cargado</NoVideoLoaded>
     <VideoInformation>Información del video</VideoInformation>
     <PositionX>Posición/Duración: {0}</PositionX>
-    <StartTime>Tiempo de Inicio</StartTime>
-    <EndTime>Tiempo de Fin</EndTime>
+    <StartTime>Tiempo Inicial</StartTime>
+    <EndTime>Tiempo Final</EndTime>
     <Duration>Duración</Duration>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
     <Text>Texto</Text>
-    <HourMinutesSecondsMilliseconds>Hora:min:sec:msec</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>Hr:min:seg:mseg</HourMinutesSecondsMilliseconds>
     <Bold>Negrita</Bold>
     <Italic>Cursiva</Italic>
     <Underline>Subrayado</Underline>
@@ -531,7 +531,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XUppercaseIsFoundInsideLowercaseWords>{0} «i» mayúscula encontradas en palabras en minúscula</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Refrescar correcciones disponibles</RefreshFixes>
     <ApplyFixes>Aplicar correcciones seleccionadas</ApplyFixes>
-    <AutoBreak>Auto &amp;br</AutoBreak>
+    <AutoBreak>Salto automático</AutoBreak>
     <Unbreak>Combinar</Unbreak>
     <FixDoubleDash>Corregir «--»  --&gt;  «...»</FixDoubleDash>
     <FixDoubleGreaterThan>Eliminar &gt;&gt; </FixDoubleGreaterThan>
@@ -564,7 +564,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OpenOpenOfficeWiki>Lista de Diccionarios de Open Office Wiki</OpenOpenOfficeWiki>
     <GetAllDictionaries>Conseguir todos los diccionarios</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Seleccione el idioma y haga clic en descargar</ChooseLanguageAndClickDownload>
-    <OpenDictionariesFolder>Carpeta de «Open Dictionaries»</OpenDictionariesFolder>
+    <OpenDictionariesFolder>Carpeta de los «Diccionarios»</OpenDictionariesFolder>
     <Download>Descarga</Download>
     <XDownloaded>{0} han sido descargados e instalados</XDownloaded>
   </GetDictionaries>
@@ -912,9 +912,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <AutoContinueInOneSecond>Auto continuar en un segundo</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>Auto continuar en {0} segundos</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Escribiendo... auto continuar detenido</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>Insertar subtítulo en posición del video</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPosition>Insert. subt. en posición del video</InsertNewSubtitleAtVideoPosition>
       <Auto>Auto</Auto>
-      <PlayFromJustBeforeText>Reproducir desde poco antes del texto</PlayFromJustBeforeText>
+      <PlayFromJustBeforeText>Repro. desde poco antes del texto</PlayFromJustBeforeText>
       <Pause>Pausa</Pause>
       <GoToSubtitlePositionAndPause>Ir a posición del subtítulo y pausar</GoToSubtitlePositionAndPause>
       <SetStartTime>Ajustar tiempo inicial</SetStartTime>
