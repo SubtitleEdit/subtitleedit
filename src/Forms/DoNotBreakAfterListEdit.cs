@@ -101,6 +101,7 @@ namespace Nikse.SubtitleEdit
             {
                 listBoxNoBreakAfter.SelectedIndex = first;
             }
+            comboBoxDictionaries.Enabled = false;
         }
 
         private void buttonOK_Click(object sender, System.EventArgs e)
@@ -155,6 +156,17 @@ namespace Nikse.SubtitleEdit
                 }
             }
             _noBreakAfterList.Add(item);
+            comboBoxDictionaries.Enabled = false;
+            ShowBreakAfterList(_noBreakAfterList);
+            for (int i = 0; i < listBoxNoBreakAfter.Items.Count; i++ )
+            {
+                if (listBoxNoBreakAfter.Items[i].ToString() == item.Text)
+                {
+                    listBoxNoBreakAfter.SelectedIndex = i;
+                    return;
+                }
+            }
+            textBoxNoBreakAfter.Text = string.Empty;
         }
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
@@ -183,6 +195,12 @@ namespace Nikse.SubtitleEdit
                    radioButtonText.Checked = false;
                }
            }
+        }
+
+        private void textBoxNoBreakAfter_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                buttonAddNamesEtc_Click(sender, e);
         }
 
     }
