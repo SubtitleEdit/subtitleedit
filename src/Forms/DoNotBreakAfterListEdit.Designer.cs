@@ -115,6 +115,7 @@
             this.textBoxNoBreakAfter.Name = "textBoxNoBreakAfter";
             this.textBoxNoBreakAfter.Size = new System.Drawing.Size(218, 20);
             this.textBoxNoBreakAfter.TabIndex = 24;
+            this.textBoxNoBreakAfter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxNoBreakAfter_KeyDown);
             // 
             // buttonAddNoBreakAfter
             // 
