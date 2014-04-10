@@ -439,6 +439,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonUnBreak.Text = _language.Unbreak;
             subtitleListView1.InitializeLanguage(_languageGeneral, Configuration.Settings);
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
+            toolStripMenuItemDelete.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
+            mergeSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.MergeSelectedLines;
 
             splitContainerStep2.Panel1MinSize = 110;
             splitContainerStep2.Panel2MinSize = 160;
