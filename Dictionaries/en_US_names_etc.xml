@@ -23,6 +23,7 @@
   <name>Anheuser</name>
   <name>Anokhi</name>
   <name>Arial</name>
+  <name>Arkenstone</name>
   <name>Artyom</name>
   <name>Ashland</name>
   <name>Athens</name>
@@ -30,7 +31,9 @@
   <name>Attenborough</name>
   <name>Audrina</name>
   <name>Aziz</name>
+  <name>Azog</name>
   <name>Bacharach</name>
+  <name>Baggins</name>
   <name>Bakuretsu</name>
   <name>Balleseros</name>
   <name>Barakiel</name>
@@ -49,6 +52,7 @@
   <name>Blighty</name>
   <name>Blyth</name>
   <name>Bolinski</name>
+  <name>Bombur</name>
   <name>Bonney</name>
   <name>Botan</name>
   <name>Boutros</name>
@@ -103,8 +107,11 @@
   <name>Dingwall</name>
   <name>Distephano</name>
   <name>DJs</name>
+  <name>Dol Guldur</name>
   <name>Dolan</name>
   <name>Dunst</name>
+  <name>Durin</name>
+  <name>Dwalin</name>
   <name>E.K.G.</name>
   <name>E.R.</name>
   <name>E.R.P.</name>
@@ -146,6 +153,7 @@
   <name>Froot Loops</name>
   <name>Furneaux</name>
   <name>Gabor</name>
+  <name>Galadriel</name>
   <name>Galliard</name>
   <name>Garber</name>
   <name>Garfield</name>
@@ -157,6 +165,7 @@
   <name>Germans</name>
   <name>Greenslade</name>
   <name>Greenville</name>
+  <name>Greenway</name>
   <name>Gridley</name>
   <name>Griselda</name>
   <name>Grote Markt</name>
@@ -231,6 +240,7 @@
   <name>Koenma-sama</name>
   <name>Kralova</name>
   <name>Kreutz</name>
+  <name>Krieger</name>
   <name>Kruesi</name>
   <name>Kuchinashi</name>
   <name>Kurama</name>
@@ -243,6 +253,7 @@
   <name>Lansberry</name>
   <name>Laurits</name>
   <name>Lazar</name>
+  <name>Legolas</name>
   <name>Leoni</name>
   <name>Leyte</name>
   <name>L'Hermitage</name>
@@ -299,10 +310,12 @@
   <name>Minamino</name>
   <name>Minogue</name>
   <name>Mirakuru</name>
+  <name>Mirkwood</name>
   <name>Mischa</name>
   <name>Mjolnir</name>
   <name>Moesha</name>
   <name>Mor'du</name>
+  <name>Moria</name>
   <name>Mosaddegh</name>
   <name>Moulin Rouge</name>
   <name>Mousson</name>
@@ -347,6 +360,7 @@
   <name>Purvis</name>
   <name>Pycroft</name>
   <name>Quintus</name>
+  <name>Radagast</name>
   <name>Rafferty</name>
   <name>Ralf</name>
   <name>Ramigani</name>
@@ -363,6 +377,7 @@
   <name>Ridgefield's</name>
   <name>Rihanna</name>
   <name>Rinaldi</name>
+  <name>Ringwraith</name>
   <name>Rio de Janeiro</name>
   <name>Riom</name>
   <name>Rizzo</name>
@@ -384,6 +399,7 @@
   <name>Sariel</name>
   <name>Sarrazin</name>
   <name>Satnam</name>
+  <name>Sauron</name>
   <name>Sayaka</name>
   <name>Schafer</name>
   <name>Schiller</name>
@@ -427,10 +443,12 @@
   <name>Takenaka</name>
   <name>Tarukane-san</name>
   <name>Tatty Bogle</name>
+  <name>Tauriel</name>
   <name>Tertullian</name>
   <name>Tetris</name>
   <name>Thieny</name>
   <name>Thierry</name>
+  <name>Thorin</name>
   <name>Thuringer</name>
   <name>Tilman Riemenschneider</name>
   <name>Tofino</name>
