@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Español">
   <General>
     <Title>Subtitle Edit</Title>
@@ -1417,7 +1417,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <StartInSourceView>Iniciar en vista de origen</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Eliminar líneas en blanco al abrir un subtítulo</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Mostrar saltos de línea en vista de lista como:</ShowLineBreaksAs>
-    <MainListViewDoubleClickAction>Doble clic en la línea en la ventana principal de vista de lista hará...</MainListViewDoubleClickAction>
+    <MainListViewDoubleClickAction>Al hacer doble clic en la línea en la ventana principal de vista de lista</MainListViewDoubleClickAction>
     <MainListViewNothing>Nada</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Ir a posición video y pausar</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Ir a posición video y reproducir</MainListViewVideoGoToPositionAndPlay>
@@ -1425,7 +1425,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <MainListViewVideoGoToPositionMinus1SecAndPause>Ir a posición video - 1 s y pausar</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Ir a posición video - 0,5 s y pausar</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>Ir a posición video - 1 s y reproducir</MainListViewVideoGoToPositionMinus1SecAndPlay>
-    <MainListViewEditTextAndPause>Ir al cuadro de edición de texto y hacer una pausa en la posición del video</MainListViewEditTextAndPause>
+    <MainListViewEditTextAndPause>Ir al cuadro de texto y hacer una pausa en la posición del video</MainListViewEditTextAndPause>
     <AutoBackup>Copia de seguridad automática</AutoBackup>
     <AutoBackupEveryMinute>cada minuto</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>cada 5 minutos</AutoBackupEveryFiveMinutes>
