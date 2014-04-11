@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Español">
   <General>
     <Title>Subtitle Edit</Title>
@@ -22,13 +22,13 @@
     <NoVideoLoaded>Ningún video cargado</NoVideoLoaded>
     <VideoInformation>Información del video</VideoInformation>
     <PositionX>Posición/Duración: {0}</PositionX>
-    <StartTime>Tiempo de Inicio</StartTime>
-    <EndTime>Tiempo de Fin</EndTime>
+    <StartTime>Tiempo Inicial</StartTime>
+    <EndTime>Tiempo Final</EndTime>
     <Duration>Duración</Duration>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
     <Text>Texto</Text>
-    <HourMinutesSecondsMilliseconds>Hora:min:sec:msec</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>Hr:min:seg:mseg</HourMinutesSecondsMilliseconds>
     <Bold>Negrita</Bold>
     <Italic>Cursiva</Italic>
     <Underline>Subrayado</Underline>
@@ -531,7 +531,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XUppercaseIsFoundInsideLowercaseWords>{0} «i» mayúscula encontradas en palabras en minúscula</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Refrescar correcciones disponibles</RefreshFixes>
     <ApplyFixes>Aplicar correcciones seleccionadas</ApplyFixes>
-    <AutoBreak>Auto &amp;br</AutoBreak>
+    <AutoBreak>Salto automático</AutoBreak>
     <Unbreak>Combinar</Unbreak>
     <FixDoubleDash>Corregir «--»  --&gt;  «...»</FixDoubleDash>
     <FixDoubleGreaterThan>Eliminar &gt;&gt; </FixDoubleGreaterThan>
@@ -564,7 +564,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OpenOpenOfficeWiki>Lista de Diccionarios de Open Office Wiki</OpenOpenOfficeWiki>
     <GetAllDictionaries>Conseguir todos los diccionarios</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Seleccione el idioma y haga clic en descargar</ChooseLanguageAndClickDownload>
-    <OpenDictionariesFolder>Carpeta de «Open Dictionaries»</OpenDictionariesFolder>
+    <OpenDictionariesFolder>Carpeta de los «Diccionarios»</OpenDictionariesFolder>
     <Download>Descarga</Download>
     <XDownloaded>{0} han sido descargados e instalados</XDownloaded>
   </GetDictionaries>
@@ -912,9 +912,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <AutoContinueInOneSecond>Auto continuar en un segundo</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>Auto continuar en {0} segundos</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Escribiendo... auto continuar detenido</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>Insertar subtítulo en posición del video</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPosition>Insert. subt. en posición del video</InsertNewSubtitleAtVideoPosition>
       <Auto>Auto</Auto>
-      <PlayFromJustBeforeText>Reproducir desde poco antes del texto</PlayFromJustBeforeText>
+      <PlayFromJustBeforeText>Repro. desde poco antes del texto</PlayFromJustBeforeText>
       <Pause>Pausa</Pause>
       <GoToSubtitlePositionAndPause>Ir a posición del subtítulo y pausar</GoToSubtitlePositionAndPause>
       <SetStartTime>Ajustar tiempo inicial</SetStartTime>
@@ -1503,7 +1503,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <ProxyUserName>Nombre de usuario</ProxyUserName>
     <ProxyPassword>Contraseña</ProxyPassword>
     <ProxyDomain>Dominio</ProxyDomain>
-    <PlayXSecondsAndBack>Reproducir «X» segundos y volver, «X» es</PlayXSecondsAndBack>
+    <PlayXSecondsAndBack>Repr. «X» segundos y volver. «X» es</PlayXSecondsAndBack>
     <StartSceneIndex>El párrafo de inicio de escena es</StartSceneIndex>
     <EndSceneIndex>El párrafo de fin de escena es</EndSceneIndex>
     <FirstPlusX>Primero + {0}</FirstPlusX>
@@ -1578,7 +1578,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <SyntaxColorTextIfTooLong>Color de texto si es muy largo</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanXLines>Color de texto si hay más líneas</SyntaxColorTextMoreThanXLines>
     <SyntaxColorOverlap>Color superposición de código de tiempo</SyntaxColorOverlap>
-    <SyntaxErrorColor>Error colores</SyntaxErrorColor>
+    <SyntaxErrorColor>Color de errores</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ir a la primera línea seleccionada</GoToFirstSelectedLine>
     <MergeSelectedLines>Unir las líneas seleccionadas</MergeSelectedLines>
     <ToggleTranslationMode>Cambiar al modo de traducción</ToggleTranslationMode>
@@ -1627,7 +1627,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <SkipOnce>Saltar un&amp;o</SkipOnce>
     <SkipAll>Saltar todos</SkipAll>
     <AddToUserDictionary>Añadir al diccionario del usuario</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>Añadir a list.nombres (sensible mayúsculas)</AddToNamesAndIgnoreList>
+    <AddToNamesAndIgnoreList>Añadir a lista de nombres (Sensible Mayús.)</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>Agregar a la lista de par de sustitución ocr</AddToOcrReplaceList>
     <Abort>Cancelar</Abort>
     <Use>Utilizar</Use>
