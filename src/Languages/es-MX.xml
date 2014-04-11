@@ -1503,7 +1503,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <ProxyUserName>Nombre de usuario</ProxyUserName>
     <ProxyPassword>Contraseña</ProxyPassword>
     <ProxyDomain>Dominio</ProxyDomain>
-    <PlayXSecondsAndBack>Reproducir «X» segundos y volver, «X» es</PlayXSecondsAndBack>
+    <PlayXSecondsAndBack>Repr. «X» segundos y volver. «X» es</PlayXSecondsAndBack>
     <StartSceneIndex>El párrafo de inicio de escena es</StartSceneIndex>
     <EndSceneIndex>El párrafo de fin de escena es</EndSceneIndex>
     <FirstPlusX>Primero + {0}</FirstPlusX>
@@ -1578,7 +1578,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <SyntaxColorTextIfTooLong>Color de texto si es muy largo</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanXLines>Color de texto si hay más líneas</SyntaxColorTextMoreThanXLines>
     <SyntaxColorOverlap>Color superposición de código de tiempo</SyntaxColorOverlap>
-    <SyntaxErrorColor>Error colores</SyntaxErrorColor>
+    <SyntaxErrorColor>Color de errores</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ir a la primera línea seleccionada</GoToFirstSelectedLine>
     <MergeSelectedLines>Unir las líneas seleccionadas</MergeSelectedLines>
     <ToggleTranslationMode>Cambiar al modo de traducción</ToggleTranslationMode>
@@ -1627,7 +1627,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <SkipOnce>Saltar un&amp;o</SkipOnce>
     <SkipAll>Saltar todos</SkipAll>
     <AddToUserDictionary>Añadir al diccionario del usuario</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>Añadir a list.nombres (sensible mayúsculas)</AddToNamesAndIgnoreList>
+    <AddToNamesAndIgnoreList>Añadir a lista de nombres (Sensible Mayús.)</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>Agregar a la lista de par de sustitución ocr</AddToOcrReplaceList>
     <Abort>Cancelar</Abort>
     <Use>Utilizar</Use>
