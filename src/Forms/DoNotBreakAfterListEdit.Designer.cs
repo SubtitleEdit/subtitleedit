@@ -183,7 +183,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(317, 340);
+            this.MinimumSize = new System.Drawing.Size(350, 340);
             this.Name = "DoNotBreakAfterListEdit";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
