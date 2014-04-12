@@ -22,19 +22,19 @@
    * Updated Polish language file - thx Admas
    * Updated Argentinian Spanish language file - thx walterh78
    * Updated Spanish (Mexico) language file - thx pakitonaranjo
-   * Html encoding of sami files is now again default false
-   * Better reading of time codes of bd sup in mkv - thx Rach78
+   * HTML encoding of SAMI files is now again default false
+   * Better reading of time codes of Blu-ray sup in mkv - thx Rach78
 * FIXED:
-   * Fixed VobSub writing compatability with gpac/mp4box + handbrake - thx Ryan
+   * Fixed VobSub writing compatibility with gpac/mp4box + handbrake - thx Ryan
    * Minor fix for ass import from Matroska (mkv) files
    * Some fixes for move word up/down - thx rebawest
    * Delete custom export format now works - thx Leon
    * Possible crash in OCR window - thx grfilho
-   * Dcinema smpte sometimes generated illegal frame numbers - thx knut
+   * DCinema SMPTE sometimes generated illegal frame numbers - thx knut
    * Fixed possible crash when converting pac to ttml - thx Dan
    * Fixed memory leak when running OCR via Tesseract
-   * Fixed possible error/crash when loading bad time codes - thx Jucá 
-	
+   * Fixed possible error/crash when loading bad time codes - thx Jucá
+
 
 
 3.3.14 (23rd February 2014)
@@ -82,7 +82,7 @@
    * Better reading of SCC files
    * Better handling of apostrophe in spell check - thx Betsy25
    * Better grouping of general settings in options
-   * Added setting for html encoding text in SAMI files (default on)
+   * Added setting for HTML encoding text in SAMI files (default on)
    * Export to DOST, buttom margin + no spaces in file names - thx Andreas
    * Save unicode to ansi, warning + also auto converts some symbols - thx SimplyTheBOSS
 * FIXED:
@@ -186,7 +186,7 @@
    * Updated Dutch language file - thx Herman
    * Updated German language file - thx Siegwarth
    * Updated Portuguese language file - thx moob
-   * OCR max. error% is now saved for blu-ray - thx Zoltán
+   * OCR max. error% is now saved for Blu-ray - thx Zoltán
    * More default values for ASS/SSA in options
    * Added split long lines to "Batch convert" - thx menes
    * Added support for multiple languages in TimedText / DFXP - thx Laszlo
@@ -245,7 +245,7 @@
    * Crash in export of images - thx Eros UK
    * Crash in OCR via "Image compare" with large image databases - thx Zoltan
    * Improved baseline in export of images - thx THXTEX
-   * Fixed duration (in some players) in blu-ray sup export - thx THXTEX
+   * Fixed duration (in some players) in Blu-ray sup export - thx THXTEX
    * Fixed bug in SSA color - thx Stuart
    * Fixed some letters in Cavena 890 format - thx Calle
    * Some fixes/improvements for "Unknown subtitle format importer"
@@ -439,7 +439,7 @@
    * Updated German language file - thx Christoph Kitsche
    * Updated Portuguese language file - thx moob
    * Remembers size of controls in main window better - thx George/Leszek
-   * SAMI format: html-decodes text + reads class attributes better
+   * SAMI format: HTML-decodes text + reads class attributes better
    * Batch convert can now also "Fix common errors" and more - thx Adem
    * Volume level is now remembered (no longer in settings) - thx fox
    * Some improvements to language detection - thx fox/mihai
