@@ -1,22 +1,5 @@
 <ReplaceList>
   <WholeWords>
-    <!-- Extrangerismos (experimental) -->
-    <Word from="pillo" to="(pillo)" />
-    <Word from="Pillo" to="(Pillo)" />
-    <Word from="follé" to="(folle)" />
-    <Word from="follé" to="(folle)" />
-    <Word from="folla" to="(folla)" />
-    <Word from="gilipollas" to="(gilipollas)" />
-    <Word from="vídeo" to="video" />
-    <Word from="vídeos" to="videos" />
-    <Word from="cotilla" to="chismoso(a)" />
-    <Word from="Cotilla" to="Chismoso(a)" />
-    <Word from="curro" to="trabajo" />
-    <Word from="Curro" to="Trabajo" />
-    <Word from="furgoneta" to="camioneta" />
-    <Word from="furgo" to="troca" />
-    <Word from="zumo" to="jugo" />
-    <Word from="Zumo" to="Jugo" />
     <!--  Abreviaturas simples -->
     <Word from="KBs" to="kB" />
     <Word from="dr" to="Dr." />
@@ -400,24 +383,6 @@
   <PartialWordsAlways />
   <PartialWords />
   <PartialLines>
-    <!-- Extrangerismos (experimental) -->
-    <LinePart from=" a por " to=" por " />
-    <LinePart from="A por " to="Por " />
-    <LinePart from="Vale." to="(Bien)." />
-    <LinePart from="Vale," to="(Bien)," />
-    <LinePart from="vale," to="(bien)," />
-    <LinePart from="Vale?" to="(De acuerdo)?" />
-    <LinePart from=" vale?" to=" (de acuerdo)?" />
-    <LinePart from="Venga." to="(Vamos)." />
-    <LinePart from="Venga," to="(Ven)," />
-    <LinePart from="vos?" to="(tú)?" />
-    <LinePart from="¿Os " to="¿(Les/Te/Se) " />
-    <LinePart from="¿os " to="¿(les/te/se) " />
-    <LinePart from=" os " to=" (les/te/se) " />
-    <LinePart from="Me cago en la leche" to="(Me lleva la chingada)" />
-    <LinePart from="me cago en la leche" to="(me lleva la chingada)" />
-    <LinePart from="mala leche" to="(mal genio)" />
-    <LinePart from="eres la leche" to="(eres fenomenal)" />
     <!--  Varios  -->
     <LinePart from="de gratis" to="gratis" />
     <LinePart from="si quiera" to="siquiera" />
