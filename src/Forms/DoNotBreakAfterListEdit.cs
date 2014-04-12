@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit
             {
                 try
                 {
-                    
+
                     string s = System.IO.Path.GetFileName(fileName);
                     string languageId = s.Substring(0, s.IndexOf("_"));
                     var ci = CultureInfo.GetCultureInfoByIetfLanguageTag(languageId);
@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit
                     _languages.Add(fileName);
                 }
                 catch
-                { 
+                {
                 }
             }
             if (comboBoxDictionaries.Items.Count > 0)
@@ -191,7 +191,7 @@ namespace Nikse.SubtitleEdit
         {
            int idx = listBoxNoBreakAfter.SelectedIndex;
            if (idx >= 0 && idx < _noBreakAfterList.Count)
-           { 
+           {
                NoBreakAfterItem item = _noBreakAfterList[idx];
                textBoxNoBreakAfter.Text = item.Text;
                if (item.Regex != null)

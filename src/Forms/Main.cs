@@ -7210,7 +7210,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 GoToNextSynaxError();
                 e.SuppressKeyPress = true;
-            }                
+            }
 
             // last key down in text
             _lastTextKeyDownTicks = DateTime.Now.Ticks;
@@ -8100,7 +8100,7 @@ namespace Nikse.SubtitleEdit.Forms
                     numericUpDownDuration.Value = numericUpDownDuration.Maximum;
                 else if (d < numericUpDownDuration.Minimum)
                     numericUpDownDuration.Value = numericUpDownDuration.Minimum;
-                else                    
+                else
                     numericUpDownDuration.Value = d;
             }
         }
@@ -11510,7 +11510,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 GoToNextSynaxError();
                 e.SuppressKeyPress = true;
-            }                
+            }
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+vPaste from clipboard
             {
                 if (Clipboard.ContainsText())
@@ -11653,7 +11653,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             catch
-            { 
+            {
             }
         }
 
@@ -13526,7 +13526,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.Invalidate();
                 }
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
-                if (!panelVideoPlayer.Visible) 
+                if (!panelVideoPlayer.Visible)
                     toolStripButtonToggleVideo_Click(null, null);
                 OpenVideo(openFileDialog1.FileName);
             }
@@ -19108,7 +19108,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void toolStripMenuItemExportDcinemaInteropClick(object sender, EventArgs e)
-        {            
+        {
             var exportBdnXmlPng = new ExportPngXml();
             exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "DCINEMA_INTEROP", _fileName, _videoInfo);
             exportBdnXmlPng.ShowDialog(this);

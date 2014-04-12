@@ -334,7 +334,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             stream.WriteByte(3);
             stream.WriteByte((emphasis2 << 4) | emphasis1); // emphasis2 + emphasis1
             stream.WriteByte((pattern << 4) | background); // pattern + background
-        }       
+        }
 
         public void CloseSubFile()
         {

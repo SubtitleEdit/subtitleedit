@@ -22,7 +22,7 @@ namespace Test
         private Nikse.SubtitleEdit.Forms.FixCommonErrors GetFixCommonErrorsLib()
         {
             return new Nikse.SubtitleEdit.Forms.FixCommonErrors();
-        }       
+        }
 
         private static void InitializeFixCommonErrorsLine(Nikse.SubtitleEdit.Forms.FixCommonErrors target, string line)
         {

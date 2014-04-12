@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
                 s = s.TrimStart('-');
 
             return s.Trim();
-        }    
+        }
 
         public void Initialize(Subtitle subtitle)
         {
@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxLinesFound.Text = string.Format(_language.LinesFoundX, count);
         }
 
-      
+
 
         private void AddToListView(Paragraph p, string newText)
         {
