@@ -16,6 +16,16 @@ namespace Nikse.SubtitleEdit
         public DoNotBreakAfterListEdit()
         {
             InitializeComponent();
+
+            Text = Configuration.Settings.Language.Settings.UseDoNotBreakAfterList;
+            labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
+            buttonRemoveNoBreakAfter.Text = Configuration.Settings.Language.DvdSubrip.Remove;
+            buttonAddNoBreakAfter.Text = Configuration.Settings.Language.DvdSubrip.Add;
+            radioButtonText.Text = Configuration.Settings.Language.General.Text;
+            radioButtonRegEx.Text = Configuration.Settings.Language.MultipleReplace.RegularExpression;
+            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+
             radioButtonRegEx.Left = radioButtonText.Left + radioButtonText.Width + 10;
             foreach (string fileName in System.IO.Directory.GetFiles(Configuration.DictionariesFolder, "*_NoBreakAfterList.xml"))
             {

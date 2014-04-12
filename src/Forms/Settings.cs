@@ -462,6 +462,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxToolsMisc.Text = language.Miscellaneous;
             checkBoxUseDoNotBreakAfterList.Text = language.UseDoNotBreakAfterList;
+            buttonEditDoNotBreakAfterList.Text = Configuration.Settings.Language.VobSubOcr.Edit;
 
             comboBoxListViewDoubleClickEvent.Items.Clear();
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewNothing);

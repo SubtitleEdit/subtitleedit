@@ -58,7 +58,6 @@
             this.groupBoxNamesIgonoreLists.Size = new System.Drawing.Size(313, 304);
             this.groupBoxNamesIgonoreLists.TabIndex = 3;
             this.groupBoxNamesIgonoreLists.TabStop = false;
-            this.groupBoxNamesIgonoreLists.Text = "No-break-after list";
             // 
             // radioButtonRegEx
             // 
