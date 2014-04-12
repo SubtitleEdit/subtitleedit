@@ -2164,7 +2164,10 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                RemoveAlternate(true);
                 OpenSubtitle(openFileDialog1.FileName, null);
+            }
             _openFileDialogOn = false;
         }
 
@@ -16640,7 +16643,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelAlternateSingleLine.Visible = false;
             labelTextAlternateLineTotal.Visible = false;
             textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 8 + buttonUnBreak.Width));
-            textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+            textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
 
             labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
             labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
@@ -16650,18 +16653,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemSpellCheckMainDropDownOpening(object sender, EventArgs e)
         {
-            //if (Configuration.Settings.General.SpellChecker.ToLower().Contains("word"))
-            //{
-            //    toolStripSeparator9.Visible = false;
-            //    GetDictionariesToolStripMenuItem.Visible = false;
-            //    addWordToNamesetcListToolStripMenuItem.Visible = false;
-            //}
-            //else
-            {
-                toolStripSeparator9.Visible = true;
-                GetDictionariesToolStripMenuItem.Visible = true;
-                addWordToNamesetcListToolStripMenuItem.Visible = true;
-            }
+            toolStripSeparator9.Visible = true;
+            GetDictionariesToolStripMenuItem.Visible = true;
+            addWordToNamesetcListToolStripMenuItem.Visible = true;
         }
 
         private void ToolStripMenuItemPlayRateSlowClick(object sender, EventArgs e)
