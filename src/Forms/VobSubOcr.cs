@@ -4187,7 +4187,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(exception.Message);
             }
-        }      
+        }
 
         public static List<NOcrChar> LoadNOcrForTesseract(string xmlRessourceName)
         {

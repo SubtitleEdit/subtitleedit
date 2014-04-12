@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelFadeUpTime.Text = l.FadeUpTime;
                 labelFadeDownTime.Text = l.FadeDownTime;
-            }            
+            }
 
             this._subtitle = _subtitle;
             this._videoFileName = _videoFileName;
@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
                    numericUpDownFadeDown.Maximum >= Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime)
                     numericUpDownFadeDown.Value = Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime;
                 else
-                    numericUpDownFadeUp.Value = 5;                
+                    numericUpDownFadeUp.Value = 5;
 
                 decimal zPosition = (decimal)Configuration.Settings.SubtitleSettings.DCinemaZPosition;
                 if (numericUpDownZPosition.Minimum <= zPosition &&

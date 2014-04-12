@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-    public class NoBreakAfterItem : IComparable 
+    public class NoBreakAfterItem : IComparable
     {
         public Regex Regex;
         public string Text;
@@ -28,13 +28,13 @@ namespace Nikse.SubtitleEdit.Logic
                 return true;
 
             return false;
-               
+
         }
 
         public override string ToString()
         {
             return Text;
-        }    
+        }
 
         public int CompareTo(object obj)
         {

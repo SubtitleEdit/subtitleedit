@@ -358,7 +358,7 @@ namespace Nikse.SubtitleEdit.Logic
             string s2 = s.Substring(0, index);
             if (Configuration.Settings.Tools.UseNoLineBreakAfter)
             {
-                foreach (NoBreakAfterItem ending in NoBreakAfterList(language)) 
+                foreach (NoBreakAfterItem ending in NoBreakAfterList(language))
                 {
                     if (ending.IsMatch(s2))
                         return false;

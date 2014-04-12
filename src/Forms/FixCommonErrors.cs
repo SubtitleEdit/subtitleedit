@@ -4472,12 +4472,12 @@ namespace Nikse.SubtitleEdit.Forms
                  GoToNextSynaxError();
                 e.SuppressKeyPress = true;
             }
-            
+
         }
 
         private void GoToNextSynaxError()
         {
- 	        int idx = 0;
+            int idx = 0;
             try
             {
                 if (listViewFixes.SelectedItems.Count > 0)
@@ -4486,13 +4486,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (listViewFixes.Items.Count > idx)
                 {
                     listViewFixes.Items[idx].Selected = true;
-                    listViewFixes.Items[idx].EnsureVisible(); 
+                    listViewFixes.Items[idx].EnsureVisible();
                     if (idx > 0)
                         listViewFixes.Items[idx-1].Selected = false;
                 }
             }
             catch
-            { 
+            {
             }
         }
 

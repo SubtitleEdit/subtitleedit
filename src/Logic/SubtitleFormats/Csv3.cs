@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         var start = DecodeTimeCode(parts[0]);
                         var end = DecodeTimeCode(parts[1]);
-                        string text = ReadText(line.Remove(0, m.Length));                        
+                        string text = ReadText(line.Remove(0, m.Length));
                         p = new Paragraph(start, end, text);
                         subtitle.Paragraphs.Add(p);
                     }
@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         sb.Append("\"");
                     }
                     else
-                    {                        
+                    {
                         isBreak = true;
                     }
                 }
