@@ -841,8 +841,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AutoDurationCurrentLine>Auto-duración (línea actual)</AutoDurationCurrentLine>
         <SelectAll>Seleccionar todo</SelectAll>
         <InsertFirstLine>Insertar línea</InsertFirstLine>
-        <InsertBefore>Insertar delante</InsertBefore>
-        <InsertAfter>Insertar detrás</InsertAfter>
+        <InsertBefore>Insertar antes</InsertBefore>
+        <InsertAfter>Insertar después</InsertAfter>
         <InsertSubtitleAfter>Insertar subtítulo después de esta línea...</InsertSubtitleAfter>
         <CopyToClipboard>Copiar como texto al portapapeles</CopyToClipboard>
         <Column>Columna</Column>
