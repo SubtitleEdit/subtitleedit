@@ -2654,8 +2654,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void ExportPngXml_Shown(object sender, EventArgs e)
         {
-            comboBoxShadowWidth.SelectedIndex = 0;
-            panelShadowColor.BackColor = Color.Black;
+            comboBoxShadowWidth.SelectedIndex = 0;            
             bool shadowVisible = _exportType == "BDNXML" || _exportType == "BLURAYSUP" || _exportType == "DOST" || _exportType == "IMAGE/FRAME" || _exportType == "FCP" || _exportType == "DCINEMA_INTEROP";
             labelShadowWidth.Visible = shadowVisible;
             buttonShadowColor.Visible = shadowVisible;
