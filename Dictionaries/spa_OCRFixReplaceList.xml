@@ -401,21 +401,6 @@
     <LinePart from=" si!" to=" sí!" />
     <LinePart from=" mi!" to=" mí!" />
     <LinePart from=" el!" to=" él!" />
-    <LinePart from="¡Por que" to="¡Por qué" />
-    <LinePart from="¡Porque" to="¡Por qué" />
-    <LinePart from="¡Con que" to="¡Con qué" />
-    <LinePart from="¡Cuanto" to="¡Cuánto" />
-    <LinePart from="¡Cuanta" to="¡Cuánta" />
-    <LinePart from="¡Cuantos" to="¡Cuántos" />
-    <LinePart from="¡Cuan" to="¡Cuán" />
-    <LinePart from="¡Se " to="¡Sé " />
-    <LinePart from="¡por que" to="¡por qué" />
-    <LinePart from="¡porque" to="¡por qué" />
-    <LinePart from="¡con que" to="¡con qué" />
-    <LinePart from="¡cuanto" to="¡cuánto" />
-    <LinePart from="¡cuanta" to="¡cuánta" />
-    <LinePart from="¡cuantos" to="¡cuántos" />
-    <LinePart from="¡cuan" to="¡cuán" />
     <!-- Acentos al final de los signos de interrogación -->
     <LinePart from=" tu?" to=" tú?" />
     <LinePart from=" si?" to=" sí?" />
@@ -835,7 +820,7 @@
     <RegEx find="(\()\u0022" replaceWith="(«" />
     <!--  Numeración  -->
     <RegEx find="([0-9])\.([0-9])\b" replaceWith="$1,$2" />
-    <RegEx find="[^|\s]([0-9]),([0-9]{3})\b" replaceWith="$1.$2" />
+    <RegEx find="([^|\s])([0-9]),([0-9]{3})\b" replaceWith="$1$2.$3" />
     <!-- "1 :", "2 :"... "n :" a "n:" -->
     <RegEx find="(\d) ([:;])" replaceWith="$1$2" />
     <!--  Corregir las comas y puntos por ej. «, ,» por «,» & «,,,» o similar por «...» -->
