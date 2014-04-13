@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.3.15 (x April 2014)
+3.3.15 (13th April 2014)
 * NEW:
    * Added new subtitle formats (200+ formats supported!)
    * Export to VobSub option "Anti-alising with transparency" thx CoOoL_BoY/moob
@@ -34,7 +34,6 @@
    * Fixed possible crash when converting pac to ttml - thx Dan
    * Fixed memory leak when running OCR via Tesseract
    * Fixed possible error/crash when loading bad time codes - thx Jucá
-
 
 
 3.3.14 (23rd February 2014)
