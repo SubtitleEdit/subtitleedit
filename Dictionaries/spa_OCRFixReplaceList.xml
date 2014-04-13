@@ -404,22 +404,18 @@
     <LinePart from="¡Por que" to="¡Por qué" />
     <LinePart from="¡Porque" to="¡Por qué" />
     <LinePart from="¡Con que" to="¡Con qué" />
-    <LinePart from="¡Que " to="¡Qué " />
     <LinePart from="¡Cuanto" to="¡Cuánto" />
     <LinePart from="¡Cuanta" to="¡Cuánta" />
     <LinePart from="¡Cuantos" to="¡Cuántos" />
     <LinePart from="¡Cuan" to="¡Cuán" />
-    <LinePart from="¡Como " to="¡Cómo " />
     <LinePart from="¡Se " to="¡Sé " />
     <LinePart from="¡por que" to="¡por qué" />
     <LinePart from="¡porque" to="¡por qué" />
     <LinePart from="¡con que" to="¡con qué" />
-    <LinePart from="¡que " to="¡qué " />
     <LinePart from="¡cuanto" to="¡cuánto" />
     <LinePart from="¡cuanta" to="¡cuánta" />
     <LinePart from="¡cuantos" to="¡cuántos" />
     <LinePart from="¡cuan" to="¡cuán" />
-    <LinePart from="¡como " to="¡cómo " />
     <!-- Acentos al final de los signos de interrogación -->
     <LinePart from=" tu?" to=" tú?" />
     <LinePart from=" si?" to=" sí?" />
@@ -696,11 +692,11 @@
     <LinePart from="aún," to="aún," />
     <LinePart from="aun no" to="aún no" />
     <!-- dé -->
-    <LinePart from="de y" to="dé y" />
-    <LinePart from="nos de" to="nos dé" />
+    <LinePart from=" de y " to=" dé y " />
+    <LinePart from=" nos de " to=" nos dé " />
     <!-- tú -->
-    <LinePart from="tu ya" to="tú ya" />
-    <LinePart from="Tu ya" to="Tú ya" />
+    <LinePart from=" tu ya " to=" tú ya " />
+    <LinePart from="Tu ya " to="Tú ya " />
     <!-- casos específicos antes de la coma -->
     <LinePart from=" de, " to=" dé," />
     <LinePart from=" mi, " to=" mí," />
@@ -727,7 +723,7 @@
     <LinePart from="se cuantas" to="sé cuántas" />
     <LinePart from="se cuan" to="sé cuán" />
     <!-- si/sí -->
-    <LinePart from="el si" to="el sí" />
+    <LinePart from=" el si " to=" el sí " />
     <LinePart from="si mismo" to="sí mismo" />
     <LinePart from="si misma" to="sí misma" />
     <!-- Errores de "l" en vez de "i" en casos específicos -->
