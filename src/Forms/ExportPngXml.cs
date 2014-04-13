@@ -2285,6 +2285,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             comboBoxBorderWidth.SelectedIndex = 2;
             comboBoxHAlign.SelectedIndex = 1;
             comboBoxResolution.SelectedIndex = 0;
+
+            if (Configuration.Settings.Tools.ExportLastShadowTransparency <= numericUpDownShadowTransparency.Maximum && Configuration.Settings.Tools.ExportLastShadowTransparency > 0)
+            {
+                numericUpDownShadowTransparency.Value = Configuration.Settings.Tools.ExportLastShadowTransparency;
+            }
+
             if ((_exportType == "BLURAYSUP" || _exportType == "DOST") && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
                 SetResolution(Configuration.Settings.Tools.ExportBluRayVideoResolution);
 
@@ -2371,11 +2377,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             if (comboBoxFramerate.Items.Count >= 2)
             {
-                if (Configuration.Settings.General.CurrentFrameRate == 24)
-                    comboBoxFramerate.SelectedIndex = 1;
-                else if (Configuration.Settings.General.CurrentFrameRate == 25)
-                    comboBoxFramerate.SelectedIndex = 2;
+                SetLastFrameRate(Configuration.Settings.Tools.ExportLastFrameRate);
             }
+            panelShadowColor.BackColor = Configuration.Settings.Tools.ExportShadowColor;
 
             for (int i=0; i<1000; i++)
                 comboBoxBottomMargin.Items.Add(i);
@@ -2453,6 +2457,22 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
+        }
+
+        private void SetLastFrameRate(double lastFrameRate)
+        {
+            for (int i = 0; i < comboBoxFramerate.Items.Count; i++)
+            {
+                double d;
+                if (double.TryParse(comboBoxFramerate.Items[i].ToString().Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                {
+                    if (Math.Abs(lastFrameRate - d) < 0.01)
+                    {
+                        comboBoxFramerate.SelectedIndex = i;
+                        return;
+                    }
+                }
+            }
         }
 
         internal void InitializeFromVobSubOcr(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VobSubOcr vobSubOcr, string languageString)
@@ -2719,6 +2739,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     Configuration.Settings.Tools.ExportFcpImageType = comboBoxImageFormat.SelectedItem.ToString();
 
             }
+            Configuration.Settings.Tools.ExportLastShadowTransparency = (int)numericUpDownShadowTransparency.Value;
+            Configuration.Settings.Tools.ExportLastFrameRate = FrameRate;
+            Configuration.Settings.Tools.ExportShadowColor = panelShadowColor.BackColor;
             Configuration.Settings.Tools.ExportFontColor = _subtitleColor;
             Configuration.Settings.Tools.ExportBorderColor = _borderColor;
             if (_exportType == "BLURAYSUP" || _exportType == "DOST")
