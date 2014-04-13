@@ -134,12 +134,15 @@ namespace Nikse.SubtitleEdit.Logic
         public string ExportBluRayVideoResolution { get; set; }
         public Color ExportFontColor { get; set; }
         public Color ExportBorderColor { get; set; }
+        public Color ExportShadowColor { get; set; }
         public int ExportBottomMargin { get; set; }
         public int ExportHorizontalAlignment { get; set; }
         public int ExportBluRayBottomMargin { get; set; }
         public int ExportBluRayShadow { get; set; }
         public int Export3DType { get; set; }
         public int Export3DDepth { get; set; }
+        public int ExportLastShadowTransparency { get; set; }
+        public double ExportLastFrameRate { get; set; }        
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public string ImportTextSplitting { get; set; }
         public bool ImportTextMergeShortLines { get; set; }
@@ -189,6 +192,7 @@ namespace Nikse.SubtitleEdit.Logic
             MusicSymbolStyle = "Double"; // 'Double' or 'Single'
             ExportFontColor = Color.White;
             ExportBorderColor = Color.Black;
+            ExportShadowColor = Color.Black;
             ExportBottomMargin = 15;
             ExportHorizontalAlignment = 1; // 1=center (0=left, 2=right)
             ExportVobSubSimpleRendering = true;
@@ -197,6 +201,8 @@ namespace Nikse.SubtitleEdit.Logic
             ExportBluRayShadow = 1;
             Export3DType = 0;
             Export3DDepth = 0;
+            ExportLastShadowTransparency = 200;
+            ExportLastFrameRate = 24.0d;
             ExportFcpImageType = "Bmp";
             ExportLastBorderWidth = 2;
             BridgeGapMilliseconds = 100;
@@ -1614,6 +1620,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportBorderColor");
             if (subNode != null)
                 settings.Tools.ExportBorderColor = Color.FromArgb(int.Parse(subNode.InnerText));
+            subNode = node.SelectSingleNode("ExportShadowColor");
+            if (subNode != null)
+                settings.Tools.ExportShadowColor = Color.FromArgb(int.Parse(subNode.InnerText));
             subNode = node.SelectSingleNode("ExportBottomMargin");
             if (subNode != null)
                 settings.Tools.ExportBottomMargin = int.Parse(subNode.InnerText);
@@ -1632,6 +1641,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("Export3DDepth");
             if (subNode != null)
                 settings.Tools.Export3DDepth = int.Parse(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportLastShadowTransparency");
+            if (subNode != null)
+                settings.Tools.ExportLastShadowTransparency = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            subNode = node.SelectSingleNode("ExportLastFrameRate");
+            if (subNode != null)
+                settings.Tools.ExportLastFrameRate = double.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
             subNode = node.SelectSingleNode("FixCommonErrorsFixOverlapAllowEqualEndStart");
             if (subNode != null)
                 settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart = Convert.ToBoolean(subNode.InnerText);
@@ -2677,12 +2692,15 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ExportBluRayVideoResolution", settings.Tools.ExportBluRayVideoResolution);
             textWriter.WriteElementString("ExportFontColor", settings.Tools.ExportFontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ExportShadowColor", settings.Tools.ExportShadowColor.ToArgb().ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ExportBottomMargin", settings.Tools.ExportBottomMargin.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ExportHorizontalAlignment", settings.Tools.ExportHorizontalAlignment.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ExportBluRayBottomMargin", settings.Tools.ExportBluRayBottomMargin.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ExportBluRayShadow", settings.Tools.ExportBluRayShadow.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("Export3DType", settings.Tools.Export3DType.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("Export3DDepth", settings.Tools.Export3DDepth.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ExportLastShadowTransparency", settings.Tools.ExportLastShadowTransparency.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ExportLastFrameRate", settings.Tools.ExportLastFrameRate.ToString(CultureInfo.InvariantCulture));            
             textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
             textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
             textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
