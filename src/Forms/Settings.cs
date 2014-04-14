@@ -651,6 +651,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.RemoveTextForHearingImpaired + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI));
             toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.ChangeCasing + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsChangeCasing));
             toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.SplitLongLines + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsSplitLongLines));
+            toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.MergeShortLines + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsMergeShortLines));
             toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.AutoDurationCurrentLine + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsAutoDuration));
             toolsNode.Nodes.Add(Configuration.Settings.Language.Settings.ShowBeamer + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsBeamer));
             treeViewShortcuts.Nodes.Add(toolsNode);
@@ -1278,6 +1279,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainToolsChangeCasing = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.Tools.SplitLongLines.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainToolsSplitLongLines = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.Tools.MergeShortLines.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainToolsMergeShortLines = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.AutoDurationCurrentLine.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainToolsAutoDuration = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.ShowBeamer.Replace("&", string.Empty))
