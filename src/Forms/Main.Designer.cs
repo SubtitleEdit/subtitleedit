@@ -1574,6 +1574,8 @@
             // toolStripMenuItemAutoMergeShortLines
             // 
             this.toolStripMenuItemAutoMergeShortLines.Name = "toolStripMenuItemAutoMergeShortLines";
+            this.toolStripMenuItemAutoMergeShortLines.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.X)));
             this.toolStripMenuItemAutoMergeShortLines.Size = new System.Drawing.Size(346, 22);
             this.toolStripMenuItemAutoMergeShortLines.Text = "Merge short lines...";
             this.toolStripMenuItemAutoMergeShortLines.Click += new System.EventHandler(this.ToolStripMenuItemAutoMergeShortLinesClick);
