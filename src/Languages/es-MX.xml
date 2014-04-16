@@ -723,7 +723,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AdjustDisplayDuration>Ajustar duraciones...</AdjustDisplayDuration>
         <ApplyDurationLimits>Aplicar límites de duración...</ApplyDurationLimits>
         <DurationsBridgeGap>Puentear intervalos en duraciones...</DurationsBridgeGap>
-        <FixCommonErrors>Corregir Errores Comunes...</FixCommonErrors>
+        <FixCommonErrors>Corregir errores comunes...</FixCommonErrors>
         <StartNumberingFrom>Iniciar numeración desde...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Eliminar texto para sordos...</RemoveTextForHearingImpaired>
         <ChangeCasing>Cambiar mayúsculas...</ChangeCasing>
@@ -780,7 +780,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       </SpellCheck>
       <Synchronization>
         <Title>Sincronización</Title>
-        <AdjustAllTimes>Ajustar todos los tiempos (mostrar antes/después)...</AdjustAllTimes>
+        <AdjustAllTimes>Ajustar tiempos (mostrar antes/después)...</AdjustAllTimes>
         <VisualSync>Sincronización visual...</VisualSync>
         <PointSync>Sincronicación puntual...</PointSync>
         <PointSyncViaOtherSubtitle>Sincronicación puntual desde otro subtítulo...</PointSyncViaOtherSubtitle>
@@ -914,7 +914,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <StillTypingAutoContinueStopped>Escribiendo... auto continuar detenido</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>Insert. subt. en posición del video</InsertNewSubtitleAtVideoPosition>
       <Auto>Auto</Auto>
-      <PlayFromJustBeforeText>Repro. desde poco antes del texto</PlayFromJustBeforeText>
+      <PlayFromJustBeforeText>Repro. poco antes del texto</PlayFromJustBeforeText>
       <Pause>Pausa</Pause>
       <GoToSubtitlePositionAndPause>Ir a posición del subtítulo y pausar</GoToSubtitlePositionAndPause>
       <SetStartTime>Ajustar tiempo inicial</SetStartTime>
