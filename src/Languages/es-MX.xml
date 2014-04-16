@@ -1514,8 +1514,8 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <MusicSymbolsToReplace>Símbolos musicales a reemplazar (separados por espacios)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corregir los errores comunes de OCR - utilizar también reglas codificadas</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Arreglar vista de tiempos cortos - permitiendo que se desplace de la hora de inicio</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
-    <Shortcuts>Accesos directos</Shortcuts>
-    <Shortcut>Acceso directo</Shortcut>
+    <Shortcuts>Atajos</Shortcuts>
+    <Shortcut>Atajo</Shortcut>
     <Control>Control</Control>
     <Alt>Alt</Alt>
     <Shift>Mayúscula</Shift>
