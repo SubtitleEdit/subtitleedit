@@ -126,6 +126,8 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainTextBoxSplitAtCursor = Keys.None;
         Keys _mainTextBoxMoveLastWordDown = Keys.None;
         Keys _mainTextBoxMoveFirstWordFromNextUp = Keys.None;
+        Keys _mainTextBoxSelectionToLower = Keys.None;
+        Keys _mainTextBoxSelectionToUpper = Keys.None;
         Keys _mainCreateInsertSubAtVideoPos = Keys.None;
         Keys _mainCreatePlayFromJustBefore = Keys.None;
         Keys _mainCreateSetStart = Keys.None;
@@ -7213,6 +7215,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 GoToNextSynaxError();
                 e.SuppressKeyPress = true;
+            }
+            else if (_mainTextBoxSelectionToLower == e.KeyData) // selection to lowercase
+            {
+                if (textBoxListViewText.SelectionLength > 0)
+                {
+                    textBoxListViewText.SelectedText = textBoxListViewText.SelectedText.ToLower();
+                    e.SuppressKeyPress = true;
+                }
+            }
+            else if (_mainTextBoxSelectionToUpper == e.KeyData) // selection to uppercase
+            {
+                if (textBoxListViewText.SelectionLength > 0)
+                {
+                    textBoxListViewText.SelectedText = textBoxListViewText.SelectedText.ToLower();
+                    e.SuppressKeyPress = true;
+                }
             }
 
             // last key down in text
@@ -14358,6 +14376,8 @@ namespace Nikse.SubtitleEdit.Forms
             _mainTextBoxSplitAtCursor = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
             _mainTextBoxMoveLastWordDown = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown);
             _mainTextBoxMoveFirstWordFromNextUp = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
+            _mainTextBoxSelectionToLower = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower);
+            _mainTextBoxSelectionToUpper = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper);
             _mainCreateInsertSubAtVideoPos = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
             _mainCreatePlayFromJustBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore);
             _mainCreateSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
@@ -16556,6 +16576,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxListViewTextAlternate.SelectionLength = 0;
                 e.SuppressKeyPress = true;
+            }
+            else if (_mainTextBoxSelectionToLower == e.KeyData) // selection to lowercase
+            {
+                if (textBoxListViewTextAlternate.SelectionLength > 0)
+                {
+                    textBoxListViewTextAlternate.SelectedText = textBoxListViewTextAlternate.SelectedText.ToLower();
+                    e.SuppressKeyPress = true;
+                }
+            }
+            else if (_mainTextBoxSelectionToUpper == e.KeyData) // selection to uppercase
+            {
+                if (textBoxListViewTextAlternate.SelectionLength > 0)
+                {
+                    textBoxListViewTextAlternate.SelectedText = textBoxListViewTextAlternate.SelectedText.ToLower();
+                    e.SuppressKeyPress = true;
+                }
             }
 
             // last key down in text

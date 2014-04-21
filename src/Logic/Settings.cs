@@ -800,6 +800,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxMoveLastWordDown { get; set; }
         public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
+        public string MainTextBoxSelectionToLower { get; set; }
+        public string MainTextBoxSelectionToUpper { get; set; }        
         public string MainCreateInsertSubAtVideoPos { get; set; }
         public string MainCreatePlayFromJustBefore { get; set; }
         public string MainCreateSetStart { get; set; }
@@ -848,8 +850,8 @@ namespace Nikse.SubtitleEdit.Logic
         {
             GeneralGoToFirstSelectedLine = "Control+L";
             GeneralMergeSelectedLines = "Control+Shift+M";
-            GeneralToggleTranslationMode = "Control+U";
-            GeneralSwitchOriginalAndTranslation = "Control+Shift+U";
+            GeneralToggleTranslationMode = "Control+Shift+O";
+            GeneralSwitchOriginalAndTranslation = "Control+Alt+O";
             GeneralMergeOriginalAndTranslation = "Control+Alt+Shift+M";
             GeneralGoToNextSubtitle = "Shift+Return";
             GeneralGoToPrevSubtitle = string.Empty;
@@ -900,6 +902,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxItalic = "Control+I";
             MainTextBoxSplitAtCursor = "Control+Alt+V";
             MainToolsAutoDuration = string.Empty;
+            MainTextBoxSelectionToLower = "Control+U";
+            MainTextBoxSelectionToUpper = "Control+Shift+U";
             MainToolsBeamer = "Control+Shift+Alt+B";
             MainCreateInsertSubAtVideoPos = string.Empty;
             MainCreatePlayFromJustBefore = string.Empty;
@@ -2303,6 +2307,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordFromNextUp");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxSelectionToLower");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxSelectionToLower = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxSelectionToUpper");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxSelectionToUpper = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainCreateInsertSubAtVideoPos");
                 if (subNode != null)
                     settings.Shortcuts.MainCreateInsertSubAtVideoPos = subNode.InnerText;
@@ -2943,6 +2953,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);
             textWriter.WriteElementString("MainTextBoxMoveLastWordDown", settings.Shortcuts.MainTextBoxMoveLastWordDown);
             textWriter.WriteElementString("MainTextBoxMoveFirstWordFromNextUp", settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
+            textWriter.WriteElementString("MainTextBoxSelectionToLower", settings.Shortcuts.MainTextBoxSelectionToLower);
+            textWriter.WriteElementString("MainTextBoxSelectionToUpper", settings.Shortcuts.MainTextBoxSelectionToUpper);
             textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", settings.Shortcuts.MainCreateInsertSubAtVideoPos);
             textWriter.WriteElementString("MainCreatePlayFromJustBefore", settings.Shortcuts.MainCreatePlayFromJustBefore);
             textWriter.WriteElementString("MainCreateSetStart", settings.Shortcuts.MainCreateSetStart);
