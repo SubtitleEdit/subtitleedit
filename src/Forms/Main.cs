@@ -109,6 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainGeneralGoToPrevSubtitle = Keys.None;
         Keys _mainGeneralGoToStartOfCurrentSubtitle = Keys.None;
         Keys _mainGeneralGoToEndOfCurrentSubtitle = Keys.None;
+        Keys _mainGeneralFileSaveAll = Keys.None;        
         Keys _mainToolsAutoDuration = Keys.None;
         Keys _mainToolsBeamer = Keys.None;
         Keys _toggleVideoDockUndock = Keys.None;
@@ -10591,6 +10592,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
+            else if (_mainGeneralFileSaveAll == e.KeyData)
+            {
+                ToolStripButtonSaveClick(sender, e);
+                e.SuppressKeyPress = true;
+            }
             else if (_mainToggleFocus == e.KeyData && inListView)
             {
                 if (SubtitleListview1.Focused)
@@ -14327,6 +14333,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemOpenKeepVideo.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileOpenKeepVideo);
             saveToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSave);
             saveAsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
+            _mainGeneralFileSaveAll = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAll);
             eBUSTLToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEbu);
 
             toolStripMenuItemUndo.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditUndo);

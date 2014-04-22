@@ -1868,6 +1868,7 @@ can edit in same subtitle file (collaboration)",
                 MainTextBoxSelectionToUpper = "Selection to uppercase",
                 MainTextBoxAutoBreak = "Auto break text",
                 MainTextBoxUnbreak = "Unbreak text",
+                MainFileSaveAll = "Save all",
                 Miscellaneous = "Misc.",
                 UseDoNotBreakAfterList = "Use do-not-break-after list (for auto-br)",
             };

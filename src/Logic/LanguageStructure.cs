@@ -1763,6 +1763,7 @@
             public string MainTextBoxSelectionToUpper { get; set; }
             public string MainTextBoxAutoBreak { get; set; }
             public string MainTextBoxUnbreak { get; set; }
+            public string MainFileSaveAll { get; set; }
             public string Miscellaneous { get; set; }
             public string UseDoNotBreakAfterList { get; set; }
         }
