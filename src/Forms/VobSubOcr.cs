@@ -3680,12 +3680,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string SaveCompareItem(NikseBitmap newTarget, string text, bool isItalic, int expandCount)
         {
-            string path = Configuration.OcrFolder + comboBoxCharacterDatabase.SelectedItem + "_";
+            string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
             string databaseName = path + "Images.db";
             FileStream f;
             long pos;
             if (!File.Exists(databaseName))
             {
+                if (!Directory.Exists(Configuration.OcrFolder))
+                {
+                    Directory.CreateDirectory(Configuration.OcrFolder);
+                }
+
                 using (f = new FileStream(databaseName, FileMode.Create))
                 {
                     pos = f.Position;
@@ -3729,8 +3734,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _compareDoc = new XmlDocument();
                 _compareDoc.LoadXml("<OcrBitmaps></OcrBitmaps>");
             }
-            //_compareDoc.DocumentElement.AppendChild(element);
-            //_compareDoc.Save(path + "Images.xml");
+            _compareDoc.DocumentElement.AppendChild(element);
+            _compareDoc.Save(path + "Images.xml");
             return name;
         }
 

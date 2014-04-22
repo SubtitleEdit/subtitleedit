@@ -7220,7 +7220,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textBoxListViewText.SelectionLength > 0)
                 {
+                    int start = textBoxListViewText.SelectionStart;
+                    int length = textBoxListViewText.SelectionLength;
                     textBoxListViewText.SelectedText = textBoxListViewText.SelectedText.ToLower();
+                    textBoxListViewText.SelectionStart = start;
+                    textBoxListViewText.SelectionLength = length;
                     e.SuppressKeyPress = true;
                 }
             }
@@ -7228,7 +7232,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textBoxListViewText.SelectionLength > 0)
                 {
-                    textBoxListViewText.SelectedText = textBoxListViewText.SelectedText.ToLower();
+                    int start = textBoxListViewText.SelectionStart;
+                    int length = textBoxListViewText.SelectionLength;
+                    textBoxListViewText.SelectedText = textBoxListViewText.SelectedText.ToUpper();
+                    textBoxListViewText.SelectionStart = start;
+                    textBoxListViewText.SelectionLength = length;
                     e.SuppressKeyPress = true;
                 }
             }
@@ -7987,6 +7995,12 @@ namespace Nikse.SubtitleEdit.Forms
                     if (old1.Contains(Environment.NewLine) || old2.Contains(Environment.NewLine) ||
                         old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                         currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text, Utilities.AutoDetectGoogleLanguage(_subtitle));
+
+                    if (string.IsNullOrEmpty(old1) || old1.Trim().Length == 0)
+                        currentParagraph.Text = currentParagraph.Text.TrimStart();
+
+                    if (string.IsNullOrEmpty(old2) || old2.Trim().Length == 0)
+                        currentParagraph.Text = currentParagraph.Text.TrimEnd();
                 }
 
                 //currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + nextParagraph.Duration.TotalMilliseconds; //nextParagraph.EndTime;
@@ -16581,7 +16595,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textBoxListViewTextAlternate.SelectionLength > 0)
                 {
+                    int start = textBoxListViewTextAlternate.SelectionStart;
+                    int length = textBoxListViewTextAlternate.SelectionLength;
                     textBoxListViewTextAlternate.SelectedText = textBoxListViewTextAlternate.SelectedText.ToLower();
+                    textBoxListViewTextAlternate.SelectionStart = start;
+                    textBoxListViewTextAlternate.SelectionLength = length;
                     e.SuppressKeyPress = true;
                 }
             }
@@ -16589,7 +16607,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textBoxListViewTextAlternate.SelectionLength > 0)
                 {
-                    textBoxListViewTextAlternate.SelectedText = textBoxListViewTextAlternate.SelectedText.ToLower();
+                    int start = textBoxListViewTextAlternate.SelectionStart;
+                    int length = textBoxListViewTextAlternate.SelectionLength;
+                    textBoxListViewTextAlternate.SelectedText = textBoxListViewTextAlternate.SelectedText.ToUpper();
+                    textBoxListViewTextAlternate.SelectionStart = start;
+                    textBoxListViewTextAlternate.SelectionLength = length;
                     e.SuppressKeyPress = true;
                 }
             }
