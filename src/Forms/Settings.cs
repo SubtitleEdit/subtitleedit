@@ -628,6 +628,7 @@ namespace Nikse.SubtitleEdit.Forms
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Open + GetShortcutText(Configuration.Settings.Shortcuts.MainFileOpen));
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.OpenKeepVideo + GetShortcutText(Configuration.Settings.Shortcuts.MainFileOpenKeepVideo));
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Save + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSave));
+            fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.SaveOriginal + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSaveOriginal));
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.SaveAs + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSaveAs));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainFileSaveAll))
                 fileNode.Nodes.Add(Configuration.Settings.Language.Settings.MainFileSaveAll + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSaveAll));
@@ -1233,6 +1234,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainFileOpenKeepVideo = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.File.Save.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainFileSave = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.File.SaveOriginal.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainFileSaveOriginal = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.File.SaveAs.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainFileSaveAs = GetShortcut(node.Text);
                     else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainFileSaveAll) && text == Configuration.Settings.Language.Settings.MainFileSaveAll.Replace("&", string.Empty))

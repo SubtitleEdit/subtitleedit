@@ -14343,6 +14343,7 @@ namespace Nikse.SubtitleEdit.Forms
             openToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
             toolStripMenuItemOpenKeepVideo.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileOpenKeepVideo);
             saveToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSave);
+            saveOriginalToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveOriginal);
             saveAsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
             _mainGeneralFileSaveAll = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAll);
             eBUSTLToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEbu);
