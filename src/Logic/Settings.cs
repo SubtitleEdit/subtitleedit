@@ -743,6 +743,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainFileOpenKeepVideo { get; set; }
         public string MainFileSave { get; set; }
         public string MainFileSaveAs { get; set; }
+        public string MainFileSaveAll { get; set; }
         public string MainFileExportEbu { get; set; }
         public string MainEditUndo { get; set; }
         public string MainEditRedo { get; set; }
@@ -860,7 +861,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainFileNew = "Control+N";
             MainFileOpen = "Control+O";
             MainFileSave = "Control+S";
-            MainFileSaveAs = "";
+            MainFileSaveAs = string.Empty;
+            MainFileSaveAll = string.Empty;
             MainFileExportEbu = string.Empty;
             MainEditUndo = "Control+Z";
             MainEditRedo = "Control+Y";
@@ -2136,6 +2138,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainFileSaveAs");
                 if (subNode != null)
                     settings.Shortcuts.MainFileSaveAs = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainFileSaveAll");
+                if (subNode != null)
+                    settings.Shortcuts.MainFileSaveAll = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainFileExportEbu");
                 if (subNode != null)
                     settings.Shortcuts.MainFileExportEbu = subNode.InnerText;
@@ -2896,7 +2901,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainFileOpenKeepVideo", settings.Shortcuts.MainFileOpenKeepVideo);
             textWriter.WriteElementString("MainFileSave", settings.Shortcuts.MainFileSave);
             textWriter.WriteElementString("MainFileSaveAs", settings.Shortcuts.MainFileSaveAs);
-            textWriter.WriteElementString("MainFileExportEbu", settings.Shortcuts.MainFileSaveAs);
+            textWriter.WriteElementString("MainFileSaveAll", settings.Shortcuts.MainFileSaveAll);
+            textWriter.WriteElementString("MainFileExportEbu", settings.Shortcuts.MainFileExportEbu);
             textWriter.WriteElementString("MainEditUndo", settings.Shortcuts.MainEditUndo);
             textWriter.WriteElementString("MainEditRedo", settings.Shortcuts.MainEditRedo);
             textWriter.WriteElementString("MainEditFind", settings.Shortcuts.MainEditFind);
