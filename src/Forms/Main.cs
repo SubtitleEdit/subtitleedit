@@ -7953,10 +7953,21 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
+                                string old1 = original.Text;
+                                string old2 = originalNext.Text;
                                 original.Text = original.Text.Replace(Environment.NewLine, " ");
                                 original.Text += Environment.NewLine + originalNext.Text.Replace(Environment.NewLine, " ");
                                 original.Text = ChangeAllLinesItalictoSingleItalic(original.Text);
-                                original.Text = Utilities.AutoBreakLine(original.Text);
+
+                                if (old1.Contains(Environment.NewLine) || old2.Contains(Environment.NewLine) ||
+                                    old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                                    original.Text = Utilities.AutoBreakLine(original.Text, Utilities.AutoDetectGoogleLanguage(_subtitleAlternate));
+
+                                if (string.IsNullOrEmpty(old1) || old1.Trim().Length == 0)
+                                    original.Text = original.Text.TrimStart();
+
+                                if (string.IsNullOrEmpty(old2) || old2.Trim().Length == 0)
+                                    original.Text = original.Text.TrimEnd();
                             }
                             original.EndTime = originalNext.EndTime;
                             _subtitleAlternate.Paragraphs.Remove(originalNext);
