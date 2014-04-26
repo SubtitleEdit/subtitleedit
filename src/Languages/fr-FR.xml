@@ -20,7 +20,7 @@
     <OpenVideoFile>Ouvrir fichier vidéo...</OpenVideoFile>
     <OpenVideoFileTitle>Ouvrir fichier vidéo...</OpenVideoFileTitle>
     <NoVideoLoaded>Pas de vidéo chargée</NoVideoLoaded>
-    <VideoInformation>Info vidéo</VideoInformation>
+    <VideoInformation>Info. vidéo</VideoInformation>
     <PositionX>Position/Durée : {0}</PositionX>
     <StartTime>Temps initial</StartTime>
     <EndTime>Temps final</EndTime>
@@ -86,16 +86,16 @@ Les suggestions sont plus que bienvenues.
 Email : mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
-    <Title>Ajouter à la liste de noms/etc</Title>
-    <Description>Ajouter à la liste de noms/bruit (respecter la casse)</Description>
+    <Title>Ajouter à liste de noms/etc.</Title>
+    <Description>Nom / bruit (respecter la casse) :</Description>
   </AddToNames>
   <AddToOcrReplaceList>
-    <Title>Ajouter la liste de remplacement OCR</Title>
-    <Description>Ajouter à la liste des paires de remplacement OCR (respecter la casse)</Description>
+    <Title>Ajouter à liste corrective OCR</Title>
+    <Description>Substituts (respecter la casse) :</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Ajouter au dictionnaire utilisateur</Title>
-    <Description>Ajouter un mot au dictionnaire utilisateur</Description>
+    <Description>Un mot :</Description>
   </AddToUserDictionary>
   <AddWaveForm>
     <Title>Générer forme à partir des données</Title>
@@ -222,7 +222,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>Différence &amp;suivante</NextDifference>
     <SubtitlesNotAlike>Les sous-titres ne sont pas similaires</SubtitlesNotAlike>
     <XNumberOfDifference>Nombre de différences: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Nombre de différences: {0} ({1}% des mots modifié)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentChanged>Nombre de différences: {0} ({1}% des mots modifiés)</XNumberOfDifferenceAndPercentChanged>
     <XNumberOfDifferenceAndPercentLettersChanged>Nombre de différences: {0} ({1}% de lettres modifié)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Cacher les lignes identiques</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorer les divisions de ligne</IgnoreLineBreaks>
@@ -246,9 +246,12 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <FontUri>URI</FontUri>
     <FontColor>Couleur</FontColor>
     <FontEffect>Effet</FontEffect>
-    <FontEffectColor>Effet de couleur</FontEffectColor>
+    <FontEffectColor>Couleur effet</FontEffectColor>
     <FontSize>Taille</FontSize>
-    <ChooseColor>Sélectionnez la couleur ...</ChooseColor>
+    <TopBottomMargin>Marge haut/bas</TopBottomMargin>
+    <ZPosition>Position Z</ZPosition>
+    <ZPositionHelp>Les nombres positifs déplacent le texte plus loin, les nombres négatifs plus près ; si la position « Z » est zéro, alors c'est de la 2D.</ZPositionHelp>
+    <ChooseColor>Choix...</ChooseColor>
     <Generate>Générer</Generate>
   </DCinemaProperties>
   <DurationsBridgeGaps>
@@ -263,7 +266,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
   </DurationsBridgeGaps>
   <DvdSubrip>
     <Title>Ripper les sous-titres de ifo/vobs (dvd)</Title>
-    <DvdGroupTitle>Info./Fichiers DVD</DvdGroupTitle>
+    <DvdGroupTitle>Info./ Fichiers DVD</DvdGroupTitle>
     <IfoFile>Fichier IFO</IfoFile>
     <IfoFiles>Fichiers IFO</IfoFiles>
     <VobFiles>Fichiers VOB</VobFiles>
@@ -292,7 +295,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
   </DvdSubRipChooseLanguage>
   <EbuSaveOtpions>
     <Title>Options d'enregistrement EBU</Title>
-    <GeneralSubtitleInformation>Info générale du sous-titre</GeneralSubtitleInformation>
+    <GeneralSubtitleInformation>Info. générale du sous-titre</GeneralSubtitleInformation>
     <CodePageNumber>Numéro page de code</CodePageNumber>
     <DiskFormatCode>Code format de disque</DiskFormatCode>
     <DisplayStandardCode>Afficher code standard</DisplayStandardCode>
@@ -337,7 +340,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <Formats>Formats</Formats>
     <New>Nouveau</New>
     <Edit>Editer</Edit>
-    <Delete>Annuler</Delete>
+    <Delete>Supprimer</Delete>
     <SaveAs>S&amp;auver sous...</SaveAs>
     <SaveSubtitleAs>Enregistrer sous-titres...</SaveSubtitleAs>
     <SubtitleExportedInCustomFormatToX>Exporter sous-titres au format personnalisé: {0}</SubtitleExportedInCustomFormatToX>
@@ -365,6 +368,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <Transparency>Transparence</Transparency>
     <ImageFormat>Format d'image</ImageFormat>
     <SimpleRendering>Rendu simple</SimpleRendering>
+    <AntiAliasingWithTransparency>Anti-aliasing avec transparence</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
     <SideBySide3D>Side-by-Side</SideBySide3D>
     <HalfTopBottom3D>Top-Bottom</HalfTopBottom3D>
@@ -670,10 +674,10 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <Plugins>Plugins...</Plugins>
         <ImportOcrFromDvd>Importer sous-titres OCR de VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importer sous-titres OCR de VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Importer sous-titres OCR de Blu-ray (.sup)...</ImportBluRaySupFile>
+        <ImportBluRaySupFile>Importer sous-titres OCR de Blu-ray (sup)...</ImportBluRaySupFile>
         <ImportXSub>Importer sous-titres OCR de divx/avi (xsub)...</ImportXSub>
-        <ImportSubtitleFromMatroskaFile>Importer Sous-titres d'un fichier Matroska...</ImportSubtitleFromMatroskaFile>
-        <ImportSubtitleWithManualChosenEncoding>Importer Sous-titres en choisissant l'encodage...</ImportSubtitleWithManualChosenEncoding>
+        <ImportSubtitleFromMatroskaFile>Importer sous-titres d'un fichier Matroska...</ImportSubtitleFromMatroskaFile>
+        <ImportSubtitleWithManualChosenEncoding>Importer sous-titres en choisissant l'encodage...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importer texte...</ImportText>
         <ImportImages>Importer images...</ImportImages>
         <ImportTimecodes>Importer Time codes...</ImportTimecodes>
@@ -744,7 +748,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <Ascending>Ordre ascendant</Ascending>
         <Descending>Ordre descendant</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Nouvelle traduction vide à partir du sous-titre en cours</MakeNewEmptyTranslationFromCurrentSubtitle>
-        <BatchConvert>Conversion par lots ...</BatchConvert>
+        <BatchConvert>Conversion par lots...</BatchConvert>
         <GenerateTimeAsText>Générer temps sous forme de texte...</GenerateTimeAsText>
         <MeasurementConverter>Convertisseur de mesure...</MeasurementConverter>
         <SplitSubtitle>Part&amp;itionner les sous-titres...</SplitSubtitle>
@@ -835,7 +839,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <Delete>Supprimer</Delete>
         <SplitLineAtCursorPosition>Supprimer à partir du curseur</SplitLineAtCursorPosition>
         <AutoDurationCurrentLine>Lecture auto (ligne actuelle)</AutoDurationCurrentLine>
-        <SelectAll>Sélectionner tout</SelectAll>
+        <SelectAll>Tout sélectionner</SelectAll>
         <InsertFirstLine>Insérer une ligne</InsertFirstLine>
         <InsertBefore>Insérer avant</InsertBefore>
         <InsertAfter>Insérer après</InsertAfter>
@@ -1084,7 +1088,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <InvalidVobSubHeader>En-tête non valide fichier VobSub : {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Ouvrir sous-titres VobSub (sub/idx)...</OpenVobSubFile>
     <VobSubFiles>Fichiers sous-titres VobSub</VobSubFiles>
-    <OpenBluRaySupFile>Ouvrir sous-titres Blu-ray (.sup)...</OpenBluRaySupFile>
+    <OpenBluRaySupFile>Ouvrir sous-titres Blu-ray (sup)...</OpenBluRaySupFile>
     <BluRaySupFiles>Fichiers sous-titres Blu-ray</BluRaySupFiles>
     <OpenXSubFiles>Ouvrir fichiers xsub...</OpenXSubFiles>
     <XSubFiles>Fichiers xsub</XSubFiles>
@@ -1112,8 +1116,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <NameXNotAddedToNamesEtcList>Le nom '{0} n'a pas été ajouté à la liste de noms/etc</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>Le mot '{0}' a été ajouté au dictionnaire utilisateur</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Le mot '{0}'  n'a pas été ajouté au dictionnaire utilisateur</WordXNotAddedToUserDic>
-    <OcrReplacePairXAdded>'{0} -&gt; {1}' a été ajouté à la liste correctif OCR</OcrReplacePairXAdded>
-    <OcrReplacePairXNotAdded>'{0} -&gt; {1}' n'a pas été ajouté à la liste correctif OCR</OcrReplacePairXNotAdded>
+    <OcrReplacePairXAdded>'{0} -&gt; {1}' a été ajouté à la liste corrective OCR</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>'{0} -&gt; {1}' n'a pas été ajouté à la liste corrective OCR</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} lignes sélectionnées</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Sous-titre contenant des notes de musique unicode. Ils seront perdus en sauvegardant avec encodage ANSI. Poursuivre la sauvegarde?</UnicodeMusicSymbolsAnsiWarning>
     <UnicodeCharactersAnsiWarning>Sous-titre contenant des caractères Unicode. Ils seront perdus en sauvegardant avec encodage ANSI. Poursuivre la sauvegarde?</UnicodeCharactersAnsiWarning>
@@ -1268,7 +1272,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <Join>Rejoindre</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
-    <Title>Info session réseau et log</Title>
+    <Title>Info. session réseau et log</Title>
     <Log>Log:</Log>
   </NetworkLogAndInfo>
   <NetworkStart>
@@ -1301,10 +1305,12 @@ Poursuivre?</SubtitleAppendPrompt>
     <PluginXDownloaded>Plugin {0} téléchargé(s)</PluginXDownloaded>
     <Download>&amp;Télécharger</Download>
     <Remove>&amp;Supprimer</Remove>
+    <UpdateAllX>Tout mettre à jour ({0})</UpdateAllX>
     <UnableToDownloadPluginListX>Impossible de télécharger la liste des plugins: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Une nouvelle version de Subtitle Edit est nécessaire!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Nouvelle version disponible!]</UpdateAvailable>
     <UpdateAll>Tout mettre à jour</UpdateAll>
+    <XPluginsUpdated>{0} plugin(s) mis à jour</XPluginsUpdated>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Supprimer le texte pour les malentendants</Title>
@@ -1372,7 +1378,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <General>Général</General>
     <Toolbar>Barre d'outils</Toolbar>
     <VideoPlayer>Lecture vidéo</VideoPlayer>
-    <WaveformAndSpectrogram>Waveform/spectrogramme</WaveformAndSpectrogram>
+    <WaveformAndSpectrogram>Spectrogramme</WaveformAndSpectrogram>
     <Tools>Outils</Tools>
     <WordLists>Listes de mots</WordLists>
     <SsaStyle>Style SSA</SsaStyle>
@@ -1439,17 +1445,18 @@ Poursuivre?</SubtitleAppendPrompt>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll de VLC Media Player 1.1.0 ou plus récent</VlcMediaPlayerDescription>
+    <VlcBrowseToLabel>Chemin uniquement pour la version portable de VLC :</VlcBrowseToLabel>
     <ShowStopButton>Afficher touche stop</ShowStopButton>
     <ShowMuteButton>Afficher touche sourdine</ShowMuteButton>
     <ShowFullscreenButton>Afficher touche plein écran</ShowFullscreenButton>
-    <PreviewFontSize>Taille de police pour l'aperçu</PreviewFontSize>
+    <PreviewFontSize>Taille de police pour aperçu :</PreviewFontSize>
     <MainWindowVideoControls>Contrôles principaux de la fenêtre vidéo</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Recherche texte et url personnalisée </CustomSearchTextAndUrl>
     <WaveFormAppearance>Apparence du spectrogramme</WaveFormAppearance>
     <WaveFormGridColor>Couleur de la grille</WaveFormGridColor>
     <WaveFormShowGridLines>Afficher le quadrillage</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Inverser sens roulette de la souris</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Autoriser chevauchement (lors du  déplacer/redimensionner)</WaveFormAllowOverlap>
+    <WaveFormAllowOverlap>Autoriser chevauchement (lors du déplacer/redimensionner)</WaveFormAllowOverlap>
     <WaveFormFocusMouseEnter>Focus actif au passage de la souris</WaveFormFocusMouseEnter>
     <WaveFormListViewFocusMouseEnter>Focus actif dans le mode liste</WaveFormListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Repère de bordure compris entre</WaveformBorderHitMs1>
@@ -1461,13 +1468,14 @@ Poursuivre?</SubtitleAppendPrompt>
     <WaveformAndSpectrogramsFolderEmpty>Effacer contenu</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Dossiers 'Waveforms' et 'Spectrograms' contiennent {0} fichiers ({1:0.00} Mo)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spectrogramme</Spectrogram>
-    <GenerateSpectrogram>Générer spectrogramme</GenerateSpectrogram>
-    <SpectrogramAppearance>Apparence du Spectrogramme</SpectrogramAppearance>
+    <GenerateSpectrogram>Générer</GenerateSpectrogram>
+    <SpectrogramAppearance>Apparence :</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Gradient d'une seule couleur</SpectrogramOneColorGradient>
     <SpectrogramClassic>Classique</SpectrogramClassic>
     <WaveformUseFFMPEG>Utiliser FFmpeg pour extraire l'audio</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Chemin de FFmpeg</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Parcourir pour FFmpeg.exe...</WaveformBrowseToFFMPEG>
+    <WaveformFFMPEGPath>Chemin de FFmpeg :</WaveformFFMPEGPath>
+    <WaveformBrowseToFFMPEG>Rechercher FFmpeg.exe...</WaveformBrowseToFFMPEG>
+    <WaveformBrowseToVLC>Rechercher VLC portable...</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Style du SSA (SubStation Alpha)</SubStationAlphaStyle>
     <ChooseFont>Choisir fonte</ChooseFont>
     <ChooseColor>Choisir couleur</ChooseColor>
@@ -1482,7 +1490,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <Remove>Enlever</Remove>
     <AddPair>Ajouter paire</AddPair>
     <UserWordList>Liste utilisateur</UserWordList>
-    <OcrFixList>Liste correctif OCR</OcrFixList>
+    <OcrFixList>Liste corrective OCR</OcrFixList>
     <Location>Emplacement</Location>
     <UseOnlineNamesEtc>Utiliser le fichier web "Names_Etc.xml"</UseOnlineNamesEtc>
     <WordAddedX>Mot ajouter : {0}</WordAddedX>
@@ -1505,7 +1513,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <MergeLinesShorterThan>Fusionner lignes inférieures à</MergeLinesShorterThan>
     <MusicSymbol>Symbole musical</MusicSymbol>
     <MusicSymbolsToReplace>Symboles musicaux à remplacer (séparer par des espaces)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Corriger les erreurs OCR courantes  (utilise également les règles codées en dur)</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonOcrErrorsUseHardcodedRules>Erreurs OCR courantes - utilise aussi les règles codées en dur</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Durées d'affichage courtes - permet de déplacer le temps initial</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Raccourcis</Shortcuts>
     <Shortcut>Raccourci</Shortcut>
     <Control>Contrôle</Control>
@@ -1565,11 +1574,11 @@ Poursuivre?</SubtitleAppendPrompt>
     <CustomSearch6>Traduction personnalisée 6</CustomSearch6>
     <SyntaxColoring>Coloration syntaxique</SyntaxColoring>
     <ListViewSyntaxColoring>Afficher coloration syntaxique</ListViewSyntaxColoring>
-    <SyntaxColorDurationIfTooSmall>Durée trop courte.</SyntaxColorDurationIfTooSmall>
-    <SyntaxColorDurationIfTooLarge>Durée trop longue.</SyntaxColorDurationIfTooLarge>
-    <SyntaxColorTextIfTooLong>Texte trop long.</SyntaxColorTextIfTooLong>
+    <SyntaxColorDurationIfTooSmall>Durée trop courte</SyntaxColorDurationIfTooSmall>
+    <SyntaxColorDurationIfTooLarge>Durée trop longue</SyntaxColorDurationIfTooLarge>
+    <SyntaxColorTextIfTooLong>Texte trop long</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanXLines>Nombre de lignes supérieur à :</SyntaxColorTextMoreThanXLines>
-    <SyntaxColorOverlap>Chevauchement de timecode.</SyntaxColorOverlap>
+    <SyntaxColorOverlap>Chevauchement de timecode</SyntaxColorOverlap>
     <SyntaxErrorColor>Couleur - Erreur</SyntaxErrorColor>
     <GoToFirstSelectedLine>Aller à la ligne sélectionnée en premier</GoToFirstSelectedLine>
     <MergeSelectedLines>Fusionner les lignes sélectionnées</MergeSelectedLines>
@@ -1588,6 +1597,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <MainTextBoxMoveFirstWordFromNextUp>Déplacer le premier mot dans la ligne du sous-titre précédent</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxAutoBreak>Division de texte automatique</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Fusionner texte</MainTextBoxUnbreak>
+    <Miscellaneous>Divers</Miscellaneous>
+    <UseDoNotBreakAfterList>Sans pause après la liste (pause automatique)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>Visualiser les sous-titres plus tôt/tard</Title>
@@ -1618,8 +1629,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <SkipOnce>&amp;Passer</SkipOnce>
     <SkipAll>Passer &amp;tous</SkipAll>
     <AddToUserDictionary>Ajouter au dictionnaire utilisateur</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>Ajouter à la liste des noms (respecter la casse)</AddToNamesAndIgnoreList>
-    <AddToOcrReplaceList>Ajouter remplacement à la liste OCR</AddToOcrReplaceList>
+    <AddToNamesAndIgnoreList>Ajouter à la liste des noms</AddToNamesAndIgnoreList>
+    <AddToOcrReplaceList>Ajouter à la liste corrective OCR</AddToOcrReplaceList>
     <Abort>Interrompre</Abort>
     <Use>Utiliser</Use>
     <UseAlways>Toujours &amp;utiliser</UseAlways>
@@ -1630,7 +1641,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <AddXToNamesEtc>Ajouter '{0}' à la liste nom/etc</AddXToNamesEtc>
     <AutoFixNames>Correction automatique seulement si la casse diffère</AutoFixNames>
     <CheckOneLetterWords>Rechercher les mots inconnus à une lettre</CheckOneLetterWords>
-    <TreatINQuoteAsING>Traiter les mots se terminant par "in" comme "ing" (uniquement en anglais)</TreatINQuoteAsING>
+    <TreatINQuoteAsING>Traiter les mots terminant par " in" en " ing" (anglais uniquement)</TreatINQuoteAsING>
     <ImageText>Texte de l'image</ImageText>
     <SpellCheckCompleted>Vérification d'orthographe terminée</SpellCheckCompleted>
     <SpellCheckAborted>Vérification d'orthographe interrompue</SpellCheckAborted>
@@ -1652,12 +1663,12 @@ Poursuivre?</SubtitleAppendPrompt>
   </Split>
   <SplitLongLines>
     <Title>Diviser lignes trop longues</Title>
-    <SingleLineMaximumLength>Longueur maximale d'une ligne</SingleLineMaximumLength>
-    <LineMaximumLength>Longueur de ligne maximum</LineMaximumLength>
+    <SingleLineMaximumLength>Maxi. caractères d'une ligne</SingleLineMaximumLength>
+    <LineMaximumLength>Maxi. caractères d’un sous-titre</LineMaximumLength>
     <LineContinuationBeginEndStrings>Continuation de la ligne début/fin</LineContinuationBeginEndStrings>
     <NumberOfSplits>Nombre de divisions: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>La plus longue ligne isolée contient {0} caractères à la ligne {1}</LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>La plus longue ligne contient {0} caractères à la ligne {1}</LongestLineIsXAtY>
+    <LongestLineIsXAtY>Le plus long sous-titre contient {0} caractères à la ligne {1}</LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Diviser sous-titres</Title>
@@ -1826,7 +1837,7 @@ Poursuivre?</SubtitleAppendPrompt>
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Importer sous-titres OCR VobSub (sub/idx)</Title>
-    <TitleBluRay>Importer sous-titres Blu-ray (.sup)</TitleBluRay>
+    <TitleBluRay>Importer sous-titres Blu-ray (sup)</TitleBluRay>
     <OcrMethod>Méthode OCR</OcrMethod>
     <OcrViaModi>OCR par Microsoft Office Document Imaging (MODI)</OcrViaModi>
     <OcrViaTesseract>OCR par Tesseract</OcrViaTesseract>
