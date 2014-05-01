@@ -104,12 +104,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             string paragraphWriteFormat = @"<SYNC Start={0}><P Class={3}>{2}" + Environment.NewLine +
                                            @"<SYNC Start={1}><P Class={3}>&nbsp;";
-            string paragraphWriteFormatOpen = @"<SYNC Start={0}><P Class={2}>{1}";
+            //string paragraphWriteFormatOpen = @"<SYNC Start={0}><P Class={2}>{1}";
             if (Name == new SamiModern().Name)
             {
                 paragraphWriteFormat = "<SYNC Start=\"{0}\"><P Class=\"{3}\">{2}</P></SYNC>" + Environment.NewLine +
                                        "<SYNC Start=\"{1}\"><P Class=\"{3}\">&nbsp;</P></SYNC>";
-                paragraphWriteFormatOpen = "<SYNC Start=\"{0}\"><P Class=\"{2}\">{1}</P></SYNC>";
+                //paragraphWriteFormatOpen = "<SYNC Start=\"{0}\"><P Class=\"{2}\">{1}</P></SYNC>";
             }
 
             int count = 1;
