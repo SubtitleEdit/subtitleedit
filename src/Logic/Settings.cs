@@ -743,6 +743,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainFileOpenKeepVideo { get; set; }
         public string MainFileSave { get; set; }
         public string MainFileSaveOriginal { get; set; }
+        public string MainFileSaveOriginalAs { get; set; }
         public string MainFileSaveAs { get; set; }
         public string MainFileSaveAll { get; set; }
         public string MainFileExportEbu { get; set; }
@@ -863,6 +864,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainFileOpen = "Control+O";
             MainFileSave = "Control+S";
             MainFileSaveOriginal = string.Empty;
+            MainFileSaveOriginalAs = string.Empty;
             MainFileSaveAs = string.Empty;
             MainFileSaveAll = string.Empty;
             MainFileExportEbu = string.Empty;
@@ -2149,6 +2151,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainFileSaveOriginal");
                 if (subNode != null)
                     settings.Shortcuts.MainFileSaveOriginal = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainFileSaveOriginalAs");
+                if (subNode != null)
+                    settings.Shortcuts.MainFileSaveOriginalAs = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainFileSaveAs");
                 if (subNode != null)
                     settings.Shortcuts.MainFileSaveAs = subNode.InnerText;
@@ -2918,6 +2923,7 @@ namespace Nikse.SubtitleEdit.Logic
                     textWriter.WriteElementString("MainFileOpenKeepVideo", settings.Shortcuts.MainFileOpenKeepVideo);
                     textWriter.WriteElementString("MainFileSave", settings.Shortcuts.MainFileSave);
                     textWriter.WriteElementString("MainFileSaveOriginal", settings.Shortcuts.MainFileSaveOriginal);
+                    textWriter.WriteElementString("MainFileSaveOriginalAs", settings.Shortcuts.MainFileSaveOriginalAs);
                     textWriter.WriteElementString("MainFileSaveAs", settings.Shortcuts.MainFileSaveAs);
                     textWriter.WriteElementString("MainFileSaveAll", settings.Shortcuts.MainFileSaveAll);
                     textWriter.WriteElementString("MainFileExportEbu", settings.Shortcuts.MainFileExportEbu);
