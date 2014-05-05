@@ -629,6 +629,10 @@ namespace Nikse.SubtitleEdit.Forms
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.OpenKeepVideo + GetShortcutText(Configuration.Settings.Shortcuts.MainFileOpenKeepVideo));
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Save + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSave));
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.SaveAs + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSaveAs));
+            fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.SaveOriginal + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSaveOriginal));
+            fileNode.Nodes.Add(Configuration.Settings.Language.Main.SaveOriginalSubtitleAs + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSaveOriginalAs));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainFileSaveAll))
+                fileNode.Nodes.Add(Configuration.Settings.Language.Settings.MainFileSaveAll + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSaveAll));
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportEbu + GetShortcutText(Configuration.Settings.Shortcuts.MainFileExportEbu));
             treeViewShortcuts.Nodes.Add(fileNode);
 
@@ -715,6 +719,10 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxMoveLastWordDown + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp))
                 textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxSelectionToLower))
+                textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxSelectionToLower + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxSelectionToUpper))
+                textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxSelectionToUpper + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper));
             textBoxNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxInsertAfter));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxAutoBreak))
                 textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxAutoBreak + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak));
@@ -1229,6 +1237,12 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainFileSave = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.File.SaveAs.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainFileSaveAs = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.File.SaveOriginal.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainFileSaveOriginal = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.SaveOriginalSubtitleAs.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainFileSaveOriginalAs = GetShortcut(node.Text);
+                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainFileSaveAll) && text == Configuration.Settings.Language.Settings.MainFileSaveAll.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainFileSaveAll = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportEbu).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainFileExportEbu = GetShortcut(node.Text);
                 }
@@ -1406,6 +1420,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp != null && text == Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.MainTextBoxSelectionToLower != null && text == Configuration.Settings.Language.Settings.MainTextBoxSelectionToLower.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.MainTextBoxSelectionToUpper != null && text == Configuration.Settings.Language.Settings.MainTextBoxSelectionToUpper.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper = GetShortcut(node.Text);                    
                     else if (Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter != null && text == Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxInsertAfter = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Settings.MainTextBoxAutoBreak != null && text == Configuration.Settings.Language.Settings.MainTextBoxAutoBreak.Replace("&", string.Empty))

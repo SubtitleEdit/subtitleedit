@@ -19,6 +19,10 @@ namespace Nikse.SubtitleEdit.Forms
         public void Initialize()
         {
             Text = _language.Title;
+            if (IntPtr.Size == 8 && _language.Title == "About Subtitle Edit")
+                Text = Text + " - 64-bit";
+            else if (IntPtr.Size == 4 && _language.Title == "About Subtitle Edit")
+                Text = Text + " - 32-bit";
             okButton.Text = _languageGeneral.OK;
             string[] versionInfo = Utilities.AssemblyVersion.Split('.');
             string minorMinorVersion = string.Empty;

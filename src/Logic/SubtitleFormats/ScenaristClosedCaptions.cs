@@ -1654,7 +1654,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string part = parts[k];
                 if (part.Length == 4)
                 {
-                    if (part == "94ae" || part == "9420")
+                    if (part == "94ae" || part == "9420" || part.ToLower() == "94ad" || part == "9426")
                     {
                     }
                     else

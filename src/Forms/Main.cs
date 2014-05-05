@@ -109,6 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainGeneralGoToPrevSubtitle = Keys.None;
         Keys _mainGeneralGoToStartOfCurrentSubtitle = Keys.None;
         Keys _mainGeneralGoToEndOfCurrentSubtitle = Keys.None;
+        Keys _mainGeneralFileSaveAll = Keys.None;        
         Keys _mainToolsAutoDuration = Keys.None;
         Keys _mainToolsBeamer = Keys.None;
         Keys _toggleVideoDockUndock = Keys.None;
@@ -126,6 +127,8 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainTextBoxSplitAtCursor = Keys.None;
         Keys _mainTextBoxMoveLastWordDown = Keys.None;
         Keys _mainTextBoxMoveFirstWordFromNextUp = Keys.None;
+        Keys _mainTextBoxSelectionToLower = Keys.None;
+        Keys _mainTextBoxSelectionToUpper = Keys.None;
         Keys _mainCreateInsertSubAtVideoPos = Keys.None;
         Keys _mainCreatePlayFromJustBefore = Keys.None;
         Keys _mainCreateSetStart = Keys.None;
@@ -7003,222 +7006,246 @@ namespace Nikse.SubtitleEdit.Forms
                 InsertAfter();
                 e.SuppressKeyPress = true;
             }
-            else if (_mainTextBoxMoveLastWordDown == e.KeyData)     // ***
-            {
-                int firstIndex = FirstSelectedIndex;
-                if (firstIndex >= 0)
-                {
-                    var p = _subtitle.GetParagraphOrDefault(firstIndex);
-                    var next = _subtitle.GetParagraphOrDefault(firstIndex + 1);
-                    if (p != null && next != null)
-                    {
-                        string s = p.Text.Trim();
-                        int idx = s.LastIndexOf(" ");
-                        if (idx > 0 || s.Length > 0)
-                        // A last word was found or the first subtitle is not empty (has one word).
-                        {
-                            // Undo
-                            MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
-
-                            // Define lastWord. If idx > 0, there is a last word.
-                            // If not, lastWord is the whole text of the first subtitle.
-                            string lastWord = (idx > 0 ? s.Substring(idx).Trim() : p.Text);
-
-                            // Remove last word from the first subtitle.
-                            p.Text = (idx > 0 ? Utilities.AutoBreakLine(s.Substring(0, idx).Trim()) : string.Empty);
-
-                            // If the first subtitle ends with a tag (</i>):
-                            String endTag = "";
-                            if (lastWord.EndsWith(">") && lastWord.Contains("<"))
-                            {
-                                // Save the end tag.
-                                endTag = lastWord.Substring(lastWord.LastIndexOf("<"), lastWord.Length - lastWord.LastIndexOf("<"));
-                                // Remove the end tag from the last word.
-                                lastWord = lastWord.Remove(lastWord.LastIndexOf("<"));
-                            }
-
-                            // If the first subtitle ends with "...":
-                            Boolean firstSubtitleEndsWithEllipsis = lastWord.EndsWith("...");
-                            if (firstSubtitleEndsWithEllipsis)
-                            {
-                                // Remove "..." from the last word.
-                                lastWord = lastWord.TrimEnd('.');
-                            }
-
-                            // If the second subtitle (next) starts with a position tag, like {\an8}:
-                            String positionTag = "";
-                            if (next.Text.StartsWith("{") && next.Text.Contains("}"))
-                            {
-                                // Save the start tag.
-                                positionTag = next.Text.Substring(next.Text.IndexOf("{"), next.Text.IndexOf("}") + 1);
-                                // Remove the position tag from next subtitle.
-                                next.Text = next.Text.Remove(0, next.Text.IndexOf("}") + 1);
-                            }
-
-                            // If the second subtitle (next) starts with a tag:
-                            String startTag = "";
-                            if (next.Text.StartsWith("<") && next.Text.Contains(">"))
-                            {
-                                // Save the start tag.
-                                startTag = next.Text.Substring(next.Text.IndexOf("<"), next.Text.IndexOf(">") + 1);
-                                // Remove the start tag from next subtitle.
-                                next.Text = next.Text.Remove(0, next.Text.IndexOf(">") + 1);
-                            }
-
-                            // If the second subtitle (next) starts with a dialogue ("-"):
-                            String dialogueMarker = "";
-                            if (next.Text.StartsWith("-"))
-                            {
-                                // Save the dialogue marker ("-" or "- ").
-                                dialogueMarker = (next.Text.StartsWith("- ") ? "- " : "-");
-                                // Remove the dialogue marker from the next subtitle.
-                                next.Text = next.Text.Remove(0, dialogueMarker.Length);
-                            }
-
-                            // If the second subtitle starts with "...":
-                            Boolean nextSubtitleStartsWithEllipsis = next.Text.StartsWith("...");
-                            if (nextSubtitleStartsWithEllipsis)
-                            {
-                                // Remove "..." from the beginning of 'next'.
-                                next.Text = next.Text.TrimStart('.');
-                            }
-
-                            // Add text + "..." + endTag to first subtitle.
-                            if (idx > 0)
-                                p.Text = p.Text + (firstSubtitleEndsWithEllipsis ? "..." : "") + endTag;
-
-                            // Add positionTag + startTag + dialogueMarker + "..." + lastWord to 'next'.
-                            next.Text = (idx > 0 ? positionTag : "") + (idx > 0 ? startTag : "") + dialogueMarker + (nextSubtitleStartsWithEllipsis && idx > 0 ? "..." : "") + Utilities.AutoBreakLine(lastWord.Trim() + " " + next.Text.Trim());
-                        }
-
-                        SubtitleListview1.SetText(firstIndex, p.Text);
-                        SubtitleListview1.SetText(firstIndex + 1, next.Text);
-
-                        textBoxListViewText.Text = p.Text;
-                    }
-                }
-                e.SuppressKeyPress = true;
-            }
-            else if (_mainTextBoxMoveFirstWordFromNextUp == e.KeyData)     // ***
-            {
-                int firstIndex = FirstSelectedIndex;
-                if (firstIndex >= 0)
-                {
-                    var p = _subtitle.GetParagraphOrDefault(firstIndex);
-                    var next = _subtitle.GetParagraphOrDefault(firstIndex + 1);
-                    if (p != null && next != null)
-                    {
-                        string s = next.Text.Trim();
-                        // Find the first space.
-                        int idx = s.IndexOf(" ");
-                        // If the first space is after a "-", even if there is "{\an8}<i>" before, find the second space.
-                        if(idx > 0 && s.Substring(idx - 1, 2) == "- ")
-                            idx = idx + 1 + s.Substring(idx + 1).IndexOf(" ");
-
-                        if (idx > 0 || s.Length > 0)
-                        // A first word was found or next subtitle is not empty (has one word).
-                        {
-                            // Undo
-                            MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
-
-                            // Define firstWord. If idx > 0, there is a first word.
-                            // If not, firstWord is the whole text of the next subtitle.
-                            string firstWord = ( idx > 0 ? s.Substring(0,idx).Trim() : next.Text);
-
-                            // Remove first word from the next subtitle.
-                            // If there is only one word, 'next' will be empty.
-                            next.Text = (idx > 0 ? Utilities.AutoBreakLine(s.Substring(idx+1).Trim()) : string.Empty);
-
-                            // If the first subtitle ends with a tag (</i>):
-                            String endTag = "";
-                            if (p.Text.EndsWith(">") && p.Text.Contains("<"))
-                            {
-                                // Save the end tag.
-                                endTag = p.Text.Substring(p.Text.LastIndexOf("<"), p.Text.Length - p.Text.LastIndexOf("<"));
-                                // Remove the endTag from first subtitle.
-                                p.Text = p.Text.Remove(p.Text.LastIndexOf("<"));
-                            }
-
-                            // If the first subtitle ends with "...":
-                            Boolean firstSubtitleEndsWithEllipsis = p.Text.EndsWith("...");
-                            if (firstSubtitleEndsWithEllipsis)
-                            {
-                                // Remove "..." from first subtitle.
-                                p.Text = p.Text.TrimEnd('.');
-                            }
-
-                            // If the second subtitle (next) starts with a position tag, like {\an8}:
-                            String positionTag = "";
-                            if (firstWord.StartsWith("{") && firstWord.Contains("}"))
-                            {
-                                // Save the start tag.
-                                positionTag = firstWord.Substring(firstWord.IndexOf("{"), firstWord.IndexOf("}") + 1);
-                                // Remove the position tag from the first word.
-                                firstWord = firstWord.Remove(0, firstWord.IndexOf("}") + 1);
-                            }
-
-                            // If the second subtitle (next) starts with a tag:
-                            String startTag = "";
-                            if (firstWord.StartsWith("<") && firstWord.Contains(">"))
-                            {
-                                // Save the start tag.
-                                startTag = firstWord.Substring(firstWord.IndexOf("<"), firstWord.IndexOf(">") + 1);
-                                // Remove the start tag from the first word.
-                                firstWord = firstWord.Remove(0, firstWord.IndexOf(">") + 1);
-                             }
-
-                            // If the second subtitle ends with a tag and there's only one word in it:
-                            if (next.Text.EndsWith(">") && next.Text.Contains("<") && next.Text.IndexOf(" ") < 0)
-                            {
-                                // Remove the end tag.
-                                next.Text = next.Text.Remove(next.Text.LastIndexOf("<"));
-                            }
-
-                            // If the second subtitle (next) starts with a dialogue ("-"):
-                            String dialogueMarker = "";
-                            if (firstWord.StartsWith("-"))
-                            {
-                                // Save the dialogue marker ("-" or "- ").
-                                dialogueMarker = (firstWord.StartsWith("- ") ? "- " : "-");
-                                // Remove the dialogue marker from the first word.
-                                firstWord = firstWord.Remove(0, dialogueMarker.Length);
-                            }
-
-                            // If the second subtitle starts with "...":
-                            Boolean nextSubtitleStartsWithEllipsis = firstWord.StartsWith("...");
-                            if (nextSubtitleStartsWithEllipsis)
-                            {
-                                // Remove "..." from the beginning of first word.
-                                firstWord = firstWord.TrimStart('.');
-                            }
-
-                            // Add positionTag + startTag + dialogueMarker + "..." + text to 'next'.
-                            if (idx > 0)
-                                next.Text = positionTag + startTag + dialogueMarker + (nextSubtitleStartsWithEllipsis ? "..." : "") + Utilities.AutoBreakLine(next.Text.Trim());
-
-                            // Add text + firstWord + "..." + endTag to First line.
-                            p.Text = (idx == 0 ? startTag : "") + Utilities.AutoBreakLine(p.Text.Trim() + " " + firstWord.Trim()) + (idx > 0 && firstSubtitleEndsWithEllipsis ? "..." : "") + endTag;
-
-                        }
-
-                        SubtitleListview1.SetText(firstIndex, p.Text);
-                        SubtitleListview1.SetText(firstIndex + 1, next.Text);
-
-                        textBoxListViewText.Text = p.Text;
-                    }
-                }
-                e.SuppressKeyPress = true;
-            }
             else if (e.KeyData == _mainListViewGoToNextError)
             {
                 GoToNextSynaxError();
                 e.SuppressKeyPress = true;
+            }
+            else if (_mainTextBoxSelectionToLower == e.KeyData) // selection to lowercase
+            {
+                if (textBoxListViewText.SelectionLength > 0)
+                {
+                    int start = textBoxListViewText.SelectionStart;
+                    int length = textBoxListViewText.SelectionLength;
+                    textBoxListViewText.SelectedText = textBoxListViewText.SelectedText.ToLower();
+                    textBoxListViewText.SelectionStart = start;
+                    textBoxListViewText.SelectionLength = length;
+                    e.SuppressKeyPress = true;
+                }
+            }
+            else if (_mainTextBoxSelectionToUpper == e.KeyData) // selection to uppercase
+            {
+                if (textBoxListViewText.SelectionLength > 0)
+                {
+                    int start = textBoxListViewText.SelectionStart;
+                    int length = textBoxListViewText.SelectionLength;
+                    textBoxListViewText.SelectedText = textBoxListViewText.SelectedText.ToUpper();
+                    textBoxListViewText.SelectionStart = start;
+                    textBoxListViewText.SelectionLength = length;
+                    e.SuppressKeyPress = true;
+                }
             }
 
             // last key down in text
             _lastTextKeyDownTicks = DateTime.Now.Ticks;
 
             UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
+        }
+
+        private void MoveFirstWordInNextUp()
+        {
+            int firstIndex = FirstSelectedIndex;
+            if (firstIndex >= 0)
+            {
+                var p = _subtitle.GetParagraphOrDefault(firstIndex);
+                var next = _subtitle.GetParagraphOrDefault(firstIndex + 1);
+                if (p != null && next != null)
+                {
+                    string s = next.Text.Trim();
+                    // Find the first space.
+                    int idx = s.IndexOf(" ");
+                    // If the first space is after a "-", even if there is "{\an8}<i>" before, find the second space.
+                    if (idx > 0 && s.Substring(idx - 1, 2) == "- ")
+                        idx = idx + 1 + s.Substring(idx + 1).IndexOf(" ");
+
+                    if (idx > 0 || s.Length > 0)
+                    // A first word was found or next subtitle is not empty (has one word).
+                    {
+                        // Undo
+                        MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
+
+                        // Define firstWord. If idx > 0, there is a first word.
+                        // If not, firstWord is the whole text of the next subtitle.
+                        string firstWord = (idx > 0 ? s.Substring(0, idx).Trim() : next.Text);
+
+                        // Remove first word from the next subtitle.
+                        // If there is only one word, 'next' will be empty.
+                        next.Text = (idx > 0 ? Utilities.AutoBreakLine(s.Substring(idx + 1).Trim()) : string.Empty);
+
+                        // If the first subtitle ends with a tag (</i>):
+                        String endTag = "";
+                        if (p.Text.EndsWith(">") && p.Text.Contains("<"))
+                        {
+                            // Save the end tag.
+                            endTag = p.Text.Substring(p.Text.LastIndexOf("<"), p.Text.Length - p.Text.LastIndexOf("<"));
+                            // Remove the endTag from first subtitle.
+                            p.Text = p.Text.Remove(p.Text.LastIndexOf("<"));
+                        }
+
+                        // If the first subtitle ends with "...":
+                        Boolean firstSubtitleEndsWithEllipsis = p.Text.EndsWith("...");
+                        if (firstSubtitleEndsWithEllipsis)
+                        {
+                            // Remove "..." from first subtitle.
+                            p.Text = p.Text.TrimEnd('.');
+                        }
+
+                        // If the second subtitle (next) starts with a position tag, like {\an8}:
+                        String positionTag = "";
+                        if (firstWord.StartsWith("{") && firstWord.Contains("}"))
+                        {
+                            // Save the start tag.
+                            positionTag = firstWord.Substring(firstWord.IndexOf("{"), firstWord.IndexOf("}") + 1);
+                            // Remove the position tag from the first word.
+                            firstWord = firstWord.Remove(0, firstWord.IndexOf("}") + 1);
+                        }
+
+                        // If the second subtitle (next) starts with a tag:
+                        String startTag = "";
+                        if (firstWord.StartsWith("<") && firstWord.Contains(">"))
+                        {
+                            // Save the start tag.
+                            startTag = firstWord.Substring(firstWord.IndexOf("<"), firstWord.IndexOf(">") + 1);
+                            // Remove the start tag from the first word.
+                            firstWord = firstWord.Remove(0, firstWord.IndexOf(">") + 1);
+                        }
+
+                        // If the second subtitle ends with a tag and there's only one word in it:
+                        if (next.Text.EndsWith(">") && next.Text.Contains("<") && next.Text.IndexOf(" ") < 0)
+                        {
+                            // Remove the end tag.
+                            next.Text = next.Text.Remove(next.Text.LastIndexOf("<"));
+                        }
+
+                        // If the second subtitle (next) starts with a dialogue ("-"):
+                        String dialogueMarker = "";
+                        if (firstWord.StartsWith("-"))
+                        {
+                            // Save the dialogue marker ("-" or "- ").
+                            dialogueMarker = (firstWord.StartsWith("- ") ? "- " : "-");
+                            // Remove the dialogue marker from the first word.
+                            firstWord = firstWord.Remove(0, dialogueMarker.Length);
+                        }
+
+                        // If the second subtitle starts with "...":
+                        Boolean nextSubtitleStartsWithEllipsis = firstWord.StartsWith("...");
+                        if (nextSubtitleStartsWithEllipsis)
+                        {
+                            // Remove "..." from the beginning of first word.
+                            firstWord = firstWord.TrimStart('.');
+                        }
+
+                        // Add positionTag + startTag + dialogueMarker + "..." + text to 'next'.
+                        if (idx > 0)
+                            next.Text = positionTag + startTag + dialogueMarker + (nextSubtitleStartsWithEllipsis ? "..." : "") + Utilities.AutoBreakLine(next.Text.Trim());
+
+                        // Add text + firstWord + "..." + endTag to First line.
+                        p.Text = (idx == 0 ? startTag : "") + Utilities.AutoBreakLine(p.Text.Trim() + " " + firstWord.Trim()) + (idx > 0 && firstSubtitleEndsWithEllipsis ? "..." : "") + endTag;
+
+                    }
+
+                    SubtitleListview1.SetText(firstIndex, p.Text);
+                    SubtitleListview1.SetText(firstIndex + 1, next.Text);
+
+                    textBoxListViewText.Text = p.Text;
+                }
+            }
+        }
+
+        private void MoveLastWordDown()
+        {
+            int firstIndex = FirstSelectedIndex;
+            if (firstIndex >= 0)
+            {
+                var p = _subtitle.GetParagraphOrDefault(firstIndex);
+                var next = _subtitle.GetParagraphOrDefault(firstIndex + 1);
+                if (p != null && next != null)
+                {
+                    string s = p.Text.Trim();
+                    int idx = s.LastIndexOf(" ");
+                    if (idx > 0 || s.Length > 0)
+                    // A last word was found or the first subtitle is not empty (has one word).
+                    {
+                        // Undo
+                        MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
+
+                        // Define lastWord. If idx > 0, there is a last word.
+                        // If not, lastWord is the whole text of the first subtitle.
+                        string lastWord = (idx > 0 ? s.Substring(idx).Trim() : p.Text);
+
+                        // Remove last word from the first subtitle.
+                        p.Text = (idx > 0 ? Utilities.AutoBreakLine(s.Substring(0, idx).Trim()) : string.Empty);
+
+                        // If the first subtitle ends with a tag (</i>):
+                        String endTag = "";
+                        if (lastWord.EndsWith(">") && lastWord.Contains("<"))
+                        {
+                            // Save the end tag.
+                            endTag = lastWord.Substring(lastWord.LastIndexOf("<"), lastWord.Length - lastWord.LastIndexOf("<"));
+                            // Remove the end tag from the last word.
+                            lastWord = lastWord.Remove(lastWord.LastIndexOf("<"));
+                        }
+
+                        // If the first subtitle ends with "...":
+                        Boolean firstSubtitleEndsWithEllipsis = lastWord.EndsWith("...");
+                        if (firstSubtitleEndsWithEllipsis)
+                        {
+                            // Remove "..." from the last word.
+                            lastWord = lastWord.TrimEnd('.');
+                        }
+
+                        // If the second subtitle (next) starts with a position tag, like {\an8}:
+                        String positionTag = "";
+                        if (next.Text.StartsWith("{") && next.Text.Contains("}"))
+                        {
+                            // Save the start tag.
+                            positionTag = next.Text.Substring(next.Text.IndexOf("{"), next.Text.IndexOf("}") + 1);
+                            // Remove the position tag from next subtitle.
+                            next.Text = next.Text.Remove(0, next.Text.IndexOf("}") + 1);
+                        }
+
+                        // If the second subtitle (next) starts with a tag:
+                        String startTag = "";
+                        if (next.Text.StartsWith("<") && next.Text.Contains(">"))
+                        {
+                            // Save the start tag.
+                            startTag = next.Text.Substring(next.Text.IndexOf("<"), next.Text.IndexOf(">") + 1);
+                            // Remove the start tag from next subtitle.
+                            next.Text = next.Text.Remove(0, next.Text.IndexOf(">") + 1);
+                        }
+
+                        // If the second subtitle (next) starts with a dialogue ("-"):
+                        String dialogueMarker = "";
+                        if (next.Text.StartsWith("-"))
+                        {
+                            // Save the dialogue marker ("-" or "- ").
+                            dialogueMarker = (next.Text.StartsWith("- ") ? "- " : "-");
+                            // Remove the dialogue marker from the next subtitle.
+                            next.Text = next.Text.Remove(0, dialogueMarker.Length);
+                        }
+
+                        // If the second subtitle starts with "...":
+                        Boolean nextSubtitleStartsWithEllipsis = next.Text.StartsWith("...");
+                        if (nextSubtitleStartsWithEllipsis)
+                        {
+                            // Remove "..." from the beginning of 'next'.
+                            next.Text = next.Text.TrimStart('.');
+                        }
+
+                        // Add text + "..." + endTag to first subtitle.
+                        if (idx > 0)
+                            p.Text = p.Text + (firstSubtitleEndsWithEllipsis ? "..." : "") + endTag;
+
+                        // Add positionTag + startTag + dialogueMarker + "..." + lastWord to 'next'.
+                        next.Text = (idx > 0 ? positionTag : "") + (idx > 0 ? startTag : "") + dialogueMarker + (nextSubtitleStartsWithEllipsis && idx > 0 ? "..." : "") + Utilities.AutoBreakLine(lastWord.Trim() + " " + next.Text.Trim());
+                    }
+
+                    SubtitleListview1.SetText(firstIndex, p.Text);
+                    SubtitleListview1.SetText(firstIndex + 1, next.Text);
+
+                    textBoxListViewText.Text = p.Text;
+                }
+            }
         }
 
         private void MakeAutoDurationSelectedLines()
@@ -7926,10 +7953,21 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
+                                string old1 = original.Text;
+                                string old2 = originalNext.Text;
                                 original.Text = original.Text.Replace(Environment.NewLine, " ");
                                 original.Text += Environment.NewLine + originalNext.Text.Replace(Environment.NewLine, " ");
                                 original.Text = ChangeAllLinesItalictoSingleItalic(original.Text);
-                                original.Text = Utilities.AutoBreakLine(original.Text);
+
+                                if (old1.Contains(Environment.NewLine) || old2.Contains(Environment.NewLine) ||
+                                    old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                                    original.Text = Utilities.AutoBreakLine(original.Text, Utilities.AutoDetectGoogleLanguage(_subtitleAlternate));
+
+                                if (string.IsNullOrEmpty(old1) || old1.Trim().Length == 0)
+                                    original.Text = original.Text.TrimStart();
+
+                                if (string.IsNullOrEmpty(old2) || old2.Trim().Length == 0)
+                                    original.Text = original.Text.TrimEnd();
                             }
                             original.EndTime = originalNext.EndTime;
                             _subtitleAlternate.Paragraphs.Remove(originalNext);
@@ -7969,6 +8007,12 @@ namespace Nikse.SubtitleEdit.Forms
                     if (old1.Contains(Environment.NewLine) || old2.Contains(Environment.NewLine) ||
                         old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                         currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text, Utilities.AutoDetectGoogleLanguage(_subtitle));
+
+                    if (string.IsNullOrEmpty(old1) || old1.Trim().Length == 0)
+                        currentParagraph.Text = currentParagraph.Text.TrimStart();
+
+                    if (string.IsNullOrEmpty(old2) || old2.Trim().Length == 0)
+                        currentParagraph.Text = currentParagraph.Text.TrimEnd();
                 }
 
                 //currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + nextParagraph.Duration.TotalMilliseconds; //nextParagraph.EndTime;
@@ -10559,6 +10603,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
+            else if (_mainGeneralFileSaveAll == e.KeyData)
+            {
+                ToolStripButtonSaveClick(sender, e);
+                e.SuppressKeyPress = true;
+            }
             else if (_mainToggleFocus == e.KeyData && inListView)
             {
                 if (SubtitleListview1.Focused)
@@ -10925,6 +10974,17 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
+            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _mainTextBoxMoveLastWordDown == e.KeyData) 
+            {
+                MoveLastWordDown();
+                e.SuppressKeyPress = true;
+            }
+            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _mainTextBoxMoveFirstWordFromNextUp == e.KeyData)  
+            {
+                MoveFirstWordInNextUp();
+                e.SuppressKeyPress = true;
+            }
+
 
             // TABS - MUST BE LAST
             else if (tabControlButtons.SelectedTab == tabPageAdjust)
@@ -14294,7 +14354,10 @@ namespace Nikse.SubtitleEdit.Forms
             openToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
             toolStripMenuItemOpenKeepVideo.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileOpenKeepVideo);
             saveToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSave);
+            saveOriginalToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveOriginal);
+            saveOriginalAstoolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveOriginalAs);
             saveAsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
+            _mainGeneralFileSaveAll = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAll);
             eBUSTLToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEbu);
 
             toolStripMenuItemUndo.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditUndo);
@@ -14358,6 +14421,8 @@ namespace Nikse.SubtitleEdit.Forms
             _mainTextBoxSplitAtCursor = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
             _mainTextBoxMoveLastWordDown = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown);
             _mainTextBoxMoveFirstWordFromNextUp = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
+            _mainTextBoxSelectionToLower = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower);
+            _mainTextBoxSelectionToUpper = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper);
             _mainCreateInsertSubAtVideoPos = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
             _mainCreatePlayFromJustBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore);
             _mainCreateSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
@@ -16556,6 +16621,30 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxListViewTextAlternate.SelectionLength = 0;
                 e.SuppressKeyPress = true;
+            }
+            else if (_mainTextBoxSelectionToLower == e.KeyData) // selection to lowercase
+            {
+                if (textBoxListViewTextAlternate.SelectionLength > 0)
+                {
+                    int start = textBoxListViewTextAlternate.SelectionStart;
+                    int length = textBoxListViewTextAlternate.SelectionLength;
+                    textBoxListViewTextAlternate.SelectedText = textBoxListViewTextAlternate.SelectedText.ToLower();
+                    textBoxListViewTextAlternate.SelectionStart = start;
+                    textBoxListViewTextAlternate.SelectionLength = length;
+                    e.SuppressKeyPress = true;
+                }
+            }
+            else if (_mainTextBoxSelectionToUpper == e.KeyData) // selection to uppercase
+            {
+                if (textBoxListViewTextAlternate.SelectionLength > 0)
+                {
+                    int start = textBoxListViewTextAlternate.SelectionStart;
+                    int length = textBoxListViewTextAlternate.SelectionLength;
+                    textBoxListViewTextAlternate.SelectedText = textBoxListViewTextAlternate.SelectedText.ToUpper();
+                    textBoxListViewTextAlternate.SelectionStart = start;
+                    textBoxListViewTextAlternate.SelectionLength = length;
+                    e.SuppressKeyPress = true;
+                }
             }
 
             // last key down in text
