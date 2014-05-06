@@ -117,10 +117,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Percent>Porcentaje</Percent>
     <Recalculate>Recalcular</Recalculate>
     <AddSeconds>Añadir segundos</AddSeconds>
-    <SetAsPercent>Ajustar como porcentaje de duración</SetAsPercent>
+    <SetAsPercent>Ajustar duración por porcentaje</SetAsPercent>
     <Note>Nota: La duración no puede solapar el tiempo de inicio del texto siguiente</Note>
     <PleaseSelectAValueFromTheDropDownList>Por favor, seleccione un valor de la lista desplegable</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Por favor, seleccione - </PleaseChoose>
+    <PleaseChoose> - Por favor, elige uno - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Aplicar límites de duración</Title>
@@ -1398,7 +1398,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <DefaultFileEncoding>Codificación del archivo por defecto</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Autodetectar codificación ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Longitud máxima línea simple</SubtitleLineMaximumLength>
-    <MaximumCharactersPerSecond>Máximo de caracteres/segundo</MaximumCharactersPerSecond>
+    <MaximumCharactersPerSecond>Máximo de caracteres/seg</MaximumCharactersPerSecond>
     <AutoWrapWhileTyping>Autoajuste de línea durante escritura</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Duración mínima, milisegundos</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Duración máxima, milisegundos</DurationMaximumMilliseconds>
