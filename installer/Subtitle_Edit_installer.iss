@@ -48,7 +48,8 @@
 #define VerBuild
 #define VerRevision
 
-#define bindir "..\src\bin\Release"
+#define bindir     "..\src\bin\Release\x86"
+#define bindir_x64 "..\src\bin\Release\x64"
 
 #ifnexist bindir + "\SubtitleEdit.exe"
   #error Compile Subtitle Edit first
@@ -112,6 +113,8 @@ PrivilegesRequired=admin
 ShowLanguageDialog=yes
 DisableDirPage=auto
 DisableProgramGroupPage=auto
+ArchitecturesAllowed=x86 x64
+ArchitecturesInstallIn64BitMode=x64
 
 
 [Languages]
@@ -203,7 +206,8 @@ Source: ..\Dictionaries\ru_RU_names_etc.xml;       DestDir: {userappdata}\Subtit
 Source: ..\Dictionaries\ru_RU_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
 Source: ..\Dictionaries\rus_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
 Source: ..\Dictionaries\swe_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: {#bindir}\Hunspellx86.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir_x64}\Hunspellx64.dll;             DestDir: {app};                                    Flags: ignoreversion; Components: main; Check: Is64BitInstallMode()
+Source: {#bindir}\Hunspellx86.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main; Check: not Is64BitInstallMode()
 Source: {#bindir}\Icons\Find.png;                  DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\Help.png;                  DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\New.png;                   DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
@@ -252,7 +256,8 @@ Source: {#bindir}\Languages\zh-CHS.xml;            DestDir: {app}\Languages;    
 Source: {#bindir}\Languages\zh-tw.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 #endif
 
-Source: {#bindir}\SubtitleEdit.exe;                DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir_x64}\SubtitleEdit.exe;            DestDir: {app};                                    Flags: ignoreversion; Components: main; Check: Is64BitInstallMode()
+Source: {#bindir}\SubtitleEdit.exe;                DestDir: {app};                                    Flags: ignoreversion; Components: main; Check: not Is64BitInstallMode()
 Source: ..\src\Changelog.txt;                      DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\gpl.txt;                                DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\Tesseract\msvcp90.dll;                  DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
@@ -350,13 +355,15 @@ Type: dirifempty; Name: {app}\Languages;                Check: not IsComponentSe
 
 
 [Run]
-Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist
+Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe;   Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist; Check: not Is64BitInstallMode()
+Filename: {win}\Microsoft.NET\Framework64\v4.0.30319\ngen.exe; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist; Check: Is64BitInstallMode()
 Filename: {app}\SubtitleEdit.exe;            Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
 Filename: http://www.nikse.dk/SubtitleEdit/; Description: {cm:run_VisitWebsite};                               Flags: nowait postinstall skipifsilent unchecked shellexec
 
 
 [UninstallRun]
-Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist
+Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe;   Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist; Check: not Is64BitInstallMode()
+Filename: {win}\Microsoft.NET\Framework64\v4.0.30319\ngen.exe; Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist; Check: Is64BitInstallMode()
 
 
 [Code]
