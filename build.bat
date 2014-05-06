@@ -42,10 +42,17 @@ IF "%~1" == "" (
 :START
 PUSHD "src"
 
-CALL "%VS120COMNTOOLS%vsvars32.bat" x86
-TITLE %BUILDTYPE%ing SubtitleEdit - Release^|Any CPU...
+CALL "%VS120COMNTOOLS%..\..\VC\vcvarsall.bat" x86
+TITLE %BUILDTYPE%ing SubtitleEdit - Release^|x86...
 
-"MSBuild.exe" SubtitleEdit.sln /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="Any CPU"^
+"MSBuild.exe" SubtitleEdit.sln /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="x86"^
+ /maxcpucount /consoleloggerparameters:DisableMPLogging;Summary;Verbosity=minimal
+IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
+
+CALL "%VS120COMNTOOLS%..\..\VC\vcvarsall.bat" x86_amd64
+TITLE %BUILDTYPE%ing SubtitleEdit - Release^|x64...
+
+"MSBuild.exe" SubtitleEdit.sln /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="x64"^
  /maxcpucount /consoleloggerparameters:DisableMPLogging;Summary;Verbosity=minimal
 IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
@@ -81,8 +88,8 @@ EXIT /B
 
 
 :SubZipFile
-TITLE Creating the ZIP file...
-PUSHD "src\bin\Release"
+TITLE Creating the x86 ZIP file...
+PUSHD "src\bin\Release\x86"
 IF EXIST "temp_zip"                                RD /S /Q "temp_zip"
 IF NOT EXIST "temp_zip"                            MD "temp_zip"
 IF NOT EXIST "temp_zip\Languages"                  MD "temp_zip\Languages"
@@ -90,25 +97,58 @@ IF NOT EXIST "temp_zip\Tesseract"                  MD "temp_zip\Tesseract"
 IF NOT EXIST "temp_zip\Tesseract\tessdata"         MD "temp_zip\Tesseract\tessdata"
 IF NOT EXIST "temp_zip\Tesseract\tessdata\configs" MD "temp_zip\Tesseract\tessdata\configs"
 
-COPY /Y /V "..\..\..\gpl.txt"                            "temp_zip\"
-COPY /Y /V "..\..\Changelog.txt"                         "temp_zip\"
-COPY /Y /V "Interop.QuartzTypeLib.dll"                   "temp_zip\"
-COPY /Y /V "Hunspellx86.dll"                             "temp_zip\"
-COPY /Y /V "NHunspell.dll"                               "temp_zip\"
-COPY /Y /V "SubtitleEdit.exe"                            "temp_zip\"
-COPY /Y /V "Languages\*.xml"                             "temp_zip\Languages\"
-COPY /Y /V "..\..\..\Tesseract\msvcp90.dll"              "temp_zip\Tesseract\"
-COPY /Y /V "..\..\..\Tesseract\msvcr90.dll"              "temp_zip\Tesseract\"
-COPY /Y /V "..\..\..\Tesseract\tesseract.exe"            "temp_zip\Tesseract\"
-COPY /Y /V "..\..\..\Tesseract\tessdata\configs\hocr"    "temp_zip\Tesseract\tessdata\configs\"
-COPY /Y /V "..\..\..\Tesseract\tessdata\eng.traineddata" "temp_zip\Tesseract\tessdata\"
+COPY /Y /V "..\..\..\gpl.txt"                               "temp_zip\"
+COPY /Y /V "..\..\..\Changelog.txt"                         "temp_zip\"
+COPY /Y /V "Interop.QuartzTypeLib.dll"                      "temp_zip\"
+COPY /Y /V "Hunspellx86.dll"                                "temp_zip\"
+COPY /Y /V "NHunspell.dll"                                  "temp_zip\"
+COPY /Y /V "SubtitleEdit.exe"                               "temp_zip\"
+COPY /Y /V "Languages\*.xml"                                "temp_zip\Languages\"
+COPY /Y /V "..\..\..\..\Tesseract\msvcp90.dll"              "temp_zip\Tesseract\"
+COPY /Y /V "..\..\..\..\Tesseract\msvcr90.dll"              "temp_zip\Tesseract\"
+COPY /Y /V "..\..\..\..\Tesseract\tesseract.exe"            "temp_zip\Tesseract\"
+COPY /Y /V "..\..\..\..\Tesseract\tessdata\configs\hocr"    "temp_zip\Tesseract\tessdata\configs\"
+COPY /Y /V "..\..\..\..\Tesseract\tessdata\eng.traineddata" "temp_zip\Tesseract\tessdata\"
 
 PUSHD "temp_zip"
-START "" /B /WAIT "%SEVENZIP_PATH%" a -tzip -mx=9 "SE%VERSION%.zip" * >NUL
+START "" /B /WAIT "%SEVENZIP_PATH%" a -tzip -mx=9 "SE%VERSION%.x86.zip" * >NUL
 IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
 
-MOVE /Y "SE%VERSION%.zip" "..\..\..\.." >NUL
+MOVE /Y "SE%VERSION%.x86.zip" "..\..\..\..\.." >NUL
+POPD
+IF EXIST "temp_zip" RD /S /Q "temp_zip"
+POPD
+
+
+TITLE Creating the x64 ZIP file...
+PUSHD "src\bin\Release\x64"
+IF EXIST "temp_zip"                                RD /S /Q "temp_zip"
+IF NOT EXIST "temp_zip"                            MD "temp_zip"
+IF NOT EXIST "temp_zip\Languages"                  MD "temp_zip\Languages"
+IF NOT EXIST "temp_zip\Tesseract"                  MD "temp_zip\Tesseract"
+IF NOT EXIST "temp_zip\Tesseract\tessdata"         MD "temp_zip\Tesseract\tessdata"
+IF NOT EXIST "temp_zip\Tesseract\tessdata\configs" MD "temp_zip\Tesseract\tessdata\configs"
+
+COPY /Y /V "..\..\..\gpl.txt"                               "temp_zip\"
+COPY /Y /V "..\..\..\Changelog.txt"                         "temp_zip\"
+COPY /Y /V "Interop.QuartzTypeLib.dll"                      "temp_zip\"
+COPY /Y /V "Hunspellx86.dll"                                "temp_zip\"
+COPY /Y /V "NHunspell.dll"                                  "temp_zip\"
+COPY /Y /V "SubtitleEdit.exe"                               "temp_zip\"
+COPY /Y /V "Languages\*.xml"                                "temp_zip\Languages\"
+COPY /Y /V "..\..\..\..\Tesseract\msvcp90.dll"              "temp_zip\Tesseract\"
+COPY /Y /V "..\..\..\..\Tesseract\msvcr90.dll"              "temp_zip\Tesseract\"
+COPY /Y /V "..\..\..\..\Tesseract\tesseract.exe"            "temp_zip\Tesseract\"
+COPY /Y /V "..\..\..\..\Tesseract\tessdata\configs\hocr"    "temp_zip\Tesseract\tessdata\configs\"
+COPY /Y /V "..\..\..\..\Tesseract\tessdata\eng.traineddata" "temp_zip\Tesseract\tessdata\"
+
+PUSHD "temp_zip"
+START "" /B /WAIT "%SEVENZIP_PATH%" a -tzip -mx=9 "SE%VERSION%.x64.zip" * >NUL
+IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
+
+
+MOVE /Y "SE%VERSION%.x64.zip" "..\..\..\..\.." >NUL
 POPD
 IF EXIST "temp_zip" RD /S /Q "temp_zip"
 POPD
