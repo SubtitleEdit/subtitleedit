@@ -3911,7 +3911,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             //ocr fix engine
             string textWithOutFixes = line;
-            if (_ocrFixEngine.IsDictionaryLoaded)
+            //OCR fix engine not loaded, when no dictionary is selected
+            if (_ocrFixEngine != null && _ocrFixEngine.IsDictionaryLoaded)
             {
                 if (checkBoxAutoFixCommonErrors.Checked)
                     line = _ocrFixEngine.FixOcrErrors(line, listViewIndex, _lastLine, true, checkBoxGuessUnknownWords.Checked);
