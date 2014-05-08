@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private int _max;
         private int _min;
-        int _lineNumber;
+        private int _lineNumber;
 
         public GoToLine()
         {
@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _min = min;
             _max = max;
-            labelGoToLine.Text = string.Format(Text +  " ({0} - {1})", min, max);
+            labelGoToLine.Text = string.Format(Text + " ({0} - {1})", min, max);
         }
 
         private void FormGoToLine_KeyDown(object sender, KeyEventArgs e)
@@ -81,8 +81,24 @@ namespace Nikse.SubtitleEdit.Forms
                     e.KeyCode == Keys.Left ||
                     e.KeyCode == Keys.Right ||
                     e.KeyCode == Keys.Back ||
+                    e.KeyCode == Keys.Home ||
+                    e.KeyCode == Keys.End ||
                     (e.KeyValue >= 96 && e.KeyValue <= 105))
                 {
+                }
+                else if (e.KeyData == (Keys.Shift | Keys.Home) || e.KeyData == (Keys.Shift | Keys.End))
+                {
+
+                }
+                else if (e.KeyData == (Keys.Control | Keys.V) && Clipboard.GetText(TextDataFormat.UnicodeText).Length > 0)
+                {
+                    string p = Clipboard.GetText(TextDataFormat.UnicodeText);
+                    int num;
+                    if (!int.TryParse(p, out num))
+                    {
+                        e.Handled = true;
+                        e.SuppressKeyPress = true;
+                    }
                 }
                 else
                 {
