@@ -17451,7 +17451,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void TimerTextUndoTick(object sender, EventArgs e)
         {
             int index = _listViewTextUndoIndex;
-            if (_listViewTextTicks == -1 || !this.CanFocus | _subtitle == null || _subtitle.Paragraphs.Count == 0 || index < 0 || index >= _subtitle.Paragraphs.Count)
+            if (_listViewTextTicks == -1 || !this.CanFocus || _subtitle == null || _subtitle.Paragraphs.Count == 0 || index < 0 || index >= _subtitle.Paragraphs.Count)
                 return;
 
             if ((DateTime.Now.Ticks - _listViewTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
