@@ -1660,9 +1660,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (parameter.AlignLeft)
                         lefts.Add(5);
                     else if (parameter.AlignRight)
-                        lefts.Add(bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) + 15); // calculate via drawing+crop
+                        lefts.Add(bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) - 15); // calculate via drawing+crop
                     else
-                        lefts.Add((bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) + 15) / 2); // calculate via drawing+crop
+                        lefts.Add((bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) + 5) / 2); // calculate via drawing+crop
                 }
             }
             else
