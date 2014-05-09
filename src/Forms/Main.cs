@@ -6898,9 +6898,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitleListViewIndex >= 0)
             {
-                string text = textBoxListViewText.Text.TrimEnd();
+                int numberOfNewLines = textBoxListViewText.Text.Length - textBoxListViewText.Text.Replace(Environment.NewLine, " ").Length;
+                Utilities.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), numberOfNewLines);
 
                 // update _subtitle + listview
+                string text = textBoxListViewText.Text.TrimEnd();
                 _subtitle.Paragraphs[_subtitleListViewIndex].Text = text;
                 UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
                 SubtitleListview1.SetText(_subtitleListViewIndex, text);
@@ -6924,9 +6926,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph original = Utilities.GetOriginalParagraph(_subtitleListViewIndex, p, _subtitleAlternate.Paragraphs);
                 if (original != null)
                 {
-                    string text = textBoxListViewTextAlternate.Text.TrimEnd();
+                    int numberOfNewLines = textBoxListViewTextAlternate.Text.Length - textBoxListViewTextAlternate.Text.Replace(Environment.NewLine, " ").Length;
+                    Utilities.CheckAutoWrap(textBoxListViewTextAlternate, new KeyEventArgs(Keys.None), numberOfNewLines);
 
                     // update _subtitle + listview
+                    string text = textBoxListViewTextAlternate.Text.TrimEnd();
                     original.Text = text;
                     UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, original, textBoxListViewTextAlternate);
                     SubtitleListview1.SetAlternateText(_subtitleListViewIndex, text);
@@ -6950,7 +6954,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             int numberOfNewLines = textBoxListViewText.Text.Length - textBoxListViewText.Text.Replace(Environment.NewLine, " ").Length;
 
-            Utilities.CheckAutoWrap(textBoxListViewText, e, numberOfNewLines);
+            //Utilities.CheckAutoWrap(textBoxListViewText, e, numberOfNewLines);
 
             if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfNewLines > 1)
             {
@@ -16580,7 +16584,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             int numberOfNewLines = textBoxListViewTextAlternate.Text.Length - textBoxListViewTextAlternate.Text.Replace(Environment.NewLine, " ").Length;
 
-            Utilities.CheckAutoWrap(textBoxListViewTextAlternate, e, numberOfNewLines);
+            //Utilities.CheckAutoWrap(textBoxListViewTextAlternate, e, numberOfNewLines);
 
             if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfNewLines > 1)
             {
