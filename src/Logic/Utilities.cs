@@ -3506,12 +3506,13 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
         {
-            if (e.Modifiers == Keys.None && e.KeyCode != Keys.Enter && numberOfNewLines < 1 && textBox.Text.Length >= Configuration.Settings.General.SubtitleLineMaximumLength)
+            int length = Utilities.RemoveHtmlTags(textBox.Text).Length;
+            if (e.Modifiers == Keys.None && e.KeyCode != Keys.Enter && numberOfNewLines < 1 && length > Configuration.Settings.General.SubtitleLineMaximumLength)
             {
                 if (Configuration.Settings.General.AutoWrapLineWhileTyping) // only if auto-break-setting is true
                 {
                     string newText;
-                    if (textBox.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
+                    if (length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
                     {
                         newText = Utilities.AutoBreakLine(textBox.Text);
                     }
