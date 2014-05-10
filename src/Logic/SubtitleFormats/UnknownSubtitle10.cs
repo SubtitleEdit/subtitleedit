@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!all.Contains("{\"content\":\""))
                 return;
 
-            var arr = all.Replace("\n", string.Empty).Replace("{\"content\":\"", "\n").Split("\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var arr = all.Replace("\n", string.Empty).Replace("{\"content\":\"", "\n").Split('\n');
 
 
             _errorCount = 0;
