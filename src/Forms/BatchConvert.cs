@@ -244,6 +244,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
+                foreach (ListViewItem lvi in listViewInputFiles.Items)
+                {
+                    if (lvi.Text.ToLower() == fileName.ToLower())
+                        return;
+                }
+
                 var fi = new FileInfo(fileName);
                 var item = new ListViewItem(fileName);
                 item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
