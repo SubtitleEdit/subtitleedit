@@ -236,7 +236,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (videoPlayerContainer.VideoPlayer != null)
             {
                 double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * 1000.0) + 5;
-                for (int i=0; i<paragraphs.Count; i++)
+                for (int i = 0; i < paragraphs.Count; i++)
                 {
                     var p = paragraphs[i];
                     if (p.StartTime.TotalMilliseconds <= positionInMilliseconds &&
@@ -483,7 +483,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (allOk)
                     {
                         int index = 0;
-                        foreach(var item in list)
+                        foreach (var item in list)
                         {
                             index += item;
                             htmlTags.Add(index, Environment.NewLine);
@@ -557,14 +557,17 @@ namespace Nikse.SubtitleEdit.Logic
             if (temp.Length < mergeLinesShorterThan)
             {
                 string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (lines.Length > 1) {
+                if (lines.Length > 1)
+                {
                     bool isDialog = true;
-                    foreach (string line in lines) {
+                    foreach (string line in lines)
+                    {
                         string cleanLine = RemoveHtmlTags(line).Trim();
                         isDialog = isDialog && (cleanLine.StartsWith("-") ||
                                                 cleanLine.StartsWith("—"));
                     }
-                    if (isDialog) {
+                    if (isDialog)
+                    {
                         return text;
                     }
                 }
@@ -613,7 +616,7 @@ namespace Nikse.SubtitleEdit.Logic
             // try to find " - " with uppercase letter after (dialogue)
             if (splitPos == -1 && s.Contains(" - "))
             {
-                for (int j = 0; j < (maximumLength / 2)+5; j++)
+                for (int j = 0; j < (maximumLength / 2) + 5; j++)
                 {
                     if (mid + j + 4 < s.Length)
                     {
@@ -804,21 +807,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (!s.Contains("<"))
                 return s;
-
-            s = s.Replace("<i>", string.Empty);
-            s = s.Replace("<і>", string.Empty);  // different unicode chars
-            s = s.Replace("</i>", string.Empty);
-            s = s.Replace("</і>", string.Empty); // different unicode chars
-            s = s.Replace("<b>", string.Empty);
-            s = s.Replace("</b>", string.Empty);
-            s = s.Replace("<u>", string.Empty);
-            s = s.Replace("</u>", string.Empty);
-            s = s.Replace("<I>", string.Empty);
-            s = s.Replace("</I>", string.Empty);
-            s = s.Replace("<B>", string.Empty);
-            s = s.Replace("</B>", string.Empty);
-            s = s.Replace("<U>", string.Empty);
-            s = s.Replace("</U>", string.Empty);
+            s = Regex.Replace(s, "(?i)</?[buiі]>", string.Empty); // Basic Latin: i, Cyrillic: і
             s = RemoveParagraphTag(s);
             return RemoveHtmlFontTag(s);
         }
@@ -853,12 +842,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string RemoveHtmlFontTag(string s)
         {
-            s = s.Replace("</font>", string.Empty);
-            s = s.Replace("</FONT>", string.Empty);
-            s = s.Replace("</Font>", string.Empty);
-            s = s.Replace("<font>", string.Empty);
-            s = s.Replace("<FONT>", string.Empty);
-            s = s.Replace("<Font>", string.Empty);
+            s = Regex.Replace(s, "(?i)</?font>", string.Empty);
             while (s.ToLower().Contains("<font"))
             {
                 int startIndex = s.ToLower().IndexOf("<font");
@@ -870,10 +854,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string RemoveParagraphTag(string s)
         {
-            s = s.Replace("</p>", string.Empty);
-            s = s.Replace("</P>", string.Empty);
-            s = s.Replace("<P>", string.Empty);
-            s = s.Replace("<P>", string.Empty);
+            s = Regex.Replace(s, "(?i)</?p>", string.Empty);
             while (s.ToLower().Contains("<p "))
             {
                 int startIndex = s.ToLower().IndexOf("<p ");
@@ -913,7 +894,7 @@ namespace Nikse.SubtitleEdit.Logic
                     encoding = Encoding.BigEndianUnicode;
                 else if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) // ucs-4
                     encoding = Encoding.UTF32;
-                else if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76 && (bom[3] == 0x38 || bom[3] == 0x39 ||bom[3] == 0x2b ||bom[3] == 0x2f)) // utf-7
+                else if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76 && (bom[3] == 0x38 || bom[3] == 0x39 || bom[3] == 0x2b || bom[3] == 0x2f)) // utf-7
                     encoding = Encoding.UTF7;
                 else if (file.Length > 12)
                 {
@@ -2569,7 +2550,7 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
- /// <summary>
+        /// <summary>
         /// HTML-encodes a string
         /// </summary>
         /// <param name="text">Text string to encode</param>
@@ -2598,7 +2579,7 @@ namespace Nikse.SubtitleEdit.Logic
                         break;
                     default:
                         if (text[i] > 127)
-                          sb.Append("&#" + (int)text[i] + ";");
+                            sb.Append("&#" + (int)text[i] + ";");
                         else
                             sb.Append(text[i]);
                         break;
@@ -3189,10 +3170,10 @@ namespace Nikse.SubtitleEdit.Logic
             while (i < len)
             {
                 char c = text[i];
-                int nextSemiColon = text.IndexOf(';', i+1);
+                int nextSemiColon = text.IndexOf(';', i + 1);
                 if (c == '&' && nextSemiColon > 0 && nextSemiColon <= i + 8)
                 {
-                    string code = text.Substring(i + 1, nextSemiColon - (i+1));
+                    string code = text.Substring(i + 1, nextSemiColon - (i + 1));
                     i += code.Length + 2;
                     switch (code) // http://www.html-entities.com/   + http://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references
                     {
@@ -3531,7 +3512,7 @@ namespace Nikse.SubtitleEdit.Logic
                         int selectionStart = textBox.SelectionStart;
                         textBox.Text = newText;
                         if (selectionStart > autobreakIndex)
-                            selectionStart += Environment.NewLine.Length-1;
+                            selectionStart += Environment.NewLine.Length - 1;
                         if (selectionStart >= 0)
                             textBox.SelectionStart = selectionStart;
                     }
