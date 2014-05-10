@@ -2,20 +2,6 @@
   <WholeWords>
     <!--  Abreviaturas simples -->
     <Word from="KBs" to="kB" />
-    <Word from="dr" to="Dr." />
-    <Word from="Dr" to="Dr." />
-    <Word from="dra" to="Dra." />
-    <Word from="Dra" to="Dra." />
-    <Word from="sr" to="Sr." />
-    <Word from="Sr" to="Sr." />
-    <Word from="sra" to="Sra." />
-    <Word from="Sra" to="Sra." />
-    <Word from="srta" to="Srta." />
-    <Word from="Srta" to="Srta." />
-    <Word from="ud" to="Ud." />
-    <Word from="Ud" to="Ud." />
-    <Word from="uds" to="Uds." />
-    <Word from="Uds" to="Uds." />
     <Word from="Vd" to="Ud" />
     <Word from="N°" to="N.°" />
     <Word from="n°" to="n.°" />
@@ -667,8 +653,8 @@
     <LinePart from="¿Y cuantas" to="¿Y cuántas" />
     <LinePart from="¿Y donde" to="¿Y dónde" />
     <LinePart from="¿Y adonde" to="¿Y adónde" />
-    <LinePart from="¿Quien" to="¿Quién" />
-    <LinePart from="¿Esta" to="¿Está" />
+    <LinePart from="¿Quien " to="¿Quién " />
+    <LinePart from="¿Esta " to="¿Está " />
     <!-- Tilde diacrítica en oraciones interrogativas o exclamativas indirectas -->
     <LinePart from="el porque" to="el porqué" />
     <LinePart from="su porque" to="su porqué" />
@@ -732,6 +718,9 @@
   </WholeLines>
   <RegularExpressions>
     <!--  Abreviaturas compuestas -->
+    <RegEx find="[Ss](r|ra|rta)\b\.?" replaceWith="S$1." />
+    <RegEx find="[Dd](r|ra)\b\.?" replaceWith="D$1." />
+    <RegEx find="[Uu](d|ds)\b\.?" replaceWith="U$1." />
     <RegEx find="(\d)(\s){0,1}([Aa])(\.){0,1}([Mm])(\.){0,1}(\W){0,1}" replaceWith="$1 a. m.$7" />
     <RegEx find="(\d)(\s){0,1}([Pp])(\.){0,1}([Mm])(\.){0,1}(\W){0,1}" replaceWith="$1 p. m.$7" />
     <RegEx find="(\d)(\s){0,1}(h)(s\b|r\b|rs\b){0,1}(\.){0,1}(\W){0,1}" replaceWith="$1 $3$6" />
@@ -820,7 +809,8 @@
     <RegEx find="(\()\u0022" replaceWith="(«" />
     <!--  Numeración  -->
     <RegEx find="([0-9])\.([0-9])\b" replaceWith="$1,$2" />
-    <RegEx find="([^|\s])([0-9]),([0-9]{3})\b" replaceWith="$1$2.$3" />
+    <RegEx find="(^|\s)([0-9])(,|\.)?([0-9]{3})\b" replaceWith="$1$2$4" />
+    <RegEx find="(\d)\s(?=\d{2}\b)" replaceWith="$1-" />
     <!-- "1 :", "2 :"... "n :" a "n:" -->
     <RegEx find="(\d) ([:;])" replaceWith="$1$2" />
     <!--  Corregir las comas y puntos por ej. «, ,» por «,» & «,,,» o similar por «...» -->
