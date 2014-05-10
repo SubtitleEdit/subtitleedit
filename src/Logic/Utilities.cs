@@ -236,7 +236,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (videoPlayerContainer.VideoPlayer != null)
             {
                 double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * 1000.0) + 5;
-                for (int i=0; i<paragraphs.Count; i++)
+                for (int i = 0; i < paragraphs.Count; i++)
                 {
                     var p = paragraphs[i];
                     if (p.StartTime.TotalMilliseconds <= positionInMilliseconds &&
@@ -373,6 +373,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static string _lastNoBreakAfterListLanguage = null;
         private static List<NoBreakAfterItem> _lastNoBreakAfterList = new List<NoBreakAfterItem>();
+
         private static IEnumerable<NoBreakAfterItem> NoBreakAfterList(string languageName)
         {
             if (string.IsNullOrEmpty(languageName))
@@ -408,7 +409,6 @@ namespace Nikse.SubtitleEdit.Logic
             _lastNoBreakAfterListLanguage = languageName;
 
             return _lastNoBreakAfterList;
-
         }
 
         public static string AutoBreakLineMoreThanTwoLines(string text, int maximumLineLength, string language)
@@ -483,7 +483,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (allOk)
                     {
                         int index = 0;
-                        foreach(var item in list)
+                        foreach (var item in list)
                         {
                             index += item;
                             htmlTags.Add(index, Environment.NewLine);
@@ -526,7 +526,6 @@ namespace Nikse.SubtitleEdit.Logic
             return list;
         }
 
-
         public static string AutoBreakLine(string text, int mininumLength, int maximumLength, int mergeLinesShorterThan, string language)
         {
             if (text == null || text.Length < 3)
@@ -557,14 +556,17 @@ namespace Nikse.SubtitleEdit.Logic
             if (temp.Length < mergeLinesShorterThan)
             {
                 string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (lines.Length > 1) {
+                if (lines.Length > 1)
+                {
                     bool isDialog = true;
-                    foreach (string line in lines) {
+                    foreach (string line in lines)
+                    {
                         string cleanLine = RemoveHtmlTags(line).Trim();
                         isDialog = isDialog && (cleanLine.StartsWith("-") ||
                                                 cleanLine.StartsWith("—"));
                     }
-                    if (isDialog) {
+                    if (isDialog)
+                    {
                         return text;
                     }
                 }
@@ -613,7 +615,7 @@ namespace Nikse.SubtitleEdit.Logic
             // try to find " - " with uppercase letter after (dialogue)
             if (splitPos == -1 && s.Contains(" - "))
             {
-                for (int j = 0; j < (maximumLength / 2)+5; j++)
+                for (int j = 0; j < (maximumLength / 2) + 5; j++)
                 {
                     if (mid + j + 4 < s.Length)
                     {
@@ -762,7 +764,6 @@ namespace Nikse.SubtitleEdit.Logic
             return s;
         }
 
-
         public static string UnbreakLine(string text)
         {
             if (text.Contains(Environment.NewLine))
@@ -853,12 +854,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string RemoveHtmlFontTag(string s)
         {
-            s = s.Replace("</font>", string.Empty);
-            s = s.Replace("</FONT>", string.Empty);
-            s = s.Replace("</Font>", string.Empty);
-            s = s.Replace("<font>", string.Empty);
-            s = s.Replace("<FONT>", string.Empty);
-            s = s.Replace("<Font>", string.Empty);
+            s = Regex.Replace(s, "(?i)</?font>", string.Empty);
             while (s.ToLower().Contains("<font"))
             {
                 int startIndex = s.ToLower().IndexOf("<font");
@@ -870,10 +866,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string RemoveParagraphTag(string s)
         {
-            s = s.Replace("</p>", string.Empty);
-            s = s.Replace("</P>", string.Empty);
-            s = s.Replace("<P>", string.Empty);
-            s = s.Replace("<P>", string.Empty);
+            s = Regex.Replace(s, "(?i)</?p>", string.Empty);
             while (s.ToLower().Contains("<p "))
             {
                 int startIndex = s.ToLower().IndexOf("<p ");
@@ -913,7 +906,7 @@ namespace Nikse.SubtitleEdit.Logic
                     encoding = Encoding.BigEndianUnicode;
                 else if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) // ucs-4
                     encoding = Encoding.UTF32;
-                else if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76 && (bom[3] == 0x38 || bom[3] == 0x39 ||bom[3] == 0x2b ||bom[3] == 0x2f)) // utf-7
+                else if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76 && (bom[3] == 0x38 || bom[3] == 0x39 || bom[3] == 0x2b || bom[3] == 0x2f)) // utf-7
                     encoding = Encoding.UTF7;
                 else if (file.Length > 12)
                 {
@@ -984,7 +977,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
             catch
             {
-
             }
             return encoding;
         }
@@ -1449,7 +1441,6 @@ namespace Nikse.SubtitleEdit.Logic
             return languageId;
         }
 
-
         public static string AutoDetectLanguageName(string languageName, Subtitle subtitle)
         {
             if (string.IsNullOrEmpty(languageName))
@@ -1496,6 +1487,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 languageName = shortName;
                         }
                         break;
+
                     case "nb_NO":
                         count = GetCount(text, "vi", "er", "og", "jeg", "var", "men");
                         if (count > bestCount)
@@ -1505,6 +1497,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 languageName = shortName;
                         }
                         break;
+
                     case "en_US":
                         count = GetCount(text, "we", "are", "and", "you", "your", "what");
                         if (count > bestCount)
@@ -1524,6 +1517,7 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                         }
                         break;
+
                     case "en_GB":
                         count = GetCount(text, "we", "are", "and", "you", "your", "what");
                         if (count > bestCount)
@@ -1539,11 +1533,13 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                         }
                         break;
+
                     case "sv_SE":
                         count = GetCount(text, "vi", "är", "och", "Jag", "inte", "för");
                         if (count > bestCount)
                             languageName = shortName;
                         break;
+
                     case "es_ES":
                         count = GetCount(text, "el", "bien", "Vamos", "Hola", "casa", "con");
                         if (count > bestCount)
@@ -1553,6 +1549,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 languageName = shortName;
                         }
                         break;
+
                     case "fr_FR":
                         count = GetCount(text, "un", "vous", "avec", "pas", "ce", "une");
                         if (count > bestCount)
@@ -1563,6 +1560,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 languageName = shortName;
                         }
                         break;
+
                     case "it_IT":
                         count = GetCount(text, "Cosa", "sono", "Grazie", "Buongiorno", "bene", "questo");
                         if (count > bestCount)
@@ -1573,31 +1571,37 @@ namespace Nikse.SubtitleEdit.Logic
                                 languageName = shortName;
                         }
                         break;
+
                     case "de_DE":
                         count = GetCount(text, "und", "auch", "sich", "bin", "hast", "möchte");
                         if (count > bestCount)
                             languageName = shortName;
                         break;
+
                     case "nl_NL":
                         count = GetCount(text, "van", "het", "een", "Het", "mij", "zijn");
                         if (count > bestCount)
                             languageName = shortName;
                         break;
+
                     case "pl_PL":
                         count = GetCount(text, "Czy", "ale", "ty", "siê", "jest", "mnie");
                         if (count > bestCount)
                             languageName = shortName;
                         break;
+
                     case "el_GR":
                         count = GetCount(text, "μου", "είναι", "Είναι", "αυτό", "Τόμπυ", "καλά");
                         if (count > bestCount)
                             languageName = shortName;
                         break;
+
                     case "ru_RU":
                         count = GetCount(text, "все", "это", "как", "Воробей", "сюда", "Давай");
                         if (count > bestCount)
                             languageName = shortName;
                         break;
+
                     case "ro_RO":
                         count = GetCount(text, "sînt", "aici", "Sînt", "domnule", "pentru", "Vreau") +
                                 GetCount(text, "trãiascã", "niciodatã", "înseamnã", "vorbesti", "oamenii", "Asteaptã") +
@@ -1616,26 +1620,31 @@ namespace Nikse.SubtitleEdit.Logic
                                 languageName = shortName;
                         }
                         break;
+
                     case "hr_HR": // Croatia
                         count = GetCount(text, "sam", "öto", "äto", "ovo", "vas", "što");
                         if (count > bestCount)
                             languageName = shortName;
                         break;
+
                     case "pt_PT": // Portuguese
                         count = GetCount(text, "não", "Não", "Estás", "Então", "isso", "com");
                         if (count > bestCount)
                             languageName = shortName;
                         break;
+
                     case "pt_BR": // Portuguese (Brasil)
                         count = GetCount(text, "não", "Não", "Estás", "Então", "isso", "com");
                         if (count > bestCount)
                             languageName = shortName;
                         break;
+
                     case "hu_HU": // Hungarian
                         count = GetCount(text, "hogy", "lesz", "tudom", "vagy", "mondtam", "még");
                         if (count > bestCount)
                             languageName = shortName;
                         break;
+
                     default:
                         break;
                 }
@@ -2067,7 +2076,6 @@ namespace Nikse.SubtitleEdit.Logic
             return userNamesEtcXmlFileName;
         }
 
-
         public static void LoadGlobalNamesEtc(List<string> namesEtcList, List<string> namesEtcMultiWordList)
         {
             // Load names etc list (names/noise words)
@@ -2146,7 +2154,6 @@ namespace Nikse.SubtitleEdit.Logic
                 }
         }
 
-
         public static string LoadLocalNamesEtc(List<string> namesEtcList, List<string> namesEtcMultiWordList, string languageName)
         {
             string userNamesEtcXmlFileName = DictionaryFolder + languageName + "_names_etc.xml";
@@ -2210,7 +2217,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return userNamesEtcXmlFileName;
         }
-
 
         public static bool IsInNamesEtcMultiWordList(List<string> namesEtcMultiWordList, string line, string word)
         {
@@ -2569,7 +2575,7 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
- /// <summary>
+        /// <summary>
         /// HTML-encodes a string
         /// </summary>
         /// <param name="text">Text string to encode</param>
@@ -2587,18 +2593,22 @@ namespace Nikse.SubtitleEdit.Logic
                     case '<':
                         sb.Append("&lt;");
                         break;
+
                     case '>':
                         sb.Append("&gt;");
                         break;
+
                     case '"':
                         sb.Append("&quot;");
                         break;
+
                     case '&':
                         sb.Append("&amp;");
                         break;
+
                     default:
                         if (text[i] > 127)
-                          sb.Append("&#" + (int)text[i] + ";");
+                            sb.Append("&#" + (int)text[i] + ";");
                         else
                             sb.Append(text[i]);
                         break;
@@ -2625,259 +2635,342 @@ namespace Nikse.SubtitleEdit.Logic
                     case '<':
                         sb.Append("&lt;");
                         break;
+
                     case '>':
                         sb.Append("&gt;");
                         break;
+
                     case '"':
                         sb.Append("&quot;");
                         break;
+
                     case '&':
                         sb.Append("&amp;");
                         break;
+
                     case '\'':
                         sb.Append("&apos;");
                         break;
+
                     case ' ':
                         sb.Append("&nbsp;");
                         break;
+
                     case '–':
                         sb.Append("&ndash;");
                         break;
+
                     case '—':
                         sb.Append("&mdash;");
                         break;
+
                     case '¡':
                         sb.Append("&iexcl;");
                         break;
+
                     case '¿':
                         sb.Append("&iquest;");
                         break;
+
                     case '“':
                         sb.Append("&ldquo;");
                         break;
+
                     case '”':
                         sb.Append("&rdquo;");
                         break;
+
                     case '‘':
                         sb.Append("&lsquo;");
                         break;
+
                     case '’':
                         sb.Append("&rsquo;");
                         break;
+
                     case '«':
                         sb.Append("&laquo;");
                         break;
+
                     case '»':
                         sb.Append("&raquo;");
                         break;
+
                     case '¢':
                         sb.Append("&cent;");
                         break;
+
                     case '©':
                         sb.Append("&copy;");
                         break;
+
                     case '÷':
                         sb.Append("&divide;");
                         break;
+
                     case 'µ':
                         sb.Append("&micro;");
                         break;
+
                     case '·':
                         sb.Append("&middot;");
                         break;
+
                     case '¶':
                         sb.Append("&para;");
                         break;
+
                     case '±':
                         sb.Append("&plusmn;");
                         break;
+
                     case '€':
                         sb.Append("&euro;");
                         break;
+
                     case '£':
                         sb.Append("&pound;");
                         break;
+
                     case '®':
                         sb.Append("&reg;");
                         break;
+
                     case '§':
                         sb.Append("&sect;");
                         break;
+
                     case '™':
                         sb.Append("&trade;");
                         break;
+
                     case '¥':
                         sb.Append("&yen;");
                         break;
+
                     case 'á':
                         sb.Append("&aacute;");
                         break;
+
                     case 'Á':
                         sb.Append("&Aacute;");
                         break;
+
                     case 'à':
                         sb.Append("&agrave;");
                         break;
+
                     case 'À':
                         sb.Append("&Agrave;");
                         break;
+
                     case 'â':
                         sb.Append("&acirc;");
                         break;
+
                     case 'Â':
                         sb.Append("&Acirc;");
                         break;
+
                     case 'å':
                         sb.Append("&aring;");
                         break;
+
                     case 'Å':
                         sb.Append("&Aring;");
                         break;
+
                     case 'ã':
                         sb.Append("&atilde;");
                         break;
+
                     case 'Ã':
                         sb.Append("&Atilde;");
                         break;
+
                     case 'ä':
                         sb.Append("&auml;");
                         break;
+
                     case 'Ä':
                         sb.Append("&Auml;");
                         break;
+
                     case 'æ':
                         sb.Append("&aelig;");
                         break;
+
                     case 'Æ':
                         sb.Append("&AElig;");
                         break;
+
                     case 'ç':
                         sb.Append("&ccedil;");
                         break;
+
                     case 'Ç':
                         sb.Append("&Ccedil;");
                         break;
+
                     case 'é':
                         sb.Append("&eacute;");
                         break;
+
                     case 'É':
                         sb.Append("&Eacute;");
                         break;
+
                     case 'è':
                         sb.Append("&egrave;");
                         break;
+
                     case 'È':
                         sb.Append("&Egrave;");
                         break;
+
                     case 'ê':
                         sb.Append("&ecirc;");
                         break;
+
                     case 'Ê':
                         sb.Append("&Ecirc;");
                         break;
+
                     case 'ë':
                         sb.Append("&euml;");
                         break;
+
                     case 'Ë':
                         sb.Append("&Euml;");
                         break;
+
                     case 'í':
                         sb.Append("&iacute;");
                         break;
+
                     case 'Í':
                         sb.Append("&Iacute;");
                         break;
+
                     case 'ì':
                         sb.Append("&igrave;");
                         break;
+
                     case 'Ì':
                         sb.Append("&Igrave;");
                         break;
+
                     case 'î':
                         sb.Append("&icirc;");
                         break;
+
                     case 'Î':
                         sb.Append("&Icirc;");
                         break;
+
                     case 'ï':
                         sb.Append("&iuml;");
                         break;
+
                     case 'Ï':
                         sb.Append("&Iuml;");
                         break;
+
                     case 'ñ':
                         sb.Append("&ntilde;");
                         break;
+
                     case 'Ñ':
                         sb.Append("&Ntilde;");
                         break;
+
                     case 'ó':
                         sb.Append("&oacute;");
                         break;
+
                     case 'Ó':
                         sb.Append("&Oacute;");
                         break;
+
                     case 'ò':
                         sb.Append("&ograve;");
                         break;
+
                     case 'Ò':
                         sb.Append("&Ograve;");
                         break;
+
                     case 'ô':
                         sb.Append("&ocirc;");
                         break;
+
                     case 'Ô':
                         sb.Append("&Ocirc;");
                         break;
+
                     case 'ø':
                         sb.Append("&oslash;");
                         break;
+
                     case 'Ø':
                         sb.Append("&Oslash;");
                         break;
+
                     case 'õ':
                         sb.Append("&otilde;");
                         break;
+
                     case 'Õ':
                         sb.Append("&Otilde;");
                         break;
+
                     case 'ö':
                         sb.Append("&ouml;");
                         break;
+
                     case 'Ö':
                         sb.Append("&Ouml;");
                         break;
+
                     case 'ß':
                         sb.Append("&szlig;");
                         break;
+
                     case 'ú':
                         sb.Append("&uacute;");
                         break;
+
                     case 'Ú':
                         sb.Append("&Uacute;");
                         break;
+
                     case 'ù':
                         sb.Append("&ugrave;");
                         break;
+
                     case 'Ù':
                         sb.Append("&Ugrave;");
                         break;
+
                     case 'û':
                         sb.Append("&ucirc;");
                         break;
+
                     case 'Û':
                         sb.Append("&Ucirc;");
                         break;
+
                     case 'ü':
                         sb.Append("&uuml;");
                         break;
+
                     case 'Ü':
                         sb.Append("&Uuml;");
                         break;
+
                     case 'ÿ':
                         sb.Append("&yuml;");
                         break;
-
 
                     default:
                         if (text[i] > 127)
@@ -2908,258 +3001,343 @@ namespace Nikse.SubtitleEdit.Logic
                     case '<':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '>':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '"':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '&':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '\'':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case ' ':
                         sb.Append("&#160;");
                         break;
+
                     case '–':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '—':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '¡':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '¿':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '“':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '”':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '‘':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '’':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '«':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '»':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '¢':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '©':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '÷':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'µ':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '·':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '¶':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '±':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '€':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '£':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '®':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '§':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '™':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case '¥':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'á':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Á':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'à':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'À':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'â':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Â':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'å':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Å':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ã':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ã':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ä':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ä':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'æ':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Æ':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ç':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ç':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'é':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'É':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'è':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'È':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ê':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ê':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ë':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ë':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'í':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Í':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ì':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ì':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'î':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Î':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ï':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ï':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ñ':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ñ':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ó':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ó':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ò':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ò':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ô':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ô':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ø':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ø':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'õ':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Õ':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ö':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ö':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ß':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ú':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ú':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ù':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ù':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'û':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Û':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ü':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'Ü':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     case 'ÿ':
                         sb.Append("&#" + (int)text[i] + ";");
                         break;
+
                     default:
                         if (text[i] > 127)
                             sb.Append("&#" + (int)text[i] + ";");
@@ -3170,7 +3348,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return sb.ToString();
         }
-
 
         /// <summary>
         /// HTML-decodes a string
@@ -3189,271 +3366,357 @@ namespace Nikse.SubtitleEdit.Logic
             while (i < len)
             {
                 char c = text[i];
-                int nextSemiColon = text.IndexOf(';', i+1);
+                int nextSemiColon = text.IndexOf(';', i + 1);
                 if (c == '&' && nextSemiColon > 0 && nextSemiColon <= i + 8)
                 {
-                    string code = text.Substring(i + 1, nextSemiColon - (i+1));
+                    string code = text.Substring(i + 1, nextSemiColon - (i + 1));
                     i += code.Length + 2;
                     switch (code) // http://www.html-entities.com/   + http://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references
                     {
                         case "lt":
                             sb.Append('<');
                             break;
+
                         case "gt":
                             sb.Append('>');
                             break;
+
                         case "quot":
                             sb.Append('"');
                             break;
+
                         case "amp":
                             sb.Append('&');
                             break;
+
                         case "apos":
                             sb.Append("'");
                             break;
+
                         case "nbsp":
                             sb.Append(" ");
                             break;
+
                         case "ndash":
                             sb.Append("–");
                             break;
+
                         case "mdash":
                             sb.Append("—");
                             break;
+
                         case "iexcl":
                             sb.Append("¡");
                             break;
+
                         case "iquest":
                             sb.Append("¿");
                             break;
+
                         case "ldquo":
                             sb.Append("“");
                             break;
+
                         case "rdquo":
                             sb.Append("”");
                             break;
+
                         case "lsquo":
                             sb.Append("‘");
                             break;
+
                         case "rsquo":
                             sb.Append("’");
                             break;
+
                         case "laquo":
                             sb.Append("«");
                             break;
+
                         case "raquo":
                             sb.Append("»");
                             break;
+
                         case "cent":
                             sb.Append("¢");
                             break;
+
                         case "copy":
                             sb.Append("©");
                             break;
+
                         case "divide":
                             sb.Append("÷");
                             break;
+
                         case "micro":
                             sb.Append("µ");
                             break;
+
                         case "middot":
                             sb.Append("·");
                             break;
+
                         case "para":
                             sb.Append("¶");
                             break;
+
                         case "plusmn":
                             sb.Append("±");
                             break;
+
                         case "euro":
                             sb.Append("€");
                             break;
+
                         case "pound":
                             sb.Append("£");
                             break;
+
                         case "reg":
                             sb.Append("®");
                             break;
+
                         case "sect":
                             sb.Append("§");
                             break;
+
                         case "trade":
                             sb.Append("™");
                             break;
+
                         case "yen":
                             sb.Append("¥");
                             break;
+
                         case "aacute":
                             sb.Append("á ");
                             break;
+
                         case "Aacute":
                             sb.Append("Á");
                             break;
+
                         case "agrave":
                             sb.Append("à");
                             break;
+
                         case "Agrave":
                             sb.Append("À");
                             break;
+
                         case "acirc":
                             sb.Append("â");
                             break;
+
                         case "Acirc":
                             sb.Append("Â");
                             break;
+
                         case "aring":
                             sb.Append("å");
                             break;
+
                         case "Aring":
                             sb.Append("Å");
                             break;
+
                         case "atilde":
                             sb.Append("ã");
                             break;
+
                         case "Atilde":
                             sb.Append("Ã");
                             break;
+
                         case "auml":
                             sb.Append("ä");
                             break;
+
                         case "Auml":
                             sb.Append("Ä");
                             break;
+
                         case "aelig":
                             sb.Append("æ");
                             break;
+
                         case "AElig":
                             sb.Append("Æ");
                             break;
+
                         case "ccedil":
                             sb.Append("ç");
                             break;
+
                         case "Ccedil":
                             sb.Append("Ç");
                             break;
+
                         case "eacute":
                             sb.Append("é");
                             break;
+
                         case "Eacute":
                             sb.Append("É");
                             break;
+
                         case "egrave":
                             sb.Append("è");
                             break;
+
                         case "Egrave":
                             sb.Append("È");
                             break;
+
                         case "ecirc":
                             sb.Append("ê");
                             break;
+
                         case "Ecirc":
                             sb.Append("Ê");
                             break;
+
                         case "euml":
                             sb.Append("ë");
                             break;
+
                         case "Euml":
                             sb.Append("Ë");
                             break;
+
                         case "iacute":
                             sb.Append("í");
                             break;
+
                         case "Iacute":
                             sb.Append("Í");
                             break;
+
                         case "igrave":
                             sb.Append("ì");
                             break;
+
                         case "Igrave":
                             sb.Append("Ì");
                             break;
+
                         case "icirc":
                             sb.Append("î");
                             break;
+
                         case "Icirc":
                             sb.Append("Î");
                             break;
+
                         case "iuml":
                             sb.Append("ï ");
                             break;
+
                         case "Iuml":
                             sb.Append("Ï");
                             break;
+
                         case "ntilde":
                             sb.Append("ñ");
                             break;
+
                         case "Ntilde":
                             sb.Append("Ñ");
                             break;
+
                         case "oacute":
                             sb.Append("ó");
                             break;
+
                         case "Oacute":
                             sb.Append("Ó");
                             break;
+
                         case "ograve":
                             sb.Append("ò");
                             break;
+
                         case "Ograve":
                             sb.Append("Ò");
                             break;
+
                         case "ocirc":
                             sb.Append("ô");
                             break;
+
                         case "Ocirc":
                             sb.Append("Ô");
                             break;
+
                         case "oslash":
                             sb.Append("ø");
                             break;
+
                         case "Oslash":
                             sb.Append("Ø");
                             break;
+
                         case "otilde":
                             sb.Append("õ");
                             break;
+
                         case "Otilde":
                             sb.Append("Õ");
                             break;
+
                         case "ouml":
                             sb.Append("ö");
                             break;
+
                         case "Ouml":
                             sb.Append("Ö");
                             break;
+
                         case "szlig":
                             sb.Append("ß");
                             break;
+
                         case "uacute":
                             sb.Append("ú");
                             break;
+
                         case "Uacute":
                             sb.Append("Ú");
                             break;
+
                         case "ugrave":
                             sb.Append("ù");
                             break;
+
                         case "Ugrave":
                             sb.Append("Ù");
                             break;
+
                         case "ucirc":
                             sb.Append("û");
                             break;
+
                         case "Ucirc":
                             sb.Append("Û");
                             break;
+
                         case "uuml":
                             sb.Append("ü");
                             break;
+
                         case "Uuml":
                             sb.Append("Ü");
                             break;
+
                         case "yuml":
                             sb.Append("ÿ");
                             break;
+
                         case "":
                             sb.Append("");
                             break;
+
                         default:
                             code = code.TrimStart('#');
                             if (code.StartsWith("x") || code.StartsWith("X"))
@@ -3531,7 +3794,7 @@ namespace Nikse.SubtitleEdit.Logic
                         int selectionStart = textBox.SelectionStart;
                         textBox.Text = newText;
                         if (selectionStart > autobreakIndex)
-                            selectionStart += Environment.NewLine.Length-1;
+                            selectionStart += Environment.NewLine.Length - 1;
                         if (selectionStart >= 0)
                             textBox.SelectionStart = selectionStart;
                     }
@@ -3540,6 +3803,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         private static readonly Dictionary<string, Keys> AllKeys = new Dictionary<string, Keys>();
+
         public static Keys GetKeys(string keysInString)
         {
             if (string.IsNullOrEmpty(keysInString))
@@ -3806,7 +4070,6 @@ namespace Nikse.SubtitleEdit.Logic
                                                 "u",  // "ᵤ"
                                                 "v",  // "ᵥ"
                                                 "x",  // "ₓ"
-
                              };
             for (int i = 0; i < text.Length; i++)
             {
@@ -3876,7 +4139,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string[] SplitForChangedCalc(string s, bool ignoreLineBreaks, bool breakToLetters)
         {
-
             const string endChars = "!?.:;,#%$£";
             var list = new List<string>();
 
@@ -4001,6 +4263,5 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return int.MaxValue;
         }
-
     }
 }
