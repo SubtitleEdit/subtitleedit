@@ -119,7 +119,7 @@
             this.groupBoxRule.Controls.Add(this.comboBoxRule);
             this.groupBoxRule.Location = new System.Drawing.Point(12, 12);
             this.groupBoxRule.Name = "groupBoxRule";
-            this.groupBoxRule.Size = new System.Drawing.Size(324, 93);
+            this.groupBoxRule.Size = new System.Drawing.Size(324, 120);
             this.groupBoxRule.TabIndex = 0;
             this.groupBoxRule.TabStop = false;
             this.groupBoxRule.Text = "Rule";

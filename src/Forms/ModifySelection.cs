@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -12,6 +12,14 @@ namespace Nikse.SubtitleEdit.Forms
         SubtitleListView _subtitleListView;
         Subtitle _subtitle;
         bool _loading;
+
+        private const int  FunctionContains = 0;
+        private const int  FunctionStartsWith = 1;
+        private const int  FunctionEndsWith = 2;
+        private const int  FunctionNotContains = 3;
+        private const int  FunctionRegEx = 4;
+        private const int  FunctionUnequal = 5;
+        private const int FunctionEqual = 6;
 
         public ModifySelection(Subtitle subtitle, SubtitleListView subtitleListView)
         {
@@ -55,13 +63,13 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxCaseSensitive.Checked = Configuration.Settings.Tools.ModifySelectionCaseSensitive;
             textBox1.Text = Configuration.Settings.Tools.ModifySelectionText;
             if (Configuration.Settings.Tools.ModifySelectionRule == "Starts with")
-                comboBoxRule.SelectedIndex = 1;
+                comboBoxRule.SelectedIndex = FunctionStartsWith;
             else if (Configuration.Settings.Tools.ModifySelectionRule == "Ends with")
-                comboBoxRule.SelectedIndex = 2;
+                comboBoxRule.SelectedIndex = FunctionEndsWith;
             else if (Configuration.Settings.Tools.ModifySelectionRule == "Not contains")
-                comboBoxRule.SelectedIndex = 3;
+                comboBoxRule.SelectedIndex = FunctionNotContains;
             else if (Configuration.Settings.Tools.ModifySelectionRule == "RegEx")
-                comboBoxRule.SelectedIndex = 4;
+                comboBoxRule.SelectedIndex = FunctionRegEx;
             else
                 comboBoxRule.SelectedIndex = 0;
             _loading = false;
@@ -97,15 +105,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             Configuration.Settings.Tools.ModifySelectionCaseSensitive = checkBoxCaseSensitive.Checked;
             Configuration.Settings.Tools.ModifySelectionText = textBox1.Text;
-            if (comboBoxRule.SelectedIndex == 0)
+            if (comboBoxRule.SelectedIndex == FunctionContains)
                 Configuration.Settings.Tools.ModifySelectionRule = "Contains";
-            else if (comboBoxRule.SelectedIndex == 1)
+            else if (comboBoxRule.SelectedIndex == FunctionStartsWith)
                 Configuration.Settings.Tools.ModifySelectionRule = "Starts with";
-            else if (comboBoxRule.SelectedIndex == 2)
+            else if (comboBoxRule.SelectedIndex == FunctionEndsWith)
                 Configuration.Settings.Tools.ModifySelectionRule = "Ends with";
-            else if (comboBoxRule.SelectedIndex == 3)
+            else if (comboBoxRule.SelectedIndex == FunctionNotContains)
                 Configuration.Settings.Tools.ModifySelectionRule = "Not contains";
-            else if (comboBoxRule.SelectedIndex == 4)
+            else if (comboBoxRule.SelectedIndex == FunctionRegEx)
                 Configuration.Settings.Tools.ModifySelectionRule = "RegEx";
         }
 
@@ -134,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             string text = textBox1.Text;
-            if (comboBoxRule.SelectedIndex != 4)
+            if (comboBoxRule.SelectedIndex != FunctionRegEx)
                 text = text.Replace("\\r\\n", Environment.NewLine);
 
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
@@ -145,27 +153,27 @@ namespace Nikse.SubtitleEdit.Forms
                     Paragraph p = _subtitle.Paragraphs[i];
                     if (text.Length > 0)
                     {
-                        if (comboBoxRule.SelectedIndex == 0) // Contains
+                        if (comboBoxRule.SelectedIndex == FunctionContains) // Contains
                         {
                             if (checkBoxCaseSensitive.Checked && p.Text.Contains(text) || !checkBoxCaseSensitive.Checked && p.Text.ToLower().Contains(text.ToLower()))
                                 AddToListView(p, i);
                         }
-                        else if (comboBoxRule.SelectedIndex == 1) // Starts with
+                        else if (comboBoxRule.SelectedIndex == FunctionStartsWith) // Starts with
                         {
                             if (checkBoxCaseSensitive.Checked && p.Text.StartsWith(text) || !checkBoxCaseSensitive.Checked && p.Text.ToLower().StartsWith(text.ToLower()))
                                 AddToListView(p, i);
                         }
-                        else if (comboBoxRule.SelectedIndex == 2) // Ends with
+                        else if (comboBoxRule.SelectedIndex == FunctionEndsWith) // Ends with
                         {
                             if (checkBoxCaseSensitive.Checked && p.Text.EndsWith(text) || !checkBoxCaseSensitive.Checked && p.Text.ToLower().EndsWith(text.ToLower()))
                                 AddToListView(p, i);
                         }
-                        else if (comboBoxRule.SelectedIndex == 3) // Not contains
+                        else if (comboBoxRule.SelectedIndex == FunctionNotContains) // Not contains
                         {
                             if (checkBoxCaseSensitive.Checked && !p.Text.Contains(text) || !checkBoxCaseSensitive.Checked && !p.Text.ToLower().Contains(text.ToLower()))
                                 AddToListView(p, i);
                         }
-                        else if (comboBoxRule.SelectedIndex == 4) // RegEx
+                        else if (comboBoxRule.SelectedIndex == FunctionRegEx) // RegEx
                         {
                             labelInfo.Text = string.Empty;
                             if (regEx == null)
@@ -184,12 +192,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 AddToListView(p, i);
                         }
                     }
-                    if (comboBoxRule.SelectedIndex == 5) // select unequal lines
+                    if (comboBoxRule.SelectedIndex == FunctionUnequal) // select unequal lines
                     {
                         if (i % 2 == 0)
                             AddToListView(p, i);
                     }
-                    else if (comboBoxRule.SelectedIndex == 6) // select equal lines
+                    else if (comboBoxRule.SelectedIndex == FunctionEqual) // select equal lines
                     {
                         if (i % 2 == 1)
                             AddToListView(p, i);
@@ -242,9 +250,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxRule_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxRule.SelectedIndex == 4) // regex
+            if (comboBoxRule.SelectedIndex == FunctionRegEx) // regex
             {
                 textBox1.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBox1);
+                checkBoxCaseSensitive.Enabled = false;
+            }
+            else if (comboBoxRule.SelectedIndex == FunctionUnequal || comboBoxRule.SelectedIndex == FunctionEqual) 
+            {
+                textBox1.ContextMenuStrip = null;
                 checkBoxCaseSensitive.Enabled = false;
             }
             else
