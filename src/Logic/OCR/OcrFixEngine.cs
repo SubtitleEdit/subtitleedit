@@ -1243,7 +1243,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         string uppercaseLetter = st.StrippedText[0].ToString().ToUpper();
                         if (st.StrippedText.Length > 1 && uppercaseLetter == "L" && "abcdfghjklmnpqrstvwxz".Contains(st.StrippedText[1].ToString()))
                             uppercaseLetter = "I";
-                        if (st.StrippedText.StartsWith("lo ") && _threeLetterIsoLanguageName == "ita")
+                        if ((st.StrippedText.StartsWith("lo ") || st.StrippedText == "lo.") && _threeLetterIsoLanguageName == "ita")
                             uppercaseLetter = "I";
                         st.StrippedText = st.StrippedText.Remove(0, 1).Insert(0, uppercaseLetter);
                         input = st.Pre + st.StrippedText + st.Post;
