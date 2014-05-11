@@ -5847,7 +5847,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             int badWords = 0;
             string textWithOutFixes;
-            if (!string.IsNullOrEmpty(_tesseractAsyncStrings[index]))
+            if (_tesseractAsyncStrings != null && !string.IsNullOrEmpty(_tesseractAsyncStrings[index]))
             {
                 textWithOutFixes = _tesseractAsyncStrings[index];
             }
