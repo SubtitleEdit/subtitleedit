@@ -1116,7 +1116,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return false;
         }
 
-        public static string FixOcrErrorsViaHardcodedRules(string input, string lastLine, HashSet<string> abbreviationList)
+        public string FixOcrErrorsViaHardcodedRules(string input, string lastLine, HashSet<string> abbreviationList)
         {
             if (!Configuration.Settings.Tools.OcrFixUseHardcodedRules)
                 return input;
@@ -1227,7 +1227,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 input = input.Insert(idx + Environment.NewLine.Length + 4, " ");
             }
 
-
             if (string.IsNullOrEmpty(lastLine) ||
                 lastLine.EndsWith(".") ||
                 lastLine.EndsWith("!") ||
@@ -1243,6 +1242,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     {
                         string uppercaseLetter = st.StrippedText[0].ToString().ToUpper();
                         if (st.StrippedText.Length > 1 && uppercaseLetter == "L" && "abcdfghjklmnpqrstvwxz".Contains(st.StrippedText[1].ToString()))
+                            uppercaseLetter = "I";
+                        if (st.StrippedText.StartsWith("lo ") && _threeLetterIsoLanguageName == "ita")
                             uppercaseLetter = "I";
                         st.StrippedText = st.StrippedText.Remove(0, 1).Insert(0, uppercaseLetter);
                         input = st.Pre + st.StrippedText + st.Post;
