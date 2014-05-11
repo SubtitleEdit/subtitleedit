@@ -3903,8 +3903,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 line = threadText;
             }
-            if (checkBoxAutoFixCommonErrors.Checked)
-                line = OcrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
+            if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
+                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
 
             if (checkBoxRightToLeft.Checked)
                 line = ReverseNumberStrings(line);
@@ -4109,8 +4109,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 line = threadText;
             }
-            if (checkBoxAutoFixCommonErrors.Checked)
-                line = OcrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
+            if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
+                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
 
             if (checkBoxRightToLeft.Checked)
                 line = ReverseNumberStrings(line);
@@ -4606,8 +4606,8 @@ namespace Nikse.SubtitleEdit.Forms
                 line = line.Replace("9-O", "9-0");
             }
 
-            if (checkBoxAutoFixCommonErrors.Checked)
-                line = OcrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
+            if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
+                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
 
             if (checkBoxRightToLeft.Checked)
                 line = ReverseNumberStrings(line);
