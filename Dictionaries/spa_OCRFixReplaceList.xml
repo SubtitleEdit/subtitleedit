@@ -718,9 +718,9 @@
   </WholeLines>
   <RegularExpressions>
     <!--  Abreviaturas compuestas -->
-    <RegEx find="[Ss](r|ra|rta)\b\.?" replaceWith="S$1." />
-    <RegEx find="[Dd](r|ra)\b\.?" replaceWith="D$1." />
-    <RegEx find="[Uu](d|ds)\b\.?" replaceWith="U$1." />
+    <RegEx find="\b[Ss](r|ra|rta)\b\.?" replaceWith="S$1." />
+    <RegEx find="\b[Dd](r|ra)\b\.?" replaceWith="D$1." />
+    <RegEx find="\b[Uu](d|ds)\b\.?" replaceWith="U$1." />
     <RegEx find="(\d)(\s){0,1}([Aa])(\.){0,1}([Mm])(\.){0,1}(\W){0,1}" replaceWith="$1 a. m.$7" />
     <RegEx find="(\d)(\s){0,1}([Pp])(\.){0,1}([Mm])(\.){0,1}(\W){0,1}" replaceWith="$1 p. m.$7" />
     <RegEx find="(\d)(\s){0,1}(h)(s\b|r\b|rs\b){0,1}(\.){0,1}(\W){0,1}" replaceWith="$1 $3$6" />
