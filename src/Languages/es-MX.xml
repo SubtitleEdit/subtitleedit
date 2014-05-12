@@ -6,7 +6,7 @@
     <TranslatedBy>Traducido por Francisco Naranjo (paconaranjo)</TranslatedBy>
     <CultureName>es-MX</CultureName>
     <HelpFile>http://www.nikse.dk/SubtitleEdit/HelpEs</HelpFile>
-    <OK>&amp;OK</OK>
+    <OK>&amp;Aceptar</OK>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
     <None>Cancelar</None>
@@ -646,9 +646,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Unir subtítulos</Title>
     <Information>Añadir subtítulos a unirse (pueden arrastrarse también)</Information>
     <NumberOfLines>#Líneas</NumberOfLines>
-    <StartTime>Tiempo de inicio</StartTime>
-    <EndTime>Hora de finalización</EndTime>
-    <FileName>Nombre de archivo</FileName>
+    <StartTime>Tiempo inicial</StartTime>
+    <EndTime>Tiempo final</EndTime>
+    <FileName>Nombre del archivo</FileName>
     <Join>Unir</Join>
     <TotalNumberOfLinesX>Total número de líneas: {0:#,###,###}</TotalNumberOfLinesX>
   </JoinSubtitles>
@@ -887,7 +887,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <UndoChangesInEditPanel>Deshacer cambios en panel de edición</UndoChangesInEditPanel>
       <Previous>&lt; Anterior</Previous>
       <Next>Siguiente &gt;</Next>
-      <AutoBreak>Auto &amp;br</AutoBreak>
+      <AutoBreak>Salto &amp;automático</AutoBreak>
       <Unbreak>Combinar</Unbreak>
     </Controls>
     <VideoControls>
@@ -1350,18 +1350,18 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
   </RestoreAutoBackup>
   <SeekSilence>
     <Title>Buscar silencio</Title>
-    <SearchDirection>Buscar dirección</SearchDirection>
+    <SearchDirection>Buscar hacia</SearchDirection>
     <Forward>Adelante</Forward>
     <Back>Atras</Back>
-    <LengthInSeconds>El silencio debe estar por lo menos (segundos)</LengthInSeconds>
-    <MaxVolume>El volumen debe estar por debajo</MaxVolume>
+    <LengthInSeconds>El silencio debe ser por lo menos de (segundos)</LengthInSeconds>
+    <MaxVolume>El volumen debe estar por debajo de</MaxVolume>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Establecer tiempo mínimo de visualización entre párrafos</Title>
     <PreviewLinesModifiedX>Vista previa - párrafos modificados: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Mostrar sólo las líneas modificadas</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milisegundos mínimos entre líneas</MinimumMillisecondsBetweenParagraphs>
-    <FrameInfo>Info. de la velocidad de cuadros</FrameInfo>
+    <FrameInfo>Información de la velocidad de cuadros</FrameInfo>
     <OneFrameXisYMilliseconds>Un fotograma a {0:0.00} fps son {1} milisegundos</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
@@ -1452,7 +1452,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <MainWindowVideoControls>Controles de video en la ventana principal</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Búsqueda de texto y URL personalizada</CustomSearchTextAndUrl>
     <WaveFormAppearance>Apariencia de forma de onda</WaveFormAppearance>
-    <WaveFormGridColor>Color de la cuadrícula</WaveFormGridColor>
+    <WaveFormGridColor>Color Cuadrícula</WaveFormGridColor>
     <WaveFormShowGridLines>Mostrar líneas de cuadrícula</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Invertir dirección de la rueda del ratón</ReverseMouseWheelScrollDirection>
     <WaveFormAllowOverlap>Permitir solapamiento (al mover/cambiar el tamaño)</WaveFormAllowOverlap>
@@ -1465,7 +1465,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <WaveFormBackgroundColor>Color de fondo</WaveFormBackgroundColor>
     <WaveFormTextColor>Color del texto</WaveFormTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Vaciar las carpetas de «Espectrogramas» y «Formas de onda»</WaveformAndSpectrogramsFolderEmpty>
-    <WaveformAndSpectrogramsFolderInfo>Las carpetas de «Espectrogramas» y «Formas de onda» contienen {0} archivos ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
+    <WaveformAndSpectrogramsFolderInfo>«Espectrogramas» y «Formas de onda» contienen {0} archivos ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Espectrograma</Spectrogram>
     <GenerateSpectrogram>Generar espectrograma</GenerateSpectrogram>
     <SpectrogramAppearance>Apariencia del Espectrograma</SpectrogramAppearance>
@@ -1596,7 +1596,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <MainTextBoxAutoBreak>Salto de texto automático</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Deshacer salto de texto</MainTextBoxUnbreak>
     <Miscellaneous>Otros</Miscellaneous>
-    <UseDoNotBreakAfterList>Utilice no-saltar-después de la lista (para auto-saltado)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Utilizar «no saltar después de la lista» (para salto automático)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>Mostrar líneas seleccionadas antes/después</Title>
@@ -1932,11 +1932,11 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <ShowWaveformAndSpectrogram>Mostrar  forma de onda y espectrograma</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Mostrar solo  forma de onda</ShowWaveformOnly>
     <ShowSpectrogramOnly>Mostrar solo espectrograma</ShowSpectrogramOnly>
-    <GuessTimeCodes>Obtener códigos de tiempo...</GuessTimeCodes>
+    <GuessTimeCodes>Adivinar códigos de tiempo...</GuessTimeCodes>
     <SeekSilence>Buscar silencio...</SeekSilence>
   </WaveForm>
   <WaveFormGenerateTimeCodes>
-    <Title>Obtener códigos de tiempo</Title>
+    <Title>Adivinar códigos de tiempo</Title>
     <StartFrom>Inicio de</StartFrom>
     <CurrentVideoPosition>Posición de video actual</CurrentVideoPosition>
     <Beginning>Comienzo</Beginning>
@@ -1944,10 +1944,10 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <FromCurrentVideoPosition>Desde la posición de video actual</FromCurrentVideoPosition>
     <DetectOptions>Detectar opciones</DetectOptions>
     <ScanBlocksOfMs>Bloques de exploración de milisegundos</ScanBlocksOfMs>
-    <BlockAverageVolMin1>volumen promedio debe estar por encima de</BlockAverageVolMin1>
-    <BlockAverageVolMin2>% del volumen total promedio</BlockAverageVolMin2>
-    <BlockAverageVolMax1>Bloquear volumen promedio debe estar por debajo de</BlockAverageVolMax1>
-    <BlockAverageVolMax2>% del volumen máximo total de</BlockAverageVolMax2>
+    <BlockAverageVolMin1>El bloque de volumen promedio debe estar por encima del</BlockAverageVolMin1>
+    <BlockAverageVolMin2>% del volumen promedio total</BlockAverageVolMin2>
+    <BlockAverageVolMax1>El bloque de volumen promedio debe estar por debajo del</BlockAverageVolMax1>
+    <BlockAverageVolMax2>% del volumen máximo total</BlockAverageVolMax2>
     <SplitLongLinesAt1>Dividir subtítulos largos en</SplitLongLinesAt1>
     <SplitLongLinesAt2>Milisegundos</SplitLongLinesAt2>
     <Other>Otro</Other>
