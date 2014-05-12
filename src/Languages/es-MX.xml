@@ -887,7 +887,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <UndoChangesInEditPanel>Deshacer cambios en panel de edición</UndoChangesInEditPanel>
       <Previous>&lt; Anterior</Previous>
       <Next>Siguiente &gt;</Next>
-      <AutoBreak>Auto &amp;br</AutoBreak>
+      <AutoBreak>Salto &amp;automático</AutoBreak>
       <Unbreak>Combinar</Unbreak>
     </Controls>
     <VideoControls>
@@ -1596,7 +1596,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <MainTextBoxAutoBreak>Salto de texto automático</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Deshacer salto de texto</MainTextBoxUnbreak>
     <Miscellaneous>Otros</Miscellaneous>
-    <UseDoNotBreakAfterList>Utilice no-saltar-después de la lista (para auto-saltado)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Utilizar «no saltar después de la lista» (para salto automático)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>Mostrar líneas seleccionadas antes/después</Title>
