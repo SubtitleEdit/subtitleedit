@@ -502,7 +502,7 @@ namespace Nikse.SubtitleEdit.Forms
             // from start
             int minLength = Math.Min(richTextBox1.Text.Length, richTextBox2.Text.Length);
             int startCharactersOk = 0;
-            for (int i=0; i < minLength; i++)
+            for (int i = 0; i < minLength; i++)
             {
                 if (richTextBox1.Text[i] == richTextBox2.Text[i])
                 {
@@ -510,7 +510,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    if (richTextBox1.Text.Length > i+4 && richTextBox2.Text.Length > i+4 &&
+                    if (richTextBox1.Text.Length > i + 4 && richTextBox2.Text.Length > i + 4 &&
                         richTextBox1.Text[i + 1] == richTextBox2.Text[i + 1] &&
                         richTextBox1.Text[i + 2] == richTextBox2.Text[i + 2] &&
                         richTextBox1.Text[i + 3] == richTextBox2.Text[i + 3] &&
@@ -615,7 +615,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (subtitleListView1.Items.Count > 0 && subtitleListView2.Items.Count > 0 &&
                 _differences != null && _differences.Count > 0)
             {
-                 if (subtitleListView1.SelectedItems.Count == 0)
+                if (subtitleListView1.SelectedItems.Count == 0)
                 {
                     buttonPreviousDifference.Enabled = false;
                     buttonNextDifference.Enabled = true;
@@ -624,7 +624,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     int index = subtitleListView1.SelectedItems[0].Index;
                     buttonPreviousDifference.Enabled = _differences[0] < index;
-                    buttonNextDifference.Enabled = _differences[_differences.Count-1] > index;
+                    buttonNextDifference.Enabled = _differences[_differences.Count - 1] > index;
                 }
             }
             else
@@ -672,7 +672,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    for (int i = subtitleListView1.SelectedItems[0].Index-1; i >= 0; i--)
+                    for (int i = subtitleListView1.SelectedItems[0].Index - 1; i >= 0; i--)
                     {
                         if (_differences.Contains(i))
                         {
@@ -776,5 +776,23 @@ namespace Nikse.SubtitleEdit.Forms
             CompareSubtitles();
         }
 
+        private void labelSubtitle1_MouseHover(object sender, EventArgs e)
+        {
+            ShowTip(labelSubtitle1);
+        }
+
+        private void labelSubtitle2_MouseHover(object sender, EventArgs e)
+        {
+            ShowTip(labelSubtitle2);
+        }
+
+        private void ShowTip(Control control)
+        {
+            string sub1Path = control.Text;
+            if (!string.IsNullOrEmpty(sub1Path))
+            {
+                toolTip1.Show(Path.GetFileName(sub1Path), control);
+            }
+        }
     }
 }
