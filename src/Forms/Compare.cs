@@ -502,7 +502,7 @@ namespace Nikse.SubtitleEdit.Forms
             // from start
             int minLength = Math.Min(richTextBox1.Text.Length, richTextBox2.Text.Length);
             int startCharactersOk = 0;
-            for (int i = 0; i < minLength; i++)
+            for (int i=0; i < minLength; i++)
             {
                 if (richTextBox1.Text[i] == richTextBox2.Text[i])
                 {
@@ -510,7 +510,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    if (richTextBox1.Text.Length > i + 4 && richTextBox2.Text.Length > i + 4 &&
+                    if (richTextBox1.Text.Length > i+4 && richTextBox2.Text.Length > i+4 &&
                         richTextBox1.Text[i + 1] == richTextBox2.Text[i + 1] &&
                         richTextBox1.Text[i + 2] == richTextBox2.Text[i + 2] &&
                         richTextBox1.Text[i + 3] == richTextBox2.Text[i + 3] &&
