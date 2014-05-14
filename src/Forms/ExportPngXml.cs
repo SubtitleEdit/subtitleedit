@@ -660,21 +660,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else
                 {
+                    int resW = 0;
+                    int resH = 0;
+                    GetResolution(ref resW, ref resH);
                     string videoFormat = "1080p";
-                    if (comboBoxResolution.SelectedIndex == 2)
+                    if (resW == 1920 && resH == 1080)
                         videoFormat = "720p";
-                    else if (comboBoxResolution.SelectedIndex == 3)
-                        videoFormat = "960x720";
-                    else if (comboBoxResolution.SelectedIndex == 4)
+                    else if (resW == 1280 && resH == 720)
+                        videoFormat = "1080p";
+                    else if (resW == 848 && resH == 480)
                         videoFormat = "480p";
-                    else if (comboBoxResolution.SelectedIndex == 5)
-                        videoFormat = "720x576";
-                    else if (comboBoxResolution.SelectedIndex == 6)
-                        videoFormat = "720x480";
-                    else if (comboBoxResolution.SelectedIndex == 7)
-                        videoFormat = "640x352";
-                    else if (comboBoxResolution.SelectedIndex == 8)
-                        videoFormat = "640x272";
+                    else
+                        videoFormat = resW + "x" + resH;
 
                     var doc = new XmlDocument();
                     Paragraph first = _subtitle.Paragraphs[0];
@@ -708,90 +705,33 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             string[] parts = xAndY.Split('x');
             if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
             {
-                if (xAndY == "1920x1080")
+                for (int i = 0; i < comboBoxResolution.Items.Count;i++)
                 {
-                    comboBoxResolution.SelectedIndex = 0;
+                    if (comboBoxResolution.Items[i].ToString().Contains(xAndY))
+                    {
+                        comboBoxResolution.SelectedIndex = i;
+                        return;
+                    }
                 }
-                else if (xAndY == "1440x1080")
-                {
-                    comboBoxResolution.SelectedIndex = 2;
-                }
-                else if (xAndY == "960x720")
-                {
-                    comboBoxResolution.SelectedIndex = 3;
-                }
-                else if (xAndY == "848x480")
-                {
-                    comboBoxResolution.SelectedIndex = 4;
-                }
-                else if (xAndY == "720x576")
-                {
-                    comboBoxResolution.SelectedIndex = 5;
-                }
-                else if (xAndY == "720x480")
-                {
-                    comboBoxResolution.SelectedIndex = 6;
-                }
-                else if (xAndY == "640x352")
-                {
-                    comboBoxResolution.SelectedIndex = 7;
-                }
-                else
-                {
-                    comboBoxResolution.Items[8] = xAndY;
-                    comboBoxResolution.SelectedIndex = 8;
-                }
+                comboBoxResolution.Items[comboBoxResolution.Items.Count-1] = xAndY;
+                comboBoxResolution.SelectedIndex = comboBoxResolution.Items.Count - 1;
             }
         }
 
         private void GetResolution(ref int width, ref int height)
         {
-            if (comboBoxResolution.SelectedIndex == 1)
-            {
-                width = 1440;
-                height = 1080;
-            }
-            else if (comboBoxResolution.SelectedIndex == 2)
-            {
-                width = 1280;
-                height = 720;
-            }
-            else if (comboBoxResolution.SelectedIndex == 3)
-            {
-                width = 960;
-                height = 720;
-            }
-            else if (comboBoxResolution.SelectedIndex == 4)
-            {
-                width = 848;
-                height = 480;
-            }
-            else if (comboBoxResolution.SelectedIndex == 5)
-            {
-                width = 720;
-                height = 576;
-            }
-            else if (comboBoxResolution.SelectedIndex == 6)
-            {
-                width = 720;
-                height = 480;
-            }
-            else if (comboBoxResolution.SelectedIndex == 7)
-            {
-                width = 640;
-                height = 352;
-            }
-            else if (comboBoxResolution.SelectedIndex == 8)
-            {
-                string[] arr = comboBoxResolution.Text.Split('x');
-                width = int.Parse(arr[0]);
-                height = int.Parse(arr[1]);
-            }
-            else
-            {
-                width = 1920;
-                height = 1080;
-            }
+            width = 1920;
+            height = 1080;
+            if (comboBoxResolution.SelectedIndex < 0)
+                return;
+
+            string text = comboBoxResolution.Text.Trim();;
+            if (text.Contains("("))
+                text = text.Remove(0, text.IndexOf("(")).Trim();
+            text = text.TrimStart('(').TrimEnd(')').Trim();           
+            string[] arr = text.Split('x');
+            width = int.Parse(arr[0]);
+            height = int.Parse(arr[1]);            
         }
 
 
@@ -2284,7 +2224,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             panelBorderColor.BackColor = _borderColor;
             comboBoxBorderWidth.SelectedIndex = 2;
             comboBoxHAlign.SelectedIndex = 1;
-            comboBoxResolution.SelectedIndex = 0;
+            comboBoxResolution.SelectedIndex = 3;
 
             if (Configuration.Settings.Tools.ExportLastShadowTransparency <= numericUpDownShadowTransparency.Maximum && Configuration.Settings.Tools.ExportLastShadowTransparency > 0)
             {
@@ -2296,11 +2236,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             if (exportType == "VOBSUB")
             {
-                comboBoxBorderWidth.SelectedIndex = 3;
+                comboBoxBorderWidth.SelectedIndex = 6;
                 if (_exportType == "VOBSUB" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubVideoResolution))
                     SetResolution(Configuration.Settings.Tools.ExportVobSubVideoResolution);
                 else
-                    comboBoxResolution.SelectedIndex = 5;
+                    comboBoxResolution.SelectedIndex = 8;
                 labelLanguage.Visible = true;
                 comboBoxLanguage.Visible = true;
                 comboBoxLanguage.Items.Clear();
@@ -2416,8 +2356,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             if (videoInfo != null && videoInfo.Height > 0 && videoInfo.Width > 0)
             {
-                comboBoxResolution.Items[8] = videoInfo.Width + "x" + videoInfo.Height;
-                comboBoxResolution.SelectedIndex = 8;
+                comboBoxResolution.Items[comboBoxResolution.Items.Count - 1] = videoInfo.Width + "x" + videoInfo.Height;
+                comboBoxResolution.SelectedIndex = comboBoxResolution.Items.Count - 1;
             }
 
             if (_subtitleFontSize == Configuration.Settings.Tools.ExportLastFontSize && Configuration.Settings.Tools.ExportLastLineHeight >= numericUpDownLineSpacing.Minimum &&
@@ -2683,8 +2623,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             ChooseResolution cr = new ChooseResolution();
             if (cr.ShowDialog(this) == DialogResult.OK)
             {
-                comboBoxResolution.Items[8] = cr.VideoWidth+ "x" + cr.VideoHeight;
-                comboBoxResolution.SelectedIndex = 8;
+                comboBoxResolution.Items[comboBoxResolution.Items.Count - 1] = cr.VideoWidth + "x" + cr.VideoHeight;
+                comboBoxResolution.SelectedIndex = comboBoxResolution.Items.Count - 1;
             }
         }
 
