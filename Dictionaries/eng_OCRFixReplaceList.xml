@@ -1,4 +1,4 @@
-<OCRFixReplaceList>
+﻿<OCRFixReplaceList>
   <WholeWords>
     <Word from="$COff$" to="scoffs" />
     <Word from="$ergei" to="Sergei" />
@@ -1734,11 +1734,38 @@
     <Word from="littie" to="little" />
     <Word from="It'lljust" to="It'll just" />
     <Word from="AIso" to="Also" />
+    <Word from="Iisten" to="listen" />
+    <Word from="suPPosed" to="supposed" />
+    <Word from="somePIace" to="someplace" />
+    <Word from="exPIain" to="explain" />
+    <Word from="Iittle" to="little" />
+    <Word from="StoP" to="Stop" />
+    <Word from="AIways" to="Always" />
+    <Word from="Iectures" to="lectures" />
+    <Word from="Iow" to="low" />
+    <Word from="Ieaving" to="leaving" />
+    <Word from="Ietting" to="letting" />
+    <Word from="Iistening" to="listening" />
+    <Word from="Iecture" to="lecture" />
+    <Word from="Iicking" to="licking" />
+    <Word from="Iosses" to="losses" />
+    <Word from="PIeased" to="Pleased" />
+    <Word from="ofburglaries" to="of burglaries" />
+    <Word from="He'sjust" to="He's just" />
+    <Word from="mytrucktoo" to="my truck too" />
+    <Word from="nowwhat" to="now what" />
+    <Word from="yourfire" to="your fire" />
+    <Word from="herwhat's" to="her what's" />
+    <Word from="hearthat" to="hear that" />
+    <Word from="oryou" to="or you" />
+    <Word from="preferjournalist" to="prefer journalist" />
+    <Word from="CIaw" to="Claw" />
+    <Word from="Ifour" to="If our" />
+    <Word from="lron" to="Iron" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
     <WordPart from="¤" to="o" />
-    <WordPart from="IVI" to="M" />
     <WordPart from="lVI" to="M" />
     <WordPart from="IVl" to="M" />
     <WordPart from="lVl" to="M" />
@@ -1749,10 +1776,17 @@
     <WordPart from="I\/l" to="M" />
     <WordPart from="l\/l" to="M" />
     <WordPart from="I\/l" to="M" />
+    <WordPart from="IVIa" to="Ma" />
+    <WordPart from="IVIe" to="Me" />
+    <WordPart from="IVIi" to="Mi" />
+    <WordPart from="IVIo" to="Mo" />
+    <WordPart from="IVIu" to="Mu" />
+    <WordPart from="IVIy" to="My" />
   </PartialWordsAlways>
   <PartialWords>
     <!-- Will be used to check words not in dictionary.
           If new word(s) and longer than 5 chars and exists in spelling dictionary, it is (or they are) accepted -->
+    <WordPart from="IVI" to="M" />
     <WordPart from="/" to="l" />
     <WordPart from="vv" to="w" />
     <WordPart from="m" to="rn" />
@@ -1895,8 +1929,8 @@
     <LinePart from="-ls this" to="- Is this" />
     <LinePart from="Maze] tov" to="Mazel tov" />
     <LinePart from="N02' " to="Not " />
-    <LinePart from="of 0ur" to="of our" />
-    <LinePart from="ot mine" to="of mine" />
+    <LinePart from=" of 0ur " to=" of our " />
+    <LinePart from=" ot mine " to=" of mine " />
     <LinePart from="PLA YING" to="PLAYING" />
     <LinePart from="REPEA TING " to="REPEATING " />
     <LinePart from="Sa y" to="Say" />
@@ -2003,8 +2037,10 @@
     <LinePart from="WIN D HOWLING" to="WIND HOWLING" />
     <LinePart from="telis me" to="tells me" />
     <LinePart from="Telis me" to="Tells me" />
-    <LinePart from="forbest act" to="for best act" />
   </PartialLines>
+  <PartialLinesAlways>
+    <LinePart from="forbest act" to="for best act" />
+  </PartialLinesAlways>
   <BeginLines>
     <Beginning from="|was" to="I was" />
     <Beginning from="|am " to="I am" />
