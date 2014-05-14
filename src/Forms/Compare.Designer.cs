@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxShowOnlyDifferences = new System.Windows.Forms.CheckBox();
             this.checkBoxOnlyListDifferencesInText = new System.Windows.Forms.CheckBox();
             this.checkBoxIgnoreLineBreaks = new System.Windows.Forms.CheckBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.subtitleListView2 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.SuspendLayout();
@@ -69,6 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelSubtitle2.Size = new System.Drawing.Size(30, 13);
             this.labelSubtitle2.TabIndex = 3;
             this.labelSubtitle2.Text = "sub2";
+            this.labelSubtitle2.MouseHover += new System.EventHandler(this.labelSubtitle2_MouseHover);
             // 
             // labelSubtitle1
             // 
@@ -78,6 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelSubtitle1.Size = new System.Drawing.Size(30, 13);
             this.labelSubtitle1.TabIndex = 2;
             this.labelSubtitle1.Text = "sub1";
+            this.labelSubtitle1.MouseHover += new System.EventHandler(this.labelSubtitle1_MouseHover);
             // 
             // buttonOpenSubtitle1
             // 
@@ -199,6 +202,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxIgnoreLineBreaks.UseVisualStyleBackColor = true;
             this.checkBoxIgnoreLineBreaks.CheckedChanged += new System.EventHandler(this.checkBoxIgnoreLineBreaks_CheckedChanged);
             // 
+            // toolTip1
+            // 
+            this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.toolTip1.ToolTipTitle = "Subtitle name";
+            // 
             // subtitleListView2
             // 
             this.subtitleListView2.DisplayExtraFromExtra = false;
@@ -211,6 +219,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView2.Name = "subtitleListView2";
             this.subtitleListView2.OwnerDraw = true;
             this.subtitleListView2.Size = new System.Drawing.Size(478, 430);
+            this.subtitleListView2.SubtitleFontBold = false;
+            this.subtitleListView2.SubtitleFontName = "Tahoma";
+            this.subtitleListView2.SubtitleFontSize = 8;
             this.subtitleListView2.TabIndex = 5;
             this.subtitleListView2.UseCompatibleStateImageBehavior = false;
             this.subtitleListView2.UseSyntaxColoring = true;
@@ -229,6 +240,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.Name = "subtitleListView1";
             this.subtitleListView1.OwnerDraw = true;
             this.subtitleListView1.Size = new System.Drawing.Size(476, 430);
+            this.subtitleListView1.SubtitleFontBold = false;
+            this.subtitleListView1.SubtitleFontName = "Tahoma";
+            this.subtitleListView1.SubtitleFontSize = 8;
             this.subtitleListView1.TabIndex = 4;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.UseSyntaxColoring = true;
@@ -290,5 +304,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxShowOnlyDifferences;
         private System.Windows.Forms.CheckBox checkBoxOnlyListDifferencesInText;
         private System.Windows.Forms.CheckBox checkBoxIgnoreLineBreaks;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
