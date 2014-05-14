@@ -1470,6 +1470,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     bool correct = DoSpell(word);
                     if (!correct)
                         correct = DoSpell(word.Trim('\''));
+                    if (!correct && word.Length > 3 && !word.EndsWith("ss") && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) && 
+                        (_threeLetterIsoLanguageName == "eng" || _threeLetterIsoLanguageName == "dan" || _threeLetterIsoLanguageName == "swe"|| _threeLetterIsoLanguageName == "nld"))
+                        correct = DoSpell(word.TrimEnd('s'));
                     if (!correct)
                         correct = DoSpell(wordNoItalics);
                     if (!correct && _userWordList.Contains(wordNoItalics))
