@@ -388,8 +388,16 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         public string FixOcrErrors(string text, int index, string lastLine, bool logSuggestions, bool useAutoGuess)
         {
-            var sb = new StringBuilder();
+            var sb = new StringBuilder();                       
             var word = new StringBuilder();
+
+            if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
+            {
+                text = text.Replace("ﬁ", "fi"); // fb01
+                text = text.Replace("ﬂ", "fl"); // fb02
+                text = text.Replace("ν", "v"); // NOTE: first 'v' is a special unicode character!!!!
+            }
+
 
             text = ReplaceWordsBeforeLineFixes(text);
 
@@ -624,6 +632,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
                 word = word.Replace("ﬁ", "fi");
+                word = word.Replace("ν", "v"); // NOTE: first 'v' is a special unicode character!!!!
 
                 while (word.Contains("--"))
                     word = word.Replace("--", "-");
