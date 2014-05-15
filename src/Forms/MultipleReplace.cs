@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (sender == radioButtonRegEx)
                 textBoxFind.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
             else
-                textBoxFind.ContextMenuStrip = null;
+                textBoxFind.ContextMenu = null;
         }
 
         private void ButtonAddClick(object sender, EventArgs e)
@@ -192,7 +192,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     newText = newText.Substring(0, index) + replaceWith;
 
                                 hit = true;
-                                index = newText.ToLower().IndexOf(findWhat.ToLower(), index+replaceWith.Length);
+                                index = newText.ToLower().IndexOf(findWhat.ToLower(), index + replaceWith.Length);
                             }
                         }
                     }
@@ -302,6 +302,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void DeleteToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (listViewReplaceList.Items.Count < 1 || listViewReplaceList.SelectedItems.Count < 1)
+                return;
             for (int i = listViewReplaceList.Items.Count - 1; i >= 0; i--)
             {
                 ListViewItem item = listViewReplaceList.Items[i];
@@ -322,6 +324,11 @@ namespace Nikse.SubtitleEdit.Forms
                     moveUpToolStripMenuItem_Click(sender, e);
                 if (e.KeyCode == Keys.Down && e.Control && !e.Alt && !e.Shift)
                     moveDownToolStripMenuItem_Click(sender, e);
+
+                if (e.KeyData == (Keys.Control | Keys.Home))
+                    moveTopToolStripMenuItem_Click(sender, e);
+                else if (e.KeyData == (Keys.Control | Keys.End))
+                    moveBottomToolStripMenuItem_Click(sender, e);
             }
         }
 
@@ -411,6 +418,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             moveUpToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
             moveDownToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
+            moveTopToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
+            moveBottomToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
         }
 
         private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
@@ -451,6 +460,24 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             SwapReplaceList(index, index + 1);
+        }
+
+
+        private void moveTopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = listViewReplaceList.SelectedIndices[0];
+            if (index == 0)
+                return;
+            SwapReplaceList(index, 0);
+        }
+
+        private void moveBottomToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = listViewReplaceList.SelectedIndices[0];
+            int bottomIndex = listViewReplaceList.Items.Count - 1;
+            if (index == bottomIndex)
+                return;
+            SwapReplaceList(index, bottomIndex);
         }
 
         private void ExportClick(object sender, EventArgs e)
@@ -501,6 +528,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+
                 foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
                 {
                     MultipleSearchAndReplaceSetting item = new MultipleSearchAndReplaceSetting();
@@ -519,10 +547,12 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.MultipleSearchAndReplaceList.Add(item);
                 }
 
+                listViewReplaceList.BeginUpdate();
                 listViewReplaceList.Items.Clear();
                 foreach (var item in Configuration.Settings.MultipleSearchAndReplaceList)
                     AddToReplaceListView(item.Enabled, item.FindWhat, item.ReplaceWith, EnglishSearchTypeToLocal(item.SearchType));
                 GeneratePreview();
+                listViewReplaceList.EndUpdate();
             }
         }
 
@@ -534,7 +564,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MultipleReplace_Shown(object sender, EventArgs e)
         {
-            listViewReplaceList.ItemChecked +=ListViewReplaceListItemChecked;
+            listViewReplaceList.ItemChecked += ListViewReplaceListItemChecked;
             GeneratePreview();
         }
 
@@ -547,7 +577,5 @@ namespace Nikse.SubtitleEdit.Forms
             }
             DialogResult = DialogResult.Cancel;
         }
-
-
     }
 }
