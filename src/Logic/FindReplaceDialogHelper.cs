@@ -158,9 +158,9 @@ namespace Nikse.SubtitleEdit.Logic
             cm.MenuItems.Add("Any character (.)", delegate { textBox.SelectedText = "."; });
             cm.MenuItems.Add("Any whitespace", delegate { textBox.SelectedText = "\\s"; });
             cm.MenuItems.Add("Zero or more (*)", delegate { textBox.SelectedText = "*"; });
-            cm.MenuItems.Add("One or more", delegate { textBox.SelectedText = "+"; });
-            cm.MenuItems.Add("In character goup ([test])", delegate { textBox.SelectedText = "[test]"; });
-            cm.MenuItems.Add("Not in character goup ([^test])", delegate { textBox.SelectedText = "[^test]"; });
+            cm.MenuItems.Add("One or more (+)", delegate { textBox.SelectedText = "+"; });
+            cm.MenuItems.Add("In character group ([test])", delegate { textBox.SelectedText = "[test]"; });
+            cm.MenuItems.Add("Not in character group ([^test])", delegate { textBox.SelectedText = "[^test]"; });
             return cm;
         }
 
