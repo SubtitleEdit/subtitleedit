@@ -1254,6 +1254,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             uppercaseLetter = "I";
                         if ((st.StrippedText.StartsWith("lo ") || st.StrippedText == "lo.") && _threeLetterIsoLanguageName == "ita")
                             uppercaseLetter = "I";
+                        if (st.StrippedText.StartsWith("t ") && st.Pre.EndsWith("'") && _threeLetterIsoLanguageName == "nld")
+                            uppercaseLetter = "t";
                         if ((st.StrippedText.StartsWith("l-I'll ") || st.StrippedText == "l-l'll ") && _threeLetterIsoLanguageName == "eng")
                         {
                             uppercaseLetter = "I";
