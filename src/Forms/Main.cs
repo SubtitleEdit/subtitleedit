@@ -11586,7 +11586,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var tmp = new Subtitle();
                     var format = new SubRip();
                     var list = new List<string>();
-                    foreach (string line in text.Replace(Environment.NewLine, "|").Split("|".ToCharArray(), StringSplitOptions.None))
+                    foreach (string line in text.Replace(Environment.NewLine, "\n").Split('\n'))
                         list.Add(line);
                     format.LoadSubtitle(tmp, list, null);
                     if (SubtitleListview1.SelectedItems.Count == 1 && tmp.Paragraphs.Count > 0)
@@ -18459,7 +18459,7 @@ namespace Nikse.SubtitleEdit.Forms
             var tmp = new Subtitle();
             var format = new SubRip();
             var list = new List<string>();
-            foreach (string line in text.Replace(Environment.NewLine, "|").Split("|".ToCharArray(), StringSplitOptions.None))
+            foreach (string line in text.Replace(Environment.NewLine, "\n").Split('\n'))
                 list.Add(line);
             format.LoadSubtitle(tmp, list, null);
 
@@ -18472,7 +18472,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (tmp.Paragraphs.Count == 0)
                     {
-                        foreach (string line in text.Replace(Environment.NewLine, "|").Split("|".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                        foreach (string line in text.Replace(Environment.NewLine, "\n").Split('\n'))
                             tmp.Paragraphs.Add(new Paragraph(0, 0, line));
                     }
 
