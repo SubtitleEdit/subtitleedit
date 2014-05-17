@@ -89,7 +89,7 @@
             // 
             this.textBoxFind.Location = new System.Drawing.Point(15, 25);
             this.textBoxFind.Name = "textBoxFind";
-            this.textBoxFind.Size = new System.Drawing.Size(262, 21);
+            this.textBoxFind.Size = new System.Drawing.Size(265, 21);
             this.textBoxFind.TabIndex = 0;
             this.textBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindKeyDown);
             // 

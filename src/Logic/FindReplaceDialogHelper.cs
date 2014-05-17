@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Logic
             cm.MenuItems.Add("New line (\\r\\n)", delegate { textBox.SelectedText = "\\r\\n"; });
             cm.MenuItems.Add("Any digit (\\d)", delegate { textBox.SelectedText = "\\d"; });
             cm.MenuItems.Add("Any character (.)", delegate { textBox.SelectedText = "."; });
-            cm.MenuItems.Add("Any whitespace", delegate { textBox.SelectedText = "\\s"; });
+            cm.MenuItems.Add("Any whitespace (\\s)", delegate { textBox.SelectedText = "\\s"; });
             cm.MenuItems.Add("Zero or more (*)", delegate { textBox.SelectedText = "*"; });
             cm.MenuItems.Add("One or more (+)", delegate { textBox.SelectedText = "+"; });
             cm.MenuItems.Add("In character group ([test])", delegate { textBox.SelectedText = "[test]"; });
