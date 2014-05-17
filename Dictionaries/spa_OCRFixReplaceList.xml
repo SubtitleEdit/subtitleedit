@@ -351,7 +351,7 @@
     <Word from="tendria" to="tendría" />
     <Word from="CÏGO" to="creo" />
     <Word from="anteg" to="antes" />
-    <Word from="SóIo" to="Sólo" />
+    <Word from="SóIo" to="Solo" />
     <Word from="Ilamándola" to="llamándola" />
     <Word from="Cáﬂaté" to="Cállate" />
     <Word from="Ilamaste" to="llamaste" />
@@ -660,7 +660,7 @@
     <LinePart from="su porque" to="su porqué" />
     <LinePart from="los porqués" to="los porqués" />
     <!-- aún -->
-    <LinePart from="aún," to="aún," />
+    <LinePart from="aun," to="aún," />
     <LinePart from="aun no" to="aún no" />
     <!-- dé -->
     <LinePart from=" de y " to=" dé y " />
@@ -700,13 +700,19 @@
     <!-- Errores de "l" en vez de "i" en casos específicos -->
     <LinePart from=" llegal" to=" ilegal" />
     <LinePart from=" lluminar" to=" iluminar" />
-    <LinePart from=" sllbato" to=" silbato" />
-    <LinePart from=" sllenclo" to=" silencio" />
-    <LinePart from=" clemencla" to=" clemencia" />
-    <LinePart from=" socledad" to=" sociedad" />
-    <LinePart from=" tlene" to=" tiene" />
-    <LinePart from=" tlempo" to=" tiempo" />
-    <LinePart from=" equlvocaba" to=" equivocaba" />
+    <LinePart from="sllbato" to="silbato" />
+    <LinePart from="sllenclo" to="silencio" />
+    <LinePart from="clemencla" to="clemencia" />
+    <LinePart from="socledad" to="sociedad" />
+    <LinePart from="tlene" to="tiene" />
+    <LinePart from="tlempo" to="tiempo" />
+    <LinePart from="equlvocaba" to="equivocaba" />
+    <LinePart from="qulnce" to="quince" />
+    <LinePart from="comlen" to="comien" />
+    <LinePart from="historl" to="histori" />
+    <LinePart from="misterl" to="misteri" />
+    <LinePart from="vivencl" to="vivenci" />
+  </PartialLines>
   </PartialLines>
   <BeginLines />
   <EndLines>
