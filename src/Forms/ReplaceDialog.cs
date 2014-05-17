@@ -173,7 +173,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (sender == radioButtonRegEx)
                 textBoxFind.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
             else
-                textBoxFind.ContextMenuStrip = null;
+                textBoxFind.ContextMenu = null;
         }
 
         private void TextBoxFindKeyDown(object sender, KeyEventArgs e)
