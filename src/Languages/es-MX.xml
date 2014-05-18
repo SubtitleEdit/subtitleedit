@@ -859,7 +859,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MergeWithLineBefore>Combinar con línea anterior</MergeWithLineBefore>
         <MergeWithLineAfter>Combinar con línea siguiente</MergeWithLineAfter>
         <Normal>Normal</Normal>
-        <Underline>Subrrallado</Underline>
+        <Underline>Subrayado</Underline>
         <Color>Color...</Color>
         <FontName>Nombre de fuente...</FontName>
         <Alignment>Alineación...</Alignment>
