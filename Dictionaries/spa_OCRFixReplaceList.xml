@@ -769,7 +769,7 @@
     <RegEx find="\x22{2,}$" replaceWith="»" />
     <RegEx find="\x22\r" replaceWith="»" />
     <RegEx find="^\x22" replaceWith="«" />
-    <RegEx find="\x22$" replaceWith="»" />
+    <RegEx find="\x22$" replaceWith="»." />
     <RegEx find="(\w)(\.)\x22" replaceWith="$1»." />
     <RegEx find="\s\x22" replaceWith=" «" />
     <RegEx find="\x22\s" replaceWith="» " />
@@ -826,6 +826,7 @@
     <RegEx find="(\.\.\.),$" replaceWith="$1" />
     <RegEx find="(\w)(\.\.)$" replaceWith="$1." />
     <!--  Puntos innecesarios (complemento)  -->
+    <RegEx find="([\w\W]\.{3})([¡¿])" replaceWith="$1 $2" />
     <RegEx find="(\w)\.\.(\s)" replaceWith="$1.$2" />
     <RegEx find="(\w)\.([\?\!])" replaceWith="$1$2" />
     <RegEx find="([\:\;])\." replaceWith="$1" />
@@ -894,7 +895,7 @@
     <RegEx find="(\b\d{1,2})(’|')(\d{2})\s(s|m)(\W|$)" replaceWith="$1,$3 $4$5" />
     <RegEx find="(\b\d{1,2})(’|')(\d{2})\s(h)(\W|$)" replaceWith="$1:$3 $4$5" />
     <!--  Porcentaje (debe llevar espacio)  -->
-    <RegEx find="(\b\d{1,2})%(\W)" replaceWith="$1 %$2" />
+    <RegEx find="(\b\d{1,3})%(\W)" replaceWith="$1 %$2" />
     <!--  Haz/has  -->
     <RegEx find="(\b)([Hh])as\s(la\b|lo\b|clic\b)(\W)" replaceWith="$1$2az $3$4" />
     <RegEx find="(\b)([Hh])az\s(de\b)(\W)" replaceWith="$1$2as $3$4" />
