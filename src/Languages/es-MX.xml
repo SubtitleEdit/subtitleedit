@@ -714,7 +714,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RightToLeftMode>Modo de derecha a izquierda</RightToLeftMode>
         <FixTrlViaUnicodeControlCharacters>Corregir RTL mediante caracteres de control Unicode (para las líneas seleccionadas)</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Invertir RTL inicio/fin (para las líneas seleccionadas)</ReverseRightToLeftStartEnd>
-        <ShowOriginalTextInAudioAndVideoPreview>Mostrar texto original en la previsualización de audio/vídeo</ShowOriginalTextInAudioAndVideoPreview>
+        <ShowOriginalTextInAudioAndVideoPreview>Mostrar texto original en la previsualización de audio/video</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modificar selección...</ModifySelection>
         <InverseSelection>Invertir selección</InverseSelection>
       </Edit>
@@ -786,7 +786,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <PointSyncViaOtherSubtitle>Sincronicación puntual desde otro subtítulo...</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
-        <Title>Auto-traducción</Title>
+        <Title>Autotraducción</Title>
         <TranslatePoweredByGoogle>Traducir (generado por Google)...</TranslatePoweredByGoogle>
         <TranslatePoweredByMicrosoft>Traducir (generado por Microsoft)...</TranslatePoweredByMicrosoft>
         <TranslateFromSwedishToDanish>Traducir de Sueco a Danés (generado por nikse.dk)...</TranslateFromSwedishToDanish>
@@ -816,7 +816,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SaveAs>Guardar como</SaveAs>
         <Find>Buscar</Find>
         <Replace>Reemplazar</Replace>
-        <FixCommonErrors>Corregir errores comunes</FixCommonErrors>
+        <FixCommonErrors>Corregir errores</FixCommonErrors>
         <VisualSync>Sincronización visual</VisualSync>
         <SpellCheck>Ortografía</SpellCheck>
         <Settings>Ajustes</Settings>
@@ -838,7 +838,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Paste>Pegar</Paste>
         <Delete>Borrar</Delete>
         <SplitLineAtCursorPosition>Dividir línea desde el cursor</SplitLineAtCursorPosition>
-        <AutoDurationCurrentLine>Auto-duración (línea actual)</AutoDurationCurrentLine>
+        <AutoDurationCurrentLine>Autoduración (línea actual)</AutoDurationCurrentLine>
         <SelectAll>Seleccionar todo</SelectAll>
         <InsertFirstLine>Insertar línea</InsertFirstLine>
         <InsertBefore>Insertar antes</InsertBefore>
@@ -972,7 +972,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeShowEarlier>Antes de mostrar el anterior</BeforeShowEarlier>
     <BeforeShowLater>Antes de mostrar el siguiente</BeforeShowLater>
     <LineNumberX>Línea número: {0:#,##0.##}</LineNumberX>
-    <OpenVideoFile>Abrir archivo de vídeo...</OpenVideoFile>
+    <OpenVideoFile>Abrir archivo de video...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Nueva tasa de cuadros ({0}) usada para calcular inicio/fin del código de tiempos</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Nueva tasa de cuadros ({0}) usada para calcular inicio/fin número de cuadro</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>La búsqueda no ha dado resultados.
@@ -1406,7 +1406,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <SubtitleFont>Fuente del subtítulo</SubtitleFont>
     <SubtitleFontSize>Tamaño de fuente del subtítulo</SubtitleFontSize>
     <SubtitleBold>Negrita</SubtitleBold>
-    <SubtitleCenter>Centro</SubtitleCenter>
+    <SubtitleCenter>Centrar</SubtitleCenter>
     <SubtitleFontColor>Color de fuente del subtítulo</SubtitleFontColor>
     <SubtitleBackgroundColor>Color de fondo del subtítulo</SubtitleBackgroundColor>
     <SpellChecker>Corrector ortográfico</SpellChecker>
@@ -1445,7 +1445,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll de VLC Media Player 1.1.0 o superior</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Ruta del VLC (solo se necesita si se usa la versión portable del VLC)</VlcBrowseToLabel>
-    <ShowStopButton>Mostrar el botón «Stop»</ShowStopButton>
+    <ShowStopButton>Mostrar botón «Stop»</ShowStopButton>
     <ShowMuteButton>Mostrar botón «Silencio»</ShowMuteButton>
     <ShowFullscreenButton>Mostrar botón «Pantalla completa»</ShowFullscreenButton>
     <PreviewFontSize>Tamaño de fuente en vista previa del subtítulo</PreviewFontSize>
@@ -1509,11 +1509,11 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <FirstPlusX>Primero + {0}</FirstPlusX>
     <LastMinusX>Último - {0}</LastMinusX>
     <FixCommonerrors>Corregir errores comunes</FixCommonerrors>
-    <MergeLinesShorterThan>Combinar líneas menores que</MergeLinesShorterThan>
+    <MergeLinesShorterThan>Combinar líneas menores de</MergeLinesShorterThan>
     <MusicSymbol>Símbolos musicales</MusicSymbol>
     <MusicSymbolsToReplace>Símbolos musicales a reemplazar (separados por espacios)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Corregir los errores comunes de OCR - utilizar también reglas codificadas</FixCommonOcrErrorsUseHardcodedRules>
-    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Arreglar vista de tiempos cortos - permitiendo que se desplace de la hora de inicio</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonOcrErrorsUseHardcodedRules>Corregir los errores comunes de OCR - utilizar reglas codificadas</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Arreglar vista de tiempos cortos - desplazando la hora de inicio</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Atajos</Shortcuts>
     <Shortcut>Atajo</Shortcut>
     <Control>Control</Control>
@@ -1523,7 +1523,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <TextBox>Cuadro de texto</TextBox>
     <UpdateShortcut>Actualizar</UpdateShortcut>
     <ShortcutIsNotValid>Acceso directo no válido: {0}</ShortcutIsNotValid>
-    <ToggleDockUndockOfVideoControls>Cambiar acoplar/desacoplar controles de vídeo</ToggleDockUndockOfVideoControls>
+    <ToggleDockUndockOfVideoControls>Cambiar acoplar/desacoplar controles de video</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ajustar final, añadir nuevo e ir a la nueva</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar posición final e ir al siguiente</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Ajustar inicio de autoduración e ir al siguiente</AdjustSetStartAutoDurationAndGoToNext>
@@ -1544,7 +1544,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <ToggleDialogueDashes>Cambiar guiones del diálogo</ToggleDialogueDashes>
     <Alignment>Alineación (líneas seleccionadas)</Alignment>
     <CopyTextOnly>Copia solo el texto al portapapeles (líneas seleccionadas)</CopyTextOnly>
-    <AutoDurationSelectedLines>Auto-duración (líneas seleccionadas)</AutoDurationSelectedLines>
+    <AutoDurationSelectedLines>Autoduración (líneas seleccionadas)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Invertir RTL inicio/final</ReverseStartAndEndingForRTL>
     <VerticalZoom>Acercamiento vertical</VerticalZoom>
     <VerticalZoomOut>Alejamiento vertical</VerticalZoomOut>
@@ -1572,12 +1572,12 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <CustomSearch5>Traducir, avanzada 5</CustomSearch5>
     <CustomSearch6>Traducir, avanzada 6</CustomSearch6>
     <SyntaxColoring>Sintaxis para colorear</SyntaxColoring>
-    <ListViewSyntaxColoring>Ver lista de sintaxis para colorear</ListViewSyntaxColoring>
-    <SyntaxColorDurationIfTooSmall>Color si es demasiada corta la duración</SyntaxColorDurationIfTooSmall>
-    <SyntaxColorDurationIfTooLarge>Color si es demasiada larga la duración</SyntaxColorDurationIfTooLarge>
-    <SyntaxColorTextIfTooLong>Color de texto si es muy largo</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Color de texto si hay más líneas</SyntaxColorTextMoreThanXLines>
-    <SyntaxColorOverlap>Color superposición de código de tiempo</SyntaxColorOverlap>
+    <ListViewSyntaxColoring>Lista de sintaxis para colorear</ListViewSyntaxColoring>
+    <SyntaxColorDurationIfTooSmall>Colorear si la duración es demasiada corta</SyntaxColorDurationIfTooSmall>
+    <SyntaxColorDurationIfTooLarge>Colorear si la duración es demasiada larga</SyntaxColorDurationIfTooLarge>
+    <SyntaxColorTextIfTooLong>Colorear el texto si es muy largo</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextMoreThanXLines>Colorear el texto si las líneas son mayores a</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorOverlap>Colorear superposición de código de tiempo</SyntaxColorOverlap>
     <SyntaxErrorColor>Color de errores</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ir a la primera línea seleccionada</GoToFirstSelectedLine>
     <MergeSelectedLines>Unir las líneas seleccionadas</MergeSelectedLines>
@@ -1902,7 +1902,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <Nordic>Nórdico</Nordic>
     <Spanish>Español</Spanish>
     <German>Alemán</German>
-    <AutoSubmitOnFirstChar>Autopresentar primer caracter</AutoSubmitOnFirstChar>
+    <AutoSubmitOnFirstChar>Autopresentar primer carácter</AutoSubmitOnFirstChar>
     <EditLastX>Editar el último: {0}</EditLastX>
   </VobSubOcrCharacter>
   <VobSubOcrCharacterInspect>
