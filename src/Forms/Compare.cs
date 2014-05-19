@@ -502,7 +502,7 @@ namespace Nikse.SubtitleEdit.Forms
             // from start
             int minLength = Math.Min(richTextBox1.Text.Length, richTextBox2.Text.Length);
             int startCharactersOk = 0;
-            for (int i=0; i < minLength; i++)
+            for (int i = 0; i < minLength; i++)
             {
                 if (richTextBox1.Text[i] == richTextBox2.Text[i])
                 {
@@ -510,7 +510,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    if (richTextBox1.Text.Length > i+4 && richTextBox2.Text.Length > i+4 &&
+                    if (richTextBox1.Text.Length > i + 4 && richTextBox2.Text.Length > i + 4 &&
                         richTextBox1.Text[i + 1] == richTextBox2.Text[i + 1] &&
                         richTextBox1.Text[i + 2] == richTextBox2.Text[i + 2] &&
                         richTextBox1.Text[i + 3] == richTextBox2.Text[i + 3] &&
@@ -792,6 +792,84 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(sub1Path))
             {
                 toolTip1.Show(Path.GetFileName(sub1Path), control);
+            }
+        }
+
+        private void subtitleListView1_DragEnter(object sender, DragEventArgs e)
+        {
+            VerifyDragEnter(e);
+        }
+
+        private void subtitleListView2_DragEnter(object sender, DragEventArgs e)
+        {
+            VerifyDragEnter(e);
+        }
+
+        private void VerifyDragEnter(DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Copy;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void subtitleListView1_DragDrop(object sender, DragEventArgs e)
+        {
+            VerifyDragDrop((sender as ListView), e);
+        }
+
+        private void subtitleListView2_DragDrop(object sender, DragEventArgs e)
+        {
+            VerifyDragDrop((sender as ListView), e);
+        }
+
+        private void VerifyDragDrop(ListView listView, DragEventArgs e)
+        {
+            var files = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (files.Length > 1)
+            {
+                MessageBox.Show(Configuration.Settings.Language.Main.DropOnlyOneFile,
+                    "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string filePath = files[0];
+            var listExt = new List<string>();
+            foreach (var s in Utilities.GetOpenDialogFilter().Split("*".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (s.EndsWith(";"))
+                    listExt.Add(s.Trim(';'));
+            }
+            if (!listExt.Contains(Path.GetExtension(filePath)))
+                return;
+            if (Main.HasVobSubHeader(filePath) || Main.IsBluRaySupFile(filePath))
+            {
+                MessageBox.Show(Configuration.Settings.Language.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
+                return;
+            }
+            Encoding encoding;
+            if (listView.Name == "subtitleListView1")
+            {
+                _subtitle1 = new Subtitle();
+                _subtitle1.LoadSubtitle(filePath, out encoding, null);
+                subtitleListView1.Fill(_subtitle1);
+                subtitleListView1.SelectIndexAndEnsureVisible(0);
+                subtitleListView2.SelectIndexAndEnsureVisible(0);
+                labelSubtitle1.Text = filePath;
+                _language1 = Utilities.AutoDetectGoogleLanguage(_subtitle1);
+                if (_subtitle1.Paragraphs.Count > 0)
+                    CompareSubtitles();
+            }
+            else
+            {
+                _subtitle2 = new Subtitle();
+                _subtitle2.LoadSubtitle(filePath, out encoding, null);
+                subtitleListView2.Fill(_subtitle2);
+                subtitleListView1.SelectIndexAndEnsureVisible(0);
+                subtitleListView2.SelectIndexAndEnsureVisible(0);
+                labelSubtitle2.Text = filePath;
+                if (_subtitle2.Paragraphs.Count > 0)
+                    CompareSubtitles();
             }
         }
     }
