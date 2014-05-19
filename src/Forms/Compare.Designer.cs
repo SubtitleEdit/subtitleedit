@@ -209,6 +209,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // subtitleListView2
             // 
+            this.subtitleListView2.AllowDrop = true;
             this.subtitleListView2.DisplayExtraFromExtra = false;
             this.subtitleListView2.FirstVisibleIndex = -1;
             this.subtitleListView2.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -227,9 +228,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView2.UseSyntaxColoring = true;
             this.subtitleListView2.View = System.Windows.Forms.View.Details;
             this.subtitleListView2.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView2SelectedIndexChanged);
+            this.subtitleListView2.DragDrop += new System.Windows.Forms.DragEventHandler(this.subtitleListView2_DragDrop);
+            this.subtitleListView2.DragEnter += new System.Windows.Forms.DragEventHandler(this.subtitleListView2_DragEnter);
             // 
             // subtitleListView1
             // 
+            this.subtitleListView1.AllowDrop = true;
             this.subtitleListView1.DisplayExtraFromExtra = false;
             this.subtitleListView1.FirstVisibleIndex = -1;
             this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -248,6 +252,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
+            this.subtitleListView1.DragDrop += new System.Windows.Forms.DragEventHandler(this.subtitleListView1_DragDrop);
+            this.subtitleListView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.subtitleListView1_DragEnter);
             // 
             // Compare
             // 
