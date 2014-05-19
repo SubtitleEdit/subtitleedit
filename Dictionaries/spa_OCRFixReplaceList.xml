@@ -901,9 +901,11 @@
     <RegEx find="(\b)([Hh])az\s(de\b)(\W)" replaceWith="$1$2as $3$4" />
     <RegEx find="(\b)([Hh])as(le\b|nos\b|me\b)(\W)" replaceWith="$1$2az$3$4" />
     <!--  Quitar itálicas en 3 o menos letras  -->
-    <RegEx find="\x3ci&gt;([a-zA-Z]{1,3})\x3c/i&gt;" replaceWith="$1 " />
+    <RegEx find="\x3ci\x3e(.{1,3})\x3c\/i\x3e" replaceWith="$1" />
     <!--  Miscelánea  -->
     <RegEx find="(\b[Cc]erca|\b[Ee]ncima|\b[Dd]ebajo|\b[Dd]etrás|\b[Dd]elante)(\s)mío" replaceWith="$1 de mí" />
     <RegEx find="(\b[Cc]erca|\b[Ee]ncima|\b[Dd]ebajo|\b[Dd]etrás|\b[Dd]elante)(\s)tuyo" replaceWith="$1 de ti" />
+    <!-- Repeticiones de una palabra más de tres veces -->
+    <RegEx find="(([a-zá-ú]+)[\.,]\s[A-ZÁ-Úa-zá-ú]){2,}\1" replaceWith="$1$1" />
   </RegularExpressions>
 </ReplaceList>
