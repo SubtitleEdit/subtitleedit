@@ -123,19 +123,19 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textBoxFind.Visible)
                 {
-                    comboBoxFind.ContextMenuStrip = null;
+                    comboBoxFind.ContextMenu = null;
                     textBoxFind.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
                 }
                 else
                 {
                     textBoxFind.ContextMenu = null;
-                    comboBoxFind.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
+                    comboBoxFind.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(comboBoxFind);
                 }
             }
             else
             {
-                textBoxFind.ContextMenuStrip = null;
-                comboBoxFind.ContextMenuStrip = null;
+                textBoxFind.ContextMenu = null;
+                comboBoxFind.ContextMenu = null;
             }
         }
 
