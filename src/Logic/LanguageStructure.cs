@@ -1463,6 +1463,21 @@
             public string XPluginsUpdated { get; set; }
         }
 
+        public class RegularExpressionContextMenu
+        {
+            public string WordBoundary { get; set; }
+            public string NonWordBoundary { get; set; }
+            public string NewLine { get; set; }
+            public string NewLineShort { get; set; }
+            public string AnyDigit { get; set; }
+            public string AnyCharacter { get; set; }
+            public string AnyWhitespace { get; set; }
+            public string ZeroOrMore { get; set; }
+            public string OneOrMore { get; set; }
+            public string InCharacterGroup { get; set; }
+            public string NotInCharacterGroup { get; set; }
+        }
+
         public class RemoveTextFromHearImpaired
         {
             public string Title { get; set; }
