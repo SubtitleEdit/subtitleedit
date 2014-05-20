@@ -2730,7 +2730,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
-                string text = ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, true);
+                string text = ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, false);
                 lastLine = text;
                 if (p.Text != text)
                 {
