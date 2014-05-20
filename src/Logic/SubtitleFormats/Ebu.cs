@@ -69,6 +69,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         return 25.0;
                     if (DiskFormatCode.StartsWith("STL29"))
                         return 29.0;
+                    if (DiskFormatCode.StartsWith("STL35"))
+                        return 35.0;
+                    if (DiskFormatCode.StartsWith("STL48"))
+                        return 48.0;
+                    if (DiskFormatCode.StartsWith("STL50"))
+                        return 50.0;
+                    if (DiskFormatCode.StartsWith("STL60"))
+                        return 60.0;
                     return 30.0; // should be DiskFormatcode STL30.01
                 }
             }
@@ -570,7 +578,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             header.DiskFormatCode.StartsWith("STL24") ||
                             header.DiskFormatCode.StartsWith("STL25") ||
                             header.DiskFormatCode.StartsWith("STL29") ||
-                            header.DiskFormatCode.StartsWith("STL30"))
+                            header.DiskFormatCode.StartsWith("STL30") ||
+                            header.DiskFormatCode.StartsWith("STL35") ||
+                            header.DiskFormatCode.StartsWith("STL48") ||
+                            header.DiskFormatCode.StartsWith("STL50") ||
+                            header.DiskFormatCode.StartsWith("STL60"))
                         {
                             return Utilities.IsInteger(header.CodePageNumber) || fileName.ToLower().EndsWith("stl");
                         }
