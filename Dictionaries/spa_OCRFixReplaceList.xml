@@ -905,7 +905,10 @@
     <!--  Miscelánea  -->
     <RegEx find="(\b[Cc]erca|\b[Ee]ncima|\b[Dd]ebajo|\b[Dd]etrás|\b[Dd]elante)(\s)mío" replaceWith="$1 de mí" />
     <RegEx find="(\b[Cc]erca|\b[Ee]ncima|\b[Dd]ebajo|\b[Dd]etrás|\b[Dd]elante)(\s)tuyo" replaceWith="$1 de ti" />
-    <!-- Repeticiones de una palabra más de tres veces -->
-    <RegEx find="(([a-zá-ú]+)[\.,]\s[A-ZÁ-Úa-zá-ú]){2,}\1" replaceWith="$1$1" />
+    <!--  Repeticiones de palabras o frases (experimental)  -->
+    <!--  Ej. «No, no, no, no, no.» por «No, no, no.»  -->
+    <RegEx find="(([a-zá-úñ]+)[\.,]\s[A-ZÁ-Úa-zá-úñ]){2,}\1" replaceWith="$1$1" />
+    <!--  Ej. «¡está aquí, está aquí, está aquí!» por «¡está aquí!»  -->
+    <RegEx find="([\W\S]\s.{2}.+),\s(.+)\1([!?.])" replaceWith="$1$3" />
   </RegularExpressions>
 </ReplaceList>
