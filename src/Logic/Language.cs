@@ -69,6 +69,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.NetworkStart NetworkStart;
         public LanguageStructure.OpenVideoDvd OpenVideoDvd;
         public LanguageStructure.PluginsGet PluginsGet;
+        public LanguageStructure.RegularExpressionContextMenu RegularExpressionContextMenu;
         public LanguageStructure.RemoveTextFromHearImpaired RemoveTextFromHearImpaired;
         public LanguageStructure.ReplaceDialog ReplaceDialog;
         public LanguageStructure.RestoreAutoBackup RestoreAutoBackup;
@@ -1566,6 +1567,21 @@ can edit in same subtitle file (collaboration)",
                 UpdateAvailable = "[Update available!]",
                 UpdateAll = "Update all",
                 XPluginsUpdated = "{0} plugin(s) updated",
+            };
+
+            RegularExpressionContextMenu = new LanguageStructure.RegularExpressionContextMenu
+            {
+                WordBoundary = "Word boundary (\\b)",
+                NonWordBoundary = "Non word boundary (\\B)",
+                NewLine = "New line (\\r\\n)",
+                NewLineShort = "New line (\\n)",
+                AnyDigit = "Any digit (\\d)",
+                AnyCharacter = "Any character (.)",
+                AnyWhitespace = "Any whitespace (\\s)",
+                ZeroOrMore = "Zero or more (*)",
+                OneOrMore = "One or more (+)",
+                InCharacterGroup = "In character group ([test])",
+                NotInCharacterGroup = "Not in character group ([^test])",
             };
 
             RemoveTextFromHearImpaired = new LanguageStructure.RemoveTextFromHearImpaired
