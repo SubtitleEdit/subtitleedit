@@ -196,11 +196,23 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (Configuration.Settings.General.MininumMillisecondsBetweenLines % 2 == 1)
                                         spacing2++;
 
-                                    double duration = p.Duration.TotalMilliseconds / 2.0;
                                     Paragraph newParagraph1 = new Paragraph(p);
                                     Paragraph newParagraph2 = new Paragraph(p);
                                     newParagraph1.Text = Utilities.AutoBreakLine(arr[0], language);
-                                    newParagraph1.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration - spacing1;
+
+                                    double startFactor = 0;
+                                    double middle = p.StartTime.TotalMilliseconds + (p.Duration.TotalMilliseconds / 2);
+                                    if (Utilities.RemoveHtmlTags(oldText).Trim().Length > 0)
+                                    {
+                                        startFactor = (double)Utilities.RemoveHtmlTags(newParagraph1.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
+                                        if (startFactor < 0.25)
+                                            startFactor = 0.25;
+                                        if (startFactor > 0.75)
+                                            startFactor = 0.75;
+                                        middle = p.StartTime.TotalMilliseconds + (p.Duration.TotalMilliseconds * startFactor);
+                                    }
+
+                                    newParagraph1.EndTime.TotalMilliseconds = middle - spacing1;
                                     newParagraph2.Text = Utilities.AutoBreakLine(arr[1], language);
                                     newParagraph2.StartTime.TotalMilliseconds = newParagraph1.EndTime.TotalMilliseconds + spacing2;
 
