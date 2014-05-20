@@ -1,16 +1,16 @@
-﻿using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic.Enums;
+﻿using Nikse.SubtitleEdit.Logic.Enums;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic
 {
     public class FindReplaceDialogHelper
     {
-        readonly string _findText = string.Empty;
-        readonly string _replaceText = string.Empty;
-        readonly Regex _regEx;
-        int _findTextLenght;
+        private readonly string _findText = string.Empty;
+        private readonly string _replaceText = string.Empty;
+        private readonly Regex _regEx;
+        private int _findTextLenght;
 
         public bool Success { get; set; }
         public FindType FindType { get; set; }
@@ -151,23 +151,76 @@ namespace Nikse.SubtitleEdit.Logic
         public static ContextMenu GetRegExContextMenu(TextBox textBox)
         {
             var cm = new ContextMenu();
-            cm.MenuItems.Add("Word boundary (\\b)", delegate { textBox.SelectedText = "\\b"; }); //TODO: Add language tags
-            cm.MenuItems.Add("Non word boundary (\\B)", delegate { textBox.SelectedText = "\\B"; });
-            cm.MenuItems.Add("New line (\\r\\n)", delegate { textBox.SelectedText = "\\r\\n"; });
-            cm.MenuItems.Add("Any digit (\\d)", delegate { textBox.SelectedText = "\\d"; });
-            cm.MenuItems.Add("Any character (.)", delegate { textBox.SelectedText = "."; });
-            cm.MenuItems.Add("Any whitespace (\\s)", delegate { textBox.SelectedText = "\\s"; });
-            cm.MenuItems.Add("Zero or more (*)", delegate { textBox.SelectedText = "*"; });
-            cm.MenuItems.Add("One or more (+)", delegate { textBox.SelectedText = "+"; });
-            cm.MenuItems.Add("In character group ([test])", delegate { textBox.SelectedText = "[test]"; });
-            cm.MenuItems.Add("Not in character group ([^test])", delegate { textBox.SelectedText = "[^test]"; });
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.RegularExpressionContextMenu.WordBoundary))
+            {
+                cm.MenuItems.Add("Word boundary (\\b)", delegate { textBox.SelectedText = "\\b"; }); //TODO: Remove in SE 3.3.4
+                cm.MenuItems.Add("Non word boundary (\\B)", delegate { textBox.SelectedText = "\\B"; });
+                cm.MenuItems.Add("New line (\\r\\n)", delegate { textBox.SelectedText = "\\r\\n"; });
+                cm.MenuItems.Add("Any digit (\\d)", delegate { textBox.SelectedText = "\\d"; });
+                cm.MenuItems.Add("Any character (.)", delegate { textBox.SelectedText = "."; });
+                cm.MenuItems.Add("Any whitespace (\\s)", delegate { textBox.SelectedText = "\\s"; });
+                cm.MenuItems.Add("Zero or more (*)", delegate { textBox.SelectedText = "*"; });
+                cm.MenuItems.Add("One or more (+)", delegate { textBox.SelectedText = "+"; });
+                cm.MenuItems.Add("In character group ([test])", delegate { textBox.SelectedText = "[test]"; });
+                cm.MenuItems.Add("Not in character group ([^test])", delegate { textBox.SelectedText = "[^test]"; });
+            }
+            else
+            {
+                var l = Configuration.Settings.Language.RegularExpressionContextMenu;
+                cm.MenuItems.Add(l.WordBoundary, delegate { textBox.SelectedText = "\\b"; }); 
+                cm.MenuItems.Add(l.NonWordBoundary, delegate { textBox.SelectedText = "\\B"; });
+                cm.MenuItems.Add(l.NewLine, delegate { textBox.SelectedText = "\\r\\n"; });
+                cm.MenuItems.Add(l.AnyDigit, delegate { textBox.SelectedText = "\\d"; });
+                cm.MenuItems.Add(l.AnyCharacter, delegate { textBox.SelectedText = "."; });
+                cm.MenuItems.Add(l.AnyWhitespace, delegate { textBox.SelectedText = "\\s"; });
+                cm.MenuItems.Add(l.ZeroOrMore, delegate { textBox.SelectedText = "*"; });
+                cm.MenuItems.Add(l.OneOrMore, delegate { textBox.SelectedText = "+"; });
+                cm.MenuItems.Add(l.InCharacterGroup, delegate { textBox.SelectedText = "[test]"; });
+                cm.MenuItems.Add(l.NotInCharacterGroup, delegate { textBox.SelectedText = "[^test]"; });
+            }
+            return cm;
+        }
+
+        public static ContextMenu GetRegExContextMenu(ComboBox comboBox)
+        {
+            var cm = new ContextMenu();
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.RegularExpressionContextMenu.WordBoundary))
+            {
+                cm.MenuItems.Add("Word boundary (\\b)", delegate { comboBox.SelectedText = "\\b"; }); //TODO: Remove in SE 3.3.4
+                cm.MenuItems.Add("Non word boundary (\\B)", delegate { comboBox.SelectedText = "\\B"; });
+                cm.MenuItems.Add("New line (\\r\\n)", delegate { comboBox.SelectedText = "\\r\\n"; });
+                cm.MenuItems.Add("Any digit (\\d)", delegate { comboBox.SelectedText = "\\d"; });
+                cm.MenuItems.Add("Any character (.)", delegate { comboBox.SelectedText = "."; });
+                cm.MenuItems.Add("Any whitespace (\\s)", delegate { comboBox.SelectedText = "\\s"; });
+                cm.MenuItems.Add("Zero or more (*)", delegate { comboBox.SelectedText = "*"; });
+                cm.MenuItems.Add("One or more (+)", delegate { comboBox.SelectedText = "+"; });
+                cm.MenuItems.Add("In character group ([test])", delegate { comboBox.SelectedText = "[test]"; });
+                cm.MenuItems.Add("Not in character group ([^test])", delegate { comboBox.SelectedText = "[^test]"; });
+            }
+            else
+            {
+                var l = Configuration.Settings.Language.RegularExpressionContextMenu;
+                cm.MenuItems.Add(l.WordBoundary, delegate { comboBox.SelectedText = "\\b"; }); 
+                cm.MenuItems.Add(l.NonWordBoundary, delegate { comboBox.SelectedText = "\\B"; });
+                cm.MenuItems.Add(l.NewLine, delegate { comboBox.SelectedText = "\\r\\n"; });
+                cm.MenuItems.Add(l.AnyDigit, delegate { comboBox.SelectedText = "\\d"; });
+                cm.MenuItems.Add(l.AnyCharacter, delegate { comboBox.SelectedText = "."; });
+                cm.MenuItems.Add(l.AnyWhitespace, delegate { comboBox.SelectedText = "\\s"; });
+                cm.MenuItems.Add(l.ZeroOrMore, delegate { comboBox.SelectedText = "*"; });
+                cm.MenuItems.Add(l.OneOrMore, delegate { comboBox.SelectedText = "+"; });
+                cm.MenuItems.Add(l.InCharacterGroup, delegate { comboBox.SelectedText = "[test]"; });
+                cm.MenuItems.Add(l.NotInCharacterGroup, delegate { comboBox.SelectedText = "[^test]"; });
+            }
             return cm;
         }
 
         public static ContextMenu GetReplaceTextContextMenu(TextBox textBox)
         {
             var cm = new ContextMenu();
-            cm.MenuItems.Add("New line (\\n)", delegate { textBox.SelectedText = "\\n"; }); //TODO: Add language tags
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.RegularExpressionContextMenu.NewLineShort))            
+                cm.MenuItems.Add("New line (\\n)", delegate { textBox.SelectedText = "\\n"; }); //TODO: Remove in SE 3.4
+            else
+                cm.MenuItems.Add(Configuration.Settings.Language.RegularExpressionContextMenu.NewLineShort, delegate { textBox.SelectedText = "\\n"; });
             return cm;
         }
 
@@ -214,5 +267,6 @@ namespace Nikse.SubtitleEdit.Logic
                 FindTextHistory.Remove(findText);
             FindTextHistory.Add(findText);
         }
+
     }
 }
