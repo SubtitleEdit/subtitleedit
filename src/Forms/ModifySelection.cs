@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBox1.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBox1);
                 checkBoxCaseSensitive.Enabled = false;
             }
-            else if (comboBoxRule.SelectedIndex == FunctionUnequal || comboBoxRule.SelectedIndex == FunctionEqual) 
+            else if (comboBoxRule.SelectedIndex == FunctionUnequal || comboBoxRule.SelectedIndex == FunctionEqual)
             {
                 textBox1.ContextMenuStrip = null;
                 checkBoxCaseSensitive.Enabled = false;
