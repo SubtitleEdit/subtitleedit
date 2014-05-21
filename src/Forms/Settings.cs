@@ -1423,7 +1423,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (Configuration.Settings.Language.Settings.MainTextBoxSelectionToLower != null && text == Configuration.Settings.Language.Settings.MainTextBoxSelectionToLower.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Settings.MainTextBoxSelectionToUpper != null && text == Configuration.Settings.Language.Settings.MainTextBoxSelectionToUpper.Replace("&", string.Empty))
-                        Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper = GetShortcut(node.Text);                    
+                        Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter != null && text == Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxInsertAfter = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Settings.MainTextBoxAutoBreak != null && text == Configuration.Settings.Language.Settings.MainTextBoxAutoBreak.Replace("&", string.Empty))

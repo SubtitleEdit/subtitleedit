@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int Export3DType { get; set; }
         public int Export3DDepth { get; set; }
         public int ExportLastShadowTransparency { get; set; }
-        public double ExportLastFrameRate { get; set; }        
+        public double ExportLastFrameRate { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public string ImportTextSplitting { get; set; }
         public bool ImportTextMergeShortLines { get; set; }
@@ -804,7 +804,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainTextBoxMoveLastWordDown { get; set; }
         public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
         public string MainTextBoxSelectionToLower { get; set; }
-        public string MainTextBoxSelectionToUpper { get; set; }        
+        public string MainTextBoxSelectionToUpper { get; set; }
         public string MainCreateInsertSubAtVideoPos { get; set; }
         public string MainCreatePlayFromJustBefore { get; set; }
         public string MainCreateSetStart { get; set; }
@@ -3066,7 +3066,7 @@ namespace Nikse.SubtitleEdit.Logic
                         File.WriteAllText(fileName, sw.ToString().Replace("encoding=\"utf-16\"", "encoding=\"utf-8\""), Encoding.UTF8);
                     }
                     catch
-                    { 
+                    {
                     }
                 }
             }

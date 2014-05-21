@@ -728,10 +728,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             string text = comboBoxResolution.Text.Trim();;
             if (text.Contains("("))
                 text = text.Remove(0, text.IndexOf("(")).Trim();
-            text = text.TrimStart('(').TrimEnd(')').Trim();           
+            text = text.TrimStart('(').TrimEnd(')').Trim();
             string[] arr = text.Split('x');
             width = int.Parse(arr[0]);
-            height = int.Parse(arr[1]);            
+            height = int.Parse(arr[1]);
         }
 
 
@@ -2594,7 +2594,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void ExportPngXml_Shown(object sender, EventArgs e)
         {
-            comboBoxShadowWidth.SelectedIndex = 0;            
+            comboBoxShadowWidth.SelectedIndex = 0;
             bool shadowVisible = _exportType == "BDNXML" || _exportType == "BLURAYSUP" || _exportType == "DOST" || _exportType == "IMAGE/FRAME" || _exportType == "FCP" || _exportType == "DCINEMA_INTEROP";
             labelShadowWidth.Visible = shadowVisible;
             buttonShadowColor.Visible = shadowVisible;
