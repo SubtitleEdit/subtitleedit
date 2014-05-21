@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.3.14</Version>
+    <Version>3.3.15</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -249,6 +249,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffectColor>Effect color</FontEffectColor>
     <FontSize>Size</FontSize>
     <TopBottomMargin>Top/bottom margin</TopBottomMargin>
+    <FadeUpTime>Fade up time</FadeUpTime>
+    <FadeDownTime>Fade down time</FadeDownTime>
     <ZPosition>Z-position</ZPosition>
     <ZPositionHelp>Positive numbers moves text away, negative numbers moves text closer, if z-position is zero then it's 2D</ZPositionHelp>
     <ChooseColor>Choose color...</ChooseColor>
@@ -916,7 +918,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Play from just before &amp;text</PlayFromJustBeforeText>
       <Pause>Pause</Pause>
-      <GoToSubtitlePositionAndPause>Go to subposition and pause</GoToSubtitlePositionAndPause>
+      <GoToSubtitlePositionAndPause>Go to sub position and pause</GoToSubtitlePositionAndPause>
       <SetStartTime>Set &amp;start time</SetStartTime>
       <SetEndTimeAndGoToNext>Set &amp;end &amp;&amp; go to next</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Adjusted via end time {0}</AdjustedViaEndTime>
@@ -1311,6 +1313,19 @@ can edit in same subtitle file (collaboration)</Information>
     <UpdateAll>Update all</UpdateAll>
     <XPluginsUpdated>{0} plugin(s) updated</XPluginsUpdated>
   </PluginsGet>
+  <RegularExpressionContextMenu>
+    <WordBoundary>Word boundary (\b)</WordBoundary>
+    <NonWordBoundary>Non word boundary (\B)</NonWordBoundary>
+    <NewLine>New line (\r\n)</NewLine>
+    <NewLineShort>New line (\n)</NewLineShort>
+    <AnyDigit>Any digit (\d)</AnyDigit>
+    <AnyCharacter>Any character (.)</AnyCharacter>
+    <AnyWhitespace>Any whitespace (\s)</AnyWhitespace>
+    <ZeroOrMore>Zero or more (*)</ZeroOrMore>
+    <OneOrMore>One or more (+)</OneOrMore>
+    <InCharacterGroup>In character group ([test])</InCharacterGroup>
+    <NotInCharacterGroup>Not in character group ([^test])</NotInCharacterGroup>
+  </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Remove text for hearing impaired</Title>
     <RemoveTextConditions>Remove text conditions</RemoveTextConditions>
@@ -1419,12 +1434,12 @@ can edit in same subtitle file (collaboration)</Information>
     <ShowLineBreaksAs>Show line breaks in list view as</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Double-clicking line in main window list view will</MainListViewDoubleClickAction>
     <MainListViewNothing>Nothing</MainListViewNothing>
-    <MainListViewVideoGoToPositionAndPause>Go to video pos and pause</MainListViewVideoGoToPositionAndPause>
-    <MainListViewVideoGoToPositionAndPlay>Go to video pos and play</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPause>Go to video position and pause</MainListViewVideoGoToPositionAndPause>
+    <MainListViewVideoGoToPositionAndPlay>Go to video position and play</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>Go to edit text box</MainListViewEditText>
-    <MainListViewVideoGoToPositionMinus1SecAndPause>Go to video pos - 1 sec and pause</MainListViewVideoGoToPositionMinus1SecAndPause>
-    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Go to video pos - 0.5 sec and pause</MainListViewVideoGoToPositionMinusHalfSecAndPause>
-    <MainListViewVideoGoToPositionMinus1SecAndPlay>Go to video pos - 1 sec and play</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Go to video position - 1 sec and pause</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Go to video position - 0.5 sec and pause</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Go to video position - 1 sec and play</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Go to edit text box, and pause at video position</MainListViewEditTextAndPause>
     <AutoBackup>Auto-backup</AutoBackup>
     <AutoBackupEveryMinute>Every minute</AutoBackupEveryMinute>
@@ -1590,11 +1605,15 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewColumnInsert>Column, insert text</ListViewColumnInsert>
     <ListViewColumnPaste>Column, paste</ListViewColumnPaste>
     <ListViewFocusWaveform>Focus waveform/spectrogram</ListViewFocusWaveform>
+    <ListViewGoToNextError>Go to next error</ListViewGoToNextError>
     <ShowBeamer>Start subtitle fullscreen beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Move last word down to next subtitle line</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Move first word from next subtitle line up</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxSelectionToLower>Selection to lowercase</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>Selection to uppercase</MainTextBoxSelectionToUpper>
     <MainTextBoxAutoBreak>Auto break text</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Unbreak text</MainTextBoxUnbreak>
+    <MainFileSaveAll>Save all</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>
     <UseDoNotBreakAfterList>Use do-not-break-after list (for auto-br)</UseDoNotBreakAfterList>
   </Settings>
