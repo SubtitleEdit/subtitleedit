@@ -8,7 +8,7 @@
    * Updated Spanish (Mexico) language file - thx pakitonaranjo
    * Updated French language file - thx JM GBT
    * Export to image based format now remembers most settings
-   * Export to image basee format, added 2k resolutions - thx Joseph
+   * Export to image based format, added 2k resolutions - thx Joseph
    * Always close SAMI tags
    * Merge selected lines in original - better handling of empty line
    * DCinema interop - better use of "Effect" - thx gena
@@ -16,21 +16,21 @@
 * FIXED:
    * OCR via "image compare" now works again
    * Fixed "Bridge gap in duration" when working with SSA/ASS
-   * Don't lock settings.xml when SE starts/exits - thx Doigt
+   * Don't lock "settings.xml" when SE starts/exits - thx Doigt
    * Fixed crash when exporting to DOST - thx Nguyen Hoang
    * Fixed crash in "Fix short display times" - thx ivandrofly
    * Fixed bug in batch convert regarding frame rate - thx Rasmus
    * Minor fixes for auto-wrap while typing - thx Andrew
    * Fixed possible crash in main window (typo in history timer)
    * Fixed cut text in image export with right-align
-   * Fixed crash when doing ocr in batch
-   * Several fixes for "Fix common ocr errors" - thx matidio/Joel
+   * Fixed crash when doing OCR in batch
+   * Several fixes for "Fix common OCR errors" - thx matidio/Joel
 
 
 3.3.15 (13th April 2014)
 * NEW:
    * Added new subtitle formats (200+ formats supported!)
-   * Export to VobSub option "Anti-alising with transparency" thx CoOoL_BoY/moob
+   * Export to VobSub option "Anti-aliasing with transparency" thx CoOoL_BoY/moob
    * Added ZPosition setting for DCinema interop - thx Joseph
    * Added fade up/down to DCinema interop properties - thx Raul
    * Added shortcut for Tools -> "Split long lines" - thx John
@@ -57,7 +57,7 @@
    * Delete custom export format now works - thx Leon
    * Possible crash in OCR window - thx grfilho
    * DCinema SMPTE sometimes generated illegal frame numbers - thx knut
-   * Fixed possible crash when converting pac to ttml - thx Dan
+   * Fixed possible crash when converting PAC to TTML - thx Dan
    * Fixed memory leak when running OCR via Tesseract
    * Fixed possible error/crash when loading bad time codes - thx Jucá
 
