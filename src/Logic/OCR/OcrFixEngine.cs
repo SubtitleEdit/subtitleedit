@@ -388,7 +388,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         public string FixOcrErrors(string text, int index, string lastLine, bool logSuggestions, bool useAutoGuess)
         {
-            var sb = new StringBuilder();                       
+            var sb = new StringBuilder();
             var word = new StringBuilder();
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
@@ -1254,7 +1254,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             uppercaseLetter = "I";
                         if ((st.StrippedText.StartsWith("lo ") || st.StrippedText == "lo.") && _threeLetterIsoLanguageName == "ita")
                             uppercaseLetter = "I";
-                        if ((st.StrippedText.StartsWith("k ") || st.StrippedText.StartsWith("m ") || st.StrippedText.StartsWith("n ") || st.StrippedText.StartsWith("r ") || st.StrippedText.StartsWith("s ") || st.StrippedText.StartsWith("t ")) && 
+                        if ((st.StrippedText.StartsWith("k ") || st.StrippedText.StartsWith("m ") || st.StrippedText.StartsWith("n ") || st.StrippedText.StartsWith("r ") || st.StrippedText.StartsWith("s ") || st.StrippedText.StartsWith("t ")) &&
                             st.Pre.EndsWith("'") && _threeLetterIsoLanguageName == "nld")
                             uppercaseLetter = st.StrippedText.Substring(0, 1);
                         if ((st.StrippedText.StartsWith("l-I'll ") || st.StrippedText == "l-l'll ") && _threeLetterIsoLanguageName == "eng")
@@ -1482,7 +1482,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     bool correct = DoSpell(word);
                     if (!correct)
                         correct = DoSpell(word.Trim('\''));
-                    if (!correct && word.Length > 3 && !word.EndsWith("ss") && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) && 
+                    if (!correct && word.Length > 3 && !word.EndsWith("ss") && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) &&
                         (_threeLetterIsoLanguageName == "eng" || _threeLetterIsoLanguageName == "dan" || _threeLetterIsoLanguageName == "swe"|| _threeLetterIsoLanguageName == "nld"))
                         correct = DoSpell(word.TrimEnd('s'));
                     if (!correct)
