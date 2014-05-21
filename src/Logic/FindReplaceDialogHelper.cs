@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Logic
             else
             {
                 var l = Configuration.Settings.Language.RegularExpressionContextMenu;
-                cm.MenuItems.Add(l.WordBoundary, delegate { textBox.SelectedText = "\\b"; }); 
+                cm.MenuItems.Add(l.WordBoundary, delegate { textBox.SelectedText = "\\b"; });
                 cm.MenuItems.Add(l.NonWordBoundary, delegate { textBox.SelectedText = "\\B"; });
                 cm.MenuItems.Add(l.NewLine, delegate { textBox.SelectedText = "\\r\\n"; });
                 cm.MenuItems.Add(l.AnyDigit, delegate { textBox.SelectedText = "\\d"; });
@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Logic
             else
             {
                 var l = Configuration.Settings.Language.RegularExpressionContextMenu;
-                cm.MenuItems.Add(l.WordBoundary, delegate { comboBox.SelectedText = "\\b"; }); 
+                cm.MenuItems.Add(l.WordBoundary, delegate { comboBox.SelectedText = "\\b"; });
                 cm.MenuItems.Add(l.NonWordBoundary, delegate { comboBox.SelectedText = "\\B"; });
                 cm.MenuItems.Add(l.NewLine, delegate { comboBox.SelectedText = "\\r\\n"; });
                 cm.MenuItems.Add(l.AnyDigit, delegate { comboBox.SelectedText = "\\d"; });
@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static ContextMenu GetReplaceTextContextMenu(TextBox textBox)
         {
             var cm = new ContextMenu();
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.RegularExpressionContextMenu.NewLineShort))            
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.RegularExpressionContextMenu.NewLineShort))
                 cm.MenuItems.Add("New line (\\n)", delegate { textBox.SelectedText = "\\n"; }); //TODO: Remove in SE 3.4
             else
                 cm.MenuItems.Add(Configuration.Settings.Language.RegularExpressionContextMenu.NewLineShort, delegate { textBox.SelectedText = "\\n"; });

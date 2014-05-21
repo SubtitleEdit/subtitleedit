@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainGeneralGoToPrevSubtitle = Keys.None;
         Keys _mainGeneralGoToStartOfCurrentSubtitle = Keys.None;
         Keys _mainGeneralGoToEndOfCurrentSubtitle = Keys.None;
-        Keys _mainGeneralFileSaveAll = Keys.None;        
+        Keys _mainGeneralFileSaveAll = Keys.None;
         Keys _mainToolsAutoDuration = Keys.None;
         Keys _mainToolsBeamer = Keys.None;
         Keys _toggleVideoDockUndock = Keys.None;
@@ -10978,12 +10978,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _mainTextBoxMoveLastWordDown == e.KeyData) 
+            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _mainTextBoxMoveLastWordDown == e.KeyData)
             {
                 MoveLastWordDown();
                 e.SuppressKeyPress = true;
             }
-            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _mainTextBoxMoveFirstWordFromNextUp == e.KeyData)  
+            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _mainTextBoxMoveFirstWordFromNextUp == e.KeyData)
             {
                 MoveFirstWordInNextUp();
                 e.SuppressKeyPress = true;
