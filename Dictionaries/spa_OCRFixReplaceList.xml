@@ -905,6 +905,8 @@
     <!--  Miscelánea  -->
     <RegEx find="(\b[Cc]erca|\b[Ee]ncima|\b[Dd]ebajo|\b[Dd]etrás|\b[Dd]elante)(\s)mío" replaceWith="$1 de mí" />
     <RegEx find="(\b[Cc]erca|\b[Ee]ncima|\b[Dd]ebajo|\b[Dd]etrás|\b[Dd]elante)(\s)tuyo" replaceWith="$1 de ti" />
+    <!--  Punto antes de «¿» y «¡»  -->
+    <RegEx find="([\wá-ú»])\s(?=(¿|¡)[A-ZÁ-Ú])" replaceWith="$1. " />
     <!--  Repeticiones de palabras o frases  -->
     <!--  Ej. «No, no, no, no, no.» por «No, no, no.»  -->
     <RegEx find="([,.]\s.{2})\1(?=[., ?!])" replaceWith="$1" />
