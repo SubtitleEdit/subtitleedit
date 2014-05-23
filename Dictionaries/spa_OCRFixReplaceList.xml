@@ -745,8 +745,11 @@
     <!--  Inicio de línea  -->
     <RegEx find="^_(\s)" replaceWith="-$1" />
     <RegEx find="^_(\w)" replaceWith="- $1" />
-    <!--  Uso de comillas según la recomiendación de la RAE -->
-    <RegEx find="[`´]" replaceWith="'" />
+    <!--  Uso de comillas según la recomiendación de la RAE y la Wikipedia -->
+	  <RegEx find="(«[^«]+)«([^»]+»[^»]+»)" replaceWith="$1“$2" />
+	  <RegEx find="(«[^«]+«[^»]+)»([^»]+»)" replaceWith="$1”$2" />
+    <RegEx find="`" replaceWith="‘" />
+	  <RegEx find="´" replaceWith="’" />
     <RegEx find="(\w)(\.)(«|»)" replaceWith="$1»." />
     <RegEx find="«(\?)" replaceWith="»?" />
     <RegEx find="«(\!)" replaceWith="»!" />
