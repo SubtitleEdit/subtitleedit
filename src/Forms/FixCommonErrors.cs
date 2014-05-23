@@ -1604,7 +1604,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string newText = p.Text;
                     if ("#♪♫".Contains(newText[0].ToString()) && !" <".Contains(newText[1].ToString()))
                         newText = newText.Insert(1, " ");
-                    if ("#♪♫".Contains(newText[newText.Length - 1].ToString()) && !" >".Contains(newText[newText.Length - 2].ToString()))
+                    if ("#♪♫".Contains(newText[newText.Length - 1].ToString()) && !" >".Contains(newText[newText.Length - 2].ToString()) && !newText.Substring(0, newText.Length-1).EndsWith(Environment.NewLine))
                         newText = newText.Insert(newText.Length - 1, " ");
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
