@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                 if (!InitializeSizeAndName(fs))
                     return;
 
-                if (Name == "stco") // 32-bit
+                if (Name == "stco") // 32-bit - chunk offset
                 {
                     Buffer = new byte[Size - 4];
                     fs.Read(Buffer, 0, Buffer.Length);
@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                     fs.Read(data, 2, 2);
                     textSize = GetUInt(data, 0); // don't get it exactly - seems like mp4box sometimes uses 2 bytes length field (first text record only)... handbrake uses 4 bytes
                 }
-                if (textSize > 0 && textSize < 200)
+                if (textSize > 0 && textSize < 500)
                 {
                     data = new byte[textSize];
                     fs.Read(data, 0, data.Length);
@@ -185,9 +185,12 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                         if (text.StartsWith("-") && !text.Contains(Environment.NewLine + "-"))
                             text = text.Remove(0, 1);
                     }
-
-                    Texts.Add(text.Replace("\n", Environment.NewLine));
-                 }
+                    Texts.Add(text.Replace(Environment.NewLine, "\n").Replace("\n", Environment.NewLine));
+                }
+                else
+                {
+                    Texts.Add(string.Empty);
+                }
             }
         }
 
