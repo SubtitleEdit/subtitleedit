@@ -348,7 +348,8 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             subTag = subTag.Remove(subTag.Length - 6) + subTag.Substring(subTag.Length - 2, 2) + subTag.Substring(subTag.Length - 4, 2) + subTag.Substring(subTag.Length - 6, 2);
                     }
                     fontTag = fontTag.Remove(fontStart, fontEnd - fontStart + 1);
-                    text = text.Insert(start, @"{\" + ssaTagName + subTag + endSsaTag);
+                    if (start < text.Length)
+                        text = text.Insert(start, @"{\" + ssaTagName + subTag + endSsaTag);
                 }
             }
             return fontTag;
