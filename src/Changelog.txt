@@ -27,7 +27,7 @@
    * Fixed crash when doing OCR in batch
    * Several fixes for "Fix common OCR errors" - thx matidio/Joel
    * Fixed crash related to bad font tags in SSA/ASS - thx hhgyu
-   * Fixed error when converting from DCinema interop to SMPTE
+   * Fixed error converting from DCinema interop to SMPTE
 
 
 3.3.15 (13th April 2014)
