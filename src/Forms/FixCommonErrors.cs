@@ -2385,7 +2385,9 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (IsTurkishLittleI(firstLetter))
                                 p.Text = pre + GetTurkishUppercaseLetter(firstLetter) + text.Substring(1);
-                            else if (Language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I"))) // l > I
+                            else if (Language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
+                                                          text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") || 
+                                                          text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc"))) // l > I
                                 p.Text = pre + "I" + text.Substring(1);
                             else
                                 p.Text = pre + firstLetter.ToUpper() + text.Substring(1);
@@ -2462,8 +2464,10 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 if (IsTurkishLittleI(firstLetter))
                                     text = pre + GetTurkishUppercaseLetter(firstLetter) + text.Substring(1);
-                                else if (Language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I"))) // l > I
-                                    p.Text = pre + "I" + text.Substring(1);
+                                else if (Language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
+                                                         text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") ||
+                                                         text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc"))) // l > I
+                                    text = pre + "I" + text.Substring(1);
                                 else
                                     text = pre + firstLetter.ToUpper() + text.Substring(1);
                                 _totalFixes++;
