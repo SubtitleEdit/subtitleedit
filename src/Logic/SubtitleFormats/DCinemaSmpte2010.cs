@@ -138,6 +138,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Configuration.Settings.SubtitleSettings.InitializeDCinameSettings(true);
 
             xml.DocumentElement.SelectSingleNode("dcst:ContentTitleText", nsmgr).InnerText = ss.CurrentDCinemaMovieTitle;
+            if (string.IsNullOrEmpty(ss.CurrentDCinemaSubtitleId) || !ss.CurrentDCinemaSubtitleId.StartsWith("urn:uuid:"))
+                ss.CurrentDCinemaSubtitleId = "urn:uuid:" + Guid.NewGuid().ToString();
             xml.DocumentElement.SelectSingleNode("dcst:Id", nsmgr).InnerText = ss.CurrentDCinemaSubtitleId;
             xml.DocumentElement.SelectSingleNode("dcst:ReelNumber", nsmgr).InnerText = ss.CurrentDCinemaReelNumber;
             xml.DocumentElement.SelectSingleNode("dcst:IssueDate", nsmgr).InnerText = ss.CurrentDCinemaIssueDate;

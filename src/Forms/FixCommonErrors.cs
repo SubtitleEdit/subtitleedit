@@ -378,19 +378,19 @@ namespace Nikse.SubtitleEdit.Forms
             _fixActions.Add(new FixItem(_language.RemoveSpaceBetweenNumber, "1 100 -> 1100", delegate { RemoveSpaceBetweenNumbers(); }, ce.RemoveSpaceBetweenNumberTicked));
             _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, "Hi John! - Hi Ida! > Hi John!" + Configuration.Settings.General.ListViewLineSeparatorString + "- Hi Ida!", delegate { DialogsOnOneLine(); }, ce.FixDialogsOnOneLineTicked));
 
-            if (_autoDetectGoogleLanguage == "tr")
+            if (Language == "tr")
             {
                 _turkishAnsiIndex = _fixActions.Count;
                 _fixActions.Add(new FixItem(_language.FixTurkishAnsi, "Ý > İ, Ð > Ğ, Þ > Ş, ý > ı, ð > ğ, þ > ş", delegate { TurkishAnsiToUnicode(); }, ce.TurkishAnsiTicked));
             }
 
-            if (_autoDetectGoogleLanguage == "da")
+            if (Language == "da")
             {
                 _danishLetterIIndex = _fixActions.Count;
                 _fixActions.Add(new FixItem(_language.FixDanishLetterI, "Jeg synes i er søde. -> Jeg synes I er søde.", delegate { FixDanishLetterI(); }, ce.DanishLetterITicked));
             }
 
-            if (_autoDetectGoogleLanguage == "es")
+            if (Language == "es")
             {
                 _spanishInvertedQuestionAndExclamationMarksIndex = _fixActions.Count;
                 _fixActions.Add(new FixItem(_language.FixSpanishInvertedQuestionAndExclamationMarks, "Hablas bien castellano? -> ¿Hablas bien castellano?", delegate { FixSpanishInvertedQuestionAndExclamationMarks(); }, ce.SpanishInvertedQuestionAndExclamationMarksTicked));
@@ -1604,7 +1604,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string newText = p.Text;
                     if ("#♪♫".Contains(newText[0].ToString()) && !" <".Contains(newText[1].ToString()))
                         newText = newText.Insert(1, " ");
-                    if ("#♪♫".Contains(newText[newText.Length - 1].ToString()) && !" >".Contains(newText[newText.Length - 2].ToString()))
+                    if ("#♪♫".Contains(newText[newText.Length - 1].ToString()) && !" >".Contains(newText[newText.Length - 2].ToString()) && !newText.Substring(0, newText.Length-1).EndsWith(Environment.NewLine))
                         newText = newText.Insert(newText.Length - 1, " ");
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
@@ -2376,7 +2376,7 @@ namespace Nikse.SubtitleEdit.Forms
                         !"0123456789".Contains(firstLetter) &&
                         isPrevEndOfLine)
                     {
-                        bool isMatchInKnowAbbreviations = _autoDetectGoogleLanguage == "en" &&
+                        bool isMatchInKnowAbbreviations = Language == "en" &&
                             (prevText.EndsWith(" o.r.") ||
                              prevText.EndsWith(" a.m.") ||
                              prevText.EndsWith(" p.m."));
@@ -2385,6 +2385,10 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (IsTurkishLittleI(firstLetter))
                                 p.Text = pre + GetTurkishUppercaseLetter(firstLetter) + text.Substring(1);
+                            else if (Language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
+                                                          text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") || 
+                                                          text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc"))) // l > I
+                                p.Text = pre + "I" + text.Substring(1);
                             else
                                 p.Text = pre + firstLetter.ToUpper() + text.Substring(1);
                             _totalFixes++;
@@ -2451,7 +2455,7 @@ namespace Nikse.SubtitleEdit.Forms
                             !prevText.EndsWith("...") &&
                             isPrevEndOfLine)
                         {
-                            bool isMatchInKnowAbbreviations = _autoDetectGoogleLanguage == "en" &&
+                            bool isMatchInKnowAbbreviations = Language == "en" &&
                                 (prevText.EndsWith(" o.r.") ||
                                  prevText.EndsWith(" a.m.") ||
                                  prevText.EndsWith(" p.m."));
@@ -2460,6 +2464,10 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 if (IsTurkishLittleI(firstLetter))
                                     text = pre + GetTurkishUppercaseLetter(firstLetter) + text.Substring(1);
+                                else if (Language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
+                                                         text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") ||
+                                                         text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc"))) // l > I
+                                    text = pre + "I" + text.Substring(1);
                                 else
                                     text = pre + firstLetter.ToUpper() + text.Substring(1);
                                 _totalFixes++;
@@ -2522,9 +2530,9 @@ namespace Nikse.SubtitleEdit.Forms
         private bool IsTurkishLittleI(string firstLetter)
         {
             if (_encoding == Encoding.UTF8)
-                return _autoDetectGoogleLanguage == "tr" && (firstLetter.StartsWith("ı") || firstLetter.StartsWith("i"));
+                return Language == "tr" && (firstLetter.StartsWith("ı") || firstLetter.StartsWith("i"));
             else
-                return _autoDetectGoogleLanguage == "tr" && (firstLetter.StartsWith("ý") || firstLetter.StartsWith("i"));
+                return Language == "tr" && (firstLetter.StartsWith("ý") || firstLetter.StartsWith("i"));
         }
 
         private string GetTurkishUppercaseLetter(string s)
@@ -3150,7 +3158,7 @@ namespace Nikse.SubtitleEdit.Forms
                             string[] parts = Utilities.RemoveHtmlTags(text).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                             if (parts.Length == 2)
                             {
-                                bool doAdd = parts[0].Trim().EndsWith(".") || parts[0].Trim().EndsWith("!") || parts[0].Trim().EndsWith("?") || _autoDetectGoogleLanguage == "ko";
+                                bool doAdd = parts[0].Trim().EndsWith(".") || parts[0].Trim().EndsWith("!") || parts[0].Trim().EndsWith("?") || Language == "ko";
 
                                 if (parts[0].Trim().StartsWith("-") && parts[1].Contains(":"))
                                     doAdd = false;
@@ -4364,8 +4372,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (listView1.Items[IndexAloneLowercaseIToUppercaseIEnglish].Checked &&
-                    _autoDetectGoogleLanguage != "en")
+                if (listView1.Items[IndexAloneLowercaseIToUppercaseIEnglish].Checked && Language != "en")
                 {
                     if (MessageBox.Show(_language.FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish + Environment.NewLine +
                                                       Environment.NewLine +
