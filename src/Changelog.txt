@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.x.x (xth June 2014)
+3.3.16 (xth June 2014)
 * NEW:
    * New shortcuts
 * IMPROVED:
@@ -26,6 +26,8 @@
    * Fixed cut text in image export with right-align
    * Fixed crash when doing OCR in batch
    * Several fixes for "Fix common OCR errors" - thx matidio/Joel
+   * Fixed crash related to bad font tags in SSA/ASS - thx hhgyu
+   * Fixed error converting from DCinema interop to SMPTE
 
 
 3.3.15 (13th April 2014)
