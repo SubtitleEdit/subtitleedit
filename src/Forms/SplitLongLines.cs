@@ -172,7 +172,18 @@ namespace Nikse.SubtitleEdit.Forms
                     string oldText = Utilities.RemoveHtmlTags(p.Text);
                     if (SplitLongLinesHelper.QualifiesForSplit(p.Text, singleLineMaxCharacters, totalLineMaxCharacters) && IsFixAllowed(p))
                     {
-                        if (!SplitLongLinesHelper.QualifiesForSplit(Utilities.AutoBreakLine(p.Text, language), singleLineMaxCharacters, totalLineMaxCharacters))
+                        bool isDialog = false;
+                        string dialogText = string.Empty;
+                        if (p.Text.Contains("-"))
+                        {
+                            dialogText = Utilities.AutoBreakLine(p.Text, 5, 100, 1, language);
+                            string[] arr = dialogText.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            if (arr.Length == 2 && (arr[0].StartsWith("-") || arr[0].StartsWith("<i>-")) && (arr[1].StartsWith("-") || arr[1].StartsWith("<i>-")))
+                                isDialog = true;
+
+                        }
+
+                        if (!isDialog && !SplitLongLinesHelper.QualifiesForSplit(Utilities.AutoBreakLine(p.Text, language), singleLineMaxCharacters, totalLineMaxCharacters))
                         {
                             Paragraph newParagraph = new Paragraph(p);
                             newParagraph.Text = Utilities.AutoBreakLine(p.Text, language);
@@ -186,6 +197,8 @@ namespace Nikse.SubtitleEdit.Forms
                         else
                         {
                             string text = Utilities.AutoBreakLine(p.Text, language);
+                            if (isDialog)
+                                text = dialogText;
                             if (text.Contains(Environment.NewLine))
                             {
                                 string[] arr = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
