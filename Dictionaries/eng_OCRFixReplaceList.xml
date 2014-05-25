@@ -1759,6 +1759,7 @@
     <Word from="CIaw" to="Claw" />
     <Word from="Ifour" to="If our" />
     <Word from="lron" to="Iron" />
+    <Word from="It'syour" to="It's your" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -2119,6 +2120,8 @@
     <Beginning from="TH REE " to="THREE " />
     <Beginning from="NARRA TOR" to="NARRATOR" />
     <Beginning from="&lt;i&gt;NARRA TOR" to="&lt;i&gt;NARRATOR" />
+    <Beginning from="lt'syour" to="It's your" />
+    <Beginning from="It'syour" to="It's your" />
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
