@@ -2286,7 +2286,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string UppercaseLetters = GetLetters(true, false, false);
         public static string LowercaseLetters = GetLetters(false, true, false);
-        public static string LowercaseLettersWithNumbers = GetLetters(false, true, false);
+        public static string LowercaseLettersWithNumbers = GetLetters(false, true, true);
         public static string AllLetters = GetLetters(true, true, false);
         public static string AllLettersAndNumbers = GetLetters(true, true, false);
 
