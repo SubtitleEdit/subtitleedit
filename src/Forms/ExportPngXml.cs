@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
         private SubtitleFormat _format;
         private Color _subtitleColor = Color.White;
         private string _subtitleFontName = "Verdana";
-        private float _subtitleFontSize = 75.0f;
+        private float _subtitleFontSize = 25.0f;
         private bool _subtitleFontBold;
         private Color _borderColor = Color.Black;
         private float _borderWidth = 2.0f;
@@ -1190,7 +1190,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             checkBoxBold.Checked = style.Bold;
                             for (i = 0; i < comboBoxBorderWidth.Items.Count; i++)
                             {
-                                if (string.Compare(comboBoxBorderWidth.Items[i].ToString(), style.OutlineWidth.ToString(), true) == 0)
+                                if (string.Compare(Utilities.RemoveNonNumbers(comboBoxBorderWidth.Items[i].ToString()), style.OutlineWidth.ToString(), true) == 0)
                                     comboBoxBorderWidth.SelectedIndex = i;
                             }
                         }
@@ -2088,7 +2088,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else
             {
-                nbmp.CropSidesAndBottom(baseLinePadding, parameter.BackgroundColor, true);
                 nbmp.CropSidesAndBottom(4, parameter.BackgroundColor, true);
                 nbmp.CropTop(4, parameter.BackgroundColor);
             }
@@ -2539,7 +2538,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             comboBoxBorderWidth.Items.Clear();
             string text = Configuration.Settings.Language.ExportPngXml.BorderStyleNormalWidthX;
             int index = 2;
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text) || _exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
             {
                 text = "{0}";
             }
@@ -2671,10 +2670,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void buttonColor_Click(object sender, EventArgs e)
         {
-            colorDialog1.Color = panelColor.BackColor;
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            ColorChooser colorChooser = new ColorChooser { Color = panelColor.BackColor, ShowAlpha = false };
+            if (colorChooser.ShowDialog() == DialogResult.OK)
             {
-                panelColor.BackColor = colorDialog1.Color;
+                panelColor.BackColor = colorChooser.Color;
                 subtitleListView1_SelectedIndexChanged(null, null);
             }
         }
@@ -2683,7 +2682,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             buttonColor_Click(null, null);
         }
-
 
         private void buttonBorderColor_Click(object sender, EventArgs e)
         {
@@ -2929,11 +2927,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void buttonShadowColor_Click(object sender, EventArgs e)
         {
-            colorDialog1.Color = panelShadowColor.BackColor;
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            ColorChooser colorChooser = new ColorChooser { Color = panelShadowColor.BackColor };
+            if (colorChooser.ShowDialog() == DialogResult.OK)
             {
-                panelShadowColor.BackColor = colorDialog1.Color;
+                panelShadowColor.BackColor = colorChooser.Color;
                 subtitleListView1_SelectedIndexChanged(null, null);
+                numericUpDownShadowTransparency.Value = colorChooser.Color.A;
             }
         }
 

@@ -29,6 +29,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.ChooseAudioTrack ChooseAudioTrack;
         public LanguageStructure.ChooseEncoding ChooseEncoding;
         public LanguageStructure.ChooseLanguage ChooseLanguage;
+        public LanguageStructure.ColorChooser ColorChooser;
         public LanguageStructure.ColumnPaste ColumnPaste;
         public LanguageStructure.CompareSubtitles CompareSubtitles;
         public LanguageStructure.DCinemaProperties DCinemaProperties;
@@ -344,6 +345,15 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Choose language",
                 Language = "Language",
+            };
+
+            ColorChooser = new LanguageStructure.ColorChooser
+            {
+                Title = "Choose color",
+                Red = "Red",
+                Green = "Green",
+                Blue = "Blue",
+                Alpha = "Alpha",
             };
 
             ColumnPaste = new LanguageStructure.ColumnPaste

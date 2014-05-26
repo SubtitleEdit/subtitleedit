@@ -44,10 +44,10 @@ namespace Nikse.SubtitleEdit.Forms
         private ColorHandler.HSV hsv;
         private Label label1;
         private Label label2;
-        private Label label3;
-        private Label label4;
+        private Label labelRed;
+        private Label labelGreen;
         private Label label5;
-        private Label label6;
+        private Label labelBlue;
         private Label labelAlpha1;
         private Label lblAlpha2;
         private Label lblBlue;
@@ -71,14 +71,20 @@ namespace Nikse.SubtitleEdit.Forms
         private Button buttonCancel;
         private Button buttonOK;
         private TrackBar tbValue;
+        private bool _showAlpha = true;
 
         public ColorChooser()
         {
-            //
-            // Required for Windows Form Designer support
-            //
             InitializeComponent();
 
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ColorChooser.Title))
+            {
+                this.Text = Configuration.Settings.Language.ColorChooser.Title;
+                labelRed.Text = Configuration.Settings.Language.ColorChooser.Red;
+                labelGreen.Text = Configuration.Settings.Language.ColorChooser.Green;
+                labelBlue.Text = Configuration.Settings.Language.ColorChooser.Blue;
+                labelAlpha1.Text = Configuration.Settings.Language.ColorChooser.Alpha;
+            }
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
@@ -87,15 +93,26 @@ namespace Nikse.SubtitleEdit.Forms
         { 
             get
             {
-                return tbAlpha.Visible;
+                return _showAlpha;
             }
             set
             {
+                if (!value && ShowAlpha)
+                {
+                    this.Height -= 40;
+                    buttonOK.Top -= 40;
+                    buttonCancel.Top -= 40;
+                }
+                else if (value && !ShowAlpha)
+                {
+                    this.Height += 40;
+                    buttonOK.Top += 40;
+                    buttonCancel.Top += 40;
+                }
                 labelAlpha1.Visible = value;
                 lblAlpha2.Visible = value;
                 tbAlpha.Visible = value;
-                if (!value)
-                    this.Width -= 20;
+                _showAlpha = value;
             }
         }
 
@@ -187,7 +204,10 @@ namespace Nikse.SubtitleEdit.Forms
             RefreshText(lblBlue, argb.Blue);
             RefreshText(lblGreen, argb.Green);
             RefreshText(lblAlpha2, argb.Alpha);
-            tbHexCode.Text = string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", argb.Alpha, argb.Red, argb.Green, argb.Blue);
+            if (_showAlpha)
+                tbHexCode.Text = string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", argb.Alpha, argb.Red, argb.Green, argb.Blue);
+            else
+                tbHexCode.Text = string.Format("{0:X2}{1:X2}{2:X2}", argb.Red, argb.Green, argb.Blue);
         }
 
         private void SetHSVLabels(ColorHandler.HSV HSV)
@@ -316,11 +336,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.lblAlpha2 = new System.Windows.Forms.Label();
             this.tbHexCode = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label3 = new System.Windows.Forms.Label();
+            this.labelRed = new System.Windows.Forms.Label();
             this.tbRed = new System.Windows.Forms.TrackBar();
-            this.label4 = new System.Windows.Forms.Label();
+            this.labelGreen = new System.Windows.Forms.Label();
             this.tbGreen = new System.Windows.Forms.TrackBar();
-            this.label6 = new System.Windows.Forms.Label();
+            this.labelBlue = new System.Windows.Forms.Label();
             this.tbBlue = new System.Windows.Forms.TrackBar();
             this.labelAlpha1 = new System.Windows.Forms.Label();
             this.tbAlpha = new System.Windows.Forms.TrackBar();
@@ -458,13 +478,13 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Controls.Add(this.label3);
+            this.flowLayoutPanel1.Controls.Add(this.labelRed);
             this.flowLayoutPanel1.Controls.Add(this.tbRed);
             this.flowLayoutPanel1.Controls.Add(this.lblRed);
-            this.flowLayoutPanel1.Controls.Add(this.label4);
+            this.flowLayoutPanel1.Controls.Add(this.labelGreen);
             this.flowLayoutPanel1.Controls.Add(this.tbGreen);
             this.flowLayoutPanel1.Controls.Add(this.lblGreen);
-            this.flowLayoutPanel1.Controls.Add(this.label6);
+            this.flowLayoutPanel1.Controls.Add(this.labelBlue);
             this.flowLayoutPanel1.Controls.Add(this.tbBlue);
             this.flowLayoutPanel1.Controls.Add(this.lblBlue);
             this.flowLayoutPanel1.Controls.Add(this.labelAlpha1);
@@ -475,16 +495,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.flowLayoutPanel1.Size = new System.Drawing.Size(386, 157);
             this.flowLayoutPanel1.TabIndex = 59;
             // 
-            // label3
+            // labelRed
             // 
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(3, 8);
-            this.label3.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(72, 18);
-            this.label3.TabIndex = 42;
-            this.label3.Text = "Red";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelRed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelRed.Location = new System.Drawing.Point(3, 8);
+            this.labelRed.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this.labelRed.Name = "labelRed";
+            this.labelRed.Size = new System.Drawing.Size(72, 18);
+            this.labelRed.TabIndex = 42;
+            this.labelRed.Text = "Red";
+            this.labelRed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tbRed
             // 
@@ -499,16 +519,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.tbRed.TickFrequency = 32;
             this.tbRed.Scroll += new System.EventHandler(this.HandleRGBScroll);
             // 
-            // label4
+            // labelGreen
             // 
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(3, 43);
-            this.label4.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(72, 18);
-            this.label4.TabIndex = 44;
-            this.label4.Text = "Green";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelGreen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelGreen.Location = new System.Drawing.Point(3, 43);
+            this.labelGreen.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this.labelGreen.Name = "labelGreen";
+            this.labelGreen.Size = new System.Drawing.Size(72, 18);
+            this.labelGreen.TabIndex = 44;
+            this.labelGreen.Text = "Green";
+            this.labelGreen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tbGreen
             // 
@@ -523,16 +543,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.tbGreen.TickFrequency = 32;
             this.tbGreen.Scroll += new System.EventHandler(this.HandleRGBScroll);
             // 
-            // label6
+            // labelBlue
             // 
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(3, 78);
-            this.label6.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(72, 18);
-            this.label6.TabIndex = 46;
-            this.label6.Text = "Blue";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelBlue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelBlue.Location = new System.Drawing.Point(3, 78);
+            this.labelBlue.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this.labelBlue.Name = "labelBlue";
+            this.labelBlue.Size = new System.Drawing.Size(72, 18);
+            this.labelBlue.TabIndex = 46;
+            this.labelBlue.Text = "Blue";
+            this.labelBlue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tbBlue
             // 
