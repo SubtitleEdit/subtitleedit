@@ -4002,5 +4002,20 @@ namespace Nikse.SubtitleEdit.Logic
             return int.MaxValue;
         }
 
+
+        internal static string RemoveNonNumbers(string p)
+        {
+            if (string.IsNullOrEmpty(p))
+                return p;
+
+            var sb = new StringBuilder();
+            for (int i = 0; i < p.Length; i++)
+            {
+                if ("0123456789".Contains(p.Substring(i, 1)))
+                    sb.Append(p.Substring(i, 1));
+            }
+            return sb.ToString();
+        }
+
     }
 }
