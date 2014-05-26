@@ -418,6 +418,10 @@
             public string FontColor { get; set; }
             public string BorderColor { get; set; }
             public string BorderWidth { get; set; }
+            public string BorderStyle { get; set; }
+            public string BorderStyleOneBox { get; set; }
+            public string BorderStyleBoxForEachLine { get; set; }
+            public string BorderStyleNormalWidthX { get; set; }
             public string ShadowColor { get; set; }
             public string ShadowWidth { get; set; }
             public string Transparency { get; set; }

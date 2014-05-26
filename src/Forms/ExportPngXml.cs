@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             public bool SubtitleFontBold { get; set; }
             public Color BorderColor { get; set; }
             public float BorderWidth { get; set; }
+            public bool BoxSingleLine { get; set; }
             public bool SimpleRendering { get; set; }
             public bool AlignLeft { get; set; }
             public bool AlignRight { get; set; }
@@ -285,6 +286,22 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+
+                if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine)
+                {
+                    parameter.BackgroundColor = panelBorderColor.BackColor;
+                    parameter.BorderWidth = 0;
+                }
+                else if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox)
+                {
+                    parameter.BoxSingleLine = true;
+                    parameter.BackgroundColor = panelBorderColor.BackColor;
+                    parameter.BorderWidth = 0;
+                }
+                else
+                {
+                    _borderWidth = float.Parse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()));
+                }            
             }
             else
             {
@@ -1192,7 +1209,19 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             _subtitleFontName = comboBoxSubtitleFont.SelectedItem.ToString();
             _subtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
             _subtitleFontBold = checkBoxBold.Checked;
-            _borderWidth = float.Parse(comboBoxBorderWidth.SelectedItem.ToString());
+
+            if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine)
+            {
+                _borderWidth = 0;
+            }
+            else if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox)
+            {
+                _borderWidth = 0;
+            }
+            else
+            {
+                _borderWidth = float.Parse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()));
+            }            
         }
 
         private static Font SetFont(MakeBitmapParameter parameter, float fontSize)
@@ -1278,6 +1307,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         mbp.BackgroundColor = style.Outline;
                     }
                 }
+            }
+
+            if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine)
+            {
+                _borderWidth = 0;
+                mbp.BackgroundColor = panelBorderColor.BackColor;
+                mbp.BoxSingleLine = true;
+            }
+            else if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox)
+            {
+                _borderWidth = 0;
+                mbp.BackgroundColor = panelBorderColor.BackColor;                
             }
 
             int width = 0;
@@ -1522,8 +1563,90 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return nbmp.Width;
         }
 
-
         private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
+        {
+            if (parameter.BoxSingleLine && parameter.P.Text.Contains(Environment.NewLine))
+            {
+                Bitmap bmp = null;
+                string old = parameter.P.Text;
+                int count = 0;
+                bool italicOn = false;
+                string fontTag = string.Empty;
+                foreach (string line in parameter.P.Text.Replace(Environment.NewLine, "\n").Split('\n'))
+                {
+                    parameter.P.Text = line;
+                    if (italicOn)
+                    {
+                        parameter.P.Text = "<i>" + parameter.P.Text;
+                    }
+                    italicOn = parameter.P.Text.Contains("<i>") && !parameter.P.Text.Contains("</i>");
+
+                    parameter.P.Text = fontTag + parameter.P.Text;
+                    if (parameter.P.Text.Contains("<font ") && !parameter.P.Text.Contains("</font>"))
+                    {
+                        int start = parameter.P.Text.LastIndexOf("<font ");
+                        int end = parameter.P.Text.IndexOf(">", start);
+                        fontTag = parameter.P.Text.Substring(start, end - start + 1);
+                    }
+
+                    var lineImage = GenerateImageFromTextWithStyleInner(parameter);
+                    if (bmp == null)
+                    {
+                        bmp = lineImage;
+                    }
+                    else
+                    {
+                        int w = Math.Max(bmp.Width, lineImage.Width);
+                        int h = bmp.Height + lineImage.Height;
+
+                        int l1 = 0;
+                        if (parameter.AlignLeft)
+                            l1 = 0;
+                        else if (parameter.AlignRight)
+                            l1 = w - bmp.Width;
+                        else
+                            l1 = (int)Math.Round(((w - bmp.Width) / 2.0));
+
+                        int l2 = 0;
+                        if (parameter.AlignLeft)
+                            l2 = 0;
+                        else if (parameter.AlignRight)
+                            l2 = w - lineImage.Width;
+                        else
+                            l2 = (int)Math.Round(((w - lineImage.Width) / 2.0));
+
+                        if (parameter.LineHeight > lineImage.Height)
+                        {
+                            h += parameter.LineHeight - lineImage.Height;
+                            Bitmap largeImage = new Bitmap(w, h);
+                            Graphics g = Graphics.FromImage(largeImage);
+                            g.DrawImageUnscaled(bmp, new Point(l1, 0));
+                            g.DrawImageUnscaled(lineImage, new Point(l2, bmp.Height + parameter.LineHeight - lineImage.Height));
+                            bmp.Dispose();
+                            bmp = largeImage;
+                        }
+                        else
+                        {
+                            Bitmap largeImage = new Bitmap(w, h);
+                            Graphics g = Graphics.FromImage(largeImage);
+                            g.DrawImageUnscaled(bmp, new Point(l1, 0));
+                            g.DrawImageUnscaled(lineImage, new Point(l2, bmp.Height));
+                            bmp.Dispose();
+                            bmp = largeImage;
+                        }
+                    }
+                    count++;
+                }
+                parameter.P.Text = old;
+                return bmp;
+            }
+            else
+            {
+                return GenerateImageFromTextWithStyleInner(parameter);
+            }
+        }
+
+        private static Bitmap GenerateImageFromTextWithStyleInner(MakeBitmapParameter parameter)
         {
             string text = parameter.P.Text;
 
@@ -1560,9 +1683,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (sizeY < 1)
                 sizeY = 1;
             bmp = new Bitmap(sizeX, sizeY);
-            g = Graphics.FromImage(bmp);
             if (parameter.BackgroundColor != Color.Transparent)
-                g.FillRectangle(new SolidBrush(parameter.BackgroundColor), 0, 0, bmp.Width, bmp.Height);
+            {
+                NikseBitmap nbmpTemp = new NikseBitmap(bmp);
+                nbmpTemp.Fill(parameter.BackgroundColor);
+              //  bmp.Dispose();
+                bmp = nbmpTemp.GetBitmap();
+//                g.FillRectangle(new SolidBrush(parameter.BackgroundColor), 0, 0, bmp.Width, bmp.Height);
+
+            }
+
+            g = Graphics.FromImage(bmp);
 
             // align lines with gjpqy, a bit lower
             var lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -2188,7 +2319,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             checkBoxBold.Text = Configuration.Settings.Language.General.Bold;
             buttonBorderColor.Text = Configuration.Settings.Language.ExportPngXml.BorderColor;
+
             labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderWidth;
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.BorderStyle)) //TODO: Remove in SE 3.4
+                labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderStyle;
+
             labelImageFormat.Text = Configuration.Settings.Language.ExportPngXml.ImageFormat;
             buttonExport.Text = Configuration.Settings.Language.ExportPngXml.ExportAllLines;
             buttonCancel.Text = Configuration.Settings.Language.General.OK;
@@ -2222,7 +2357,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             _subtitle = subtitle;
             panelColor.BackColor = _subtitleColor;
             panelBorderColor.BackColor = _borderColor;
-            comboBoxBorderWidth.SelectedIndex = 2;
+            InitBorderStyle();
             comboBoxHAlign.SelectedIndex = 1;
             comboBoxResolution.SelectedIndex = 3;
 
@@ -2399,6 +2534,29 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
 
+        private void InitBorderStyle()
+        {
+            comboBoxBorderWidth.Items.Clear();
+            string text = Configuration.Settings.Language.ExportPngXml.BorderStyleNormalWidthX;
+            int index = 2;
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "{0}";
+            }
+            else
+            {
+                comboBoxBorderWidth.Items.Add(Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine);
+                comboBoxBorderWidth.Items.Add(Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox);
+                index = 4;
+            }
+
+            for (int i=0; i<16; i++)
+            {
+                comboBoxBorderWidth.Items.Add(string.Format(text, i));
+            }
+            comboBoxBorderWidth.SelectedIndex = index;
+        }
+
         private void SetLastFrameRate(double lastFrameRate)
         {
             for (int i = 0; i < comboBoxFramerate.Items.Count; i++)
@@ -2529,16 +2687,16 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void buttonBorderColor_Click(object sender, EventArgs e)
         {
-            colorDialog1.Color = panelBorderColor.BackColor;
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            ColorChooser colorChooser = new ColorChooser { Color = panelBorderColor.BackColor };
+            if (colorChooser.ShowDialog() == DialogResult.OK)
             {
-                panelBorderColor.BackColor = colorDialog1.Color;
+                panelBorderColor.BackColor = colorChooser.Color;
                 subtitleListView1_SelectedIndexChanged(null, null);
             }
         }
 
         private void panelBorderColor_MouseClick(object sender, MouseEventArgs e)
-        {
+        {            
             buttonBorderColor_Click(null, null);
         }
 
@@ -2819,7 +2977,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             subtitleListView1_SelectedIndexChanged(null, null);
         }
-
 
     }
 }
