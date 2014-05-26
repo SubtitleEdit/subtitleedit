@@ -236,6 +236,15 @@
             public string Language { get; set; }
         }
 
+        public class ColorChooser
+        {
+            public string Title { get; set; }
+            public string Red { get; set; }
+            public string Green { get; set; }
+            public string Blue { get; set; }
+            public string Alpha { get; set; }
+        }
+
         public class ColumnPaste
         {
             public string Title { get; set; }
