@@ -567,6 +567,8 @@ namespace Nikse.SubtitleEdit.Logic
                 SaveDvdStudioProStlAs = "Choose DVD Studio Pro STL file name",
                 SomeLinesWereTooLongX = "Some lines were too long:\r\n{0}",
                 LineHeight = "Line height",
+                BoxSingleLine = "Box - single line",
+                BoxMultiLine = "Box - multi line",
             };
 
             ExportText = new LanguageStructure.ExportText

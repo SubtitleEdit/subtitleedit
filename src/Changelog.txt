@@ -4,16 +4,18 @@
 3.3.16 (xth June 2014)
 * NEW:
    * New shortcuts
+   * Export to image based formats can do do boxing
+   * Export to image based formats, added 2k resolutions - thx Joseph
 * IMPROVED:
    * Updated Spanish (Mexico) language file - thx pakitonaranjo
    * Updated French language file - thx JM GBT
    * Export to image based format now remembers most settings
-   * Export to image based format, added 2k resolutions - thx Joseph
    * Always close SAMI tags
    * Merge selected lines in original - better handling of empty line
    * DCinema interop - better use of "Effect" - thx gena
    * Drag & drop support for subtitle comparer - thx ivandrofly
    * Better time division in "Split long lines" - thx Joel
+   * Better splitting of dialogues in "Split long lines" - thx Joel
 * FIXED:
    * OCR via "image compare" now works again
    * Fixed "Bridge gap in duration" when working with SSA/ASS

@@ -455,6 +455,8 @@
             public string SaveDvdStudioProStlAs { get; set; }
             public string SomeLinesWereTooLongX { get; set; }
             public string LineHeight { get; set; }
+            public string BoxSingleLine { get; set; }
+            public string BoxMultiLine { get; set; }
         }
 
         public class ExportText

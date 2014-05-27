@@ -72,6 +72,10 @@ namespace Nikse.SubtitleEdit.Forms
         private string _fileName;
         private VobSubOcr _vobSubOcr;
 
+        private const string BoxMultiLine = "BoxMultiLine";
+        private const string BoxSingleLine = "BoxSingleLine";
+
+
         public ExportPngXml()
         {
             InitializeComponent();
@@ -1565,10 +1569,22 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
         {
-            if (parameter.BoxSingleLine && parameter.P.Text.Contains(Environment.NewLine))
+            if (parameter.P.Text.Contains(Environment.NewLine) && (parameter.BoxSingleLine || parameter.P.Text.Contains(BoxSingleLine)))
             {
                 Bitmap bmp = null;
                 string old = parameter.P.Text;
+                int oldType3d = parameter.Type3D;                
+                if (parameter.Type3D == 2) // Half-Top/Bottom 3D                
+                {
+                    parameter.Type3D = 0; // fix later
+                }
+                Color oldBackgroundColor = parameter.BackgroundColor;
+                if (parameter.P.Text.Contains(BoxSingleLine))
+                {
+                    parameter.P.Text = parameter.P.Text.Replace("<" + BoxSingleLine + ">", string.Empty).Replace("</" + BoxSingleLine + ">", string.Empty);
+                    parameter.BackgroundColor = parameter.BorderColor;
+                }
+
                 int count = 0;
                 bool italicOn = false;
                 string fontTag = string.Empty;
@@ -1638,11 +1654,29 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     count++;
                 }
                 parameter.P.Text = old;
+                parameter.Type3D = oldType3d;
+                parameter.BackgroundColor = oldBackgroundColor;
+
+                if (parameter.Type3D == 2) // Half-side-by-side 3D - due to per line we need to do this after making lines
+                {
+                    var newBmp = Make3DTopBottom(parameter, new NikseBitmap(bmp)).GetBitmap();
+                    bmp.Dispose();
+                    bmp = newBmp;
+                }
                 return bmp;
             }
             else
             {
-                return GenerateImageFromTextWithStyleInner(parameter);
+                Color oldBackgroundColor = parameter.BackgroundColor;
+                if (parameter.P.Text.Contains(BoxMultiLine) || parameter.P.Text.Contains(BoxSingleLine))
+                {
+                    parameter.P.Text = parameter.P.Text.Replace("<" + BoxMultiLine + ">", string.Empty).Replace("</" + BoxMultiLine + ">", string.Empty);
+                    parameter.P.Text = parameter.P.Text.Replace("<" + BoxSingleLine + ">", string.Empty).Replace("</" + BoxSingleLine + ">", string.Empty);
+                    parameter.BackgroundColor = parameter.BorderColor;
+                }
+                var bmp = GenerateImageFromTextWithStyleInner(parameter);
+                parameter.BackgroundColor = oldBackgroundColor;
+                return bmp;
             }
         }
 
@@ -2119,31 +2153,37 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else if (parameter.Type3D == 2) // Half-Top/Bottom 3D
             {
-                Bitmap singleBmp = nbmp.GetBitmap();
-                Bitmap singleHalfBmp = ScaleToHalfHeight(singleBmp);
-                singleBmp.Dispose();
-                Bitmap topBottomBmp = new Bitmap(parameter.ScreenWidth, parameter.ScreenHeight - parameter.BottomMargin);
-                int singleHeight = parameter.ScreenHeight / 2;
-                int leftM = (parameter.ScreenWidth / 2) - (singleHalfBmp.Width / 2);
-
-                using (Graphics gTopBottom = Graphics.FromImage(topBottomBmp))
-                {
-                    gTopBottom.DrawImage(singleHalfBmp, leftM + parameter.Depth3D, singleHeight - singleHalfBmp.Height - parameter.BottomMargin);
-                    gTopBottom.DrawImage(singleHalfBmp, leftM - parameter.Depth3D, parameter.ScreenHeight - parameter.BottomMargin - singleHalfBmp.Height);
-                }
-                nbmp = new NikseBitmap(topBottomBmp);
-                if (parameter.BackgroundColor == Color.Transparent)
-                {
-                    nbmp.CropTop(2, Color.Transparent);
-                    nbmp.CropTransparentSidesAndBottom(2, false);
-                }
-                else
-                {
-                    nbmp.CropTop(4, parameter.BackgroundColor);
-                    nbmp.CropSidesAndBottom(4, parameter.BackgroundColor, false);
-                }
+                nbmp = Make3DTopBottom(parameter, nbmp);
             }
             return nbmp.GetBitmap();
+        }
+
+        private static NikseBitmap Make3DTopBottom(MakeBitmapParameter parameter, NikseBitmap nbmp)
+        {
+            Bitmap singleBmp = nbmp.GetBitmap();
+            Bitmap singleHalfBmp = ScaleToHalfHeight(singleBmp);
+            singleBmp.Dispose();
+            Bitmap topBottomBmp = new Bitmap(parameter.ScreenWidth, parameter.ScreenHeight - parameter.BottomMargin);
+            int singleHeight = parameter.ScreenHeight / 2;
+            int leftM = (parameter.ScreenWidth / 2) - (singleHalfBmp.Width / 2);
+
+            using (Graphics gTopBottom = Graphics.FromImage(topBottomBmp))
+            {
+                gTopBottom.DrawImage(singleHalfBmp, leftM + parameter.Depth3D, singleHeight - singleHalfBmp.Height - parameter.BottomMargin);
+                gTopBottom.DrawImage(singleHalfBmp, leftM - parameter.Depth3D, parameter.ScreenHeight - parameter.BottomMargin - singleHalfBmp.Height);
+            }
+            nbmp = new NikseBitmap(topBottomBmp);
+            if (parameter.BackgroundColor == Color.Transparent)
+            {
+                nbmp.CropTop(2, Color.Transparent);
+                nbmp.CropTransparentSidesAndBottom(2, false);
+            }
+            else
+            {
+                nbmp.CropTop(4, parameter.BackgroundColor);
+                nbmp.CropSidesAndBottom(4, parameter.BackgroundColor, false);
+            }
+            return nbmp;
         }
 
         private static void DrawShadowAndPAth(MakeBitmapParameter parameter, Graphics g, GraphicsPath path)
@@ -2299,6 +2339,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             checkBoxSimpleRender.Text = Configuration.Settings.Language.ExportPngXml.SimpleRendering;
             checkBoxTransAntiAliase.Text = Configuration.Settings.Language.ExportPngXml.AntiAliasingWithTransparency;
 
+            normalToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Normal; ;
+            italicToolStripMenuItem.Text = Configuration.Settings.Language.General.Italic;
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.BoxSingleLine)) //TODO: Remove in SE 3.4
+            {
+                boxSingleLineToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.BoxSingleLine;
+                boxMultiLineToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.BoxMultiLine;
+            }
+
             comboBox3D.Items.Clear();
             comboBox3D.Items.Add(Configuration.Settings.Language.General.None);
             comboBox3D.Items.Add(Configuration.Settings.Language.ExportPngXml.SideBySide3D);
@@ -2353,7 +2401,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             Utilities.InitializeSubtitleFont(subtitleListView1);
             subtitleListView1.AutoSizeAllColumns(this);
 
-            _subtitle = subtitle;
+            _subtitle = new Subtitle(subtitle);
             panelColor.BackColor = _subtitleColor;
             panelBorderColor.BackColor = _borderColor;
             InitBorderStyle();
@@ -2538,9 +2586,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             comboBoxBorderWidth.Items.Clear();
             string text = Configuration.Settings.Language.ExportPngXml.BorderStyleNormalWidthX;
             int index = 2;
-            if (string.IsNullOrEmpty(text) || _exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
+            if (string.IsNullOrEmpty(text))
             {
                 text = "{0}";
+            }
+            else if (_exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
+            {
+                comboBoxBorderWidth.Items.Add(Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox);
+                index = 3;
             }
             else
             {
@@ -2689,7 +2742,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (colorChooser.ShowDialog() == DialogResult.OK)
             {
                 panelBorderColor.BackColor = colorChooser.Color;
-                subtitleListView1_SelectedIndexChanged(null, null);
+                
             }
         }
 
@@ -2975,6 +3028,111 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void numericUpDownLineSpacing_ValueChanged(object sender, EventArgs e)
         {
             subtitleListView1_SelectedIndexChanged(null, null);
+        }
+     
+        private void ListViewToggleTag(string tag)
+        {
+            if (_subtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
+            {
+                var indexes = new List<int>();
+                foreach (ListViewItem item in subtitleListView1.SelectedItems)
+                    indexes.Add(item.Index);
+
+                subtitleListView1.BeginUpdate();
+                foreach (int i in indexes)
+                {
+                    if (tag == BoxMultiLine)
+                    {
+                        _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.Replace("<" + BoxSingleLine + ">", string.Empty).Replace("</" + BoxSingleLine + ">", string.Empty);
+                    }
+                    else if (tag == BoxSingleLine)
+                    {
+                        _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.Replace("<" + BoxMultiLine + ">", string.Empty).Replace("</" + BoxMultiLine + ">", string.Empty);
+                    }
+
+                    if (_subtitle.Paragraphs[i].Text.Contains("<" + tag + ">"))
+                    {
+                        _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.Replace("<" + tag + ">", string.Empty);
+                        _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.Replace("</" + tag + ">", string.Empty);
+                    }
+                    else
+                    {
+                        int indexOfEndBracket = _subtitle.Paragraphs[i].Text.IndexOf("}");
+                        if (_subtitle.Paragraphs[i].Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                            _subtitle.Paragraphs[i].Text = string.Format("{2}<{0}>{1}</{0}>", tag, _subtitle.Paragraphs[i].Text.Remove(0, indexOfEndBracket + 1), _subtitle.Paragraphs[i].Text.Substring(0, indexOfEndBracket + 1));
+                        else
+                            _subtitle.Paragraphs[i].Text = string.Format("<{0}>{1}</{0}>", tag, _subtitle.Paragraphs[i].Text);
+                    }
+                    subtitleListView1.SetText(i, _subtitle.Paragraphs[i].Text);
+                }
+                subtitleListView1.EndUpdate();
+            }
+        }
+
+        private void boxMultiLineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListViewToggleTag(BoxMultiLine);
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void boxSingleLineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListViewToggleTag(BoxSingleLine);
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void italicToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListViewToggleTag("i");
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void normalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_subtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
+            {
+                bool isSsa = _format.FriendlyName == new SubStationAlpha().FriendlyName ||
+                             _format.FriendlyName == new AdvancedSubStationAlpha().FriendlyName;
+
+                foreach (ListViewItem item in subtitleListView1.SelectedItems)
+                {
+                    Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
+                    if (p != null)
+                    {
+                        int indexOfEndBracket = p.Text.IndexOf("}");
+                        if (p.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                            p.Text = p.Text.Remove(0, indexOfEndBracket + 1);
+                        p.Text = Utilities.RemoveHtmlTags(p.Text);
+                        p.Text = p.Text.Replace("♪", string.Empty);
+                        if (isSsa)
+                            p.Text = RemoveSsaStyle(p.Text);
+                        subtitleListView1.SetText(item.Index, p.Text);
+                    }
+                }
+            }
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private string RemoveSsaStyle(string text)
+        {
+            int indexOfBegin = text.IndexOf("{");
+            while (indexOfBegin >= 0 && text.IndexOf("}") > indexOfBegin)
+            {
+                int indexOfEnd = text.IndexOf("}");
+                text = text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
+                indexOfBegin = text.IndexOf("{");
+            }
+            return text;
+        }
+
+        private void subtitleListView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            var italicShortCut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+            if (e.KeyData == italicShortCut)
+            {
+                ListViewToggleTag("i");
+                subtitleListView1_SelectedIndexChanged(null, null);
+            }
         }
 
     }
