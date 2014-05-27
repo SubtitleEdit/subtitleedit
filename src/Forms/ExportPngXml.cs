@@ -2742,7 +2742,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (colorChooser.ShowDialog() == DialogResult.OK)
             {
                 panelBorderColor.BackColor = colorChooser.Color;
-                
+                subtitleListView1_SelectedIndexChanged(null, null);
             }
         }
 
