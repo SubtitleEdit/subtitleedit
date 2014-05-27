@@ -36,8 +36,6 @@ namespace Nikse.SubtitleEdit.Forms
         /// <summary>
         ///   Required designer variable.
         /// </summary>
-        private readonly Container components;
-
         private ColorHandler.ARGB argb;
         private ChangeStyle changeType = ChangeStyle.None;
         private FlowLayoutPanel flowLayoutPanel1;
@@ -138,13 +136,6 @@ namespace Nikse.SubtitleEdit.Forms
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-            }
             base.Dispose(disposing);
         }
 
