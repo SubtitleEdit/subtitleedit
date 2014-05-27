@@ -80,6 +80,11 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxExportImage = new System.Windows.Forms.GroupBox();
             this.timerPreview = new System.Windows.Forms.Timer(this.components);
+            this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.boxSingleLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.boxMultiLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.italicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.normalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -88,6 +93,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).BeginInit();
             this.groupBoxExportImage.SuspendLayout();
+            this.contextMenuStripListView.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -781,10 +787,49 @@
             this.timerPreview.Interval = 500;
             this.timerPreview.Tick += new System.EventHandler(this.timerPreview_Tick);
             // 
+            // contextMenuStripListView
+            // 
+            this.contextMenuStripListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.normalToolStripMenuItem,
+            this.italicToolStripMenuItem,
+            this.boxSingleLineToolStripMenuItem,
+            this.boxMultiLineToolStripMenuItem});
+            this.contextMenuStripListView.Name = "contextMenuStripListView";
+            this.contextMenuStripListView.Size = new System.Drawing.Size(158, 92);
+            // 
+            // boxSingleLineToolStripMenuItem
+            // 
+            this.boxSingleLineToolStripMenuItem.Name = "boxSingleLineToolStripMenuItem";
+            this.boxSingleLineToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.boxSingleLineToolStripMenuItem.Text = "Box - single line";
+            this.boxSingleLineToolStripMenuItem.Click += new System.EventHandler(this.boxSingleLineToolStripMenuItem_Click);
+            // 
+            // boxMultiLineToolStripMenuItem
+            // 
+            this.boxMultiLineToolStripMenuItem.Name = "boxMultiLineToolStripMenuItem";
+            this.boxMultiLineToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.boxMultiLineToolStripMenuItem.Text = "Box - multi line";
+            this.boxMultiLineToolStripMenuItem.Click += new System.EventHandler(this.boxMultiLineToolStripMenuItem_Click);
+            // 
+            // italicToolStripMenuItem
+            // 
+            this.italicToolStripMenuItem.Name = "italicToolStripMenuItem";
+            this.italicToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.italicToolStripMenuItem.Text = "Italic";
+            this.italicToolStripMenuItem.Click += new System.EventHandler(this.italicToolStripMenuItem_Click);
+            // 
+            // normalToolStripMenuItem
+            // 
+            this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
+            this.normalToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.normalToolStripMenuItem.Text = "Normal";
+            this.normalToolStripMenuItem.Click += new System.EventHandler(this.normalToolStripMenuItem_Click);
+            // 
             // subtitleListView1
             // 
             this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.subtitleListView1.ContextMenuStrip = this.contextMenuStripListView;
             this.subtitleListView1.DisplayExtraFromExtra = false;
             this.subtitleListView1.FirstVisibleIndex = -1;
             this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -802,6 +847,7 @@
             this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
+            this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
             // 
             // ExportPngXml
             // 
@@ -835,6 +881,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).EndInit();
             this.groupBoxExportImage.ResumeLayout(false);
+            this.contextMenuStripListView.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -893,5 +940,10 @@
         private System.Windows.Forms.Label labelLineHeight;
         private System.Windows.Forms.NumericUpDown numericUpDownLineSpacing;
         private System.Windows.Forms.CheckBox checkBoxTransAntiAliase;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripListView;
+        private System.Windows.Forms.ToolStripMenuItem boxSingleLineToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem boxMultiLineToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem normalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem italicToolStripMenuItem;
     }
 }
