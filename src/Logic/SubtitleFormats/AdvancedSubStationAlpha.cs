@@ -382,13 +382,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             int count = 0;
             while (text.Contains("<font ") && count < 10)
             {
+                text = text.Replace("</font>", string.Empty);
                 int start = text.IndexOf(@"<font ");
                 int end = text.IndexOf('>', start);
                 if (end > 0)
                 {
                     string fontTag = text.Substring(start + 4, end - (start + 4));
                     text = text.Remove(start, end - start + 1);
-                    text = text.Replace("</font>", string.Empty);
 
                     fontTag = FormatTag(ref text, start, fontTag, "face=\"", "\"", "fn", "}");
                     fontTag = FormatTag(ref text, start, fontTag, "face='", "'", "fn", "}");
