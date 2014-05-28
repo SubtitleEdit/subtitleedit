@@ -1569,7 +1569,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
         {
-            if (parameter.P.Text.Contains(Environment.NewLine) && (parameter.BoxSingleLine || parameter.P.Text.Contains(BoxSingleLine)))
+            if (!parameter.SimpleRendering && parameter.P.Text.Contains(Environment.NewLine) && (parameter.BoxSingleLine || parameter.P.Text.Contains(BoxSingleLine)))
             {
                 Bitmap bmp = null;
                 string old = parameter.P.Text;
@@ -2590,11 +2590,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 text = "{0}";
             }
-            else if (_exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
-            {
-                comboBoxBorderWidth.Items.Add(Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox);
-                index = 3;
-            }
             else
             {
                 comboBoxBorderWidth.Items.Add(Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine);
@@ -3103,7 +3098,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (p.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                             p.Text = p.Text.Remove(0, indexOfEndBracket + 1);
                         p.Text = Utilities.RemoveHtmlTags(p.Text);
-                        p.Text = p.Text.Replace("♪", string.Empty);
+                        p.Text = p.Text.Replace("<" + BoxSingleLine + ">", string.Empty).Replace("</" + BoxSingleLine + ">", string.Empty);
+                        p.Text = p.Text.Replace("<" + BoxMultiLine + ">", string.Empty).Replace("</" + BoxMultiLine + ">", string.Empty);
+
                         if (isSsa)
                             p.Text = RemoveSsaStyle(p.Text);
                         subtitleListView1.SetText(item.Index, p.Text);
