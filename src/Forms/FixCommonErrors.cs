@@ -2762,17 +2762,29 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RemoveSpaceBetweenNumbers()
         {
-            string fixAction = _language.FixCommonOcrErrors;
+            string fixAction = _language.RemoveSpaceBetweenNumber;
             int noOfFixes = 0;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
                 string text = p.Text;
                 Match match = RemoveSpaceBetweenNumbersRegEx.Match(text);
-                while (match.Success)
+                int counter = 0;
+                while (match.Success && counter < 100 && text.Length > match.Index + 1)
                 {
-                    text = text.Remove(match.Index + 1, 1);
-                    match = RemoveSpaceBetweenNumbersRegEx.Match(text);
+                    string temp = text.Substring(match.Index + 2);
+                    if (temp != "1/2" &&
+                        !temp.StartsWith("1/2 ") &&
+                        !temp.StartsWith("1/2.") &&
+                        !temp.StartsWith("1/2!") &&
+                        !temp.StartsWith("1/2?") &&
+                        !temp.StartsWith("1/2<"))
+                    {
+                        text = text.Remove(match.Index + 1, 1);
+                    }
+                    if (text.Length > match.Index + 1)
+                        match = RemoveSpaceBetweenNumbersRegEx.Match(text, match.Index + 2);
+                    counter++;
                 }
                 if (p.Text != text)
                 {
