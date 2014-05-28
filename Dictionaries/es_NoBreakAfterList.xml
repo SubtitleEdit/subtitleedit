@@ -1,45 +1,76 @@
 <NoBreakAfterList>
   <Item> a</Item>
   <Item> a la</Item>
+  <Item> a tu</Item>
   <Item> al</Item>
+  <Item> aunque</Item>
   <Item> como</Item>
   <Item> con</Item>
+  <Item> cuando</Item>
   <Item> de</Item>
+  <Item> de la</Item>
+  <Item> de que</Item>
   <Item> de tu</Item>
   <Item> del</Item>
+  <Item> dentro</Item>
   <Item> el</Item>
   <Item> en</Item>
+  <Item> en este</Item>
+  <Item> en su</Item>
   <Item> es</Item>
+  <Item> esa</Item>
   <Item> la</Item>
   <Item> lo</Item>
   <Item> los</Item>
   <Item> luego</Item>
   <Item> me</Item>
   <Item> mi</Item>
+  <Item> mucho</Item>
   <Item> muy</Item>
   <Item> ni</Item>
+  <Item> no</Item>
+  <Item> no </Item>
+  <Item> no es</Item>
+  <Item> no se</Item>
   <Item> nos</Item>
   <Item> nos lo</Item>
   <Item> o</Item>
   <Item> para</Item>
+  <Item> para el</Item>
   <Item> para que te</Item>
   <Item> para ti</Item>
   <Item> pero</Item>
   <Item> por</Item>
+  <Item> por lo</Item>
   <Item> porque</Item>
   <Item> que</Item>
+  <Item> que ha</Item>
+  <Item> que he</Item>
   <Item> que no</Item>
   <Item> que nos</Item>
+  <Item> que por</Item>
   <Item> se</Item>
+  <Item> se ha</Item>
+  <Item> se lo</Item>
   <Item> sin</Item>
+  <Item> sin un</Item>
   <Item> sobre</Item>
+  <Item> su</Item>
+  <Item> tan</Item>
   <Item> tanto</Item>
   <Item> te</Item>
   <Item> un</Item>
+  <Item> una</Item>
+  <Item> unas</Item>
+  <Item> unos</Item>
   <Item> y</Item>
   <Item> y el</Item>
   <Item> y me</Item>
+  <Item> y nos</Item>
   <Item> ya</Item>
-  <Item RegEx="True">(?=.{20,40})\s[¿¡«][\w]{1,3}\s</Item>
   <Item> ya que</Item>
+  <Item RegEx="True">(?=.{20,40})\s[¿¡«][\w]{1,3}\s</Item>
+  <Item RegEx="True">(?=«.{1,15}»)\s.{1,3}\s</Item>
+  <Item RegEx="True">(?=señor\s[A-ZÁ-Ú][a-zá-úñü]+)\s</Item>
+  <Item RegEx="True">(?=.{20}\.)\s[A-Z-Á-Ú].{15,30}</Item>
 </NoBreakAfterList>
