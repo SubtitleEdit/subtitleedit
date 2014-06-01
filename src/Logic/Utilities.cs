@@ -872,7 +872,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             s = s.Replace("</p>", string.Empty);
             s = s.Replace("</P>", string.Empty);
-            s = s.Replace("<P>", string.Empty);
+            s = s.Replace("<p>", string.Empty); // U+0050
             s = s.Replace("<P>", string.Empty);
             while (s.ToLower().Contains("<p "))
             {
