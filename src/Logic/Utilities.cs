@@ -2569,7 +2569,7 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
-        /// <summary>
+ /// <summary>
         /// HTML-encodes a string
         /// </summary>
         /// <param name="text">Text string to encode</param>
@@ -2598,7 +2598,7 @@ namespace Nikse.SubtitleEdit.Logic
                         break;
                     default:
                         if (text[i] > 127)
-                            sb.Append("&#" + (int)text[i] + ";");
+                          sb.Append("&#" + (int)text[i] + ";");
                         else
                             sb.Append(text[i]);
                         break;
@@ -3621,7 +3621,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static string ToSuperscript(string text)
         {
             var sb = new StringBuilder();
-            IList<string> superscript = new List<string>{
+            var superscript = new List<string>{
                                                 "⁰",
                                                 "¹",
                                                 "²",
@@ -3681,7 +3681,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                 "ᵁ",
                                                 "ᵂ",
                                             };
-            IList<string> normal = new List<string>{
+            var normal = new List<string>{
                                                 "0", // "⁰"
                                                 "1", // "¹"
                                                 "2", // "²"
@@ -3756,7 +3756,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static string ToSubscript(string text)
         {
             var sb = new StringBuilder();
-            IList<string> subcript = new List<string>{
+            var subcript = new List<string>{
                                                 "₀",
                                                 "₁",
                                                 "₂",
@@ -3781,7 +3781,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                 "ᵥ",
                                                 "ₓ",
                                             };
-            IList<string> normal = new List<string>
+            var normal = new List<string>
                              {
                                                 "0",  // "₀"
                                                 "1",  // "₁"
