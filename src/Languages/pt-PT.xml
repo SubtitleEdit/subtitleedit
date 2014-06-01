@@ -208,6 +208,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Escolha o idioma</Title>
     <Language>Idioma</Language>
   </ChooseLanguage>
+    <ColorChooser>
+    <Title>Escolher cor</Title>
+    <Red>Vermelho</Red>
+    <Green>Verde</Green>
+    <Blue>Azul</Blue>
+    <Alpha>Alfa</Alpha>
+  </ColorChooser>
   <ColumnPaste>
     <Title>Colar coluna</Title>
     <ChooseColumn>Escolher coluna</ChooseColumn>
@@ -344,7 +351,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Formats>Formatos</Formats>
     <New>Novo</New>
     <Edit>Editar</Edit>
-    <Delete>Apagar</Delete>
+    <Delete>Eliminar</Delete>
     <SaveAs>G&amp;uardar como...</SaveAs>
     <SaveSubtitleAs>Guardar legenda como...</SaveSubtitleAs>
     <SubtitleExportedInCustomFormatToX>Legenda exportada em formato personalizado para: {0}</SubtitleExportedInCustomFormatToX>
@@ -367,9 +374,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Cor do tipo de letra</FontColor>
     <BorderColor>Cor da borda</BorderColor>
     <BorderWidth>Tamanho da borda</BorderWidth>
+    <BorderStyle>Estilo da borda</BorderStyle>
+    <BorderStyleOneBox>Caixa opaca</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Tudo em Caixa opaca</BorderStyleBoxForEachLine>
+    <BorderStyleNormalWidthX>Normal, largura={0}</BorderStyleNormalWidthX>	
     <ShadowColor>Cor da sombra</ShadowColor>
     <ShadowWidth>Largura da sombra</ShadowWidth>
-    <Transparency>Opacidade</Transparency>	
+    <Transparency>Transparência</Transparency>	
 	<ImageFormat>Formato de Imagem</ImageFormat>
     <SimpleRendering>Renderização simples</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing com transparência</AntiAliasingWithTransparency>	
@@ -390,7 +401,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveFabImageScriptAs>Escolha o nome do ficheiro Blu-ray sup</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Escolha o nome do ficheiro DVD Studio Pro STL</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>Linhas demasiado longas: {0}</SomeLinesWereTooLongX>
-    <LineHeight>Altura da linha</LineHeight>	
+    <LineHeight>Altura da linha</LineHeight>
+    <BoxSingleLine>Caixa - linha única</BoxSingleLine>
+    <BoxMultiLine>Caixa - todas as linhas</BoxMultiLine>	
   </ExportPngXml>
   <ExportText>
     <Title>Exportar texto</Title>
@@ -839,7 +852,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Cut>Cortar</Cut>
         <Copy>Copiar</Copy>
         <Paste>Colar</Paste>
-        <Delete>Apagar</Delete>
+        <Delete>Eliminar</Delete>
         <SplitLineAtCursorPosition>Dividir linha a partir do cursor</SplitLineAtCursorPosition>
         <AutoDurationCurrentLine>Duração automática (linha corrente)</AutoDurationCurrentLine>
         <SelectAll>Seleccionar tudo</SelectAll>
@@ -1314,6 +1327,19 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
 	<UpdateAll>Actualizar todos</UpdateAll>
     <XPluginsUpdated>{0} plugin(s) actualizados</XPluginsUpdated>	
   </PluginsGet>
+    <RegularExpressionContextMenu>
+    <WordBoundary>Limite de palavra (\b)</WordBoundary>
+    <NonWordBoundary>Sem limite palavra (\B)</NonWordBoundary>
+    <NewLine>Nova linha (\r\n)</NewLine>
+    <NewLineShort>Nova linha (\n)</NewLineShort>
+    <AnyDigit>Qualquer dígito (\d)</AnyDigit>
+    <AnyCharacter>Qualquer caractere (.)</AnyCharacter>
+    <AnyWhitespace>Qualquer espaço em branco (\s)</AnyWhitespace>
+    <ZeroOrMore>Zero ou mais (*)</ZeroOrMore>
+    <OneOrMore>Um ou mais (+)</OneOrMore>
+    <InCharacterGroup>No grupo de caracteres ([teste])</InCharacterGroup>
+    <NotInCharacterGroup>Não estiver no grupo de caracteres ([^teste])</NotInCharacterGroup>
+  </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Eliminar texto para surdos</Title>
     <RemoveTextConditions>Eliminar condições de texto</RemoveTextConditions>
@@ -1597,10 +1623,13 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ShowBeamer>Iniciar a legenda em ecrã inteiro</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mover a última palavra para baixo para a próxima linha de legendas</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Mover a primeira palavra a partir da próxima linha acima das legendas</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxSelectionToLower>Selecção para minúsculas</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>Selecção para maiúsculas</MainTextBoxSelectionToUpper>	
     <MainTextBoxAutoBreak>Quebra de texto automática</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Remover quebra de texto</MainTextBoxUnbreak>
+    <MainFileSaveAll>Guardar tudo</MainFileSaveAll>	
     <Miscellaneous>Diversos</Miscellaneous>
-    <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista" para o ajuste-auto (só legenda em inglês)</UseDoNotBreakAfterList>	
+    <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista" (para o ajuste-auto)</UseDoNotBreakAfterList>	
   </Settings>
   <ShowEarlierLater>
     <Title>Mostrar linhas seleccionadas antes/depois</Title>

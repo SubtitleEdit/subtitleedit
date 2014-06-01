@@ -145,9 +145,18 @@ namespace Nikse.SubtitleEdit
 
             NoBreakAfterItem item;
             if (radioButtonText.Checked)
+            {
                 item = new NoBreakAfterItem(textBoxNoBreakAfter.Text);
+            }
             else
+            {
+                if (!Utilities.IsValidRegex(textBoxNoBreakAfter.Text))
+                {
+                    MessageBox.Show("Invalid regex");
+                    return;
+                }
                 item = new NoBreakAfterItem(new Regex(textBoxNoBreakAfter.Text), textBoxNoBreakAfter.Text);
+            }
 
             foreach (NoBreakAfterItem nbai in _noBreakAfterList)
             {
@@ -168,7 +177,7 @@ namespace Nikse.SubtitleEdit
             _noBreakAfterList.Add(item);
             comboBoxDictionaries.Enabled = false;
             ShowBreakAfterList(_noBreakAfterList);
-            for (int i = 0; i < listBoxNoBreakAfter.Items.Count; i++ )
+            for (int i = 0; i < listBoxNoBreakAfter.Items.Count; i++)
             {
                 if (listBoxNoBreakAfter.Items[i].ToString() == item.Text)
                 {
@@ -189,22 +198,22 @@ namespace Nikse.SubtitleEdit
 
         private void listBoxNamesEtc_SelectedIndexChanged(object sender, EventArgs e)
         {
-           int idx = listBoxNoBreakAfter.SelectedIndex;
-           if (idx >= 0 && idx < _noBreakAfterList.Count)
-           {
-               NoBreakAfterItem item = _noBreakAfterList[idx];
-               textBoxNoBreakAfter.Text = item.Text;
-               if (item.Regex != null)
-               {
-                   radioButtonRegEx.Checked = false;
-                   radioButtonText.Checked = true;
-               }
-               else
-               {
-                   radioButtonRegEx.Checked = true;
-                   radioButtonText.Checked = false;
-               }
-           }
+            int idx = listBoxNoBreakAfter.SelectedIndex;
+            if (idx >= 0 && idx < _noBreakAfterList.Count)
+            {
+                NoBreakAfterItem item = _noBreakAfterList[idx];
+                textBoxNoBreakAfter.Text = item.Text;
+                if (item.Regex != null)
+                {
+                    radioButtonRegEx.Checked = false;
+                    radioButtonText.Checked = true;
+                }
+                else
+                {
+                    radioButtonRegEx.Checked = true;
+                    radioButtonText.Checked = false;
+                }
+            }
         }
 
         private void textBoxNoBreakAfter_KeyDown(object sender, KeyEventArgs e)
