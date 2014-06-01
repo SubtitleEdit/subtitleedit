@@ -8,8 +8,8 @@
     <HelpFile></HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>&amp;Abbrechen</Cancel>
-    <Apply>Übernehmen</Apply>
-    <None>Kein</None>
+    <Apply>Auswahl</Apply>
+    <None>Aus</None>
     <All>Alle</All>
     <Preview>Vorschau</Preview>
     <SubtitleFiles>Untertiteldateien</SubtitleFiles>
@@ -17,8 +17,8 @@
     <VideoFiles>Videodateien</VideoFiles>
     <AudioFiles>Audiodateien</AudioFiles>
     <OpenSubtitle>Untertitel öffnen...</OpenSubtitle>
-    <OpenVideoFile>Video öffnen...</OpenVideoFile>
-    <OpenVideoFileTitle>Video öffnen...</OpenVideoFileTitle>
+    <OpenVideoFile>Videodatei öffnen...</OpenVideoFile>
+    <OpenVideoFileTitle>Videodatei öffnen...</OpenVideoFileTitle>
     <NoVideoLoaded>Kein Video gefunden</NoVideoLoaded>
     <VideoInformation>Video Info</VideoInformation>
     <PositionX>Position / Länge: {0}</PositionX>
@@ -53,7 +53,7 @@
     <SubtitleSaved>Untertitel gespeichert</SubtitleSaved>
     <CurrentSubtitle>Aktueller Untertitel</CurrentSubtitle>
     <OriginalText>Originaltext</OriginalText>
-    <OpenOriginalSubtitleFile>Original Untertiteldatei öffnen...</OpenOriginalSubtitleFile>
+    <OpenOriginalSubtitleFile>Original Untertitel öffnen...</OpenOriginalSubtitleFile>
     <PleaseWait>Bitte warten...</PleaseWait>
     <SessionKey>Sitzungsschlüssel</SessionKey>
     <UserName>Benutzername</UserName>
@@ -135,7 +135,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <OnlyUnbreakLinesShorterThan>Umbrüche nur entfernen wenn Texte kürzer als</OnlyUnbreakLinesShorterThan>
   </AutoBreakUnbreakLines>
     <BatchConvert>
-    <Title>Batch Konvertierung</Title>
+    <Title>Stapelkonvertierung</Title>
     <Input>Eingabe</Input>
     <InputDescription>Eingabedateien</InputDescription>
     <Status>Status</Status>
@@ -184,8 +184,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
   <ChangeFrameRate>
     <Title>Bildfrequenz ändern</Title>
     <ConvertFrameRateOfSubtitle>Bildfrequenz des Untertitels ändern</ConvertFrameRateOfSubtitle>
-    <FromFrameRate>Von Bildfrequenz</FromFrameRate>
-    <ToFrameRate>Zu Bildfrequenz</ToFrameRate>
+    <FromFrameRate>von Bildfrequenz</FromFrameRate>
+    <ToFrameRate>zu Bildfrequenz</ToFrameRate>
     <FrameRateNotCorrect>Bildfrequenz ist nicht korrekt</FrameRateNotCorrect>
     <FrameRateNotChanged>Bildfrequenz ist gleich - nichts zu konvertieren</FrameRateNotChanged>
   </ChangeFrameRate>
@@ -249,6 +249,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffectColor>Effektfarbe</FontEffectColor>
     <FontSize>Größe</FontSize>
     <TopBottomMargin>Oben/Unten Rand</TopBottomMargin>
+    <FadeUpTime>Einblendzeit</FadeUpTime>
+    <FadeDownTime>Ausblendzeit</FadeDownTime>
     <ZPosition>Z-Position</ZPosition>
     <ZPositionHelp>Positive Zahlen bewegen Text weg, negative Zahlen bewegen Text heran. Wenn Z-Position Null, ist er in 2D</ZPositionHelp>
     <ChooseColor>Farbe wählen...</ChooseColor>
@@ -393,7 +395,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Preview>Vorschau</Preview>
     <ExportOptions>Exportoptionen</ExportOptions>
     <FormatText>Text formatieren</FormatText>
-    <None>kein</None>
+    <None>Aus</None>
     <MergeAllLines>Alle Zeilen verbinden</MergeAllLines>
     <UnbreakLines>Zeilenumbrüche entfernen</UnbreakLines>
     <RemoveStyling>Stile entfernen</RemoveStyling>
@@ -464,7 +466,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Mit Großbuchstaben nach Punkten beginnen</StartWithUppercaseLetterAfterPeriodInsideParagraph>
     <StartWithUppercaseLetterAfterColon>Mit Großbuchstaben nach Doppelpunkt/Semikolon beginnen</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>Allein stehendes 'i' zu 'I' (Englisch) korrigieren</FixLowercaseIToUppercaseI>
-    <FixCommonOcrErrors>Häufige OCR Fehler (verwende OCR Korrekturliste) korrigieren</FixCommonOcrErrors>
+    <FixCommonOcrErrors>Häufige OCR Fehler korrigieren (OCR Korrekturliste verwenden)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Häufige OCR Fehler korrigiert (OCR Korrekturliste verwendet): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Leerzeichen zwischen Zahlen entfernen</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Einzeilige Dialoge korrigieren</FixDialogsOnOneLine>
@@ -661,7 +663,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Reopen>&amp;Erneut öffnen</Reopen>
         <Save>&amp;Speichern</Save>
         <SaveAs>Speichern &amp;als...</SaveAs>
-        <RestoreAutoBackup>Auto Sicherung wiederherstellen...</RestoreAutoBackup>
+        <RestoreAutoBackup>Automatische Sicherung wiederherstellen...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Erweiterte SSA Eigenschaften...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>SSA Eigenschaften...</SubStationAlphaProperties>
         <OpenOriginal>Original Untertitel öffnen (Übersetzer Modus)...</OpenOriginal>
@@ -721,15 +723,15 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Werkzeuge</Title>
         <AdjustDisplayDuration>&amp;Längen anpassen...</AdjustDisplayDuration>
         <ApplyDurationLimits>Längenbegrenzungen anwenden...</ApplyDurationLimits>
-        <DurationsBridgeGap>Abstände in Dauer Überbrücken...</DurationsBridgeGap>
+        <DurationsBridgeGap>Kurze Zeitabstände überbrücken...</DurationsBridgeGap>
         <FixCommonErrors>Häufige &amp;Fehler korrigieren...</FixCommonErrors>
-        <StartNumberingFrom>Nummerierung beginnen bei...</StartNumberingFrom>
-        <RemoveTextForHearingImpaired>Entferne Untertitel für Hörgeschädigte...</RemoveTextForHearingImpaired>
-        <ChangeCasing>Ändere Groß-/Kleinschreibung...</ChangeCasing>
+        <StartNumberingFrom>Nummerierung beginnen ab...</StartNumberingFrom>
+        <RemoveTextForHearingImpaired>Untertitel für Hörgeschädigte entfernen...</RemoveTextForHearingImpaired>
+        <ChangeCasing>Schreibweise ändern...</ChangeCasing>
         <ChangeFrameRate>Bildfrequenz ändern...</ChangeFrameRate>
         <ChangeSpeedInPercent>Geschwindigkeit ändern (%)...</ChangeSpeedInPercent>
         <MergeShortLines>Kurze Texte verbinden...</MergeShortLines>
-        <MergeDuplicateText>Texte mit gleichen Inhalt verbinden...</MergeDuplicateText>
+        <MergeDuplicateText>Zeilen mit gleichen Text verbinden...</MergeDuplicateText>
         <SplitLongLines>Lange Texte trennen...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimale Anzeigezeit zwischen Untertitel...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sortieren nach</SortBy>
@@ -746,7 +748,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Style>Stil</Style>
         <Ascending>Aufsteigend</Ascending>
         <Descending>Absteigend</Descending>
-        <MakeNewEmptyTranslationFromCurrentSubtitle>Neue leere Übersetzung aus aktuellem Untertitel erstellen</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>Neue leere Übersetzung aus aktuellen Untertitel erstellen</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Stapelkonvertierung...</BatchConvert>
         <GenerateTimeAsText>Zeit als Text erstellen...</GenerateTimeAsText>
         <MeasurementConverter>Maßeinheiten umwandeln...</MeasurementConverter>
@@ -779,7 +781,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
       </SpellCheck>
       <Synchronization>
         <Title>Anpassung</Title>
-        <AdjustAllTimes>Alle Zeiten anpassen (Früher/Später anzeigen)...</AdjustAllTimes>
+        <AdjustAllTimes>Zeiten anpassen (früher/später anzeigen)...</AdjustAllTimes>
         <VisualSync>&amp;Visuelle Anpassung...</VisualSync>
         <PointSync>Punkt Anpassung...</PointSync>
         <PointSyncViaOtherSubtitle>Punkt Anpassung über anderen Untertitel...</PointSyncViaOtherSubtitle>
@@ -788,7 +790,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Auto Übersetzung</Title>
         <TranslatePoweredByGoogle>Übersetzung (mit Google)...</TranslatePoweredByGoogle>
         <TranslatePoweredByMicrosoft>Übersetzung (mit Microsoft)...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>Übersetzung von schwedisch nach dänisch (mit nikse.dk)...</TranslateFromSwedishToDanish>
+        <TranslateFromSwedishToDanish>Übersetzung von schwedisch in dänisch (mit nikse.dk)...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
         <Title>Optionen</Title>
@@ -873,7 +875,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <AdjustDisplayDurationForSelectedLines>Länge ausgewählter Texte anpassen...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Häufige Fehler im ausgewählten Text korrigieren...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Groß-/Kleinschreibung im ausgewählten Text ändern...</ChangeCasingForSelectedLines>
-        <SaveSelectedLines>Ausgewählte Texte speichern unter...</SaveSelectedLines>
+        <SaveSelectedLines>Ausgewählte Texte speichern als...</SaveSelectedLines>
         <WebVTTSetNewVoice>Neue Sprache...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Sprache entfernen</WebVTTRemoveVoices>
       </ContextMenu>
@@ -943,8 +945,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveChangesToX>Änderungen an {0} speichern?</SaveChangesToX>
     <SaveChangesToUntitledOriginal>Änderungen am unbenannten Original speichern?</SaveChangesToUntitledOriginal>
     <SaveChangesToOriginalX>Änderungen am Original {0} speichern?</SaveChangesToOriginalX>
-    <SaveSubtitleAs>Speichere Untertitel als...</SaveSubtitleAs>
-    <SaveOriginalSubtitleAs>Speichere Original Untertitel als...</SaveOriginalSubtitleAs>
+    <SaveSubtitleAs>Untertitel speichern als...</SaveSubtitleAs>
+    <SaveOriginalSubtitleAs>Original Untertitel speichern als...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>Kein Untertitel geladen</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Visuelle Anpassung - ausgewählter Text</VisualSyncSelectedLines>
     <VisualSyncTitle>Anpassung</VisualSyncTitle>
@@ -1010,8 +1012,7 @@ Am Anfang des Dokuments weitersuchen?</ReplaceXContinue>
     <TextingForHearingImpairedRemovedOneLine>Text für Hörgeschädigte entfernt: Ein Text</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Text für Hörgeschädigte entfernt: {0} Texte</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Untertitel wurde getrennt</SubtitleSplitted>
-    <SubtitleAppendPrompt>Es wird ein existierender Untertitel am aktuell geladenen Untertitel angehängt,
-der schon an das Video angepasst sein sollte.
+    <SubtitleAppendPrompt>Es wird ein existierender Untertitel am aktuell geladenen Untertitel angehängt, der schon an das Video angepasst sein sollte.
 
 Fortfahren?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Untertitel anhängen</SubtitleAppendPromptTitle>
@@ -1027,7 +1028,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <SelectedLinesTranslated>Ausgewählten Text übersetzt</SelectedLinesTranslated>
     <SubtitleTranslated>Untertitel übersetzt</SubtitleTranslated>
     <TranslateSwedishToDanish>Aktuell geladenen schwedischen Untertitel in dänisch übersetzen</TranslateSwedishToDanish>
-    <TranslateSwedishToDanishWarning>Aktuell geladenen Untertitel von SCHWEDISCH (sicher dass es schwedisch ist?) in dänisch übersetzen?</TranslateSwedishToDanishWarning>
+    <TranslateSwedishToDanishWarning>Aktuell geladenen Untertitel von SCHWEDISCH in DÄNISCH übersetzen? (Sicher, das der aktuelle Untertitel schwedisch ist?)</TranslateSwedishToDanishWarning>
     <TranslatingViaNikseDkMt>Übersetze mit www.nikse.dk/mt...</TranslatingViaNikseDkMt>
     <BeforeSwedishToDanishTranslation>Vor Übersetzung von schwedisch in dänisch</BeforeSwedishToDanishTranslation>
     <TranslationFromSwedishToDanishComplete>Übersetzung von schwedisch in dänisch abgeschlossen</TranslationFromSwedishToDanishComplete>
@@ -1049,7 +1050,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <BeforeAddingTagX>Vor Hinzufügen des &lt;{0}&gt; Tags</BeforeAddingTagX>
     <TagXAdded>&lt;{0}&gt; Tag hinzugefügt</TagXAdded>
     <LineXOfY>Text {0} von {1}</LineXOfY>
-    <XLinesSavedAsY>{0} Texte gespeichert unter {1}</XLinesSavedAsY>
+    <XLinesSavedAsY>{0} Texte gespeichert als {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} Texte gelöscht</XLinesDeleted>
     <BeforeDeletingXLines>Vor Löschen von {0} Texten</BeforeDeletingXLines>
     <DeleteXLinesPrompt>Lösche {0} Texte?</DeleteXLinesPrompt>
@@ -1241,7 +1242,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <EqualLines>Gleiche Texte</EqualLines>
   </ModifySelection>
   <MultipleReplace>
-    <Title>Mehrfach ersetzem</Title>
+    <Title>Mehrfach ersetzen</Title>
     <FindWhat>Suche nach</FindWhat>
     <ReplaceWith>Ersetze durch</ReplaceWith>
     <Normal>Normal</Normal>
@@ -1310,6 +1311,19 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <UpdateAll>Alle Aktualisieren</UpdateAll>
     <XPluginsUpdated>{0} Plugin(s) aktualisiert</XPluginsUpdated>
   </PluginsGet>
+  <RegularExpressionContextMenu>
+    <WordBoundary>Wortgrenze (\b)</WordBoundary>
+    <NonWordBoundary>Keine Wortgrenze (\B)</NonWordBoundary>
+    <NewLine>Neue Zeile (\r\n)</NewLine>
+    <NewLineShort>Neue Zeile (\n)</NewLineShort>
+    <AnyDigit>Jede Ziffer (\d)</AnyDigit>
+    <AnyCharacter>Jedes Zeichen (.)</AnyCharacter>
+    <AnyWhitespace>Jedes Leerzeichen (\s)</AnyWhitespace>
+    <ZeroOrMore>Null oder mehr (*)</ZeroOrMore>
+    <OneOrMore>Eins oder mehr (+)</OneOrMore>
+    <InCharacterGroup>In Zeichengruppe ([test])</InCharacterGroup>
+    <NotInCharacterGroup>Nicht in Zeichengruppe ([^test])</NotInCharacterGroup>
+  </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Untertitel für Hörgeschädigte entfernen</Title>
     <RemoveTextConditions>Textbedingungen entfernen</RemoveTextConditions>
@@ -1340,8 +1354,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ReplaceAll>&amp;Alle Ersetzen</ReplaceAll>
   </ReplaceDialog>
   <RestoreAutoBackup>
-    <Title>Auto Sicherung wiederherstellen</Title>
-    <Information>Auto Sicherung öffnen</Information>
+    <Title>Automatische Sicherung wiederherstellen</Title>
+    <Information>Automatische Sicherung öffnen</Information>
     <DateAndTime>Datum und Zeit</DateAndTime>
     <FileName>Dateiname</FileName>
     <Extension>Erweiterung</Extension>
@@ -1421,9 +1435,9 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MainListViewVideoGoToPositionAndPause>Zur Videoposition und Pause</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Zur Videoposition und Wiedergabe</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>Gehe zum Textbearbeitungsfeld</MainListViewEditText>
-    <MainListViewVideoGoToPositionMinus1SecAndPause>Zur Videoposition - 1 s und Pause</MainListViewVideoGoToPositionMinus1SecAndPause>
-    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Zur Videoposition - 0.5 s und Pause</MainListViewVideoGoToPositionMinusHalfSecAndPause>
-    <MainListViewVideoGoToPositionMinus1SecAndPlay>Zur Videoposition - 1 s und Wiedergabe</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Zur Videoposition - 1 Sek und Pause</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Zur Videoposition - 0.5 Sek und Pause</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Zur Videoposition - 1 Sek und Wiedergabe</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Zum Eingabetextfeld und Pause bei Videoposition</MainListViewEditTextAndPause>
     <AutoBackup>Auto Speichern</AutoBackup>
     <AutoBackupEveryMinute>Jede Minute</AutoBackupEveryMinute>
@@ -1511,7 +1525,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MergeLinesShorterThan>Verbinde Texte die kürzer sind als</MergeLinesShorterThan>
     <MusicSymbol>Musik Symbol</MusicSymbol>
     <MusicSymbolsToReplace>Zu ersetzende Musik Symbole (durch Leerzeichen trennen)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Häufige OCR Fehler korrigieren - auch Hardcoded Regeln verwenden</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonOcrErrorsUseHardcodedRules>OCR Fehler korrigieren - auch Hardcoded Regeln anwenden</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Kurze Anzeigezeit korrigieren - Startzeitanpassung zulassen</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Kurzbefehle</Shortcuts>
     <Shortcut>Kurzbefehl</Shortcut>
@@ -1522,7 +1536,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <TextBox>Textbox</TextBox>
     <UpdateShortcut>Änderung</UpdateShortcut>
     <ShortcutIsNotValid>Kurzbefehl ist ungültig: {0}</ShortcutIsNotValid>
-    <ToggleDockUndockOfVideoControls>An-/abdocken der Videosteuerung umschalten</ToggleDockUndockOfVideoControls>
+    <ToggleDockUndockOfVideoControls>An-/Abdocken der Videosteuerung umschalten</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ende setzen, ergänzen und dahin</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Über Endposition anpassen und weiter</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Start setzen, Autolänge und weiter</AdjustSetStartAutoDurationAndGoToNext>
@@ -1551,7 +1565,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformSeekSilenceBack>Suche stumm zurück</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Text hier ergänzen (für neue Auswahl)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Neue Auswahl abspielen</WaveformPlayNewSelection>
-    <WaveformPlayFirstSelectedSubtitle>Ersten gewählten untertitel abspielen</WaveformPlayFirstSelectedSubtitle>
+    <WaveformPlayFirstSelectedSubtitle>Ersten gewählten Untertitel abspielen</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Listenansicht fokussieren</WaveformFocusListView>
     <GoBack1Frame>Ein Bild zurück</GoBack1Frame>
     <GoForward1Frame>Ein Bild vor</GoForward1Frame>
@@ -1589,11 +1603,15 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ListViewColumnInsert>Zeile, Text einfügen</ListViewColumnInsert>
     <ListViewColumnPaste>Zeile, Einfügen</ListViewColumnPaste>
     <ListViewFocusWaveform>Wellenform/Spektrogram fokussieren</ListViewFocusWaveform>
+    <ListViewGoToNextError>Zum nächsten Fehler</ListViewGoToNextError>
     <ShowBeamer>Starte Untertitel Vollbildbeamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Letzes Wort zur nächsten Zeile</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Erstes Wort der nächsten Zeile nach oben</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxSelectionToLower>Auswahl in Kleinbuchstaben</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>Auswahl in Großbuchstaben</MainTextBoxSelectionToUpper>
     <MainTextBoxAutoBreak>Auto Umbruch</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Umbruch entfernen</MainTextBoxUnbreak>
+    <MainFileSaveAll>Alles Speichern</MainFileSaveAll>
     <Miscellaneous>Sonstiges</Miscellaneous>
     <UseDoNotBreakAfterList>Nicht nach Liste umbrechen (für Auto Umbruch)</UseDoNotBreakAfterList>
   </Settings>
@@ -1668,7 +1686,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <LongestLineIsXAtY>Längste Textlänge ist {0} bei Text {1}</LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
-    <Title>Untertitel teilen...</Title>
+    <Title>Untertitel teilen</Title>
     <Description1>Länge des ersten Videoteils eingeben</Description1>
     <Description2>oder Länge aus Video auslesen:</Description2>
     <Split>&amp;Teilen</Split>
@@ -1786,13 +1804,13 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Punkt Anpassung</Title>
-    <TitleViaOtherSubtitle>Punkt Anpassung mit anderem Untertitel</TitleViaOtherSubtitle>
+    <TitleViaOtherSubtitle>Punkt Anpassung mit anderen Untertitel</TitleViaOtherSubtitle>
     <SyncHelp>Mindestens zwei Punkte für eine grobe Anpassung setzen</SyncHelp>
     <SetSyncPoint>Sync Punkt setzen</SetSyncPoint>
     <RemoveSyncPoint>Sync Punkt entfernen</RemoveSyncPoint>
     <SyncPointsX>Sync Punkte: {0}</SyncPointsX>
     <Info>Ein Sync Punkt passt die Position an, zwei oder mehr Punkte passen Position und Geschwindigkeit an.</Info>
-    <ApplySync>Übernehmen</ApplySync>
+    <ApplySync>Auswahl</ApplySync>
   </PointSync>
   <TransportStreamSubtitleChooser>
     <Title>Transport Stream Untertitelauswahl - {0}</Title>
@@ -1878,7 +1896,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <SaveAllSubtitleImagesAsBdnXml>Alle Bilder speichern (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Alle Bilder speichern mit HTML Index...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} Bilder gespeichert als {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Versuche Microsoft ODI OCR für unbekannte Wörter</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Microsoft ODI OCR für unbekannte Wörter versuchen</TryModiForUnknownWords>
     <DictionaryX>Wörterbuch: {0}</DictionaryX>
     <RightToLeft>Rechts nach links</RightToLeft>
     <ShowOnlyForcedSubtitles>Nur erzwungene Untertitel anzeigen</ShowOnlyForcedSubtitles>
