@@ -900,6 +900,7 @@
     <Compile Include="Logic\SubtitleFormats\Csv3.cs" />
     <Compile Include="Logic\SubtitleFormats\FilmEditXml.cs" />
     <Compile Include="Logic\SubtitleFormats\SwiftTextLineNoAndDur .cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle71.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle70.cs" />
     <Compile Include="Logic\SubtitleFormats\TimeXml2.cs" />
     <Compile Include="Logic\SubtitleFormats\OresmeDocXDocument.cs" />
