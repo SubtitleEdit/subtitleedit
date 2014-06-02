@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.15</Version>
-    <TranslatedBy>Translated by Trottel</TranslatedBy>
+    <TranslatedBy>Překlad do češtiny: Trottel</TranslatedBy>
     <CultureName>cs-CZ</CultureName>
     <HelpFile />
     <OK>&amp;OK</OK>
@@ -203,11 +203,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PleaseSelectAnEncoding>Vyberte kódování</PleaseSelectAnEncoding>
   </ChooseEncoding>
   <ChooseLanguage>
-    <Title>Vyberte jazyk</Title>
+    <Title>Vybrat jazyk</Title>
     <Language>Jazyk</Language>
   </ChooseLanguage>
   <ColorChooser>
-    <Title>Vyberte barvu</Title>
+    <Title>Vybrat barvu</Title>
     <Red>Červená</Red>
     <Green>Zelená</Green>
     <Blue>Modrá</Blue>
@@ -258,8 +258,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TopBottomMargin>Horní a dolní okraj</TopBottomMargin>
     <FadeUpTime>Čas rozetmění</FadeUpTime>
     <FadeDownTime>Čas setmění</FadeDownTime>
-    <ZPosition>Pozice Z</ZPosition>
-    <ZPositionHelp>Kladná čísla text oddalují, záporná čísla text přibližují, pokud je pozice Z nula, pak je to 2D</ZPositionHelp>
+    <ZPosition>Hodnota Z</ZPosition>
+    <ZPositionHelp>Kladná čísla posouvají text dál, záporná blíž, pokud je hodnota Z nula, pak je to 2D</ZPositionHelp>
     <ChooseColor>Vyberte barvu...</ChooseColor>
     <Generate>Generovat</Generate>
   </DCinemaProperties>
@@ -689,9 +689,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Plugins>Doplňky...</Plugins>
         <ImportOcrFromDvd>Importovat/OCR titulky z vob/ifo (DVD) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importovat/OCR titulky VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Importovat/OCR soubor Blu-ray .sup...</ImportBluRaySupFile>
+        <ImportBluRaySupFile>Importovat/OCR soubor titulků Blu-ray (.sup)...</ImportBluRaySupFile>
         <ImportXSub>Importovat/OCR xsub z divx/avi...</ImportXSub>
-        <ImportSubtitleFromMatroskaFile>Importovat titlky ze souboru Matroska...</ImportSubtitleFromMatroskaFile>
+        <ImportSubtitleFromMatroskaFile>Importovat titulky ze souboru Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importovat titulky s ručně vybraným kódováním...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importovat prostý text...</ImportText>
         <ImportImages>Importovat obrázky...</ImportImages>
@@ -1138,8 +1138,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <OcrReplacePairXAdded>Dvojice seznamu náhrad OCR '{0} -&gt; {1}' byla přidána do seznamu náhrad OCR</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>Dvojice seznamu náhrad OCR '{0} -&gt; {1}' NEBYLA přidána do seznamu náhrad OCR</OcrReplacePairXNotAdded>
     <XLinesSelected>Vybráno {0} řádků</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Titulky obsahují hudební znaky unicode. Uložením souboru s kódováním ANSI se ztratí. Pokračovat v ukládání?</UnicodeMusicSymbolsAnsiWarning>
-    <UnicodeCharactersAnsiWarning>Titulky obsahují znaky unicode. Uložením souboru s kódováním ANSI se ztratí. Pokračovat v ukládání?</UnicodeCharactersAnsiWarning>
+    <UnicodeMusicSymbolsAnsiWarning>Titulky obsahují znaky unicode. Uložením pomocí kódování souboru ANSI se ztratí. Pokračovat v ukládání?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeCharactersAnsiWarning>Titulky obsahují znaky unicode. Uložením pomocí kódování souboru ANSI se ztratí. Pokračovat v ukládání?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Titulky obsahují záporné časové kódy. Pokračovat v ukládání?</NegativeTimeWarning>
     <BeforeMergeShortLines>Před sloučením krátkých řádků</BeforeMergeShortLines>
     <BeforeSplitLongLines>Před rozdělením dlouhých řádků</BeforeSplitLongLines>
@@ -1324,7 +1324,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <NewVersionOfSubtitleEditRequired>Je vyžadována novější verze Subtitle Edit!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Je dostupná aktualizace!]</UpdateAvailable>
     <UpdateAll>Aktualizovat vše</UpdateAll>
-    <XPluginsUpdated>Aktualizováno doplňků: {0}</XPluginsUpdated>
+    <XPluginsUpdated>Aktualizováno {0} doplňků</XPluginsUpdated>
   </PluginsGet>
   <RegularExpressionContextMenu>
     <WordBoundary>Hranice slova (\b)</WordBoundary>
@@ -1430,7 +1430,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AutoWrapWhileTyping>Automaticky zalamovat během psaní</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. trvání, milisekundy</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. trvání, milisekundy</DurationMaximumMilliseconds>
-    <MinimumGapMilliseconds>Min. mezera mezy titulky v ms</MinimumGapMilliseconds>
+    <MinimumGapMilliseconds>Min. mezera mezi titulky v ms</MinimumGapMilliseconds>
     <SubtitleFont>Písmo titulků</SubtitleFont>
     <SubtitleFontSize>Velikost písma titulků</SubtitleFontSize>
     <SubtitleBold>Tučné</SubtitleBold>
@@ -1502,7 +1502,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <WaveformUseFFMPEG>Použít FFMPEG pro extrahování křivky</WaveformUseFFMPEG>
     <WaveformFFMPEGPath>Cesta k FFMPEG</WaveformFFMPEGPath>
     <WaveformBrowseToFFMPEG>Najít FFMPEG</WaveformBrowseToFFMPEG>
-    <WaveformBrowseToVLC>Hledat přenosné VLC</WaveformBrowseToVLC>
+    <WaveformBrowseToVLC>Najít přenosné VLC</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Styl (Advanced) Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Vyberte písmo</ChooseFont>
     <ChooseColor>Vyberte barvu</ChooseColor>
@@ -1628,7 +1628,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <MainTextBoxUnbreak>Zrušit zalomení textu</MainTextBoxUnbreak>
     <MainFileSaveAll>Uložit vše</MainFileSaveAll>
     <Miscellaneous>Různé</Miscellaneous>
-    <UseDoNotBreakAfterList>Používat seznam nezalamování po (pro auto-br)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Používat seznam nezalamování po (pro automatické zalamování)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>Zobrazit vybrané řádky dříve nebo později</Title>
