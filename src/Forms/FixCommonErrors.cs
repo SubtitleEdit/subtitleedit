@@ -717,7 +717,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
-                        //prev.EndTime.TotalMilliseconds--;
+//                        prev.EndTime.TotalMilliseconds--;
                     }
                     else if (prevOptimalDisplayTime <= (p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds))
                     {
@@ -2390,7 +2390,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (IsTurkishLittleI(firstLetter))
                                 p.Text = pre + GetTurkishUppercaseLetter(firstLetter) + text.Substring(1);
                             else if (Language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
-                                                          text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") ||
+                                                          text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") || 
                                                           text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc"))) // l > I
                                 p.Text = pre + "I" + text.Substring(1);
                             else
@@ -3467,7 +3467,7 @@ namespace Nikse.SubtitleEdit.Forms
                         text = text.Substring(4);
                     else
                         text = text.Substring(3);
-                } 
+                }
             } while (text.StartsWith("<i>") || text.StartsWith("-"));
 
             text = pre + openB + text;
@@ -3528,7 +3528,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var littleIRegex = new Regex(@"\bi\b", RegexOptions.Compiled);
 
-            IList<Regex> iList = new List<Regex>
+            var iList = new List<Regex>
                              { // not a complete list, more phrases will come
                                  MyRegEx(@", i ved nok\b"),
                                  MyRegEx(@", i ved, "),
@@ -4532,7 +4532,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_mainListViewGoToNextError == e.KeyData)
             {
-                GoToNextSynaxError();
+                 GoToNextSynaxError();
                 e.SuppressKeyPress = true;
             }
 
