@@ -917,5 +917,7 @@
     <RegEx find="([,.]\s(.{3,}))\1(?=[., ?!])" replaceWith="" />
     <!--  Espacios después del guión  -->
     <RegEx find="(^|\n)(-)([^\s])" replaceWith="$1$2 $3" />
+    <!--  Punto antes del guión  -->
+    <RegEx find="([^\.\?\!])\s-\s" replaceWith="$1. - " />
   </RegularExpressions>
 </ReplaceList>
