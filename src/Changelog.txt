@@ -4,11 +4,13 @@
 3.3.16 (xth June 2014)
 * NEW:
    * New shortcuts
-   * Export to image based formats can do do boxing
+   * Export to image based formats can now do boxing
    * Export to image based formats, added 2k resolutions - thx Joseph
 * IMPROVED:
    * Updated Spanish (Mexico) language file - thx pakitonaranjo
    * Updated French language file - thx JM GBT
+   * Updated Portuguese language file - thx moob
+   * Updated German language file - thx Siegwarth
    * Export to image based format now remembers most settings
    * Always close SAMI tags
    * Merge selected lines in original - better handling of empty line
