@@ -206,6 +206,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Vybrat jazyk</Title>
     <Language>Jazyk</Language>
   </ChooseLanguage>
+  <ColorChooser>
+    <Title>Vybrat barvu</Title>
+    <Red>Červená</Red>
+    <Green>Zelená</Green>
+    <Blue>Modrá</Blue>
+    <Alpha>Alfa</Alpha>
+  </ColorChooser>
   <ColumnPaste>
     <Title>Vložit sloupec</Title>
     <ChooseColumn>Vybrat sloupec</ChooseColumn>
@@ -249,8 +256,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffectColor>Barva efektu</FontEffectColor>
     <FontSize>Velikost</FontSize>
     <TopBottomMargin>Horní a dolní okraj</TopBottomMargin>
+    <FadeUpTime>Čas rozetmění</FadeUpTime>
+    <FadeDownTime>Čas setmění</FadeDownTime>
     <ZPosition>Hodnota Z</ZPosition>
-    <ZPositionHelp>Kladné hodnoty posouvají text pryč, záporné blíže, pokud je hodnota Z nula, pak je to 2D</ZPositionHelp>
+    <ZPositionHelp>Kladná čísla posouvají text dál, záporná blíž, pokud je hodnota Z nula, pak je to 2D</ZPositionHelp>
     <ChooseColor>Vyberte barvu...</ChooseColor>
     <Generate>Generovat</Generate>
   </DCinemaProperties>
@@ -363,11 +372,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Barva písma</FontColor>
     <BorderColor>Barva okraje</BorderColor>
     <BorderWidth>Šířka okraje</BorderWidth>
+    <BorderStyle>Styl okraje</BorderStyle>
+    <BorderStyleOneBox>Jedno pole</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Pole pro každý řádek</BorderStyleBoxForEachLine>
+    <BorderStyleNormalWidthX>Normální, šířka={0}</BorderStyleNormalWidthX>
     <ShadowColor>Barva stínu</ShadowColor>
     <ShadowWidth>Šířka stínu</ShadowWidth>
     <Transparency>Alfa</Transparency>
     <ImageFormat>Formát obrázku</ImageFormat>
-    <SimpleRendering>Jendoduché vykreslování</SimpleRendering>
+    <SimpleRendering>Jednoduché vykreslování</SimpleRendering>
     <AntiAliasingWithTransparency>Vyhlazování s průhledností</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
     <SideBySide3D>Poloviční vedle sebe</SideBySide3D>
@@ -380,7 +393,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Left>Vlevo</Left>
     <Right>Vpravo</Right>
     <Center>Na střed</Center>
-    <BottomMargin>Spodní okraj</BottomMargin>
+    <BottomMargin>Dolní okraj</BottomMargin>
     <SaveBluRraySupAs>Vyberte název souboru Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Vyberte název souboru VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Vyberte název souboru Blu-ray sup</SaveFabImageScriptAs>
@@ -388,6 +401,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SomeLinesWereTooLongX>Některé řádky byly příliš dlouhé:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Výška řádku</LineHeight>
+    <BoxSingleLine>Pole - jednořádkové</BoxSingleLine>
+    <BoxMultiLine>Pole - víceřádkové</BoxMultiLine>
   </ExportPngXml>
   <ExportText>
     <Title>Exportovat text</Title>
@@ -676,7 +691,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportOcrVobSubSubtitle>Importovat/OCR titulky VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importovat/OCR soubor titulků Blu-ray (.sup)...</ImportBluRaySupFile>
         <ImportXSub>Importovat/OCR xsub z divx/avi...</ImportXSub>
-        <ImportSubtitleFromMatroskaFile>Importovat titulky ze souboru Matroska (.mkv)...</ImportSubtitleFromMatroskaFile>
+        <ImportSubtitleFromMatroskaFile>Importovat titulky ze souboru Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importovat titulky s ručně vybraným kódováním...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importovat prostý text...</ImportText>
         <ImportImages>Importovat obrázky...</ImportImages>
@@ -763,9 +778,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Zavřít soubor videa</CloseVideo>
         <ImportSceneChanges>Importovat změny scén...</ImportSceneChanges>
         <RemoveSceneChanges>Odebrat změny scén</RemoveSceneChanges>
-        <ShowHideVideo>Zobrazit/skrýt video</ShowHideVideo>
-        <ShowHideWaveForm>Zobrazit/skrýt křivku</ShowHideWaveForm>
-        <ShowHideWaveformAndSpectrogram>Zobrazit/skrýt křivku a spektrogram</ShowHideWaveformAndSpectrogram>
+        <ShowHideVideo>Zobrazit nebo skrýt video</ShowHideVideo>
+        <ShowHideWaveForm>Zobrazit nebo skrýt křivku</ShowHideWaveForm>
+        <ShowHideWaveformAndSpectrogram>Zobrazit nebo skrýt křivku a spektrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Zrušit ukotvení ovládání videa</UnDockVideoControls>
         <ReDockVideoControls>Obnovit ukotvení ovládání videa</ReDockVideoControls>
       </Video>
@@ -821,8 +836,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Kontrola pravopisu</SpellCheck>
         <Settings>Nastavení</Settings>
         <Help>Nápověda</Help>
-        <ShowHideWaveForm>Zobrazit/skrýt křivku</ShowHideWaveForm>
-        <ShowHideVideo>Zobrazit/skrýt video</ShowHideVideo>
+        <ShowHideWaveForm>Zobrazit nebo skrýt křivku</ShowHideWaveForm>
+        <ShowHideVideo>Zobrazit nebo skrýt video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - nastavit styl</AdvancedSubStationAlphaSetStyle>
@@ -1123,8 +1138,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <OcrReplacePairXAdded>Dvojice seznamu náhrad OCR '{0} -&gt; {1}' byla přidána do seznamu náhrad OCR</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>Dvojice seznamu náhrad OCR '{0} -&gt; {1}' NEBYLA přidána do seznamu náhrad OCR</OcrReplacePairXNotAdded>
     <XLinesSelected>Vybráno {0} řádků</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Titulky obsahují znaky unicode. Uložením pomocí kódování ANSI se ztratí. Pokračovat v ukládání?</UnicodeMusicSymbolsAnsiWarning>
-    <UnicodeCharactersAnsiWarning>Titulky obsahují znaky unicode. Uložením pomocí kódování ANSI se ztratí. Pokračovat v ukládání?</UnicodeCharactersAnsiWarning>
+    <UnicodeMusicSymbolsAnsiWarning>Titulky obsahují znaky unicode. Uložením pomocí kódování souboru ANSI se ztratí. Pokračovat v ukládání?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeCharactersAnsiWarning>Titulky obsahují znaky unicode. Uložením pomocí kódování souboru ANSI se ztratí. Pokračovat v ukládání?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Titulky obsahují záporné časové kódy. Pokračovat v ukládání?</NegativeTimeWarning>
     <BeforeMergeShortLines>Před sloučením krátkých řádků</BeforeMergeShortLines>
     <BeforeSplitLongLines>Před rozdělením dlouhých řádků</BeforeSplitLongLines>
@@ -1311,6 +1326,19 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <UpdateAll>Aktualizovat vše</UpdateAll>
     <XPluginsUpdated>Aktualizováno {0} doplňků</XPluginsUpdated>
   </PluginsGet>
+  <RegularExpressionContextMenu>
+    <WordBoundary>Hranice slova (\b)</WordBoundary>
+    <NonWordBoundary>Kromě hranice slova (\B)</NonWordBoundary>
+    <NewLine>Nový řádek (\r\n)</NewLine>
+    <NewLineShort>Nový řádek (\n)</NewLineShort>
+    <AnyDigit>Jakékoliv číslo (\d)</AnyDigit>
+    <AnyCharacter>Jakýkoliv znak (.)</AnyCharacter>
+    <AnyWhitespace>Jakákoliv mezera (\s)</AnyWhitespace>
+    <ZeroOrMore>Žádný nebo více (*)</ZeroOrMore>
+    <OneOrMore>Jeden nebo více (+)</OneOrMore>
+    <InCharacterGroup>Ze skupiny znaků ([test])</InCharacterGroup>
+    <NotInCharacterGroup>Mimo skupinu znaků ([^test])</NotInCharacterGroup>
+  </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Odebrat text pro sluchově postižené</Title>
     <RemoveTextConditions>Podmínky odebrání textu</RemoveTextConditions>
@@ -1444,7 +1472,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll z VLC Media Player 1.1.0 nebo novějšího</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>Cesta k VLC (potřeba, pouze pokud používáte přenosnou verzi VLC)</VlcBrowseToLabel>
+    <VlcBrowseToLabel>Cesta k VLC (pouze pokud používáte přenosnou verzi VLC)</VlcBrowseToLabel>
     <ShowStopButton>Zobrazit tlačítko zastavení</ShowStopButton>
     <ShowMuteButton>Zobrazit tlačítko ztlumení</ShowMuteButton>
     <ShowFullscreenButton>Zobrazit tlačítko na celou obrazovku</ShowFullscreenButton>
@@ -1512,7 +1540,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <MergeLinesShorterThan>Zrušit zalomení titulků kratších než</MergeLinesShorterThan>
     <MusicSymbol>Hudební symbol</MusicSymbol>
     <MusicSymbolsToReplace>Hudební symboly, které nahradit (oddělené mezerou)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Opravit běžné chyby OCR (použít také pravidla kódování)</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonOcrErrorsUseHardcodedRules>Opravit běžné chyby OCR - použít také pravidla pevného kódování</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Opravit krátké časy zobrazení - povolit posun času začátku</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Klávesové zkratky</Shortcuts>
     <Shortcut>Klávesová zkratka</Shortcut>
@@ -1590,13 +1618,17 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ListViewColumnInsert>Sloupec, vložit text</ListViewColumnInsert>
     <ListViewColumnPaste>Sloupec, vložit</ListViewColumnPaste>
     <ListViewFocusWaveform>Zaměření křivky/spektrogramu</ListViewFocusWaveform>
+    <ListViewGoToNextError>Přejít na další chybu</ListViewGoToNextError>
     <ShowBeamer>Spustit beamer titulků na celou obrazovku</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Přesunout poslední slovo dolů do dalšího řádku titulku</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Přesunout první slovo z dalšího řádku titulku nahoru</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxSelectionToLower>Výběr na malá písmena</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>Výběr na velká písmena</MainTextBoxSelectionToUpper>
     <MainTextBoxAutoBreak>Automaticky zalomit text</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Zrušit zalomení textu</MainTextBoxUnbreak>
+    <MainFileSaveAll>Uložit vše</MainFileSaveAll>
     <Miscellaneous>Různé</Miscellaneous>
-    <UseDoNotBreakAfterList>Použít seznam nezalamování (pro automatické zalamování)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Používat seznam nezalamování po (pro automatické zalamování)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>Zobrazit vybrané řádky dříve nebo později</Title>
