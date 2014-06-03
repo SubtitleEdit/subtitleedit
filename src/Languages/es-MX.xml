@@ -249,6 +249,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffectColor>Color Efecto </FontEffectColor>
     <FontSize>Tamaño</FontSize>
     <TopBottomMargin>Margen Arriba/Abajo</TopBottomMargin>
+    <FadeUpTime>Atenuar tiempo de subida</FadeUpTime>
+    <FadeDownTime>Atenuar tiempo de bajada</FadeDownTime>
     <ZPosition>Posición-Z</ZPosition>
     <ZPositionHelp>Números positivos alejan el texto, números negativos acercan el texto, si la posición-z está en cero entonces es 2D</ZPositionHelp>
     <ChooseColor>Elige el color...</ChooseColor>
@@ -1311,6 +1313,19 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <UpdateAll>Actualizar todo</UpdateAll>
     <XPluginsUpdated>{0} plugin(s) actualizados</XPluginsUpdated>
   </PluginsGet>
+  <RegularExpressionContextMenu>
+    <WordBoundary>Límite de palabra (\b)</WordBoundary>
+    <NonWordBoundary>No es un límite de palabra (\B)</NonWordBoundary>
+    <NewLine>Nueva línea (\r\n)</NewLine>
+    <NewLineShort>Nueva línea (\n)</NewLineShort>
+    <AnyDigit>Cualquier dígito (\d)</AnyDigit>
+    <AnyCharacter>Cualquier carácter (.)</AnyCharacter>
+    <AnyWhitespace>Cualquier espacio en blanco (\s)</AnyWhitespace>
+    <ZeroOrMore>Cero o más (*)</ZeroOrMore>
+    <OneOrMore>Uno o más (+)</OneOrMore>
+    <InCharacterGroup>En el grupo de caracteres ([prueba])</InCharacterGroup>
+    <NotInCharacterGroup>No esté en el grupo de caracteres ([^prueba])</NotInCharacterGroup>
+  </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Eliminar texto para sordos</Title>
     <RemoveTextConditions>Eliminar las condiciones de texto</RemoveTextConditions>
@@ -1590,11 +1605,15 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <ListViewColumnInsert>Columna, insertar texto</ListViewColumnInsert>
     <ListViewColumnPaste>Columna, pegar</ListViewColumnPaste>
     <ListViewFocusWaveform>Enfoque forma de onda/espectrograma</ListViewFocusWaveform>
+    <ListViewGoToNextError>Ir al siguiente error</ListViewGoToNextError>
     <ShowBeamer>Inicio proyector de subtítulos en pantalla completa</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mover última palabra a la siguiente línea de subtítulos</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Mover primera palabra a la anterior línea de subtítulos</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxSelectionToLower>Selección de minúsculas</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>Selección de mayúsculas</MainTextBoxSelectionToUpper>
     <MainTextBoxAutoBreak>Salto de texto automático</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Deshacer salto de texto</MainTextBoxUnbreak>
+    <MainFileSaveAll>Guardar todo</MainFileSaveAll>
     <Miscellaneous>Otros</Miscellaneous>
     <UseDoNotBreakAfterList>Utilizar «no saltar después de la lista» (para salto automático)</UseDoNotBreakAfterList>
   </Settings>
