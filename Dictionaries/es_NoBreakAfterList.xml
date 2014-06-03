@@ -15,6 +15,8 @@
   <Item> del</Item>
   <Item> dentro</Item>
   <Item> donde</Item>
+  <Item> dónde</Item>
+  <Item> durante</Item>
   <Item> el</Item>
   <Item> en</Item>
   <Item> en este</Item>
@@ -22,6 +24,7 @@
   <Item> es</Item>
   <Item> esa</Item>
   <Item> esta</Item>
+  <Item> está</Item>
   <Item> este</Item>
   <Item> ha</Item>
   <Item> la</Item>
@@ -30,12 +33,14 @@
   <Item> luego</Item>
   <Item> me</Item>
   <Item> mi</Item>
+  <Item> mientras</Item>
   <Item> mucho</Item>
   <Item> muy</Item>
   <Item> ni</Item>
   <Item> no</Item>
   <Item> no </Item>
   <Item> no es</Item>
+  <Item> no hay</Item>
   <Item> no se</Item>
   <Item> nos</Item>
   <Item> nos lo</Item>
@@ -66,6 +71,7 @@
   <Item> tan</Item>
   <Item> tanto</Item>
   <Item> te</Item>
+  <Item> todavía no</Item>
   <Item> un</Item>
   <Item> una</Item>
   <Item> unas</Item>
@@ -77,13 +83,18 @@
   <Item> y nos</Item>
   <Item> ya</Item>
   <Item> ya que</Item>
-  <Item> mientras</Item>
-  <Item> durante</Item>
-  <Item> dónde</Item>
-  <Item> todavía no</Item>
-  <Item> no hay</Item>
-  <Item> está</Item>
-  <Item RegEx="True">(?=.{20,39}\.)\s[A-Z]([\wá-ú]{1,3})?</Item>
+  <Item> será</Item>
+  <Item> sea</Item>
+  <Item> las</Item>
+  <Item> hasta</Item>
+  <Item> vamos a</Item>
+  <Item> tu</Item>
+  <Item> en otro</Item>
+  <Item> igual</Item>
+  <Item> como un</Item>
+  <Item> no le</Item>
+  <Item> no la</Item>
+  <Item RegEx="True">(?=.{20,39}[\.\?\!])\s[A-Z]([\wá-ú]{1,3})?</Item>
   <Item RegEx="True">(?=.{20,40})\s[¿¡«][\wá-ú]{1,3}\s</Item>
   <Item RegEx="True">(?=«.{1,15}»)\s.{1,3}\s</Item>
   <Item RegEx="True">(?=señora?\s[A-ZÁ-Ú][a-zá-úñü]+)\s</Item>
