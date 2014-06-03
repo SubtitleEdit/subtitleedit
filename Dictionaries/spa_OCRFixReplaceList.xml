@@ -818,7 +818,7 @@
     <RegEx find="(\()\u0022" replaceWith="(«" />
     <!--  Numeración  -->
     <RegEx find="([0-9])\.([0-9])\b" replaceWith="$1,$2" />
-    <RegEx find="(^|\s)([0-9])(,|\.)?([0-9]{3})\b" replaceWith="$1$2$4" />
+    <RegEx find="(^|\s|[¡¿«])([0-9])(,|\.)?([0-9]{3})\b" replaceWith="$1$2$4" />
     <RegEx find="(\d)\s(?=\d{2}\b)" replaceWith="$1-" />
     <!-- "1 :", "2 :"... "n :" a "n:" -->
     <RegEx find="(\d) ([:;])" replaceWith="$1$2" />
@@ -915,5 +915,9 @@
     <RegEx find="([,.]\s.{2})\1(?=[., ?!])" replaceWith="$1" />
     <!--  Ej. «¡está aquí, está aquí, está aquí!» por «¡está aquí!»  -->
     <RegEx find="([,.]\s(.{3,}))\1(?=[., ?!])" replaceWith="" />
+    <!--  Espacios después del guión  -->
+    <RegEx find="(^|\n)(-)([^\s])" replaceWith="$1$2 $3" />
+    <!--  Punto antes del guión  -->
+    <RegEx find="([^\.\?\!])\s-\s" replaceWith="$1. - " />
   </RegularExpressions>
 </ReplaceList>
