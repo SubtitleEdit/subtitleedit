@@ -202,7 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
                     string text = string.Format("{1} {0} |", p.Text.Replace("|", _newlineString), _splitterString);
-                    if (HttpUtility.UrlEncode(sb.ToString() + text).Length >= textMaxSize)
+                    if (Utilities.UrlEncode(sb.ToString() + text).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index - 1);
                         sb = new StringBuilder();
@@ -313,7 +313,7 @@ namespace Nikse.SubtitleEdit.Forms
             // create the web request to the Google Translate REST interface
 
             //API V 1.0
-            string url = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + HttpUtility.UrlEncode(input) + "&langpair=" + languagePair + "&key=" + googleApiKey;
+            string url = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + Utilities.UrlEncode(input) + "&langpair=" + languagePair + "&key=" + googleApiKey;
 
             //API V 2.0 ?
             //string[] arr = languagePair.Split('|');
@@ -400,7 +400,7 @@ namespace Nikse.SubtitleEdit.Forms
             input = input.Replace("'", "&apos;");
 
             //string url = String.Format("http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}", HttpUtility.UrlEncode(input), languagePair);
-            string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), HttpUtility.UrlEncode(input));
+            string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
             var webClient = new WebClient();
             webClient.Proxy = Utilities.GetProxy();
             webClient.Encoding = encoding;
@@ -418,7 +418,7 @@ namespace Nikse.SubtitleEdit.Forms
                         startIndex++;
                         int endIndex = result.IndexOf("</span>", startIndex);
                         string translatedText = result.Substring(startIndex, endIndex - startIndex);
-                        string test = HttpUtility.HtmlDecode(translatedText);
+                        string test = Utilities.HtmlDecode(translatedText);
                         sb.Append(test);
                         startIndex = result.IndexOf("<span title=", startIndex);
                     }
@@ -831,7 +831,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = string.Format("{1}{0}|", p.Text, _splitterString);
                     if (!overQuota)
                     {
-                        if ((HttpUtility.UrlEncode(sb.ToString() + text)).Length >= textMaxSize)
+                        if ((Utilities.UrlEncode(sb.ToString() + text)).Length >= textMaxSize)
                         {
                             try
                             {
