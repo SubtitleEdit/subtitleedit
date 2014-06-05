@@ -2283,12 +2283,16 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 _subtitleFontName = Configuration.Settings.Tools.ExportBluRayFontName;
             else if (_exportType == "FCP" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportFcpFontName))
                 _subtitleFontName = Configuration.Settings.Tools.ExportFcpFontName;
+            else if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportFontNameOther))
+                _subtitleFontName = Configuration.Settings.Tools.ExportFontNameOther;
             if (_exportType == "VOBSUB" && Configuration.Settings.Tools.ExportVobSubFontSize > 0)
                 _subtitleFontSize = Configuration.Settings.Tools.ExportVobSubFontSize;
             else if ((_exportType == "BLURAYSUP" || _exportType == "DOST") && Configuration.Settings.Tools.ExportBluRayFontSize > 0)
                 _subtitleFontSize = Configuration.Settings.Tools.ExportBluRayFontSize;
             else if (_exportType == "FCP" && Configuration.Settings.Tools.ExportFcpFontSize > 0)
                 _subtitleFontSize = Configuration.Settings.Tools.ExportFcpFontSize;
+            else if (Configuration.Settings.Tools.ExportLastFontSize > 0)
+                _subtitleFontSize = Configuration.Settings.Tools.ExportLastFontSize;
 
             if (_exportType == "FCP")
             {
@@ -2328,7 +2332,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else
             {
-                comboBoxSubtitleFontSize.SelectedIndex = 16;
+                comboBoxSubtitleFontSize.SelectedIndex = 16;                
+                int i = 0;
+                foreach (string item in comboBoxSubtitleFontSize.Items)
+                {
+                    if (item == Convert.ToInt32(_subtitleFontSize).ToString(CultureInfo.InvariantCulture))
+                        comboBoxSubtitleFontSize.SelectedIndex = i;
+                    i++;
+                }
             }
 
             groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
@@ -2883,7 +2894,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportFcpFontSize = (int)_subtitleFontSize;
                 if (comboBoxImageFormat.SelectedItem != null)
                     Configuration.Settings.Tools.ExportFcpImageType = comboBoxImageFormat.SelectedItem.ToString();
-
             }
             Configuration.Settings.Tools.ExportLastShadowTransparency = (int)numericUpDownShadowTransparency.Value;
             Configuration.Settings.Tools.ExportLastFrameRate = FrameRate;
@@ -2902,6 +2912,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (comboBoxShadowWidth.Visible)
                 Configuration.Settings.Tools.ExportBluRayShadow = comboBoxShadowWidth.SelectedIndex;
 
+            Configuration.Settings.Tools.ExportFontNameOther = _subtitleFontName;
             Configuration.Settings.Tools.ExportLastFontSize = (int)_subtitleFontSize;
             Configuration.Settings.Tools.ExportLastLineHeight = (int)numericUpDownLineSpacing.Value;
             Configuration.Settings.Tools.ExportLastBorderWidth = comboBoxBorderWidth.SelectedIndex;
