@@ -125,6 +125,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string ExportBluRayFontName { get; set; }
         public int ExportBluRayFontSize { get; set; }
         public string ExportFcpFontName { get; set; }
+        public string ExportFontNameOther { get; set; }
         public int ExportFcpFontSize { get; set; }
         public string ExportFcpImageType { get; set; }
         public int ExportLastFontSize { get; set; }
@@ -1614,6 +1615,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportFcpFontName");
             if (subNode != null)
                 settings.Tools.ExportFcpFontName = subNode.InnerText;
+            subNode = node.SelectSingleNode("ExportFontNameOther");
+            if (subNode != null)
+                settings.Tools.ExportFontNameOther = subNode.InnerText;            
             subNode = node.SelectSingleNode("ExportFcpFontSize");
             if (subNode != null)
                 settings.Tools.ExportFcpFontSize = Convert.ToInt32(subNode.InnerText);
@@ -2725,6 +2729,7 @@ namespace Nikse.SubtitleEdit.Logic
                     textWriter.WriteElementString("ExportBluRayFontName", settings.Tools.ExportBluRayFontName);
                     textWriter.WriteElementString("ExportBluRayFontSize", settings.Tools.ExportBluRayFontSize.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteElementString("ExportFcpFontName", settings.Tools.ExportFcpFontName);
+                    textWriter.WriteElementString("ExportFontNameOther", settings.Tools.ExportFontNameOther);
                     textWriter.WriteElementString("ExportFcpFontSize", settings.Tools.ExportFcpFontSize.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteElementString("ExportFcpImageType", settings.Tools.ExportFcpImageType);
                     textWriter.WriteElementString("ExportLastFontSize", settings.Tools.ExportLastFontSize.ToString(CultureInfo.InvariantCulture));
