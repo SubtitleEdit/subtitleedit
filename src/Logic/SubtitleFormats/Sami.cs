@@ -234,8 +234,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             const string syncTag = "<sync start=";
+            const string syncTagEnc = "<sync encrypted=\"true\" start=";
             int syncStartPos = allInputLower.IndexOf(syncTag);
             int index = syncStartPos + syncTag.Length;
+        
+            int syncStartPosEnc = allInputLower.IndexOf(syncTagEnc);
+            if ((syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos) || syncStartPos == -1)
+            {
+                syncStartPos = syncStartPosEnc;
+                index = syncStartPosEnc + syncTagEnc.Length;
+            }
+
             var p = new Paragraph();
             while (syncStartPos >= 0)
             {
@@ -253,6 +262,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     index++;
 
                 int syncEndPos = allInputLower.IndexOf(syncTag, index);
+                int syncEndPosEnc = allInputLower.IndexOf(syncTagEnc, index);
+                if ((syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos) || syncEndPos == -1)
+                    syncEndPos = syncEndPosEnc;
+
                 string text;
                 if (syncEndPos >= 0)
                     text = allInput.Substring(index, syncEndPos - index);
@@ -308,7 +321,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text = text.Replace("  ", " ");
                 text = text.Replace("</BODY>", string.Empty).Replace("</SAMI>", string.Empty).TrimEnd();
 
-                if (text.IndexOf(">") > 0)
+                int endSyncPos = text.ToUpper().IndexOf("</SYNC>");
+                if (text.IndexOf(">") > 0 && (text.IndexOf(">") < endSyncPos || endSyncPos == -1))
                     text = text.Remove(0, text.IndexOf(">")+1);
                 text = text.TrimEnd();
 
@@ -396,6 +410,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     syncStartPos = allInputLower.IndexOf(syncTag, syncEndPos);
                     index = syncStartPos + syncTag.Length;
+
+                    syncStartPosEnc = allInputLower.IndexOf(syncTagEnc, syncEndPos);
+                    if ((syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos) || syncStartPos == -1)
+                    {
+                        syncStartPos = syncStartPosEnc;
+                        index = syncStartPosEnc + syncTagEnc.Length;
+                    }
                 }
             }
             if (p != null && !string.IsNullOrEmpty(p.Text) && subtitle.Paragraphs.IndexOf(p) == -1)
