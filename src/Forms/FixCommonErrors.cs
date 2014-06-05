@@ -1037,6 +1037,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (Utilities.RemoveHtmlTags(line).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                     {
                         tooLong = true;
+                        break;
                     }
                 }
                 if (tooLong)
@@ -3441,36 +3442,76 @@ namespace Nikse.SubtitleEdit.Forms
                 LogStatus(_language.FixEllipsesStart, string.Format(_language.XFixEllipsesStart, fixCount));
         }
 
+        private string FixMissingOpenBracket(string text, string openB)
+        {
+            string pre = string.Empty;
+            string closeB = openB == "(" ? ")" : "]";
+
+            if (text.Contains(" " + closeB))
+                openB = openB + " ";
+
+            do
+            {
+                if (text.Length > 1 && text.StartsWith("-"))
+                {
+                    pre += "- ";
+                    if (text.Substring(1, 1) == " ")
+                        text = text.Substring(2);
+                    else
+                        text = text.Substring(1);
+                }
+                if (text.Length > 3 && text.StartsWith("<i>"))
+                {
+                    pre = "<i>";
+                    if (text.Substring(3, 1) == " ")
+                        text = text.Substring(4);
+                    else
+                        text = text.Substring(3);
+                }
+            } while (text.StartsWith("<i>") || text.StartsWith("-"));
+
+            text = pre + openB + text;
+            return text;
+        }
+
         public void FixMissingOpenBracket()
         {
             string fixAction = _language.FixMissingOpenBracket;
-            int fixCount = 0;
+            int fixCount = 0, openIdx, closeIdx;
+            bool hit = false;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
 
-                if (p.Text.Contains("]") && !p.Text.Contains("["))
+                if (AllowFix(p, fixAction))
                 {
-                    if (AllowFix(p, fixAction))
+                    hit = false;
+                    string oldText = p.Text;
+                    openIdx = p.Text.IndexOf('(');
+                    closeIdx = p.Text.IndexOf(')');
+                    if ((closeIdx > -1 && closeIdx < openIdx) || (closeIdx > -1 && openIdx == -1))
                     {
-                        string oldText = p.Text;
-                        string pre = "";
-                        string oBkt = "[";
-                        if (p.Text.Contains(" ]"))
-                            oBkt = "[ ";
+                        p.Text = FixMissingOpenBracket(p.Text, "(");
+                        hit = true;
+                    }
 
-                        if (p.Text.Length > 3 && p.Text.StartsWith("<i>"))
-                        {
-                            pre = "<i>";
-                            p.Text = p.Text.Substring(3);
-                        }
-                        p.Text = pre + oBkt + p.Text;
+                    openIdx = p.Text.IndexOf('[');
+                    closeIdx = p.Text.IndexOf(']');
+                    if ((closeIdx > -1 && closeIdx < openIdx) || (closeIdx > -1 && openIdx == -1))
+                    {
+                        p.Text = FixMissingOpenBracket(p.Text, "[");
+                        hit = true;
+                    }
+
+                    if (hit)
+                    {
                         fixCount++;
                         _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
             }
+
             if (fixCount > 0)
                 LogStatus(_language.FixMissingOpenBracket, string.Format(_language.XFixMissingOpenBracket, fixCount));
         }
