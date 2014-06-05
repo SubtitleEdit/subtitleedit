@@ -103,7 +103,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string LastShowEarlierOrLaterSelection { get; set; }
         public string NewEmptyTranslationText { get; set; }
         public string BatchConvertOutputFolder { get; set; }
-        public bool BatchConvertOverwrite { get; set; }
+        public bool BatchConvertOverwriteExisting { get; set; }
+        public bool BatchConvertOverwriteOriginal { get; set; }
         public bool BatchConvertRemoveFormatting { get; set; }
         public bool BatchConvertFixCasing { get; set; }
         public bool BatchConvertRemoveTextForHI { get; set; }
@@ -1549,10 +1550,13 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("BatchConvertOutputFolder");
             if (subNode != null)
                 settings.Tools.BatchConvertOutputFolder = subNode.InnerText;
-            subNode = node.SelectSingleNode("BatchConvertOverwrite");
+            subNode = node.SelectSingleNode("BatchConvertOverwriteExisting");
             if (subNode != null)
-                settings.Tools.BatchConvertOverwrite = Convert.ToBoolean(subNode.InnerText);
-            subNode = node.SelectSingleNode("BatchConvertRemoveFormatting");
+                settings.Tools.BatchConvertOverwriteExisting = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("BatchConvertOverwriteExisting");
+            if (subNode != null)
+                settings.Tools.BatchConvertOverwriteOriginal = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("BatchConvertOverwriteOriginal");
             if (subNode != null)
                 settings.Tools.BatchConvertRemoveFormatting = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("BatchConvertFixCasing");
@@ -2707,7 +2711,8 @@ namespace Nikse.SubtitleEdit.Logic
                     textWriter.WriteElementString("SplitVia", settings.Tools.SplitVia);
                     textWriter.WriteElementString("NewEmptyTranslationText", settings.Tools.NewEmptyTranslationText);
                     textWriter.WriteElementString("BatchConvertOutputFolder", settings.Tools.BatchConvertOutputFolder);
-                    textWriter.WriteElementString("BatchConvertOverwrite", settings.Tools.BatchConvertOverwrite.ToString());
+                    textWriter.WriteElementString("BatchConvertOverwriteExisting", settings.Tools.BatchConvertOverwriteExisting.ToString());
+                    textWriter.WriteElementString("BatchConvertOverwriteOriginal", settings.Tools.BatchConvertOverwriteOriginal.ToString());
                     textWriter.WriteElementString("BatchConvertRemoveFormatting", settings.Tools.BatchConvertRemoveFormatting.ToString());
                     textWriter.WriteElementString("BatchConvertFixCasing", settings.Tools.BatchConvertFixCasing.ToString());
                     textWriter.WriteElementString("BatchConvertRemoveTextForHI", settings.Tools.BatchConvertRemoveTextForHI.ToString());
