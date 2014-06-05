@@ -163,7 +163,8 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxOutputFolder.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             else
                 textBoxOutputFolder.Text = Configuration.Settings.Tools.BatchConvertOutputFolder;
-            checkBoxOverwrite.Checked = Configuration.Settings.Tools.BatchConvertOverwrite;
+            checkBoxOverwrite.Checked = Configuration.Settings.Tools.BatchConvertOverwriteExisting;
+            checkBoxOverwriteOriginalFiles.Checked = Configuration.Settings.Tools.BatchConvertOverwriteOriginal;
             checkBoxFixCasing.Checked = Configuration.Settings.Tools.BatchConvertFixCasing;
             checkBoxFixCommonErrors.Checked = Configuration.Settings.Tools.BatchConvertFixCommonErrors;
             checkBoxMultipleReplace.Checked = Configuration.Settings.Tools.BatchConvertMultipleReplace;
@@ -444,8 +445,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            Configuration.Settings.Tools.BatchConvertOutputFolder = textBoxOutputFolder.Text;
-            Configuration.Settings.Tools.BatchConvertOverwrite = checkBoxOverwrite.Checked;
             DialogResult = DialogResult.Cancel;
         }
 
@@ -1099,6 +1098,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertRemoveTextForHI = checkBoxRemoveTextForHI.Checked;
             Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles = checkBoxSetMinimumDisplayTimeBetweenSubs.Checked;
             Configuration.Settings.Tools.BatchConvertOutputFolder = textBoxOutputFolder.Text;
+            Configuration.Settings.Tools.BatchConvertOverwriteExisting = checkBoxOverwrite.Checked;
+            Configuration.Settings.Tools.BatchConvertOverwriteOriginal = checkBoxOverwriteOriginalFiles.Checked;
         }
 
         private void buttonMultipleReplaceSettings_Click(object sender, EventArgs e)
