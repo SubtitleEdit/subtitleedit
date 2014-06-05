@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
 
         // Locations for the two "pointers" on the form.
 
-        private int brightness;
+        private int brightness = byte.MaxValue;
         private Point brightnessPoint;
         private Point centerPoint;
         private Bitmap colorImage;
@@ -220,132 +220,150 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
 
         public void Draw(Graphics g, Point mousePoint)
         {
-            // You've moved the mouse. 
-            // Now update the screen to match.
-
-            // Keep track of the previous color pointer point, 
-            // so you can put the mouse there in case the 
-            // user has clicked outside the circle.
-            Point newColorPoint = colorPoint;
-            Point newBrightnessPoint = brightnessPoint;
-
-            // Store this away for later use.
-            this.g = g;
-
-            if (currentState == MouseState.MouseUp)
+            try
             {
-                if (! mousePoint.IsEmpty)
+
+                // You've moved the mouse. 
+                // Now update the screen to match.
+
+                // Keep track of the previous color pointer point, 
+                // so you can put the mouse there in case the 
+                // user has clicked outside the circle.
+                Point newColorPoint = colorPoint;
+                Point newBrightnessPoint = brightnessPoint;
+
+                // Store this away for later use.
+                this.g = g;
+
+                if (currentState == MouseState.MouseUp)
                 {
-                    if (colorRegion.IsVisible(mousePoint))
+                    if (!mousePoint.IsEmpty)
                     {
-                        // Is the mouse point within the color circle?
-                        // If so, you just clicked on the color wheel.
-                        currentState = MouseState.ClickOnColor;
-                    }
-                    else if (brightnessRegion.IsVisible(mousePoint))
-                    {
-                        // Is the mouse point within the brightness area?
-                        // You clicked on the brightness area.
-                        currentState = MouseState.ClickOnBrightness;
-                    }
-                    else
-                    {
-                        // Clicked outside the color and the brightness
-                        // regions. In that case, just put the 
-                        // pointers back where they were.
-                        currentState = MouseState.ClickOutsideRegion;
-                    }
-                }
-            }
-
-            switch (currentState)
-            {
-                case MouseState.ClickOnBrightness:
-                case MouseState.DragInBrightness:
-                    // Calculate new color information
-                    // based on the brightness, which may have changed.
-                    Point newPoint = mousePoint;
-                    if (newPoint.Y < brightnessMin)
-                    {
-                        newPoint.Y = brightnessMin;
-                    }
-                    else if (newPoint.Y > brightnessMax)
-                    {
-                        newPoint.Y = brightnessMax;
-                    }
-                    newBrightnessPoint = new Point(brightnessX, newPoint.Y);
-                    brightness = (int) ((brightnessMax - newPoint.Y)*brightnessScaling);
-                    HSV.Value = brightness;
-                    argb = ColorHandler.HSVtoRGB(HSV);
-                    break;
-
-                case MouseState.ClickOnColor:
-                case MouseState.DragInColor:
-                    // Calculate new color information
-                    // based on selected color, which may have changed.
-                    newColorPoint = mousePoint;
-
-                    // Calculate x and y distance from the center,
-                    // and then calculate the angle corresponding to the
-                    // new location.
-                    Point delta = new Point(
-                        mousePoint.X - centerPoint.X, mousePoint.Y - centerPoint.Y);
-                    int degrees = CalcDegrees(delta);
-
-                    // Calculate distance from the center to the new point 
-                    // as a fraction of the radius. Use your old friend, 
-                    // the Pythagorean theorem, to calculate this value.
-                    double distance = Math.Sqrt(delta.X*delta.X + delta.Y*delta.Y)/radius;
-
-                    if (currentState == MouseState.DragInColor)
-                    {
-                        if (distance > 1)
+                        if (colorRegion.IsVisible(mousePoint))
                         {
-                            // Mouse is down, and outside the circle, but you 
-                            // were previously dragging in the color circle. 
-                            // What to do?
-                            // In that case, move the point to the edge of the 
-                            // circle at the correct angle.
-                            distance = 1;
-                            newColorPoint = GetPoint(degrees, radius, centerPoint);
+                            // Is the mouse point within the color circle?
+                            // If so, you just clicked on the color wheel.
+                            currentState = MouseState.ClickOnColor;
+                        }
+                        else if (brightnessRegion.IsVisible(mousePoint))
+                        {
+                            // Is the mouse point within the brightness area?
+                            // You clicked on the brightness area.
+                            currentState = MouseState.ClickOnBrightness;
+                        }
+                        else
+                        {
+                            // Clicked outside the color and the brightness
+                            // regions. In that case, just put the 
+                            // pointers back where they were.
+                            currentState = MouseState.ClickOutsideRegion;
                         }
                     }
+                }
 
-                    // Calculate the new HSV and RGB values.
-                    HSV.Hue = (degrees*255/360);
-                    HSV.Saturation = (int) (distance*255);
-                    HSV.Value = brightness;
-                    argb = ColorHandler.HSVtoRGB(HSV);
-                    fullColor = ColorHandler.HSVtoColor(HSV.Alpha, HSV.Hue, HSV.Saturation, 255);
-                    break;
+                switch (currentState)
+                {
+                    case MouseState.ClickOnBrightness:
+                    case MouseState.DragInBrightness:
+                        // Calculate new color information
+                        // based on the brightness, which may have changed.
+                        Point newPoint = mousePoint;
+                        if (newPoint.Y < brightnessMin)
+                        {
+                            newPoint.Y = brightnessMin;
+                        }
+                        else if (newPoint.Y > brightnessMax)
+                        {
+                            newPoint.Y = brightnessMax;
+                        }
+                        newBrightnessPoint = new Point(brightnessX, newPoint.Y);
+                        brightness = (int)((brightnessMax - newPoint.Y) * brightnessScaling);
+                        HSV.Value = brightness;
+                        brightness = byte.MaxValue;
+                        argb = ColorHandler.HSVtoRGB(HSV);
+                        brightness = (argb.Red + argb.Green + argb.Blue) / 3;
+                        break;
+
+                    case MouseState.ClickOnColor:
+                    case MouseState.DragInColor:
+                        // Calculate new color information
+                        // based on selected color, which may have changed.
+                        newColorPoint = mousePoint;
+
+                        // Calculate x and y distance from the center,
+                        // and then calculate the angle corresponding to the
+                        // new location.
+                        Point delta = new Point(
+                            mousePoint.X - centerPoint.X, mousePoint.Y - centerPoint.Y);
+                        int degrees = CalcDegrees(delta);
+
+                        // Calculate distance from the center to the new point 
+                        // as a fraction of the radius. Use your old friend, 
+                        // the Pythagorean theorem, to calculate this value.
+                        double distance = Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y) / radius;
+
+                        if (currentState == MouseState.DragInColor)
+                        {
+                            if (distance > 1)
+                            {
+                                // Mouse is down, and outside the circle, but you 
+                                // were previously dragging in the color circle. 
+                                // What to do?
+                                // In that case, move the point to the edge of the 
+                                // circle at the correct angle.
+                                distance = 1;
+                                newColorPoint = GetPoint(degrees, radius, centerPoint);
+                            }
+                        }
+
+                        // Calculate the new HSV and RGB values.
+                        HSV.Hue = (degrees * 255 / 360);
+                        HSV.Saturation = (int)(distance * 255);
+                        brightness = byte.MaxValue;
+                        HSV.Value = brightness;                       
+                        argb = ColorHandler.HSVtoRGB(HSV);
+                        if (argb.Red < 0 || argb.Red > byte.MaxValue || argb.Green < 0 || argb.Green > byte.MaxValue || argb.Blue < 0 || argb.Blue > byte.MaxValue)
+                        {
+                            UpdateDisplay();
+                            return;
+                        }                            
+                        brightness = (argb.Red + argb.Green + argb.Blue) / 3;
+                        fullColor = ColorHandler.HSVtoColor(HSV.Alpha, HSV.Hue, HSV.Saturation, 255);
+                        break;
+                }
+                selectedColor = ColorHandler.HSVtoColor(HSV);
+
+                // Raise an event back to the parent form,
+                // so the form can update any UI it's using 
+                // to display selected color values.
+                OnColorChanged(argb, HSV);
+
+                // On the way out, set the new state.
+                switch (currentState)
+                {
+                    case MouseState.ClickOnBrightness:
+                        currentState = MouseState.DragInBrightness;
+                        break;
+                    case MouseState.ClickOnColor:
+                        currentState = MouseState.DragInColor;
+                        break;
+                    case MouseState.ClickOutsideRegion:
+                        currentState = MouseState.DragOutsideRegion;
+                        break;
+                }
+
+                // Store away the current points for next time.
+                colorPoint = newColorPoint;
+                brightnessPoint = newBrightnessPoint;
+
+                // Draw the gradients and points. 
+                UpdateDisplay();
+
             }
-            selectedColor = ColorHandler.HSVtoColor(HSV);
-
-            // Raise an event back to the parent form,
-            // so the form can update any UI it's using 
-            // to display selected color values.
-            OnColorChanged(argb, HSV);
-
-            // On the way out, set the new state.
-            switch (currentState)
+            catch (Exception e)
             {
-                case MouseState.ClickOnBrightness:
-                    currentState = MouseState.DragInBrightness;
-                    break;
-                case MouseState.ClickOnColor:
-                    currentState = MouseState.DragInColor;
-                    break;
-                case MouseState.ClickOutsideRegion:
-                    currentState = MouseState.DragOutsideRegion;
-                    break;
+                System.Windows.Forms.MessageBox.Show(e.Message);
             }
-
-            // Store away the current points for next time.
-            colorPoint = newColorPoint;
-            brightnessPoint = newBrightnessPoint;
-
-            // Draw the gradients and points. 
-            UpdateDisplay();
         }
 
         private Point CalcBrightnessPoint(int brightness)
