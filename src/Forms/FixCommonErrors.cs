@@ -3476,6 +3476,8 @@ namespace Nikse.SubtitleEdit.Forms
                         pre += ".";
                         text = text.Substring(1);
                     }
+                    if (text.Length > 0 && text[0] == ' ')
+                        pre += " ";
                     text = text.TrimStart(' ');
                 }
             } while (text.StartsWith("<i>") || text.StartsWith("-"));
