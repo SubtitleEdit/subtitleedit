@@ -1,8 +1,9 @@
 ﻿Subtitle Edit Changelog
 
 
-3.3.16 (xth June 2014)
+3.4 (xth June 2014)
 * NEW:
+   * Switched to .NET Framework 4.0 (from .NET Framework 2.0)
    * New shortcuts
    * Export to image based formats can now do boxing
    * Export to image based formats, added 2k resolutions - thx Joseph
