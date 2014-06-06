@@ -2035,6 +2035,12 @@
     <LinePart from="WIN D HOWLING" to="WIND HOWLING" />
     <LinePart from="telis me" to="tells me" />
     <LinePart from="Telis me" to="Tells me" />
+    <LinePart from=". Ls " to=". Is " />
+    <LinePart from="! Ls " to="! Is " />
+    <LinePart from="? Ls " to="? Is " />
+    <LinePart from=". Lt " to=". It " />
+    <LinePart from="! Lt " to="! It " />
+    <LinePart from="? Lt " to="? It " />
   </PartialLines>
   <PartialLinesAlways>
     <LinePart from="forbest act" to="for best act" />
@@ -2122,6 +2128,9 @@
     <Beginning from="&lt;i&gt;NARRA TOR" to="&lt;i&gt;NARRATOR" />
     <Beginning from="lt'syour" to="It's your" />
     <Beginning from="It'syour" to="It's your" />
+    <Beginning from="Lt " to="It " />
+    <Beginning from="Ls " to="Is " />
+    <Beginning from="Lt's " to="It's " />
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
