@@ -71,10 +71,6 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>DLLs\Interop.QuartzTypeLib.dll</HintPath>
     </Reference>
-    <Reference Include="NHunspell, Version=0.9.6.0, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>DLLs\NHunspell.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -778,6 +774,16 @@
     <Compile Include="Logic\Forms\RemoveTextForHI.cs" />
     <Compile Include="Logic\Forms\SplitLongLinesHelper.cs" />
     <Compile Include="Logic\MurMurHash3.cs" />
+    <Compile Include="Logic\NHunspell\Hunspell.cs" />
+    <Compile Include="Logic\NHunspell\Hyphen.cs" />
+    <Compile Include="Logic\NHunspell\HyphenResult.cs" />
+    <Compile Include="Logic\NHunspell\LanguageConfig.cs" />
+    <Compile Include="Logic\NHunspell\Marshalling.cs" />
+    <Compile Include="Logic\NHunspell\MyThes.cs" />
+    <Compile Include="Logic\NHunspell\SpellEngine.cs" />
+    <Compile Include="Logic\NHunspell\SpellFactory.cs" />
+    <Compile Include="Logic\NHunspell\ThesMeaning.cs" />
+    <Compile Include="Logic\NHunspell\ThesResult.cs" />
     <Compile Include="Logic\NikseBitmapImageSplitter.cs" />
     <Compile Include="Logic\DetectEncoding\EncodingTools.cs" />
     <Compile Include="Logic\DetectEncoding\Multilang\CMLangConvertCharset.cs" />
@@ -1694,7 +1700,6 @@
     <None Include="Resources\pictureBoxNoFS.Image.png" />
     <None Include="Web References\SeNetworkService\SeService.disco" />
     <None Include="DLLs\Interop.QuartzTypeLib.dll" />
-    <None Include="DLLs\NHunspell.dll" />
     <Content Include="Changelog.txt" />
     <Content Include="..\gpl.txt" />
     <None Include="Dlls\Hunspellx64.dll" />
@@ -1784,6 +1789,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Logic\NHunspell\Licence.txt" />
     <Content Include="Resources\TesseractDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>
