@@ -831,7 +831,7 @@
     <!--  Puntos innecesarios (complemento)  -->
     <RegEx find="([\w\W]\.{3})([¡¿])" replaceWith="$1 $2" />
     <RegEx find="(\w)\.\.(\s)" replaceWith="$1.$2" />
-    <RegEx find="(\w)\.([\?\!])" replaceWith="$1$2" />
+    <RegEx find="[\wá-ú\x22»]\.([\?\!])" replaceWith="$1$2" />
     <RegEx find="([\:\;])\." replaceWith="$1" />
     <RegEx find="\.([\:\;])" replaceWith="$1" />
     <RegEx find="\:+" replaceWith=":" />
@@ -918,6 +918,6 @@
     <!--  Espacios después del guión  -->
     <RegEx find="(^|\n)(-)([^\s])" replaceWith="$1$2 $3" />
     <!--  Punto antes del guión  -->
-    <RegEx find="([^\.\?\!])\s-\s" replaceWith="$1. - " />
+    <RegEx find="([^\.\?\!]) - " replaceWith="$1. - " />
   </RegularExpressions>
 </ReplaceList>
