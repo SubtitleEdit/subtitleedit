@@ -11,10 +11,11 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private Subtitle _subtitle;
         private Subtitle _mergedSubtitle;
-        private bool loading = true;
+        private bool _loading = true;
         private Timer previewTimer = new Timer();
         public int NumberOfMerges { get; private set; }
         private string _language;
+        private Dictionary<int, bool> _isFixAllowedList = new Dictionary<int, bool>();
 
         private void FixLargeFonts()
         {
@@ -51,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoBreakOn.Text = Configuration.Settings.Language.MergeTextWithSameTimeCodes.ReBreakLines;
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
-            listViewFixes.Columns[2].Text = Configuration.Settings.Language.MergedShortLines.MergedText;
+            listViewFixes.Columns[2].Text = Configuration.Settings.Language.MergeTextWithSameTimeCodes.MergedText;
 
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -82,6 +83,11 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add(subItem);
 
             listViewFixes.Items.Add(item);
+
+            foreach (string number in lineNumbers.TrimEnd(',').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            {
+                _isFixAllowedList.Add(Convert.ToInt32(number), true);
+            }            
         }
 
         private void GeneratePreview()
@@ -104,31 +110,32 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetBackgroundColor(index, Color.Green);
             }
             SubtitleListview1.EndUpdate();
-            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergedShortLines.NumberOfMergesX, NumberOfMerges);
+            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergeTextWithSameTimeCodes.NumberOfMergesX, NumberOfMerges);
         }
 
         private bool IsFixAllowed(Paragraph p)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                string numbers = item.SubItems[1].Text;
-                foreach (string number in numbers.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
-                {
-                    if (number == p.Number.ToString())
-                        return item.Checked;
-                }
-            }
+            if (_isFixAllowedList.ContainsKey(p.Number))
+                return _isFixAllowedList[p.Number];
             return true;
         }
 
         private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            if (loading)
+            if (_loading)
                 return;
+
+            foreach (string number in e.Item.SubItems[1].Text.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            {
+                int no = Convert.ToInt32(number);
+                if (_isFixAllowedList.ContainsKey(no))
+                    _isFixAllowedList[no] = e.Item.Checked;
+            }    
 
             var mergedIndexes = new List<int>();
 
             NumberOfMerges = 0;
+            Cursor = Cursors.WaitCursor;
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
             int count;
@@ -140,17 +147,21 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetBackgroundColor(index, Color.Green);
             }
             SubtitleListview1.EndUpdate();
-            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergedShortLines.NumberOfMergesX, NumberOfMerges);
+            Cursor = Cursors.Default;
+            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergeTextWithSameTimeCodes.NumberOfMergesX, NumberOfMerges);
         }
 
         public Subtitle MergeLinesWithSameTimeCodes(Subtitle subtitle, List<int> mergedIndexes, out int numberOfMerges, bool clearFixes, bool reBreak, bool lineAfterNext, int maxMsBetween)
         {
             listViewFixes.BeginUpdate();
             List<int> removed = new List<int>();
-            if (!loading)
+            if (!_loading)
                 listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
             if (clearFixes)
+            {
                 listViewFixes.Items.Clear();
+                _isFixAllowedList = new Dictionary<int, bool>();
+            }
             numberOfMerges = 0;
             var mergedSubtitle = new Subtitle();
             bool lastMerged = false;
@@ -214,7 +225,7 @@ namespace Nikse.SubtitleEdit.Forms
                 mergedSubtitle.Paragraphs.Add(new Paragraph(subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1)));
 
             listViewFixes.EndUpdate();
-            if (!loading)
+            if (!_loading)
                 listViewFixes.ItemChecked += listViewFixes_ItemChecked;
 
             mergedSubtitle.Renumber(1);
@@ -257,7 +268,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Focus();
             if (listViewFixes.Items.Count > 0)
                 listViewFixes.Items[0].Selected = true;
-            loading = false;
+            _loading = false;
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
         }
 
