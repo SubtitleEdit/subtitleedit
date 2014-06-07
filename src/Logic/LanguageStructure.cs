@@ -1084,6 +1084,7 @@
                     public string ChangeSpeedInPercent { get; set; }
                     public string MergeShortLines { get; set; }
                     public string MergeDuplicateText { get; set; }
+                    public string MergeSameTimeCodes { get; set; }
                     public string SplitLongLines { get; set; }
                     public string MinimumDisplayTimeBetweenParagraphs { get; set; }
                     public string SortBy { get; set; }
@@ -1374,6 +1375,15 @@
             public string NumberOfMergesX { get; set; }
             public string MergedText { get; set; }
             public string OnlyMergeContinuationLines { get; set; }
+        }
+
+        public class MergeTextWithSameTimeCodes
+        {
+            public string Title { get; set; }
+            public string MaxDifferenceMilliseconds { get; set; }
+            public string ReBreakLines { get; set; }
+            public string NumberOfMergesX { get; set; }
+            public string MergedText { get; set; }
         }
 
         public class ModifySelection

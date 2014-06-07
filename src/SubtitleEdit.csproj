@@ -284,6 +284,12 @@
     <Compile Include="Forms\MeasurementConverter.Designer.cs">
       <DependentUpon>MeasurementConverter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\MergeTextWithSameTimeCodes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MergeTextWithSameTimeCodes.Designer.cs">
+      <DependentUpon>MergeTextWithSameTimeCodes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\NuendoProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1271,6 +1277,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MeasurementConverter.resx">
       <DependentUpon>MeasurementConverter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MergeTextWithSameTimeCodes.resx">
+      <DependentUpon>MergeTextWithSameTimeCodes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NuendoProperties.resx">
       <DependentUpon>NuendoProperties.cs</DependentUpon>

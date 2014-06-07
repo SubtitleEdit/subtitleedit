@@ -1579,6 +1579,9 @@ namespace Nikse.SubtitleEdit.Forms
             changeSpeedInPercentToolStripMenuItem.Text = _language.Menu.Tools.ChangeSpeedInPercent;
             toolStripMenuItemAutoMergeShortLines.Text = _language.Menu.Tools.MergeShortLines;
             toolStripMenuItemMergeDuplicateText.Text = _language.Menu.Tools.MergeDuplicateText;
+            toolStripMenuItemMergeLinesWithSameTimeCodes.Text = _language.Menu.Tools.MergeSameTimeCodes;
+            if (string.IsNullOrEmpty(_language.Menu.Tools.MergeSameTimeCodes))
+                toolStripMenuItemMergeLinesWithSameTimeCodes.Visible = false;
             toolStripMenuItemMergeDuplicateText.Visible = !string.IsNullOrEmpty(_language.Menu.Tools.MergeDuplicateText);
             toolStripMenuItemAutoSplitLongLines.Text = _language.Menu.Tools.SplitLongLines;
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
@@ -18844,6 +18847,38 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ReloadFromSourceView();
                 var form = new MergeDoubleLines();
+                _formPositionsAndSizes.SetPositionAndSize(form);
+                form.Initialize(_subtitle);
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (!string.IsNullOrEmpty(_language.BeforeMergeLinesWithSameText)) //TODO: Remove in SE 3.3.4
+                        MakeHistoryForUndo(_language.BeforeMergeLinesWithSameText);
+                    else
+                        MakeHistoryForUndo(_language.BeforeMergeShortLines);
+                    _subtitle.Paragraphs.Clear();
+                    foreach (Paragraph p in form.MergedSubtitle.Paragraphs)
+                        _subtitle.Paragraphs.Add(p);
+                    ShowStatus(string.Format(_language.MergedShortLinesX, form.NumberOfMerges));
+                    SaveSubtitleListviewIndexes();
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    RestoreSubtitleListviewIndexes();
+                }
+                _formPositionsAndSizes.SavePositionAndSize(form);
+            }
+            else
+            {
+                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+
+        private void toolStripMenuItemMergeLinesWithSameTimeCodes_Click(object sender, EventArgs e)
+        {
+            if (IsSubtitleLoaded)
+            {
+                ReloadFromSourceView();
+                var form = new MergeTextWithSameTimeCodes();
                 _formPositionsAndSizes.SetPositionAndSize(form);
                 form.Initialize(_subtitle);
                 if (form.ShowDialog(this) == DialogResult.OK)
