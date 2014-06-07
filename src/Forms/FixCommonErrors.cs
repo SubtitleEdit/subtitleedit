@@ -3461,11 +3461,24 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (text.Length > 3 && text.StartsWith("<i>"))
                 {
-                    pre = "<i>";
+                    pre += "<i>";
                     if (text.Substring(3, 1) == " ")
                         text = text.Substring(4);
                     else
                         text = text.Substring(3);
+                }
+                if(text.Length > 1 && (text[0] == ' ' || text[0] ==  '.' ))
+                {
+                    pre += (text[0] == '.' ? '.' : ' ').ToString();
+                    text = text.Substring(1);
+                    while (text.Length > 0 && text.Substring(0, 1) == ".")
+                    {
+                        pre += ".";
+                        text = text.Substring(1);
+                    }
+                    if (text.Length > 0 && text[0] == ' ')
+                        pre += " ";
+                    text = text.TrimStart(' ');
                 }
             } while (text.StartsWith("<i>") || text.StartsWith("-"));
 
