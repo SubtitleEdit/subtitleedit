@@ -5,6 +5,9 @@
 // <summary>
 //   The marshal hunspell dll.
 // </summary>
+//
+// nikse.dk: Added attributes to all delegates regarding calling convension: [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+// http://stackoverflow.com/questions/2390407/pinvokestackimbalance-c-sharp-call-to-unmanaged-c-function/2738125#comment2825285_2738125
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NHunspell
