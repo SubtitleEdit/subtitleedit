@@ -96,6 +96,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new ScenaristClosedCaptionsDropFrame(),
                     new SmilTimesheetData(),
                     new SoftNiSub(),
+                    new SoftNicolonSub(),
                     new SonyDVDArchitect(),
                     new SonyDVDArchitectExplicitDuration(),
                     new SonyDVDArchitectLineAndDuration(),
