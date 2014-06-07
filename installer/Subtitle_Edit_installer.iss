@@ -438,6 +438,40 @@ begin
 end;
 
 
+// Function to retrieve old version's uninstall string and uninstall it
+// Note that we only care for the 32-bit version on 64-bit Windows
+function UninstallOldVer(): Integer;
+var
+  sUnInstallString: String;
+  iResultCode: Integer;
+begin
+  // Return Values:
+  // 0 - no idea
+  // 1 - can't find the registry key (probably no previous version installed)
+  // 2 - uninstall string is empty
+  // 3 - error executing the UnInstallString
+  // 4 - successfully executed the UnInstallString
+
+  // default return value
+  Result := 0;
+
+  sUnInstallString := '';
+
+  // get the uninstall string of the old app
+  if RegQueryStringValue(HKLM32, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1', 'UninstallString', sUnInstallString) then begin
+    if sUnInstallString <> '' then begin
+      sUnInstallString := RemoveQuotes(sUnInstallString);
+      if Exec(sUnInstallString, '/SILENT /VERYSILENT /NORESTART /SUPPRESSMSGBOXES', '', SW_HIDE, ewWaitUntilTerminated, iResultCode) then
+        Result := 4
+      else
+        Result := 3;
+    end else
+      Result := 2;
+  end else
+    Result := 1;
+end;
+
+
 function ShouldSkipPage(PageID: Integer): Boolean;
 begin
   // Hide the license page
@@ -506,6 +540,13 @@ begin
   end
   else begin
     Result := True;
+
+    if IsWin64 then begin
+      // We need to uninstall the old version before we create the installer's mutex
+      // otherwise UninstallOldVer's `Exec` will fail for obvious reasons...
+      UninstallOldVer();
+    end;
+
     CreateMutex(installer_mutex);
 
     while IsModuleLoaded('SubtitleEdit.exe') and (iMsgBoxResult <> IDCANCEL) do
