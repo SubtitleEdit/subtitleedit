@@ -3461,11 +3461,22 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (text.Length > 3 && text.StartsWith("<i>"))
                 {
-                    pre = "<i>";
+                    pre += "<i>";
                     if (text.Substring(3, 1) == " ")
                         text = text.Substring(4);
                     else
                         text = text.Substring(3);
+                }
+                if (text.Length > 1 && (text[0] == ' ' || text[0] == '.'))
+                {
+                    pre += (text[0] == '.' ? '.' : ' ').ToString();
+                    text = text.Substring(1);
+                    while (text.Length > 0 && text.Substring(0, 1) == ".")
+                    {
+                        pre += ".";
+                        text = text.Substring(1);
+                    }
+                    text = text.TrimStart(' ');
                 }
             } while (text.StartsWith("<i>") || text.StartsWith("-"));
 
@@ -3511,40 +3522,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (fixCount > 0)
-                LogStatus(_language.FixMissingOpenBracket, string.Format(_language.XFixMissingOpenBracket, fixCount));
-        }
-
-        public void FixMissingOpenBracket2()
-        {
-            string fixAction = _language.FixMissingOpenBracket;
-            int fixCount = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
-            {
-                Paragraph p = _subtitle.Paragraphs[i];
-
-                if (p.Text.Contains("]") && !p.Text.Contains("["))
-                {
-                    if (AllowFix(p, fixAction))
-                    {
-                        string oldText = p.Text;
-                        string pre = "";
-                        string oBkt = "[";
-                        if (p.Text.Contains(" ]"))
-                            oBkt = "[ ";
-
-                        if (p.Text.Length > 3 && p.Text.StartsWith("<i>"))
-                        {
-                            pre = "<i>";
-                            p.Text = p.Text.Substring(3);
-                        }
-                        p.Text = pre + oBkt + p.Text;
-                        fixCount++;
-                        _totalFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                }
-            }
             if (fixCount > 0)
                 LogStatus(_language.FixMissingOpenBracket, string.Format(_language.XFixMissingOpenBracket, fixCount));
         }
