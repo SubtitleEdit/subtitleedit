@@ -62,6 +62,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.MeasurementConverter MeasurementConverter;
         public LanguageStructure.MergeDoubleLines MergeDoubleLines;
         public LanguageStructure.MergeShortLines MergedShortLines;
+        public LanguageStructure.MergeTextWithSameTimeCodes MergeTextWithSameTimeCodes;
         public LanguageStructure.ModifySelection ModifySelection;
         public LanguageStructure.MultipleReplace MultipleReplace;
         public LanguageStructure.NetworkChat NetworkChat;
@@ -1201,6 +1202,7 @@ namespace Nikse.SubtitleEdit.Logic
                         ChangeSpeedInPercent = "Changed speed (percent)...",
                         MergeShortLines = "Merge short lines...",
                         MergeDuplicateText = "Merge lines with same text...",
+                        MergeSameTimeCodes = "Merge lines with same time codes...",
                         SplitLongLines = "Split long lines...",
                         MinimumDisplayTimeBetweenParagraphs = "Minimum display time between subtitles...",
                         SortBy = "Sort by",
@@ -1479,6 +1481,15 @@ namespace Nikse.SubtitleEdit.Logic
                 NumberOfMergesX = "Number of merges: {0}",
                 MergedText = "Merged text",
                 OnlyMergeContinuationLines = "Only merge continuation lines",
+            };
+
+            MergeTextWithSameTimeCodes = new LanguageStructure.MergeTextWithSameTimeCodes
+            {
+                Title = "Merge lines with same time codes",
+                MaxDifferenceMilliseconds = "Max. milliseconds difference",
+                ReBreakLines = "Re-break lines",
+                NumberOfMergesX = "Number of merges: {0}",
+                MergedText = "Merged text",
             };
 
             ModifySelection = new LanguageStructure.ModifySelection
