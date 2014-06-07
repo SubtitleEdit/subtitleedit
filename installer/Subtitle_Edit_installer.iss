@@ -252,7 +252,6 @@ Source: {#bindir}\Languages\zh-CHS.xml;            DestDir: {app}\Languages;    
 Source: {#bindir}\Languages\zh-tw.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 #endif
 
-Source: {#bindir}\NHunspell.dll;                   DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\SubtitleEdit.exe;                DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\src\Changelog.txt;                      DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\gpl.txt;                                DestDir: {app};                                    Flags: ignoreversion; Components: main
