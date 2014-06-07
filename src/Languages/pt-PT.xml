@@ -747,6 +747,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeSpeedInPercent>Alterar a velocidade (percentagem)...</ChangeSpeedInPercent>
         <MergeShortLines>Combinar as linhas curtas...</MergeShortLines>
 		<MergeDuplicateText>Combinar as linhas com o mesmo texto...</MergeDuplicateText>
+        <MergeSameTimeCodes>Combinar linhas com os mesmos códigos de tempo...</MergeSameTimeCodes>		
         <SplitLongLines>Dividir as linhas longas...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Duração mínima entre legendas...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>
@@ -1239,6 +1240,13 @@ Deseja continuar?</SubtitleAppendPrompt>
     <MergedText>Texto combinado</MergedText>
     <OnlyMergeContinuationLines>Só combinar as linhas continuadas</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <MergeTextWithSameTimeCodes>
+    <Title>Combinar linhas com os mesmos códigos de tempo</Title>
+    <MaxDifferenceMilliseconds>Max. diferença milissegundos</MaxDifferenceMilliseconds>
+    <ReBreakLines>Requebrar as linhas</ReBreakLines>
+    <NumberOfMergesX>Número de combinações: {0}</NumberOfMergesX>
+    <MergedText>Texto combinado</MergedText>
+  </MergeTextWithSameTimeCodes>  
   <ModifySelection>
     <Title>Modificar a selecção</Title>
     <Rule>Regra</Rule>
