@@ -40,9 +40,16 @@ namespace Nikse.SubtitleEdit.Forms
             var toolTip1 = new ToolTip();
             toolTip1.SetToolTip(linkLabelGitBuildHash, GetGitHubHashLink());
 
-            richTextBoxAbout1.Text = _language.AboutText1.TrimEnd() + Environment.NewLine +
-                                     Environment.NewLine +
-                                     _languageGeneral.TranslatedBy.Trim();
+            string aboutText = _language.AboutText1.TrimEnd() + Environment.NewLine +
+                               Environment.NewLine +
+                               _languageGeneral.TranslatedBy.Trim();
+            while (aboutText.Contains("\n ") || aboutText.Contains("\n\t"))
+            {
+                aboutText = aboutText.Replace("\n ", "\n");
+                aboutText = aboutText.Replace("\n\t", "\n");
+            }
+            richTextBoxAbout1.Text = aboutText;
+
             double height = TextDraw.MeasureTextHeight(richTextBoxAbout1.Font, richTextBoxAbout1.Text, false)*1.4 + 80;
             richTextBoxAbout1.Height = (int) height;
             Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 90;
