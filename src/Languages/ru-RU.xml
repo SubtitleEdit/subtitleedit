@@ -1527,7 +1527,7 @@ https://github.com/SubtitleEdit/subtitleedit.
     <ToggleTranslationMode>Вкл./Откл. режим перевода</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Переключение оригинала и перевода</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Объединить оригинал и перевод</MergeOriginalAndTranslation>
-    <ShortcutIsAlreadyDefinedX>Команда уже определена: 
+    <ShortcutIsAlreadyDefinedX>Команда уже определена:
 {0}
 </ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Переключение перевода и оригинала в предпросмотре видео/аудио</ToggleTranslationAndOriginalInPreviews>

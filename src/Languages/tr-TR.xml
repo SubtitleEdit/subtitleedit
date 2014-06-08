@@ -74,7 +74,7 @@
   </General>
   <About>
     <Title>Subtitle Edit Hakkında</Title>
-    <AboutText1>Subtitle Edit, GNU Public License. altında ücretsiz bir yazılımdır. 
+    <AboutText1>Subtitle Edit, GNU Public License. altında ücretsiz bir yazılımdır.
 Dağıtabilir, geliştirebilir ve özgürce kullanabilirsiniz.
 
 C# kaynak kodu https://github.com/SubtitleEdit/subtitleedit adresinde mevcuttur.
@@ -1085,7 +1085,7 @@ Continue?</SubtitleAppendPrompt>
   </NetworkChat>
   <NetworkJoin>
     <Title>Ağ oturumuna katıl</Title>
-    <Information>Birden fazla kişiyle aynı altyazıyı 
+    <Information>Birden fazla kişiyle aynı altyazıyı
 düzenleyebileceğiniz bir oturuma katılın.</Information>
     <Join>Katıl</Join>
   </NetworkJoin>
@@ -1365,7 +1365,7 @@ Yeni oturum başlatın.</Information>
     <ToggleTranslationMode>Toggle translation mode</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Orijinal ve çeviri arasında geçiş yap</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Orijinali ve çeviriyi birleştir</MergeOriginalAndTranslation>
-    <ShortcutIsAlreadyDefinedX>Zaten tanımlanan kısayol: 
+    <ShortcutIsAlreadyDefinedX>Zaten tanımlanan kısayol:
 {0}
 </ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Toggle translation and original in video/audio preview</ToggleTranslationAndOriginalInPreviews>

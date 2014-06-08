@@ -957,7 +957,7 @@ Elindítja a dokumentum tetejéről és folytatja a keresést és cserét?</Repl
     <TextingForHearingImpairedRemovedOneLine>Szöveg eltávolítva a halláskárosultak számára : Egy sor</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Szöveg eltávolítva a halláskárosultak számára : {0} sor</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Felirat vágva</SubtitleSplitted>
-    <SubtitleAppendPrompt>Ez hozzá fog fűzni egy létező feliratot a jelenleg betöltött felirathoz, amelyet 
+    <SubtitleAppendPrompt>Ez hozzá fog fűzni egy létező feliratot a jelenleg betöltött felirathoz, amelyet
 már szinkronizálni kellett volna a videóállománnyal.
 
 Folytatja?</SubtitleAppendPrompt>
