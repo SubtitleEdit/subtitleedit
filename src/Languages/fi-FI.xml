@@ -79,12 +79,12 @@ Subtitle Edit on ilmainen GNU Public License ohjelma.Voit jakaa, muokata ja käy
 Vieraile www.nikse.dk uusimman version saamiseksi. 
 Ehdotukset ovat erittäin tervetulleita.
 Sähköposti: mailto:nikse.dk@gmail.com
-		</AboutText1>
+        </AboutText1>
   </About>
   <AddToNames>
     <Title>Lisää nimet-/etc luetteloon</Title>
     <Description>Lisää nimet-/virheluetteloon (sama kirjainkoko)
-		</Description>
+        </Description>
   </AddToNames>
   <AddToOcrReplaceList>
     <Title>Lisää OCR korvausluetteloon</Title>
@@ -101,10 +101,10 @@ Sähköposti: mailto:nikse.dk@gmail.com
     <PleaseWait>Tämä voi kestää muutamia minuutteja - odota</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC Media Playeria ei löydy</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit tarvitsee VLC media Playerin 1.1.x tai uudemman äänidatan purkamiseksi.
-		</VlcMediaPlayerNotFound>
+        </VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>
 Haluatko mennä VLC media playerin kotisivulle?
-		</GoToVlcMediaPlayerHomePage>
+        </GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Muodostetaan peak-tiedosto...</GeneratingPeakFile>
     <GeneratingSpectrogram>Muodostetaan spectrogrammi...</GeneratingSpectrogram>
     <ExtractingSeconds>Puretaan audio: {0:0.0} sekuntia</ExtractingSeconds>
@@ -850,10 +850,10 @@ Haluatko mennä VLC media playerin kotisivulle?
     <FindContinueTitle>Jatketaanko hakua?</FindContinueTitle>
     <ReplaceContinueNotFound>
 Etsittävää kohdetta ei löytynyt. Haluatko aloittaa asiakirjan alusta ja jatkaa Etsi ja korvaa toimintoa?
-		</ReplaceContinueNotFound>
+        </ReplaceContinueNotFound>
     <ReplaceXContinue>
 Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa asiakirjan alusta ja jatkaa Etsi ja korvaa toimintoa?
-		</ReplaceXContinue>
+        </ReplaceXContinue>
     <ReplaceContinueTitle>Jatketaanko 'Korvausta'?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Etsitään '{0}' riviltä {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' löytyi riviltä {1}</XFoundAtLineNumberY>
@@ -973,7 +973,7 @@ Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa asiakirjan alusta ja ja
     <ShowSelectedLinesXSecondsLinesLater>Näytä valitut rivit {0:0.0##} sekuntia myöhemmin</ShowSelectedLinesXSecondsLinesLater>
     <ShowSelectionAndForwardXSecondsLinesEarlier>
 Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
-		</ShowSelectionAndForwardXSecondsLinesEarlier>
+        </ShowSelectionAndForwardXSecondsLinesEarlier>
     <ShowSelectionAndForwardXSecondsLinesLater>Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia myöhemmin</ShowSelectionAndForwardXSecondsLinesLater>
     <ShowSelectedLinesEarlierLaterPerformed>Näytä aikaisemmat/myöhemmät suoritukset valituilla riveillä</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Kaksoissanat regexin kautta {0}</DoubleWordsViaRegEx>
@@ -989,12 +989,13 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <NameXNotAddedToNamesEtcList>Nimeä {0} EI lisätty nimet/etc-luetteloon</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>Sana '{0}' lisätty käyttäjän sanastoon</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Sanaa '{0}' EI lisätty käyttäjän sanastoon
-		</WordXNotAddedToUserDic>
+    </WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>
 Ocr korvauslistapari '{0} -&gt; {1}' lisättiin Ocr korvauslistapariin
-		</OcrReplacePairXAdded>
+    </OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>
-Ocr korvauslistaparia '{0} -&gt; {1}' EI lisätty Ocr korvauslistaan		</OcrReplacePairXNotAdded>
+Ocr korvauslistaparia '{0} -&gt; {1}' EI lisätty Ocr korvauslistaan
+    </OcrReplacePairXNotAdded>
     <XLinesSelected>{0} riviä valittu</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Tekstitys sisältää unicode-nuotteja. Tallennus ANSI-koodausta käyttäen hukkaa nämä. Jatketaanko?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Tekstityksessä on negatiivisia aikakoodeja. Haluatko jatkaa tallentamista?</NegativeTimeWarning>
@@ -1114,7 +1115,7 @@ Ocr korvauslistaparia '{0} -&gt; {1}' EI lisätty Ocr korvauslistaan		</OcrRepla
     <OpenPluginsFolder>Avaa 'Plugins' kansio</OpenPluginsFolder>
     <GetPluginsInfo1>
 Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
-		</GetPluginsInfo1>
+    </GetPluginsInfo1>
     <GetPluginsInfo2>Valitse laajennus ja klikkaa "Lataa"</GetPluginsInfo2>
     <PluginXDownloaded>Laajennus {0} ladattu</PluginXDownloaded>
     <Download>Lataa</Download>
@@ -1371,7 +1372,7 @@ Subtitle Edit laajennukset täytyy ladata "Plugins" kansioon
     <SwitchOriginalAndTranslation>Vaihda alkuperäinen ja käännös</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Yhdistä alkuperäinen ja käännös</MergeOriginalAndTranslation>
     <ShortcutIsAlreadyDefinedX>Oikotie on jo määritelty: {0}
-	</ShortcutIsAlreadyDefinedX>
+    </ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Vaihda käännös ja alkuperäinen video/audio esikatselussa</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Sarake, poista teksti</ListViewColumnDelete>
     <ListViewColumnInsert>Sarake, lisää teksti</ListViewColumnInsert>

@@ -1283,7 +1283,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   <NetworkJoin>
     <Title>네트워크 - 기존 세션 참여</Title>
     <Information>기존 세션에 참여하면 같은 자막 파일을 여러 사람들이
-	협력해서 편집할 수 있습니다.</Information>
+    협력해서 편집할 수 있습니다.</Information>
     <Join>참여</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1294,7 +1294,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Title>네트워크 - 새 세션 시작</Title>
     <ConnectionTo>{0}에 연결 하는 중...</ConnectionTo>
     <Information>새 세션에서 하나의 자막 파일을 여러 곳에 있는 사람들과
-	공동으로 제작할 수 있습니다.</Information>
+    공동으로 제작할 수 있습니다.</Information>
     <Start>시작</Start>
   </NetworkStart>
   <OpenVideoDvd>

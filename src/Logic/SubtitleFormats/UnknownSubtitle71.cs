@@ -86,8 +86,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             // 2.
             // 0 0 : 0 0 : 0 6 : 1 6
             // 0 0 : 0 0 : 0 7 : 2 0
-            // G e t   i n s i d e ,   m o m ! 
-            // -   I   w a n t   t o   c o m e . 
+            // G e t   i n s i d e ,   m o m !
+            // -   I   w a n t   t o   c o m e .
 
             const string paragraphWriteFormat = "{4} . {3}{3}{0}{3}{3}{1}{3}{3}{2}{3}{3}";
             var sb = new StringBuilder();

@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string number in lineNumbers.TrimEnd(',').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
                 _isFixAllowedList.Add(Convert.ToInt32(number), true);
-            }            
+            }
         }
 
         private void GeneratePreview()
@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int no = Convert.ToInt32(number);
                 if (_isFixAllowedList.ContainsKey(no))
                     _isFixAllowedList[no] = e.Item.Checked;
-            }    
+            }
 
             var mergedIndexes = new List<int>();
 
@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         lineNumbers.Append(p.Number.ToString() + ", ");
                         lineNumbers.Append(next.Number.ToString());
-                    }                  
+                    }
                     else
                     {
                         lastMerged = false;
@@ -238,8 +238,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return false;
 
             return Math.Abs(next.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) <= maxMsBetween &&
-                   Math.Abs(next.EndTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) <= maxMsBetween;           
-        }      
+                   Math.Abs(next.EndTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) <= maxMsBetween;
+        }
 
         private void MergeTextWithSameTimeCodes_KeyDown(object sender, KeyEventArgs e)
         {

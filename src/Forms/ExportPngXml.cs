@@ -305,7 +305,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     _borderWidth = float.Parse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()));
-                }            
+                }
             }
             else
             {
@@ -1225,7 +1225,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             else
             {
                 _borderWidth = float.Parse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()));
-            }            
+            }
         }
 
         private static Font SetFont(MakeBitmapParameter parameter, float fontSize)
@@ -1322,7 +1322,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             else if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox)
             {
                 _borderWidth = 0;
-                mbp.BackgroundColor = panelBorderColor.BackColor;                
+                mbp.BackgroundColor = panelBorderColor.BackColor;
             }
 
             int width = 0;
@@ -1573,8 +1573,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 Bitmap bmp = null;
                 string old = parameter.P.Text;
-                int oldType3d = parameter.Type3D;                
-                if (parameter.Type3D == 2) // Half-Top/Bottom 3D                
+                int oldType3d = parameter.Type3D;
+                if (parameter.Type3D == 2) // Half-Top/Bottom 3D
                 {
                     parameter.Type3D = 0; // fix later
                 }
@@ -2332,7 +2332,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else
             {
-                comboBoxSubtitleFontSize.SelectedIndex = 16;                
+                comboBoxSubtitleFontSize.SelectedIndex = 16;
                 int i = 0;
                 foreach (string item in comboBoxSubtitleFontSize.Items)
                 {
@@ -2756,7 +2756,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         }
 
         private void panelBorderColor_MouseClick(object sender, MouseEventArgs e)
-        {            
+        {
             buttonBorderColor_Click(null, null);
         }
 
@@ -3038,7 +3038,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             subtitleListView1_SelectedIndexChanged(null, null);
         }
-     
+
         private void ListViewToggleTag(string tag)
         {
             if (_subtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
