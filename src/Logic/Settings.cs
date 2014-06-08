@@ -1621,7 +1621,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.ExportFcpFontName = subNode.InnerText;
             subNode = node.SelectSingleNode("ExportFontNameOther");
             if (subNode != null)
-                settings.Tools.ExportFontNameOther = subNode.InnerText;            
+                settings.Tools.ExportFontNameOther = subNode.InnerText;
             subNode = node.SelectSingleNode("ExportFcpFontSize");
             if (subNode != null)
                 settings.Tools.ExportFcpFontSize = Convert.ToInt32(subNode.InnerText);

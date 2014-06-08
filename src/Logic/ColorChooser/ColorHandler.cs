@@ -3,12 +3,12 @@
 // Author: Adalberto L. Simeone (Taranto, Italy)
 // E-Mail: avengerdragon@gmail.com
 // Website: http://www.avengersutd.com/blog
-// 
+//
 // This source code is Intellectual property of the Author
-// and is released under the Creative Commons Attribution 
+// and is released under the Creative Commons Attribution
 // NonCommercial License, available at:
-// http://creativecommons.org/licenses/by-nc/3.0/ 
-// You can alter and use this source code as you wish, 
+// http://creativecommons.org/licenses/by-nc/3.0/
+// You can alter and use this source code as you wish,
 // provided that you do not use the results in commercial
 // projects, without the express and written consent of
 // the Author.
@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
 {
     public class ColorHandler
     {
-        // Handle conversions between RGB and HSV    
+        // Handle conversions between RGB and HSV
         // (and Color types, as well).
 
         public static ARGB HSVtoRGB(int a, int h, int s, int v)
@@ -49,11 +49,11 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
         public static ARGB HSVtoRGB(HSV HSV)
         {
             // HSV contains values scaled as in the color wheel:
-            // that is, all from 0 to 255. 
+            // that is, all from 0 to 255.
 
             // for ( this code to work, HSV.Hue needs
             // to be scaled from 0 to 360 (it//s the angle of the selected
-            // point within the circle). HSV.Saturation and HSV.value must be 
+            // point within the circle). HSV.Saturation and HSV.value must be
             // scaled to be between 0 and 1.
 
             double h;
@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                 double fractionalSector = sectorPos - sectorNumber;
 
                 // Calculate values for the three axes
-                // of the color. 
+                // of the color.
                 double p = v*(1 - s);
                 double q = v*(1 - (s*fractionalSector));
                 double t = v*(1 - (s*(1 - fractionalSector)));
@@ -144,9 +144,9 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
 
         public static HSV RGBtoHSV(ARGB argb)
         {
-            // In this function, R, G, and B values must be scaled 
+            // In this function, R, G, and B values must be scaled
             // to be between 0 and 1.
-            // HSV.Hue will be a value between 0 and 360, and 
+            // HSV.Hue will be a value between 0 and 360, and
             // HSV.Saturation and value are between 0 and 1.
             // The code must scale these to be between 0 and 255 for
             // the purposes of this application.
@@ -190,7 +190,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                     h = 4 + (r - g)/delta;
                 }
             }
-            // Scale h to be between 0 and 360. 
+            // Scale h to be between 0 and 360.
             // This may require adding 360, if the value
             // is negative.
             h *= 60;
@@ -199,7 +199,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                 h += 360;
             }
 
-            // Scale to the requirements of this 
+            // Scale to the requirements of this
             // application. All values are between 0 and 255.
             return new HSV(argb.Alpha, (int) (h/360*255), (int) (s*255), (int) (v*255));
         }

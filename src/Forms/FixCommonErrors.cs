@@ -2392,7 +2392,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (IsTurkishLittleI(firstLetter))
                                 p.Text = pre + GetTurkishUppercaseLetter(firstLetter) + text.Substring(1);
                             else if (Language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
-                                                          text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") || 
+                                                          text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") ||
                                                           text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc"))) // l > I
                                 p.Text = pre + "I" + text.Substring(1);
                             else

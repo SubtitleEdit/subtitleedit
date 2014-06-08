@@ -237,7 +237,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             const string syncTagEnc = "<sync encrypted=\"true\" start=";
             int syncStartPos = allInputLower.IndexOf(syncTag);
             int index = syncStartPos + syncTag.Length;
-        
+
             int syncStartPosEnc = allInputLower.IndexOf(syncTagEnc);
             if ((syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos) || syncStartPos == -1)
             {
