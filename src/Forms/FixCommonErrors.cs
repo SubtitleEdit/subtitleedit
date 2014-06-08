@@ -1135,6 +1135,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             const string zeroWhiteSpace = "\u200B";
             const string zeroWidthNoBreakSpace = "\uFEFF";
+            const string noBreakSpace = "\u00A0";
 
             string fixAction = _language.UnneededSpace;
             int doubleSpaces = 0;
@@ -1147,6 +1148,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 p.Text = p.Text.Replace(zeroWhiteSpace, string.Empty);
                 p.Text = p.Text.Replace(zeroWidthNoBreakSpace, string.Empty);
+                p.Text = p.Text.Replace(noBreakSpace, string.Empty);
+
                 p.Text = p.Text.Replace("", string.Empty); // some kind of hidden space!!!
                 while (p.Text.Contains("  "))
                     p.Text = p.Text.Replace("  ", " ");
