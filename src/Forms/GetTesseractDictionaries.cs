@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             labelPleaseWait.Text = string.Empty;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
-            LoadDictionaryList("Nikse.SubtitleEdit.Resources.TesseractDictionaries.xml.zip");
+            LoadDictionaryList("Nikse.SubtitleEdit.Resources.TesseractDictionaries.xml.gz");
             FixLargeFonts();
         }
 
