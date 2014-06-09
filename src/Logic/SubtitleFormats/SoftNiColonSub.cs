@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var sb = new StringBuilder();
             sb.AppendLine("*PART 1*");
-            sb.AppendLine("00:00:00.00\\00:00:00:00");
+            sb.AppendLine("00:00:00:00\\00:00:00:00");
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string text = p.Text;
