@@ -1,6 +1,5 @@
 ﻿<!-- This list contains names/words with specific casing - and specific to english only -->
 <ignore_list>
-  <name>/td&gt;</name>
   <name>1A</name>
   <name>2A</name>
   <name>A.M.</name>
@@ -2214,7 +2213,6 @@
   <name>Tatum</name>
   <name>Tauriel</name>
   <name>Taylor</name>
-  <name>td&gt;</name>
   <name>Teagan</name>
   <name>Tegan</name>
   <name>Temperance</name>
