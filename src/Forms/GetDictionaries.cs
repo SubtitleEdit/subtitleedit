@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             labelPleaseWait.Text = string.Empty;
 
-            LoadDictionaryList("Nikse.SubtitleEdit.Resources.OpenOfficeDictionaries.xml.zip");
+            LoadDictionaryList("Nikse.SubtitleEdit.Resources.OpenOfficeDictionaries.xml.gz");
             FixLargeFonts();
         }
 
@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.Error != null && _xmlName == "Nikse.SubtitleEdit.Resources.OpenOfficeDictionaries.xml.zip")
             {
                 MessageBox.Show("Unable to connect to extensions.services.openoffice.org... Switching host - please re-try!");
-                LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.zip");
+                LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz");
                 labelPleaseWait.Text = string.Empty;
                 buttonOK.Enabled = true;
                 buttonDownload.Enabled = true;
