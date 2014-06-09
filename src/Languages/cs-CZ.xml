@@ -746,6 +746,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeSpeedInPercent>Změnit rychlost (procenta)...</ChangeSpeedInPercent>
         <MergeShortLines>Sloučit krátké řádky...</MergeShortLines>
         <MergeDuplicateText>Sloučit řádky se stejným textem...</MergeDuplicateText>
+        <MergeSameTimeCodes>Sloučit řádky se stejnými časovými kódy...</MergeSameTimeCodes>
         <SplitLongLines>Rozdělit dlouhé řádky...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimální čas zobrazení mezi titulky...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Seřadit podle</SortBy>
@@ -1238,6 +1239,13 @@ Pokračovat?</SubtitleAppendPrompt>
     <MergedText>Sloučený text</MergedText>
     <OnlyMergeContinuationLines>Sloučit pouze navazující řádky</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <MergeTextWithSameTimeCodes>
+    <Title>Sloučit řádky se stejnými časovými kódy...</Title>
+    <MaxDifferenceMilliseconds>Max. rozdíl milisekund</MaxDifferenceMilliseconds>
+    <ReBreakLines>Znovu zalomit řádky</ReBreakLines>
+    <NumberOfMergesX>Počet sloučení: {0}</NumberOfMergesX>
+    <MergedText>Sloučený text</MergedText>
+  </MergeTextWithSameTimeCodes>
   <ModifySelection>
     <Title>Změnit výběr</Title>
     <Rule>Pravidlo</Rule>
