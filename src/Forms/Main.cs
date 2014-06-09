@@ -228,7 +228,10 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (object obj in comboBoxSubtitleFormats.Items)
             {
                 if (obj.ToString() == format.FriendlyName)
+                {
                     comboBoxSubtitleFormats.SelectedIndex = i;
+                    return;
+                }
                 i++;
             }
         }
@@ -3587,6 +3590,8 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.HideExtraColumn();
             SubtitleListview1.DisplayExtraFromExtra = false;
 
+            ComboBoxSubtitleFormatsSelectedIndexChanged(null, null);
+
             toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
 
             SetEncoding(Configuration.Settings.General.DefaultEncoding);
@@ -3699,8 +3704,10 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.ShowExtraColumn("Character"); //TODO: Put in language xml file
                     else
                         SubtitleListview1.ShowExtraColumn(Configuration.Settings.Language.General.Style);
+                    
                     SubtitleListview1.DisplayExtraFromExtra = true;
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+
                 }
             }
         }
