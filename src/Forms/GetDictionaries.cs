@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxDictionaries.Items.Clear();
                 XmlDocument doc = new XmlDocument();
-                var rdr = new StreamReader(strm);
+                using (var rdr = new StreamReader(strm))
                 using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
                 {
                     byte[] data = new byte[275000];
@@ -54,7 +54,6 @@ namespace Nikse.SubtitleEdit.Forms
                     string s = System.Text.Encoding.UTF8.GetString(data2).Trim();
                     doc.LoadXml(s);
                 }
-                rdr.Close();
 
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
                 {
