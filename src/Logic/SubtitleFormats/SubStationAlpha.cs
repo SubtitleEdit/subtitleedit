@@ -46,7 +46,7 @@ PlayDepth: 0
 
 [V4 Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
-Style: Default,{1},{2},{3},65535,65535,-2147483640,-1,0,1,3,0,2,10,10,10,0,1
+Style: Default,{1},{2},{3},65535,65535,-2147483640,-1,0,1,{4},{5},2,10,10,10,0,1
 
 [Events]
 Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
@@ -84,7 +84,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             }
             else if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]"))
             {
-                LoadStylesFromAdvancedSubstationAlpha(subtitle, title, header, headerNoStyles, sb);
+                LoadStylesFromAdvancedSubstationAlpha(subtitle, title, subtitle.Header, headerNoStyles, sb);
             }
             else if (subtitle.Header != null && subtitle.Header.Contains("http://www.w3.org/ns/ttml"))
             {
@@ -96,7 +96,10 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                             title,
                                             Configuration.Settings.SubtitleSettings.SsaFontName,
                                             (int)Configuration.Settings.SubtitleSettings.SsaFontSize,
-                                            System.Drawing.ColorTranslator.ToWin32(fontColor)));
+                                            System.Drawing.ColorTranslator.ToWin32(fontColor),
+                                            Configuration.Settings.SubtitleSettings.SsaOutline,
+                                            Configuration.Settings.SubtitleSettings.SsaShadow
+                                            ));
             }
             foreach (Paragraph p in subtitle.Paragraphs)
             {
