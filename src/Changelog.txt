@@ -35,7 +35,7 @@
    * Fixed crash related to bad font tags in SSA/ASS - thx hhgyu
    * Fixed error converting from DCinema interop to SMPTE
    * Load last line if blank when loading SubRip files - thx Leon
-   * Spell check auto-fix names now actually works
+   * Spell check auto-fix names now actually works - thx Martin
 
 
 3.3.15 (13th April 2014)
