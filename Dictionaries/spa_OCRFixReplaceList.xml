@@ -745,12 +745,12 @@
     <!--  Inicio de línea  -->
     <RegEx find="^_(\s)" replaceWith="-$1" />
     <RegEx find="^_(\w)" replaceWith="- $1" />
-    <!--  Uso de comillas según la recomiendación de la RAE y la Wikipedia -->
-    <RegEx find="(«[^«]+)«([^»]+»[^»]+»)" replaceWith="$1“$2" />
-    <RegEx find="(«[^«]+«[^»]+)»([^»]+»)" replaceWith="$1”$2" />
+    <!--  Uso de comillas según la recomendación de la RAE y la Wikipedia -->
+    <RegEx find="(«[^“«»]+)«" replaceWith="$1“" />
+    <RegEx find="(“[^«»”]+)»" replaceWith="$1”" />
     <RegEx find="`" replaceWith="‘" />
     <RegEx find="´" replaceWith="’" />
-    <RegEx find="(\w)(\.)(«|»)" replaceWith="$1»." />
+    <RegEx find="([\wá-ú])(\.)(«|»)" replaceWith="$1»." />
     <RegEx find="«(\?)" replaceWith="»?" />
     <RegEx find="«(\!)" replaceWith="»!" />
     <RegEx find="«\s" replaceWith="» " />
@@ -764,7 +764,7 @@
     <RegEx find="«(\!)" replaceWith="»!" />
     <RegEx find="(¿)»" replaceWith="¿«" />
     <RegEx find="(¡)»" replaceWith="¡«" />
-    <!--  Uso de comillas (ANSI) según la recomiendación de la RAE («\x22» es el carácter «"»)  -->
+    <!--  Uso de comillas (ANSI) según la recomendación de la RAE («\x22» es el carácter «"»)  -->
     <RegEx find="^(\.\.\.)(\s){0,1}\x22" replaceWith="$1«" />
     <RegEx find="«\x22" replaceWith="«" />
     <RegEx find="\x22»" replaceWith="»" />
@@ -791,7 +791,7 @@
     <RegEx find="\x22(\))" replaceWith="»)" />
     <RegEx find="(\))\x22" replaceWith=")»" />
     <RegEx find="(\()\x22" replaceWith="(«" />
-    <!--  Uso de comillas (Unicode) según la recomiendación de la RAE («\u0022» es el carácter «"»)  -->
+    <!--  Uso de comillas (Unicode) según la recomendación de la RAE («\u0022» es el carácter «"»)  -->
     <RegEx find="^(\.\.\.)(\s){0,1}\u0022" replaceWith="$1«" />
     <RegEx find="^\u0022{2,}" replaceWith="«" />
     <RegEx find="\u0022{2,}$" replaceWith="»" />
@@ -827,7 +827,7 @@
     <RegEx find="(, ,+)$" replaceWith="," />
     <RegEx find="(,\s),+\s" replaceWith="$1" />
     <RegEx find="(\.\.\.),$" replaceWith="$1" />
-    <RegEx find="(\w)(\.\.)$" replaceWith="$1." />
+    <RegEx find="([\wá-ú])(\.\.)$" replaceWith="$1." />
     <!--  Puntos innecesarios (complemento)  -->
     <RegEx find="([\w\W]\.{3})([¡¿])" replaceWith="$1 $2" />
     <RegEx find="(\w)\.\.(\s)" replaceWith="$1.$2" />
@@ -875,8 +875,8 @@
     <!-- Prefijos; palabras compuestas (mayúsculas)  -->
     <RegEx find="(\b[Aa]nti|\b[Mm]ini|\b[Pp]os|\b[Pp]ro)\s([A-Z]{1,10})([A-Z][a-zá-ú]){0,10}(\b)" replaceWith="$1-$2$3" />
     <!--  Casos de mayúsculas con dos puntos  -->
-    <RegEx find="([a-z]): «([a-z])" replaceWith="$1: «(Mayúscula)$2" />
-    <RegEx find="([A-Z]): ([a-z])" replaceWith="$1: (Mayúscula)$2" />
+    <RegEx find="([\wá-ú]): «([a-zá-ú])" replaceWith="$1: «(Mayúscula)$2" />
+    <RegEx find="([\wá-ú]): ([a-zá-ú])" replaceWith="$1: (Mayúscula)$2" />
     <!--  Usos correctos de la coma  -->
     <RegEx find="(\b[Pp]ero),(\s)([¡¿])" replaceWith="$1$2$3" />
     <RegEx find="(\b[Aa]unque),(\s|$)" replaceWith="$1$2" />
