@@ -727,17 +727,20 @@ namespace Nikse.SubtitleEdit.Forms
                             if (AutoFixNames && _currentWord.Length > 1 && suggestions.Contains(_currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1)))
                             {
                                 ChangeWord = _currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1);
-                                Action = SpellCheckAction.ChangeAll;
+                                DoAction(SpellCheckAction.ChangeAll);
+                                return;
                             }
                             else if (AutoFixNames && _currentWord.Length > 1 && suggestions.Contains(_currentWord.ToUpper()))
                             {
                                 ChangeWord = _currentWord.ToUpper();
-                                Action = SpellCheckAction.ChangeAll;
+                                DoAction(SpellCheckAction.ChangeAll);
+                                return;
                             }
                             else if (AutoFixNames && _currentWord.Length > 1 && _namesEtcList.Contains(_currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1)))
                             {
                                 ChangeWord = _currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1);
-                                Action = SpellCheckAction.ChangeAll;
+                                DoAction(SpellCheckAction.ChangeAll);
+                                return;
                             }
                             else
                             {
