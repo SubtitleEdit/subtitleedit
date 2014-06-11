@@ -20,6 +20,7 @@
    * Drag & drop support for subtitle comparer - thx ivandrofly
    * Better time division in "Split long lines" - thx Joel
    * Better splitting of dialogues in "Split long lines" - thx Joel
+   * Word lists improved - thx ivandrofly
 * FIXED:
    * OCR via "image compare" now works again
    * Fixed "Bridge gap in duration" when working with SSA/ASS
