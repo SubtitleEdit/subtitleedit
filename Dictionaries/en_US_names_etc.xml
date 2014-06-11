@@ -28,7 +28,7 @@
   <name>Adam</name>
   <name>Adan</name>
   <name>Addilyn</name>
-  <name>AddisAbaba</name>
+  <name>Addis Ababa</name>
   <name>Addison</name>
   <name>Addisyn</name>
   <name>Addyson</name>
@@ -435,7 +435,7 @@
   <name>Bryson</name>
   <name>Bucharest</name>
   <name>Budapest</name>
-  <name>BuenosAires</name>
+  <name>Buenos Aires</name>
   <name>Burkitt</name>
   <name>Byakko</name>
   <name>Byam</name>
@@ -649,6 +649,7 @@
   <name>Danny</name>
   <name>Dante</name>
   <name>Daphne</name>
+  <name>Dar es-Salaam</name>
   <name>Dar-es-Salaam</name>
   <name>Darian</name>
   <name>Darien</name>
@@ -1042,11 +1043,11 @@
   <name>Hirschberg</name>
   <name>Hjalte</name>
   <name>Hobart</name>
-  <name>HoChiMinhCity</name>
+  <name>Ho Chi Minh City</name>
   <name>Hoggart</name>
   <name>Holden</name>
   <name>Holly</name>
-  <name>HongKong</name>
+  <name>Hong Kong</name>
   <name>Honolulu</name>
   <name>Hope</name>
   <name>Hossein</name>
@@ -1467,7 +1468,7 @@
   <name>Kristopher</name>
   <name>Kruesi</name>
   <name>Krystal</name>
-  <name>KualaLumpur</name>
+  <name>Kuala Lumpur</name>
   <name>Kuchinashi</name>
   <name>Kurama</name>
   <name>Kuwabara</name>
@@ -1606,7 +1607,7 @@
   <name>Lorelai</name>
   <name>Lorelei</name>
   <name>Lorenzo</name>
-  <name>LosAngeles</name>
+  <name>Los Angeles</name>
   <name>Louis</name>
   <name>Luca</name>
   <name>Lucas</name>
@@ -1791,7 +1792,7 @@
   <name>Meridius</name>
   <name>Merion</name>
   <name>Messiah</name>
-  <name>MexicoCity</name>
+  <name>Mexico City</name>
   <name>Mia</name>
   <name>Miah</name>
   <name>Miami</name>
@@ -1887,8 +1888,8 @@
   <name>Neveah</name>
   <name>New Hampshire</name>
   <name>New Jersey</name>
-  <name>NewOrleans</name>
-  <name>NewYork</name>
+  <name>New Orleans</name>
+  <name>New York</name>
   <name>Nia</name>
   <name>Nicholas</name>
   <name>Nickolas</name>
@@ -1952,7 +1953,7 @@
   <name>Paloma</name>
   <name>Paltrow</name>
   <name>Pamela</name>
-  <name>PanamaCity</name>
+  <name>Panama City</name>
   <name>Paola</name>
   <name>Paris</name>
   <name>Parker</name>
@@ -1992,7 +1993,7 @@
   <name>Poindexter</name>
   <name>Pont Neuf</name>
   <name>Porter</name>
-  <name>PortMorsby</name>
+  <name>Port Morsby</name>
   <name>Pozarsky</name>
   <name>Praetorians</name>
   <name>Prague</name>
@@ -2083,7 +2084,6 @@
   <name>Rinaldi</name>
   <name>Ringwraith</name>
   <name>Rio de Janeiro</name>
-  <name>RiodeJaneiro</name>
   <name>Riom</name>
   <name>Rivka</name>
   <name>Riya</name>
@@ -2164,14 +2164,14 @@
   <name>Sanaa</name>
   <name>Sandberg</name>
   <name>Sandra</name>
-  <name>SanFrancisco</name>
+  <name>San Francisco</name>
   <name>Saniya</name>
   <name>Saniyah</name>
   <name>Sanjay</name>
   <name>Santiago</name>
   <name>Santino</name>
   <name>Santos</name>
-  <name>SaoPaulo</name>
+  <name>Sao Paulo</name>
   <name>Sara</name>
   <name>Sarah</name>
   <name>Sarahi</name>
@@ -2281,8 +2281,8 @@
   <name>Steve</name>
   <name>Steven</name>
   <name>Stillman</name>
-  <name>StLouis</name>
-  <name>StLucia</name>
+  <name>St. Louis</name>
+  <name>St. Lucia</name>
   <name>Stockholm</name>
   <name>StPetersburg</name>
   <name>Straczynski</name>
