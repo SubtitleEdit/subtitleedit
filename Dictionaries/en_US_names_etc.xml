@@ -480,7 +480,6 @@
   <name>Canberra</name>
   <name>Candar</name>
   <name>Candarian</name>
-  <name>Cannon</name>
   <name>Capoeira</name>
   <name>Cara</name>
   <name>Caracas</name>
@@ -531,7 +530,6 @@
   <name>Channing</name>
   <name>Chantal</name>
   <name>Chantel</name>
-  <name>Charity</name>
   <name>Charlee</name>
   <name>Charleigh</name>
   <name>Charles</name>
@@ -539,7 +537,6 @@
   <name>Charli</name>
   <name>Charlie</name>
   <name>Charlotte</name>
-  <name>Chase</name>
   <name>Chaya</name>
   <name>Chelsea</name>
   <name>Cherish</name>
@@ -604,7 +601,6 @@
   <name>Courtney</name>
   <name>Coverdale</name>
   <name>Craig</name>
-  <name>Crew</name>
   <name>Cristian</name>
   <name>Cristiano</name>
   <name>Cristina</name>
@@ -909,7 +905,6 @@
   <name>Gabriella</name>
   <name>Gabrielle</name>
   <name>Gael</name>
-  <name>Gage</name>
   <name>Gaige</name>
   <name>Galadriel</name>
   <name>Galilea</name>
@@ -1042,14 +1037,13 @@
   <name>Hillard</name>
   <name>Hirschberg</name>
   <name>Hjalte</name>
-  <name>Hobart</name>
   <name>Ho Chi Minh City</name>
+  <name>Hobart</name>
   <name>Hoggart</name>
   <name>Holden</name>
   <name>Holly</name>
   <name>Hong Kong</name>
   <name>Honolulu</name>
-  <name>Hope</name>
   <name>Hossein</name>
   <name>Houston</name>
   <name>Howard</name>
@@ -1297,10 +1291,8 @@
   <name>Julio</name>
   <name>Julissa</name>
   <name>Julius</name>
-  <name>June</name>
   <name>Juniper</name>
   <name>Jurgen</name>
-  <name>Justice</name>
   <name>Justin</name>
   <name>Justus</name>
   <name>Kabul</name>
@@ -1508,7 +1500,6 @@
   <name>Landon</name>
   <name>Landry</name>
   <name>Landyn</name>
-  <name>Lane</name>
   <name>Laney</name>
   <name>Langford</name>
   <name>Lansberry</name>
@@ -1533,7 +1524,6 @@
   <name>Leandro</name>
   <name>Leanna</name>
   <name>Lee</name>
-  <name>Legend</name>
   <name>Legolas</name>
   <name>Leia</name>
   <name>Leigha</name>
@@ -1566,7 +1556,6 @@
   <name>Liam</name>
   <name>Liana</name>
   <name>Libby</name>
-  <name>Liberty</name>
   <name>Lila</name>
   <name>Lilah</name>
   <name>Lilia</name>
@@ -1659,7 +1648,6 @@
   <name>Magdalen</name>
   <name>Maggie</name>
   <name>Maia</name>
-  <name>Major</name>
   <name>Makai</name>
   <name>Makaichu</name>
   <name>Makayla</name>
@@ -1992,7 +1980,6 @@
   <name>Pittsburgh</name>
   <name>Poindexter</name>
   <name>Pont Neuf</name>
-  <name>Porter</name>
   <name>Port Morsby</name>
   <name>Pozarsky</name>
   <name>Praetorians</name>
@@ -2161,10 +2148,10 @@
   <name>Samiyah</name>
   <name>Samson</name>
   <name>Samuel</name>
+  <name>San Francisco</name>
   <name>Sanaa</name>
   <name>Sandberg</name>
   <name>Sandra</name>
-  <name>San Francisco</name>
   <name>Saniya</name>
   <name>Saniyah</name>
   <name>Sanjay</name>
@@ -2264,6 +2251,9 @@
   <name>Spectravision</name>
   <name>Spencer</name>
   <name>Sportpaleis</name>
+  <name>St. Louis</name>
+  <name>St. Lucia</name>
+  <name>St. Petersburg</name>
   <name>Stacy</name>
   <name>Stancombe</name>
   <name>Stanislaus</name>
@@ -2281,16 +2271,12 @@
   <name>Steve</name>
   <name>Steven</name>
   <name>Stillman</name>
-  <name>St. Louis</name>
-  <name>St. Lucia</name>
   <name>Stockholm</name>
-  <name>StPetersburg</name>
   <name>Straczynski</name>
   <name>Sturridge</name>
   <name>Succinylcholine</name>
   <name>Suez</name>
   <name>Sullivan</name>
-  <name>Summer</name>
   <name>Sunaina</name>
   <name>Susan</name>
   <name>Suzaku</name>
@@ -2425,7 +2411,6 @@
   <name>Vincenzo</name>
   <name>Vindobona</name>
   <name>Viney</name>
-  <name>Violet</name>
   <name>Virginia</name>
   <name>Vitalievich</name>
   <name>Vitaly</name>
