@@ -92,6 +92,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddWaterMark(Subtitle subtitle, string input)
         {
+            if (subtitle == null || subtitle.Paragraphs.Count == 0)
+            {
+                return;
+            }
+
             byte[] buffer = Encoding.ASCII.GetBytes(input);
 
             if (radioButtonCurrentLine.Checked)
