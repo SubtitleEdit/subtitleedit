@@ -981,7 +981,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Legenda original guardada {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Ficheiro modificado no disco</FileOnDiskModified>
     <OverwriteModifiedFile>Substituir o ficheiro {0} modificado em {1} {2}{3} pelo ficheiro actual carregado do disco em {4} {5}?</OverwriteModifiedFile>
-    <UnableToSaveSubtitleX>Não foi possível guardar a legenda {0}</UnableToSaveSubtitleX>
+    <UnableToSaveSubtitleX>Não foi possível guardar a legenda {0}
+parece estar vazia!
+    </UnableToSaveSubtitleX>
     <BeforeNew>Antes de novo</BeforeNew>
     <New>Novo</New>
     <BeforeConvertingToX>Convertendo anterior para {0}</BeforeConvertingToX>
