@@ -60,6 +60,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string ReadWaterMark(string input)
         {
+            if (input.IndexOf(zeroWhiteSpace) == -1)
+                return string.Empty;
             int i = 0;
             StringBuilder sb = new StringBuilder();
             bool letterOn = false;
