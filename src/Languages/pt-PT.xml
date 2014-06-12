@@ -208,7 +208,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Escolha o idioma</Title>
     <Language>Idioma</Language>
   </ChooseLanguage>
-    <ColorChooser>
+  <ColorChooser>
     <Title>Escolher cor</Title>
     <Red>Vermelho</Red>
     <Green>Verde</Green>
@@ -469,16 +469,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixLongDisplayTimes>Corrigir tempos longos</FixLongDisplayTimes>
     <FixInvalidItalicTags>Corrigir etiquetas itálicas inválidas</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Remover espaços desnecessários</RemoveUnneededSpaces>
-    <RemoveUnneededPeriods>Remover períodos desnecessários</RemoveUnneededPeriods>
+    <RemoveUnneededPeriods>Remover pontos desnecessários</RemoveUnneededPeriods>
     <FixMissingSpaces>Corrigir espaços em falta</FixMissingSpaces>
     <BreakLongLines>Dividir linhas longas</BreakLongLines>
     <RemoveLineBreaks>Remover quebras de linha em textos curtos só com uma frase</RemoveLineBreaks>
     <RemoveLineBreaksAll>Remover quebras de linha em textos curtos (todos excepto diálogos)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Corrigir 'i' maiúscula em palavras em minúsculo (erro de OCR)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Substituir apóstrofe dupla ('') por aspas (")</FixDoubleApostrophes>
-    <AddPeriods>Adicionar espaço depois de linhas quando a seguinte começar com maiúscula</AddPeriods>
+    <AddPeriods>Adicionar ponto final depois de linhas quando a seguinte começar com maiúscula</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Iniciar parágrafo com maiúscula</StartWithUppercaseLetterAfterParagraph>
-    <StartWithUppercaseLetterAfterPeriodInsideParagraph>Iniciar com maiúscula depois de ponto dentro do parágrafo</StartWithUppercaseLetterAfterPeriodInsideParagraph>
+    <StartWithUppercaseLetterAfterPeriodInsideParagraph>Iniciar com maiúscula depois de ponto final dentro do parágrafo</StartWithUppercaseLetterAfterPeriodInsideParagraph>
     <StartWithUppercaseLetterAfterColon>Iniciar com maiúscula depois de ":" ou ";"</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>Corrigir "i" minúscula sozinha por "I" maiúscula (Inglês)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Corrigir erros comuns de OCR (usando lista de substituição OCR)</FixCommonOcrErrors>
@@ -542,7 +542,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XMissingSpacesAdded>{0} espaços em falta adicionados</XMissingSpacesAdded>
     <FixUppercaseIInsideLowercaseWord>Corrigir letra maiúscula 'i' numa palavra minúscula</FixUppercaseIInsideLowercaseWord>
     <XPeriodsAdded>{0} pontos adicionados.</XPeriodsAdded>
-    <FixMissingPeriodAtEndOfLine>Adicionar ponto em falta no final da linha</FixMissingPeriodAtEndOfLine>
+    <FixMissingPeriodAtEndOfLine>Adicionar ponto final em falta no final da linha</FixMissingPeriodAtEndOfLine>
     <XDoubleApostrophesFixed>{0} apóstrofes duplas corrigidas.</XDoubleApostrophesFixed>
     <XUppercaseIsFoundInsideLowercaseWords>{0} maiúsculas 'i's encontradas palavras minúsculas</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Actualizar correcções disponíveis</RefreshFixes>
@@ -982,8 +982,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileOnDiskModified>Ficheiro modificado no disco</FileOnDiskModified>
     <OverwriteModifiedFile>Substituir o ficheiro {0} modificado em {1} {2}{3} pelo ficheiro actual carregado do disco em {4} {5}?</OverwriteModifiedFile>
     <UnableToSaveSubtitleX>Não foi possível guardar a legenda {0}
-parece estar vazia!
-    </UnableToSaveSubtitleX>
+A legenda parece não ter conteúdo - tente guardar novamente se tiver a trabalhar numa legenda válida!</UnableToSaveSubtitleX>
     <BeforeNew>Antes de novo</BeforeNew>
     <New>Novo</New>
     <BeforeConvertingToX>Convertendo anterior para {0}</BeforeConvertingToX>
@@ -1337,7 +1336,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <UpdateAll>Actualizar todos</UpdateAll>
     <XPluginsUpdated>{0} plugin(s) actualizados</XPluginsUpdated>
   </PluginsGet>
-    <RegularExpressionContextMenu>
+  <RegularExpressionContextMenu>
     <WordBoundary>Limite de palavra (\b)</WordBoundary>
     <NonWordBoundary>Sem limite palavra (\B)</NonWordBoundary>
     <NewLine>Nova linha (\r\n)</NewLine>
