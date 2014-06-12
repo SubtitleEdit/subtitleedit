@@ -7,6 +7,7 @@
    * New shortcuts
    * Export to image based formats can now do boxing
    * Export to image based formats, added 2k resolutions - thx Joseph
+   * New tool "Merge lines with same text"
 * IMPROVED:
    * Updated Spanish (Mexico) language file - thx pakitonaranjo
    * Updated French language file - thx JM GBT
@@ -19,6 +20,7 @@
    * Drag & drop support for subtitle comparer - thx ivandrofly
    * Better time division in "Split long lines" - thx Joel
    * Better splitting of dialogues in "Split long lines" - thx Joel
+   * Word lists improved - thx ivandrofly
 * FIXED:
    * OCR via "image compare" now works again
    * Fixed "Bridge gap in duration" when working with SSA/ASS
@@ -33,6 +35,8 @@
    * Several fixes for "Fix common OCR errors" - thx matidio/Joel
    * Fixed crash related to bad font tags in SSA/ASS - thx hhgyu
    * Fixed error converting from DCinema interop to SMPTE
+   * Load last line if blank when loading SubRip files - thx Leon
+   * Spell check auto-fix names now actually works - thx Martin
 
 
 3.3.15 (13th April 2014)

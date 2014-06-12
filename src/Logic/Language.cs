@@ -891,7 +891,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SavedOriginalSubtitleX = "Saved original subtitle {0}",
                 FileOnDiskModified = "file on disk modified",
                 OverwriteModifiedFile = "Overwrite the file {0} modified at {1} {2}{3} with current file loaded from disk at {4} {5}?",
-                UnableToSaveSubtitleX = "Unable to save subtitle file {0}",
+                UnableToSaveSubtitleX = "Unable to save subtitle file {0}" + Environment.NewLine + "Subtitle seems to be empty - try to re-save if you're working on a valid subtitle!",
                 BeforeNew = "Before new",
                 New = "New",
                 BeforeConvertingToX = "Before converting to {0}",

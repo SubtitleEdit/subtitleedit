@@ -5,31 +5,19 @@
     <Word from="acessor" to="assessor" />
     <Word from="acólico" to="acólito" />
     <Word from="açoreano" to="açoriano" />
+    <Word from="actuacao" to="actuação" />
     <Word from="acucar" to="açúcar" />
     <Word from="açucar" to="açúcar" />
-    <Word from="admnistração" to="administração" />
-    <Word from="admnistrador" to="administrador" />
-    <Word from="admnistradora" to="administradora" />
-    <Word from="admnistradoras" to="administradoras" />
-    <Word from="admnistradores" to="administradores" />
-    <Word from="admnistrar" to="administrar" />
     <Word from="advinhar" to="adivinhar" />
     <Word from="africa" to="áfrica" />
     <Word from="ajuisar" to="ajuizar" />
     <Word from="album" to="álbum" />
-    <Word from="alcól" to="álcool" />
-    <Word from="álcol" to="álcool" />
-    <Word from="alcólica" to="alcoólica" />
-    <Word from="alcólicas" to="alcoólicas" />
-    <Word from="alcólico" to="alcoólico" />
-    <Word from="alcólicos" to="alcoólicos" />
     <Word from="alcoolémia" to="alcoolemia" />
     <Word from="aldião" to="aldeão" />
     <Word from="algerino" to="argelino" />
     <Word from="ameixeal" to="ameixial" />
     <Word from="amiaça" to="ameaça" />
     <Word from="analizar" to="analisar" />
-    <Word from="ancioso" to="ansioso" />
     <Word from="andáste" to="andaste" />
     <Word from="anemona" to="anémona" />
     <Word from="antartico" to="antárctico" />
@@ -38,12 +26,14 @@
     <Word from="apárte" to="aparte" />
     <Word from="apiadeiro" to="apeadeiro" />
     <Word from="apiar" to="apear" />
+    <Word from="apreciacao" to="apreciação" />
     <Word from="arctico" to="árctico" />
     <Word from="arrazar" to="arrasar" />
     <Word from="ártico" to="árctico" />
     <Word from="artifice" to="artífice" />
     <Word from="artifícial" to="artificial" />
     <Word from="ascenção" to="ascensão" />
+    <Word from="Associacao" to="Associação" />
     <Word from="assucar" to="açúcar" />
     <Word from="assúcar" to="açúcar" />
     <Word from="aste" to="haste" />
@@ -87,6 +77,7 @@
     <Word from="cincoenta" to="cinquenta" />
     <Word from="cinseiro" to="cinzeiro" />
     <Word from="cinsero" to="sincero" />
+    <Word from="citacoes" to="citações" />
     <Word from="coalizão" to="colisão" />
     <Word from="côdia" to="côdea" />
     <Word from="combóio" to="comboio" />
@@ -96,6 +87,7 @@
     <Word from="constituíu" to="constituiu" />
     <Word from="contato" to="contacto" />
     <Word from="contensão" to="contenção" />
+    <Word from="contribuicoes" to="contribuições" />
     <Word from="coorte" to="corte" />
     <Word from="côr" to="cor" />
     <Word from="corassão" to="coração" />
@@ -117,8 +109,6 @@
     <Word from="despendio" to="dispêndio" />
     <Word from="despêndio" to="dispêndio" />
     <Word from="desplicência" to="displicência" />
-    <Word from="despretenciosa" to="despretensiosa" />
-    <Word from="despretencioso" to="despretensioso" />
     <Word from="dificulidade" to="dificuldade" />
     <Word from="dispender" to="despender" />
     <Word from="dispendio" to="dispêndio" />
@@ -145,12 +135,14 @@
     <Word from="escrivões" to="escrivães" />
     <Word from="esqueiro" to="isqueiro" />
     <Word from="esquesito" to="esquisito" />
+    <Word from="estacoes" to="estações" />
     <Word from="esteje" to="esteja" />
     <Word from="excavação" to="escavação" />
     <Word from="excavar" to="escavar" />
     <Word from="exdrúxula" to="esdrúxula" />
     <Word from="exdrúxulas" to="esdrúxulas" />
     <Word from="exitar" to="hesitar" />
+    <Word from="explicacoes" to="explicações" />
     <Word from="exquisito" to="esquisito" />
     <Word from="extende" to="estende" />
     <Word from="extender" to="estender" />
@@ -218,6 +210,7 @@
     <Word from="indiguinar" to="indignar" />
     <Word from="inflacção" to="inflação" />
     <Word from="ingreja" to="igreja" />
+    <Word from="INSCRICOES" to="INSCRIÇÕES" />
     <Word from="intensão" to="intenção" />
     <Word from="intertido" to="entretido" />
     <Word from="intoxica" to="Intoxica" />
@@ -255,7 +248,6 @@
     <Word from="maçajar" to="massajar" />
     <Word from="Macfadden-o" to="Macfadden o" />
     <Word from="mae" to="mãe" />
-    <Word from="Mae" to="Mãe" />
     <Word from="magestade" to="majestade" />
     <Word from="mãgua" to="mágoa" />
     <Word from="mangerico" to="manjerico" />
@@ -296,6 +288,7 @@
     <Word from="ofecina" to="oficina" />
     <Word from="oje" to="hoje" />
     <Word from="omem" to="homem" />
+    <Word from="opcoes" to="opções" />
     <Word from="opóbrio" to="opróbrio" />
     <Word from="opróbio" to="opróbrio" />
     <Word from="orfão" to="órfão" />
@@ -324,12 +317,11 @@
     <Word from="poden" to="podem" />
     <Word from="poder-mos" to="pudermos" />
     <Word from="ponteagudo" to="pontiagudo" />
+    <Word from="pontuacoes" to="pontuações" />
     <Word from="prazeiroso" to="prazeroso" />
     <Word from="precaridade" to="precariedade" />
     <Word from="precizar" to="precisar" />
     <Word from="preserverança" to="perseverança" />
-    <Word from="pretenciosa" to="pretensiosa" />
-    <Word from="pretencioso" to="pretensioso" />
     <Word from="previlégio" to="privilégio" />
     <Word from="primária-que" to="primária que" />
     <Word from="priúdo" to="período" />
@@ -338,8 +330,6 @@
     <Word from="priveligiada" to="privilegiada" />
     <Word from="priveligiado" to="privilegiado" />
     <Word from="probalidade" to="probabilidade" />
-    <Word from="procesos" to="processos" />
-    <Word from="processo" to="processos" />
     <Word from="progreso" to="progresso" />
     <Word from="proibído" to="proibido" />
     <Word from="proíbido" to="proibido" />
@@ -347,6 +337,7 @@
     <Word from="propiedade" to="propriedade" />
     <Word from="propio" to="próprio" />
     <Word from="própio" to="próprio" />
+    <Word from="provocacoes" to="provocações" />
     <Word from="prsença" to="presença" />
     <Word from="prustituta" to="prostituta" />
     <Word from="pudérmos" to="pudermos" />
@@ -376,6 +367,7 @@
     <Word from="rectaguarda" to="retaguarda" />
     <Word from="rédia" to="rédea" />
     <Word from="reestabelecer" to="restabelecer" />
+    <Word from="refeicoes" to="refeições" />
     <Word from="refêrencia" to="referência" />
     <Word from="regeitar" to="rejeitar" />
     <Word from="regurjitar" to="regurgitar" />
@@ -385,6 +377,7 @@
     <Word from="requere-se" to="requer-se" />
     <Word from="requer-o" to="requere-o" />
     <Word from="requesito" to="requisito" />
+    <Word from="requisicoes" to="requisições" />
     <Word from="RESIDENCIA" to="RESIDÊNCIA" />
     <Word from="respiraçáo" to="respiração" />
     <Word from="restablecer" to="restabelecer" />
@@ -454,6 +447,7 @@
     <Word from="têem" to="têm" />
     <Word from="telemovel" to="telemóvel" />
     <Word from="telémovel" to="telemóvel" />
+    <Word from="terminacoes" to="terminações" />
     <Word from="toráxico" to="torácico" />
     <Word from="tou" to="estou" />
     <Word from="transpôr" to="transpor" />
@@ -522,5 +516,13 @@
   <RegularExpressions>
     <!--    <RegEx find="\bi\b" replaceWith="I" /> just an example - do not use this regex -->
     <RegEx find="(\\d) +º" replaceWith="$1º" />
+	<RegEx find="\Bccao\b" replaceWith="cção" />
+	<RegEx find="\Bccoes\b" replaceWith="cções" />
+	<RegEx find="\Bccao\b" replaceWith="cção" />
+	<RegEx find="\Bcao\b" replaceWith="ção" />
+	<RegEx find="\b([mM])ae\b" replaceWith="$1ãe" />
+	<RegEx find="\Bdmnis\B" replaceWith="dminis" />
+	<RegEx find="\Blcól\B" replaceWith="lcoól" />
+	<RegEx find="\Bcios\B" replaceWith="sios" />
   </RegularExpressions>
 </OCRFixReplaceList>
