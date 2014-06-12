@@ -744,6 +744,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <ChangeSpeedInPercent>비율로 속도 조정...</ChangeSpeedInPercent>
         <MergeShortLines>짧은 줄 병합하기</MergeShortLines>
         <MergeDuplicateText>동일한 텍스트 라인 병합하기</MergeDuplicateText>
+        <MergeSameTimeCodes>동일한 타임코드 라인 병합하기</MergeSameTimeCodes>
         <SplitLongLines>긴 줄 분할하기</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>자막 사이의 최소 간격 설정...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>정렬 기준</SortBy>
@@ -977,7 +978,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SavedOriginalSubtitleX>원본 자막 {0}을 저장했습니다.</SavedOriginalSubtitleX>
     <FileOnDiskModified>디스크 상의 파일이 변경되었습니다.</FileOnDiskModified>
     <OverwriteModifiedFile>{1} {2}{3}에서 변경된 파일 {0}로 {4} {5} 디스크에 로드된 현재 파일을 덮어쓰시겠습니까?</OverwriteModifiedFile>
-    <UnableToSaveSubtitleX>자막 파일 {0}을 저장할 수 없습니다.</UnableToSaveSubtitleX>
+    <UnableToSaveSubtitleX>자막 파일 {0}을 저장할 수 없습니다.
+빈 자막 같습니다 - 유효한 자막을 만들어 다시 저장해 보십시오!</UnableToSaveSubtitleX>
     <BeforeNew>새 작업 전</BeforeNew>
     <New>새 작업</New>
     <BeforeConvertingToX>{0}으(로) 변환하기 전</BeforeConvertingToX>
@@ -1238,6 +1240,13 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MergedText>병합된 텍스트</MergedText>
     <OnlyMergeContinuationLines>연속한 줄만 병합</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <MergeTextWithSameTimeCodes>
+    <Title>* 동일한 타임코드 라인 병합하기</Title>
+    <MaxDifferenceMilliseconds>최대 차이 (밀리초)</MaxDifferenceMilliseconds>
+    <ReBreakLines>다시 줄바꾸기</ReBreakLines>
+    <NumberOfMergesX>병합: {0}개</NumberOfMergesX>
+    <MergedText>병합된 텍스트</MergedText>
+  </MergeTextWithSameTimeCodes>
   <ModifySelection>
     <Title>* 줄 선택 바꾸기</Title>
     <Rule>규칙</Rule>
@@ -1283,7 +1292,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   <NetworkJoin>
     <Title>네트워크 - 기존 세션 참여</Title>
     <Information>기존 세션에 참여하면 같은 자막 파일을 여러 사람들이
-    협력해서 편집할 수 있습니다.</Information>
+	협력해서 편집할 수 있습니다.</Information>
     <Join>참여</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1294,7 +1303,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Title>네트워크 - 새 세션 시작</Title>
     <ConnectionTo>{0}에 연결 하는 중...</ConnectionTo>
     <Information>새 세션에서 하나의 자막 파일을 여러 곳에 있는 사람들과
-    공동으로 제작할 수 있습니다.</Information>
+	공동으로 제작할 수 있습니다.</Information>
     <Start>시작</Start>
   </NetworkStart>
   <OpenVideoDvd>
