@@ -206,6 +206,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Choose language</Title>
     <Language>Language</Language>
   </ChooseLanguage>
+  <ColorChooser>
+    <Title>Choose color</Title>
+    <Red>Red</Red>
+    <Green>Green</Green>
+    <Blue>Blue</Blue>
+    <Alpha>Alpha</Alpha>
+  </ColorChooser>
   <ColumnPaste>
     <Title>Column paste</Title>
     <ChooseColumn>Choose column</ChooseColumn>
@@ -365,6 +372,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Font color</FontColor>
     <BorderColor>Border color</BorderColor>
     <BorderWidth>Border width</BorderWidth>
+    <BorderStyle>Border style</BorderStyle>
+    <BorderStyleOneBox>One box</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Box for each line</BorderStyleBoxForEachLine>
+    <BorderStyleNormalWidthX>Normal, width={0}</BorderStyleNormalWidthX>
     <ShadowColor>Shadow color</ShadowColor>
     <ShadowWidth>Shadow width</ShadowWidth>
     <Transparency>Alpha</Transparency>
@@ -390,6 +401,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SomeLinesWereTooLongX>Some lines were too long:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Line height</LineHeight>
+    <BoxSingleLine>Box - single line</BoxSingleLine>
+    <BoxMultiLine>Box - multi line</BoxMultiLine>
   </ExportPngXml>
   <ExportText>
     <Title>Export text</Title>
@@ -733,6 +746,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeSpeedInPercent>Changed speed (percent)...</ChangeSpeedInPercent>
         <MergeShortLines>Merge short lines...</MergeShortLines>
         <MergeDuplicateText>Merge lines with same text...</MergeDuplicateText>
+        <MergeSameTimeCodes>Merge lines with same time codes...</MergeSameTimeCodes>
         <SplitLongLines>Split long lines...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimum display time between subtitles...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sort by</SortBy>
@@ -967,8 +981,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileOnDiskModified>file on disk modified</FileOnDiskModified>
     <OverwriteModifiedFile>Overwrite the file {0} modified at {1} {2}{3} with current file loaded from disk at {4} {5}?</OverwriteModifiedFile>
     <UnableToSaveSubtitleX>Unable to save subtitle file {0}
-Subtitle seems to be empty - try to re-save if you're working on a valid subtitle!
-    </UnableToSaveSubtitleX>
+Subtitle seems to be empty - try to re-save if you're working on a valid subtitle!</UnableToSaveSubtitleX>
     <BeforeNew>Before new</BeforeNew>
     <New>New</New>
     <BeforeConvertingToX>Before converting to {0}</BeforeConvertingToX>
@@ -1227,6 +1240,13 @@ Continue?</SubtitleAppendPrompt>
     <MergedText>Merged text</MergedText>
     <OnlyMergeContinuationLines>Only merge continuation lines</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <MergeTextWithSameTimeCodes>
+    <Title>Merge lines with same time codes</Title>
+    <MaxDifferenceMilliseconds>Max. milliseconds difference</MaxDifferenceMilliseconds>
+    <ReBreakLines>Re-break lines</ReBreakLines>
+    <NumberOfMergesX>Number of merges: {0}</NumberOfMergesX>
+    <MergedText>Merged text</MergedText>
+  </MergeTextWithSameTimeCodes>
   <ModifySelection>
     <Title>Modify selection</Title>
     <Rule>Rule</Rule>
