@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string x = sb.ToString();
-            if (!x.Contains("<fcpxml version=\"1.3\">"))
+            if (!x.Contains("<fcpxml version=\"1.3\">") && !x.Contains("<fcpxml version=\"1.2\">"))
                 return;
 
             var xml = new XmlDocument();
@@ -158,6 +158,33 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     catch
                     {
                         _errorCount++;
+                    }
+                }
+                if (subtitle.Paragraphs.Count == 0)
+                {
+                    foreach (XmlNode node in xml.SelectNodes("fcpxml/project/sequence/spine/clip/title/text"))
+                    {
+                        try
+                        {
+                            string text = node.ParentNode.InnerText;
+                            Paragraph p = new Paragraph();
+                            p.Text = text.Trim();
+                            p.StartTime = DecodeTime(node.ParentNode.Attributes["offset"]);
+                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + DecodeTime(node.ParentNode.Attributes["duration"]).TotalMilliseconds;
+                            bool add = true;
+                            if (subtitle.Paragraphs.Count > 0)
+                            {
+                                var prev = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
+                                if (prev.Text == p.Text && prev.StartTime.TotalMilliseconds == p.StartTime.TotalMilliseconds)
+                                    add = false;
+                            }
+                            if (add)
+                                subtitle.Paragraphs.Add(p);
+                        }
+                        catch
+                        {
+                            _errorCount++;
+                        }
                     }
                 }
                 subtitle.Renumber(1);
