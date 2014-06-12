@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
                     (e.KeyValue >= 96 && e.KeyValue <= 105))
                 {
                 }
-                else if (e.KeyData == (Keys.Shift | Keys.Home) || e.KeyData == (Keys.Shift | Keys.End))
+                else if (e.KeyData == (Keys.Shift | Keys.Home) || e.KeyData == (Keys.Shift | Keys.End) || e.KeyData == (Keys.Control | Keys.A))
                 {
                 }
                 else if (e.KeyData == (Keys.Control | Keys.V) && Clipboard.GetText(TextDataFormat.UnicodeText).Length > 0)
@@ -95,7 +95,6 @@ namespace Nikse.SubtitleEdit.Forms
                     int num;
                     if (!int.TryParse(p, out num))
                     {
-                        e.Handled = true;
                         e.SuppressKeyPress = true;
                     }
                 }
