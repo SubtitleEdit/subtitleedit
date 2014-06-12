@@ -105,64 +105,82 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// </summary>
         public List<List<PaletteInfo>> Palettes;
 
-        private static readonly byte[] PacketHeader =
+        private static byte[] GetPacketHeader()
         {
-            0x50, 0x47,             // 0:  "PG"
-            0x00, 0x00, 0x00, 0x00, // 2:  PTS - presentation time stamp
-            0x00, 0x00, 0x00, 0x00, // 6:  DTS - decoding time stamp
-            0x00,                   // 10: segment_type
-            0x00, 0x00,             // 11: segment_length (bytes following till next PG)
-        };
+            return new byte[] 
+            {
+                0x50, 0x47,             // 0:  "PG"
+                0x00, 0x00, 0x00, 0x00, // 2:  PTS - presentation time stamp
+                0x00, 0x00, 0x00, 0x00, // 6:  DTS - decoding time stamp
+                0x00,                   // 10: segment_type
+                0x00, 0x00,             // 11: segment_length (bytes following till next PG)
+            };
+        }
 
-        private static readonly byte[] HeaderPCSStart =
+        private static byte[] GetHeaderPCSStart()
         {
-            0x00, 0x00, 0x00, 0x00, // 0: video_width, video_height
-            0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
-            0x00, 0x00,             // 5: composition_number (increased by start and end header)
-            0x80,                   // 7: composition_state (0x80: epoch start)
-            0x00,                   // 8: palette_update_flag (0x80), 7bit reserved
-            0x00,                   // 9: palette_id_ref (0..7)
-            0x01,                   // 10: number_of_composition_objects (0..2)
-            0x00, 0x00,             // 11: 16bit object_id_ref
-            0x00,                   // 13: window_id_ref (0..1)
-            0x00,                   // 14: object_cropped_flag: 0x80, forced_on_flag = 0x040, 6bit reserved
-            0x00, 0x00, 0x00, 0x00  // 15: composition_object_horizontal_position, composition_object_vertical_position
-        };
+            return new byte[] 
+            {
+                0x00, 0x00, 0x00, 0x00, // 0: video_width, video_height
+                0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
+                0x00, 0x00,             // 5: composition_number (increased by start and end header)
+                0x80,                   // 7: composition_state (0x80: epoch start)
+                0x00,                   // 8: palette_update_flag (0x80), 7bit reserved
+                0x00,                   // 9: palette_id_ref (0..7)
+                0x01,                   // 10: number_of_composition_objects (0..2)
+                0x00, 0x00,             // 11: 16bit object_id_ref
+                0x00,                   // 13: window_id_ref (0..1)
+                0x00,                   // 14: object_cropped_flag: 0x80, forced_on_flag = 0x040, 6bit reserved
+                0x00, 0x00, 0x00, 0x00  // 15: composition_object_horizontal_position, composition_object_vertical_position
+            };
+        }
 
-        private static readonly byte[] HeaderPCSEnd =
+        private static byte[] GetHeaderPCSEnd()
         {
-            0x00, 0x00, 0x00, 0x00, // 0: video_width, video_height
-            0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
-            0x00, 0x00,             // 5: composition_number (increased by start and end header)
-            0x00,                   // 7: composition_state (0x00: normal)
-            0x00,                   // 8: palette_update_flag (0x80), 7bit reserved
-            0x00,                   // 9: palette_id_ref (0..7)
-            0x00,                   // 10: number_of_composition_objects (0..2)
-        };
+            return new byte[] 
+            {
+                0x00, 0x00, 0x00, 0x00, // 0: video_width, video_height
+                0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
+                0x00, 0x00,             // 5: composition_number (increased by start and end header)
+                0x00,                   // 7: composition_state (0x00: normal)
+                0x00,                   // 8: palette_update_flag (0x80), 7bit reserved
+                0x00,                   // 9: palette_id_ref (0..7)
+                0x00,                   // 10: number_of_composition_objects (0..2)
+            };
+        }
 
-        private static readonly byte[] HeaderODSFirst =
+        private static byte[] GetHeaderODSFirst()
         {
-            0x00, 0x00,             // 0: object_id
-            0x00,                   // 2: object_version_number
-            0xC0,                   // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
-            0x00, 0x00, 0x00,       // 4: object_data_length - full RLE buffer length (including 4 bytes size info)
-            0x00, 0x00, 0x00, 0x00, // 7: object_width, object_height
-        };
+            return new byte[] 
+            {
+                0x00, 0x00,             // 0: object_id
+                0x00,                   // 2: object_version_number
+                0xC0,                   // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
+                0x00, 0x00, 0x00,       // 4: object_data_length - full RLE buffer length (including 4 bytes size info)
+                0x00, 0x00, 0x00, 0x00, // 7: object_width, object_height
+            };
+        }
 
-        private static readonly byte[] HeaderODSNext =
+        private static byte[] GetHeaderODSNext()
         {
-            0x00, 0x00,             // 0: object_id
-            0x00,                   // 2: object_version_number
-            0x40,                   // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
-        };
+            return new byte[] 
+            {
+                0x00, 0x00,             // 0: object_id
+                0x00,                   // 2: object_version_number
+                0x40,                   // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
+            };
+        }
 
-        private static readonly byte[] HeaderWds =
+        private static byte[] GetHeaderWds()
         {
-            0x01,                   // 0 : number of windows (currently assumed 1, 0..2 is legal)
-            0x00,                   // 1 : window id (0..1)
-            0x00, 0x00, 0x00, 0x00, // 2 : x-ofs, y-ofs
-            0x00, 0x00, 0x00, 0x00  // 6 : width, height
-        };
+            return new byte[] 
+            {
+                0x01,                   // 0 : number of windows (currently assumed 1, 0..2 is legal)
+                0x00,                   // 1 : window id (0..1)
+                0x00, 0x00, 0x00, 0x00, // 2 : x-ofs, y-ofs
+                0x00, 0x00, 0x00, 0x00  // 6 : width, height
+             };
+        }
 
         public BluRaySupPicture()
         {
@@ -363,6 +381,13 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             // a typical frame consists of 8 packets. It can be enlonged by additional
             // object frames
             int palSize = colorPalette.Count;
+
+            var PacketHeader = GetPacketHeader();
+            var HeaderPCSStart = GetHeaderPCSStart();
+            var HeaderPCSEnd = GetHeaderPCSEnd();
+            var HeaderWds = GetHeaderWds();
+            var HeaderODSFirst = GetHeaderODSFirst();
+            var HeaderODSNext = GetHeaderODSNext();
 
             int size = PacketHeader.Length * (8 + numAddPackets);
             size += HeaderPCSStart.Length + HeaderPCSEnd.Length;

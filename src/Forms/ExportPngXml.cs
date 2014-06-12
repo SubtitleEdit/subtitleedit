@@ -455,7 +455,7 @@ namespace Nikse.SubtitleEdit.Forms
                             threadEqual.Start(paramEqual);
 
                             if (threadUnEqual.ThreadState == ThreadState.Running)
-                                threadUnEqual.Join(3000);
+                                threadUnEqual.Join();
                             imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramUnEqual, i);
                             if (!string.IsNullOrEmpty(paramUnEqual.Error))
                             {
@@ -469,7 +469,7 @@ namespace Nikse.SubtitleEdit.Forms
                             threadUnEqual.Start(paramUnEqual);
 
                             if (threadEqual.ThreadState == ThreadState.Running)
-                                threadEqual.Join(3000);
+                                threadEqual.Join();
                             imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
                             if (!string.IsNullOrEmpty(paramEqual.Error))
                             {
@@ -484,22 +484,20 @@ namespace Nikse.SubtitleEdit.Forms
                     if (i % 2 == 0)
                     {
                         if (threadEqual.ThreadState == ThreadState.Running)
-                            threadEqual.Join(3000);
+                            threadEqual.Join();
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
                         if (threadUnEqual.ThreadState == ThreadState.Running)
-                            threadUnEqual.Join(3000);
+                            threadUnEqual.Join();
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramUnEqual, i);
                     }
                     else
                     {
                         if (threadUnEqual.ThreadState == ThreadState.Running)
-                            threadUnEqual.Join(3000);
-                        imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter,
-                                                          binarySubtitleFile, paramUnEqual, i);
+                            threadUnEqual.Join();
+                        imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramUnEqual, i);
                         if (threadEqual.ThreadState == ThreadState.Running)
-                            threadEqual.Join(3000);
-                        imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter,
-                                                          binarySubtitleFile, paramEqual, i);
+                            threadEqual.Join();
+                        imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
                     }
                 }
 
