@@ -207,6 +207,13 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Vælg sprog</Title>
     <Language>Sprog</Language>
   </ChooseLanguage>
+  <ColorChooser>
+    <Title>Vælg farve</Title>
+    <Red>Rød</Red>
+    <Green>Grøn</Green>
+    <Blue>Blå</Blue>
+    <Alpha>Alpha</Alpha>
+  </ColorChooser>
   <ColumnPaste>
     <Title>Indsæt fra udklipsholder</Title>
     <ChooseColumn>Vælg kolonne</ChooseColumn>
@@ -250,6 +257,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffectColor>Effekt farve</FontEffectColor>
     <FontSize>Str.</FontSize>
     <TopBottomMargin>Top/bund margin</TopBottomMargin>
+    <FadeUpTime>Fade up tid</FadeUpTime>
+    <FadeDownTime>Fade ned tid</FadeDownTime>
     <ZPosition>Z-position</ZPosition>
     <ZPositionHelp>positive tal flytter tekst væk, negative tal flytter tekst tættere på, hvis z-position er nul så er det 2D</ZPositionHelp>
     <ChooseColor>Vælg farve...</ChooseColor>
@@ -364,6 +373,10 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Skriftfarve</FontColor>
     <BorderColor>Kantfarve</BorderColor>
     <BorderWidth>Kantbredde</BorderWidth>
+    <BorderStyle>Border stil</BorderStyle>
+    <BorderStyleOneBox>En Boks</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Boks for hver linje</BorderStyleBoxForEachLine>
+    <BorderStyleNormalWidthX>Normal, bredde = {0}</BorderStyleNormalWidthX>
     <ShadowColor>Skygge farve</ShadowColor>
     <ShadowWidth>Skygge tykkelse</ShadowWidth>
     <Transparency>Alpha</Transparency>
@@ -389,6 +402,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SomeLinesWereTooLongX>Nogle linjer var for lange:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Linje højde</LineHeight>
+    <BoxSingleLine>Boks - enkelt linje</BoxSingleLine>
+    <BoxMultiLine>Boks - multi linie</BoxMultiLine>
   </ExportPngXml>
   <ExportText>
     <Title>Eksport tekst</Title>
@@ -732,6 +747,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeSpeedInPercent>Ændr hastighed (procent)...</ChangeSpeedInPercent>
         <MergeShortLines>Flet korte linjer...</MergeShortLines>
         <MergeDuplicateText>Flet liner med samme tekst...</MergeDuplicateText>
+        <MergeSameTimeCodes>Flet linjer med samme tidskoder...</MergeSameTimeCodes>
         <SplitLongLines>Split lange linjer...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimum visningstid mellem tekster...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sorter efter</SortBy>
@@ -1224,6 +1240,13 @@ Fortsæt?</SubtitleAppendPrompt>
     <MergedText>Sammenlagt tekst</MergedText>
     <OnlyMergeContinuationLines>Flet kun fortsættelses-linjer</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <MergeTextWithSameTimeCodes>
+    <Title>Flet linjer med samme tidskoder</Title>
+    <MaxDifferenceMilliseconds>Max. millisekunder forskel</MaxDifferenceMilliseconds>
+    <ReBreakLines>Auto-bryd linjer</ReBreakLines>
+    <NumberOfMergesX>Antal fletninger: {0}</NumberOfMergesX>
+    <MergedText>Fusioneret tekst</MergedText>
+  </MergeTextWithSameTimeCodes>
   <ModifySelection>
     <Title>Modificer markering</Title>
     <Rule>Regel</Rule>
@@ -1312,6 +1335,19 @@ Fortsæt?</SubtitleAppendPrompt>
     <UpdateAll>Opdater alle</UpdateAll>
     <XPluginsUpdated>{0} plugin(s) opdateret</XPluginsUpdated>
   </PluginsGet>
+  <RegularExpressionContextMenu>
+    <WordBoundary>Word boundary (\b)</WordBoundary>
+    <NonWordBoundary>Non word boundary (\B)</NonWordBoundary>
+    <NewLine>New line (\r\n)</NewLine>
+    <NewLineShort>New line (\n)</NewLineShort>
+    <AnyDigit>Any digit (\d)</AnyDigit>
+    <AnyCharacter>Any character (.)</AnyCharacter>
+    <AnyWhitespace>Any whitespace (\s)</AnyWhitespace>
+    <ZeroOrMore>Zero or more (*)</ZeroOrMore>
+    <OneOrMore>One or more (+)</OneOrMore>
+    <InCharacterGroup>In character group ([test])</InCharacterGroup>
+    <NotInCharacterGroup>Not in character group ([^test])</NotInCharacterGroup>
+  </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Fjern tekst for hørehæmmede</Title>
     <RemoveTextConditions>Betingelser</RemoveTextConditions>
@@ -1592,11 +1628,15 @@ Fortsæt?</SubtitleAppendPrompt>
     <ListViewColumnInsert>Column, indsæt tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Column, indsæt fra udklipsholder</ListViewColumnPaste>
     <ListViewFocusWaveform>Fokuser bølgeform/spectrogram</ListViewFocusWaveform>
+    <ListViewGoToNextError>Gå til næste fejl</ListViewGoToNextError>
     <ShowBeamer>Start undertekst fremviser (fuldskærm)</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Flyt sidste ord ned til næste linje</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Flyt første ord fra næste linje op</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxSelectionToLower>Markering til små bogstaver</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>Markering til store bogstaver</MainTextBoxSelectionToUpper>
     <MainTextBoxAutoBreak>Auto-ombryd tekst</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Fjern linjeskift</MainTextBoxUnbreak>
+    <MainFileSaveAll>Gem alle</MainFileSaveAll>
     <Miscellaneous>Diverse</Miscellaneous>
     <UseDoNotBreakAfterList>Benyt skift-ikke-efter-liste (for auto-ombrydning)</UseDoNotBreakAfterList>
   </Settings>
