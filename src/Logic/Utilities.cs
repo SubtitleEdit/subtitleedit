@@ -2002,9 +2002,23 @@ namespace Nikse.SubtitleEdit.Logic
                 else
                     userWords.LoadXml("<words />");
 
-                XmlNode node = userWords.CreateElement("word");
-                node.InnerText = word;
-                userWords.DocumentElement.AppendChild(node);
+                var words = new List<string>();
+                foreach (XmlNode node in userWords.DocumentElement.SelectNodes("word"))
+                { 
+                    string w = node.InnerText.Trim();
+                    if (w.Length > 0)
+                        words.Add(w);
+                }
+                words.Add(word);
+                words.Sort();
+
+                userWords.DocumentElement.RemoveAll();
+                foreach (string w in words)
+                {
+                    XmlNode node = userWords.CreateElement("word");
+                    node.InnerText = w;
+                    userWords.DocumentElement.AppendChild(node);
+                }                
                 userWords.Save(userWordsXmlFileName);
             }
         }
