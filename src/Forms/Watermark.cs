@@ -60,6 +60,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string ReadWaterMark(string input)
         {
+            if (input.IndexOf(zeroWhiteSpace) == -1)
+                return string.Empty;
             int i = 0;
             StringBuilder sb = new StringBuilder();
             bool letterOn = false;
@@ -92,6 +94,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddWaterMark(Subtitle subtitle, string input)
         {
+            if (subtitle == null || subtitle.Paragraphs.Count == 0)
+            {
+                return;
+            }
+
             byte[] buffer = Encoding.ASCII.GetBytes(input);
 
             if (radioButtonCurrentLine.Checked)
