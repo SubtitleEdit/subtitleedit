@@ -2737,14 +2737,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void FixOcrErrorsViaReplaceList(string threeLetterISOLanguageName)
         {
-            OcrFixEngine ocrFixEngine = new OcrFixEngine(threeLetterISOLanguageName, null, this);
+            var ocrFixEngine = new OcrFixEngine(threeLetterISOLanguageName, null, this);
             string fixAction = _language.FixCommonOcrErrors;
             int noOfFixes = 0;
             string lastLine = string.Empty;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
-                string text = ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, false);
+                var p = _subtitle.Paragraphs[i];
+                string text = ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
                 lastLine = text;
                 if (p.Text != text)
                 {

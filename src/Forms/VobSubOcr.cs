@@ -3915,7 +3915,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (_ocrFixEngine != null && _ocrFixEngine.IsDictionaryLoaded)
             {
                 if (checkBoxAutoFixCommonErrors.Checked)
-                    line = _ocrFixEngine.FixOcrErrors(line, listViewIndex, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                    line = _ocrFixEngine.FixOcrErrors(line, listViewIndex, _lastLine, true, GetAutoGuessLevel());
+
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
@@ -3923,7 +3924,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
-                    line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, listViewIndex, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, checkBoxGuessUnknownWords.Checked);
+                    line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, listViewIndex, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, GetAutoGuessLevel());
                 }
 
                 if (_ocrFixEngine.Abort)
@@ -4120,8 +4121,12 @@ namespace Nikse.SubtitleEdit.Forms
             string textWithOutFixes = line;
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
+                var autoGuessLevel = OcrFixEngine.AutoGuessLevel.None;
+                if (checkBoxGuessUnknownWords.Checked)
+                    autoGuessLevel = OcrFixEngine.AutoGuessLevel.Aggressive;
+
                 if (checkBoxAutoFixCommonErrors.Checked)
-                    line = _ocrFixEngine.FixOcrErrors(line, listViewIndex, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                    line = _ocrFixEngine.FixOcrErrors(line, listViewIndex, _lastLine, true, autoGuessLevel);
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
@@ -4129,7 +4134,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
-                    line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, listViewIndex, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, checkBoxGuessUnknownWords.Checked);
+                    line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, listViewIndex, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, autoGuessLevel);
                 }
 
                 if (_ocrFixEngine.Abort)
@@ -4427,7 +4432,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
                 if (checkBoxAutoFixCommonErrors.Checked)
-                    line = _ocrFixEngine.FixOcrErrors(line, listViewIndex, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                    line = _ocrFixEngine.FixOcrErrors(line, listViewIndex, _lastLine, true, GetAutoGuessLevel());
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
@@ -4435,7 +4440,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
-                    line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, listViewIndex, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, checkBoxGuessUnknownWords.Checked);
+                    line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, listViewIndex, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, GetAutoGuessLevel());
                 }
 
                 if (_ocrFixEngine.Abort)
@@ -5930,7 +5935,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
                 if (checkBoxAutoFixCommonErrors.Checked)
-                    line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                    line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, GetAutoGuessLevel());
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
                 int oldCorrectWords = correctWords;
@@ -5942,7 +5947,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _ocrFixEngine.UnknownWordsFound.Clear();
 
                     string newUnfixedText = TesseractResizeAndRetry(bitmap);
-                    string newText = _ocrFixEngine.FixOcrErrors(newUnfixedText, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                    string newText = _ocrFixEngine.FixOcrErrors(newUnfixedText, index, _lastLine, true, GetAutoGuessLevel());
                     int newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText, out correctWords);
 
                     if (wordsNotFound == 1 && newWordsNotFound == 1 && newUnfixedText.EndsWith("!!") && textWithOutFixes.EndsWith("u") && newText.Length > 1)
@@ -6015,7 +6020,7 @@ namespace Nikse.SubtitleEdit.Forms
                             int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(oneColorText, out modiCorrectWords);
                             string modiTextOcrFixed = oneColorText;
                             if (checkBoxAutoFixCommonErrors.Checked)
-                                modiTextOcrFixed = _ocrFixEngine.FixOcrErrors(oneColorText, index, _lastLine, false, checkBoxGuessUnknownWords.Checked);
+                                modiTextOcrFixed = _ocrFixEngine.FixOcrErrors(oneColorText, index, _lastLine, false, GetAutoGuessLevel());
                             int modiOcrCorrectedCorrectWords;
                             int modiOcrCorrectedWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiTextOcrFixed, out modiOcrCorrectedCorrectWords);
                             if (modiOcrCorrectedWordsNotFound <= modiWordsNotFound)
@@ -6031,7 +6036,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 wordsNotFound = modiWordsNotFound;
                                 correctWords = modiCorrectWords;
                                 if (checkBoxAutoFixCommonErrors.Checked)
-                                    line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                                    line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, GetAutoGuessLevel());
                             }
                             else if (wordsNotFound == modiWordsNotFound && oneColorText.EndsWith("!") && (line.EndsWith("l") || line.EndsWith("ﬂ")))
                             {
@@ -6039,7 +6044,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 wordsNotFound = modiWordsNotFound;
                                 correctWords = modiCorrectWords;
                                 if (checkBoxAutoFixCommonErrors.Checked)
-                                    line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                                    line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, GetAutoGuessLevel());
                             }
                         }
                     }
@@ -6063,7 +6068,7 @@ namespace Nikse.SubtitleEdit.Forms
                             int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(unItalicText, out modiCorrectWords);
                             string modiTextOcrFixed = unItalicText;
                             if (checkBoxAutoFixCommonErrors.Checked)
-                                modiTextOcrFixed = _ocrFixEngine.FixOcrErrors(unItalicText, index, _lastLine, false, checkBoxGuessUnknownWords.Checked);
+                                modiTextOcrFixed = _ocrFixEngine.FixOcrErrors(unItalicText, index, _lastLine, false, GetAutoGuessLevel());
                             int modiOcrCorrectedCorrectWords;
                             int modiOcrCorrectedWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiTextOcrFixed, out modiOcrCorrectedCorrectWords);
                             if (modiOcrCorrectedWordsNotFound <= modiWordsNotFound)
@@ -6295,7 +6300,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         line = line.Replace("'.", ":");
                                     }
-                                    line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                                    line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, GetAutoGuessLevel());
                                 }
                                 line = "<i>" + line + "</i>";
                             }
@@ -6392,7 +6397,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 string modiTextOcrFixed = modiText;
                                 if (checkBoxAutoFixCommonErrors.Checked)
-                                    modiTextOcrFixed = _ocrFixEngine.FixOcrErrors(modiText, index, _lastLine, false, checkBoxGuessUnknownWords.Checked);
+                                    modiTextOcrFixed = _ocrFixEngine.FixOcrErrors(modiText, index, _lastLine, false, GetAutoGuessLevel());
                                 int modiOcrCorrectedWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiTextOcrFixed, out correctWords);
                                 if (modiOcrCorrectedWordsNotFound <= modiWordsNotFound)
                                     modiText = modiTextOcrFixed;
@@ -6405,11 +6410,11 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // take the best option - before ocr fixing, which we do again to save suggestions and prompt for user input
-                        line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, checkBoxGuessUnknownWords.Checked);
+                        line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, GetAutoGuessLevel());
                     }
                     else
                     { // fix some error manually (modi not available)
-                        line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, checkBoxGuessUnknownWords.Checked);
+                        line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, GetAutoGuessLevel());
                     }
                 }
 
@@ -6475,7 +6480,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             { // no dictionary :(
                 if (checkBoxAutoFixCommonErrors.Checked)
-                    line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                    line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, GetAutoGuessLevel());
 
                 if (badWords >= numberOfWords)
                     subtitleListView1.SetBackgroundColor(index, Color.Red);
@@ -8416,6 +8421,14 @@ namespace Nikse.SubtitleEdit.Forms
             form.Initialize(_nOcrDb);
             form.Show(this);
         }
+
+        private  OcrFixEngine.AutoGuessLevel GetAutoGuessLevel()
+        {
+            var autoGuessLevel = OcrFixEngine.AutoGuessLevel.None;
+            if (checkBoxGuessUnknownWords.Checked)
+                autoGuessLevel = OcrFixEngine.AutoGuessLevel.Aggressive;
+            return autoGuessLevel;
+        }            
 
     }
 }

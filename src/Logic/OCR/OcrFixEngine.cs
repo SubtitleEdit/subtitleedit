@@ -14,6 +14,13 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 {
     public class OcrFixEngine
     {
+        public enum AutoGuessLevel
+        { 
+            None,
+            Cautious,
+            Aggressive
+        }
+
         // Dictionaries/spellchecking/fixing
         Dictionary<string, string> _wordReplaceList;
         Dictionary<string, string> _partialLineWordBoundaryReplaceList;
@@ -386,7 +393,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return list;
         }
 
-        public string FixOcrErrors(string text, int index, string lastLine, bool logSuggestions, bool useAutoGuess)
+        public string FixOcrErrors(string text, int index, string lastLine, bool logSuggestions, AutoGuessLevel autoGuess)
         {
             var sb = new StringBuilder();
             var word = new StringBuilder();
@@ -452,7 +459,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
             text = FixCommenOcrLineErrors(sb.ToString(), lastLine);
             int wordsNotFound;
-            text =  FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, text, index, null, true, false, logSuggestions, useAutoGuess);
+            text =  FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, text, index, null, true, false, logSuggestions, autoGuess);
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
                 text = FixLowercaseIToUppercaseI(text, lastLine);
@@ -1424,7 +1431,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return newText;
         }
 
-        public string FixUnknownWordsViaGuessOrPrompt(out int wordsNotFound, string line, int index, Bitmap bitmap, bool autoFix, bool promptForFixingErrors, bool log, bool useAutoGuess)
+        public string FixUnknownWordsViaGuessOrPrompt(out int wordsNotFound, string line, int index, Bitmap bitmap, bool autoFix, bool promptForFixingErrors, bool log, AutoGuessLevel autoGuess)
         {
             var localIgnoreWords = new List<string>();
             wordsNotFound = 0;
@@ -1549,10 +1556,10 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             UnknownWordsFound.Add(string.Format("#{0}: {1}", index + 1, nf));
                         }
 
-                        if (autoFix && useAutoGuess)
+                        if (autoFix && autoGuess != AutoGuessLevel.None) 
                         {
                             var guesses = new List<string>();
-                            if (word.Length > 5)
+                            if (word.Length > 5 && autoGuess == AutoGuessLevel.Aggressive)
                             {
                                 guesses = (List<string>)CreateGuessesFromLetters(word);
 
@@ -1566,7 +1573,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                                 if (DoSpell(word.ToLower()))
                                     guesses.Insert(0, wordWithCasingChanged);
                             }
-                            else
+                            else if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
                             {
                                 if (word[0] == 'L')
                                     guesses.Add("I" + word.Substring(1));
@@ -1585,6 +1592,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                                     guesses.Add(word.Replace("$", "s"));
                                 if (!word.EndsWith("€") && !word.StartsWith("€"))
                                     guesses.Add(word.Replace("€", "e"));
+                                guesses.Add(word.Replace("/", "l"));
+                                guesses.Add(word.Replace(")/", "y"));
                             }
                             foreach (string guess in guesses)
                             {
