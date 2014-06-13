@@ -368,16 +368,15 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "(laughing/clapping)");
         }
 
-        //Auto-guess unknown words in "Fix common errors" is now disabled
-        //[TestMethod]
-        //[DeploymentItem("SubtitleEdit.exe")]
-        //public void FixCommonOcrErrorsSlashIsL()
-        //{
-        //    var target = GetFixCommonErrorsLib();
-        //    InitializeFixCommonErrorsLine(target, "The font is ita/ic!");
-        //    target.FixOcrErrorsViaReplaceList("eng");
-        //    Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The font is italic!"); // will fail if English dictionary is not found
-        //}
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixCommonOcrErrorsSlashIsL() // requires hardcoded rules enabled
+        {
+            var target = GetFixCommonErrorsLib();
+            InitializeFixCommonErrorsLine(target, "The font is ita/ic!"); 
+            target.FixOcrErrorsViaReplaceList("eng");
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The font is italic!"); // will fail if English dictionary is not found
+        }
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
