@@ -523,6 +523,5 @@
 	<RegEx find="\b([mM])ae\b" replaceWith="$1ãe" />
 	<RegEx find="\Bdmnis\B" replaceWith="dminis" />
 	<RegEx find="\Blcól\B" replaceWith="lcoól" />
-	<RegEx find="\Bcios\B" replaceWith="sios" />
   </RegularExpressions>
 </OCRFixReplaceList>
