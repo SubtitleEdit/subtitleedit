@@ -100,6 +100,5 @@ namespace Nikse.SubtitleEdit.Forms
                 return "https://github.com/SubtitleEdit/subtitleedit";
             }
         }
-
     }
 }

@@ -8,7 +8,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class ImportUnknownFormat : Form
     {
-
         public Subtitle ImportedSubitle;
         private readonly Timer _refreshTimer = new Timer();
 
@@ -55,12 +54,11 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectIndexAndEnsureVisible(0);
         }
 
-        void RefreshTimerTick(object sender, EventArgs e)
+        private void RefreshTimerTick(object sender, EventArgs e)
         {
             _refreshTimer.Stop();
             GeneratePreviewReal();
         }
-
 
         private void LoadTextFile(string fileName)
         {
