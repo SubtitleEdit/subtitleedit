@@ -42,10 +42,17 @@ IF "%~1" == "" (
 :START
 PUSHD "src"
 
-CALL "%VS120COMNTOOLS%vsvars32.bat" x86
-TITLE %BUILDTYPE%ing SubtitleEdit - Release^|Any CPU...
+CALL "%VS120COMNTOOLS%..\..\VC\vcvarsall.bat" x86
+TITLE %BUILDTYPE%ing SubtitleEdit - Release^|x86...
 
-"MSBuild.exe" SubtitleEdit.sln /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="Any CPU"^
+"MSBuild.exe" SubtitleEdit.sln /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="x86"^
+ /maxcpucount /consoleloggerparameters:DisableMPLogging;Summary;Verbosity=minimal
+IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
+
+CALL "%VS120COMNTOOLS%..\..\VC\vcvarsall.bat" x86_amd64
+TITLE %BUILDTYPE%ing SubtitleEdit - Release^|x64...
+
+"MSBuild.exe" SubtitleEdit.sln /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="x64"^
  /maxcpucount /consoleloggerparameters:DisableMPLogging;Summary;Verbosity=minimal
 IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
@@ -54,19 +61,20 @@ POPD
 
 IF /I "%BUILDTYPE%" == "Clean" GOTO END
 
-IF DEFINED SEVENZIP_PATH IF EXIST "%SEVENZIP_PATH%" CALL :SubZipFile
+CALL :SubDetectSevenzipPath
+IF DEFINED SEVENZIP_PATH IF EXIST "%SEVENZIP_PATH%" (
+  CALL :SubZipFile x86
+  CALL :SubZipFile x64
+)
 
 CALL :SubDetectInnoSetup
 
 IF DEFINED InnoSetupPath (
-  PUSHD "installer"
-
   TITLE Compiling installer...
-  "%InnoSetupPath%\iscc.exe" /O.. /Q "Subtitle_Edit_installer.iss"
+  "%InnoSetupPath%" /O"." /Q "installer\Subtitle_Edit_installer.iss"
   IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
   ECHO. & ECHO Installer compiled successfully!
-  POPD
 ) ELSE (
   ECHO Inno Setup wasn't found; the installer wasn't built
 )
@@ -81,8 +89,8 @@ EXIT /B
 
 
 :SubZipFile
-TITLE Creating the ZIP file...
-PUSHD "src\bin\Release"
+TITLE Creating the %~1 ZIP file...
+PUSHD "src\bin\Release\%~1"
 IF EXIST "temp_zip"                                RD /S /Q "temp_zip"
 IF NOT EXIST "temp_zip"                            MD "temp_zip"
 IF NOT EXIST "temp_zip\Languages"                  MD "temp_zip\Languages"
@@ -90,27 +98,28 @@ IF NOT EXIST "temp_zip\Tesseract"                  MD "temp_zip\Tesseract"
 IF NOT EXIST "temp_zip\Tesseract\tessdata"         MD "temp_zip\Tesseract\tessdata"
 IF NOT EXIST "temp_zip\Tesseract\tessdata\configs" MD "temp_zip\Tesseract\tessdata\configs"
 
-COPY /Y /V "..\..\..\gpl.txt"                            "temp_zip\"
-COPY /Y /V "..\..\Changelog.txt"                         "temp_zip\"
-COPY /Y /V "Interop.QuartzTypeLib.dll"                   "temp_zip\"
-COPY /Y /V "Hunspellx86.dll"                             "temp_zip\"
-COPY /Y /V "SubtitleEdit.exe"                            "temp_zip\"
-COPY /Y /V "Languages\*.xml"                             "temp_zip\Languages\"
-COPY /Y /V "..\..\..\Tesseract\msvcp90.dll"              "temp_zip\Tesseract\"
-COPY /Y /V "..\..\..\Tesseract\msvcr90.dll"              "temp_zip\Tesseract\"
-COPY /Y /V "..\..\..\Tesseract\tesseract.exe"            "temp_zip\Tesseract\"
-COPY /Y /V "..\..\..\Tesseract\tessdata\configs\hocr"    "temp_zip\Tesseract\tessdata\configs\"
-COPY /Y /V "..\..\..\Tesseract\tessdata\eng.traineddata" "temp_zip\Tesseract\tessdata\"
+COPY /Y /V "..\..\..\..\gpl.txt"                            "temp_zip\"
+COPY /Y /V "..\..\..\Changelog.txt"                         "temp_zip\"
+COPY /Y /V "Interop.QuartzTypeLib.dll"                      "temp_zip\"
+COPY /Y /V "Hunspell%~1.dll"                                "temp_zip\"
+COPY /Y /V "SubtitleEdit.exe"                               "temp_zip\"
+COPY /Y /V "Languages\*.xml"                                "temp_zip\Languages\"
+COPY /Y /V "..\..\..\..\Tesseract\msvcp90.dll"              "temp_zip\Tesseract\"
+COPY /Y /V "..\..\..\..\Tesseract\msvcr90.dll"              "temp_zip\Tesseract\"
+COPY /Y /V "..\..\..\..\Tesseract\tesseract.exe"            "temp_zip\Tesseract\"
+COPY /Y /V "..\..\..\..\Tesseract\tessdata\configs\hocr"    "temp_zip\Tesseract\tessdata\configs\"
+COPY /Y /V "..\..\..\..\Tesseract\tessdata\eng.traineddata" "temp_zip\Tesseract\tessdata\"
 
 PUSHD "temp_zip"
-START "" /B /WAIT "%SEVENZIP_PATH%" a -tzip -mx=9 "SE%VERSION%.zip" * >NUL
+START "" /B /WAIT "%SEVENZIP_PATH%" a -tzip -mx=9 "SE%VERSION%.%~1.zip" * >NUL
 IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
 
-MOVE /Y "SE%VERSION%.zip" "..\..\..\.." >NUL
+MOVE /Y "SE%VERSION%.%~1.zip" "..\..\..\..\.." >NUL
 POPD
 IF EXIST "temp_zip" RD /S /Q "temp_zip"
 POPD
+
 EXIT /B
 
 
@@ -137,21 +146,21 @@ ENDLOCAL
 EXIT /B
 
 
-:SubDetectInnoSetup
-rem Detect if we are running on 64bit Windows and use Wow6432Node since Inno Setup is
-rem a 32-bit application, and set the registry key of Inno Setup accordingly
-IF DEFINED PROGRAMFILES(x86) (
-  SET "U_=HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
-) ELSE (
-  SET "U_=HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
-)
+:SubDetectSevenzipPath
+FOR %%G IN (7z.exe) DO (SET "SEVENZIP_PATH=%%~$PATH:G")
+IF EXIST "%SEVENZIP_PATH%" (SET "SEVENZIP=%SEVENZIP_PATH%" & EXIT /B)
 
-FOR /F "delims=" %%a IN (
-  'REG QUERY "%U_%\Inno Setup 5_is1" /v "Inno Setup: App Path"2^>Nul^|FIND "REG_"') DO (
-  SET "InnoSetupPath=%%a" & CALL :SubInnoSetup %%InnoSetupPath:*Z=%%)
+FOR %%G IN (7za.exe) DO (SET "SEVENZIP_PATH=%%~$PATH:G")
+IF EXIST "%SEVENZIP_PATH%" (SET "SEVENZIP=%SEVENZIP_PATH%" & EXIT /B)
+
+FOR /F "tokens=2*" %%A IN (
+  'REG QUERY "HKLM\SOFTWARE\7-Zip" /v "Path" 2^>NUL ^| FIND "REG_SZ" ^|^|
+   REG QUERY "HKLM\SOFTWARE\Wow6432Node\7-Zip" /v "Path" 2^>NUL ^| FIND "REG_SZ"') DO SET "SEVENZIP=%%B\7z.exe"
 EXIT /B
 
 
-:SubInnoSetup
-SET "InnoSetupPath=%*"
+:SubDetectInnoSetup
+FOR /F "tokens=5*" %%A IN (
+  'REG QUERY "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Inno Setup 5_is1" /v "Inno Setup: App Path" 2^>NUL ^| FIND "REG_SZ" ^|^|
+   REG QUERY "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Inno Setup 5_is1" /v "Inno Setup: App Path" 2^>NUL ^| FIND "REG_SZ"') DO SET "InnoSetupPath=%%B\ISCC.exe"
 EXIT /B
