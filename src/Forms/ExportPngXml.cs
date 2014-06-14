@@ -744,7 +744,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (comboBoxResolution.SelectedIndex < 0)
                 return;
 
-            string text = comboBoxResolution.Text.Trim();;
+            string text = comboBoxResolution.Text.Trim();
             if (text.Contains("("))
                 text = text.Remove(0, text.IndexOf("(")).Trim();
             text = text.TrimStart('(').TrimEnd(')').Trim();

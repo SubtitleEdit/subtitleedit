@@ -301,7 +301,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             // object frames
             int palSize = colorPalette.Count;
 
-            var packetHeader = new byte[] 
+            var packetHeader = new byte[]
             {
                 0x50, 0x47,             // 0:  "PG"
                 0x00, 0x00, 0x00, 0x00, // 2:  PTS - presentation time stamp
@@ -309,7 +309,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 0x00,                   // 10: segment_type
                 0x00, 0x00,             // 11: segment_length (bytes following till next PG)
             };
-            var headerPCSStart = new byte[] 
+            var headerPCSStart = new byte[]
             {
                 0x00, 0x00, 0x00, 0x00, // 0: video_width, video_height
                 0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
@@ -323,7 +323,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 0x00,                   // 14: object_cropped_flag: 0x80, forced_on_flag = 0x040, 6bit reserved
                 0x00, 0x00, 0x00, 0x00  // 15: composition_object_horizontal_position, composition_object_vertical_position
             };
-            var headerPCSEnd = new byte[] 
+            var headerPCSEnd = new byte[]
             {
                 0x00, 0x00, 0x00, 0x00, // 0: video_width, video_height
                 0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
@@ -333,14 +333,14 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 0x00,                   // 9: palette_id_ref (0..7)
                 0x00,                   // 10: number_of_composition_objects (0..2)
             };
-            var headerWds = new byte[] 
+            var headerWds = new byte[]
             {
                 0x01,                   // 0 : number of windows (currently assumed 1, 0..2 is legal)
                 0x00,                   // 1 : window id (0..1)
                 0x00, 0x00, 0x00, 0x00, // 2 : x-ofs, y-ofs
                 0x00, 0x00, 0x00, 0x00  // 6 : width, height
              };
-            var headerODSFirst = new byte[] 
+            var headerODSFirst = new byte[]
             {
                 0x00, 0x00,             // 0: object_id
                 0x00,                   // 2: object_version_number
@@ -348,7 +348,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 0x00, 0x00, 0x00,       // 4: object_data_length - full RLE buffer length (including 4 bytes size info)
                 0x00, 0x00, 0x00, 0x00, // 7: object_width, object_height
             };
-            var headerODSNext = new byte[] 
+            var headerODSNext = new byte[]
             {
                 0x00, 0x00,             // 0: object_id
                 0x00,                   // 2: object_version_number

@@ -373,7 +373,7 @@ namespace Test
         public void FixCommonOcrErrorsSlashIsL() // requires hardcoded rules enabled
         {
             var target = GetFixCommonErrorsLib();
-            InitializeFixCommonErrorsLine(target, "The font is ita/ic!"); 
+            InitializeFixCommonErrorsLine(target, "The font is ita/ic!");
             target.FixOcrErrorsViaReplaceList("eng");
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The font is italic!"); // will fail if English dictionary is not found
         }
