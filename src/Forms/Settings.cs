@@ -318,7 +318,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxVideoEngine.Text = language.VideoEngine;
             radioButtonVideoPlayerDirectShow.Text = language.DirectShow;
+            
             labelDirectShowDescription.Text = language.DirectShowDescription;
+            if (IntPtr.Size == 8 && !string.IsNullOrEmpty(language.DirectShowDescription64))
+                labelDirectShowDescription.Text = language.DirectShowDescription64;
+
             radioButtonVideoPlayerManagedDirectX.Text = language.ManagedDirectX;
             labelManagedDirectXDescription.Text = language.ManagedDirectXDescription;
             radioButtonVideoPlayerMPlayer.Text = language.MPlayer;
