@@ -3704,7 +3704,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.ShowExtraColumn("Character"); //TODO: Put in language xml file
                     else
                         SubtitleListview1.ShowExtraColumn(Configuration.Settings.Language.General.Style);
-                    
+
                     SubtitleListview1.DisplayExtraFromExtra = true;
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
 

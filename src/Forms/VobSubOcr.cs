@@ -8428,7 +8428,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxGuessUnknownWords.Checked)
                 autoGuessLevel = OcrFixEngine.AutoGuessLevel.Aggressive;
             return autoGuessLevel;
-        }            
+        }
 
     }
 }

@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
     public class OcrFixEngine
     {
         public enum AutoGuessLevel
-        { 
+        {
             None,
             Cautious,
             Aggressive
@@ -1556,7 +1556,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             UnknownWordsFound.Add(string.Format("#{0}: {1}", index + 1, nf));
                         }
 
-                        if (autoFix && autoGuess != AutoGuessLevel.None) 
+                        if (autoFix && autoGuess != AutoGuessLevel.None)
                         {
                             var guesses = new List<string>();
                             if (word.Length > 5 && autoGuess == AutoGuessLevel.Aggressive)

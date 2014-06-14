@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             sb.AppendLine("");
             sb.Append("Note that Subtitle Edit is a " + (IntPtr.Size * 8) + "-bit program, and hence requires " + (IntPtr.Size * 8) + "-bit codecs!");
-            
+
 
             richTextBoxMessage.Text = sb.ToString();
 

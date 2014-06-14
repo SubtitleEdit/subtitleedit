@@ -2004,7 +2004,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 var words = new List<string>();
                 foreach (XmlNode node in userWords.DocumentElement.SelectNodes("word"))
-                { 
+                {
                     string w = node.InnerText.Trim();
                     if (w.Length > 0)
                         words.Add(w);
@@ -2018,7 +2018,7 @@ namespace Nikse.SubtitleEdit.Logic
                     XmlNode node = userWords.CreateElement("word");
                     node.InnerText = w;
                     userWords.DocumentElement.AppendChild(node);
-                }                
+                }
                 userWords.Save(userWordsXmlFileName);
             }
         }

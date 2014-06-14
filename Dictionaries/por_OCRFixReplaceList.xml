@@ -515,12 +515,12 @@
   <RegularExpressions>
     <!--    <RegEx find="\bi\b" replaceWith="I" /> just an example - do not use this regex -->
     <RegEx find="(\\d) +º" replaceWith="$1º" />
-	<RegEx find="\Bccao\b" replaceWith="cção" />
-	<RegEx find="\Bccoes\b" replaceWith="cções" />
-	<RegEx find="\Bccao\b" replaceWith="cção" />
-	<RegEx find="\Bcao\b" replaceWith="ção" />
-	<RegEx find="\b([mM])ae\b" replaceWith="$1ãe" />
-	<RegEx find="\Bdmnis\B" replaceWith="dminis" />
-	<RegEx find="\Blcól\B" replaceWith="lcoól" />
+    <RegEx find="\Bccao\b" replaceWith="cção" />
+    <RegEx find="\Bccoes\b" replaceWith="cções" />
+    <RegEx find="\Bccao\b" replaceWith="cção" />
+    <RegEx find="\Bcao\b" replaceWith="ção" />
+    <RegEx find="\b([mM])ae\b" replaceWith="$1ãe" />
+    <RegEx find="\Bdmnis\B" replaceWith="dminis" />
+    <RegEx find="\Blcól\B" replaceWith="lcoól" />
   </RegularExpressions>
 </OCRFixReplaceList>
