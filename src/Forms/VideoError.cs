@@ -64,7 +64,6 @@ namespace Nikse.SubtitleEdit.Forms
             sb.AppendLine("");
 
             sb.AppendLine("You can read more about codecs and media formats here:");
-            sb.AppendLine(" - http://www.inmatrix.com/zplayer/formats/");
             sb.AppendLine(" - http://www.free-codecs.com/guides/What_Codecs_Should_I_Use.htm");
             sb.AppendLine("");
 
@@ -75,8 +74,8 @@ namespace Nikse.SubtitleEdit.Forms
             sb.AppendLine(" - http://www.headbands.com/gspot/");
 
             sb.AppendLine("");
-            sb.Append("Note that Subtitle Edit is a 32-bit program, and hence requires 32-bit codecs!");
-
+            sb.Append("Note that Subtitle Edit is a " + (IntPtr.Size * 8) + "-bit program, and hence requires " + (IntPtr.Size * 8) + "-bit codecs!");
+            
 
             richTextBoxMessage.Text = sb.ToString();
 
