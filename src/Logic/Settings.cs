@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Logic
         public WordListSettings()
         {
             LastLanguage = "en-US";
-            NamesEtcUrl = "http://www.nikse.dk/se/Names_Etc.xml";
+            NamesEtcUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Dictionaries/names_etc.xml";
         }
     }
 
