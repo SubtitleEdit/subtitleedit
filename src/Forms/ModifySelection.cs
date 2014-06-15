@@ -277,6 +277,5 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Preview();
         }
-
     }
 }

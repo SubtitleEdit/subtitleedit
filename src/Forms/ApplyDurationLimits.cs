@@ -124,7 +124,6 @@ namespace Nikse.SubtitleEdit.Forms
             return false;
         }
 
-
         private void FixShortDisplayTimes()
         {
             Subtitle unfixables = new Subtitle();

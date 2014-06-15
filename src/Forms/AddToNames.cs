@@ -79,7 +79,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-
         private void ButtonOkClick(object sender, EventArgs e)
         {
             if (textBoxAddName.Text.Trim().Length > 0)
@@ -136,6 +135,5 @@ namespace Nikse.SubtitleEdit.Forms
                     DialogResult = DialogResult.Cancel;
             }
         }
-
     }
 }

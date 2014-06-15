@@ -757,6 +757,5 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
         }
-
     }
 }

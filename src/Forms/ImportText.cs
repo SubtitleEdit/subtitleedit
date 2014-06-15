@@ -805,6 +805,5 @@ namespace Nikse.SubtitleEdit.Forms
         {
             GeneratePreview();
         }
-
     }
 }

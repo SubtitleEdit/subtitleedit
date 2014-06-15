@@ -10,7 +10,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class ImportSceneChanges : Form
     {
-
         public List<double> SceneChangesInSeconds = new List<double>();
         private double _frameRate = 25;
         public ImportSceneChanges(VideoInfo videoInfo, string videoFileName)
@@ -133,6 +132,5 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
         }
-
     }
 }

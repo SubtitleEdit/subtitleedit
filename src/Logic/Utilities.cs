@@ -2081,7 +2081,6 @@ namespace Nikse.SubtitleEdit.Logic
             return userNamesEtcXmlFileName;
         }
 
-
         public static void LoadGlobalNamesEtc(List<string> namesEtcList, List<string> namesEtcMultiWordList)
         {
             // Load names etc list (names/noise words)
@@ -2160,7 +2159,6 @@ namespace Nikse.SubtitleEdit.Logic
                 }
         }
 
-
         public static string LoadLocalNamesEtc(List<string> namesEtcList, List<string> namesEtcMultiWordList, string languageName)
         {
             string userNamesEtcXmlFileName = DictionaryFolder + languageName + "_names_etc.xml";
@@ -2224,7 +2222,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return userNamesEtcXmlFileName;
         }
-
 
         public static bool IsInNamesEtcMultiWordList(List<string> namesEtcMultiWordList, string line, string word)
         {
@@ -2583,7 +2580,7 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
- /// <summary>
+        /// <summary>
         /// HTML-encodes a string
         /// </summary>
         /// <param name="text">Text string to encode</param>
@@ -3184,7 +3181,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return sb.ToString();
         }
-
 
         /// <summary>
         /// HTML-decodes a string
@@ -4016,7 +4012,6 @@ namespace Nikse.SubtitleEdit.Logic
             return int.MaxValue;
         }
 
-
         internal static string RemoveNonNumbers(string p)
         {
             if (string.IsNullOrEmpty(p))
@@ -4030,6 +4025,5 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return sb.ToString();
         }
-
     }
 }
