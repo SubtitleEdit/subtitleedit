@@ -2472,7 +2472,7 @@
             this.textBoxNamesEtcOnline.Name = "textBoxNamesEtcOnline";
             this.textBoxNamesEtcOnline.Size = new System.Drawing.Size(235, 21);
             this.textBoxNamesEtcOnline.TabIndex = 28;
-            this.textBoxNamesEtcOnline.Text = "http://www.nikse.dk/se/Names_Etc.xml";
+            this.textBoxNamesEtcOnline.Text = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Dictionaries/names_etc.xml";
             // 
             // groupBoxNamesIgonoreLists
             // 
