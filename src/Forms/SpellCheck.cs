@@ -445,10 +445,11 @@ namespace Nikse.SubtitleEdit.Forms
                             _userPhraseList.Add(s);
                         else
                             _userWordList.Add(s);
-                        XmlNode node = _userWordDictionary.CreateElement("word");
-                        node.InnerText = s;
-                        _userWordDictionary.DocumentElement.AppendChild(node);
-                        _userWordDictionary.Save(_dictionaryFolder + _languageName + "_user.xml");
+                        Utilities.AddToUserDictionary(s, _languageName);
+                        //XmlNode node = _userWordDictionary.CreateElement("word");
+                        //node.InnerText = s;
+                        //_userWordDictionary.DocumentElement.AppendChild(node);
+                        //_userWordDictionary.Save(_dictionaryFolder + _languageName + "_user.xml");
                     }
                     break;
                 case SpellCheckAction.AddToNamesEtc:
