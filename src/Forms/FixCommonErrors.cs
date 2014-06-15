@@ -2662,7 +2662,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var st = new StripableText(p.Text);
                         if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper())
-                            p.Text = st.Pre + st.StrippedText[0].ToString().ToUpper() + st.StrippedText.Remove(0, 1) + st.Post;
+                            p.Text = st.Pre + char.ToUpper(st.StrippedText[0]) + st.StrippedText.Substring(1) + st.Post;
                     }
                 }
 
