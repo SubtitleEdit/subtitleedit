@@ -35,7 +35,6 @@ namespace Nikse.SubtitleEdit.Forms
         Dictionary<string, string> _changeAllDictionary = new Dictionary<string, string>();
         List<string> _userWordList = new List<string>();
         List<string> _userPhraseList = new List<string>();
-        XmlDocument _userWordDictionary = new XmlDocument();
         string _prefix = string.Empty;
         string _postfix = string.Empty;
         Hunspell _hunspell;
@@ -253,14 +252,14 @@ namespace Nikse.SubtitleEdit.Forms
             string dictionary = Utilities.DictionaryFolder + _languageName;
             _userWordList = new List<string>();
             _userPhraseList = new List<string>();
-            _userWordDictionary = new XmlDocument();
             string fileName = Utilities.DictionaryFolder + _languageName + "_user.xml";
             if (File.Exists(fileName))
             {
                 try
                 {
-                    _userWordDictionary.Load(fileName);
-                    foreach (XmlNode node in _userWordDictionary.DocumentElement.SelectNodes("word"))
+                    var userWordDictionary = new XmlDocument();
+                    userWordDictionary.Load(fileName);
+                    foreach (XmlNode node in userWordDictionary.DocumentElement.SelectNodes("word"))
                     {
                         string word = node.InnerText.Trim().ToLower();
                         if (word.Contains(" "))
@@ -272,14 +271,8 @@ namespace Nikse.SubtitleEdit.Forms
                 catch (Exception exception)
                 {
                     MessageBox.Show("Unable to load user dictionary for " + _languageName + " from file: " + fileName + Environment.NewLine +
-                        Environment.NewLine +
-                        exception.Source + ": " + exception.Message);
-                    _userWordDictionary.LoadXml("<words />");
+                        Environment.NewLine + exception.Source + ": " + exception.Message);
                 }
-            }
-            else
-            {
-                _userWordDictionary.LoadXml("<words />");
             }
 
             _changeAllDictionary = new Dictionary<string, string>();
@@ -446,10 +439,6 @@ namespace Nikse.SubtitleEdit.Forms
                         else
                             _userWordList.Add(s);
                         Utilities.AddToUserDictionary(s, _languageName);
-                        //XmlNode node = _userWordDictionary.CreateElement("word");
-                        //node.InnerText = s;
-                        //_userWordDictionary.DocumentElement.AppendChild(node);
-                        //_userWordDictionary.Save(_dictionaryFolder + _languageName + "_user.xml");
                     }
                     break;
                 case SpellCheckAction.AddToNamesEtc:
@@ -1015,11 +1004,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             _userWordList = new List<string>();
             _userPhraseList = new List<string>();
-            _userWordDictionary = new XmlDocument();
             if (File.Exists(dictionaryFolder + _languageName + "_user.xml"))
             {
-                _userWordDictionary.Load(dictionaryFolder + _languageName + "_user.xml");
-                foreach (XmlNode node in _userWordDictionary.DocumentElement.SelectNodes("word"))
+                var userWordDictionary = new XmlDocument();
+                userWordDictionary.Load(dictionaryFolder + _languageName + "_user.xml");
+                foreach (XmlNode node in userWordDictionary.DocumentElement.SelectNodes("word"))
                 {
                     string word = node.InnerText.Trim().ToLower();
                     if (word.Contains(" "))
@@ -1027,10 +1016,6 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         _userWordList.Add(word);
                 }
-            }
-            else
-            {
-                _userWordDictionary.LoadXml("<words />");
             }
 
             // Add names/userdic with "." or " " or "-"
