@@ -1017,10 +1017,19 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     {
                         if (word[match.Index + 1] == 'I' || word[match.Index + 1] == '1')
                         {
-                            string oldText = word;
-                            word = word.Substring(0, match.Index + 1) + "l";
-                            if (match.Index + 2 < oldText.Length)
-                                word += oldText.Substring(match.Index + 2);
+                            bool doFix = true;
+                            if (word[match.Index + 1] == 'I' && match.Index >= 1 && word.Substring(match.Index - 1).StartsWith("Mc"))
+                                doFix = false;
+                            if (word[match.Index + 1] == 'I' && match.Index >= 2 && word.Substring(match.Index - 2).StartsWith("Mac"))
+                                doFix = false;
+
+                            if (doFix)
+                            {
+                                string oldText = word;
+                                word = word.Substring(0, match.Index + 1) + "l";
+                                if (match.Index + 2 < oldText.Length)
+                                    word += oldText.Substring(match.Index + 2);
+                            }
                         }
                         match = RegExIandZero.Match(word, match.Index + 1);
                     }
@@ -1319,8 +1328,19 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 var match = RegExUppercaseI.Match(input);
                 while (match.Success)
                 {
-                    input = input.Substring(0, match.Index + 1) + "l" + input.Substring(match.Index + 2);
-                    match = RegExUppercaseI.Match(input);
+                    bool doFix = true;
+                    if (match.Index >= 1 && input.Substring(match.Index - 1).StartsWith("Mc"))
+                        doFix = false;
+                    if (match.Index >= 2 && input.Substring(match.Index - 2).StartsWith("Mac"))
+                        doFix = false;
+
+                    if (doFix)
+                        input = input.Substring(0, match.Index + 1) + "l" + input.Substring(match.Index + 2);
+
+                    if (match.Index + 1 < input.Length)
+                        match = RegExUppercaseI.Match(input, match.Index + 1);
+                    else
+                        break; // end while
                 }
             }
 
