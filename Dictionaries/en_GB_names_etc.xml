@@ -1,7 +1,5 @@
 ﻿<!-- This list contains names/words with specific casing - and specific to english only -->
 <ignore_list>
-  <name>A.M.</name>
-  <name>Aaron</name>
   <name>Abbie</name>
   <name>Abi</name>
   <name>Abigail</name>
@@ -41,13 +39,13 @@
   <name>Brandon</name>
   <name>C.O.</name>
   <name>C.T.</name>
+  <name>CEOs</name>
   <name>Caitlin</name>
   <name>Callum</name>
   <name>Cameron</name>
   <name>Canadian</name>
   <name>Catherine</name>
   <name>Centerville</name>
-  <name>CEOs</name>
   <name>Charlie</name>
   <name>Charlotte</name>
   <name>Chelsea</name>
@@ -63,6 +61,7 @@
   <name>Cruella</name>
   <name>Czech Republic</name>
   <name>D.C.</name>
+  <name>DJs</name>
   <name>Daisy</name>
   <name>Dan</name>
   <name>Daniel</name>
@@ -70,7 +69,6 @@
   <name>Danish</name>
   <name>David</name>
   <name>Declan</name>
-  <name>DJs</name>
   <name>Dylan</name>
   <name>E.R.</name>
   <name>E.R.P.</name>
@@ -186,7 +184,6 @@
   <name>Kirsty</name>
   <name>Kyle</name>
   <name>Lachlan</name>
-  <name>Lærke</name>
   <name>Langford</name>
   <name>Laura</name>
   <name>Lauren</name>
@@ -209,6 +206,7 @@
   <name>Lukas</name>
   <name>Luke</name>
   <name>Lydia</name>
+  <name>Lærke</name>
   <name>Malou</name>
   <name>Malthe</name>
   <name>Marc</name>
@@ -222,7 +220,6 @@
   <name>Max</name>
   <name>McHenry</name>
   <name>Megan</name>
-  <name>Mélanie</name>
   <name>Melissa</name>
   <name>Merion</name>
   <name>Mia</name>
@@ -236,6 +233,7 @@
   <name>Molly</name>
   <name>Morgan</name>
   <name>Moulin Rouge</name>
+  <name>Mélanie</name>
   <name>Naomi</name>
   <name>Natalie</name>
   <name>Natasha</name>
