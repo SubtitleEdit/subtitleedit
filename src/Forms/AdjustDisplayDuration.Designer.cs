@@ -177,11 +177,12 @@
             "+0.7",
             "+0.8",
             "+0.9",
-            "+1.0",
-            "+2.0",
-            "+3.0",
-            "+4.0",
-            "+5.0"});
+            "+1",
+            "+2",
+            "+3",
+            "+4",
+            "+5",
+            "+10"});
             this.comboBoxSeconds.Location = new System.Drawing.Point(13, 89);
             this.comboBoxSeconds.Name = "comboBoxSeconds";
             this.comboBoxSeconds.Size = new System.Drawing.Size(141, 21);
