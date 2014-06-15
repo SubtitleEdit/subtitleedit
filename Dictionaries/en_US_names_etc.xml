@@ -1,12 +1,8 @@
-﻿<!-- This list contains names/words with specific casing - and specific to english only -->
+<!-- This list contains names/words with specific casing - and specific to english only -->
 <ignore_list>
   <name>1A</name>
   <name>2A</name>
   <name>A.M.</name>
-  <name>Aaden</name>
-  <name>Aaliyah</name>
-  <name>Aarav</name>
-  <name>Aaron</name>
   <name>Abbey</name>
   <name>Abbie</name>
   <name>Abbigail</name>
@@ -270,7 +266,6 @@
   <name>Aviana</name>
   <name>Avianna</name>
   <name>Axel</name>
-  <name>Ayaan</name>
   <name>Ayana</name>
   <name>Ayanna</name>
   <name>Aydan</name>
@@ -279,6 +274,7 @@
   <name>Ayla</name>
   <name>Ayleen</name>
   <name>Aylin</name>
+  <name>Ayaan</name>
   <name>Azaria</name>
   <name>Aziz</name>
   <name>Azog</name>
@@ -1038,8 +1034,8 @@
   <name>Hillard</name>
   <name>Hirschberg</name>
   <name>Hjalte</name>
-  <name>Hobart</name>
   <name>Ho Chi Minh City</name>
+  <name>Hobart</name>
   <name>Hoggart</name>
   <name>Holden</name>
   <name>Holly</name>
@@ -1061,6 +1057,7 @@
   <name>Imani</name>
   <name>Ines</name>
   <name>Ingrid</name>
+  <name>Instagram</name>
   <name>Insulin</name>
   <name>Iraqis</name>
   <name>Irene</name>
@@ -1068,7 +1065,6 @@
   <name>Iris</name>
   <name>IRS</name>
   <name>Irvin</name>
-  <name>Isaac</name>
   <name>Isabel</name>
   <name>Isabela</name>
   <name>Isabell</name>
@@ -1088,6 +1084,7 @@
   <name>Israelis</name>
   <name>Issac</name>
   <name>Istanbul</name>
+  <name>Isaac</name>
   <name>Itzel</name>
   <name>Ivan</name>
   <name>Ivana</name>
@@ -1235,6 +1232,7 @@
   <name>Joe</name>
   <name>Joel</name>
   <name>Joey</name>
+  <name>Joffrey</name>
   <name>Johan</name>
   <name>Johann</name>
   <name>Johanna</name>
@@ -1449,6 +1447,7 @@
   <name>Kolton</name>
   <name>Konner</name>
   <name>Konnor</name>
+  <name>Koothrappali</name>
   <name>Korbin</name>
   <name>Kourtney</name>
   <name>Kralova</name>
@@ -1488,7 +1487,6 @@
   <name>Kyson</name>
   <name>Lacey</name>
   <name>Lachlan</name>
-  <name>Lærke</name>
   <name>Lagos</name>
   <name>Lahore</name>
   <name>Laila</name>
@@ -1504,6 +1502,7 @@
   <name>Lane</name>
   <name>Laney</name>
   <name>Langford</name>
+  <name>Lannister</name>
   <name>Lansberry</name>
   <name>Lara</name>
   <name>Larissa</name>
@@ -1527,6 +1526,7 @@
   <name>Leanna</name>
   <name>Lee</name>
   <name>Legend</name>
+  <name>Legoland</name>
   <name>Legolas</name>
   <name>Leia</name>
   <name>Leigha</name>
@@ -1596,6 +1596,7 @@
   <name>Lola</name>
   <name>London</name>
   <name>Londyn</name>
+  <name>Loras</name>
   <name>Lord Milori</name>
   <name>Lorelai</name>
   <name>Lorelei</name>
@@ -1621,8 +1622,8 @@
   <name>Lyla</name>
   <name>Lylah</name>
   <name>Lyric</name>
+  <name>Lærke</name>
   <name>M&amp;M</name>
-  <name>Maasai</name>
   <name>MacArthur</name>
   <name>MacDonald</name>
   <name>Macey</name>
@@ -1630,6 +1631,7 @@
   <name>Macie</name>
   <name>MacKenzie</name>
   <name>MacMurray</name>
+  <name>MacNeil</name>
   <name>Macy</name>
   <name>Madalyn</name>
   <name>Madalynn</name>
@@ -1715,6 +1717,7 @@
   <name>Marquis</name>
   <name>Marron</name>
   <name>Marshall</name>
+  <name>Martell</name>
   <name>Martha</name>
   <name>Martin</name>
   <name>Maruthi</name>
@@ -1850,6 +1853,7 @@
   <name>Myla</name>
   <name>Myles</name>
   <name>Myra</name>
+  <name>Maasai</name>
   <name>Nadeshiko</name>
   <name>Nadi</name>
   <name>Nadia</name>
@@ -1984,8 +1988,8 @@
   <name>Pittsburgh</name>
   <name>Poindexter</name>
   <name>Pont Neuf</name>
-  <name>Porter</name>
   <name>Port Morsby</name>
+  <name>Porter</name>
   <name>Pozarsky</name>
   <name>Praetorians</name>
   <name>Prague</name>
@@ -2018,6 +2022,7 @@
   <name>Rafferty</name>
   <name>Raiden</name>
   <name>Raina</name>
+  <name>Rajesh</name>
   <name>Ralf</name>
   <name>Ralph</name>
   <name>Ramigani</name>
@@ -2132,7 +2137,6 @@
   <name>Rylen</name>
   <name>Rylie</name>
   <name>S.H.I.E.L.D.</name>
-  <name>Saanvi</name>
   <name>Sabrina</name>
   <name>Sadie</name>
   <name>Sage</name>
@@ -2152,16 +2156,16 @@
   <name>Samiyah</name>
   <name>Samson</name>
   <name>Samuel</name>
-  <name>Sanaa</name>
+  <name>San Francisco</name>
   <name>Sandberg</name>
   <name>Sandra</name>
-  <name>San Francisco</name>
   <name>Saniya</name>
   <name>Saniyah</name>
   <name>Sanjay</name>
   <name>Santiago</name>
   <name>Santino</name>
   <name>Santos</name>
+  <name>Sanaa</name>
   <name>Sao Paulo</name>
   <name>Sara</name>
   <name>Sarah</name>
@@ -2221,6 +2225,7 @@
   <name>Shion</name>
   <name>Shultz</name>
   <name>Sidney</name>
+  <name>Siebert</name>
   <name>Siegel</name>
   <name>Siena</name>
   <name>Sienna</name>
@@ -2255,6 +2260,8 @@
   <name>Spectravision</name>
   <name>Spencer</name>
   <name>Sportpaleis</name>
+  <name>St. Louis</name>
+  <name>St. Lucia</name>
   <name>Stacy</name>
   <name>Stancombe</name>
   <name>Stanislaus</name>
@@ -2272,8 +2279,6 @@
   <name>Steve</name>
   <name>Steven</name>
   <name>Stillman</name>
-  <name>St. Louis</name>
-  <name>St. Lucia</name>
   <name>Stockholm</name>
   <name>StPetersburg</name>
   <name>Straczynski</name>
@@ -2289,6 +2294,7 @@
   <name>Sydney</name>
   <name>Sylas</name>
   <name>Sylvia</name>
+  <name>Saanvi</name>
   <name>Tabitha</name>
   <name>Taipei</name>
   <name>Taj Mahal</name>
@@ -2300,6 +2306,7 @@
   <name>Tanner</name>
   <name>Tara</name>
   <name>Taraji</name>
+  <name>Targaryen</name>
   <name>Tarukane-san</name>
   <name>Taryn</name>
   <name>Tate</name>
@@ -2379,6 +2386,7 @@
   <name>Tyree</name>
   <name>Tyrell</name>
   <name>Tyrese</name>
+  <name>Tyrion</name>
   <name>Tyrone</name>
   <name>Tyson</name>
   <name>Udaipur</name>
@@ -2462,6 +2470,7 @@
   <name>Witkowskis</name>
   <name>Wittenberg</name>
   <name>Wolfie</name>
+  <name>Wolowitz</name>
   <name>Wuhan</name>
   <name>Wyatt</name>
   <name>Wymer</name>
@@ -2531,4 +2540,8 @@
   <name>Zoie</name>
   <name>Zuri</name>
   <name>Zurich</name>
+  <name>Aaden</name>
+  <name>Aaliyah</name>
+  <name>Aarav</name>
+  <name>Aaron</name>
 </ignore_list>
