@@ -41,7 +41,6 @@ namespace UpdateAssemblyInfo
         static int Main(string[] args)
         {
             string errorFileName = System.Reflection.Assembly.GetEntryAssembly().Location.Replace(".exe", "_error.txt");
-            File.WriteAllText(errorFileName, "test");
 
             if (args.Length != 2)
             {

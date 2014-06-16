@@ -46,7 +46,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
@@ -87,9 +87,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Hunspellx86.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Hunspellx64.dll" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
