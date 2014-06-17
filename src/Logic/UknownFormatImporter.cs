@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using System;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -32,7 +32,28 @@ namespace Nikse.SubtitleEdit.Logic
                     subtitle = ImportTimeCodesInFramesAndTextOnSameLine(lines);
                 }
             }
+            if (subtitle.Paragraphs.Count > 1)
+                CleanUp(subtitle);
             return subtitle;
+        }
+
+        private void CleanUp(Subtitle subtitle)
+        {
+            foreach (Paragraph p in subtitle.Paragraphs)
+            { 
+                p.Text = p.Text.Replace("<div>", string.Empty);
+                p.Text = p.Text.Replace("</div>", string.Empty);
+                p.Text = p.Text.Replace("<body>", string.Empty);
+                p.Text = p.Text.Replace("</body>", string.Empty);
+                p.Text = p.Text.Replace("</tt>", string.Empty);
+                p.Text = p.Text.Replace("  ", " ");
+                p.Text = p.Text.Replace("  ", " ");
+                p.Text = p.Text.Replace("  ", " ");
+                p.Text = p.Text.Replace("|", Environment.NewLine).Replace("<p>", Environment.NewLine).Replace("</p>", Environment.NewLine).Trim();
+                p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine).Trim();
+                p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine).Trim();
+            }
+            subtitle.RemoveEmptyLines();
         }
 
         private Subtitle ImportTimeCodesInFramesAndTextOnSameLine(string[] lines)

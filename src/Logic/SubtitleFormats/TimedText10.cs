@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Xml;
-using System.Globalization;
 
 //http://www.w3.org/TR/ttaf1-dfxp/
 //Timed Text Markup Language (TTML) 1.0
@@ -48,9 +48,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var paragraphs = nds.SelectNodes("//ttml:p", nsmgr);
                     return paragraphs.Count > 0;
                 }
-                catch (Exception ex)
+                catch 
                 {
-                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                    try
+                    {
+                        xml.LoadXml(xmlAsString.Replace(" & ", " and "));
+                        var nsmgr = new XmlNamespaceManager(xml.NameTable);
+                        nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                        var nds = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
+                        var paragraphs = nds.SelectNodes("//ttml:p", nsmgr);
+                        return paragraphs.Count > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                    }
                 }
             }
             return false;
