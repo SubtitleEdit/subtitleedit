@@ -1643,7 +1643,6 @@
             public string VideoEngine { get; set; }
             public string DirectShow { get; set; }
             public string DirectShowDescription { get; set; }
-            public string DirectShowDescription64 { get; set; }
             public string ManagedDirectX { get; set; }
             public string ManagedDirectXDescription { get; set; }
             public string MPlayer { get; set; }
