@@ -71,6 +71,15 @@ namespace Test
                     CopyStream(strm, file);
                 }
             }
+            strm = asm.GetManifestResourceStream("Test.Hunspellx64.dll");
+            if (strm != null)
+            {
+                var rdr = new StreamReader(strm);
+                using (Stream file = File.OpenWrite("Hunspellx64.dll"))
+                {
+                    CopyStream(strm, file);
+                }
+            }
         }
 
         //Use ClassCleanup to run code after all tests in a class have run
