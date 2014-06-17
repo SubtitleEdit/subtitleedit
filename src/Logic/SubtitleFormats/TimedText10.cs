@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     try
                     {
-                        xml.LoadXml(xmlAsString.Replace(" & ", " and "));
+                        xml.LoadXml(xmlAsString.Replace(" & ", " &amp; "));
                         var nsmgr = new XmlNamespaceManager(xml.NameTable);
                         nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
                         var nds = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
@@ -393,7 +393,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument();
-            xml.LoadXml(sb.ToString().Trim());
+
+            try
+            {
+                xml.LoadXml(sb.ToString().Trim());
+            }
+            catch
+            {
+                xml.LoadXml(sb.ToString().Replace(" & ", " &amp; ").Trim());
+            }
 
             string ns = "http://www.w3.org/ns/ttml";
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
