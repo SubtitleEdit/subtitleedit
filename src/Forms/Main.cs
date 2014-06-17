@@ -12267,6 +12267,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetMinimalDisplayTimeDifferenceToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (!IsSubtitleLoaded)
+            {
+                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             var setMinDisplayDiff = new SetMinimumDisplayTimeBetweenParagraphs();
             _formPositionsAndSizes.SetPositionAndSize(setMinDisplayDiff);
             setMinDisplayDiff.Initialize(_subtitle);
@@ -18922,6 +18927,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemModifySelection_Click(object sender, EventArgs e)
         {
+            if (!IsSubtitleLoaded)
+            {
+                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             var form = new ModifySelection(_subtitle, SubtitleListview1);
             _formPositionsAndSizes.SetPositionAndSize(form);
             form.ShowDialog(this);
@@ -18930,8 +18940,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
         {
+            if (!IsSubtitleLoaded)
+            {
+                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             foreach (ListViewItem item in SubtitleListview1.Items)
-                item.Selected = !item.Selected;
+                    item.Selected = !item.Selected;
         }
 
         private void toolStripMenuItemSpellCheckFromCurrentLine_Click(object sender, EventArgs e)
@@ -19033,6 +19048,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemDurationBridgeGaps_Click(object sender, EventArgs e)
         {
+            if (!IsSubtitleLoaded)
+            {
+                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             var form = new DurationsBridgeGaps(_subtitle);
             _formPositionsAndSizes.SetPositionAndSize(form);
             if (form.ShowDialog(this) == DialogResult.OK)
