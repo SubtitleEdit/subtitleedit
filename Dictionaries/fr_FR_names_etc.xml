@@ -10,7 +10,6 @@
   <name>Abigaëlle</name>
   <name>Abigaïl</name>
   <name>Abondance</name>
-  <name>Abraham</name>
   <name>Absalon</name>
   <name>Abélard</name>
   <name>Abélie</name>
@@ -27,7 +26,6 @@
   <name>Adalbéron</name>
   <name>Adalric</name>
   <name>Adalsinde</name>
-  <name>Adam</name>
   <name>Adegrin</name>
   <name>Adegrine</name>
   <name>Adel</name>
@@ -74,12 +72,9 @@
   <name>Aimable</name>
   <name>Aimé</name>
   <name>Aimée</name>
-  <name>Alain</name>
   <name>Alaine</name>
   <name>Alban</name>
   <name>Albane</name>
-  <name>Albert</name>
-  <name>Alberte</name>
   <name>Albertet</name>
   <name>Albertine</name>
   <name>Albin</name>
@@ -87,7 +82,6 @@
   <name>Albérade</name>
   <name>Albéric</name>
   <name>Alcibiade</name>
-  <name>Alcide</name>
   <name>Alcidie</name>
   <name>Alcime</name>
   <name>Alcine</name>
@@ -102,14 +96,11 @@
   <name>Aldéric</name>
   <name>Aleaume</name>
   <name>Aleth</name>
-  <name>Alexandre</name>
   <name>Alexandrine</name>
   <name>Alexane</name>
   <name>Alexiane</name>
   <name>Alexie</name>
   <name>Alexine</name>
-  <name>Alexis</name>
-  <name>Alice</name>
   <name>Aliette</name>
   <name>Aline</name>
   <name>Alizé</name>
@@ -171,7 +162,6 @@
   <name>Andrée</name>
   <name>Andéol</name>
   <name>Angadrême</name>
-  <name>Angela</name>
   <name>Angelin</name>
   <name>Angeline</name>
   <name>Angilbe</name>
@@ -183,10 +173,7 @@
   <name>Anicet</name>
   <name>Anicette</name>
   <name>Anis</name>
-  <name>Annabelle</name>
-  <name>Annette</name>
   <name>Annibal</name>
-  <name>Annie</name>
   <name>Annonciade</name>
   <name>Ansbert</name>
   <name>Ansberte</name>
@@ -199,12 +186,10 @@
   <name>Anthime</name>
   <name>Antide</name>
   <name>Antigone</name>
-  <name>Antoine</name>
   <name>Antoinette</name>
   <name>Antonin</name>
   <name>Antonine</name>
   <name>Anémone</name>
-  <name>Aphrodite</name>
   <name>Aphélie</name>
   <name>Apollinaire</name>
   <name>Apolline</name>
@@ -218,7 +203,6 @@
   <name>Arcadie</name>
   <name>Archambaud</name>
   <name>Archambeau</name>
-  <name>Archibald</name>
   <name>Argine</name>
   <name>Arian</name>
   <name>Ariane</name>
@@ -229,7 +213,6 @@
   <name>Aristion</name>
   <name>Arlette</name>
   <name>Armance</name>
-  <name>Armand</name>
   <name>Armande</name>
   <name>Armandie</name>
   <name>Armandine</name>
@@ -248,7 +231,6 @@
   <name>Arsène</name>
   <name>Arsènie</name>
   <name>Arthaud</name>
-  <name>Arthur</name>
   <name>Arthurine</name>
   <name>Arthème</name>
   <name>Artémis</name>
@@ -276,10 +258,8 @@
   <name>Audette</name>
   <name>Audouin</name>
   <name>Audran</name>
-  <name>Audrey</name>
   <name>Audric</name>
   <name>Auguste</name>
-  <name>Augustin</name>
   <name>Augustine</name>
   <name>Aulde</name>
   <name>Aure</name>
@@ -300,7 +280,6 @@
   <name>Avigaïl</name>
   <name>Avoye</name>
   <name>Avril</name>
-  <name>Axel</name>
   <name>Axeline</name>
   <name>Axellane</name>
   <name>Axelle</name>
@@ -322,24 +301,18 @@
   <name>Basile</name>
   <name>Bastien</name>
   <name>Baudouin</name>
-  <name>Benjamin</name>
   <name>Benoît</name>
-  <name>Bernadette</name>
-  <name>Bernard</name>
   <name>Berthe</name>
   <name>Bertrand</name>
   <name>Beuve</name>
-  <name>Blaise</name>
   <name>Blanche</name>
   <name>Blandine</name>
   <name>Bodon</name>
   <name>Boniface</name>
   <name>Bouchard</name>
-  <name>Brice</name>
   <name>Brigitte</name>
   <name>Brunehaut</name>
   <name>Brunehilde</name>
-  <name>Bruno</name>
   <name>Brunon</name>
   <name>Béatrice</name>
   <name>Béatrix</name>
@@ -354,34 +327,23 @@
   <name>Candide</name>
   <name>Capucine</name>
   <name>Caribert</name>
-  <name>Carine</name>
   <name>Carle</name>
   <name>Carloman</name>
-  <name>Caroline</name>
   <name>Cassandre</name>
   <name>Cassien</name>
   <name>Cathaline</name>
-  <name>Catherine</name>
   <name>Chamas</name>
-  <name>Chantal</name>
-  <name>Charles</name>
   <name>Charline</name>
-  <name>Charlotte</name>
   <name>Charlène</name>
   <name>Childebert</name>
   <name>Chilpéric</name>
   <name>Chloé</name>
   <name>Christelle</name>
-  <name>Christian</name>
-  <name>Christiane</name>
-  <name>Christine</name>
   <name>Christodule</name>
   <name>Christophe</name>
   <name>Chrystèle</name>
   <name>Chrétien</name>
-  <name>Claire</name>
   <name>Clara</name>
-  <name>Clarence</name>
   <name>Claudie</name>
   <name>Claudien</name>
   <name>Clotaire</name>
@@ -390,19 +352,15 @@
   <name>Cléandre</name>
   <name>Clémence</name>
   <name>Clément</name>
-  <name>Clémentine</name>
   <name>Colas</name>
-  <name>Colin</name>
   <name>Coline</name>
   <name>Constance</name>
   <name>Constant</name>
   <name>Constantin</name>
-  <name>Cora</name>
   <name>Coralie</name>
   <name>Coraline</name>
   <name>Corentin</name>
   <name>Corentine</name>
-  <name>Corinne</name>
   <name>Cosette</name>
   <name>Cyprien</name>
   <name>Cyriaque</name>
@@ -418,27 +376,19 @@
   <name>Césaire</name>
   <name>César</name>
   <name>Côme</name>
-  <name>Damien</name>
-  <name>Daniel</name>
-  <name>Danielle</name>
   <name>Danièle</name>
   <name>Daphné</name>
   <name>Daphnée</name>
-  <name>David</name>
   <name>Delphine</name>
   <name>Denis</name>
-  <name>Denise</name>
-  <name>Diane</name>
   <name>Didier</name>
   <name>Dieudonné</name>
   <name>Dieudonnée</name>
-  <name>Dorian</name>
   <name>Doriane</name>
   <name>Dorianne</name>
   <name>Dorine</name>
   <name>Douce</name>
   <name>Désiré</name>
-  <name>Edith</name>
   <name>Edouard</name>
   <name>Elia</name>
   <name>Eliane</name>
@@ -446,28 +396,19 @@
   <name>Eliette</name>
   <name>Elise</name>
   <name>Elisée</name>
-  <name>Ella</name>
   <name>Elodie</name>
   <name>Eloïse</name>
-  <name>Elsa</name>
   <name>Eléis</name>
   <name>Eléna</name>
   <name>Eléonore</name>
   <name>Emeline</name>
   <name>Emeric</name>
-  <name>Emile</name>
-  <name>Emilie</name>
   <name>Emilien</name>
-  <name>Emma</name>
-  <name>Emmanuel</name>
   <name>Emmanuelle</name>
   <name>Epiphane</name>
-  <name>Eric</name>
-  <name>Ernest</name>
   <name>Ernestine</name>
   <name>Estelle</name>
   <name>Estevan</name>
-  <name>Esther</name>
   <name>Etienne</name>
   <name>Eudes</name>
   <name>Eudoxe</name>
@@ -478,25 +419,21 @@
   <name>Eusèbe</name>
   <name>Eva</name>
   <name>Evangéline</name>
-  <name>Eve</name>
   <name>Evelyne</name>
   <name>Fabien</name>
   <name>Fabrice</name>
   <name>Falba</name>
-  <name>Fanny</name>
   <name>Fantine</name>
   <name>Faustine</name>
   <name>Ferdinand</name>
   <name>Fernand</name>
   <name>Fernande</name>
   <name>Fiacre</name>
-  <name>Fiona</name>
   <name>Firmin</name>
   <name>Flavie</name>
   <name>Flavien</name>
   <name>Flodoard</name>
   <name>Flore</name>
-  <name>Florence</name>
   <name>Florent</name>
   <name>Florentin</name>
   <name>Florian</name>
@@ -505,9 +442,7 @@
   <name>Fortunée</name>
   <name>Foulques</name>
   <name>Francia</name>
-  <name>Francis</name>
   <name>Franck</name>
-  <name>François</name>
   <name>Françoise</name>
   <name>Frédéric</name>
   <name>Fulbert</name>
@@ -517,8 +452,6 @@
   <name>Félicité</name>
   <name>Félix</name>
   <name>Gabin</name>
-  <name>Gabriel</name>
-  <name>Gabrielle</name>
   <name>Galeran</name>
   <name>Galerand</name>
   <name>Garnier</name>
@@ -539,12 +472,10 @@
   <name>Gertrude</name>
   <name>Gervais</name>
   <name>Ghislain</name>
-  <name>Gilbert</name>
   <name>Gilles</name>
   <name>Girart</name>
   <name>Gislebert</name>
   <name>Gisèle</name>
-  <name>Gladys</name>
   <name>Gondebaud</name>
   <name>Gonthier</name>
   <name>Gontran</name>
@@ -554,7 +485,6 @@
   <name>Gui</name>
   <name>Guilhem</name>
   <name>Guilhemine</name>
-  <name>Guillaume</name>
   <name>Guillemette</name>
   <name>Gustaphine</name>
   <name>Gustave</name>
@@ -571,58 +501,39 @@
   <name>Géraud</name>
   <name>Hardouin</name>
   <name>Harmonie</name>
-  <name>Hector</name>
   <name>Hedwige</name>
-  <name>Henri</name>
   <name>Henriette</name>
-  <name>Herbert</name>
   <name>Herluin</name>
-  <name>Hermione</name>
   <name>Hilaire</name>
   <name>Hildebert</name>
   <name>Hincmar</name>
   <name>Honoré</name>
   <name>Hortense</name>
-  <name>Hubert</name>
-  <name>Hugo</name>
   <name>Hugues</name>
   <name>Huguette</name>
   <name>Hédelin</name>
   <name>Hélier</name>
   <name>Héloïse</name>
   <name>Hélène</name>
-  <name>Igor</name>
-  <name>Ingrid</name>
   <name>Innocent</name>
   <name>Inès</name>
-  <name>Irina</name>
   <name>Iris</name>
   <name>Irène</name>
-  <name>Isabelle</name>
-  <name>Isadora</name>
   <name>Isaline</name>
   <name>Iseult</name>
   <name>Isidore</name>
   <name>Jacinthe</name>
   <name>Jacqueline</name>
-  <name>Jacques</name>
   <name>Jade</name>
   <name>Japhet</name>
-  <name>Jean</name>
   <name>Jeanine</name>
-  <name>Jeanne</name>
   <name>Jeannel</name>
   <name>Jeannot</name>
-  <name>Jessica</name>
-  <name>Joachim</name>
   <name>Joanny</name>
   <name>Job</name>
   <name>Jocelyn</name>
   <name>Jocelyne</name>
   <name>Johan</name>
-  <name>Jonas</name>
-  <name>Jonathan</name>
-  <name>Joseph</name>
   <name>Josse</name>
   <name>Josselin</name>
   <name>Joséphine</name>
@@ -631,30 +542,17 @@
   <name>Joëlle</name>
   <name>Jude</name>
   <name>Judicaël</name>
-  <name>Judith</name>
-  <name>Jules</name>
-  <name>Julie</name>
   <name>Julien</name>
-  <name>Juliette</name>
   <name>Juste</name>
-  <name>Justin</name>
   <name>Justine</name>
   <name>Jérémie</name>
   <name>Jérôme</name>
-  <name>Karen</name>
   <name>Karine</name>
-  <name>Kevin</name>
   <name>Kilian</name>
   <name>Lambert</name>
-  <name>Landry</name>
-  <name>Laura</name>
   <name>Laure</name>
   <name>Laureene</name>
-  <name>Laurel</name>
   <name>Laureline</name>
-  <name>Lauren</name>
-  <name>Laurence</name>
-  <name>Laurent</name>
   <name>Laurianne</name>
   <name>Laurine</name>
   <name>Laurène</name>
@@ -664,29 +562,19 @@
   <name>Leufroy</name>
   <name>Lilian</name>
   <name>Lilou</name>
-  <name>Lionel</name>
   <name>Lison</name>
   <name>Liétald</name>
-  <name>Lola</name>
   <name>Lorrain</name>
-  <name>Lorraine</name>
   <name>Lorène</name>
   <name>Lothaire</name>
-  <name>Lou</name>
-  <name>Louis</name>
-  <name>Louise</name>
   <name>Loup</name>
   <name>Loïc</name>
-  <name>Lucas</name>
   <name>Lucie</name>
   <name>Lucien</name>
   <name>Lucienne</name>
-  <name>Lucile</name>
-  <name>Lucille</name>
   <name>Ludivine</name>
   <name>Ludolphe</name>
   <name>Ludovic</name>
-  <name>Lydia</name>
   <name>Lydie</name>
   <name>Lætitia</name>
   <name>Léa</name>
@@ -697,7 +585,6 @@
   <name>Léonne</name>
   <name>Léopold</name>
   <name>Létaud</name>
-  <name>Madeleine</name>
   <name>Madyson</name>
   <name>Magali</name>
   <name>Maguelone</name>
@@ -710,56 +597,41 @@
   <name>Mamert</name>
   <name>Manassès</name>
   <name>Manon</name>
-  <name>Marc</name>
   <name>Marceau</name>
   <name>Marcel</name>
   <name>Marcelin</name>
   <name>Marceline</name>
   <name>Margaux</name>
   <name>Margot</name>
-  <name>Marguerite</name>
-  <name>Marie</name>
   <name>Marina</name>
   <name>Marine</name>
-  <name>Marion</name>
   <name>Marius</name>
   <name>Marlène</name>
   <name>Marthe</name>
-  <name>Martin</name>
   <name>Martine</name>
   <name>Mathias</name>
   <name>Mathieu</name>
-  <name>Mathilde</name>
-  <name>Mathis</name>
   <name>Mathurin</name>
   <name>Matthias</name>
   <name>Matthieu</name>
   <name>Maud</name>
   <name>Maugis</name>
-  <name>Maurice</name>
   <name>Mauricet</name>
   <name>Mauricette</name>
-  <name>Max</name>
   <name>Maxence</name>
   <name>Maximilien</name>
   <name>Mayeul</name>
   <name>Maëlys</name>
   <name>Mence</name>
-  <name>Merlin</name>
-  <name>Michel</name>
   <name>Micheline</name>
   <name>Michèle</name>
   <name>Mireille</name>
-  <name>Miriam</name>
-  <name>Monique</name>
   <name>Morgane</name>
   <name>Moïse</name>
   <name>Moïsette</name>
-  <name>Muriel</name>
   <name>Murielle</name>
   <name>Mylène</name>
   <name>Médéric</name>
-  <name>Mélanie</name>
   <name>Mélina</name>
   <name>Méline</name>
   <name>Mélisande</name>
@@ -769,19 +641,12 @@
   <name>Mélissandre</name>
   <name>Mélysandre</name>
   <name>Mérovée</name>
-  <name>Nadia</name>
-  <name>Nadine</name>
   <name>Nadège</name>
-  <name>Natalie</name>
   <name>Nathalie</name>
-  <name>Nathan</name>
   <name>Naudet</name>
   <name>Naël</name>
   <name>Nestor</name>
   <name>Nicci</name>
-  <name>Nicolas</name>
-  <name>Nicole</name>
-  <name>Nicolette</name>
   <name>Nolwenn</name>
   <name>Norbert</name>
   <name>Norgot</name>
@@ -798,34 +663,25 @@
   <name>Odilon</name>
   <name>Odon</name>
   <name>Oger</name>
-  <name>Olga</name>
   <name>Olive</name>
-  <name>Olivia</name>
-  <name>Olivier</name>
   <name>Olympe</name>
   <name>Ophélie</name>
   <name>Orlane</name>
-  <name>Oscar</name>
   <name>Othon</name>
   <name>Ozanne</name>
   <name>Pacôme</name>
-  <name>Pascal</name>
   <name>Pascale</name>
   <name>Pascaline</name>
   <name>Paterne</name>
   <name>Patrice</name>
-  <name>Paul</name>
   <name>Paule</name>
-  <name>Paulette</name>
   <name>Pauline</name>
   <name>Perceval</name>
   <name>Perrine</name>
   <name>Philibert</name>
-  <name>Philippe</name>
   <name>Philippine</name>
   <name>Philomène</name>
   <name>Philémon</name>
-  <name>Pierre</name>
   <name>Pollyanna</name>
   <name>Primerose</name>
   <name>Priscille</name>
@@ -836,30 +692,21 @@
   <name>Pénélope</name>
   <name>Pépin</name>
   <name>Pétronille</name>
-  <name>Quentin</name>
-  <name>Rachel</name>
   <name>Raoul</name>
   <name>Raphaël</name>
   <name>Raphaëlle</name>
-  <name>Raymond</name>
   <name>Raymonde</name>
-  <name>Rebecca</name>
   <name>Renaud</name>
   <name>René</name>
-  <name>Renée</name>
   <name>Reybaud</name>
-  <name>Richard</name>
-  <name>Robert</name>
   <name>Roch</name>
   <name>Rodolphe</name>
-  <name>Roger</name>
   <name>Roland</name>
   <name>Rolande</name>
   <name>Romain</name>
   <name>Romuald</name>
   <name>Roméo</name>
   <name>Ronan</name>
-  <name>Rosalie</name>
   <name>Rose</name>
   <name>Roselin</name>
   <name>Roseline</name>
@@ -870,19 +717,14 @@
   <name>Rémi</name>
   <name>Rémy</name>
   <name>Sabine</name>
-  <name>Salomon</name>
   <name>Salomé</name>
-  <name>Samuel</name>
   <name>Sandrine</name>
-  <name>Sarah</name>
   <name>Savin</name>
   <name>Serge</name>
   <name>Sibylle</name>
   <name>Sidoine</name>
   <name>Sigebert</name>
   <name>Sigismond</name>
-  <name>Simon</name>
-  <name>Simone</name>
   <name>Siméon</name>
   <name>Sixte</name>
   <name>Sixtine</name>
@@ -890,14 +732,11 @@
   <name>Soleine</name>
   <name>Soline</name>
   <name>Solène</name>
-  <name>Sophie</name>
   <name>Stanislas</name>
   <name>Stéphan</name>
   <name>Stéphane</name>
   <name>Stéphanie</name>
-  <name>Suzanne</name>
   <name>Suzette</name>
-  <name>Suzie</name>
   <name>Suzon</name>
   <name>Sylvain</name>
   <name>Sylvestre</name>
@@ -910,14 +749,11 @@
   <name>Séverine</name>
   <name>Tancrède</name>
   <name>Tanguy</name>
-  <name>Tatiana</name>
   <name>Taurin</name>
-  <name>Tessa</name>
   <name>Thaïs</name>
   <name>Thibault</name>
   <name>Thibert</name>
   <name>Thierry</name>
-  <name>Thomas</name>
   <name>Théo</name>
   <name>Théodebert</name>
   <name>Théodora</name>
@@ -930,36 +766,27 @@
   <name>Titien</name>
   <name>Tonnin</name>
   <name>Trajan</name>
-  <name>Tristan</name>
   <name>Turold</name>
   <name>Ulrich</name>
   <name>Ulysse</name>
   <name>Urbain</name>
   <name>Uther</name>
   <name>Valentin</name>
-  <name>Valentine</name>
   <name>Valère</name>
   <name>Valérie</name>
   <name>Valéry</name>
-  <name>Vanessa</name>
   <name>Venceslas</name>
   <name>Victoire</name>
-  <name>Victor</name>
-  <name>Victoria</name>
   <name>Victorin</name>
   <name>Victorine</name>
-  <name>Vincent</name>
   <name>Vinciane</name>
   <name>Violette</name>
   <name>Virginie</name>
   <name>Viviane</name>
   <name>Vivien</name>
-  <name>Vladimir</name>
-  <name>Véronique</name>
   <name>Waleran</name>
   <name>Walerand</name>
   <name>Wandrille</name>
-  <name>Xavier</name>
   <name>Xavière</name>
   <name>Yann</name>
   <name>Yannick</name>
@@ -974,7 +801,6 @@
   <name>Yves</name>
   <name>Yvette</name>
   <name>Yvon</name>
-  <name>Yvonne</name>
   <name>Zacharie</name>
   <name>Zaché</name>
   <name>Zoé</name>
