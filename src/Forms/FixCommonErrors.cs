@@ -1961,138 +1961,132 @@ namespace Nikse.SubtitleEdit.Forms
                 string oldText = p.Text;
 
                 Match match = ReAfterLowercaseLetter.Match(p.Text);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    if (!(match.Index > 1 && p.Text.Substring(match.Index - 1, 2) == "Mc")) // irish names, McDonalds etc.
                     {
-                        if (!(match.Index > 1 && p.Text.Substring(match.Index - 1, 2) == "Mc")) // irish names, McDonalds etc.
+                        if (p.Text[match.Index + 1] == 'I')
                         {
-                            if (p.Text[match.Index + 1] == 'I')
+                            if (AllowFix(p, fixAction))
                             {
-                                if (AllowFix(p, fixAction))
-                                {
-                                    p.Text = p.Text.Substring(0, match.Index + 1) + "l";
-                                    if (match.Index + 2 < oldText.Length)
-                                        p.Text += oldText.Substring(match.Index + 2);
+                                p.Text = p.Text.Substring(0, match.Index + 1) + "l";
+                                if (match.Index + 2 < oldText.Length)
+                                    p.Text += oldText.Substring(match.Index + 2);
 
-                                    uppercaseIsInsideLowercaseWords++;
-                                    _totalFixes++;
-                                    AddFixToListView(p, fixAction, oldText, p.Text);
-                                }
+                                uppercaseIsInsideLowercaseWords++;
+                                _totalFixes++;
+                                AddFixToListView(p, fixAction, oldText, p.Text);
                             }
                         }
-                        match = match.NextMatch();
                     }
+                    match = match.NextMatch();
                 }
 
                 StripableText st = new StripableText(p.Text);
                 match = ReBeforeLowercaseLetter.Match(st.StrippedText);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    string word = GetWholeWord(st.StrippedText, match.Index);
+                    if (!IsName(word))
                     {
-                        string word = GetWholeWord(st.StrippedText, match.Index);
-                        if (!IsName(word))
+                        if (AllowFix(p, fixAction))
                         {
-                            if (AllowFix(p, fixAction))
+                            if (word.ToLower() == "internal" ||
+                                word.ToLower() == "island" ||
+                                word.ToLower() == "islands")
                             {
-                                if (word.ToLower() == "internal" ||
-                                    word.ToLower() == "island" ||
-                                    word.ToLower() == "islands")
-                                {
-                                }
-                                else if (match.Index == 0)
-                                {  // first letter in paragraph
+                            }
+                            else if (match.Index == 0)
+                            {  // first letter in paragraph
 
-                                    //too risky! - perhaps if periods is fixed at the same time... or too complicated!?
-                                    //if (isLineContinuation)
-                                    //{
-                                    //    st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
-                                    //    p.Text = st.MergedString;
-                                    //    uppercaseIsInsideLowercaseWords++;
-                                    //    _totalFixes++;
-                                    //    AddFixToListView(p, fixAction, oldText, p.Text);
-                                    //}
-                                }
-                                else
+                                //too risky! - perhaps if periods is fixed at the same time... or too complicated!?
+                                //if (isLineContinuation)
+                                //{
+                                //    st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
+                                //    p.Text = st.MergedString;
+                                //    uppercaseIsInsideLowercaseWords++;
+                                //    _totalFixes++;
+                                //    AddFixToListView(p, fixAction, oldText, p.Text);
+                                //}
+                            }
+                            else
+                            {
+                                if (match.Index > 2 && st.StrippedText[match.Index - 1] == ' ')
                                 {
-                                    if (match.Index > 2 && st.StrippedText[match.Index - 1] == ' ')
+                                    if ((Utilities.AllLettersAndNumbers + ",").Contains(st.StrippedText[match.Index - 2].ToString()))
                                     {
-                                        if ((Utilities.AllLettersAndNumbers + ",").Contains(st.StrippedText[match.Index - 2].ToString()))
+                                        string secondLetter = string.Empty;
+                                        if (match.Length >= 2)
+                                            secondLetter = match.Value.Substring(1, 1);
+                                        if (Utilities.LowerCaseVowels.Contains(secondLetter.ToLower()))
                                         {
-                                            string secondLetter = string.Empty;
-                                            if (match.Length >= 2)
-                                                secondLetter = match.Value.Substring(1, 1);
-                                            if (Utilities.LowerCaseVowels.Contains(secondLetter.ToLower()))
-                                            {
-                                                st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
-                                                p.Text = st.MergedString;
-                                                uppercaseIsInsideLowercaseWords++;
-                                                _totalFixes++;
-                                                AddFixToListView(p, fixAction, oldText, p.Text);
-                                            }
-                                        }
-                                    }
-                                    else if (match.Index > Environment.NewLine.Length + 1 && Environment.NewLine.Contains(st.StrippedText[match.Index - 1].ToString()))
-                                    {
-                                        if ((Utilities.AllLettersAndNumbers + ",").Contains(st.StrippedText[match.Index - (Environment.NewLine.Length + 1)].ToString()))
-                                        {
-                                            string next = string.Empty;
-                                            if (match.Length >= 2)
-                                                next = match.Value.Substring(1, 1);
-
-                                            if (Utilities.LowerCaseVowels.Contains(next))
-                                            {
-                                                st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
-                                                p.Text = st.MergedString;
-                                                uppercaseIsInsideLowercaseWords++;
-                                                _totalFixes++;
-                                                AddFixToListView(p, fixAction, oldText, p.Text);
-                                            }
-                                        }
-                                    }
-                                    else if (match.Index > 1 && ((st.StrippedText[match.Index - 1] == '\"') || (st.StrippedText[match.Index - 1] == '\'') ||
-                                                                 (st.StrippedText[match.Index - 1] == '>') || (st.StrippedText[match.Index - 1] == '-')))
-                                    {
-                                    }
-                                    else
-                                    {
-                                        string before = string.Empty;
-                                        string after = string.Empty;
-                                        if (match.Index > 0)
-                                            before = st.StrippedText.Substring(match.Index - 1, 1);
-                                        if (match.Index < st.StrippedText.Length - 2)
-                                            after = st.StrippedText.Substring(match.Index + 1, 1);
-                                        if (before.Length == 1 && before != before.ToLower() && after.Length == 1 && after != after.ToUpper() &&
-                                            !Utilities.LowerCaseVowels.Contains(before.ToLower()) && !Utilities.LowerCaseVowels.Contains(after.ToLower()))
-                                        {
-                                            st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "i");
+                                            st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
                                             p.Text = st.MergedString;
                                             uppercaseIsInsideLowercaseWords++;
                                             _totalFixes++;
                                             AddFixToListView(p, fixAction, oldText, p.Text);
                                         }
-                                        else
+                                    }
+                                }
+                                else if (match.Index > Environment.NewLine.Length + 1 && Environment.NewLine.Contains(st.StrippedText[match.Index - 1].ToString()))
+                                {
+                                    if ((Utilities.AllLettersAndNumbers + ",").Contains(st.StrippedText[match.Index - (Environment.NewLine.Length + 1)].ToString()))
+                                    {
+                                        string next = string.Empty;
+                                        if (match.Length >= 2)
+                                            next = match.Value.Substring(1, 1);
+
+                                        if (Utilities.LowerCaseVowels.Contains(next))
                                         {
-                                            if ("‘’¡¿„“()[]♪'. ".Contains(before) && !(Utilities.LowerCaseVowels).Contains(after.ToLower()))
-                                            {
-                                            }
-                                            else
-                                            {
-                                                st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
-                                                p.Text = st.MergedString;
-                                                uppercaseIsInsideLowercaseWords++;
-                                                _totalFixes++;
-                                                AddFixToListView(p, fixAction, oldText, p.Text);
-                                            }
+                                            st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
+                                            p.Text = st.MergedString;
+                                            uppercaseIsInsideLowercaseWords++;
+                                            _totalFixes++;
+                                            AddFixToListView(p, fixAction, oldText, p.Text);
                                         }
                                     }
                                 }
-
+                                else if (match.Index > 1 && ((st.StrippedText[match.Index - 1] == '\"') || (st.StrippedText[match.Index - 1] == '\'') ||
+                                                             (st.StrippedText[match.Index - 1] == '>') || (st.StrippedText[match.Index - 1] == '-')))
+                                {
+                                }
+                                else
+                                {
+                                    string before = string.Empty;
+                                    string after = string.Empty;
+                                    if (match.Index > 0)
+                                        before = st.StrippedText.Substring(match.Index - 1, 1);
+                                    if (match.Index < st.StrippedText.Length - 2)
+                                        after = st.StrippedText.Substring(match.Index + 1, 1);
+                                    if (before.Length == 1 && before != before.ToLower() && after.Length == 1 && after != after.ToUpper() &&
+                                        !Utilities.LowerCaseVowels.Contains(before.ToLower()) && !Utilities.LowerCaseVowels.Contains(after.ToLower()))
+                                    {
+                                        st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "i");
+                                        p.Text = st.MergedString;
+                                        uppercaseIsInsideLowercaseWords++;
+                                        _totalFixes++;
+                                        AddFixToListView(p, fixAction, oldText, p.Text);
+                                    }
+                                    else
+                                    {
+                                        if ("‘’¡¿„“()[]♪'. ".Contains(before) && !(Utilities.LowerCaseVowels).Contains(after.ToLower()))
+                                        {
+                                        }
+                                        else
+                                        {
+                                            st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
+                                            p.Text = st.MergedString;
+                                            uppercaseIsInsideLowercaseWords++;
+                                            _totalFixes++;
+                                            AddFixToListView(p, fixAction, oldText, p.Text);
+                                        }
+                                    }
+                                }
                             }
+
                         }
-                        match = match.NextMatch();
                     }
+                    match = match.NextMatch();
                 }
 
                 //isLineContinuation = p.Text.Length > 0 && Utilities.GetLetters(true, true, false).Contains(p.Text[p.Text.Length - 1].ToString());
