@@ -1,7 +1,5 @@
-﻿<!-- This list contains names/words with specific casing - and specific to english only -->
+<!-- This list contains names/words with specific casing - and specific to english only -->
 <ignore_list>
-  <name>Aaden</name>
-  <name>Aarav</name>
   <name>Abbey</name>
   <name>Abbie</name>
   <name>Abbigail</name>
@@ -135,7 +133,6 @@
   <name>Averie</name>
   <name>Aviana</name>
   <name>Avianna</name>
-  <name>Ayaan</name>
   <name>Ayana</name>
   <name>Ayanna</name>
   <name>Aydan</name>
@@ -143,6 +140,7 @@
   <name>Ayla</name>
   <name>Ayleen</name>
   <name>Aylin</name>
+  <name>Ayaan</name>
   <name>Azaria</name>
   <name>Azog</name>
   <name>Bacharach</name>
@@ -208,7 +206,6 @@
   <name>Brysen</name>
   <name>Bucharest</name>
   <name>Buenos Aires</name>
-  <name>CONKLIN</name>
   <name>Cade</name>
   <name>Cadence</name>
   <name>Cahill</name>
@@ -262,6 +259,7 @@
   <name>Clooney</name>
   <name>Coachella</name>
   <name>Coen</name>
+  <name>Coggins</name>
   <name>Colet</name>
   <name>Cologne</name>
   <name>Colombo</name>
@@ -269,6 +267,7 @@
   <name>Colten</name>
   <name>Columbo</name>
   <name>Colvin</name>
+  <name>Conklin</name>
   <name>Cooper</name>
   <name>Corban</name>
   <name>Corbin</name>
@@ -717,7 +716,6 @@
   <name>Kyra</name>
   <name>Kyron</name>
   <name>Kyson</name>
-  <name>L'Hermitage</name>
   <name>Lahore</name>
   <name>Laila</name>
   <name>Lailah</name>
@@ -751,6 +749,7 @@
   <name>Lesly</name>
   <name>Levi</name>
   <name>Leyla</name>
+  <name>L'Hermitage</name>
   <name>Lia</name>
   <name>Liana</name>
   <name>Liberty</name>
@@ -858,6 +857,7 @@
   <name>Maxton</name>
   <name>Maxx</name>
   <name>Mayson</name>
+  <name>McAlister</name>
   <name>Mckayla</name>
   <name>Mckenna</name>
   <name>Mckenzie</name>
@@ -933,8 +933,6 @@
   <name>Nutella</name>
   <name>Nyla</name>
   <name>Nylah</name>
-  <name>O'Regan</name>
-  <name>OMG</name>
   <name>Oakenshield</name>
   <name>Odin</name>
   <name>Oeufcocque Penteano</name>
@@ -943,6 +941,8 @@
   <name>Oleg</name>
   <name>Oliveira</name>
   <name>Omari</name>
+  <name>OMG</name>
+  <name>O'Regan</name>
   <name>Orion</name>
   <name>Osaka</name>
   <name>Oslo</name>
@@ -1029,7 +1029,6 @@
   <name>Ryleigh</name>
   <name>Rylen</name>
   <name>Rylie</name>
-  <name>Saanvi</name>
   <name>Sadie</name>
   <name>Sage</name>
   <name>Saige</name>
@@ -1041,11 +1040,11 @@
   <name>Samiyah</name>
   <name>Samson</name>
   <name>San Francisco</name>
-  <name>Sanaa</name>
   <name>Sandberg</name>
   <name>Saniya</name>
   <name>Saniyah</name>
   <name>Santino</name>
+  <name>Sanaa</name>
   <name>Sao Paulo</name>
   <name>Sarahi</name>
   <name>Sarai</name>
@@ -1055,6 +1054,7 @@
   <name>Sarrazin</name>
   <name>Satnam</name>
   <name>Sauron</name>
+  <name>Seagrave</name>
   <name>Segway</name>
   <name>Selah</name>
   <name>Semaj</name>
@@ -1067,6 +1067,7 @@
   <name>Shenyang</name>
   <name>Sherlyn</name>
   <name>Shiloh</name>
+  <name>Shumway</name>
   <name>Siena</name>
   <name>Sienna</name>
   <name>Sincere</name>
@@ -1082,16 +1083,17 @@
   <name>Soren</name>
   <name>St. Louis</name>
   <name>St. Lucia</name>
-  <name>StPetersburg</name>
   <name>Stanislaus</name>
   <name>Stanny's</name>
   <name>Star Trek</name>
   <name>Sterling</name>
   <name>Stillman</name>
+  <name>St. Petersburg</name>
   <name>Sturridge</name>
   <name>Suez</name>
   <name>Summer</name>
   <name>Sylas</name>
+  <name>Saanvi</name>
   <name>Taipei</name>
   <name>Talia</name>
   <name>Taliyah</name>
@@ -1155,6 +1157,7 @@
   <name>Warmbrunn</name>
   <name>Warsaw</name>
   <name>Waylon</name>
+  <name>Wembley</name>
   <name>Wes</name>
   <name>Westin</name>
   <name>Weston</name>
@@ -1208,4 +1211,6 @@
   <name>Zion</name>
   <name>Zoie</name>
   <name>Zuri</name>
+  <name>Aaden</name>
+  <name>Aarav</name>
 </ignore_list>
