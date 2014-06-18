@@ -875,8 +875,38 @@
     <!-- Prefijos; palabras compuestas (mayúsculas)  -->
     <RegEx find="(\b[Aa]nti|\b[Mm]ini|\b[Pp]os|\b[Pp]ro)\s([A-Z]{1,10})([A-Z][a-zá-ú]){0,10}(\b)" replaceWith="$1-$2$3" />
     <!--  Casos de mayúsculas con dos puntos  -->
-    <RegEx find="([\wá-ú]): «([a-zá-ú])" replaceWith="$1: «(Mayúscula)$2" />
-    <RegEx find="([\wá-ú]): ([a-zá-ú])" replaceWith="$1: (Mayúscula)$2" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(a)" replaceWith="$1A" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(b)" replaceWith="$1B" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(c)" replaceWith="$1C" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(d)" replaceWith="$1D" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(e)" replaceWith="$1E" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(f)" replaceWith="$1F" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(g)" replaceWith="$1G" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(h)" replaceWith="$1H" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(i)" replaceWith="$1I" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(j)" replaceWith="$1J" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(k)" replaceWith="$1K" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(l)" replaceWith="$1L" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(m)" replaceWith="$1M" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(n)" replaceWith="$1N" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(ñ)" replaceWith="$1Ñ" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(o)" replaceWith="$1O" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(p)" replaceWith="$1P" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(q)" replaceWith="$1Q" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(r)" replaceWith="$1R" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(s)" replaceWith="$1S" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(t)" replaceWith="$1T" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(u)" replaceWith="$1U" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(v)" replaceWith="$1V" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(w)" replaceWith="$1W" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(x)" replaceWith="$1X" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(y)" replaceWith="$1Y" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(z)" replaceWith="$1Z" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(á)" replaceWith="$1Á" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(é)" replaceWith="$1É" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(í)" replaceWith="$1Í" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(ó)" replaceWith="$1Ó" />
+    <RegEx find="([\wá-ú]:\s[«\x22]?)(ú)" replaceWith="$1Ú" />
     <!--  Usos correctos de la coma  -->
     <RegEx find="(\b[Pp]ero),(\s)([¡¿])" replaceWith="$1$2$3" />
     <RegEx find="(\b[Aa]unque),(\s|$)" replaceWith="$1$2" />
@@ -891,7 +921,7 @@
     <RegEx find="(\b[Ll]o|\b[Ll]a|\b[Ll]e)(\s)se(\W|$)" replaceWith="$1$2sé$3" />
     <RegEx find="[Ss]e\s(dónde\b|cuándo\b|adónde\b|cómo\b|cuál\b|quién\b|cuánto\b|cuánta\b|cuántos\b|cuántas\b|cuán\b)" replaceWith="sé $1" />
     <!--  «té»  -->
-    <RegEx find="\b([Tt])e\s(verde\b|negro\b|perla\b|manzanilla\b|limón\b|janzmín\b)" replaceWith="$1é $2" />
+    <RegEx find="\b([Tt])e\s(verde\b|negro\b|perla\b|de manzanilla\b|de lim[óo]n\b|de jazm[íi]n\b)" replaceWith="$1é $2" />
     <!--  Apóstrofo  -->
     <RegEx find="(\b[A-Z][a-zá-ú]{3,12})\s(’|')(\d\d(\s|$))" replaceWith="$1 $3" />
     <RegEx find="(\b[A-Z]{2,5})(’|')(s)" replaceWith="(Ej. Devedés)$1$3" />
@@ -919,5 +949,9 @@
     <RegEx find="(^|\n)(-)([^\s])" replaceWith="$1$2 $3" />
     <!--  Punto antes del guión  -->
     <RegEx find="([^\.\?\!]) - " replaceWith="$1. - " />
+    <!-- Terminaciones en «ólogo», «ílogo» y «álogo»  -->
+    <RegEx find="\Bo(log[ao]s?\b)" replaceWith="ó$1" />
+    <RegEx find="\Ba(log[ao]s?\b)" replaceWith="á$1" />
+    <RegEx find="\Bi(log[ao]s?\b)" replaceWith="í$1" />
   </RegularExpressions>
 </ReplaceList>
