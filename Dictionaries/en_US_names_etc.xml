@@ -1,7 +1,5 @@
-﻿<!-- This list contains names/words with specific casing - and specific to english only -->
+<!-- This list contains names/words with specific casing - and specific to english only -->
 <ignore_list>
-  <name>Aaden</name>
-  <name>Aarav</name>
   <name>Abbey</name>
   <name>Abbie</name>
   <name>Abbigail</name>
@@ -135,7 +133,6 @@
   <name>Averie</name>
   <name>Aviana</name>
   <name>Avianna</name>
-  <name>Ayaan</name>
   <name>Ayana</name>
   <name>Ayanna</name>
   <name>Aydan</name>
@@ -143,6 +140,7 @@
   <name>Ayla</name>
   <name>Ayleen</name>
   <name>Aylin</name>
+  <name>Ayaan</name>
   <name>Azaria</name>
   <name>Azog</name>
   <name>Bacharach</name>
@@ -174,6 +172,7 @@
   <name>Bowen</name>
   <name>Boxster</name>
   <name>Boxter</name>
+  <name>Brad Pitt</name>
   <name>Braelyn</name>
   <name>Braelynn</name>
   <name>Brandenberg</name>
@@ -268,6 +267,7 @@
   <name>Colten</name>
   <name>Columbo</name>
   <name>Colvin</name>
+  <name>Connery</name>
   <name>Cooper</name>
   <name>Corban</name>
   <name>Corbin</name>
@@ -320,6 +320,7 @@
   <name>Easton</name>
   <name>Eden</name>
   <name>Efrain</name>
+  <name>Eiffel Tower</name>
   <name>Elaina</name>
   <name>Elian</name>
   <name>Eliana</name>
@@ -387,6 +388,7 @@
   <name>Gauge</name>
   <name>Gavyn</name>
   <name>Genesis</name>
+  <name>Gerard Depardieu</name>
   <name>Gerardo</name>
   <name>Giada</name>
   <name>Giana</name>
@@ -403,6 +405,7 @@
   <name>Gracelyn</name>
   <name>Gracelynn</name>
   <name>Grady</name>
+  <name>Grand Canyon</name>
   <name>Grant</name>
   <name>Graysen</name>
   <name>Greenway</name>
@@ -555,6 +558,7 @@
   <name>Johanna</name>
   <name>Johnathan</name>
   <name>Johnathon</name>
+  <name>Johnny Depp</name>
   <name>Jolene</name>
   <name>Jolie</name>
   <name>Jon</name>
@@ -715,7 +719,6 @@
   <name>Kyra</name>
   <name>Kyron</name>
   <name>Kyson</name>
-  <name>L'Hermitage</name>
   <name>Lahore</name>
   <name>Laila</name>
   <name>Lailah</name>
@@ -744,11 +747,13 @@
   <name>Leland</name>
   <name>Leningrad</name>
   <name>Leona</name>
+  <name>Leonardo DiCaprio</name>
   <name>Leonel</name>
   <name>Leonidas</name>
   <name>Lesly</name>
   <name>Levi</name>
   <name>Leyla</name>
+  <name>L'Hermitage</name>
   <name>Lia</name>
   <name>Liana</name>
   <name>Liberty</name>
@@ -833,6 +838,7 @@
   <name>Marisol</name>
   <name>Maritza</name>
   <name>Mariyah</name>
+  <name>Mark Wahlberg</name>
   <name>Marlee</name>
   <name>Marlon</name>
   <name>Marnier</name>
@@ -916,6 +922,7 @@
   <name>Neveah</name>
   <name>New Orleans</name>
   <name>Nia</name>
+  <name>Niagara Falls</name>
   <name>Nickolas</name>
   <name>Nicosia</name>
   <name>Niklaus</name>
@@ -932,8 +939,6 @@
   <name>Nutella</name>
   <name>Nyla</name>
   <name>Nylah</name>
-  <name>O'Regan</name>
-  <name>OMG</name>
   <name>Oakenshield</name>
   <name>Odin</name>
   <name>Oeufcocque Penteano</name>
@@ -942,6 +947,9 @@
   <name>Oleg</name>
   <name>Oliveira</name>
   <name>Omari</name>
+  <name>OMG</name>
+  <name>Oprah Winfrey</name>
+  <name>O'Regan</name>
   <name>Orion</name>
   <name>Osaka</name>
   <name>Oslo</name>
@@ -1000,6 +1008,7 @@
   <name>Rio de Janeiro</name>
   <name>Rivka</name>
   <name>Riya</name>
+  <name>Robert De Niro</name>
   <name>Rocco</name>
   <name>Rochway</name>
   <name>Roderick</name>
@@ -1028,7 +1037,6 @@
   <name>Ryleigh</name>
   <name>Rylen</name>
   <name>Rylie</name>
-  <name>Saanvi</name>
   <name>Sadie</name>
   <name>Sage</name>
   <name>Saige</name>
@@ -1040,11 +1048,11 @@
   <name>Samiyah</name>
   <name>Samson</name>
   <name>San Francisco</name>
-  <name>Sanaa</name>
   <name>Sandberg</name>
   <name>Saniya</name>
   <name>Saniyah</name>
   <name>Santino</name>
+  <name>Sanaa</name>
   <name>Sao Paulo</name>
   <name>Sarahi</name>
   <name>Sarai</name>
@@ -1070,6 +1078,7 @@
   <name>Shumway</name>
   <name>Siena</name>
   <name>Sienna</name>
+  <name>Simon Cowell</name>
   <name>Sincere</name>
   <name>Skokie</name>
   <name>Skye</name>
@@ -1093,6 +1102,7 @@
   <name>Suez</name>
   <name>Summer</name>
   <name>Sylas</name>
+  <name>Saanvi</name>
   <name>Taipei</name>
   <name>Talia</name>
   <name>Taliyah</name>
@@ -1186,6 +1196,7 @@
   <name>Yazmin</name>
   <name>Yehuda</name>
   <name>Yesenia</name>
+  <name>Yoko Ono</name>
   <name>Yokohama</name>
   <name>Yoselin</name>
   <name>Yuliana</name>
@@ -1210,4 +1221,6 @@
   <name>Zion</name>
   <name>Zoie</name>
   <name>Zuri</name>
+  <name>Aaden</name>
+  <name>Aarav</name>
 </ignore_list>
