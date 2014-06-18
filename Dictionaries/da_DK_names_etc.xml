@@ -1,4 +1,4 @@
-﻿<ignore_words>
+﻿<ignore_list>
   <name>Aquarium</name>
   <name>Armfeldt</name>
   <name>Asgård</name>
@@ -77,4 +77,4 @@
   <name>Wharton</name>
   <name>Wylie</name>
   <name>Yardley</name>
-</ignore_words>
+</ignore_list>
