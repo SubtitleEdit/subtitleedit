@@ -1858,6 +1858,7 @@
             public string ImageText { get; set; }
             public string SpellCheckCompleted { get; set; }
             public string SpellCheckAborted { get; set; }
+            public string UndoX { get; set; }
         }
 
         public class Split
