@@ -366,6 +366,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "OCR spellcheck";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OcrSpellCheck_KeyDown);
             this.groupBoxSuggestions.ResumeLayout(false);
             this.GroupBoxEditWord.ResumeLayout(false);
             this.GroupBoxEditWord.PerformLayout();

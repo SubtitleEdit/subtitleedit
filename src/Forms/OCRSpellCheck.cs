@@ -280,5 +280,14 @@ namespace Nikse.SubtitleEdit.Forms
                 System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(text));
         }
 
+        private void OcrSpellCheck_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.G)
+            {
+                e.SuppressKeyPress = true;
+                buttonGoogleIt_Click(null, null);
+            }
+        }
+
     }
 }
