@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.4 (xth June 2014)
+3.4.0 (xth June 2014)
 * NEW:
    * Switched to .NET Framework 4.0 (from .NET Framework 2.0)
    * Runs 64-bit on 64-bit operating systems (requires 64-bit codecs!)
