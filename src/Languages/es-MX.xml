@@ -206,6 +206,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Seleccionar idioma</Title>
     <Language>Idioma</Language>
   </ChooseLanguage>
+  <ColorChooser>
+    <Title>Elegir color</Title>
+    <Red>Rojo</Red>
+    <Green>Verde</Green>
+    <Blue>Azul</Blue>
+    <Alpha>Alfa</Alpha>
+  </ColorChooser>
   <ColumnPaste>
     <Title>Pegar columna</Title>
     <ChooseColumn>Elegir columna</ChooseColumn>
@@ -365,6 +372,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Color de fuente</FontColor>
     <BorderColor>Color de borde</BorderColor>
     <BorderWidth>Ancho de borde</BorderWidth>
+    <BorderStyle>Estilo de borde</BorderStyle>
+    <BorderStyleOneBox>Una casilla</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Casilla para cada línea</BorderStyleBoxForEachLine>
+    <BorderStyleNormalWidthX>Normal, ancho={0}</BorderStyleNormalWidthX>
     <ShadowColor>Color de sombra</ShadowColor>
     <ShadowWidth>Ancho de sombra</ShadowWidth>
     <Transparency>Transparencia</Transparency>
@@ -390,6 +401,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SomeLinesWereTooLongX>Algunas líneas son muy largas:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Alto de línea</LineHeight>
+    <BoxSingleLine>Casilla - una sola línea</BoxSingleLine>
+    <BoxMultiLine>Casilla - multilínea</BoxMultiLine>
   </ExportPngXml>
   <ExportText>
     <Title>Exportar texto</Title>
@@ -733,6 +746,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeSpeedInPercent>Cambiar velocidad (porcentaje)...</ChangeSpeedInPercent>
         <MergeShortLines>Combinar líneas cortas...</MergeShortLines>
         <MergeDuplicateText>Fusionar líneas con el mismo texto...</MergeDuplicateText>
+		<MergeSameTimeCodes>Fusionar líneas con los mismos códigos de tiempo...</MergeSameTimeCodes>
         <SplitLongLines>Dividir líneas largas...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Duración mínima entre párrafos...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>
@@ -966,7 +980,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Subtítulo original guardado {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Modificado archivo en disco</FileOnDiskModified>
     <OverwriteModifiedFile>¿Sobreescribir archivo {0} modificado a {1} {2}{3} con archivo actual cargado del disco a {4} {5}?</OverwriteModifiedFile>
-    <UnableToSaveSubtitleX>Imposible guardar archivo de subtítulo {0}</UnableToSaveSubtitleX>
+    <UnableToSaveSubtitleX>Imposible guardar archivo de subtítulo {0}
+¡El subtítulo parece estar vacío - intentar volver a guardarlo si estás trabajando con un subtítulo válido!</UnableToSaveSubtitleX>
     <BeforeNew>Anterior nuevo</BeforeNew>
     <New>Nuevo</New>
     <BeforeConvertingToX>Convirtiendo anterior a {0}</BeforeConvertingToX>
@@ -1225,6 +1240,13 @@ con el archivo de video, al subtítulo actual cargado.
     <MergedText>Texto combinado</MergedText>
     <OnlyMergeContinuationLines>Combinar solo líneas que continúan</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <MergeTextWithSameTimeCodes>
+    <Title>Fusionar líneas con los mismos códigos de tiempo</Title>
+    <MaxDifferenceMilliseconds>Diferencia máx. en milisegundos</MaxDifferenceMilliseconds>
+    <ReBreakLines>Redividir líneas</ReBreakLines>
+    <NumberOfMergesX>Número de fusiones: {0}</NumberOfMergesX>
+    <MergedText>Texto fusionado</MergedText>
+  </MergeTextWithSameTimeCodes>
   <ModifySelection>
     <Title>Modificar selección</Title>
     <Rule>Regla</Rule>
