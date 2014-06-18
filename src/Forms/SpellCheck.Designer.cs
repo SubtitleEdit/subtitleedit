@@ -56,6 +56,7 @@
             this.textBoxWholeText = new System.Windows.Forms.TextBox();
             this.labelActionInfo = new System.Windows.Forms.Label();
             this.buttonSpellCheckDownload = new System.Windows.Forms.Button();
+            this.buttonUndo = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxWordNotFound.SuspendLayout();
             this.groupBoxSuggestions.SuspendLayout();
@@ -121,13 +122,13 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addXToNamesnoiseListToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(211, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(208, 26);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1Opening);
             // 
             // addXToNamesnoiseListToolStripMenuItem
             // 
             this.addXToNamesnoiseListToolStripMenuItem.Name = "addXToNamesnoiseListToolStripMenuItem";
-            this.addXToNamesnoiseListToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.addXToNamesnoiseListToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.addXToNamesnoiseListToolStripMenuItem.Text = "Add x to names/noise list";
             this.addXToNamesnoiseListToolStripMenuItem.Click += new System.EventHandler(this.AddXToNamesnoiseListToolStripMenuItemClick);
             // 
@@ -237,6 +238,7 @@
             // 
             // groupBoxWordNotFound
             // 
+            this.groupBoxWordNotFound.Controls.Add(this.buttonUndo);
             this.groupBoxWordNotFound.Controls.Add(this.buttonAddToNames);
             this.groupBoxWordNotFound.Controls.Add(this.buttonAddToDictionary);
             this.groupBoxWordNotFound.Controls.Add(this.buttonSkipOnce);
@@ -269,7 +271,7 @@
             this.checkBoxAutoChangeNames.AutoSize = true;
             this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 157);
             this.checkBoxAutoChangeNames.Name = "checkBoxAutoChangeNames";
-            this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(209, 17);
+            this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(216, 17);
             this.checkBoxAutoChangeNames.TabIndex = 3;
             this.checkBoxAutoChangeNames.Text = "Auto fix names where only casing differ";
             this.checkBoxAutoChangeNames.UseVisualStyleBackColor = true;
@@ -347,6 +349,17 @@
             this.buttonSpellCheckDownload.UseVisualStyleBackColor = true;
             this.buttonSpellCheckDownload.Click += new System.EventHandler(this.buttonSpellCheckDownload_Click);
             // 
+            // buttonUndo
+            // 
+            this.buttonUndo.Location = new System.Drawing.Point(20, 158);
+            this.buttonUndo.Name = "buttonUndo";
+            this.buttonUndo.Size = new System.Drawing.Size(250, 21);
+            this.buttonUndo.TabIndex = 7;
+            this.buttonUndo.Text = "Undo: skip all \'A\'";
+            this.buttonUndo.UseVisualStyleBackColor = true;
+            this.buttonUndo.Visible = false;
+            this.buttonUndo.Click += new System.EventHandler(this.buttonUndo_Click);
+            // 
             // SpellCheck
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -415,5 +428,6 @@
         private System.Windows.Forms.CheckBox checkBoxAutoChangeNames;
         private System.Windows.Forms.Label labelActionInfo;
         private System.Windows.Forms.Button buttonSpellCheckDownload;
+        private System.Windows.Forms.Button buttonUndo;
     }
 }

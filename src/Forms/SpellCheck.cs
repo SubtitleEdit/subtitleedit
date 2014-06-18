@@ -13,6 +13,19 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class SpellCheck : Form
     {
+        private class UndoObject
+        {
+            public int CurrentIndex { get; set; }
+            public string UndoText { get; set; }
+            public string UndoWord { get; set; }
+            public string CurrentWord { get; set; }
+            public Paragraph Paragraph { get; set; }
+            public string ParagraphBeforeText { get; set; }
+            public SpellCheckAction Action { get; set; }
+            public Subtitle Subtitle { get; set; }
+        }
+        List<UndoObject> _undoList = new List<UndoObject>();
+
         SpellCheckAction _action = SpellCheckAction.Skip;
         private List<string> _suggestions;
         private string _currentAction = null;
@@ -207,6 +220,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.ShowHelp("#spellcheck");
                 e.SuppressKeyPress = true;
             }
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.G)
+            {
+                e.SuppressKeyPress = true;
+                System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(textBoxWord.Text));
+            }
         }
 
         private void ButtonAbortClick(object sender, EventArgs e)
@@ -217,6 +235,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonChangeClick(object sender, EventArgs e)
         {
+            PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.Change, _currentWord + " > " + textBoxWord.Text), SpellCheckAction.Change);
             DoAction(SpellCheckAction.Change);
         }
 
@@ -231,11 +250,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonSkipAllClick(object sender, EventArgs e)
         {
+            PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.SkipAll, textBoxWord.Text), SpellCheckAction.SkipAll);
             DoAction(SpellCheckAction.SkipAll);
         }
 
         private void ButtonSkipOnceClick(object sender, EventArgs e)
         {
+            PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.SkipOnce, textBoxWord.Text), SpellCheckAction.Skip);
             DoAction(SpellCheckAction.Skip);
         }
 
@@ -313,6 +334,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonChangeAllClick(object sender, EventArgs e)
         {
+            PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.ChangeAll, _currentWord + " > " + textBoxWord.Text), SpellCheckAction.ChangeAll);
             DoAction(SpellCheckAction.ChangeAll);
         }
 
@@ -335,6 +357,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAddToNamesClick(object sender, EventArgs e)
         {
+            PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList, textBoxWord.Text), SpellCheckAction.AddToNamesEtc);
             DoAction(SpellCheckAction.AddToNamesEtc);
         }
 
@@ -778,8 +801,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (SplitChars.Contains(s.Substring(i, 1)))
                 {
                     if (sb.Length > 0)
-                        list.Add(new SpellCheckWord() { Text = sb.ToString(), Index = i-sb.Length } );
-                    sb = new StringBuilder ();
+                        list.Add(new SpellCheckWord() { Text = sb.ToString(), Index = i - sb.Length });
+                    sb = new StringBuilder();
                 }
                 else
                 {
@@ -1131,6 +1154,97 @@ namespace Nikse.SubtitleEdit.Forms
             if (comboBoxDictionaries.Items.Count > 0 && comboBoxDictionaries.SelectedIndex == -1)
                 comboBoxDictionaries.SelectedIndex = 0;
             ComboBoxDictionariesSelectedIndexChanged(null, null);
+        }
+
+        private void PushUndo(string text, SpellCheckAction action)
+        {
+            return;
+            //if (text.Trim().Length > 0)
+            //{
+            //    if (action == SpellCheckAction.ChangeAll && _changeAllDictionary.ContainsKey(_currentWord))
+            //        return;
+
+            //    _undoList.Add(new UndoObject()
+            //    {
+            //        CurrentIndex = _currentIndex,
+            //        UndoText = text,
+            //        UndoWord = textBoxWord.Text.Trim(),
+            //        Action = action,
+            //        Paragraph = _currentParagraph,
+            //        ParagraphBeforeText = _currentParagraph.Text,
+            //        CurrentWord = _currentWord,
+            //        Subtitle = new Subtitle(_subtitle),
+            //    });
+            //    buttonUndo.Text = string.Format("Undo: {0}", text);
+            //    buttonUndo.Visible = true;
+            //}
+        }
+
+        private void buttonUndo_Click(object sender, EventArgs e)
+        {
+            if (_undoList.Count > 0)
+            {
+                var undo = _undoList[_undoList.Count - 1];
+                _currentIndex = undo.CurrentIndex - 1;                
+                switch (undo.Action)
+                {
+                    case SpellCheckAction.Change:
+                        break;
+                    case SpellCheckAction.ChangeAll:
+                        _changeAllDictionary.Remove(undo.CurrentWord);
+                        break;
+                    case SpellCheckAction.Skip:
+                        break;
+                    case SpellCheckAction.SkipAll:
+                        _skipAllList.Remove(undo.UndoWord.ToUpper());
+                        if (undo.UndoWord.EndsWith("'") || undo.UndoWord.StartsWith("'"))
+                            _skipAllList.Remove(undo.UndoWord.ToUpper().Trim('\''));
+                        break;
+                    case SpellCheckAction.AddToDictionary:
+                        _userWordList.Remove(undo.UndoWord);
+                        _userPhraseList.Remove(undo.UndoWord);
+                        //Utilities.RemoveFromUserDictionary(undo.UndoWord, _languageName);
+                        break;
+                    case SpellCheckAction.AddToNamesEtc:
+                        if (ChangeWord.Length > 1 && !_namesEtcList.Contains(ChangeWord))
+                        {
+                            _namesEtcList.Add(ChangeWord);
+                            _namesEtcListUppercase.Add(ChangeWord.ToUpper());
+                            if (_languageName.StartsWith("en_") && !ChangeWord.ToLower().EndsWith("s"))
+                            {
+                                _namesEtcList.Add(ChangeWord + "s");
+                                _namesEtcListUppercase.Add(ChangeWord.ToUpper() + "S");
+                            }
+                            if (!ChangeWord.ToLower().EndsWith("s"))
+                            {
+                                _namesEtcListWithApostrophe.Add(ChangeWord + "'s");
+                                _namesEtcListUppercase.Add(ChangeWord.ToUpper() + "'S");
+                            }
+                            if (!ChangeWord.EndsWith("'"))
+                                _namesEtcListWithApostrophe.Add(ChangeWord + "'");
+                            Utilities.AddWordToLocalNamesEtcList(ChangeWord, _languageName);
+                        }
+                        break;
+                    case SpellCheckAction.ChangeWholeText:
+                        _mainWindow.ShowStatus(string.Format(Configuration.Settings.Language.Main.SpellCheckChangedXToY, _currentParagraph.Text.Replace(Environment.NewLine, " "), ChangeWholeText.Replace(Environment.NewLine, " ")));
+                        _currentParagraph.Text = ChangeWholeText;
+                        _mainWindow.ChangeWholeTextMainPart(ref _noOfChangedWords, ref _firstChange, _currentIndex, _currentParagraph);
+                        break;
+                    default:
+                        break;
+                }
+
+                _undoList.RemoveAt(_undoList.Count - 1);
+                if (_undoList.Count > 0)
+                {
+                    buttonUndo.Text = _undoList[_undoList.Count - 1].UndoText;
+                }
+                else
+                {
+                    buttonUndo.Visible = false;
+                }
+            }
+            PrepareNextWord();
         }
 
     }
