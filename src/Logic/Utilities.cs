@@ -1990,6 +1990,39 @@ namespace Nikse.SubtitleEdit.Logic
             return new Regex(@"[\b ,\.\?\!]" + s + @"[\b !\.,\r\n\?]", RegexOptions.Compiled);
         }
 
+        public static void RemoveFromUserDictionary(string word, string languageName)
+        {
+            word = word.Trim();
+            if (word.Length > 1)
+            {
+                string userWordsXmlFileName = DictionaryFolder + languageName + "_user.xml";
+                var userWords = new XmlDocument();
+                if (File.Exists(userWordsXmlFileName))
+                    userWords.Load(userWordsXmlFileName);
+                else
+                    userWords.LoadXml("<words />");
+
+                var words = new List<string>();
+                foreach (XmlNode node in userWords.DocumentElement.SelectNodes("word"))
+                {
+                    string w = node.InnerText.Trim();
+                    if (w.Length > 0 && w != word)
+                        words.Add(w);
+                }
+                words.Add(word);
+                words.Sort();
+
+                userWords.DocumentElement.RemoveAll();
+                foreach (string w in words)
+                {
+                    XmlNode node = userWords.CreateElement("word");
+                    node.InnerText = w;
+                    userWords.DocumentElement.AppendChild(node);
+                }
+                userWords.Save(userWordsXmlFileName);
+            }
+        }
+
         public static void AddToUserDictionary(string word, string languageName)
         {
             word = word.Trim();
@@ -2021,6 +2054,42 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 userWords.Save(userWordsXmlFileName);
             }
+        }
+
+        public static bool RemoveFromLocalNamesEtcList(string word, string languageName)
+        {
+            word = word.Trim();
+            if (word.Length > 1)
+            {
+                var localNamesEtc = new List<string>();
+                string userNamesEtcXmlFileName = LoadLocalNamesEtc(localNamesEtc, localNamesEtc, languageName);
+
+                if (localNamesEtc.Contains(word))
+                    return false;
+                localNamesEtc.Remove(word);
+                localNamesEtc.Sort();
+
+                var namesEtcDoc = new XmlDocument();
+                if (File.Exists(userNamesEtcXmlFileName))
+                    namesEtcDoc.Load(userNamesEtcXmlFileName);
+                else
+                    namesEtcDoc.LoadXml("<ignore_words />");
+
+                XmlNode de = namesEtcDoc.DocumentElement;
+                if (de != null)
+                {
+                    de.RemoveAll();
+                    foreach (var name in localNamesEtc)
+                    {
+                        XmlNode node = namesEtcDoc.CreateElement("name");
+                        node.InnerText = name;
+                        de.AppendChild(node);
+                    }
+                    namesEtcDoc.Save(userNamesEtcXmlFileName);
+                }
+                return true;
+            }
+            return false;
         }
 
         public static bool AddWordToLocalNamesEtcList(string word, string languageName)

@@ -19,10 +19,13 @@ namespace Nikse.SubtitleEdit.Forms
             public string UndoText { get; set; }
             public string UndoWord { get; set; }
             public string CurrentWord { get; set; }
-            public Paragraph Paragraph { get; set; }
-            public string ParagraphBeforeText { get; set; }
             public SpellCheckAction Action { get; set; }
             public Subtitle Subtitle { get; set; }
+            public int NoOfSkippedWords { get; set; }
+            public int NoOfChangedWords { get; set; }
+            public int NoOfCorrectWords { get; set; }
+            public int NoOfNamesEtc { get; set; }
+            public int NoOfAddedWords { get; set; }
         }
         List<UndoObject> _undoList = new List<UndoObject>();
 
@@ -149,6 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
             _suggestions = suggestions;
             groupBoxWordNotFound.Visible = true;
             groupBoxEditWholeText.Visible = false;
+            buttonEditWholeText.Text = Configuration.Settings.Language.SpellCheck.EditWholeText;
             Text = Configuration.Settings.Language.SpellCheck.Title + " [" + languageName + "] - " + progress;
             textBoxWord.Text = word.Text;
             textBoxWholeText.Text = paragraph;
@@ -244,6 +248,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listBoxSuggestions.SelectedIndex >= 0)
             {
                 textBoxWord.Text = listBoxSuggestions.SelectedItem.ToString();
+                PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.Change, _currentWord + " > " + textBoxWord.Text), SpellCheckAction.Change);
                 DoAction(SpellCheckAction.Change);
             }
         }
@@ -343,6 +348,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listBoxSuggestions.SelectedIndex >= 0)
             {
                 textBoxWord.Text = listBoxSuggestions.SelectedItem.ToString();
+                PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.ChangeAll, _currentWord + " > " + textBoxWord.Text), SpellCheckAction.ChangeAll);
                 DoAction(SpellCheckAction.ChangeAll);
             }
         }
@@ -381,11 +387,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonSkipTextClick(object sender, EventArgs e)
         {
+            PushUndo(string.Format("{0}", Configuration.Settings.Language.SpellCheck.SkipOnce), SpellCheckAction.Skip);
             DoAction(SpellCheckAction.Skip);
         }
 
         private void ButtonChangeWholeTextClick(object sender, EventArgs e)
         {
+            PushUndo(string.Format("{0}", Configuration.Settings.Language.SpellCheck.EditWholeText), SpellCheckAction.ChangeWholeText);
             DoAction(SpellCheckAction.ChangeWholeText);
         }
 
@@ -949,6 +957,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _subtitle = subtitle;
 
+            buttonUndo.Visible = false;
+            _undoList = new List<UndoObject>();
+
             if (_currentIndex >= subtitle.Paragraphs.Count)
                 _currentIndex = 0;
 
@@ -1158,26 +1169,33 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PushUndo(string text, SpellCheckAction action)
         {
-            return;
-            //if (text.Trim().Length > 0)
-            //{
-            //    if (action == SpellCheckAction.ChangeAll && _changeAllDictionary.ContainsKey(_currentWord))
-            //        return;
+            if (text.Trim().Length > 0)
+            {
+                if (action == SpellCheckAction.ChangeAll && _changeAllDictionary.ContainsKey(_currentWord))
+                    return;
 
-            //    _undoList.Add(new UndoObject()
-            //    {
-            //        CurrentIndex = _currentIndex,
-            //        UndoText = text,
-            //        UndoWord = textBoxWord.Text.Trim(),
-            //        Action = action,
-            //        Paragraph = _currentParagraph,
-            //        ParagraphBeforeText = _currentParagraph.Text,
-            //        CurrentWord = _currentWord,
-            //        Subtitle = new Subtitle(_subtitle),
-            //    });
-            //    buttonUndo.Text = string.Format("Undo: {0}", text);
-            //    buttonUndo.Visible = true;
-            //}
+                string format = Configuration.Settings.Language.SpellCheck.UndoX;
+                if (string.IsNullOrEmpty(format))
+                    format = "Undo: {0}";
+                string undoText = string.Format(format, text);
+
+                _undoList.Add(new UndoObject()
+                {
+                    CurrentIndex = _currentIndex,
+                    UndoText = undoText,
+                    UndoWord = textBoxWord.Text.Trim(),
+                    Action = action,
+                    CurrentWord = _currentWord,
+                    Subtitle = new Subtitle(_subtitle),
+                    NoOfSkippedWords = _noOfSkippedWords,
+                    NoOfChangedWords = _noOfChangedWords,
+                    NoOfCorrectWords = _noOfCorrectWords,
+                    NoOfNamesEtc = _noOfNamesEtc,
+                    NoOfAddedWords = _noOfAddedWords,
+                });
+                buttonUndo.Text = undoText;
+                buttonUndo.Visible = true;
+            }
         }
 
         private void buttonUndo_Click(object sender, EventArgs e)
@@ -1185,12 +1203,20 @@ namespace Nikse.SubtitleEdit.Forms
             if (_undoList.Count > 0)
             {
                 var undo = _undoList[_undoList.Count - 1];
-                _currentIndex = undo.CurrentIndex - 1;                
+                _currentIndex = undo.CurrentIndex - 1;
+                _noOfSkippedWords = undo.NoOfSkippedWords;
+                _noOfChangedWords = undo.NoOfChangedWords;
+                _noOfCorrectWords = undo.NoOfCorrectWords;
+                _noOfNamesEtc = undo.NoOfNamesEtc;
+                _noOfAddedWords = undo.NoOfAddedWords;
+
                 switch (undo.Action)
                 {
                     case SpellCheckAction.Change:
+                        _subtitle = _mainWindow.UndoFromSpellCheck(undo.Subtitle);
                         break;
                     case SpellCheckAction.ChangeAll:
+                        _subtitle = _mainWindow.UndoFromSpellCheck(undo.Subtitle);
                         _changeAllDictionary.Remove(undo.CurrentWord);
                         break;
                     case SpellCheckAction.Skip:
@@ -1203,32 +1229,31 @@ namespace Nikse.SubtitleEdit.Forms
                     case SpellCheckAction.AddToDictionary:
                         _userWordList.Remove(undo.UndoWord);
                         _userPhraseList.Remove(undo.UndoWord);
-                        //Utilities.RemoveFromUserDictionary(undo.UndoWord, _languageName);
+                        Utilities.AddToUserDictionary(undo.UndoWord, _languageName);
                         break;
                     case SpellCheckAction.AddToNamesEtc:
-                        if (ChangeWord.Length > 1 && !_namesEtcList.Contains(ChangeWord))
+                        if (undo.UndoWord.Length > 1 && _namesEtcList.Contains(undo.UndoWord))
                         {
-                            _namesEtcList.Add(ChangeWord);
-                            _namesEtcListUppercase.Add(ChangeWord.ToUpper());
-                            if (_languageName.StartsWith("en_") && !ChangeWord.ToLower().EndsWith("s"))
+                            _namesEtcList.Remove(undo.UndoWord);
+                            _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper());
+                            if (_languageName.StartsWith("en_") && !undo.UndoWord.ToLower().EndsWith("s"))
                             {
-                                _namesEtcList.Add(ChangeWord + "s");
-                                _namesEtcListUppercase.Add(ChangeWord.ToUpper() + "S");
+                                _namesEtcList.Remove(undo.UndoWord + "s");
+                                _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper() + "S");
                             }
-                            if (!ChangeWord.ToLower().EndsWith("s"))
+                            if (!undo.UndoWord.ToLower().EndsWith("s"))
                             {
-                                _namesEtcListWithApostrophe.Add(ChangeWord + "'s");
-                                _namesEtcListUppercase.Add(ChangeWord.ToUpper() + "'S");
+                                _namesEtcListWithApostrophe.Remove(undo.UndoWord + "'s");
+                                _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper() + "'S");
                             }
-                            if (!ChangeWord.EndsWith("'"))
-                                _namesEtcListWithApostrophe.Add(ChangeWord + "'");
-                            Utilities.AddWordToLocalNamesEtcList(ChangeWord, _languageName);
+                            if (!undo.UndoWord.EndsWith("'"))
+                                _namesEtcListWithApostrophe.Remove(undo.UndoWord + "'");
+
+                            Utilities.RemoveFromLocalNamesEtcList(ChangeWord, _languageName);
                         }
                         break;
                     case SpellCheckAction.ChangeWholeText:
-                        _mainWindow.ShowStatus(string.Format(Configuration.Settings.Language.Main.SpellCheckChangedXToY, _currentParagraph.Text.Replace(Environment.NewLine, " "), ChangeWholeText.Replace(Environment.NewLine, " ")));
-                        _currentParagraph.Text = ChangeWholeText;
-                        _mainWindow.ChangeWholeTextMainPart(ref _noOfChangedWords, ref _firstChange, _currentIndex, _currentParagraph);
+                        _subtitle = _mainWindow.UndoFromSpellCheck(undo.Subtitle);
                         break;
                     default:
                         break;

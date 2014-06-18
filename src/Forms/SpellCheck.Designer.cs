@@ -47,6 +47,7 @@
             this.buttonUseSuggestionAlways = new System.Windows.Forms.Button();
             this.buttonAddToNames = new System.Windows.Forms.Button();
             this.groupBoxWordNotFound = new System.Windows.Forms.GroupBox();
+            this.buttonUndo = new System.Windows.Forms.Button();
             this.groupBoxSuggestions = new System.Windows.Forms.GroupBox();
             this.checkBoxAutoChangeNames = new System.Windows.Forms.CheckBox();
             this.buttonEditWholeText = new System.Windows.Forms.Button();
@@ -56,7 +57,6 @@
             this.textBoxWholeText = new System.Windows.Forms.TextBox();
             this.labelActionInfo = new System.Windows.Forms.Label();
             this.buttonSpellCheckDownload = new System.Windows.Forms.Button();
-            this.buttonUndo = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxWordNotFound.SuspendLayout();
             this.groupBoxSuggestions.SuspendLayout();
@@ -65,9 +65,9 @@
             // 
             // buttonAddToDictionary
             // 
-            this.buttonAddToDictionary.Location = new System.Drawing.Point(20, 131);
+            this.buttonAddToDictionary.Location = new System.Drawing.Point(6, 131);
             this.buttonAddToDictionary.Name = "buttonAddToDictionary";
-            this.buttonAddToDictionary.Size = new System.Drawing.Size(250, 21);
+            this.buttonAddToDictionary.Size = new System.Drawing.Size(280, 21);
             this.buttonAddToDictionary.TabIndex = 6;
             this.buttonAddToDictionary.Text = "Add to user dictionary (not case sensitive)";
             this.buttonAddToDictionary.UseVisualStyleBackColor = true;
@@ -77,9 +77,9 @@
             // 
             // buttonSkipOnce
             // 
-            this.buttonSkipOnce.Location = new System.Drawing.Point(20, 75);
+            this.buttonSkipOnce.Location = new System.Drawing.Point(6, 75);
             this.buttonSkipOnce.Name = "buttonSkipOnce";
-            this.buttonSkipOnce.Size = new System.Drawing.Size(122, 21);
+            this.buttonSkipOnce.Size = new System.Drawing.Size(136, 21);
             this.buttonSkipOnce.TabIndex = 3;
             this.buttonSkipOnce.Text = "Skip &once";
             this.buttonSkipOnce.UseVisualStyleBackColor = true;
@@ -137,7 +137,7 @@
             this.listBoxSuggestions.FormattingEnabled = true;
             this.listBoxSuggestions.Location = new System.Drawing.Point(8, 44);
             this.listBoxSuggestions.Name = "listBoxSuggestions";
-            this.listBoxSuggestions.Size = new System.Drawing.Size(272, 82);
+            this.listBoxSuggestions.Size = new System.Drawing.Size(272, 108);
             this.listBoxSuggestions.TabIndex = 2;
             this.listBoxSuggestions.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListBoxSuggestionsMouseDoubleClick);
             // 
@@ -152,15 +152,15 @@
             // 
             // textBoxWord
             // 
-            this.textBoxWord.Location = new System.Drawing.Point(20, 20);
+            this.textBoxWord.Location = new System.Drawing.Point(6, 20);
             this.textBoxWord.Name = "textBoxWord";
-            this.textBoxWord.Size = new System.Drawing.Size(250, 21);
+            this.textBoxWord.Size = new System.Drawing.Size(280, 21);
             this.textBoxWord.TabIndex = 0;
             this.textBoxWord.TextChanged += new System.EventHandler(this.textBoxWord_TextChanged);
             // 
             // buttonAbort
             // 
-            this.buttonAbort.Location = new System.Drawing.Point(515, 307);
+            this.buttonAbort.Location = new System.Drawing.Point(515, 318);
             this.buttonAbort.Name = "buttonAbort";
             this.buttonAbort.Size = new System.Drawing.Size(85, 21);
             this.buttonAbort.TabIndex = 3;
@@ -172,7 +172,7 @@
             // 
             this.buttonSkipAll.Location = new System.Drawing.Point(148, 75);
             this.buttonSkipAll.Name = "buttonSkipAll";
-            this.buttonSkipAll.Size = new System.Drawing.Size(122, 21);
+            this.buttonSkipAll.Size = new System.Drawing.Size(138, 21);
             this.buttonSkipAll.TabIndex = 4;
             this.buttonSkipAll.Text = "&Skip all";
             this.buttonSkipAll.UseVisualStyleBackColor = true;
@@ -182,9 +182,9 @@
             // 
             // buttonChange
             // 
-            this.buttonChange.Location = new System.Drawing.Point(20, 47);
+            this.buttonChange.Location = new System.Drawing.Point(6, 47);
             this.buttonChange.Name = "buttonChange";
-            this.buttonChange.Size = new System.Drawing.Size(122, 21);
+            this.buttonChange.Size = new System.Drawing.Size(136, 21);
             this.buttonChange.TabIndex = 1;
             this.buttonChange.Text = "Change";
             this.buttonChange.UseVisualStyleBackColor = true;
@@ -206,7 +206,7 @@
             // 
             this.buttonChangeAll.Location = new System.Drawing.Point(148, 47);
             this.buttonChangeAll.Name = "buttonChangeAll";
-            this.buttonChangeAll.Size = new System.Drawing.Size(122, 21);
+            this.buttonChangeAll.Size = new System.Drawing.Size(138, 21);
             this.buttonChangeAll.TabIndex = 2;
             this.buttonChangeAll.Text = "Change all";
             this.buttonChangeAll.UseVisualStyleBackColor = true;
@@ -226,9 +226,9 @@
             // 
             // buttonAddToNames
             // 
-            this.buttonAddToNames.Location = new System.Drawing.Point(20, 103);
+            this.buttonAddToNames.Location = new System.Drawing.Point(6, 103);
             this.buttonAddToNames.Name = "buttonAddToNames";
-            this.buttonAddToNames.Size = new System.Drawing.Size(250, 21);
+            this.buttonAddToNames.Size = new System.Drawing.Size(280, 21);
             this.buttonAddToNames.TabIndex = 5;
             this.buttonAddToNames.Text = "Add to names/noise list (case sensitive)";
             this.buttonAddToNames.UseVisualStyleBackColor = true;
@@ -248,10 +248,21 @@
             this.groupBoxWordNotFound.Controls.Add(this.buttonChange);
             this.groupBoxWordNotFound.Location = new System.Drawing.Point(11, 120);
             this.groupBoxWordNotFound.Name = "groupBoxWordNotFound";
-            this.groupBoxWordNotFound.Size = new System.Drawing.Size(292, 182);
+            this.groupBoxWordNotFound.Size = new System.Drawing.Size(292, 192);
             this.groupBoxWordNotFound.TabIndex = 0;
             this.groupBoxWordNotFound.TabStop = false;
             this.groupBoxWordNotFound.Text = "Word not found";
+            // 
+            // buttonUndo
+            // 
+            this.buttonUndo.Location = new System.Drawing.Point(6, 158);
+            this.buttonUndo.Name = "buttonUndo";
+            this.buttonUndo.Size = new System.Drawing.Size(280, 21);
+            this.buttonUndo.TabIndex = 7;
+            this.buttonUndo.Text = "Undo: skip all \'A\'";
+            this.buttonUndo.UseVisualStyleBackColor = true;
+            this.buttonUndo.Visible = false;
+            this.buttonUndo.Click += new System.EventHandler(this.buttonUndo_Click);
             // 
             // groupBoxSuggestions
             // 
@@ -261,7 +272,7 @@
             this.groupBoxSuggestions.Controls.Add(this.listBoxSuggestions);
             this.groupBoxSuggestions.Location = new System.Drawing.Point(309, 120);
             this.groupBoxSuggestions.Name = "groupBoxSuggestions";
-            this.groupBoxSuggestions.Size = new System.Drawing.Size(291, 182);
+            this.groupBoxSuggestions.Size = new System.Drawing.Size(291, 192);
             this.groupBoxSuggestions.TabIndex = 1;
             this.groupBoxSuggestions.TabStop = false;
             this.groupBoxSuggestions.Text = "Suggestions";
@@ -269,7 +280,7 @@
             // checkBoxAutoChangeNames
             // 
             this.checkBoxAutoChangeNames.AutoSize = true;
-            this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 157);
+            this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 161);
             this.checkBoxAutoChangeNames.Name = "checkBoxAutoChangeNames";
             this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(216, 17);
             this.checkBoxAutoChangeNames.TabIndex = 3;
@@ -294,7 +305,7 @@
             this.groupBoxEditWholeText.Controls.Add(this.textBoxWholeText);
             this.groupBoxEditWholeText.Location = new System.Drawing.Point(11, 120);
             this.groupBoxEditWholeText.Name = "groupBoxEditWholeText";
-            this.groupBoxEditWholeText.Size = new System.Drawing.Size(292, 176);
+            this.groupBoxEditWholeText.Size = new System.Drawing.Size(292, 192);
             this.groupBoxEditWholeText.TabIndex = 40;
             this.groupBoxEditWholeText.TabStop = false;
             this.groupBoxEditWholeText.Text = "Edit whole text";
@@ -332,7 +343,7 @@
             // 
             this.labelActionInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelActionInfo.AutoSize = true;
-            this.labelActionInfo.Location = new System.Drawing.Point(11, 311);
+            this.labelActionInfo.Location = new System.Drawing.Point(12, 321);
             this.labelActionInfo.Name = "labelActionInfo";
             this.labelActionInfo.Size = new System.Drawing.Size(79, 13);
             this.labelActionInfo.TabIndex = 2;
@@ -349,22 +360,11 @@
             this.buttonSpellCheckDownload.UseVisualStyleBackColor = true;
             this.buttonSpellCheckDownload.Click += new System.EventHandler(this.buttonSpellCheckDownload_Click);
             // 
-            // buttonUndo
-            // 
-            this.buttonUndo.Location = new System.Drawing.Point(20, 158);
-            this.buttonUndo.Name = "buttonUndo";
-            this.buttonUndo.Size = new System.Drawing.Size(250, 21);
-            this.buttonUndo.TabIndex = 7;
-            this.buttonUndo.Text = "Undo: skip all \'A\'";
-            this.buttonUndo.UseVisualStyleBackColor = true;
-            this.buttonUndo.Visible = false;
-            this.buttonUndo.Click += new System.EventHandler(this.buttonUndo_Click);
-            // 
             // SpellCheck
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(612, 341);
+            this.ClientSize = new System.Drawing.Size(612, 347);
             this.Controls.Add(this.buttonSpellCheckDownload);
             this.Controls.Add(this.labelActionInfo);
             this.Controls.Add(this.richTextBoxParagraph);

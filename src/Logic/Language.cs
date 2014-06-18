@@ -1966,6 +1966,7 @@ can edit in same subtitle file (collaboration)",
                 ImageText = "Image text",
                 SpellCheckCompleted ="Spell check completed.",
                 SpellCheckAborted = "Spell check aborted",
+                UndoX = "Undo: {0}",
             };
 
             Split = new LanguageStructure.Split

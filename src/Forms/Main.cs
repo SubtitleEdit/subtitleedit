@@ -19264,5 +19264,24 @@ namespace Nikse.SubtitleEdit.Forms
             exportBdnXmlPng.ShowDialog(this);
         }
 
+        internal Subtitle UndoFromSpellCheck(Subtitle subtitle)
+        {
+            var idx = FirstSelectedIndex;
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                if (_subtitle.Paragraphs[i].Text != subtitle.Paragraphs[i].Text)
+                {
+                    _subtitle.Paragraphs[i].Text = subtitle.Paragraphs[i].Text;
+                    SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
+                }
+                if (idx == i)
+                {
+                    SubtitleListview1.SetText(idx, _subtitle.Paragraphs[idx].Text);
+                }
+            }
+            RefreshSelectedParagraph();
+            return _subtitle;
+        }
+
     }
 }
