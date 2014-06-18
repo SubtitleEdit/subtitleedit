@@ -1,4 +1,4 @@
-﻿<ignore_words>
+﻿<ignore_list>
   <name>ADN</name>
   <name>ASN</name>
   <name>Aang</name>
@@ -172,7 +172,6 @@
   <name>Cemre</name>
   <name>Champagne</name>
   <name>Charger</name>
-  <name>Chase</name>
   <name>Chateau</name>
   <name>Chelmsford</name>
   <name>Chemicals</name>
@@ -1011,4 +1010,4 @@
   <name>Ålsgårde</name>
   <name>Århus</name>
   <name>Øresund</name>
-</ignore_words>
+</ignore_list>
