@@ -765,7 +765,7 @@
     <RegEx find="(¿)»" replaceWith="¿«" />
     <RegEx find="(¡)»" replaceWith="¡«" />
     <!--  Uso de comillas (ANSI) según la recomendación de la RAE («\x22» es el carácter «"»)  -->
-    <RegEx find="([\wá-ú])([\.,]) ?[\x22»]" replaceWith="$1?»$2" />
+    <RegEx find="([\wá-ú])([\.,]) ?[\x22»]" replaceWith="$1»$2" />
     <RegEx find="([\wá-ú])\?[\x22»](\s|$)" replaceWith="$1?».$2" />
     <RegEx find="^(\.\.\.)(\s){0,1}\x22" replaceWith="$1«" />
     <RegEx find="«\x22" replaceWith="«" />
