@@ -31,6 +31,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOptions = new System.Windows.Forms.GroupBox();
+            this.comboBoxFrameRateMultiplier = new System.Windows.Forms.ComboBox();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.textBoxTitle = new System.Windows.Forms.TextBox();
@@ -48,7 +49,6 @@
             this.labelCollision = new System.Windows.Forms.Label();
             this.comboBoxDefaultStyle = new System.Windows.Forms.ComboBox();
             this.labelWrapStyle = new System.Windows.Forms.Label();
-            this.comboBoxFrameRateMultiplier = new System.Windows.Forms.ComboBox();
             this.groupBoxOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -103,6 +103,18 @@
             this.groupBoxOptions.Size = new System.Drawing.Size(479, 310);
             this.groupBoxOptions.TabIndex = 0;
             this.groupBoxOptions.TabStop = false;
+            // 
+            // comboBoxFrameRateMultiplier
+            // 
+            this.comboBoxFrameRateMultiplier.FormattingEnabled = true;
+            this.comboBoxFrameRateMultiplier.Items.AddRange(new object[] {
+            "999 1000",
+            "1 1",
+            "1000 1001"});
+            this.comboBoxFrameRateMultiplier.Location = new System.Drawing.Point(191, 176);
+            this.comboBoxFrameRateMultiplier.Name = "comboBoxFrameRateMultiplier";
+            this.comboBoxFrameRateMultiplier.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxFrameRateMultiplier.TabIndex = 18;
             // 
             // textBoxDescription
             // 
@@ -260,17 +272,6 @@
             this.labelWrapStyle.Size = new System.Drawing.Size(65, 13);
             this.labelWrapStyle.TabIndex = 1;
             this.labelWrapStyle.Text = "Default style";
-            // 
-            // comboBoxFrameRateMultiplier
-            // 
-            this.comboBoxFrameRateMultiplier.FormattingEnabled = true;
-            this.comboBoxFrameRateMultiplier.Items.AddRange(new object[] {
-            "1 1",
-            "999 1000"});
-            this.comboBoxFrameRateMultiplier.Location = new System.Drawing.Point(191, 176);
-            this.comboBoxFrameRateMultiplier.Name = "comboBoxFrameRateMultiplier";
-            this.comboBoxFrameRateMultiplier.Size = new System.Drawing.Size(263, 21);
-            this.comboBoxFrameRateMultiplier.TabIndex = 18;
             // 
             // TimedTextProperties
             // 
