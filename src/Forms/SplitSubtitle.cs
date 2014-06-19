@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             _fileName = fileName;
             _format = format;
             _encoding = encoding;
-            splitTimeUpDownAdjust.TimeCode = new TimeCode(TimeSpan.FromSeconds(lengthInSeconds));
+            splitTimeUpDownAdjust.TimeCode = TimeCode.FromSeconds(lengthInSeconds);
         }
 
         private void FormSplitSubtitle_KeyDown(object sender, KeyEventArgs e)
@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Forms
                 VideoInfo info = Utilities.GetVideoInfo(openFileDialog1.FileName, delegate { Application.DoEvents(); });
                 if (info != null && info.Success)
                 {
-                    splitTimeUpDownAdjust.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(info.TotalMilliseconds));
+                    splitTimeUpDownAdjust.TimeCode = new TimeCode(info.TotalMilliseconds);
                 }
             }
         }

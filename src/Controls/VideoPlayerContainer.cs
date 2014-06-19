@@ -1211,12 +1211,12 @@ namespace Nikse.SubtitleEdit.Controls
                 var pos = CurrentPosition;
                 if (pos > 1000000)
                     pos = 0;
-                var span = TimeSpan.FromSeconds(pos);
-                var dur = TimeSpan.FromSeconds(Duration);
+                var span = TimeCode.FromSeconds(pos);
+                var dur = TimeCode.FromSeconds(Duration);
 
 
                 if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
-                    _labelTimeCode.Text = string.Format("{0} / {1}", new TimeCode(span).ToHHMMSSFF(), new TimeCode(dur).ToHHMMSSFF());
+                    _labelTimeCode.Text = string.Format("{0} / {1}", span.ToHHMMSSFF(), dur.ToHHMMSSFF());
                 else
                     _labelTimeCode.Text = string.Format("{0:00}:{1:00}:{2:00},{3:000} / {4:00}:{5:00}:{6:00},{7:000}", span.Hours, span.Minutes, span.Seconds, span.Milliseconds, dur.Hours, dur.Minutes, dur.Seconds, dur.Milliseconds);
 

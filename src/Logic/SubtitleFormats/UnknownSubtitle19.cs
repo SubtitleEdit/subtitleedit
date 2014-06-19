@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private TimeCode DecodeTimeCode(string s)
         {
-            return new TimeCode(TimeSpan.FromSeconds(double.Parse(s)));
+            return TimeCode.FromSeconds(double.Parse(s));
         }
 
         public override string ToText(Subtitle subtitle, string title)

@@ -149,8 +149,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private TimeCode DecodeTimeCode(string timePart)
         {
             int milliseconds = (int)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(timePart));
-            TimeSpan ts = TimeSpan.FromMilliseconds(milliseconds);
-            return new TimeCode(ts);
+            return new TimeCode(milliseconds);
         }
 
     }

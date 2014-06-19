@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         dur = node.Attributes["dur"].InnerText;
                     }
 
-                    TimeCode startCode = new TimeCode(TimeSpan.FromSeconds(startSeconds));
+                    TimeCode startCode = TimeCode.FromSeconds(startSeconds);
                     if (start.Length > 0)
                     {
                         startCode = GetTimeCode(start);
@@ -155,11 +155,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else if (dur.Length > 0)
                     {
-                        endCode = new TimeCode(TimeSpan.FromMilliseconds(GetTimeCode(dur).TotalMilliseconds + startCode.TotalMilliseconds));
+                        endCode = new TimeCode(GetTimeCode(dur).TotalMilliseconds + startCode.TotalMilliseconds);
                     }
                     else
                     {
-                        endCode = new TimeCode(TimeSpan.FromMilliseconds(startCode.TotalMilliseconds + 3000));
+                        endCode = new TimeCode(startCode.TotalMilliseconds + 3000);
                     }
                     startSeconds = endCode.TotalSeconds;
 
@@ -180,14 +180,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (s.EndsWith("s"))
             {
                 s = s.TrimEnd('s');
-                TimeSpan ts = TimeSpan.FromSeconds(double.Parse(s));
-                return new TimeCode(ts);
+                return TimeCode.FromSeconds(double.Parse(s));
             }
             else
             {
                 string[] parts = s.Split(new char[] { ':', '.', ',' });
-                TimeSpan ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
-                return new TimeCode(ts);
+                return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
             }
         }
     }

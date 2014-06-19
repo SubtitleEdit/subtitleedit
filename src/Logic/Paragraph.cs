@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                var timeCode = new TimeCode(EndTime.TimeSpan);
+                var timeCode = new TimeCode(EndTime.TotalMilliseconds);
                 timeCode.AddTime(- StartTime.TotalMilliseconds);
                 return timeCode;
             }
@@ -46,8 +46,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public Paragraph()
         {
-            StartTime = new TimeCode(TimeSpan.FromSeconds(0));
-            EndTime = new TimeCode(TimeSpan.FromSeconds(0));
+            StartTime = TimeCode.FromSeconds(0);
+            EndTime = TimeCode.FromSeconds(0);
             Text = string.Empty;
             ID = Guid.NewGuid().ToString();
         }
@@ -64,8 +64,8 @@ namespace Nikse.SubtitleEdit.Logic
         {
             Number = paragraph.Number;
             Text = paragraph.Text;
-            StartTime = new TimeCode(paragraph.StartTime.TimeSpan);
-            EndTime = new TimeCode(paragraph.EndTime.TimeSpan);
+            StartTime = new TimeCode(paragraph.StartTime.TotalMilliseconds);
+            EndTime = new TimeCode(paragraph.EndTime.TotalMilliseconds);
             StartFrame = paragraph.StartFrame;
             EndFrame = paragraph.EndFrame;
             Forced = paragraph.Forced;
@@ -91,8 +91,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public Paragraph(string text, double startTotalMilliseconds, double endTotalMilliseconds)
         {
-            StartTime = new TimeCode(TimeSpan.FromMilliseconds(startTotalMilliseconds));
-            EndTime = new TimeCode(TimeSpan.FromMilliseconds(endTotalMilliseconds));
+            StartTime = new TimeCode(startTotalMilliseconds);
+            EndTime = new TimeCode(endTotalMilliseconds);
             Text = text;
             ID = Guid.NewGuid().ToString();
         }

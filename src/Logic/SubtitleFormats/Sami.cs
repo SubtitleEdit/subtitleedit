@@ -392,7 +392,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 if (!string.IsNullOrEmpty(p.Text) && !string.IsNullOrEmpty(millisecAsString))
                 {
-                    p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(long.Parse(millisecAsString)));
+                    p.EndTime = new TimeCode(long.Parse(millisecAsString));
                     subtitle.Paragraphs.Add(p);
                     p = new Paragraph();
                 }
@@ -400,7 +400,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.Text = cleanText;
                 long l;
                 if (long.TryParse(millisecAsString, out l))
-                    p.StartTime = new TimeCode(TimeSpan.FromMilliseconds(l));
+                    p.StartTime = new TimeCode(l);
 
                 if (syncEndPos <= 0)
                 {

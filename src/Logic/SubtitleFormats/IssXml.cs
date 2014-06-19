@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 foreach (XmlNode node in xml.SelectNodes("//StItem"))
                 {
                     Paragraph p = new Paragraph();
-                    p.StartTime = new TimeCode(TimeSpan.FromMilliseconds(long.Parse(node.Attributes["TC"].InnerText)));
+                    p.StartTime = new TimeCode(long.Parse(node.Attributes["TC"].InnerText));
 
                     //p.StartFrame = int.Parse(node.Attributes["TC"].InnerText);
                     //p.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);

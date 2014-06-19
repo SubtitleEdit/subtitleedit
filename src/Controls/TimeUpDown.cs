@@ -98,18 +98,17 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetTotalMilliseconds(double milliseconds)
         {
-            TimeSpan ts = TimeSpan.FromMilliseconds(milliseconds);
             if (Mode == TimeMode.HHMMSSMS)
             {
                 if (Mode == TimeMode.HHMMSSMS && milliseconds < 0)
                     maskedTextBox1.Mask = "-00:00:00.000";
                 else
                     maskedTextBox1.Mask = "00:00:00.000";
-                maskedTextBox1.Text = new TimeCode(ts).ToString();
+                maskedTextBox1.Text = new TimeCode(milliseconds).ToString();
             }
             else
             {
-                maskedTextBox1.Text = new TimeCode(ts).ToString().Substring(0, 9) + string.Format("{0:00}", Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(ts.Milliseconds));
+                maskedTextBox1.Text = new TimeCode(milliseconds).ToString().Substring(0, 9) + string.Format("{0:00}", Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(milliseconds));
             }
         }
 
@@ -215,7 +214,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    maskedTextBox1.Text = new TimeCode(TimeSpan.FromMilliseconds(0)).ToString();
+                    maskedTextBox1.Text = new TimeCode(0).ToString();
                 }
             }
         }

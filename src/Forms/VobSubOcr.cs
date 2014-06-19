@@ -526,8 +526,8 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
             for (int i = 0; i < max; i++)
             {
-                var startTime = new TimeCode(TimeSpan.FromMilliseconds(GetSubtitleStartTimeMilliseconds(i)));
-                var endTime = new TimeCode(TimeSpan.FromMilliseconds(GetSubtitleEndTimeMilliseconds(i)));
+                var startTime = new TimeCode(GetSubtitleStartTimeMilliseconds(i));
+                var endTime = new TimeCode(GetSubtitleEndTimeMilliseconds(i));
                 Application.DoEvents();
                 if (_abort)
                 {
@@ -696,8 +696,8 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
             for (int i = 0; i < max; i++)
             {
-                var startTime = new TimeCode(TimeSpan.FromMilliseconds(GetSubtitleStartTimeMilliseconds(i)));
-                var endTime = new TimeCode(TimeSpan.FromMilliseconds(GetSubtitleEndTimeMilliseconds(i)));
+                var startTime = new TimeCode(GetSubtitleStartTimeMilliseconds(i));
+                var endTime = new TimeCode(GetSubtitleEndTimeMilliseconds(i));
                 Application.DoEvents();
                 if (_abort)
                 {
@@ -1112,8 +1112,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _bluRaySubtitles.Add(x);
                     Paragraph p = new Paragraph();
-                    p.StartTime = new TimeCode(TimeSpan.FromMilliseconds((x.StartTime + 45) / 90.0));
-                    p.EndTime = new TimeCode(TimeSpan.FromMilliseconds((x.EndTime + 45) / 90.0));
+                    p.StartTime = new TimeCode((x.StartTime + 45) / 90.0);
+                    p.EndTime = new TimeCode((x.EndTime + 45) / 90.0);
                     _subtitle.Paragraphs.Add(p);
                 }
             }
@@ -1153,8 +1153,8 @@ namespace Nikse.SubtitleEdit.Forms
                     if (checkBoxUseTimeCodesFromIdx.Checked && x.IdxLine != null)
                     {
                         double durationMilliseconds = p.Duration.TotalMilliseconds;
-                        p.StartTime = new TimeCode(TimeSpan.FromMilliseconds(x.IdxLine.StartTime.TotalMilliseconds));
-                        p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(x.IdxLine.StartTime.TotalMilliseconds + durationMilliseconds));
+                        p.StartTime = new TimeCode(x.IdxLine.StartTime.TotalMilliseconds);
+                        p.EndTime = new TimeCode(x.IdxLine.StartTime.TotalMilliseconds + durationMilliseconds);
                     }
                     _subtitle.Paragraphs.Add(p);
                 }
@@ -5544,8 +5544,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var bmp = ShowSubtitleImage(i);
-            var startTime = new TimeCode(TimeSpan.FromMilliseconds(GetSubtitleStartTimeMilliseconds(i)));
-            var endTime = new TimeCode(TimeSpan.FromMilliseconds(GetSubtitleEndTimeMilliseconds(i)));
+            var startTime = new TimeCode(GetSubtitleStartTimeMilliseconds(i));
+            var endTime = new TimeCode(GetSubtitleEndTimeMilliseconds(i));
             labelStatus.Text = string.Format("{0} / {1}: {2} - {3}", i + 1, max, startTime, endTime);
             progressBar1.Value = i + 1;
             labelStatus.Refresh();

@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonAllLines.Checked = true;
 
             _adjustCallback = adjustCallback;
-            timeUpDownAdjust.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(Configuration.Settings.General.DefaultAdjustMilliseconds));
+            timeUpDownAdjust.TimeCode = new TimeCode(Configuration.Settings.General.DefaultAdjustMilliseconds);
         }
 
         private SelectionChoice GetSelectionChoice()

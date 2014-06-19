@@ -101,8 +101,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int m = int.Parse(arr[1]);
             int s = int.Parse(arr[2]);
             int ms = int.Parse(arr[3]);
-            TimeSpan ts = new TimeSpan(0, h, m, s, ms);
-            return new TimeCode(ts);
+            return new TimeCode(h, m, s, ms);
         }
 
     }

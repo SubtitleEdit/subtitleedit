@@ -772,8 +772,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (milliseconds > 999)
                 milliseconds = 999;
 
-            var ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), milliseconds);
-            return new TimeCode(ts);
+            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), milliseconds);
         }
 
         private string ConvertToTimeString(TimeCode time)

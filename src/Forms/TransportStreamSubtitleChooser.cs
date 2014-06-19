@@ -87,8 +87,8 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var sub in list)
             {
                 i++;
-                var start = new TimeCode(TimeSpan.FromMilliseconds(sub.StartMilliseconds));
-                var end = new TimeCode(TimeSpan.FromMilliseconds(sub.EndMilliseconds));
+                var start = new TimeCode(sub.StartMilliseconds);
+                var end = new TimeCode(sub.EndMilliseconds);
                 if (string.IsNullOrEmpty(Configuration.Settings.Language.TransportStreamSubtitleChooser.SubLine))
                     listBoxSubtitles.Items.Add(string.Format("{0}:  {1} --> {2},  {3} image(s)", i, start.ToString(), end.ToString(), sub.NumberOfImages));
                 else
