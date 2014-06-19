@@ -267,6 +267,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAddToDictionaryClick(object sender, EventArgs e)
         {
+            PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.AddToUserDictionary, textBoxWord.Text), SpellCheckAction.AddToDictionary);
             DoAction(SpellCheckAction.AddToDictionary);
         }
 
@@ -1204,6 +1205,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var undo = _undoList[_undoList.Count - 1];
                 _currentIndex = undo.CurrentIndex - 1;
+                _wordsIndex = int.MaxValue-1;
                 _noOfSkippedWords = undo.NoOfSkippedWords;
                 _noOfChangedWords = undo.NoOfChangedWords;
                 _noOfCorrectWords = undo.NoOfCorrectWords;
@@ -1229,7 +1231,7 @@ namespace Nikse.SubtitleEdit.Forms
                     case SpellCheckAction.AddToDictionary:
                         _userWordList.Remove(undo.UndoWord);
                         _userPhraseList.Remove(undo.UndoWord);
-                        Utilities.AddToUserDictionary(undo.UndoWord, _languageName);
+                        Utilities.RemoveFromUserDictionary(undo.UndoWord, _languageName);
                         break;
                     case SpellCheckAction.AddToNamesEtc:
                         if (undo.UndoWord.Length > 1 && _namesEtcList.Contains(undo.UndoWord))
@@ -1249,7 +1251,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!undo.UndoWord.EndsWith("'"))
                                 _namesEtcListWithApostrophe.Remove(undo.UndoWord + "'");
 
-                            Utilities.RemoveFromLocalNamesEtcList(ChangeWord, _languageName);
+                            Utilities.RemoveFromLocalNamesEtcList(undo.UndoWord, _languageName);
                         }
                         break;
                     case SpellCheckAction.ChangeWholeText:
