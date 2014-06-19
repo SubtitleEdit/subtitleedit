@@ -178,9 +178,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string ms = timeMS.InnerText;
                         long milliseconds;
                         if (long.TryParse(ms, out milliseconds))
-                            p.StartTime = new TimeCode(TimeSpan.FromMilliseconds(milliseconds));
+                            p.StartTime = new TimeCode(milliseconds);
                     }
-                    p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text)));
+                    p.EndTime = new TimeCode(p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text));
 
                     subtitle.Paragraphs.Add(p);
                 }

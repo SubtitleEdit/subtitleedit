@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         TimeCode duration = TimedText10.GetTimeCode(node.Attributes["dur"].InnerText, false);
                         TimeCode startTime = TimedText10.GetTimeCode(start, false);
-                        TimeCode endTime = new TimeCode(TimeSpan.FromMilliseconds(startTime.TotalMilliseconds + duration.TotalMilliseconds));
+                        TimeCode endTime = new TimeCode(startTime.TotalMilliseconds + duration.TotalMilliseconds);
                         subtitle.Paragraphs.Add(new Paragraph(startTime, endTime, text));
                     }
                 }

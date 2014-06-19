@@ -95,8 +95,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int minutes = int.Parse(parts[1]);
             int seconds = int.Parse(parts[2]);
             int milliseconds = int.Parse(parts[3]) * 10;
-            TimeSpan ts = new TimeSpan(0, hours, minutes, seconds, milliseconds);
-            return new TimeCode(ts);
+            return new TimeCode(hours, minutes, seconds, milliseconds);
         }
 
     }

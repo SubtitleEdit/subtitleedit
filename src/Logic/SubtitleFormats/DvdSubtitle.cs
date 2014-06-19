@@ -73,8 +73,8 @@ LICENSE=
             _errorCount = 0;
             bool textOn = false;
             string text = string.Empty;
-            TimeSpan start = TimeSpan.FromMilliseconds(0);
-            TimeSpan end = TimeSpan.FromMilliseconds(0);
+            TimeCode start = new TimeCode(0);
+            TimeCode end = new TimeCode(0);
             foreach (string line in lines)
             {
                 if (textOn)
@@ -83,14 +83,14 @@ LICENSE=
                     {
                         Paragraph p = new Paragraph();
                         p.Text = text;
-                        p.StartTime = new TimeCode(start);
-                        p.EndTime = new TimeCode(end);
+                        p.StartTime = new TimeCode(start.TotalMilliseconds);
+                        p.EndTime = new TimeCode(end.TotalMilliseconds);
 
                         subtitle.Paragraphs.Add(p);
 
                         text = string.Empty;
-                        start = TimeSpan.FromMilliseconds(0);
-                        end = TimeSpan.FromMilliseconds(0);
+                        start = new TimeCode(0);
+                        end = new TimeCode(0);
                         textOn = false;
                     }
                     else
@@ -117,7 +117,7 @@ LICENSE=
                                 int milliseconds = int.Parse(arr[3]);
                                 if (arr[3].Length == 2)
                                     milliseconds *= 10;
-                                start = new TimeSpan(0, hours, minutes, seconds, milliseconds); // FIXED timestamp - needed a zero as first parameter!!
+                                start = new TimeCode(hours, minutes, seconds, milliseconds); 
                             }
                         }
                         catch

@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 dateTimePicker1.Value = start;
                 timeUpDownStartTime.TimeCode = new TimeCode(start.Hour, start.Minute, start.Second, start.Millisecond);
-                timeUpDownDuration.TimeCode = new TimeCode(TimeSpan.FromSeconds(durationInSeconds));
+                timeUpDownDuration.TimeCode = TimeCode.FromSeconds(durationInSeconds);
             }
         }
 
@@ -116,8 +116,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = new Paragraph();
                 p.Text = FormatDateTime(start);
                 start = start.AddSeconds(1);
-                p.StartTime = new TimeCode(TimeSpan.FromSeconds(i));
-                p.EndTime = new TimeCode(TimeSpan.FromSeconds(i + 0.999));
+                p.StartTime = TimeCode.FromSeconds(i);
+                p.EndTime = TimeCode.FromSeconds(i + 0.999);
                 DateTimeSubtitle.Paragraphs.Add(p);
             }
             DialogResult = DialogResult.OK;

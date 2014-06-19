@@ -249,11 +249,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                         if (text == "942c 942c" || text == "942c")
                         {
-                            p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(startTime.TotalMilliseconds));
+                            p.EndTime = new TimeCode(startTime.TotalMilliseconds);
                         }
                         else
                         {
-                            p = new Paragraph(startTime, new TimeCode(TimeSpan.FromMilliseconds(startTime.TotalMilliseconds)), text);
+                            p = new Paragraph(startTime, new TimeCode(startTime.TotalMilliseconds), text);
                             subtitle.Paragraphs.Add(p);
                         }
                     }
@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p = subtitle.GetParagraphOrDefault(i);
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
                 if (p != null && next != null && p.EndTime.TotalMilliseconds == p.StartTime.TotalMilliseconds)
-                    p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds));
+                    p.EndTime = new TimeCode(next.StartTime.TotalMilliseconds);
                 if (next != null && string.IsNullOrEmpty(next.Text))
                     subtitle.Paragraphs.Remove(next);
             }
@@ -345,8 +345,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (milliseconds > 999)
                 milliseconds = 999;
 
-            var ts = new TimeSpan(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), milliseconds);
-            return new TimeCode(ts);
+            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), milliseconds);
         }
 
     }

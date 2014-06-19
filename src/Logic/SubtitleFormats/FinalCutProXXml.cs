@@ -184,15 +184,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             // 220220/60000s
             if (duration != null)
             {
-
                 var arr = duration.Value.TrimEnd('s').Split('/');
                 if (arr.Length == 2)
                 {
-                    return new TimeCode(TimeSpan.FromSeconds(long.Parse(arr[0]) / double.Parse(arr[1]) ));
+                    return TimeCode.FromSeconds(long.Parse(arr[0]) / double.Parse(arr[1]));
                 }
                 else if (arr.Length == 1)
                 {
-                    return new TimeCode(TimeSpan.FromSeconds(float.Parse(arr[0])));
+                    return TimeCode.FromSeconds(float.Parse(arr[0]));
                 }
             }
             return new TimeCode(0, 0, 0, 0);

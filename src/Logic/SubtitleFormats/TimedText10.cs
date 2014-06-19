@@ -474,7 +474,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         dur = node.Attributes["dur", ns].InnerText;
                     }
 
-                    var startCode = new TimeCode(TimeSpan.FromSeconds(startSeconds));
+                    var startCode = TimeCode.FromSeconds(startSeconds);
                     if (start.Length > 0)
                     {
                         startCode = GetTimeCode(start, true);
@@ -487,11 +487,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else if (dur.Length > 0)
                     {
-                        endCode = new TimeCode(TimeSpan.FromMilliseconds(GetTimeCode(dur, true).TotalMilliseconds + startCode.TotalMilliseconds));
+                        endCode = new TimeCode(GetTimeCode(dur, true).TotalMilliseconds + startCode.TotalMilliseconds);
                     }
                     else
                     {
-                        endCode = new TimeCode(TimeSpan.FromMilliseconds(startCode.TotalMilliseconds + 3000));
+                        endCode = new TimeCode(startCode.TotalMilliseconds + 3000);
                     }
                     startSeconds = endCode.TotalSeconds;
 
@@ -604,25 +604,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 s = s.TrimEnd('s');
                 s = s.TrimEnd('m');
-                TimeSpan ts = TimeSpan.FromMilliseconds(double.Parse(s.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture));
-                return new TimeCode(ts);
+                return new TimeCode(double.Parse(s.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture));
             }
             else if (s.EndsWith("s"))
             {
                 s = s.TrimEnd('s');
-                TimeSpan ts = TimeSpan.FromSeconds(double.Parse(s.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture));
-                return new TimeCode(ts);
+                return TimeCode.FromSeconds(double.Parse(s.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture));
             }
             else if (s.EndsWith("t"))
             {
                 s = s.TrimEnd('t');
                 TimeSpan ts = TimeSpan.FromTicks(long.Parse(s, System.Globalization.CultureInfo.InvariantCulture));
-                return new TimeCode(ts);
+                return new TimeCode(ts.TotalMilliseconds);
             }
             string[] parts = s.Split(new[] { ':', '.', ',' });
             if (frames)
-                return new TimeCode(new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3]))));
-            return new TimeCode(new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3])));
+                return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
+            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
         }
 
         public override List<string> AlternateExtensions

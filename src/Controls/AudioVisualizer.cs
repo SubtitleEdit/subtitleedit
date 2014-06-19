@@ -885,8 +885,8 @@ namespace Nikse.SubtitleEdit.Controls
                             if (currentRegionRight - currentRegionLeft > 0.1) // not too small subtitles
                             {
                                 Paragraph paragraph = new Paragraph();
-                                paragraph.StartTime = new TimeCode(TimeSpan.FromSeconds(currentRegionLeft));
-                                paragraph.EndTime = new TimeCode(TimeSpan.FromSeconds(currentRegionRight));
+                                paragraph.StartTime = TimeCode.FromSeconds(currentRegionLeft);
+                                paragraph.EndTime = TimeCode.FromSeconds(currentRegionRight);
                                 if (PreventOverlap)
                                 {
                                     if (paragraph.StartTime.TotalMilliseconds <= _wholeParagraphMinMilliseconds)

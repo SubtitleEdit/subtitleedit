@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 if (next == null || next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 100)
                 {
-                    TimeCode tc = new TimeCode(TimeSpan.FromMilliseconds(p.EndTime.TotalMilliseconds));
+                    TimeCode tc = new TimeCode(p.EndTime.TotalMilliseconds);
                     sb.AppendLine(string.Format("[{0:00}:{1:00}.{2:00}]{3}", tc.Hours * 60 + tc.Minutes, tc.Seconds, (int)Math.Round(tc.Milliseconds / 10.0), string.Empty));
                 }
             }
@@ -191,7 +191,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (string.IsNullOrEmpty(next.Text))
                     {
-                        p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds));
+                        p.EndTime = new TimeCode(next.StartTime.TotalMilliseconds);
                     }
                     else
                     {
@@ -200,13 +200,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (p.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     {
                         double duration = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-                        p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds + duration));
+                        p.EndTime = new TimeCode(p.StartTime.TotalMilliseconds + duration);
                     }
                 }
                 else
                 {
                     double duration = Utilities.GetOptimalDisplayMilliseconds(p.Text, 16) + 1500;
-                    p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds + duration));
+                    p.EndTime = new TimeCode(p.StartTime.TotalMilliseconds + duration);
                 }
                 index++;
             }

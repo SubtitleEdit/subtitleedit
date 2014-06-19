@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private TimeCode DecodeTimeCode(string timeCode)
         {
-            return new TimeCode(TimeSpan.FromMilliseconds(long.Parse(timeCode)));
+            return new TimeCode(long.Parse(timeCode));
         }
 
     }

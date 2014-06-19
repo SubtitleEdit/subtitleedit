@@ -7,14 +7,19 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public static TimeCode MaxTime = new TimeCode(99, 59, 59, 999);
 
-        TimeSpan _time;
+        double _totalMilliseconds;
 
         public bool IsMaxTime
         {
             get
             {
-                return _time.TotalMilliseconds == MaxTime.TotalMilliseconds;
+                return _totalMilliseconds == MaxTime.TotalMilliseconds;
             }
+        }
+
+        public static TimeCode FromSeconds(double seconds)
+        {
+            return new TimeCode(seconds * 1000.0);
         }
 
         public static double ParseToMilliseconds(string text)
@@ -46,8 +51,7 @@ namespace Nikse.SubtitleEdit.Logic
                 int frames;
                 if (int.TryParse(parts[0], out hours) && int.TryParse(parts[1], out minutes) && int.TryParse(parts[2], out seconds) && int.TryParse(parts[3], out frames))
                 {
-                    TimeSpan ts = new TimeSpan(0, hours, minutes, seconds, SubtitleFormat.FramesToMillisecondsMax999(frames));
-                    return ts.TotalMilliseconds;
+                    return new TimeCode(hours, minutes, seconds, SubtitleFormat.FramesToMillisecondsMax999(frames)).TotalMilliseconds;
                 }
             }
             return 0;
@@ -55,59 +59,93 @@ namespace Nikse.SubtitleEdit.Logic
 
         public TimeCode(TimeSpan timeSpan)
         {
-            TimeSpan = timeSpan;
+            _totalMilliseconds = timeSpan.TotalMilliseconds;
+        }
+
+        public TimeCode(double totalMilliseconds)
+        {
+            _totalMilliseconds = totalMilliseconds;
         }
 
         public TimeCode(int hour, int minute, int seconds, int milliseconds)
         {
-            _time = new TimeSpan(0, hour, minute, seconds, milliseconds);
+            _totalMilliseconds = hour * 60 * 60 * 1000 + minute * 60 * 1000 + seconds * 1000 + milliseconds;
         }
 
         public int Hours
         {
-            get { return _time.Hours + _time.Days * 24; }
-            set { _time = new TimeSpan(0, value, _time.Minutes, _time.Seconds, _time.Milliseconds); }
+            get 
+            {
+                var ts = TimeSpan;
+                return ts.Hours + ts.Days * 24;  
+            }
+            set 
+            {
+                var ts = TimeSpan;
+                _totalMilliseconds = new TimeSpan(0, value, ts.Minutes, ts.Seconds, ts.Milliseconds).TotalMilliseconds; 
+            }
         }
 
         public int Minutes
         {
-            get { return _time.Minutes; }
-            set { _time = new TimeSpan(0, _time.Hours, value, _time.Seconds, _time.Milliseconds); }
+            get 
+            { 
+                return TimeSpan.Minutes; 
+            }
+            set 
+            {
+                var ts = TimeSpan;
+                TimeSpan = new TimeSpan(0, ts.Hours, value, ts.Seconds, ts.Milliseconds); 
+            }
         }
 
         public int Seconds
         {
-            get { return _time.Seconds; }
-            set { _time = new TimeSpan(0, _time.Hours, _time.Minutes, value, _time.Milliseconds); }
+            get 
+            { 
+                return TimeSpan.Seconds; 
+            }
+            set 
+            {
+                var ts = TimeSpan;
+                TimeSpan = new TimeSpan(0, ts.Hours, ts.Minutes, value, ts.Milliseconds); 
+            }
         }
 
         public int Milliseconds
         {
-            get { return _time.Milliseconds; }
-            set { _time = new TimeSpan(0, _time.Hours, _time.Minutes, _time.Seconds, value); }
+            get 
+            { 
+                return TimeSpan.Milliseconds; 
+            }
+            set 
+            {
+                var ts = TimeSpan;
+                _totalMilliseconds = new TimeSpan(0, ts.Hours, ts.Minutes, ts.Seconds, value).TotalMilliseconds; 
+            }
         }
 
         public double TotalMilliseconds
         {
-            get { return _time.TotalMilliseconds; }
-            set { _time = TimeSpan.FromMilliseconds(value); }
+            get { return _totalMilliseconds; }
+            set { _totalMilliseconds = value; }
         }
 
         public double TotalSeconds
         {
-            get { return _time.TotalSeconds; }
-            set { _time = TimeSpan.FromSeconds(value); }
+            get { return _totalMilliseconds / 1000.0; }
+            set { _totalMilliseconds = value * 1000.0; }
         }
 
         public TimeSpan TimeSpan
         {
             get
             {
-                return _time;
+                return TimeSpan.FromMilliseconds(_totalMilliseconds);
             }
             set
             {
-                _time = value;
+                _totalMilliseconds = value.TotalMilliseconds;
             }
         }
 
@@ -119,25 +157,25 @@ namespace Nikse.SubtitleEdit.Logic
             Milliseconds += milliseconds;
         }
 
-
         public void AddTime(long milliseconds)
         {
-            _time = TimeSpan.FromMilliseconds(_time.TotalMilliseconds + milliseconds);
+            _totalMilliseconds += milliseconds;
         }
 
         public void AddTime(TimeSpan timeSpan)
         {
-            _time = TimeSpan.FromMilliseconds(_time.TotalMilliseconds + timeSpan.TotalMilliseconds);
+            _totalMilliseconds += timeSpan.TotalMilliseconds;
         }
 
         public void AddTime(double milliseconds)
         {
-            _time = TimeSpan.FromMilliseconds(_time.TotalMilliseconds + milliseconds);
+            _totalMilliseconds += milliseconds;
         }
 
         public override string ToString()
         {
-            string s = string.Format("{0:00}:{1:00}:{2:00},{3:000}", _time.Hours + _time.Days * 24, _time.Minutes, _time.Seconds, _time.Milliseconds);
+            var ts = TimeSpan;
+            string s = string.Format("{0:00}:{1:00}:{2:00},{3:000}", ts.Hours + ts.Days * 24, ts.Minutes, ts.Seconds, ts.Milliseconds);
 
             if (TotalMilliseconds >= 0)
                 return s;
@@ -147,13 +185,14 @@ namespace Nikse.SubtitleEdit.Logic
 
         public string ToShortString()
         {
+            var ts = TimeSpan;
             string s;
-            if (_time.Minutes == 0 && _time.Hours == 0 && _time.Days == 0)
-                s = string.Format("{0:0},{1:000}", _time.Seconds, _time.Milliseconds);
-            else if (_time.Hours == 0 && _time.Days == 0)
-                s = string.Format("{0:0}:{1:00},{2:000}", _time.Minutes, _time.Seconds, _time.Milliseconds);
+            if (ts.Minutes == 0 && ts.Hours == 0 && ts.Days == 0)
+                s = string.Format("{0:0},{1:000}", ts.Seconds, ts.Milliseconds);
+            else if (ts.Hours == 0 && ts.Days == 0)
+                s = string.Format("{0:0}:{1:00},{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
             else
-                s = string.Format("{0:0}:{1:00}:{2:00},{3:000}", _time.Hours + _time.Days * 24, _time.Minutes, _time.Seconds, _time.Milliseconds);
+                s = string.Format("{0:0}:{1:00}:{2:00},{3:000}", ts.Hours + ts.Days * 24, ts.Minutes, ts.Seconds, ts.Milliseconds);
 
             if (TotalMilliseconds >= 0)
                 return s;
@@ -163,21 +202,24 @@ namespace Nikse.SubtitleEdit.Logic
 
         public string ToShortStringHHMMSSFF()
         {
-            if (_time.Minutes == 0 && _time.Hours == 0)
-                return string.Format("{0:00}:{1:00}", _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(_time.Milliseconds));
-            if (_time.Hours == 0)
-                return string.Format("{0:00}:{1:00}:{2:00}", _time.Minutes, _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(_time.Milliseconds));
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", _time.Hours, _time.Minutes, _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(_time.Milliseconds));
+            var ts = TimeSpan;
+            if (ts.Minutes == 0 && ts.Hours == 0)
+                return string.Format("{0:00}:{1:00}", ts.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
+            if (ts.Hours == 0)
+                return string.Format("{0:00}:{1:00}:{2:00}", ts.Minutes, ts.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
         }
 
         public string ToHHMMSSFF()
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", _time.Hours, _time.Minutes, _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(_time.Milliseconds));
+            var ts = TimeSpan;
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
         }
 
         public string ToHHMMSSPeriodFF()
         {
-            return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", _time.Hours, _time.Minutes, _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(_time.Milliseconds));
+            var ts = TimeSpan;
+            return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
         }
 
     }

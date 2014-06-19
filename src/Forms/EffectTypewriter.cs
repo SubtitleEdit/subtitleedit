@@ -88,8 +88,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             double startMilliseconds;
             double endMilliseconds;
-            TimeSpan start;
-            TimeSpan end;
+            TimeCode start;
+            TimeCode end;
             int index = 0;
             string text = string.Empty;
             bool tagOn = false;
@@ -130,9 +130,9 @@ namespace Nikse.SubtitleEdit.Forms
                     startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
                     endMilliseconds = ((index + 1) * stepsLength) -1;
                     endMilliseconds += _paragraph.StartTime.TotalMilliseconds;
-                    start = TimeSpan.FromMilliseconds(startMilliseconds);
-                    end = TimeSpan.FromMilliseconds(endMilliseconds);
-                    _animation.Add(new Paragraph(new TimeCode(start), new TimeCode(end), text));
+                    start = new TimeCode(startMilliseconds);
+                    end = new TimeCode(endMilliseconds);
+                    _animation.Add(new Paragraph(start, end, text));
                     index++;
                 }
                 i++;
@@ -143,9 +143,9 @@ namespace Nikse.SubtitleEdit.Forms
                 startMilliseconds = index * stepsLength;
                 startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
                 endMilliseconds = _paragraph.EndTime.TotalMilliseconds;
-                start = TimeSpan.FromMilliseconds(startMilliseconds);
-                end = TimeSpan.FromMilliseconds(endMilliseconds);
-                _animation.Add(new Paragraph(new TimeCode(start), new TimeCode(end), _paragraph.Text));
+                start = new TimeCode(startMilliseconds);
+                end = new TimeCode(endMilliseconds);
+                _animation.Add(new Paragraph(start, end, _paragraph.Text));
             }
             else if (_animation.Count > 0)
             {
