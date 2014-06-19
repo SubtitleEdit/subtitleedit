@@ -2009,7 +2009,6 @@ namespace Nikse.SubtitleEdit.Logic
                     if (w.Length > 0 && w != word)
                         words.Add(w);
                 }
-                words.Add(word);
                 words.Sort();
 
                 userWords.DocumentElement.RemoveAll();
@@ -2064,7 +2063,7 @@ namespace Nikse.SubtitleEdit.Logic
                 var localNamesEtc = new List<string>();
                 string userNamesEtcXmlFileName = LoadLocalNamesEtc(localNamesEtc, localNamesEtc, languageName);
 
-                if (localNamesEtc.Contains(word))
+                if (!localNamesEtc.Contains(word))
                     return false;
                 localNamesEtc.Remove(word);
                 localNamesEtc.Sort();
