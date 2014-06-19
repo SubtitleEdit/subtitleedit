@@ -15559,8 +15559,34 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
+                string post = string.Empty;
+                string pre = string.Empty;
                 // There is text selected
                 text = tb.SelectedText;
+                while (text.EndsWith(" ") || text.EndsWith(Environment.NewLine) || text.StartsWith(" ") || text.StartsWith(Environment.NewLine))
+                {
+                    if (text.EndsWith(" "))
+                    {
+                        post += " ";
+                        text = text.Remove(text.Length - 1);
+                    }
+                    if(text.EndsWith(Environment.NewLine))
+                    {
+                        post += Environment.NewLine;
+                        text = text.Remove(text.Length - 2);
+                    }
+                    if (text.StartsWith(" "))
+                    {
+                        pre += " ";
+                        text = text.Remove(0, 1);
+                    }
+                    if(text.StartsWith(Environment.NewLine))
+                    {
+                        pre += Environment.NewLine;
+                        text = text.Remove(0, 2);
+                    }
+                }
+
                 // Remove tags if present.
                 if (text.Contains("<" + tag + ">"))
                 {
@@ -15572,11 +15598,24 @@ namespace Nikse.SubtitleEdit.Forms
                     // Add tags.
                     int indexOfEndBracket = text.IndexOf("}");
                     if (text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                    {
                         text = string.Format("{2}<{0}>{1}</{0}>", tag, text.Remove(0, indexOfEndBracket + 1), text.Substring(0, indexOfEndBracket + 1));
+                    }
                     else
+                    {
                         text = string.Format("<{0}>{1}</{0}>", tag, text);
+                    }
                 }
                 // Update text and maintain selection.
+                if (pre.Length > 0)
+                {
+                    text = pre + text;
+                    selectionStart += pre.Length;
+                }
+                if (post.Length > 0)
+                {
+                    text = text + post;
+                }
                 tb.SelectedText = text;
                 tb.SelectionStart = selectionStart;
                 tb.SelectionLength = text.Length;
