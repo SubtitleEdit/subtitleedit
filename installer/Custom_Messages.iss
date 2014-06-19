@@ -25,8 +25,6 @@
 [CustomMessages]
 ; English
 en.comp_translations=Translations
-en.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-en.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 en.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
 en.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 en.msg_OptimizingPerformance=Optimizing performance...
@@ -45,8 +43,6 @@ en.types_default=Default installation
 #ifdef localize
 ; Arabic
 ar.comp_translations=Translations
-ar.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-ar.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 ar.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
 ar.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 ar.msg_OptimizingPerformance=Optimizing performance...
@@ -64,8 +60,6 @@ ar.types_default=Default installation
 
 ; Bulgarian
 bg.comp_translations=Translations
-bg.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-bg.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 bg.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
 bg.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 bg.msg_OptimizingPerformance=Optimizing performance...
@@ -83,8 +77,6 @@ bg.types_default=Default installation
 
 ; Portuguese (Brazil)
 br.comp_translations=Traduções
-br.msg_AppIsRunning=A instalação detectou que o Subtitle Edit está em execução.%n%nPor favor, feche todas as instâncias agora, então clique OK para continuar, ou Cancelar para sair.
-br.msg_AppIsRunningUninstall=A desinstalação detectou que o Subtitle Edit está em execução.%n%nPor favor, feche todas as instâncias, então clique OK para continuar, ou Cancelar para sair.
 br.msg_AskToDownNET=O Subtitle Edit necessita do .NET Framework 4.0. Por favor, baixe e instale o .NET Framework e execute a instalação novamente.%n%nDeseja baixar o .NET Framework 4.0 agora?
 br.msg_DeleteSettings=Deseja também deletar as configurações do Subtitle Edit e quaisquer mudanças feitas nos dicionários?%n%nSe você planeja reinstalar o Subtitle Edit você não precisa deletar estes itens.
 br.msg_OptimizingPerformance=Otimizando performance...
@@ -102,8 +94,6 @@ br.types_default=Instalação padrão
 
 ; Catalan
 ca.comp_translations=Translations
-ca.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-ca.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 ca.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
 ca.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 ca.msg_OptimizingPerformance=Optimizing performance...
@@ -121,8 +111,6 @@ ca.types_default=Default installation
 
 ; Czech
 cs.comp_translations=Překlady
-cs.msg_AppIsRunning=Instalační program zjistil, že je Subtitle Edit aktuálně spuštěn.%n%nZavřete všechny jeho instance a pak klepnutím na tlačítko OK pokračujte nebo klepnutím na tlačítko Storno ukončete instalaci.
-cs.msg_AppIsRunningUninstall=Odinstalační program zjistil, že je Subtitle Edit aktuálně spuštěn.%n%nZavřete všechny jeho instance a pak klepnutím na tlačítko OK pokračujte nebo klepnutím na tlačítko Storno ukončete instalaci.
 cs.msg_AskToDownNET=Subtitle Edit vyžaduje .NET Framework 4.0. Stáhněte a nainstalujte .NET Framework a spusťte znovu instalaci.%n%nChcete nyní stáhnout .NET Framework 4.0?
 cs.msg_DeleteSettings=Chcete také odstranit nastavení Subtitle Edit a všechny vlastní změny, které jste provedli ve slovnících?%n%nPokud zamýšlíte přeinstalaci Subtitle Edit, nemusíte je odstraňovat.
 cs.msg_OptimizingPerformance=Optimalizace výkonu...
@@ -140,8 +128,6 @@ cs.types_default=Výchozí instalace
 
 ; Deutsch
 de.comp_translations=Übersetzungen
-de.msg_AppIsRunning=Subtitle Edit ist noch aktiv.%n%nBitte beenden Sie jetzt alle Instanzen und klicken Sie dann auf OK oder Abbrechen.
-de.msg_AppIsRunningUninstall=Subtitle Edit ist noch aktiv.%n%nBitte beenden Sie jetzt alle Instanzen und klicken Sie dann auf OK oder Abbrechen.
 de.msg_AskToDownNET=Subtitle Edit benötigt .NET Framework 4.0. Bitte installieren Sie .NET Framework und starten Sie die Installation erneut.%n%nMöchten Sie .NET Framework 4.0 jetzt herunterladen?
 de.msg_DeleteSettings=Möchten Sie die Einstellungen und Änderungen der Wörterbücher ebenfalls löschen?%n%nWenn Sie Subtitle Edit erneut installieren wollen, müssen Sie nichts löschen.
 de.msg_OptimizingPerformance=Leistungsoptimierung...
@@ -159,8 +145,6 @@ de.types_default=Standardinstallation
 
 ; Danish
 dk.comp_translations=Oversættelser
-dk.msg_AppIsRunning=Subtitle Edit kører i øjeblikket.%n%nLuk venligst Subtitle Edit og klik på OK for at fortsætte eller Fortryd for at afbryde installationen.
-dk.msg_AppIsRunningUninstall=Subtitle Edit kører i øjeblikket.%n%nLuk venligst Subtitle Edit og klik på OK for at fortsætte eller Fortryd for at afbryde afinstallationen.
 dk.msg_AskToDownNET=Subtitle Edit kræver .NET Framework 4.0 eller nyere. Download and installer .NET Framework og kør setup igen.%n%nVil du downloade .NET Framework 4.0 nu?
 dk.msg_DeleteSettings=Vil du også slette Subtitle Edit's indstillinger og evt. ændringer i ordlister?%n%nHvis du vil geninstallere Subtitle Edit senere kan du beholde disse indstillinger.
 dk.msg_OptimizingPerformance=Optimerer performance...
@@ -178,8 +162,6 @@ dk.types_default=Default installation
 
 ; Greek
 el.comp_translations=Μεταφράσεις
-el.msg_AppIsRunning=Η εγκατάσταση εντόπισε ότι εκτελείται η εφαρμογή Subtitle Edit.%n%nΠαρακαλώ κλείστε την εφαρμογή τώρα και πατήστε Εντάξει για να συνεχίσετε, ή Άκυρο για έξοδο.
-el.msg_AppIsRunningUninstall=Η απεγκατάσταση εντόπισε ότι εκτελείται η εφαρμογή Subtitle Edit.%n%nΠαρακαλώ κλείστε την εφαρμογή τώρα και πατήστε Εντάξει για να συνεχίσετε, ή Άκυρο για έξοδο.
 el.msg_AskToDownNET=Το Subtitle Edit χρειάζεται το .NET Framework 4.0. Κατεβάστε και εγκαταστήστε το .NET Framework και επαναλάβετε την εγκατάσταση.%n%nΘέλετε να κατεβάσετε το .NET Framework 4.0 τώρα;
 el.msg_DeleteSettings=Θέλετε επίσης να διαγράψετε τις ρυθμίσεις του Subtitle Edit και οποιεσδήποτε τροποποιήσεις έχετε κάνει στους φακέλους;%n%nΑν σκοπεύετε να επανεγκαταστήσετε το Subtitle Edit δε χρειάζεται να τις διαγράψετε.
 el.msg_OptimizingPerformance=Βελτιστοποίηση απόδοσης...
@@ -197,8 +179,6 @@ el.types_default=Προεπιλεγμένη εγκατάσταση
 
 ; Spanish
 es.comp_translations=Traducciones
-es.msg_AppIsRunning=El programa de instalacion ha detectado que Subtitle Edit se esta ejecutando actualmente.%n%nPor favor, cierra todas las instancias actuales, haz clic en Aceptar para continuar o en Cancelar para salir.
-es.msg_AppIsRunningUninstall=El desinstalador ha detectado que Subtitle Edit se esta ejecutando actualmente.%n%nPor favor, cierra todas las instancias actuales, haz clic en Aceptar para continuar o en Cancelar para salir.
 es.msg_AskToDownNET=Subtitle Edit requiere .NET Framework 4.0. Por favor, descarga e instala .NET Framework y ejecuta la instalacion de nuevo.%n%n?Quieres descargar el .NET Framework 4.0 ahora?
 es.msg_DeleteSettings=?Deseas tambien eliminar la configuracion de Subtitle Edit y los cambios personalizados realizados en los diccionarios?%n%nSi planeas reinstalar Subtitle Edit no tienes que eliminarlos.
 es.msg_OptimizingPerformance=Optimizando el rendimiento...
@@ -216,8 +196,6 @@ es.types_default=Instalacion predefinida
 
 ; Basque
 eu.comp_translations=Itzulpenak
-eu.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-eu.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 eu.msg_AskToDownNET=Subtitle Edit-ek beharrezkoa du .NET Framework 4.0. Mesedez jeitsi eta ezarri .NET Framework eta abiarazi berriro ezartzailea.%n%nNahi duzu .NET Framework 4.0 orain jeistea?
 eu.msg_DeleteSettings=Nahi dituzu ere Subtitle Edit-en ezarpenak eta hiztegietan egin dituzun aldaketak ezabatzea?%n%nSubtitle Edit berriro ezartzeko asmoa baduzu ez dituzu ezabatu behar.
 eu.msg_OptimizingPerformance=Egintza hobereneratzen...
@@ -235,8 +213,6 @@ eu.types_default=Berezko ezarpena
 
 ; Persian
 fa.comp_translations=ترجمه ها
-fa.msg_AppIsRunning=برنامه ویرایش زیرنویس در حال اجرا میباشد.%n%nلطفا تمامی پنجره های ان را بسته , و بر روی ادامه کلیک کنید یا انصراف دهید
-fa.msg_AppIsRunningUninstall=برنامه ویرایش زیرنویس در حال اجرا میباشد%n%nلطفا تمامی پنجره های ان را بسته , و بر روی ادامه کلیک کنید یا انصراف دهید
 fa.msg_AskToDownNET=برنامه ویرایش زیرنویس به کتابخانه.NET Framework 4.0 نیاز دارد. لطفا آن را یا دانلود کنید یا نصب کنید و دوباره برنامه نصب را اجرا کنید%n%nآیا همین الان Framework 4.0 را دانلود میکنید?
 fa.msg_DeleteSettings=آیا میخواهید تمامی تنظیمات و گزینه های ایجاد شده توسط شما هم پاک شود?%n%nاگر شما قصد نصب دوباره را دارید نیازی به حذف آن ندارید
 fa.msg_OptimizingPerformance=بهینه سازی اجرا
@@ -254,8 +230,6 @@ fa.types_default=نصب پیشفرض
 
 ; Finnish
 fi.comp_translations=Käännökset
-fi.msg_AppIsRunning=Asennusohjelma on havainnut, että Subtitle Edit on parhaillaan käynnissä.%n%nSulje kaikki tapaukset nyt, sitten klikkaa OK jatkaaksesi tai Peruuta poistuaksesi.
-fi.msg_AppIsRunningUninstall=Asennuksen purkuohjelma on havainnut, että Subtitle Edit on parhaillaan käynnissä.%n%nSulje kaikki tapaukset nyt, sitten klikkaa OK jatkaaksesi tai Peruuta poistuaksesi.
 fi.msg_AskToDownNET=Subtitle Edit tarvitsee .NET Framework 4.0. Lataa ja asenna .NET Framework ja suorita asennusohjelma uudelleen.%n%nHaluatko ladata .NET Framework 4.0 nyt?
 fi.msg_DeleteSettings=Haluatko myös poistaa Subtitle Edit'n asetukset ja mukautetut sanakirjoihin tehdyt muutokset?%n%nJos aiot uudelleenasentaa Subtitle Edit'n sinun ei tarvitse poistaa niitä.
 fi.msg_OptimizingPerformance=Optimoidaan suorituskykyä...
@@ -273,8 +247,6 @@ fi.types_default=Oletus asennus
 
 ; French
 fr.comp_translations=Translations
-fr.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-fr.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 fr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
 fr.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 fr.msg_OptimizingPerformance=Optimizing performance...
@@ -292,8 +264,6 @@ fr.types_default=Default installation
 
 ; Croatian
 hr.comp_translations=Translations
-hr.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-hr.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 hr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
 hr.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 hr.msg_OptimizingPerformance=Optimizing performance...
@@ -311,8 +281,6 @@ hr.types_default=Default installation
 
 ; Hungarian
 hu.comp_translations=Translations
-hu.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-hu.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 hu.msg_AskToDownNET=A Subtitle Edit futtatásához .NET Framework 4.0 szükséges. Kérjük, töltse le és telepítse a .NET Framework keretprogramot és futtassa újra a telepítőt.%n%nLetölti a .NET Framework 4.0 telepítőt most?
 hu.msg_DeleteSettings=Törölni szeretné a Subtitle Edit beállításait és a szótárakban végrehajtott egyéni módosításokat?%n%nHa a Subtitle Edit újratelepítését tervezi, Önnek nem kell törölni azt.
 hu.msg_OptimizingPerformance=Optimizing performance...
@@ -330,8 +298,6 @@ hu.types_default=Default installation
 
 ; Italian
 it.comp_translations=Traduzioni
-it.msg_AppIsRunning=Il processo di installazione ha rilevato che Subtitle Edit è in esecuzione.%n%nPer favore, chiudi tutte le sue finestre, poi clicca OK per continuare, o Annulla per uscire.
-it.msg_AppIsRunningUninstall=Il processo di disinstallazione ha rilevato che Subtitle Edit è in esecuzione.%n%nPer favore, chiudi tutte le sue finestre, poi clicca OK per continuare, o Annulla per uscire.
 it.msg_AskToDownNET=Subtitle Edit richiede .NET Framework 4.0. Per favore scarica e installa .NET Framework ed esegui nuovamente l'installazione.%n%nVuoi scaricare .NET Framework 4.0 adesso?
 it.msg_DeleteSettings=Vuoi anche cancellare le impostazioni di Subtitle Edit e le modifiche che hai apportato ai dizionari?%n%nSe hai intenzione di reinstallare Subtitle Edit puoi non farlo.
 it.msg_OptimizingPerformance=Ottimizzazione prestazioni in corso...
@@ -349,8 +315,6 @@ it.types_default=Installazione predefinita
 
 ; Japanese
 ja.comp_translations=Translations
-ja.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-ja.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 ja.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
 ja.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 ja.msg_OptimizingPerformance=Optimizing performance...
@@ -368,8 +332,6 @@ ja.types_default=Default installation
 
 ; Korean
 kr.comp_translations=번역
-kr.msg_AppIsRunning=Subtitle Edit가 현재 실행되고 있습니다.%n%n이제 Subtitle Edit의 모든 인스턴스를 닫아 주십시오. 그런 다음 계속하려면 '확인'을, 종료하려면 '취소'를 클릭하십시오.
-kr.msg_AppIsRunningUninstall=Subtitle Edit가 현재 실행되고 있습니다.%n%n이제 Subtitle Edit의 모든 인스턴스를 닫아 주십시오. 그런 다음 계속하려면 '확인'을, 종료하려면 '취소'를 클릭하십시오.
 kr.msg_AskToDownNET=Subtitle Edit는 .NET Framework 4.0이 필요합니다. .NET Framework를 다운 받아 설치하신 후, Subtitle Edit 설치 마법사를 다시 실행하시기 바랍니다.%n%n지금 .NET Framework 4.0을 다운로드하시겠습니까?
 kr.msg_DeleteSettings=Subtitle Edit의 설정 및 사전에 포함된 사용자 지정의 모든 변경 사항을 삭제하시겠습니까?%n%n만약 Subtitle Edit를 다시 설치할 계획이면 그것을 삭제할 필요가 없습니다.
 kr.msg_OptimizingPerformance=성능을 최적화하는 중...
@@ -387,8 +349,6 @@ kr.types_default=기본 설치
 
 ; Dutch
 nl.comp_translations=Translations
-nl.msg_AppIsRunning=Setup constateert dat Subtitle Edit al aktief is.%n%nSluit alstublieft alle geopende vensters, dan klik OK om door te gaan of Cancel om af te sluiten.
-nl.msg_AppIsRunningUninstall=Uninstall constateert dat Subtitle Edit al geopend is.%n%nSluit alstublieft alle geopende vensters, dan klik OK om door te gaan of Cancel om af te sluiten.
 nl.msg_AskToDownNET=Subtitle Edit vereist .NET Framework 4.0. Download en instaleer deze software alstublieft en doe de setup opnieuw.%n%nWilt u nu .NET Framework 4.0 instaleren?
 nl.msg_DeleteSettings=Wilt u de instellingen en persoonlijke aanpassingen in de woordenboeken van Subtitle Edit verwijderen?%n%nAls u Subtitle Edit opnieuw installeert hoeft u deze niet te verwijderen.
 nl.msg_OptimizingPerformance=Prestatie optimaliseren...
@@ -406,8 +366,6 @@ nl.types_default=Standaard installatie
 
 ; Polish
 pl.comp_translations=Tłumaczenia
-pl.msg_AppIsRunning=Instalator wykrył, że Subtitle Edit jest obecnie uruchomiony.%n%nProszę teraz zamknąć wszystkie kopie SE, a następnie kliknąć przycisk OK, aby kontynuować, lub Anuluj, aby wyjść.
-pl.msg_AppIsRunningUninstall=Deinstalator wykrył, że Subtitle Edit jest obecnie uruchomiony.%n%nProszę teraz zamknąć wszystkie kopie SE, a następnie kliknąć przycisk OK, aby kontynuować, lub Anuluj, aby wyjść.
 pl.msg_AskToDownNET=Subtitle Edit do poprawnej pracy wymaga .NET Framework 4.0. Pobierz i zainstaluj .NET Framework i uruchom ponownie instalator.%n%nCzy chcesz teraz pobrać .NET Framework 4.0?
 pl.msg_DeleteSettings=Czy chcesz także usunąć ustawienia Subtitle Edit oraz wszelkie niestandardowe zmiany wprowadzone w słownikach?%n%nJeśli planujesz ponowną instalację Subtitle Edit, nie musisz ich usuwać.
 pl.msg_OptimizingPerformance=Optymalizowanie wydajności...
@@ -425,8 +383,6 @@ pl.types_default=Instalacja domyślna
 
 ; Portuguese (Portugal)
 pt.comp_translations=Traduções
-pt.msg_AppIsRunning=A instalação detectou que o Subtitle Edit está em execução.%n%nPor favor, feche todas as instâncias agora, e clique OK para continuar, ou Cancelar para sair.
-pt.msg_AppIsRunningUninstall=A desinstalação detectou que o Subtitle Edit está em execução.%n%nPor favor, feche todas as instâncias, e clique OK para continuar, ou Cancelar para sair.
 pt.msg_AskToDownNET=O Subtitle Edit necessita do .NET Framework 4.0. Por favor, baixe e instale o .NET Framework, e execute a instalação novamente.%n%nDeseja baixar o .NET Framework 4.0 agora?
 pt.msg_DeleteSettings=Deseja remover as configurações do Subtitle Edit e quaisquer mudanças feitas nos dicionários?%n%nSe planeia reinstalar o Subtitle Edit não necessita remover estes itens.
 pt.msg_OptimizingPerformance=Otimizando performance...
@@ -444,8 +400,6 @@ pt.types_default=Instalação padrão
 
 ; Romanian
 ro.comp_translations=Translations
-ro.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-ro.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 ro.msg_AskToDownNET=Subtitle Edit necesită .NET Framework 4.0. Vă rog să descărcaţi şi să instalaţi .NET Framework şi apoi reinstalaţi.%n%nVreţi să descărcaţi acum .NET Framework 4.0?
 ro.msg_DeleteSettings=Vreţi de asemenea să ştergeţi setările şi personalizările făcute în dicţionare?%n%nDacă aveţi de gând să reinstalaţi Subtitle Edit, nu este nevoie să le ştergeţi.
 ro.msg_OptimizingPerformance=Optimizing performance...
@@ -463,8 +417,6 @@ ro.types_default=Default installation
 
 ; Russian
 ru.comp_translations=Файлы локализации программы
-ru.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-ru.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 ru.msg_AskToDownNET=Для работы "Subtitle Edit" требуется установленный .NET Framework 4.0. Пожалуйста, загрузите и установите .NET Framework, а затем повторите инсталляцию.%n%nВыполнить загрузку .NET Framework 4.0 сейчас?
 ru.msg_DeleteSettings=Следует ли также удалить ваши настройки программы и пользовательские словари?%n%nЕсли вы будете обновлять программу, то не удаляйте ваши настройки и словари.
 ru.msg_OptimizingPerformance=Оптимизация производительности...
@@ -482,8 +434,6 @@ ru.types_default=Обычная установка
 
 ; Serbian Cyrillic
 srC.comp_translations=Преводи
-srC.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-srC.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 srC.msg_AskToDownNET=Програм захтева .NET радни оквир 4.0. Инсталирајте га и поново покрените инсталацију.%n%nЖелите ли да преузмете захтевани програм сада?
 srC.msg_DeleteSettings=Желите ли да обришете поставке и друге прилагођене измене које сте направили у речницима?%n%nАко планирате да поново инсталирате програм, не морате их брисати.
 srC.msg_OptimizingPerformance=Учитавам…
@@ -501,8 +451,6 @@ srC.types_default=Подразумевана инсталација
 
 ; Serbian Latin
 srL.comp_translations=Prevodi
-srL.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-srL.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 srL.msg_AskToDownNET=Program zahteva .NET radni okvir 4.0. Instalirajte ga i ponovo pokrenite instalaciju.%n%Želite li da preuzmete zahtevani program sada?
 srL.msg_DeleteSettings=Želite li da obrišete postavke i druge prilagođene izmene koje ste napravili u rečnicima?%n%nAko planirate da ponovo instalirate program, ne morate ih brisati.
 srL.msg_OptimizingPerformance=Učitavam…
@@ -520,8 +468,6 @@ srL.types_default=Podrazumevana instalacija
 
 ; Swedish
 sv.comp_translations=Translations
-sv.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-sv.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 sv.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
 sv.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 sv.msg_OptimizingPerformance=Optimizing performance...
@@ -538,8 +484,6 @@ sv.types_default=Default installation
 
 ; Turkish
 tr.comp_translations=Translations
-tr.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-tr.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 tr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
 tr.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 tr.msg_OptimizingPerformance=Optimizing performance...
@@ -556,8 +500,6 @@ tr.types_default=Default installation
 
 ; Vietnamese
 vn.comp_translations=Translations
-vn.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-vn.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 vn.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
 vn.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 vn.msg_OptimizingPerformance=Optimizing performance...
@@ -574,8 +516,6 @@ vn.types_default=Default installation
 
 ; Chinese Simplified
 zh.comp_translations=Translations
-zh.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-zh.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 zh.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
 zh.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 zh.msg_OptimizingPerformance=Optimizing performance...
@@ -592,8 +532,6 @@ zh.types_default=Default installation
 
 ; Chinese Traditional
 zhTW.comp_translations=Translations
-zhTW.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-zhTW.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 zhTW.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
 zhTW.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 zhTW.msg_OptimizingPerformance=Optimizing performance...

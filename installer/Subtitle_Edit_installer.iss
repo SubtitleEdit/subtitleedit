@@ -106,6 +106,7 @@ PrivilegesRequired=admin
 ShowLanguageDialog=yes
 DisableDirPage=auto
 DisableProgramGroupPage=auto
+CloseApplications=true
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 
@@ -176,7 +177,6 @@ Name: reset_settings;     Description: {cm:tsk_ResetSettings};     GroupDescript
 
 
 [Files]
-Source: psvince.dll;                               DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\Dictionaries\da_DK_names_etc.xml;       DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
 Source: ..\Dictionaries\da_DK_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
 Source: ..\Dictionaries\dan_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
@@ -363,12 +363,6 @@ Filename: {win}\Microsoft.NET\Framework64\v4.0.30319\ngen.exe; Parameters: "unin
 // Global variables/constants and general functions
 const installer_mutex = 'subtitle_edit_setup_mutex';
 
-function IsModuleLoaded(modulename: AnsiString): Boolean;
-external 'IsModuleLoaded2@files:psvince.dll stdcall setuponly';
-
-function IsModuleLoadedU(modulename: AnsiString): Boolean;
-external 'IsModuleLoaded2@{app}\psvince.dll stdcall uninstallonly';
-
 
 // Check if Subtitle Edit's settings exist
 function SettingsExistCheck(): Boolean;
@@ -543,11 +537,6 @@ begin
 
     CreateMutex(installer_mutex);
 
-    while IsModuleLoaded('SubtitleEdit.exe') and (iMsgBoxResult <> IDCANCEL) do
-      iMsgBoxResult := SuppressibleMsgBox(CustomMessage('msg_AppIsRunning'), mbError, MB_OKCANCEL, IDCANCEL);
-
-    if iMsgBoxResult = IDCANCEL then
-      Result := False;
 
     // Check if .NET Framework 4.0 is installed and if not offer to download it
     try
@@ -577,14 +566,6 @@ begin
     Result := True;
     CreateMutex(installer_mutex);
 
-    // Check if app is running during uninstallation
-    while IsModuleLoadedU('SubtitleEdit.exe') and (iMsgBoxResult <> IDCANCEL) do
-      iMsgBoxResult := SuppressibleMsgBox(CustomMessage('msg_AppIsRunningUninstall'), mbError, MB_OKCANCEL, IDCANCEL);
 
-    if iMsgBoxResult = IDCANCEL then
-      Result := False;
-
-    // Unload the psvince.dll in order to be uninstalled
-    UnloadDLL(ExpandConstant('{app}\psvince.dll'));
   end;
 end;
