@@ -15466,22 +15466,121 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 tb = textBoxListViewText;
 
-            string text = tb.SelectedText;
+            string text = string.Empty;
             int selectionStart = tb.SelectionStart;
-
-            if (text.Contains("<" + tag + ">"))
+           
+            // No text selected.
+            if (tb.SelectedText.Length == 0)
             {
-                text = text.Replace("<" + tag + ">", string.Empty);
-                text = text.Replace("</" + tag + ">", string.Empty);
+                text = tb.Text;
+                // Split lines (split a subtitle into its lines).
+                var lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                // Get current line index (the line where the cursor is).
+                int selectedLineNumber = tb.GetLineFromCharIndex(tb.SelectionStart);
+
+                Boolean isDialogue = false;
+                int lineNumber = 0;
+                string templine = string.Empty;
+                var lineSb = new StringBuilder();
+                int tagLength = 0;
+                // See if lines start with "-".
+                foreach (string line in lines)
+                {
+                    // Append line break in every line except the first one
+                    if (lineNumber > 0)
+                        lineSb.Append(Environment.NewLine);
+                    templine = line;
+
+                    string positionTag = string.Empty;
+                    int indexOfEndBracket = templine.IndexOf("}");
+                    if (templine.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                    {
+                        // Find position tag and remove it from string.
+                        positionTag = templine.Substring(0, indexOfEndBracket + 1);
+                        templine = templine.Remove(0, indexOfEndBracket + 1);
+                    }
+
+                    if (templine.StartsWith("-") || templine.StartsWith("<" + tag + ">" + "-"))
+                    {
+                        isDialogue = true;
+                        // Apply tags to current line (it is the selected line). Or remove them.
+                        if (selectedLineNumber == lineNumber)
+                        {
+                            // Remove tags if present.
+                            if (templine.Contains("<" + tag + ">"))
+                            {
+                                templine = templine.Replace("<" + tag + ">", string.Empty);
+                                templine = templine.Replace("</" + tag + ">", string.Empty);
+                                tagLength = -3;
+                            }
+                            else
+                            {
+                                // Add tags.
+                                templine = string.Format("<{0}>{1}</{0}>", tag, templine);
+                                tagLength = 3;
+                            }
+                        }
+                    }
+                    lineSb.Append(positionTag + templine);
+                    lineNumber++;
+                }
+                if (isDialogue)
+                {
+                    text = lineSb.ToString();
+                    tb.Text = text;
+                    tb.SelectionStart = selectionStart + tagLength;
+                    tb.SelectionLength = 0;
+                }
+                // There are no dialogue lines present.
+                else
+                {
+                    // Remove tags if present.
+                    if (text.Contains("<" + tag + ">"))
+                    {
+                        text = text.Replace("<" + tag + ">", string.Empty);
+                        text = text.Replace("</" + tag + ">", string.Empty);
+                        tb.Text = text;
+                        tb.SelectionStart = selectionStart - 3;
+                        tb.SelectionLength = 0;
+                    }
+                    else
+                    {
+                        // Add tags.
+                        int indexOfEndBracket = text.IndexOf("}");
+                        if (text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                            text = string.Format("{2}<{0}>{1}</{0}>", tag, text.Remove(0, indexOfEndBracket + 1), text.Substring(0, indexOfEndBracket + 1));
+                        else
+                            text = string.Format("<{0}>{1}</{0}>", tag, text);
+                        tb.Text = text;
+                        tb.SelectionStart = selectionStart + 3;
+                        tb.SelectionLength = 0;
+                    }
+                }
             }
             else
             {
-                text = string.Format("<{0}>{1}</{0}>", tag, text);
+                // There is text selected
+                text = tb.SelectedText;
+                // Remove tags if present.
+                if (text.Contains("<" + tag + ">"))
+                {
+                    text = text.Replace("<" + tag + ">", string.Empty);
+                    text = text.Replace("</" + tag + ">", string.Empty);
+                }
+                else
+                {
+                    // Add tags.
+                    int indexOfEndBracket = text.IndexOf("}");
+                    if (text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                        text = string.Format("{2}<{0}>{1}</{0}>", tag, text.Remove(0, indexOfEndBracket + 1), text.Substring(0, indexOfEndBracket + 1));
+                    else
+                        text = string.Format("<{0}>{1}</{0}>", tag, text);
+                }
+                // Update text and maintain selection.
+                tb.SelectedText = text;
+                tb.SelectionStart = selectionStart;
+                tb.SelectionLength = text.Length;
             }
-
-            tb.SelectedText = text;
-            tb.SelectionStart = selectionStart;
-            tb.SelectionLength = text.Length;
         }
 
         private void BoldToolStripMenuItem1Click(object sender, EventArgs e)
