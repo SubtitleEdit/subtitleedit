@@ -371,10 +371,10 @@ Filename: {win}\Microsoft.NET\Framework64\v4.0.30319\ngen.exe; Parameters: "unin
 const installer_mutex = 'subtitle_edit_setup_mutex';
 
 function IsModuleLoaded(modulename: AnsiString): Boolean;
-external 'IsModuleLoaded@files:psvince.dll stdcall setuponly';
+external 'IsModuleLoaded2@files:psvince.dll stdcall setuponly';
 
 function IsModuleLoadedU(modulename: AnsiString): Boolean;
-external 'IsModuleLoaded@{app}\psvince.dll stdcall uninstallonly';
+external 'IsModuleLoaded2@{app}\psvince.dll stdcall uninstallonly';
 
 
 // Check if Subtitle Edit's settings exist
