@@ -224,10 +224,18 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.ShowHelp("#spellcheck");
                 e.SuppressKeyPress = true;
             }
-            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.G)
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.G)
             {
                 e.SuppressKeyPress = true;
                 System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(textBoxWord.Text));
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z)
+            {
+                if (buttonUndo.Visible)
+                { 
+                    buttonUndo_Click(null, null);
+                    e.SuppressKeyPress = true;
+                }
             }
         }
 
@@ -911,9 +919,9 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             found = true;
                             int endIndexPlus = indexStart + wordWithDashesOrPeriods.Length;
-                            bool startOk = indexStart == 0 || (" ['\"" + Environment.NewLine).Contains(text.Substring(indexStart - 1, 1));
+                            bool startOk = indexStart == 0 || (" (['\"" + Environment.NewLine).Contains(text.Substring(indexStart - 1, 1));
                             bool endOk = endIndexPlus == text.Length;
-                            if (!endOk && endIndexPlus < text.Length && (",!?:;. ]").Contains(text.Substring(endIndexPlus, 1)))
+                            if (!endOk && endIndexPlus < text.Length && (",!?:;. ])<'\"").Contains(text.Substring(endIndexPlus, 1)))
                                 endOk = true;
                             if (startOk && endOk)
                             {
