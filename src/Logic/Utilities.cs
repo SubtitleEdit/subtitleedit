@@ -1186,6 +1186,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoDetectGoogleLanguage(Encoding encoding)
         {
+            if (encoding.CodePage == 860)
+                return "pt"; // Portuguese
             if (encoding.CodePage == 949)
                 return "ko"; // Korean
             if (encoding.CodePage == 950)
