@@ -9,6 +9,7 @@
    * Export to image based formats can now do boxing
    * Export to image based formats, added 2k resolutions - thx Joseph
    * New tool "Merge lines with same text"
+   * Spell check undo
 * IMPROVED:
    * Updated Spanish (Mexico) language file - thx pakitonaranjo
    * Updated French language file - thx JM GBT
@@ -22,6 +23,7 @@
    * Better time division in "Split long lines" - thx Joel
    * Better splitting of dialogues in "Split long lines" - thx Joel
    * Word lists improved - thx ivandrofly
+   * Ctrl+i now works better in text box - thx rebawest
 * FIXED:
    * OCR via "image compare" now works again
    * Fixed "Bridge gap in duration" when working with SSA/ASS
