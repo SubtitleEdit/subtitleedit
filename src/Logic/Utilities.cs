@@ -1299,7 +1299,9 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "pl";
 
-            count = GetCount(text, "Cosa", "sono", "Grazie", "Buongiorno", "bene", "questo");
+            count = GetCount(text, "Cosa", "sono", "Grazie", "Buongiorno", "bene", "questo") + GetCount(text, "ragazzi", "propriamente", "numero", "hanno", "giorno", "faccio") +
+                    GetCount(text, "davvero", "negativo", "essere", "vuole", "sensitivo", "venire");           
+
             if (count > bestCount)
             {
                 int frenchWords = GetCount(text, "Cest", "cest", "pas", "vous", "pour", "suis"); // not spanish words
