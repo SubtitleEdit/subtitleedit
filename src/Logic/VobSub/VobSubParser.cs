@@ -79,7 +79,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                                     position += 0x800;
 
                                 int currentSubPictureStreamId = vsp.PacketizedElementaryStream.SubPictureStreamId.Value;
-                                while (vsp.PacketizedElementaryStream.SubPictureStreamId.HasValue &&
+                                while (vsp.PacketizedElementaryStream != null &&
+                                       vsp.PacketizedElementaryStream.SubPictureStreamId.HasValue &&
                                        (vsp.PacketizedElementaryStream.Length == PacketizedElementaryStreamMaximumLength ||
                                         currentSubPictureStreamId != vsp.PacketizedElementaryStream.SubPictureStreamId.Value) && position < fs.Length)
                                 {
@@ -87,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                                     fs.Read(buffer, 0, 0x800);
                                     vsp = new VobSubPack(buffer, p); // idx position?
 
-                                    if (vsp.PacketizedElementaryStream.SubPictureStreamId.HasValue && currentSubPictureStreamId == vsp.PacketizedElementaryStream.SubPictureStreamId.Value)
+                                    if (vsp.PacketizedElementaryStream != null && vsp.PacketizedElementaryStream.SubPictureStreamId.HasValue && currentSubPictureStreamId == vsp.PacketizedElementaryStream.SubPictureStreamId.Value)
                                     {
                                         VobSubPacks.Add(vsp);
 
