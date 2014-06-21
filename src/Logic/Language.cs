@@ -337,7 +337,7 @@ namespace Nikse.SubtitleEdit.Logic
                 CheckingForUpdatesFailedX = "Checking for updates failed: {0}",
                 CheckingForUpdatesNoneAvailable = "You're using the latest version of Subtitle Edit :)",
                 CheckingForUpdatesNewVersion = "New version available!",
-                InstallUpdate = "Download and install",
+                InstallUpdate = "Go to download page",
             };            
 
             ChooseAudioTrack = new LanguageStructure.ChooseAudioTrack

@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonDownloadAndInstall.Visible = false;
             textBoxChangeLog.Visible = false;
             buttonCancel.Text = Configuration.Settings.Language.General.OK;
+            buttonCancel.Visible = false;
         }
 
         private void CheckForUpdates_KeyDown(object sender, KeyEventArgs e)
@@ -43,21 +44,32 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 timerCheckForUpdates.Stop();
                 labelStatus.Text = string.Format(Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesFailedX, "Time out");
+                buttonCancel.Visible = true;
             }
             else if (_updatesHelper.Error != null)
             {
                 timerCheckForUpdates.Stop();
                 labelStatus.Text = string.Format(Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesFailedX, _updatesHelper.Error);
+                buttonCancel.Visible = true;
             }
             else if (_updatesHelper.Done)
             {
                 timerCheckForUpdates.Stop();
-                Height = 600;
-                textBoxChangeLog.Text = _updatesHelper.LatestChangeLog;
-                textBoxChangeLog.Visible = true;
-                labelStatus.Text = Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesNewVersion;
-                buttonDownloadAndInstall.Visible = true;
-                buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+                if (_updatesHelper.IsUpdateAvailable())
+                {
+                    Height = 600;
+                    textBoxChangeLog.Text = _updatesHelper.LatestChangeLog;
+                    textBoxChangeLog.Visible = true;
+                    labelStatus.Text = Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesNewVersion;
+                    buttonDownloadAndInstall.Visible = true;
+                    buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+                    buttonCancel.Visible = true;
+                }
+                else
+                {
+                    labelStatus.Text = Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesNoneAvailable;
+                    buttonCancel.Visible = true;
+                }
             }
             _seconds += timerCheckForUpdates.Interval / 1000.0;
         }
