@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timerCheckForUpdates.Stop();
                 if (_updatesHelper.IsUpdateAvailable())
                 {
-                    Height = 600;
+                    Height = 550;
                     textBoxChangeLog.Text = _updatesHelper.LatestChangeLog;
                     textBoxChangeLog.Visible = true;
                     labelStatus.Text = Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesNewVersion;
@@ -68,6 +68,9 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     labelStatus.Text = Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesNoneAvailable;
+                    Height = 550;
+                    textBoxChangeLog.Text = _updatesHelper.LatestChangeLog;
+                    textBoxChangeLog.Visible = true;
                     buttonCancel.Visible = true;
                 }
             }
