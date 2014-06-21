@@ -2675,6 +2675,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.StartWithUppercaseLetterAfterColon;
             int noOfFixes = 0;
+            listViewFixes.BeginUpdate();
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
@@ -2688,7 +2689,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (lastText.EndsWith(":") || lastText.EndsWith(";"))
                     {
                         var st = new StripableText(p.Text);
-                        if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper())
+                        if (st.StrippedText.Length > 0 && st.StrippedText[0] != char.ToUpper(st.StrippedText[0]))
                             p.Text = st.Pre + char.ToUpper(st.StrippedText[0]) + st.StrippedText.Substring(1) + st.Post;
                     }
                 }
@@ -2738,6 +2739,7 @@ namespace Nikse.SubtitleEdit.Forms
                     AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
+            listViewFixes.EndUpdate();
             if (noOfFixes > 0)
                 LogStatus(_language.StartWithUppercaseLetterAfterColon, noOfFixes.ToString());
         }
