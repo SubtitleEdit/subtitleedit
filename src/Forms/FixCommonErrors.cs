@@ -2129,7 +2129,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
                 string nextText = string.Empty;
                 if (next != null)
-                    nextText = Utilities.RemoveHtmlTags(next.Text).TrimStart('-').TrimStart('"').TrimStart('„').TrimStart();
+                    nextText = Utilities.RemoveHtmlTags(next.Text).TrimStart('-', '"', '„').TrimStart();
                 string tempNoHtml = Utilities.RemoveHtmlTags(p.Text).TrimEnd();
 
 
