@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic
         private void CleanUp(Subtitle subtitle)
         {
             foreach (Paragraph p in subtitle.Paragraphs)
-            { 
+            {
                 p.Text = p.Text.Replace("<div>", string.Empty);
                 p.Text = p.Text.Replace("</div>", string.Empty);
                 p.Text = p.Text.Replace("<body>", string.Empty);

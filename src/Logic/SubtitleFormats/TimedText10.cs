@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var paragraphs = nds.SelectNodes("//ttml:p", nsmgr);
                     return paragraphs.Count > 0;
                 }
-                catch 
+                catch
                 {
                     try
                     {

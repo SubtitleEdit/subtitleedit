@@ -1300,7 +1300,7 @@ namespace Nikse.SubtitleEdit.Logic
                 return "pl";
 
             count = GetCount(text, "Cosa", "sono", "Grazie", "Buongiorno", "bene", "questo") + GetCount(text, "ragazzi", "propriamente", "numero", "hanno", "giorno", "faccio") +
-                    GetCount(text, "davvero", "negativo", "essere", "vuole", "sensitivo", "venire");           
+                    GetCount(text, "davvero", "negativo", "essere", "vuole", "sensitivo", "venire");
 
             if (count > bestCount)
             {
