@@ -1186,6 +1186,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoDetectGoogleLanguage(Encoding encoding)
         {
+            if (encoding.CodePage == 860)
+                return "pt"; // Portuguese
             if (encoding.CodePage == 949)
                 return "ko"; // Korean
             if (encoding.CodePage == 950)
@@ -3921,16 +3923,16 @@ namespace Nikse.SubtitleEdit.Logic
         public static Color GetColorFromFontString(string text, Color defaultColor)
         {
             string s = text.TrimEnd();
-            int start = s.IndexOf("<font ");
-            if (start >= 0 && s.EndsWith("</font>"))
+            int start = s.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+            if (start >= 0 && s.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
             {
-                int end = s.IndexOf(">", start);
+                int end = s.IndexOf(">", start, StringComparison.Ordinal);
                 if (end > 0)
                 {
                     string f = s.Substring(start, end - start);
                     if (f.Contains(" color="))
                     {
-                        int colorStart = f.IndexOf(" color=");
+                        int colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
                         if (s.IndexOf("\"", colorStart + " color=".Length + 1) > 0)
                             end = s.IndexOf("\"", colorStart + " color=".Length + 1);
                         s = s.Substring(colorStart, end - colorStart);
