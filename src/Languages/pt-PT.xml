@@ -195,6 +195,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Ajustar a velocidade em percentagem</Title>
     <Info>Alterar a velocidade da legenda em percentagem</Info>
   </ChangeSpeedInPercent>
+  <CheckForUpdates>
+    <Title>Verificar se há atualizações</Title>
+    <CheckingForUpdates>A verificar se há atualizações...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>A verificação por actualizações falhou: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesNoneAvailable>Está a usar a última versão do Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNewVersion>Nova versão disponível!</CheckingForUpdatesNewVersion>
+    <InstallUpdate>Transferir e instalar</InstallUpdate>
+  </CheckForUpdates>  
   <ChooseAudioTrack>
     <Title>Escolher a faixa de áudio</Title>
   </ChooseAudioTrack>
@@ -822,6 +830,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <LeaveSession>Abandonar sessão</LeaveSession>
       </Networking>
       <Help>
+        <CheckForUpdates>Verificar se há atualizações...</CheckForUpdates>	  
         <Title>Ajuda</Title>
         <Help>&amp;Ajuda</Help>
         <About>&amp;Sobre</About>
@@ -1263,8 +1272,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <EndsWith>Termina com</EndsWith>
     <NoContains>Não Contém</NoContains>
     <RegEx>Expressão regular</RegEx>
-    <UnequalLines>Linhas díspares</UnequalLines>
-    <EqualLines>Linhas iguais</EqualLines>
+    <UnequalLines>Linhas com números ímpares</UnequalLines>
+    <EqualLines>Linhas com números pares</EqualLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Múltipla substituição</Title>
@@ -1351,7 +1360,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
   </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Eliminar texto para surdos</Title>
-    <RemoveTextConditions>Eliminar condições de texto</RemoveTextConditions>
+    <RemoveTextConditions>Condições de texto a eliminar</RemoveTextConditions>
     <RemoveTextBetween>Eliminar texto entre</RemoveTextBetween>
     <SquareBrackets>'[' e ']'</SquareBrackets>
     <Brackets>'{' e '}'</Brackets>
@@ -1476,6 +1485,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <VideoEngine>Mecanismo de vídeo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll na pasta system32</DirectShowDescription>
+    <DirectShowDescription64>quartz.dll na pasta SysWOW64</DirectShowDescription64>	
     <ManagedDirectX>Gerado pelo DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - Código .NET gerado pelo DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
