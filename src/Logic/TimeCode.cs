@@ -74,54 +74,54 @@ namespace Nikse.SubtitleEdit.Logic
 
         public int Hours
         {
-            get 
+            get
             {
                 var ts = TimeSpan;
-                return ts.Hours + ts.Days * 24;  
+                return ts.Hours + ts.Days * 24;
             }
-            set 
+            set
             {
                 var ts = TimeSpan;
-                _totalMilliseconds = new TimeSpan(0, value, ts.Minutes, ts.Seconds, ts.Milliseconds).TotalMilliseconds; 
+                _totalMilliseconds = new TimeSpan(0, value, ts.Minutes, ts.Seconds, ts.Milliseconds).TotalMilliseconds;
             }
         }
 
         public int Minutes
         {
-            get 
-            { 
-                return TimeSpan.Minutes; 
+            get
+            {
+                return TimeSpan.Minutes;
             }
-            set 
+            set
             {
                 var ts = TimeSpan;
-                TimeSpan = new TimeSpan(0, ts.Hours, value, ts.Seconds, ts.Milliseconds); 
+                TimeSpan = new TimeSpan(0, ts.Hours, value, ts.Seconds, ts.Milliseconds);
             }
         }
 
         public int Seconds
         {
-            get 
-            { 
-                return TimeSpan.Seconds; 
+            get
+            {
+                return TimeSpan.Seconds;
             }
-            set 
+            set
             {
                 var ts = TimeSpan;
-                TimeSpan = new TimeSpan(0, ts.Hours, ts.Minutes, value, ts.Milliseconds); 
+                TimeSpan = new TimeSpan(0, ts.Hours, ts.Minutes, value, ts.Milliseconds);
             }
         }
 
         public int Milliseconds
         {
-            get 
-            { 
-                return TimeSpan.Milliseconds; 
+            get
+            {
+                return TimeSpan.Milliseconds;
             }
-            set 
+            set
             {
                 var ts = TimeSpan;
-                _totalMilliseconds = new TimeSpan(0, ts.Hours, ts.Minutes, ts.Seconds, value).TotalMilliseconds; 
+                _totalMilliseconds = new TimeSpan(0, ts.Hours, ts.Minutes, ts.Seconds, value).TotalMilliseconds;
             }
         }
 

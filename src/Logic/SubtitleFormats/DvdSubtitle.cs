@@ -117,7 +117,7 @@ LICENSE=
                                 int milliseconds = int.Parse(arr[3]);
                                 if (arr[3].Length == 2)
                                     milliseconds *= 10;
-                                start = new TimeCode(hours, minutes, seconds, milliseconds); 
+                                start = new TimeCode(hours, minutes, seconds, milliseconds);
                             }
                         }
                         catch

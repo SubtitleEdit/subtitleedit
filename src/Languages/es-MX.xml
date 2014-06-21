@@ -746,7 +746,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeSpeedInPercent>Cambiar velocidad (porcentaje)...</ChangeSpeedInPercent>
         <MergeShortLines>Combinar líneas cortas...</MergeShortLines>
         <MergeDuplicateText>Fusionar líneas con el mismo texto...</MergeDuplicateText>
-		<MergeSameTimeCodes>Fusionar líneas con los mismos códigos de tiempo...</MergeSameTimeCodes>
+        <MergeSameTimeCodes>Fusionar líneas con los mismos códigos de tiempo...</MergeSameTimeCodes>
         <SplitLongLines>Dividir líneas largas...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Duración mínima entre párrafos...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>

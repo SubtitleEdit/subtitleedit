@@ -15468,7 +15468,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             string text = string.Empty;
             int selectionStart = tb.SelectionStart;
-           
+
             // No text selected.
             if (tb.SelectedText.Length == 0)
             {

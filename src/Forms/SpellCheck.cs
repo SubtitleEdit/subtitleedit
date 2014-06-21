@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z)
             {
                 if (buttonUndo.Visible)
-                { 
+                {
                     buttonUndo_Click(null, null);
                     e.SuppressKeyPress = true;
                 }
