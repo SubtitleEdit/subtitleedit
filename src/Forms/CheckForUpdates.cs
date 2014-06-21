@@ -62,5 +62,10 @@ namespace Nikse.SubtitleEdit.Forms
             _seconds += timerCheckForUpdates.Interval / 1000.0;
         }
 
+        private void buttonDownloadAndInstall_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/SubtitleEdit/subtitleedit/releases");
+        }
+
     }
 }

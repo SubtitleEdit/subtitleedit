@@ -1178,6 +1178,7 @@
 
                 public class HelpMenu
                 {
+                    public string CheckForUpdates { get; set; }                    
                     public string Title { get; set; }
                     public string Help { get; set; }
                     public string About { get; set; }

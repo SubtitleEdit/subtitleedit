@@ -1292,6 +1292,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                     Help = new LanguageStructure.Main.MainMenu.HelpMenu
                     {
+                        CheckForUpdates = "Check for updates...",
                         Title = "Help",
                         Help = "&Help",
                         About = "&About"
