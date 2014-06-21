@@ -2129,7 +2129,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
                 string nextText = string.Empty;
                 if (next != null)
-                    nextText = Utilities.RemoveHtmlTags(next.Text).TrimStart('-').TrimStart('"').TrimStart('„').TrimStart();
+                    nextText = Utilities.RemoveHtmlTags(next.Text).TrimStart('-', '"', '„').TrimStart();
                 string tempNoHtml = Utilities.RemoveHtmlTags(p.Text).TrimEnd();
 
 
@@ -2308,6 +2308,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void FixStartWithUppercaseLetterAfterParagraph()
         {
+            listViewFixes.BeginUpdate();
             string fixAction1 = _language.FixFirstLetterToUppercaseAfterParagraph + " ";
             string fixAction2 = _language.FixFirstLetterToUppercaseAfterParagraph;
             int fixedStartWithUppercaseLetterAfterParagraphTicked = 0;
@@ -2371,7 +2372,7 @@ namespace Nikse.SubtitleEdit.Forms
                     bool isPrevEndOfLine = IsPrevoiusTextEndOfParagraph(prevText);
                     if (prevText == " .")
                         isPrevEndOfLine = true;
-                    if (!text.StartsWith("www.") &&
+                    if ((!text.StartsWith("www.") && !text.StartsWith("http:") && !text.StartsWith("https:")) &&
                         (firstLetter != firstLetter.ToUpper() || IsTurkishLittleI(firstLetter)) &&
                         !"0123456789".Contains(firstLetter) &&
                         isPrevEndOfLine)
@@ -2387,7 +2388,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 p.Text = pre + GetTurkishUppercaseLetter(firstLetter) + text.Substring(1);
                             else if (Language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
                                                           text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") ||
-                                                          text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc"))) // l > I
+                                                          text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc") || text.StartsWith("l'm ")) || text.StartsWith("l am ")) // l > I
                                 p.Text = pre + "I" + text.Substring(1);
                             else
                                 p.Text = pre + firstLetter.ToUpper() + text.Substring(1);
@@ -2400,7 +2401,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (p.Text != null && p.Text.Contains(Environment.NewLine))
                 {
-                    string[] arr = p.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                    string[] arr = p.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 2 && arr[1].Length > 1)
                     {
                         string text = arr[1];
@@ -2450,7 +2451,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string firstLetter = text.Substring(0, 1);
                         string prevText = Utilities.RemoveHtmlTags(arr[0]);
                         bool isPrevEndOfLine = IsPrevoiusTextEndOfParagraph(prevText);
-                        if (!text.StartsWith("www.") &&
+                        if ((!text.StartsWith("www.") && !text.StartsWith("http:") && !text.StartsWith("https:")) &&
                             (firstLetter != firstLetter.ToUpper() || IsTurkishLittleI(firstLetter)) &&
                             !prevText.EndsWith("...") &&
                             isPrevEndOfLine)
@@ -2466,7 +2467,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     text = pre + GetTurkishUppercaseLetter(firstLetter) + text.Substring(1);
                                 else if (Language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
                                                          text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") ||
-                                                         text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc"))) // l > I
+                                                         text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc") || text.StartsWith("l'm ")) || text.StartsWith("l am ")) // l > I
                                     text = pre + "I" + text.Substring(1);
                                 else
                                     text = pre + firstLetter.ToUpper() + text.Substring(1);
@@ -2481,16 +2482,48 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (p.Text.Length > 4)
                 {
+                    int len = 0;
                     int indexOfNewLine = p.Text.IndexOf(Environment.NewLine + " -", 1);
                     if (indexOfNewLine == -1)
+                    {
+                        indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "- <i> ♪", 1);
+                        len = "- <i> ♪".Length;
+                    }
+                    if (indexOfNewLine == -1)
+                    {
                         indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "-", 1);
+                        len = "-".Length;
+                    }
                     if (indexOfNewLine == -1)
+                    {
                         indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i>-", 1);
+                        len = "<i>-".Length;
+                    }
                     if (indexOfNewLine == -1)
+                    {
                         indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i> -", 1);
+                        len = "<i> -".Length;
+                    }
+                    if (indexOfNewLine == -1)
+                    {
+                        indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ -", 1);
+                        len = "♪ -".Length;
+                    }
+                    if (indexOfNewLine == -1)
+                    {
+                        indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ <i> -", 1);
+                        len = "♪ <i> -".Length;
+                    }
+                    if (indexOfNewLine == -1)
+                    {
+                        indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ <i>-", 1);
+                        len = "♪ <i>-".Length;
+                    }
+
+
                     if (indexOfNewLine > 0)
                     {
-                        string text = p.Text.Substring(indexOfNewLine + 2);
+                        string text = p.Text.Substring(indexOfNewLine + len);
                         StripableText st = new StripableText(text);
 
                         if (st.StrippedText.Length > 0 && IsTurkishLittleI(st.StrippedText) && !st.Pre.EndsWith("[") && !st.Pre.Contains("..."))
@@ -2500,29 +2533,29 @@ namespace Nikse.SubtitleEdit.Forms
                             if (AllowFix(p, fixAction2))
                             {
                                 string oldText = p.Text;
-                                p.Text = p.Text.Remove(indexOfNewLine + 2).Insert(indexOfNewLine + 2, text);
+                                p.Text = p.Text.Remove(indexOfNewLine + len).Insert(indexOfNewLine + len, text);
                                 _totalFixes++;
                                 fixedStartWithUppercaseLetterAfterParagraphTicked++;
                                 AddFixToListView(p, fixAction2, oldText, p.Text);
                             }
                         }
-                        else if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper() && !st.Pre.EndsWith("[") && !st.Pre.Contains("..."))
+                        else if (st.StrippedText.Length > 0 && st.StrippedText[0] != char.ToUpper(st.StrippedText[0]) && !st.Pre.EndsWith("[") && !st.Pre.Contains("..."))
                         {
                             text = st.Pre + st.StrippedText.Remove(0, 1).Insert(0, st.StrippedText[0].ToString().ToUpper()) + st.Post;
 
                             if (AllowFix(p, fixAction2))
                             {
                                 string oldText = p.Text;
-                                p.Text = p.Text.Remove(indexOfNewLine + 2).Insert(indexOfNewLine + 2, text);
+                                p.Text = p.Text.Remove(indexOfNewLine + len).Insert(indexOfNewLine + len, text);
                                 _totalFixes++;
                                 fixedStartWithUppercaseLetterAfterParagraphTicked++;
                                 AddFixToListView(p, fixAction2, oldText, p.Text);
                             }
                         }
                     }
-
                 }
             }
+            listViewFixes.EndUpdate();
             if (fixedStartWithUppercaseLetterAfterParagraphTicked > 0)
                 LogStatus(_language.StartWithUppercaseLetterAfterParagraph, fixedStartWithUppercaseLetterAfterParagraphTicked.ToString());
         }
@@ -2642,6 +2675,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.StartWithUppercaseLetterAfterColon;
             int noOfFixes = 0;
+            listViewFixes.BeginUpdate();
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
@@ -2655,7 +2689,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (lastText.EndsWith(":") || lastText.EndsWith(";"))
                     {
                         var st = new StripableText(p.Text);
-                        if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper())
+                        if (st.StrippedText.Length > 0 && st.StrippedText[0] != char.ToUpper(st.StrippedText[0]))
                             p.Text = st.Pre + char.ToUpper(st.StrippedText[0]) + st.StrippedText.Substring(1) + st.Post;
                     }
                 }
@@ -2705,6 +2739,7 @@ namespace Nikse.SubtitleEdit.Forms
                     AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
+            listViewFixes.EndUpdate();
             if (noOfFixes > 0)
                 LogStatus(_language.StartWithUppercaseLetterAfterColon, noOfFixes.ToString());
         }
