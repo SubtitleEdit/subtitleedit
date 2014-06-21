@@ -1136,6 +1136,7 @@ namespace Nikse.SubtitleEdit.Forms
             const string zeroWhiteSpace = "\u200B";
             const string zeroWidthNoBreakSpace = "\uFEFF";
             const string noBreakSpace = "\u00A0";
+            const string char160 = " "; // Convert.ToChar(160).ToString()
 
             string fixAction = _language.UnneededSpace;
             int doubleSpaces = 0;
@@ -1149,6 +1150,7 @@ namespace Nikse.SubtitleEdit.Forms
                 p.Text = p.Text.Replace(zeroWhiteSpace, string.Empty);
                 p.Text = p.Text.Replace(zeroWidthNoBreakSpace, string.Empty);
                 p.Text = p.Text.Replace(noBreakSpace, string.Empty);
+                p.Text = p.Text.Replace(char160, " ");
 
                 p.Text = p.Text.Replace("", string.Empty); // some kind of hidden space!!!
                 while (p.Text.Contains("  "))
@@ -1293,7 +1295,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (p.Text.Length != oldText.Length && Utilities.CountTagInText(p.Text, " ") != Utilities.CountTagInText(oldText, " "))
+                if (p.Text.Length != oldText.Length && Utilities.CountTagInText(p.Text, " ") != Utilities.CountTagInText(oldText, " ") + Utilities.CountTagInText(oldText, char160))
                 {
                     if (AllowFix(p, fixAction))
                     {
