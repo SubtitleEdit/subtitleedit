@@ -1702,6 +1702,7 @@ namespace Nikse.SubtitleEdit.Forms
             chatToolStripMenuItem.Text = _language.Menu.Networking.Chat;
             leaveSessionToolStripMenuItem.Text = _language.Menu.Networking.LeaveSession;
 
+            checkForUpdatesToolStripMenuItem.Text = _language.Menu.Help.CheckForUpdates;
             helpToolStripMenuItem.Text = _language.Menu.Help.Title;
             helpToolStripMenuItem1.Text = _language.Menu.Help.Help;
             aboutToolStripMenuItem.Text = _language.Menu.Help.About;
