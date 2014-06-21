@@ -803,6 +803,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     p.Text = p.Text.Remove(0, 5);
                             }
                         }
+                        sub.RemoveEmptyLines();
                         if (checkBoxFixCasing.Checked)
                         {
                             _changeCasing.FixCasing(sub, Utilities.AutoDetectGoogleLanguage(sub));
