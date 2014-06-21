@@ -19421,5 +19421,13 @@ namespace Nikse.SubtitleEdit.Forms
             return _subtitle;
         }
 
+        private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new CheckForUpdates();
+            _formPositionsAndSizes.SetPositionAndSize(form);
+            form.ShowDialog(this);
+            _formPositionsAndSizes.SavePositionAndSize(form);
+        }
+
     }
 }
