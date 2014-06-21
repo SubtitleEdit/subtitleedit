@@ -217,6 +217,16 @@
             public string Info { get; set; }
         }
 
+        public class CheckForUpdates
+        {
+            public string Title { get; set; }
+            public string CheckingForUpdates { get; set; }
+            public string CheckingForUpdatesFailedX { get; set; }
+            public string CheckingForUpdatesNoneAvailable { get; set; }
+            public string CheckingForUpdatesNewVersion { get; set; }
+            public string InstallUpdate { get; set; }
+        }
+
         public class ChooseAudioTrack
         {
             public string Title { get; set; }

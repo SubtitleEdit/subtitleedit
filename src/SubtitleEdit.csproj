@@ -75,6 +75,12 @@
     <Compile Include="Controls\AudioVisualizer.Designer.cs">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\CheckForUpdates.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CheckForUpdates.Designer.cs">
+      <DependentUpon>CheckForUpdates.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ColorChooser.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -753,6 +759,7 @@
     <Compile Include="Logic\ColorChooser\ColorChangedEventArgs.cs" />
     <Compile Include="Logic\ColorChooser\ColorHandler.cs" />
     <Compile Include="Logic\ColorChooser\ColorWheel.cs" />
+    <Compile Include="Logic\Forms\CheckForUpdatesHelper.cs" />
     <Compile Include="Logic\Forms\RemoveTextForHISettings.cs" />
     <Compile Include="Logic\Forms\RemoveTextForHI.cs" />
     <Compile Include="Logic\Forms\SplitLongLinesHelper.cs" />
@@ -1169,6 +1176,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\AudioVisualizer.resx">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CheckForUpdates.resx">
+      <DependentUpon>CheckForUpdates.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ColorChooser.resx">
       <DependentUpon>ColorChooser.cs</DependentUpon>

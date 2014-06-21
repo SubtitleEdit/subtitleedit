@@ -154,6 +154,7 @@
             this.ChangeCasingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoMergeShortLines = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMergeDuplicateText = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemMergeLinesWithSameTimeCodes = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoSplitLongLines = new System.Windows.Forms.ToolStripMenuItem();
             this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -446,7 +447,8 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemMergeLinesWithSameTimeCodes = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1590,6 +1592,13 @@
             this.toolStripMenuItemMergeDuplicateText.Text = "Merge lines with same text...";
             this.toolStripMenuItemMergeDuplicateText.Click += new System.EventHandler(this.toolStripMenuItemMergeDuplicateText_Click);
             // 
+            // toolStripMenuItemMergeLinesWithSameTimeCodes
+            // 
+            this.toolStripMenuItemMergeLinesWithSameTimeCodes.Name = "toolStripMenuItemMergeLinesWithSameTimeCodes";
+            this.toolStripMenuItemMergeLinesWithSameTimeCodes.Size = new System.Drawing.Size(346, 22);
+            this.toolStripMenuItemMergeLinesWithSameTimeCodes.Text = "Merge lines with same time codes...";
+            this.toolStripMenuItemMergeLinesWithSameTimeCodes.Click += new System.EventHandler(this.toolStripMenuItemMergeLinesWithSameTimeCodes_Click);
+            // 
             // toolStripMenuItemAutoSplitLongLines
             // 
             this.toolStripMenuItemAutoSplitLongLines.Name = "toolStripMenuItemAutoSplitLongLines";
@@ -2119,6 +2128,8 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.checkForUpdatesToolStripMenuItem,
+            this.toolStripMenuItem3,
             this.helpToolStripMenuItem1,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
@@ -2129,14 +2140,14 @@
             // 
             this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
             this.helpToolStripMenuItem1.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(118, 22);
+            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(186, 22);
             this.helpToolStripMenuItem1.Text = "Help";
             this.helpToolStripMenuItem1.Click += new System.EventHandler(this.HelpToolStripMenuItem1Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
             // 
@@ -4389,12 +4400,17 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // toolStripMenuItemMergeLinesWithSameTimeCodes
+            // toolStripMenuItem3
             // 
-            this.toolStripMenuItemMergeLinesWithSameTimeCodes.Name = "toolStripMenuItemMergeLinesWithSameTimeCodes";
-            this.toolStripMenuItemMergeLinesWithSameTimeCodes.Size = new System.Drawing.Size(346, 22);
-            this.toolStripMenuItemMergeLinesWithSameTimeCodes.Text = "Merge lines with same time codes...";
-            this.toolStripMenuItemMergeLinesWithSameTimeCodes.Click += new System.EventHandler(this.toolStripMenuItemMergeLinesWithSameTimeCodes_Click);
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(183, 6);
+            // 
+            // checkForUpdatesToolStripMenuItem
+            // 
+            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.checkForUpdatesToolStripMenuItem.Text = "Check for updates...";
+            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -4896,6 +4912,8 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonFixCommonErrors;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportDcinemaInterop;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeLinesWithSameTimeCodes;
+        private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
     }
 }
 

@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.ChangeCasingNames ChangeCasingNames;
         public LanguageStructure.ChangeFrameRate ChangeFrameRate;
         public LanguageStructure.ChangeSpeedInPercent ChangeSpeedInPercent;
+        public LanguageStructure.CheckForUpdates CheckForUpdates;        
         public LanguageStructure.ChooseAudioTrack ChooseAudioTrack;
         public LanguageStructure.ChooseEncoding ChooseEncoding;
         public LanguageStructure.ChooseLanguage ChooseLanguage;
@@ -328,6 +329,16 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Adjust speed in percent",
                 Info = "Change speed of subtitle in percent",
             };
+
+            CheckForUpdates = new LanguageStructure.CheckForUpdates
+            {
+                Title = "Check for updates",
+                CheckingForUpdates = "Checking for updates...",
+                CheckingForUpdatesFailedX = "Checking for updates failed: {0}",
+                CheckingForUpdatesNoneAvailable = "You're using the latest version of Subtitle Edit :)",
+                CheckingForUpdatesNewVersion = "New version available!",
+                InstallUpdate = "Download and install",
+            };            
 
             ChooseAudioTrack = new LanguageStructure.ChooseAudioTrack
             {
