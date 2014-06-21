@@ -48,8 +48,7 @@
 #define VerBuild
 #define VerRevision
 
-#define bindir     "..\src\bin\Release\x86"
-#define bindir_x64 "..\src\bin\Release\x64"
+#define bindir "..\src\bin\Release"
 
 #ifnexist bindir + "\SubtitleEdit.exe"
   #error Compile Subtitle Edit first
@@ -107,8 +106,6 @@ ShowLanguageDialog=yes
 DisableDirPage=auto
 DisableProgramGroupPage=auto
 CloseApplications=true
-ArchitecturesAllowed=x86 x64
-ArchitecturesInstallIn64BitMode=x64
 
 
 [Languages]
@@ -199,8 +196,7 @@ Source: ..\Dictionaries\ru_RU_names_etc.xml;       DestDir: {userappdata}\Subtit
 Source: ..\Dictionaries\ru_RU_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
 Source: ..\Dictionaries\rus_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
 Source: ..\Dictionaries\swe_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: {#bindir_x64}\Hunspellx64.dll;             DestDir: {app};                                    Flags: ignoreversion; Components: main; Check: Is64BitInstallMode()
-Source: {#bindir}\Hunspellx86.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main; Check: not Is64BitInstallMode()
+Source: {#bindir}\Hunspellx86.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\Find.png;                  DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\Help.png;                  DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\New.png;                   DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
@@ -249,8 +245,7 @@ Source: {#bindir}\Languages\zh-CHS.xml;            DestDir: {app}\Languages;    
 Source: {#bindir}\Languages\zh-tw.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 #endif
 
-Source: {#bindir_x64}\SubtitleEdit.exe;            DestDir: {app};                                    Flags: ignoreversion; Components: main; Check: Is64BitInstallMode()
-Source: {#bindir}\SubtitleEdit.exe;                DestDir: {app};                                    Flags: ignoreversion; Components: main; Check: not Is64BitInstallMode()
+Source: {#bindir}\SubtitleEdit.exe;                DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\src\Changelog.txt;                      DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\gpl.txt;                                DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\Tesseract\msvcp90.dll;                  DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
@@ -348,15 +343,13 @@ Type: dirifempty; Name: {app}\Languages;                Check: not IsComponentSe
 
 
 [Run]
-Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe;   Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist; Check: not Is64BitInstallMode()
-Filename: {win}\Microsoft.NET\Framework64\v4.0.30319\ngen.exe; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist; Check: Is64BitInstallMode()
+Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist
 Filename: {app}\SubtitleEdit.exe;            Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
 Filename: http://www.nikse.dk/SubtitleEdit/; Description: {cm:run_VisitWebsite};                               Flags: nowait postinstall skipifsilent unchecked shellexec
 
 
 [UninstallRun]
-Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe;   Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist; Check: not Is64BitInstallMode()
-Filename: {win}\Microsoft.NET\Framework64\v4.0.30319\ngen.exe; Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist; Check: Is64BitInstallMode()
+Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist
 
 
 [Code]
@@ -423,40 +416,6 @@ var
 begin
   sPrevPath := WizardForm.PrevAppDir;
   Result := (sPrevPath <> '');
-end;
-
-
-// Function to retrieve old version's uninstall string and uninstall it
-// Note that we only care for the 32-bit version on 64-bit Windows
-function UninstallOldVer(): Integer;
-var
-  sUnInstallString: String;
-  iResultCode: Integer;
-begin
-  // Return Values:
-  // 0 - no idea
-  // 1 - can't find the registry key (probably no previous version installed)
-  // 2 - uninstall string is empty
-  // 3 - error executing the UnInstallString
-  // 4 - successfully executed the UnInstallString
-
-  // default return value
-  Result := 0;
-
-  sUnInstallString := '';
-
-  // get the uninstall string of the old app
-  if RegQueryStringValue(HKLM32, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1', 'UninstallString', sUnInstallString) then begin
-    if sUnInstallString <> '' then begin
-      sUnInstallString := RemoveQuotes(sUnInstallString);
-      if Exec(sUnInstallString, '/SILENT /VERYSILENT /NORESTART /SUPPRESSMSGBOXES', '', SW_HIDE, ewWaitUntilTerminated, iResultCode) then
-        Result := 4
-      else
-        Result := 3;
-    end else
-      Result := 2;
-  end else
-    Result := 1;
 end;
 
 
@@ -528,13 +487,6 @@ begin
   end
   else begin
     Result := True;
-
-    if IsWin64 then begin
-      // We need to uninstall the old version before we create the installer's mutex
-      // otherwise UninstallOldVer's `Exec` will fail for obvious reasons...
-      UninstallOldVer();
-    end;
-
     CreateMutex(installer_mutex);
 
 
