@@ -554,7 +554,7 @@ namespace Nikse.SubtitleEdit.Forms
             int emptyLinesRemoved = 0;
 
             int firstNumber = _subtitle.Paragraphs[0].Number;
-
+            listViewFixes.BeginUpdate();
             for (int i = _subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
@@ -601,6 +601,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            listViewFixes.EndUpdate();
             if (emptyLinesRemoved > 0)
             {
                 LogStatus(_language.RemovedEmptyLinesUnsedLineBreaks, string.Format(_language.EmptyLinesRemovedX, emptyLinesRemoved));
@@ -1779,6 +1780,15 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
+                if (!p.Text.Contains("\""))
+                    continue;
+                // Removes ' if like: "' or '"
+                while (p.Text.Contains("\"'") || p.Text.Contains("'\""))
+                {
+                    p.Text = p.Text.Replace("\"'", "\"");
+                    p.Text = p.Text.Replace("'\"", "\"");
+                }
+
                 if (Utilities.CountTagInText(p.Text, "\"") == 1)
                 {
                     Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
