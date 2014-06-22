@@ -201,7 +201,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CheckingForUpdatesFailedX>A verificação por actualizações falhou: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Está a usar a última versão do Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Nova versão disponível!</CheckingForUpdatesNewVersion>
-    <InstallUpdate>Transferir e instalar</InstallUpdate>
+    <InstallUpdate>Ir para a página de transferência</InstallUpdate>
   </CheckForUpdates>  
   <ChooseAudioTrack>
     <Title>Escolher a faixa de áudio</Title>
