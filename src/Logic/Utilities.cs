@@ -2616,7 +2616,48 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (italicBeginTagCount == 0 && italicEndTagCount == 1)
                 {
+                    string cleanText = RemoveHtmlTags(text);
+                    bool isFixed= false;
+
+                    // Foo.</i>
+                    if (text.EndsWith(endTag) && !cleanText.StartsWith("-") && !cleanText.Contains(Environment.NewLine + "-"))
+                    {
+                        text = beginTag + text;
+                        isFixed = true;
+                    }
+
+                    // - Foo</i> | - Foo.
+                    // - Bar.    | - Foo.</i>
+                    if (!isFixed && CountTagInText(cleanText, Environment.NewLine) == 1)
+                    {
+                        int newLineIndex = text.IndexOf(Environment.NewLine);
+                        if (newLineIndex > 0)
+                        {
+                            var firstLine = text.Substring(0, newLineIndex).Trim();
+                            var secondLine = text.Substring(newLineIndex + 2).Trim();
+                            if (firstLine.EndsWith(endTag))
+                            {
+                                firstLine = beginTag + firstLine;
+                                isFixed = true;
+                            }
+                            if (secondLine.EndsWith(endTag))
+                            {
+                                secondLine = beginTag + secondLine;
+                                isFixed = true;
+                            }
+                            text = firstLine + Environment.NewLine + secondLine;
+                        }
+                    }
+                    if (!isFixed)
+                        text = text.Replace(endTag, string.Empty);
+                }
+
+                // - foo.</i>
+                // - bar.</i>
+                if (italicBeginTagCount == 0 && italicEndTagCount == 2 && text.Contains(endTag + Environment.NewLine) && text.EndsWith(endTag))
+                {
                     text = text.Replace(endTag, string.Empty);
+                    text = beginTag + text + endTag;
                 }
 
                 if (italicBeginTagCount == 0 && italicEndTagCount == 2 && text.StartsWith("</i>") && text.EndsWith("</i>"))
@@ -2625,11 +2666,60 @@ namespace Nikse.SubtitleEdit.Logic
                     text = text.Remove(firstIndex, endTag.Length).Insert(firstIndex, "<i>");
                 }
 
+                // <i>Foo</i>
+                // <i>Bar</i>
+                if(italicBeginTagCount == 2 && italicEndTagCount == 2 && CountTagInText(text, Environment.NewLine) == 1)
+                {
+                    int index = text.IndexOf(Environment.NewLine);
+                    if (index > 0 && text.Length > index + (beginTag.Length + endTag.Length))
+                    {
+                        var firstLine = text.Substring(0, index).Trim();
+                        var secondLine = text.Substring(index + 2).Trim();
+                        if (StartsAndEndsWithTag(firstLine, beginTag, endTag) && StartsAndEndsWithTag(secondLine, beginTag, endTag))
+                        {
+                            text = text.Replace(beginTag, String.Empty).Replace(endTag, String.Empty);
+                            text = beginTag + text + endTag;
+                        }
+                    }
+                }
+
                 text = text.Replace("<i></i>", string.Empty);
                 text = text.Replace("<i> </i>", string.Empty);
                 text = text.Replace("<i>  </i>", string.Empty);
             }
             return text;
+        }
+
+        public static bool StartsAndEndsWithTag(string text, string startTag, string endTag)
+        {
+            if (text == null)
+                return false;
+            if (text.Trim().Length == 0)
+                return false;
+            if (!text.Contains(startTag) || !text.Contains(endTag))
+                return false;
+
+            while (text.Contains("  "))
+                text = text.Replace("  ", " ");
+
+            var s1 = "- " + startTag;
+            var s2 = "-" + startTag;
+            var s3 = "- ..." + startTag;
+            var s4 = "- " + startTag + "..."; // - <i>...
+
+            var e1 = endTag + ".";
+            var e2 = endTag + "!";
+            var e3 = endTag + "?";
+            var e4 = endTag + "...";
+            var e5 = endTag + "-"; 
+
+            bool isStart = false;
+            bool isEnd = false;
+            if(text.StartsWith(startTag) || text.StartsWith(s1) || text.StartsWith(s2) || text.StartsWith(s3) || text.StartsWith(s4))
+                isStart = true;
+            if (text.EndsWith(endTag) || text.EndsWith(e1) || text.EndsWith(e2) || text.EndsWith(e3) || text.EndsWith(e4) || text.EndsWith(e5))
+                isEnd = true;
+            return isStart == isEnd;
         }
 
         public static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
