@@ -14351,7 +14351,7 @@ namespace Nikse.SubtitleEdit.Forms
             _timerCheckForUpdates.Stop();
             if (_checkForUpdatesHelper.IsUpdateAvailable())
             {
-                var form = new CheckForUpdates(_checkForUpdatesHelper);
+                var form = new CheckForUpdates(this, _checkForUpdatesHelper);
                 form.ShowDialog(this);
             }
             _checkForUpdatesHelper = null;
@@ -19459,7 +19459,7 @@ namespace Nikse.SubtitleEdit.Forms
             { 
             }
 
-            var form = new CheckForUpdates();
+            var form = new CheckForUpdates(this);
             form.ShowDialog(this);
             Configuration.Settings.General.LastCheckForUpdates = DateTime.Now;
         }
