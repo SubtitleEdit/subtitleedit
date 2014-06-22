@@ -159,30 +159,31 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public bool IsUpdateAvailable()
         {
-            string[] currentVersionInfo = Utilities.AssemblyVersion.Split('.');
-            string minorMinorVersion = string.Empty;
-            if (currentVersionInfo.Length >= 3 && currentVersionInfo[2] != "0")
-                minorMinorVersion = "." + currentVersionInfo[2];
-            string currentVersion = String.Format("{0}.{1}{2}", currentVersionInfo[0], currentVersionInfo[1], minorMinorVersion);
-            if (currentVersion == LatestVersionNumber)
-                return false;
-
-            string[] latestVersionInfo = LatestVersionNumber.Split('.');
             try
             {
+                string[] currentVersionInfo = Utilities.AssemblyVersion.Split('.');
+                string minorMinorVersion = string.Empty;
+                if (currentVersionInfo.Length >= 3 && currentVersionInfo[2] != "0")
+                    minorMinorVersion = "." + currentVersionInfo[2];
+                string currentVersion = String.Format("{0}.{1}{2}", currentVersionInfo[0], currentVersionInfo[1], minorMinorVersion);
+                if (currentVersion == LatestVersionNumber)
+                    return false;
+
+                string[] latestVersionInfo = LatestVersionNumber.Split('.');
                 if (int.Parse(latestVersionInfo[0]) > int.Parse(currentVersionInfo[0]))
                     return true;
                 if (int.Parse(latestVersionInfo[0]) == int.Parse(currentVersionInfo[0]) && int.Parse(latestVersionInfo[1]) > int.Parse(currentVersionInfo[1]))
                     return true;
                 if (int.Parse(latestVersionInfo[0]) == int.Parse(currentVersionInfo[0]) && int.Parse(latestVersionInfo[1]) == int.Parse(currentVersionInfo[1]) && int.Parse(latestVersionInfo[2]) > int.Parse(currentVersionInfo[2]))
                     return true;
+
+                return false;
             }
             catch
             {
                 return false;
             }            
 
-            return false;
         }
 
     }

@@ -225,6 +225,7 @@
             public string CheckingForUpdatesNoneAvailable { get; set; }
             public string CheckingForUpdatesNewVersion { get; set; }
             public string InstallUpdate { get; set; }
+            public string NoUpdates { get; set; }
         }
 
         public class ChooseAudioTrack
@@ -1646,6 +1647,7 @@
             public string AutoBackupEveryMinute { get; set; }
             public string AutoBackupEveryFiveMinutes { get; set; }
             public string AutoBackupEveryFifteenMinutes { get; set; }
+            public string CheckForUpdates { get; set; }            
             public string AllowEditOfOriginalSubtitle { get; set; }
             public string PromptDeleteLines { get; set; }
             public string TimeCodeMode { get; set; }

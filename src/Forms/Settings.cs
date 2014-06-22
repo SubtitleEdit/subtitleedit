@@ -298,6 +298,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelListViewDoubleClickEvent.Text = language.MainListViewDoubleClickAction;
             labelAutoBackup.Text = language.AutoBackup;
             comboBoxAutoBackup.Left = labelAutoBackup.Left + labelAutoBackup.Width + 3;
+            checkBoxCheckForUpdates.Text = language.CheckForUpdates;
             checkBoxAllowEditOfOriginalSubtitle.Text = language.AllowEditOfOriginalSubtitle;
             checkBoxPromptDeleteLines.Text = language.PromptDeleteLines;
 
