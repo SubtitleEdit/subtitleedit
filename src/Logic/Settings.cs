@@ -1563,10 +1563,10 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("BatchConvertOverwriteExisting");
             if (subNode != null)
                 settings.Tools.BatchConvertOverwriteExisting = Convert.ToBoolean(subNode.InnerText);
-            subNode = node.SelectSingleNode("BatchConvertOverwriteExisting");
+            subNode = node.SelectSingleNode("BatchConvertOverwriteOriginal");
             if (subNode != null)
                 settings.Tools.BatchConvertOverwriteOriginal = Convert.ToBoolean(subNode.InnerText);
-            subNode = node.SelectSingleNode("BatchConvertOverwriteOriginal");
+            subNode = node.SelectSingleNode("BatchConvertRemoveFormatting");
             if (subNode != null)
                 settings.Tools.BatchConvertRemoveFormatting = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("BatchConvertFixCasing");
