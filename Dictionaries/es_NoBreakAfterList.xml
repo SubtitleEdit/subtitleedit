@@ -1,15 +1,22 @@
 <NoBreakAfterList>
+  <Item RegEx="True"> [¿¡«]</Item>
+  <Item RegEx="True"> [A-ZÁ-ÚÑ]</Item>
   <Item> a</Item>
   <Item> a la</Item>
+  <Item> a su</Item>
   <Item> a tu</Item>
   <Item> al</Item>
+  <Item> aun así</Item>
   <Item> aunque</Item>
+  <Item> cada</Item>
   <Item> como</Item>
+  <Item> como un</Item>
   <Item> con</Item>
   <Item> con la</Item>
   <Item> cuando</Item>
   <Item> de</Item>
   <Item> de la</Item>
+  <Item> de lo</Item>
   <Item> de que</Item>
   <Item> de tu</Item>
   <Item> del</Item>
@@ -20,6 +27,7 @@
   <Item> el</Item>
   <Item> en</Item>
   <Item> en este</Item>
+  <Item> en otro</Item>
   <Item> en su</Item>
   <Item> es</Item>
   <Item> esa</Item>
@@ -27,11 +35,19 @@
   <Item> está</Item>
   <Item> este</Item>
   <Item> ha</Item>
+  <Item> han</Item>
+  <Item> hasta</Item>
+  <Item> iba a</Item>
+  <Item> igual</Item>
   <Item> la</Item>
+  <Item> las</Item>
+  <Item> le</Item>
+  <Item> les</Item>
   <Item> lo</Item>
   <Item> los</Item>
   <Item> luego</Item>
   <Item> me</Item>
+  <Item> mejor</Item>
   <Item> mi</Item>
   <Item> mientras</Item>
   <Item> mucho</Item>
@@ -41,6 +57,8 @@
   <Item> no </Item>
   <Item> no es</Item>
   <Item> no hay</Item>
+  <Item> no la</Item>
+  <Item> no le</Item>
   <Item> no se</Item>
   <Item> nos</Item>
   <Item> nos lo</Item>
@@ -61,9 +79,12 @@
   <Item> que no hay</Item>
   <Item> que nos</Item>
   <Item> que por</Item>
+  <Item> realmente</Item>
   <Item> se</Item>
   <Item> se ha</Item>
   <Item> se lo</Item>
+  <Item> sea</Item>
+  <Item> será</Item>
   <Item> sin</Item>
   <Item> sin un</Item>
   <Item> sobre</Item>
@@ -72,10 +93,12 @@
   <Item> tanto</Item>
   <Item> te</Item>
   <Item> todavía no</Item>
+  <Item> tu</Item>
   <Item> un</Item>
   <Item> una</Item>
   <Item> unas</Item>
   <Item> unos</Item>
+  <Item> vamos a</Item>
   <Item> vas</Item>
   <Item> y</Item>
   <Item> y el</Item>
@@ -83,23 +106,10 @@
   <Item> y nos</Item>
   <Item> ya</Item>
   <Item> ya que</Item>
-  <Item> será</Item>
-  <Item> sea</Item>
-  <Item> las</Item>
-  <Item> hasta</Item>
-  <Item> vamos a</Item>
-  <Item> tu</Item>
-  <Item> en otro</Item>
-  <Item> igual</Item>
-  <Item> como un</Item>
-  <Item> no le</Item>
-  <Item> no la</Item>
-  <Item RegEx="True">(?=.{20,39}[\.\?\!])\s[A-Z]([\wá-ú]{1,3})?</Item>
-  <Item RegEx="True">(?=.{20,40})\s[¿¡«][\wá-ú]{1,3}\s</Item>
-  <Item RegEx="True">(?=«.{1,15}»)\s.{1,3}\s</Item>
-  <Item RegEx="True">(?=señora?\s[A-ZÁ-Ú][a-zá-úñü]+)\s</Item>
-  <Item> cada</Item>
-  <Item> le</Item>
-  <Item> iba a</Item>
-  <Item> a su</Item>
+  <Item RegEx="True">(?=[,\.\?\!]) </Item>
+  <Item RegEx="True">(?=señora? [A-ZÁ-Ú][a-zá-úñü]+) </Item>
+  <Item> mis</Item>
+  <Item> en la</Item>
+  <Item> cuán</Item>
+  <Item> más</Item>
 </NoBreakAfterList>
