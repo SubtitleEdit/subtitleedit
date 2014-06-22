@@ -194,6 +194,15 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Juster hastighed i procent</Title>
     <Info>Skift hastighed for undertekst i procent</Info>
   </ChangeSpeedInPercent>
+  <CheckForUpdates>
+    <Title>Tjek for opdateringer</Title>
+    <CheckingForUpdates>Kontrollerer for opdateringer...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>Kontrol for opdateringer mislykkedes: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesNoneAvailable>Du bruger den nyeste version af Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNewVersion>Ny version tilgængelig!</CheckingForUpdatesNewVersion>
+    <InstallUpdate>Gå til download side</InstallUpdate>
+    <NoUpdates>Opdater ikke</NoUpdates>
+  </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Vælg lydspor</Title>
   </ChooseAudioTrack>
@@ -822,6 +831,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <LeaveSession>Forlad session</LeaveSession>
       </Networking>
       <Help>
+        <CheckForUpdates>Kontroller for opdateringer...</CheckForUpdates>
         <Title>Hjælp</Title>
         <Help>&amp;Hjælp</Help>
         <About>&amp;Om</About>
@@ -1467,6 +1477,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <AutoBackupEveryMinute>Hvert minut</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Hver 5. minut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Hver 15. minut</AutoBackupEveryFifteenMinutes>
+    <CheckForUpdates>Tjek for opdateringer</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Tillad redigering af originale undertekst</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Spørg om slet af linjer</PromptDeleteLines>
     <TimeCodeMode>Tidskode indstillinger</TimeCodeMode>
@@ -1685,6 +1696,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <ImageText>Billede tekst</ImageText>
     <SpellCheckCompleted>Stavekontrol færdig</SpellCheckCompleted>
     <SpellCheckAborted>Stavekontrol afbrudt</SpellCheckAborted>
+    <UndoX>Fortryd: {0}</UndoX>
   </SpellCheck>
   <Split>
     <Title>Split</Title>
