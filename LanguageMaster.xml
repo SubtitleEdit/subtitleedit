@@ -193,6 +193,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Adjust speed in percent</Title>
     <Info>Change speed of subtitle in percent</Info>
   </ChangeSpeedInPercent>
+  <CheckForUpdates>
+    <Title>Check for updates</Title>
+    <CheckingForUpdates>Checking for updates...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>Checking for updates failed: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesNoneAvailable>You're using the latest version of Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNewVersion>New version available!</CheckingForUpdatesNewVersion>
+    <InstallUpdate>Go to download page</InstallUpdate>
+    <NoUpdates>Don't update</NoUpdates>
+  </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Choose audio track</Title>
   </ChooseAudioTrack>
@@ -821,6 +830,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <LeaveSession>Leave session</LeaveSession>
       </Networking>
       <Help>
+        <CheckForUpdates>Check for updates...</CheckForUpdates>
         <Title>Help</Title>
         <Help>&amp;Help</Help>
         <About>&amp;About</About>
@@ -1467,6 +1477,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AutoBackupEveryMinute>Every minute</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Every 5th minute</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Every 15th minute</AutoBackupEveryFifteenMinutes>
+    <CheckForUpdates>Check for updates</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Allow edit of original subtitle</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Prompt for delete lines</PromptDeleteLines>
     <TimeCodeMode>Time code mode</TimeCodeMode>
@@ -1684,6 +1695,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ImageText>Image text</ImageText>
     <SpellCheckCompleted>Spell check completed.</SpellCheckCompleted>
     <SpellCheckAborted>Spell check aborted</SpellCheckAborted>
+    <UndoX>Undo: {0}</UndoX>
   </SpellCheck>
   <Split>
     <Title>Split</Title>
