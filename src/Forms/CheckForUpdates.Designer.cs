@@ -113,7 +113,7 @@
             this.Name = "CheckForUpdates";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "CheckForUpdates";
             this.Shown += new System.EventHandler(this.CheckForUpdates_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckForUpdates_KeyDown);

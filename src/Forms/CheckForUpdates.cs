@@ -10,11 +10,13 @@ namespace Nikse.SubtitleEdit.Forms
         private CheckForUpdatesHelper _updatesHelper;
         private double _seconds = 0;
         private bool _performCheckOnShown = true;
-       
-        public CheckForUpdates()
+        Main _mainForm;
+
+        public CheckForUpdates(Main mainForm)
         {
             InitializeComponent();
 
+            _mainForm = mainForm;
             InitLanguage();
         }
 
@@ -29,12 +31,15 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Visible = false;
             buttonDontCheckUpdates.Text = Configuration.Settings.Language.CheckForUpdates.NoUpdates;
             buttonDontCheckUpdates.Visible = false;
+
+            this.Location = new System.Drawing.Point(_mainForm.Location.X + (_mainForm.Width / 2) - (Width / 2), _mainForm.Location.Y + (_mainForm.Height / 2) - (Height / 2) - 200);
         }
 
-        public CheckForUpdates(CheckForUpdatesHelper checkForUpdatesHelper)
+        public CheckForUpdates(Main mainForm, CheckForUpdatesHelper checkForUpdatesHelper)
         {
             InitializeComponent();
 
+            _mainForm = mainForm;
             _updatesHelper = checkForUpdatesHelper;
             InitLanguage();
             ShowAvailableUpdate(true);
@@ -58,10 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             _updatesHelper.CheckForUpdates();
             timerCheckForUpdates.Start();
 
-            if (buttonDownloadAndInstall.Visible)
-                buttonDownloadAndInstall.Focus();
-            else if (buttonCancel.Visible)
-                buttonCancel.Focus();
+            buttonCancel.Focus();
         }
 
         private void timerCheckForUpdates_Tick(object sender, EventArgs e)
@@ -95,6 +97,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             _seconds += timerCheckForUpdates.Interval / 1000.0;
+
+            if (buttonDownloadAndInstall.Visible)
+                buttonDownloadAndInstall.Focus();
+            else if (buttonCancel.Visible)
+                buttonCancel.Focus();
         }
 
         private void ShowAvailableUpdate(bool fromAutoCheck)
