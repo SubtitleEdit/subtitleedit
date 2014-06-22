@@ -27,8 +27,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonDownloadAndInstall.Text = Configuration.Settings.Language.CheckForUpdates.InstallUpdate;
             buttonDownloadAndInstall.Visible = false;
             textBoxChangeLog.Visible = false;
-            buttonCancel.Text = Configuration.Settings.Language.General.OK;
-            buttonCancel.Visible = false;
+            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Visible = false;
             buttonDontCheckUpdates.Text = Configuration.Settings.Language.CheckForUpdates.NoUpdates;
             buttonDontCheckUpdates.Visible = false;
 
@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             _updatesHelper.CheckForUpdates();
             timerCheckForUpdates.Start();
 
-            buttonCancel.Focus();
+            buttonOK.Focus();
         }
 
         private void timerCheckForUpdates_Tick(object sender, EventArgs e)
@@ -72,13 +72,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 timerCheckForUpdates.Stop();
                 labelStatus.Text = string.Format(Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesFailedX, "Time out");
-                buttonCancel.Visible = true;
+                buttonOK.Visible = true;
             }
             else if (_updatesHelper.Error != null)
             {
                 timerCheckForUpdates.Stop();
                 labelStatus.Text = string.Format(Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesFailedX, _updatesHelper.Error);
-                buttonCancel.Visible = true;
+                buttonOK.Visible = true;
             }
             else if (_updatesHelper.Done)
             {
@@ -93,15 +93,15 @@ namespace Nikse.SubtitleEdit.Forms
                     Height = 600;
                     textBoxChangeLog.Text = _updatesHelper.LatestChangeLog;
                     textBoxChangeLog.Visible = true;
-                    buttonCancel.Visible = true;
+                    buttonOK.Visible = true;
                 }
             }
             _seconds += timerCheckForUpdates.Interval / 1000.0;
 
             if (buttonDownloadAndInstall.Visible)
                 buttonDownloadAndInstall.Focus();
-            else if (buttonCancel.Visible)
-                buttonCancel.Focus();
+            else if (buttonOK.Visible)
+                buttonOK.Focus();
         }
 
         private void ShowAvailableUpdate(bool fromAutoCheck)
@@ -111,8 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxChangeLog.Visible = true;
             labelStatus.Text = Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesNewVersion;
             buttonDownloadAndInstall.Visible = true;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonCancel.Visible = true;
+            buttonOK.Visible = true;
             if (Configuration.Settings.General.CheckForUpdates && fromAutoCheck)
             {
                 buttonDontCheckUpdates.Visible = true;
@@ -120,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 buttonDontCheckUpdates.Visible = false;
-                buttonDownloadAndInstall.Left = buttonCancel.Left - 6 - buttonDownloadAndInstall.Width;
+                buttonDownloadAndInstall.Left = buttonOK.Left - 6 - buttonDownloadAndInstall.Width;
             }
         }
 

@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.labelStatus = new System.Windows.Forms.Label();
             this.textBoxChangeLog = new System.Windows.Forms.TextBox();
-            this.buttonCancel = new System.Windows.Forms.Button();
+            this.buttonOK = new System.Windows.Forms.Button();
             this.buttonDownloadAndInstall = new System.Windows.Forms.Button();
             this.timerCheckForUpdates = new System.Windows.Forms.Timer(this.components);
             this.buttonDontCheckUpdates = new System.Windows.Forms.Button();
@@ -61,15 +61,15 @@
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(556, 90);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 2;
-            this.buttonCancel.Text = "C&ancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonOK.Location = new System.Drawing.Point(556, 90);
+            this.buttonOK.Name = "buttonCancel";
+            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.TabIndex = 2;
+            this.buttonOK.Text = "C&ancel";
+            this.buttonOK.UseVisualStyleBackColor = true;
             // 
             // buttonDownloadAndInstall
             // 
@@ -105,7 +105,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(643, 123);
             this.Controls.Add(this.buttonDontCheckUpdates);
-            this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonDownloadAndInstall);
             this.Controls.Add(this.textBoxChangeLog);
             this.Controls.Add(this.labelStatus);
@@ -126,7 +126,7 @@
 
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.TextBox textBoxChangeLog;
-        private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonDownloadAndInstall;
         private System.Windows.Forms.Timer timerCheckForUpdates;
         private System.Windows.Forms.Button buttonDontCheckUpdates;
