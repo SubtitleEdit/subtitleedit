@@ -34,6 +34,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonDownloadAndInstall = new System.Windows.Forms.Button();
             this.timerCheckForUpdates = new System.Windows.Forms.Timer(this.components);
+            this.buttonDontCheckUpdates = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // labelStatus
@@ -43,7 +44,7 @@
             this.labelStatus.Location = new System.Drawing.Point(10, 15);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(41, 13);
-            this.labelStatus.TabIndex = 0;
+            this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "label1";
             // 
             // textBoxChangeLog
@@ -56,7 +57,7 @@
             this.textBoxChangeLog.Name = "textBoxChangeLog";
             this.textBoxChangeLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxChangeLog.Size = new System.Drawing.Size(618, 53);
-            this.textBoxChangeLog.TabIndex = 1;
+            this.textBoxChangeLog.TabIndex = 4;
             // 
             // buttonCancel
             // 
@@ -66,7 +67,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(556, 90);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 5;
+            this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -74,10 +75,10 @@
             // 
             this.buttonDownloadAndInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDownloadAndInstall.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonDownloadAndInstall.Location = new System.Drawing.Point(390, 90);
+            this.buttonDownloadAndInstall.Location = new System.Drawing.Point(224, 90);
             this.buttonDownloadAndInstall.Name = "buttonDownloadAndInstall";
             this.buttonDownloadAndInstall.Size = new System.Drawing.Size(160, 21);
-            this.buttonDownloadAndInstall.TabIndex = 4;
+            this.buttonDownloadAndInstall.TabIndex = 0;
             this.buttonDownloadAndInstall.Text = "&OK";
             this.buttonDownloadAndInstall.UseVisualStyleBackColor = true;
             this.buttonDownloadAndInstall.Click += new System.EventHandler(this.buttonDownloadAndInstall_Click);
@@ -86,11 +87,24 @@
             // 
             this.timerCheckForUpdates.Tick += new System.EventHandler(this.timerCheckForUpdates_Tick);
             // 
+            // buttonDontCheckUpdates
+            // 
+            this.buttonDontCheckUpdates.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonDontCheckUpdates.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonDontCheckUpdates.Location = new System.Drawing.Point(390, 90);
+            this.buttonDontCheckUpdates.Name = "buttonDontCheckUpdates";
+            this.buttonDontCheckUpdates.Size = new System.Drawing.Size(160, 21);
+            this.buttonDontCheckUpdates.TabIndex = 1;
+            this.buttonDontCheckUpdates.Text = "Don\'t check for updates";
+            this.buttonDontCheckUpdates.UseVisualStyleBackColor = true;
+            this.buttonDontCheckUpdates.Click += new System.EventHandler(this.buttonDontCheckUpdates_Click);
+            // 
             // CheckForUpdates
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(643, 123);
+            this.Controls.Add(this.buttonDontCheckUpdates);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonDownloadAndInstall);
             this.Controls.Add(this.textBoxChangeLog);
@@ -115,5 +129,6 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonDownloadAndInstall;
         private System.Windows.Forms.Timer timerCheckForUpdates;
+        private System.Windows.Forms.Button buttonDontCheckUpdates;
     }
 }

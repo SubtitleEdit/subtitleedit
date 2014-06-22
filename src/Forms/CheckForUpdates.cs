@@ -9,11 +9,17 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private CheckForUpdatesHelper _updatesHelper;
         private double _seconds = 0;
+        private bool _performCheckOnShown = true;
        
         public CheckForUpdates()
         {
             InitializeComponent();
 
+            InitLanguage();
+        }
+
+        private void InitLanguage()
+        {
             Text = Configuration.Settings.Language.CheckForUpdates.Title;
             labelStatus.Text = Configuration.Settings.Language.CheckForUpdates.CheckingForUpdates;
             buttonDownloadAndInstall.Text = Configuration.Settings.Language.CheckForUpdates.InstallUpdate;
@@ -21,6 +27,8 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxChangeLog.Visible = false;
             buttonCancel.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Visible = false;
+            buttonDontCheckUpdates.Text = Configuration.Settings.Language.CheckForUpdates.NoUpdates;
+            buttonDontCheckUpdates.Visible = false;
         }
 
         public CheckForUpdates(CheckForUpdatesHelper checkForUpdatesHelper)
@@ -28,7 +36,9 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
 
             _updatesHelper = checkForUpdatesHelper;
-            ShowAvailableUpdate();
+            InitLanguage();
+            ShowAvailableUpdate(true);
+            _performCheckOnShown = false;
         }
 
         private void CheckForUpdates_KeyDown(object sender, KeyEventArgs e)
@@ -39,11 +49,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void CheckForUpdates_Shown(object sender, EventArgs e)
         {
+            if (!_performCheckOnShown)
+                return;
+
             _updatesHelper = new CheckForUpdatesHelper();
             Application.DoEvents();
             Refresh();
             _updatesHelper.CheckForUpdates();
             timerCheckForUpdates.Start();
+
+            if (buttonDownloadAndInstall.Visible)
+                buttonDownloadAndInstall.Focus();
+            else if (buttonCancel.Visible)
+                buttonCancel.Focus();
         }
 
         private void timerCheckForUpdates_Tick(object sender, EventArgs e)
@@ -65,12 +83,12 @@ namespace Nikse.SubtitleEdit.Forms
                 timerCheckForUpdates.Stop();
                 if (_updatesHelper.IsUpdateAvailable())
                 {
-                    ShowAvailableUpdate();
+                    ShowAvailableUpdate(false);
                 }
                 else
                 {
                     labelStatus.Text = Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesNoneAvailable;
-                    Height = 550;
+                    Height = 600;
                     textBoxChangeLog.Text = _updatesHelper.LatestChangeLog;
                     textBoxChangeLog.Visible = true;
                     buttonCancel.Visible = true;
@@ -79,20 +97,35 @@ namespace Nikse.SubtitleEdit.Forms
             _seconds += timerCheckForUpdates.Interval / 1000.0;
         }
 
-        private void ShowAvailableUpdate()
+        private void ShowAvailableUpdate(bool fromAutoCheck)
         {
-            Height = 550;
+            Height = 600;
             textBoxChangeLog.Text = _updatesHelper.LatestChangeLog;
             textBoxChangeLog.Visible = true;
             labelStatus.Text = Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesNewVersion;
             buttonDownloadAndInstall.Visible = true;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonCancel.Visible = true;
+            if (Configuration.Settings.General.CheckForUpdates && fromAutoCheck)
+            {
+                buttonDontCheckUpdates.Visible = true;
+            }
+            else
+            {
+                buttonDontCheckUpdates.Visible = false;
+                buttonDownloadAndInstall.Left = buttonCancel.Left - 6 - buttonDownloadAndInstall.Width;
+            }
         }
 
         private void buttonDownloadAndInstall_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/SubtitleEdit/subtitleedit/releases");
+        }
+
+        private void buttonDontCheckUpdates_Click(object sender, EventArgs e)
+        {
+            Configuration.Settings.General.CheckForUpdates = false;
+            DialogResult = DialogResult.Cancel;
         }
 
     }
