@@ -18,9 +18,9 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         private int _successCount;
 
         public string Error { get; set; }
-        public bool Done 
-        { 
-            get 
+        public bool Done
+        {
+            get
             {
                 return _successCount == 1;
             }
@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public void CheckForUpdates()
         {
-            // load github release json 
+            // load github release json
             //StartDownloadString(ReleasesUrl, "application/json", new AsyncCallback(FinishWebRequestReleases));
 
             // load change log
@@ -183,7 +183,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             catch
             {
                 return false;
-            }            
+            }
 
         }
 

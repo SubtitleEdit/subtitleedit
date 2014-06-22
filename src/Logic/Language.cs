@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.ChangeCasingNames ChangeCasingNames;
         public LanguageStructure.ChangeFrameRate ChangeFrameRate;
         public LanguageStructure.ChangeSpeedInPercent ChangeSpeedInPercent;
-        public LanguageStructure.CheckForUpdates CheckForUpdates;        
+        public LanguageStructure.CheckForUpdates CheckForUpdates;
         public LanguageStructure.ChooseAudioTrack ChooseAudioTrack;
         public LanguageStructure.ChooseEncoding ChooseEncoding;
         public LanguageStructure.ChooseLanguage ChooseLanguage;
@@ -339,7 +339,7 @@ namespace Nikse.SubtitleEdit.Logic
                 CheckingForUpdatesNewVersion = "New version available!",
                 InstallUpdate = "Go to download page",
                 NoUpdates = "Don't update",
-            };            
+            };
 
             ChooseAudioTrack = new LanguageStructure.ChooseAudioTrack
             {

@@ -1179,7 +1179,7 @@
 
                 public class HelpMenu
                 {
-                    public string CheckForUpdates { get; set; }                    
+                    public string CheckForUpdates { get; set; }
                     public string Title { get; set; }
                     public string Help { get; set; }
                     public string About { get; set; }
@@ -1647,7 +1647,7 @@
             public string AutoBackupEveryMinute { get; set; }
             public string AutoBackupEveryFiveMinutes { get; set; }
             public string AutoBackupEveryFifteenMinutes { get; set; }
-            public string CheckForUpdates { get; set; }            
+            public string CheckForUpdates { get; set; }
             public string AllowEditOfOriginalSubtitle { get; set; }
             public string PromptDeleteLines { get; set; }
             public string TimeCodeMode { get; set; }
