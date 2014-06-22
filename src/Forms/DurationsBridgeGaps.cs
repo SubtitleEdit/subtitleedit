@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK;
+            DialogResult = DialogResult.Cancel;
         }
 
         private void GeneratePreview()
