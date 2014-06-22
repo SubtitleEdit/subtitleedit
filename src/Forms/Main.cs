@@ -86,6 +86,9 @@ namespace Nikse.SubtitleEdit.Forms
         StringBuilder _statusLog = new StringBuilder();
         bool _makeHistoryPaused = false;
 
+        Nikse.SubtitleEdit.Logic.Forms.CheckForUpdatesHelper _checkForUpdatesHelper;
+        System.Windows.Forms.Timer _timerCheckForUpdates;
+
         NikseWebServiceSession _networkSession;
         NetworkChat _networkChat = null;
 
@@ -14330,6 +14333,28 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
             LoadPlugins();
             tabControlSubtitle.Invalidate();
+
+            if (Configuration.Settings.General.CheckForUpdates && Configuration.Settings.General.LastCheckForUpdates < DateTime.Now.AddDays(-5))
+            {
+                _checkForUpdatesHelper = new Nikse.SubtitleEdit.Logic.Forms.CheckForUpdatesHelper();
+                _checkForUpdatesHelper.CheckForUpdates();
+                _timerCheckForUpdates = new System.Windows.Forms.Timer();
+                _timerCheckForUpdates.Interval = 7000;
+                _timerCheckForUpdates.Tick += TimerCheckForUpdatesTick;
+                _timerCheckForUpdates.Start();
+                Configuration.Settings.General.LastCheckForUpdates = DateTime.Now;
+            }
+        }
+
+        void TimerCheckForUpdatesTick(object sender, EventArgs e)
+        {
+            _timerCheckForUpdates.Stop();
+            if (_checkForUpdatesHelper.IsUpdateAvailable())
+            {
+                var form = new CheckForUpdates(_checkForUpdatesHelper);
+                form.ShowDialog(this);
+            }
+            _checkForUpdatesHelper = null;
         }
 
         void  _timerDoSyntaxColoring_Tick(object sender, EventArgs e)
@@ -19425,9 +19450,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var form = new CheckForUpdates();
-            _formPositionsAndSizes.SetPositionAndSize(form);
             form.ShowDialog(this);
-            _formPositionsAndSizes.SavePositionAndSize(form);
+            Configuration.Settings.General.LastCheckForUpdates = DateTime.Now;
         }
 
     }

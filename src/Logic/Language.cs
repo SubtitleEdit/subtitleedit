@@ -338,6 +338,7 @@ namespace Nikse.SubtitleEdit.Logic
                 CheckingForUpdatesNoneAvailable = "You're using the latest version of Subtitle Edit :)",
                 CheckingForUpdatesNewVersion = "New version available!",
                 InstallUpdate = "Go to download page",
+                NoUpdates = "Don't update",
             };            
 
             ChooseAudioTrack = new LanguageStructure.ChooseAudioTrack
@@ -1755,6 +1756,7 @@ can edit in same subtitle file (collaboration)",
                 AutoBackupEveryMinute = "Every minute",
                 AutoBackupEveryFiveMinutes = "Every 5th minute",
                 AutoBackupEveryFifteenMinutes = "Every 15th minute",
+                CheckForUpdates = "Check for updates",
                 AllowEditOfOriginalSubtitle = "Allow edit of original subtitle",
                 PromptDeleteLines = "Prompt for delete lines",
                 TimeCodeMode = "Time code mode",

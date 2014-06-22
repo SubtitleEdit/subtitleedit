@@ -509,6 +509,8 @@ namespace Nikse.SubtitleEdit.Logic
         public int NewEmptyDefaultMs { get; set; }
         public bool RightToLeftMode { get; set; }
         public string LastSaveAsFormat { get; set; }
+        public bool CheckForUpdates { get; set; }
+        public DateTime LastCheckForUpdates { get; set; }
         public bool ShowBetaStuff { get; set; }
 
         public GeneralSettings()
@@ -590,6 +592,8 @@ namespace Nikse.SubtitleEdit.Logic
             DisableVideoAutoLoading = false;
             RightToLeftMode = false;
             LastSaveAsFormat = string.Empty;
+            CheckForUpdates = true;
+            LastCheckForUpdates = DateTime.Now;
             ShowBetaStuff = false;
             NewEmptyDefaultMs = 2000;
         }
@@ -1445,6 +1449,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("LastSaveAsFormat");
             if (subNode != null)
                 settings.General.LastSaveAsFormat = subNode.InnerText.Trim();
+            subNode = node.SelectSingleNode("CheckForUpdates");
+            if (subNode != null)
+                settings.General.CheckForUpdates = Convert.ToBoolean(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("LastCheckForUpdates");
+            if (subNode != null)
+                settings.General.LastCheckForUpdates = Convert.ToDateTime(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("ShowBetaStuff");
             if (subNode != null)
                 settings.General.ShowBetaStuff = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -2673,6 +2683,8 @@ namespace Nikse.SubtitleEdit.Logic
                     textWriter.WriteElementString("DisableVideoAutoLoading", settings.General.DisableVideoAutoLoading.ToString());
                     textWriter.WriteElementString("RightToLeftMode", settings.General.RightToLeftMode.ToString());
                     textWriter.WriteElementString("LastSaveAsFormat", settings.General.LastSaveAsFormat);
+                    textWriter.WriteElementString("CheckForUpdates", settings.General.CheckForUpdates.ToString());
+                    textWriter.WriteElementString("LastCheckForUpdates", settings.General.LastCheckForUpdates.ToString("yyyy-MM-dd"));
                     textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
                     textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
 
