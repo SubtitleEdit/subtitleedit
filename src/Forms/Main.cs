@@ -14355,6 +14355,7 @@ namespace Nikse.SubtitleEdit.Forms
                 form.ShowDialog(this);
             }
             _checkForUpdatesHelper = null;
+            _timerCheckForUpdates = null;
         }
 
         void  _timerDoSyntaxColoring_Tick(object sender, EventArgs e)
@@ -19449,6 +19450,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            try
+            {
+                if (_timerCheckForUpdates != null)
+                    _timerCheckForUpdates.Stop();
+            }
+            catch
+            { 
+            }
+
             var form = new CheckForUpdates();
             form.ShowDialog(this);
             Configuration.Settings.General.LastCheckForUpdates = DateTime.Now;
