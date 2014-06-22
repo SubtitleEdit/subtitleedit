@@ -10,10 +10,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
     {
         private static Regex regex = new Regex(@"\d\.\d", RegexOptions.Compiled); // 3.4.0 (xth June 2014)
 
-        private const string ReleasesUrl = "https://api.github.com/repos/SubtitleEdit/subtitleedit/releases";
+        //        private const string ReleasesUrl = "https://api.github.com/repos/SubtitleEdit/subtitleedit/releases";
         private const string ChangeLogUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/src/Changelog.txt";
 
-        private string _jsonReleases;
+//        private string _jsonReleases;
         private string _changeLog;
         private int _successCount;
 
@@ -54,20 +54,20 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
         }
 
-        void FinishWebRequestReleases(IAsyncResult result)
-        {
-            try
-            {
-                _jsonReleases = GetStringFromResponse(result);
-            }
-            catch (Exception exception)
-            {
-                if (Error == null)
-                {
-                    Error = exception.Message;
-                }
-            }
-        }
+        //void FinishWebRequestReleases(IAsyncResult result)
+        //{
+        //    try
+        //    {
+        //        _jsonReleases = GetStringFromResponse(result);
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        if (Error == null)
+        //        {
+        //            Error = exception.Message;
+        //        }
+        //    }
+        //}
 
         void FinishWebRequestChangeLog(IAsyncResult result)
         {
@@ -161,6 +161,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         {
             try
             {
+                //string[] currentVersionInfo = "3.3.14".Split('.'); // for testing...
                 string[] currentVersionInfo = Utilities.AssemblyVersion.Split('.');
                 string minorMinorVersion = string.Empty;
                 if (currentVersionInfo.Length >= 3 && currentVersionInfo[2] != "0")
