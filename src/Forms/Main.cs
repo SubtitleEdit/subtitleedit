@@ -19456,7 +19456,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _timerCheckForUpdates.Stop();
             }
             catch
-            { 
+            {
             }
 
             var form = new CheckForUpdates(this);
