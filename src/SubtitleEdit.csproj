@@ -1084,6 +1084,7 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle3.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle4.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeTranscript.cs" />
+    <Compile Include="Logic\SubtitleFormats\YouTubeTranscriptOneLine.cs" />
     <Compile Include="Logic\SubtitleFormats\ZeroG.cs" />
     <Compile Include="Logic\TarHeader.cs" />
     <Compile Include="Logic\TarReader.cs" />
