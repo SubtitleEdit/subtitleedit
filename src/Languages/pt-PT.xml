@@ -202,7 +202,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CheckingForUpdatesNoneAvailable>Está a usar a última versão do Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Nova versão disponível!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Ir para a página de transferência</InstallUpdate>
-  </CheckForUpdates>
+    <NoUpdates>Não atualizar</NoUpdates>	
+  </CheckForUpdates>  
   <ChooseAudioTrack>
     <Title>Escolher a faixa de áudio</Title>
   </ChooseAudioTrack>
@@ -830,7 +831,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <LeaveSession>Abandonar sessão</LeaveSession>
       </Networking>
       <Help>
-        <CheckForUpdates>Verificar se há atualizações...</CheckForUpdates>
+        <CheckForUpdates>Verificar se há atualizações...</CheckForUpdates>	  
         <Title>Ajuda</Title>
         <Help>&amp;Ajuda</Help>
         <About>&amp;Sobre</About>
@@ -1477,6 +1478,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AutoBackupEveryMinute>Cada minuto</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Cada 5 minutos</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Cada 15 minutos</AutoBackupEveryFifteenMinutes>
+    <CheckForUpdates>Verificar se há atualizações</CheckForUpdates>	
     <AllowEditOfOriginalSubtitle>Permitir a edição da legenda original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmar eliminação de linhas</PromptDeleteLines>
     <TimeCodeMode>Modo de código de tempo</TimeCodeMode>
@@ -1485,7 +1487,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <VideoEngine>Mecanismo de vídeo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll na pasta system32</DirectShowDescription>
-    <DirectShowDescription64>quartz.dll na pasta SysWOW64</DirectShowDescription64>
+    <DirectShowDescription64>quartz.dll na pasta SysWOW64</DirectShowDescription64>	
     <ManagedDirectX>Gerado pelo DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - Código .NET gerado pelo DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
