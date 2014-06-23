@@ -558,11 +558,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = _subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
-                if (p.Text.Trim().Length == 0)
-                {
-                    continue;
-                }
-                else
+                if (!string.IsNullOrEmpty(p.Text))
                 {
                     string text = p.Text.Trim(' ');
                     if (text.StartsWith(Environment.NewLine))
@@ -590,7 +586,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = _subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
-                if (p.Text.Trim().Length == 0)
+                if (string.IsNullOrEmpty(p.Text))
                 {
                     if (AllowFix(p, fixAction0))
                     {
