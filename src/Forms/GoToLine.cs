@@ -86,7 +86,8 @@ namespace Nikse.SubtitleEdit.Forms
                     (e.KeyValue >= 96 && e.KeyValue <= 105))
                 {
                 }
-                else if (e.KeyData == (Keys.Shift | Keys.Home) || e.KeyData == (Keys.Shift | Keys.End))
+                else if (e.KeyData == (Keys.Shift | Keys.Home) || e.KeyData == (Keys.Shift | Keys.End) ||
+                    e.KeyCode == (Keys.MButton | Keys.Space) || e.KeyCode == (Keys.LButton | Keys.RButton | Keys.Space))
                 {
                 }
                 else if (e.KeyCode == Keys.Enter)
@@ -104,7 +105,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (e.Modifiers != Keys.Control && e.Modifiers != Keys.Alt)
                 {
-                    e.Handled = true;
                     e.SuppressKeyPress = true;
                 }
             }
