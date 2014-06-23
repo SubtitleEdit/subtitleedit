@@ -560,6 +560,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
                 if (p.Text.Trim().Length == 0)
                 {
+                    continue;
                 }
                 else
                 {
