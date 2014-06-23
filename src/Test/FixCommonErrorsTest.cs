@@ -226,7 +226,7 @@ namespace Test
             var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "Awesome it is!</i>");
             target.FixInvalidItalicTags();
-            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Awesome it is!");
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>Awesome it is!</i>");
         }
 
         [TestMethod]
