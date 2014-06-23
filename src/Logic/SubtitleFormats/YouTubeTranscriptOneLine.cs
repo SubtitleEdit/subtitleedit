@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), new TimeCode(0,0,0,0), line.Remove(0, splitter));
                     subtitle.Paragraphs.Add(p);
                 }
-                else 
+                else
                 {
                     _errorCount++;
                 }
