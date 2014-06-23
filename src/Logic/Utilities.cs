@@ -2711,7 +2711,7 @@ namespace Nikse.SubtitleEdit.Logic
             var e2 = endTag + "!";
             var e3 = endTag + "?";
             var e4 = endTag + "...";
-            var e5 = endTag + "-"; 
+            var e5 = endTag + "-";
 
             bool isStart = false;
             bool isEnd = false;
