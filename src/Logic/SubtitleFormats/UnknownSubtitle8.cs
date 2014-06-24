@@ -72,6 +72,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         _errorCount++;
                     }
                 }
+                else
+                {
+                    _errorCount++;
+                }
             }
 
             foreach (Paragraph p in subtitle.Paragraphs)

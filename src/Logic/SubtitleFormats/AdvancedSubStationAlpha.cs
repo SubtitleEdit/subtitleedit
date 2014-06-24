@@ -994,6 +994,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
         public static string CheckForErrors(string header)
         {
+            if (string.IsNullOrEmpty(header))
+                return string.Empty;
+
             var sb = new StringBuilder();
 
             int styleCount = -1;
