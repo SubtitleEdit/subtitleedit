@@ -16645,7 +16645,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InsertLineToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (!IsSubtitleLoaded)
+            if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
             {
                 InsertBefore();
             }
