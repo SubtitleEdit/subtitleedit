@@ -7086,9 +7086,17 @@ namespace Nikse.SubtitleEdit.Forms
                         // If not, firstWord is the whole text of the next subtitle.
                         string firstWord = (idx > 0 ? s.Substring(0, idx).Trim() : next.Text);
 
+                        // If firstWord contains a line break, it has two words.
+                        if (firstWord.Contains(Environment.NewLine))
+                        {
+                            // Redefine firstWord and idx.
+                            firstWord = firstWord.Remove(firstWord.IndexOf(Environment.NewLine));
+                            idx = s.IndexOf(Environment.NewLine);
+                        }
+
                         // Remove first word from the next subtitle.
                         // If there is only one word, 'next' will be empty.
-                        next.Text = (idx > 0 ? Utilities.AutoBreakLine(s.Substring(idx + 1).Trim()) : string.Empty);
+                        next.Text = (idx > 0 ? s.Substring(idx + 1).Trim() : string.Empty);
 
                         // If the first subtitle ends with a tag (</i>):
                         String endTag = "";
@@ -7155,16 +7163,21 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // Add positionTag + startTag + dialogueMarker + "..." + text to 'next'.
                         if (idx > 0)
-                            next.Text = positionTag + startTag + dialogueMarker + (nextSubtitleStartsWithEllipsis ? "..." : "") + Utilities.AutoBreakLine(next.Text.Trim());
+                            next.Text = positionTag + startTag + dialogueMarker + (nextSubtitleStartsWithEllipsis ? "..." : "") + next.Text.Trim();
 
                         // Add text + firstWord + "..." + endTag to First line.
-                        p.Text = (idx == 0 ? startTag : "") + Utilities.AutoBreakLine(p.Text.Trim() + " " + firstWord.Trim()) + (idx > 0 && firstSubtitleEndsWithEllipsis ? "..." : "") + endTag;
+                        p.Text = (idx == 0 ? startTag : "") + p.Text.Trim() + " " + firstWord.Trim() + (idx > 0 && firstSubtitleEndsWithEllipsis ? "..." : "") + endTag;
 
+                        // Now, idx will hold the position of the last line break, if any.
+                        idx = p.Text.LastIndexOf(Environment.NewLine);
+
+                        // Check if the last line of the subtitle (the one that now contains the moved word) is longer than SubtitleLineMaximumLength.
+                        if (Utilities.RemoveHtmlTags(p.Text.Substring((idx > 0 ? idx + Environment.NewLine.Length : 0 ))).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                            p.Text = Utilities.AutoBreakLine(p.Text);
                     }
 
                     SubtitleListview1.SetText(firstIndex, p.Text);
                     SubtitleListview1.SetText(firstIndex + 1, next.Text);
-
                     textBoxListViewText.Text = p.Text;
                 }
             }
@@ -7191,8 +7204,16 @@ namespace Nikse.SubtitleEdit.Forms
                         // If not, lastWord is the whole text of the first subtitle.
                         string lastWord = (idx > 0 ? s.Substring(idx).Trim() : p.Text);
 
+                        // If lastWord contains a line break, it has two words.
+                        if (lastWord.Contains(Environment.NewLine))
+                        {
+                            // Redefine lastWord and idx.
+                            lastWord = lastWord.Substring(lastWord.LastIndexOf(Environment.NewLine));
+                            idx = s.LastIndexOf(Environment.NewLine);
+                        }
+
                         // Remove last word from the first subtitle.
-                        p.Text = (idx > 0 ? Utilities.AutoBreakLine(s.Substring(0, idx).Trim()) : string.Empty);
+                        p.Text = (idx > 0 ? s.Substring(0, idx).Trim() : string.Empty);
 
                         // If the first subtitle ends with a tag (</i>):
                         String endTag = "";
@@ -7255,17 +7276,24 @@ namespace Nikse.SubtitleEdit.Forms
                             p.Text = p.Text + (firstSubtitleEndsWithEllipsis ? "..." : "") + endTag;
 
                         // Add positionTag + startTag + dialogueMarker + "..." + lastWord to 'next'.
-                        next.Text = (idx > 0 ? positionTag : "") + (idx > 0 ? startTag : "") + dialogueMarker + (nextSubtitleStartsWithEllipsis && idx > 0 ? "..." : "") + Utilities.AutoBreakLine(lastWord.Trim() + " " + next.Text.Trim());
+                        next.Text = (idx > 0 ? positionTag : "") + (idx > 0 ? startTag : "") + dialogueMarker + (nextSubtitleStartsWithEllipsis && idx > 0 ? "..." : "") + lastWord.Trim() + " " + next.Text.Trim();
+
+                        // Now, idx will hold the position of the first line break, if any.
+                        idx = next.Text.IndexOf(Environment.NewLine);
+
+                        // Check if the first line of the next subtitle (the one that now contains the moved word) is longer than SubtitleLineMaximumLength.
+                        if (Utilities.RemoveHtmlTags(next.Text.Substring(0, (idx > 0 ? idx : next.Text.Length))).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                            next.Text = Utilities.AutoBreakLine(next.Text);
                     }
 
                     SubtitleListview1.SetText(firstIndex, p.Text);
                     SubtitleListview1.SetText(firstIndex + 1, next.Text);
-
                     textBoxListViewText.Text = p.Text;
                 }
             }
         }
 
+        
         private void MakeAutoDurationSelectedLines()
         {
             if (_subtitle.Paragraphs.Count == 0)
