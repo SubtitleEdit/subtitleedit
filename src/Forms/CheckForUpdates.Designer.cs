@@ -55,17 +55,18 @@
             this.textBoxChangeLog.Location = new System.Drawing.Point(13, 31);
             this.textBoxChangeLog.Multiline = true;
             this.textBoxChangeLog.Name = "textBoxChangeLog";
+            this.textBoxChangeLog.ReadOnly = true;
             this.textBoxChangeLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxChangeLog.Size = new System.Drawing.Size(618, 53);
             this.textBoxChangeLog.TabIndex = 4;
             // 
-            // buttonCancel
+            // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(556, 90);
-            this.buttonOK.Name = "buttonCancel";
+            this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 2;
             this.buttonOK.Text = "C&ancel";
