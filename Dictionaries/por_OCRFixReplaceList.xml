@@ -9,7 +9,7 @@
     <Word from="acucar" to="açúcar" />
     <Word from="açucar" to="açúcar" />
     <Word from="advinhar" to="adivinhar" />
-    <Word from="africa" to="áfrica" />
+    <Word from="africa" to="África" />
     <Word from="ajuisar" to="ajuizar" />
     <Word from="album" to="álbum" />
     <Word from="alcoolémia" to="alcoolemia" />
@@ -34,7 +34,7 @@
     <Word from="artifícial" to="artificial" />
     <Word from="ascenção" to="ascensão" />
     <Word from="Associacao" to="Associação" />
-    <Word from="assucar" to="açúcar" />
+    <!-- <Word from="assucar" to="açúcar" /> assucar é uma palavra existente no dicionário -->
     <Word from="assúcar" to="açúcar" />
     <Word from="aste" to="haste" />
     <Word from="asterístico" to="asterisco" />
@@ -46,7 +46,7 @@
     <Word from="bandeija" to="bandeja" />
     <Word from="bébé" to="bebé" />
     <Word from="beige" to="bege" />
-    <Word from="belem" to="belém" />
+    <Word from="belem" to="Belém" />
     <Word from="benção" to="bênção" />
     <Word from="beneficiência" to="beneficência" />
     <Word from="beneficiente" to="beneficente" />
@@ -92,8 +92,8 @@
     <Word from="corassão" to="coração" />
     <Word from="corçario" to="corsário" />
     <Word from="corçário" to="corsário" />
-    <Word from="cornprimidosinbos" to="comprimidosinhos" />
-    <Word from="cota-parte" to="quota-parte" />
+    <Word from="cornprimidosinbo" to="comprimidozinho" />
+    <!-- <Word from="cota-parte" to="quota-parte" /> é uma palavra existente no dicionário -->
     <Word from="crâneo" to="crânio" />
     <Word from="dE" to="de" />
     <Word from="defenição" to="definição" />
@@ -185,7 +185,7 @@
     <Word from="hernia" to="hérnia" />
     <Word from="higiéne" to="higiene" />
     <Word from="hilariedade" to="hilaridade" />
-    <Word from="hiperacídez" to="hiper-acidez" />
+    <Word from="hiperacídez" to="hiperacidez" />
     <Word from="hontem" to="ontem" />
     <Word from="igiene" to="higiene" />
     <Word from="igienico" to="higiénico" />
@@ -302,14 +302,14 @@
     <Word from="paralizar" to="paralisar" />
     <Word from="paráste" to="paraste" />
     <Word from="Pátria" to="pátria" />
-    <Word from="paúl" to="paul" />
+    <Word from="paúl" to="Paul" />
     <Word from="pecalço" to="percalço" />
     <Word from="pêga" to="pega" />
     <Word from="periodo" to="período" />
     <Word from="pertubar" to="perturbar" />
     <Word from="perú" to="peru" />
     <Word from="piqueno" to="pequeno" />
-    <Word from="pirinéus" to="pirenéus" />
+    <Word from="pirinéus" to="Pirenéus" />
     <Word from="poblema" to="problema" />
     <Word from="pobrema" to="problema" />
     <Word from="poden" to="podem" />
@@ -419,7 +419,7 @@
     <Word from="suavisar" to="suavizar" />
     <Word from="substituido" to="substituído" />
     <Word from="suburbio" to="subúrbio" />
-    <Word from="sues" to="seus" />
+    <!--<Word from="sues" to="seus" /> sues existe "Cuidado, não sues muito." -->
     <Word from="sufciente" to="suficiente" />
     <Word from="sufeciente" to="suficiente" />
     <Word from="suI" to="sul" />
@@ -467,8 +467,8 @@
     <Word from="xadrês" to="xadrez" />
     <Word from="xafariz" to="chafariz" />
     <Word from="xéxé" to="xexé" />
-    <Word from="xilindró" to="xelindró" />
-    <Word from="zaíre" to="zaire" />
+    <Word from="xilindró" to="chilindró" />
+    <Word from="zaíre" to="Zaire" />
     <Word from="zepelin" to="zepelim" />
     <Word from="zeppelim" to="zepelim" />
     <Word from="zeppelin" to="zepelim" />
@@ -514,10 +514,10 @@
   <RegularExpressions>
     <!--    <RegEx find="\bi\b" replaceWith="I" /> just an example - do not use this regex -->
     <RegEx find="(\\d) +º" replaceWith="$1º" />
-    <RegEx find="\Bccao\b" replaceWith="cção" />
-    <RegEx find="\Bccoes\b" replaceWith="cções" />
-    <RegEx find="\Bccao\b" replaceWith="cção" />
     <RegEx find="\Bcao\b" replaceWith="ção" />
+    <RegEx find="\Bcoes\b" replaceWith="ções" />
+    <!-- <RegEx find="\Bccao\b" replaceWith="cção" /> não faz sentido ter este e ter a linha de cima-->
+    <!-- <RegEx find="\Bccoes\b" replaceWith="cções" /> não faz sentido ter este e ter a linha de cima-->
     <RegEx find="\b([mM])ae\b" replaceWith="$1ãe" />
     <RegEx find="\Bdmnis\B" replaceWith="dminis" />
     <RegEx find="\Blcól\B" replaceWith="lcoól" />
