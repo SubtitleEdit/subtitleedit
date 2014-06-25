@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.15</Version>
-    <TranslatedBy>Tłumaczenie Adam Malich (mailto: adam_malich@gizycko.mm.pl)</TranslatedBy>
+    <TranslatedBy>Tłumaczenie Adam Malich (mailto:adam_malich@gizycko.mm.pl)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <HelpFile>http://www.potplayer.pl/storage/SubtitleEdit/Help/PL/</HelpFile>
     <OK>&amp;OK</OK>
@@ -194,6 +194,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Regulacja prędkości w procentach</Title>
     <Info>Zmień szybkość napisów w procentach</Info>
   </ChangeSpeedInPercent>
+  <CheckForUpdates>
+    <Title>Sprawdzanie aktualizacji</Title>
+    <CheckingForUpdates>Sprawdzanie aktualizacji...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>Sprawdzenie aktualizacji nie powiodło się: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesNoneAvailable>Używasz najnowszej wersji Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNewVersion>Dostępna jest nowa wersja!</CheckingForUpdatesNewVersion>
+    <InstallUpdate>Przejdź na stronę pobierania</InstallUpdate>
+    <NoUpdates>Nie aktualizuj</NoUpdates>
+  </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Wybór ścieżki audio</Title>
   </ChooseAudioTrack>
@@ -207,6 +216,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Wybór języka</Title>
     <Language>Język</Language>
   </ChooseLanguage>
+  <ColorChooser>
+    <Title>Wybierz kolor</Title>
+    <Red>Czerwony</Red>
+    <Green>Zielony</Green>
+    <Blue>Niebieski</Blue>
+    <Alpha>Alpha</Alpha>
+  </ColorChooser>
   <ColumnPaste>
     <Title>Wklej kolumnę</Title>
     <ChooseColumn>Wybierz kolumnę</ChooseColumn>
@@ -250,6 +266,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffectColor>Kolor efektu</FontEffectColor>
     <FontSize>Rozmiar</FontSize>
     <TopBottomMargin>Górny/dolny margines</TopBottomMargin>
+    <FadeUpTime>Czas pojawiania</FadeUpTime>
+    <FadeDownTime>Czas zanikania</FadeDownTime>
     <ZPosition>Pozycja Z</ZPosition>
     <ZPositionHelp>Dodatnie cyfry odsuwają tekst dalej, a cyfry ujemne przysuwają tekst bliżej, Jeśli pozyca-zi jest zero, to jest to 2D.</ZPositionHelp>
     <ChooseColor>Wybierz kolor...</ChooseColor>
@@ -364,6 +382,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Kolor czcionki:</FontColor>
     <BorderColor>Kolor obramowania:</BorderColor>
     <BorderWidth>Szerokość obramowania:</BorderWidth>
+    <BorderStyle>Styl obramowania</BorderStyle>
+    <BorderStyleOneBox>Jedno pole obramowane</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Pole obramowane dla każdej linii</BorderStyleBoxForEachLine>
+    <BorderStyleNormalWidthX>Normalna, szerokość={0}</BorderStyleNormalWidthX>
     <ShadowColor>Kolor cienia</ShadowColor>
     <ShadowWidth>Szerokość cienia</ShadowWidth>
     <Transparency>Alfa</Transparency>
@@ -388,6 +410,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveDvdStudioProStlAs>Wybierz nazwę pliku DVD Studio Pro STL</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>Niektóre linie były zbyt długie:{0}</SomeLinesWereTooLongX>
     <LineHeight>Wysokość linii</LineHeight>
+    <BoxSingleLine>Box - pojedyncza linia</BoxSingleLine>
+    <BoxMultiLine>Box - wiele linii</BoxMultiLine>
   </ExportPngXml>
   <ExportText>
     <Title>Eksport tekstu</Title>
@@ -733,6 +757,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <ChangeSpeedInPercent>Zmień prędkość (procentowo)...</ChangeSpeedInPercent>
         <MergeShortLines>Połącz krótkie linie...</MergeShortLines>
         <MergeDuplicateText>Połącz linie z takim samym tekstem...</MergeDuplicateText>
+        <MergeSameTimeCodes>Połącz linie z takimi samymi kodami czasowymi...</MergeSameTimeCodes>
         <SplitLongLines>Podziel długie linie...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Odstęp czasowy między liniami napisów...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sortuj linie wg</SortBy>
@@ -807,6 +832,7 @@ Proszę podać numer w określonym zakresie.</XIsNotAValidNumber>
         <LeaveSession>Opuść sesję</LeaveSession>
       </Networking>
       <Help>
+        <CheckForUpdates>Sprawdź aktualizacje...</CheckForUpdates>
         <Title>Pomoc</Title>
         <Help>&amp;Pomoc</Help>
         <About>&amp;O programie</About>
@@ -1218,9 +1244,9 @@ Chcesz zapisać?</NegativeTimeWarning>
     <Kilos>Kilogramy</Kilos>
   </MeasurementConverter>
   <MergeDoubleLines>
-    <Title>Połącz linie z takim samym tekstem</Title>
+    <Title>Łączenie linii z takim samym tekstem</Title>
     <MaxMillisecondsBetweenLines>Maks. milisekund pomiędzy liniami</MaxMillisecondsBetweenLines>
-    <IncludeIncrementing>Zawiera zwiększające się linie</IncludeIncrementing>
+    <IncludeIncrementing>Uwzględniaj zwiększające się linie</IncludeIncrementing>
   </MergeDoubleLines>
   <MergedShortLines>
     <Title>Łączenie krótkich linii</Title>
@@ -1230,6 +1256,13 @@ Chcesz zapisać?</NegativeTimeWarning>
     <MergedText>Połączony tekst</MergedText>
     <OnlyMergeContinuationLines>Łączenie linii tylko z wielokropkiem</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <MergeTextWithSameTimeCodes>
+    <Title>Łączenie linii z takimi samymi kodami czasowymi</Title>
+    <MaxDifferenceMilliseconds>Maksymalna różnica milisekund</MaxDifferenceMilliseconds>
+    <ReBreakLines>Ponownie przełam linie</ReBreakLines>
+    <NumberOfMergesX>Liczba połączonych: {0}</NumberOfMergesX>
+    <MergedText>Połączony tekst</MergedText>
+  </MergeTextWithSameTimeCodes>
   <ModifySelection>
     <Title>Modyfikacja zaznaczonych</Title>
     <Rule>Zasady</Rule>
@@ -1318,6 +1351,19 @@ Chcesz zapisać?</NegativeTimeWarning>
     <UpdateAll>Aktualizuj wszystko</UpdateAll>
     <XPluginsUpdated>{0} wtyczek zaktualizowano</XPluginsUpdated>
   </PluginsGet>
+  <RegularExpressionContextMenu>
+    <WordBoundary>Ograniczenie wyrazu (\b)</WordBoundary>
+    <NonWordBoundary>Wyraz bez ograniczenia (\B)</NonWordBoundary>
+    <NewLine>Nowa linia (\r\n)</NewLine>
+    <NewLineShort>Nowa linia (\n)</NewLineShort>
+    <AnyDigit>Dowolna cyfra (\d)</AnyDigit>
+    <AnyCharacter>Dowolny znak (.)</AnyCharacter>
+    <AnyWhitespace>Dowolne białe znaki (\s)</AnyWhitespace>
+    <ZeroOrMore>Zero lub więcej (*)</ZeroOrMore>
+    <OneOrMore>Jeden lub więcej (+)</OneOrMore>
+    <InCharacterGroup>W grupie znaków ([test])</InCharacterGroup>
+    <NotInCharacterGroup>Nie w grupie znaków ([^test])</NotInCharacterGroup>
+  </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Usuwanie tekstu dla niesłyszących</Title>
     <RemoveTextConditions>Uwarunkowania dla usuwanego tekstu</RemoveTextConditions>
@@ -1366,7 +1412,7 @@ Chcesz zapisać?</NegativeTimeWarning>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Ustawianie minimalnego odstępu czasowego między wyświetlanymi napisami</Title>
     <PreviewLinesModifiedX>Podgląd - zmodyfikowanych akapitów: {0}</PreviewLinesModifiedX>
-    <ShowOnlyModifiedLines>Pokaż tylko zmodyfikowane linie</ShowOnlyModifiedLines>
+    <ShowOnlyModifiedLines>Pokaż tylko modyfikowane linie</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimalny odstęp między liniami napisów w milisekundach:</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Informacje o ilości klatek na sekundę</FrameInfo>
     <OneFrameXisYMilliseconds>Jedna klatka z fps {0:0.00} ma {1} milisekund</OneFrameXisYMilliseconds>
@@ -1405,7 +1451,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <DefaultFileEncoding>Domyślne kodowanie</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Autom. detekcja kodowania ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Maksymalna długość linii napisów</SubtitleLineMaximumLength>
-    <MaximumCharactersPerSecond>Maks. znaków/sek.</MaximumCharactersPerSecond>
+    <MaximumCharactersPerSecond>Maksymalnie znaków/sek.</MaximumCharactersPerSecond>
     <AutoWrapWhileTyping>Automatycznie zawijaj podczas pisania</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Minimalny czas trwania w ms</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Maksymalny czas trwania w ms</DurationMaximumMilliseconds>
@@ -1437,6 +1483,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <AutoBackupEveryMinute>Co minutę</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Co 5 minut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Co 15 minut</AutoBackupEveryFifteenMinutes>
+    <CheckForUpdates>Sprawdzaj aktualizacje</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Zezwalaj na edycję napisów źródłowych</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Pytaj o usunięcie linii</PromptDeleteLines>
     <TimeCodeMode>Tryb kodów czasowych</TimeCodeMode>
@@ -1515,12 +1562,12 @@ Chcesz zapisać?</NegativeTimeWarning>
     <EndSceneIndex>Akapit sceny końcowej:</EndSceneIndex>
     <FirstPlusX>Pierwsza + {0}</FirstPlusX>
     <LastMinusX>Ostatnia - {0}</LastMinusX>
-    <FixCommonerrors>Popraw pospolite błędy</FixCommonerrors>
+    <FixCommonerrors>Popraw błędy</FixCommonerrors>
     <MergeLinesShorterThan>Połącz linie krótsze, niż</MergeLinesShorterThan>
     <MusicSymbol>Zamiana symboli muzycznych:</MusicSymbol>
     <MusicSymbolsToReplace>Symbole muzyczne do zamiany (oddzielone spacją)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw pospolite błędy OCR - także używające sztywnych zasad</FixCommonOcrErrorsUseHardcodedRules>
-    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania - zezwól na przesunięcie czasu startu</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetl. - zezwól na przesunięcie czasu startu</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Skróty klawiaturowe</Shortcuts>
     <Shortcut>Polecenie:</Shortcut>
     <Control>Ctrl</Control>
@@ -1599,13 +1646,17 @@ Chcesz zapisać?</NegativeTimeWarning>
     <ListViewColumnInsert>Kolumna, wstaw tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Kolumna, wklej</ListViewColumnPaste>
     <ListViewFocusWaveform>Skupienie na waveform/spectrogram</ListViewFocusWaveform>
+    <ListViewGoToNextError>Przejdź do następnego błędu</ListViewGoToNextError>
     <ShowBeamer>Uruchom projekcję napisów na pełnym ekranie</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Przenieś ostatnie słowo w dół do następnej linii napisów</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Przenieś pierwsze słowo z następnej linii napisów do góry</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxSelectionToLower>Zaznacz do małych liter</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>Zaznacz do dużych liter</MainTextBoxSelectionToUpper>
     <MainTextBoxAutoBreak>Automatyczne łamanie tekstu</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Cofnij łamanie tekstu</MainTextBoxUnbreak>
+    <MainFileSaveAll>Zapisz wszystko</MainFileSaveAll>
     <Miscellaneous>Inne</Miscellaneous>
-    <UseDoNotBreakAfterList>Włącz "bez-linii-łamania-po liście" (dla automatycznego łamania)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Włącz "bez-łamania-linii-w liście" (dla automatycznego łamania)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>Ukazywanie się wybranych linii wcześniej/później</Title>
@@ -1652,9 +1703,10 @@ Chcesz zapisać?</NegativeTimeWarning>
     <ImageText>Obraz tekstu</ImageText>
     <SpellCheckCompleted>Ukończono sprawdzanie pisowni.</SpellCheckCompleted>
     <SpellCheckAborted>Przerwano sprawdzanie pisowni.</SpellCheckAborted>
+    <UndoX>Cofniętych: {0}</UndoX>
   </SpellCheck>
   <Split>
-    <Title>Podziel</Title>
+    <Title>Podział</Title>
     <SplitOptions>Opcje podziału</SplitOptions>
     <Lines>Linii</Lines>
     <Characters>Znaków</Characters>
@@ -1670,9 +1722,9 @@ Chcesz zapisać?</NegativeTimeWarning>
   </Split>
   <SplitLongLines>
     <Title>Podział długich linii</Title>
-    <SingleLineMaximumLength>Maks. liczba znaków w jednej linii:</SingleLineMaximumLength>
+    <SingleLineMaximumLength>Maks. ilość znaków w jednej linii:</SingleLineMaximumLength>
     <LineMaximumLength>Maks. całkowita ilość znaków w linii:</LineMaximumLength>
-    <LineContinuationBeginEndStrings>Dodaj znak interpunkcyjny na początek/koniec linii:</LineContinuationBeginEndStrings>
+    <LineContinuationBeginEndStrings>Dodaj znak interpunkcyjny na początku/końcu linii:</LineContinuationBeginEndStrings>
     <NumberOfSplits>Ilość podzielonych: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>Największa ilość znaków {0} w linii o numerze {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>Największa całkowita ilość znaków {0} w linii o numerze {1}</LongestLineIsXAtY>
