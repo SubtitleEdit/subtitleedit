@@ -14364,7 +14364,12 @@ namespace Nikse.SubtitleEdit.Forms
             LoadPlugins();
             tabControlSubtitle.Invalidate();
 
-            if (Configuration.Settings.General.CheckForUpdates && Configuration.Settings.General.LastCheckForUpdates < DateTime.Now.AddDays(-5))
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.CheckForUpdates.CheckingForUpdates))
+            {
+                checkForUpdatesToolStripMenuItem.Visible = false;
+                toolStripMenuItemSplitterCheckForUpdates.Visible = false;
+            }
+            else if (Configuration.Settings.General.CheckForUpdates && Configuration.Settings.General.LastCheckForUpdates < DateTime.Now.AddDays(-5))
             {
                 _checkForUpdatesHelper = new Nikse.SubtitleEdit.Logic.Forms.CheckForUpdatesHelper();
                 _checkForUpdatesHelper.CheckForUpdates();
