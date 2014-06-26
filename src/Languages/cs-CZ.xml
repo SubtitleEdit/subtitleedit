@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Language Name="Čeština">
+<Language xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.15</Version>
@@ -193,6 +193,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Upravit rychlost v procentech</Title>
     <Info>Změnit rychlost titulků v procentech</Info>
   </ChangeSpeedInPercent>
+  <CheckForUpdates>
+    <Title>Zkontrolovat aktualizace</Title>
+    <CheckingForUpdates>Kontrola aktualizací...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>Kontrola aktualizací selhala: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesNoneAvailable>Používáte nejnovější verzi Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNewVersion>Je dostupná nová verze!</CheckingForUpdatesNewVersion>
+    <InstallUpdate>Přejít na stránku pro stahování</InstallUpdate>
+    <NoUpdates>Neaktualizovat</NoUpdates>
+  </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Vyberte stopu audia</Title>
   </ChooseAudioTrack>
@@ -821,6 +830,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <LeaveSession>Opustit relaci</LeaveSession>
       </Networking>
       <Help>
+        <CheckForUpdates>Zkontrolovat aktualizace...</CheckForUpdates>
         <Title>Nápověda</Title>
         <Help>&amp;Nápověda</Help>
         <About>&amp;O aplikaci</About>
@@ -980,7 +990,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Uloženy původní titulky {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>soubor na disku změněn</FileOnDiskModified>
     <OverwriteModifiedFile>Přepsat soubor {0} změněný v {1} {2}{3} aktuálním souborem načteným z disku v {4} {5}?</OverwriteModifiedFile>
-    <UnableToSaveSubtitleX>Nelze uložit soubor titulků {0}</UnableToSaveSubtitleX>
+    <UnableToSaveSubtitleX>Nelze uložit soubor titulků {0}
+Titulky se zdají být prázdné - zkuste je znovu uložit, pokud pracujete na platných titulcích!</UnableToSaveSubtitleX>
     <BeforeNew>Před novým</BeforeNew>
     <New>Nový</New>
     <BeforeConvertingToX>Před převodem na {0}</BeforeConvertingToX>
@@ -1466,6 +1477,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AutoBackupEveryMinute>Každou minutu</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Každých 5 minut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Každých 15 minut</AutoBackupEveryFifteenMinutes>
+    <CheckForUpdates>Kontrolovat aktualizace</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Povolit úpravu původních titulků</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Dotázat se na odstranění řádků</PromptDeleteLines>
     <TimeCodeMode>Režim časového kódu</TimeCodeMode>
@@ -1683,6 +1695,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ImageText>Snímek textu</ImageText>
     <SpellCheckCompleted>Kontrola pravopisu dokončena.</SpellCheckCompleted>
     <SpellCheckAborted>Kontrola pravopisu přerušena</SpellCheckAborted>
+    <UndoX>Zpět: {0}</UndoX>
   </SpellCheck>
   <Split>
     <Title>Rozdělit</Title>
