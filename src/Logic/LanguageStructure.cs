@@ -101,7 +101,7 @@
             public string Description { get; set; }
         }
 
-        public class AddWareForm
+        public class AddWaveForm
         {
             public string Title { get; set; }
             public string SourceVideoFile { get; set; }

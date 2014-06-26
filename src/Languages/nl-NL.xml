@@ -262,7 +262,7 @@ Suggesties zijn van harte welkom
     <ProlongEndTime>Eerdere tekst gebruikt de gehele hiaattijd.</ProlongEndTime>
     <DivideEven>Tekst verdeeld hiaattijd</DivideEven>
   </DurationsBridgeGaps>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Rip ondertitels van ifo/vobs (dvd)</Title>
     <DvdGroupTitle>dvd-bestanden/info</DvdGroupTitle>
     <IfoFile>IFO-bestand</IfoFile>
@@ -283,7 +283,7 @@ Suggesties zijn van harte welkom
     <ReadingSubtitleData>Lezen ondertitel data...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Rippen vob-bestand {1} van {2}:. {0}</RippingVobFileXofYZ>
     <WrongIfoType>IFO type is '{0}' en niet 'DVDVIDEO-VTS' {1} Probeer dan een ander bestand {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Kies taal</Title>
     <ChooseLanguageStreamId>Kies taal (stroom-id)</ChooseLanguageStreamId>

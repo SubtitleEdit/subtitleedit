@@ -283,7 +283,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ProlongEndTime>Poprzedni tekst widoczny przez cały czas trwania odstępu</ProlongEndTime>
     <DivideEven>Teksty rozdzielane są czasem trwania odstępu</DivideEven>
   </DurationsBridgeGaps>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Przechwyt napisów z ifo/vob (dvd)</Title>
     <DvdGroupTitle>Pliki/info DVD</DvdGroupTitle>
     <IfoFile>Plik IFO</IfoFile>
@@ -304,7 +304,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ReadingSubtitleData>Odczyt danych napisów...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Odczyt z pliku VOB {1} z {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>Typ IFO '{0} i nie jest to 'DVDVideo-VTS'. {1} Spróbuj wybrać inny plik zamiast {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Wybór języka</Title>
     <ChooseLanguageStreamId>Wybierz język (strumień-id)</ChooseLanguageStreamId>

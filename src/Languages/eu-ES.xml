@@ -262,7 +262,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <ProlongEndTime>Aurreko idazkiak hutsarte denbora guztia hartzen du</ProlongEndTime>
     <DivideEven>Idazkiak hutsarte denbora zatitzen du</DivideEven>
   </DurationsBridgeGaps>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Grabatu ifo/vob azpidatziak (dvd)-tik</Title>
     <DvdGroupTitle>DVD agiri/argibideak</DvdGroupTitle>
     <IfoFile>IFO agiria</IfoFile>
@@ -283,7 +283,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <ReadingSubtitleData>Azpidatzi datuak irakurtzen...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Vob agiria grabatzen {1} {2}-tik: {0}</RippingVobFileXofYZ>
     <WrongIfoType>IFO mota da '{0}' eta ez 'DVDVIDEO-VTS'. {1} Saiatu beste agiri batekin {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Hautatu hizkuntza</Title>
     <ChooseLanguageStreamId>Hautatu hizkuntza (Jario-ezaug.)</ChooseLanguageStreamId>

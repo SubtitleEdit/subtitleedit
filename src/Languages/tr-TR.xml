@@ -226,7 +226,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <FontSize>Boyur</FontSize>
     <ChooseColor>Renk seç...</ChooseColor>
   </DCinemaProperties>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Ifo/vobs (dvd) dosyasından altyazı riple</Title>
     <DvdGroupTitle>DVD dosyaları/bilgi</DvdGroupTitle>
     <IfoFile>IFO dosyası</IfoFile>
@@ -247,7 +247,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <ReadingSubtitleData>Altyazı verisi okunuyor...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Vob dosyası ripleniyor {1} / {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>IFO type is '{0}' and not 'DVDVIDEO-VTS'.{1}Try another file than {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Dil seç</Title>
     <ChooseLanguageStreamId>Dil seç (stream-id)</ChooseLanguageStreamId>

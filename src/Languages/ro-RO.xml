@@ -224,7 +224,7 @@ E-mail: nikse.dk @gmail.com</AboutText1>
     <FontSize>Marime</FontSize>
     <ChooseColor>Alege culoare</ChooseColor>
   </DCinemaProperties>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Extrage subtitrare din IFO/vobs (DVD)</Title>
     <DvdGroupTitle>Fisiere DVD/info</DvdGroupTitle>
     <IfoFile>Fisier IFO</IfoFile>
@@ -245,7 +245,7 @@ E-mail: nikse.dk @gmail.com</AboutText1>
     <ReadingSubtitleData>Citeste datele subtitrarii...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Extrage fisier VOB {1} din {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>Tipul IFO este '{0}'si nu "DVDVIDEO -VTS'. {1}Incearca alt fisier decat {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Alege limba</Title>
     <ChooseLanguageStreamId>Alege limba (stream-id)</ChooseLanguageStreamId>

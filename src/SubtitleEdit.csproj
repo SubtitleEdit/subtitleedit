@@ -117,11 +117,11 @@
     <Compile Include="Forms\AddToUserDic.Designer.cs">
       <DependentUpon>AddToUserDic.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AddWareForm.cs">
+    <Compile Include="Forms\AddWaveForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AddWareForm.Designer.cs">
-      <DependentUpon>AddWareForm.cs</DependentUpon>
+    <Compile Include="Forms\AddWaveForm.Designer.cs">
+      <DependentUpon>AddWaveForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\AlignmentPicker.cs">
       <SubType>Form</SubType>
@@ -763,6 +763,7 @@
     <Compile Include="Logic\Forms\RemoveTextForHISettings.cs" />
     <Compile Include="Logic\Forms\RemoveTextForHI.cs" />
     <Compile Include="Logic\Forms\SplitLongLinesHelper.cs" />
+    <Compile Include="Logic\LanguageDeserializer.cs" />
     <Compile Include="Logic\MurMurHash3.cs" />
     <Compile Include="Logic\NHunspell\Hunspell.cs" />
     <Compile Include="Logic\NHunspell\Hyphen.cs" />
@@ -1136,6 +1137,7 @@
     <Compile Include="Logic\VobSub\VobSubPack.cs" />
     <Compile Include="Logic\VobSub\VobSubWriter.cs" />
     <Compile Include="Logic\WordSpellChecker.cs" />
+    <Compile Include="Logic\XmlDeserializerGenerator.cs" />
     <Compile Include="Logic\XSub.cs" />
     <Compile Include="Logic\zlib\Adler32.cs" />
     <Compile Include="Logic\zlib\Deflate.cs" />
@@ -1201,8 +1203,8 @@
     <EmbeddedResource Include="Forms\AddToUserDic.resx">
       <DependentUpon>AddToUserDic.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AddWareForm.resx">
-      <DependentUpon>AddWareForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\AddWaveForm.resx">
+      <DependentUpon>AddWaveForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AlignmentPicker.resx">
       <DependentUpon>AlignmentPicker.cs</DependentUpon>

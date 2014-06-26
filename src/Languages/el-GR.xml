@@ -160,7 +160,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowOnlyDifferences>Εμφάνιση μόνο διαφορών</ShowOnlyDifferences>
     <OnlyLookForDifferencesInText>Αναζήτηση μόνο για διαφορές στο κείμενο</OnlyLookForDifferencesInText>
   </CompareSubtitles>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Αντιγράψτε υπότιτλους από IFO/VOB (DVD)</Title>
     <DvdGroupTitle>DVD αρχεία/πληροφορίες</DvdGroupTitle>
     <IfoFile>Αρχεία IFO</IfoFile>
@@ -181,7 +181,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ReadingSubtitleData>Ανάγνωση δεδομένων υπότιτλου...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Αντιγραφή αρχείου VOB {1} από {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>Ο τύπος του IFO είναι '{0}' και όχι 'DVDVIDEO-VTS'.{1}Δοκιμάστε ένα άλλο αρχείο αντί του {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Επιλέξτε γλώσσα</Title>
     <ChooseLanguageStreamId>Επιλέξτε γλώσσα (id-ροής)</ChooseLanguageStreamId>

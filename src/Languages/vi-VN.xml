@@ -242,7 +242,7 @@ Rất hân hạnh được chào đón.
     <FontSize>Kích thước</FontSize>
     <ChooseColor>Chọn màusắc ...</ChooseColor>
   </DCinemaProperties>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Trích xuất phụ đề từ ifo/vobs (dvd)</Title>
     <DvdGroupTitle>Tập tin DVD/Thông tin</DvdGroupTitle>
     <IfoFile>Tập tin IFO</IfoFile>
@@ -263,7 +263,7 @@ Rất hân hạnh được chào đón.
     <ReadingSubtitleData>Đọc dữ liệu phụ đề...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Trích xuất  tập tin vob {1} của {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>Loại IFO là '{0}' và không phải 'DVDVIDEO-VTS' {1} Hãy thử một tập tin khác {2}.</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Chọn ngôn ngữ</Title>
     <ChooseLanguageStreamId>Chọn ngôn ngữ (dòng-id)</ChooseLanguageStreamId>

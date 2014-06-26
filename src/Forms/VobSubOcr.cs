@@ -429,9 +429,9 @@ namespace Nikse.SubtitleEdit.Forms
             bDNXMLToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportBdnXml;
             bluraySupToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportBluRaySup;
 
-            toolStripMenuItemClearFixes.Text = Configuration.Settings.Language.DvdSubrip.Clear;
-            toolStripMenuItemClearGuesses.Text = Configuration.Settings.Language.DvdSubrip.Clear;
-            clearToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubrip.Clear;
+            toolStripMenuItemClearFixes.Text = Configuration.Settings.Language.DvdSubRip.Clear;
+            toolStripMenuItemClearGuesses.Text = Configuration.Settings.Language.DvdSubRip.Clear;
+            clearToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.Clear;
 
             checkBoxNOcrCorrect.Checked = Configuration.Settings.VobSubOcr.LineOcrDraw;
             checkBoxNOcrItalic.Checked = Configuration.Settings.VobSubOcr.LineOcrAdvancedItalic;

@@ -273,7 +273,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ProlongEndTime>El texto anterior lleva todo el intervalo de tiempo</ProlongEndTime>
     <DivideEven>El texto divide el intervalo de tiempo</DivideEven>
   </DurationsBridgeGaps>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Ripear subtítulos de ifo/vobs (dvd)</Title>
     <DvdGroupTitle>DVD archivos/info</DvdGroupTitle>
     <IfoFile>Archivo IFO</IfoFile>
@@ -294,7 +294,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ReadingSubtitleData>Leyendo datos del subtítulo...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Ripeando archivo vob {1} of {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>El tipo IFO es '{0}' en lugar de 'DVDVIDEO-VTS'.{1}Pruebe con otro archivo que {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Seleccionar idioma</Title>
     <ChooseLanguageStreamId>Seleccioneidioma (stream-id)</ChooseLanguageStreamId>

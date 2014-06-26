@@ -224,7 +224,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 獲得。
     <FontSize>大小</FontSize>
     <ChooseColor>選取彩色...</ChooseColor>
   </DCinemaProperties>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>從 DVD 提取字幕</Title>
     <DvdGroupTitle>DVD 檔案/訊息</DvdGroupTitle>
     <IfoFile>IFO 檔案</IfoFile>
@@ -245,7 +245,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 獲得。
     <ReadingSubtitleData>正在讀取字幕資料...</ReadingSubtitleData>
     <RippingVobFileXofYZ>正在提取 VOB 檔案 {1}/{2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>IFO 類型是 '{0}' 而不是 'DVDVIDEO-VTS'。{1}請嘗試其它檔案而不是 {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>選取語系</Title>
     <ChooseLanguageStreamId>選取語系 (流 ID)</ChooseLanguageStreamId>

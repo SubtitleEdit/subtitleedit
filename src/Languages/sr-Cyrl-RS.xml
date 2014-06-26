@@ -158,7 +158,7 @@
     <ShowOnlyDifferences>П&amp;рикажи само разлике</ShowOnlyDifferences>
     <OnlyLookForDifferencesInText>&amp;Тражи само разлике у тексту</OnlyLookForDifferencesInText>
   </CompareSubtitles>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Вађење ДВД титла</Title>
     <DvdGroupTitle>Датотеке ДВД-ја</DvdGroupTitle>
     <IfoFile>IFO</IfoFile>
@@ -179,7 +179,7 @@
     <ReadingSubtitleData>Учитавам титл…</ReadingSubtitleData>
     <RippingVobFileXofYZ>Извршавам VOB датотеку… ({1} од {2}): {0}</RippingVobFileXofYZ>
     <WrongIfoType>IFO је погрешне врсте. {1}Изаберите другу датотеку.</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Одабир језика</Title>
     <ChooseLanguageStreamId>Изаберите жељени језик испод:</ChooseLanguageStreamId>

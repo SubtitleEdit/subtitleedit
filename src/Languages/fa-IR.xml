@@ -160,7 +160,7 @@ http://soft98.ir
     <ShowOnlyDifferences>فقط تفاوت ها را نمایش بده</ShowOnlyDifferences>
     <OnlyLookForDifferencesInText>فقط برای تفاوت های موجود در متن نگاه کن</OnlyLookForDifferencesInText>
   </CompareSubtitles>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>ifo/vobs (DVD)تبدیل زیرنویسها از</Title>
     <DvdGroupTitle>فایلها/اطلاعات دی وی دی</DvdGroupTitle>
     <IfoFile>IFO فایل</IfoFile>
@@ -181,7 +181,7 @@ http://soft98.ir
     <ReadingSubtitleData>در حال خواندن اطلاعات</ReadingSubtitleData>
     <RippingVobFileXofYZ>Ripping vob file {1} of {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>نوعIFO '{0}' است و نه'DVDVIDEO-VTS'.{1}فایل دیگری را امتحان کنید {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>زبان را انتخاب کنید</Title>
     <ChooseLanguageStreamId>زبان را انتخاب کنید (stream-id)</ChooseLanguageStreamId>
