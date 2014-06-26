@@ -234,7 +234,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Text = string.Empty;
             if (e.Error != null)
             {
-                MessageBox.Show("Download failed!");
+                MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed);
                 DialogResult = DialogResult.Cancel;
                 return;
             }
