@@ -3327,11 +3327,26 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixDoubleDash;
             int fixCount = 0;
+            const string defHyphen = "-"; // - Hyphen-minus (Basic Latin)
+
+            var hyphenBullet = "\u2043";
+            var hyphen = "\u2010";
+            var figureDash = "\u2012";
+            var enDash = "\u2013";
+            var emDash = "\u2014";
+            var horizontalBar = "\u2015";
+
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
                 string text = p.Text;
                 string oldText = p.Text;
+                text = text.Replace(hyphenBullet, defHyphen);
+                text = text.Replace(hyphen, defHyphen);
+                text = text.Replace(figureDash, defHyphen);
+                text = text.Replace(enDash, defHyphen);
+                text = text.Replace(emDash, defHyphen);
+                text = text.Replace(horizontalBar, defHyphen);
 
                 while (text.Contains("---"))
                 {
