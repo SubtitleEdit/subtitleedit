@@ -2,7 +2,7 @@
 <Language Name="Bulgarian">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.3.15</Version>
+    <Version>3.3.14</Version>
     <TranslatedBy>Превод на български: Ivo Ivanov и JJD</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
@@ -193,6 +193,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Нагласяне скоростта в проценти</Title>
     <Info>Промяна скоростта на субтитрите в проценти</Info>
   </ChangeSpeedInPercent>
+  <CheckForUpdates>
+    <Title>Проверка за обновяване</Title>
+    <CheckingForUpdates>Проверка за обновяване...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>Грешка при проверка за обновяване: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesNoneAvailable>Използвате последна версия на Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNewVersion>Налична е нова версия!</CheckingForUpdatesNewVersion>
+    <InstallUpdate>Към страницата за смъкване</InstallUpdate>
+    <NoUpdates>Не обновявай</NoUpdates>
+  </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Избор на аудио поток</Title>
   </ChooseAudioTrack>
@@ -206,6 +215,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Избор на език</Title>
     <Language>Език</Language>
   </ChooseLanguage>
+  <ColorChooser>
+    <Title>Избиране на цвят</Title>
+    <Red>Червен</Red>
+    <Green>Зелен</Green>
+    <Blue>Син</Blue>
+    <Alpha>Алфа</Alpha>
+  </ColorChooser>
   <ColumnPaste>
     <Title>Поставяне на колона</Title>
     <ChooseColumn>Избиране на колона</ChooseColumn>
@@ -248,6 +264,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffect>Ефект</FontEffect>
     <FontEffectColor>Цвят на ефекта</FontEffectColor>
     <FontSize>Размер</FontSize>
+    <TopBottomMargin>Горно/долно подравняване</TopBottomMargin>
+    <FadeUpTime>Време за появяване</FadeUpTime>
+    <FadeDownTime>Време за скриване</FadeDownTime>
+    <ZPosition>Z-позиция</ZPosition>
+    <ZPositionHelp>Позитивните номера местят текста напред, отрицателните - назад. Ако Z-позицията е нула, тогава това е 2D</ZPositionHelp>
     <ChooseColor>Изберете цвят...</ChooseColor>
     <Generate>Генериране</Generate>
   </DCinemaProperties>
@@ -261,7 +282,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ProlongEndTime>Предния текст взема времетраенето</ProlongEndTime>
     <DivideEven>Текста дели времетраенето</DivideEven>
   </DurationsBridgeGaps>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Сваляне на субтитри от ifo/vobs (dvd)</Title>
     <DvdGroupTitle>DVD файлове/info</DvdGroupTitle>
     <IfoFile>IFO файл</IfoFile>
@@ -282,7 +303,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ReadingSubtitleData>Прочитане на данните със субтитри...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Сваляне на vob файл {1} of {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>Типът на IFO е '{0}' и не е 'DVDVIDEO-VTS'.{1}Опитайте друг файл, отколкото {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Избор на език</Title>
     <ChooseLanguageStreamId>Избор на език (поток-id)</ChooseLanguageStreamId>
@@ -360,11 +381,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Цвят на шрифта</FontColor>
     <BorderColor>Цвят на контура</BorderColor>
     <BorderWidth>Широчина на контура</BorderWidth>
+    <BorderStyle>Стил на ограждението</BorderStyle>
+    <BorderStyleOneBox>Едно ограждение</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Ограждение за всеки ред</BorderStyleBoxForEachLine>
+    <BorderStyleNormalWidthX>Нормално, ширина={0}</BorderStyleNormalWidthX>
     <ShadowColor>Цвят на сянка</ShadowColor>
     <ShadowWidth>Мащаб на сянка</ShadowWidth>
     <Transparency>Алфа</Transparency>
     <ImageFormat>Формат на снимката</ImageFormat>
     <SimpleRendering>Просто рендиране</SimpleRendering>
+    <AntiAliasingWithTransparency>Анти-алайсинг с прозрачност</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
     <SideBySide3D>Side-by-side 3D</SideBySide3D>
     <HalfTopBottom3D>Горна половина/Дъно</HalfTopBottom3D>
@@ -383,6 +409,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveDvdStudioProStlAs>Изберете DVD Studio Pro STL файл име</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>Някои линии бяха по-дълги от:{0}</SomeLinesWereTooLongX>
     <LineHeight>Височина на ред</LineHeight>
+    <BoxSingleLine>Ограждение - единично</BoxSingleLine>
+    <BoxMultiLine>Ограждение - множество</BoxMultiLine>
   </ExportPngXml>
   <ExportText>
     <Title>Експортиране на текст</Title>
@@ -726,6 +754,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeSpeedInPercent>Променена скорост (процент)...</ChangeSpeedInPercent>
         <MergeShortLines>Сливане на кратки редове...</MergeShortLines>
         <MergeDuplicateText>Обединяване на редове с еднакъв текст</MergeDuplicateText>
+        <MergeSameTimeCodes>Сливане на редове с еднакав тайм код</MergeSameTimeCodes>
         <SplitLongLines>Разделяне на дълги редове...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Минимално време за показване между субтитрите...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Сортиране по</SortBy>
@@ -800,6 +829,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <LeaveSession>Прекратяване на сесия</LeaveSession>
       </Networking>
       <Help>
+        <CheckForUpdates>Проверка за обновяване...</CheckForUpdates>
         <Title>Помощ</Title>
         <Help>Помощ</Help>
         <About>Относно</About>
@@ -1216,6 +1246,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MergedText>Слят текст</MergedText>
     <OnlyMergeContinuationLines>Сливане само на редовете с многоточия</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <MergeTextWithSameTimeCodes>
+    <Title>Обединяване на редове с еднакъв тайм код</Title>
+    <MaxDifferenceMilliseconds>Макс. разлика в милисекунди</MaxDifferenceMilliseconds>
+    <ReBreakLines>Пре-разделяне на редове</ReBreakLines>
+    <NumberOfMergesX>Брой сливания: {0}</NumberOfMergesX>
+    <MergedText>Слят текст</MergedText>
+  </MergeTextWithSameTimeCodes>
   <ModifySelection>
     <Title>Модифициране на избраното</Title>
     <Rule>Правило</Rule>
@@ -1297,11 +1334,26 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PluginXDownloaded>Приставката {0} е смъкната</PluginXDownloaded>
     <Download>Смъкване</Download>
     <Remove>Премахване</Remove>
+    <UpdateAllX>Обновяване на всички ({0})</UpdateAllX>
     <UnableToDownloadPluginListX>Не може да се смъкне списъка с приставки: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Изисква се нова версия на Subtitle Edit</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Налично е обновяване!]</UpdateAvailable>
     <UpdateAll>Обновяване на всички</UpdateAll>
+    <XPluginsUpdated>{0} приставка/и бяха обновени</XPluginsUpdated>
   </PluginsGet>
+  <RegularExpressionContextMenu>
+    <WordBoundary>Разтояние между думи</WordBoundary>
+    <NonWordBoundary>Без разтояние между думи</NonWordBoundary>
+    <NewLine>Нов ред</NewLine>
+    <NewLineShort>Нов ред</NewLineShort>
+    <AnyDigit>Всяка цифра</AnyDigit>
+    <AnyCharacter>Всеки символ</AnyCharacter>
+    <AnyWhitespace>Всеки интервал</AnyWhitespace>
+    <ZeroOrMore>Нула или повече (*)</ZeroOrMore>
+    <OneOrMore>Един или повече (+)</OneOrMore>
+    <InCharacterGroup>В група символи ([test])</InCharacterGroup>
+    <NotInCharacterGroup>Не в група символи ([^test])</NotInCharacterGroup>
+  </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Изтриване на текст за увредени със слуха</Title>
     <RemoveTextConditions>Условия за изтриване на текст</RemoveTextConditions>
@@ -1421,6 +1473,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AutoBackupEveryMinute>Всяка минута</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Всеки 5 минути</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Всеки 15 минути</AutoBackupEveryFifteenMinutes>
+    <CheckForUpdates>Проверка за обновяване</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Разрешаване редактиране на оригиналните субтитри</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Запитване преди изтриване на редове</PromptDeleteLines>
     <TimeCodeMode>Режим "Тайм Код"</TimeCodeMode>
@@ -1435,6 +1488,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll от VLC Media Player 1.1.0 или по-нова</VlcMediaPlayerDescription>
+    <VlcBrowseToLabel>VLC път (трябва само ако се ползва портабъл версията на VLC)</VlcBrowseToLabel>
     <ShowStopButton>Показване на бутон за спиране</ShowStopButton>
     <ShowMuteButton>Показване на бутона "Без звук"</ShowMuteButton>
     <ShowFullscreenButton>Показване на бутона "На цял екран"</ShowFullscreenButton>
@@ -1464,6 +1518,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformUseFFMPEG>Използване на FFMPEG</WaveformUseFFMPEG>
     <WaveformFFMPEGPath>Път до FFMPEG</WaveformFFMPEGPath>
     <WaveformBrowseToFFMPEG>Разлистване до FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformBrowseToVLC>Прелистване за VLC портабъл</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Стил на Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Избор на шрифт</ChooseFont>
     <ChooseColor>Избор на цвят</ChooseColor>
@@ -1502,6 +1557,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MusicSymbol>Музикален символ</MusicSymbol>
     <MusicSymbolsToReplace>Музикални символи, които да се заменят (разделени с интервал)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Поправяне на някои OCR грешки</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Поправка на краткотрайно време за показ - разрешение за промяна на началното време</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Клавишни комбинации</Shortcuts>
     <Shortcut>Клавиш</Shortcut>
     <Control>Ctrl</Control>
@@ -1578,11 +1634,17 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnInsert>Колона, вмъкване на текст</ListViewColumnInsert>
     <ListViewColumnPaste>Колона, поставяне</ListViewColumnPaste>
     <ListViewFocusWaveform>Фокус на wave формата/спектограмата</ListViewFocusWaveform>
+    <ListViewGoToNextError>Отиване при следващата грешка</ListViewGoToNextError>
     <ShowBeamer>Начало сиянието на субтитрите в пълен екран</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Преместване на последната дума в следващия субтитърен ред</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Преместване нагоре на първата дума от следващият субтитърен ред</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxSelectionToLower>Избраното в малки букви</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>Избраното в главни букви</MainTextBoxSelectionToUpper>
     <MainTextBoxAutoBreak>Автоматично прекъсване на текст</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Непрекъсване на текст</MainTextBoxUnbreak>
+    <MainFileSaveAll>Запис на всички</MainFileSaveAll>
+    <Miscellaneous>Други</Miscellaneous>
+    <UseDoNotBreakAfterList>Използване на "не разделяй след списъка" (за авто-br)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>Покажи избраните редове по-рано/по-късно</Title>
@@ -1629,6 +1691,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ImageText>Изображение с текст</ImageText>
     <SpellCheckCompleted>Проверката на правопис е завършена.</SpellCheckCompleted>
     <SpellCheckAborted>Проверката на правопис е прекратена</SpellCheckAborted>
+    <UndoX>Отмяна: {0}</UndoX>
   </SpellCheck>
   <Split>
     <Title>Разделяне</Title>
