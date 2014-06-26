@@ -249,6 +249,8 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffectColor>Couleur effet</FontEffectColor>
     <FontSize>Taille</FontSize>
     <TopBottomMargin>Marge haut/bas</TopBottomMargin>
+    <FadeUpTime>Fondu début</FadeUpTime>
+    <FadeDownTime>Fondu fin</FadeDownTime>
     <ZPosition>Position Z</ZPosition>
     <ZPositionHelp>Les nombres positifs déplacent le texte plus loin, les nombres négatifs plus près ; si la position « Z » est zéro, alors c'est de la 2D.</ZPositionHelp>
     <ChooseColor>Choix...</ChooseColor>
@@ -264,7 +266,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <ProlongEndTime>Texte précédent prend tous le temps de l'espace</ProlongEndTime>
     <DivideEven>Textes partages le temps de l'espace</DivideEven>
   </DurationsBridgeGaps>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Ripper les sous-titres de ifo/vobs (dvd)</Title>
     <DvdGroupTitle>Info./ Fichiers DVD</DvdGroupTitle>
     <IfoFile>Fichier IFO</IfoFile>
@@ -285,7 +287,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <ReadingSubtitleData>Lecture données des sous-titres...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Ripper fichier vob {1} sur {2} : {0}</RippingVobFileXofYZ>
     <WrongIfoType>Mauvais type de fichier IFO ‘’{0}’’, il doit être de type ‘’DVDVideo-VTS’’. {1} Essayer autre fichier que « {2} »</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Choix de la langue</Title>
     <ChooseLanguageStreamId>Choix de la langue (stream-id)</ChooseLanguageStreamId>
@@ -1312,6 +1314,19 @@ Poursuivre?</SubtitleAppendPrompt>
     <UpdateAll>Tout mettre à jour</UpdateAll>
     <XPluginsUpdated>{0} plugin(s) mis à jour</XPluginsUpdated>
   </PluginsGet>
+  <RegularExpressionContextMenu>
+    <WordBoundary>Limite de mots (\b)</WordBoundary>
+    <NonWordBoundary>Sans limite de mots (\B)</NonWordBoundary>
+    <NewLine>Nouvelle ligne (\r\n)</NewLine>
+    <NewLineShort>Nouvelle ligne (\n)</NewLineShort>
+    <AnyDigit>Tous les chiffres (\d)</AnyDigit>
+    <AnyCharacter>Tous les caractères (.)</AnyCharacter>
+    <AnyWhitespace>Tous les espaces (\s)</AnyWhitespace>
+    <ZeroOrMore>Zéro ou plus (*)</ZeroOrMore>
+    <OneOrMore>Un ou plus (+)</OneOrMore>
+    <InCharacterGroup>Dans groupe de caractères ([test])</InCharacterGroup>
+    <NotInCharacterGroup>Pas dans groupe de caractères ([^test])</NotInCharacterGroup>
+  </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Supprimer le texte pour les malentendants</Title>
     <RemoveTextConditions>Règles de suppression</RemoveTextConditions>
@@ -1592,11 +1607,15 @@ Poursuivre?</SubtitleAppendPrompt>
     <ListViewColumnInsert>Colonne, coller du texte</ListViewColumnInsert>
     <ListViewColumnPaste>Colonne, coller du presse-papiers</ListViewColumnPaste>
     <ListViewFocusWaveform>Focus sur onde/spectrogramme</ListViewFocusWaveform>
+    <ListViewGoToNextError>Aller à l'erreur suivante</ListViewGoToNextError>
     <ShowBeamer>Début des sous-titres spectateur (plein écran)</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Déplacer le dernier mot dans la ligne du sous-titre suivant</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Déplacer le premier mot dans la ligne du sous-titre précédent</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxSelectionToLower>Sélectionner minuscules</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>Sélectionner majuscules</MainTextBoxSelectionToUpper>
     <MainTextBoxAutoBreak>Division de texte automatique</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Fusionner texte</MainTextBoxUnbreak>
+    <MainFileSaveAll>Tout enregistrer</MainFileSaveAll>
     <Miscellaneous>Divers</Miscellaneous>
     <UseDoNotBreakAfterList>Sans pause après la liste (pause automatique)</UseDoNotBreakAfterList>
   </Settings>
