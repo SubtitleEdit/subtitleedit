@@ -233,7 +233,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 for (int x = 0; x < bitmap.Width; x++)
                 {
                     Color c = bitmap.GetPixel(x, y);
-                    if (!pal.ContainsKey(c) && c != Color.Transparent && pal.Count < 255)
+                    if (!pal.ContainsKey(c) && c != Color.Transparent && pal.Count < 254)
                         pal.Add(c, pal.Count);
                 }
             }
