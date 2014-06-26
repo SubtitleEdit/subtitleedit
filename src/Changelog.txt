@@ -5,16 +5,25 @@
 * NEW:
    * Switched to .NET Framework 4.0 (from .NET Framework 2.0)
    * Runs 64-bit on 64-bit operating systems (requires 64-bit codecs!)
+   * New subtitle formats
    * New shortcuts
    * Export to image based formats can now do boxing
    * Export to image based formats, added 2k resolutions - thx Joseph
    * New tool "Merge lines with same text"
    * Spell check undo
+   * Check for updates
 * IMPROVED:
    * Updated Spanish (Mexico) language file - thx pakitonaranjo
    * Updated French language file - thx JM GBT
    * Updated Portuguese language file - thx moob
+   * Updated Korean language file - thx domddol
    * Updated German language file - thx Siegwarth
+   * Updated Polish language file - thx Admas
+   * Updated Russian language file - thx Leserg
+   * Updated Czech language file - thx Trottel
+   * Updated French language file - thx JM GBT
+   * Updated Bulgarian language file updated - thx Iavor
+   * Updated Dutch translation - thx Quetsbeek + minouhse
    * Export to image based format now remembers most settings
    * Always close SAMI tags
    * Merge selected lines in original - better handling of empty line
@@ -26,6 +35,7 @@
    * Ctrl+i now works better in text box - thx rebawest
 * FIXED:
    * OCR via "image compare" now works again
+   * Fixed several bugs regarding Bluray-sup export - thx mariner
    * Fixed "Bridge gap in duration" when working with SSA/ASS
    * Don't lock "settings.xml" when SE starts/exits - thx Doigt
    * Fixed crash when exporting to DOST - thx Nguyen Hoang
