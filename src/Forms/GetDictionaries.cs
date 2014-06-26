@@ -167,7 +167,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Error != null)
             {
-                MessageBox.Show("Download failed: " + e.Error.Message);
+                MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed + Environment.NewLine + 
+                                Environment.NewLine +                     
+                                e.Error.Message);
                 DialogResult = DialogResult.Cancel;
                 return;
             }
