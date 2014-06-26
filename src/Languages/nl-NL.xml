@@ -191,6 +191,15 @@ Suggesties zijn van harte welkom
     <Title>Pas de snelheid aan in procenten</Title>
     <Info>Verander de snelheid van de ondertiteling in procenten</Info>
   </ChangeSpeedInPercent>
+  <CheckForUpdates>
+    <Title>Controleer op updates</Title>
+    <CheckingForUpdates>Controleren op updates...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>Controleren op updates mislukt: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesNoneAvailable>Je gebruikt nu de nieuwste versie van Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNewVersion>Nieuwe versie beschikbaar!</CheckingForUpdatesNewVersion>
+    <InstallUpdate>Ga naar download pagina.</InstallUpdate>
+    <NoUpdates>Niet updaten.</NoUpdates>
+  </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Kies audio spoor</Title>
   </ChooseAudioTrack>
@@ -204,6 +213,13 @@ Suggesties zijn van harte welkom
     <Title>Kies taal</Title>
     <Language>Taal</Language>
   </ChooseLanguage>
+  <ColorChooser>
+    <Title>Kies kleur</Title>
+    <Red>Rood</Red>
+    <Green>Groen</Green>
+    <Blue>Blauw</Blue>
+    <Alpha>Alpha</Alpha>
+  </ColorChooser>
   <ColumnPaste>
     <Title>Voeg kolom in</Title>
     <ChooseColumn>Kies kolom</ChooseColumn>
@@ -247,6 +263,8 @@ Suggesties zijn van harte welkom
     <FontEffectColor>Effect kleur</FontEffectColor>
     <FontSize>Grootte</FontSize>
     <TopBottomMargin>Boven/onder marge</TopBottomMargin>
+    <FadeUpTime>Fade up tijd</FadeUpTime>
+    <FadeDownTime>Fade down tijd</FadeDownTime>
     <ZPosition>Z- positie</ZPosition>
     <ZPositionHelp>Positieve cijfers verplaatsen tekst verder weg, negatieve dichterbij, Als Z-positie is nul dan is het 2D</ZPositionHelp>
     <ChooseColor>Kies kleur...</ChooseColor>
@@ -361,11 +379,16 @@ Suggesties zijn van harte welkom
     <FontColor>Tekenkleur</FontColor>
     <BorderColor>Randkleur</BorderColor>
     <BorderWidth>Randbreedte</BorderWidth>
+    <BorderStyle>Randstijl</BorderStyle>
+    <BorderStyleOneBox>Een kader</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Kader voor elke lijn</BorderStyleBoxForEachLine>
+    <BorderStyleNormalWidthX>Normaal, breedte = {0}</BorderStyleNormalWidthX>
     <ShadowColor>Schaduw kleur</ShadowColor>
     <ShadowWidth>Schaduw breedte</ShadowWidth>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Beeldformaat</ImageFormat>
     <SimpleRendering>Eenvoudige weergave</SimpleRendering>
+    <AntiAliasingWithTransparency>Anti-aliasing met transparantie</AntiAliasingWithTransparency>
     <Text3D>3D teksten</Text3D>
     <SideBySide3D>Zij-aan-zij 3D</SideBySide3D>
     <HalfTopBottom3D>Half-Top/bodem</HalfTopBottom3D>
@@ -384,6 +407,8 @@ Suggesties zijn van harte welkom
     <SaveDvdStudioProStlAs>Kies DVD Studio Pro STL bestandsnaam</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>Enkele regels waren te lang: {0}</SomeLinesWereTooLongX>
     <LineHeight>Regel hoogte</LineHeight>
+    <BoxSingleLine>Kader - enkele lijn</BoxSingleLine>
+    <BoxMultiLine>Kader - meerdere lijnen</BoxMultiLine>
   </ExportPngXml>
   <ExportText>
     <Title>Tekst exporteren</Title>
@@ -727,6 +752,7 @@ Suggesties zijn van harte welkom
         <ChangeSpeedInPercent>Wijzig snelheid (procent)...</ChangeSpeedInPercent>
         <MergeShortLines>Samenvoegen korte regels...</MergeShortLines>
         <MergeDuplicateText>Voeg regels met dezelfde tekst samen</MergeDuplicateText>
+        <MergeSameTimeCodes>Regels met dezelfde tijdcodes samenvoegen...</MergeSameTimeCodes>
         <SplitLongLines>Splits lange regels...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimale weergavetijd tussen regels</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sorteer op</SortBy>
@@ -801,6 +827,7 @@ Suggesties zijn van harte welkom
         <LeaveSession>Verlaat sessie</LeaveSession>
       </Networking>
       <Help>
+        <CheckForUpdates>Controleer op updates...</CheckForUpdates>
         <Title>Help</Title>
         <Help>&amp;Hulp</Help>
         <About>&amp;Over</About>
@@ -1213,6 +1240,13 @@ Suggesties zijn van harte welkom
     <MergedText>Samengevoegde tekst</MergedText>
     <OnlyMergeContinuationLines>Alleen samenvoegen doorlopende regels</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <MergeTextWithSameTimeCodes>
+    <Title>Regels met dezelfde tijdcodes samenvoegen</Title>
+    <MaxDifferenceMilliseconds>Max. milliseconden verschil</MaxDifferenceMilliseconds>
+    <ReBreakLines>Breek regels opnieuw af</ReBreakLines>
+    <NumberOfMergesX>Aantal samengevoegd: {0}</NumberOfMergesX>
+    <MergedText>Samengevoegde tekst</MergedText>
+  </MergeTextWithSameTimeCodes>
   <ModifySelection>
     <Title>Modificeer selectie</Title>
     <Rule>Regel</Rule>
@@ -1292,11 +1326,26 @@ Suggesties zijn van harte welkom
     <PluginXDownloaded>Plugin {0} gedownload</PluginXDownloaded>
     <Download>&amp;Download</Download>
     <Remove>&amp;Verwijderen</Remove>
+    <UpdateAllX>Werk alles bij ({0})</UpdateAllX>
     <UnableToDownloadPluginListX>Kan plug lijst niet downloaden: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Nieuwere versie van Subtitle Edit nodig!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Update beschikbaar!]</UpdateAvailable>
     <UpdateAll>Update alles</UpdateAll>
+    <XPluginsUpdated>{0} plugin (s) bijgewerkt</XPluginsUpdated>
   </PluginsGet>
+  <RegularExpressionContextMenu>
+    <WordBoundary>Woord grens (\ b)</WordBoundary>
+    <NonWordBoundary>Niet-woord grens (\ B)</NonWordBoundary>
+    <NewLine>Nieuwe regel (\ r \ n)</NewLine>
+    <NewLineShort>Nieuwe regel (\ n)</NewLineShort>
+    <AnyDigit>Elk cijfer (\ d)</AnyDigit>
+    <AnyCharacter>Elk teken (.)</AnyCharacter>
+    <AnyWhitespace>Elke witruimte (\ s)</AnyWhitespace>
+    <ZeroOrMore>Nul of meer (*)</ZeroOrMore>
+    <OneOrMore>Een of meer (+)</OneOrMore>
+    <InCharacterGroup>In groep tekens ([Test])</InCharacterGroup>
+    <NotInCharacterGroup>Niet in groep tekens ([^-test])</NotInCharacterGroup>
+  </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Verwijder tekst voor slechthorenden</Title>
     <RemoveTextConditions>Verwijder tekst voorwaarden</RemoveTextConditions>
@@ -1416,6 +1465,7 @@ Suggesties zijn van harte welkom
     <AutoBackupEveryMinute>Elke minuut</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Elke 5e minuut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Elke 15e minuut</AutoBackupEveryFifteenMinutes>
+    <CheckForUpdates>Controleer op updates</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Sta bewerking van de oorspronkelijke ondertitel toe</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Vraag om verwijderen regels</PromptDeleteLines>
     <TimeCodeMode>Tijdcode-modus</TimeCodeMode>
@@ -1430,6 +1480,7 @@ Suggesties zijn van harte welkom
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll van VLC Media Player 1.1.0 of nieuwer</VlcMediaPlayerDescription>
+    <VlcBrowseToLabel>VLC pad (alleen nodig als je met de draagbare versie van VLC werkt)</VlcBrowseToLabel>
     <ShowStopButton>Toon stopknop</ShowStopButton>
     <ShowMuteButton>Toon mute-knop</ShowMuteButton>
     <ShowFullscreenButton>Toon volledige scherm knop</ShowFullscreenButton>
@@ -1459,12 +1510,13 @@ Suggesties zijn van harte welkom
     <WaveformUseFFMPEG>Gebruik FFMPEG voor golfvorm extractie</WaveformUseFFMPEG>
     <WaveformFFMPEGPath>Pad naar FFMPEG</WaveformFFMPEGPath>
     <WaveformBrowseToFFMPEG>Ga naar FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformBrowseToVLC>Blader naar VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha stijl</SubStationAlphaStyle>
     <ChooseFont>Kies lettertype</ChooseFont>
     <ChooseColor>Kies kleur</ChooseColor>
     <SsaOutline>Omranding</SsaOutline>
     <SsaShadow>Schaduw</SsaShadow>
-    <SsaOpaqueBox>Opaque doos</SsaOpaqueBox>
+    <SsaOpaqueBox>Opaque kader</SsaOpaqueBox>
     <Testing123>Testing 123...</Testing123>
     <Language>Taal</Language>
     <NamesIgnoreLists>Namen/negeer lijst (hoofdlettergevoelig)</NamesIgnoreLists>
@@ -1574,11 +1626,17 @@ Suggesties zijn van harte welkom
     <ListViewColumnInsert>Kolom, tekst invoegen</ListViewColumnInsert>
     <ListViewColumnPaste>Kolom, samenvoegen</ListViewColumnPaste>
     <ListViewFocusWaveform>Focus golfvorm/spectrogram</ListViewFocusWaveform>
+    <ListViewGoToNextError>Ga naar volgende fout</ListViewGoToNextError>
     <ShowBeamer>Start ondertiteling volledig scherm beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>verplaats laatste woord naar beneden naar volgende ondertitel</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>verplaats eerste woord naar boven van volgende ondertitel</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxSelectionToLower>Selectie naar kleine letters</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>Selectie naar hoofdletters</MainTextBoxSelectionToUpper>
     <MainTextBoxAutoBreak>Breek tekst automatisch af</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Breek tekst niet automatisch af</MainTextBoxUnbreak>
+    <MainFileSaveAll>Alles opslaan</MainFileSaveAll>
+    <Miscellaneous>Diversen</Miscellaneous>
+    <UseDoNotBreakAfterList>Gebruik breek-niet-af-lijst (voor auto-afbr)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>Toon geselecteerde regels eerder/later</Title>
@@ -1625,6 +1683,7 @@ Suggesties zijn van harte welkom
     <ImageText>Afbeelding tekst</ImageText>
     <SpellCheckCompleted>Spellingcontrole voltooid.</SpellCheckCompleted>
     <SpellCheckAborted>Spellingcontrole afgebroken</SpellCheckAborted>
+    <UndoX>Maak ongedaan: {0}</UndoX>
   </SpellCheck>
   <Split>
     <Title>Splits</Title>
@@ -1751,7 +1810,7 @@ Suggesties zijn van harte welkom
     <MarginVertical>Marge verticaal</MarginVertical>
     <Border>Grens</Border>
     <PlusShadow>+ Schaduw</PlusShadow>
-    <OpaqueBox>Opaque doos (gebruikt rand kleur)</OpaqueBox>
+    <OpaqueBox>Opaque kader (gebruikt rand kleur)</OpaqueBox>
     <Import>Importeren...</Import>
     <Export>Exporteer</Export>
     <Copy>Kopieer</Copy>
