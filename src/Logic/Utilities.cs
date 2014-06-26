@@ -2520,6 +2520,7 @@ namespace Nikse.SubtitleEdit.Logic
             text = text.Replace("< /I>", endTag);
             text = text.Replace("</ I>", endTag);
             text = text.Replace("< /I>", endTag);
+            text = text.Replace("< / I >", endTag);
 
             text = text.Replace("</i> <i>", "_@_");
             text = text.Replace(" _@_", "_@_");
