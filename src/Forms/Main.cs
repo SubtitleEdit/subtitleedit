@@ -11932,9 +11932,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    var reader = new System.IO.StreamReader(Path.Combine(Configuration.BaseDirectory, "Languages") + Path.DirectorySeparatorChar + cultureName + ".xml");
-                    Configuration.Settings.Language = Language.Load(reader);
-                    reader.Close();
+                    Configuration.Settings.Language = Language.Load(Path.Combine(Configuration.BaseDirectory, "Languages") + Path.DirectorySeparatorChar + cultureName + ".xml");
+
+                    //var reader = new System.IO.StreamReader(Path.Combine(Configuration.BaseDirectory, "Languages") + Path.DirectorySeparatorChar + cultureName + ".xml");
+                    //Configuration.Settings.Language = Language.Load(reader);
+                    //reader.Close();
                 }
                 Configuration.Settings.General.Language = cultureName;
                 _languageGeneral = Configuration.Settings.Language.General;
@@ -15014,7 +15016,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (mediaPlayer != null)
                     mediaPlayer.Pause();
-                var addWaveForm = new AddWareForm();
+                var addWaveForm = new AddWaveForm();
                 string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
                 string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
                 addWaveForm.Initialize(_videoFileName, spectrogramFolder, _videoAudioTrackNumber);
@@ -15384,7 +15386,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var addWaveForm = new AddWareForm();
+            var addWaveForm = new AddWaveForm();
             string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
             addWaveForm.InitializeViaWaveFile(fileName, spectrogramFolder);
             if (addWaveForm.ShowDialog() == DialogResult.OK)

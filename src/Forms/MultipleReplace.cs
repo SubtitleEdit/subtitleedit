@@ -58,8 +58,8 @@ namespace Nikse.SubtitleEdit.Forms
             splitContainer1.Panel1MinSize = 200;
             splitContainer1.Panel2MinSize = 200;
 
-            moveUpToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubrip.MoveUp;
-            moveDownToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubrip.MoveDown;
+            moveUpToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveUp;
+            moveDownToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveDown;
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;

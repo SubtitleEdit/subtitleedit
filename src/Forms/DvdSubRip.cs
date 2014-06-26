@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = string.Empty;
             buttonStartRipping.Enabled = false;
 
-            _language = Configuration.Settings.Language.DvdSubrip;
+            _language = Configuration.Settings.Language.DvdSubRip;
             Text = _language.Title;
             groupBoxDvd.Text = _language.DvdGroupTitle;
             labelIfoFile.Text = _language.IfoFile;

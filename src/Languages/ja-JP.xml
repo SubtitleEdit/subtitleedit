@@ -225,7 +225,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <FontSize>サイズ</FontSize>
     <ChooseColor>色の選択...</ChooseColor>
   </DCinemaProperties>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>ifo/vob (DVD) から字幕を抽出</Title>
     <DvdGroupTitle>DVD ファイル/情報</DvdGroupTitle>
     <IfoFile>IFO ファイル</IfoFile>
@@ -246,7 +246,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <ReadingSubtitleData>字幕データを読み取っています...</ReadingSubtitleData>
     <RippingVobFileXofYZ>{2} の vob ファイル {1} を抽出中: {0}</RippingVobFileXofYZ>
     <WrongIfoType>IFO の種類が '{0}' で 'DVDVIDEO-VTS' ではありません.{1}{2} 以上のファイルで試行してください</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>言語の選択</Title>
     <ChooseLanguageStreamId>言語の選択 (stream-id)</ChooseLanguageStreamId>

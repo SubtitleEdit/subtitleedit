@@ -254,7 +254,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ProlongEndTime>Text anterior pren tot el temps buit</ProlongEndTime>
     <DivideEven>Temps buit dividit entre texts</DivideEven>
   </DurationsBridgeGaps>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Extreu subtítols des de IFO/VOB (DVD)</Title>
     <DvdGroupTitle>Info fitxers DVD</DvdGroupTitle>
     <IfoFile>Fitxer IFO</IfoFile>
@@ -275,7 +275,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ReadingSubtitleData>Llegint dades subtítol...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Extraient fitxer vob {1} de {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>IFO és '{0}' i no 'DVDVIDEO-VTS'.{1} Intenta amb altre fitxer {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Escolliu idioma</Title>
     <ChooseLanguageStreamId>Escolliu idioma (flux-id)</ChooseLanguageStreamId>

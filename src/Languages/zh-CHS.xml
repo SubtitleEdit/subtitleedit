@@ -264,7 +264,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <ProlongEndTime>间隔时间分配给前一行</ProlongEndTime>
     <DivideEven>间隔时间均分给前后两行</DivideEven>
   </DurationsBridgeGaps>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>从 DVD 中提取字幕</Title>
     <DvdGroupTitle>DVD 文件/信息</DvdGroupTitle>
     <IfoFile>IFO 文件</IfoFile>
@@ -285,7 +285,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <ReadingSubtitleData>正在读取字幕数据...</ReadingSubtitleData>
     <RippingVobFileXofYZ>正在提取 VOB 文件 {1}/{2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>IFO 类型是 '{0}' 而不是 'DVDVIDEO-VTS'。{1}请尝试其它文件而不是 {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>选择语言</Title>
     <ChooseLanguageStreamId>选择语言 (流 ID)</ChooseLanguageStreamId>

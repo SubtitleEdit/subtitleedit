@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.AddToNames AddToNames;
         public LanguageStructure.AddToOcrReplaceList AddToOcrReplaceList;
         public LanguageStructure.AddToUserDictionary AddToUserDictionary;
-        public LanguageStructure.AddWareForm AddWaveForm;
+        public LanguageStructure.AddWaveForm AddWaveForm;
         public LanguageStructure.AdjustDisplayDuration AdjustDisplayDuration;
         public LanguageStructure.ApplyDurationLimits ApplyDurationLimits;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.CompareSubtitles CompareSubtitles;
         public LanguageStructure.DCinemaProperties DCinemaProperties;
         public LanguageStructure.DurationsBridgeGaps DurationsBridgeGaps;
-        public LanguageStructure.DvdSubRip DvdSubrip;
+        public LanguageStructure.DvdSubRip DvdSubRip;
         public LanguageStructure.DvdSubRipChooseLanguage DvdSubRipChooseLanguage;
         public LanguageStructure.EbuSaveOtpions EbuSaveOtpions;
         public LanguageStructure.EffectKaraoke EffectKaraoke;
@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Description = "Add word to user dictionary (not case sensitive)",
             };
 
-            AddWaveForm = new LanguageStructure.AddWareForm
+            AddWaveForm = new LanguageStructure.AddWaveForm
             {
                 Title = "Generate wave form data",
                 GenerateWaveFormData = "Generate wave form data",
@@ -438,7 +438,7 @@ namespace Nikse.SubtitleEdit.Logic
                 DivideEven = "Texts divides gap time",
             };
 
-            DvdSubrip = new LanguageStructure.DvdSubRip
+            DvdSubRip = new LanguageStructure.DvdSubRip
             {
                 Title = "Rip subtitles from ifo/vobs (dvd)",
                 DvdGroupTitle = "DVD files/info",
@@ -2336,20 +2336,16 @@ Keep changes?",
 
         }
 
-        public static Language LoadAndDecompress(StreamReader sr)
-        {
-            using (var zip = new GZipStream(sr.BaseStream, CompressionMode.Decompress))
-            {
-                var s = new XmlSerializer(typeof(Language));
-                return (Language)s.Deserialize(zip);
-            }
-        }
-
         public static Language Load(StreamReader sr)
         {
             var s = new XmlSerializer(typeof(Language));
             var language = (Language)s.Deserialize(sr);
             return language;
+        }
+
+        public static Language Load(string fileName)
+        {
+            return LanguageDeserializer.CustomDeserializeLanguage(fileName);
         }
 
         public void Save()

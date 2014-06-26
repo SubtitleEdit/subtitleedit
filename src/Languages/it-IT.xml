@@ -262,7 +262,7 @@
     <ProlongEndTime>Il testo precedente prende tutto il tempo di vuoto</ProlongEndTime>
     <DivideEven>I testi si suddividono il tempo vuoto        </DivideEven>
   </DurationsBridgeGaps>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Estrazione sottotitoli da ifo/vob (DVD)</Title>
     <DvdGroupTitle>File DVD/info</DvdGroupTitle>
     <IfoFile>File IFO</IfoFile>
@@ -283,7 +283,7 @@
     <ReadingSubtitleData>Lettura informazioni sottotitoli...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Estrazione file vob {1} di {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>Il tipo IFO è '{0}' e non 'DVDVIDEO-VTS'.{1}Prova un altro file di {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Scegli lingua</Title>
     <ChooseLanguageStreamId>Scegli lingua (ID del flusso)</ChooseLanguageStreamId>

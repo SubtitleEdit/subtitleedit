@@ -280,7 +280,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ProlongEndTime>이전 텍스트로 시간 간격 메움</ProlongEndTime>
     <DivideEven>텍스트로 시간 간격을 공유</DivideEven>
   </DurationsBridgeGaps>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>DVD(ifo/vob)에서 자막 가져오기</Title>
     <DvdGroupTitle>DVD 파일/정보</DvdGroupTitle>
     <IfoFile>IFO 파일</IfoFile>
@@ -301,7 +301,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ReadingSubtitleData>자막 데이터를 읽는 중...</ReadingSubtitleData>
     <RippingVobFileXofYZ>{2}개의 Vob 중 {1}번째 추출 중.../ 현재 파일: {0}</RippingVobFileXofYZ>
     <WrongIfoType>이 IFO의 형식은 '{0}'입니다. 'DVDVideo-VTS'가 아닙니다. {2}가 아닌 다른 파일로 {1}시도해 주십시오!</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>언어 선택</Title>
     <ChooseLanguageStreamId>언어 선택 (스트림 ID)</ChooseLanguageStreamId>

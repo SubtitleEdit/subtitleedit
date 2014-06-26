@@ -120,9 +120,17 @@ namespace Nikse.SubtitleEdit.Forms
         private void ChangeLanguage_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
             else if (e.Shift && e.Control && e.Alt && e.KeyCode == Keys.L)
+            {
                 Configuration.Settings.Language.Save();
+            }
+            else if (e.Shift && e.Control && e.Alt && e.KeyCode == Keys.C)
+            {
+                XmlDeserializerGenerator.GenerateCSharpXmlDeserializerForLanguageStructure();
+            }
             else if (e.KeyCode == Keys.F1)
             {
                 Utilities.ShowHelp("#translate");

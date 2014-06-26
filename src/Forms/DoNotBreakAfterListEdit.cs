@@ -19,8 +19,8 @@ namespace Nikse.SubtitleEdit
 
             Text = Configuration.Settings.Language.Settings.UseDoNotBreakAfterList;
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
-            buttonRemoveNoBreakAfter.Text = Configuration.Settings.Language.DvdSubrip.Remove;
-            buttonAddNoBreakAfter.Text = Configuration.Settings.Language.DvdSubrip.Add;
+            buttonRemoveNoBreakAfter.Text = Configuration.Settings.Language.DvdSubRip.Remove;
+            buttonAddNoBreakAfter.Text = Configuration.Settings.Language.DvdSubRip.Add;
             radioButtonText.Text = Configuration.Settings.Language.General.Text;
             radioButtonRegEx.Text = Configuration.Settings.Language.MultipleReplace.RegularExpression;
             buttonOK.Text = Configuration.Settings.Language.General.OK;

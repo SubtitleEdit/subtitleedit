@@ -253,7 +253,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ProlongEndTime>Previous text takes all gap time</ProlongEndTime>
     <DivideEven>Texts divides gap time</DivideEven>
   </DurationsBridgeGaps>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Feliratok rippelése ifo/vob fájlokból (dvd)</Title>
     <DvdGroupTitle>DVD fájlok/információ</DvdGroupTitle>
     <IfoFile>IFO fájl</IfoFile>
@@ -274,7 +274,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ReadingSubtitleData>Felirat adat olvasás...</ReadingSubtitleData>
     <RippingVobFileXofYZ>{1} - {2} vob fájl rippelése: {0}</RippingVobFileXofYZ>
     <WrongIfoType>'{0}' IFO típus és nem 'DVDVIDEO-VTS'.{1}Próbáljon másik fájlt, mint {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Válasszon nyelvet</Title>
     <ChooseLanguageStreamId>Válasszon nyelvet (adatfolyam-azonosító)</ChooseLanguageStreamId>

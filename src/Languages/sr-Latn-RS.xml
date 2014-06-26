@@ -225,7 +225,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <FontSize>Veličina Fonta</FontSize>
     <ChooseColor>Odaberite boju...</ChooseColor>
   </DCinemaProperties>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Vađenje DVD prevoda</Title>
     <DvdGroupTitle>Datoteke DVD-a</DvdGroupTitle>
     <IfoFile>IFO</IfoFile>
@@ -246,7 +246,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <ReadingSubtitleData>Učitavam prevod</ReadingSubtitleData>
     <RippingVobFileXofYZ>Izvlačim VOB datoteke… ({1} od {2}): {0}</RippingVobFileXofYZ>
     <WrongIfoType>IFO je pogrešne vrste. {1}Izaberite drugu datoteku.</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Biranje jezika</Title>
     <ChooseLanguageStreamId>Izaberite željeni jezik ispod:</ChooseLanguageStreamId>

@@ -282,7 +282,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ProlongEndTime>Předchozí text zabere celý čas mezery</ProlongEndTime>
     <DivideEven>Texty si rozdělí čas mezery</DivideEven>
   </DurationsBridgeGaps>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Vytáhnout titulky z souborů ifo/vob (DVD)</Title>
     <DvdGroupTitle>DVD soubory/info</DvdGroupTitle>
     <IfoFile>Soubor IFO</IfoFile>
@@ -303,7 +303,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ReadingSubtitleData>Čtení dat titulků...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Vytahování souboru vob {1} z {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>Typ IFO je '{0}' a ne 'DVDVIDEO-VTS'.{1}Zkuste jiný soubor než {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Vybrat jazyk</Title>
     <ChooseLanguageStreamId>Vyberte jazyk (ID stopy)</ChooseLanguageStreamId>

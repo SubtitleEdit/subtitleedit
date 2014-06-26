@@ -25,9 +25,9 @@ namespace Nikse.SubtitleEdit.Forms
             listViewParts.Columns[2].Text = Configuration.Settings.Language.JoinSubtitles.EndTime;
             listViewParts.Columns[3].Text = Configuration.Settings.Language.JoinSubtitles.FileName;
 
-            buttonAddVobFile.Text = Configuration.Settings.Language.DvdSubrip.Add;
-            ButtonRemoveVob.Text = Configuration.Settings.Language.DvdSubrip.Remove;
-            buttonClear.Text = Configuration.Settings.Language.DvdSubrip.Clear;
+            buttonAddVobFile.Text = Configuration.Settings.Language.DvdSubRip.Add;
+            ButtonRemoveVob.Text = Configuration.Settings.Language.DvdSubRip.Remove;
+            buttonClear.Text = Configuration.Settings.Language.DvdSubRip.Clear;
 
             Text = Configuration.Settings.Language.JoinSubtitles.Title;
             groupBoxPreview.Text = Configuration.Settings.Language.JoinSubtitles.Information;

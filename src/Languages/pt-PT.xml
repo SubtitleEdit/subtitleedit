@@ -284,7 +284,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ProlongEndTime>Texto anterior com todos os tempos de intervalo</ProlongEndTime>
     <DivideEven>Texto divide o tempo do intervalo</DivideEven>
   </DurationsBridgeGaps>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Extrair legendas de IFO/VOBs (DVD)</Title>
     <DvdGroupTitle>Ficheiro DVD/info</DvdGroupTitle>
     <IfoFile>Ficheiro IFO</IfoFile>
@@ -305,7 +305,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ReadingSubtitleData>A ler dados da legenda...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Extrair ficheiro VOB {1} de {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>O tipo IFO é '{0}' e não 'DVDVIDEO-VTS'.{1}Tentar outro ficheiro que {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Seleccionar idioma</Title>
     <ChooseLanguageStreamId>Seleccionar idioma (stream-id)</ChooseLanguageStreamId>

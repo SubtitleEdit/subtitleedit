@@ -226,7 +226,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <FontSize>Storlek</FontSize>
     <ChooseColor>Välj färg</ChooseColor>
   </DCinemaProperties>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Rippa text från Ifo/vobs (DVD)</Title>
     <DvdGroupTitle>DVD-fil/info</DvdGroupTitle>
     <IfoFile>IFO-fil</IfoFile>
@@ -247,7 +247,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <ReadingSubtitleData>Läs text data</ReadingSubtitleData>
     <RippingVobFileXofYZ>Rippa VOB-fil {1} av {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>IFO typ '{0}' och inte 'DVD-video VTS'. {1} Försök med en annan fil än {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Välj språk</Title>
     <ChooseLanguageStreamId>Välj språk (stream-id)</ChooseLanguageStreamId>
