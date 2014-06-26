@@ -25,7 +25,7 @@
    * Updated Bulgarian language file updated - thx Iavor
    * Updated Dutch translation - thx Quetsbeek + minouhse
    * Export to image based format now remembers most settings
-   * Always close SAMI tags
+   * Always close SAMI tags (except when end time=next start time)
    * Merge selected lines in original - better handling of empty line
    * DCinema interop - better use of "Effect" - thx gena
    * Drag & drop support for subtitle comparer - thx ivandrofly
