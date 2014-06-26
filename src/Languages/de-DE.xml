@@ -193,6 +193,15 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Geschwindigkeit prozentual ändern</Title>
     <Info>Geschwindigeit der Untertitel prozentual ändern</Info>
   </ChangeSpeedInPercent>
+  <CheckForUpdates>
+    <Title>Nach Aktualisierungen suchen</Title>
+    <CheckingForUpdates>Suche nach Aktualisierungen...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>Suche fehlgeschlagen: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesNoneAvailable>Die aktuellste Subtitle Edit Version wird schon verwendet :)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNewVersion>Neue Version verfügbar!</CheckingForUpdatesNewVersion>
+    <InstallUpdate>Zur Downloadseite</InstallUpdate>
+    <NoUpdates>Nicht Aktualisieren</NoUpdates>
+  </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Audiospur wählen</Title>
   </ChooseAudioTrack>
@@ -206,6 +215,13 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Sprache auswählen</Title>
     <Language>Sprache</Language>
   </ChooseLanguage>
+  <ColorChooser>
+    <Title>Farbe wählen</Title>
+    <Red>Rot</Red>
+    <Green>Grün</Green>
+    <Blue>Blau</Blue>
+    <Alpha>Alpha</Alpha>
+  </ColorChooser>
     <ColumnPaste>
     <Title>Spalte einfügen</Title>
     <ChooseColumn>Spalte auswählen</ChooseColumn>
@@ -365,6 +381,10 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Schriftfarbe</FontColor>
     <BorderColor>Rahmenfarbe</BorderColor>
     <BorderWidth>Rahmenbreite</BorderWidth>
+    <BorderStyle>Rahmenstil</BorderStyle>
+    <BorderStyleOneBox>Eine Box</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Box für jede Zeile</BorderStyleBoxForEachLine>
+    <BorderStyleNormalWidthX>Normal, Breite={0}</BorderStyleNormalWidthX>
     <ShadowColor>Schattenfarbe</ShadowColor>
     <ShadowWidth>Schattenbreite</ShadowWidth>
     <Transparency>Alpha</Transparency>
@@ -389,6 +409,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL Dateiname wählen</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>Einige Zeilen sind zu lang: {0}</SomeLinesWereTooLongX>
     <LineHeight>Zeilenhöhe</LineHeight>
+    <BoxSingleLine>Box - Einzeilig</BoxSingleLine>
+    <BoxMultiLine>Box - Mehrzeilig</BoxMultiLine>
   </ExportPngXml>
   <ExportText>
     <Title>Text exportieren</Title>
@@ -732,6 +754,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeSpeedInPercent>Geschwindigkeit ändern (%)...</ChangeSpeedInPercent>
         <MergeShortLines>Kurze Texte verbinden...</MergeShortLines>
         <MergeDuplicateText>Zeilen mit gleichen Text verbinden...</MergeDuplicateText>
+        <MergeSameTimeCodes>Zeilen mit gleichen Zeitstempel verbinden...</MergeSameTimeCodes>
         <SplitLongLines>Lange Texte trennen...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimale Anzeigezeit zwischen Untertitel...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sortieren nach</SortBy>
@@ -806,6 +829,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <LeaveSession>Sitzung verlassen</LeaveSession>
       </Networking>
       <Help>
+        <CheckForUpdates>Nach Aktualisierungen suchen...</CheckForUpdates>
         <Title>Hilfe</Title>
         <Help>&amp;Hilfe</Help>
         <About>Ü&amp;ber</About>
@@ -965,7 +989,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Original Untertitel {0} gespeichert</SavedOriginalSubtitleX>
     <FileOnDiskModified>Datei auf Disk wurde geändert</FileOnDiskModified>
     <OverwriteModifiedFile>Soll die Datei {0} bearbeitet am {1} {2}{3} überschrieben werden mit aktueller Datei, geladen am {4} {5}?</OverwriteModifiedFile>
-    <UnableToSaveSubtitleX>Konnte Untertiteldatei {0} nicht speichern</UnableToSaveSubtitleX>
+    <UnableToSaveSubtitleX>Konnte Untertiteldatei {0} nicht speichern
+Untertitel scheint leer zu sein - erneutes Speichern versuchen!</UnableToSaveSubtitleX>
     <BeforeNew>Vor Neu</BeforeNew>
     <New>Neu</New>
     <BeforeConvertingToX>Vor Konvertierung zu {0}</BeforeConvertingToX>
@@ -1012,7 +1037,8 @@ Am Anfang des Dokuments weitersuchen?</ReplaceXContinue>
     <TextingForHearingImpairedRemovedOneLine>Text für Hörgeschädigte entfernt: Ein Text</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Text für Hörgeschädigte entfernt: {0} Texte</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Untertitel wurde getrennt</SubtitleSplitted>
-    <SubtitleAppendPrompt>Es wird ein existierender Untertitel am aktuell geladenen Untertitel angehängt, der schon an das Video angepasst sein sollte.
+    <SubtitleAppendPrompt>Es wird ein existierender Untertitel am aktuell geladenen Untertitel
+angehängt, der schon an das Video angepasst sein sollte.
 
 Fortfahren?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Untertitel anhängen</SubtitleAppendPromptTitle>
@@ -1223,6 +1249,13 @@ Fortfahren?</SubtitleAppendPrompt>
     <MergedText>Verbundener Text</MergedText>
     <OnlyMergeContinuationLines>Nur zusammengehörende Texte verbinden</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <MergeTextWithSameTimeCodes>
+    <Title>Merge lines with same time codes</Title>
+    <MaxDifferenceMilliseconds>Max. milliseconds difference</MaxDifferenceMilliseconds>
+    <ReBreakLines>Re-break lines</ReBreakLines>
+    <NumberOfMergesX>Number of merges: {0}</NumberOfMergesX>
+    <MergedText>Verbundener Text</MergedText>
+  </MergeTextWithSameTimeCodes>
   <ModifySelection>
     <Title>Auswahl ändern</Title>
     <Rule>Regel</Rule>
@@ -1443,6 +1476,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <AutoBackupEveryMinute>Jede Minute</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Alle 5 Minuten</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Alle 15 Minuten</AutoBackupEveryFifteenMinutes>
+    <CheckForUpdates>Nach Aktualisierungen suchen</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Erlaube Bearbeitung des Original Untertitels</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Nachfrage beim Löschen von Texten</PromptDeleteLines>
     <TimeCodeMode>Zeitstempelmodus</TimeCodeMode>
@@ -1660,6 +1694,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ImageText>Bildtext</ImageText>
     <SpellCheckCompleted>Rechtschreibprüfung abgeschlossen</SpellCheckCompleted>
     <SpellCheckAborted>Rechtschreibprüfung abgebrochen</SpellCheckAborted>
+    <UndoX>Rückgängig: {0}</UndoX>
   </SpellCheck>
   <Split>
     <Title>Trennen</Title>
