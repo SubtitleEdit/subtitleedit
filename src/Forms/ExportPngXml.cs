@@ -102,8 +102,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string BdnXmlTimeCode(TimeCode timecode)
         {
-            int frames = (int)Math.Round(timecode.Milliseconds / (1000.0 / FrameRate));
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", timecode.Hours, timecode.Minutes, timecode.Seconds, frames);
+            var fr = FrameRate;
+            var tc = new TimeCode(timecode.TotalMilliseconds * (Math.Ceiling(fr) / fr));            
+            int frames =SubtitleFormat.MillisecondsToFramesMaxFrameRate(tc.Milliseconds);
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", tc.Hours, tc.Minutes, tc.Seconds, frames);
         }
 
         private static ContentAlignment GetAlignmentFromParagraph(Paragraph p, SubtitleFormat format, Subtitle subtitle)
