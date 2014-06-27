@@ -326,11 +326,18 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static bool IsPartOfNumber(string s, int position)
         {
+            if (s == null || s.Trim().Length == 0)
+                return false;
+
+            if (position + 2 > s.Length)
+                return false;
+
+            const string numbers = "1234567890";
             if (",.".Contains(s[position].ToString()))
             {
                 if (position > 0 && position < s.Length - 1)
                 {
-                    return "1234567890".Contains(s[position - 1].ToString()) && "1234567890".Contains(s[position + 1].ToString());
+                    return numbers.Contains(s[position - 1].ToString()) && numbers.Contains(s[position + 1].ToString());
                 }
             }
             return false;
@@ -804,6 +811,9 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (!s.Contains("<"))
                 return s;
+
+            if(s.Contains("< "))
+                s = FixInvalidItalicTags(s);
 
             s = s.Replace("<i>", string.Empty);
             s = s.Replace("<і>", string.Empty);  // different unicode chars
@@ -2520,6 +2530,7 @@ namespace Nikse.SubtitleEdit.Logic
             text = text.Replace("< /I>", endTag);
             text = text.Replace("</ I>", endTag);
             text = text.Replace("< /I>", endTag);
+            text = text.Replace("< / I >", endTag);
 
             text = text.Replace("</i> <i>", "_@_");
             text = text.Replace(" _@_", "_@_");
@@ -2745,7 +2756,7 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
- /// <summary>
+        /// <summary>
         /// HTML-encodes a string
         /// </summary>
         /// <param name="text">Text string to encode</param>
