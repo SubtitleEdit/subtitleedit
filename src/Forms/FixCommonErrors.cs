@@ -958,11 +958,13 @@ namespace Nikse.SubtitleEdit.Forms
             const string endTag = "</i>";
             string fixAction = _language.FixInvalidItalicTag;
             int noOfInvalidHtmlTags = 0;
+            listViewFixes.BeginUpdate();
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
-                if (_subtitle.Paragraphs[i].Text.Contains("<"))
+                var text = _subtitle.Paragraphs[i].Text;
+                if (text.Contains("<"))
                 {
-                    string text = _subtitle.Paragraphs[i].Text.Replace(beginTag.ToUpper(), beginTag).Replace(endTag.ToUpper(), endTag);
+                    text = text.Replace(beginTag.ToUpper(), beginTag).Replace(endTag.ToUpper(), endTag);
                     string oldText = text;
 
                     text = Utilities.FixInvalidItalicTags(text);
@@ -978,6 +980,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            listViewFixes.EndUpdate();
+            listViewFixes.Refresh();
             if (noOfInvalidHtmlTags > 0)
                 LogStatus(_language.FixInvalidItalicTags, string.Format(_language.XInvalidHtmlTagsFixed, noOfInvalidHtmlTags));
         }
