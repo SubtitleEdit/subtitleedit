@@ -833,6 +833,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             oldVlcLocation = Configuration.Settings.General.VlcLocation;
             oldVlcLocationRelative = Configuration.Settings.General.VlcLocationRelative;
+
+            labelPlatform.Text = (IntPtr.Size * 8) + "-bit";
         }
 
         private string GetShortcutText(string shortcut)

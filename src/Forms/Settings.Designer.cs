@@ -33,6 +33,7 @@
             this.tabControlSettings = new System.Windows.Forms.TabControl();
             this.tabPageGenerel = new System.Windows.Forms.TabPage();
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
+            this.checkBoxCheckForUpdates = new System.Windows.Forms.CheckBox();
             this.numericUpDownMinGapMs = new System.Windows.Forms.NumericUpDown();
             this.labelMinGapMs = new System.Windows.Forms.Label();
             this.labelSpellChecker = new System.Windows.Forms.Label();
@@ -280,7 +281,7 @@
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFMPEG = new System.Windows.Forms.OpenFileDialog();
-            this.checkBoxCheckForUpdates = new System.Windows.Forms.CheckBox();
+            this.labelPlatform = new System.Windows.Forms.Label();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -448,6 +449,16 @@
             this.groupBoxMiscellaneous.TabIndex = 0;
             this.groupBoxMiscellaneous.TabStop = false;
             this.groupBoxMiscellaneous.Text = "Miscellaneous";
+            // 
+            // checkBoxCheckForUpdates
+            // 
+            this.checkBoxCheckForUpdates.AutoSize = true;
+            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(441, 399);
+            this.checkBoxCheckForUpdates.Name = "checkBoxCheckForUpdates";
+            this.checkBoxCheckForUpdates.Size = new System.Drawing.Size(114, 17);
+            this.checkBoxCheckForUpdates.TabIndex = 45;
+            this.checkBoxCheckForUpdates.Text = "Check for updates";
+            this.checkBoxCheckForUpdates.UseVisualStyleBackColor = true;
             // 
             // numericUpDownMinGapMs
             // 
@@ -1682,6 +1693,7 @@
             // 
             // groupBoxVideoEngine
             // 
+            this.groupBoxVideoEngine.Controls.Add(this.labelPlatform);
             this.groupBoxVideoEngine.Controls.Add(this.buttonVlcPathBrowse);
             this.groupBoxVideoEngine.Controls.Add(this.textBoxVlcPath);
             this.groupBoxVideoEngine.Controls.Add(this.labelVlcPath);
@@ -3264,15 +3276,16 @@
             // 
             this.openFileDialogFFMPEG.FileName = "openFileDialog1";
             // 
-            // checkBoxCheckForUpdates
+            // labelPlatform
             // 
-            this.checkBoxCheckForUpdates.AutoSize = true;
-            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(441, 399);
-            this.checkBoxCheckForUpdates.Name = "checkBoxCheckForUpdates";
-            this.checkBoxCheckForUpdates.Size = new System.Drawing.Size(114, 17);
-            this.checkBoxCheckForUpdates.TabIndex = 45;
-            this.checkBoxCheckForUpdates.Text = "Check for updates";
-            this.checkBoxCheckForUpdates.UseVisualStyleBackColor = true;
+            this.labelPlatform.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPlatform.ForeColor = System.Drawing.Color.Gray;
+            this.labelPlatform.Location = new System.Drawing.Point(724, 13);
+            this.labelPlatform.Name = "labelPlatform";
+            this.labelPlatform.Size = new System.Drawing.Size(83, 11);
+            this.labelPlatform.TabIndex = 27;
+            this.labelPlatform.Text = "x-bit";
+            this.labelPlatform.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // Settings
             // 
@@ -3634,5 +3647,6 @@
         private System.Windows.Forms.CheckBox checkBoxUseDoNotBreakAfterList;
         private System.Windows.Forms.Button buttonEditDoNotBreakAfterList;
         private System.Windows.Forms.CheckBox checkBoxCheckForUpdates;
+        private System.Windows.Forms.Label labelPlatform;
     }
 }
