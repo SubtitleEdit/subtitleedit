@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Shift && e.Control && e.Alt && e.KeyCode == Keys.C)
             {
-                XmlDeserializerGenerator.GenerateCSharpXmlDeserializerForLanguageStructure();
+                LanguageDeserializerGenerator.GenerateCSharpXmlDeserializerForLanguage();
             }
             else if (e.KeyCode == Keys.F1)
             {

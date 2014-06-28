@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.OCR;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -3435,38 +3436,38 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = _subtitle.Paragraphs[i];
                 var text = p.Text;
-                if (!text.Contains("..") || !AllowFix(p, fixAction))
-                    continue;
-
-                var oldText = text;
-                if (!text.Contains(Environment.NewLine))
+                if (text.Contains("..") && AllowFix(p, fixAction))
                 {
-                    text = FixEllipsesStartHelper(text);
-                    if(oldText != text)
+                    var oldText = text;
+                    if (!text.Contains(Environment.NewLine))
                     {
-                        p.Text = text;
-                        fixCount++;
-                        _totalErrors++;
-                        AddFixToListView(p, fixAction, oldText, text);
+                        text = FixCommonErrorsHelper.FixEllipsesStartHelper(text);
+                        if (oldText != text)
+                        {
+                            p.Text = text;
+                            fixCount++;
+                            _totalErrors++;
+                            AddFixToListView(p, fixAction, oldText, text);
+                        }
                     }
-                }
-                else
-                {
-                    var lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    var fixedParagraph = string.Empty;
-                    for (int k = 0; k < lines.Length; k++)
+                    else
                     {
-                        var line = lines[k];
-                        fixedParagraph += Environment.NewLine + FixEllipsesStartHelper(line);
-                        fixedParagraph = fixedParagraph.Trim();
-                    }
+                        var lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        var fixedParagraph = string.Empty;
+                        for (int k = 0; k < lines.Length; k++)
+                        {
+                            var line = lines[k];
+                            fixedParagraph += Environment.NewLine + FixCommonErrorsHelper.FixEllipsesStartHelper(line);
+                            fixedParagraph = fixedParagraph.Trim();
+                        }
 
-                    if (fixedParagraph != text)
-                    {
-                        p.Text = fixedParagraph;
-                        fixCount++;
-                        _totalErrors++;
-                        AddFixToListView(p, fixAction, oldText, fixedParagraph);
+                        if (fixedParagraph != text)
+                        {
+                            p.Text = fixedParagraph;
+                            fixCount++;
+                            _totalErrors++;
+                            AddFixToListView(p, fixAction, oldText, fixedParagraph);
+                        }
                     }
                 }
             }
@@ -3476,72 +3477,7 @@ namespace Nikse.SubtitleEdit.Forms
                 LogStatus(_language.FixEllipsesStart, string.Format(_language.XFixEllipsesStart, fixCount));
         }
 
-        private string FixEllipsesStartHelper(string text)
-        {
-            if (text == null || text.Trim().Length < 4)
-                return text;
-            if (!text.Contains(".."))
-                return text;
-
-            if (text.StartsWith("..."))
-            {
-                text = text.TrimStart('.');
-            }
-
-            text = text.Replace("-..", "- ..");
-            var tag = "- ...";
-            if (text.StartsWith(tag))
-            {
-                text = "- " + text.Substring(tag.Length, text.Length - tag.Length);
-                while (text.StartsWith("- ."))
-                {
-                    text = "- " + text.Substring(3, text.Length - 3);
-                    text = text.Replace("  ", " ");
-                }
-            }
-
-            tag = "<i>...";
-            if (text.StartsWith(tag))
-            {
-                text = "<i>" + text.Substring(tag.Length, text.Length - tag.Length);
-                while (text.StartsWith("<i>."))
-                    text = "<i>" + text.Substring(4, text.Length - 4);
-            }
-            tag = "<i> ...";
-            if (text.StartsWith(tag))
-            {
-                text = "<i>" + text.Substring(tag.Length, text.Length - tag.Length);
-                while (text.StartsWith("<i>."))
-                    text = "<i>" + text.Substring(4, text.Length - 4);
-            }
-
-            tag = "- <i>...";
-            if (text.StartsWith(tag))
-            {
-                text = "- <i>" + text.Substring(tag.Length, text.Length - tag.Length);
-                while (text.StartsWith("- <i>."))
-                    text = "- <i>" + text.Substring(6, text.Length - 6);
-            }
-            tag = "- <i> ...";
-            if (text.StartsWith(tag))
-            {
-                text = "- <i>" + text.Substring(tag.Length, text.Length - tag.Length);
-                while (text.StartsWith("- <i>."))
-                    text = "- <i>" + text.Substring(6, text.Length - 6);
-            }
-
-            // Narrator:... Hello foo!
-            text = text.Replace(":..", ": ..");
-            tag = ": ..";
-            if(text.Contains(tag))
-            {
-                text = text.Replace(": ..", ": ");
-                while (text.Contains(": ."))
-                    text = text.Replace(": .", ": ");
-            }
-            text = text.Replace("  ", " ");
-            return text;
-        }
+       
 
         private string FixMissingOpenBracket(string text, string openB)
         {
