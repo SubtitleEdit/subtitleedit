@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Forms;
 
 namespace Test
 {
@@ -571,6 +572,72 @@ namespace Test
         }
         #endregion
 
+        #region Ellipses start
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartNormal1()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("...But that is true.");
+            Assert.AreEqual(result, "But that is true.");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartNormal2()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("... But that is true.");
+            Assert.AreEqual(result, "But that is true.");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartNormal3()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("Kurt: ... true but bad.");
+            Assert.AreEqual(result, "Kurt: true but bad.");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartNormal4()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("Kurt: ... true but bad.");
+            Assert.AreEqual(result, "Kurt: true but bad.");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartItalic1()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("<i>...But that is true.</i>");
+            Assert.AreEqual(result, "<i>But that is true.</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartItalic2()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("<i>... But that is true.</i>");
+            Assert.AreEqual(result, "<i>But that is true.</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartItalic3()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("<i>Kurt: ... true but bad.</i>");
+            Assert.AreEqual(result, "<i>Kurt: true but bad.</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartItalic4()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("<i>Kurt: ... true but bad.</i>");
+            Assert.AreEqual(result, "<i>Kurt: true but bad.</i>");
+        }
+
+        #endregion
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -601,9 +668,6 @@ namespace Test
             target.FixOcrErrorsViaReplaceList("eng");
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Yeah, see, that's not mine.");
         }
-
-
-
 
     }
 }

@@ -760,6 +760,7 @@
     <Compile Include="Logic\ColorChooser\ColorHandler.cs" />
     <Compile Include="Logic\ColorChooser\ColorWheel.cs" />
     <Compile Include="Logic\Forms\CheckForUpdatesHelper.cs" />
+    <Compile Include="Logic\Forms\FixCommonErrorsHelper.cs" />
     <Compile Include="Logic\Forms\RemoveTextForHISettings.cs" />
     <Compile Include="Logic\Forms\RemoveTextForHI.cs" />
     <Compile Include="Logic\Forms\SplitLongLinesHelper.cs" />
@@ -1137,7 +1138,7 @@
     <Compile Include="Logic\VobSub\VobSubPack.cs" />
     <Compile Include="Logic\VobSub\VobSubWriter.cs" />
     <Compile Include="Logic\WordSpellChecker.cs" />
-    <Compile Include="Logic\XmlDeserializerGenerator.cs" />
+    <Compile Include="Logic\LanguageDeserializerGenerator.cs" />
     <Compile Include="Logic\XSub.cs" />
     <Compile Include="Logic\zlib\Adler32.cs" />
     <Compile Include="Logic\zlib\Deflate.cs" />
