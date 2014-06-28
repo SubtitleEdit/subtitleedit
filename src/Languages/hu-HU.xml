@@ -75,13 +75,13 @@
   <About>
     <Title>A Subtitle Edit névjegye</Title>
     <AboutText1>A Subtitle Edit egy GNU Public License alatt kiadott ingyenes szoftver.
-A program szabadon terjeszthető, módosítható és használható. 
+A program szabadon terjeszthető, módosítható és használható.
 
-A C# forráskód elérhető a https://github.com/SubtitleEdit/subtitleedit címen. 
+A C# forráskód elérhető a https://github.com/SubtitleEdit/subtitleedit címen.
 
-A legfrissebb verziókért, keresse fel a www.nikse.dk oldalt. 
+A legfrissebb verziókért, keresse fel a www.nikse.dk oldalt.
 
-A javaslatokat is szívesen fogadjuk. 
+A javaslatokat is szívesen fogadjuk.
 
 Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
@@ -1038,8 +1038,8 @@ Elindítja a dokumentum tetejéről és folytatja a keresést és cserét?</Repl
     <TextingForHearingImpairedRemovedOneLine>Szöveg eltávolítva a halláskárosultak számára : Egy sor</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Szöveg eltávolítva a halláskárosultak számára : {0} sor</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Felirat vágva</SubtitleSplitted>
-    <SubtitleAppendPrompt>Ez hozzá fog fűzni egy létező feliratot a jelenleg betöltött felirathoz, amelyet már szinkronizálni kellett 
-volna a videóállománnyal. 
+    <SubtitleAppendPrompt>Ez hozzá fog fűzni egy létező feliratot a jelenleg betöltött felirathoz, amelyet már szinkronizálni kellett
+volna a videóállománnyal.
 
 Folytatja?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Felirat hozzáfűzése</SubtitleAppendPromptTitle>
@@ -1301,7 +1301,7 @@ Folytatja?</SubtitleAppendPrompt>
   </NetworkChat>
   <NetworkJoin>
     <Title>Csatlakozzon a hálózati munkafolyamathoz</Title>
-    <Information>Csatlakozás egy létező folyamathoz ahol több személy 
+    <Information>Csatlakozás egy létező folyamathoz ahol több személy
 szerkesztheti ugyanazt a felirat fájlt (együttműködés)</Information>
     <Join>Egyesítés</Join>
   </NetworkJoin>
@@ -1312,7 +1312,7 @@ szerkesztheti ugyanazt a felirat fájlt (együttműködés)</Information>
   <NetworkStart>
     <Title>Hálózati folyamat indítása</Title>
     <ConnectionTo>{0} csatlakozás...</ConnectionTo>
-    <Information>Új folyamat indítása, ahol több személy 
+    <Information>Új folyamat indítása, ahol több személy
 szerkesztheti ugyanazt a feliratfájlt</Information>
     <Start>Indítás</Start>
   </NetworkStart>

@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Logic
                         sb.AppendLine("\t\t\t" + currentName + "." + prp.Name + " = new " + prp.PropertyType.FullName.Replace("+", ".") + "();");
                         sb.AppendLine("\t\t\tnode = doc.DocumentElement.SelectSingleNode(\"" + xmlPath + "/" + prp.Name + "\");");
                         sb.AppendLine("\t\t\tif (node != null)");
-                        sb.AppendLine("\t\t\t{");                        
+                        sb.AppendLine("\t\t\t{");
                         sb.AppendLine(GenerateCSharpXmlDeserializer(prp.PropertyType, currentName + "." + prp.Name, xmlPath + "/" + prp.Name + "/"));
                         sb.AppendLine("\t\t\t}");
                     }

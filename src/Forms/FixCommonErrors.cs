@@ -3477,7 +3477,7 @@ namespace Nikse.SubtitleEdit.Forms
                 LogStatus(_language.FixEllipsesStart, string.Format(_language.XFixEllipsesStart, fixCount));
         }
 
-       
+
 
         private string FixMissingOpenBracket(string text, string openB)
         {
