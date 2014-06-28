@@ -1,6107 +1,5500 @@
 using System.IO;
 using System.Xml;
+using Nikse.SubtitleEdit.Logic;
+
+// !!! THIS FILE IS AUTO-GENERATED!!!
+// !!! THIS FILE IS AUTO-GENERATED!!!
+// !!! THIS FILE IS AUTO-GENERATED!!!
 
 namespace Nikse.SubtitleEdit.Logic
 {
 
-    public class LanguageDeserializer // NOTE: This class is AUTO-GENERATED!!!! (Choose language + press ctrl+alt+shift+C)
+    public class LanguageDeserializer // NOTE: This class is AUTO-GENERATED!!!! (Choose language + press ctrl+alt+shift+C to generate)
     {
 
         public static Language CustomDeserializeLanguage(string fileName)
         {
-            var doc = new XmlDocument();
-            doc.PreserveWhitespace = true;
-
+            string name = string.Empty;
             var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            doc.Load(stream);
-            stream.Close();
-
-            XmlNode node = doc.DocumentElement;
-            XmlNode subNode;
             var language = new Language();
-
-            subNode = node.SelectSingleNode("Name");
-            if (subNode != null)
-                language.Name = subNode.InnerText;
-
             language.General = new Nikse.SubtitleEdit.Logic.LanguageStructure.General();
-            node = doc.DocumentElement.SelectSingleNode("General");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.General.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Version");
-                if (subNode != null)
-                    language.General.Version = subNode.InnerText;
-                subNode = node.SelectSingleNode("TranslatedBy");
-                if (subNode != null)
-                    language.General.TranslatedBy = subNode.InnerText;
-                subNode = node.SelectSingleNode("CultureName");
-                if (subNode != null)
-                    language.General.CultureName = subNode.InnerText;
-                subNode = node.SelectSingleNode("HelpFile");
-                if (subNode != null)
-                    language.General.HelpFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("OK");
-                if (subNode != null)
-                    language.General.OK = subNode.InnerText;
-                subNode = node.SelectSingleNode("Cancel");
-                if (subNode != null)
-                    language.General.Cancel = subNode.InnerText;
-                subNode = node.SelectSingleNode("Apply");
-                if (subNode != null)
-                    language.General.Apply = subNode.InnerText;
-                subNode = node.SelectSingleNode("None");
-                if (subNode != null)
-                    language.General.None = subNode.InnerText;
-                subNode = node.SelectSingleNode("All");
-                if (subNode != null)
-                    language.General.All = subNode.InnerText;
-                subNode = node.SelectSingleNode("Preview");
-                if (subNode != null)
-                    language.General.Preview = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleFiles");
-                if (subNode != null)
-                    language.General.SubtitleFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("AllFiles");
-                if (subNode != null)
-                    language.General.AllFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("VideoFiles");
-                if (subNode != null)
-                    language.General.VideoFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("AudioFiles");
-                if (subNode != null)
-                    language.General.AudioFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenSubtitle");
-                if (subNode != null)
-                    language.General.OpenSubtitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenVideoFile");
-                if (subNode != null)
-                    language.General.OpenVideoFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenVideoFileTitle");
-                if (subNode != null)
-                    language.General.OpenVideoFileTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("NoVideoLoaded");
-                if (subNode != null)
-                    language.General.NoVideoLoaded = subNode.InnerText;
-                subNode = node.SelectSingleNode("VideoInformation");
-                if (subNode != null)
-                    language.General.VideoInformation = subNode.InnerText;
-                subNode = node.SelectSingleNode("PositionX");
-                if (subNode != null)
-                    language.General.PositionX = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartTime");
-                if (subNode != null)
-                    language.General.StartTime = subNode.InnerText;
-                subNode = node.SelectSingleNode("EndTime");
-                if (subNode != null)
-                    language.General.EndTime = subNode.InnerText;
-                subNode = node.SelectSingleNode("Duration");
-                if (subNode != null)
-                    language.General.Duration = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberSymbol");
-                if (subNode != null)
-                    language.General.NumberSymbol = subNode.InnerText;
-                subNode = node.SelectSingleNode("Number");
-                if (subNode != null)
-                    language.General.Number = subNode.InnerText;
-                subNode = node.SelectSingleNode("Text");
-                if (subNode != null)
-                    language.General.Text = subNode.InnerText;
-                subNode = node.SelectSingleNode("HourMinutesSecondsMilliseconds");
-                if (subNode != null)
-                    language.General.HourMinutesSecondsMilliseconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("Bold");
-                if (subNode != null)
-                    language.General.Bold = subNode.InnerText;
-                subNode = node.SelectSingleNode("Italic");
-                if (subNode != null)
-                    language.General.Italic = subNode.InnerText;
-                subNode = node.SelectSingleNode("Underline");
-                if (subNode != null)
-                    language.General.Underline = subNode.InnerText;
-                subNode = node.SelectSingleNode("Visible");
-                if (subNode != null)
-                    language.General.Visible = subNode.InnerText;
-                subNode = node.SelectSingleNode("FrameRate");
-                if (subNode != null)
-                    language.General.FrameRate = subNode.InnerText;
-                subNode = node.SelectSingleNode("Name");
-                if (subNode != null)
-                    language.General.Name = subNode.InnerText;
-                subNode = node.SelectSingleNode("FileNameXAndSize");
-                if (subNode != null)
-                    language.General.FileNameXAndSize = subNode.InnerText;
-                subNode = node.SelectSingleNode("ResolutionX");
-                if (subNode != null)
-                    language.General.ResolutionX = subNode.InnerText;
-                subNode = node.SelectSingleNode("FrameRateX");
-                if (subNode != null)
-                    language.General.FrameRateX = subNode.InnerText;
-                subNode = node.SelectSingleNode("TotalFramesX");
-                if (subNode != null)
-                    language.General.TotalFramesX = subNode.InnerText;
-                subNode = node.SelectSingleNode("VideoEncodingX");
-                if (subNode != null)
-                    language.General.VideoEncodingX = subNode.InnerText;
-                subNode = node.SelectSingleNode("SingleLineLengths");
-                if (subNode != null)
-                    language.General.SingleLineLengths = subNode.InnerText;
-                subNode = node.SelectSingleNode("TotalLengthX");
-                if (subNode != null)
-                    language.General.TotalLengthX = subNode.InnerText;
-                subNode = node.SelectSingleNode("TotalLengthXSplitLine");
-                if (subNode != null)
-                    language.General.TotalLengthXSplitLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("SplitLine");
-                if (subNode != null)
-                    language.General.SplitLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("NotAvailable");
-                if (subNode != null)
-                    language.General.NotAvailable = subNode.InnerText;
-                subNode = node.SelectSingleNode("OverlapPreviousLineX");
-                if (subNode != null)
-                    language.General.OverlapPreviousLineX = subNode.InnerText;
-                subNode = node.SelectSingleNode("OverlapX");
-                if (subNode != null)
-                    language.General.OverlapX = subNode.InnerText;
-                subNode = node.SelectSingleNode("OverlapNextX");
-                if (subNode != null)
-                    language.General.OverlapNextX = subNode.InnerText;
-                subNode = node.SelectSingleNode("Negative");
-                if (subNode != null)
-                    language.General.Negative = subNode.InnerText;
-                subNode = node.SelectSingleNode("RegularExpressionIsNotValid");
-                if (subNode != null)
-                    language.General.RegularExpressionIsNotValid = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleSaved");
-                if (subNode != null)
-                    language.General.SubtitleSaved = subNode.InnerText;
-                subNode = node.SelectSingleNode("CurrentSubtitle");
-                if (subNode != null)
-                    language.General.CurrentSubtitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("OriginalText");
-                if (subNode != null)
-                    language.General.OriginalText = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenOriginalSubtitleFile");
-                if (subNode != null)
-                    language.General.OpenOriginalSubtitleFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("PleaseWait");
-                if (subNode != null)
-                    language.General.PleaseWait = subNode.InnerText;
-                subNode = node.SelectSingleNode("SessionKey");
-                if (subNode != null)
-                    language.General.SessionKey = subNode.InnerText;
-                subNode = node.SelectSingleNode("UserName");
-                if (subNode != null)
-                    language.General.UserName = subNode.InnerText;
-                subNode = node.SelectSingleNode("UserNameAlreadyInUse");
-                if (subNode != null)
-                    language.General.UserNameAlreadyInUse = subNode.InnerText;
-                subNode = node.SelectSingleNode("WebServiceUrl");
-                if (subNode != null)
-                    language.General.WebServiceUrl = subNode.InnerText;
-                subNode = node.SelectSingleNode("IP");
-                if (subNode != null)
-                    language.General.IP = subNode.InnerText;
-                subNode = node.SelectSingleNode("VideoWindowTitle");
-                if (subNode != null)
-                    language.General.VideoWindowTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("AudioWindowTitle");
-                if (subNode != null)
-                    language.General.AudioWindowTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("ControlsWindowTitle");
-                if (subNode != null)
-                    language.General.ControlsWindowTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("Advanced");
-                if (subNode != null)
-                    language.General.Advanced = subNode.InnerText;
-                subNode = node.SelectSingleNode("Style");
-                if (subNode != null)
-                    language.General.Style = subNode.InnerText;
-                subNode = node.SelectSingleNode("Class");
-                if (subNode != null)
-                    language.General.Class = subNode.InnerText;
-                subNode = node.SelectSingleNode("GeneralText");
-                if (subNode != null)
-                    language.General.GeneralText = subNode.InnerText;
-                subNode = node.SelectSingleNode("LineNumber");
-                if (subNode != null)
-                    language.General.LineNumber = subNode.InnerText;
-                subNode = node.SelectSingleNode("Before");
-                if (subNode != null)
-                    language.General.Before = subNode.InnerText;
-                subNode = node.SelectSingleNode("After");
-                if (subNode != null)
-                    language.General.After = subNode.InnerText;
-                subNode = node.SelectSingleNode("Size");
-                if (subNode != null)
-                    language.General.Size = subNode.InnerText;
-
-            }
-
             language.About = new Nikse.SubtitleEdit.Logic.LanguageStructure.About();
-            node = doc.DocumentElement.SelectSingleNode("About");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.About.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("AboutText1");
-                if (subNode != null)
-                    language.About.AboutText1 = subNode.InnerText;
-
-            }
-
             language.AddToNames = new Nikse.SubtitleEdit.Logic.LanguageStructure.AddToNames();
-            node = doc.DocumentElement.SelectSingleNode("AddToNames");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.AddToNames.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Description");
-                if (subNode != null)
-                    language.AddToNames.Description = subNode.InnerText;
-
-            }
-
             language.AddToOcrReplaceList = new Nikse.SubtitleEdit.Logic.LanguageStructure.AddToOcrReplaceList();
-            node = doc.DocumentElement.SelectSingleNode("AddToOcrReplaceList");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.AddToOcrReplaceList.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Description");
-                if (subNode != null)
-                    language.AddToOcrReplaceList.Description = subNode.InnerText;
-
-            }
-
             language.AddToUserDictionary = new Nikse.SubtitleEdit.Logic.LanguageStructure.AddToUserDictionary();
-            node = doc.DocumentElement.SelectSingleNode("AddToUserDictionary");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.AddToUserDictionary.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Description");
-                if (subNode != null)
-                    language.AddToUserDictionary.Description = subNode.InnerText;
-
-            }
-
             language.AddWaveForm = new Nikse.SubtitleEdit.Logic.LanguageStructure.AddWaveForm();
-            node = doc.DocumentElement.SelectSingleNode("AddWaveForm");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.AddWaveForm.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("SourceVideoFile");
-                if (subNode != null)
-                    language.AddWaveForm.SourceVideoFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("GenerateWaveFormData");
-                if (subNode != null)
-                    language.AddWaveForm.GenerateWaveFormData = subNode.InnerText;
-                subNode = node.SelectSingleNode("PleaseWait");
-                if (subNode != null)
-                    language.AddWaveForm.PleaseWait = subNode.InnerText;
-                subNode = node.SelectSingleNode("VlcMediaPlayerNotFoundTitle");
-                if (subNode != null)
-                    language.AddWaveForm.VlcMediaPlayerNotFoundTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("VlcMediaPlayerNotFound");
-                if (subNode != null)
-                    language.AddWaveForm.VlcMediaPlayerNotFound = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoToVlcMediaPlayerHomePage");
-                if (subNode != null)
-                    language.AddWaveForm.GoToVlcMediaPlayerHomePage = subNode.InnerText;
-                subNode = node.SelectSingleNode("GeneratingPeakFile");
-                if (subNode != null)
-                    language.AddWaveForm.GeneratingPeakFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("GeneratingSpectrogram");
-                if (subNode != null)
-                    language.AddWaveForm.GeneratingSpectrogram = subNode.InnerText;
-                subNode = node.SelectSingleNode("ExtractingSeconds");
-                if (subNode != null)
-                    language.AddWaveForm.ExtractingSeconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("ExtractingMinutes");
-                if (subNode != null)
-                    language.AddWaveForm.ExtractingMinutes = subNode.InnerText;
-
-            }
-
             language.AdjustDisplayDuration = new Nikse.SubtitleEdit.Logic.LanguageStructure.AdjustDisplayDuration();
-            node = doc.DocumentElement.SelectSingleNode("AdjustDisplayDuration");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.AdjustDisplayDuration.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("AdjustVia");
-                if (subNode != null)
-                    language.AdjustDisplayDuration.AdjustVia = subNode.InnerText;
-                subNode = node.SelectSingleNode("Seconds");
-                if (subNode != null)
-                    language.AdjustDisplayDuration.Seconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("Percent");
-                if (subNode != null)
-                    language.AdjustDisplayDuration.Percent = subNode.InnerText;
-                subNode = node.SelectSingleNode("Recalculate");
-                if (subNode != null)
-                    language.AdjustDisplayDuration.Recalculate = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddSeconds");
-                if (subNode != null)
-                    language.AdjustDisplayDuration.AddSeconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("SetAsPercent");
-                if (subNode != null)
-                    language.AdjustDisplayDuration.SetAsPercent = subNode.InnerText;
-                subNode = node.SelectSingleNode("Note");
-                if (subNode != null)
-                    language.AdjustDisplayDuration.Note = subNode.InnerText;
-                subNode = node.SelectSingleNode("PleaseSelectAValueFromTheDropDownList");
-                if (subNode != null)
-                    language.AdjustDisplayDuration.PleaseSelectAValueFromTheDropDownList = subNode.InnerText;
-                subNode = node.SelectSingleNode("PleaseChoose");
-                if (subNode != null)
-                    language.AdjustDisplayDuration.PleaseChoose = subNode.InnerText;
-
-            }
-
             language.ApplyDurationLimits = new Nikse.SubtitleEdit.Logic.LanguageStructure.ApplyDurationLimits();
-            node = doc.DocumentElement.SelectSingleNode("ApplyDurationLimits");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ApplyDurationLimits.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixesAvailable");
-                if (subNode != null)
-                    language.ApplyDurationLimits.FixesAvailable = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnableToFix");
-                if (subNode != null)
-                    language.ApplyDurationLimits.UnableToFix = subNode.InnerText;
-
-            }
-
             language.AutoBreakUnbreakLines = new Nikse.SubtitleEdit.Logic.LanguageStructure.AutoBreakUnbreakLines();
-            node = doc.DocumentElement.SelectSingleNode("AutoBreakUnbreakLines");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("TitleAutoBreak");
-                if (subNode != null)
-                    language.AutoBreakUnbreakLines.TitleAutoBreak = subNode.InnerText;
-                subNode = node.SelectSingleNode("TitleUnbreak");
-                if (subNode != null)
-                    language.AutoBreakUnbreakLines.TitleUnbreak = subNode.InnerText;
-                subNode = node.SelectSingleNode("LinesFoundX");
-                if (subNode != null)
-                    language.AutoBreakUnbreakLines.LinesFoundX = subNode.InnerText;
-                subNode = node.SelectSingleNode("OnlyBreakLinesLongerThan");
-                if (subNode != null)
-                    language.AutoBreakUnbreakLines.OnlyBreakLinesLongerThan = subNode.InnerText;
-                subNode = node.SelectSingleNode("OnlyUnbreakLinesLongerThan");
-                if (subNode != null)
-                    language.AutoBreakUnbreakLines.OnlyUnbreakLinesLongerThan = subNode.InnerText;
-
-            }
-
             language.BatchConvert = new Nikse.SubtitleEdit.Logic.LanguageStructure.BatchConvert();
-            node = doc.DocumentElement.SelectSingleNode("BatchConvert");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.BatchConvert.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Input");
-                if (subNode != null)
-                    language.BatchConvert.Input = subNode.InnerText;
-                subNode = node.SelectSingleNode("InputDescription");
-                if (subNode != null)
-                    language.BatchConvert.InputDescription = subNode.InnerText;
-                subNode = node.SelectSingleNode("Status");
-                if (subNode != null)
-                    language.BatchConvert.Status = subNode.InnerText;
-                subNode = node.SelectSingleNode("Output");
-                if (subNode != null)
-                    language.BatchConvert.Output = subNode.InnerText;
-                subNode = node.SelectSingleNode("ChooseOutputFolder");
-                if (subNode != null)
-                    language.BatchConvert.ChooseOutputFolder = subNode.InnerText;
-                subNode = node.SelectSingleNode("OverwriteExistingFiles");
-                if (subNode != null)
-                    language.BatchConvert.OverwriteExistingFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("Style");
-                if (subNode != null)
-                    language.BatchConvert.Style = subNode.InnerText;
-                subNode = node.SelectSingleNode("ConvertOptions");
-                if (subNode != null)
-                    language.BatchConvert.ConvertOptions = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveFormatting");
-                if (subNode != null)
-                    language.BatchConvert.RemoveFormatting = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveTextForHI");
-                if (subNode != null)
-                    language.BatchConvert.RemoveTextForHI = subNode.InnerText;
-                subNode = node.SelectSingleNode("OverwriteOriginalFiles");
-                if (subNode != null)
-                    language.BatchConvert.OverwriteOriginalFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("ReDoCasing");
-                if (subNode != null)
-                    language.BatchConvert.ReDoCasing = subNode.InnerText;
-                subNode = node.SelectSingleNode("Convert");
-                if (subNode != null)
-                    language.BatchConvert.Convert = subNode.InnerText;
-                subNode = node.SelectSingleNode("NothingToConvert");
-                if (subNode != null)
-                    language.BatchConvert.NothingToConvert = subNode.InnerText;
-                subNode = node.SelectSingleNode("PleaseChooseOutputFolder");
-                if (subNode != null)
-                    language.BatchConvert.PleaseChooseOutputFolder = subNode.InnerText;
-                subNode = node.SelectSingleNode("Converted");
-                if (subNode != null)
-                    language.BatchConvert.Converted = subNode.InnerText;
-                subNode = node.SelectSingleNode("ConvertedX");
-                if (subNode != null)
-                    language.BatchConvert.ConvertedX = subNode.InnerText;
-                subNode = node.SelectSingleNode("Settings");
-                if (subNode != null)
-                    language.BatchConvert.Settings = subNode.InnerText;
-                subNode = node.SelectSingleNode("SplitLongLines");
-                if (subNode != null)
-                    language.BatchConvert.SplitLongLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("AutoBalance");
-                if (subNode != null)
-                    language.BatchConvert.AutoBalance = subNode.InnerText;
-                subNode = node.SelectSingleNode("ScanFolder");
-                if (subNode != null)
-                    language.BatchConvert.ScanFolder = subNode.InnerText;
-                subNode = node.SelectSingleNode("ScanningFolder");
-                if (subNode != null)
-                    language.BatchConvert.ScanningFolder = subNode.InnerText;
-                subNode = node.SelectSingleNode("Recursive");
-                if (subNode != null)
-                    language.BatchConvert.Recursive = subNode.InnerText;
-                subNode = node.SelectSingleNode("SetMinMsBetweenSubtitles");
-                if (subNode != null)
-                    language.BatchConvert.SetMinMsBetweenSubtitles = subNode.InnerText;
-
-            }
-
             language.Beamer = new Nikse.SubtitleEdit.Logic.LanguageStructure.Beamer();
-            node = doc.DocumentElement.SelectSingleNode("Beamer");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.Beamer.Title = subNode.InnerText;
-
-            }
-
             language.ChangeCasing = new Nikse.SubtitleEdit.Logic.LanguageStructure.ChangeCasing();
-            node = doc.DocumentElement.SelectSingleNode("ChangeCasing");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ChangeCasing.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("ChangeCasingTo");
-                if (subNode != null)
-                    language.ChangeCasing.ChangeCasingTo = subNode.InnerText;
-                subNode = node.SelectSingleNode("NormalCasing");
-                if (subNode != null)
-                    language.ChangeCasing.NormalCasing = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixNamesCasing");
-                if (subNode != null)
-                    language.ChangeCasing.FixNamesCasing = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixOnlyNamesCasing");
-                if (subNode != null)
-                    language.ChangeCasing.FixOnlyNamesCasing = subNode.InnerText;
-                subNode = node.SelectSingleNode("OnlyChangeAllUppercaseLines");
-                if (subNode != null)
-                    language.ChangeCasing.OnlyChangeAllUppercaseLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("AllUppercase");
-                if (subNode != null)
-                    language.ChangeCasing.AllUppercase = subNode.InnerText;
-                subNode = node.SelectSingleNode("AllLowercase");
-                if (subNode != null)
-                    language.ChangeCasing.AllLowercase = subNode.InnerText;
-
-            }
-
             language.ChangeCasingNames = new Nikse.SubtitleEdit.Logic.LanguageStructure.ChangeCasingNames();
-            node = doc.DocumentElement.SelectSingleNode("ChangeCasingNames");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ChangeCasingNames.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("NamesFoundInSubtitleX");
-                if (subNode != null)
-                    language.ChangeCasingNames.NamesFoundInSubtitleX = subNode.InnerText;
-                subNode = node.SelectSingleNode("Enabled");
-                if (subNode != null)
-                    language.ChangeCasingNames.Enabled = subNode.InnerText;
-                subNode = node.SelectSingleNode("Name");
-                if (subNode != null)
-                    language.ChangeCasingNames.Name = subNode.InnerText;
-                subNode = node.SelectSingleNode("LinesFoundX");
-                if (subNode != null)
-                    language.ChangeCasingNames.LinesFoundX = subNode.InnerText;
-
-            }
-
             language.ChangeFrameRate = new Nikse.SubtitleEdit.Logic.LanguageStructure.ChangeFrameRate();
-            node = doc.DocumentElement.SelectSingleNode("ChangeFrameRate");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ChangeFrameRate.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("ConvertFrameRateOfSubtitle");
-                if (subNode != null)
-                    language.ChangeFrameRate.ConvertFrameRateOfSubtitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("FromFrameRate");
-                if (subNode != null)
-                    language.ChangeFrameRate.FromFrameRate = subNode.InnerText;
-                subNode = node.SelectSingleNode("ToFrameRate");
-                if (subNode != null)
-                    language.ChangeFrameRate.ToFrameRate = subNode.InnerText;
-                subNode = node.SelectSingleNode("FrameRateNotCorrect");
-                if (subNode != null)
-                    language.ChangeFrameRate.FrameRateNotCorrect = subNode.InnerText;
-                subNode = node.SelectSingleNode("FrameRateNotChanged");
-                if (subNode != null)
-                    language.ChangeFrameRate.FrameRateNotChanged = subNode.InnerText;
-
-            }
-
             language.ChangeSpeedInPercent = new Nikse.SubtitleEdit.Logic.LanguageStructure.ChangeSpeedInPercent();
-            node = doc.DocumentElement.SelectSingleNode("ChangeSpeedInPercent");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ChangeSpeedInPercent.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Info");
-                if (subNode != null)
-                    language.ChangeSpeedInPercent.Info = subNode.InnerText;
-
-            }
-
             language.CheckForUpdates = new Nikse.SubtitleEdit.Logic.LanguageStructure.CheckForUpdates();
-            node = doc.DocumentElement.SelectSingleNode("CheckForUpdates");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.CheckForUpdates.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("CheckingForUpdates");
-                if (subNode != null)
-                    language.CheckForUpdates.CheckingForUpdates = subNode.InnerText;
-                subNode = node.SelectSingleNode("CheckingForUpdatesFailedX");
-                if (subNode != null)
-                    language.CheckForUpdates.CheckingForUpdatesFailedX = subNode.InnerText;
-                subNode = node.SelectSingleNode("CheckingForUpdatesNoneAvailable");
-                if (subNode != null)
-                    language.CheckForUpdates.CheckingForUpdatesNoneAvailable = subNode.InnerText;
-                subNode = node.SelectSingleNode("CheckingForUpdatesNewVersion");
-                if (subNode != null)
-                    language.CheckForUpdates.CheckingForUpdatesNewVersion = subNode.InnerText;
-                subNode = node.SelectSingleNode("InstallUpdate");
-                if (subNode != null)
-                    language.CheckForUpdates.InstallUpdate = subNode.InnerText;
-                subNode = node.SelectSingleNode("NoUpdates");
-                if (subNode != null)
-                    language.CheckForUpdates.NoUpdates = subNode.InnerText;
-
-            }
-
             language.ChooseAudioTrack = new Nikse.SubtitleEdit.Logic.LanguageStructure.ChooseAudioTrack();
-            node = doc.DocumentElement.SelectSingleNode("ChooseAudioTrack");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ChooseAudioTrack.Title = subNode.InnerText;
-
-            }
-
             language.ChooseEncoding = new Nikse.SubtitleEdit.Logic.LanguageStructure.ChooseEncoding();
-            node = doc.DocumentElement.SelectSingleNode("ChooseEncoding");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ChooseEncoding.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("CodePage");
-                if (subNode != null)
-                    language.ChooseEncoding.CodePage = subNode.InnerText;
-                subNode = node.SelectSingleNode("DisplayName");
-                if (subNode != null)
-                    language.ChooseEncoding.DisplayName = subNode.InnerText;
-                subNode = node.SelectSingleNode("PleaseSelectAnEncoding");
-                if (subNode != null)
-                    language.ChooseEncoding.PleaseSelectAnEncoding = subNode.InnerText;
-
-            }
-
             language.ChooseLanguage = new Nikse.SubtitleEdit.Logic.LanguageStructure.ChooseLanguage();
-            node = doc.DocumentElement.SelectSingleNode("ChooseLanguage");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ChooseLanguage.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Language");
-                if (subNode != null)
-                    language.ChooseLanguage.Language = subNode.InnerText;
-
-            }
-
             language.ColorChooser = new Nikse.SubtitleEdit.Logic.LanguageStructure.ColorChooser();
-            node = doc.DocumentElement.SelectSingleNode("ColorChooser");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ColorChooser.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Red");
-                if (subNode != null)
-                    language.ColorChooser.Red = subNode.InnerText;
-                subNode = node.SelectSingleNode("Green");
-                if (subNode != null)
-                    language.ColorChooser.Green = subNode.InnerText;
-                subNode = node.SelectSingleNode("Blue");
-                if (subNode != null)
-                    language.ColorChooser.Blue = subNode.InnerText;
-                subNode = node.SelectSingleNode("Alpha");
-                if (subNode != null)
-                    language.ColorChooser.Alpha = subNode.InnerText;
-
-            }
-
             language.ColumnPaste = new Nikse.SubtitleEdit.Logic.LanguageStructure.ColumnPaste();
-            node = doc.DocumentElement.SelectSingleNode("ColumnPaste");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ColumnPaste.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("ChooseColumn");
-                if (subNode != null)
-                    language.ColumnPaste.ChooseColumn = subNode.InnerText;
-                subNode = node.SelectSingleNode("OverwriteShiftCellsDown");
-                if (subNode != null)
-                    language.ColumnPaste.OverwriteShiftCellsDown = subNode.InnerText;
-                subNode = node.SelectSingleNode("Overwrite");
-                if (subNode != null)
-                    language.ColumnPaste.Overwrite = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShiftCellsDown");
-                if (subNode != null)
-                    language.ColumnPaste.ShiftCellsDown = subNode.InnerText;
-                subNode = node.SelectSingleNode("TimeCodesOnly");
-                if (subNode != null)
-                    language.ColumnPaste.TimeCodesOnly = subNode.InnerText;
-                subNode = node.SelectSingleNode("TextOnly");
-                if (subNode != null)
-                    language.ColumnPaste.TextOnly = subNode.InnerText;
-                subNode = node.SelectSingleNode("OriginalTextOnly");
-                if (subNode != null)
-                    language.ColumnPaste.OriginalTextOnly = subNode.InnerText;
-
-            }
-
             language.CompareSubtitles = new Nikse.SubtitleEdit.Logic.LanguageStructure.CompareSubtitles();
-            node = doc.DocumentElement.SelectSingleNode("CompareSubtitles");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.CompareSubtitles.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("PreviousDifference");
-                if (subNode != null)
-                    language.CompareSubtitles.PreviousDifference = subNode.InnerText;
-                subNode = node.SelectSingleNode("NextDifference");
-                if (subNode != null)
-                    language.CompareSubtitles.NextDifference = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitlesNotAlike");
-                if (subNode != null)
-                    language.CompareSubtitles.SubtitlesNotAlike = subNode.InnerText;
-                subNode = node.SelectSingleNode("XNumberOfDifference");
-                if (subNode != null)
-                    language.CompareSubtitles.XNumberOfDifference = subNode.InnerText;
-                subNode = node.SelectSingleNode("XNumberOfDifferenceAndPercentChanged");
-                if (subNode != null)
-                    language.CompareSubtitles.XNumberOfDifferenceAndPercentChanged = subNode.InnerText;
-                subNode = node.SelectSingleNode("XNumberOfDifferenceAndPercentLettersChanged");
-                if (subNode != null)
-                    language.CompareSubtitles.XNumberOfDifferenceAndPercentLettersChanged = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowOnlyDifferences");
-                if (subNode != null)
-                    language.CompareSubtitles.ShowOnlyDifferences = subNode.InnerText;
-                subNode = node.SelectSingleNode("IgnoreLineBreaks");
-                if (subNode != null)
-                    language.CompareSubtitles.IgnoreLineBreaks = subNode.InnerText;
-                subNode = node.SelectSingleNode("OnlyLookForDifferencesInText");
-                if (subNode != null)
-                    language.CompareSubtitles.OnlyLookForDifferencesInText = subNode.InnerText;
-                subNode = node.SelectSingleNode("CannotCompareWithImageBasedSubtitles");
-                if (subNode != null)
-                    language.CompareSubtitles.CannotCompareWithImageBasedSubtitles = subNode.InnerText;
-
-            }
-
             language.DCinemaProperties = new Nikse.SubtitleEdit.Logic.LanguageStructure.DCinemaProperties();
-            node = doc.DocumentElement.SelectSingleNode("DCinemaProperties");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.DCinemaProperties.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("TitleSmpte");
-                if (subNode != null)
-                    language.DCinemaProperties.TitleSmpte = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleId");
-                if (subNode != null)
-                    language.DCinemaProperties.SubtitleId = subNode.InnerText;
-                subNode = node.SelectSingleNode("GenerateId");
-                if (subNode != null)
-                    language.DCinemaProperties.GenerateId = subNode.InnerText;
-                subNode = node.SelectSingleNode("MovieTitle");
-                if (subNode != null)
-                    language.DCinemaProperties.MovieTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("ReelNumber");
-                if (subNode != null)
-                    language.DCinemaProperties.ReelNumber = subNode.InnerText;
-                subNode = node.SelectSingleNode("Language");
-                if (subNode != null)
-                    language.DCinemaProperties.Language = subNode.InnerText;
-                subNode = node.SelectSingleNode("IssueDate");
-                if (subNode != null)
-                    language.DCinemaProperties.IssueDate = subNode.InnerText;
-                subNode = node.SelectSingleNode("EditRate");
-                if (subNode != null)
-                    language.DCinemaProperties.EditRate = subNode.InnerText;
-                subNode = node.SelectSingleNode("TimeCodeRate");
-                if (subNode != null)
-                    language.DCinemaProperties.TimeCodeRate = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartTime");
-                if (subNode != null)
-                    language.DCinemaProperties.StartTime = subNode.InnerText;
-                subNode = node.SelectSingleNode("Font");
-                if (subNode != null)
-                    language.DCinemaProperties.Font = subNode.InnerText;
-                subNode = node.SelectSingleNode("FontId");
-                if (subNode != null)
-                    language.DCinemaProperties.FontId = subNode.InnerText;
-                subNode = node.SelectSingleNode("FontUri");
-                if (subNode != null)
-                    language.DCinemaProperties.FontUri = subNode.InnerText;
-                subNode = node.SelectSingleNode("FontColor");
-                if (subNode != null)
-                    language.DCinemaProperties.FontColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("FontEffect");
-                if (subNode != null)
-                    language.DCinemaProperties.FontEffect = subNode.InnerText;
-                subNode = node.SelectSingleNode("FontEffectColor");
-                if (subNode != null)
-                    language.DCinemaProperties.FontEffectColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("FontSize");
-                if (subNode != null)
-                    language.DCinemaProperties.FontSize = subNode.InnerText;
-                subNode = node.SelectSingleNode("TopBottomMargin");
-                if (subNode != null)
-                    language.DCinemaProperties.TopBottomMargin = subNode.InnerText;
-                subNode = node.SelectSingleNode("FadeUpTime");
-                if (subNode != null)
-                    language.DCinemaProperties.FadeUpTime = subNode.InnerText;
-                subNode = node.SelectSingleNode("FadeDownTime");
-                if (subNode != null)
-                    language.DCinemaProperties.FadeDownTime = subNode.InnerText;
-                subNode = node.SelectSingleNode("ZPosition");
-                if (subNode != null)
-                    language.DCinemaProperties.ZPosition = subNode.InnerText;
-                subNode = node.SelectSingleNode("ZPositionHelp");
-                if (subNode != null)
-                    language.DCinemaProperties.ZPositionHelp = subNode.InnerText;
-                subNode = node.SelectSingleNode("ChooseColor");
-                if (subNode != null)
-                    language.DCinemaProperties.ChooseColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("Generate");
-                if (subNode != null)
-                    language.DCinemaProperties.Generate = subNode.InnerText;
-
-            }
-
             language.DurationsBridgeGaps = new Nikse.SubtitleEdit.Logic.LanguageStructure.DurationsBridgeGaps();
-            node = doc.DocumentElement.SelectSingleNode("DurationsBridgeGaps");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.DurationsBridgeGaps.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("GapsBridgedX");
-                if (subNode != null)
-                    language.DurationsBridgeGaps.GapsBridgedX = subNode.InnerText;
-                subNode = node.SelectSingleNode("GapToNext");
-                if (subNode != null)
-                    language.DurationsBridgeGaps.GapToNext = subNode.InnerText;
-                subNode = node.SelectSingleNode("BridgeGapsSmallerThanXPart1");
-                if (subNode != null)
-                    language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart1 = subNode.InnerText;
-                subNode = node.SelectSingleNode("BridgeGapsSmallerThanXPart2");
-                if (subNode != null)
-                    language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2 = subNode.InnerText;
-                subNode = node.SelectSingleNode("MinMsBetweenLines");
-                if (subNode != null)
-                    language.DurationsBridgeGaps.MinMsBetweenLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("ProlongEndTime");
-                if (subNode != null)
-                    language.DurationsBridgeGaps.ProlongEndTime = subNode.InnerText;
-                subNode = node.SelectSingleNode("DivideEven");
-                if (subNode != null)
-                    language.DurationsBridgeGaps.DivideEven = subNode.InnerText;
-
-            }
-
             language.DvdSubRip = new Nikse.SubtitleEdit.Logic.LanguageStructure.DvdSubRip();
-            node = doc.DocumentElement.SelectSingleNode("DvdSubRip");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.DvdSubRip.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("DvdGroupTitle");
-                if (subNode != null)
-                    language.DvdSubRip.DvdGroupTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("IfoFile");
-                if (subNode != null)
-                    language.DvdSubRip.IfoFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("IfoFiles");
-                if (subNode != null)
-                    language.DvdSubRip.IfoFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("VobFiles");
-                if (subNode != null)
-                    language.DvdSubRip.VobFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("Add");
-                if (subNode != null)
-                    language.DvdSubRip.Add = subNode.InnerText;
-                subNode = node.SelectSingleNode("Remove");
-                if (subNode != null)
-                    language.DvdSubRip.Remove = subNode.InnerText;
-                subNode = node.SelectSingleNode("Clear");
-                if (subNode != null)
-                    language.DvdSubRip.Clear = subNode.InnerText;
-                subNode = node.SelectSingleNode("MoveUp");
-                if (subNode != null)
-                    language.DvdSubRip.MoveUp = subNode.InnerText;
-                subNode = node.SelectSingleNode("MoveDown");
-                if (subNode != null)
-                    language.DvdSubRip.MoveDown = subNode.InnerText;
-                subNode = node.SelectSingleNode("Languages");
-                if (subNode != null)
-                    language.DvdSubRip.Languages = subNode.InnerText;
-                subNode = node.SelectSingleNode("PalNtsc");
-                if (subNode != null)
-                    language.DvdSubRip.PalNtsc = subNode.InnerText;
-                subNode = node.SelectSingleNode("Pal");
-                if (subNode != null)
-                    language.DvdSubRip.Pal = subNode.InnerText;
-                subNode = node.SelectSingleNode("Ntsc");
-                if (subNode != null)
-                    language.DvdSubRip.Ntsc = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartRipping");
-                if (subNode != null)
-                    language.DvdSubRip.StartRipping = subNode.InnerText;
-                subNode = node.SelectSingleNode("Abort");
-                if (subNode != null)
-                    language.DvdSubRip.Abort = subNode.InnerText;
-                subNode = node.SelectSingleNode("AbortedByUser");
-                if (subNode != null)
-                    language.DvdSubRip.AbortedByUser = subNode.InnerText;
-                subNode = node.SelectSingleNode("ReadingSubtitleData");
-                if (subNode != null)
-                    language.DvdSubRip.ReadingSubtitleData = subNode.InnerText;
-                subNode = node.SelectSingleNode("RippingVobFileXofYZ");
-                if (subNode != null)
-                    language.DvdSubRip.RippingVobFileXofYZ = subNode.InnerText;
-                subNode = node.SelectSingleNode("WrongIfoType");
-                if (subNode != null)
-                    language.DvdSubRip.WrongIfoType = subNode.InnerText;
-
-            }
-
             language.DvdSubRipChooseLanguage = new Nikse.SubtitleEdit.Logic.LanguageStructure.DvdSubRipChooseLanguage();
-            node = doc.DocumentElement.SelectSingleNode("DvdSubRipChooseLanguage");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.DvdSubRipChooseLanguage.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("ChooseLanguageStreamId");
-                if (subNode != null)
-                    language.DvdSubRipChooseLanguage.ChooseLanguageStreamId = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnknownLanguage");
-                if (subNode != null)
-                    language.DvdSubRipChooseLanguage.UnknownLanguage = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleImageXofYAndWidthXHeight");
-                if (subNode != null)
-                    language.DvdSubRipChooseLanguage.SubtitleImageXofYAndWidthXHeight = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleImage");
-                if (subNode != null)
-                    language.DvdSubRipChooseLanguage.SubtitleImage = subNode.InnerText;
-
-            }
-
             language.EbuSaveOtpions = new Nikse.SubtitleEdit.Logic.LanguageStructure.EbuSaveOtpions();
-            node = doc.DocumentElement.SelectSingleNode("EbuSaveOtpions");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.EbuSaveOtpions.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("GeneralSubtitleInformation");
-                if (subNode != null)
-                    language.EbuSaveOtpions.GeneralSubtitleInformation = subNode.InnerText;
-                subNode = node.SelectSingleNode("CodePageNumber");
-                if (subNode != null)
-                    language.EbuSaveOtpions.CodePageNumber = subNode.InnerText;
-                subNode = node.SelectSingleNode("DiskFormatCode");
-                if (subNode != null)
-                    language.EbuSaveOtpions.DiskFormatCode = subNode.InnerText;
-                subNode = node.SelectSingleNode("DisplayStandardCode");
-                if (subNode != null)
-                    language.EbuSaveOtpions.DisplayStandardCode = subNode.InnerText;
-                subNode = node.SelectSingleNode("CharacterCodeTable");
-                if (subNode != null)
-                    language.EbuSaveOtpions.CharacterCodeTable = subNode.InnerText;
-                subNode = node.SelectSingleNode("LanguageCode");
-                if (subNode != null)
-                    language.EbuSaveOtpions.LanguageCode = subNode.InnerText;
-                subNode = node.SelectSingleNode("OriginalProgramTitle");
-                if (subNode != null)
-                    language.EbuSaveOtpions.OriginalProgramTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("OriginalEpisodeTitle");
-                if (subNode != null)
-                    language.EbuSaveOtpions.OriginalEpisodeTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("TranslatedProgramTitle");
-                if (subNode != null)
-                    language.EbuSaveOtpions.TranslatedProgramTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("TranslatedEpisodeTitle");
-                if (subNode != null)
-                    language.EbuSaveOtpions.TranslatedEpisodeTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("TranslatorsName");
-                if (subNode != null)
-                    language.EbuSaveOtpions.TranslatorsName = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleListReferenceCode");
-                if (subNode != null)
-                    language.EbuSaveOtpions.SubtitleListReferenceCode = subNode.InnerText;
-                subNode = node.SelectSingleNode("CountryOfOrigin");
-                if (subNode != null)
-                    language.EbuSaveOtpions.CountryOfOrigin = subNode.InnerText;
-                subNode = node.SelectSingleNode("RevisionNumber");
-                if (subNode != null)
-                    language.EbuSaveOtpions.RevisionNumber = subNode.InnerText;
-                subNode = node.SelectSingleNode("MaxNoOfDisplayableChars");
-                if (subNode != null)
-                    language.EbuSaveOtpions.MaxNoOfDisplayableChars = subNode.InnerText;
-                subNode = node.SelectSingleNode("MaxNumberOfDisplayableRows");
-                if (subNode != null)
-                    language.EbuSaveOtpions.MaxNumberOfDisplayableRows = subNode.InnerText;
-                subNode = node.SelectSingleNode("DiskSequenceNumber");
-                if (subNode != null)
-                    language.EbuSaveOtpions.DiskSequenceNumber = subNode.InnerText;
-                subNode = node.SelectSingleNode("TotalNumberOfDisks");
-                if (subNode != null)
-                    language.EbuSaveOtpions.TotalNumberOfDisks = subNode.InnerText;
-                subNode = node.SelectSingleNode("Import");
-                if (subNode != null)
-                    language.EbuSaveOtpions.Import = subNode.InnerText;
-                subNode = node.SelectSingleNode("TextAndTimingInformation");
-                if (subNode != null)
-                    language.EbuSaveOtpions.TextAndTimingInformation = subNode.InnerText;
-                subNode = node.SelectSingleNode("JustificationCode");
-                if (subNode != null)
-                    language.EbuSaveOtpions.JustificationCode = subNode.InnerText;
-                subNode = node.SelectSingleNode("Errors");
-                if (subNode != null)
-                    language.EbuSaveOtpions.Errors = subNode.InnerText;
-                subNode = node.SelectSingleNode("ErrorsX");
-                if (subNode != null)
-                    language.EbuSaveOtpions.ErrorsX = subNode.InnerText;
-                subNode = node.SelectSingleNode("MaxLengthError");
-                if (subNode != null)
-                    language.EbuSaveOtpions.MaxLengthError = subNode.InnerText;
-                subNode = node.SelectSingleNode("TextUnchangedPresentation");
-                if (subNode != null)
-                    language.EbuSaveOtpions.TextUnchangedPresentation = subNode.InnerText;
-                subNode = node.SelectSingleNode("TextLeftJustifiedText");
-                if (subNode != null)
-                    language.EbuSaveOtpions.TextLeftJustifiedText = subNode.InnerText;
-                subNode = node.SelectSingleNode("TextCentredText");
-                if (subNode != null)
-                    language.EbuSaveOtpions.TextCentredText = subNode.InnerText;
-                subNode = node.SelectSingleNode("TextRightJustifiedText");
-                if (subNode != null)
-                    language.EbuSaveOtpions.TextRightJustifiedText = subNode.InnerText;
-
-            }
-
             language.EffectKaraoke = new Nikse.SubtitleEdit.Logic.LanguageStructure.EffectKaraoke();
-            node = doc.DocumentElement.SelectSingleNode("EffectKaraoke");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.EffectKaraoke.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("ChooseColor");
-                if (subNode != null)
-                    language.EffectKaraoke.ChooseColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("TotalMilliseconds");
-                if (subNode != null)
-                    language.EffectKaraoke.TotalMilliseconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("EndDelayInMilliseconds");
-                if (subNode != null)
-                    language.EffectKaraoke.EndDelayInMilliseconds = subNode.InnerText;
-
-            }
-
             language.EffectTypewriter = new Nikse.SubtitleEdit.Logic.LanguageStructure.EffectTypewriter();
-            node = doc.DocumentElement.SelectSingleNode("EffectTypewriter");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.EffectTypewriter.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("TotalMilliseconds");
-                if (subNode != null)
-                    language.EffectTypewriter.TotalMilliseconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("EndDelayInMillisecs");
-                if (subNode != null)
-                    language.EffectTypewriter.EndDelayInMillisecs = subNode.InnerText;
-
-            }
-
             language.ExportCustomText = new Nikse.SubtitleEdit.Logic.LanguageStructure.ExportCustomText();
-            node = doc.DocumentElement.SelectSingleNode("ExportCustomText");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ExportCustomText.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Formats");
-                if (subNode != null)
-                    language.ExportCustomText.Formats = subNode.InnerText;
-                subNode = node.SelectSingleNode("New");
-                if (subNode != null)
-                    language.ExportCustomText.New = subNode.InnerText;
-                subNode = node.SelectSingleNode("Edit");
-                if (subNode != null)
-                    language.ExportCustomText.Edit = subNode.InnerText;
-                subNode = node.SelectSingleNode("Delete");
-                if (subNode != null)
-                    language.ExportCustomText.Delete = subNode.InnerText;
-                subNode = node.SelectSingleNode("SaveAs");
-                if (subNode != null)
-                    language.ExportCustomText.SaveAs = subNode.InnerText;
-                subNode = node.SelectSingleNode("SaveSubtitleAs");
-                if (subNode != null)
-                    language.ExportCustomText.SaveSubtitleAs = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleExportedInCustomFormatToX");
-                if (subNode != null)
-                    language.ExportCustomText.SubtitleExportedInCustomFormatToX = subNode.InnerText;
-
-            }
-
             language.ExportCustomTextFormat = new Nikse.SubtitleEdit.Logic.LanguageStructure.ExportCustomTextFormat();
-            node = doc.DocumentElement.SelectSingleNode("ExportCustomTextFormat");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ExportCustomTextFormat.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Template");
-                if (subNode != null)
-                    language.ExportCustomTextFormat.Template = subNode.InnerText;
-                subNode = node.SelectSingleNode("Header");
-                if (subNode != null)
-                    language.ExportCustomTextFormat.Header = subNode.InnerText;
-                subNode = node.SelectSingleNode("TextLine");
-                if (subNode != null)
-                    language.ExportCustomTextFormat.TextLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("TimeCode");
-                if (subNode != null)
-                    language.ExportCustomTextFormat.TimeCode = subNode.InnerText;
-                subNode = node.SelectSingleNode("NewLine");
-                if (subNode != null)
-                    language.ExportCustomTextFormat.NewLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("Footer");
-                if (subNode != null)
-                    language.ExportCustomTextFormat.Footer = subNode.InnerText;
-                subNode = node.SelectSingleNode("DoNotModify");
-                if (subNode != null)
-                    language.ExportCustomTextFormat.DoNotModify = subNode.InnerText;
-
-            }
-
             language.ExportPngXml = new Nikse.SubtitleEdit.Logic.LanguageStructure.ExportPngXml();
-            node = doc.DocumentElement.SelectSingleNode("ExportPngXml");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ExportPngXml.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImageSettings");
-                if (subNode != null)
-                    language.ExportPngXml.ImageSettings = subNode.InnerText;
-                subNode = node.SelectSingleNode("FontFamily");
-                if (subNode != null)
-                    language.ExportPngXml.FontFamily = subNode.InnerText;
-                subNode = node.SelectSingleNode("FontSize");
-                if (subNode != null)
-                    language.ExportPngXml.FontSize = subNode.InnerText;
-                subNode = node.SelectSingleNode("FontColor");
-                if (subNode != null)
-                    language.ExportPngXml.FontColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("BorderColor");
-                if (subNode != null)
-                    language.ExportPngXml.BorderColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("BorderWidth");
-                if (subNode != null)
-                    language.ExportPngXml.BorderWidth = subNode.InnerText;
-                subNode = node.SelectSingleNode("BorderStyle");
-                if (subNode != null)
-                    language.ExportPngXml.BorderStyle = subNode.InnerText;
-                subNode = node.SelectSingleNode("BorderStyleOneBox");
-                if (subNode != null)
-                    language.ExportPngXml.BorderStyleOneBox = subNode.InnerText;
-                subNode = node.SelectSingleNode("BorderStyleBoxForEachLine");
-                if (subNode != null)
-                    language.ExportPngXml.BorderStyleBoxForEachLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("BorderStyleNormalWidthX");
-                if (subNode != null)
-                    language.ExportPngXml.BorderStyleNormalWidthX = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShadowColor");
-                if (subNode != null)
-                    language.ExportPngXml.ShadowColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShadowWidth");
-                if (subNode != null)
-                    language.ExportPngXml.ShadowWidth = subNode.InnerText;
-                subNode = node.SelectSingleNode("Transparency");
-                if (subNode != null)
-                    language.ExportPngXml.Transparency = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImageFormat");
-                if (subNode != null)
-                    language.ExportPngXml.ImageFormat = subNode.InnerText;
-                subNode = node.SelectSingleNode("SimpleRendering");
-                if (subNode != null)
-                    language.ExportPngXml.SimpleRendering = subNode.InnerText;
-                subNode = node.SelectSingleNode("AntiAliasingWithTransparency");
-                if (subNode != null)
-                    language.ExportPngXml.AntiAliasingWithTransparency = subNode.InnerText;
-                subNode = node.SelectSingleNode("Text3D");
-                if (subNode != null)
-                    language.ExportPngXml.Text3D = subNode.InnerText;
-                subNode = node.SelectSingleNode("SideBySide3D");
-                if (subNode != null)
-                    language.ExportPngXml.SideBySide3D = subNode.InnerText;
-                subNode = node.SelectSingleNode("HalfTopBottom3D");
-                if (subNode != null)
-                    language.ExportPngXml.HalfTopBottom3D = subNode.InnerText;
-                subNode = node.SelectSingleNode("Depth");
-                if (subNode != null)
-                    language.ExportPngXml.Depth = subNode.InnerText;
-                subNode = node.SelectSingleNode("ExportAllLines");
-                if (subNode != null)
-                    language.ExportPngXml.ExportAllLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("XImagesSavedInY");
-                if (subNode != null)
-                    language.ExportPngXml.XImagesSavedInY = subNode.InnerText;
-                subNode = node.SelectSingleNode("VideoResolution");
-                if (subNode != null)
-                    language.ExportPngXml.VideoResolution = subNode.InnerText;
-                subNode = node.SelectSingleNode("Align");
-                if (subNode != null)
-                    language.ExportPngXml.Align = subNode.InnerText;
-                subNode = node.SelectSingleNode("Left");
-                if (subNode != null)
-                    language.ExportPngXml.Left = subNode.InnerText;
-                subNode = node.SelectSingleNode("Right");
-                if (subNode != null)
-                    language.ExportPngXml.Right = subNode.InnerText;
-                subNode = node.SelectSingleNode("Center");
-                if (subNode != null)
-                    language.ExportPngXml.Center = subNode.InnerText;
-                subNode = node.SelectSingleNode("BottomMargin");
-                if (subNode != null)
-                    language.ExportPngXml.BottomMargin = subNode.InnerText;
-                subNode = node.SelectSingleNode("SaveBluRraySupAs");
-                if (subNode != null)
-                    language.ExportPngXml.SaveBluRraySupAs = subNode.InnerText;
-                subNode = node.SelectSingleNode("SaveVobSubAs");
-                if (subNode != null)
-                    language.ExportPngXml.SaveVobSubAs = subNode.InnerText;
-                subNode = node.SelectSingleNode("SaveFabImageScriptAs");
-                if (subNode != null)
-                    language.ExportPngXml.SaveFabImageScriptAs = subNode.InnerText;
-                subNode = node.SelectSingleNode("SaveDvdStudioProStlAs");
-                if (subNode != null)
-                    language.ExportPngXml.SaveDvdStudioProStlAs = subNode.InnerText;
-                subNode = node.SelectSingleNode("SomeLinesWereTooLongX");
-                if (subNode != null)
-                    language.ExportPngXml.SomeLinesWereTooLongX = subNode.InnerText;
-                subNode = node.SelectSingleNode("LineHeight");
-                if (subNode != null)
-                    language.ExportPngXml.LineHeight = subNode.InnerText;
-                subNode = node.SelectSingleNode("BoxSingleLine");
-                if (subNode != null)
-                    language.ExportPngXml.BoxSingleLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("BoxMultiLine");
-                if (subNode != null)
-                    language.ExportPngXml.BoxMultiLine = subNode.InnerText;
-
-            }
-
             language.ExportText = new Nikse.SubtitleEdit.Logic.LanguageStructure.ExportText();
-            node = doc.DocumentElement.SelectSingleNode("ExportText");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ExportText.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Preview");
-                if (subNode != null)
-                    language.ExportText.Preview = subNode.InnerText;
-                subNode = node.SelectSingleNode("ExportOptions");
-                if (subNode != null)
-                    language.ExportText.ExportOptions = subNode.InnerText;
-                subNode = node.SelectSingleNode("FormatText");
-                if (subNode != null)
-                    language.ExportText.FormatText = subNode.InnerText;
-                subNode = node.SelectSingleNode("None");
-                if (subNode != null)
-                    language.ExportText.None = subNode.InnerText;
-                subNode = node.SelectSingleNode("MergeAllLines");
-                if (subNode != null)
-                    language.ExportText.MergeAllLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnbreakLines");
-                if (subNode != null)
-                    language.ExportText.UnbreakLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveStyling");
-                if (subNode != null)
-                    language.ExportText.RemoveStyling = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowLineNumbers");
-                if (subNode != null)
-                    language.ExportText.ShowLineNumbers = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddNewLineAfterLineNumber");
-                if (subNode != null)
-                    language.ExportText.AddNewLineAfterLineNumber = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowTimeCode");
-                if (subNode != null)
-                    language.ExportText.ShowTimeCode = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddNewLineAfterTimeCode");
-                if (subNode != null)
-                    language.ExportText.AddNewLineAfterTimeCode = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddNewLineAfterTexts");
-                if (subNode != null)
-                    language.ExportText.AddNewLineAfterTexts = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddNewLineBetweenSubtitles");
-                if (subNode != null)
-                    language.ExportText.AddNewLineBetweenSubtitles = subNode.InnerText;
-                subNode = node.SelectSingleNode("TimeCodeFormat");
-                if (subNode != null)
-                    language.ExportText.TimeCodeFormat = subNode.InnerText;
-                subNode = node.SelectSingleNode("Srt");
-                if (subNode != null)
-                    language.ExportText.Srt = subNode.InnerText;
-                subNode = node.SelectSingleNode("Milliseconds");
-                if (subNode != null)
-                    language.ExportText.Milliseconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("HHMMSSFF");
-                if (subNode != null)
-                    language.ExportText.HHMMSSFF = subNode.InnerText;
-                subNode = node.SelectSingleNode("TimeCodeSeperator");
-                if (subNode != null)
-                    language.ExportText.TimeCodeSeperator = subNode.InnerText;
-
-            }
-
             language.ExtractDateTimeInfo = new Nikse.SubtitleEdit.Logic.LanguageStructure.ExtractDateTimeInfo();
-            node = doc.DocumentElement.SelectSingleNode("ExtractDateTimeInfo");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ExtractDateTimeInfo.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenVideoFile");
-                if (subNode != null)
-                    language.ExtractDateTimeInfo.OpenVideoFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartFrom");
-                if (subNode != null)
-                    language.ExtractDateTimeInfo.StartFrom = subNode.InnerText;
-                subNode = node.SelectSingleNode("DateTimeFormat");
-                if (subNode != null)
-                    language.ExtractDateTimeInfo.DateTimeFormat = subNode.InnerText;
-                subNode = node.SelectSingleNode("Example");
-                if (subNode != null)
-                    language.ExtractDateTimeInfo.Example = subNode.InnerText;
-                subNode = node.SelectSingleNode("GenerateSubtitle");
-                if (subNode != null)
-                    language.ExtractDateTimeInfo.GenerateSubtitle = subNode.InnerText;
-
-            }
-
             language.FindDialog = new Nikse.SubtitleEdit.Logic.LanguageStructure.FindDialog();
-            node = doc.DocumentElement.SelectSingleNode("FindDialog");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.FindDialog.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Find");
-                if (subNode != null)
-                    language.FindDialog.Find = subNode.InnerText;
-                subNode = node.SelectSingleNode("Normal");
-                if (subNode != null)
-                    language.FindDialog.Normal = subNode.InnerText;
-                subNode = node.SelectSingleNode("CaseSensitive");
-                if (subNode != null)
-                    language.FindDialog.CaseSensitive = subNode.InnerText;
-                subNode = node.SelectSingleNode("RegularExpression");
-                if (subNode != null)
-                    language.FindDialog.RegularExpression = subNode.InnerText;
-
-            }
-
             language.FindSubtitleLine = new Nikse.SubtitleEdit.Logic.LanguageStructure.FindSubtitleLine();
-            node = doc.DocumentElement.SelectSingleNode("FindSubtitleLine");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.FindSubtitleLine.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Find");
-                if (subNode != null)
-                    language.FindSubtitleLine.Find = subNode.InnerText;
-                subNode = node.SelectSingleNode("FindNext");
-                if (subNode != null)
-                    language.FindSubtitleLine.FindNext = subNode.InnerText;
-
-            }
-
             language.FixCommonErrors = new Nikse.SubtitleEdit.Logic.LanguageStructure.FixCommonErrors();
-            node = doc.DocumentElement.SelectSingleNode("FixCommonErrors");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.FixCommonErrors.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Step1");
-                if (subNode != null)
-                    language.FixCommonErrors.Step1 = subNode.InnerText;
-                subNode = node.SelectSingleNode("WhatToFix");
-                if (subNode != null)
-                    language.FixCommonErrors.WhatToFix = subNode.InnerText;
-                subNode = node.SelectSingleNode("Example");
-                if (subNode != null)
-                    language.FixCommonErrors.Example = subNode.InnerText;
-                subNode = node.SelectSingleNode("SelectAll");
-                if (subNode != null)
-                    language.FixCommonErrors.SelectAll = subNode.InnerText;
-                subNode = node.SelectSingleNode("InverseSelection");
-                if (subNode != null)
-                    language.FixCommonErrors.InverseSelection = subNode.InnerText;
-                subNode = node.SelectSingleNode("Back");
-                if (subNode != null)
-                    language.FixCommonErrors.Back = subNode.InnerText;
-                subNode = node.SelectSingleNode("Next");
-                if (subNode != null)
-                    language.FixCommonErrors.Next = subNode.InnerText;
-                subNode = node.SelectSingleNode("Step2");
-                if (subNode != null)
-                    language.FixCommonErrors.Step2 = subNode.InnerText;
-                subNode = node.SelectSingleNode("Fixes");
-                if (subNode != null)
-                    language.FixCommonErrors.Fixes = subNode.InnerText;
-                subNode = node.SelectSingleNode("Log");
-                if (subNode != null)
-                    language.FixCommonErrors.Log = subNode.InnerText;
-                subNode = node.SelectSingleNode("Function");
-                if (subNode != null)
-                    language.FixCommonErrors.Function = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemovedEmptyLine");
-                if (subNode != null)
-                    language.FixCommonErrors.RemovedEmptyLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemovedEmptyLineAtTop");
-                if (subNode != null)
-                    language.FixCommonErrors.RemovedEmptyLineAtTop = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemovedEmptyLineAtBottom");
-                if (subNode != null)
-                    language.FixCommonErrors.RemovedEmptyLineAtBottom = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemovedEmptyLinesUnsedLineBreaks");
-                if (subNode != null)
-                    language.FixCommonErrors.RemovedEmptyLinesUnsedLineBreaks = subNode.InnerText;
-                subNode = node.SelectSingleNode("EmptyLinesRemovedX");
-                if (subNode != null)
-                    language.FixCommonErrors.EmptyLinesRemovedX = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixOverlappingDisplayTimes");
-                if (subNode != null)
-                    language.FixCommonErrors.FixOverlappingDisplayTimes = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixShortDisplayTimes");
-                if (subNode != null)
-                    language.FixCommonErrors.FixShortDisplayTimes = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixLongDisplayTimes");
-                if (subNode != null)
-                    language.FixCommonErrors.FixLongDisplayTimes = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixInvalidItalicTags");
-                if (subNode != null)
-                    language.FixCommonErrors.FixInvalidItalicTags = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveUnneededSpaces");
-                if (subNode != null)
-                    language.FixCommonErrors.RemoveUnneededSpaces = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveUnneededPeriods");
-                if (subNode != null)
-                    language.FixCommonErrors.RemoveUnneededPeriods = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixMissingSpaces");
-                if (subNode != null)
-                    language.FixCommonErrors.FixMissingSpaces = subNode.InnerText;
-                subNode = node.SelectSingleNode("BreakLongLines");
-                if (subNode != null)
-                    language.FixCommonErrors.BreakLongLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveLineBreaks");
-                if (subNode != null)
-                    language.FixCommonErrors.RemoveLineBreaks = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveLineBreaksAll");
-                if (subNode != null)
-                    language.FixCommonErrors.RemoveLineBreaksAll = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixUppercaseIInsindeLowercaseWords");
-                if (subNode != null)
-                    language.FixCommonErrors.FixUppercaseIInsindeLowercaseWords = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixDoubleApostrophes");
-                if (subNode != null)
-                    language.FixCommonErrors.FixDoubleApostrophes = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddPeriods");
-                if (subNode != null)
-                    language.FixCommonErrors.AddPeriods = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartWithUppercaseLetterAfterParagraph");
-                if (subNode != null)
-                    language.FixCommonErrors.StartWithUppercaseLetterAfterParagraph = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartWithUppercaseLetterAfterPeriodInsideParagraph");
-                if (subNode != null)
-                    language.FixCommonErrors.StartWithUppercaseLetterAfterPeriodInsideParagraph = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartWithUppercaseLetterAfterColon");
-                if (subNode != null)
-                    language.FixCommonErrors.StartWithUppercaseLetterAfterColon = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixLowercaseIToUppercaseI");
-                if (subNode != null)
-                    language.FixCommonErrors.FixLowercaseIToUppercaseI = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixCommonOcrErrors");
-                if (subNode != null)
-                    language.FixCommonErrors.FixCommonOcrErrors = subNode.InnerText;
-                subNode = node.SelectSingleNode("CommonOcrErrorsFixed");
-                if (subNode != null)
-                    language.FixCommonErrors.CommonOcrErrorsFixed = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveSpaceBetweenNumber");
-                if (subNode != null)
-                    language.FixCommonErrors.RemoveSpaceBetweenNumber = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixDialogsOnOneLine");
-                if (subNode != null)
-                    language.FixCommonErrors.FixDialogsOnOneLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveSpaceBetweenNumbersFixed");
-                if (subNode != null)
-                    language.FixCommonErrors.RemoveSpaceBetweenNumbersFixed = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixTurkishAnsi");
-                if (subNode != null)
-                    language.FixCommonErrors.FixTurkishAnsi = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixDanishLetterI");
-                if (subNode != null)
-                    language.FixCommonErrors.FixDanishLetterI = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixSpanishInvertedQuestionAndExclamationMarks");
-                if (subNode != null)
-                    language.FixCommonErrors.FixSpanishInvertedQuestionAndExclamationMarks = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddMissingQuote");
-                if (subNode != null)
-                    language.FixCommonErrors.AddMissingQuote = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddMissingQuotes");
-                if (subNode != null)
-                    language.FixCommonErrors.AddMissingQuotes = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixHyphens");
-                if (subNode != null)
-                    language.FixCommonErrors.FixHyphens = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixHyphensAdd");
-                if (subNode != null)
-                    language.FixCommonErrors.FixHyphensAdd = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixHyphen");
-                if (subNode != null)
-                    language.FixCommonErrors.FixHyphen = subNode.InnerText;
-                subNode = node.SelectSingleNode("XHyphensFixed");
-                if (subNode != null)
-                    language.FixCommonErrors.XHyphensFixed = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddMissingQuotesExample");
-                if (subNode != null)
-                    language.FixCommonErrors.AddMissingQuotesExample = subNode.InnerText;
-                subNode = node.SelectSingleNode("XMissingQuotesAdded");
-                if (subNode != null)
-                    language.FixCommonErrors.XMissingQuotesAdded = subNode.InnerText;
-                subNode = node.SelectSingleNode("Fix3PlusLines");
-                if (subNode != null)
-                    language.FixCommonErrors.Fix3PlusLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("Fix3PlusLine");
-                if (subNode != null)
-                    language.FixCommonErrors.Fix3PlusLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("X3PlusLinesFixed");
-                if (subNode != null)
-                    language.FixCommonErrors.X3PlusLinesFixed = subNode.InnerText;
-                subNode = node.SelectSingleNode("Analysing");
-                if (subNode != null)
-                    language.FixCommonErrors.Analysing = subNode.InnerText;
-                subNode = node.SelectSingleNode("NothingToFix");
-                if (subNode != null)
-                    language.FixCommonErrors.NothingToFix = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixesFoundX");
-                if (subNode != null)
-                    language.FixCommonErrors.FixesFoundX = subNode.InnerText;
-                subNode = node.SelectSingleNode("XFixesApplied");
-                if (subNode != null)
-                    language.FixCommonErrors.XFixesApplied = subNode.InnerText;
-                subNode = node.SelectSingleNode("NothingToFixBut");
-                if (subNode != null)
-                    language.FixCommonErrors.NothingToFixBut = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish");
-                if (subNode != null)
-                    language.FixCommonErrors.FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish = subNode.InnerText;
-                subNode = node.SelectSingleNode("Continue");
-                if (subNode != null)
-                    language.FixCommonErrors.Continue = subNode.InnerText;
-                subNode = node.SelectSingleNode("ContinueAnyway");
-                if (subNode != null)
-                    language.FixCommonErrors.ContinueAnyway = subNode.InnerText;
-                subNode = node.SelectSingleNode("UncheckedFixLowercaseIToUppercaseI");
-                if (subNode != null)
-                    language.FixCommonErrors.UncheckedFixLowercaseIToUppercaseI = subNode.InnerText;
-                subNode = node.SelectSingleNode("XIsChangedToUppercase");
-                if (subNode != null)
-                    language.FixCommonErrors.XIsChangedToUppercase = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixFirstLetterToUppercaseAfterParagraph");
-                if (subNode != null)
-                    language.FixCommonErrors.FixFirstLetterToUppercaseAfterParagraph = subNode.InnerText;
-                subNode = node.SelectSingleNode("MergeShortLine");
-                if (subNode != null)
-                    language.FixCommonErrors.MergeShortLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("MergeShortLineAll");
-                if (subNode != null)
-                    language.FixCommonErrors.MergeShortLineAll = subNode.InnerText;
-                subNode = node.SelectSingleNode("XLineBreaksAdded");
-                if (subNode != null)
-                    language.FixCommonErrors.XLineBreaksAdded = subNode.InnerText;
-                subNode = node.SelectSingleNode("BreakLongLine");
-                if (subNode != null)
-                    language.FixCommonErrors.BreakLongLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixLongDisplayTime");
-                if (subNode != null)
-                    language.FixCommonErrors.FixLongDisplayTime = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixInvalidItalicTag");
-                if (subNode != null)
-                    language.FixCommonErrors.FixInvalidItalicTag = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixShortDisplayTime");
-                if (subNode != null)
-                    language.FixCommonErrors.FixShortDisplayTime = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixOverlappingDisplayTime");
-                if (subNode != null)
-                    language.FixCommonErrors.FixOverlappingDisplayTime = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixInvalidItalicTagsExample");
-                if (subNode != null)
-                    language.FixCommonErrors.FixInvalidItalicTagsExample = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveUnneededSpacesExample");
-                if (subNode != null)
-                    language.FixCommonErrors.RemoveUnneededSpacesExample = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveUnneededPeriodsExample");
-                if (subNode != null)
-                    language.FixCommonErrors.RemoveUnneededPeriodsExample = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixMissingSpacesExample");
-                if (subNode != null)
-                    language.FixCommonErrors.FixMissingSpacesExample = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixUppercaseIInsindeLowercaseWordsExample");
-                if (subNode != null)
-                    language.FixCommonErrors.FixUppercaseIInsindeLowercaseWordsExample = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixLowercaseIToUppercaseIExample");
-                if (subNode != null)
-                    language.FixCommonErrors.FixLowercaseIToUppercaseIExample = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartTimeLaterThanEndTime");
-                if (subNode != null)
-                    language.FixCommonErrors.StartTimeLaterThanEndTime = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnableToFixStartTimeLaterThanEndTime");
-                if (subNode != null)
-                    language.FixCommonErrors.UnableToFixStartTimeLaterThanEndTime = subNode.InnerText;
-                subNode = node.SelectSingleNode("XFixedToYZ");
-                if (subNode != null)
-                    language.FixCommonErrors.XFixedToYZ = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnableToFixTextXY");
-                if (subNode != null)
-                    language.FixCommonErrors.UnableToFixTextXY = subNode.InnerText;
-                subNode = node.SelectSingleNode("XOverlappingTimestampsFixed");
-                if (subNode != null)
-                    language.FixCommonErrors.XOverlappingTimestampsFixed = subNode.InnerText;
-                subNode = node.SelectSingleNode("XDisplayTimesProlonged");
-                if (subNode != null)
-                    language.FixCommonErrors.XDisplayTimesProlonged = subNode.InnerText;
-                subNode = node.SelectSingleNode("XInvalidHtmlTagsFixed");
-                if (subNode != null)
-                    language.FixCommonErrors.XInvalidHtmlTagsFixed = subNode.InnerText;
-                subNode = node.SelectSingleNode("XDisplayTimesShortned");
-                if (subNode != null)
-                    language.FixCommonErrors.XDisplayTimesShortned = subNode.InnerText;
-                subNode = node.SelectSingleNode("XLinesUnbreaked");
-                if (subNode != null)
-                    language.FixCommonErrors.XLinesUnbreaked = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnneededSpace");
-                if (subNode != null)
-                    language.FixCommonErrors.UnneededSpace = subNode.InnerText;
-                subNode = node.SelectSingleNode("XUnneededSpacesRemoved");
-                if (subNode != null)
-                    language.FixCommonErrors.XUnneededSpacesRemoved = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnneededPeriod");
-                if (subNode != null)
-                    language.FixCommonErrors.UnneededPeriod = subNode.InnerText;
-                subNode = node.SelectSingleNode("XUnneededPeriodsRemoved");
-                if (subNode != null)
-                    language.FixCommonErrors.XUnneededPeriodsRemoved = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixMissingSpace");
-                if (subNode != null)
-                    language.FixCommonErrors.FixMissingSpace = subNode.InnerText;
-                subNode = node.SelectSingleNode("XMissingSpacesAdded");
-                if (subNode != null)
-                    language.FixCommonErrors.XMissingSpacesAdded = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixUppercaseIInsideLowercaseWord");
-                if (subNode != null)
-                    language.FixCommonErrors.FixUppercaseIInsideLowercaseWord = subNode.InnerText;
-                subNode = node.SelectSingleNode("XPeriodsAdded");
-                if (subNode != null)
-                    language.FixCommonErrors.XPeriodsAdded = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixMissingPeriodAtEndOfLine");
-                if (subNode != null)
-                    language.FixCommonErrors.FixMissingPeriodAtEndOfLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("XDoubleApostrophesFixed");
-                if (subNode != null)
-                    language.FixCommonErrors.XDoubleApostrophesFixed = subNode.InnerText;
-                subNode = node.SelectSingleNode("XUppercaseIsFoundInsideLowercaseWords");
-                if (subNode != null)
-                    language.FixCommonErrors.XUppercaseIsFoundInsideLowercaseWords = subNode.InnerText;
-                subNode = node.SelectSingleNode("RefreshFixes");
-                if (subNode != null)
-                    language.FixCommonErrors.RefreshFixes = subNode.InnerText;
-                subNode = node.SelectSingleNode("ApplyFixes");
-                if (subNode != null)
-                    language.FixCommonErrors.ApplyFixes = subNode.InnerText;
-                subNode = node.SelectSingleNode("AutoBreak");
-                if (subNode != null)
-                    language.FixCommonErrors.AutoBreak = subNode.InnerText;
-                subNode = node.SelectSingleNode("Unbreak");
-                if (subNode != null)
-                    language.FixCommonErrors.Unbreak = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixDoubleDash");
-                if (subNode != null)
-                    language.FixCommonErrors.FixDoubleDash = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixDoubleGreaterThan");
-                if (subNode != null)
-                    language.FixCommonErrors.FixDoubleGreaterThan = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixEllipsesStart");
-                if (subNode != null)
-                    language.FixCommonErrors.FixEllipsesStart = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixMissingOpenBracket");
-                if (subNode != null)
-                    language.FixCommonErrors.FixMissingOpenBracket = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixMusicNotation");
-                if (subNode != null)
-                    language.FixCommonErrors.FixMusicNotation = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixDoubleDashs");
-                if (subNode != null)
-                    language.FixCommonErrors.FixDoubleDashs = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixDoubleGreaterThans");
-                if (subNode != null)
-                    language.FixCommonErrors.FixDoubleGreaterThans = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixEllipsesStarts");
-                if (subNode != null)
-                    language.FixCommonErrors.FixEllipsesStarts = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixMissingOpenBrackets");
-                if (subNode != null)
-                    language.FixCommonErrors.FixMissingOpenBrackets = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixMusicNotations");
-                if (subNode != null)
-                    language.FixCommonErrors.FixMusicNotations = subNode.InnerText;
-                subNode = node.SelectSingleNode("XFixDoubleDash");
-                if (subNode != null)
-                    language.FixCommonErrors.XFixDoubleDash = subNode.InnerText;
-                subNode = node.SelectSingleNode("XFixDoubleGreaterThan");
-                if (subNode != null)
-                    language.FixCommonErrors.XFixDoubleGreaterThan = subNode.InnerText;
-                subNode = node.SelectSingleNode("XFixEllipsesStart");
-                if (subNode != null)
-                    language.FixCommonErrors.XFixEllipsesStart = subNode.InnerText;
-                subNode = node.SelectSingleNode("XFixMissingOpenBracket");
-                if (subNode != null)
-                    language.FixCommonErrors.XFixMissingOpenBracket = subNode.InnerText;
-                subNode = node.SelectSingleNode("XFixMusicNotation");
-                if (subNode != null)
-                    language.FixCommonErrors.XFixMusicNotation = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixDoubleDashExample");
-                if (subNode != null)
-                    language.FixCommonErrors.FixDoubleDashExample = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixDoubleGreaterThanExample");
-                if (subNode != null)
-                    language.FixCommonErrors.FixDoubleGreaterThanExample = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixEllipsesStartExample");
-                if (subNode != null)
-                    language.FixCommonErrors.FixEllipsesStartExample = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixMissingOpenBracketExample");
-                if (subNode != null)
-                    language.FixCommonErrors.FixMissingOpenBracketExample = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixMusicNotationExample");
-                if (subNode != null)
-                    language.FixCommonErrors.FixMusicNotationExample = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfImportantLogMessages");
-                if (subNode != null)
-                    language.FixCommonErrors.NumberOfImportantLogMessages = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixedOkXY");
-                if (subNode != null)
-                    language.FixCommonErrors.FixedOkXY = subNode.InnerText;
-
-            }
-
             language.GetDictionaries = new Nikse.SubtitleEdit.Logic.LanguageStructure.GetDictionaries();
-            node = doc.DocumentElement.SelectSingleNode("GetDictionaries");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.GetDictionaries.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("DescriptionLine1");
-                if (subNode != null)
-                    language.GetDictionaries.DescriptionLine1 = subNode.InnerText;
-                subNode = node.SelectSingleNode("DescriptionLine2");
-                if (subNode != null)
-                    language.GetDictionaries.DescriptionLine2 = subNode.InnerText;
-                subNode = node.SelectSingleNode("GetDictionariesHere");
-                if (subNode != null)
-                    language.GetDictionaries.GetDictionariesHere = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenOpenOfficeWiki");
-                if (subNode != null)
-                    language.GetDictionaries.OpenOpenOfficeWiki = subNode.InnerText;
-                subNode = node.SelectSingleNode("GetAllDictionaries");
-                if (subNode != null)
-                    language.GetDictionaries.GetAllDictionaries = subNode.InnerText;
-                subNode = node.SelectSingleNode("ChooseLanguageAndClickDownload");
-                if (subNode != null)
-                    language.GetDictionaries.ChooseLanguageAndClickDownload = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenDictionariesFolder");
-                if (subNode != null)
-                    language.GetDictionaries.OpenDictionariesFolder = subNode.InnerText;
-                subNode = node.SelectSingleNode("Download");
-                if (subNode != null)
-                    language.GetDictionaries.Download = subNode.InnerText;
-                subNode = node.SelectSingleNode("XDownloaded");
-                if (subNode != null)
-                    language.GetDictionaries.XDownloaded = subNode.InnerText;
-
-            }
-
             language.GetTesseractDictionaries = new Nikse.SubtitleEdit.Logic.LanguageStructure.GetTesseractDictionaries();
-            node = doc.DocumentElement.SelectSingleNode("GetTesseractDictionaries");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.GetTesseractDictionaries.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("DescriptionLine1");
-                if (subNode != null)
-                    language.GetTesseractDictionaries.DescriptionLine1 = subNode.InnerText;
-                subNode = node.SelectSingleNode("DownloadFailed");
-                if (subNode != null)
-                    language.GetTesseractDictionaries.DownloadFailed = subNode.InnerText;
-                subNode = node.SelectSingleNode("GetDictionariesHere");
-                if (subNode != null)
-                    language.GetTesseractDictionaries.GetDictionariesHere = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenOpenOfficeWiki");
-                if (subNode != null)
-                    language.GetTesseractDictionaries.OpenOpenOfficeWiki = subNode.InnerText;
-                subNode = node.SelectSingleNode("GetAllDictionaries");
-                if (subNode != null)
-                    language.GetTesseractDictionaries.GetAllDictionaries = subNode.InnerText;
-                subNode = node.SelectSingleNode("ChooseLanguageAndClickDownload");
-                if (subNode != null)
-                    language.GetTesseractDictionaries.ChooseLanguageAndClickDownload = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenDictionariesFolder");
-                if (subNode != null)
-                    language.GetTesseractDictionaries.OpenDictionariesFolder = subNode.InnerText;
-                subNode = node.SelectSingleNode("Download");
-                if (subNode != null)
-                    language.GetTesseractDictionaries.Download = subNode.InnerText;
-                subNode = node.SelectSingleNode("XDownloaded");
-                if (subNode != null)
-                    language.GetTesseractDictionaries.XDownloaded = subNode.InnerText;
-
-            }
-
             language.GoogleTranslate = new Nikse.SubtitleEdit.Logic.LanguageStructure.GoogleTranslate();
-            node = doc.DocumentElement.SelectSingleNode("GoogleTranslate");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.GoogleTranslate.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("From");
-                if (subNode != null)
-                    language.GoogleTranslate.From = subNode.InnerText;
-                subNode = node.SelectSingleNode("To");
-                if (subNode != null)
-                    language.GoogleTranslate.To = subNode.InnerText;
-                subNode = node.SelectSingleNode("Translate");
-                if (subNode != null)
-                    language.GoogleTranslate.Translate = subNode.InnerText;
-                subNode = node.SelectSingleNode("PleaseWait");
-                if (subNode != null)
-                    language.GoogleTranslate.PleaseWait = subNode.InnerText;
-                subNode = node.SelectSingleNode("PoweredByGoogleTranslate");
-                if (subNode != null)
-                    language.GoogleTranslate.PoweredByGoogleTranslate = subNode.InnerText;
-                subNode = node.SelectSingleNode("PoweredByMicrosoftTranslate");
-                if (subNode != null)
-                    language.GoogleTranslate.PoweredByMicrosoftTranslate = subNode.InnerText;
-
-            }
-
             language.GoogleOrMicrosoftTranslate = new Nikse.SubtitleEdit.Logic.LanguageStructure.GoogleOrMicrosoftTranslate();
-            node = doc.DocumentElement.SelectSingleNode("GoogleOrMicrosoftTranslate");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.GoogleOrMicrosoftTranslate.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("From");
-                if (subNode != null)
-                    language.GoogleOrMicrosoftTranslate.From = subNode.InnerText;
-                subNode = node.SelectSingleNode("To");
-                if (subNode != null)
-                    language.GoogleOrMicrosoftTranslate.To = subNode.InnerText;
-                subNode = node.SelectSingleNode("Translate");
-                if (subNode != null)
-                    language.GoogleOrMicrosoftTranslate.Translate = subNode.InnerText;
-                subNode = node.SelectSingleNode("SourceText");
-                if (subNode != null)
-                    language.GoogleOrMicrosoftTranslate.SourceText = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoogleTranslate");
-                if (subNode != null)
-                    language.GoogleOrMicrosoftTranslate.GoogleTranslate = subNode.InnerText;
-                subNode = node.SelectSingleNode("MicrosoftTranslate");
-                if (subNode != null)
-                    language.GoogleOrMicrosoftTranslate.MicrosoftTranslate = subNode.InnerText;
-
-            }
-
             language.GoToLine = new Nikse.SubtitleEdit.Logic.LanguageStructure.GoToLine();
-            node = doc.DocumentElement.SelectSingleNode("GoToLine");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.GoToLine.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("XIsNotAValidNumber");
-                if (subNode != null)
-                    language.GoToLine.XIsNotAValidNumber = subNode.InnerText;
-
-            }
-
             language.ImportImages = new Nikse.SubtitleEdit.Logic.LanguageStructure.ImportImages();
-            node = doc.DocumentElement.SelectSingleNode("ImportImages");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ImportImages.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImageFiles");
-                if (subNode != null)
-                    language.ImportImages.ImageFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("Input");
-                if (subNode != null)
-                    language.ImportImages.Input = subNode.InnerText;
-                subNode = node.SelectSingleNode("InputDescription");
-                if (subNode != null)
-                    language.ImportImages.InputDescription = subNode.InnerText;
-
-            }
-
             language.ImportSceneChanges = new Nikse.SubtitleEdit.Logic.LanguageStructure.ImportSceneChanges();
-            node = doc.DocumentElement.SelectSingleNode("ImportSceneChanges");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ImportSceneChanges.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenTextFile");
-                if (subNode != null)
-                    language.ImportSceneChanges.OpenTextFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImportOptions");
-                if (subNode != null)
-                    language.ImportSceneChanges.ImportOptions = subNode.InnerText;
-                subNode = node.SelectSingleNode("TextFiles");
-                if (subNode != null)
-                    language.ImportSceneChanges.TextFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("TimeCodes");
-                if (subNode != null)
-                    language.ImportSceneChanges.TimeCodes = subNode.InnerText;
-                subNode = node.SelectSingleNode("Frames");
-                if (subNode != null)
-                    language.ImportSceneChanges.Frames = subNode.InnerText;
-                subNode = node.SelectSingleNode("Seconds");
-                if (subNode != null)
-                    language.ImportSceneChanges.Seconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("Milliseconds");
-                if (subNode != null)
-                    language.ImportSceneChanges.Milliseconds = subNode.InnerText;
-
-            }
-
             language.ImportText = new Nikse.SubtitleEdit.Logic.LanguageStructure.ImportText();
-            node = doc.DocumentElement.SelectSingleNode("ImportText");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ImportText.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("OneSubtitleIsOneFile");
-                if (subNode != null)
-                    language.ImportText.OneSubtitleIsOneFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenTextFile");
-                if (subNode != null)
-                    language.ImportText.OpenTextFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenTextFiles");
-                if (subNode != null)
-                    language.ImportText.OpenTextFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImportOptions");
-                if (subNode != null)
-                    language.ImportText.ImportOptions = subNode.InnerText;
-                subNode = node.SelectSingleNode("Splitting");
-                if (subNode != null)
-                    language.ImportText.Splitting = subNode.InnerText;
-                subNode = node.SelectSingleNode("AutoSplitText");
-                if (subNode != null)
-                    language.ImportText.AutoSplitText = subNode.InnerText;
-                subNode = node.SelectSingleNode("OneLineIsOneSubtitle");
-                if (subNode != null)
-                    language.ImportText.OneLineIsOneSubtitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("LineBreak");
-                if (subNode != null)
-                    language.ImportText.LineBreak = subNode.InnerText;
-                subNode = node.SelectSingleNode("SplitAtBlankLines");
-                if (subNode != null)
-                    language.ImportText.SplitAtBlankLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("MergeShortLines");
-                if (subNode != null)
-                    language.ImportText.MergeShortLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveEmptyLines");
-                if (subNode != null)
-                    language.ImportText.RemoveEmptyLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveLinesWithoutLetters");
-                if (subNode != null)
-                    language.ImportText.RemoveLinesWithoutLetters = subNode.InnerText;
-                subNode = node.SelectSingleNode("GenerateTimeCodes");
-                if (subNode != null)
-                    language.ImportText.GenerateTimeCodes = subNode.InnerText;
-                subNode = node.SelectSingleNode("GapBetweenSubtitles");
-                if (subNode != null)
-                    language.ImportText.GapBetweenSubtitles = subNode.InnerText;
-                subNode = node.SelectSingleNode("Auto");
-                if (subNode != null)
-                    language.ImportText.Auto = subNode.InnerText;
-                subNode = node.SelectSingleNode("Fixed");
-                if (subNode != null)
-                    language.ImportText.Fixed = subNode.InnerText;
-                subNode = node.SelectSingleNode("Refresh");
-                if (subNode != null)
-                    language.ImportText.Refresh = subNode.InnerText;
-                subNode = node.SelectSingleNode("TextFiles");
-                if (subNode != null)
-                    language.ImportText.TextFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("PreviewLinesModifiedX");
-                if (subNode != null)
-                    language.ImportText.PreviewLinesModifiedX = subNode.InnerText;
-                subNode = node.SelectSingleNode("TimeCodes");
-                if (subNode != null)
-                    language.ImportText.TimeCodes = subNode.InnerText;
-
-            }
-
             language.Interjections = new Nikse.SubtitleEdit.Logic.LanguageStructure.Interjections();
-            node = doc.DocumentElement.SelectSingleNode("Interjections");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.Interjections.Title = subNode.InnerText;
-
-            }
-
             language.JoinSubtitles = new Nikse.SubtitleEdit.Logic.LanguageStructure.JoinSubtitles();
-            node = doc.DocumentElement.SelectSingleNode("JoinSubtitles");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.JoinSubtitles.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Information");
-                if (subNode != null)
-                    language.JoinSubtitles.Information = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfLines");
-                if (subNode != null)
-                    language.JoinSubtitles.NumberOfLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartTime");
-                if (subNode != null)
-                    language.JoinSubtitles.StartTime = subNode.InnerText;
-                subNode = node.SelectSingleNode("EndTime");
-                if (subNode != null)
-                    language.JoinSubtitles.EndTime = subNode.InnerText;
-                subNode = node.SelectSingleNode("FileName");
-                if (subNode != null)
-                    language.JoinSubtitles.FileName = subNode.InnerText;
-                subNode = node.SelectSingleNode("Join");
-                if (subNode != null)
-                    language.JoinSubtitles.Join = subNode.InnerText;
-                subNode = node.SelectSingleNode("TotalNumberOfLinesX");
-                if (subNode != null)
-                    language.JoinSubtitles.TotalNumberOfLinesX = subNode.InnerText;
-
-            }
-
             language.Main = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main();
-            node = doc.DocumentElement.SelectSingleNode("Main");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("SaveChangesToUntitled");
-                if (subNode != null)
-                    language.Main.SaveChangesToUntitled = subNode.InnerText;
-                subNode = node.SelectSingleNode("SaveChangesToX");
-                if (subNode != null)
-                    language.Main.SaveChangesToX = subNode.InnerText;
-                subNode = node.SelectSingleNode("SaveChangesToUntitledOriginal");
-                if (subNode != null)
-                    language.Main.SaveChangesToUntitledOriginal = subNode.InnerText;
-                subNode = node.SelectSingleNode("SaveChangesToOriginalX");
-                if (subNode != null)
-                    language.Main.SaveChangesToOriginalX = subNode.InnerText;
-                subNode = node.SelectSingleNode("SaveSubtitleAs");
-                if (subNode != null)
-                    language.Main.SaveSubtitleAs = subNode.InnerText;
-                subNode = node.SelectSingleNode("SaveOriginalSubtitleAs");
-                if (subNode != null)
-                    language.Main.SaveOriginalSubtitleAs = subNode.InnerText;
-                subNode = node.SelectSingleNode("NoSubtitleLoaded");
-                if (subNode != null)
-                    language.Main.NoSubtitleLoaded = subNode.InnerText;
-                subNode = node.SelectSingleNode("VisualSyncSelectedLines");
-                if (subNode != null)
-                    language.Main.VisualSyncSelectedLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("VisualSyncTitle");
-                if (subNode != null)
-                    language.Main.VisualSyncTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeVisualSync");
-                if (subNode != null)
-                    language.Main.BeforeVisualSync = subNode.InnerText;
-                subNode = node.SelectSingleNode("VisualSyncPerformedOnSelectedLines");
-                if (subNode != null)
-                    language.Main.VisualSyncPerformedOnSelectedLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("VisualSyncPerformed");
-                if (subNode != null)
-                    language.Main.VisualSyncPerformed = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImportThisVobSubSubtitle");
-                if (subNode != null)
-                    language.Main.ImportThisVobSubSubtitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("FileXIsLargerThan10Mb");
-                if (subNode != null)
-                    language.Main.FileXIsLargerThan10Mb = subNode.InnerText;
-                subNode = node.SelectSingleNode("ContinueAnyway");
-                if (subNode != null)
-                    language.Main.ContinueAnyway = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeLoadOf");
-                if (subNode != null)
-                    language.Main.BeforeLoadOf = subNode.InnerText;
-                subNode = node.SelectSingleNode("LoadedSubtitleX");
-                if (subNode != null)
-                    language.Main.LoadedSubtitleX = subNode.InnerText;
-                subNode = node.SelectSingleNode("LoadedEmptyOrShort");
-                if (subNode != null)
-                    language.Main.LoadedEmptyOrShort = subNode.InnerText;
-                subNode = node.SelectSingleNode("FileIsEmptyOrShort");
-                if (subNode != null)
-                    language.Main.FileIsEmptyOrShort = subNode.InnerText;
-                subNode = node.SelectSingleNode("FileNotFound");
-                if (subNode != null)
-                    language.Main.FileNotFound = subNode.InnerText;
-                subNode = node.SelectSingleNode("SavedSubtitleX");
-                if (subNode != null)
-                    language.Main.SavedSubtitleX = subNode.InnerText;
-                subNode = node.SelectSingleNode("SavedOriginalSubtitleX");
-                if (subNode != null)
-                    language.Main.SavedOriginalSubtitleX = subNode.InnerText;
-                subNode = node.SelectSingleNode("FileOnDiskModified");
-                if (subNode != null)
-                    language.Main.FileOnDiskModified = subNode.InnerText;
-                subNode = node.SelectSingleNode("OverwriteModifiedFile");
-                if (subNode != null)
-                    language.Main.OverwriteModifiedFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnableToSaveSubtitleX");
-                if (subNode != null)
-                    language.Main.UnableToSaveSubtitleX = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeNew");
-                if (subNode != null)
-                    language.Main.BeforeNew = subNode.InnerText;
-                subNode = node.SelectSingleNode("New");
-                if (subNode != null)
-                    language.Main.New = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeConvertingToX");
-                if (subNode != null)
-                    language.Main.BeforeConvertingToX = subNode.InnerText;
-                subNode = node.SelectSingleNode("ConvertedToX");
-                if (subNode != null)
-                    language.Main.ConvertedToX = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeShowEarlier");
-                if (subNode != null)
-                    language.Main.BeforeShowEarlier = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeShowLater");
-                if (subNode != null)
-                    language.Main.BeforeShowLater = subNode.InnerText;
-                subNode = node.SelectSingleNode("LineNumberX");
-                if (subNode != null)
-                    language.Main.LineNumberX = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenVideoFile");
-                if (subNode != null)
-                    language.Main.OpenVideoFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("NewFrameRateUsedToCalculateTimeCodes");
-                if (subNode != null)
-                    language.Main.NewFrameRateUsedToCalculateTimeCodes = subNode.InnerText;
-                subNode = node.SelectSingleNode("NewFrameRateUsedToCalculateFrameNumbers");
-                if (subNode != null)
-                    language.Main.NewFrameRateUsedToCalculateFrameNumbers = subNode.InnerText;
-                subNode = node.SelectSingleNode("FindContinue");
-                if (subNode != null)
-                    language.Main.FindContinue = subNode.InnerText;
-                subNode = node.SelectSingleNode("FindContinueTitle");
-                if (subNode != null)
-                    language.Main.FindContinueTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("ReplaceContinueNotFound");
-                if (subNode != null)
-                    language.Main.ReplaceContinueNotFound = subNode.InnerText;
-                subNode = node.SelectSingleNode("ReplaceXContinue");
-                if (subNode != null)
-                    language.Main.ReplaceXContinue = subNode.InnerText;
-                subNode = node.SelectSingleNode("ReplaceContinueTitle");
-                if (subNode != null)
-                    language.Main.ReplaceContinueTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("SearchingForXFromLineY");
-                if (subNode != null)
-                    language.Main.SearchingForXFromLineY = subNode.InnerText;
-                subNode = node.SelectSingleNode("XFoundAtLineNumberY");
-                if (subNode != null)
-                    language.Main.XFoundAtLineNumberY = subNode.InnerText;
-                subNode = node.SelectSingleNode("XNotFound");
-                if (subNode != null)
-                    language.Main.XNotFound = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeReplace");
-                if (subNode != null)
-                    language.Main.BeforeReplace = subNode.InnerText;
-                subNode = node.SelectSingleNode("MatchFoundX");
-                if (subNode != null)
-                    language.Main.MatchFoundX = subNode.InnerText;
-                subNode = node.SelectSingleNode("NoMatchFoundX");
-                if (subNode != null)
-                    language.Main.NoMatchFoundX = subNode.InnerText;
-                subNode = node.SelectSingleNode("FoundNothingToReplace");
-                if (subNode != null)
-                    language.Main.FoundNothingToReplace = subNode.InnerText;
-                subNode = node.SelectSingleNode("ReplaceCountX");
-                if (subNode != null)
-                    language.Main.ReplaceCountX = subNode.InnerText;
-                subNode = node.SelectSingleNode("NoXFoundAtLineY");
-                if (subNode != null)
-                    language.Main.NoXFoundAtLineY = subNode.InnerText;
-                subNode = node.SelectSingleNode("OneReplacementMade");
-                if (subNode != null)
-                    language.Main.OneReplacementMade = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeChangesMadeInSourceView");
-                if (subNode != null)
-                    language.Main.BeforeChangesMadeInSourceView = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnableToParseSourceView");
-                if (subNode != null)
-                    language.Main.UnableToParseSourceView = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoToLineNumberX");
-                if (subNode != null)
-                    language.Main.GoToLineNumberX = subNode.InnerText;
-                subNode = node.SelectSingleNode("CreateAdjustChangesApplied");
-                if (subNode != null)
-                    language.Main.CreateAdjustChangesApplied = subNode.InnerText;
-                subNode = node.SelectSingleNode("SelectedLines");
-                if (subNode != null)
-                    language.Main.SelectedLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeDisplayTimeAdjustment");
-                if (subNode != null)
-                    language.Main.BeforeDisplayTimeAdjustment = subNode.InnerText;
-                subNode = node.SelectSingleNode("DisplayTimeAdjustedX");
-                if (subNode != null)
-                    language.Main.DisplayTimeAdjustedX = subNode.InnerText;
-                subNode = node.SelectSingleNode("DisplayTimesAdjustedX");
-                if (subNode != null)
-                    language.Main.DisplayTimesAdjustedX = subNode.InnerText;
-                subNode = node.SelectSingleNode("StarTimeAdjustedX");
-                if (subNode != null)
-                    language.Main.StarTimeAdjustedX = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeCommonErrorFixes");
-                if (subNode != null)
-                    language.Main.BeforeCommonErrorFixes = subNode.InnerText;
-                subNode = node.SelectSingleNode("CommonErrorsFixedInSelectedLines");
-                if (subNode != null)
-                    language.Main.CommonErrorsFixedInSelectedLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("CommonErrorsFixed");
-                if (subNode != null)
-                    language.Main.CommonErrorsFixed = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeRenumbering");
-                if (subNode != null)
-                    language.Main.BeforeRenumbering = subNode.InnerText;
-                subNode = node.SelectSingleNode("RenumberedStartingFromX");
-                if (subNode != null)
-                    language.Main.RenumberedStartingFromX = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeRemovalOfTextingForHearingImpaired");
-                if (subNode != null)
-                    language.Main.BeforeRemovalOfTextingForHearingImpaired = subNode.InnerText;
-                subNode = node.SelectSingleNode("TextingForHearingImpairedRemovedOneLine");
-                if (subNode != null)
-                    language.Main.TextingForHearingImpairedRemovedOneLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("TextingForHearingImpairedRemovedXLines");
-                if (subNode != null)
-                    language.Main.TextingForHearingImpairedRemovedXLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleSplitted");
-                if (subNode != null)
-                    language.Main.SubtitleSplitted = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleAppendPrompt");
-                if (subNode != null)
-                    language.Main.SubtitleAppendPrompt = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleAppendPromptTitle");
-                if (subNode != null)
-                    language.Main.SubtitleAppendPromptTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenSubtitleToAppend");
-                if (subNode != null)
-                    language.Main.OpenSubtitleToAppend = subNode.InnerText;
-                subNode = node.SelectSingleNode("AppendViaVisualSyncTitle");
-                if (subNode != null)
-                    language.Main.AppendViaVisualSyncTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("AppendSynchronizedSubtitlePrompt");
-                if (subNode != null)
-                    language.Main.AppendSynchronizedSubtitlePrompt = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeAppend");
-                if (subNode != null)
-                    language.Main.BeforeAppend = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleAppendedX");
-                if (subNode != null)
-                    language.Main.SubtitleAppendedX = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleNotAppended");
-                if (subNode != null)
-                    language.Main.SubtitleNotAppended = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoogleTranslate");
-                if (subNode != null)
-                    language.Main.GoogleTranslate = subNode.InnerText;
-                subNode = node.SelectSingleNode("MicrosoftTranslate");
-                if (subNode != null)
-                    language.Main.MicrosoftTranslate = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeGoogleTranslation");
-                if (subNode != null)
-                    language.Main.BeforeGoogleTranslation = subNode.InnerText;
-                subNode = node.SelectSingleNode("SelectedLinesTranslated");
-                if (subNode != null)
-                    language.Main.SelectedLinesTranslated = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleTranslated");
-                if (subNode != null)
-                    language.Main.SubtitleTranslated = subNode.InnerText;
-                subNode = node.SelectSingleNode("TranslateSwedishToDanish");
-                if (subNode != null)
-                    language.Main.TranslateSwedishToDanish = subNode.InnerText;
-                subNode = node.SelectSingleNode("TranslateSwedishToDanishWarning");
-                if (subNode != null)
-                    language.Main.TranslateSwedishToDanishWarning = subNode.InnerText;
-                subNode = node.SelectSingleNode("TranslatingViaNikseDkMt");
-                if (subNode != null)
-                    language.Main.TranslatingViaNikseDkMt = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeSwedishToDanishTranslation");
-                if (subNode != null)
-                    language.Main.BeforeSwedishToDanishTranslation = subNode.InnerText;
-                subNode = node.SelectSingleNode("TranslationFromSwedishToDanishComplete");
-                if (subNode != null)
-                    language.Main.TranslationFromSwedishToDanishComplete = subNode.InnerText;
-                subNode = node.SelectSingleNode("TranslationFromSwedishToDanishFailed");
-                if (subNode != null)
-                    language.Main.TranslationFromSwedishToDanishFailed = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeUndo");
-                if (subNode != null)
-                    language.Main.BeforeUndo = subNode.InnerText;
-                subNode = node.SelectSingleNode("UndoPerformed");
-                if (subNode != null)
-                    language.Main.UndoPerformed = subNode.InnerText;
-                subNode = node.SelectSingleNode("RedoPerformed");
-                if (subNode != null)
-                    language.Main.RedoPerformed = subNode.InnerText;
-                subNode = node.SelectSingleNode("NothingToUndo");
-                if (subNode != null)
-                    language.Main.NothingToUndo = subNode.InnerText;
-                subNode = node.SelectSingleNode("InvalidLanguageNameX");
-                if (subNode != null)
-                    language.Main.InvalidLanguageNameX = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnableToChangeLanguage");
-                if (subNode != null)
-                    language.Main.UnableToChangeLanguage = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfCorrectedWords");
-                if (subNode != null)
-                    language.Main.NumberOfCorrectedWords = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfSkippedWords");
-                if (subNode != null)
-                    language.Main.NumberOfSkippedWords = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfCorrectWords");
-                if (subNode != null)
-                    language.Main.NumberOfCorrectWords = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfWordsAddedToDictionary");
-                if (subNode != null)
-                    language.Main.NumberOfWordsAddedToDictionary = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfNameHits");
-                if (subNode != null)
-                    language.Main.NumberOfNameHits = subNode.InnerText;
-                subNode = node.SelectSingleNode("SpellCheck");
-                if (subNode != null)
-                    language.Main.SpellCheck = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeSpellCheck");
-                if (subNode != null)
-                    language.Main.BeforeSpellCheck = subNode.InnerText;
-                subNode = node.SelectSingleNode("SpellCheckChangedXToY");
-                if (subNode != null)
-                    language.Main.SpellCheckChangedXToY = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeAddingTagX");
-                if (subNode != null)
-                    language.Main.BeforeAddingTagX = subNode.InnerText;
-                subNode = node.SelectSingleNode("TagXAdded");
-                if (subNode != null)
-                    language.Main.TagXAdded = subNode.InnerText;
-                subNode = node.SelectSingleNode("LineXOfY");
-                if (subNode != null)
-                    language.Main.LineXOfY = subNode.InnerText;
-                subNode = node.SelectSingleNode("XLinesSavedAsY");
-                if (subNode != null)
-                    language.Main.XLinesSavedAsY = subNode.InnerText;
-                subNode = node.SelectSingleNode("XLinesDeleted");
-                if (subNode != null)
-                    language.Main.XLinesDeleted = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeDeletingXLines");
-                if (subNode != null)
-                    language.Main.BeforeDeletingXLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("DeleteXLinesPrompt");
-                if (subNode != null)
-                    language.Main.DeleteXLinesPrompt = subNode.InnerText;
-                subNode = node.SelectSingleNode("OneLineDeleted");
-                if (subNode != null)
-                    language.Main.OneLineDeleted = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeDeletingOneLine");
-                if (subNode != null)
-                    language.Main.BeforeDeletingOneLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("DeleteOneLinePrompt");
-                if (subNode != null)
-                    language.Main.DeleteOneLinePrompt = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeInsertLine");
-                if (subNode != null)
-                    language.Main.BeforeInsertLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("LineInserted");
-                if (subNode != null)
-                    language.Main.LineInserted = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeLineUpdatedInListView");
-                if (subNode != null)
-                    language.Main.BeforeLineUpdatedInListView = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeSettingFontToNormal");
-                if (subNode != null)
-                    language.Main.BeforeSettingFontToNormal = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeSplitLine");
-                if (subNode != null)
-                    language.Main.BeforeSplitLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("LineSplitted");
-                if (subNode != null)
-                    language.Main.LineSplitted = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeMergeLines");
-                if (subNode != null)
-                    language.Main.BeforeMergeLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("LinesMerged");
-                if (subNode != null)
-                    language.Main.LinesMerged = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeSettingColor");
-                if (subNode != null)
-                    language.Main.BeforeSettingColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeSettingFontName");
-                if (subNode != null)
-                    language.Main.BeforeSettingFontName = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeTypeWriterEffect");
-                if (subNode != null)
-                    language.Main.BeforeTypeWriterEffect = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeKaraokeEffect");
-                if (subNode != null)
-                    language.Main.BeforeKaraokeEffect = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeImportingDvdSubtitle");
-                if (subNode != null)
-                    language.Main.BeforeImportingDvdSubtitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenMatroskaFile");
-                if (subNode != null)
-                    language.Main.OpenMatroskaFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("MatroskaFiles");
-                if (subNode != null)
-                    language.Main.MatroskaFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("NoSubtitlesFound");
-                if (subNode != null)
-                    language.Main.NoSubtitlesFound = subNode.InnerText;
-                subNode = node.SelectSingleNode("NotAValidMatroskaFileX");
-                if (subNode != null)
-                    language.Main.NotAValidMatroskaFileX = subNode.InnerText;
-                subNode = node.SelectSingleNode("ParsingMatroskaFile");
-                if (subNode != null)
-                    language.Main.ParsingMatroskaFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeImportFromMatroskaFile");
-                if (subNode != null)
-                    language.Main.BeforeImportFromMatroskaFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleImportedFromMatroskaFile");
-                if (subNode != null)
-                    language.Main.SubtitleImportedFromMatroskaFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("DropFileXNotAccepted");
-                if (subNode != null)
-                    language.Main.DropFileXNotAccepted = subNode.InnerText;
-                subNode = node.SelectSingleNode("DropOnlyOneFile");
-                if (subNode != null)
-                    language.Main.DropOnlyOneFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeCreateAdjustLines");
-                if (subNode != null)
-                    language.Main.BeforeCreateAdjustLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenAnsiSubtitle");
-                if (subNode != null)
-                    language.Main.OpenAnsiSubtitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeChangeCasing");
-                if (subNode != null)
-                    language.Main.BeforeChangeCasing = subNode.InnerText;
-                subNode = node.SelectSingleNode("CasingCompleteMessageNoNames");
-                if (subNode != null)
-                    language.Main.CasingCompleteMessageNoNames = subNode.InnerText;
-                subNode = node.SelectSingleNode("CasingCompleteMessageOnlyNames");
-                if (subNode != null)
-                    language.Main.CasingCompleteMessageOnlyNames = subNode.InnerText;
-                subNode = node.SelectSingleNode("CasingCompleteMessage");
-                if (subNode != null)
-                    language.Main.CasingCompleteMessage = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeChangeFrameRate");
-                if (subNode != null)
-                    language.Main.BeforeChangeFrameRate = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeAdjustSpeedInPercent");
-                if (subNode != null)
-                    language.Main.BeforeAdjustSpeedInPercent = subNode.InnerText;
-                subNode = node.SelectSingleNode("FrameRateChangedFromXToY");
-                if (subNode != null)
-                    language.Main.FrameRateChangedFromXToY = subNode.InnerText;
-                subNode = node.SelectSingleNode("IdxFileNotFoundWarning");
-                if (subNode != null)
-                    language.Main.IdxFileNotFoundWarning = subNode.InnerText;
-                subNode = node.SelectSingleNode("InvalidVobSubHeader");
-                if (subNode != null)
-                    language.Main.InvalidVobSubHeader = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenVobSubFile");
-                if (subNode != null)
-                    language.Main.OpenVobSubFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("VobSubFiles");
-                if (subNode != null)
-                    language.Main.VobSubFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenBluRaySupFile");
-                if (subNode != null)
-                    language.Main.OpenBluRaySupFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("BluRaySupFiles");
-                if (subNode != null)
-                    language.Main.BluRaySupFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenXSubFiles");
-                if (subNode != null)
-                    language.Main.OpenXSubFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("XSubFiles");
-                if (subNode != null)
-                    language.Main.XSubFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeImportingVobSubFile");
-                if (subNode != null)
-                    language.Main.BeforeImportingVobSubFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeImportingBluRaySupFile");
-                if (subNode != null)
-                    language.Main.BeforeImportingBluRaySupFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeImportingBdnXml");
-                if (subNode != null)
-                    language.Main.BeforeImportingBdnXml = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeShowSelectedLinesEarlierLater");
-                if (subNode != null)
-                    language.Main.BeforeShowSelectedLinesEarlierLater = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowAllLinesXSecondsLinesEarlier");
-                if (subNode != null)
-                    language.Main.ShowAllLinesXSecondsLinesEarlier = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowAllLinesXSecondsLinesLater");
-                if (subNode != null)
-                    language.Main.ShowAllLinesXSecondsLinesLater = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowSelectedLinesXSecondsLinesEarlier");
-                if (subNode != null)
-                    language.Main.ShowSelectedLinesXSecondsLinesEarlier = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowSelectedLinesXSecondsLinesLater");
-                if (subNode != null)
-                    language.Main.ShowSelectedLinesXSecondsLinesLater = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowSelectionAndForwardXSecondsLinesEarlier");
-                if (subNode != null)
-                    language.Main.ShowSelectionAndForwardXSecondsLinesEarlier = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowSelectionAndForwardXSecondsLinesLater");
-                if (subNode != null)
-                    language.Main.ShowSelectionAndForwardXSecondsLinesLater = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowSelectedLinesEarlierLaterPerformed");
-                if (subNode != null)
-                    language.Main.ShowSelectedLinesEarlierLaterPerformed = subNode.InnerText;
-                subNode = node.SelectSingleNode("DoubleWordsViaRegEx");
-                if (subNode != null)
-                    language.Main.DoubleWordsViaRegEx = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeSortX");
-                if (subNode != null)
-                    language.Main.BeforeSortX = subNode.InnerText;
-                subNode = node.SelectSingleNode("SortedByX");
-                if (subNode != null)
-                    language.Main.SortedByX = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeAutoBalanceSelectedLines");
-                if (subNode != null)
-                    language.Main.BeforeAutoBalanceSelectedLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfLinesAutoBalancedX");
-                if (subNode != null)
-                    language.Main.NumberOfLinesAutoBalancedX = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeRemoveLineBreaksInSelectedLines");
-                if (subNode != null)
-                    language.Main.BeforeRemoveLineBreaksInSelectedLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfWithRemovedLineBreakX");
-                if (subNode != null)
-                    language.Main.NumberOfWithRemovedLineBreakX = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeMultipleReplace");
-                if (subNode != null)
-                    language.Main.BeforeMultipleReplace = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfLinesReplacedX");
-                if (subNode != null)
-                    language.Main.NumberOfLinesReplacedX = subNode.InnerText;
-                subNode = node.SelectSingleNode("NameXAddedToNamesEtcList");
-                if (subNode != null)
-                    language.Main.NameXAddedToNamesEtcList = subNode.InnerText;
-                subNode = node.SelectSingleNode("NameXNotAddedToNamesEtcList");
-                if (subNode != null)
-                    language.Main.NameXNotAddedToNamesEtcList = subNode.InnerText;
-                subNode = node.SelectSingleNode("WordXAddedToUserDic");
-                if (subNode != null)
-                    language.Main.WordXAddedToUserDic = subNode.InnerText;
-                subNode = node.SelectSingleNode("WordXNotAddedToUserDic");
-                if (subNode != null)
-                    language.Main.WordXNotAddedToUserDic = subNode.InnerText;
-                subNode = node.SelectSingleNode("OcrReplacePairXAdded");
-                if (subNode != null)
-                    language.Main.OcrReplacePairXAdded = subNode.InnerText;
-                subNode = node.SelectSingleNode("OcrReplacePairXNotAdded");
-                if (subNode != null)
-                    language.Main.OcrReplacePairXNotAdded = subNode.InnerText;
-                subNode = node.SelectSingleNode("XLinesSelected");
-                if (subNode != null)
-                    language.Main.XLinesSelected = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnicodeMusicSymbolsAnsiWarning");
-                if (subNode != null)
-                    language.Main.UnicodeMusicSymbolsAnsiWarning = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnicodeCharactersAnsiWarning");
-                if (subNode != null)
-                    language.Main.UnicodeCharactersAnsiWarning = subNode.InnerText;
-                subNode = node.SelectSingleNode("NegativeTimeWarning");
-                if (subNode != null)
-                    language.Main.NegativeTimeWarning = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeMergeShortLines");
-                if (subNode != null)
-                    language.Main.BeforeMergeShortLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeSplitLongLines");
-                if (subNode != null)
-                    language.Main.BeforeSplitLongLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("MergedShortLinesX");
-                if (subNode != null)
-                    language.Main.MergedShortLinesX = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeSetMinimumDisplayTimeBetweenParagraphs");
-                if (subNode != null)
-                    language.Main.BeforeSetMinimumDisplayTimeBetweenParagraphs = subNode.InnerText;
-                subNode = node.SelectSingleNode("XMinimumDisplayTimeBetweenParagraphsChanged");
-                if (subNode != null)
-                    language.Main.XMinimumDisplayTimeBetweenParagraphsChanged = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeImportText");
-                if (subNode != null)
-                    language.Main.BeforeImportText = subNode.InnerText;
-                subNode = node.SelectSingleNode("TextImported");
-                if (subNode != null)
-                    language.Main.TextImported = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforePointSynchronization");
-                if (subNode != null)
-                    language.Main.BeforePointSynchronization = subNode.InnerText;
-                subNode = node.SelectSingleNode("PointSynchronizationDone");
-                if (subNode != null)
-                    language.Main.PointSynchronizationDone = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeTimeCodeImport");
-                if (subNode != null)
-                    language.Main.BeforeTimeCodeImport = subNode.InnerText;
-                subNode = node.SelectSingleNode("TimeCodeImportedFromXY");
-                if (subNode != null)
-                    language.Main.TimeCodeImportedFromXY = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeInsertSubtitleAtVideoPosition");
-                if (subNode != null)
-                    language.Main.BeforeInsertSubtitleAtVideoPosition = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeSetStartTimeAndOffsetTheRest");
-                if (subNode != null)
-                    language.Main.BeforeSetStartTimeAndOffsetTheRest = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeSetEndTimeAndOffsetTheRest");
-                if (subNode != null)
-                    language.Main.BeforeSetEndTimeAndOffsetTheRest = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeSetEndAndVideoPosition");
-                if (subNode != null)
-                    language.Main.BeforeSetEndAndVideoPosition = subNode.InnerText;
-                subNode = node.SelectSingleNode("ContinueWithCurrentSpellCheck");
-                if (subNode != null)
-                    language.Main.ContinueWithCurrentSpellCheck = subNode.InnerText;
-                subNode = node.SelectSingleNode("CharactersPerSecond");
-                if (subNode != null)
-                    language.Main.CharactersPerSecond = subNode.InnerText;
-                subNode = node.SelectSingleNode("GetFrameRateFromVideoFile");
-                if (subNode != null)
-                    language.Main.GetFrameRateFromVideoFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("NetworkMessage");
-                if (subNode != null)
-                    language.Main.NetworkMessage = subNode.InnerText;
-                subNode = node.SelectSingleNode("NetworkUpdate");
-                if (subNode != null)
-                    language.Main.NetworkUpdate = subNode.InnerText;
-                subNode = node.SelectSingleNode("NetworkInsert");
-                if (subNode != null)
-                    language.Main.NetworkInsert = subNode.InnerText;
-                subNode = node.SelectSingleNode("NetworkDelete");
-                if (subNode != null)
-                    language.Main.NetworkDelete = subNode.InnerText;
-                subNode = node.SelectSingleNode("NetworkNewUser");
-                if (subNode != null)
-                    language.Main.NetworkNewUser = subNode.InnerText;
-                subNode = node.SelectSingleNode("NetworkByeUser");
-                if (subNode != null)
-                    language.Main.NetworkByeUser = subNode.InnerText;
-                subNode = node.SelectSingleNode("NetworkUnableToConnectToServer");
-                if (subNode != null)
-                    language.Main.NetworkUnableToConnectToServer = subNode.InnerText;
-                subNode = node.SelectSingleNode("UserAndAction");
-                if (subNode != null)
-                    language.Main.UserAndAction = subNode.InnerText;
-                subNode = node.SelectSingleNode("NetworkMode");
-                if (subNode != null)
-                    language.Main.NetworkMode = subNode.InnerText;
-                subNode = node.SelectSingleNode("XStartedSessionYAtZ");
-                if (subNode != null)
-                    language.Main.XStartedSessionYAtZ = subNode.InnerText;
-                subNode = node.SelectSingleNode("SpellChekingViaWordXLineYOfX");
-                if (subNode != null)
-                    language.Main.SpellChekingViaWordXLineYOfX = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnableToStartWord");
-                if (subNode != null)
-                    language.Main.UnableToStartWord = subNode.InnerText;
-                subNode = node.SelectSingleNode("SpellCheckAbortedXCorrections");
-                if (subNode != null)
-                    language.Main.SpellCheckAbortedXCorrections = subNode.InnerText;
-                subNode = node.SelectSingleNode("SpellCheckCompletedXCorrections");
-                if (subNode != null)
-                    language.Main.SpellCheckCompletedXCorrections = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenOtherSubtitle");
-                if (subNode != null)
-                    language.Main.OpenOtherSubtitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeToggleDialogueDashes");
-                if (subNode != null)
-                    language.Main.BeforeToggleDialogueDashes = subNode.InnerText;
-                subNode = node.SelectSingleNode("ExportPlainTextAs");
-                if (subNode != null)
-                    language.Main.ExportPlainTextAs = subNode.InnerText;
-                subNode = node.SelectSingleNode("TextFiles");
-                if (subNode != null)
-                    language.Main.TextFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleExported");
-                if (subNode != null)
-                    language.Main.SubtitleExported = subNode.InnerText;
-                subNode = node.SelectSingleNode("LineNumberXErrorReadingFromSourceLineY");
-                if (subNode != null)
-                    language.Main.LineNumberXErrorReadingFromSourceLineY = subNode.InnerText;
-                subNode = node.SelectSingleNode("LineNumberXErrorReadingTimeCodeFromSourceLineY");
-                if (subNode != null)
-                    language.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY = subNode.InnerText;
-                subNode = node.SelectSingleNode("LineNumberXExpectedNumberFromSourceLineY");
-                if (subNode != null)
-                    language.Main.LineNumberXExpectedNumberFromSourceLineY = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeGuessingTimeCodes");
-                if (subNode != null)
-                    language.Main.BeforeGuessingTimeCodes = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeAutoDuration");
-                if (subNode != null)
-                    language.Main.BeforeAutoDuration = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeColumnPaste");
-                if (subNode != null)
-                    language.Main.BeforeColumnPaste = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeColumnDelete");
-                if (subNode != null)
-                    language.Main.BeforeColumnDelete = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeColumnImportText");
-                if (subNode != null)
-                    language.Main.BeforeColumnImportText = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeColumnShiftCellsDown");
-                if (subNode != null)
-                    language.Main.BeforeColumnShiftCellsDown = subNode.InnerText;
-                subNode = node.SelectSingleNode("ErrorLoadingPluginXErrorY");
-                if (subNode != null)
-                    language.Main.ErrorLoadingPluginXErrorY = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeRunningPluginXVersionY");
-                if (subNode != null)
-                    language.Main.BeforeRunningPluginXVersionY = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnableToReadPluginResult");
-                if (subNode != null)
-                    language.Main.UnableToReadPluginResult = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnableToCreateBackupDirectory");
-                if (subNode != null)
-                    language.Main.UnableToCreateBackupDirectory = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeDisplaySubtitleJoin");
-                if (subNode != null)
-                    language.Main.BeforeDisplaySubtitleJoin = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitlesJoined");
-                if (subNode != null)
-                    language.Main.SubtitlesJoined = subNode.InnerText;
-                subNode = node.SelectSingleNode("StatusLog");
-                if (subNode != null)
-                    language.Main.StatusLog = subNode.InnerText;
-                subNode = node.SelectSingleNode("XSceneChangesImported");
-                if (subNode != null)
-                    language.Main.XSceneChangesImported = subNode.InnerText;
-                subNode = node.SelectSingleNode("PluginXExecuted");
-                if (subNode != null)
-                    language.Main.PluginXExecuted = subNode.InnerText;
-                subNode = node.SelectSingleNode("NotAValidXSubFile");
-                if (subNode != null)
-                    language.Main.NotAValidXSubFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("BeforeMergeLinesWithSameText");
-                if (subNode != null)
-                    language.Main.BeforeMergeLinesWithSameText = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImportTimeCodesDifferentNumberOfLinesWarning");
-                if (subNode != null)
-                    language.Main.ImportTimeCodesDifferentNumberOfLinesWarning = subNode.InnerText;
-                subNode = node.SelectSingleNode("ParsingTransportStream");
-                if (subNode != null)
-                    language.Main.ParsingTransportStream = subNode.InnerText;
-                subNode = node.SelectSingleNode("ErrorLoadIdx");
-                if (subNode != null)
-                    language.Main.ErrorLoadIdx = subNode.InnerText;
-                subNode = node.SelectSingleNode("ErrorLoadRar");
-                if (subNode != null)
-                    language.Main.ErrorLoadRar = subNode.InnerText;
-                subNode = node.SelectSingleNode("ErrorLoadZip");
-                if (subNode != null)
-                    language.Main.ErrorLoadZip = subNode.InnerText;
-
-                language.Main.Menu = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu();
-                node = doc.DocumentElement.SelectSingleNode("Main/Menu");
-                if (node != null)
-                {
-
-                    language.Main.Menu.File = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.FileMenu();
-                    node = doc.DocumentElement.SelectSingleNode("Main/Menu/File");
-                    if (node != null)
-                    {
-                        subNode = node.SelectSingleNode("Title");
-                        if (subNode != null)
-                            language.Main.Menu.File.Title = subNode.InnerText;
-                        subNode = node.SelectSingleNode("New");
-                        if (subNode != null)
-                            language.Main.Menu.File.New = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Open");
-                        if (subNode != null)
-                            language.Main.Menu.File.Open = subNode.InnerText;
-                        subNode = node.SelectSingleNode("OpenKeepVideo");
-                        if (subNode != null)
-                            language.Main.Menu.File.OpenKeepVideo = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Reopen");
-                        if (subNode != null)
-                            language.Main.Menu.File.Reopen = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Save");
-                        if (subNode != null)
-                            language.Main.Menu.File.Save = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SaveAs");
-                        if (subNode != null)
-                            language.Main.Menu.File.SaveAs = subNode.InnerText;
-                        subNode = node.SelectSingleNode("RestoreAutoBackup");
-                        if (subNode != null)
-                            language.Main.Menu.File.RestoreAutoBackup = subNode.InnerText;
-                        subNode = node.SelectSingleNode("AdvancedSubStationAlphaProperties");
-                        if (subNode != null)
-                            language.Main.Menu.File.AdvancedSubStationAlphaProperties = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SubStationAlphaProperties");
-                        if (subNode != null)
-                            language.Main.Menu.File.SubStationAlphaProperties = subNode.InnerText;
-                        subNode = node.SelectSingleNode("OpenOriginal");
-                        if (subNode != null)
-                            language.Main.Menu.File.OpenOriginal = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SaveOriginal");
-                        if (subNode != null)
-                            language.Main.Menu.File.SaveOriginal = subNode.InnerText;
-                        subNode = node.SelectSingleNode("CloseOriginal");
-                        if (subNode != null)
-                            language.Main.Menu.File.CloseOriginal = subNode.InnerText;
-                        subNode = node.SelectSingleNode("OpenContainingFolder");
-                        if (subNode != null)
-                            language.Main.Menu.File.OpenContainingFolder = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Compare");
-                        if (subNode != null)
-                            language.Main.Menu.File.Compare = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Statistics");
-                        if (subNode != null)
-                            language.Main.Menu.File.Statistics = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Plugins");
-                        if (subNode != null)
-                            language.Main.Menu.File.Plugins = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ImportOcrFromDvd");
-                        if (subNode != null)
-                            language.Main.Menu.File.ImportOcrFromDvd = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ImportOcrVobSubSubtitle");
-                        if (subNode != null)
-                            language.Main.Menu.File.ImportOcrVobSubSubtitle = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ImportBluRaySupFile");
-                        if (subNode != null)
-                            language.Main.Menu.File.ImportBluRaySupFile = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ImportXSub");
-                        if (subNode != null)
-                            language.Main.Menu.File.ImportXSub = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ImportSubtitleFromMatroskaFile");
-                        if (subNode != null)
-                            language.Main.Menu.File.ImportSubtitleFromMatroskaFile = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ImportSubtitleWithManualChosenEncoding");
-                        if (subNode != null)
-                            language.Main.Menu.File.ImportSubtitleWithManualChosenEncoding = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ImportText");
-                        if (subNode != null)
-                            language.Main.Menu.File.ImportText = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ImportImages");
-                        if (subNode != null)
-                            language.Main.Menu.File.ImportImages = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ImportTimecodes");
-                        if (subNode != null)
-                            language.Main.Menu.File.ImportTimecodes = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Export");
-                        if (subNode != null)
-                            language.Main.Menu.File.Export = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportBdnXml");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportBdnXml = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportBluRaySup");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportBluRaySup = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportVobSub");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportVobSub = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportCavena890");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportCavena890 = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportEbu");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportEbu = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportPac");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportPac = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportPlainText");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportPlainText = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportAdobeEncoreFabImageScript");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportAdobeEncoreFabImageScript = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportKoreanAtsFilePair");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportKoreanAtsFilePair = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportAvidStl");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportAvidStl = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportDvdStudioProStl");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportDvdStudioProStl = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportCapMakerPlus");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportCapMakerPlus = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportCaptionsInc");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportCaptionsInc = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportCheetahCap");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportCheetahCap = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportUltech130");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportUltech130 = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ExportCustomTextFormat");
-                        if (subNode != null)
-                            language.Main.Menu.File.ExportCustomTextFormat = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Exit");
-                        if (subNode != null)
-                            language.Main.Menu.File.Exit = subNode.InnerText;
-
-                    }
-
-                    language.Main.Menu.Edit = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.EditMenu();
-                    node = doc.DocumentElement.SelectSingleNode("Main/Menu/Edit");
-                    if (node != null)
-                    {
-                        subNode = node.SelectSingleNode("Title");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.Title = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Undo");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.Undo = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Redo");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.Redo = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ShowUndoHistory");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.ShowUndoHistory = subNode.InnerText;
-                        subNode = node.SelectSingleNode("InsertUnicodeSymbol");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.InsertUnicodeSymbol = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Find");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.Find = subNode.InnerText;
-                        subNode = node.SelectSingleNode("FindNext");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.FindNext = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Replace");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.Replace = subNode.InnerText;
-                        subNode = node.SelectSingleNode("MultipleReplace");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.MultipleReplace = subNode.InnerText;
-                        subNode = node.SelectSingleNode("GoToSubtitleNumber");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.GoToSubtitleNumber = subNode.InnerText;
-                        subNode = node.SelectSingleNode("RightToLeftMode");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.RightToLeftMode = subNode.InnerText;
-                        subNode = node.SelectSingleNode("FixTrlViaUnicodeControlCharacters");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.FixTrlViaUnicodeControlCharacters = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ReverseRightToLeftStartEnd");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.ReverseRightToLeftStartEnd = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ShowOriginalTextInAudioAndVideoPreview");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.ShowOriginalTextInAudioAndVideoPreview = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ModifySelection");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.ModifySelection = subNode.InnerText;
-                        subNode = node.SelectSingleNode("InverseSelection");
-                        if (subNode != null)
-                            language.Main.Menu.Edit.InverseSelection = subNode.InnerText;
-
-                    }
-
-                    language.Main.Menu.Tools = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.ToolsMenu();
-                    node = doc.DocumentElement.SelectSingleNode("Main/Menu/Tools");
-                    if (node != null)
-                    {
-                        subNode = node.SelectSingleNode("Title");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.Title = subNode.InnerText;
-                        subNode = node.SelectSingleNode("AdjustDisplayDuration");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.AdjustDisplayDuration = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ApplyDurationLimits");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.ApplyDurationLimits = subNode.InnerText;
-                        subNode = node.SelectSingleNode("DurationsBridgeGap");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.DurationsBridgeGap = subNode.InnerText;
-                        subNode = node.SelectSingleNode("FixCommonErrors");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.FixCommonErrors = subNode.InnerText;
-                        subNode = node.SelectSingleNode("StartNumberingFrom");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.StartNumberingFrom = subNode.InnerText;
-                        subNode = node.SelectSingleNode("RemoveTextForHearingImpaired");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.RemoveTextForHearingImpaired = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ChangeCasing");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.ChangeCasing = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ChangeFrameRate");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.ChangeFrameRate = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ChangeSpeedInPercent");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.ChangeSpeedInPercent = subNode.InnerText;
-                        subNode = node.SelectSingleNode("MergeShortLines");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.MergeShortLines = subNode.InnerText;
-                        subNode = node.SelectSingleNode("MergeDuplicateText");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.MergeDuplicateText = subNode.InnerText;
-                        subNode = node.SelectSingleNode("MergeSameTimeCodes");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.MergeSameTimeCodes = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SplitLongLines");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.SplitLongLines = subNode.InnerText;
-                        subNode = node.SelectSingleNode("MinimumDisplayTimeBetweenParagraphs");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.MinimumDisplayTimeBetweenParagraphs = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SortBy");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.SortBy = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Number");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.Number = subNode.InnerText;
-                        subNode = node.SelectSingleNode("StartTime");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.StartTime = subNode.InnerText;
-                        subNode = node.SelectSingleNode("EndTime");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.EndTime = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Duration");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.Duration = subNode.InnerText;
-                        subNode = node.SelectSingleNode("TextAlphabetically");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.TextAlphabetically = subNode.InnerText;
-                        subNode = node.SelectSingleNode("TextSingleLineMaximumLength");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.TextSingleLineMaximumLength = subNode.InnerText;
-                        subNode = node.SelectSingleNode("TextTotalLength");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.TextTotalLength = subNode.InnerText;
-                        subNode = node.SelectSingleNode("TextNumberOfLines");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.TextNumberOfLines = subNode.InnerText;
-                        subNode = node.SelectSingleNode("TextNumberOfCharactersPerSeconds");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.TextNumberOfCharactersPerSeconds = subNode.InnerText;
-                        subNode = node.SelectSingleNode("WordsPerMinute");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.WordsPerMinute = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Style");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.Style = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Ascending");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.Ascending = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Descending");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.Descending = subNode.InnerText;
-                        subNode = node.SelectSingleNode("MakeNewEmptyTranslationFromCurrentSubtitle");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle = subNode.InnerText;
-                        subNode = node.SelectSingleNode("BatchConvert");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.BatchConvert = subNode.InnerText;
-                        subNode = node.SelectSingleNode("GenerateTimeAsText");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.GenerateTimeAsText = subNode.InnerText;
-                        subNode = node.SelectSingleNode("MeasurementConverter");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.MeasurementConverter = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SplitSubtitle");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.SplitSubtitle = subNode.InnerText;
-                        subNode = node.SelectSingleNode("AppendSubtitle");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.AppendSubtitle = subNode.InnerText;
-                        subNode = node.SelectSingleNode("JoinSubtitles");
-                        if (subNode != null)
-                            language.Main.Menu.Tools.JoinSubtitles = subNode.InnerText;
-
-                    }
-
-                    language.Main.Menu.Video = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.VideoMenu();
-                    node = doc.DocumentElement.SelectSingleNode("Main/Menu/Video");
-                    if (node != null)
-                    {
-                        subNode = node.SelectSingleNode("Title");
-                        if (subNode != null)
-                            language.Main.Menu.Video.Title = subNode.InnerText;
-                        subNode = node.SelectSingleNode("OpenVideo");
-                        if (subNode != null)
-                            language.Main.Menu.Video.OpenVideo = subNode.InnerText;
-                        subNode = node.SelectSingleNode("OpenDvd");
-                        if (subNode != null)
-                            language.Main.Menu.Video.OpenDvd = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ChooseAudioTrack");
-                        if (subNode != null)
-                            language.Main.Menu.Video.ChooseAudioTrack = subNode.InnerText;
-                        subNode = node.SelectSingleNode("CloseVideo");
-                        if (subNode != null)
-                            language.Main.Menu.Video.CloseVideo = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ImportSceneChanges");
-                        if (subNode != null)
-                            language.Main.Menu.Video.ImportSceneChanges = subNode.InnerText;
-                        subNode = node.SelectSingleNode("RemoveSceneChanges");
-                        if (subNode != null)
-                            language.Main.Menu.Video.RemoveSceneChanges = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ShowHideVideo");
-                        if (subNode != null)
-                            language.Main.Menu.Video.ShowHideVideo = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ShowHideWaveForm");
-                        if (subNode != null)
-                            language.Main.Menu.Video.ShowHideWaveForm = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ShowHideWaveformAndSpectrogram");
-                        if (subNode != null)
-                            language.Main.Menu.Video.ShowHideWaveformAndSpectrogram = subNode.InnerText;
-                        subNode = node.SelectSingleNode("UnDockVideoControls");
-                        if (subNode != null)
-                            language.Main.Menu.Video.UnDockVideoControls = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ReDockVideoControls");
-                        if (subNode != null)
-                            language.Main.Menu.Video.ReDockVideoControls = subNode.InnerText;
-
-                    }
-
-                    language.Main.Menu.SpellCheck = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.SpellCheckMenu();
-                    node = doc.DocumentElement.SelectSingleNode("Main/Menu/SpellCheck");
-                    if (node != null)
-                    {
-                        subNode = node.SelectSingleNode("Title");
-                        if (subNode != null)
-                            language.Main.Menu.SpellCheck.Title = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SpellCheck");
-                        if (subNode != null)
-                            language.Main.Menu.SpellCheck.SpellCheck = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SpellCheckFromCurrentLine");
-                        if (subNode != null)
-                            language.Main.Menu.SpellCheck.SpellCheckFromCurrentLine = subNode.InnerText;
-                        subNode = node.SelectSingleNode("FindDoubleWords");
-                        if (subNode != null)
-                            language.Main.Menu.SpellCheck.FindDoubleWords = subNode.InnerText;
-                        subNode = node.SelectSingleNode("FindDoubleLines");
-                        if (subNode != null)
-                            language.Main.Menu.SpellCheck.FindDoubleLines = subNode.InnerText;
-                        subNode = node.SelectSingleNode("GetDictionaries");
-                        if (subNode != null)
-                            language.Main.Menu.SpellCheck.GetDictionaries = subNode.InnerText;
-                        subNode = node.SelectSingleNode("AddToNamesEtcList");
-                        if (subNode != null)
-                            language.Main.Menu.SpellCheck.AddToNamesEtcList = subNode.InnerText;
-
-                    }
-
-                    language.Main.Menu.Synchronization = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.SynchronizationkMenu();
-                    node = doc.DocumentElement.SelectSingleNode("Main/Menu/Synchronization");
-                    if (node != null)
-                    {
-                        subNode = node.SelectSingleNode("Title");
-                        if (subNode != null)
-                            language.Main.Menu.Synchronization.Title = subNode.InnerText;
-                        subNode = node.SelectSingleNode("AdjustAllTimes");
-                        if (subNode != null)
-                            language.Main.Menu.Synchronization.AdjustAllTimes = subNode.InnerText;
-                        subNode = node.SelectSingleNode("VisualSync");
-                        if (subNode != null)
-                            language.Main.Menu.Synchronization.VisualSync = subNode.InnerText;
-                        subNode = node.SelectSingleNode("PointSync");
-                        if (subNode != null)
-                            language.Main.Menu.Synchronization.PointSync = subNode.InnerText;
-                        subNode = node.SelectSingleNode("PointSyncViaOtherSubtitle");
-                        if (subNode != null)
-                            language.Main.Menu.Synchronization.PointSyncViaOtherSubtitle = subNode.InnerText;
-
-                    }
-
-                    language.Main.Menu.AutoTranslate = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.AutoTranslateMenu();
-                    node = doc.DocumentElement.SelectSingleNode("Main/Menu/AutoTranslate");
-                    if (node != null)
-                    {
-                        subNode = node.SelectSingleNode("Title");
-                        if (subNode != null)
-                            language.Main.Menu.AutoTranslate.Title = subNode.InnerText;
-                        subNode = node.SelectSingleNode("TranslatePoweredByGoogle");
-                        if (subNode != null)
-                            language.Main.Menu.AutoTranslate.TranslatePoweredByGoogle = subNode.InnerText;
-                        subNode = node.SelectSingleNode("TranslatePoweredByMicrosoft");
-                        if (subNode != null)
-                            language.Main.Menu.AutoTranslate.TranslatePoweredByMicrosoft = subNode.InnerText;
-                        subNode = node.SelectSingleNode("TranslateFromSwedishToDanish");
-                        if (subNode != null)
-                            language.Main.Menu.AutoTranslate.TranslateFromSwedishToDanish = subNode.InnerText;
-
-                    }
-
-                    language.Main.Menu.Options = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.OptionsMenu();
-                    node = doc.DocumentElement.SelectSingleNode("Main/Menu/Options");
-                    if (node != null)
-                    {
-                        subNode = node.SelectSingleNode("Title");
-                        if (subNode != null)
-                            language.Main.Menu.Options.Title = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Settings");
-                        if (subNode != null)
-                            language.Main.Menu.Options.Settings = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ChooseLanguage");
-                        if (subNode != null)
-                            language.Main.Menu.Options.ChooseLanguage = subNode.InnerText;
-
-                    }
-
-                    language.Main.Menu.Networking = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.NetworkingMenu();
-                    node = doc.DocumentElement.SelectSingleNode("Main/Menu/Networking");
-                    if (node != null)
-                    {
-                        subNode = node.SelectSingleNode("Title");
-                        if (subNode != null)
-                            language.Main.Menu.Networking.Title = subNode.InnerText;
-                        subNode = node.SelectSingleNode("StartNewSession");
-                        if (subNode != null)
-                            language.Main.Menu.Networking.StartNewSession = subNode.InnerText;
-                        subNode = node.SelectSingleNode("JoinSession");
-                        if (subNode != null)
-                            language.Main.Menu.Networking.JoinSession = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ShowSessionInfoAndLog");
-                        if (subNode != null)
-                            language.Main.Menu.Networking.ShowSessionInfoAndLog = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Chat");
-                        if (subNode != null)
-                            language.Main.Menu.Networking.Chat = subNode.InnerText;
-                        subNode = node.SelectSingleNode("LeaveSession");
-                        if (subNode != null)
-                            language.Main.Menu.Networking.LeaveSession = subNode.InnerText;
-
-                    }
-
-                    language.Main.Menu.Help = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.HelpMenu();
-                    node = doc.DocumentElement.SelectSingleNode("Main/Menu/Help");
-                    if (node != null)
-                    {
-                        subNode = node.SelectSingleNode("CheckForUpdates");
-                        if (subNode != null)
-                            language.Main.Menu.Help.CheckForUpdates = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Title");
-                        if (subNode != null)
-                            language.Main.Menu.Help.Title = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Help");
-                        if (subNode != null)
-                            language.Main.Menu.Help.Help = subNode.InnerText;
-                        subNode = node.SelectSingleNode("About");
-                        if (subNode != null)
-                            language.Main.Menu.Help.About = subNode.InnerText;
-
-                    }
-
-                    language.Main.Menu.ToolBar = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.ToolBarMenu();
-                    node = doc.DocumentElement.SelectSingleNode("Main/Menu/ToolBar");
-                    if (node != null)
-                    {
-                        subNode = node.SelectSingleNode("New");
-                        if (subNode != null)
-                            language.Main.Menu.ToolBar.New = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Open");
-                        if (subNode != null)
-                            language.Main.Menu.ToolBar.Open = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Save");
-                        if (subNode != null)
-                            language.Main.Menu.ToolBar.Save = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SaveAs");
-                        if (subNode != null)
-                            language.Main.Menu.ToolBar.SaveAs = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Find");
-                        if (subNode != null)
-                            language.Main.Menu.ToolBar.Find = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Replace");
-                        if (subNode != null)
-                            language.Main.Menu.ToolBar.Replace = subNode.InnerText;
-                        subNode = node.SelectSingleNode("FixCommonErrors");
-                        if (subNode != null)
-                            language.Main.Menu.ToolBar.FixCommonErrors = subNode.InnerText;
-                        subNode = node.SelectSingleNode("VisualSync");
-                        if (subNode != null)
-                            language.Main.Menu.ToolBar.VisualSync = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SpellCheck");
-                        if (subNode != null)
-                            language.Main.Menu.ToolBar.SpellCheck = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Settings");
-                        if (subNode != null)
-                            language.Main.Menu.ToolBar.Settings = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Help");
-                        if (subNode != null)
-                            language.Main.Menu.ToolBar.Help = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ShowHideWaveForm");
-                        if (subNode != null)
-                            language.Main.Menu.ToolBar.ShowHideWaveForm = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ShowHideVideo");
-                        if (subNode != null)
-                            language.Main.Menu.ToolBar.ShowHideVideo = subNode.InnerText;
-
-                    }
-
-                    language.Main.Menu.ContextMenu = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.ListViewContextMenu();
-                    node = doc.DocumentElement.SelectSingleNode("Main/Menu/ContextMenu");
-                    if (node != null)
-                    {
-                        subNode = node.SelectSingleNode("AdvancedSubStationAlphaSetStyle");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.AdvancedSubStationAlphaSetStyle = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SubStationAlphaSetStyle");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.SubStationAlphaSetStyle = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SubStationAlphaStyles");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.SubStationAlphaStyles = subNode.InnerText;
-                        subNode = node.SelectSingleNode("AdvancedSubStationAlphaStyles");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.AdvancedSubStationAlphaStyles = subNode.InnerText;
-                        subNode = node.SelectSingleNode("TimedTextSetStyle");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.TimedTextSetStyle = subNode.InnerText;
-                        subNode = node.SelectSingleNode("TimedTextStyles");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.TimedTextStyles = subNode.InnerText;
-                        subNode = node.SelectSingleNode("TimedTextSetLanguage");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.TimedTextSetLanguage = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SamiSetStyle");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.SamiSetStyle = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Cut");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.Cut = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Copy");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.Copy = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Paste");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.Paste = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Delete");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.Delete = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SplitLineAtCursorPosition");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.SplitLineAtCursorPosition = subNode.InnerText;
-                        subNode = node.SelectSingleNode("AutoDurationCurrentLine");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.AutoDurationCurrentLine = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SelectAll");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.SelectAll = subNode.InnerText;
-                        subNode = node.SelectSingleNode("InsertFirstLine");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.InsertFirstLine = subNode.InnerText;
-                        subNode = node.SelectSingleNode("InsertBefore");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.InsertBefore = subNode.InnerText;
-                        subNode = node.SelectSingleNode("InsertAfter");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.InsertAfter = subNode.InnerText;
-                        subNode = node.SelectSingleNode("InsertSubtitleAfter");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.InsertSubtitleAfter = subNode.InnerText;
-                        subNode = node.SelectSingleNode("CopyToClipboard");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.CopyToClipboard = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Column");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.Column = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ColumnDeleteText");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.ColumnDeleteText = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ColumnDeleteTextAndShiftCellsUp");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.ColumnDeleteTextAndShiftCellsUp = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ColumnInsertEmptyTextAndShiftCellsDown");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.ColumnInsertEmptyTextAndShiftCellsDown = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ColumnInsertTextFromSubtitle");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.ColumnInsertTextFromSubtitle = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ColumnImportTextAndShiftCellsDown");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.ColumnImportTextAndShiftCellsDown = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ColumnPasteFromClipboard");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.ColumnPasteFromClipboard = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ColumnCopyOriginalTextToCurrent");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.ColumnCopyOriginalTextToCurrent = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Split");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.Split = subNode.InnerText;
-                        subNode = node.SelectSingleNode("MergeSelectedLines");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.MergeSelectedLines = subNode.InnerText;
-                        subNode = node.SelectSingleNode("MergeSelectedLinesASDialogue");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.MergeSelectedLinesASDialogue = subNode.InnerText;
-                        subNode = node.SelectSingleNode("MergeWithLineBefore");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.MergeWithLineBefore = subNode.InnerText;
-                        subNode = node.SelectSingleNode("MergeWithLineAfter");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.MergeWithLineAfter = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Normal");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.Normal = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Underline");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.Underline = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Color");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.Color = subNode.InnerText;
-                        subNode = node.SelectSingleNode("FontName");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.FontName = subNode.InnerText;
-                        subNode = node.SelectSingleNode("Alignment");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.Alignment = subNode.InnerText;
-                        subNode = node.SelectSingleNode("AutoBalanceSelectedLines");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.AutoBalanceSelectedLines = subNode.InnerText;
-                        subNode = node.SelectSingleNode("RemoveLineBreaksFromSelectedLines");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.RemoveLineBreaksFromSelectedLines = subNode.InnerText;
-                        subNode = node.SelectSingleNode("TypewriterEffect");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.TypewriterEffect = subNode.InnerText;
-                        subNode = node.SelectSingleNode("KaraokeEffect");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.KaraokeEffect = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ShowSelectedLinesEarlierLater");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.ShowSelectedLinesEarlierLater = subNode.InnerText;
-                        subNode = node.SelectSingleNode("VisualSyncSelectedLines");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.VisualSyncSelectedLines = subNode.InnerText;
-                        subNode = node.SelectSingleNode("GoogleAndMicrosoftTranslateSelectedLine");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.GoogleAndMicrosoftTranslateSelectedLine = subNode.InnerText;
-                        subNode = node.SelectSingleNode("GoogleTranslateSelectedLines");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.GoogleTranslateSelectedLines = subNode.InnerText;
-                        subNode = node.SelectSingleNode("AdjustDisplayDurationForSelectedLines");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines = subNode.InnerText;
-                        subNode = node.SelectSingleNode("FixCommonErrorsInSelectedLines");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.FixCommonErrorsInSelectedLines = subNode.InnerText;
-                        subNode = node.SelectSingleNode("ChangeCasingForSelectedLines");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.ChangeCasingForSelectedLines = subNode.InnerText;
-                        subNode = node.SelectSingleNode("SaveSelectedLines");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.SaveSelectedLines = subNode.InnerText;
-                        subNode = node.SelectSingleNode("WebVTTSetNewVoice");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.WebVTTSetNewVoice = subNode.InnerText;
-                        subNode = node.SelectSingleNode("WebVTTRemoveVoices");
-                        if (subNode != null)
-                            language.Main.Menu.ContextMenu.WebVTTRemoveVoices = subNode.InnerText;
-
-                    }
-
-                }
-
-                language.Main.Controls = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainControls();
-                node = doc.DocumentElement.SelectSingleNode("Main/Controls");
-                if (node != null)
-                {
-                    subNode = node.SelectSingleNode("SubtitleFormat");
-                    if (subNode != null)
-                        language.Main.Controls.SubtitleFormat = subNode.InnerText;
-                    subNode = node.SelectSingleNode("FileEncoding");
-                    if (subNode != null)
-                        language.Main.Controls.FileEncoding = subNode.InnerText;
-                    subNode = node.SelectSingleNode("ListView");
-                    if (subNode != null)
-                        language.Main.Controls.ListView = subNode.InnerText;
-                    subNode = node.SelectSingleNode("SourceView");
-                    if (subNode != null)
-                        language.Main.Controls.SourceView = subNode.InnerText;
-                    subNode = node.SelectSingleNode("UndoChangesInEditPanel");
-                    if (subNode != null)
-                        language.Main.Controls.UndoChangesInEditPanel = subNode.InnerText;
-                    subNode = node.SelectSingleNode("Previous");
-                    if (subNode != null)
-                        language.Main.Controls.Previous = subNode.InnerText;
-                    subNode = node.SelectSingleNode("Next");
-                    if (subNode != null)
-                        language.Main.Controls.Next = subNode.InnerText;
-                    subNode = node.SelectSingleNode("AutoBreak");
-                    if (subNode != null)
-                        language.Main.Controls.AutoBreak = subNode.InnerText;
-                    subNode = node.SelectSingleNode("Unbreak");
-                    if (subNode != null)
-                        language.Main.Controls.Unbreak = subNode.InnerText;
-
-                }
-
-                language.Main.VideoControls = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainVideoControls();
-                node = doc.DocumentElement.SelectSingleNode("Main/VideoControls");
-                if (node != null)
-                {
-                    subNode = node.SelectSingleNode("Translate");
-                    if (subNode != null)
-                        language.Main.VideoControls.Translate = subNode.InnerText;
-                    subNode = node.SelectSingleNode("Create");
-                    if (subNode != null)
-                        language.Main.VideoControls.Create = subNode.InnerText;
-                    subNode = node.SelectSingleNode("Adjust");
-                    if (subNode != null)
-                        language.Main.VideoControls.Adjust = subNode.InnerText;
-                    subNode = node.SelectSingleNode("SelectCurrentElementWhilePlaying");
-                    if (subNode != null)
-                        language.Main.VideoControls.SelectCurrentElementWhilePlaying = subNode.InnerText;
-                    subNode = node.SelectSingleNode("AutoRepeat");
-                    if (subNode != null)
-                        language.Main.VideoControls.AutoRepeat = subNode.InnerText;
-                    subNode = node.SelectSingleNode("AutoRepeatOn");
-                    if (subNode != null)
-                        language.Main.VideoControls.AutoRepeatOn = subNode.InnerText;
-                    subNode = node.SelectSingleNode("AutoRepeatCount");
-                    if (subNode != null)
-                        language.Main.VideoControls.AutoRepeatCount = subNode.InnerText;
-                    subNode = node.SelectSingleNode("AutoContinue");
-                    if (subNode != null)
-                        language.Main.VideoControls.AutoContinue = subNode.InnerText;
-                    subNode = node.SelectSingleNode("AutoContinueOn");
-                    if (subNode != null)
-                        language.Main.VideoControls.AutoContinueOn = subNode.InnerText;
-                    subNode = node.SelectSingleNode("DelayInSeconds");
-                    if (subNode != null)
-                        language.Main.VideoControls.DelayInSeconds = subNode.InnerText;
-                    subNode = node.SelectSingleNode("OriginalText");
-                    if (subNode != null)
-                        language.Main.VideoControls.OriginalText = subNode.InnerText;
-                    subNode = node.SelectSingleNode("Previous");
-                    if (subNode != null)
-                        language.Main.VideoControls.Previous = subNode.InnerText;
-                    subNode = node.SelectSingleNode("Stop");
-                    if (subNode != null)
-                        language.Main.VideoControls.Stop = subNode.InnerText;
-                    subNode = node.SelectSingleNode("PlayCurrent");
-                    if (subNode != null)
-                        language.Main.VideoControls.PlayCurrent = subNode.InnerText;
-                    subNode = node.SelectSingleNode("Next");
-                    if (subNode != null)
-                        language.Main.VideoControls.Next = subNode.InnerText;
-                    subNode = node.SelectSingleNode("Playing");
-                    if (subNode != null)
-                        language.Main.VideoControls.Playing = subNode.InnerText;
-                    subNode = node.SelectSingleNode("RepeatingLastTime");
-                    if (subNode != null)
-                        language.Main.VideoControls.RepeatingLastTime = subNode.InnerText;
-                    subNode = node.SelectSingleNode("RepeatingXTimesLeft");
-                    if (subNode != null)
-                        language.Main.VideoControls.RepeatingXTimesLeft = subNode.InnerText;
-                    subNode = node.SelectSingleNode("AutoContinueInOneSecond");
-                    if (subNode != null)
-                        language.Main.VideoControls.AutoContinueInOneSecond = subNode.InnerText;
-                    subNode = node.SelectSingleNode("AutoContinueInXSeconds");
-                    if (subNode != null)
-                        language.Main.VideoControls.AutoContinueInXSeconds = subNode.InnerText;
-                    subNode = node.SelectSingleNode("StillTypingAutoContinueStopped");
-                    if (subNode != null)
-                        language.Main.VideoControls.StillTypingAutoContinueStopped = subNode.InnerText;
-                    subNode = node.SelectSingleNode("InsertNewSubtitleAtVideoPosition");
-                    if (subNode != null)
-                        language.Main.VideoControls.InsertNewSubtitleAtVideoPosition = subNode.InnerText;
-                    subNode = node.SelectSingleNode("Auto");
-                    if (subNode != null)
-                        language.Main.VideoControls.Auto = subNode.InnerText;
-                    subNode = node.SelectSingleNode("PlayFromJustBeforeText");
-                    if (subNode != null)
-                        language.Main.VideoControls.PlayFromJustBeforeText = subNode.InnerText;
-                    subNode = node.SelectSingleNode("Pause");
-                    if (subNode != null)
-                        language.Main.VideoControls.Pause = subNode.InnerText;
-                    subNode = node.SelectSingleNode("GoToSubtitlePositionAndPause");
-                    if (subNode != null)
-                        language.Main.VideoControls.GoToSubtitlePositionAndPause = subNode.InnerText;
-                    subNode = node.SelectSingleNode("SetStartTime");
-                    if (subNode != null)
-                        language.Main.VideoControls.SetStartTime = subNode.InnerText;
-                    subNode = node.SelectSingleNode("SetEndTimeAndGoToNext");
-                    if (subNode != null)
-                        language.Main.VideoControls.SetEndTimeAndGoToNext = subNode.InnerText;
-                    subNode = node.SelectSingleNode("AdjustedViaEndTime");
-                    if (subNode != null)
-                        language.Main.VideoControls.AdjustedViaEndTime = subNode.InnerText;
-                    subNode = node.SelectSingleNode("SetEndTime");
-                    if (subNode != null)
-                        language.Main.VideoControls.SetEndTime = subNode.InnerText;
-                    subNode = node.SelectSingleNode("SetstartTimeAndOffsetOfRest");
-                    if (subNode != null)
-                        language.Main.VideoControls.SetstartTimeAndOffsetOfRest = subNode.InnerText;
-                    subNode = node.SelectSingleNode("SearchTextOnline");
-                    if (subNode != null)
-                        language.Main.VideoControls.SearchTextOnline = subNode.InnerText;
-                    subNode = node.SelectSingleNode("GoogleTranslate");
-                    if (subNode != null)
-                        language.Main.VideoControls.GoogleTranslate = subNode.InnerText;
-                    subNode = node.SelectSingleNode("GoogleIt");
-                    if (subNode != null)
-                        language.Main.VideoControls.GoogleIt = subNode.InnerText;
-                    subNode = node.SelectSingleNode("SecondsBackShort");
-                    if (subNode != null)
-                        language.Main.VideoControls.SecondsBackShort = subNode.InnerText;
-                    subNode = node.SelectSingleNode("SecondsForwardShort");
-                    if (subNode != null)
-                        language.Main.VideoControls.SecondsForwardShort = subNode.InnerText;
-                    subNode = node.SelectSingleNode("VideoPosition");
-                    if (subNode != null)
-                        language.Main.VideoControls.VideoPosition = subNode.InnerText;
-                    subNode = node.SelectSingleNode("TranslateTip");
-                    if (subNode != null)
-                        language.Main.VideoControls.TranslateTip = subNode.InnerText;
-                    subNode = node.SelectSingleNode("CreateTip");
-                    if (subNode != null)
-                        language.Main.VideoControls.CreateTip = subNode.InnerText;
-                    subNode = node.SelectSingleNode("AdjustTip");
-                    if (subNode != null)
-                        language.Main.VideoControls.AdjustTip = subNode.InnerText;
-                    subNode = node.SelectSingleNode("BeforeChangingTimeInWaveFormX");
-                    if (subNode != null)
-                        language.Main.VideoControls.BeforeChangingTimeInWaveFormX = subNode.InnerText;
-                    subNode = node.SelectSingleNode("NewTextInsertAtX");
-                    if (subNode != null)
-                        language.Main.VideoControls.NewTextInsertAtX = subNode.InnerText;
-                    subNode = node.SelectSingleNode("Center");
-                    if (subNode != null)
-                        language.Main.VideoControls.Center = subNode.InnerText;
-                    subNode = node.SelectSingleNode("PlayRate");
-                    if (subNode != null)
-                        language.Main.VideoControls.PlayRate = subNode.InnerText;
-                    subNode = node.SelectSingleNode("Slow");
-                    if (subNode != null)
-                        language.Main.VideoControls.Slow = subNode.InnerText;
-                    subNode = node.SelectSingleNode("Normal");
-                    if (subNode != null)
-                        language.Main.VideoControls.Normal = subNode.InnerText;
-                    subNode = node.SelectSingleNode("Fast");
-                    if (subNode != null)
-                        language.Main.VideoControls.Fast = subNode.InnerText;
-                    subNode = node.SelectSingleNode("VeryFast");
-                    if (subNode != null)
-                        language.Main.VideoControls.VeryFast = subNode.InnerText;
-
-                }
-
-            }
-
+            language.Main.Menu = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu();
+            language.Main.Menu.File = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.FileMenu();
+            language.Main.Menu.Edit = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.EditMenu();
+            language.Main.Menu.Tools = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.ToolsMenu();
+            language.Main.Menu.Video = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.VideoMenu();
+            language.Main.Menu.SpellCheck = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.SpellCheckMenu();
+            language.Main.Menu.Synchronization = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.SynchronizationkMenu();
+            language.Main.Menu.AutoTranslate = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.AutoTranslateMenu();
+            language.Main.Menu.Options = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.OptionsMenu();
+            language.Main.Menu.Networking = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.NetworkingMenu();
+            language.Main.Menu.Help = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.HelpMenu();
+            language.Main.Menu.ToolBar = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.ToolBarMenu();
+            language.Main.Menu.ContextMenu = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainMenu.ListViewContextMenu();
+            language.Main.Controls = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainControls();
+            language.Main.VideoControls = new Nikse.SubtitleEdit.Logic.LanguageStructure.Main.MainVideoControls();
             language.MatroskaSubtitleChooser = new Nikse.SubtitleEdit.Logic.LanguageStructure.MatroskaSubtitleChooser();
-            node = doc.DocumentElement.SelectSingleNode("MatroskaSubtitleChooser");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.MatroskaSubtitleChooser.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("PleaseChoose");
-                if (subNode != null)
-                    language.MatroskaSubtitleChooser.PleaseChoose = subNode.InnerText;
-                subNode = node.SelectSingleNode("TrackXLanguageYTypeZ");
-                if (subNode != null)
-                    language.MatroskaSubtitleChooser.TrackXLanguageYTypeZ = subNode.InnerText;
-
-            }
-
             language.MeasurementConverter = new Nikse.SubtitleEdit.Logic.LanguageStructure.MeasurementConverter();
-            node = doc.DocumentElement.SelectSingleNode("MeasurementConverter");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.MeasurementConverter.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("ConvertFrom");
-                if (subNode != null)
-                    language.MeasurementConverter.ConvertFrom = subNode.InnerText;
-                subNode = node.SelectSingleNode("ConvertTo");
-                if (subNode != null)
-                    language.MeasurementConverter.ConvertTo = subNode.InnerText;
-                subNode = node.SelectSingleNode("CopyToClipboard");
-                if (subNode != null)
-                    language.MeasurementConverter.CopyToClipboard = subNode.InnerText;
-                subNode = node.SelectSingleNode("Celsius");
-                if (subNode != null)
-                    language.MeasurementConverter.Celsius = subNode.InnerText;
-                subNode = node.SelectSingleNode("Fahrenheit");
-                if (subNode != null)
-                    language.MeasurementConverter.Fahrenheit = subNode.InnerText;
-                subNode = node.SelectSingleNode("Miles");
-                if (subNode != null)
-                    language.MeasurementConverter.Miles = subNode.InnerText;
-                subNode = node.SelectSingleNode("Kilometers");
-                if (subNode != null)
-                    language.MeasurementConverter.Kilometers = subNode.InnerText;
-                subNode = node.SelectSingleNode("Meters");
-                if (subNode != null)
-                    language.MeasurementConverter.Meters = subNode.InnerText;
-                subNode = node.SelectSingleNode("Yards");
-                if (subNode != null)
-                    language.MeasurementConverter.Yards = subNode.InnerText;
-                subNode = node.SelectSingleNode("Feet");
-                if (subNode != null)
-                    language.MeasurementConverter.Feet = subNode.InnerText;
-                subNode = node.SelectSingleNode("Inches");
-                if (subNode != null)
-                    language.MeasurementConverter.Inches = subNode.InnerText;
-                subNode = node.SelectSingleNode("Pounds");
-                if (subNode != null)
-                    language.MeasurementConverter.Pounds = subNode.InnerText;
-                subNode = node.SelectSingleNode("Kilos");
-                if (subNode != null)
-                    language.MeasurementConverter.Kilos = subNode.InnerText;
-
-            }
-
             language.MergeDoubleLines = new Nikse.SubtitleEdit.Logic.LanguageStructure.MergeDoubleLines();
-            node = doc.DocumentElement.SelectSingleNode("MergeDoubleLines");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.MergeDoubleLines.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("MaxMillisecondsBetweenLines");
-                if (subNode != null)
-                    language.MergeDoubleLines.MaxMillisecondsBetweenLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("IncludeIncrementing");
-                if (subNode != null)
-                    language.MergeDoubleLines.IncludeIncrementing = subNode.InnerText;
-
-            }
-
             language.MergedShortLines = new Nikse.SubtitleEdit.Logic.LanguageStructure.MergeShortLines();
-            node = doc.DocumentElement.SelectSingleNode("MergedShortLines");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.MergedShortLines.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("MaximumCharacters");
-                if (subNode != null)
-                    language.MergedShortLines.MaximumCharacters = subNode.InnerText;
-                subNode = node.SelectSingleNode("MaximumMillisecondsBetween");
-                if (subNode != null)
-                    language.MergedShortLines.MaximumMillisecondsBetween = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfMergesX");
-                if (subNode != null)
-                    language.MergedShortLines.NumberOfMergesX = subNode.InnerText;
-                subNode = node.SelectSingleNode("MergedText");
-                if (subNode != null)
-                    language.MergedShortLines.MergedText = subNode.InnerText;
-                subNode = node.SelectSingleNode("OnlyMergeContinuationLines");
-                if (subNode != null)
-                    language.MergedShortLines.OnlyMergeContinuationLines = subNode.InnerText;
-
-            }
-
             language.MergeTextWithSameTimeCodes = new Nikse.SubtitleEdit.Logic.LanguageStructure.MergeTextWithSameTimeCodes();
-            node = doc.DocumentElement.SelectSingleNode("MergeTextWithSameTimeCodes");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.MergeTextWithSameTimeCodes.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("MaxDifferenceMilliseconds");
-                if (subNode != null)
-                    language.MergeTextWithSameTimeCodes.MaxDifferenceMilliseconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("ReBreakLines");
-                if (subNode != null)
-                    language.MergeTextWithSameTimeCodes.ReBreakLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfMergesX");
-                if (subNode != null)
-                    language.MergeTextWithSameTimeCodes.NumberOfMergesX = subNode.InnerText;
-                subNode = node.SelectSingleNode("MergedText");
-                if (subNode != null)
-                    language.MergeTextWithSameTimeCodes.MergedText = subNode.InnerText;
-
-            }
-
             language.ModifySelection = new Nikse.SubtitleEdit.Logic.LanguageStructure.ModifySelection();
-            node = doc.DocumentElement.SelectSingleNode("ModifySelection");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ModifySelection.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Rule");
-                if (subNode != null)
-                    language.ModifySelection.Rule = subNode.InnerText;
-                subNode = node.SelectSingleNode("CaseSensitive");
-                if (subNode != null)
-                    language.ModifySelection.CaseSensitive = subNode.InnerText;
-                subNode = node.SelectSingleNode("DoWithMatches");
-                if (subNode != null)
-                    language.ModifySelection.DoWithMatches = subNode.InnerText;
-                subNode = node.SelectSingleNode("MakeNewSelection");
-                if (subNode != null)
-                    language.ModifySelection.MakeNewSelection = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddToCurrentSelection");
-                if (subNode != null)
-                    language.ModifySelection.AddToCurrentSelection = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtractFromCurrentSelection");
-                if (subNode != null)
-                    language.ModifySelection.SubtractFromCurrentSelection = subNode.InnerText;
-                subNode = node.SelectSingleNode("IntersectWithCurrentSelection");
-                if (subNode != null)
-                    language.ModifySelection.IntersectWithCurrentSelection = subNode.InnerText;
-                subNode = node.SelectSingleNode("MatchingLinesX");
-                if (subNode != null)
-                    language.ModifySelection.MatchingLinesX = subNode.InnerText;
-                subNode = node.SelectSingleNode("Contains");
-                if (subNode != null)
-                    language.ModifySelection.Contains = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartsWith");
-                if (subNode != null)
-                    language.ModifySelection.StartsWith = subNode.InnerText;
-                subNode = node.SelectSingleNode("EndsWith");
-                if (subNode != null)
-                    language.ModifySelection.EndsWith = subNode.InnerText;
-                subNode = node.SelectSingleNode("NoContains");
-                if (subNode != null)
-                    language.ModifySelection.NoContains = subNode.InnerText;
-                subNode = node.SelectSingleNode("RegEx");
-                if (subNode != null)
-                    language.ModifySelection.RegEx = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnequalLines");
-                if (subNode != null)
-                    language.ModifySelection.UnequalLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("EqualLines");
-                if (subNode != null)
-                    language.ModifySelection.EqualLines = subNode.InnerText;
-
-            }
-
             language.MultipleReplace = new Nikse.SubtitleEdit.Logic.LanguageStructure.MultipleReplace();
-            node = doc.DocumentElement.SelectSingleNode("MultipleReplace");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.MultipleReplace.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("FindWhat");
-                if (subNode != null)
-                    language.MultipleReplace.FindWhat = subNode.InnerText;
-                subNode = node.SelectSingleNode("ReplaceWith");
-                if (subNode != null)
-                    language.MultipleReplace.ReplaceWith = subNode.InnerText;
-                subNode = node.SelectSingleNode("Normal");
-                if (subNode != null)
-                    language.MultipleReplace.Normal = subNode.InnerText;
-                subNode = node.SelectSingleNode("CaseSensitive");
-                if (subNode != null)
-                    language.MultipleReplace.CaseSensitive = subNode.InnerText;
-                subNode = node.SelectSingleNode("RegularExpression");
-                if (subNode != null)
-                    language.MultipleReplace.RegularExpression = subNode.InnerText;
-                subNode = node.SelectSingleNode("LinesFoundX");
-                if (subNode != null)
-                    language.MultipleReplace.LinesFoundX = subNode.InnerText;
-                subNode = node.SelectSingleNode("Delete");
-                if (subNode != null)
-                    language.MultipleReplace.Delete = subNode.InnerText;
-                subNode = node.SelectSingleNode("Add");
-                if (subNode != null)
-                    language.MultipleReplace.Add = subNode.InnerText;
-                subNode = node.SelectSingleNode("Update");
-                if (subNode != null)
-                    language.MultipleReplace.Update = subNode.InnerText;
-                subNode = node.SelectSingleNode("Enabled");
-                if (subNode != null)
-                    language.MultipleReplace.Enabled = subNode.InnerText;
-                subNode = node.SelectSingleNode("SearchType");
-                if (subNode != null)
-                    language.MultipleReplace.SearchType = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveAll");
-                if (subNode != null)
-                    language.MultipleReplace.RemoveAll = subNode.InnerText;
-                subNode = node.SelectSingleNode("Import");
-                if (subNode != null)
-                    language.MultipleReplace.Import = subNode.InnerText;
-                subNode = node.SelectSingleNode("Export");
-                if (subNode != null)
-                    language.MultipleReplace.Export = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImportRulesTitle");
-                if (subNode != null)
-                    language.MultipleReplace.ImportRulesTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("ExportRulesTitle");
-                if (subNode != null)
-                    language.MultipleReplace.ExportRulesTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("Rules");
-                if (subNode != null)
-                    language.MultipleReplace.Rules = subNode.InnerText;
-
-            }
-
             language.NetworkChat = new Nikse.SubtitleEdit.Logic.LanguageStructure.NetworkChat();
-            node = doc.DocumentElement.SelectSingleNode("NetworkChat");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.NetworkChat.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Send");
-                if (subNode != null)
-                    language.NetworkChat.Send = subNode.InnerText;
-
-            }
-
             language.NetworkJoin = new Nikse.SubtitleEdit.Logic.LanguageStructure.NetworkJoin();
-            node = doc.DocumentElement.SelectSingleNode("NetworkJoin");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.NetworkJoin.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Information");
-                if (subNode != null)
-                    language.NetworkJoin.Information = subNode.InnerText;
-                subNode = node.SelectSingleNode("Join");
-                if (subNode != null)
-                    language.NetworkJoin.Join = subNode.InnerText;
-
-            }
-
             language.NetworkLogAndInfo = new Nikse.SubtitleEdit.Logic.LanguageStructure.NetworkLogAndInfo();
-            node = doc.DocumentElement.SelectSingleNode("NetworkLogAndInfo");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.NetworkLogAndInfo.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Log");
-                if (subNode != null)
-                    language.NetworkLogAndInfo.Log = subNode.InnerText;
-
-            }
-
             language.NetworkStart = new Nikse.SubtitleEdit.Logic.LanguageStructure.NetworkStart();
-            node = doc.DocumentElement.SelectSingleNode("NetworkStart");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.NetworkStart.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("ConnectionTo");
-                if (subNode != null)
-                    language.NetworkStart.ConnectionTo = subNode.InnerText;
-                subNode = node.SelectSingleNode("Information");
-                if (subNode != null)
-                    language.NetworkStart.Information = subNode.InnerText;
-                subNode = node.SelectSingleNode("Start");
-                if (subNode != null)
-                    language.NetworkStart.Start = subNode.InnerText;
-
-            }
-
             language.OpenVideoDvd = new Nikse.SubtitleEdit.Logic.LanguageStructure.OpenVideoDvd();
-            node = doc.DocumentElement.SelectSingleNode("OpenVideoDvd");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.OpenVideoDvd.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenDvdFrom");
-                if (subNode != null)
-                    language.OpenVideoDvd.OpenDvdFrom = subNode.InnerText;
-                subNode = node.SelectSingleNode("Disc");
-                if (subNode != null)
-                    language.OpenVideoDvd.Disc = subNode.InnerText;
-                subNode = node.SelectSingleNode("Folder");
-                if (subNode != null)
-                    language.OpenVideoDvd.Folder = subNode.InnerText;
-                subNode = node.SelectSingleNode("ChooseDrive");
-                if (subNode != null)
-                    language.OpenVideoDvd.ChooseDrive = subNode.InnerText;
-                subNode = node.SelectSingleNode("ChooseFolder");
-                if (subNode != null)
-                    language.OpenVideoDvd.ChooseFolder = subNode.InnerText;
-
-            }
-
             language.PluginsGet = new Nikse.SubtitleEdit.Logic.LanguageStructure.PluginsGet();
-            node = doc.DocumentElement.SelectSingleNode("PluginsGet");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.PluginsGet.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("InstalledPlugins");
-                if (subNode != null)
-                    language.PluginsGet.InstalledPlugins = subNode.InnerText;
-                subNode = node.SelectSingleNode("GetPlugins");
-                if (subNode != null)
-                    language.PluginsGet.GetPlugins = subNode.InnerText;
-                subNode = node.SelectSingleNode("Description");
-                if (subNode != null)
-                    language.PluginsGet.Description = subNode.InnerText;
-                subNode = node.SelectSingleNode("Version");
-                if (subNode != null)
-                    language.PluginsGet.Version = subNode.InnerText;
-                subNode = node.SelectSingleNode("Date");
-                if (subNode != null)
-                    language.PluginsGet.Date = subNode.InnerText;
-                subNode = node.SelectSingleNode("Type");
-                if (subNode != null)
-                    language.PluginsGet.Type = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpenPluginsFolder");
-                if (subNode != null)
-                    language.PluginsGet.OpenPluginsFolder = subNode.InnerText;
-                subNode = node.SelectSingleNode("GetPluginsInfo1");
-                if (subNode != null)
-                    language.PluginsGet.GetPluginsInfo1 = subNode.InnerText;
-                subNode = node.SelectSingleNode("GetPluginsInfo2");
-                if (subNode != null)
-                    language.PluginsGet.GetPluginsInfo2 = subNode.InnerText;
-                subNode = node.SelectSingleNode("PluginXDownloaded");
-                if (subNode != null)
-                    language.PluginsGet.PluginXDownloaded = subNode.InnerText;
-                subNode = node.SelectSingleNode("Download");
-                if (subNode != null)
-                    language.PluginsGet.Download = subNode.InnerText;
-                subNode = node.SelectSingleNode("Remove");
-                if (subNode != null)
-                    language.PluginsGet.Remove = subNode.InnerText;
-                subNode = node.SelectSingleNode("UpdateAllX");
-                if (subNode != null)
-                    language.PluginsGet.UpdateAllX = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnableToDownloadPluginListX");
-                if (subNode != null)
-                    language.PluginsGet.UnableToDownloadPluginListX = subNode.InnerText;
-                subNode = node.SelectSingleNode("NewVersionOfSubtitleEditRequired");
-                if (subNode != null)
-                    language.PluginsGet.NewVersionOfSubtitleEditRequired = subNode.InnerText;
-                subNode = node.SelectSingleNode("UpdateAvailable");
-                if (subNode != null)
-                    language.PluginsGet.UpdateAvailable = subNode.InnerText;
-                subNode = node.SelectSingleNode("UpdateAll");
-                if (subNode != null)
-                    language.PluginsGet.UpdateAll = subNode.InnerText;
-                subNode = node.SelectSingleNode("XPluginsUpdated");
-                if (subNode != null)
-                    language.PluginsGet.XPluginsUpdated = subNode.InnerText;
-
-            }
-
             language.RegularExpressionContextMenu = new Nikse.SubtitleEdit.Logic.LanguageStructure.RegularExpressionContextMenu();
-            node = doc.DocumentElement.SelectSingleNode("RegularExpressionContextMenu");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("WordBoundary");
-                if (subNode != null)
-                    language.RegularExpressionContextMenu.WordBoundary = subNode.InnerText;
-                subNode = node.SelectSingleNode("NonWordBoundary");
-                if (subNode != null)
-                    language.RegularExpressionContextMenu.NonWordBoundary = subNode.InnerText;
-                subNode = node.SelectSingleNode("NewLine");
-                if (subNode != null)
-                    language.RegularExpressionContextMenu.NewLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("NewLineShort");
-                if (subNode != null)
-                    language.RegularExpressionContextMenu.NewLineShort = subNode.InnerText;
-                subNode = node.SelectSingleNode("AnyDigit");
-                if (subNode != null)
-                    language.RegularExpressionContextMenu.AnyDigit = subNode.InnerText;
-                subNode = node.SelectSingleNode("AnyCharacter");
-                if (subNode != null)
-                    language.RegularExpressionContextMenu.AnyCharacter = subNode.InnerText;
-                subNode = node.SelectSingleNode("AnyWhitespace");
-                if (subNode != null)
-                    language.RegularExpressionContextMenu.AnyWhitespace = subNode.InnerText;
-                subNode = node.SelectSingleNode("ZeroOrMore");
-                if (subNode != null)
-                    language.RegularExpressionContextMenu.ZeroOrMore = subNode.InnerText;
-                subNode = node.SelectSingleNode("OneOrMore");
-                if (subNode != null)
-                    language.RegularExpressionContextMenu.OneOrMore = subNode.InnerText;
-                subNode = node.SelectSingleNode("InCharacterGroup");
-                if (subNode != null)
-                    language.RegularExpressionContextMenu.InCharacterGroup = subNode.InnerText;
-                subNode = node.SelectSingleNode("NotInCharacterGroup");
-                if (subNode != null)
-                    language.RegularExpressionContextMenu.NotInCharacterGroup = subNode.InnerText;
-
-            }
-
             language.RemoveTextFromHearImpaired = new Nikse.SubtitleEdit.Logic.LanguageStructure.RemoveTextFromHearImpaired();
-            node = doc.DocumentElement.SelectSingleNode("RemoveTextFromHearImpaired");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveTextConditions");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.RemoveTextConditions = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveTextBetween");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.RemoveTextBetween = subNode.InnerText;
-                subNode = node.SelectSingleNode("SquareBrackets");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.SquareBrackets = subNode.InnerText;
-                subNode = node.SelectSingleNode("Brackets");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.Brackets = subNode.InnerText;
-                subNode = node.SelectSingleNode("Parentheses");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.Parentheses = subNode.InnerText;
-                subNode = node.SelectSingleNode("QuestionMarks");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.QuestionMarks = subNode.InnerText;
-                subNode = node.SelectSingleNode("And");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.And = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveTextBeforeColon");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.RemoveTextBeforeColon = subNode.InnerText;
-                subNode = node.SelectSingleNode("OnlyIfTextIsUppercase");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.OnlyIfTextIsUppercase = subNode.InnerText;
-                subNode = node.SelectSingleNode("OnlyIfInSeparateLine");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.OnlyIfInSeparateLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("LinesFoundX");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.LinesFoundX = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveTextIfContains");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.RemoveTextIfContains = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveTextIfAllUppercase");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.RemoveTextIfAllUppercase = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveInterjections");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.RemoveInterjections = subNode.InnerText;
-                subNode = node.SelectSingleNode("EditInterjections");
-                if (subNode != null)
-                    language.RemoveTextFromHearImpaired.EditInterjections = subNode.InnerText;
-
-            }
-
             language.ReplaceDialog = new Nikse.SubtitleEdit.Logic.LanguageStructure.ReplaceDialog();
-            node = doc.DocumentElement.SelectSingleNode("ReplaceDialog");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ReplaceDialog.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("FindWhat");
-                if (subNode != null)
-                    language.ReplaceDialog.FindWhat = subNode.InnerText;
-                subNode = node.SelectSingleNode("Normal");
-                if (subNode != null)
-                    language.ReplaceDialog.Normal = subNode.InnerText;
-                subNode = node.SelectSingleNode("CaseSensitive");
-                if (subNode != null)
-                    language.ReplaceDialog.CaseSensitive = subNode.InnerText;
-                subNode = node.SelectSingleNode("RegularExpression");
-                if (subNode != null)
-                    language.ReplaceDialog.RegularExpression = subNode.InnerText;
-                subNode = node.SelectSingleNode("ReplaceWith");
-                if (subNode != null)
-                    language.ReplaceDialog.ReplaceWith = subNode.InnerText;
-                subNode = node.SelectSingleNode("Find");
-                if (subNode != null)
-                    language.ReplaceDialog.Find = subNode.InnerText;
-                subNode = node.SelectSingleNode("Replace");
-                if (subNode != null)
-                    language.ReplaceDialog.Replace = subNode.InnerText;
-                subNode = node.SelectSingleNode("ReplaceAll");
-                if (subNode != null)
-                    language.ReplaceDialog.ReplaceAll = subNode.InnerText;
-
-            }
-
             language.RestoreAutoBackup = new Nikse.SubtitleEdit.Logic.LanguageStructure.RestoreAutoBackup();
-            node = doc.DocumentElement.SelectSingleNode("RestoreAutoBackup");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.RestoreAutoBackup.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Information");
-                if (subNode != null)
-                    language.RestoreAutoBackup.Information = subNode.InnerText;
-                subNode = node.SelectSingleNode("DateAndTime");
-                if (subNode != null)
-                    language.RestoreAutoBackup.DateAndTime = subNode.InnerText;
-                subNode = node.SelectSingleNode("FileName");
-                if (subNode != null)
-                    language.RestoreAutoBackup.FileName = subNode.InnerText;
-                subNode = node.SelectSingleNode("Extension");
-                if (subNode != null)
-                    language.RestoreAutoBackup.Extension = subNode.InnerText;
-                subNode = node.SelectSingleNode("NoBackedUpFilesFound");
-                if (subNode != null)
-                    language.RestoreAutoBackup.NoBackedUpFilesFound = subNode.InnerText;
-
-            }
-
             language.SeekSilence = new Nikse.SubtitleEdit.Logic.LanguageStructure.SeekSilence();
-            node = doc.DocumentElement.SelectSingleNode("SeekSilence");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.SeekSilence.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("SearchDirection");
-                if (subNode != null)
-                    language.SeekSilence.SearchDirection = subNode.InnerText;
-                subNode = node.SelectSingleNode("Forward");
-                if (subNode != null)
-                    language.SeekSilence.Forward = subNode.InnerText;
-                subNode = node.SelectSingleNode("Back");
-                if (subNode != null)
-                    language.SeekSilence.Back = subNode.InnerText;
-                subNode = node.SelectSingleNode("LengthInSeconds");
-                if (subNode != null)
-                    language.SeekSilence.LengthInSeconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("MaxVolume");
-                if (subNode != null)
-                    language.SeekSilence.MaxVolume = subNode.InnerText;
-
-            }
-
             language.SetMinimumDisplayTimeBetweenParagraphs = new Nikse.SubtitleEdit.Logic.LanguageStructure.SetMinimumDisplayTimeBetweenParagraphs();
-            node = doc.DocumentElement.SelectSingleNode("SetMinimumDisplayTimeBetweenParagraphs");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.SetMinimumDisplayTimeBetweenParagraphs.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("PreviewLinesModifiedX");
-                if (subNode != null)
-                    language.SetMinimumDisplayTimeBetweenParagraphs.PreviewLinesModifiedX = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowOnlyModifiedLines");
-                if (subNode != null)
-                    language.SetMinimumDisplayTimeBetweenParagraphs.ShowOnlyModifiedLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("MinimumMillisecondsBetweenParagraphs");
-                if (subNode != null)
-                    language.SetMinimumDisplayTimeBetweenParagraphs.MinimumMillisecondsBetweenParagraphs = subNode.InnerText;
-                subNode = node.SelectSingleNode("FrameInfo");
-                if (subNode != null)
-                    language.SetMinimumDisplayTimeBetweenParagraphs.FrameInfo = subNode.InnerText;
-                subNode = node.SelectSingleNode("OneFrameXisYMilliseconds");
-                if (subNode != null)
-                    language.SetMinimumDisplayTimeBetweenParagraphs.OneFrameXisYMilliseconds = subNode.InnerText;
-
-            }
-
             language.SetSyncPoint = new Nikse.SubtitleEdit.Logic.LanguageStructure.SetSyncPoint();
-            node = doc.DocumentElement.SelectSingleNode("SetSyncPoint");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.SetSyncPoint.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("SyncPointTimeCode");
-                if (subNode != null)
-                    language.SetSyncPoint.SyncPointTimeCode = subNode.InnerText;
-                subNode = node.SelectSingleNode("ThreeSecondsBack");
-                if (subNode != null)
-                    language.SetSyncPoint.ThreeSecondsBack = subNode.InnerText;
-                subNode = node.SelectSingleNode("HalfASecondBack");
-                if (subNode != null)
-                    language.SetSyncPoint.HalfASecondBack = subNode.InnerText;
-                subNode = node.SelectSingleNode("HalfASecondForward");
-                if (subNode != null)
-                    language.SetSyncPoint.HalfASecondForward = subNode.InnerText;
-                subNode = node.SelectSingleNode("ThreeSecondsForward");
-                if (subNode != null)
-                    language.SetSyncPoint.ThreeSecondsForward = subNode.InnerText;
-
-            }
-
             language.Settings = new Nikse.SubtitleEdit.Logic.LanguageStructure.Settings();
-            node = doc.DocumentElement.SelectSingleNode("Settings");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.Settings.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("General");
-                if (subNode != null)
-                    language.Settings.General = subNode.InnerText;
-                subNode = node.SelectSingleNode("Toolbar");
-                if (subNode != null)
-                    language.Settings.Toolbar = subNode.InnerText;
-                subNode = node.SelectSingleNode("VideoPlayer");
-                if (subNode != null)
-                    language.Settings.VideoPlayer = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformAndSpectrogram");
-                if (subNode != null)
-                    language.Settings.WaveformAndSpectrogram = subNode.InnerText;
-                subNode = node.SelectSingleNode("Tools");
-                if (subNode != null)
-                    language.Settings.Tools = subNode.InnerText;
-                subNode = node.SelectSingleNode("WordLists");
-                if (subNode != null)
-                    language.Settings.WordLists = subNode.InnerText;
-                subNode = node.SelectSingleNode("SsaStyle");
-                if (subNode != null)
-                    language.Settings.SsaStyle = subNode.InnerText;
-                subNode = node.SelectSingleNode("Proxy");
-                if (subNode != null)
-                    language.Settings.Proxy = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowToolBarButtons");
-                if (subNode != null)
-                    language.Settings.ShowToolBarButtons = subNode.InnerText;
-                subNode = node.SelectSingleNode("New");
-                if (subNode != null)
-                    language.Settings.New = subNode.InnerText;
-                subNode = node.SelectSingleNode("Open");
-                if (subNode != null)
-                    language.Settings.Open = subNode.InnerText;
-                subNode = node.SelectSingleNode("Save");
-                if (subNode != null)
-                    language.Settings.Save = subNode.InnerText;
-                subNode = node.SelectSingleNode("SaveAs");
-                if (subNode != null)
-                    language.Settings.SaveAs = subNode.InnerText;
-                subNode = node.SelectSingleNode("Find");
-                if (subNode != null)
-                    language.Settings.Find = subNode.InnerText;
-                subNode = node.SelectSingleNode("Replace");
-                if (subNode != null)
-                    language.Settings.Replace = subNode.InnerText;
-                subNode = node.SelectSingleNode("VisualSync");
-                if (subNode != null)
-                    language.Settings.VisualSync = subNode.InnerText;
-                subNode = node.SelectSingleNode("SpellCheck");
-                if (subNode != null)
-                    language.Settings.SpellCheck = subNode.InnerText;
-                subNode = node.SelectSingleNode("SettingsName");
-                if (subNode != null)
-                    language.Settings.SettingsName = subNode.InnerText;
-                subNode = node.SelectSingleNode("Help");
-                if (subNode != null)
-                    language.Settings.Help = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowFrameRate");
-                if (subNode != null)
-                    language.Settings.ShowFrameRate = subNode.InnerText;
-                subNode = node.SelectSingleNode("DefaultFrameRate");
-                if (subNode != null)
-                    language.Settings.DefaultFrameRate = subNode.InnerText;
-                subNode = node.SelectSingleNode("DefaultFileEncoding");
-                if (subNode != null)
-                    language.Settings.DefaultFileEncoding = subNode.InnerText;
-                subNode = node.SelectSingleNode("AutoDetectAnsiEncoding");
-                if (subNode != null)
-                    language.Settings.AutoDetectAnsiEncoding = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleLineMaximumLength");
-                if (subNode != null)
-                    language.Settings.SubtitleLineMaximumLength = subNode.InnerText;
-                subNode = node.SelectSingleNode("MaximumCharactersPerSecond");
-                if (subNode != null)
-                    language.Settings.MaximumCharactersPerSecond = subNode.InnerText;
-                subNode = node.SelectSingleNode("AutoWrapWhileTyping");
-                if (subNode != null)
-                    language.Settings.AutoWrapWhileTyping = subNode.InnerText;
-                subNode = node.SelectSingleNode("DurationMinimumMilliseconds");
-                if (subNode != null)
-                    language.Settings.DurationMinimumMilliseconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("DurationMaximumMilliseconds");
-                if (subNode != null)
-                    language.Settings.DurationMaximumMilliseconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("MinimumGapMilliseconds");
-                if (subNode != null)
-                    language.Settings.MinimumGapMilliseconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleFont");
-                if (subNode != null)
-                    language.Settings.SubtitleFont = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleFontSize");
-                if (subNode != null)
-                    language.Settings.SubtitleFontSize = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleBold");
-                if (subNode != null)
-                    language.Settings.SubtitleBold = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleCenter");
-                if (subNode != null)
-                    language.Settings.SubtitleCenter = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleFontColor");
-                if (subNode != null)
-                    language.Settings.SubtitleFontColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleBackgroundColor");
-                if (subNode != null)
-                    language.Settings.SubtitleBackgroundColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("SpellChecker");
-                if (subNode != null)
-                    language.Settings.SpellChecker = subNode.InnerText;
-                subNode = node.SelectSingleNode("RememberRecentFiles");
-                if (subNode != null)
-                    language.Settings.RememberRecentFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartWithLastFileLoaded");
-                if (subNode != null)
-                    language.Settings.StartWithLastFileLoaded = subNode.InnerText;
-                subNode = node.SelectSingleNode("RememberSelectedLine");
-                if (subNode != null)
-                    language.Settings.RememberSelectedLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("RememberPositionAndSize");
-                if (subNode != null)
-                    language.Settings.RememberPositionAndSize = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartInSourceView");
-                if (subNode != null)
-                    language.Settings.StartInSourceView = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveBlankLinesWhenOpening");
-                if (subNode != null)
-                    language.Settings.RemoveBlankLinesWhenOpening = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowLineBreaksAs");
-                if (subNode != null)
-                    language.Settings.ShowLineBreaksAs = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainListViewDoubleClickAction");
-                if (subNode != null)
-                    language.Settings.MainListViewDoubleClickAction = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainListViewNothing");
-                if (subNode != null)
-                    language.Settings.MainListViewNothing = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainListViewVideoGoToPositionAndPause");
-                if (subNode != null)
-                    language.Settings.MainListViewVideoGoToPositionAndPause = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainListViewVideoGoToPositionAndPlay");
-                if (subNode != null)
-                    language.Settings.MainListViewVideoGoToPositionAndPlay = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainListViewEditText");
-                if (subNode != null)
-                    language.Settings.MainListViewEditText = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainListViewVideoGoToPositionMinus1SecAndPause");
-                if (subNode != null)
-                    language.Settings.MainListViewVideoGoToPositionMinus1SecAndPause = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainListViewVideoGoToPositionMinusHalfSecAndPause");
-                if (subNode != null)
-                    language.Settings.MainListViewVideoGoToPositionMinusHalfSecAndPause = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainListViewVideoGoToPositionMinus1SecAndPlay");
-                if (subNode != null)
-                    language.Settings.MainListViewVideoGoToPositionMinus1SecAndPlay = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainListViewEditTextAndPause");
-                if (subNode != null)
-                    language.Settings.MainListViewEditTextAndPause = subNode.InnerText;
-                subNode = node.SelectSingleNode("AutoBackup");
-                if (subNode != null)
-                    language.Settings.AutoBackup = subNode.InnerText;
-                subNode = node.SelectSingleNode("AutoBackupEveryMinute");
-                if (subNode != null)
-                    language.Settings.AutoBackupEveryMinute = subNode.InnerText;
-                subNode = node.SelectSingleNode("AutoBackupEveryFiveMinutes");
-                if (subNode != null)
-                    language.Settings.AutoBackupEveryFiveMinutes = subNode.InnerText;
-                subNode = node.SelectSingleNode("AutoBackupEveryFifteenMinutes");
-                if (subNode != null)
-                    language.Settings.AutoBackupEveryFifteenMinutes = subNode.InnerText;
-                subNode = node.SelectSingleNode("CheckForUpdates");
-                if (subNode != null)
-                    language.Settings.CheckForUpdates = subNode.InnerText;
-                subNode = node.SelectSingleNode("AllowEditOfOriginalSubtitle");
-                if (subNode != null)
-                    language.Settings.AllowEditOfOriginalSubtitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("PromptDeleteLines");
-                if (subNode != null)
-                    language.Settings.PromptDeleteLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("TimeCodeMode");
-                if (subNode != null)
-                    language.Settings.TimeCodeMode = subNode.InnerText;
-                subNode = node.SelectSingleNode("TimeCodeModeHHMMSSMsec");
-                if (subNode != null)
-                    language.Settings.TimeCodeModeHHMMSSMsec = subNode.InnerText;
-                subNode = node.SelectSingleNode("TimeCodeModeHHMMSSFF");
-                if (subNode != null)
-                    language.Settings.TimeCodeModeHHMMSSFF = subNode.InnerText;
-                subNode = node.SelectSingleNode("VideoEngine");
-                if (subNode != null)
-                    language.Settings.VideoEngine = subNode.InnerText;
-                subNode = node.SelectSingleNode("DirectShow");
-                if (subNode != null)
-                    language.Settings.DirectShow = subNode.InnerText;
-                subNode = node.SelectSingleNode("DirectShowDescription");
-                if (subNode != null)
-                    language.Settings.DirectShowDescription = subNode.InnerText;
-                subNode = node.SelectSingleNode("ManagedDirectX");
-                if (subNode != null)
-                    language.Settings.ManagedDirectX = subNode.InnerText;
-                subNode = node.SelectSingleNode("ManagedDirectXDescription");
-                if (subNode != null)
-                    language.Settings.ManagedDirectXDescription = subNode.InnerText;
-                subNode = node.SelectSingleNode("MPlayer");
-                if (subNode != null)
-                    language.Settings.MPlayer = subNode.InnerText;
-                subNode = node.SelectSingleNode("MPlayerDescription");
-                if (subNode != null)
-                    language.Settings.MPlayerDescription = subNode.InnerText;
-                subNode = node.SelectSingleNode("VlcMediaPlayer");
-                if (subNode != null)
-                    language.Settings.VlcMediaPlayer = subNode.InnerText;
-                subNode = node.SelectSingleNode("VlcMediaPlayerDescription");
-                if (subNode != null)
-                    language.Settings.VlcMediaPlayerDescription = subNode.InnerText;
-                subNode = node.SelectSingleNode("VlcBrowseToLabel");
-                if (subNode != null)
-                    language.Settings.VlcBrowseToLabel = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowStopButton");
-                if (subNode != null)
-                    language.Settings.ShowStopButton = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowMuteButton");
-                if (subNode != null)
-                    language.Settings.ShowMuteButton = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowFullscreenButton");
-                if (subNode != null)
-                    language.Settings.ShowFullscreenButton = subNode.InnerText;
-                subNode = node.SelectSingleNode("PreviewFontSize");
-                if (subNode != null)
-                    language.Settings.PreviewFontSize = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainWindowVideoControls");
-                if (subNode != null)
-                    language.Settings.MainWindowVideoControls = subNode.InnerText;
-                subNode = node.SelectSingleNode("CustomSearchTextAndUrl");
-                if (subNode != null)
-                    language.Settings.CustomSearchTextAndUrl = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveFormAppearance");
-                if (subNode != null)
-                    language.Settings.WaveFormAppearance = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveFormGridColor");
-                if (subNode != null)
-                    language.Settings.WaveFormGridColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveFormShowGridLines");
-                if (subNode != null)
-                    language.Settings.WaveFormShowGridLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("ReverseMouseWheelScrollDirection");
-                if (subNode != null)
-                    language.Settings.ReverseMouseWheelScrollDirection = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveFormAllowOverlap");
-                if (subNode != null)
-                    language.Settings.WaveFormAllowOverlap = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveFormFocusMouseEnter");
-                if (subNode != null)
-                    language.Settings.WaveFormFocusMouseEnter = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveFormListViewFocusMouseEnter");
-                if (subNode != null)
-                    language.Settings.WaveFormListViewFocusMouseEnter = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformBorderHitMs1");
-                if (subNode != null)
-                    language.Settings.WaveformBorderHitMs1 = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformBorderHitMs2");
-                if (subNode != null)
-                    language.Settings.WaveformBorderHitMs2 = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveFormColor");
-                if (subNode != null)
-                    language.Settings.WaveFormColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveFormSelectedColor");
-                if (subNode != null)
-                    language.Settings.WaveFormSelectedColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveFormBackgroundColor");
-                if (subNode != null)
-                    language.Settings.WaveFormBackgroundColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveFormTextColor");
-                if (subNode != null)
-                    language.Settings.WaveFormTextColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformAndSpectrogramsFolderEmpty");
-                if (subNode != null)
-                    language.Settings.WaveformAndSpectrogramsFolderEmpty = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformAndSpectrogramsFolderInfo");
-                if (subNode != null)
-                    language.Settings.WaveformAndSpectrogramsFolderInfo = subNode.InnerText;
-                subNode = node.SelectSingleNode("Spectrogram");
-                if (subNode != null)
-                    language.Settings.Spectrogram = subNode.InnerText;
-                subNode = node.SelectSingleNode("GenerateSpectrogram");
-                if (subNode != null)
-                    language.Settings.GenerateSpectrogram = subNode.InnerText;
-                subNode = node.SelectSingleNode("SpectrogramAppearance");
-                if (subNode != null)
-                    language.Settings.SpectrogramAppearance = subNode.InnerText;
-                subNode = node.SelectSingleNode("SpectrogramOneColorGradient");
-                if (subNode != null)
-                    language.Settings.SpectrogramOneColorGradient = subNode.InnerText;
-                subNode = node.SelectSingleNode("SpectrogramClassic");
-                if (subNode != null)
-                    language.Settings.SpectrogramClassic = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformUseFFMPEG");
-                if (subNode != null)
-                    language.Settings.WaveformUseFFMPEG = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformFFMPEGPath");
-                if (subNode != null)
-                    language.Settings.WaveformFFMPEGPath = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformBrowseToFFMPEG");
-                if (subNode != null)
-                    language.Settings.WaveformBrowseToFFMPEG = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformBrowseToVLC");
-                if (subNode != null)
-                    language.Settings.WaveformBrowseToVLC = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubStationAlphaStyle");
-                if (subNode != null)
-                    language.Settings.SubStationAlphaStyle = subNode.InnerText;
-                subNode = node.SelectSingleNode("ChooseFont");
-                if (subNode != null)
-                    language.Settings.ChooseFont = subNode.InnerText;
-                subNode = node.SelectSingleNode("ChooseColor");
-                if (subNode != null)
-                    language.Settings.ChooseColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("SsaOutline");
-                if (subNode != null)
-                    language.Settings.SsaOutline = subNode.InnerText;
-                subNode = node.SelectSingleNode("SsaShadow");
-                if (subNode != null)
-                    language.Settings.SsaShadow = subNode.InnerText;
-                subNode = node.SelectSingleNode("SsaOpaqueBox");
-                if (subNode != null)
-                    language.Settings.SsaOpaqueBox = subNode.InnerText;
-                subNode = node.SelectSingleNode("Testing123");
-                if (subNode != null)
-                    language.Settings.Testing123 = subNode.InnerText;
-                subNode = node.SelectSingleNode("Language");
-                if (subNode != null)
-                    language.Settings.Language = subNode.InnerText;
-                subNode = node.SelectSingleNode("NamesIgnoreLists");
-                if (subNode != null)
-                    language.Settings.NamesIgnoreLists = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddNameEtc");
-                if (subNode != null)
-                    language.Settings.AddNameEtc = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddWord");
-                if (subNode != null)
-                    language.Settings.AddWord = subNode.InnerText;
-                subNode = node.SelectSingleNode("Remove");
-                if (subNode != null)
-                    language.Settings.Remove = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddPair");
-                if (subNode != null)
-                    language.Settings.AddPair = subNode.InnerText;
-                subNode = node.SelectSingleNode("UserWordList");
-                if (subNode != null)
-                    language.Settings.UserWordList = subNode.InnerText;
-                subNode = node.SelectSingleNode("OcrFixList");
-                if (subNode != null)
-                    language.Settings.OcrFixList = subNode.InnerText;
-                subNode = node.SelectSingleNode("Location");
-                if (subNode != null)
-                    language.Settings.Location = subNode.InnerText;
-                subNode = node.SelectSingleNode("UseOnlineNamesEtc");
-                if (subNode != null)
-                    language.Settings.UseOnlineNamesEtc = subNode.InnerText;
-                subNode = node.SelectSingleNode("WordAddedX");
-                if (subNode != null)
-                    language.Settings.WordAddedX = subNode.InnerText;
-                subNode = node.SelectSingleNode("WordAlreadyExists");
-                if (subNode != null)
-                    language.Settings.WordAlreadyExists = subNode.InnerText;
-                subNode = node.SelectSingleNode("WordNotFound");
-                if (subNode != null)
-                    language.Settings.WordNotFound = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveX");
-                if (subNode != null)
-                    language.Settings.RemoveX = subNode.InnerText;
-                subNode = node.SelectSingleNode("CannotUpdateNamesEtcOnline");
-                if (subNode != null)
-                    language.Settings.CannotUpdateNamesEtcOnline = subNode.InnerText;
-                subNode = node.SelectSingleNode("ProxyServerSettings");
-                if (subNode != null)
-                    language.Settings.ProxyServerSettings = subNode.InnerText;
-                subNode = node.SelectSingleNode("ProxyAddress");
-                if (subNode != null)
-                    language.Settings.ProxyAddress = subNode.InnerText;
-                subNode = node.SelectSingleNode("ProxyAuthentication");
-                if (subNode != null)
-                    language.Settings.ProxyAuthentication = subNode.InnerText;
-                subNode = node.SelectSingleNode("ProxyUserName");
-                if (subNode != null)
-                    language.Settings.ProxyUserName = subNode.InnerText;
-                subNode = node.SelectSingleNode("ProxyPassword");
-                if (subNode != null)
-                    language.Settings.ProxyPassword = subNode.InnerText;
-                subNode = node.SelectSingleNode("ProxyDomain");
-                if (subNode != null)
-                    language.Settings.ProxyDomain = subNode.InnerText;
-                subNode = node.SelectSingleNode("PlayXSecondsAndBack");
-                if (subNode != null)
-                    language.Settings.PlayXSecondsAndBack = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartSceneIndex");
-                if (subNode != null)
-                    language.Settings.StartSceneIndex = subNode.InnerText;
-                subNode = node.SelectSingleNode("EndSceneIndex");
-                if (subNode != null)
-                    language.Settings.EndSceneIndex = subNode.InnerText;
-                subNode = node.SelectSingleNode("FirstPlusX");
-                if (subNode != null)
-                    language.Settings.FirstPlusX = subNode.InnerText;
-                subNode = node.SelectSingleNode("LastMinusX");
-                if (subNode != null)
-                    language.Settings.LastMinusX = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixCommonerrors");
-                if (subNode != null)
-                    language.Settings.FixCommonerrors = subNode.InnerText;
-                subNode = node.SelectSingleNode("MergeLinesShorterThan");
-                if (subNode != null)
-                    language.Settings.MergeLinesShorterThan = subNode.InnerText;
-                subNode = node.SelectSingleNode("MusicSymbol");
-                if (subNode != null)
-                    language.Settings.MusicSymbol = subNode.InnerText;
-                subNode = node.SelectSingleNode("MusicSymbolsToReplace");
-                if (subNode != null)
-                    language.Settings.MusicSymbolsToReplace = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixCommonOcrErrorsUseHardcodedRules");
-                if (subNode != null)
-                    language.Settings.FixCommonOcrErrorsUseHardcodedRules = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime");
-                if (subNode != null)
-                    language.Settings.FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime = subNode.InnerText;
-                subNode = node.SelectSingleNode("Shortcuts");
-                if (subNode != null)
-                    language.Settings.Shortcuts = subNode.InnerText;
-                subNode = node.SelectSingleNode("Shortcut");
-                if (subNode != null)
-                    language.Settings.Shortcut = subNode.InnerText;
-                subNode = node.SelectSingleNode("Control");
-                if (subNode != null)
-                    language.Settings.Control = subNode.InnerText;
-                subNode = node.SelectSingleNode("Alt");
-                if (subNode != null)
-                    language.Settings.Alt = subNode.InnerText;
-                subNode = node.SelectSingleNode("Shift");
-                if (subNode != null)
-                    language.Settings.Shift = subNode.InnerText;
-                subNode = node.SelectSingleNode("Key");
-                if (subNode != null)
-                    language.Settings.Key = subNode.InnerText;
-                subNode = node.SelectSingleNode("TextBox");
-                if (subNode != null)
-                    language.Settings.TextBox = subNode.InnerText;
-                subNode = node.SelectSingleNode("UpdateShortcut");
-                if (subNode != null)
-                    language.Settings.UpdateShortcut = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShortcutIsNotValid");
-                if (subNode != null)
-                    language.Settings.ShortcutIsNotValid = subNode.InnerText;
-                subNode = node.SelectSingleNode("ToggleDockUndockOfVideoControls");
-                if (subNode != null)
-                    language.Settings.ToggleDockUndockOfVideoControls = subNode.InnerText;
-                subNode = node.SelectSingleNode("CreateSetEndAddNewAndGoToNew");
-                if (subNode != null)
-                    language.Settings.CreateSetEndAddNewAndGoToNew = subNode.InnerText;
-                subNode = node.SelectSingleNode("AdjustViaEndAutoStartAndGoToNext");
-                if (subNode != null)
-                    language.Settings.AdjustViaEndAutoStartAndGoToNext = subNode.InnerText;
-                subNode = node.SelectSingleNode("AdjustSetStartAutoDurationAndGoToNext");
-                if (subNode != null)
-                    language.Settings.AdjustSetStartAutoDurationAndGoToNext = subNode.InnerText;
-                subNode = node.SelectSingleNode("AdjustSetEndNextStartAndGoToNext");
-                if (subNode != null)
-                    language.Settings.AdjustSetEndNextStartAndGoToNext = subNode.InnerText;
-                subNode = node.SelectSingleNode("AdjustStartDownEndUpAndGoToNext");
-                if (subNode != null)
-                    language.Settings.AdjustStartDownEndUpAndGoToNext = subNode.InnerText;
-                subNode = node.SelectSingleNode("AdjustSelected100MsForward");
-                if (subNode != null)
-                    language.Settings.AdjustSelected100MsForward = subNode.InnerText;
-                subNode = node.SelectSingleNode("AdjustSelected100MsBack");
-                if (subNode != null)
-                    language.Settings.AdjustSelected100MsBack = subNode.InnerText;
-                subNode = node.SelectSingleNode("AdjustSetStartTimeKeepDuration");
-                if (subNode != null)
-                    language.Settings.AdjustSetStartTimeKeepDuration = subNode.InnerText;
-                subNode = node.SelectSingleNode("AdjustSetEndAndOffsetTheRest");
-                if (subNode != null)
-                    language.Settings.AdjustSetEndAndOffsetTheRest = subNode.InnerText;
-                subNode = node.SelectSingleNode("AdjustSetEndAndOffsetTheRestAndGoToNext");
-                if (subNode != null)
-                    language.Settings.AdjustSetEndAndOffsetTheRestAndGoToNext = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainCreateStartDownEndUp");
-                if (subNode != null)
-                    language.Settings.MainCreateStartDownEndUp = subNode.InnerText;
-                subNode = node.SelectSingleNode("MergeDialogue");
-                if (subNode != null)
-                    language.Settings.MergeDialogue = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoToNext");
-                if (subNode != null)
-                    language.Settings.GoToNext = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoToPrevious");
-                if (subNode != null)
-                    language.Settings.GoToPrevious = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoToCurrentSubtitleStart");
-                if (subNode != null)
-                    language.Settings.GoToCurrentSubtitleStart = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoToCurrentSubtitleEnd");
-                if (subNode != null)
-                    language.Settings.GoToCurrentSubtitleEnd = subNode.InnerText;
-                subNode = node.SelectSingleNode("ToggleFocus");
-                if (subNode != null)
-                    language.Settings.ToggleFocus = subNode.InnerText;
-                subNode = node.SelectSingleNode("ToggleDialogueDashes");
-                if (subNode != null)
-                    language.Settings.ToggleDialogueDashes = subNode.InnerText;
-                subNode = node.SelectSingleNode("Alignment");
-                if (subNode != null)
-                    language.Settings.Alignment = subNode.InnerText;
-                subNode = node.SelectSingleNode("CopyTextOnly");
-                if (subNode != null)
-                    language.Settings.CopyTextOnly = subNode.InnerText;
-                subNode = node.SelectSingleNode("AutoDurationSelectedLines");
-                if (subNode != null)
-                    language.Settings.AutoDurationSelectedLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("ReverseStartAndEndingForRTL");
-                if (subNode != null)
-                    language.Settings.ReverseStartAndEndingForRTL = subNode.InnerText;
-                subNode = node.SelectSingleNode("VerticalZoom");
-                if (subNode != null)
-                    language.Settings.VerticalZoom = subNode.InnerText;
-                subNode = node.SelectSingleNode("VerticalZoomOut");
-                if (subNode != null)
-                    language.Settings.VerticalZoomOut = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformSeekSilenceForward");
-                if (subNode != null)
-                    language.Settings.WaveformSeekSilenceForward = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformSeekSilenceBack");
-                if (subNode != null)
-                    language.Settings.WaveformSeekSilenceBack = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformAddTextHere");
-                if (subNode != null)
-                    language.Settings.WaveformAddTextHere = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformPlayNewSelection");
-                if (subNode != null)
-                    language.Settings.WaveformPlayNewSelection = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformPlayFirstSelectedSubtitle");
-                if (subNode != null)
-                    language.Settings.WaveformPlayFirstSelectedSubtitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformFocusListView");
-                if (subNode != null)
-                    language.Settings.WaveformFocusListView = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoBack1Frame");
-                if (subNode != null)
-                    language.Settings.GoBack1Frame = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoForward1Frame");
-                if (subNode != null)
-                    language.Settings.GoForward1Frame = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoBack100Milliseconds");
-                if (subNode != null)
-                    language.Settings.GoBack100Milliseconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoForward100Milliseconds");
-                if (subNode != null)
-                    language.Settings.GoForward100Milliseconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoBack500Milliseconds");
-                if (subNode != null)
-                    language.Settings.GoBack500Milliseconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoForward500Milliseconds");
-                if (subNode != null)
-                    language.Settings.GoForward500Milliseconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoBack1Second");
-                if (subNode != null)
-                    language.Settings.GoBack1Second = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoForward1Second");
-                if (subNode != null)
-                    language.Settings.GoForward1Second = subNode.InnerText;
-                subNode = node.SelectSingleNode("TogglePlayPause");
-                if (subNode != null)
-                    language.Settings.TogglePlayPause = subNode.InnerText;
-                subNode = node.SelectSingleNode("Pause");
-                if (subNode != null)
-                    language.Settings.Pause = subNode.InnerText;
-                subNode = node.SelectSingleNode("Fullscreen");
-                if (subNode != null)
-                    language.Settings.Fullscreen = subNode.InnerText;
-                subNode = node.SelectSingleNode("CustomSearch1");
-                if (subNode != null)
-                    language.Settings.CustomSearch1 = subNode.InnerText;
-                subNode = node.SelectSingleNode("CustomSearch2");
-                if (subNode != null)
-                    language.Settings.CustomSearch2 = subNode.InnerText;
-                subNode = node.SelectSingleNode("CustomSearch3");
-                if (subNode != null)
-                    language.Settings.CustomSearch3 = subNode.InnerText;
-                subNode = node.SelectSingleNode("CustomSearch4");
-                if (subNode != null)
-                    language.Settings.CustomSearch4 = subNode.InnerText;
-                subNode = node.SelectSingleNode("CustomSearch5");
-                if (subNode != null)
-                    language.Settings.CustomSearch5 = subNode.InnerText;
-                subNode = node.SelectSingleNode("CustomSearch6");
-                if (subNode != null)
-                    language.Settings.CustomSearch6 = subNode.InnerText;
-                subNode = node.SelectSingleNode("SyntaxColoring");
-                if (subNode != null)
-                    language.Settings.SyntaxColoring = subNode.InnerText;
-                subNode = node.SelectSingleNode("ListViewSyntaxColoring");
-                if (subNode != null)
-                    language.Settings.ListViewSyntaxColoring = subNode.InnerText;
-                subNode = node.SelectSingleNode("SyntaxColorDurationIfTooSmall");
-                if (subNode != null)
-                    language.Settings.SyntaxColorDurationIfTooSmall = subNode.InnerText;
-                subNode = node.SelectSingleNode("SyntaxColorDurationIfTooLarge");
-                if (subNode != null)
-                    language.Settings.SyntaxColorDurationIfTooLarge = subNode.InnerText;
-                subNode = node.SelectSingleNode("SyntaxColorTextIfTooLong");
-                if (subNode != null)
-                    language.Settings.SyntaxColorTextIfTooLong = subNode.InnerText;
-                subNode = node.SelectSingleNode("SyntaxColorTextMoreThanXLines");
-                if (subNode != null)
-                    language.Settings.SyntaxColorTextMoreThanXLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("SyntaxColorOverlap");
-                if (subNode != null)
-                    language.Settings.SyntaxColorOverlap = subNode.InnerText;
-                subNode = node.SelectSingleNode("SyntaxErrorColor");
-                if (subNode != null)
-                    language.Settings.SyntaxErrorColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoToFirstSelectedLine");
-                if (subNode != null)
-                    language.Settings.GoToFirstSelectedLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("MergeSelectedLines");
-                if (subNode != null)
-                    language.Settings.MergeSelectedLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("ToggleTranslationMode");
-                if (subNode != null)
-                    language.Settings.ToggleTranslationMode = subNode.InnerText;
-                subNode = node.SelectSingleNode("SwitchOriginalAndTranslation");
-                if (subNode != null)
-                    language.Settings.SwitchOriginalAndTranslation = subNode.InnerText;
-                subNode = node.SelectSingleNode("MergeOriginalAndTranslation");
-                if (subNode != null)
-                    language.Settings.MergeOriginalAndTranslation = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShortcutIsAlreadyDefinedX");
-                if (subNode != null)
-                    language.Settings.ShortcutIsAlreadyDefinedX = subNode.InnerText;
-                subNode = node.SelectSingleNode("ToggleTranslationAndOriginalInPreviews");
-                if (subNode != null)
-                    language.Settings.ToggleTranslationAndOriginalInPreviews = subNode.InnerText;
-                subNode = node.SelectSingleNode("ListViewColumnDelete");
-                if (subNode != null)
-                    language.Settings.ListViewColumnDelete = subNode.InnerText;
-                subNode = node.SelectSingleNode("ListViewColumnInsert");
-                if (subNode != null)
-                    language.Settings.ListViewColumnInsert = subNode.InnerText;
-                subNode = node.SelectSingleNode("ListViewColumnPaste");
-                if (subNode != null)
-                    language.Settings.ListViewColumnPaste = subNode.InnerText;
-                subNode = node.SelectSingleNode("ListViewFocusWaveform");
-                if (subNode != null)
-                    language.Settings.ListViewFocusWaveform = subNode.InnerText;
-                subNode = node.SelectSingleNode("ListViewGoToNextError");
-                if (subNode != null)
-                    language.Settings.ListViewGoToNextError = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowBeamer");
-                if (subNode != null)
-                    language.Settings.ShowBeamer = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainTextBoxMoveLastWordDown");
-                if (subNode != null)
-                    language.Settings.MainTextBoxMoveLastWordDown = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordFromNextUp");
-                if (subNode != null)
-                    language.Settings.MainTextBoxMoveFirstWordFromNextUp = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainTextBoxSelectionToLower");
-                if (subNode != null)
-                    language.Settings.MainTextBoxSelectionToLower = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainTextBoxSelectionToUpper");
-                if (subNode != null)
-                    language.Settings.MainTextBoxSelectionToUpper = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainTextBoxAutoBreak");
-                if (subNode != null)
-                    language.Settings.MainTextBoxAutoBreak = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainTextBoxUnbreak");
-                if (subNode != null)
-                    language.Settings.MainTextBoxUnbreak = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainFileSaveAll");
-                if (subNode != null)
-                    language.Settings.MainFileSaveAll = subNode.InnerText;
-                subNode = node.SelectSingleNode("Miscellaneous");
-                if (subNode != null)
-                    language.Settings.Miscellaneous = subNode.InnerText;
-                subNode = node.SelectSingleNode("UseDoNotBreakAfterList");
-                if (subNode != null)
-                    language.Settings.UseDoNotBreakAfterList = subNode.InnerText;
-
-            }
-
             language.ShowEarlierLater = new Nikse.SubtitleEdit.Logic.LanguageStructure.ShowEarlierLater();
-            node = doc.DocumentElement.SelectSingleNode("ShowEarlierLater");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ShowEarlierLater.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("TitleAll");
-                if (subNode != null)
-                    language.ShowEarlierLater.TitleAll = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowEarlier");
-                if (subNode != null)
-                    language.ShowEarlierLater.ShowEarlier = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowLater");
-                if (subNode != null)
-                    language.ShowEarlierLater.ShowLater = subNode.InnerText;
-                subNode = node.SelectSingleNode("TotalAdjustmentX");
-                if (subNode != null)
-                    language.ShowEarlierLater.TotalAdjustmentX = subNode.InnerText;
-                subNode = node.SelectSingleNode("AllLines");
-                if (subNode != null)
-                    language.ShowEarlierLater.AllLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("SelectedLinesOnly");
-                if (subNode != null)
-                    language.ShowEarlierLater.SelectedLinesOnly = subNode.InnerText;
-                subNode = node.SelectSingleNode("SelectedLinesAndForward");
-                if (subNode != null)
-                    language.ShowEarlierLater.SelectedLinesAndForward = subNode.InnerText;
-
-            }
-
             language.ShowHistory = new Nikse.SubtitleEdit.Logic.LanguageStructure.ShowHistory();
-            node = doc.DocumentElement.SelectSingleNode("ShowHistory");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.ShowHistory.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("SelectRollbackPoint");
-                if (subNode != null)
-                    language.ShowHistory.SelectRollbackPoint = subNode.InnerText;
-                subNode = node.SelectSingleNode("Time");
-                if (subNode != null)
-                    language.ShowHistory.Time = subNode.InnerText;
-                subNode = node.SelectSingleNode("Description");
-                if (subNode != null)
-                    language.ShowHistory.Description = subNode.InnerText;
-                subNode = node.SelectSingleNode("CompareHistoryItems");
-                if (subNode != null)
-                    language.ShowHistory.CompareHistoryItems = subNode.InnerText;
-                subNode = node.SelectSingleNode("CompareWithCurrent");
-                if (subNode != null)
-                    language.ShowHistory.CompareWithCurrent = subNode.InnerText;
-                subNode = node.SelectSingleNode("Rollback");
-                if (subNode != null)
-                    language.ShowHistory.Rollback = subNode.InnerText;
-
-            }
-
             language.SpellCheck = new Nikse.SubtitleEdit.Logic.LanguageStructure.SpellCheck();
-            node = doc.DocumentElement.SelectSingleNode("SpellCheck");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.SpellCheck.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("FullText");
-                if (subNode != null)
-                    language.SpellCheck.FullText = subNode.InnerText;
-                subNode = node.SelectSingleNode("WordNotFound");
-                if (subNode != null)
-                    language.SpellCheck.WordNotFound = subNode.InnerText;
-                subNode = node.SelectSingleNode("Language");
-                if (subNode != null)
-                    language.SpellCheck.Language = subNode.InnerText;
-                subNode = node.SelectSingleNode("Change");
-                if (subNode != null)
-                    language.SpellCheck.Change = subNode.InnerText;
-                subNode = node.SelectSingleNode("ChangeAll");
-                if (subNode != null)
-                    language.SpellCheck.ChangeAll = subNode.InnerText;
-                subNode = node.SelectSingleNode("SkipOnce");
-                if (subNode != null)
-                    language.SpellCheck.SkipOnce = subNode.InnerText;
-                subNode = node.SelectSingleNode("SkipAll");
-                if (subNode != null)
-                    language.SpellCheck.SkipAll = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddToUserDictionary");
-                if (subNode != null)
-                    language.SpellCheck.AddToUserDictionary = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddToNamesAndIgnoreList");
-                if (subNode != null)
-                    language.SpellCheck.AddToNamesAndIgnoreList = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddToOcrReplaceList");
-                if (subNode != null)
-                    language.SpellCheck.AddToOcrReplaceList = subNode.InnerText;
-                subNode = node.SelectSingleNode("Abort");
-                if (subNode != null)
-                    language.SpellCheck.Abort = subNode.InnerText;
-                subNode = node.SelectSingleNode("Use");
-                if (subNode != null)
-                    language.SpellCheck.Use = subNode.InnerText;
-                subNode = node.SelectSingleNode("UseAlways");
-                if (subNode != null)
-                    language.SpellCheck.UseAlways = subNode.InnerText;
-                subNode = node.SelectSingleNode("Suggestions");
-                if (subNode != null)
-                    language.SpellCheck.Suggestions = subNode.InnerText;
-                subNode = node.SelectSingleNode("SpellCheckProgress");
-                if (subNode != null)
-                    language.SpellCheck.SpellCheckProgress = subNode.InnerText;
-                subNode = node.SelectSingleNode("EditWholeText");
-                if (subNode != null)
-                    language.SpellCheck.EditWholeText = subNode.InnerText;
-                subNode = node.SelectSingleNode("EditWordOnly");
-                if (subNode != null)
-                    language.SpellCheck.EditWordOnly = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddXToNamesEtc");
-                if (subNode != null)
-                    language.SpellCheck.AddXToNamesEtc = subNode.InnerText;
-                subNode = node.SelectSingleNode("AutoFixNames");
-                if (subNode != null)
-                    language.SpellCheck.AutoFixNames = subNode.InnerText;
-                subNode = node.SelectSingleNode("CheckOneLetterWords");
-                if (subNode != null)
-                    language.SpellCheck.CheckOneLetterWords = subNode.InnerText;
-                subNode = node.SelectSingleNode("TreatINQuoteAsING");
-                if (subNode != null)
-                    language.SpellCheck.TreatINQuoteAsING = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImageText");
-                if (subNode != null)
-                    language.SpellCheck.ImageText = subNode.InnerText;
-                subNode = node.SelectSingleNode("SpellCheckCompleted");
-                if (subNode != null)
-                    language.SpellCheck.SpellCheckCompleted = subNode.InnerText;
-                subNode = node.SelectSingleNode("SpellCheckAborted");
-                if (subNode != null)
-                    language.SpellCheck.SpellCheckAborted = subNode.InnerText;
-                subNode = node.SelectSingleNode("UndoX");
-                if (subNode != null)
-                    language.SpellCheck.UndoX = subNode.InnerText;
-
-            }
-
             language.Split = new Nikse.SubtitleEdit.Logic.LanguageStructure.Split();
-            node = doc.DocumentElement.SelectSingleNode("Split");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.Split.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("SplitOptions");
-                if (subNode != null)
-                    language.Split.SplitOptions = subNode.InnerText;
-                subNode = node.SelectSingleNode("Lines");
-                if (subNode != null)
-                    language.Split.Lines = subNode.InnerText;
-                subNode = node.SelectSingleNode("Characters");
-                if (subNode != null)
-                    language.Split.Characters = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfEqualParts");
-                if (subNode != null)
-                    language.Split.NumberOfEqualParts = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleInfo");
-                if (subNode != null)
-                    language.Split.SubtitleInfo = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfLinesX");
-                if (subNode != null)
-                    language.Split.NumberOfLinesX = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfCharactersX");
-                if (subNode != null)
-                    language.Split.NumberOfCharactersX = subNode.InnerText;
-                subNode = node.SelectSingleNode("Output");
-                if (subNode != null)
-                    language.Split.Output = subNode.InnerText;
-                subNode = node.SelectSingleNode("FileName");
-                if (subNode != null)
-                    language.Split.FileName = subNode.InnerText;
-                subNode = node.SelectSingleNode("OutputFolder");
-                if (subNode != null)
-                    language.Split.OutputFolder = subNode.InnerText;
-                subNode = node.SelectSingleNode("DoSplit");
-                if (subNode != null)
-                    language.Split.DoSplit = subNode.InnerText;
-                subNode = node.SelectSingleNode("Basic");
-                if (subNode != null)
-                    language.Split.Basic = subNode.InnerText;
-
-            }
-
             language.SplitLongLines = new Nikse.SubtitleEdit.Logic.LanguageStructure.SplitLongLines();
-            node = doc.DocumentElement.SelectSingleNode("SplitLongLines");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.SplitLongLines.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("SingleLineMaximumLength");
-                if (subNode != null)
-                    language.SplitLongLines.SingleLineMaximumLength = subNode.InnerText;
-                subNode = node.SelectSingleNode("LineMaximumLength");
-                if (subNode != null)
-                    language.SplitLongLines.LineMaximumLength = subNode.InnerText;
-                subNode = node.SelectSingleNode("LineContinuationBeginEndStrings");
-                if (subNode != null)
-                    language.SplitLongLines.LineContinuationBeginEndStrings = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfSplits");
-                if (subNode != null)
-                    language.SplitLongLines.NumberOfSplits = subNode.InnerText;
-                subNode = node.SelectSingleNode("LongestSingleLineIsXAtY");
-                if (subNode != null)
-                    language.SplitLongLines.LongestSingleLineIsXAtY = subNode.InnerText;
-                subNode = node.SelectSingleNode("LongestLineIsXAtY");
-                if (subNode != null)
-                    language.SplitLongLines.LongestLineIsXAtY = subNode.InnerText;
-
-            }
-
             language.SplitSubtitle = new Nikse.SubtitleEdit.Logic.LanguageStructure.SplitSubtitle();
-            node = doc.DocumentElement.SelectSingleNode("SplitSubtitle");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.SplitSubtitle.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Description1");
-                if (subNode != null)
-                    language.SplitSubtitle.Description1 = subNode.InnerText;
-                subNode = node.SelectSingleNode("Description2");
-                if (subNode != null)
-                    language.SplitSubtitle.Description2 = subNode.InnerText;
-                subNode = node.SelectSingleNode("Split");
-                if (subNode != null)
-                    language.SplitSubtitle.Split = subNode.InnerText;
-                subNode = node.SelectSingleNode("Done");
-                if (subNode != null)
-                    language.SplitSubtitle.Done = subNode.InnerText;
-                subNode = node.SelectSingleNode("NothingToSplit");
-                if (subNode != null)
-                    language.SplitSubtitle.NothingToSplit = subNode.InnerText;
-                subNode = node.SelectSingleNode("SavePartOneAs");
-                if (subNode != null)
-                    language.SplitSubtitle.SavePartOneAs = subNode.InnerText;
-                subNode = node.SelectSingleNode("SavePartTwoAs");
-                if (subNode != null)
-                    language.SplitSubtitle.SavePartTwoAs = subNode.InnerText;
-                subNode = node.SelectSingleNode("Part1");
-                if (subNode != null)
-                    language.SplitSubtitle.Part1 = subNode.InnerText;
-                subNode = node.SelectSingleNode("Part2");
-                if (subNode != null)
-                    language.SplitSubtitle.Part2 = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnableToSaveFileX");
-                if (subNode != null)
-                    language.SplitSubtitle.UnableToSaveFileX = subNode.InnerText;
-                subNode = node.SelectSingleNode("OverwriteExistingFiles");
-                if (subNode != null)
-                    language.SplitSubtitle.OverwriteExistingFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("FolderNotFoundX");
-                if (subNode != null)
-                    language.SplitSubtitle.FolderNotFoundX = subNode.InnerText;
-                subNode = node.SelectSingleNode("Untitled");
-                if (subNode != null)
-                    language.SplitSubtitle.Untitled = subNode.InnerText;
-
-            }
-
             language.StartNumberingFrom = new Nikse.SubtitleEdit.Logic.LanguageStructure.StartNumberingFrom();
-            node = doc.DocumentElement.SelectSingleNode("StartNumberingFrom");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.StartNumberingFrom.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartFromNumber");
-                if (subNode != null)
-                    language.StartNumberingFrom.StartFromNumber = subNode.InnerText;
-                subNode = node.SelectSingleNode("PleaseEnterAValidNumber");
-                if (subNode != null)
-                    language.StartNumberingFrom.PleaseEnterAValidNumber = subNode.InnerText;
-
-            }
-
             language.Statistics = new Nikse.SubtitleEdit.Logic.LanguageStructure.Statistics();
-            node = doc.DocumentElement.SelectSingleNode("Statistics");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.Statistics.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("TitleWithFileName");
-                if (subNode != null)
-                    language.Statistics.TitleWithFileName = subNode.InnerText;
-                subNode = node.SelectSingleNode("GeneralStatistics");
-                if (subNode != null)
-                    language.Statistics.GeneralStatistics = subNode.InnerText;
-                subNode = node.SelectSingleNode("MostUsed");
-                if (subNode != null)
-                    language.Statistics.MostUsed = subNode.InnerText;
-                subNode = node.SelectSingleNode("MostUsedLines");
-                if (subNode != null)
-                    language.Statistics.MostUsedLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("MostUsedWords");
-                if (subNode != null)
-                    language.Statistics.MostUsedWords = subNode.InnerText;
-                subNode = node.SelectSingleNode("NothingFound");
-                if (subNode != null)
-                    language.Statistics.NothingFound = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfLinesX");
-                if (subNode != null)
-                    language.Statistics.NumberOfLinesX = subNode.InnerText;
-                subNode = node.SelectSingleNode("LengthInFormatXinCharactersY");
-                if (subNode != null)
-                    language.Statistics.LengthInFormatXinCharactersY = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfCharactersInTextOnly");
-                if (subNode != null)
-                    language.Statistics.NumberOfCharactersInTextOnly = subNode.InnerText;
-                subNode = node.SelectSingleNode("TotalCharsPerSecond");
-                if (subNode != null)
-                    language.Statistics.TotalCharsPerSecond = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfItalicTags");
-                if (subNode != null)
-                    language.Statistics.NumberOfItalicTags = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfBoldTags");
-                if (subNode != null)
-                    language.Statistics.NumberOfBoldTags = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfUnderlineTags");
-                if (subNode != null)
-                    language.Statistics.NumberOfUnderlineTags = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfFontTags");
-                if (subNode != null)
-                    language.Statistics.NumberOfFontTags = subNode.InnerText;
-                subNode = node.SelectSingleNode("NumberOfAlignmentTags");
-                if (subNode != null)
-                    language.Statistics.NumberOfAlignmentTags = subNode.InnerText;
-                subNode = node.SelectSingleNode("LineLengthMinimum");
-                if (subNode != null)
-                    language.Statistics.LineLengthMinimum = subNode.InnerText;
-                subNode = node.SelectSingleNode("LineLengthMaximum");
-                if (subNode != null)
-                    language.Statistics.LineLengthMaximum = subNode.InnerText;
-                subNode = node.SelectSingleNode("LineLengthAvarage");
-                if (subNode != null)
-                    language.Statistics.LineLengthAvarage = subNode.InnerText;
-                subNode = node.SelectSingleNode("LinesPerSubtitleAvarage");
-                if (subNode != null)
-                    language.Statistics.LinesPerSubtitleAvarage = subNode.InnerText;
-                subNode = node.SelectSingleNode("SingleLineLengthMinimum");
-                if (subNode != null)
-                    language.Statistics.SingleLineLengthMinimum = subNode.InnerText;
-                subNode = node.SelectSingleNode("SingleLineLengthMaximum");
-                if (subNode != null)
-                    language.Statistics.SingleLineLengthMaximum = subNode.InnerText;
-                subNode = node.SelectSingleNode("SingleLineLengthAvarage");
-                if (subNode != null)
-                    language.Statistics.SingleLineLengthAvarage = subNode.InnerText;
-                subNode = node.SelectSingleNode("DurationMinimum");
-                if (subNode != null)
-                    language.Statistics.DurationMinimum = subNode.InnerText;
-                subNode = node.SelectSingleNode("DurationMaximum");
-                if (subNode != null)
-                    language.Statistics.DurationMaximum = subNode.InnerText;
-                subNode = node.SelectSingleNode("DurationAvarage");
-                if (subNode != null)
-                    language.Statistics.DurationAvarage = subNode.InnerText;
-
-            }
-
             language.SubStationAlphaProperties = new Nikse.SubtitleEdit.Logic.LanguageStructure.SubStationAlphaProperties();
-            node = doc.DocumentElement.SelectSingleNode("SubStationAlphaProperties");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("TitleSubstationAlpha");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.TitleSubstationAlpha = subNode.InnerText;
-                subNode = node.SelectSingleNode("Script");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.Script = subNode.InnerText;
-                subNode = node.SelectSingleNode("ScriptTitle");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.ScriptTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("OriginalScript");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.OriginalScript = subNode.InnerText;
-                subNode = node.SelectSingleNode("Translation");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.Translation = subNode.InnerText;
-                subNode = node.SelectSingleNode("Editing");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.Editing = subNode.InnerText;
-                subNode = node.SelectSingleNode("Timing");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.Timing = subNode.InnerText;
-                subNode = node.SelectSingleNode("SyncPoint");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.SyncPoint = subNode.InnerText;
-                subNode = node.SelectSingleNode("UpdatedBy");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.UpdatedBy = subNode.InnerText;
-                subNode = node.SelectSingleNode("UpdateDetails");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.UpdateDetails = subNode.InnerText;
-                subNode = node.SelectSingleNode("Resolution");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.Resolution = subNode.InnerText;
-                subNode = node.SelectSingleNode("VideoResolution");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.VideoResolution = subNode.InnerText;
-                subNode = node.SelectSingleNode("Options");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.Options = subNode.InnerText;
-                subNode = node.SelectSingleNode("WrapStyle");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.WrapStyle = subNode.InnerText;
-                subNode = node.SelectSingleNode("Collision");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.Collision = subNode.InnerText;
-                subNode = node.SelectSingleNode("ScaleBorderAndShadow");
-                if (subNode != null)
-                    language.SubStationAlphaProperties.ScaleBorderAndShadow = subNode.InnerText;
-
-            }
-
             language.SubStationAlphaStyles = new Nikse.SubtitleEdit.Logic.LanguageStructure.SubStationAlphaStyles();
-            node = doc.DocumentElement.SelectSingleNode("SubStationAlphaStyles");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("TitleSubstationAlpha");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.TitleSubstationAlpha = subNode.InnerText;
-                subNode = node.SelectSingleNode("Styles");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Styles = subNode.InnerText;
-                subNode = node.SelectSingleNode("Properties");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Properties = subNode.InnerText;
-                subNode = node.SelectSingleNode("Name");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Name = subNode.InnerText;
-                subNode = node.SelectSingleNode("Font");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Font = subNode.InnerText;
-                subNode = node.SelectSingleNode("FontName");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.FontName = subNode.InnerText;
-                subNode = node.SelectSingleNode("FontSize");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.FontSize = subNode.InnerText;
-                subNode = node.SelectSingleNode("UseCount");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.UseCount = subNode.InnerText;
-                subNode = node.SelectSingleNode("Primary");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Primary = subNode.InnerText;
-                subNode = node.SelectSingleNode("Secondary");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Secondary = subNode.InnerText;
-                subNode = node.SelectSingleNode("Tertiary");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Tertiary = subNode.InnerText;
-                subNode = node.SelectSingleNode("Outline");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Outline = subNode.InnerText;
-                subNode = node.SelectSingleNode("Shadow");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Shadow = subNode.InnerText;
-                subNode = node.SelectSingleNode("Back");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Back = subNode.InnerText;
-                subNode = node.SelectSingleNode("Alignment");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Alignment = subNode.InnerText;
-                subNode = node.SelectSingleNode("TopLeft");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.TopLeft = subNode.InnerText;
-                subNode = node.SelectSingleNode("TopCenter");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.TopCenter = subNode.InnerText;
-                subNode = node.SelectSingleNode("TopRight");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.TopRight = subNode.InnerText;
-                subNode = node.SelectSingleNode("MiddleLeft");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.MiddleLeft = subNode.InnerText;
-                subNode = node.SelectSingleNode("MiddleCenter");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.MiddleCenter = subNode.InnerText;
-                subNode = node.SelectSingleNode("MiddleRight");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.MiddleRight = subNode.InnerText;
-                subNode = node.SelectSingleNode("BottomLeft");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.BottomLeft = subNode.InnerText;
-                subNode = node.SelectSingleNode("BottomCenter");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.BottomCenter = subNode.InnerText;
-                subNode = node.SelectSingleNode("BottomRight");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.BottomRight = subNode.InnerText;
-                subNode = node.SelectSingleNode("Colors");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Colors = subNode.InnerText;
-                subNode = node.SelectSingleNode("Margins");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Margins = subNode.InnerText;
-                subNode = node.SelectSingleNode("MarginLeft");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.MarginLeft = subNode.InnerText;
-                subNode = node.SelectSingleNode("MarginRight");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.MarginRight = subNode.InnerText;
-                subNode = node.SelectSingleNode("MarginVertical");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.MarginVertical = subNode.InnerText;
-                subNode = node.SelectSingleNode("Border");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Border = subNode.InnerText;
-                subNode = node.SelectSingleNode("PlusShadow");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.PlusShadow = subNode.InnerText;
-                subNode = node.SelectSingleNode("OpaqueBox");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.OpaqueBox = subNode.InnerText;
-                subNode = node.SelectSingleNode("Import");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Import = subNode.InnerText;
-                subNode = node.SelectSingleNode("Export");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Export = subNode.InnerText;
-                subNode = node.SelectSingleNode("Copy");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Copy = subNode.InnerText;
-                subNode = node.SelectSingleNode("CopyOfY");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.CopyOfY = subNode.InnerText;
-                subNode = node.SelectSingleNode("CopyXOfY");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.CopyXOfY = subNode.InnerText;
-                subNode = node.SelectSingleNode("New");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.New = subNode.InnerText;
-                subNode = node.SelectSingleNode("Remove");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.Remove = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveAll");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.RemoveAll = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImportStyleFromFile");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.ImportStyleFromFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("ExportStyleToFile");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.ExportStyleToFile = subNode.InnerText;
-                subNode = node.SelectSingleNode("ChooseStyle");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.ChooseStyle = subNode.InnerText;
-                subNode = node.SelectSingleNode("StyleAlreadyExits");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.StyleAlreadyExits = subNode.InnerText;
-                subNode = node.SelectSingleNode("StyleXExportedToFileY");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.StyleXExportedToFileY = subNode.InnerText;
-                subNode = node.SelectSingleNode("StyleXImportedFromFileY");
-                if (subNode != null)
-                    language.SubStationAlphaStyles.StyleXImportedFromFileY = subNode.InnerText;
-
-            }
-
             language.PointSync = new Nikse.SubtitleEdit.Logic.LanguageStructure.PointSync();
-            node = doc.DocumentElement.SelectSingleNode("PointSync");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.PointSync.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("TitleViaOtherSubtitle");
-                if (subNode != null)
-                    language.PointSync.TitleViaOtherSubtitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("SyncHelp");
-                if (subNode != null)
-                    language.PointSync.SyncHelp = subNode.InnerText;
-                subNode = node.SelectSingleNode("SetSyncPoint");
-                if (subNode != null)
-                    language.PointSync.SetSyncPoint = subNode.InnerText;
-                subNode = node.SelectSingleNode("RemoveSyncPoint");
-                if (subNode != null)
-                    language.PointSync.RemoveSyncPoint = subNode.InnerText;
-                subNode = node.SelectSingleNode("SyncPointsX");
-                if (subNode != null)
-                    language.PointSync.SyncPointsX = subNode.InnerText;
-                subNode = node.SelectSingleNode("Info");
-                if (subNode != null)
-                    language.PointSync.Info = subNode.InnerText;
-                subNode = node.SelectSingleNode("ApplySync");
-                if (subNode != null)
-                    language.PointSync.ApplySync = subNode.InnerText;
-
-            }
-
             language.TransportStreamSubtitleChooser = new Nikse.SubtitleEdit.Logic.LanguageStructure.TransportStreamSubtitleChooser();
-            node = doc.DocumentElement.SelectSingleNode("TransportStreamSubtitleChooser");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.TransportStreamSubtitleChooser.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("PidLine");
-                if (subNode != null)
-                    language.TransportStreamSubtitleChooser.PidLine = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubLine");
-                if (subNode != null)
-                    language.TransportStreamSubtitleChooser.SubLine = subNode.InnerText;
-
-            }
-
             language.UnknownSubtitle = new Nikse.SubtitleEdit.Logic.LanguageStructure.UnknownSubtitle();
-            node = doc.DocumentElement.SelectSingleNode("UnknownSubtitle");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.UnknownSubtitle.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Message");
-                if (subNode != null)
-                    language.UnknownSubtitle.Message = subNode.InnerText;
-
-            }
-
             language.VisualSync = new Nikse.SubtitleEdit.Logic.LanguageStructure.VisualSync();
-            node = doc.DocumentElement.SelectSingleNode("VisualSync");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.VisualSync.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartScene");
-                if (subNode != null)
-                    language.VisualSync.StartScene = subNode.InnerText;
-                subNode = node.SelectSingleNode("EndScene");
-                if (subNode != null)
-                    language.VisualSync.EndScene = subNode.InnerText;
-                subNode = node.SelectSingleNode("Synchronize");
-                if (subNode != null)
-                    language.VisualSync.Synchronize = subNode.InnerText;
-                subNode = node.SelectSingleNode("HalfASecondBack");
-                if (subNode != null)
-                    language.VisualSync.HalfASecondBack = subNode.InnerText;
-                subNode = node.SelectSingleNode("ThreeSecondsBack");
-                if (subNode != null)
-                    language.VisualSync.ThreeSecondsBack = subNode.InnerText;
-                subNode = node.SelectSingleNode("PlayXSecondsAndBack");
-                if (subNode != null)
-                    language.VisualSync.PlayXSecondsAndBack = subNode.InnerText;
-                subNode = node.SelectSingleNode("FindText");
-                if (subNode != null)
-                    language.VisualSync.FindText = subNode.InnerText;
-                subNode = node.SelectSingleNode("GoToSubPosition");
-                if (subNode != null)
-                    language.VisualSync.GoToSubPosition = subNode.InnerText;
-                subNode = node.SelectSingleNode("KeepChangesTitle");
-                if (subNode != null)
-                    language.VisualSync.KeepChangesTitle = subNode.InnerText;
-                subNode = node.SelectSingleNode("KeepChangesMessage");
-                if (subNode != null)
-                    language.VisualSync.KeepChangesMessage = subNode.InnerText;
-                subNode = node.SelectSingleNode("SynchronizationDone");
-                if (subNode != null)
-                    language.VisualSync.SynchronizationDone = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartSceneMustComeBeforeEndScene");
-                if (subNode != null)
-                    language.VisualSync.StartSceneMustComeBeforeEndScene = subNode.InnerText;
-                subNode = node.SelectSingleNode("Tip");
-                if (subNode != null)
-                    language.VisualSync.Tip = subNode.InnerText;
-
-            }
-
             language.VobSubEditCharacters = new Nikse.SubtitleEdit.Logic.LanguageStructure.VobSubEditCharacters();
-            node = doc.DocumentElement.SelectSingleNode("VobSubEditCharacters");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.VobSubEditCharacters.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("ChooseCharacter");
-                if (subNode != null)
-                    language.VobSubEditCharacters.ChooseCharacter = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImageCompareFiles");
-                if (subNode != null)
-                    language.VobSubEditCharacters.ImageCompareFiles = subNode.InnerText;
-                subNode = node.SelectSingleNode("CurrentCompareImage");
-                if (subNode != null)
-                    language.VobSubEditCharacters.CurrentCompareImage = subNode.InnerText;
-                subNode = node.SelectSingleNode("TextAssociatedWithImage");
-                if (subNode != null)
-                    language.VobSubEditCharacters.TextAssociatedWithImage = subNode.InnerText;
-                subNode = node.SelectSingleNode("IsItalic");
-                if (subNode != null)
-                    language.VobSubEditCharacters.IsItalic = subNode.InnerText;
-                subNode = node.SelectSingleNode("Update");
-                if (subNode != null)
-                    language.VobSubEditCharacters.Update = subNode.InnerText;
-                subNode = node.SelectSingleNode("Delete");
-                if (subNode != null)
-                    language.VobSubEditCharacters.Delete = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImageDoubleSize");
-                if (subNode != null)
-                    language.VobSubEditCharacters.ImageDoubleSize = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImageFileNotFound");
-                if (subNode != null)
-                    language.VobSubEditCharacters.ImageFileNotFound = subNode.InnerText;
-                subNode = node.SelectSingleNode("Image");
-                if (subNode != null)
-                    language.VobSubEditCharacters.Image = subNode.InnerText;
-
-            }
-
             language.VobSubOcr = new Nikse.SubtitleEdit.Logic.LanguageStructure.VobSubOcr();
-            node = doc.DocumentElement.SelectSingleNode("VobSubOcr");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.VobSubOcr.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("TitleBluRay");
-                if (subNode != null)
-                    language.VobSubOcr.TitleBluRay = subNode.InnerText;
-                subNode = node.SelectSingleNode("OcrMethod");
-                if (subNode != null)
-                    language.VobSubOcr.OcrMethod = subNode.InnerText;
-                subNode = node.SelectSingleNode("OcrViaModi");
-                if (subNode != null)
-                    language.VobSubOcr.OcrViaModi = subNode.InnerText;
-                subNode = node.SelectSingleNode("OcrViaTesseract");
-                if (subNode != null)
-                    language.VobSubOcr.OcrViaTesseract = subNode.InnerText;
-                subNode = node.SelectSingleNode("OcrViaNOCR");
-                if (subNode != null)
-                    language.VobSubOcr.OcrViaNOCR = subNode.InnerText;
-                subNode = node.SelectSingleNode("Language");
-                if (subNode != null)
-                    language.VobSubOcr.Language = subNode.InnerText;
-                subNode = node.SelectSingleNode("OcrViaImageCompare");
-                if (subNode != null)
-                    language.VobSubOcr.OcrViaImageCompare = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImageDatabase");
-                if (subNode != null)
-                    language.VobSubOcr.ImageDatabase = subNode.InnerText;
-                subNode = node.SelectSingleNode("NoOfPixelsIsSpace");
-                if (subNode != null)
-                    language.VobSubOcr.NoOfPixelsIsSpace = subNode.InnerText;
-                subNode = node.SelectSingleNode("MaxErrorPercent");
-                if (subNode != null)
-                    language.VobSubOcr.MaxErrorPercent = subNode.InnerText;
-                subNode = node.SelectSingleNode("New");
-                if (subNode != null)
-                    language.VobSubOcr.New = subNode.InnerText;
-                subNode = node.SelectSingleNode("Edit");
-                if (subNode != null)
-                    language.VobSubOcr.Edit = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartOcr");
-                if (subNode != null)
-                    language.VobSubOcr.StartOcr = subNode.InnerText;
-                subNode = node.SelectSingleNode("Stop");
-                if (subNode != null)
-                    language.VobSubOcr.Stop = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartOcrFrom");
-                if (subNode != null)
-                    language.VobSubOcr.StartOcrFrom = subNode.InnerText;
-                subNode = node.SelectSingleNode("LoadingVobSubImages");
-                if (subNode != null)
-                    language.VobSubOcr.LoadingVobSubImages = subNode.InnerText;
-                subNode = node.SelectSingleNode("LoadingImageCompareDatabase");
-                if (subNode != null)
-                    language.VobSubOcr.LoadingImageCompareDatabase = subNode.InnerText;
-                subNode = node.SelectSingleNode("ConvertingImageCompareDatabase");
-                if (subNode != null)
-                    language.VobSubOcr.ConvertingImageCompareDatabase = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleImage");
-                if (subNode != null)
-                    language.VobSubOcr.SubtitleImage = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleText");
-                if (subNode != null)
-                    language.VobSubOcr.SubtitleText = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnableToCreateCharacterDatabaseFolder");
-                if (subNode != null)
-                    language.VobSubOcr.UnableToCreateCharacterDatabaseFolder = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleImageXofY");
-                if (subNode != null)
-                    language.VobSubOcr.SubtitleImageXofY = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImagePalette");
-                if (subNode != null)
-                    language.VobSubOcr.ImagePalette = subNode.InnerText;
-                subNode = node.SelectSingleNode("UseCustomColors");
-                if (subNode != null)
-                    language.VobSubOcr.UseCustomColors = subNode.InnerText;
-                subNode = node.SelectSingleNode("Transparent");
-                if (subNode != null)
-                    language.VobSubOcr.Transparent = subNode.InnerText;
-                subNode = node.SelectSingleNode("TransparentMinAlpha");
-                if (subNode != null)
-                    language.VobSubOcr.TransparentMinAlpha = subNode.InnerText;
-                subNode = node.SelectSingleNode("TransportStream");
-                if (subNode != null)
-                    language.VobSubOcr.TransportStream = subNode.InnerText;
-                subNode = node.SelectSingleNode("TransportStreamGrayscale");
-                if (subNode != null)
-                    language.VobSubOcr.TransportStreamGrayscale = subNode.InnerText;
-                subNode = node.SelectSingleNode("TransportStreamGetColor");
-                if (subNode != null)
-                    language.VobSubOcr.TransportStreamGetColor = subNode.InnerText;
-                subNode = node.SelectSingleNode("PromptForUnknownWords");
-                if (subNode != null)
-                    language.VobSubOcr.PromptForUnknownWords = subNode.InnerText;
-                subNode = node.SelectSingleNode("TryToGuessUnkownWords");
-                if (subNode != null)
-                    language.VobSubOcr.TryToGuessUnkownWords = subNode.InnerText;
-                subNode = node.SelectSingleNode("AutoBreakSubtitleIfMoreThanTwoLines");
-                if (subNode != null)
-                    language.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("AllFixes");
-                if (subNode != null)
-                    language.VobSubOcr.AllFixes = subNode.InnerText;
-                subNode = node.SelectSingleNode("GuessesUsed");
-                if (subNode != null)
-                    language.VobSubOcr.GuessesUsed = subNode.InnerText;
-                subNode = node.SelectSingleNode("UnknownWords");
-                if (subNode != null)
-                    language.VobSubOcr.UnknownWords = subNode.InnerText;
-                subNode = node.SelectSingleNode("OcrAutoCorrectionSpellchecking");
-                if (subNode != null)
-                    language.VobSubOcr.OcrAutoCorrectionSpellchecking = subNode.InnerText;
-                subNode = node.SelectSingleNode("FixOcrErrors");
-                if (subNode != null)
-                    language.VobSubOcr.FixOcrErrors = subNode.InnerText;
-                subNode = node.SelectSingleNode("ImportTextWithMatchingTimeCodes");
-                if (subNode != null)
-                    language.VobSubOcr.ImportTextWithMatchingTimeCodes = subNode.InnerText;
-                subNode = node.SelectSingleNode("SaveSubtitleImageAs");
-                if (subNode != null)
-                    language.VobSubOcr.SaveSubtitleImageAs = subNode.InnerText;
-                subNode = node.SelectSingleNode("SaveAllSubtitleImagesAsBdnXml");
-                if (subNode != null)
-                    language.VobSubOcr.SaveAllSubtitleImagesAsBdnXml = subNode.InnerText;
-                subNode = node.SelectSingleNode("SaveAllSubtitleImagesWithHtml");
-                if (subNode != null)
-                    language.VobSubOcr.SaveAllSubtitleImagesWithHtml = subNode.InnerText;
-                subNode = node.SelectSingleNode("XImagesSavedInY");
-                if (subNode != null)
-                    language.VobSubOcr.XImagesSavedInY = subNode.InnerText;
-                subNode = node.SelectSingleNode("TryModiForUnknownWords");
-                if (subNode != null)
-                    language.VobSubOcr.TryModiForUnknownWords = subNode.InnerText;
-                subNode = node.SelectSingleNode("DictionaryX");
-                if (subNode != null)
-                    language.VobSubOcr.DictionaryX = subNode.InnerText;
-                subNode = node.SelectSingleNode("RightToLeft");
-                if (subNode != null)
-                    language.VobSubOcr.RightToLeft = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowOnlyForcedSubtitles");
-                if (subNode != null)
-                    language.VobSubOcr.ShowOnlyForcedSubtitles = subNode.InnerText;
-                subNode = node.SelectSingleNode("UseTimeCodesFromIdx");
-                if (subNode != null)
-                    language.VobSubOcr.UseTimeCodesFromIdx = subNode.InnerText;
-                subNode = node.SelectSingleNode("NoMatch");
-                if (subNode != null)
-                    language.VobSubOcr.NoMatch = subNode.InnerText;
-                subNode = node.SelectSingleNode("AutoTransparentBackground");
-                if (subNode != null)
-                    language.VobSubOcr.AutoTransparentBackground = subNode.InnerText;
-                subNode = node.SelectSingleNode("InspectCompareMatchesForCurrentImage");
-                if (subNode != null)
-                    language.VobSubOcr.InspectCompareMatchesForCurrentImage = subNode.InnerText;
-                subNode = node.SelectSingleNode("EditLastAdditions");
-                if (subNode != null)
-                    language.VobSubOcr.EditLastAdditions = subNode.InnerText;
-
-            }
-
             language.VobSubOcrCharacter = new Nikse.SubtitleEdit.Logic.LanguageStructure.VobSubOcrCharacter();
-            node = doc.DocumentElement.SelectSingleNode("VobSubOcrCharacter");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.VobSubOcrCharacter.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShrinkSelection");
-                if (subNode != null)
-                    language.VobSubOcrCharacter.ShrinkSelection = subNode.InnerText;
-                subNode = node.SelectSingleNode("ExpandSelection");
-                if (subNode != null)
-                    language.VobSubOcrCharacter.ExpandSelection = subNode.InnerText;
-                subNode = node.SelectSingleNode("SubtitleImage");
-                if (subNode != null)
-                    language.VobSubOcrCharacter.SubtitleImage = subNode.InnerText;
-                subNode = node.SelectSingleNode("Characters");
-                if (subNode != null)
-                    language.VobSubOcrCharacter.Characters = subNode.InnerText;
-                subNode = node.SelectSingleNode("CharactersAsText");
-                if (subNode != null)
-                    language.VobSubOcrCharacter.CharactersAsText = subNode.InnerText;
-                subNode = node.SelectSingleNode("Italic");
-                if (subNode != null)
-                    language.VobSubOcrCharacter.Italic = subNode.InnerText;
-                subNode = node.SelectSingleNode("Abort");
-                if (subNode != null)
-                    language.VobSubOcrCharacter.Abort = subNode.InnerText;
-                subNode = node.SelectSingleNode("Skip");
-                if (subNode != null)
-                    language.VobSubOcrCharacter.Skip = subNode.InnerText;
-                subNode = node.SelectSingleNode("Nordic");
-                if (subNode != null)
-                    language.VobSubOcrCharacter.Nordic = subNode.InnerText;
-                subNode = node.SelectSingleNode("Spanish");
-                if (subNode != null)
-                    language.VobSubOcrCharacter.Spanish = subNode.InnerText;
-                subNode = node.SelectSingleNode("German");
-                if (subNode != null)
-                    language.VobSubOcrCharacter.German = subNode.InnerText;
-                subNode = node.SelectSingleNode("AutoSubmitOnFirstChar");
-                if (subNode != null)
-                    language.VobSubOcrCharacter.AutoSubmitOnFirstChar = subNode.InnerText;
-                subNode = node.SelectSingleNode("EditLastX");
-                if (subNode != null)
-                    language.VobSubOcrCharacter.EditLastX = subNode.InnerText;
-
-            }
-
             language.VobSubOcrCharacterInspect = new Nikse.SubtitleEdit.Logic.LanguageStructure.VobSubOcrCharacterInspect();
-            node = doc.DocumentElement.SelectSingleNode("VobSubOcrCharacterInspect");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.VobSubOcrCharacterInspect.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("InspectItems");
-                if (subNode != null)
-                    language.VobSubOcrCharacterInspect.InspectItems = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddBetterMatch");
-                if (subNode != null)
-                    language.VobSubOcrCharacterInspect.AddBetterMatch = subNode.InnerText;
-
-            }
-
             language.VobSubOcrNewFolder = new Nikse.SubtitleEdit.Logic.LanguageStructure.VobSubOcrNewFolder();
-            node = doc.DocumentElement.SelectSingleNode("VobSubOcrNewFolder");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.VobSubOcrNewFolder.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("Message");
-                if (subNode != null)
-                    language.VobSubOcrNewFolder.Message = subNode.InnerText;
-
-            }
-
             language.WaveForm = new Nikse.SubtitleEdit.Logic.LanguageStructure.WaveForm();
-            node = doc.DocumentElement.SelectSingleNode("WaveForm");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("ClickToAddWaveForm");
-                if (subNode != null)
-                    language.WaveForm.ClickToAddWaveForm = subNode.InnerText;
-                subNode = node.SelectSingleNode("ClickToAddWaveformAndSpectrogram");
-                if (subNode != null)
-                    language.WaveForm.ClickToAddWaveformAndSpectrogram = subNode.InnerText;
-                subNode = node.SelectSingleNode("Seconds");
-                if (subNode != null)
-                    language.WaveForm.Seconds = subNode.InnerText;
-                subNode = node.SelectSingleNode("ZoomIn");
-                if (subNode != null)
-                    language.WaveForm.ZoomIn = subNode.InnerText;
-                subNode = node.SelectSingleNode("ZoomOut");
-                if (subNode != null)
-                    language.WaveForm.ZoomOut = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddParagraphHere");
-                if (subNode != null)
-                    language.WaveForm.AddParagraphHere = subNode.InnerText;
-                subNode = node.SelectSingleNode("AddParagraphHereAndPasteText");
-                if (subNode != null)
-                    language.WaveForm.AddParagraphHereAndPasteText = subNode.InnerText;
-                subNode = node.SelectSingleNode("FocusTextBox");
-                if (subNode != null)
-                    language.WaveForm.FocusTextBox = subNode.InnerText;
-                subNode = node.SelectSingleNode("DeleteParagraph");
-                if (subNode != null)
-                    language.WaveForm.DeleteParagraph = subNode.InnerText;
-                subNode = node.SelectSingleNode("Split");
-                if (subNode != null)
-                    language.WaveForm.Split = subNode.InnerText;
-                subNode = node.SelectSingleNode("SplitAtCursor");
-                if (subNode != null)
-                    language.WaveForm.SplitAtCursor = subNode.InnerText;
-                subNode = node.SelectSingleNode("MergeWithPrevious");
-                if (subNode != null)
-                    language.WaveForm.MergeWithPrevious = subNode.InnerText;
-                subNode = node.SelectSingleNode("MergeWithNext");
-                if (subNode != null)
-                    language.WaveForm.MergeWithNext = subNode.InnerText;
-                subNode = node.SelectSingleNode("PlaySelection");
-                if (subNode != null)
-                    language.WaveForm.PlaySelection = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowWaveformAndSpectrogram");
-                if (subNode != null)
-                    language.WaveForm.ShowWaveformAndSpectrogram = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowWaveformOnly");
-                if (subNode != null)
-                    language.WaveForm.ShowWaveformOnly = subNode.InnerText;
-                subNode = node.SelectSingleNode("ShowSpectrogramOnly");
-                if (subNode != null)
-                    language.WaveForm.ShowSpectrogramOnly = subNode.InnerText;
-                subNode = node.SelectSingleNode("GuessTimeCodes");
-                if (subNode != null)
-                    language.WaveForm.GuessTimeCodes = subNode.InnerText;
-                subNode = node.SelectSingleNode("SeekSilence");
-                if (subNode != null)
-                    language.WaveForm.SeekSilence = subNode.InnerText;
-
-            }
-
             language.WaveFormGenerateTimeCodes = new Nikse.SubtitleEdit.Logic.LanguageStructure.WaveFormGenerateTimeCodes();
-            node = doc.DocumentElement.SelectSingleNode("WaveFormGenerateTimeCodes");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.WaveFormGenerateTimeCodes.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("StartFrom");
-                if (subNode != null)
-                    language.WaveFormGenerateTimeCodes.StartFrom = subNode.InnerText;
-                subNode = node.SelectSingleNode("CurrentVideoPosition");
-                if (subNode != null)
-                    language.WaveFormGenerateTimeCodes.CurrentVideoPosition = subNode.InnerText;
-                subNode = node.SelectSingleNode("Beginning");
-                if (subNode != null)
-                    language.WaveFormGenerateTimeCodes.Beginning = subNode.InnerText;
-                subNode = node.SelectSingleNode("DeleteLines");
-                if (subNode != null)
-                    language.WaveFormGenerateTimeCodes.DeleteLines = subNode.InnerText;
-                subNode = node.SelectSingleNode("FromCurrentVideoPosition");
-                if (subNode != null)
-                    language.WaveFormGenerateTimeCodes.FromCurrentVideoPosition = subNode.InnerText;
-                subNode = node.SelectSingleNode("DetectOptions");
-                if (subNode != null)
-                    language.WaveFormGenerateTimeCodes.DetectOptions = subNode.InnerText;
-                subNode = node.SelectSingleNode("ScanBlocksOfMs");
-                if (subNode != null)
-                    language.WaveFormGenerateTimeCodes.ScanBlocksOfMs = subNode.InnerText;
-                subNode = node.SelectSingleNode("BlockAverageVolMin1");
-                if (subNode != null)
-                    language.WaveFormGenerateTimeCodes.BlockAverageVolMin1 = subNode.InnerText;
-                subNode = node.SelectSingleNode("BlockAverageVolMin2");
-                if (subNode != null)
-                    language.WaveFormGenerateTimeCodes.BlockAverageVolMin2 = subNode.InnerText;
-                subNode = node.SelectSingleNode("BlockAverageVolMax1");
-                if (subNode != null)
-                    language.WaveFormGenerateTimeCodes.BlockAverageVolMax1 = subNode.InnerText;
-                subNode = node.SelectSingleNode("BlockAverageVolMax2");
-                if (subNode != null)
-                    language.WaveFormGenerateTimeCodes.BlockAverageVolMax2 = subNode.InnerText;
-                subNode = node.SelectSingleNode("SplitLongLinesAt1");
-                if (subNode != null)
-                    language.WaveFormGenerateTimeCodes.SplitLongLinesAt1 = subNode.InnerText;
-                subNode = node.SelectSingleNode("SplitLongLinesAt2");
-                if (subNode != null)
-                    language.WaveFormGenerateTimeCodes.SplitLongLinesAt2 = subNode.InnerText;
-                subNode = node.SelectSingleNode("Other");
-                if (subNode != null)
-                    language.WaveFormGenerateTimeCodes.Other = subNode.InnerText;
-
-            }
-
             language.WebVttNewVoice = new Nikse.SubtitleEdit.Logic.LanguageStructure.WebVttNewVoice();
-            node = doc.DocumentElement.SelectSingleNode("WebVttNewVoice");
-            if (node != null)
+
+            using (XmlReader reader = XmlReader.Create(stream))
             {
-                subNode = node.SelectSingleNode("Title");
-                if (subNode != null)
-                    language.WebVttNewVoice.Title = subNode.InnerText;
-                subNode = node.SelectSingleNode("VoiceName");
-                if (subNode != null)
-                    language.WebVttNewVoice.VoiceName = subNode.InnerText;
+                while (reader.Read())
+                {
+                    if (reader.NodeType == XmlNodeType.Element)
+                    {
+                        if (name.Length > 0 || reader.Name != "Language")
+                            name = (name + "/" + reader.Name).TrimStart('/');
+                    }
+                    else if (reader.NodeType == XmlNodeType.EndElement)
+                    {
+                        int idx = name.LastIndexOf("/");
+                        if (idx > 0)
+                            name = name.Remove(idx);
+                        else
+                            name = string.Empty;
+                    }
+                    else if (reader.NodeType == XmlNodeType.Text)
+                    {
+                        SetValue(language, reader, name);
+                    }
+                }
+            }
+            stream.Close();
+            return language;
+        }
+
+        private static void SetValue(Language language, XmlReader reader, string name)
+        {
+            switch (name)
+            {
+                case "Name":
+                    language.Name = reader.Value;
+                    break;
+                case "General/Title":
+                    language.General.Title = reader.Value;
+                    break;
+                case "General/Version":
+                    language.General.Version = reader.Value;
+                    break;
+                case "General/TranslatedBy":
+                    language.General.TranslatedBy = reader.Value;
+                    break;
+                case "General/CultureName":
+                    language.General.CultureName = reader.Value;
+                    break;
+                case "General/HelpFile":
+                    language.General.HelpFile = reader.Value;
+                    break;
+                case "General/OK":
+                    language.General.OK = reader.Value;
+                    break;
+                case "General/Cancel":
+                    language.General.Cancel = reader.Value;
+                    break;
+                case "General/Apply":
+                    language.General.Apply = reader.Value;
+                    break;
+                case "General/None":
+                    language.General.None = reader.Value;
+                    break;
+                case "General/All":
+                    language.General.All = reader.Value;
+                    break;
+                case "General/Preview":
+                    language.General.Preview = reader.Value;
+                    break;
+                case "General/SubtitleFiles":
+                    language.General.SubtitleFiles = reader.Value;
+                    break;
+                case "General/AllFiles":
+                    language.General.AllFiles = reader.Value;
+                    break;
+                case "General/VideoFiles":
+                    language.General.VideoFiles = reader.Value;
+                    break;
+                case "General/AudioFiles":
+                    language.General.AudioFiles = reader.Value;
+                    break;
+                case "General/OpenSubtitle":
+                    language.General.OpenSubtitle = reader.Value;
+                    break;
+                case "General/OpenVideoFile":
+                    language.General.OpenVideoFile = reader.Value;
+                    break;
+                case "General/OpenVideoFileTitle":
+                    language.General.OpenVideoFileTitle = reader.Value;
+                    break;
+                case "General/NoVideoLoaded":
+                    language.General.NoVideoLoaded = reader.Value;
+                    break;
+                case "General/VideoInformation":
+                    language.General.VideoInformation = reader.Value;
+                    break;
+                case "General/PositionX":
+                    language.General.PositionX = reader.Value;
+                    break;
+                case "General/StartTime":
+                    language.General.StartTime = reader.Value;
+                    break;
+                case "General/EndTime":
+                    language.General.EndTime = reader.Value;
+                    break;
+                case "General/Duration":
+                    language.General.Duration = reader.Value;
+                    break;
+                case "General/NumberSymbol":
+                    language.General.NumberSymbol = reader.Value;
+                    break;
+                case "General/Number":
+                    language.General.Number = reader.Value;
+                    break;
+                case "General/Text":
+                    language.General.Text = reader.Value;
+                    break;
+                case "General/HourMinutesSecondsMilliseconds":
+                    language.General.HourMinutesSecondsMilliseconds = reader.Value;
+                    break;
+                case "General/Bold":
+                    language.General.Bold = reader.Value;
+                    break;
+                case "General/Italic":
+                    language.General.Italic = reader.Value;
+                    break;
+                case "General/Underline":
+                    language.General.Underline = reader.Value;
+                    break;
+                case "General/Visible":
+                    language.General.Visible = reader.Value;
+                    break;
+                case "General/FrameRate":
+                    language.General.FrameRate = reader.Value;
+                    break;
+                case "General/Name":
+                    language.General.Name = reader.Value;
+                    break;
+                case "General/FileNameXAndSize":
+                    language.General.FileNameXAndSize = reader.Value;
+                    break;
+                case "General/ResolutionX":
+                    language.General.ResolutionX = reader.Value;
+                    break;
+                case "General/FrameRateX":
+                    language.General.FrameRateX = reader.Value;
+                    break;
+                case "General/TotalFramesX":
+                    language.General.TotalFramesX = reader.Value;
+                    break;
+                case "General/VideoEncodingX":
+                    language.General.VideoEncodingX = reader.Value;
+                    break;
+                case "General/SingleLineLengths":
+                    language.General.SingleLineLengths = reader.Value;
+                    break;
+                case "General/TotalLengthX":
+                    language.General.TotalLengthX = reader.Value;
+                    break;
+                case "General/TotalLengthXSplitLine":
+                    language.General.TotalLengthXSplitLine = reader.Value;
+                    break;
+                case "General/SplitLine":
+                    language.General.SplitLine = reader.Value;
+                    break;
+                case "General/NotAvailable":
+                    language.General.NotAvailable = reader.Value;
+                    break;
+                case "General/OverlapPreviousLineX":
+                    language.General.OverlapPreviousLineX = reader.Value;
+                    break;
+                case "General/OverlapX":
+                    language.General.OverlapX = reader.Value;
+                    break;
+                case "General/OverlapNextX":
+                    language.General.OverlapNextX = reader.Value;
+                    break;
+                case "General/Negative":
+                    language.General.Negative = reader.Value;
+                    break;
+                case "General/RegularExpressionIsNotValid":
+                    language.General.RegularExpressionIsNotValid = reader.Value;
+                    break;
+                case "General/SubtitleSaved":
+                    language.General.SubtitleSaved = reader.Value;
+                    break;
+                case "General/CurrentSubtitle":
+                    language.General.CurrentSubtitle = reader.Value;
+                    break;
+                case "General/OriginalText":
+                    language.General.OriginalText = reader.Value;
+                    break;
+                case "General/OpenOriginalSubtitleFile":
+                    language.General.OpenOriginalSubtitleFile = reader.Value;
+                    break;
+                case "General/PleaseWait":
+                    language.General.PleaseWait = reader.Value;
+                    break;
+                case "General/SessionKey":
+                    language.General.SessionKey = reader.Value;
+                    break;
+                case "General/UserName":
+                    language.General.UserName = reader.Value;
+                    break;
+                case "General/UserNameAlreadyInUse":
+                    language.General.UserNameAlreadyInUse = reader.Value;
+                    break;
+                case "General/WebServiceUrl":
+                    language.General.WebServiceUrl = reader.Value;
+                    break;
+                case "General/IP":
+                    language.General.IP = reader.Value;
+                    break;
+                case "General/VideoWindowTitle":
+                    language.General.VideoWindowTitle = reader.Value;
+                    break;
+                case "General/AudioWindowTitle":
+                    language.General.AudioWindowTitle = reader.Value;
+                    break;
+                case "General/ControlsWindowTitle":
+                    language.General.ControlsWindowTitle = reader.Value;
+                    break;
+                case "General/Advanced":
+                    language.General.Advanced = reader.Value;
+                    break;
+                case "General/Style":
+                    language.General.Style = reader.Value;
+                    break;
+                case "General/Class":
+                    language.General.Class = reader.Value;
+                    break;
+                case "General/GeneralText":
+                    language.General.GeneralText = reader.Value;
+                    break;
+                case "General/LineNumber":
+                    language.General.LineNumber = reader.Value;
+                    break;
+                case "General/Before":
+                    language.General.Before = reader.Value;
+                    break;
+                case "General/After":
+                    language.General.After = reader.Value;
+                    break;
+                case "General/Size":
+                    language.General.Size = reader.Value;
+                    break;
+                case "About/Title":
+                    language.About.Title = reader.Value;
+                    break;
+                case "About/AboutText1":
+                    language.About.AboutText1 = reader.Value;
+                    break;
+                case "AddToNames/Title":
+                    language.AddToNames.Title = reader.Value;
+                    break;
+                case "AddToNames/Description":
+                    language.AddToNames.Description = reader.Value;
+                    break;
+                case "AddToOcrReplaceList/Title":
+                    language.AddToOcrReplaceList.Title = reader.Value;
+                    break;
+                case "AddToOcrReplaceList/Description":
+                    language.AddToOcrReplaceList.Description = reader.Value;
+                    break;
+                case "AddToUserDictionary/Title":
+                    language.AddToUserDictionary.Title = reader.Value;
+                    break;
+                case "AddToUserDictionary/Description":
+                    language.AddToUserDictionary.Description = reader.Value;
+                    break;
+                case "AddWaveForm/Title":
+                    language.AddWaveForm.Title = reader.Value;
+                    break;
+                case "AddWaveForm/SourceVideoFile":
+                    language.AddWaveForm.SourceVideoFile = reader.Value;
+                    break;
+                case "AddWaveForm/GenerateWaveFormData":
+                    language.AddWaveForm.GenerateWaveFormData = reader.Value;
+                    break;
+                case "AddWaveForm/PleaseWait":
+                    language.AddWaveForm.PleaseWait = reader.Value;
+                    break;
+                case "AddWaveForm/VlcMediaPlayerNotFoundTitle":
+                    language.AddWaveForm.VlcMediaPlayerNotFoundTitle = reader.Value;
+                    break;
+                case "AddWaveForm/VlcMediaPlayerNotFound":
+                    language.AddWaveForm.VlcMediaPlayerNotFound = reader.Value;
+                    break;
+                case "AddWaveForm/GoToVlcMediaPlayerHomePage":
+                    language.AddWaveForm.GoToVlcMediaPlayerHomePage = reader.Value;
+                    break;
+                case "AddWaveForm/GeneratingPeakFile":
+                    language.AddWaveForm.GeneratingPeakFile = reader.Value;
+                    break;
+                case "AddWaveForm/GeneratingSpectrogram":
+                    language.AddWaveForm.GeneratingSpectrogram = reader.Value;
+                    break;
+                case "AddWaveForm/ExtractingSeconds":
+                    language.AddWaveForm.ExtractingSeconds = reader.Value;
+                    break;
+                case "AddWaveForm/ExtractingMinutes":
+                    language.AddWaveForm.ExtractingMinutes = reader.Value;
+                    break;
+                case "AdjustDisplayDuration/Title":
+                    language.AdjustDisplayDuration.Title = reader.Value;
+                    break;
+                case "AdjustDisplayDuration/AdjustVia":
+                    language.AdjustDisplayDuration.AdjustVia = reader.Value;
+                    break;
+                case "AdjustDisplayDuration/Seconds":
+                    language.AdjustDisplayDuration.Seconds = reader.Value;
+                    break;
+                case "AdjustDisplayDuration/Percent":
+                    language.AdjustDisplayDuration.Percent = reader.Value;
+                    break;
+                case "AdjustDisplayDuration/Recalculate":
+                    language.AdjustDisplayDuration.Recalculate = reader.Value;
+                    break;
+                case "AdjustDisplayDuration/AddSeconds":
+                    language.AdjustDisplayDuration.AddSeconds = reader.Value;
+                    break;
+                case "AdjustDisplayDuration/SetAsPercent":
+                    language.AdjustDisplayDuration.SetAsPercent = reader.Value;
+                    break;
+                case "AdjustDisplayDuration/Note":
+                    language.AdjustDisplayDuration.Note = reader.Value;
+                    break;
+                case "AdjustDisplayDuration/PleaseSelectAValueFromTheDropDownList":
+                    language.AdjustDisplayDuration.PleaseSelectAValueFromTheDropDownList = reader.Value;
+                    break;
+                case "AdjustDisplayDuration/PleaseChoose":
+                    language.AdjustDisplayDuration.PleaseChoose = reader.Value;
+                    break;
+                case "ApplyDurationLimits/Title":
+                    language.ApplyDurationLimits.Title = reader.Value;
+                    break;
+                case "ApplyDurationLimits/FixesAvailable":
+                    language.ApplyDurationLimits.FixesAvailable = reader.Value;
+                    break;
+                case "ApplyDurationLimits/UnableToFix":
+                    language.ApplyDurationLimits.UnableToFix = reader.Value;
+                    break;
+                case "AutoBreakUnbreakLines/TitleAutoBreak":
+                    language.AutoBreakUnbreakLines.TitleAutoBreak = reader.Value;
+                    break;
+                case "AutoBreakUnbreakLines/TitleUnbreak":
+                    language.AutoBreakUnbreakLines.TitleUnbreak = reader.Value;
+                    break;
+                case "AutoBreakUnbreakLines/LinesFoundX":
+                    language.AutoBreakUnbreakLines.LinesFoundX = reader.Value;
+                    break;
+                case "AutoBreakUnbreakLines/OnlyBreakLinesLongerThan":
+                    language.AutoBreakUnbreakLines.OnlyBreakLinesLongerThan = reader.Value;
+                    break;
+                case "AutoBreakUnbreakLines/OnlyUnbreakLinesLongerThan":
+                    language.AutoBreakUnbreakLines.OnlyUnbreakLinesLongerThan = reader.Value;
+                    break;
+                case "BatchConvert/Title":
+                    language.BatchConvert.Title = reader.Value;
+                    break;
+                case "BatchConvert/Input":
+                    language.BatchConvert.Input = reader.Value;
+                    break;
+                case "BatchConvert/InputDescription":
+                    language.BatchConvert.InputDescription = reader.Value;
+                    break;
+                case "BatchConvert/Status":
+                    language.BatchConvert.Status = reader.Value;
+                    break;
+                case "BatchConvert/Output":
+                    language.BatchConvert.Output = reader.Value;
+                    break;
+                case "BatchConvert/ChooseOutputFolder":
+                    language.BatchConvert.ChooseOutputFolder = reader.Value;
+                    break;
+                case "BatchConvert/OverwriteExistingFiles":
+                    language.BatchConvert.OverwriteExistingFiles = reader.Value;
+                    break;
+                case "BatchConvert/Style":
+                    language.BatchConvert.Style = reader.Value;
+                    break;
+                case "BatchConvert/ConvertOptions":
+                    language.BatchConvert.ConvertOptions = reader.Value;
+                    break;
+                case "BatchConvert/RemoveFormatting":
+                    language.BatchConvert.RemoveFormatting = reader.Value;
+                    break;
+                case "BatchConvert/RemoveTextForHI":
+                    language.BatchConvert.RemoveTextForHI = reader.Value;
+                    break;
+                case "BatchConvert/OverwriteOriginalFiles":
+                    language.BatchConvert.OverwriteOriginalFiles = reader.Value;
+                    break;
+                case "BatchConvert/ReDoCasing":
+                    language.BatchConvert.ReDoCasing = reader.Value;
+                    break;
+                case "BatchConvert/Convert":
+                    language.BatchConvert.Convert = reader.Value;
+                    break;
+                case "BatchConvert/NothingToConvert":
+                    language.BatchConvert.NothingToConvert = reader.Value;
+                    break;
+                case "BatchConvert/PleaseChooseOutputFolder":
+                    language.BatchConvert.PleaseChooseOutputFolder = reader.Value;
+                    break;
+                case "BatchConvert/Converted":
+                    language.BatchConvert.Converted = reader.Value;
+                    break;
+                case "BatchConvert/ConvertedX":
+                    language.BatchConvert.ConvertedX = reader.Value;
+                    break;
+                case "BatchConvert/Settings":
+                    language.BatchConvert.Settings = reader.Value;
+                    break;
+                case "BatchConvert/SplitLongLines":
+                    language.BatchConvert.SplitLongLines = reader.Value;
+                    break;
+                case "BatchConvert/AutoBalance":
+                    language.BatchConvert.AutoBalance = reader.Value;
+                    break;
+                case "BatchConvert/ScanFolder":
+                    language.BatchConvert.ScanFolder = reader.Value;
+                    break;
+                case "BatchConvert/ScanningFolder":
+                    language.BatchConvert.ScanningFolder = reader.Value;
+                    break;
+                case "BatchConvert/Recursive":
+                    language.BatchConvert.Recursive = reader.Value;
+                    break;
+                case "BatchConvert/SetMinMsBetweenSubtitles":
+                    language.BatchConvert.SetMinMsBetweenSubtitles = reader.Value;
+                    break;
+                case "Beamer/Title":
+                    language.Beamer.Title = reader.Value;
+                    break;
+                case "ChangeCasing/Title":
+                    language.ChangeCasing.Title = reader.Value;
+                    break;
+                case "ChangeCasing/ChangeCasingTo":
+                    language.ChangeCasing.ChangeCasingTo = reader.Value;
+                    break;
+                case "ChangeCasing/NormalCasing":
+                    language.ChangeCasing.NormalCasing = reader.Value;
+                    break;
+                case "ChangeCasing/FixNamesCasing":
+                    language.ChangeCasing.FixNamesCasing = reader.Value;
+                    break;
+                case "ChangeCasing/FixOnlyNamesCasing":
+                    language.ChangeCasing.FixOnlyNamesCasing = reader.Value;
+                    break;
+                case "ChangeCasing/OnlyChangeAllUppercaseLines":
+                    language.ChangeCasing.OnlyChangeAllUppercaseLines = reader.Value;
+                    break;
+                case "ChangeCasing/AllUppercase":
+                    language.ChangeCasing.AllUppercase = reader.Value;
+                    break;
+                case "ChangeCasing/AllLowercase":
+                    language.ChangeCasing.AllLowercase = reader.Value;
+                    break;
+                case "ChangeCasingNames/Title":
+                    language.ChangeCasingNames.Title = reader.Value;
+                    break;
+                case "ChangeCasingNames/NamesFoundInSubtitleX":
+                    language.ChangeCasingNames.NamesFoundInSubtitleX = reader.Value;
+                    break;
+                case "ChangeCasingNames/Enabled":
+                    language.ChangeCasingNames.Enabled = reader.Value;
+                    break;
+                case "ChangeCasingNames/Name":
+                    language.ChangeCasingNames.Name = reader.Value;
+                    break;
+                case "ChangeCasingNames/LinesFoundX":
+                    language.ChangeCasingNames.LinesFoundX = reader.Value;
+                    break;
+                case "ChangeFrameRate/Title":
+                    language.ChangeFrameRate.Title = reader.Value;
+                    break;
+                case "ChangeFrameRate/ConvertFrameRateOfSubtitle":
+                    language.ChangeFrameRate.ConvertFrameRateOfSubtitle = reader.Value;
+                    break;
+                case "ChangeFrameRate/FromFrameRate":
+                    language.ChangeFrameRate.FromFrameRate = reader.Value;
+                    break;
+                case "ChangeFrameRate/ToFrameRate":
+                    language.ChangeFrameRate.ToFrameRate = reader.Value;
+                    break;
+                case "ChangeFrameRate/FrameRateNotCorrect":
+                    language.ChangeFrameRate.FrameRateNotCorrect = reader.Value;
+                    break;
+                case "ChangeFrameRate/FrameRateNotChanged":
+                    language.ChangeFrameRate.FrameRateNotChanged = reader.Value;
+                    break;
+                case "ChangeSpeedInPercent/Title":
+                    language.ChangeSpeedInPercent.Title = reader.Value;
+                    break;
+                case "ChangeSpeedInPercent/Info":
+                    language.ChangeSpeedInPercent.Info = reader.Value;
+                    break;
+                case "CheckForUpdates/Title":
+                    language.CheckForUpdates.Title = reader.Value;
+                    break;
+                case "CheckForUpdates/CheckingForUpdates":
+                    language.CheckForUpdates.CheckingForUpdates = reader.Value;
+                    break;
+                case "CheckForUpdates/CheckingForUpdatesFailedX":
+                    language.CheckForUpdates.CheckingForUpdatesFailedX = reader.Value;
+                    break;
+                case "CheckForUpdates/CheckingForUpdatesNoneAvailable":
+                    language.CheckForUpdates.CheckingForUpdatesNoneAvailable = reader.Value;
+                    break;
+                case "CheckForUpdates/CheckingForUpdatesNewVersion":
+                    language.CheckForUpdates.CheckingForUpdatesNewVersion = reader.Value;
+                    break;
+                case "CheckForUpdates/InstallUpdate":
+                    language.CheckForUpdates.InstallUpdate = reader.Value;
+                    break;
+                case "CheckForUpdates/NoUpdates":
+                    language.CheckForUpdates.NoUpdates = reader.Value;
+                    break;
+                case "ChooseAudioTrack/Title":
+                    language.ChooseAudioTrack.Title = reader.Value;
+                    break;
+                case "ChooseEncoding/Title":
+                    language.ChooseEncoding.Title = reader.Value;
+                    break;
+                case "ChooseEncoding/CodePage":
+                    language.ChooseEncoding.CodePage = reader.Value;
+                    break;
+                case "ChooseEncoding/DisplayName":
+                    language.ChooseEncoding.DisplayName = reader.Value;
+                    break;
+                case "ChooseEncoding/PleaseSelectAnEncoding":
+                    language.ChooseEncoding.PleaseSelectAnEncoding = reader.Value;
+                    break;
+                case "ChooseLanguage/Title":
+                    language.ChooseLanguage.Title = reader.Value;
+                    break;
+                case "ChooseLanguage/Language":
+                    language.ChooseLanguage.Language = reader.Value;
+                    break;
+                case "ColorChooser/Title":
+                    language.ColorChooser.Title = reader.Value;
+                    break;
+                case "ColorChooser/Red":
+                    language.ColorChooser.Red = reader.Value;
+                    break;
+                case "ColorChooser/Green":
+                    language.ColorChooser.Green = reader.Value;
+                    break;
+                case "ColorChooser/Blue":
+                    language.ColorChooser.Blue = reader.Value;
+                    break;
+                case "ColorChooser/Alpha":
+                    language.ColorChooser.Alpha = reader.Value;
+                    break;
+                case "ColumnPaste/Title":
+                    language.ColumnPaste.Title = reader.Value;
+                    break;
+                case "ColumnPaste/ChooseColumn":
+                    language.ColumnPaste.ChooseColumn = reader.Value;
+                    break;
+                case "ColumnPaste/OverwriteShiftCellsDown":
+                    language.ColumnPaste.OverwriteShiftCellsDown = reader.Value;
+                    break;
+                case "ColumnPaste/Overwrite":
+                    language.ColumnPaste.Overwrite = reader.Value;
+                    break;
+                case "ColumnPaste/ShiftCellsDown":
+                    language.ColumnPaste.ShiftCellsDown = reader.Value;
+                    break;
+                case "ColumnPaste/TimeCodesOnly":
+                    language.ColumnPaste.TimeCodesOnly = reader.Value;
+                    break;
+                case "ColumnPaste/TextOnly":
+                    language.ColumnPaste.TextOnly = reader.Value;
+                    break;
+                case "ColumnPaste/OriginalTextOnly":
+                    language.ColumnPaste.OriginalTextOnly = reader.Value;
+                    break;
+                case "CompareSubtitles/Title":
+                    language.CompareSubtitles.Title = reader.Value;
+                    break;
+                case "CompareSubtitles/PreviousDifference":
+                    language.CompareSubtitles.PreviousDifference = reader.Value;
+                    break;
+                case "CompareSubtitles/NextDifference":
+                    language.CompareSubtitles.NextDifference = reader.Value;
+                    break;
+                case "CompareSubtitles/SubtitlesNotAlike":
+                    language.CompareSubtitles.SubtitlesNotAlike = reader.Value;
+                    break;
+                case "CompareSubtitles/XNumberOfDifference":
+                    language.CompareSubtitles.XNumberOfDifference = reader.Value;
+                    break;
+                case "CompareSubtitles/XNumberOfDifferenceAndPercentChanged":
+                    language.CompareSubtitles.XNumberOfDifferenceAndPercentChanged = reader.Value;
+                    break;
+                case "CompareSubtitles/XNumberOfDifferenceAndPercentLettersChanged":
+                    language.CompareSubtitles.XNumberOfDifferenceAndPercentLettersChanged = reader.Value;
+                    break;
+                case "CompareSubtitles/ShowOnlyDifferences":
+                    language.CompareSubtitles.ShowOnlyDifferences = reader.Value;
+                    break;
+                case "CompareSubtitles/IgnoreLineBreaks":
+                    language.CompareSubtitles.IgnoreLineBreaks = reader.Value;
+                    break;
+                case "CompareSubtitles/OnlyLookForDifferencesInText":
+                    language.CompareSubtitles.OnlyLookForDifferencesInText = reader.Value;
+                    break;
+                case "CompareSubtitles/CannotCompareWithImageBasedSubtitles":
+                    language.CompareSubtitles.CannotCompareWithImageBasedSubtitles = reader.Value;
+                    break;
+                case "DCinemaProperties/Title":
+                    language.DCinemaProperties.Title = reader.Value;
+                    break;
+                case "DCinemaProperties/TitleSmpte":
+                    language.DCinemaProperties.TitleSmpte = reader.Value;
+                    break;
+                case "DCinemaProperties/SubtitleId":
+                    language.DCinemaProperties.SubtitleId = reader.Value;
+                    break;
+                case "DCinemaProperties/GenerateId":
+                    language.DCinemaProperties.GenerateId = reader.Value;
+                    break;
+                case "DCinemaProperties/MovieTitle":
+                    language.DCinemaProperties.MovieTitle = reader.Value;
+                    break;
+                case "DCinemaProperties/ReelNumber":
+                    language.DCinemaProperties.ReelNumber = reader.Value;
+                    break;
+                case "DCinemaProperties/Language":
+                    language.DCinemaProperties.Language = reader.Value;
+                    break;
+                case "DCinemaProperties/IssueDate":
+                    language.DCinemaProperties.IssueDate = reader.Value;
+                    break;
+                case "DCinemaProperties/EditRate":
+                    language.DCinemaProperties.EditRate = reader.Value;
+                    break;
+                case "DCinemaProperties/TimeCodeRate":
+                    language.DCinemaProperties.TimeCodeRate = reader.Value;
+                    break;
+                case "DCinemaProperties/StartTime":
+                    language.DCinemaProperties.StartTime = reader.Value;
+                    break;
+                case "DCinemaProperties/Font":
+                    language.DCinemaProperties.Font = reader.Value;
+                    break;
+                case "DCinemaProperties/FontId":
+                    language.DCinemaProperties.FontId = reader.Value;
+                    break;
+                case "DCinemaProperties/FontUri":
+                    language.DCinemaProperties.FontUri = reader.Value;
+                    break;
+                case "DCinemaProperties/FontColor":
+                    language.DCinemaProperties.FontColor = reader.Value;
+                    break;
+                case "DCinemaProperties/FontEffect":
+                    language.DCinemaProperties.FontEffect = reader.Value;
+                    break;
+                case "DCinemaProperties/FontEffectColor":
+                    language.DCinemaProperties.FontEffectColor = reader.Value;
+                    break;
+                case "DCinemaProperties/FontSize":
+                    language.DCinemaProperties.FontSize = reader.Value;
+                    break;
+                case "DCinemaProperties/TopBottomMargin":
+                    language.DCinemaProperties.TopBottomMargin = reader.Value;
+                    break;
+                case "DCinemaProperties/FadeUpTime":
+                    language.DCinemaProperties.FadeUpTime = reader.Value;
+                    break;
+                case "DCinemaProperties/FadeDownTime":
+                    language.DCinemaProperties.FadeDownTime = reader.Value;
+                    break;
+                case "DCinemaProperties/ZPosition":
+                    language.DCinemaProperties.ZPosition = reader.Value;
+                    break;
+                case "DCinemaProperties/ZPositionHelp":
+                    language.DCinemaProperties.ZPositionHelp = reader.Value;
+                    break;
+                case "DCinemaProperties/ChooseColor":
+                    language.DCinemaProperties.ChooseColor = reader.Value;
+                    break;
+                case "DCinemaProperties/Generate":
+                    language.DCinemaProperties.Generate = reader.Value;
+                    break;
+                case "DurationsBridgeGaps/Title":
+                    language.DurationsBridgeGaps.Title = reader.Value;
+                    break;
+                case "DurationsBridgeGaps/GapsBridgedX":
+                    language.DurationsBridgeGaps.GapsBridgedX = reader.Value;
+                    break;
+                case "DurationsBridgeGaps/GapToNext":
+                    language.DurationsBridgeGaps.GapToNext = reader.Value;
+                    break;
+                case "DurationsBridgeGaps/BridgeGapsSmallerThanXPart1":
+                    language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart1 = reader.Value;
+                    break;
+                case "DurationsBridgeGaps/BridgeGapsSmallerThanXPart2":
+                    language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2 = reader.Value;
+                    break;
+                case "DurationsBridgeGaps/MinMsBetweenLines":
+                    language.DurationsBridgeGaps.MinMsBetweenLines = reader.Value;
+                    break;
+                case "DurationsBridgeGaps/ProlongEndTime":
+                    language.DurationsBridgeGaps.ProlongEndTime = reader.Value;
+                    break;
+                case "DurationsBridgeGaps/DivideEven":
+                    language.DurationsBridgeGaps.DivideEven = reader.Value;
+                    break;
+                case "DvdSubRip/Title":
+                    language.DvdSubRip.Title = reader.Value;
+                    break;
+                case "DvdSubRip/DvdGroupTitle":
+                    language.DvdSubRip.DvdGroupTitle = reader.Value;
+                    break;
+                case "DvdSubRip/IfoFile":
+                    language.DvdSubRip.IfoFile = reader.Value;
+                    break;
+                case "DvdSubRip/IfoFiles":
+                    language.DvdSubRip.IfoFiles = reader.Value;
+                    break;
+                case "DvdSubRip/VobFiles":
+                    language.DvdSubRip.VobFiles = reader.Value;
+                    break;
+                case "DvdSubRip/Add":
+                    language.DvdSubRip.Add = reader.Value;
+                    break;
+                case "DvdSubRip/Remove":
+                    language.DvdSubRip.Remove = reader.Value;
+                    break;
+                case "DvdSubRip/Clear":
+                    language.DvdSubRip.Clear = reader.Value;
+                    break;
+                case "DvdSubRip/MoveUp":
+                    language.DvdSubRip.MoveUp = reader.Value;
+                    break;
+                case "DvdSubRip/MoveDown":
+                    language.DvdSubRip.MoveDown = reader.Value;
+                    break;
+                case "DvdSubRip/Languages":
+                    language.DvdSubRip.Languages = reader.Value;
+                    break;
+                case "DvdSubRip/PalNtsc":
+                    language.DvdSubRip.PalNtsc = reader.Value;
+                    break;
+                case "DvdSubRip/Pal":
+                    language.DvdSubRip.Pal = reader.Value;
+                    break;
+                case "DvdSubRip/Ntsc":
+                    language.DvdSubRip.Ntsc = reader.Value;
+                    break;
+                case "DvdSubRip/StartRipping":
+                    language.DvdSubRip.StartRipping = reader.Value;
+                    break;
+                case "DvdSubRip/Abort":
+                    language.DvdSubRip.Abort = reader.Value;
+                    break;
+                case "DvdSubRip/AbortedByUser":
+                    language.DvdSubRip.AbortedByUser = reader.Value;
+                    break;
+                case "DvdSubRip/ReadingSubtitleData":
+                    language.DvdSubRip.ReadingSubtitleData = reader.Value;
+                    break;
+                case "DvdSubRip/RippingVobFileXofYZ":
+                    language.DvdSubRip.RippingVobFileXofYZ = reader.Value;
+                    break;
+                case "DvdSubRip/WrongIfoType":
+                    language.DvdSubRip.WrongIfoType = reader.Value;
+                    break;
+                case "DvdSubRipChooseLanguage/Title":
+                    language.DvdSubRipChooseLanguage.Title = reader.Value;
+                    break;
+                case "DvdSubRipChooseLanguage/ChooseLanguageStreamId":
+                    language.DvdSubRipChooseLanguage.ChooseLanguageStreamId = reader.Value;
+                    break;
+                case "DvdSubRipChooseLanguage/UnknownLanguage":
+                    language.DvdSubRipChooseLanguage.UnknownLanguage = reader.Value;
+                    break;
+                case "DvdSubRipChooseLanguage/SubtitleImageXofYAndWidthXHeight":
+                    language.DvdSubRipChooseLanguage.SubtitleImageXofYAndWidthXHeight = reader.Value;
+                    break;
+                case "DvdSubRipChooseLanguage/SubtitleImage":
+                    language.DvdSubRipChooseLanguage.SubtitleImage = reader.Value;
+                    break;
+                case "EbuSaveOtpions/Title":
+                    language.EbuSaveOtpions.Title = reader.Value;
+                    break;
+                case "EbuSaveOtpions/GeneralSubtitleInformation":
+                    language.EbuSaveOtpions.GeneralSubtitleInformation = reader.Value;
+                    break;
+                case "EbuSaveOtpions/CodePageNumber":
+                    language.EbuSaveOtpions.CodePageNumber = reader.Value;
+                    break;
+                case "EbuSaveOtpions/DiskFormatCode":
+                    language.EbuSaveOtpions.DiskFormatCode = reader.Value;
+                    break;
+                case "EbuSaveOtpions/DisplayStandardCode":
+                    language.EbuSaveOtpions.DisplayStandardCode = reader.Value;
+                    break;
+                case "EbuSaveOtpions/CharacterCodeTable":
+                    language.EbuSaveOtpions.CharacterCodeTable = reader.Value;
+                    break;
+                case "EbuSaveOtpions/LanguageCode":
+                    language.EbuSaveOtpions.LanguageCode = reader.Value;
+                    break;
+                case "EbuSaveOtpions/OriginalProgramTitle":
+                    language.EbuSaveOtpions.OriginalProgramTitle = reader.Value;
+                    break;
+                case "EbuSaveOtpions/OriginalEpisodeTitle":
+                    language.EbuSaveOtpions.OriginalEpisodeTitle = reader.Value;
+                    break;
+                case "EbuSaveOtpions/TranslatedProgramTitle":
+                    language.EbuSaveOtpions.TranslatedProgramTitle = reader.Value;
+                    break;
+                case "EbuSaveOtpions/TranslatedEpisodeTitle":
+                    language.EbuSaveOtpions.TranslatedEpisodeTitle = reader.Value;
+                    break;
+                case "EbuSaveOtpions/TranslatorsName":
+                    language.EbuSaveOtpions.TranslatorsName = reader.Value;
+                    break;
+                case "EbuSaveOtpions/SubtitleListReferenceCode":
+                    language.EbuSaveOtpions.SubtitleListReferenceCode = reader.Value;
+                    break;
+                case "EbuSaveOtpions/CountryOfOrigin":
+                    language.EbuSaveOtpions.CountryOfOrigin = reader.Value;
+                    break;
+                case "EbuSaveOtpions/RevisionNumber":
+                    language.EbuSaveOtpions.RevisionNumber = reader.Value;
+                    break;
+                case "EbuSaveOtpions/MaxNoOfDisplayableChars":
+                    language.EbuSaveOtpions.MaxNoOfDisplayableChars = reader.Value;
+                    break;
+                case "EbuSaveOtpions/MaxNumberOfDisplayableRows":
+                    language.EbuSaveOtpions.MaxNumberOfDisplayableRows = reader.Value;
+                    break;
+                case "EbuSaveOtpions/DiskSequenceNumber":
+                    language.EbuSaveOtpions.DiskSequenceNumber = reader.Value;
+                    break;
+                case "EbuSaveOtpions/TotalNumberOfDisks":
+                    language.EbuSaveOtpions.TotalNumberOfDisks = reader.Value;
+                    break;
+                case "EbuSaveOtpions/Import":
+                    language.EbuSaveOtpions.Import = reader.Value;
+                    break;
+                case "EbuSaveOtpions/TextAndTimingInformation":
+                    language.EbuSaveOtpions.TextAndTimingInformation = reader.Value;
+                    break;
+                case "EbuSaveOtpions/JustificationCode":
+                    language.EbuSaveOtpions.JustificationCode = reader.Value;
+                    break;
+                case "EbuSaveOtpions/Errors":
+                    language.EbuSaveOtpions.Errors = reader.Value;
+                    break;
+                case "EbuSaveOtpions/ErrorsX":
+                    language.EbuSaveOtpions.ErrorsX = reader.Value;
+                    break;
+                case "EbuSaveOtpions/MaxLengthError":
+                    language.EbuSaveOtpions.MaxLengthError = reader.Value;
+                    break;
+                case "EbuSaveOtpions/TextUnchangedPresentation":
+                    language.EbuSaveOtpions.TextUnchangedPresentation = reader.Value;
+                    break;
+                case "EbuSaveOtpions/TextLeftJustifiedText":
+                    language.EbuSaveOtpions.TextLeftJustifiedText = reader.Value;
+                    break;
+                case "EbuSaveOtpions/TextCentredText":
+                    language.EbuSaveOtpions.TextCentredText = reader.Value;
+                    break;
+                case "EbuSaveOtpions/TextRightJustifiedText":
+                    language.EbuSaveOtpions.TextRightJustifiedText = reader.Value;
+                    break;
+                case "EffectKaraoke/Title":
+                    language.EffectKaraoke.Title = reader.Value;
+                    break;
+                case "EffectKaraoke/ChooseColor":
+                    language.EffectKaraoke.ChooseColor = reader.Value;
+                    break;
+                case "EffectKaraoke/TotalMilliseconds":
+                    language.EffectKaraoke.TotalMilliseconds = reader.Value;
+                    break;
+                case "EffectKaraoke/EndDelayInMilliseconds":
+                    language.EffectKaraoke.EndDelayInMilliseconds = reader.Value;
+                    break;
+                case "EffectTypewriter/Title":
+                    language.EffectTypewriter.Title = reader.Value;
+                    break;
+                case "EffectTypewriter/TotalMilliseconds":
+                    language.EffectTypewriter.TotalMilliseconds = reader.Value;
+                    break;
+                case "EffectTypewriter/EndDelayInMillisecs":
+                    language.EffectTypewriter.EndDelayInMillisecs = reader.Value;
+                    break;
+                case "ExportCustomText/Title":
+                    language.ExportCustomText.Title = reader.Value;
+                    break;
+                case "ExportCustomText/Formats":
+                    language.ExportCustomText.Formats = reader.Value;
+                    break;
+                case "ExportCustomText/New":
+                    language.ExportCustomText.New = reader.Value;
+                    break;
+                case "ExportCustomText/Edit":
+                    language.ExportCustomText.Edit = reader.Value;
+                    break;
+                case "ExportCustomText/Delete":
+                    language.ExportCustomText.Delete = reader.Value;
+                    break;
+                case "ExportCustomText/SaveAs":
+                    language.ExportCustomText.SaveAs = reader.Value;
+                    break;
+                case "ExportCustomText/SaveSubtitleAs":
+                    language.ExportCustomText.SaveSubtitleAs = reader.Value;
+                    break;
+                case "ExportCustomText/SubtitleExportedInCustomFormatToX":
+                    language.ExportCustomText.SubtitleExportedInCustomFormatToX = reader.Value;
+                    break;
+                case "ExportCustomTextFormat/Title":
+                    language.ExportCustomTextFormat.Title = reader.Value;
+                    break;
+                case "ExportCustomTextFormat/Template":
+                    language.ExportCustomTextFormat.Template = reader.Value;
+                    break;
+                case "ExportCustomTextFormat/Header":
+                    language.ExportCustomTextFormat.Header = reader.Value;
+                    break;
+                case "ExportCustomTextFormat/TextLine":
+                    language.ExportCustomTextFormat.TextLine = reader.Value;
+                    break;
+                case "ExportCustomTextFormat/TimeCode":
+                    language.ExportCustomTextFormat.TimeCode = reader.Value;
+                    break;
+                case "ExportCustomTextFormat/NewLine":
+                    language.ExportCustomTextFormat.NewLine = reader.Value;
+                    break;
+                case "ExportCustomTextFormat/Footer":
+                    language.ExportCustomTextFormat.Footer = reader.Value;
+                    break;
+                case "ExportCustomTextFormat/DoNotModify":
+                    language.ExportCustomTextFormat.DoNotModify = reader.Value;
+                    break;
+                case "ExportPngXml/Title":
+                    language.ExportPngXml.Title = reader.Value;
+                    break;
+                case "ExportPngXml/ImageSettings":
+                    language.ExportPngXml.ImageSettings = reader.Value;
+                    break;
+                case "ExportPngXml/FontFamily":
+                    language.ExportPngXml.FontFamily = reader.Value;
+                    break;
+                case "ExportPngXml/FontSize":
+                    language.ExportPngXml.FontSize = reader.Value;
+                    break;
+                case "ExportPngXml/FontColor":
+                    language.ExportPngXml.FontColor = reader.Value;
+                    break;
+                case "ExportPngXml/BorderColor":
+                    language.ExportPngXml.BorderColor = reader.Value;
+                    break;
+                case "ExportPngXml/BorderWidth":
+                    language.ExportPngXml.BorderWidth = reader.Value;
+                    break;
+                case "ExportPngXml/BorderStyle":
+                    language.ExportPngXml.BorderStyle = reader.Value;
+                    break;
+                case "ExportPngXml/BorderStyleOneBox":
+                    language.ExportPngXml.BorderStyleOneBox = reader.Value;
+                    break;
+                case "ExportPngXml/BorderStyleBoxForEachLine":
+                    language.ExportPngXml.BorderStyleBoxForEachLine = reader.Value;
+                    break;
+                case "ExportPngXml/BorderStyleNormalWidthX":
+                    language.ExportPngXml.BorderStyleNormalWidthX = reader.Value;
+                    break;
+                case "ExportPngXml/ShadowColor":
+                    language.ExportPngXml.ShadowColor = reader.Value;
+                    break;
+                case "ExportPngXml/ShadowWidth":
+                    language.ExportPngXml.ShadowWidth = reader.Value;
+                    break;
+                case "ExportPngXml/Transparency":
+                    language.ExportPngXml.Transparency = reader.Value;
+                    break;
+                case "ExportPngXml/ImageFormat":
+                    language.ExportPngXml.ImageFormat = reader.Value;
+                    break;
+                case "ExportPngXml/SimpleRendering":
+                    language.ExportPngXml.SimpleRendering = reader.Value;
+                    break;
+                case "ExportPngXml/AntiAliasingWithTransparency":
+                    language.ExportPngXml.AntiAliasingWithTransparency = reader.Value;
+                    break;
+                case "ExportPngXml/Text3D":
+                    language.ExportPngXml.Text3D = reader.Value;
+                    break;
+                case "ExportPngXml/SideBySide3D":
+                    language.ExportPngXml.SideBySide3D = reader.Value;
+                    break;
+                case "ExportPngXml/HalfTopBottom3D":
+                    language.ExportPngXml.HalfTopBottom3D = reader.Value;
+                    break;
+                case "ExportPngXml/Depth":
+                    language.ExportPngXml.Depth = reader.Value;
+                    break;
+                case "ExportPngXml/ExportAllLines":
+                    language.ExportPngXml.ExportAllLines = reader.Value;
+                    break;
+                case "ExportPngXml/XImagesSavedInY":
+                    language.ExportPngXml.XImagesSavedInY = reader.Value;
+                    break;
+                case "ExportPngXml/VideoResolution":
+                    language.ExportPngXml.VideoResolution = reader.Value;
+                    break;
+                case "ExportPngXml/Align":
+                    language.ExportPngXml.Align = reader.Value;
+                    break;
+                case "ExportPngXml/Left":
+                    language.ExportPngXml.Left = reader.Value;
+                    break;
+                case "ExportPngXml/Right":
+                    language.ExportPngXml.Right = reader.Value;
+                    break;
+                case "ExportPngXml/Center":
+                    language.ExportPngXml.Center = reader.Value;
+                    break;
+                case "ExportPngXml/BottomMargin":
+                    language.ExportPngXml.BottomMargin = reader.Value;
+                    break;
+                case "ExportPngXml/SaveBluRraySupAs":
+                    language.ExportPngXml.SaveBluRraySupAs = reader.Value;
+                    break;
+                case "ExportPngXml/SaveVobSubAs":
+                    language.ExportPngXml.SaveVobSubAs = reader.Value;
+                    break;
+                case "ExportPngXml/SaveFabImageScriptAs":
+                    language.ExportPngXml.SaveFabImageScriptAs = reader.Value;
+                    break;
+                case "ExportPngXml/SaveDvdStudioProStlAs":
+                    language.ExportPngXml.SaveDvdStudioProStlAs = reader.Value;
+                    break;
+                case "ExportPngXml/SomeLinesWereTooLongX":
+                    language.ExportPngXml.SomeLinesWereTooLongX = reader.Value;
+                    break;
+                case "ExportPngXml/LineHeight":
+                    language.ExportPngXml.LineHeight = reader.Value;
+                    break;
+                case "ExportPngXml/BoxSingleLine":
+                    language.ExportPngXml.BoxSingleLine = reader.Value;
+                    break;
+                case "ExportPngXml/BoxMultiLine":
+                    language.ExportPngXml.BoxMultiLine = reader.Value;
+                    break;
+                case "ExportText/Title":
+                    language.ExportText.Title = reader.Value;
+                    break;
+                case "ExportText/Preview":
+                    language.ExportText.Preview = reader.Value;
+                    break;
+                case "ExportText/ExportOptions":
+                    language.ExportText.ExportOptions = reader.Value;
+                    break;
+                case "ExportText/FormatText":
+                    language.ExportText.FormatText = reader.Value;
+                    break;
+                case "ExportText/None":
+                    language.ExportText.None = reader.Value;
+                    break;
+                case "ExportText/MergeAllLines":
+                    language.ExportText.MergeAllLines = reader.Value;
+                    break;
+                case "ExportText/UnbreakLines":
+                    language.ExportText.UnbreakLines = reader.Value;
+                    break;
+                case "ExportText/RemoveStyling":
+                    language.ExportText.RemoveStyling = reader.Value;
+                    break;
+                case "ExportText/ShowLineNumbers":
+                    language.ExportText.ShowLineNumbers = reader.Value;
+                    break;
+                case "ExportText/AddNewLineAfterLineNumber":
+                    language.ExportText.AddNewLineAfterLineNumber = reader.Value;
+                    break;
+                case "ExportText/ShowTimeCode":
+                    language.ExportText.ShowTimeCode = reader.Value;
+                    break;
+                case "ExportText/AddNewLineAfterTimeCode":
+                    language.ExportText.AddNewLineAfterTimeCode = reader.Value;
+                    break;
+                case "ExportText/AddNewLineAfterTexts":
+                    language.ExportText.AddNewLineAfterTexts = reader.Value;
+                    break;
+                case "ExportText/AddNewLineBetweenSubtitles":
+                    language.ExportText.AddNewLineBetweenSubtitles = reader.Value;
+                    break;
+                case "ExportText/TimeCodeFormat":
+                    language.ExportText.TimeCodeFormat = reader.Value;
+                    break;
+                case "ExportText/Srt":
+                    language.ExportText.Srt = reader.Value;
+                    break;
+                case "ExportText/Milliseconds":
+                    language.ExportText.Milliseconds = reader.Value;
+                    break;
+                case "ExportText/HHMMSSFF":
+                    language.ExportText.HHMMSSFF = reader.Value;
+                    break;
+                case "ExportText/TimeCodeSeperator":
+                    language.ExportText.TimeCodeSeperator = reader.Value;
+                    break;
+                case "ExtractDateTimeInfo/Title":
+                    language.ExtractDateTimeInfo.Title = reader.Value;
+                    break;
+                case "ExtractDateTimeInfo/OpenVideoFile":
+                    language.ExtractDateTimeInfo.OpenVideoFile = reader.Value;
+                    break;
+                case "ExtractDateTimeInfo/StartFrom":
+                    language.ExtractDateTimeInfo.StartFrom = reader.Value;
+                    break;
+                case "ExtractDateTimeInfo/DateTimeFormat":
+                    language.ExtractDateTimeInfo.DateTimeFormat = reader.Value;
+                    break;
+                case "ExtractDateTimeInfo/Example":
+                    language.ExtractDateTimeInfo.Example = reader.Value;
+                    break;
+                case "ExtractDateTimeInfo/GenerateSubtitle":
+                    language.ExtractDateTimeInfo.GenerateSubtitle = reader.Value;
+                    break;
+                case "FindDialog/Title":
+                    language.FindDialog.Title = reader.Value;
+                    break;
+                case "FindDialog/Find":
+                    language.FindDialog.Find = reader.Value;
+                    break;
+                case "FindDialog/Normal":
+                    language.FindDialog.Normal = reader.Value;
+                    break;
+                case "FindDialog/CaseSensitive":
+                    language.FindDialog.CaseSensitive = reader.Value;
+                    break;
+                case "FindDialog/RegularExpression":
+                    language.FindDialog.RegularExpression = reader.Value;
+                    break;
+                case "FindSubtitleLine/Title":
+                    language.FindSubtitleLine.Title = reader.Value;
+                    break;
+                case "FindSubtitleLine/Find":
+                    language.FindSubtitleLine.Find = reader.Value;
+                    break;
+                case "FindSubtitleLine/FindNext":
+                    language.FindSubtitleLine.FindNext = reader.Value;
+                    break;
+                case "FixCommonErrors/Title":
+                    language.FixCommonErrors.Title = reader.Value;
+                    break;
+                case "FixCommonErrors/Step1":
+                    language.FixCommonErrors.Step1 = reader.Value;
+                    break;
+                case "FixCommonErrors/WhatToFix":
+                    language.FixCommonErrors.WhatToFix = reader.Value;
+                    break;
+                case "FixCommonErrors/Example":
+                    language.FixCommonErrors.Example = reader.Value;
+                    break;
+                case "FixCommonErrors/SelectAll":
+                    language.FixCommonErrors.SelectAll = reader.Value;
+                    break;
+                case "FixCommonErrors/InverseSelection":
+                    language.FixCommonErrors.InverseSelection = reader.Value;
+                    break;
+                case "FixCommonErrors/Back":
+                    language.FixCommonErrors.Back = reader.Value;
+                    break;
+                case "FixCommonErrors/Next":
+                    language.FixCommonErrors.Next = reader.Value;
+                    break;
+                case "FixCommonErrors/Step2":
+                    language.FixCommonErrors.Step2 = reader.Value;
+                    break;
+                case "FixCommonErrors/Fixes":
+                    language.FixCommonErrors.Fixes = reader.Value;
+                    break;
+                case "FixCommonErrors/Log":
+                    language.FixCommonErrors.Log = reader.Value;
+                    break;
+                case "FixCommonErrors/Function":
+                    language.FixCommonErrors.Function = reader.Value;
+                    break;
+                case "FixCommonErrors/RemovedEmptyLine":
+                    language.FixCommonErrors.RemovedEmptyLine = reader.Value;
+                    break;
+                case "FixCommonErrors/RemovedEmptyLineAtTop":
+                    language.FixCommonErrors.RemovedEmptyLineAtTop = reader.Value;
+                    break;
+                case "FixCommonErrors/RemovedEmptyLineAtBottom":
+                    language.FixCommonErrors.RemovedEmptyLineAtBottom = reader.Value;
+                    break;
+                case "FixCommonErrors/RemovedEmptyLinesUnsedLineBreaks":
+                    language.FixCommonErrors.RemovedEmptyLinesUnsedLineBreaks = reader.Value;
+                    break;
+                case "FixCommonErrors/EmptyLinesRemovedX":
+                    language.FixCommonErrors.EmptyLinesRemovedX = reader.Value;
+                    break;
+                case "FixCommonErrors/FixOverlappingDisplayTimes":
+                    language.FixCommonErrors.FixOverlappingDisplayTimes = reader.Value;
+                    break;
+                case "FixCommonErrors/FixShortDisplayTimes":
+                    language.FixCommonErrors.FixShortDisplayTimes = reader.Value;
+                    break;
+                case "FixCommonErrors/FixLongDisplayTimes":
+                    language.FixCommonErrors.FixLongDisplayTimes = reader.Value;
+                    break;
+                case "FixCommonErrors/FixInvalidItalicTags":
+                    language.FixCommonErrors.FixInvalidItalicTags = reader.Value;
+                    break;
+                case "FixCommonErrors/RemoveUnneededSpaces":
+                    language.FixCommonErrors.RemoveUnneededSpaces = reader.Value;
+                    break;
+                case "FixCommonErrors/RemoveUnneededPeriods":
+                    language.FixCommonErrors.RemoveUnneededPeriods = reader.Value;
+                    break;
+                case "FixCommonErrors/FixMissingSpaces":
+                    language.FixCommonErrors.FixMissingSpaces = reader.Value;
+                    break;
+                case "FixCommonErrors/BreakLongLines":
+                    language.FixCommonErrors.BreakLongLines = reader.Value;
+                    break;
+                case "FixCommonErrors/RemoveLineBreaks":
+                    language.FixCommonErrors.RemoveLineBreaks = reader.Value;
+                    break;
+                case "FixCommonErrors/RemoveLineBreaksAll":
+                    language.FixCommonErrors.RemoveLineBreaksAll = reader.Value;
+                    break;
+                case "FixCommonErrors/FixUppercaseIInsindeLowercaseWords":
+                    language.FixCommonErrors.FixUppercaseIInsindeLowercaseWords = reader.Value;
+                    break;
+                case "FixCommonErrors/FixDoubleApostrophes":
+                    language.FixCommonErrors.FixDoubleApostrophes = reader.Value;
+                    break;
+                case "FixCommonErrors/AddPeriods":
+                    language.FixCommonErrors.AddPeriods = reader.Value;
+                    break;
+                case "FixCommonErrors/StartWithUppercaseLetterAfterParagraph":
+                    language.FixCommonErrors.StartWithUppercaseLetterAfterParagraph = reader.Value;
+                    break;
+                case "FixCommonErrors/StartWithUppercaseLetterAfterPeriodInsideParagraph":
+                    language.FixCommonErrors.StartWithUppercaseLetterAfterPeriodInsideParagraph = reader.Value;
+                    break;
+                case "FixCommonErrors/StartWithUppercaseLetterAfterColon":
+                    language.FixCommonErrors.StartWithUppercaseLetterAfterColon = reader.Value;
+                    break;
+                case "FixCommonErrors/FixLowercaseIToUppercaseI":
+                    language.FixCommonErrors.FixLowercaseIToUppercaseI = reader.Value;
+                    break;
+                case "FixCommonErrors/FixCommonOcrErrors":
+                    language.FixCommonErrors.FixCommonOcrErrors = reader.Value;
+                    break;
+                case "FixCommonErrors/CommonOcrErrorsFixed":
+                    language.FixCommonErrors.CommonOcrErrorsFixed = reader.Value;
+                    break;
+                case "FixCommonErrors/RemoveSpaceBetweenNumber":
+                    language.FixCommonErrors.RemoveSpaceBetweenNumber = reader.Value;
+                    break;
+                case "FixCommonErrors/FixDialogsOnOneLine":
+                    language.FixCommonErrors.FixDialogsOnOneLine = reader.Value;
+                    break;
+                case "FixCommonErrors/RemoveSpaceBetweenNumbersFixed":
+                    language.FixCommonErrors.RemoveSpaceBetweenNumbersFixed = reader.Value;
+                    break;
+                case "FixCommonErrors/FixTurkishAnsi":
+                    language.FixCommonErrors.FixTurkishAnsi = reader.Value;
+                    break;
+                case "FixCommonErrors/FixDanishLetterI":
+                    language.FixCommonErrors.FixDanishLetterI = reader.Value;
+                    break;
+                case "FixCommonErrors/FixSpanishInvertedQuestionAndExclamationMarks":
+                    language.FixCommonErrors.FixSpanishInvertedQuestionAndExclamationMarks = reader.Value;
+                    break;
+                case "FixCommonErrors/AddMissingQuote":
+                    language.FixCommonErrors.AddMissingQuote = reader.Value;
+                    break;
+                case "FixCommonErrors/AddMissingQuotes":
+                    language.FixCommonErrors.AddMissingQuotes = reader.Value;
+                    break;
+                case "FixCommonErrors/FixHyphens":
+                    language.FixCommonErrors.FixHyphens = reader.Value;
+                    break;
+                case "FixCommonErrors/FixHyphensAdd":
+                    language.FixCommonErrors.FixHyphensAdd = reader.Value;
+                    break;
+                case "FixCommonErrors/FixHyphen":
+                    language.FixCommonErrors.FixHyphen = reader.Value;
+                    break;
+                case "FixCommonErrors/XHyphensFixed":
+                    language.FixCommonErrors.XHyphensFixed = reader.Value;
+                    break;
+                case "FixCommonErrors/AddMissingQuotesExample":
+                    language.FixCommonErrors.AddMissingQuotesExample = reader.Value;
+                    break;
+                case "FixCommonErrors/XMissingQuotesAdded":
+                    language.FixCommonErrors.XMissingQuotesAdded = reader.Value;
+                    break;
+                case "FixCommonErrors/Fix3PlusLines":
+                    language.FixCommonErrors.Fix3PlusLines = reader.Value;
+                    break;
+                case "FixCommonErrors/Fix3PlusLine":
+                    language.FixCommonErrors.Fix3PlusLine = reader.Value;
+                    break;
+                case "FixCommonErrors/X3PlusLinesFixed":
+                    language.FixCommonErrors.X3PlusLinesFixed = reader.Value;
+                    break;
+                case "FixCommonErrors/Analysing":
+                    language.FixCommonErrors.Analysing = reader.Value;
+                    break;
+                case "FixCommonErrors/NothingToFix":
+                    language.FixCommonErrors.NothingToFix = reader.Value;
+                    break;
+                case "FixCommonErrors/FixesFoundX":
+                    language.FixCommonErrors.FixesFoundX = reader.Value;
+                    break;
+                case "FixCommonErrors/XFixesApplied":
+                    language.FixCommonErrors.XFixesApplied = reader.Value;
+                    break;
+                case "FixCommonErrors/NothingToFixBut":
+                    language.FixCommonErrors.NothingToFixBut = reader.Value;
+                    break;
+                case "FixCommonErrors/FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish":
+                    language.FixCommonErrors.FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish = reader.Value;
+                    break;
+                case "FixCommonErrors/Continue":
+                    language.FixCommonErrors.Continue = reader.Value;
+                    break;
+                case "FixCommonErrors/ContinueAnyway":
+                    language.FixCommonErrors.ContinueAnyway = reader.Value;
+                    break;
+                case "FixCommonErrors/UncheckedFixLowercaseIToUppercaseI":
+                    language.FixCommonErrors.UncheckedFixLowercaseIToUppercaseI = reader.Value;
+                    break;
+                case "FixCommonErrors/XIsChangedToUppercase":
+                    language.FixCommonErrors.XIsChangedToUppercase = reader.Value;
+                    break;
+                case "FixCommonErrors/FixFirstLetterToUppercaseAfterParagraph":
+                    language.FixCommonErrors.FixFirstLetterToUppercaseAfterParagraph = reader.Value;
+                    break;
+                case "FixCommonErrors/MergeShortLine":
+                    language.FixCommonErrors.MergeShortLine = reader.Value;
+                    break;
+                case "FixCommonErrors/MergeShortLineAll":
+                    language.FixCommonErrors.MergeShortLineAll = reader.Value;
+                    break;
+                case "FixCommonErrors/XLineBreaksAdded":
+                    language.FixCommonErrors.XLineBreaksAdded = reader.Value;
+                    break;
+                case "FixCommonErrors/BreakLongLine":
+                    language.FixCommonErrors.BreakLongLine = reader.Value;
+                    break;
+                case "FixCommonErrors/FixLongDisplayTime":
+                    language.FixCommonErrors.FixLongDisplayTime = reader.Value;
+                    break;
+                case "FixCommonErrors/FixInvalidItalicTag":
+                    language.FixCommonErrors.FixInvalidItalicTag = reader.Value;
+                    break;
+                case "FixCommonErrors/FixShortDisplayTime":
+                    language.FixCommonErrors.FixShortDisplayTime = reader.Value;
+                    break;
+                case "FixCommonErrors/FixOverlappingDisplayTime":
+                    language.FixCommonErrors.FixOverlappingDisplayTime = reader.Value;
+                    break;
+                case "FixCommonErrors/FixInvalidItalicTagsExample":
+                    language.FixCommonErrors.FixInvalidItalicTagsExample = reader.Value;
+                    break;
+                case "FixCommonErrors/RemoveUnneededSpacesExample":
+                    language.FixCommonErrors.RemoveUnneededSpacesExample = reader.Value;
+                    break;
+                case "FixCommonErrors/RemoveUnneededPeriodsExample":
+                    language.FixCommonErrors.RemoveUnneededPeriodsExample = reader.Value;
+                    break;
+                case "FixCommonErrors/FixMissingSpacesExample":
+                    language.FixCommonErrors.FixMissingSpacesExample = reader.Value;
+                    break;
+                case "FixCommonErrors/FixUppercaseIInsindeLowercaseWordsExample":
+                    language.FixCommonErrors.FixUppercaseIInsindeLowercaseWordsExample = reader.Value;
+                    break;
+                case "FixCommonErrors/FixLowercaseIToUppercaseIExample":
+                    language.FixCommonErrors.FixLowercaseIToUppercaseIExample = reader.Value;
+                    break;
+                case "FixCommonErrors/StartTimeLaterThanEndTime":
+                    language.FixCommonErrors.StartTimeLaterThanEndTime = reader.Value;
+                    break;
+                case "FixCommonErrors/UnableToFixStartTimeLaterThanEndTime":
+                    language.FixCommonErrors.UnableToFixStartTimeLaterThanEndTime = reader.Value;
+                    break;
+                case "FixCommonErrors/XFixedToYZ":
+                    language.FixCommonErrors.XFixedToYZ = reader.Value;
+                    break;
+                case "FixCommonErrors/UnableToFixTextXY":
+                    language.FixCommonErrors.UnableToFixTextXY = reader.Value;
+                    break;
+                case "FixCommonErrors/XOverlappingTimestampsFixed":
+                    language.FixCommonErrors.XOverlappingTimestampsFixed = reader.Value;
+                    break;
+                case "FixCommonErrors/XDisplayTimesProlonged":
+                    language.FixCommonErrors.XDisplayTimesProlonged = reader.Value;
+                    break;
+                case "FixCommonErrors/XInvalidHtmlTagsFixed":
+                    language.FixCommonErrors.XInvalidHtmlTagsFixed = reader.Value;
+                    break;
+                case "FixCommonErrors/XDisplayTimesShortned":
+                    language.FixCommonErrors.XDisplayTimesShortned = reader.Value;
+                    break;
+                case "FixCommonErrors/XLinesUnbreaked":
+                    language.FixCommonErrors.XLinesUnbreaked = reader.Value;
+                    break;
+                case "FixCommonErrors/UnneededSpace":
+                    language.FixCommonErrors.UnneededSpace = reader.Value;
+                    break;
+                case "FixCommonErrors/XUnneededSpacesRemoved":
+                    language.FixCommonErrors.XUnneededSpacesRemoved = reader.Value;
+                    break;
+                case "FixCommonErrors/UnneededPeriod":
+                    language.FixCommonErrors.UnneededPeriod = reader.Value;
+                    break;
+                case "FixCommonErrors/XUnneededPeriodsRemoved":
+                    language.FixCommonErrors.XUnneededPeriodsRemoved = reader.Value;
+                    break;
+                case "FixCommonErrors/FixMissingSpace":
+                    language.FixCommonErrors.FixMissingSpace = reader.Value;
+                    break;
+                case "FixCommonErrors/XMissingSpacesAdded":
+                    language.FixCommonErrors.XMissingSpacesAdded = reader.Value;
+                    break;
+                case "FixCommonErrors/FixUppercaseIInsideLowercaseWord":
+                    language.FixCommonErrors.FixUppercaseIInsideLowercaseWord = reader.Value;
+                    break;
+                case "FixCommonErrors/XPeriodsAdded":
+                    language.FixCommonErrors.XPeriodsAdded = reader.Value;
+                    break;
+                case "FixCommonErrors/FixMissingPeriodAtEndOfLine":
+                    language.FixCommonErrors.FixMissingPeriodAtEndOfLine = reader.Value;
+                    break;
+                case "FixCommonErrors/XDoubleApostrophesFixed":
+                    language.FixCommonErrors.XDoubleApostrophesFixed = reader.Value;
+                    break;
+                case "FixCommonErrors/XUppercaseIsFoundInsideLowercaseWords":
+                    language.FixCommonErrors.XUppercaseIsFoundInsideLowercaseWords = reader.Value;
+                    break;
+                case "FixCommonErrors/RefreshFixes":
+                    language.FixCommonErrors.RefreshFixes = reader.Value;
+                    break;
+                case "FixCommonErrors/ApplyFixes":
+                    language.FixCommonErrors.ApplyFixes = reader.Value;
+                    break;
+                case "FixCommonErrors/AutoBreak":
+                    language.FixCommonErrors.AutoBreak = reader.Value;
+                    break;
+                case "FixCommonErrors/Unbreak":
+                    language.FixCommonErrors.Unbreak = reader.Value;
+                    break;
+                case "FixCommonErrors/FixDoubleDash":
+                    language.FixCommonErrors.FixDoubleDash = reader.Value;
+                    break;
+                case "FixCommonErrors/FixDoubleGreaterThan":
+                    language.FixCommonErrors.FixDoubleGreaterThan = reader.Value;
+                    break;
+                case "FixCommonErrors/FixEllipsesStart":
+                    language.FixCommonErrors.FixEllipsesStart = reader.Value;
+                    break;
+                case "FixCommonErrors/FixMissingOpenBracket":
+                    language.FixCommonErrors.FixMissingOpenBracket = reader.Value;
+                    break;
+                case "FixCommonErrors/FixMusicNotation":
+                    language.FixCommonErrors.FixMusicNotation = reader.Value;
+                    break;
+                case "FixCommonErrors/FixDoubleDashs":
+                    language.FixCommonErrors.FixDoubleDashs = reader.Value;
+                    break;
+                case "FixCommonErrors/FixDoubleGreaterThans":
+                    language.FixCommonErrors.FixDoubleGreaterThans = reader.Value;
+                    break;
+                case "FixCommonErrors/FixEllipsesStarts":
+                    language.FixCommonErrors.FixEllipsesStarts = reader.Value;
+                    break;
+                case "FixCommonErrors/FixMissingOpenBrackets":
+                    language.FixCommonErrors.FixMissingOpenBrackets = reader.Value;
+                    break;
+                case "FixCommonErrors/FixMusicNotations":
+                    language.FixCommonErrors.FixMusicNotations = reader.Value;
+                    break;
+                case "FixCommonErrors/XFixDoubleDash":
+                    language.FixCommonErrors.XFixDoubleDash = reader.Value;
+                    break;
+                case "FixCommonErrors/XFixDoubleGreaterThan":
+                    language.FixCommonErrors.XFixDoubleGreaterThan = reader.Value;
+                    break;
+                case "FixCommonErrors/XFixEllipsesStart":
+                    language.FixCommonErrors.XFixEllipsesStart = reader.Value;
+                    break;
+                case "FixCommonErrors/XFixMissingOpenBracket":
+                    language.FixCommonErrors.XFixMissingOpenBracket = reader.Value;
+                    break;
+                case "FixCommonErrors/XFixMusicNotation":
+                    language.FixCommonErrors.XFixMusicNotation = reader.Value;
+                    break;
+                case "FixCommonErrors/FixDoubleDashExample":
+                    language.FixCommonErrors.FixDoubleDashExample = reader.Value;
+                    break;
+                case "FixCommonErrors/FixDoubleGreaterThanExample":
+                    language.FixCommonErrors.FixDoubleGreaterThanExample = reader.Value;
+                    break;
+                case "FixCommonErrors/FixEllipsesStartExample":
+                    language.FixCommonErrors.FixEllipsesStartExample = reader.Value;
+                    break;
+                case "FixCommonErrors/FixMissingOpenBracketExample":
+                    language.FixCommonErrors.FixMissingOpenBracketExample = reader.Value;
+                    break;
+                case "FixCommonErrors/FixMusicNotationExample":
+                    language.FixCommonErrors.FixMusicNotationExample = reader.Value;
+                    break;
+                case "FixCommonErrors/NumberOfImportantLogMessages":
+                    language.FixCommonErrors.NumberOfImportantLogMessages = reader.Value;
+                    break;
+                case "FixCommonErrors/FixedOkXY":
+                    language.FixCommonErrors.FixedOkXY = reader.Value;
+                    break;
+                case "GetDictionaries/Title":
+                    language.GetDictionaries.Title = reader.Value;
+                    break;
+                case "GetDictionaries/DescriptionLine1":
+                    language.GetDictionaries.DescriptionLine1 = reader.Value;
+                    break;
+                case "GetDictionaries/DescriptionLine2":
+                    language.GetDictionaries.DescriptionLine2 = reader.Value;
+                    break;
+                case "GetDictionaries/GetDictionariesHere":
+                    language.GetDictionaries.GetDictionariesHere = reader.Value;
+                    break;
+                case "GetDictionaries/OpenOpenOfficeWiki":
+                    language.GetDictionaries.OpenOpenOfficeWiki = reader.Value;
+                    break;
+                case "GetDictionaries/GetAllDictionaries":
+                    language.GetDictionaries.GetAllDictionaries = reader.Value;
+                    break;
+                case "GetDictionaries/ChooseLanguageAndClickDownload":
+                    language.GetDictionaries.ChooseLanguageAndClickDownload = reader.Value;
+                    break;
+                case "GetDictionaries/OpenDictionariesFolder":
+                    language.GetDictionaries.OpenDictionariesFolder = reader.Value;
+                    break;
+                case "GetDictionaries/Download":
+                    language.GetDictionaries.Download = reader.Value;
+                    break;
+                case "GetDictionaries/XDownloaded":
+                    language.GetDictionaries.XDownloaded = reader.Value;
+                    break;
+                case "GetTesseractDictionaries/Title":
+                    language.GetTesseractDictionaries.Title = reader.Value;
+                    break;
+                case "GetTesseractDictionaries/DescriptionLine1":
+                    language.GetTesseractDictionaries.DescriptionLine1 = reader.Value;
+                    break;
+                case "GetTesseractDictionaries/DownloadFailed":
+                    language.GetTesseractDictionaries.DownloadFailed = reader.Value;
+                    break;
+                case "GetTesseractDictionaries/GetDictionariesHere":
+                    language.GetTesseractDictionaries.GetDictionariesHere = reader.Value;
+                    break;
+                case "GetTesseractDictionaries/OpenOpenOfficeWiki":
+                    language.GetTesseractDictionaries.OpenOpenOfficeWiki = reader.Value;
+                    break;
+                case "GetTesseractDictionaries/GetAllDictionaries":
+                    language.GetTesseractDictionaries.GetAllDictionaries = reader.Value;
+                    break;
+                case "GetTesseractDictionaries/ChooseLanguageAndClickDownload":
+                    language.GetTesseractDictionaries.ChooseLanguageAndClickDownload = reader.Value;
+                    break;
+                case "GetTesseractDictionaries/OpenDictionariesFolder":
+                    language.GetTesseractDictionaries.OpenDictionariesFolder = reader.Value;
+                    break;
+                case "GetTesseractDictionaries/Download":
+                    language.GetTesseractDictionaries.Download = reader.Value;
+                    break;
+                case "GetTesseractDictionaries/XDownloaded":
+                    language.GetTesseractDictionaries.XDownloaded = reader.Value;
+                    break;
+                case "GoogleTranslate/Title":
+                    language.GoogleTranslate.Title = reader.Value;
+                    break;
+                case "GoogleTranslate/From":
+                    language.GoogleTranslate.From = reader.Value;
+                    break;
+                case "GoogleTranslate/To":
+                    language.GoogleTranslate.To = reader.Value;
+                    break;
+                case "GoogleTranslate/Translate":
+                    language.GoogleTranslate.Translate = reader.Value;
+                    break;
+                case "GoogleTranslate/PleaseWait":
+                    language.GoogleTranslate.PleaseWait = reader.Value;
+                    break;
+                case "GoogleTranslate/PoweredByGoogleTranslate":
+                    language.GoogleTranslate.PoweredByGoogleTranslate = reader.Value;
+                    break;
+                case "GoogleTranslate/PoweredByMicrosoftTranslate":
+                    language.GoogleTranslate.PoweredByMicrosoftTranslate = reader.Value;
+                    break;
+                case "GoogleOrMicrosoftTranslate/Title":
+                    language.GoogleOrMicrosoftTranslate.Title = reader.Value;
+                    break;
+                case "GoogleOrMicrosoftTranslate/From":
+                    language.GoogleOrMicrosoftTranslate.From = reader.Value;
+                    break;
+                case "GoogleOrMicrosoftTranslate/To":
+                    language.GoogleOrMicrosoftTranslate.To = reader.Value;
+                    break;
+                case "GoogleOrMicrosoftTranslate/Translate":
+                    language.GoogleOrMicrosoftTranslate.Translate = reader.Value;
+                    break;
+                case "GoogleOrMicrosoftTranslate/SourceText":
+                    language.GoogleOrMicrosoftTranslate.SourceText = reader.Value;
+                    break;
+                case "GoogleOrMicrosoftTranslate/GoogleTranslate":
+                    language.GoogleOrMicrosoftTranslate.GoogleTranslate = reader.Value;
+                    break;
+                case "GoogleOrMicrosoftTranslate/MicrosoftTranslate":
+                    language.GoogleOrMicrosoftTranslate.MicrosoftTranslate = reader.Value;
+                    break;
+                case "GoToLine/Title":
+                    language.GoToLine.Title = reader.Value;
+                    break;
+                case "GoToLine/XIsNotAValidNumber":
+                    language.GoToLine.XIsNotAValidNumber = reader.Value;
+                    break;
+                case "ImportImages/Title":
+                    language.ImportImages.Title = reader.Value;
+                    break;
+                case "ImportImages/ImageFiles":
+                    language.ImportImages.ImageFiles = reader.Value;
+                    break;
+                case "ImportImages/Input":
+                    language.ImportImages.Input = reader.Value;
+                    break;
+                case "ImportImages/InputDescription":
+                    language.ImportImages.InputDescription = reader.Value;
+                    break;
+                case "ImportSceneChanges/Title":
+                    language.ImportSceneChanges.Title = reader.Value;
+                    break;
+                case "ImportSceneChanges/OpenTextFile":
+                    language.ImportSceneChanges.OpenTextFile = reader.Value;
+                    break;
+                case "ImportSceneChanges/ImportOptions":
+                    language.ImportSceneChanges.ImportOptions = reader.Value;
+                    break;
+                case "ImportSceneChanges/TextFiles":
+                    language.ImportSceneChanges.TextFiles = reader.Value;
+                    break;
+                case "ImportSceneChanges/TimeCodes":
+                    language.ImportSceneChanges.TimeCodes = reader.Value;
+                    break;
+                case "ImportSceneChanges/Frames":
+                    language.ImportSceneChanges.Frames = reader.Value;
+                    break;
+                case "ImportSceneChanges/Seconds":
+                    language.ImportSceneChanges.Seconds = reader.Value;
+                    break;
+                case "ImportSceneChanges/Milliseconds":
+                    language.ImportSceneChanges.Milliseconds = reader.Value;
+                    break;
+                case "ImportText/Title":
+                    language.ImportText.Title = reader.Value;
+                    break;
+                case "ImportText/OneSubtitleIsOneFile":
+                    language.ImportText.OneSubtitleIsOneFile = reader.Value;
+                    break;
+                case "ImportText/OpenTextFile":
+                    language.ImportText.OpenTextFile = reader.Value;
+                    break;
+                case "ImportText/OpenTextFiles":
+                    language.ImportText.OpenTextFiles = reader.Value;
+                    break;
+                case "ImportText/ImportOptions":
+                    language.ImportText.ImportOptions = reader.Value;
+                    break;
+                case "ImportText/Splitting":
+                    language.ImportText.Splitting = reader.Value;
+                    break;
+                case "ImportText/AutoSplitText":
+                    language.ImportText.AutoSplitText = reader.Value;
+                    break;
+                case "ImportText/OneLineIsOneSubtitle":
+                    language.ImportText.OneLineIsOneSubtitle = reader.Value;
+                    break;
+                case "ImportText/LineBreak":
+                    language.ImportText.LineBreak = reader.Value;
+                    break;
+                case "ImportText/SplitAtBlankLines":
+                    language.ImportText.SplitAtBlankLines = reader.Value;
+                    break;
+                case "ImportText/MergeShortLines":
+                    language.ImportText.MergeShortLines = reader.Value;
+                    break;
+                case "ImportText/RemoveEmptyLines":
+                    language.ImportText.RemoveEmptyLines = reader.Value;
+                    break;
+                case "ImportText/RemoveLinesWithoutLetters":
+                    language.ImportText.RemoveLinesWithoutLetters = reader.Value;
+                    break;
+                case "ImportText/GenerateTimeCodes":
+                    language.ImportText.GenerateTimeCodes = reader.Value;
+                    break;
+                case "ImportText/GapBetweenSubtitles":
+                    language.ImportText.GapBetweenSubtitles = reader.Value;
+                    break;
+                case "ImportText/Auto":
+                    language.ImportText.Auto = reader.Value;
+                    break;
+                case "ImportText/Fixed":
+                    language.ImportText.Fixed = reader.Value;
+                    break;
+                case "ImportText/Refresh":
+                    language.ImportText.Refresh = reader.Value;
+                    break;
+                case "ImportText/TextFiles":
+                    language.ImportText.TextFiles = reader.Value;
+                    break;
+                case "ImportText/PreviewLinesModifiedX":
+                    language.ImportText.PreviewLinesModifiedX = reader.Value;
+                    break;
+                case "ImportText/TimeCodes":
+                    language.ImportText.TimeCodes = reader.Value;
+                    break;
+                case "Interjections/Title":
+                    language.Interjections.Title = reader.Value;
+                    break;
+                case "JoinSubtitles/Title":
+                    language.JoinSubtitles.Title = reader.Value;
+                    break;
+                case "JoinSubtitles/Information":
+                    language.JoinSubtitles.Information = reader.Value;
+                    break;
+                case "JoinSubtitles/NumberOfLines":
+                    language.JoinSubtitles.NumberOfLines = reader.Value;
+                    break;
+                case "JoinSubtitles/StartTime":
+                    language.JoinSubtitles.StartTime = reader.Value;
+                    break;
+                case "JoinSubtitles/EndTime":
+                    language.JoinSubtitles.EndTime = reader.Value;
+                    break;
+                case "JoinSubtitles/FileName":
+                    language.JoinSubtitles.FileName = reader.Value;
+                    break;
+                case "JoinSubtitles/Join":
+                    language.JoinSubtitles.Join = reader.Value;
+                    break;
+                case "JoinSubtitles/TotalNumberOfLinesX":
+                    language.JoinSubtitles.TotalNumberOfLinesX = reader.Value;
+                    break;
+                case "Main/SaveChangesToUntitled":
+                    language.Main.SaveChangesToUntitled = reader.Value;
+                    break;
+                case "Main/SaveChangesToX":
+                    language.Main.SaveChangesToX = reader.Value;
+                    break;
+                case "Main/SaveChangesToUntitledOriginal":
+                    language.Main.SaveChangesToUntitledOriginal = reader.Value;
+                    break;
+                case "Main/SaveChangesToOriginalX":
+                    language.Main.SaveChangesToOriginalX = reader.Value;
+                    break;
+                case "Main/SaveSubtitleAs":
+                    language.Main.SaveSubtitleAs = reader.Value;
+                    break;
+                case "Main/SaveOriginalSubtitleAs":
+                    language.Main.SaveOriginalSubtitleAs = reader.Value;
+                    break;
+                case "Main/NoSubtitleLoaded":
+                    language.Main.NoSubtitleLoaded = reader.Value;
+                    break;
+                case "Main/VisualSyncSelectedLines":
+                    language.Main.VisualSyncSelectedLines = reader.Value;
+                    break;
+                case "Main/VisualSyncTitle":
+                    language.Main.VisualSyncTitle = reader.Value;
+                    break;
+                case "Main/BeforeVisualSync":
+                    language.Main.BeforeVisualSync = reader.Value;
+                    break;
+                case "Main/VisualSyncPerformedOnSelectedLines":
+                    language.Main.VisualSyncPerformedOnSelectedLines = reader.Value;
+                    break;
+                case "Main/VisualSyncPerformed":
+                    language.Main.VisualSyncPerformed = reader.Value;
+                    break;
+                case "Main/ImportThisVobSubSubtitle":
+                    language.Main.ImportThisVobSubSubtitle = reader.Value;
+                    break;
+                case "Main/FileXIsLargerThan10Mb":
+                    language.Main.FileXIsLargerThan10Mb = reader.Value;
+                    break;
+                case "Main/ContinueAnyway":
+                    language.Main.ContinueAnyway = reader.Value;
+                    break;
+                case "Main/BeforeLoadOf":
+                    language.Main.BeforeLoadOf = reader.Value;
+                    break;
+                case "Main/LoadedSubtitleX":
+                    language.Main.LoadedSubtitleX = reader.Value;
+                    break;
+                case "Main/LoadedEmptyOrShort":
+                    language.Main.LoadedEmptyOrShort = reader.Value;
+                    break;
+                case "Main/FileIsEmptyOrShort":
+                    language.Main.FileIsEmptyOrShort = reader.Value;
+                    break;
+                case "Main/FileNotFound":
+                    language.Main.FileNotFound = reader.Value;
+                    break;
+                case "Main/SavedSubtitleX":
+                    language.Main.SavedSubtitleX = reader.Value;
+                    break;
+                case "Main/SavedOriginalSubtitleX":
+                    language.Main.SavedOriginalSubtitleX = reader.Value;
+                    break;
+                case "Main/FileOnDiskModified":
+                    language.Main.FileOnDiskModified = reader.Value;
+                    break;
+                case "Main/OverwriteModifiedFile":
+                    language.Main.OverwriteModifiedFile = reader.Value;
+                    break;
+                case "Main/UnableToSaveSubtitleX":
+                    language.Main.UnableToSaveSubtitleX = reader.Value;
+                    break;
+                case "Main/BeforeNew":
+                    language.Main.BeforeNew = reader.Value;
+                    break;
+                case "Main/New":
+                    language.Main.New = reader.Value;
+                    break;
+                case "Main/BeforeConvertingToX":
+                    language.Main.BeforeConvertingToX = reader.Value;
+                    break;
+                case "Main/ConvertedToX":
+                    language.Main.ConvertedToX = reader.Value;
+                    break;
+                case "Main/BeforeShowEarlier":
+                    language.Main.BeforeShowEarlier = reader.Value;
+                    break;
+                case "Main/BeforeShowLater":
+                    language.Main.BeforeShowLater = reader.Value;
+                    break;
+                case "Main/LineNumberX":
+                    language.Main.LineNumberX = reader.Value;
+                    break;
+                case "Main/OpenVideoFile":
+                    language.Main.OpenVideoFile = reader.Value;
+                    break;
+                case "Main/NewFrameRateUsedToCalculateTimeCodes":
+                    language.Main.NewFrameRateUsedToCalculateTimeCodes = reader.Value;
+                    break;
+                case "Main/NewFrameRateUsedToCalculateFrameNumbers":
+                    language.Main.NewFrameRateUsedToCalculateFrameNumbers = reader.Value;
+                    break;
+                case "Main/FindContinue":
+                    language.Main.FindContinue = reader.Value;
+                    break;
+                case "Main/FindContinueTitle":
+                    language.Main.FindContinueTitle = reader.Value;
+                    break;
+                case "Main/ReplaceContinueNotFound":
+                    language.Main.ReplaceContinueNotFound = reader.Value;
+                    break;
+                case "Main/ReplaceXContinue":
+                    language.Main.ReplaceXContinue = reader.Value;
+                    break;
+                case "Main/ReplaceContinueTitle":
+                    language.Main.ReplaceContinueTitle = reader.Value;
+                    break;
+                case "Main/SearchingForXFromLineY":
+                    language.Main.SearchingForXFromLineY = reader.Value;
+                    break;
+                case "Main/XFoundAtLineNumberY":
+                    language.Main.XFoundAtLineNumberY = reader.Value;
+                    break;
+                case "Main/XNotFound":
+                    language.Main.XNotFound = reader.Value;
+                    break;
+                case "Main/BeforeReplace":
+                    language.Main.BeforeReplace = reader.Value;
+                    break;
+                case "Main/MatchFoundX":
+                    language.Main.MatchFoundX = reader.Value;
+                    break;
+                case "Main/NoMatchFoundX":
+                    language.Main.NoMatchFoundX = reader.Value;
+                    break;
+                case "Main/FoundNothingToReplace":
+                    language.Main.FoundNothingToReplace = reader.Value;
+                    break;
+                case "Main/ReplaceCountX":
+                    language.Main.ReplaceCountX = reader.Value;
+                    break;
+                case "Main/NoXFoundAtLineY":
+                    language.Main.NoXFoundAtLineY = reader.Value;
+                    break;
+                case "Main/OneReplacementMade":
+                    language.Main.OneReplacementMade = reader.Value;
+                    break;
+                case "Main/BeforeChangesMadeInSourceView":
+                    language.Main.BeforeChangesMadeInSourceView = reader.Value;
+                    break;
+                case "Main/UnableToParseSourceView":
+                    language.Main.UnableToParseSourceView = reader.Value;
+                    break;
+                case "Main/GoToLineNumberX":
+                    language.Main.GoToLineNumberX = reader.Value;
+                    break;
+                case "Main/CreateAdjustChangesApplied":
+                    language.Main.CreateAdjustChangesApplied = reader.Value;
+                    break;
+                case "Main/SelectedLines":
+                    language.Main.SelectedLines = reader.Value;
+                    break;
+                case "Main/BeforeDisplayTimeAdjustment":
+                    language.Main.BeforeDisplayTimeAdjustment = reader.Value;
+                    break;
+                case "Main/DisplayTimeAdjustedX":
+                    language.Main.DisplayTimeAdjustedX = reader.Value;
+                    break;
+                case "Main/DisplayTimesAdjustedX":
+                    language.Main.DisplayTimesAdjustedX = reader.Value;
+                    break;
+                case "Main/StarTimeAdjustedX":
+                    language.Main.StarTimeAdjustedX = reader.Value;
+                    break;
+                case "Main/BeforeCommonErrorFixes":
+                    language.Main.BeforeCommonErrorFixes = reader.Value;
+                    break;
+                case "Main/CommonErrorsFixedInSelectedLines":
+                    language.Main.CommonErrorsFixedInSelectedLines = reader.Value;
+                    break;
+                case "Main/CommonErrorsFixed":
+                    language.Main.CommonErrorsFixed = reader.Value;
+                    break;
+                case "Main/BeforeRenumbering":
+                    language.Main.BeforeRenumbering = reader.Value;
+                    break;
+                case "Main/RenumberedStartingFromX":
+                    language.Main.RenumberedStartingFromX = reader.Value;
+                    break;
+                case "Main/BeforeRemovalOfTextingForHearingImpaired":
+                    language.Main.BeforeRemovalOfTextingForHearingImpaired = reader.Value;
+                    break;
+                case "Main/TextingForHearingImpairedRemovedOneLine":
+                    language.Main.TextingForHearingImpairedRemovedOneLine = reader.Value;
+                    break;
+                case "Main/TextingForHearingImpairedRemovedXLines":
+                    language.Main.TextingForHearingImpairedRemovedXLines = reader.Value;
+                    break;
+                case "Main/SubtitleSplitted":
+                    language.Main.SubtitleSplitted = reader.Value;
+                    break;
+                case "Main/SubtitleAppendPrompt":
+                    language.Main.SubtitleAppendPrompt = reader.Value;
+                    break;
+                case "Main/SubtitleAppendPromptTitle":
+                    language.Main.SubtitleAppendPromptTitle = reader.Value;
+                    break;
+                case "Main/OpenSubtitleToAppend":
+                    language.Main.OpenSubtitleToAppend = reader.Value;
+                    break;
+                case "Main/AppendViaVisualSyncTitle":
+                    language.Main.AppendViaVisualSyncTitle = reader.Value;
+                    break;
+                case "Main/AppendSynchronizedSubtitlePrompt":
+                    language.Main.AppendSynchronizedSubtitlePrompt = reader.Value;
+                    break;
+                case "Main/BeforeAppend":
+                    language.Main.BeforeAppend = reader.Value;
+                    break;
+                case "Main/SubtitleAppendedX":
+                    language.Main.SubtitleAppendedX = reader.Value;
+                    break;
+                case "Main/SubtitleNotAppended":
+                    language.Main.SubtitleNotAppended = reader.Value;
+                    break;
+                case "Main/GoogleTranslate":
+                    language.Main.GoogleTranslate = reader.Value;
+                    break;
+                case "Main/MicrosoftTranslate":
+                    language.Main.MicrosoftTranslate = reader.Value;
+                    break;
+                case "Main/BeforeGoogleTranslation":
+                    language.Main.BeforeGoogleTranslation = reader.Value;
+                    break;
+                case "Main/SelectedLinesTranslated":
+                    language.Main.SelectedLinesTranslated = reader.Value;
+                    break;
+                case "Main/SubtitleTranslated":
+                    language.Main.SubtitleTranslated = reader.Value;
+                    break;
+                case "Main/TranslateSwedishToDanish":
+                    language.Main.TranslateSwedishToDanish = reader.Value;
+                    break;
+                case "Main/TranslateSwedishToDanishWarning":
+                    language.Main.TranslateSwedishToDanishWarning = reader.Value;
+                    break;
+                case "Main/TranslatingViaNikseDkMt":
+                    language.Main.TranslatingViaNikseDkMt = reader.Value;
+                    break;
+                case "Main/BeforeSwedishToDanishTranslation":
+                    language.Main.BeforeSwedishToDanishTranslation = reader.Value;
+                    break;
+                case "Main/TranslationFromSwedishToDanishComplete":
+                    language.Main.TranslationFromSwedishToDanishComplete = reader.Value;
+                    break;
+                case "Main/TranslationFromSwedishToDanishFailed":
+                    language.Main.TranslationFromSwedishToDanishFailed = reader.Value;
+                    break;
+                case "Main/BeforeUndo":
+                    language.Main.BeforeUndo = reader.Value;
+                    break;
+                case "Main/UndoPerformed":
+                    language.Main.UndoPerformed = reader.Value;
+                    break;
+                case "Main/RedoPerformed":
+                    language.Main.RedoPerformed = reader.Value;
+                    break;
+                case "Main/NothingToUndo":
+                    language.Main.NothingToUndo = reader.Value;
+                    break;
+                case "Main/InvalidLanguageNameX":
+                    language.Main.InvalidLanguageNameX = reader.Value;
+                    break;
+                case "Main/UnableToChangeLanguage":
+                    language.Main.UnableToChangeLanguage = reader.Value;
+                    break;
+                case "Main/NumberOfCorrectedWords":
+                    language.Main.NumberOfCorrectedWords = reader.Value;
+                    break;
+                case "Main/NumberOfSkippedWords":
+                    language.Main.NumberOfSkippedWords = reader.Value;
+                    break;
+                case "Main/NumberOfCorrectWords":
+                    language.Main.NumberOfCorrectWords = reader.Value;
+                    break;
+                case "Main/NumberOfWordsAddedToDictionary":
+                    language.Main.NumberOfWordsAddedToDictionary = reader.Value;
+                    break;
+                case "Main/NumberOfNameHits":
+                    language.Main.NumberOfNameHits = reader.Value;
+                    break;
+                case "Main/SpellCheck":
+                    language.Main.SpellCheck = reader.Value;
+                    break;
+                case "Main/BeforeSpellCheck":
+                    language.Main.BeforeSpellCheck = reader.Value;
+                    break;
+                case "Main/SpellCheckChangedXToY":
+                    language.Main.SpellCheckChangedXToY = reader.Value;
+                    break;
+                case "Main/BeforeAddingTagX":
+                    language.Main.BeforeAddingTagX = reader.Value;
+                    break;
+                case "Main/TagXAdded":
+                    language.Main.TagXAdded = reader.Value;
+                    break;
+                case "Main/LineXOfY":
+                    language.Main.LineXOfY = reader.Value;
+                    break;
+                case "Main/XLinesSavedAsY":
+                    language.Main.XLinesSavedAsY = reader.Value;
+                    break;
+                case "Main/XLinesDeleted":
+                    language.Main.XLinesDeleted = reader.Value;
+                    break;
+                case "Main/BeforeDeletingXLines":
+                    language.Main.BeforeDeletingXLines = reader.Value;
+                    break;
+                case "Main/DeleteXLinesPrompt":
+                    language.Main.DeleteXLinesPrompt = reader.Value;
+                    break;
+                case "Main/OneLineDeleted":
+                    language.Main.OneLineDeleted = reader.Value;
+                    break;
+                case "Main/BeforeDeletingOneLine":
+                    language.Main.BeforeDeletingOneLine = reader.Value;
+                    break;
+                case "Main/DeleteOneLinePrompt":
+                    language.Main.DeleteOneLinePrompt = reader.Value;
+                    break;
+                case "Main/BeforeInsertLine":
+                    language.Main.BeforeInsertLine = reader.Value;
+                    break;
+                case "Main/LineInserted":
+                    language.Main.LineInserted = reader.Value;
+                    break;
+                case "Main/BeforeLineUpdatedInListView":
+                    language.Main.BeforeLineUpdatedInListView = reader.Value;
+                    break;
+                case "Main/BeforeSettingFontToNormal":
+                    language.Main.BeforeSettingFontToNormal = reader.Value;
+                    break;
+                case "Main/BeforeSplitLine":
+                    language.Main.BeforeSplitLine = reader.Value;
+                    break;
+                case "Main/LineSplitted":
+                    language.Main.LineSplitted = reader.Value;
+                    break;
+                case "Main/BeforeMergeLines":
+                    language.Main.BeforeMergeLines = reader.Value;
+                    break;
+                case "Main/LinesMerged":
+                    language.Main.LinesMerged = reader.Value;
+                    break;
+                case "Main/BeforeSettingColor":
+                    language.Main.BeforeSettingColor = reader.Value;
+                    break;
+                case "Main/BeforeSettingFontName":
+                    language.Main.BeforeSettingFontName = reader.Value;
+                    break;
+                case "Main/BeforeTypeWriterEffect":
+                    language.Main.BeforeTypeWriterEffect = reader.Value;
+                    break;
+                case "Main/BeforeKaraokeEffect":
+                    language.Main.BeforeKaraokeEffect = reader.Value;
+                    break;
+                case "Main/BeforeImportingDvdSubtitle":
+                    language.Main.BeforeImportingDvdSubtitle = reader.Value;
+                    break;
+                case "Main/OpenMatroskaFile":
+                    language.Main.OpenMatroskaFile = reader.Value;
+                    break;
+                case "Main/MatroskaFiles":
+                    language.Main.MatroskaFiles = reader.Value;
+                    break;
+                case "Main/NoSubtitlesFound":
+                    language.Main.NoSubtitlesFound = reader.Value;
+                    break;
+                case "Main/NotAValidMatroskaFileX":
+                    language.Main.NotAValidMatroskaFileX = reader.Value;
+                    break;
+                case "Main/ParsingMatroskaFile":
+                    language.Main.ParsingMatroskaFile = reader.Value;
+                    break;
+                case "Main/BeforeImportFromMatroskaFile":
+                    language.Main.BeforeImportFromMatroskaFile = reader.Value;
+                    break;
+                case "Main/SubtitleImportedFromMatroskaFile":
+                    language.Main.SubtitleImportedFromMatroskaFile = reader.Value;
+                    break;
+                case "Main/DropFileXNotAccepted":
+                    language.Main.DropFileXNotAccepted = reader.Value;
+                    break;
+                case "Main/DropOnlyOneFile":
+                    language.Main.DropOnlyOneFile = reader.Value;
+                    break;
+                case "Main/BeforeCreateAdjustLines":
+                    language.Main.BeforeCreateAdjustLines = reader.Value;
+                    break;
+                case "Main/OpenAnsiSubtitle":
+                    language.Main.OpenAnsiSubtitle = reader.Value;
+                    break;
+                case "Main/BeforeChangeCasing":
+                    language.Main.BeforeChangeCasing = reader.Value;
+                    break;
+                case "Main/CasingCompleteMessageNoNames":
+                    language.Main.CasingCompleteMessageNoNames = reader.Value;
+                    break;
+                case "Main/CasingCompleteMessageOnlyNames":
+                    language.Main.CasingCompleteMessageOnlyNames = reader.Value;
+                    break;
+                case "Main/CasingCompleteMessage":
+                    language.Main.CasingCompleteMessage = reader.Value;
+                    break;
+                case "Main/BeforeChangeFrameRate":
+                    language.Main.BeforeChangeFrameRate = reader.Value;
+                    break;
+                case "Main/BeforeAdjustSpeedInPercent":
+                    language.Main.BeforeAdjustSpeedInPercent = reader.Value;
+                    break;
+                case "Main/FrameRateChangedFromXToY":
+                    language.Main.FrameRateChangedFromXToY = reader.Value;
+                    break;
+                case "Main/IdxFileNotFoundWarning":
+                    language.Main.IdxFileNotFoundWarning = reader.Value;
+                    break;
+                case "Main/InvalidVobSubHeader":
+                    language.Main.InvalidVobSubHeader = reader.Value;
+                    break;
+                case "Main/OpenVobSubFile":
+                    language.Main.OpenVobSubFile = reader.Value;
+                    break;
+                case "Main/VobSubFiles":
+                    language.Main.VobSubFiles = reader.Value;
+                    break;
+                case "Main/OpenBluRaySupFile":
+                    language.Main.OpenBluRaySupFile = reader.Value;
+                    break;
+                case "Main/BluRaySupFiles":
+                    language.Main.BluRaySupFiles = reader.Value;
+                    break;
+                case "Main/OpenXSubFiles":
+                    language.Main.OpenXSubFiles = reader.Value;
+                    break;
+                case "Main/XSubFiles":
+                    language.Main.XSubFiles = reader.Value;
+                    break;
+                case "Main/BeforeImportingVobSubFile":
+                    language.Main.BeforeImportingVobSubFile = reader.Value;
+                    break;
+                case "Main/BeforeImportingBluRaySupFile":
+                    language.Main.BeforeImportingBluRaySupFile = reader.Value;
+                    break;
+                case "Main/BeforeImportingBdnXml":
+                    language.Main.BeforeImportingBdnXml = reader.Value;
+                    break;
+                case "Main/BeforeShowSelectedLinesEarlierLater":
+                    language.Main.BeforeShowSelectedLinesEarlierLater = reader.Value;
+                    break;
+                case "Main/ShowAllLinesXSecondsLinesEarlier":
+                    language.Main.ShowAllLinesXSecondsLinesEarlier = reader.Value;
+                    break;
+                case "Main/ShowAllLinesXSecondsLinesLater":
+                    language.Main.ShowAllLinesXSecondsLinesLater = reader.Value;
+                    break;
+                case "Main/ShowSelectedLinesXSecondsLinesEarlier":
+                    language.Main.ShowSelectedLinesXSecondsLinesEarlier = reader.Value;
+                    break;
+                case "Main/ShowSelectedLinesXSecondsLinesLater":
+                    language.Main.ShowSelectedLinesXSecondsLinesLater = reader.Value;
+                    break;
+                case "Main/ShowSelectionAndForwardXSecondsLinesEarlier":
+                    language.Main.ShowSelectionAndForwardXSecondsLinesEarlier = reader.Value;
+                    break;
+                case "Main/ShowSelectionAndForwardXSecondsLinesLater":
+                    language.Main.ShowSelectionAndForwardXSecondsLinesLater = reader.Value;
+                    break;
+                case "Main/ShowSelectedLinesEarlierLaterPerformed":
+                    language.Main.ShowSelectedLinesEarlierLaterPerformed = reader.Value;
+                    break;
+                case "Main/DoubleWordsViaRegEx":
+                    language.Main.DoubleWordsViaRegEx = reader.Value;
+                    break;
+                case "Main/BeforeSortX":
+                    language.Main.BeforeSortX = reader.Value;
+                    break;
+                case "Main/SortedByX":
+                    language.Main.SortedByX = reader.Value;
+                    break;
+                case "Main/BeforeAutoBalanceSelectedLines":
+                    language.Main.BeforeAutoBalanceSelectedLines = reader.Value;
+                    break;
+                case "Main/NumberOfLinesAutoBalancedX":
+                    language.Main.NumberOfLinesAutoBalancedX = reader.Value;
+                    break;
+                case "Main/BeforeRemoveLineBreaksInSelectedLines":
+                    language.Main.BeforeRemoveLineBreaksInSelectedLines = reader.Value;
+                    break;
+                case "Main/NumberOfWithRemovedLineBreakX":
+                    language.Main.NumberOfWithRemovedLineBreakX = reader.Value;
+                    break;
+                case "Main/BeforeMultipleReplace":
+                    language.Main.BeforeMultipleReplace = reader.Value;
+                    break;
+                case "Main/NumberOfLinesReplacedX":
+                    language.Main.NumberOfLinesReplacedX = reader.Value;
+                    break;
+                case "Main/NameXAddedToNamesEtcList":
+                    language.Main.NameXAddedToNamesEtcList = reader.Value;
+                    break;
+                case "Main/NameXNotAddedToNamesEtcList":
+                    language.Main.NameXNotAddedToNamesEtcList = reader.Value;
+                    break;
+                case "Main/WordXAddedToUserDic":
+                    language.Main.WordXAddedToUserDic = reader.Value;
+                    break;
+                case "Main/WordXNotAddedToUserDic":
+                    language.Main.WordXNotAddedToUserDic = reader.Value;
+                    break;
+                case "Main/OcrReplacePairXAdded":
+                    language.Main.OcrReplacePairXAdded = reader.Value;
+                    break;
+                case "Main/OcrReplacePairXNotAdded":
+                    language.Main.OcrReplacePairXNotAdded = reader.Value;
+                    break;
+                case "Main/XLinesSelected":
+                    language.Main.XLinesSelected = reader.Value;
+                    break;
+                case "Main/UnicodeMusicSymbolsAnsiWarning":
+                    language.Main.UnicodeMusicSymbolsAnsiWarning = reader.Value;
+                    break;
+                case "Main/UnicodeCharactersAnsiWarning":
+                    language.Main.UnicodeCharactersAnsiWarning = reader.Value;
+                    break;
+                case "Main/NegativeTimeWarning":
+                    language.Main.NegativeTimeWarning = reader.Value;
+                    break;
+                case "Main/BeforeMergeShortLines":
+                    language.Main.BeforeMergeShortLines = reader.Value;
+                    break;
+                case "Main/BeforeSplitLongLines":
+                    language.Main.BeforeSplitLongLines = reader.Value;
+                    break;
+                case "Main/MergedShortLinesX":
+                    language.Main.MergedShortLinesX = reader.Value;
+                    break;
+                case "Main/BeforeSetMinimumDisplayTimeBetweenParagraphs":
+                    language.Main.BeforeSetMinimumDisplayTimeBetweenParagraphs = reader.Value;
+                    break;
+                case "Main/XMinimumDisplayTimeBetweenParagraphsChanged":
+                    language.Main.XMinimumDisplayTimeBetweenParagraphsChanged = reader.Value;
+                    break;
+                case "Main/BeforeImportText":
+                    language.Main.BeforeImportText = reader.Value;
+                    break;
+                case "Main/TextImported":
+                    language.Main.TextImported = reader.Value;
+                    break;
+                case "Main/BeforePointSynchronization":
+                    language.Main.BeforePointSynchronization = reader.Value;
+                    break;
+                case "Main/PointSynchronizationDone":
+                    language.Main.PointSynchronizationDone = reader.Value;
+                    break;
+                case "Main/BeforeTimeCodeImport":
+                    language.Main.BeforeTimeCodeImport = reader.Value;
+                    break;
+                case "Main/TimeCodeImportedFromXY":
+                    language.Main.TimeCodeImportedFromXY = reader.Value;
+                    break;
+                case "Main/BeforeInsertSubtitleAtVideoPosition":
+                    language.Main.BeforeInsertSubtitleAtVideoPosition = reader.Value;
+                    break;
+                case "Main/BeforeSetStartTimeAndOffsetTheRest":
+                    language.Main.BeforeSetStartTimeAndOffsetTheRest = reader.Value;
+                    break;
+                case "Main/BeforeSetEndTimeAndOffsetTheRest":
+                    language.Main.BeforeSetEndTimeAndOffsetTheRest = reader.Value;
+                    break;
+                case "Main/BeforeSetEndAndVideoPosition":
+                    language.Main.BeforeSetEndAndVideoPosition = reader.Value;
+                    break;
+                case "Main/ContinueWithCurrentSpellCheck":
+                    language.Main.ContinueWithCurrentSpellCheck = reader.Value;
+                    break;
+                case "Main/CharactersPerSecond":
+                    language.Main.CharactersPerSecond = reader.Value;
+                    break;
+                case "Main/GetFrameRateFromVideoFile":
+                    language.Main.GetFrameRateFromVideoFile = reader.Value;
+                    break;
+                case "Main/NetworkMessage":
+                    language.Main.NetworkMessage = reader.Value;
+                    break;
+                case "Main/NetworkUpdate":
+                    language.Main.NetworkUpdate = reader.Value;
+                    break;
+                case "Main/NetworkInsert":
+                    language.Main.NetworkInsert = reader.Value;
+                    break;
+                case "Main/NetworkDelete":
+                    language.Main.NetworkDelete = reader.Value;
+                    break;
+                case "Main/NetworkNewUser":
+                    language.Main.NetworkNewUser = reader.Value;
+                    break;
+                case "Main/NetworkByeUser":
+                    language.Main.NetworkByeUser = reader.Value;
+                    break;
+                case "Main/NetworkUnableToConnectToServer":
+                    language.Main.NetworkUnableToConnectToServer = reader.Value;
+                    break;
+                case "Main/UserAndAction":
+                    language.Main.UserAndAction = reader.Value;
+                    break;
+                case "Main/NetworkMode":
+                    language.Main.NetworkMode = reader.Value;
+                    break;
+                case "Main/XStartedSessionYAtZ":
+                    language.Main.XStartedSessionYAtZ = reader.Value;
+                    break;
+                case "Main/SpellChekingViaWordXLineYOfX":
+                    language.Main.SpellChekingViaWordXLineYOfX = reader.Value;
+                    break;
+                case "Main/UnableToStartWord":
+                    language.Main.UnableToStartWord = reader.Value;
+                    break;
+                case "Main/SpellCheckAbortedXCorrections":
+                    language.Main.SpellCheckAbortedXCorrections = reader.Value;
+                    break;
+                case "Main/SpellCheckCompletedXCorrections":
+                    language.Main.SpellCheckCompletedXCorrections = reader.Value;
+                    break;
+                case "Main/OpenOtherSubtitle":
+                    language.Main.OpenOtherSubtitle = reader.Value;
+                    break;
+                case "Main/BeforeToggleDialogueDashes":
+                    language.Main.BeforeToggleDialogueDashes = reader.Value;
+                    break;
+                case "Main/ExportPlainTextAs":
+                    language.Main.ExportPlainTextAs = reader.Value;
+                    break;
+                case "Main/TextFiles":
+                    language.Main.TextFiles = reader.Value;
+                    break;
+                case "Main/SubtitleExported":
+                    language.Main.SubtitleExported = reader.Value;
+                    break;
+                case "Main/LineNumberXErrorReadingFromSourceLineY":
+                    language.Main.LineNumberXErrorReadingFromSourceLineY = reader.Value;
+                    break;
+                case "Main/LineNumberXErrorReadingTimeCodeFromSourceLineY":
+                    language.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY = reader.Value;
+                    break;
+                case "Main/LineNumberXExpectedNumberFromSourceLineY":
+                    language.Main.LineNumberXExpectedNumberFromSourceLineY = reader.Value;
+                    break;
+                case "Main/BeforeGuessingTimeCodes":
+                    language.Main.BeforeGuessingTimeCodes = reader.Value;
+                    break;
+                case "Main/BeforeAutoDuration":
+                    language.Main.BeforeAutoDuration = reader.Value;
+                    break;
+                case "Main/BeforeColumnPaste":
+                    language.Main.BeforeColumnPaste = reader.Value;
+                    break;
+                case "Main/BeforeColumnDelete":
+                    language.Main.BeforeColumnDelete = reader.Value;
+                    break;
+                case "Main/BeforeColumnImportText":
+                    language.Main.BeforeColumnImportText = reader.Value;
+                    break;
+                case "Main/BeforeColumnShiftCellsDown":
+                    language.Main.BeforeColumnShiftCellsDown = reader.Value;
+                    break;
+                case "Main/ErrorLoadingPluginXErrorY":
+                    language.Main.ErrorLoadingPluginXErrorY = reader.Value;
+                    break;
+                case "Main/BeforeRunningPluginXVersionY":
+                    language.Main.BeforeRunningPluginXVersionY = reader.Value;
+                    break;
+                case "Main/UnableToReadPluginResult":
+                    language.Main.UnableToReadPluginResult = reader.Value;
+                    break;
+                case "Main/UnableToCreateBackupDirectory":
+                    language.Main.UnableToCreateBackupDirectory = reader.Value;
+                    break;
+                case "Main/BeforeDisplaySubtitleJoin":
+                    language.Main.BeforeDisplaySubtitleJoin = reader.Value;
+                    break;
+                case "Main/SubtitlesJoined":
+                    language.Main.SubtitlesJoined = reader.Value;
+                    break;
+                case "Main/StatusLog":
+                    language.Main.StatusLog = reader.Value;
+                    break;
+                case "Main/XSceneChangesImported":
+                    language.Main.XSceneChangesImported = reader.Value;
+                    break;
+                case "Main/PluginXExecuted":
+                    language.Main.PluginXExecuted = reader.Value;
+                    break;
+                case "Main/NotAValidXSubFile":
+                    language.Main.NotAValidXSubFile = reader.Value;
+                    break;
+                case "Main/BeforeMergeLinesWithSameText":
+                    language.Main.BeforeMergeLinesWithSameText = reader.Value;
+                    break;
+                case "Main/ImportTimeCodesDifferentNumberOfLinesWarning":
+                    language.Main.ImportTimeCodesDifferentNumberOfLinesWarning = reader.Value;
+                    break;
+                case "Main/ParsingTransportStream":
+                    language.Main.ParsingTransportStream = reader.Value;
+                    break;
+                case "Main/ErrorLoadIdx":
+                    language.Main.ErrorLoadIdx = reader.Value;
+                    break;
+                case "Main/ErrorLoadRar":
+                    language.Main.ErrorLoadRar = reader.Value;
+                    break;
+                case "Main/ErrorLoadZip":
+                    language.Main.ErrorLoadZip = reader.Value;
+                    break;
+                case "Main/Menu/File/Title":
+                    language.Main.Menu.File.Title = reader.Value;
+                    break;
+                case "Main/Menu/File/New":
+                    language.Main.Menu.File.New = reader.Value;
+                    break;
+                case "Main/Menu/File/Open":
+                    language.Main.Menu.File.Open = reader.Value;
+                    break;
+                case "Main/Menu/File/OpenKeepVideo":
+                    language.Main.Menu.File.OpenKeepVideo = reader.Value;
+                    break;
+                case "Main/Menu/File/Reopen":
+                    language.Main.Menu.File.Reopen = reader.Value;
+                    break;
+                case "Main/Menu/File/Save":
+                    language.Main.Menu.File.Save = reader.Value;
+                    break;
+                case "Main/Menu/File/SaveAs":
+                    language.Main.Menu.File.SaveAs = reader.Value;
+                    break;
+                case "Main/Menu/File/RestoreAutoBackup":
+                    language.Main.Menu.File.RestoreAutoBackup = reader.Value;
+                    break;
+                case "Main/Menu/File/AdvancedSubStationAlphaProperties":
+                    language.Main.Menu.File.AdvancedSubStationAlphaProperties = reader.Value;
+                    break;
+                case "Main/Menu/File/SubStationAlphaProperties":
+                    language.Main.Menu.File.SubStationAlphaProperties = reader.Value;
+                    break;
+                case "Main/Menu/File/OpenOriginal":
+                    language.Main.Menu.File.OpenOriginal = reader.Value;
+                    break;
+                case "Main/Menu/File/SaveOriginal":
+                    language.Main.Menu.File.SaveOriginal = reader.Value;
+                    break;
+                case "Main/Menu/File/CloseOriginal":
+                    language.Main.Menu.File.CloseOriginal = reader.Value;
+                    break;
+                case "Main/Menu/File/OpenContainingFolder":
+                    language.Main.Menu.File.OpenContainingFolder = reader.Value;
+                    break;
+                case "Main/Menu/File/Compare":
+                    language.Main.Menu.File.Compare = reader.Value;
+                    break;
+                case "Main/Menu/File/Statistics":
+                    language.Main.Menu.File.Statistics = reader.Value;
+                    break;
+                case "Main/Menu/File/Plugins":
+                    language.Main.Menu.File.Plugins = reader.Value;
+                    break;
+                case "Main/Menu/File/ImportOcrFromDvd":
+                    language.Main.Menu.File.ImportOcrFromDvd = reader.Value;
+                    break;
+                case "Main/Menu/File/ImportOcrVobSubSubtitle":
+                    language.Main.Menu.File.ImportOcrVobSubSubtitle = reader.Value;
+                    break;
+                case "Main/Menu/File/ImportBluRaySupFile":
+                    language.Main.Menu.File.ImportBluRaySupFile = reader.Value;
+                    break;
+                case "Main/Menu/File/ImportXSub":
+                    language.Main.Menu.File.ImportXSub = reader.Value;
+                    break;
+                case "Main/Menu/File/ImportSubtitleFromMatroskaFile":
+                    language.Main.Menu.File.ImportSubtitleFromMatroskaFile = reader.Value;
+                    break;
+                case "Main/Menu/File/ImportSubtitleWithManualChosenEncoding":
+                    language.Main.Menu.File.ImportSubtitleWithManualChosenEncoding = reader.Value;
+                    break;
+                case "Main/Menu/File/ImportText":
+                    language.Main.Menu.File.ImportText = reader.Value;
+                    break;
+                case "Main/Menu/File/ImportImages":
+                    language.Main.Menu.File.ImportImages = reader.Value;
+                    break;
+                case "Main/Menu/File/ImportTimecodes":
+                    language.Main.Menu.File.ImportTimecodes = reader.Value;
+                    break;
+                case "Main/Menu/File/Export":
+                    language.Main.Menu.File.Export = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportBdnXml":
+                    language.Main.Menu.File.ExportBdnXml = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportBluRaySup":
+                    language.Main.Menu.File.ExportBluRaySup = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportVobSub":
+                    language.Main.Menu.File.ExportVobSub = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportCavena890":
+                    language.Main.Menu.File.ExportCavena890 = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportEbu":
+                    language.Main.Menu.File.ExportEbu = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportPac":
+                    language.Main.Menu.File.ExportPac = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportPlainText":
+                    language.Main.Menu.File.ExportPlainText = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportAdobeEncoreFabImageScript":
+                    language.Main.Menu.File.ExportAdobeEncoreFabImageScript = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportKoreanAtsFilePair":
+                    language.Main.Menu.File.ExportKoreanAtsFilePair = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportAvidStl":
+                    language.Main.Menu.File.ExportAvidStl = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportDvdStudioProStl":
+                    language.Main.Menu.File.ExportDvdStudioProStl = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportCapMakerPlus":
+                    language.Main.Menu.File.ExportCapMakerPlus = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportCaptionsInc":
+                    language.Main.Menu.File.ExportCaptionsInc = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportCheetahCap":
+                    language.Main.Menu.File.ExportCheetahCap = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportUltech130":
+                    language.Main.Menu.File.ExportUltech130 = reader.Value;
+                    break;
+                case "Main/Menu/File/ExportCustomTextFormat":
+                    language.Main.Menu.File.ExportCustomTextFormat = reader.Value;
+                    break;
+                case "Main/Menu/File/Exit":
+                    language.Main.Menu.File.Exit = reader.Value;
+                    break;
+                case "Main/Menu/Edit/Title":
+                    language.Main.Menu.Edit.Title = reader.Value;
+                    break;
+                case "Main/Menu/Edit/Undo":
+                    language.Main.Menu.Edit.Undo = reader.Value;
+                    break;
+                case "Main/Menu/Edit/Redo":
+                    language.Main.Menu.Edit.Redo = reader.Value;
+                    break;
+                case "Main/Menu/Edit/ShowUndoHistory":
+                    language.Main.Menu.Edit.ShowUndoHistory = reader.Value;
+                    break;
+                case "Main/Menu/Edit/InsertUnicodeSymbol":
+                    language.Main.Menu.Edit.InsertUnicodeSymbol = reader.Value;
+                    break;
+                case "Main/Menu/Edit/Find":
+                    language.Main.Menu.Edit.Find = reader.Value;
+                    break;
+                case "Main/Menu/Edit/FindNext":
+                    language.Main.Menu.Edit.FindNext = reader.Value;
+                    break;
+                case "Main/Menu/Edit/Replace":
+                    language.Main.Menu.Edit.Replace = reader.Value;
+                    break;
+                case "Main/Menu/Edit/MultipleReplace":
+                    language.Main.Menu.Edit.MultipleReplace = reader.Value;
+                    break;
+                case "Main/Menu/Edit/GoToSubtitleNumber":
+                    language.Main.Menu.Edit.GoToSubtitleNumber = reader.Value;
+                    break;
+                case "Main/Menu/Edit/RightToLeftMode":
+                    language.Main.Menu.Edit.RightToLeftMode = reader.Value;
+                    break;
+                case "Main/Menu/Edit/FixTrlViaUnicodeControlCharacters":
+                    language.Main.Menu.Edit.FixTrlViaUnicodeControlCharacters = reader.Value;
+                    break;
+                case "Main/Menu/Edit/ReverseRightToLeftStartEnd":
+                    language.Main.Menu.Edit.ReverseRightToLeftStartEnd = reader.Value;
+                    break;
+                case "Main/Menu/Edit/ShowOriginalTextInAudioAndVideoPreview":
+                    language.Main.Menu.Edit.ShowOriginalTextInAudioAndVideoPreview = reader.Value;
+                    break;
+                case "Main/Menu/Edit/ModifySelection":
+                    language.Main.Menu.Edit.ModifySelection = reader.Value;
+                    break;
+                case "Main/Menu/Edit/InverseSelection":
+                    language.Main.Menu.Edit.InverseSelection = reader.Value;
+                    break;
+                case "Main/Menu/Tools/Title":
+                    language.Main.Menu.Tools.Title = reader.Value;
+                    break;
+                case "Main/Menu/Tools/AdjustDisplayDuration":
+                    language.Main.Menu.Tools.AdjustDisplayDuration = reader.Value;
+                    break;
+                case "Main/Menu/Tools/ApplyDurationLimits":
+                    language.Main.Menu.Tools.ApplyDurationLimits = reader.Value;
+                    break;
+                case "Main/Menu/Tools/DurationsBridgeGap":
+                    language.Main.Menu.Tools.DurationsBridgeGap = reader.Value;
+                    break;
+                case "Main/Menu/Tools/FixCommonErrors":
+                    language.Main.Menu.Tools.FixCommonErrors = reader.Value;
+                    break;
+                case "Main/Menu/Tools/StartNumberingFrom":
+                    language.Main.Menu.Tools.StartNumberingFrom = reader.Value;
+                    break;
+                case "Main/Menu/Tools/RemoveTextForHearingImpaired":
+                    language.Main.Menu.Tools.RemoveTextForHearingImpaired = reader.Value;
+                    break;
+                case "Main/Menu/Tools/ChangeCasing":
+                    language.Main.Menu.Tools.ChangeCasing = reader.Value;
+                    break;
+                case "Main/Menu/Tools/ChangeFrameRate":
+                    language.Main.Menu.Tools.ChangeFrameRate = reader.Value;
+                    break;
+                case "Main/Menu/Tools/ChangeSpeedInPercent":
+                    language.Main.Menu.Tools.ChangeSpeedInPercent = reader.Value;
+                    break;
+                case "Main/Menu/Tools/MergeShortLines":
+                    language.Main.Menu.Tools.MergeShortLines = reader.Value;
+                    break;
+                case "Main/Menu/Tools/MergeDuplicateText":
+                    language.Main.Menu.Tools.MergeDuplicateText = reader.Value;
+                    break;
+                case "Main/Menu/Tools/MergeSameTimeCodes":
+                    language.Main.Menu.Tools.MergeSameTimeCodes = reader.Value;
+                    break;
+                case "Main/Menu/Tools/SplitLongLines":
+                    language.Main.Menu.Tools.SplitLongLines = reader.Value;
+                    break;
+                case "Main/Menu/Tools/MinimumDisplayTimeBetweenParagraphs":
+                    language.Main.Menu.Tools.MinimumDisplayTimeBetweenParagraphs = reader.Value;
+                    break;
+                case "Main/Menu/Tools/SortBy":
+                    language.Main.Menu.Tools.SortBy = reader.Value;
+                    break;
+                case "Main/Menu/Tools/Number":
+                    language.Main.Menu.Tools.Number = reader.Value;
+                    break;
+                case "Main/Menu/Tools/StartTime":
+                    language.Main.Menu.Tools.StartTime = reader.Value;
+                    break;
+                case "Main/Menu/Tools/EndTime":
+                    language.Main.Menu.Tools.EndTime = reader.Value;
+                    break;
+                case "Main/Menu/Tools/Duration":
+                    language.Main.Menu.Tools.Duration = reader.Value;
+                    break;
+                case "Main/Menu/Tools/TextAlphabetically":
+                    language.Main.Menu.Tools.TextAlphabetically = reader.Value;
+                    break;
+                case "Main/Menu/Tools/TextSingleLineMaximumLength":
+                    language.Main.Menu.Tools.TextSingleLineMaximumLength = reader.Value;
+                    break;
+                case "Main/Menu/Tools/TextTotalLength":
+                    language.Main.Menu.Tools.TextTotalLength = reader.Value;
+                    break;
+                case "Main/Menu/Tools/TextNumberOfLines":
+                    language.Main.Menu.Tools.TextNumberOfLines = reader.Value;
+                    break;
+                case "Main/Menu/Tools/TextNumberOfCharactersPerSeconds":
+                    language.Main.Menu.Tools.TextNumberOfCharactersPerSeconds = reader.Value;
+                    break;
+                case "Main/Menu/Tools/WordsPerMinute":
+                    language.Main.Menu.Tools.WordsPerMinute = reader.Value;
+                    break;
+                case "Main/Menu/Tools/Style":
+                    language.Main.Menu.Tools.Style = reader.Value;
+                    break;
+                case "Main/Menu/Tools/Ascending":
+                    language.Main.Menu.Tools.Ascending = reader.Value;
+                    break;
+                case "Main/Menu/Tools/Descending":
+                    language.Main.Menu.Tools.Descending = reader.Value;
+                    break;
+                case "Main/Menu/Tools/MakeNewEmptyTranslationFromCurrentSubtitle":
+                    language.Main.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle = reader.Value;
+                    break;
+                case "Main/Menu/Tools/BatchConvert":
+                    language.Main.Menu.Tools.BatchConvert = reader.Value;
+                    break;
+                case "Main/Menu/Tools/GenerateTimeAsText":
+                    language.Main.Menu.Tools.GenerateTimeAsText = reader.Value;
+                    break;
+                case "Main/Menu/Tools/MeasurementConverter":
+                    language.Main.Menu.Tools.MeasurementConverter = reader.Value;
+                    break;
+                case "Main/Menu/Tools/SplitSubtitle":
+                    language.Main.Menu.Tools.SplitSubtitle = reader.Value;
+                    break;
+                case "Main/Menu/Tools/AppendSubtitle":
+                    language.Main.Menu.Tools.AppendSubtitle = reader.Value;
+                    break;
+                case "Main/Menu/Tools/JoinSubtitles":
+                    language.Main.Menu.Tools.JoinSubtitles = reader.Value;
+                    break;
+                case "Main/Menu/Video/Title":
+                    language.Main.Menu.Video.Title = reader.Value;
+                    break;
+                case "Main/Menu/Video/OpenVideo":
+                    language.Main.Menu.Video.OpenVideo = reader.Value;
+                    break;
+                case "Main/Menu/Video/OpenDvd":
+                    language.Main.Menu.Video.OpenDvd = reader.Value;
+                    break;
+                case "Main/Menu/Video/ChooseAudioTrack":
+                    language.Main.Menu.Video.ChooseAudioTrack = reader.Value;
+                    break;
+                case "Main/Menu/Video/CloseVideo":
+                    language.Main.Menu.Video.CloseVideo = reader.Value;
+                    break;
+                case "Main/Menu/Video/ImportSceneChanges":
+                    language.Main.Menu.Video.ImportSceneChanges = reader.Value;
+                    break;
+                case "Main/Menu/Video/RemoveSceneChanges":
+                    language.Main.Menu.Video.RemoveSceneChanges = reader.Value;
+                    break;
+                case "Main/Menu/Video/ShowHideVideo":
+                    language.Main.Menu.Video.ShowHideVideo = reader.Value;
+                    break;
+                case "Main/Menu/Video/ShowHideWaveForm":
+                    language.Main.Menu.Video.ShowHideWaveForm = reader.Value;
+                    break;
+                case "Main/Menu/Video/ShowHideWaveformAndSpectrogram":
+                    language.Main.Menu.Video.ShowHideWaveformAndSpectrogram = reader.Value;
+                    break;
+                case "Main/Menu/Video/UnDockVideoControls":
+                    language.Main.Menu.Video.UnDockVideoControls = reader.Value;
+                    break;
+                case "Main/Menu/Video/ReDockVideoControls":
+                    language.Main.Menu.Video.ReDockVideoControls = reader.Value;
+                    break;
+                case "Main/Menu/SpellCheck/Title":
+                    language.Main.Menu.SpellCheck.Title = reader.Value;
+                    break;
+                case "Main/Menu/SpellCheck/SpellCheck":
+                    language.Main.Menu.SpellCheck.SpellCheck = reader.Value;
+                    break;
+                case "Main/Menu/SpellCheck/SpellCheckFromCurrentLine":
+                    language.Main.Menu.SpellCheck.SpellCheckFromCurrentLine = reader.Value;
+                    break;
+                case "Main/Menu/SpellCheck/FindDoubleWords":
+                    language.Main.Menu.SpellCheck.FindDoubleWords = reader.Value;
+                    break;
+                case "Main/Menu/SpellCheck/FindDoubleLines":
+                    language.Main.Menu.SpellCheck.FindDoubleLines = reader.Value;
+                    break;
+                case "Main/Menu/SpellCheck/GetDictionaries":
+                    language.Main.Menu.SpellCheck.GetDictionaries = reader.Value;
+                    break;
+                case "Main/Menu/SpellCheck/AddToNamesEtcList":
+                    language.Main.Menu.SpellCheck.AddToNamesEtcList = reader.Value;
+                    break;
+                case "Main/Menu/Synchronization/Title":
+                    language.Main.Menu.Synchronization.Title = reader.Value;
+                    break;
+                case "Main/Menu/Synchronization/AdjustAllTimes":
+                    language.Main.Menu.Synchronization.AdjustAllTimes = reader.Value;
+                    break;
+                case "Main/Menu/Synchronization/VisualSync":
+                    language.Main.Menu.Synchronization.VisualSync = reader.Value;
+                    break;
+                case "Main/Menu/Synchronization/PointSync":
+                    language.Main.Menu.Synchronization.PointSync = reader.Value;
+                    break;
+                case "Main/Menu/Synchronization/PointSyncViaOtherSubtitle":
+                    language.Main.Menu.Synchronization.PointSyncViaOtherSubtitle = reader.Value;
+                    break;
+                case "Main/Menu/AutoTranslate/Title":
+                    language.Main.Menu.AutoTranslate.Title = reader.Value;
+                    break;
+                case "Main/Menu/AutoTranslate/TranslatePoweredByGoogle":
+                    language.Main.Menu.AutoTranslate.TranslatePoweredByGoogle = reader.Value;
+                    break;
+                case "Main/Menu/AutoTranslate/TranslatePoweredByMicrosoft":
+                    language.Main.Menu.AutoTranslate.TranslatePoweredByMicrosoft = reader.Value;
+                    break;
+                case "Main/Menu/AutoTranslate/TranslateFromSwedishToDanish":
+                    language.Main.Menu.AutoTranslate.TranslateFromSwedishToDanish = reader.Value;
+                    break;
+                case "Main/Menu/Options/Title":
+                    language.Main.Menu.Options.Title = reader.Value;
+                    break;
+                case "Main/Menu/Options/Settings":
+                    language.Main.Menu.Options.Settings = reader.Value;
+                    break;
+                case "Main/Menu/Options/ChooseLanguage":
+                    language.Main.Menu.Options.ChooseLanguage = reader.Value;
+                    break;
+                case "Main/Menu/Networking/Title":
+                    language.Main.Menu.Networking.Title = reader.Value;
+                    break;
+                case "Main/Menu/Networking/StartNewSession":
+                    language.Main.Menu.Networking.StartNewSession = reader.Value;
+                    break;
+                case "Main/Menu/Networking/JoinSession":
+                    language.Main.Menu.Networking.JoinSession = reader.Value;
+                    break;
+                case "Main/Menu/Networking/ShowSessionInfoAndLog":
+                    language.Main.Menu.Networking.ShowSessionInfoAndLog = reader.Value;
+                    break;
+                case "Main/Menu/Networking/Chat":
+                    language.Main.Menu.Networking.Chat = reader.Value;
+                    break;
+                case "Main/Menu/Networking/LeaveSession":
+                    language.Main.Menu.Networking.LeaveSession = reader.Value;
+                    break;
+                case "Main/Menu/Help/CheckForUpdates":
+                    language.Main.Menu.Help.CheckForUpdates = reader.Value;
+                    break;
+                case "Main/Menu/Help/Title":
+                    language.Main.Menu.Help.Title = reader.Value;
+                    break;
+                case "Main/Menu/Help/Help":
+                    language.Main.Menu.Help.Help = reader.Value;
+                    break;
+                case "Main/Menu/Help/About":
+                    language.Main.Menu.Help.About = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/New":
+                    language.Main.Menu.ToolBar.New = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/Open":
+                    language.Main.Menu.ToolBar.Open = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/Save":
+                    language.Main.Menu.ToolBar.Save = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/SaveAs":
+                    language.Main.Menu.ToolBar.SaveAs = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/Find":
+                    language.Main.Menu.ToolBar.Find = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/Replace":
+                    language.Main.Menu.ToolBar.Replace = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/FixCommonErrors":
+                    language.Main.Menu.ToolBar.FixCommonErrors = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/VisualSync":
+                    language.Main.Menu.ToolBar.VisualSync = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/SpellCheck":
+                    language.Main.Menu.ToolBar.SpellCheck = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/Settings":
+                    language.Main.Menu.ToolBar.Settings = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/Help":
+                    language.Main.Menu.ToolBar.Help = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/ShowHideWaveForm":
+                    language.Main.Menu.ToolBar.ShowHideWaveForm = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/ShowHideVideo":
+                    language.Main.Menu.ToolBar.ShowHideVideo = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/AdvancedSubStationAlphaSetStyle":
+                    language.Main.Menu.ContextMenu.AdvancedSubStationAlphaSetStyle = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/SubStationAlphaSetStyle":
+                    language.Main.Menu.ContextMenu.SubStationAlphaSetStyle = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/SubStationAlphaStyles":
+                    language.Main.Menu.ContextMenu.SubStationAlphaStyles = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/AdvancedSubStationAlphaStyles":
+                    language.Main.Menu.ContextMenu.AdvancedSubStationAlphaStyles = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/TimedTextSetStyle":
+                    language.Main.Menu.ContextMenu.TimedTextSetStyle = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/TimedTextStyles":
+                    language.Main.Menu.ContextMenu.TimedTextStyles = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/TimedTextSetLanguage":
+                    language.Main.Menu.ContextMenu.TimedTextSetLanguage = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/SamiSetStyle":
+                    language.Main.Menu.ContextMenu.SamiSetStyle = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/Cut":
+                    language.Main.Menu.ContextMenu.Cut = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/Copy":
+                    language.Main.Menu.ContextMenu.Copy = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/Paste":
+                    language.Main.Menu.ContextMenu.Paste = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/Delete":
+                    language.Main.Menu.ContextMenu.Delete = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/SplitLineAtCursorPosition":
+                    language.Main.Menu.ContextMenu.SplitLineAtCursorPosition = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/AutoDurationCurrentLine":
+                    language.Main.Menu.ContextMenu.AutoDurationCurrentLine = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/SelectAll":
+                    language.Main.Menu.ContextMenu.SelectAll = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/InsertFirstLine":
+                    language.Main.Menu.ContextMenu.InsertFirstLine = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/InsertBefore":
+                    language.Main.Menu.ContextMenu.InsertBefore = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/InsertAfter":
+                    language.Main.Menu.ContextMenu.InsertAfter = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/InsertSubtitleAfter":
+                    language.Main.Menu.ContextMenu.InsertSubtitleAfter = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/CopyToClipboard":
+                    language.Main.Menu.ContextMenu.CopyToClipboard = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/Column":
+                    language.Main.Menu.ContextMenu.Column = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/ColumnDeleteText":
+                    language.Main.Menu.ContextMenu.ColumnDeleteText = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/ColumnDeleteTextAndShiftCellsUp":
+                    language.Main.Menu.ContextMenu.ColumnDeleteTextAndShiftCellsUp = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/ColumnInsertEmptyTextAndShiftCellsDown":
+                    language.Main.Menu.ContextMenu.ColumnInsertEmptyTextAndShiftCellsDown = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/ColumnInsertTextFromSubtitle":
+                    language.Main.Menu.ContextMenu.ColumnInsertTextFromSubtitle = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/ColumnImportTextAndShiftCellsDown":
+                    language.Main.Menu.ContextMenu.ColumnImportTextAndShiftCellsDown = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/ColumnPasteFromClipboard":
+                    language.Main.Menu.ContextMenu.ColumnPasteFromClipboard = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/ColumnCopyOriginalTextToCurrent":
+                    language.Main.Menu.ContextMenu.ColumnCopyOriginalTextToCurrent = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/Split":
+                    language.Main.Menu.ContextMenu.Split = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/MergeSelectedLines":
+                    language.Main.Menu.ContextMenu.MergeSelectedLines = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/MergeSelectedLinesASDialogue":
+                    language.Main.Menu.ContextMenu.MergeSelectedLinesASDialogue = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/MergeWithLineBefore":
+                    language.Main.Menu.ContextMenu.MergeWithLineBefore = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/MergeWithLineAfter":
+                    language.Main.Menu.ContextMenu.MergeWithLineAfter = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/Normal":
+                    language.Main.Menu.ContextMenu.Normal = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/Underline":
+                    language.Main.Menu.ContextMenu.Underline = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/Color":
+                    language.Main.Menu.ContextMenu.Color = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/FontName":
+                    language.Main.Menu.ContextMenu.FontName = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/Alignment":
+                    language.Main.Menu.ContextMenu.Alignment = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/AutoBalanceSelectedLines":
+                    language.Main.Menu.ContextMenu.AutoBalanceSelectedLines = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/RemoveLineBreaksFromSelectedLines":
+                    language.Main.Menu.ContextMenu.RemoveLineBreaksFromSelectedLines = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/TypewriterEffect":
+                    language.Main.Menu.ContextMenu.TypewriterEffect = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/KaraokeEffect":
+                    language.Main.Menu.ContextMenu.KaraokeEffect = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/ShowSelectedLinesEarlierLater":
+                    language.Main.Menu.ContextMenu.ShowSelectedLinesEarlierLater = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/VisualSyncSelectedLines":
+                    language.Main.Menu.ContextMenu.VisualSyncSelectedLines = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/GoogleAndMicrosoftTranslateSelectedLine":
+                    language.Main.Menu.ContextMenu.GoogleAndMicrosoftTranslateSelectedLine = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/GoogleTranslateSelectedLines":
+                    language.Main.Menu.ContextMenu.GoogleTranslateSelectedLines = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/AdjustDisplayDurationForSelectedLines":
+                    language.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/FixCommonErrorsInSelectedLines":
+                    language.Main.Menu.ContextMenu.FixCommonErrorsInSelectedLines = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/ChangeCasingForSelectedLines":
+                    language.Main.Menu.ContextMenu.ChangeCasingForSelectedLines = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/SaveSelectedLines":
+                    language.Main.Menu.ContextMenu.SaveSelectedLines = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/WebVTTSetNewVoice":
+                    language.Main.Menu.ContextMenu.WebVTTSetNewVoice = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/WebVTTRemoveVoices":
+                    language.Main.Menu.ContextMenu.WebVTTRemoveVoices = reader.Value;
+                    break;
+                case "Main/Controls/SubtitleFormat":
+                    language.Main.Controls.SubtitleFormat = reader.Value;
+                    break;
+                case "Main/Controls/FileEncoding":
+                    language.Main.Controls.FileEncoding = reader.Value;
+                    break;
+                case "Main/Controls/ListView":
+                    language.Main.Controls.ListView = reader.Value;
+                    break;
+                case "Main/Controls/SourceView":
+                    language.Main.Controls.SourceView = reader.Value;
+                    break;
+                case "Main/Controls/UndoChangesInEditPanel":
+                    language.Main.Controls.UndoChangesInEditPanel = reader.Value;
+                    break;
+                case "Main/Controls/Previous":
+                    language.Main.Controls.Previous = reader.Value;
+                    break;
+                case "Main/Controls/Next":
+                    language.Main.Controls.Next = reader.Value;
+                    break;
+                case "Main/Controls/AutoBreak":
+                    language.Main.Controls.AutoBreak = reader.Value;
+                    break;
+                case "Main/Controls/Unbreak":
+                    language.Main.Controls.Unbreak = reader.Value;
+                    break;
+                case "Main/VideoControls/Translate":
+                    language.Main.VideoControls.Translate = reader.Value;
+                    break;
+                case "Main/VideoControls/Create":
+                    language.Main.VideoControls.Create = reader.Value;
+                    break;
+                case "Main/VideoControls/Adjust":
+                    language.Main.VideoControls.Adjust = reader.Value;
+                    break;
+                case "Main/VideoControls/SelectCurrentElementWhilePlaying":
+                    language.Main.VideoControls.SelectCurrentElementWhilePlaying = reader.Value;
+                    break;
+                case "Main/VideoControls/AutoRepeat":
+                    language.Main.VideoControls.AutoRepeat = reader.Value;
+                    break;
+                case "Main/VideoControls/AutoRepeatOn":
+                    language.Main.VideoControls.AutoRepeatOn = reader.Value;
+                    break;
+                case "Main/VideoControls/AutoRepeatCount":
+                    language.Main.VideoControls.AutoRepeatCount = reader.Value;
+                    break;
+                case "Main/VideoControls/AutoContinue":
+                    language.Main.VideoControls.AutoContinue = reader.Value;
+                    break;
+                case "Main/VideoControls/AutoContinueOn":
+                    language.Main.VideoControls.AutoContinueOn = reader.Value;
+                    break;
+                case "Main/VideoControls/DelayInSeconds":
+                    language.Main.VideoControls.DelayInSeconds = reader.Value;
+                    break;
+                case "Main/VideoControls/OriginalText":
+                    language.Main.VideoControls.OriginalText = reader.Value;
+                    break;
+                case "Main/VideoControls/Previous":
+                    language.Main.VideoControls.Previous = reader.Value;
+                    break;
+                case "Main/VideoControls/Stop":
+                    language.Main.VideoControls.Stop = reader.Value;
+                    break;
+                case "Main/VideoControls/PlayCurrent":
+                    language.Main.VideoControls.PlayCurrent = reader.Value;
+                    break;
+                case "Main/VideoControls/Next":
+                    language.Main.VideoControls.Next = reader.Value;
+                    break;
+                case "Main/VideoControls/Playing":
+                    language.Main.VideoControls.Playing = reader.Value;
+                    break;
+                case "Main/VideoControls/RepeatingLastTime":
+                    language.Main.VideoControls.RepeatingLastTime = reader.Value;
+                    break;
+                case "Main/VideoControls/RepeatingXTimesLeft":
+                    language.Main.VideoControls.RepeatingXTimesLeft = reader.Value;
+                    break;
+                case "Main/VideoControls/AutoContinueInOneSecond":
+                    language.Main.VideoControls.AutoContinueInOneSecond = reader.Value;
+                    break;
+                case "Main/VideoControls/AutoContinueInXSeconds":
+                    language.Main.VideoControls.AutoContinueInXSeconds = reader.Value;
+                    break;
+                case "Main/VideoControls/StillTypingAutoContinueStopped":
+                    language.Main.VideoControls.StillTypingAutoContinueStopped = reader.Value;
+                    break;
+                case "Main/VideoControls/InsertNewSubtitleAtVideoPosition":
+                    language.Main.VideoControls.InsertNewSubtitleAtVideoPosition = reader.Value;
+                    break;
+                case "Main/VideoControls/Auto":
+                    language.Main.VideoControls.Auto = reader.Value;
+                    break;
+                case "Main/VideoControls/PlayFromJustBeforeText":
+                    language.Main.VideoControls.PlayFromJustBeforeText = reader.Value;
+                    break;
+                case "Main/VideoControls/Pause":
+                    language.Main.VideoControls.Pause = reader.Value;
+                    break;
+                case "Main/VideoControls/GoToSubtitlePositionAndPause":
+                    language.Main.VideoControls.GoToSubtitlePositionAndPause = reader.Value;
+                    break;
+                case "Main/VideoControls/SetStartTime":
+                    language.Main.VideoControls.SetStartTime = reader.Value;
+                    break;
+                case "Main/VideoControls/SetEndTimeAndGoToNext":
+                    language.Main.VideoControls.SetEndTimeAndGoToNext = reader.Value;
+                    break;
+                case "Main/VideoControls/AdjustedViaEndTime":
+                    language.Main.VideoControls.AdjustedViaEndTime = reader.Value;
+                    break;
+                case "Main/VideoControls/SetEndTime":
+                    language.Main.VideoControls.SetEndTime = reader.Value;
+                    break;
+                case "Main/VideoControls/SetstartTimeAndOffsetOfRest":
+                    language.Main.VideoControls.SetstartTimeAndOffsetOfRest = reader.Value;
+                    break;
+                case "Main/VideoControls/SearchTextOnline":
+                    language.Main.VideoControls.SearchTextOnline = reader.Value;
+                    break;
+                case "Main/VideoControls/GoogleTranslate":
+                    language.Main.VideoControls.GoogleTranslate = reader.Value;
+                    break;
+                case "Main/VideoControls/GoogleIt":
+                    language.Main.VideoControls.GoogleIt = reader.Value;
+                    break;
+                case "Main/VideoControls/SecondsBackShort":
+                    language.Main.VideoControls.SecondsBackShort = reader.Value;
+                    break;
+                case "Main/VideoControls/SecondsForwardShort":
+                    language.Main.VideoControls.SecondsForwardShort = reader.Value;
+                    break;
+                case "Main/VideoControls/VideoPosition":
+                    language.Main.VideoControls.VideoPosition = reader.Value;
+                    break;
+                case "Main/VideoControls/TranslateTip":
+                    language.Main.VideoControls.TranslateTip = reader.Value;
+                    break;
+                case "Main/VideoControls/CreateTip":
+                    language.Main.VideoControls.CreateTip = reader.Value;
+                    break;
+                case "Main/VideoControls/AdjustTip":
+                    language.Main.VideoControls.AdjustTip = reader.Value;
+                    break;
+                case "Main/VideoControls/BeforeChangingTimeInWaveFormX":
+                    language.Main.VideoControls.BeforeChangingTimeInWaveFormX = reader.Value;
+                    break;
+                case "Main/VideoControls/NewTextInsertAtX":
+                    language.Main.VideoControls.NewTextInsertAtX = reader.Value;
+                    break;
+                case "Main/VideoControls/Center":
+                    language.Main.VideoControls.Center = reader.Value;
+                    break;
+                case "Main/VideoControls/PlayRate":
+                    language.Main.VideoControls.PlayRate = reader.Value;
+                    break;
+                case "Main/VideoControls/Slow":
+                    language.Main.VideoControls.Slow = reader.Value;
+                    break;
+                case "Main/VideoControls/Normal":
+                    language.Main.VideoControls.Normal = reader.Value;
+                    break;
+                case "Main/VideoControls/Fast":
+                    language.Main.VideoControls.Fast = reader.Value;
+                    break;
+                case "Main/VideoControls/VeryFast":
+                    language.Main.VideoControls.VeryFast = reader.Value;
+                    break;
+                case "MatroskaSubtitleChooser/Title":
+                    language.MatroskaSubtitleChooser.Title = reader.Value;
+                    break;
+                case "MatroskaSubtitleChooser/PleaseChoose":
+                    language.MatroskaSubtitleChooser.PleaseChoose = reader.Value;
+                    break;
+                case "MatroskaSubtitleChooser/TrackXLanguageYTypeZ":
+                    language.MatroskaSubtitleChooser.TrackXLanguageYTypeZ = reader.Value;
+                    break;
+                case "MeasurementConverter/Title":
+                    language.MeasurementConverter.Title = reader.Value;
+                    break;
+                case "MeasurementConverter/ConvertFrom":
+                    language.MeasurementConverter.ConvertFrom = reader.Value;
+                    break;
+                case "MeasurementConverter/ConvertTo":
+                    language.MeasurementConverter.ConvertTo = reader.Value;
+                    break;
+                case "MeasurementConverter/CopyToClipboard":
+                    language.MeasurementConverter.CopyToClipboard = reader.Value;
+                    break;
+                case "MeasurementConverter/Celsius":
+                    language.MeasurementConverter.Celsius = reader.Value;
+                    break;
+                case "MeasurementConverter/Fahrenheit":
+                    language.MeasurementConverter.Fahrenheit = reader.Value;
+                    break;
+                case "MeasurementConverter/Miles":
+                    language.MeasurementConverter.Miles = reader.Value;
+                    break;
+                case "MeasurementConverter/Kilometers":
+                    language.MeasurementConverter.Kilometers = reader.Value;
+                    break;
+                case "MeasurementConverter/Meters":
+                    language.MeasurementConverter.Meters = reader.Value;
+                    break;
+                case "MeasurementConverter/Yards":
+                    language.MeasurementConverter.Yards = reader.Value;
+                    break;
+                case "MeasurementConverter/Feet":
+                    language.MeasurementConverter.Feet = reader.Value;
+                    break;
+                case "MeasurementConverter/Inches":
+                    language.MeasurementConverter.Inches = reader.Value;
+                    break;
+                case "MeasurementConverter/Pounds":
+                    language.MeasurementConverter.Pounds = reader.Value;
+                    break;
+                case "MeasurementConverter/Kilos":
+                    language.MeasurementConverter.Kilos = reader.Value;
+                    break;
+                case "MergeDoubleLines/Title":
+                    language.MergeDoubleLines.Title = reader.Value;
+                    break;
+                case "MergeDoubleLines/MaxMillisecondsBetweenLines":
+                    language.MergeDoubleLines.MaxMillisecondsBetweenLines = reader.Value;
+                    break;
+                case "MergeDoubleLines/IncludeIncrementing":
+                    language.MergeDoubleLines.IncludeIncrementing = reader.Value;
+                    break;
+                case "MergedShortLines/Title":
+                    language.MergedShortLines.Title = reader.Value;
+                    break;
+                case "MergedShortLines/MaximumCharacters":
+                    language.MergedShortLines.MaximumCharacters = reader.Value;
+                    break;
+                case "MergedShortLines/MaximumMillisecondsBetween":
+                    language.MergedShortLines.MaximumMillisecondsBetween = reader.Value;
+                    break;
+                case "MergedShortLines/NumberOfMergesX":
+                    language.MergedShortLines.NumberOfMergesX = reader.Value;
+                    break;
+                case "MergedShortLines/MergedText":
+                    language.MergedShortLines.MergedText = reader.Value;
+                    break;
+                case "MergedShortLines/OnlyMergeContinuationLines":
+                    language.MergedShortLines.OnlyMergeContinuationLines = reader.Value;
+                    break;
+                case "MergeTextWithSameTimeCodes/Title":
+                    language.MergeTextWithSameTimeCodes.Title = reader.Value;
+                    break;
+                case "MergeTextWithSameTimeCodes/MaxDifferenceMilliseconds":
+                    language.MergeTextWithSameTimeCodes.MaxDifferenceMilliseconds = reader.Value;
+                    break;
+                case "MergeTextWithSameTimeCodes/ReBreakLines":
+                    language.MergeTextWithSameTimeCodes.ReBreakLines = reader.Value;
+                    break;
+                case "MergeTextWithSameTimeCodes/NumberOfMergesX":
+                    language.MergeTextWithSameTimeCodes.NumberOfMergesX = reader.Value;
+                    break;
+                case "MergeTextWithSameTimeCodes/MergedText":
+                    language.MergeTextWithSameTimeCodes.MergedText = reader.Value;
+                    break;
+                case "ModifySelection/Title":
+                    language.ModifySelection.Title = reader.Value;
+                    break;
+                case "ModifySelection/Rule":
+                    language.ModifySelection.Rule = reader.Value;
+                    break;
+                case "ModifySelection/CaseSensitive":
+                    language.ModifySelection.CaseSensitive = reader.Value;
+                    break;
+                case "ModifySelection/DoWithMatches":
+                    language.ModifySelection.DoWithMatches = reader.Value;
+                    break;
+                case "ModifySelection/MakeNewSelection":
+                    language.ModifySelection.MakeNewSelection = reader.Value;
+                    break;
+                case "ModifySelection/AddToCurrentSelection":
+                    language.ModifySelection.AddToCurrentSelection = reader.Value;
+                    break;
+                case "ModifySelection/SubtractFromCurrentSelection":
+                    language.ModifySelection.SubtractFromCurrentSelection = reader.Value;
+                    break;
+                case "ModifySelection/IntersectWithCurrentSelection":
+                    language.ModifySelection.IntersectWithCurrentSelection = reader.Value;
+                    break;
+                case "ModifySelection/MatchingLinesX":
+                    language.ModifySelection.MatchingLinesX = reader.Value;
+                    break;
+                case "ModifySelection/Contains":
+                    language.ModifySelection.Contains = reader.Value;
+                    break;
+                case "ModifySelection/StartsWith":
+                    language.ModifySelection.StartsWith = reader.Value;
+                    break;
+                case "ModifySelection/EndsWith":
+                    language.ModifySelection.EndsWith = reader.Value;
+                    break;
+                case "ModifySelection/NoContains":
+                    language.ModifySelection.NoContains = reader.Value;
+                    break;
+                case "ModifySelection/RegEx":
+                    language.ModifySelection.RegEx = reader.Value;
+                    break;
+                case "ModifySelection/UnequalLines":
+                    language.ModifySelection.UnequalLines = reader.Value;
+                    break;
+                case "ModifySelection/EqualLines":
+                    language.ModifySelection.EqualLines = reader.Value;
+                    break;
+                case "MultipleReplace/Title":
+                    language.MultipleReplace.Title = reader.Value;
+                    break;
+                case "MultipleReplace/FindWhat":
+                    language.MultipleReplace.FindWhat = reader.Value;
+                    break;
+                case "MultipleReplace/ReplaceWith":
+                    language.MultipleReplace.ReplaceWith = reader.Value;
+                    break;
+                case "MultipleReplace/Normal":
+                    language.MultipleReplace.Normal = reader.Value;
+                    break;
+                case "MultipleReplace/CaseSensitive":
+                    language.MultipleReplace.CaseSensitive = reader.Value;
+                    break;
+                case "MultipleReplace/RegularExpression":
+                    language.MultipleReplace.RegularExpression = reader.Value;
+                    break;
+                case "MultipleReplace/LinesFoundX":
+                    language.MultipleReplace.LinesFoundX = reader.Value;
+                    break;
+                case "MultipleReplace/Delete":
+                    language.MultipleReplace.Delete = reader.Value;
+                    break;
+                case "MultipleReplace/Add":
+                    language.MultipleReplace.Add = reader.Value;
+                    break;
+                case "MultipleReplace/Update":
+                    language.MultipleReplace.Update = reader.Value;
+                    break;
+                case "MultipleReplace/Enabled":
+                    language.MultipleReplace.Enabled = reader.Value;
+                    break;
+                case "MultipleReplace/SearchType":
+                    language.MultipleReplace.SearchType = reader.Value;
+                    break;
+                case "MultipleReplace/RemoveAll":
+                    language.MultipleReplace.RemoveAll = reader.Value;
+                    break;
+                case "MultipleReplace/Import":
+                    language.MultipleReplace.Import = reader.Value;
+                    break;
+                case "MultipleReplace/Export":
+                    language.MultipleReplace.Export = reader.Value;
+                    break;
+                case "MultipleReplace/ImportRulesTitle":
+                    language.MultipleReplace.ImportRulesTitle = reader.Value;
+                    break;
+                case "MultipleReplace/ExportRulesTitle":
+                    language.MultipleReplace.ExportRulesTitle = reader.Value;
+                    break;
+                case "MultipleReplace/Rules":
+                    language.MultipleReplace.Rules = reader.Value;
+                    break;
+                case "NetworkChat/Title":
+                    language.NetworkChat.Title = reader.Value;
+                    break;
+                case "NetworkChat/Send":
+                    language.NetworkChat.Send = reader.Value;
+                    break;
+                case "NetworkJoin/Title":
+                    language.NetworkJoin.Title = reader.Value;
+                    break;
+                case "NetworkJoin/Information":
+                    language.NetworkJoin.Information = reader.Value;
+                    break;
+                case "NetworkJoin/Join":
+                    language.NetworkJoin.Join = reader.Value;
+                    break;
+                case "NetworkLogAndInfo/Title":
+                    language.NetworkLogAndInfo.Title = reader.Value;
+                    break;
+                case "NetworkLogAndInfo/Log":
+                    language.NetworkLogAndInfo.Log = reader.Value;
+                    break;
+                case "NetworkStart/Title":
+                    language.NetworkStart.Title = reader.Value;
+                    break;
+                case "NetworkStart/ConnectionTo":
+                    language.NetworkStart.ConnectionTo = reader.Value;
+                    break;
+                case "NetworkStart/Information":
+                    language.NetworkStart.Information = reader.Value;
+                    break;
+                case "NetworkStart/Start":
+                    language.NetworkStart.Start = reader.Value;
+                    break;
+                case "OpenVideoDvd/Title":
+                    language.OpenVideoDvd.Title = reader.Value;
+                    break;
+                case "OpenVideoDvd/OpenDvdFrom":
+                    language.OpenVideoDvd.OpenDvdFrom = reader.Value;
+                    break;
+                case "OpenVideoDvd/Disc":
+                    language.OpenVideoDvd.Disc = reader.Value;
+                    break;
+                case "OpenVideoDvd/Folder":
+                    language.OpenVideoDvd.Folder = reader.Value;
+                    break;
+                case "OpenVideoDvd/ChooseDrive":
+                    language.OpenVideoDvd.ChooseDrive = reader.Value;
+                    break;
+                case "OpenVideoDvd/ChooseFolder":
+                    language.OpenVideoDvd.ChooseFolder = reader.Value;
+                    break;
+                case "PluginsGet/Title":
+                    language.PluginsGet.Title = reader.Value;
+                    break;
+                case "PluginsGet/InstalledPlugins":
+                    language.PluginsGet.InstalledPlugins = reader.Value;
+                    break;
+                case "PluginsGet/GetPlugins":
+                    language.PluginsGet.GetPlugins = reader.Value;
+                    break;
+                case "PluginsGet/Description":
+                    language.PluginsGet.Description = reader.Value;
+                    break;
+                case "PluginsGet/Version":
+                    language.PluginsGet.Version = reader.Value;
+                    break;
+                case "PluginsGet/Date":
+                    language.PluginsGet.Date = reader.Value;
+                    break;
+                case "PluginsGet/Type":
+                    language.PluginsGet.Type = reader.Value;
+                    break;
+                case "PluginsGet/OpenPluginsFolder":
+                    language.PluginsGet.OpenPluginsFolder = reader.Value;
+                    break;
+                case "PluginsGet/GetPluginsInfo1":
+                    language.PluginsGet.GetPluginsInfo1 = reader.Value;
+                    break;
+                case "PluginsGet/GetPluginsInfo2":
+                    language.PluginsGet.GetPluginsInfo2 = reader.Value;
+                    break;
+                case "PluginsGet/PluginXDownloaded":
+                    language.PluginsGet.PluginXDownloaded = reader.Value;
+                    break;
+                case "PluginsGet/Download":
+                    language.PluginsGet.Download = reader.Value;
+                    break;
+                case "PluginsGet/Remove":
+                    language.PluginsGet.Remove = reader.Value;
+                    break;
+                case "PluginsGet/UpdateAllX":
+                    language.PluginsGet.UpdateAllX = reader.Value;
+                    break;
+                case "PluginsGet/UnableToDownloadPluginListX":
+                    language.PluginsGet.UnableToDownloadPluginListX = reader.Value;
+                    break;
+                case "PluginsGet/NewVersionOfSubtitleEditRequired":
+                    language.PluginsGet.NewVersionOfSubtitleEditRequired = reader.Value;
+                    break;
+                case "PluginsGet/UpdateAvailable":
+                    language.PluginsGet.UpdateAvailable = reader.Value;
+                    break;
+                case "PluginsGet/UpdateAll":
+                    language.PluginsGet.UpdateAll = reader.Value;
+                    break;
+                case "PluginsGet/XPluginsUpdated":
+                    language.PluginsGet.XPluginsUpdated = reader.Value;
+                    break;
+                case "RegularExpressionContextMenu/WordBoundary":
+                    language.RegularExpressionContextMenu.WordBoundary = reader.Value;
+                    break;
+                case "RegularExpressionContextMenu/NonWordBoundary":
+                    language.RegularExpressionContextMenu.NonWordBoundary = reader.Value;
+                    break;
+                case "RegularExpressionContextMenu/NewLine":
+                    language.RegularExpressionContextMenu.NewLine = reader.Value;
+                    break;
+                case "RegularExpressionContextMenu/NewLineShort":
+                    language.RegularExpressionContextMenu.NewLineShort = reader.Value;
+                    break;
+                case "RegularExpressionContextMenu/AnyDigit":
+                    language.RegularExpressionContextMenu.AnyDigit = reader.Value;
+                    break;
+                case "RegularExpressionContextMenu/AnyCharacter":
+                    language.RegularExpressionContextMenu.AnyCharacter = reader.Value;
+                    break;
+                case "RegularExpressionContextMenu/AnyWhitespace":
+                    language.RegularExpressionContextMenu.AnyWhitespace = reader.Value;
+                    break;
+                case "RegularExpressionContextMenu/ZeroOrMore":
+                    language.RegularExpressionContextMenu.ZeroOrMore = reader.Value;
+                    break;
+                case "RegularExpressionContextMenu/OneOrMore":
+                    language.RegularExpressionContextMenu.OneOrMore = reader.Value;
+                    break;
+                case "RegularExpressionContextMenu/InCharacterGroup":
+                    language.RegularExpressionContextMenu.InCharacterGroup = reader.Value;
+                    break;
+                case "RegularExpressionContextMenu/NotInCharacterGroup":
+                    language.RegularExpressionContextMenu.NotInCharacterGroup = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/Title":
+                    language.RemoveTextFromHearImpaired.Title = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/RemoveTextConditions":
+                    language.RemoveTextFromHearImpaired.RemoveTextConditions = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/RemoveTextBetween":
+                    language.RemoveTextFromHearImpaired.RemoveTextBetween = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/SquareBrackets":
+                    language.RemoveTextFromHearImpaired.SquareBrackets = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/Brackets":
+                    language.RemoveTextFromHearImpaired.Brackets = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/Parentheses":
+                    language.RemoveTextFromHearImpaired.Parentheses = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/QuestionMarks":
+                    language.RemoveTextFromHearImpaired.QuestionMarks = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/And":
+                    language.RemoveTextFromHearImpaired.And = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/RemoveTextBeforeColon":
+                    language.RemoveTextFromHearImpaired.RemoveTextBeforeColon = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/OnlyIfTextIsUppercase":
+                    language.RemoveTextFromHearImpaired.OnlyIfTextIsUppercase = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/OnlyIfInSeparateLine":
+                    language.RemoveTextFromHearImpaired.OnlyIfInSeparateLine = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/LinesFoundX":
+                    language.RemoveTextFromHearImpaired.LinesFoundX = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/RemoveTextIfContains":
+                    language.RemoveTextFromHearImpaired.RemoveTextIfContains = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/RemoveTextIfAllUppercase":
+                    language.RemoveTextFromHearImpaired.RemoveTextIfAllUppercase = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/RemoveInterjections":
+                    language.RemoveTextFromHearImpaired.RemoveInterjections = reader.Value;
+                    break;
+                case "RemoveTextFromHearImpaired/EditInterjections":
+                    language.RemoveTextFromHearImpaired.EditInterjections = reader.Value;
+                    break;
+                case "ReplaceDialog/Title":
+                    language.ReplaceDialog.Title = reader.Value;
+                    break;
+                case "ReplaceDialog/FindWhat":
+                    language.ReplaceDialog.FindWhat = reader.Value;
+                    break;
+                case "ReplaceDialog/Normal":
+                    language.ReplaceDialog.Normal = reader.Value;
+                    break;
+                case "ReplaceDialog/CaseSensitive":
+                    language.ReplaceDialog.CaseSensitive = reader.Value;
+                    break;
+                case "ReplaceDialog/RegularExpression":
+                    language.ReplaceDialog.RegularExpression = reader.Value;
+                    break;
+                case "ReplaceDialog/ReplaceWith":
+                    language.ReplaceDialog.ReplaceWith = reader.Value;
+                    break;
+                case "ReplaceDialog/Find":
+                    language.ReplaceDialog.Find = reader.Value;
+                    break;
+                case "ReplaceDialog/Replace":
+                    language.ReplaceDialog.Replace = reader.Value;
+                    break;
+                case "ReplaceDialog/ReplaceAll":
+                    language.ReplaceDialog.ReplaceAll = reader.Value;
+                    break;
+                case "RestoreAutoBackup/Title":
+                    language.RestoreAutoBackup.Title = reader.Value;
+                    break;
+                case "RestoreAutoBackup/Information":
+                    language.RestoreAutoBackup.Information = reader.Value;
+                    break;
+                case "RestoreAutoBackup/DateAndTime":
+                    language.RestoreAutoBackup.DateAndTime = reader.Value;
+                    break;
+                case "RestoreAutoBackup/FileName":
+                    language.RestoreAutoBackup.FileName = reader.Value;
+                    break;
+                case "RestoreAutoBackup/Extension":
+                    language.RestoreAutoBackup.Extension = reader.Value;
+                    break;
+                case "RestoreAutoBackup/NoBackedUpFilesFound":
+                    language.RestoreAutoBackup.NoBackedUpFilesFound = reader.Value;
+                    break;
+                case "SeekSilence/Title":
+                    language.SeekSilence.Title = reader.Value;
+                    break;
+                case "SeekSilence/SearchDirection":
+                    language.SeekSilence.SearchDirection = reader.Value;
+                    break;
+                case "SeekSilence/Forward":
+                    language.SeekSilence.Forward = reader.Value;
+                    break;
+                case "SeekSilence/Back":
+                    language.SeekSilence.Back = reader.Value;
+                    break;
+                case "SeekSilence/LengthInSeconds":
+                    language.SeekSilence.LengthInSeconds = reader.Value;
+                    break;
+                case "SeekSilence/MaxVolume":
+                    language.SeekSilence.MaxVolume = reader.Value;
+                    break;
+                case "SetMinimumDisplayTimeBetweenParagraphs/Title":
+                    language.SetMinimumDisplayTimeBetweenParagraphs.Title = reader.Value;
+                    break;
+                case "SetMinimumDisplayTimeBetweenParagraphs/PreviewLinesModifiedX":
+                    language.SetMinimumDisplayTimeBetweenParagraphs.PreviewLinesModifiedX = reader.Value;
+                    break;
+                case "SetMinimumDisplayTimeBetweenParagraphs/ShowOnlyModifiedLines":
+                    language.SetMinimumDisplayTimeBetweenParagraphs.ShowOnlyModifiedLines = reader.Value;
+                    break;
+                case "SetMinimumDisplayTimeBetweenParagraphs/MinimumMillisecondsBetweenParagraphs":
+                    language.SetMinimumDisplayTimeBetweenParagraphs.MinimumMillisecondsBetweenParagraphs = reader.Value;
+                    break;
+                case "SetMinimumDisplayTimeBetweenParagraphs/FrameInfo":
+                    language.SetMinimumDisplayTimeBetweenParagraphs.FrameInfo = reader.Value;
+                    break;
+                case "SetMinimumDisplayTimeBetweenParagraphs/OneFrameXisYMilliseconds":
+                    language.SetMinimumDisplayTimeBetweenParagraphs.OneFrameXisYMilliseconds = reader.Value;
+                    break;
+                case "SetSyncPoint/Title":
+                    language.SetSyncPoint.Title = reader.Value;
+                    break;
+                case "SetSyncPoint/SyncPointTimeCode":
+                    language.SetSyncPoint.SyncPointTimeCode = reader.Value;
+                    break;
+                case "SetSyncPoint/ThreeSecondsBack":
+                    language.SetSyncPoint.ThreeSecondsBack = reader.Value;
+                    break;
+                case "SetSyncPoint/HalfASecondBack":
+                    language.SetSyncPoint.HalfASecondBack = reader.Value;
+                    break;
+                case "SetSyncPoint/HalfASecondForward":
+                    language.SetSyncPoint.HalfASecondForward = reader.Value;
+                    break;
+                case "SetSyncPoint/ThreeSecondsForward":
+                    language.SetSyncPoint.ThreeSecondsForward = reader.Value;
+                    break;
+                case "Settings/Title":
+                    language.Settings.Title = reader.Value;
+                    break;
+                case "Settings/General":
+                    language.Settings.General = reader.Value;
+                    break;
+                case "Settings/Toolbar":
+                    language.Settings.Toolbar = reader.Value;
+                    break;
+                case "Settings/VideoPlayer":
+                    language.Settings.VideoPlayer = reader.Value;
+                    break;
+                case "Settings/WaveformAndSpectrogram":
+                    language.Settings.WaveformAndSpectrogram = reader.Value;
+                    break;
+                case "Settings/Tools":
+                    language.Settings.Tools = reader.Value;
+                    break;
+                case "Settings/WordLists":
+                    language.Settings.WordLists = reader.Value;
+                    break;
+                case "Settings/SsaStyle":
+                    language.Settings.SsaStyle = reader.Value;
+                    break;
+                case "Settings/Proxy":
+                    language.Settings.Proxy = reader.Value;
+                    break;
+                case "Settings/ShowToolBarButtons":
+                    language.Settings.ShowToolBarButtons = reader.Value;
+                    break;
+                case "Settings/New":
+                    language.Settings.New = reader.Value;
+                    break;
+                case "Settings/Open":
+                    language.Settings.Open = reader.Value;
+                    break;
+                case "Settings/Save":
+                    language.Settings.Save = reader.Value;
+                    break;
+                case "Settings/SaveAs":
+                    language.Settings.SaveAs = reader.Value;
+                    break;
+                case "Settings/Find":
+                    language.Settings.Find = reader.Value;
+                    break;
+                case "Settings/Replace":
+                    language.Settings.Replace = reader.Value;
+                    break;
+                case "Settings/VisualSync":
+                    language.Settings.VisualSync = reader.Value;
+                    break;
+                case "Settings/SpellCheck":
+                    language.Settings.SpellCheck = reader.Value;
+                    break;
+                case "Settings/SettingsName":
+                    language.Settings.SettingsName = reader.Value;
+                    break;
+                case "Settings/Help":
+                    language.Settings.Help = reader.Value;
+                    break;
+                case "Settings/ShowFrameRate":
+                    language.Settings.ShowFrameRate = reader.Value;
+                    break;
+                case "Settings/DefaultFrameRate":
+                    language.Settings.DefaultFrameRate = reader.Value;
+                    break;
+                case "Settings/DefaultFileEncoding":
+                    language.Settings.DefaultFileEncoding = reader.Value;
+                    break;
+                case "Settings/AutoDetectAnsiEncoding":
+                    language.Settings.AutoDetectAnsiEncoding = reader.Value;
+                    break;
+                case "Settings/SubtitleLineMaximumLength":
+                    language.Settings.SubtitleLineMaximumLength = reader.Value;
+                    break;
+                case "Settings/MaximumCharactersPerSecond":
+                    language.Settings.MaximumCharactersPerSecond = reader.Value;
+                    break;
+                case "Settings/AutoWrapWhileTyping":
+                    language.Settings.AutoWrapWhileTyping = reader.Value;
+                    break;
+                case "Settings/DurationMinimumMilliseconds":
+                    language.Settings.DurationMinimumMilliseconds = reader.Value;
+                    break;
+                case "Settings/DurationMaximumMilliseconds":
+                    language.Settings.DurationMaximumMilliseconds = reader.Value;
+                    break;
+                case "Settings/MinimumGapMilliseconds":
+                    language.Settings.MinimumGapMilliseconds = reader.Value;
+                    break;
+                case "Settings/SubtitleFont":
+                    language.Settings.SubtitleFont = reader.Value;
+                    break;
+                case "Settings/SubtitleFontSize":
+                    language.Settings.SubtitleFontSize = reader.Value;
+                    break;
+                case "Settings/SubtitleBold":
+                    language.Settings.SubtitleBold = reader.Value;
+                    break;
+                case "Settings/SubtitleCenter":
+                    language.Settings.SubtitleCenter = reader.Value;
+                    break;
+                case "Settings/SubtitleFontColor":
+                    language.Settings.SubtitleFontColor = reader.Value;
+                    break;
+                case "Settings/SubtitleBackgroundColor":
+                    language.Settings.SubtitleBackgroundColor = reader.Value;
+                    break;
+                case "Settings/SpellChecker":
+                    language.Settings.SpellChecker = reader.Value;
+                    break;
+                case "Settings/RememberRecentFiles":
+                    language.Settings.RememberRecentFiles = reader.Value;
+                    break;
+                case "Settings/StartWithLastFileLoaded":
+                    language.Settings.StartWithLastFileLoaded = reader.Value;
+                    break;
+                case "Settings/RememberSelectedLine":
+                    language.Settings.RememberSelectedLine = reader.Value;
+                    break;
+                case "Settings/RememberPositionAndSize":
+                    language.Settings.RememberPositionAndSize = reader.Value;
+                    break;
+                case "Settings/StartInSourceView":
+                    language.Settings.StartInSourceView = reader.Value;
+                    break;
+                case "Settings/RemoveBlankLinesWhenOpening":
+                    language.Settings.RemoveBlankLinesWhenOpening = reader.Value;
+                    break;
+                case "Settings/ShowLineBreaksAs":
+                    language.Settings.ShowLineBreaksAs = reader.Value;
+                    break;
+                case "Settings/MainListViewDoubleClickAction":
+                    language.Settings.MainListViewDoubleClickAction = reader.Value;
+                    break;
+                case "Settings/MainListViewNothing":
+                    language.Settings.MainListViewNothing = reader.Value;
+                    break;
+                case "Settings/MainListViewVideoGoToPositionAndPause":
+                    language.Settings.MainListViewVideoGoToPositionAndPause = reader.Value;
+                    break;
+                case "Settings/MainListViewVideoGoToPositionAndPlay":
+                    language.Settings.MainListViewVideoGoToPositionAndPlay = reader.Value;
+                    break;
+                case "Settings/MainListViewEditText":
+                    language.Settings.MainListViewEditText = reader.Value;
+                    break;
+                case "Settings/MainListViewVideoGoToPositionMinus1SecAndPause":
+                    language.Settings.MainListViewVideoGoToPositionMinus1SecAndPause = reader.Value;
+                    break;
+                case "Settings/MainListViewVideoGoToPositionMinusHalfSecAndPause":
+                    language.Settings.MainListViewVideoGoToPositionMinusHalfSecAndPause = reader.Value;
+                    break;
+                case "Settings/MainListViewVideoGoToPositionMinus1SecAndPlay":
+                    language.Settings.MainListViewVideoGoToPositionMinus1SecAndPlay = reader.Value;
+                    break;
+                case "Settings/MainListViewEditTextAndPause":
+                    language.Settings.MainListViewEditTextAndPause = reader.Value;
+                    break;
+                case "Settings/AutoBackup":
+                    language.Settings.AutoBackup = reader.Value;
+                    break;
+                case "Settings/AutoBackupEveryMinute":
+                    language.Settings.AutoBackupEveryMinute = reader.Value;
+                    break;
+                case "Settings/AutoBackupEveryFiveMinutes":
+                    language.Settings.AutoBackupEveryFiveMinutes = reader.Value;
+                    break;
+                case "Settings/AutoBackupEveryFifteenMinutes":
+                    language.Settings.AutoBackupEveryFifteenMinutes = reader.Value;
+                    break;
+                case "Settings/CheckForUpdates":
+                    language.Settings.CheckForUpdates = reader.Value;
+                    break;
+                case "Settings/AllowEditOfOriginalSubtitle":
+                    language.Settings.AllowEditOfOriginalSubtitle = reader.Value;
+                    break;
+                case "Settings/PromptDeleteLines":
+                    language.Settings.PromptDeleteLines = reader.Value;
+                    break;
+                case "Settings/TimeCodeMode":
+                    language.Settings.TimeCodeMode = reader.Value;
+                    break;
+                case "Settings/TimeCodeModeHHMMSSMsec":
+                    language.Settings.TimeCodeModeHHMMSSMsec = reader.Value;
+                    break;
+                case "Settings/TimeCodeModeHHMMSSFF":
+                    language.Settings.TimeCodeModeHHMMSSFF = reader.Value;
+                    break;
+                case "Settings/VideoEngine":
+                    language.Settings.VideoEngine = reader.Value;
+                    break;
+                case "Settings/DirectShow":
+                    language.Settings.DirectShow = reader.Value;
+                    break;
+                case "Settings/DirectShowDescription":
+                    language.Settings.DirectShowDescription = reader.Value;
+                    break;
+                case "Settings/ManagedDirectX":
+                    language.Settings.ManagedDirectX = reader.Value;
+                    break;
+                case "Settings/ManagedDirectXDescription":
+                    language.Settings.ManagedDirectXDescription = reader.Value;
+                    break;
+                case "Settings/MPlayer":
+                    language.Settings.MPlayer = reader.Value;
+                    break;
+                case "Settings/MPlayerDescription":
+                    language.Settings.MPlayerDescription = reader.Value;
+                    break;
+                case "Settings/VlcMediaPlayer":
+                    language.Settings.VlcMediaPlayer = reader.Value;
+                    break;
+                case "Settings/VlcMediaPlayerDescription":
+                    language.Settings.VlcMediaPlayerDescription = reader.Value;
+                    break;
+                case "Settings/VlcBrowseToLabel":
+                    language.Settings.VlcBrowseToLabel = reader.Value;
+                    break;
+                case "Settings/ShowStopButton":
+                    language.Settings.ShowStopButton = reader.Value;
+                    break;
+                case "Settings/ShowMuteButton":
+                    language.Settings.ShowMuteButton = reader.Value;
+                    break;
+                case "Settings/ShowFullscreenButton":
+                    language.Settings.ShowFullscreenButton = reader.Value;
+                    break;
+                case "Settings/PreviewFontSize":
+                    language.Settings.PreviewFontSize = reader.Value;
+                    break;
+                case "Settings/MainWindowVideoControls":
+                    language.Settings.MainWindowVideoControls = reader.Value;
+                    break;
+                case "Settings/CustomSearchTextAndUrl":
+                    language.Settings.CustomSearchTextAndUrl = reader.Value;
+                    break;
+                case "Settings/WaveFormAppearance":
+                    language.Settings.WaveFormAppearance = reader.Value;
+                    break;
+                case "Settings/WaveFormGridColor":
+                    language.Settings.WaveFormGridColor = reader.Value;
+                    break;
+                case "Settings/WaveFormShowGridLines":
+                    language.Settings.WaveFormShowGridLines = reader.Value;
+                    break;
+                case "Settings/ReverseMouseWheelScrollDirection":
+                    language.Settings.ReverseMouseWheelScrollDirection = reader.Value;
+                    break;
+                case "Settings/WaveFormAllowOverlap":
+                    language.Settings.WaveFormAllowOverlap = reader.Value;
+                    break;
+                case "Settings/WaveFormFocusMouseEnter":
+                    language.Settings.WaveFormFocusMouseEnter = reader.Value;
+                    break;
+                case "Settings/WaveFormListViewFocusMouseEnter":
+                    language.Settings.WaveFormListViewFocusMouseEnter = reader.Value;
+                    break;
+                case "Settings/WaveformBorderHitMs1":
+                    language.Settings.WaveformBorderHitMs1 = reader.Value;
+                    break;
+                case "Settings/WaveformBorderHitMs2":
+                    language.Settings.WaveformBorderHitMs2 = reader.Value;
+                    break;
+                case "Settings/WaveFormColor":
+                    language.Settings.WaveFormColor = reader.Value;
+                    break;
+                case "Settings/WaveFormSelectedColor":
+                    language.Settings.WaveFormSelectedColor = reader.Value;
+                    break;
+                case "Settings/WaveFormBackgroundColor":
+                    language.Settings.WaveFormBackgroundColor = reader.Value;
+                    break;
+                case "Settings/WaveFormTextColor":
+                    language.Settings.WaveFormTextColor = reader.Value;
+                    break;
+                case "Settings/WaveformAndSpectrogramsFolderEmpty":
+                    language.Settings.WaveformAndSpectrogramsFolderEmpty = reader.Value;
+                    break;
+                case "Settings/WaveformAndSpectrogramsFolderInfo":
+                    language.Settings.WaveformAndSpectrogramsFolderInfo = reader.Value;
+                    break;
+                case "Settings/Spectrogram":
+                    language.Settings.Spectrogram = reader.Value;
+                    break;
+                case "Settings/GenerateSpectrogram":
+                    language.Settings.GenerateSpectrogram = reader.Value;
+                    break;
+                case "Settings/SpectrogramAppearance":
+                    language.Settings.SpectrogramAppearance = reader.Value;
+                    break;
+                case "Settings/SpectrogramOneColorGradient":
+                    language.Settings.SpectrogramOneColorGradient = reader.Value;
+                    break;
+                case "Settings/SpectrogramClassic":
+                    language.Settings.SpectrogramClassic = reader.Value;
+                    break;
+                case "Settings/WaveformUseFFMPEG":
+                    language.Settings.WaveformUseFFMPEG = reader.Value;
+                    break;
+                case "Settings/WaveformFFMPEGPath":
+                    language.Settings.WaveformFFMPEGPath = reader.Value;
+                    break;
+                case "Settings/WaveformBrowseToFFMPEG":
+                    language.Settings.WaveformBrowseToFFMPEG = reader.Value;
+                    break;
+                case "Settings/WaveformBrowseToVLC":
+                    language.Settings.WaveformBrowseToVLC = reader.Value;
+                    break;
+                case "Settings/SubStationAlphaStyle":
+                    language.Settings.SubStationAlphaStyle = reader.Value;
+                    break;
+                case "Settings/ChooseFont":
+                    language.Settings.ChooseFont = reader.Value;
+                    break;
+                case "Settings/ChooseColor":
+                    language.Settings.ChooseColor = reader.Value;
+                    break;
+                case "Settings/SsaOutline":
+                    language.Settings.SsaOutline = reader.Value;
+                    break;
+                case "Settings/SsaShadow":
+                    language.Settings.SsaShadow = reader.Value;
+                    break;
+                case "Settings/SsaOpaqueBox":
+                    language.Settings.SsaOpaqueBox = reader.Value;
+                    break;
+                case "Settings/Testing123":
+                    language.Settings.Testing123 = reader.Value;
+                    break;
+                case "Settings/Language":
+                    language.Settings.Language = reader.Value;
+                    break;
+                case "Settings/NamesIgnoreLists":
+                    language.Settings.NamesIgnoreLists = reader.Value;
+                    break;
+                case "Settings/AddNameEtc":
+                    language.Settings.AddNameEtc = reader.Value;
+                    break;
+                case "Settings/AddWord":
+                    language.Settings.AddWord = reader.Value;
+                    break;
+                case "Settings/Remove":
+                    language.Settings.Remove = reader.Value;
+                    break;
+                case "Settings/AddPair":
+                    language.Settings.AddPair = reader.Value;
+                    break;
+                case "Settings/UserWordList":
+                    language.Settings.UserWordList = reader.Value;
+                    break;
+                case "Settings/OcrFixList":
+                    language.Settings.OcrFixList = reader.Value;
+                    break;
+                case "Settings/Location":
+                    language.Settings.Location = reader.Value;
+                    break;
+                case "Settings/UseOnlineNamesEtc":
+                    language.Settings.UseOnlineNamesEtc = reader.Value;
+                    break;
+                case "Settings/WordAddedX":
+                    language.Settings.WordAddedX = reader.Value;
+                    break;
+                case "Settings/WordAlreadyExists":
+                    language.Settings.WordAlreadyExists = reader.Value;
+                    break;
+                case "Settings/WordNotFound":
+                    language.Settings.WordNotFound = reader.Value;
+                    break;
+                case "Settings/RemoveX":
+                    language.Settings.RemoveX = reader.Value;
+                    break;
+                case "Settings/CannotUpdateNamesEtcOnline":
+                    language.Settings.CannotUpdateNamesEtcOnline = reader.Value;
+                    break;
+                case "Settings/ProxyServerSettings":
+                    language.Settings.ProxyServerSettings = reader.Value;
+                    break;
+                case "Settings/ProxyAddress":
+                    language.Settings.ProxyAddress = reader.Value;
+                    break;
+                case "Settings/ProxyAuthentication":
+                    language.Settings.ProxyAuthentication = reader.Value;
+                    break;
+                case "Settings/ProxyUserName":
+                    language.Settings.ProxyUserName = reader.Value;
+                    break;
+                case "Settings/ProxyPassword":
+                    language.Settings.ProxyPassword = reader.Value;
+                    break;
+                case "Settings/ProxyDomain":
+                    language.Settings.ProxyDomain = reader.Value;
+                    break;
+                case "Settings/PlayXSecondsAndBack":
+                    language.Settings.PlayXSecondsAndBack = reader.Value;
+                    break;
+                case "Settings/StartSceneIndex":
+                    language.Settings.StartSceneIndex = reader.Value;
+                    break;
+                case "Settings/EndSceneIndex":
+                    language.Settings.EndSceneIndex = reader.Value;
+                    break;
+                case "Settings/FirstPlusX":
+                    language.Settings.FirstPlusX = reader.Value;
+                    break;
+                case "Settings/LastMinusX":
+                    language.Settings.LastMinusX = reader.Value;
+                    break;
+                case "Settings/FixCommonerrors":
+                    language.Settings.FixCommonerrors = reader.Value;
+                    break;
+                case "Settings/MergeLinesShorterThan":
+                    language.Settings.MergeLinesShorterThan = reader.Value;
+                    break;
+                case "Settings/MusicSymbol":
+                    language.Settings.MusicSymbol = reader.Value;
+                    break;
+                case "Settings/MusicSymbolsToReplace":
+                    language.Settings.MusicSymbolsToReplace = reader.Value;
+                    break;
+                case "Settings/FixCommonOcrErrorsUseHardcodedRules":
+                    language.Settings.FixCommonOcrErrorsUseHardcodedRules = reader.Value;
+                    break;
+                case "Settings/FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime":
+                    language.Settings.FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime = reader.Value;
+                    break;
+                case "Settings/Shortcuts":
+                    language.Settings.Shortcuts = reader.Value;
+                    break;
+                case "Settings/Shortcut":
+                    language.Settings.Shortcut = reader.Value;
+                    break;
+                case "Settings/Control":
+                    language.Settings.Control = reader.Value;
+                    break;
+                case "Settings/Alt":
+                    language.Settings.Alt = reader.Value;
+                    break;
+                case "Settings/Shift":
+                    language.Settings.Shift = reader.Value;
+                    break;
+                case "Settings/Key":
+                    language.Settings.Key = reader.Value;
+                    break;
+                case "Settings/TextBox":
+                    language.Settings.TextBox = reader.Value;
+                    break;
+                case "Settings/UpdateShortcut":
+                    language.Settings.UpdateShortcut = reader.Value;
+                    break;
+                case "Settings/ShortcutIsNotValid":
+                    language.Settings.ShortcutIsNotValid = reader.Value;
+                    break;
+                case "Settings/ToggleDockUndockOfVideoControls":
+                    language.Settings.ToggleDockUndockOfVideoControls = reader.Value;
+                    break;
+                case "Settings/CreateSetEndAddNewAndGoToNew":
+                    language.Settings.CreateSetEndAddNewAndGoToNew = reader.Value;
+                    break;
+                case "Settings/AdjustViaEndAutoStartAndGoToNext":
+                    language.Settings.AdjustViaEndAutoStartAndGoToNext = reader.Value;
+                    break;
+                case "Settings/AdjustSetStartAutoDurationAndGoToNext":
+                    language.Settings.AdjustSetStartAutoDurationAndGoToNext = reader.Value;
+                    break;
+                case "Settings/AdjustSetEndNextStartAndGoToNext":
+                    language.Settings.AdjustSetEndNextStartAndGoToNext = reader.Value;
+                    break;
+                case "Settings/AdjustStartDownEndUpAndGoToNext":
+                    language.Settings.AdjustStartDownEndUpAndGoToNext = reader.Value;
+                    break;
+                case "Settings/AdjustSelected100MsForward":
+                    language.Settings.AdjustSelected100MsForward = reader.Value;
+                    break;
+                case "Settings/AdjustSelected100MsBack":
+                    language.Settings.AdjustSelected100MsBack = reader.Value;
+                    break;
+                case "Settings/AdjustSetStartTimeKeepDuration":
+                    language.Settings.AdjustSetStartTimeKeepDuration = reader.Value;
+                    break;
+                case "Settings/AdjustSetEndAndOffsetTheRest":
+                    language.Settings.AdjustSetEndAndOffsetTheRest = reader.Value;
+                    break;
+                case "Settings/AdjustSetEndAndOffsetTheRestAndGoToNext":
+                    language.Settings.AdjustSetEndAndOffsetTheRestAndGoToNext = reader.Value;
+                    break;
+                case "Settings/MainCreateStartDownEndUp":
+                    language.Settings.MainCreateStartDownEndUp = reader.Value;
+                    break;
+                case "Settings/MergeDialogue":
+                    language.Settings.MergeDialogue = reader.Value;
+                    break;
+                case "Settings/GoToNext":
+                    language.Settings.GoToNext = reader.Value;
+                    break;
+                case "Settings/GoToPrevious":
+                    language.Settings.GoToPrevious = reader.Value;
+                    break;
+                case "Settings/GoToCurrentSubtitleStart":
+                    language.Settings.GoToCurrentSubtitleStart = reader.Value;
+                    break;
+                case "Settings/GoToCurrentSubtitleEnd":
+                    language.Settings.GoToCurrentSubtitleEnd = reader.Value;
+                    break;
+                case "Settings/ToggleFocus":
+                    language.Settings.ToggleFocus = reader.Value;
+                    break;
+                case "Settings/ToggleDialogueDashes":
+                    language.Settings.ToggleDialogueDashes = reader.Value;
+                    break;
+                case "Settings/Alignment":
+                    language.Settings.Alignment = reader.Value;
+                    break;
+                case "Settings/CopyTextOnly":
+                    language.Settings.CopyTextOnly = reader.Value;
+                    break;
+                case "Settings/AutoDurationSelectedLines":
+                    language.Settings.AutoDurationSelectedLines = reader.Value;
+                    break;
+                case "Settings/ReverseStartAndEndingForRTL":
+                    language.Settings.ReverseStartAndEndingForRTL = reader.Value;
+                    break;
+                case "Settings/VerticalZoom":
+                    language.Settings.VerticalZoom = reader.Value;
+                    break;
+                case "Settings/VerticalZoomOut":
+                    language.Settings.VerticalZoomOut = reader.Value;
+                    break;
+                case "Settings/WaveformSeekSilenceForward":
+                    language.Settings.WaveformSeekSilenceForward = reader.Value;
+                    break;
+                case "Settings/WaveformSeekSilenceBack":
+                    language.Settings.WaveformSeekSilenceBack = reader.Value;
+                    break;
+                case "Settings/WaveformAddTextHere":
+                    language.Settings.WaveformAddTextHere = reader.Value;
+                    break;
+                case "Settings/WaveformPlayNewSelection":
+                    language.Settings.WaveformPlayNewSelection = reader.Value;
+                    break;
+                case "Settings/WaveformPlayFirstSelectedSubtitle":
+                    language.Settings.WaveformPlayFirstSelectedSubtitle = reader.Value;
+                    break;
+                case "Settings/WaveformFocusListView":
+                    language.Settings.WaveformFocusListView = reader.Value;
+                    break;
+                case "Settings/GoBack1Frame":
+                    language.Settings.GoBack1Frame = reader.Value;
+                    break;
+                case "Settings/GoForward1Frame":
+                    language.Settings.GoForward1Frame = reader.Value;
+                    break;
+                case "Settings/GoBack100Milliseconds":
+                    language.Settings.GoBack100Milliseconds = reader.Value;
+                    break;
+                case "Settings/GoForward100Milliseconds":
+                    language.Settings.GoForward100Milliseconds = reader.Value;
+                    break;
+                case "Settings/GoBack500Milliseconds":
+                    language.Settings.GoBack500Milliseconds = reader.Value;
+                    break;
+                case "Settings/GoForward500Milliseconds":
+                    language.Settings.GoForward500Milliseconds = reader.Value;
+                    break;
+                case "Settings/GoBack1Second":
+                    language.Settings.GoBack1Second = reader.Value;
+                    break;
+                case "Settings/GoForward1Second":
+                    language.Settings.GoForward1Second = reader.Value;
+                    break;
+                case "Settings/TogglePlayPause":
+                    language.Settings.TogglePlayPause = reader.Value;
+                    break;
+                case "Settings/Pause":
+                    language.Settings.Pause = reader.Value;
+                    break;
+                case "Settings/Fullscreen":
+                    language.Settings.Fullscreen = reader.Value;
+                    break;
+                case "Settings/CustomSearch1":
+                    language.Settings.CustomSearch1 = reader.Value;
+                    break;
+                case "Settings/CustomSearch2":
+                    language.Settings.CustomSearch2 = reader.Value;
+                    break;
+                case "Settings/CustomSearch3":
+                    language.Settings.CustomSearch3 = reader.Value;
+                    break;
+                case "Settings/CustomSearch4":
+                    language.Settings.CustomSearch4 = reader.Value;
+                    break;
+                case "Settings/CustomSearch5":
+                    language.Settings.CustomSearch5 = reader.Value;
+                    break;
+                case "Settings/CustomSearch6":
+                    language.Settings.CustomSearch6 = reader.Value;
+                    break;
+                case "Settings/SyntaxColoring":
+                    language.Settings.SyntaxColoring = reader.Value;
+                    break;
+                case "Settings/ListViewSyntaxColoring":
+                    language.Settings.ListViewSyntaxColoring = reader.Value;
+                    break;
+                case "Settings/SyntaxColorDurationIfTooSmall":
+                    language.Settings.SyntaxColorDurationIfTooSmall = reader.Value;
+                    break;
+                case "Settings/SyntaxColorDurationIfTooLarge":
+                    language.Settings.SyntaxColorDurationIfTooLarge = reader.Value;
+                    break;
+                case "Settings/SyntaxColorTextIfTooLong":
+                    language.Settings.SyntaxColorTextIfTooLong = reader.Value;
+                    break;
+                case "Settings/SyntaxColorTextMoreThanXLines":
+                    language.Settings.SyntaxColorTextMoreThanXLines = reader.Value;
+                    break;
+                case "Settings/SyntaxColorOverlap":
+                    language.Settings.SyntaxColorOverlap = reader.Value;
+                    break;
+                case "Settings/SyntaxErrorColor":
+                    language.Settings.SyntaxErrorColor = reader.Value;
+                    break;
+                case "Settings/GoToFirstSelectedLine":
+                    language.Settings.GoToFirstSelectedLine = reader.Value;
+                    break;
+                case "Settings/MergeSelectedLines":
+                    language.Settings.MergeSelectedLines = reader.Value;
+                    break;
+                case "Settings/ToggleTranslationMode":
+                    language.Settings.ToggleTranslationMode = reader.Value;
+                    break;
+                case "Settings/SwitchOriginalAndTranslation":
+                    language.Settings.SwitchOriginalAndTranslation = reader.Value;
+                    break;
+                case "Settings/MergeOriginalAndTranslation":
+                    language.Settings.MergeOriginalAndTranslation = reader.Value;
+                    break;
+                case "Settings/ShortcutIsAlreadyDefinedX":
+                    language.Settings.ShortcutIsAlreadyDefinedX = reader.Value;
+                    break;
+                case "Settings/ToggleTranslationAndOriginalInPreviews":
+                    language.Settings.ToggleTranslationAndOriginalInPreviews = reader.Value;
+                    break;
+                case "Settings/ListViewColumnDelete":
+                    language.Settings.ListViewColumnDelete = reader.Value;
+                    break;
+                case "Settings/ListViewColumnInsert":
+                    language.Settings.ListViewColumnInsert = reader.Value;
+                    break;
+                case "Settings/ListViewColumnPaste":
+                    language.Settings.ListViewColumnPaste = reader.Value;
+                    break;
+                case "Settings/ListViewFocusWaveform":
+                    language.Settings.ListViewFocusWaveform = reader.Value;
+                    break;
+                case "Settings/ListViewGoToNextError":
+                    language.Settings.ListViewGoToNextError = reader.Value;
+                    break;
+                case "Settings/ShowBeamer":
+                    language.Settings.ShowBeamer = reader.Value;
+                    break;
+                case "Settings/MainTextBoxMoveLastWordDown":
+                    language.Settings.MainTextBoxMoveLastWordDown = reader.Value;
+                    break;
+                case "Settings/MainTextBoxMoveFirstWordFromNextUp":
+                    language.Settings.MainTextBoxMoveFirstWordFromNextUp = reader.Value;
+                    break;
+                case "Settings/MainTextBoxSelectionToLower":
+                    language.Settings.MainTextBoxSelectionToLower = reader.Value;
+                    break;
+                case "Settings/MainTextBoxSelectionToUpper":
+                    language.Settings.MainTextBoxSelectionToUpper = reader.Value;
+                    break;
+                case "Settings/MainTextBoxAutoBreak":
+                    language.Settings.MainTextBoxAutoBreak = reader.Value;
+                    break;
+                case "Settings/MainTextBoxUnbreak":
+                    language.Settings.MainTextBoxUnbreak = reader.Value;
+                    break;
+                case "Settings/MainFileSaveAll":
+                    language.Settings.MainFileSaveAll = reader.Value;
+                    break;
+                case "Settings/Miscellaneous":
+                    language.Settings.Miscellaneous = reader.Value;
+                    break;
+                case "Settings/UseDoNotBreakAfterList":
+                    language.Settings.UseDoNotBreakAfterList = reader.Value;
+                    break;
+                case "ShowEarlierLater/Title":
+                    language.ShowEarlierLater.Title = reader.Value;
+                    break;
+                case "ShowEarlierLater/TitleAll":
+                    language.ShowEarlierLater.TitleAll = reader.Value;
+                    break;
+                case "ShowEarlierLater/ShowEarlier":
+                    language.ShowEarlierLater.ShowEarlier = reader.Value;
+                    break;
+                case "ShowEarlierLater/ShowLater":
+                    language.ShowEarlierLater.ShowLater = reader.Value;
+                    break;
+                case "ShowEarlierLater/TotalAdjustmentX":
+                    language.ShowEarlierLater.TotalAdjustmentX = reader.Value;
+                    break;
+                case "ShowEarlierLater/AllLines":
+                    language.ShowEarlierLater.AllLines = reader.Value;
+                    break;
+                case "ShowEarlierLater/SelectedLinesOnly":
+                    language.ShowEarlierLater.SelectedLinesOnly = reader.Value;
+                    break;
+                case "ShowEarlierLater/SelectedLinesAndForward":
+                    language.ShowEarlierLater.SelectedLinesAndForward = reader.Value;
+                    break;
+                case "ShowHistory/Title":
+                    language.ShowHistory.Title = reader.Value;
+                    break;
+                case "ShowHistory/SelectRollbackPoint":
+                    language.ShowHistory.SelectRollbackPoint = reader.Value;
+                    break;
+                case "ShowHistory/Time":
+                    language.ShowHistory.Time = reader.Value;
+                    break;
+                case "ShowHistory/Description":
+                    language.ShowHistory.Description = reader.Value;
+                    break;
+                case "ShowHistory/CompareHistoryItems":
+                    language.ShowHistory.CompareHistoryItems = reader.Value;
+                    break;
+                case "ShowHistory/CompareWithCurrent":
+                    language.ShowHistory.CompareWithCurrent = reader.Value;
+                    break;
+                case "ShowHistory/Rollback":
+                    language.ShowHistory.Rollback = reader.Value;
+                    break;
+                case "SpellCheck/Title":
+                    language.SpellCheck.Title = reader.Value;
+                    break;
+                case "SpellCheck/FullText":
+                    language.SpellCheck.FullText = reader.Value;
+                    break;
+                case "SpellCheck/WordNotFound":
+                    language.SpellCheck.WordNotFound = reader.Value;
+                    break;
+                case "SpellCheck/Language":
+                    language.SpellCheck.Language = reader.Value;
+                    break;
+                case "SpellCheck/Change":
+                    language.SpellCheck.Change = reader.Value;
+                    break;
+                case "SpellCheck/ChangeAll":
+                    language.SpellCheck.ChangeAll = reader.Value;
+                    break;
+                case "SpellCheck/SkipOnce":
+                    language.SpellCheck.SkipOnce = reader.Value;
+                    break;
+                case "SpellCheck/SkipAll":
+                    language.SpellCheck.SkipAll = reader.Value;
+                    break;
+                case "SpellCheck/AddToUserDictionary":
+                    language.SpellCheck.AddToUserDictionary = reader.Value;
+                    break;
+                case "SpellCheck/AddToNamesAndIgnoreList":
+                    language.SpellCheck.AddToNamesAndIgnoreList = reader.Value;
+                    break;
+                case "SpellCheck/AddToOcrReplaceList":
+                    language.SpellCheck.AddToOcrReplaceList = reader.Value;
+                    break;
+                case "SpellCheck/Abort":
+                    language.SpellCheck.Abort = reader.Value;
+                    break;
+                case "SpellCheck/Use":
+                    language.SpellCheck.Use = reader.Value;
+                    break;
+                case "SpellCheck/UseAlways":
+                    language.SpellCheck.UseAlways = reader.Value;
+                    break;
+                case "SpellCheck/Suggestions":
+                    language.SpellCheck.Suggestions = reader.Value;
+                    break;
+                case "SpellCheck/SpellCheckProgress":
+                    language.SpellCheck.SpellCheckProgress = reader.Value;
+                    break;
+                case "SpellCheck/EditWholeText":
+                    language.SpellCheck.EditWholeText = reader.Value;
+                    break;
+                case "SpellCheck/EditWordOnly":
+                    language.SpellCheck.EditWordOnly = reader.Value;
+                    break;
+                case "SpellCheck/AddXToNamesEtc":
+                    language.SpellCheck.AddXToNamesEtc = reader.Value;
+                    break;
+                case "SpellCheck/AutoFixNames":
+                    language.SpellCheck.AutoFixNames = reader.Value;
+                    break;
+                case "SpellCheck/CheckOneLetterWords":
+                    language.SpellCheck.CheckOneLetterWords = reader.Value;
+                    break;
+                case "SpellCheck/TreatINQuoteAsING":
+                    language.SpellCheck.TreatINQuoteAsING = reader.Value;
+                    break;
+                case "SpellCheck/ImageText":
+                    language.SpellCheck.ImageText = reader.Value;
+                    break;
+                case "SpellCheck/SpellCheckCompleted":
+                    language.SpellCheck.SpellCheckCompleted = reader.Value;
+                    break;
+                case "SpellCheck/SpellCheckAborted":
+                    language.SpellCheck.SpellCheckAborted = reader.Value;
+                    break;
+                case "SpellCheck/UndoX":
+                    language.SpellCheck.UndoX = reader.Value;
+                    break;
+                case "Split/Title":
+                    language.Split.Title = reader.Value;
+                    break;
+                case "Split/SplitOptions":
+                    language.Split.SplitOptions = reader.Value;
+                    break;
+                case "Split/Lines":
+                    language.Split.Lines = reader.Value;
+                    break;
+                case "Split/Characters":
+                    language.Split.Characters = reader.Value;
+                    break;
+                case "Split/NumberOfEqualParts":
+                    language.Split.NumberOfEqualParts = reader.Value;
+                    break;
+                case "Split/SubtitleInfo":
+                    language.Split.SubtitleInfo = reader.Value;
+                    break;
+                case "Split/NumberOfLinesX":
+                    language.Split.NumberOfLinesX = reader.Value;
+                    break;
+                case "Split/NumberOfCharactersX":
+                    language.Split.NumberOfCharactersX = reader.Value;
+                    break;
+                case "Split/Output":
+                    language.Split.Output = reader.Value;
+                    break;
+                case "Split/FileName":
+                    language.Split.FileName = reader.Value;
+                    break;
+                case "Split/OutputFolder":
+                    language.Split.OutputFolder = reader.Value;
+                    break;
+                case "Split/DoSplit":
+                    language.Split.DoSplit = reader.Value;
+                    break;
+                case "Split/Basic":
+                    language.Split.Basic = reader.Value;
+                    break;
+                case "SplitLongLines/Title":
+                    language.SplitLongLines.Title = reader.Value;
+                    break;
+                case "SplitLongLines/SingleLineMaximumLength":
+                    language.SplitLongLines.SingleLineMaximumLength = reader.Value;
+                    break;
+                case "SplitLongLines/LineMaximumLength":
+                    language.SplitLongLines.LineMaximumLength = reader.Value;
+                    break;
+                case "SplitLongLines/LineContinuationBeginEndStrings":
+                    language.SplitLongLines.LineContinuationBeginEndStrings = reader.Value;
+                    break;
+                case "SplitLongLines/NumberOfSplits":
+                    language.SplitLongLines.NumberOfSplits = reader.Value;
+                    break;
+                case "SplitLongLines/LongestSingleLineIsXAtY":
+                    language.SplitLongLines.LongestSingleLineIsXAtY = reader.Value;
+                    break;
+                case "SplitLongLines/LongestLineIsXAtY":
+                    language.SplitLongLines.LongestLineIsXAtY = reader.Value;
+                    break;
+                case "SplitSubtitle/Title":
+                    language.SplitSubtitle.Title = reader.Value;
+                    break;
+                case "SplitSubtitle/Description1":
+                    language.SplitSubtitle.Description1 = reader.Value;
+                    break;
+                case "SplitSubtitle/Description2":
+                    language.SplitSubtitle.Description2 = reader.Value;
+                    break;
+                case "SplitSubtitle/Split":
+                    language.SplitSubtitle.Split = reader.Value;
+                    break;
+                case "SplitSubtitle/Done":
+                    language.SplitSubtitle.Done = reader.Value;
+                    break;
+                case "SplitSubtitle/NothingToSplit":
+                    language.SplitSubtitle.NothingToSplit = reader.Value;
+                    break;
+                case "SplitSubtitle/SavePartOneAs":
+                    language.SplitSubtitle.SavePartOneAs = reader.Value;
+                    break;
+                case "SplitSubtitle/SavePartTwoAs":
+                    language.SplitSubtitle.SavePartTwoAs = reader.Value;
+                    break;
+                case "SplitSubtitle/Part1":
+                    language.SplitSubtitle.Part1 = reader.Value;
+                    break;
+                case "SplitSubtitle/Part2":
+                    language.SplitSubtitle.Part2 = reader.Value;
+                    break;
+                case "SplitSubtitle/UnableToSaveFileX":
+                    language.SplitSubtitle.UnableToSaveFileX = reader.Value;
+                    break;
+                case "SplitSubtitle/OverwriteExistingFiles":
+                    language.SplitSubtitle.OverwriteExistingFiles = reader.Value;
+                    break;
+                case "SplitSubtitle/FolderNotFoundX":
+                    language.SplitSubtitle.FolderNotFoundX = reader.Value;
+                    break;
+                case "SplitSubtitle/Untitled":
+                    language.SplitSubtitle.Untitled = reader.Value;
+                    break;
+                case "StartNumberingFrom/Title":
+                    language.StartNumberingFrom.Title = reader.Value;
+                    break;
+                case "StartNumberingFrom/StartFromNumber":
+                    language.StartNumberingFrom.StartFromNumber = reader.Value;
+                    break;
+                case "StartNumberingFrom/PleaseEnterAValidNumber":
+                    language.StartNumberingFrom.PleaseEnterAValidNumber = reader.Value;
+                    break;
+                case "Statistics/Title":
+                    language.Statistics.Title = reader.Value;
+                    break;
+                case "Statistics/TitleWithFileName":
+                    language.Statistics.TitleWithFileName = reader.Value;
+                    break;
+                case "Statistics/GeneralStatistics":
+                    language.Statistics.GeneralStatistics = reader.Value;
+                    break;
+                case "Statistics/MostUsed":
+                    language.Statistics.MostUsed = reader.Value;
+                    break;
+                case "Statistics/MostUsedLines":
+                    language.Statistics.MostUsedLines = reader.Value;
+                    break;
+                case "Statistics/MostUsedWords":
+                    language.Statistics.MostUsedWords = reader.Value;
+                    break;
+                case "Statistics/NothingFound":
+                    language.Statistics.NothingFound = reader.Value;
+                    break;
+                case "Statistics/NumberOfLinesX":
+                    language.Statistics.NumberOfLinesX = reader.Value;
+                    break;
+                case "Statistics/LengthInFormatXinCharactersY":
+                    language.Statistics.LengthInFormatXinCharactersY = reader.Value;
+                    break;
+                case "Statistics/NumberOfCharactersInTextOnly":
+                    language.Statistics.NumberOfCharactersInTextOnly = reader.Value;
+                    break;
+                case "Statistics/TotalCharsPerSecond":
+                    language.Statistics.TotalCharsPerSecond = reader.Value;
+                    break;
+                case "Statistics/NumberOfItalicTags":
+                    language.Statistics.NumberOfItalicTags = reader.Value;
+                    break;
+                case "Statistics/NumberOfBoldTags":
+                    language.Statistics.NumberOfBoldTags = reader.Value;
+                    break;
+                case "Statistics/NumberOfUnderlineTags":
+                    language.Statistics.NumberOfUnderlineTags = reader.Value;
+                    break;
+                case "Statistics/NumberOfFontTags":
+                    language.Statistics.NumberOfFontTags = reader.Value;
+                    break;
+                case "Statistics/NumberOfAlignmentTags":
+                    language.Statistics.NumberOfAlignmentTags = reader.Value;
+                    break;
+                case "Statistics/LineLengthMinimum":
+                    language.Statistics.LineLengthMinimum = reader.Value;
+                    break;
+                case "Statistics/LineLengthMaximum":
+                    language.Statistics.LineLengthMaximum = reader.Value;
+                    break;
+                case "Statistics/LineLengthAvarage":
+                    language.Statistics.LineLengthAvarage = reader.Value;
+                    break;
+                case "Statistics/LinesPerSubtitleAvarage":
+                    language.Statistics.LinesPerSubtitleAvarage = reader.Value;
+                    break;
+                case "Statistics/SingleLineLengthMinimum":
+                    language.Statistics.SingleLineLengthMinimum = reader.Value;
+                    break;
+                case "Statistics/SingleLineLengthMaximum":
+                    language.Statistics.SingleLineLengthMaximum = reader.Value;
+                    break;
+                case "Statistics/SingleLineLengthAvarage":
+                    language.Statistics.SingleLineLengthAvarage = reader.Value;
+                    break;
+                case "Statistics/DurationMinimum":
+                    language.Statistics.DurationMinimum = reader.Value;
+                    break;
+                case "Statistics/DurationMaximum":
+                    language.Statistics.DurationMaximum = reader.Value;
+                    break;
+                case "Statistics/DurationAvarage":
+                    language.Statistics.DurationAvarage = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/Title":
+                    language.SubStationAlphaProperties.Title = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/TitleSubstationAlpha":
+                    language.SubStationAlphaProperties.TitleSubstationAlpha = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/Script":
+                    language.SubStationAlphaProperties.Script = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/ScriptTitle":
+                    language.SubStationAlphaProperties.ScriptTitle = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/OriginalScript":
+                    language.SubStationAlphaProperties.OriginalScript = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/Translation":
+                    language.SubStationAlphaProperties.Translation = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/Editing":
+                    language.SubStationAlphaProperties.Editing = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/Timing":
+                    language.SubStationAlphaProperties.Timing = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/SyncPoint":
+                    language.SubStationAlphaProperties.SyncPoint = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/UpdatedBy":
+                    language.SubStationAlphaProperties.UpdatedBy = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/UpdateDetails":
+                    language.SubStationAlphaProperties.UpdateDetails = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/Resolution":
+                    language.SubStationAlphaProperties.Resolution = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/VideoResolution":
+                    language.SubStationAlphaProperties.VideoResolution = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/Options":
+                    language.SubStationAlphaProperties.Options = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/WrapStyle":
+                    language.SubStationAlphaProperties.WrapStyle = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/Collision":
+                    language.SubStationAlphaProperties.Collision = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/ScaleBorderAndShadow":
+                    language.SubStationAlphaProperties.ScaleBorderAndShadow = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Title":
+                    language.SubStationAlphaStyles.Title = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/TitleSubstationAlpha":
+                    language.SubStationAlphaStyles.TitleSubstationAlpha = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Styles":
+                    language.SubStationAlphaStyles.Styles = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Properties":
+                    language.SubStationAlphaStyles.Properties = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Name":
+                    language.SubStationAlphaStyles.Name = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Font":
+                    language.SubStationAlphaStyles.Font = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/FontName":
+                    language.SubStationAlphaStyles.FontName = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/FontSize":
+                    language.SubStationAlphaStyles.FontSize = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/UseCount":
+                    language.SubStationAlphaStyles.UseCount = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Primary":
+                    language.SubStationAlphaStyles.Primary = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Secondary":
+                    language.SubStationAlphaStyles.Secondary = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Tertiary":
+                    language.SubStationAlphaStyles.Tertiary = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Outline":
+                    language.SubStationAlphaStyles.Outline = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Shadow":
+                    language.SubStationAlphaStyles.Shadow = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Back":
+                    language.SubStationAlphaStyles.Back = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Alignment":
+                    language.SubStationAlphaStyles.Alignment = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/TopLeft":
+                    language.SubStationAlphaStyles.TopLeft = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/TopCenter":
+                    language.SubStationAlphaStyles.TopCenter = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/TopRight":
+                    language.SubStationAlphaStyles.TopRight = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/MiddleLeft":
+                    language.SubStationAlphaStyles.MiddleLeft = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/MiddleCenter":
+                    language.SubStationAlphaStyles.MiddleCenter = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/MiddleRight":
+                    language.SubStationAlphaStyles.MiddleRight = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/BottomLeft":
+                    language.SubStationAlphaStyles.BottomLeft = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/BottomCenter":
+                    language.SubStationAlphaStyles.BottomCenter = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/BottomRight":
+                    language.SubStationAlphaStyles.BottomRight = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Colors":
+                    language.SubStationAlphaStyles.Colors = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Margins":
+                    language.SubStationAlphaStyles.Margins = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/MarginLeft":
+                    language.SubStationAlphaStyles.MarginLeft = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/MarginRight":
+                    language.SubStationAlphaStyles.MarginRight = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/MarginVertical":
+                    language.SubStationAlphaStyles.MarginVertical = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Border":
+                    language.SubStationAlphaStyles.Border = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/PlusShadow":
+                    language.SubStationAlphaStyles.PlusShadow = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/OpaqueBox":
+                    language.SubStationAlphaStyles.OpaqueBox = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Import":
+                    language.SubStationAlphaStyles.Import = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Export":
+                    language.SubStationAlphaStyles.Export = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Copy":
+                    language.SubStationAlphaStyles.Copy = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/CopyOfY":
+                    language.SubStationAlphaStyles.CopyOfY = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/CopyXOfY":
+                    language.SubStationAlphaStyles.CopyXOfY = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/New":
+                    language.SubStationAlphaStyles.New = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Remove":
+                    language.SubStationAlphaStyles.Remove = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/RemoveAll":
+                    language.SubStationAlphaStyles.RemoveAll = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/ImportStyleFromFile":
+                    language.SubStationAlphaStyles.ImportStyleFromFile = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/ExportStyleToFile":
+                    language.SubStationAlphaStyles.ExportStyleToFile = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/ChooseStyle":
+                    language.SubStationAlphaStyles.ChooseStyle = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/StyleAlreadyExits":
+                    language.SubStationAlphaStyles.StyleAlreadyExits = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/StyleXExportedToFileY":
+                    language.SubStationAlphaStyles.StyleXExportedToFileY = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/StyleXImportedFromFileY":
+                    language.SubStationAlphaStyles.StyleXImportedFromFileY = reader.Value;
+                    break;
+                case "PointSync/Title":
+                    language.PointSync.Title = reader.Value;
+                    break;
+                case "PointSync/TitleViaOtherSubtitle":
+                    language.PointSync.TitleViaOtherSubtitle = reader.Value;
+                    break;
+                case "PointSync/SyncHelp":
+                    language.PointSync.SyncHelp = reader.Value;
+                    break;
+                case "PointSync/SetSyncPoint":
+                    language.PointSync.SetSyncPoint = reader.Value;
+                    break;
+                case "PointSync/RemoveSyncPoint":
+                    language.PointSync.RemoveSyncPoint = reader.Value;
+                    break;
+                case "PointSync/SyncPointsX":
+                    language.PointSync.SyncPointsX = reader.Value;
+                    break;
+                case "PointSync/Info":
+                    language.PointSync.Info = reader.Value;
+                    break;
+                case "PointSync/ApplySync":
+                    language.PointSync.ApplySync = reader.Value;
+                    break;
+                case "TransportStreamSubtitleChooser/Title":
+                    language.TransportStreamSubtitleChooser.Title = reader.Value;
+                    break;
+                case "TransportStreamSubtitleChooser/PidLine":
+                    language.TransportStreamSubtitleChooser.PidLine = reader.Value;
+                    break;
+                case "TransportStreamSubtitleChooser/SubLine":
+                    language.TransportStreamSubtitleChooser.SubLine = reader.Value;
+                    break;
+                case "UnknownSubtitle/Title":
+                    language.UnknownSubtitle.Title = reader.Value;
+                    break;
+                case "UnknownSubtitle/Message":
+                    language.UnknownSubtitle.Message = reader.Value;
+                    break;
+                case "VisualSync/Title":
+                    language.VisualSync.Title = reader.Value;
+                    break;
+                case "VisualSync/StartScene":
+                    language.VisualSync.StartScene = reader.Value;
+                    break;
+                case "VisualSync/EndScene":
+                    language.VisualSync.EndScene = reader.Value;
+                    break;
+                case "VisualSync/Synchronize":
+                    language.VisualSync.Synchronize = reader.Value;
+                    break;
+                case "VisualSync/HalfASecondBack":
+                    language.VisualSync.HalfASecondBack = reader.Value;
+                    break;
+                case "VisualSync/ThreeSecondsBack":
+                    language.VisualSync.ThreeSecondsBack = reader.Value;
+                    break;
+                case "VisualSync/PlayXSecondsAndBack":
+                    language.VisualSync.PlayXSecondsAndBack = reader.Value;
+                    break;
+                case "VisualSync/FindText":
+                    language.VisualSync.FindText = reader.Value;
+                    break;
+                case "VisualSync/GoToSubPosition":
+                    language.VisualSync.GoToSubPosition = reader.Value;
+                    break;
+                case "VisualSync/KeepChangesTitle":
+                    language.VisualSync.KeepChangesTitle = reader.Value;
+                    break;
+                case "VisualSync/KeepChangesMessage":
+                    language.VisualSync.KeepChangesMessage = reader.Value;
+                    break;
+                case "VisualSync/SynchronizationDone":
+                    language.VisualSync.SynchronizationDone = reader.Value;
+                    break;
+                case "VisualSync/StartSceneMustComeBeforeEndScene":
+                    language.VisualSync.StartSceneMustComeBeforeEndScene = reader.Value;
+                    break;
+                case "VisualSync/Tip":
+                    language.VisualSync.Tip = reader.Value;
+                    break;
+                case "VobSubEditCharacters/Title":
+                    language.VobSubEditCharacters.Title = reader.Value;
+                    break;
+                case "VobSubEditCharacters/ChooseCharacter":
+                    language.VobSubEditCharacters.ChooseCharacter = reader.Value;
+                    break;
+                case "VobSubEditCharacters/ImageCompareFiles":
+                    language.VobSubEditCharacters.ImageCompareFiles = reader.Value;
+                    break;
+                case "VobSubEditCharacters/CurrentCompareImage":
+                    language.VobSubEditCharacters.CurrentCompareImage = reader.Value;
+                    break;
+                case "VobSubEditCharacters/TextAssociatedWithImage":
+                    language.VobSubEditCharacters.TextAssociatedWithImage = reader.Value;
+                    break;
+                case "VobSubEditCharacters/IsItalic":
+                    language.VobSubEditCharacters.IsItalic = reader.Value;
+                    break;
+                case "VobSubEditCharacters/Update":
+                    language.VobSubEditCharacters.Update = reader.Value;
+                    break;
+                case "VobSubEditCharacters/Delete":
+                    language.VobSubEditCharacters.Delete = reader.Value;
+                    break;
+                case "VobSubEditCharacters/ImageDoubleSize":
+                    language.VobSubEditCharacters.ImageDoubleSize = reader.Value;
+                    break;
+                case "VobSubEditCharacters/ImageFileNotFound":
+                    language.VobSubEditCharacters.ImageFileNotFound = reader.Value;
+                    break;
+                case "VobSubEditCharacters/Image":
+                    language.VobSubEditCharacters.Image = reader.Value;
+                    break;
+                case "VobSubOcr/Title":
+                    language.VobSubOcr.Title = reader.Value;
+                    break;
+                case "VobSubOcr/TitleBluRay":
+                    language.VobSubOcr.TitleBluRay = reader.Value;
+                    break;
+                case "VobSubOcr/OcrMethod":
+                    language.VobSubOcr.OcrMethod = reader.Value;
+                    break;
+                case "VobSubOcr/OcrViaModi":
+                    language.VobSubOcr.OcrViaModi = reader.Value;
+                    break;
+                case "VobSubOcr/OcrViaTesseract":
+                    language.VobSubOcr.OcrViaTesseract = reader.Value;
+                    break;
+                case "VobSubOcr/OcrViaNOCR":
+                    language.VobSubOcr.OcrViaNOCR = reader.Value;
+                    break;
+                case "VobSubOcr/Language":
+                    language.VobSubOcr.Language = reader.Value;
+                    break;
+                case "VobSubOcr/OcrViaImageCompare":
+                    language.VobSubOcr.OcrViaImageCompare = reader.Value;
+                    break;
+                case "VobSubOcr/ImageDatabase":
+                    language.VobSubOcr.ImageDatabase = reader.Value;
+                    break;
+                case "VobSubOcr/NoOfPixelsIsSpace":
+                    language.VobSubOcr.NoOfPixelsIsSpace = reader.Value;
+                    break;
+                case "VobSubOcr/MaxErrorPercent":
+                    language.VobSubOcr.MaxErrorPercent = reader.Value;
+                    break;
+                case "VobSubOcr/New":
+                    language.VobSubOcr.New = reader.Value;
+                    break;
+                case "VobSubOcr/Edit":
+                    language.VobSubOcr.Edit = reader.Value;
+                    break;
+                case "VobSubOcr/StartOcr":
+                    language.VobSubOcr.StartOcr = reader.Value;
+                    break;
+                case "VobSubOcr/Stop":
+                    language.VobSubOcr.Stop = reader.Value;
+                    break;
+                case "VobSubOcr/StartOcrFrom":
+                    language.VobSubOcr.StartOcrFrom = reader.Value;
+                    break;
+                case "VobSubOcr/LoadingVobSubImages":
+                    language.VobSubOcr.LoadingVobSubImages = reader.Value;
+                    break;
+                case "VobSubOcr/LoadingImageCompareDatabase":
+                    language.VobSubOcr.LoadingImageCompareDatabase = reader.Value;
+                    break;
+                case "VobSubOcr/ConvertingImageCompareDatabase":
+                    language.VobSubOcr.ConvertingImageCompareDatabase = reader.Value;
+                    break;
+                case "VobSubOcr/SubtitleImage":
+                    language.VobSubOcr.SubtitleImage = reader.Value;
+                    break;
+                case "VobSubOcr/SubtitleText":
+                    language.VobSubOcr.SubtitleText = reader.Value;
+                    break;
+                case "VobSubOcr/UnableToCreateCharacterDatabaseFolder":
+                    language.VobSubOcr.UnableToCreateCharacterDatabaseFolder = reader.Value;
+                    break;
+                case "VobSubOcr/SubtitleImageXofY":
+                    language.VobSubOcr.SubtitleImageXofY = reader.Value;
+                    break;
+                case "VobSubOcr/ImagePalette":
+                    language.VobSubOcr.ImagePalette = reader.Value;
+                    break;
+                case "VobSubOcr/UseCustomColors":
+                    language.VobSubOcr.UseCustomColors = reader.Value;
+                    break;
+                case "VobSubOcr/Transparent":
+                    language.VobSubOcr.Transparent = reader.Value;
+                    break;
+                case "VobSubOcr/TransparentMinAlpha":
+                    language.VobSubOcr.TransparentMinAlpha = reader.Value;
+                    break;
+                case "VobSubOcr/TransportStream":
+                    language.VobSubOcr.TransportStream = reader.Value;
+                    break;
+                case "VobSubOcr/TransportStreamGrayscale":
+                    language.VobSubOcr.TransportStreamGrayscale = reader.Value;
+                    break;
+                case "VobSubOcr/TransportStreamGetColor":
+                    language.VobSubOcr.TransportStreamGetColor = reader.Value;
+                    break;
+                case "VobSubOcr/PromptForUnknownWords":
+                    language.VobSubOcr.PromptForUnknownWords = reader.Value;
+                    break;
+                case "VobSubOcr/TryToGuessUnkownWords":
+                    language.VobSubOcr.TryToGuessUnkownWords = reader.Value;
+                    break;
+                case "VobSubOcr/AutoBreakSubtitleIfMoreThanTwoLines":
+                    language.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines = reader.Value;
+                    break;
+                case "VobSubOcr/AllFixes":
+                    language.VobSubOcr.AllFixes = reader.Value;
+                    break;
+                case "VobSubOcr/GuessesUsed":
+                    language.VobSubOcr.GuessesUsed = reader.Value;
+                    break;
+                case "VobSubOcr/UnknownWords":
+                    language.VobSubOcr.UnknownWords = reader.Value;
+                    break;
+                case "VobSubOcr/OcrAutoCorrectionSpellchecking":
+                    language.VobSubOcr.OcrAutoCorrectionSpellchecking = reader.Value;
+                    break;
+                case "VobSubOcr/FixOcrErrors":
+                    language.VobSubOcr.FixOcrErrors = reader.Value;
+                    break;
+                case "VobSubOcr/ImportTextWithMatchingTimeCodes":
+                    language.VobSubOcr.ImportTextWithMatchingTimeCodes = reader.Value;
+                    break;
+                case "VobSubOcr/SaveSubtitleImageAs":
+                    language.VobSubOcr.SaveSubtitleImageAs = reader.Value;
+                    break;
+                case "VobSubOcr/SaveAllSubtitleImagesAsBdnXml":
+                    language.VobSubOcr.SaveAllSubtitleImagesAsBdnXml = reader.Value;
+                    break;
+                case "VobSubOcr/SaveAllSubtitleImagesWithHtml":
+                    language.VobSubOcr.SaveAllSubtitleImagesWithHtml = reader.Value;
+                    break;
+                case "VobSubOcr/XImagesSavedInY":
+                    language.VobSubOcr.XImagesSavedInY = reader.Value;
+                    break;
+                case "VobSubOcr/TryModiForUnknownWords":
+                    language.VobSubOcr.TryModiForUnknownWords = reader.Value;
+                    break;
+                case "VobSubOcr/DictionaryX":
+                    language.VobSubOcr.DictionaryX = reader.Value;
+                    break;
+                case "VobSubOcr/RightToLeft":
+                    language.VobSubOcr.RightToLeft = reader.Value;
+                    break;
+                case "VobSubOcr/ShowOnlyForcedSubtitles":
+                    language.VobSubOcr.ShowOnlyForcedSubtitles = reader.Value;
+                    break;
+                case "VobSubOcr/UseTimeCodesFromIdx":
+                    language.VobSubOcr.UseTimeCodesFromIdx = reader.Value;
+                    break;
+                case "VobSubOcr/NoMatch":
+                    language.VobSubOcr.NoMatch = reader.Value;
+                    break;
+                case "VobSubOcr/AutoTransparentBackground":
+                    language.VobSubOcr.AutoTransparentBackground = reader.Value;
+                    break;
+                case "VobSubOcr/InspectCompareMatchesForCurrentImage":
+                    language.VobSubOcr.InspectCompareMatchesForCurrentImage = reader.Value;
+                    break;
+                case "VobSubOcr/EditLastAdditions":
+                    language.VobSubOcr.EditLastAdditions = reader.Value;
+                    break;
+                case "VobSubOcrCharacter/Title":
+                    language.VobSubOcrCharacter.Title = reader.Value;
+                    break;
+                case "VobSubOcrCharacter/ShrinkSelection":
+                    language.VobSubOcrCharacter.ShrinkSelection = reader.Value;
+                    break;
+                case "VobSubOcrCharacter/ExpandSelection":
+                    language.VobSubOcrCharacter.ExpandSelection = reader.Value;
+                    break;
+                case "VobSubOcrCharacter/SubtitleImage":
+                    language.VobSubOcrCharacter.SubtitleImage = reader.Value;
+                    break;
+                case "VobSubOcrCharacter/Characters":
+                    language.VobSubOcrCharacter.Characters = reader.Value;
+                    break;
+                case "VobSubOcrCharacter/CharactersAsText":
+                    language.VobSubOcrCharacter.CharactersAsText = reader.Value;
+                    break;
+                case "VobSubOcrCharacter/Italic":
+                    language.VobSubOcrCharacter.Italic = reader.Value;
+                    break;
+                case "VobSubOcrCharacter/Abort":
+                    language.VobSubOcrCharacter.Abort = reader.Value;
+                    break;
+                case "VobSubOcrCharacter/Skip":
+                    language.VobSubOcrCharacter.Skip = reader.Value;
+                    break;
+                case "VobSubOcrCharacter/Nordic":
+                    language.VobSubOcrCharacter.Nordic = reader.Value;
+                    break;
+                case "VobSubOcrCharacter/Spanish":
+                    language.VobSubOcrCharacter.Spanish = reader.Value;
+                    break;
+                case "VobSubOcrCharacter/German":
+                    language.VobSubOcrCharacter.German = reader.Value;
+                    break;
+                case "VobSubOcrCharacter/AutoSubmitOnFirstChar":
+                    language.VobSubOcrCharacter.AutoSubmitOnFirstChar = reader.Value;
+                    break;
+                case "VobSubOcrCharacter/EditLastX":
+                    language.VobSubOcrCharacter.EditLastX = reader.Value;
+                    break;
+                case "VobSubOcrCharacterInspect/Title":
+                    language.VobSubOcrCharacterInspect.Title = reader.Value;
+                    break;
+                case "VobSubOcrCharacterInspect/InspectItems":
+                    language.VobSubOcrCharacterInspect.InspectItems = reader.Value;
+                    break;
+                case "VobSubOcrCharacterInspect/AddBetterMatch":
+                    language.VobSubOcrCharacterInspect.AddBetterMatch = reader.Value;
+                    break;
+                case "VobSubOcrNewFolder/Title":
+                    language.VobSubOcrNewFolder.Title = reader.Value;
+                    break;
+                case "VobSubOcrNewFolder/Message":
+                    language.VobSubOcrNewFolder.Message = reader.Value;
+                    break;
+                case "WaveForm/ClickToAddWaveForm":
+                    language.WaveForm.ClickToAddWaveForm = reader.Value;
+                    break;
+                case "WaveForm/ClickToAddWaveformAndSpectrogram":
+                    language.WaveForm.ClickToAddWaveformAndSpectrogram = reader.Value;
+                    break;
+                case "WaveForm/Seconds":
+                    language.WaveForm.Seconds = reader.Value;
+                    break;
+                case "WaveForm/ZoomIn":
+                    language.WaveForm.ZoomIn = reader.Value;
+                    break;
+                case "WaveForm/ZoomOut":
+                    language.WaveForm.ZoomOut = reader.Value;
+                    break;
+                case "WaveForm/AddParagraphHere":
+                    language.WaveForm.AddParagraphHere = reader.Value;
+                    break;
+                case "WaveForm/AddParagraphHereAndPasteText":
+                    language.WaveForm.AddParagraphHereAndPasteText = reader.Value;
+                    break;
+                case "WaveForm/FocusTextBox":
+                    language.WaveForm.FocusTextBox = reader.Value;
+                    break;
+                case "WaveForm/DeleteParagraph":
+                    language.WaveForm.DeleteParagraph = reader.Value;
+                    break;
+                case "WaveForm/Split":
+                    language.WaveForm.Split = reader.Value;
+                    break;
+                case "WaveForm/SplitAtCursor":
+                    language.WaveForm.SplitAtCursor = reader.Value;
+                    break;
+                case "WaveForm/MergeWithPrevious":
+                    language.WaveForm.MergeWithPrevious = reader.Value;
+                    break;
+                case "WaveForm/MergeWithNext":
+                    language.WaveForm.MergeWithNext = reader.Value;
+                    break;
+                case "WaveForm/PlaySelection":
+                    language.WaveForm.PlaySelection = reader.Value;
+                    break;
+                case "WaveForm/ShowWaveformAndSpectrogram":
+                    language.WaveForm.ShowWaveformAndSpectrogram = reader.Value;
+                    break;
+                case "WaveForm/ShowWaveformOnly":
+                    language.WaveForm.ShowWaveformOnly = reader.Value;
+                    break;
+                case "WaveForm/ShowSpectrogramOnly":
+                    language.WaveForm.ShowSpectrogramOnly = reader.Value;
+                    break;
+                case "WaveForm/GuessTimeCodes":
+                    language.WaveForm.GuessTimeCodes = reader.Value;
+                    break;
+                case "WaveForm/SeekSilence":
+                    language.WaveForm.SeekSilence = reader.Value;
+                    break;
+                case "WaveFormGenerateTimeCodes/Title":
+                    language.WaveFormGenerateTimeCodes.Title = reader.Value;
+                    break;
+                case "WaveFormGenerateTimeCodes/StartFrom":
+                    language.WaveFormGenerateTimeCodes.StartFrom = reader.Value;
+                    break;
+                case "WaveFormGenerateTimeCodes/CurrentVideoPosition":
+                    language.WaveFormGenerateTimeCodes.CurrentVideoPosition = reader.Value;
+                    break;
+                case "WaveFormGenerateTimeCodes/Beginning":
+                    language.WaveFormGenerateTimeCodes.Beginning = reader.Value;
+                    break;
+                case "WaveFormGenerateTimeCodes/DeleteLines":
+                    language.WaveFormGenerateTimeCodes.DeleteLines = reader.Value;
+                    break;
+                case "WaveFormGenerateTimeCodes/FromCurrentVideoPosition":
+                    language.WaveFormGenerateTimeCodes.FromCurrentVideoPosition = reader.Value;
+                    break;
+                case "WaveFormGenerateTimeCodes/DetectOptions":
+                    language.WaveFormGenerateTimeCodes.DetectOptions = reader.Value;
+                    break;
+                case "WaveFormGenerateTimeCodes/ScanBlocksOfMs":
+                    language.WaveFormGenerateTimeCodes.ScanBlocksOfMs = reader.Value;
+                    break;
+                case "WaveFormGenerateTimeCodes/BlockAverageVolMin1":
+                    language.WaveFormGenerateTimeCodes.BlockAverageVolMin1 = reader.Value;
+                    break;
+                case "WaveFormGenerateTimeCodes/BlockAverageVolMin2":
+                    language.WaveFormGenerateTimeCodes.BlockAverageVolMin2 = reader.Value;
+                    break;
+                case "WaveFormGenerateTimeCodes/BlockAverageVolMax1":
+                    language.WaveFormGenerateTimeCodes.BlockAverageVolMax1 = reader.Value;
+                    break;
+                case "WaveFormGenerateTimeCodes/BlockAverageVolMax2":
+                    language.WaveFormGenerateTimeCodes.BlockAverageVolMax2 = reader.Value;
+                    break;
+                case "WaveFormGenerateTimeCodes/SplitLongLinesAt1":
+                    language.WaveFormGenerateTimeCodes.SplitLongLinesAt1 = reader.Value;
+                    break;
+                case "WaveFormGenerateTimeCodes/SplitLongLinesAt2":
+                    language.WaveFormGenerateTimeCodes.SplitLongLinesAt2 = reader.Value;
+                    break;
+                case "WaveFormGenerateTimeCodes/Other":
+                    language.WaveFormGenerateTimeCodes.Other = reader.Value;
+                    break;
+                case "WebVttNewVoice/Title":
+                    language.WebVttNewVoice.Title = reader.Value;
+                    break;
+                case "WebVttNewVoice/VoiceName":
+                    language.WebVttNewVoice.VoiceName = reader.Value;
+                    break;
+
 
             }
-
-
-            return language;
         }
     }
 }
