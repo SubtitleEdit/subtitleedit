@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string BdnXmlTimeCode(TimeCode timecode)
         {
             var fr = FrameRate;
-            var tc = new TimeCode(timecode.TotalMilliseconds * (Math.Ceiling(fr) / fr));            
+            var tc = new TimeCode(timecode.TotalMilliseconds * (Math.Ceiling(fr) / fr));
             int frames =SubtitleFormat.MillisecondsToFramesMaxFrameRate(tc.Milliseconds);
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", tc.Hours, tc.Minutes, tc.Seconds, frames);
         }

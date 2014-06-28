@@ -7293,7 +7293,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        
+
         private void MakeAutoDurationSelectedLines()
         {
             if (_subtitle.Paragraphs.Count == 0)
