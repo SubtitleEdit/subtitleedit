@@ -103,6 +103,15 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.WaveFormGenerateTimeCodes WaveFormGenerateTimeCodes;
         public LanguageStructure.WebVttNewVoice WebVttNewVoice;
 
+        private string GetVersionNumber()
+        {
+            string[] versionInfo = Utilities.AssemblyVersion.Split('.');
+            string minorMinorVersion = string.Empty;
+            if (versionInfo.Length >= 3 && versionInfo[2] != "0")
+                minorMinorVersion = "." + versionInfo[2];
+            return string.Format("{0}.{1}{2}", versionInfo[0], versionInfo[1], minorMinorVersion);
+        }
+
         public Language()
         {
             Name = "English";
@@ -110,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic
             General = new LanguageStructure.General
             {
                 Title = "Subtitle Edit",
-                Version = "3.3",
+                Version = GetVersionNumber(),
                 TranslatedBy = " ",
                 CultureName = "en-US",
                 HelpFile = string.Empty,
@@ -2336,12 +2345,12 @@ Keep changes?",
 
         }
 
-        public static Language Load(StreamReader sr)
-        {
-            var s = new XmlSerializer(typeof(Language));
-            var language = (Language)s.Deserialize(sr);
-            return language;
-        }
+        //public static Language Load(StreamReader sr) // normal but slow .net way
+        //{
+        //    var s = new XmlSerializer(typeof(Language));
+        //    var language = (Language)s.Deserialize(sr);
+        //    return language;
+        //}
 
         public static Language Load(string fileName)
         {
@@ -2351,15 +2360,17 @@ Keep changes?",
         public void Save()
         {
             var s = new XmlSerializer(typeof(Language));
-            StringBuilder sb = new StringBuilder();
-            TextWriter w = new StringWriter(sb);
+            var sb = new StringBuilder();
+            var w = new StringWriter(sb);
             s.Serialize(w, this);
             w.Close();
 
             string xml = sb.ToString();
             xml = xml.Replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" ", string.Empty);
+            xml = xml.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ", string.Empty);
             xml = xml.Replace("encoding=\"utf-16\"", "encoding=\"utf-8\"");
-            File.WriteAllText(Path.Combine(Configuration.BaseDirectory, "Language.xml"), xml, Encoding.UTF8);
+            xml = xml.Replace("<TranslatedBy> </TranslatedBy>", "<TranslatedBy>Translated by Nikse</TranslatedBy>");
+            File.WriteAllText(Path.Combine(Configuration.BaseDirectory, "LanguageMaster.xml"), xml, Encoding.UTF8);
         }
 
         public static void TranslateViaGoogle(string languagePair)

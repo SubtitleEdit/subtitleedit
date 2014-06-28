@@ -1294,6 +1294,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <ImportRulesTitle>Import erstat-regle(r) fra...</ImportRulesTitle>
     <ExportRulesTitle>Export erstat-regle(r)...</ExportRulesTitle>
     <Rules>Eksport regler</Rules>
+    <MoveToTop>Flyt til top</MoveToTop>
+    <MoveToBottom>Flyt til bund</MoveToBottom>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
