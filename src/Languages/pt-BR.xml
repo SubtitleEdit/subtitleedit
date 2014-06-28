@@ -5,8 +5,7 @@
     <Version>3.3.15</Version>
     <TranslatedBy>Tradução (Português do Brasil): Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
@@ -194,6 +193,15 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Ajustar velocidade em porcentagem</Title>
     <Info>Alterar velocidade da legenda em porcentagem</Info>
   </ChangeSpeedInPercent>
+  <CheckForUpdates>
+    <Title>Verificar atualizações</Title>
+    <CheckingForUpdates>Verificando atualizações...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>Falha ao verificar atualizações: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesNoneAvailable>Você está usando a versão mais atual do Subtitle Edit =)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNewVersion>Nova versão disponível</CheckingForUpdatesNewVersion>
+    <InstallUpdate>Ir para página de download</InstallUpdate>
+    <NoUpdates>Não atualizar</NoUpdates>
+  </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Escolher faixa de áudio</Title>
   </ChooseAudioTrack>
@@ -207,6 +215,13 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Selecione o idioma</Title>
     <Language>Idioma</Language>
   </ChooseLanguage>
+  <ColorChooser>
+    <Title>Escolha a cor</Title>
+    <Red>Vermelho</Red>
+    <Green>Verde</Green>
+    <Blue>Azul</Blue>
+    <Alpha>Alpha</Alpha>
+  </ColorChooser>
   <ColumnPaste>
     <Title>Colar na coluna</Title>
     <ChooseColumn>Escolha a coluna</ChooseColumn>
@@ -250,6 +265,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffectColor>Cor do efeito</FontEffectColor>
     <FontSize>Tamanho</FontSize>
     <TopBottomMargin>Margem superior/inferior</TopBottomMargin>
+    <FadeUpTime>Tempo para aparecer</FadeUpTime>
+    <FadeDownTime>Tempo para sumir</FadeDownTime>
     <ZPosition>Posição-Z</ZPosition>
     <ZPositionHelp>Números positivos afastam o texto; negativos aproximam o texto, se a posição-z for zero então é 2D</ZPositionHelp>
     <ChooseColor>Escolher cor...</ChooseColor>
@@ -266,26 +283,26 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <DivideEven>Texto divide o intervalo</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Ripar legendas de IFO/VOBs (DVD)</Title>
-    <DvdGroupTitle>Arquivos DVD/info</DvdGroupTitle>
+    <Title>Ripar legendas do IFO/VOB (DVD)</Title>
+    <DvdGroupTitle>Arquivo DVD/info</DvdGroupTitle>
     <IfoFile>Arquivo IFO</IfoFile>
     <IfoFiles>Arquivos IFO</IfoFiles>
     <VobFiles>Arquivos VOB</VobFiles>
     <Add>Adicionar...</Add>
     <Remove>Remover</Remove>
     <Clear>Limpar</Clear>
-    <MoveUp>Subir</MoveUp>
-    <MoveDown>Descer</MoveDown>
+    <MoveUp>Mover para cima</MoveUp>
+    <MoveDown>Mover para baixo</MoveDown>
     <Languages>Idiomas</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
-    <Pal>PAL (25fps)</Pal>
-    <Ntsc>NTSC (23.976fps)</Ntsc>
-    <StartRipping>Iniciar ripagem</StartRipping>
+    <Pal>PAL (25 fps)</Pal>
+    <Ntsc>NTSC (29.97 fps)</Ntsc>
+    <StartRipping>Iniciar</StartRipping>
     <Abort>Cancelar</Abort>
     <AbortedByUser>Cancelado pelo usuário</AbortedByUser>
     <ReadingSubtitleData>Lendo dados da legenda...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Ripando arquivo VOB {1} de {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>O tipo IFO é '{0}' e não 'DVDVIDEO-VTS'.{1}Tente outro arquivo que {2}</WrongIfoType>
+    <WrongIfoType>Tipo IFO é '{0}' e não 'DVDVIDEO-VTS'.{1}Tente outro arquivo que {2}</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Selecionar idioma</Title>
@@ -364,6 +381,10 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Cor da fonte</FontColor>
     <BorderColor>Cor da borda</BorderColor>
     <BorderWidth>Tamanho da borda</BorderWidth>
+    <BorderStyle>Estilo da borda</BorderStyle>
+    <BorderStyleOneBox>Uma caixa</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Caixa para cada linha</BorderStyleBoxForEachLine>
+    <BorderStyleNormalWidthX>Normal, largura={0}</BorderStyleNormalWidthX>
     <ShadowColor>Cor da sombra</ShadowColor>
     <ShadowWidth>Largura da sombra</ShadowWidth>
     <Transparency>Alpha</Transparency>
@@ -388,6 +409,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveDvdStudioProStlAs>Escolher nome arquivo DVD Studio Pro STL</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>Algumas linhas são muito longas: {0}</SomeLinesWereTooLongX>
     <LineHeight>Altura da linha</LineHeight>
+    <BoxSingleLine>Caixa - única linha</BoxSingleLine>
+    <BoxMultiLine>Caixa - multilinha</BoxMultiLine>
   </ExportPngXml>
   <ExportText>
     <Title>Exportar texto</Title>
@@ -731,6 +754,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeSpeedInPercent>Velocidade alterada (porcentagem)...</ChangeSpeedInPercent>
         <MergeShortLines>Mesclar linhas curtas...</MergeShortLines>
         <MergeDuplicateText>Mesclar linhas como o mesmo texto...</MergeDuplicateText>
+        <MergeSameTimeCodes>Mesclar linhas como os mesmos códigos de tempo...</MergeSameTimeCodes>
         <SplitLongLines>Dividir linhas longas...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Duração mínima entre parágrafos...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>
@@ -805,6 +829,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <LeaveSession>Abandonar sessão</LeaveSession>
       </Networking>
       <Help>
+        <CheckForUpdates>Verificar atualizações...</CheckForUpdates>
         <Title>Ajuda</Title>
         <Help>&amp;Ajuda</Help>
         <About>&amp;Sobre</About>
@@ -1223,6 +1248,13 @@ Deseja continuar?</SubtitleAppendPrompt>
     <MergedText>Texto combinado</MergedText>
     <OnlyMergeContinuationLines>Combinar somente linhas que continuam</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <MergeTextWithSameTimeCodes>
+    <Title>Mesclar linha com os mesmos códigos de tempo</Title>
+    <MaxDifferenceMilliseconds>Diferença máx. milisegundos</MaxDifferenceMilliseconds>
+    <ReBreakLines>Quebrar linhas novamente</ReBreakLines>
+    <NumberOfMergesX>Número de mesclagens: {0}</NumberOfMergesX>
+    <MergedText>Texto mesclado</MergedText>
+  </MergeTextWithSameTimeCodes>
   <ModifySelection>
     <Title>Modificar seleção</Title>
     <Rule>Regra</Rule>
@@ -1309,7 +1341,21 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <NewVersionOfSubtitleEditRequired>Nova versão do Subtitle Edit necessária!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Atualização disponível!]</UpdateAvailable>
     <UpdateAll>Atualizar tudo</UpdateAll>
+    <XPluginsUpdated>{0} plugins atualizados</XPluginsUpdated>
   </PluginsGet>
+  <RegularExpressionContextMenu>
+    <WordBoundary>Limitar palavra (\b)</WordBoundary>
+    <NonWordBoundary>Sem limitar palavra (\B)</NonWordBoundary>
+    <NewLine>Nova linha (\r\n)</NewLine>
+    <NewLineShort>Nova linha (\n)</NewLineShort>
+    <AnyDigit>Qualquer dígito (\d)</AnyDigit>
+    <AnyCharacter>Qualquer caractere (.)</AnyCharacter>
+    <AnyWhitespace>Qualquer espaço em branco (\s)</AnyWhitespace>
+    <ZeroOrMore>Zero ou mais (*)</ZeroOrMore>
+    <OneOrMore>Um ou mais (+)</OneOrMore>
+    <InCharacterGroup>No grupo de caractetes ([teste])</InCharacterGroup>
+    <NotInCharacterGroup>Não no grupo de caracteres ([^teste])</NotInCharacterGroup>
+  </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Eliminar texto para surdos</Title>
     <RemoveTextConditions>Eliminar condições de texto</RemoveTextConditions>
@@ -1429,6 +1475,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <AutoBackupEveryMinute>Cada minuto</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Cada 5 minutos</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Cada 15 minutos</AutoBackupEveryFifteenMinutes>
+    <CheckForUpdates>Verificar atualizações</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Permitir a edição da legenda original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmar eliminação de linhas</PromptDeleteLines>
     <TimeCodeMode>Modo código de tempo</TimeCodeMode>
@@ -1589,11 +1636,17 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <ListViewColumnInsert>Coluna, inserir texto</ListViewColumnInsert>
     <ListViewColumnPaste>Coluna, colar</ListViewColumnPaste>
     <ListViewFocusWaveform>Foco da forma de onda/espectrograma</ListViewFocusWaveform>
+    <ListViewGoToNextError>Ir para próximo erro</ListViewGoToNextError>
     <ShowBeamer>Iniciar projeção da legenda em tela cheia</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mover última palavra para baixo na próxima linha</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Mover primeira palavra da próxima linha para cima</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxSelectionToLower>Seleção para minúsculas</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>Seleção para maiúsculas</MainTextBoxSelectionToUpper>
     <MainTextBoxAutoBreak>Auto quebrar texto</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Unir texto</MainTextBoxUnbreak>
+    <MainFileSaveAll>Salvar tudo</MainFileSaveAll>
+    <Miscellaneous>Misc.</Miscellaneous>
+    <UseDoNotBreakAfterList>Usar lista não-quebrar-após (para auto-br)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>Mostrar linhas selec. antes/depois</Title>
@@ -1640,6 +1693,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <ImageText>Imagem de texto</ImageText>
     <SpellCheckCompleted>Revisão ortográfica completada.</SpellCheckCompleted>
     <SpellCheckAborted>Revisão ortográfica cancelada</SpellCheckAborted>
+    <UndoX>Desfazer: {0}</UndoX>
   </SpellCheck>
   <Split>
     <Title>Dividir</Title>
