@@ -686,9 +686,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     GetResolution(ref resW, ref resH);
                     string videoFormat = "1080p";
                     if (resW == 1920 && resH == 1080)
-                        videoFormat = "720p";
-                    else if (resW == 1280 && resH == 720)
                         videoFormat = "1080p";
+                    else if (resW == 1280 && resH == 720)
+                        videoFormat = "720p";
                     else if (resW == 848 && resH == 480)
                         videoFormat = "480p";
                     else
