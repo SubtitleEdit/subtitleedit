@@ -25,6 +25,8 @@
    * Updated Bulgarian language file updated - thx Iavor
    * Updated Dutch language file - thx Quetsbeek + minouhse
    * Updated Hungarian language file - thx Zityi
+   * Updated Italian language file - thx SilverDrake
+   * Updated Finnish language file - thx Teijo
    * Export to image based format now remembers most settings
    * Always close SAMI tags (except when end time=next start time)
    * Merge selected lines in original - better handling of empty line
