@@ -500,7 +500,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool AllowFix(Paragraph p, string action)
         {
-
             //if (!buttonBack.Enabled)
             if (_onlyListFixes || _batchMode)
                 return true;
@@ -3431,51 +3430,117 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixEllipsesStart;
             int fixCount = 0;
+            listViewFixes.BeginUpdate();
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
+                var text = p.Text;
+                if (!text.Contains("..") || !AllowFix(p, fixAction))
+                    continue;
 
-                if (p.Text.StartsWith("..."))
+                var oldText = text;
+                if (!text.Contains(Environment.NewLine))
                 {
-                    if (AllowFix(p, fixAction))
+                    text = FixEllipsesStartHelper(text);
+                    if(oldText != text)
                     {
-                        string oldText = p.Text;
-                        p.Text = p.Text.TrimStart('.');
+                        p.Text = text;
                         fixCount++;
-                        _totalFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        _totalErrors++;
+                        AddFixToListView(p, fixAction, oldText, text);
                     }
                 }
-
-                if (p.Text.StartsWith("<i>..."))
+                else
                 {
-                    if (AllowFix(p, fixAction))
+                    var lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    var fixedParagraph = string.Empty;
+                    for (int k = 0; k < lines.Length; k++)
                     {
-                        string oldText = p.Text;
-                        p.Text = "<i>" + p.Text.Substring(6, p.Text.Length - 6);
-                        while (p.Text.StartsWith("<i>."))
-                            p.Text = "<i>" + p.Text.Substring(4, p.Text.Length - 6);
+                        var line = lines[k];
+                        fixedParagraph += Environment.NewLine + FixEllipsesStartHelper(line);
+                        fixedParagraph = fixedParagraph.Trim();
+                    }
+
+                    if (fixedParagraph != text)
+                    {
+                        p.Text = fixedParagraph;
                         fixCount++;
-                        _totalFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        _totalErrors++;
+                        AddFixToListView(p, fixAction, oldText, fixedParagraph);
                     }
                 }
-
-                if (p.Text.Contains(": ..."))
-                {
-                    if (AllowFix(p, fixAction))
-                    {
-                        string oldText = p.Text;
-                        p.Text = p.Text.Replace(": ...", ": ");
-                        fixCount++;
-                        _totalFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                }
-
             }
+            listViewFixes.EndUpdate();
+            listViewFixes.Refresh();
             if (fixCount > 0)
                 LogStatus(_language.FixEllipsesStart, string.Format(_language.XFixEllipsesStart, fixCount));
+        }
+
+        private string FixEllipsesStartHelper(string text)
+        {
+            if (text == null || text.Trim().Length < 4)
+                return text;
+            if (!text.Contains(".."))
+                return text;
+
+            if (text.StartsWith("..."))
+            {
+                text = text.TrimStart('.');
+            }
+
+            text = text.Replace("-..", "- ..");
+            var tag = "- ...";
+            if (text.StartsWith(tag))
+            {
+                text = "- " + text.Substring(tag.Length, text.Length - tag.Length);
+                while (text.StartsWith("- ."))
+                {
+                    text = "- " + text.Substring(3, text.Length - 3);
+                    text = text.Replace("  ", " ");
+                }
+            }
+
+            tag = "<i>...";
+            if (text.StartsWith(tag))
+            {
+                text = "<i>" + text.Substring(tag.Length, text.Length - tag.Length);
+                while (text.StartsWith("<i>."))
+                    text = "<i>" + text.Substring(4, text.Length - 4);
+            }
+            tag = "<i> ...";
+            if (text.StartsWith(tag))
+            {
+                text = "<i>" + text.Substring(tag.Length, text.Length - tag.Length);
+                while (text.StartsWith("<i>."))
+                    text = "<i>" + text.Substring(4, text.Length - 4);
+            }
+
+            tag = "- <i>...";
+            if (text.StartsWith(tag))
+            {
+                text = "- <i>" + text.Substring(tag.Length, text.Length - tag.Length);
+                while (text.StartsWith("- <i>."))
+                    text = "- <i>" + text.Substring(6, text.Length - 6);
+            }
+            tag = "- <i> ...";
+            if (text.StartsWith(tag))
+            {
+                text = "- <i>" + text.Substring(tag.Length, text.Length - tag.Length);
+                while (text.StartsWith("- <i>."))
+                    text = "- <i>" + text.Substring(6, text.Length - 6);
+            }
+
+            // Narrator:... Hello foo!
+            text = text.Replace(":..", ": ..");
+            tag = ": ..";
+            if(text.Contains(tag))
+            {
+                text = text.Replace(": ..", ": ");
+                while (text.Contains(": ."))
+                    text = text.Replace(": .", ": ");
+            }
+            text = text.Replace("  ", " ");
+            return text;
         }
 
         private string FixMissingOpenBracket(string text, string openB)
