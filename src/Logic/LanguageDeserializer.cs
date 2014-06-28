@@ -3578,6 +3578,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "MultipleReplace/Rules":
                     language.MultipleReplace.Rules = reader.Value;
                     break;
+                case "MultipleReplace/MoveToTop":
+                    language.MultipleReplace.MoveToTop = reader.Value;
+                    break;
+                case "MultipleReplace/MoveToBottom":
+                    language.MultipleReplace.MoveToBottom = reader.Value;
+                    break;
                 case "NetworkChat/Title":
                     language.NetworkChat.Title = reader.Value;
                     break;
@@ -5492,8 +5498,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "WebVttNewVoice/VoiceName":
                     language.WebVttNewVoice.VoiceName = reader.Value;
                     break;
-
-
             }
         }
     }

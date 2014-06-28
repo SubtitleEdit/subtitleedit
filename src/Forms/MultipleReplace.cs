@@ -61,6 +61,14 @@ namespace Nikse.SubtitleEdit.Forms
             moveUpToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveUp;
             moveDownToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveDown;
 
+            moveTopToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToTop;
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.MultipleReplace.MoveToTop))
+                moveTopToolStripMenuItem.Visible = false;
+
+            moveBottomToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToBottom;
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.MultipleReplace.MoveToBottom))
+                moveBottomToolStripMenuItem.Visible = false;
+
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
         }

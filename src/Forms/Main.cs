@@ -11933,10 +11933,6 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     Configuration.Settings.Language = Language.Load(Path.Combine(Configuration.BaseDirectory, "Languages") + Path.DirectorySeparatorChar + cultureName + ".xml");
-
-                    //var reader = new System.IO.StreamReader(Path.Combine(Configuration.BaseDirectory, "Languages") + Path.DirectorySeparatorChar + cultureName + ".xml");
-                    //Configuration.Settings.Language = Language.Load(reader);
-                    //reader.Close();
                 }
                 Configuration.Settings.General.Language = cultureName;
                 _languageGeneral = Configuration.Settings.Language.General;
