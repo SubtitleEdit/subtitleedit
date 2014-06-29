@@ -35,10 +35,10 @@
    * Better time division in "Split long lines" - thx Joel
    * Better splitting of dialogues in "Split long lines" - thx Joel
    * Word lists improved - thx ivandrofly
-   * Ctrl+i now works better in text box - thx rebawest
+   * Ctrl+I now works better in text box - thx rebawest
 * FIXED:
    * OCR via "image compare" now works again
-   * Fixed several bugs regarding Bluray-sup export - thx mariner
+   * Fixed several bugs regarding Blu-ray sup export - thx mariner
    * Fixed "Bridge gap in duration" when working with SSA/ASS
    * Don't lock "settings.xml" when SE starts/exits - thx Doigt
    * Fixed crash when exporting to DOST - thx Nguyen Hoang
@@ -183,7 +183,7 @@
    * Fix short durations will now see if line can start earlier - thx Daniel
    * "File -> Import plain text" can now import from multiple files
    * "Save as..." now remembers subtitle format
-   * Now detects VobSub/Bluray-sup with wrong extension when opening a file
+   * Now detects VobSub/Blu-ray sup with wrong extension when opening a file
    * Now gives nice error message when opening idx, rar or zip files
    * French rules regarding spaces/!?:; in "Fix common errors" - thx René
    * Compare window, now left list view will also sync - thx Krystian
