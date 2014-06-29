@@ -192,13 +192,13 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Info>비율로 자막 속도를 조정합니다.</Info>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
-    <Title>업데이트 확인</Title>
+    <Title>* 업데이트 확인</Title>
     <CheckingForUpdates>업데이트 확인 중...</CheckingForUpdates>
     <CheckingForUpdatesFailedX>업데이트 실패: {0}</CheckingForUpdatesFailedX>
-    <CheckingForUpdatesNoneAvailable>Subtitle Edit의 최신 버전을 사용하고 있습니다 :)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNoneAvailable>현재 최신 버전을 사용하고 있습니다 :)</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>새로운 버전이 있습니다!</CheckingForUpdatesNewVersion>
     <InstallUpdate>다운로드 페이지로 이동</InstallUpdate>
-    <NoUpdates>업데이트 안함</NoUpdates>
+    <NoUpdates>업데이트 안 함</NoUpdates>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>오디오 트랙 선택</Title>
@@ -1294,6 +1294,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ImportRulesTitle>* 바꾸기 규칙 가져오기</ImportRulesTitle>
     <ExportRulesTitle>* 바꾸기 규칙 내보내기</ExportRulesTitle>
     <Rules>규칙</Rules>
+    <MoveToTop>맨 위로 이동</MoveToTop>
+    <MoveToBottom>맨 아래로 이동</MoveToBottom>
   </MultipleReplace>
   <NetworkChat>
     <Title>채팅</Title>
