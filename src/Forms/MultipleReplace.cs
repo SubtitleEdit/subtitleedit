@@ -60,14 +60,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             moveUpToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveUp;
             moveDownToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveDown;
-
             moveTopToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToTop;
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.MultipleReplace.MoveToTop))
-                moveTopToolStripMenuItem.Visible = false;
-
             moveBottomToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToBottom;
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.MultipleReplace.MoveToBottom))
-                moveBottomToolStripMenuItem.Visible = false;
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
@@ -428,6 +422,11 @@ namespace Nikse.SubtitleEdit.Forms
             moveDownToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
             moveTopToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
             moveBottomToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
+
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.MultipleReplace.MoveToBottom))
+                moveBottomToolStripMenuItem.Visible = false;
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.MultipleReplace.MoveToTop))
+                moveTopToolStripMenuItem.Visible = false;
         }
 
         private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
