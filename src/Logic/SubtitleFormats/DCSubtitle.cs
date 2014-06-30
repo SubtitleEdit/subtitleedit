@@ -724,7 +724,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             int milliseconds = (int)(int.Parse(parts[3]) * 4); // 000 to 249
             if (s.Contains("."))
-                milliseconds = (int)(Math.Round((int.Parse(parts[3]) / 10.0 * 1000.0)));
+                milliseconds = int.Parse(parts[3].PadRight(3, '0'));
             if (milliseconds > 999)
                 milliseconds = 999;
 
