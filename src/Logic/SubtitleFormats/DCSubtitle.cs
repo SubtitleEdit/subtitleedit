@@ -731,7 +731,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), milliseconds);
         }
 
-        private static string ConvertToTimeString(TimeCode time)
+        public static string ConvertToTimeString(TimeCode time)
         {
             return string.Format("{0:00}:{1:00}:{2:00}:{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 4);
         }

@@ -1046,7 +1046,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         param.Bitmap.Save(fileName, ImageFormat.Png);
                         imagesSavedCount++;
                         param.Saved = true;
-                        sb.AppendLine("<Subtitle FadeDownTime=\"" + 0 + "\" FadeUpTime=\"" + 0 + "\" TimeOut=\"" + param.P.EndTime.ToString().Replace(",", ":") + "\" TimeIn=\"" + param.P.StartTime.ToString().Replace(",", ":") + "\" SpotNumber=\"" + param.P.Number + "\">");
+                        sb.AppendLine("<Subtitle FadeDownTime=\"" + 0 + "\" FadeUpTime=\"" + 0 + "\" TimeOut=\"" + DCSubtitle.ConvertToTimeString(param.P.EndTime) + "\" TimeIn=\"" + DCSubtitle.ConvertToTimeString(param.P.StartTime) + "\" SpotNumber=\"" + param.P.Number + "\">");
                         if (param.Depth3D == 0)
                             sb.AppendLine("<Image VPosition=\"9.7\" VAlign=\"bottom\" HAlign=\"center\">" + numberString + ".png" + "</Image>");
                         else
