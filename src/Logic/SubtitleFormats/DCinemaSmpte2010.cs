@@ -429,7 +429,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         textNode.InnerXml = html.ToString();
 
                         subNode.AppendChild(textNode);
-                        vPos -= vPosFactor;
+                        if (alignVTop)
+                            vPos += vPosFactor;
+                        else
+                            vPos -= vPosFactor;
                     }
                     if (subNode.InnerXml.Length == 0)
                     { // Empty text is just one space
