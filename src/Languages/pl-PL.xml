@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="Polish">
+<Language xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.15</Version>
-    <TranslatedBy>Tłumaczenie Adam Malich (mailto:adam_malich@gizycko.mm.pl)</TranslatedBy>
+    <TranslatedBy>Tłumaczenie Adam Malich (mailto: adam_malich@gizycko.mm.pl)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <HelpFile>http://www.potplayer.pl/storage/SubtitleEdit/Help/PL/</HelpFile>
     <OK>&amp;OK</OK>
@@ -195,7 +195,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Info>Zmień szybkość napisów w procentach</Info>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
-    <Title>Sprawdzanie aktualizacji</Title>
+    <Title>Sprawdź aktualizacje</Title>
     <CheckingForUpdates>Sprawdzanie aktualizacji...</CheckingForUpdates>
     <CheckingForUpdatesFailedX>Sprawdzenie aktualizacji nie powiodło się: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Używasz najnowszej wersji Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
@@ -284,8 +284,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DivideEven>Teksty rozdzielane są czasem trwania odstępu</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Przechwyt napisów z ifo/vob (dvd)</Title>
-    <DvdGroupTitle>Pliki/info DVD</DvdGroupTitle>
+    <Title>Wyciągnij napisy z ifo/vobs (dvd)</Title>
+    <DvdGroupTitle>Pliki DVD//info</DvdGroupTitle>
     <IfoFile>Plik IFO</IfoFile>
     <IfoFiles>Pliki IFO</IfoFiles>
     <VobFiles>Pliki VOB</VobFiles>
@@ -296,14 +296,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MoveDown>W dół</MoveDown>
     <Languages>Języki</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
-    <Pal>PAL (25 fps)</Pal>
-    <Ntsc>NTSC (23.976 fps)</Ntsc>
-    <StartRipping>Rozpocznij przechwyt</StartRipping>
+    <Pal>PAL (25fps)</Pal>
+    <Ntsc>NTSC (29.97fps)</Ntsc>
+    <StartRipping>Rozpocznij rippowanie</StartRipping>
     <Abort>Przerwij</Abort>
-    <AbortedByUser>Przerwane przez użytkownika</AbortedByUser>
+    <AbortedByUser>Przerwane przez użytkonika</AbortedByUser>
     <ReadingSubtitleData>Odczyt danych napisów...</ReadingSubtitleData>
-    <RippingVobFileXofYZ>Odczyt z pliku VOB {1} z {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>Typ IFO '{0} i nie jest to 'DVDVideo-VTS'. {1} Spróbuj wybrać inny plik zamiast {2}</WrongIfoType>
+    <RippingVobFileXofYZ>Rippowany plik vob {1} z {2}: {0}</RippingVobFileXofYZ>
+    <WrongIfoType>IFO jest typem '{0}' a nie 'DVDVIDEO-VTS'.{1}Spróbuj inny plik niż {2}</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Wybór języka</Title>
@@ -1451,7 +1451,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <DefaultFileEncoding>Domyślne kodowanie</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Autom. detekcja kodowania ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Maksymalna długość linii napisów</SubtitleLineMaximumLength>
-    <MaximumCharactersPerSecond>Maksymalnie znaków/sek.</MaximumCharactersPerSecond>
+    <MaximumCharactersPerSecond>Maks. znaków/sek.</MaximumCharactersPerSecond>
     <AutoWrapWhileTyping>Automatycznie zawijaj podczas pisania</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Minimalny czas trwania w ms</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Maksymalny czas trwania w ms</DurationMaximumMilliseconds>
@@ -1483,7 +1483,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <AutoBackupEveryMinute>Co minutę</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Co 5 minut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Co 15 minut</AutoBackupEveryFifteenMinutes>
-    <CheckForUpdates>Sprawdzaj aktualizacje</CheckForUpdates>
+    <CheckForUpdates>Sprawdź aktualizacje</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Zezwalaj na edycję napisów źródłowych</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Pytaj o usunięcie linii</PromptDeleteLines>
     <TimeCodeMode>Tryb kodów czasowych</TimeCodeMode>
@@ -1562,12 +1562,12 @@ Chcesz zapisać?</NegativeTimeWarning>
     <EndSceneIndex>Akapit sceny końcowej:</EndSceneIndex>
     <FirstPlusX>Pierwsza + {0}</FirstPlusX>
     <LastMinusX>Ostatnia - {0}</LastMinusX>
-    <FixCommonerrors>Popraw błędy</FixCommonerrors>
+    <FixCommonerrors>Popraw pospolite błędy</FixCommonerrors>
     <MergeLinesShorterThan>Połącz linie krótsze, niż</MergeLinesShorterThan>
     <MusicSymbol>Zamiana symboli muzycznych:</MusicSymbol>
     <MusicSymbolsToReplace>Symbole muzyczne do zamiany (oddzielone spacją)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw pospolite błędy OCR - także używające sztywnych zasad</FixCommonOcrErrorsUseHardcodedRules>
-    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetl. - zezwól na przesunięcie czasu startu</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania - zezwól na przesunięcie czasu startu</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Skróty klawiaturowe</Shortcuts>
     <Shortcut>Polecenie:</Shortcut>
     <Control>Ctrl</Control>
@@ -1656,7 +1656,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <MainTextBoxUnbreak>Cofnij łamanie tekstu</MainTextBoxUnbreak>
     <MainFileSaveAll>Zapisz wszystko</MainFileSaveAll>
     <Miscellaneous>Inne</Miscellaneous>
-    <UseDoNotBreakAfterList>Włącz "bez-łamania-linii-w liście" (dla automatycznego łamania)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Włącz "bez-linii-łamania-po liście" (dla automatycznego łamania)</UseDoNotBreakAfterList>
   </Settings>
   <ShowEarlierLater>
     <Title>Ukazywanie się wybranych linii wcześniej/później</Title>
