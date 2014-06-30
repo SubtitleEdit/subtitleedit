@@ -446,6 +446,12 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxToolsEndSceneIndex.Items.Add(string.Format(language.LastMinusX, 1));
             comboBoxToolsEndSceneIndex.Items.Add(string.Format(language.LastMinusX, 2));
             comboBoxToolsEndSceneIndex.Items.Add(string.Format(language.LastMinusX, 3));
+            int visAdjustTextMax = Math.Max(labelVerifyButton.Width, labelToolsStartScene.Width);
+            visAdjustTextMax = Math.Max(visAdjustTextMax, labelToolsEndScene.Width);
+            comboBoxToolsVerifySeconds.Left = groupBoxToolsVisualSync.Left + visAdjustTextMax + 12;
+            comboBoxToolsStartSceneIndex.Left = comboBoxToolsVerifySeconds.Left;
+            comboBoxToolsEndSceneIndex.Left = comboBoxToolsVerifySeconds.Left;
+
             groupBoxFixCommonErrors.Text = language.FixCommonerrors;
             labelMergeShortLines.Text = language.MergeLinesShorterThan;
             labelToolsMusicSymbol.Text = language.MusicSymbol;
