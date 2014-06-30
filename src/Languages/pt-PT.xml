@@ -293,12 +293,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Add>Adicionar...</Add>
     <Remove>Remover</Remove>
     <Clear>Limpar</Clear>
-    <MoveUp>Subir</MoveUp>
-    <MoveDown>Descer</MoveDown>
+    <MoveUp>Mover para cima</MoveUp>
+    <MoveDown>Mover para baixo</MoveDown>
     <Languages>Idiomas</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
-    <Pal>PAL (25fps)</Pal>
-    <Ntsc>NTSC (29.97fps)</Ntsc>
+    <Pal>PAL (25 fps)</Pal>
+    <Ntsc>NTSC (29.97 fps)</Ntsc>
     <StartRipping>Iniciar extracção</StartRipping>
     <Abort>Cancelar</Abort>
     <AbortedByUser>Cancelado pelo utilizador</AbortedByUser>
@@ -973,7 +973,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveChangesToOriginalX>Guardar alterações originais ao {0}?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Guardar legenda como...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Guardar legenda original como..</SaveOriginalSubtitleAs>
-    <NoSubtitleLoaded>Nenhuma legenda carregada</NoSubtitleLoaded>
+    <NoSubtitleLoaded>Legenda não detectada</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Sincronia visual - linhas seleccionadas</VisualSyncSelectedLines>
     <VisualSyncTitle>Sincronia visual</VisualSyncTitle>
     <BeforeVisualSync>Antes da Sincronia visual</BeforeVisualSync>
@@ -1295,6 +1295,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ImportRulesTitle>Importar regra(s) de substituição de...</ImportRulesTitle>
     <ExportRulesTitle>Exportar regra(s) de substituição para...</ExportRulesTitle>
     <Rules>Regras de exportação</Rules>
+    <MoveToTop>Mover para o inicio</MoveToTop>
+    <MoveToBottom>Mover para o fim</MoveToBottom>	
   </MultipleReplace>
   <NetworkChat>
     <Title>Conversação</Title>
