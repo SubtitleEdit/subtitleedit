@@ -89,7 +89,7 @@ DefaultGroupName=Subtitle Edit
 VersionInfoVersion={#app_ver_full}
 MinVersion=5.1
 LicenseFile=..\gpl.txt
-InfoAfterFile=..\src\Changelog.txt
+InfoAfterFile=..\Changelog.txt
 SetupIconFile=..\src\Icons\SE.ico
 WizardImageFile=Icons\WizardImageFile.bmp
 WizardSmallImageFile=Icons\WizardSmallImageFile.bmp
@@ -247,7 +247,7 @@ Source: {#bindir}\Languages\zh-tw.xml;             DestDir: {app}\Languages;    
 #endif
 
 Source: {#bindir}\SubtitleEdit.exe;                DestDir: {app};                                    Flags: ignoreversion; Components: main
-Source: ..\src\Changelog.txt;                      DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: ..\Changelog.txt;                          DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\gpl.txt;                                DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\Tesseract\msvcp90.dll;                  DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
 Source: ..\Tesseract\msvcr90.dll;                  DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
