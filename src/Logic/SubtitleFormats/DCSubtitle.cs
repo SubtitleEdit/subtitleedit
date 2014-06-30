@@ -432,7 +432,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         textNode.InnerXml = html.ToString();
 
                         subNode.AppendChild(textNode);
-                        vPos -= vPosFactor;
+                        if (alignVTop)
+                            vPos += vPosFactor;
+                        else
+                            vPos -= vPosFactor;
                     }
 
                     mainListFont.AppendChild(subNode);
