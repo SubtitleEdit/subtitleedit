@@ -10,10 +10,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
     {
         private static Regex regex = new Regex(@"\d\.\d", RegexOptions.Compiled); // 3.4.0 (xth June 2014)
 
-        //        private const string ReleasesUrl = "https://api.github.com/repos/SubtitleEdit/subtitleedit/releases";
-        private const string ChangeLogUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/src/Changelog.txt";
+        //private const string ReleasesUrl = "https://api.github.com/repos/SubtitleEdit/subtitleedit/releases";
+        private const string ChangeLogUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Changelog.txt";
 
-//        private string _jsonReleases;
+        //private string _jsonReleases;
         private string _changeLog;
         private int _successCount;
 
