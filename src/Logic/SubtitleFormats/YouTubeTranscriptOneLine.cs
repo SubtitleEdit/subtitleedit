@@ -63,8 +63,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (regexTimeCodes.IsMatch(line))
                 {
                     int splitter = line.IndexOf(":") + 3;
-                    p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), new TimeCode(0,0,0,0), line.Remove(0, splitter));
+                    string text = line.Remove(0, splitter);
+                    p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), new TimeCode(0,0,0,0), text);
                     subtitle.Paragraphs.Add(p);
+                    if (text.StartsWith(":") || text.StartsWith("0") || text.StartsWith("1") || text.StartsWith("2") || text.StartsWith("3") || text.StartsWith("4") ||
+                        text.StartsWith("5") || text.StartsWith("6") || text.StartsWith("7") || text.StartsWith("8") || text.StartsWith("9"))
+                        _errorCount++;
                 }
                 else
                 {
