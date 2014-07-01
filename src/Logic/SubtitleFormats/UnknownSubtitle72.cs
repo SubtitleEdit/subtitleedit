@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         //«Steppe»
         //Bogdan Voloshin, Yaroslavl
 
-        static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d\d\d$", RegexOptions.Compiled);
+        static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d{1,3}$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -117,6 +117,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 int startMinutes = int.Parse(parts[1]);
                 int startSeconds = int.Parse(parts[2]);
                 int startMilliseconds = int.Parse(parts[3]);
+
+                if (parts[3].Length == 2)
+                    _errorCount++;
+
                 paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
                 return true;
             }
