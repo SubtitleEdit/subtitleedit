@@ -114,6 +114,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     expectStartTime = true;
                 }
+                else
+                {
+                    _errorCount++;
+                }
             }
             if (p != null && p.StartTime.TotalMilliseconds > 0)
                 subtitle.Paragraphs.Add(p);

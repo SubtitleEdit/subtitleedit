@@ -75,6 +75,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         p.Text = line;
                     else
                         p.Text = p.Text + Environment.NewLine + line;
+                    
+                    if (p.Text.Length > 800)
+                    {
+                        _errorCount++;
+                        return;
+                    }
                 }
             }
             foreach (Paragraph p2 in subtitle.Paragraphs)
