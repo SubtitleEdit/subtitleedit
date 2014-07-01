@@ -499,15 +499,15 @@
     <RegEx find="\Bdmnis\B" replaceWith="dminis" />
     <RegEx find="\Blcól\B" replaceWith="lcoól" />
     <!-- suiças, suiço, suiços, suissas, suíssas, suisso, suísso, suíssos, Suíssa...etc -> Suíça -->
-    <RegEx find="\b([sS])u[ií][ss|ç|s]([oa])(s?)\b" replaceWith="$1uíç$2$3" />
+    <RegEx find="\b([sS])u[ií](ss|ç|s)([oa])(s?)\b" replaceWith="$1uíç$3$4" />
     <!-- acucar, acúcar, açucar, assúcar -> açúcar  -->
-    <RegEx find="\b([aA])[cu|çu|cú|ssú]car\b" replaceWith="$1çúcar$2" />
+    <RegEx find="\b([aA])(cu|çu|cú|ssú)car\b" replaceWith="$1çúcar" />
     <!-- tambem, também, tanbem, também, tanbém...etc  -> também -->
     <RegEx find="\b([tT])[ãáâa][nm][vb][eé][nm]\b" replaceWith="$1ambém" />
     <!-- amarei-te -> amar-te-ei | ajudarei-te -> ajudar-te-ei -->
-    <RegEx find="\b([a-zA-Z]*)arei-te\b" replaceWith="$1ar-te-ei" />
+    <RegEx find="\b([a-zA-Z][a-zA-Z]+)arei-te\b" replaceWith="$1ar-te-ei" />
     <!-- a muito tempo -> há muito tempo -->
-    <RegEx find="\b[aáà] ([muito|bastante|algum|alguns|pouco|um|un]s?)( [tempo|dia|hora|minuto|segundo]s?)\b" replaceWith="há $1$2" />
-    <RegEx find="\b[AÁÀ] ([muito|bastante|algum|alguns|pouco|um|un]s?)( [tempo|dia|hora|minuto|segundo]s?)\b" replaceWith="Há $1$2" />
+    <RegEx find="\b[aáà] (muito|bastante|pouco|algum|alguns|um|uns)(s?) (tempo|dia|hora|minuto|segundo)(s?)\b" replaceWith="há $1$2 $3$4" />
+    <RegEx find="\b[AÁÀ] (muito|bastante|pouco|algum|alguns|um|uns)(s?) (tempo|dia|hora|minuto|segundo)(s?)\b" replaceWith="Há $1$2 $3$4" />
   </RegularExpressions>
 </OCRFixReplaceList>
