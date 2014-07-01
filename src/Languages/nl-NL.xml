@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.15</Version>
-    <TranslatedBy>Vertaald door: Quetsbeek en minouhse</TranslatedBy>
+    <TranslatedBy>Vertaald door: Quetsbeek en minouhse 01072014</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile />
     <OK>&amp;Oké</OK>
@@ -281,26 +281,26 @@ Suggesties zijn van harte welkom
     <DivideEven>Tekst verdeeld hiaattijd</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Rip ondertitels van ifo/vobs (dvd)</Title>
-    <DvdGroupTitle>dvd-bestanden/info</DvdGroupTitle>
+    <Title>Rip ondertitels van IFO/VOB (dvd)</Title>
+    <DvdGroupTitle>DVD bestanden/info</DvdGroupTitle>
     <IfoFile>IFO-bestand</IfoFile>
     <IfoFiles>IFO bestanden</IfoFiles>
     <VobFiles>VOB-bestanden</VobFiles>
     <Add>Toevoegen...</Add>
-    <Remove>Verwijder</Remove>
-    <Clear>Leeg</Clear>
+    <Remove>Verwijderen</Remove>
+    <Clear>Leegmaken</Clear>
     <MoveUp>Omhoog</MoveUp>
     <MoveDown>Omlaag</MoveDown>
     <Languages>Talen</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25fps)</Pal>
-    <Ntsc>NTSC (23.976fps)</Ntsc>
-    <StartRipping>Start het rippen</StartRipping>
+    <Ntsc>NTSC (29,97 fps)</Ntsc>
+    <StartRipping>Start rippen</StartRipping>
     <Abort>Afbreken</Abort>
-    <AbortedByUser>Afgebroken door de gebruiker</AbortedByUser>
-    <ReadingSubtitleData>Lezen ondertitel data...</ReadingSubtitleData>
-    <RippingVobFileXofYZ>Rippen vob-bestand {1} van {2}:. {0}</RippingVobFileXofYZ>
-    <WrongIfoType>IFO type is '{0}' en niet 'DVDVIDEO-VTS' {1} Probeer dan een ander bestand {2}</WrongIfoType>
+    <AbortedByUser>Afgebroken door gebruiker</AbortedByUser>
+    <ReadingSubtitleData>Lezen ondertitelgegevens...</ReadingSubtitleData>
+    <RippingVobFileXofYZ>Rippen vob-bestand {1} van {2}: {0}</RippingVobFileXofYZ>
+    <WrongIfoType>Soort IFO is '{0}' en niet 'DVD-Video-VTS'. {1} Probeer dan een ander bestand {2}</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Kies taal</Title>
@@ -1516,7 +1516,7 @@ Suggesties zijn van harte welkom
     <ChooseColor>Kies kleur</ChooseColor>
     <SsaOutline>Omranding</SsaOutline>
     <SsaShadow>Schaduw</SsaShadow>
-    <SsaOpaqueBox>Opaque kader</SsaOpaqueBox>
+    <SsaOpaqueBox>Opaque doos</SsaOpaqueBox>
     <Testing123>Testing 123...</Testing123>
     <Language>Taal</Language>
     <NamesIgnoreLists>Namen/negeer lijst (hoofdlettergevoelig)</NamesIgnoreLists>
@@ -1810,7 +1810,7 @@ Suggesties zijn van harte welkom
     <MarginVertical>Marge verticaal</MarginVertical>
     <Border>Grens</Border>
     <PlusShadow>+ Schaduw</PlusShadow>
-    <OpaqueBox>Opaque kader (gebruikt rand kleur)</OpaqueBox>
+    <OpaqueBox>Opaque doos (gebruikt rand kleur)</OpaqueBox>
     <Import>Importeren...</Import>
     <Export>Exporteer</Export>
     <Copy>Kopieer</Copy>
