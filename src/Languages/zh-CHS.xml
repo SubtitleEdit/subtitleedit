@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="简体中文">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.15</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung</TranslatedBy>
     <CultureName>zh-CHS</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <OK>确定(&amp;O)</OK>
     <Cancel>取消(&amp;A)</Cancel>
     <Apply>应用</Apply>
@@ -193,6 +192,15 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <Title>调整速度百分比</Title>
     <Info>调整字幕速度百分比</Info>
   </ChangeSpeedInPercent>
+  <CheckForUpdates>
+    <Title>检查更新</Title>
+    <CheckingForUpdates>正在检查更新...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>未能检查到更新：{0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesNoneAvailable>你正在使用最新版本的 Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNewVersion>有新版本可用!</CheckingForUpdatesNewVersion>
+    <InstallUpdate>前往下载页面</InstallUpdate>
+    <NoUpdates>不要更新</NoUpdates>
+  </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>标题</Title>
   </ChooseAudioTrack>
@@ -206,6 +214,14 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <Title>选择语言</Title>
     <Language>语言</Language>
   </ChooseLanguage>
+  <ColorChooser>
+    <Title>红</Title>
+    <Red>绿</Red>
+    <Green>蓝</Green>
+    <Blue>Alpha</Blue>
+    <Alpha>
+    </Alpha>
+  </ColorChooser>
   <ColumnPaste>
     <Title>粘贴列</Title>
     <ChooseColumn>选择列</ChooseColumn>
@@ -249,6 +265,8 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <FontEffectColor>特性颜色</FontEffectColor>
     <FontSize>大小</FontSize>
     <TopBottomMargin>顶部/底部边界</TopBottomMargin>
+    <FadeUpTime>淡入时间</FadeUpTime>
+    <FadeDownTime>淡出时间</FadeDownTime>
     <ZPosition>Z向位置</ZPosition>
     <ZPositionHelp>正值可将文字推远，复制可将文字拉近</ZPositionHelp>
     <ChooseColor>选择颜色...</ChooseColor>
@@ -265,26 +283,26 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <DivideEven>间隔时间均分给前后两行</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>从 DVD 中提取字幕</Title>
-    <DvdGroupTitle>DVD 文件/信息</DvdGroupTitle>
-    <IfoFile>IFO 文件</IfoFile>
-    <IfoFiles>IFO 文件</IfoFiles>
-    <VobFiles>VOB 文件</VobFiles>
+    <Title>从ifo/vobs (DVD) 中提取字幕</Title>
+    <DvdGroupTitle>DVD文件/信息</DvdGroupTitle>
+    <IfoFile>IFO文件</IfoFile>
+    <IfoFiles>IFO文件</IfoFiles>
+    <VobFiles>VOB文件</VobFiles>
     <Add>添加...</Add>
-    <Remove>删除</Remove>
-    <Clear>清除</Clear>
+    <Remove>移除</Remove>
+    <Clear>清空</Clear>
     <MoveUp>上移</MoveUp>
     <MoveDown>下移</MoveDown>
     <Languages>语言</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
-    <Pal>PAL (25fps)</Pal>
-    <Ntsc>NTSC (23.976fps)</Ntsc>
+    <Pal>PAL（25fps）</Pal>
+    <Ntsc>NTSC（29.97fps）</Ntsc>
     <StartRipping>开始提取</StartRipping>
     <Abort>中止</Abort>
-    <AbortedByUser>用户中止</AbortedByUser>
+    <AbortedByUser>用户已中止</AbortedByUser>
     <ReadingSubtitleData>正在读取字幕数据...</ReadingSubtitleData>
-    <RippingVobFileXofYZ>正在提取 VOB 文件 {1}/{2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>IFO 类型是 '{0}' 而不是 'DVDVIDEO-VTS'。{1}请尝试其它文件而不是 {2}</WrongIfoType>
+    <RippingVobFileXofYZ>提取vob文件{1}/{2}：{0}</RippingVobFileXofYZ>
+    <WrongIfoType>IFO类型为‘{0}’,并且不是‘DVDVIDEO-VTS’.{1}请尝试另一个不同于{2}的文件</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>选择语言</Title>
@@ -363,6 +381,10 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <FontColor>字体颜色</FontColor>
     <BorderColor>边缘颜色</BorderColor>
     <BorderWidth>边缘宽度</BorderWidth>
+    <BorderStyle>边缘样式</BorderStyle>
+    <BorderStyleOneBox>单一方框</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>每行一个方框</BorderStyleBoxForEachLine>
+    <BorderStyleNormalWidthX>正常，宽度为{0}</BorderStyleNormalWidthX>
     <ShadowColor>阴影颜色</ShadowColor>
     <ShadowWidth>阴影宽度</ShadowWidth>
     <Transparency>透明度</Transparency>
@@ -388,6 +410,8 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <SomeLinesWereTooLongX>某些行过长:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>行高</LineHeight>
+    <BoxSingleLine>边缘 - 单线条</BoxSingleLine>
+    <BoxMultiLine>边缘 - 多线条</BoxMultiLine>
   </ExportPngXml>
   <ExportText>
     <Title>导出文本</Title>
@@ -731,6 +755,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <ChangeSpeedInPercent>更改速度 (百分比)...</ChangeSpeedInPercent>
         <MergeShortLines>合并短行...</MergeShortLines>
         <MergeDuplicateText>合并内容相同的行...</MergeDuplicateText>
+        <MergeSameTimeCodes>合并时间码相同的行</MergeSameTimeCodes>
         <SplitLongLines>分割长行...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>段落间最小显示时间...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>排序方式</SortBy>
@@ -805,6 +830,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <LeaveSession>离开会话</LeaveSession>
       </Networking>
       <Help>
+        <CheckForUpdates>检查更新...</CheckForUpdates>
         <Title>帮助(&amp;H)</Title>
         <Help>帮助(&amp;H)</Help>
         <About>关于(&amp;A)...</About>
@@ -1221,6 +1247,13 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <MergedText>合并文本</MergedText>
     <OnlyMergeContinuationLines>仅合并连续行</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <MergeTextWithSameTimeCodes>
+    <Title>合并时间码相同的行</Title>
+    <MaxDifferenceMilliseconds>最大毫秒差</MaxDifferenceMilliseconds>
+    <ReBreakLines>再次添加断行线</ReBreakLines>
+    <NumberOfMergesX>合并行数：{0}</NumberOfMergesX>
+    <MergedText>已合并文本</MergedText>
+  </MergeTextWithSameTimeCodes>
   <ModifySelection>
     <Title>修改选择</Title>
     <Rule>规则</Rule>
@@ -1307,6 +1340,19 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <UpdateAll>全部更新</UpdateAll>
     <XPluginsUpdated>更新了{0}个插件</XPluginsUpdated>
   </PluginsGet>
+  <RegularExpressionContextMenu>
+    <WordBoundary>字边界 (\b)</WordBoundary>
+    <NonWordBoundary>非字边界 (\B)</NonWordBoundary>
+    <NewLine>换行 (\r\n)</NewLine>
+    <NewLineShort>换行 (\n)</NewLineShort>
+    <AnyDigit>任意数字 (\d)</AnyDigit>
+    <AnyCharacter>任意字符 (.)</AnyCharacter>
+    <AnyWhitespace>任意空白符(\s)</AnyWhitespace>
+    <ZeroOrMore>零个或更多个 (*)</ZeroOrMore>
+    <OneOrMore>一个或更多个 (+)</OneOrMore>
+    <InCharacterGroup>包含在字符组 ([test]) 中</InCharacterGroup>
+    <NotInCharacterGroup>未包含在字符组 ([test]) 中</NotInCharacterGroup>
+  </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>删除妨碍听觉的文本</Title>
     <RemoveTextConditions>删除文本条件</RemoveTextConditions>
@@ -1426,6 +1472,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <AutoBackupEveryMinute>每隔 1 分钟</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>每隔 5 分钟</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>每隔 15 分钟</AutoBackupEveryFifteenMinutes>
+    <CheckForUpdates>检查更新</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>允许编辑原始字幕</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>删除行时提示</PromptDeleteLines>
     <TimeCodeMode>时间码模式</TimeCodeMode>
@@ -1580,7 +1627,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <ToggleTranslationMode>切换翻译模式</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>切换原文和翻译</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>合并原文和翻译</MergeOriginalAndTranslation>
-    <ShortcutIsAlreadyDefinedX>快捷键已经定义:
+    <ShortcutIsAlreadyDefinedX>快捷键已经定义: 
 {0}
 </ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>在 视频/音频 预览中切换翻译和原文</ToggleTranslationAndOriginalInPreviews>
@@ -1588,11 +1635,15 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <ListViewColumnInsert>列，插入文本</ListViewColumnInsert>
     <ListViewColumnPaste>列，粘贴</ListViewColumnPaste>
     <ListViewFocusWaveform>操作焦点位于波兴/频谱区</ListViewFocusWaveform>
+    <ListViewGoToNextError>转到下一个错误</ListViewGoToNextError>
     <ShowBeamer>启动字幕全屏幕投影仪</ShowBeamer>
     <MainTextBoxMoveLastWordDown>将上一行的最后一个单词移到下一行</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>将下一行的第一个单词移到上一行</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxSelectionToLower>选中的内容转小写</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>选中的内容转大写</MainTextBoxSelectionToUpper>
     <MainTextBoxAutoBreak>文本自动换行</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>取消换行</MainTextBoxUnbreak>
+    <MainFileSaveAll>显示全部</MainFileSaveAll>
     <Miscellaneous>杂项</Miscellaneous>
     <UseDoNotBreakAfterList>使用不在后面断行的列表</UseDoNotBreakAfterList>
   </Settings>
@@ -1641,6 +1692,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <ImageText>图片文字</ImageText>
     <SpellCheckCompleted>拼写检查完成。</SpellCheckCompleted>
     <SpellCheckAborted>拼写检查中止</SpellCheckAborted>
+    <UndoX>撤销：{0}</UndoX>
   </SpellCheck>
   <Split>
     <Title>分割</Title>
