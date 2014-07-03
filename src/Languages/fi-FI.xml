@@ -282,7 +282,7 @@ Siirrytäänkö VLC Media Playerin kotisivulle?
     <ProlongEndTime>Täytä aikaväli edellisellä tekstillä</ProlongEndTime>
     <DivideEven>Jaa aikaväli tekstien kesken</DivideEven>
   </DurationsBridgeGaps>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Irroita tekstitys ifo/vobs-tiedostoista (dvd)</Title>
     <DvdGroupTitle>DVD tiedostot/tiedot</DvdGroupTitle>
     <IfoFile>IFO-tiedosto</IfoFile>
@@ -303,7 +303,7 @@ Siirrytäänkö VLC Media Playerin kotisivulle?
     <ReadingSubtitleData>Luetaan tekstityksen tietoja...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Irroitetaan vob tiedosto {1} / {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>IFO-tyyppi on '{0}' eikä 'DVDVIDEO-VTS'.{1} Valitse muu tiedosto kuin {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Valitse kieli</Title>
     <ChooseLanguageStreamId>Valitse kieli (stream-id)</ChooseLanguageStreamId>
