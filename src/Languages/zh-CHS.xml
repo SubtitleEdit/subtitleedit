@@ -1627,7 +1627,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <ToggleTranslationMode>切换翻译模式</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>切换原文和翻译</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>合并原文和翻译</MergeOriginalAndTranslation>
-    <ShortcutIsAlreadyDefinedX>快捷键已经定义: 
+    <ShortcutIsAlreadyDefinedX>快捷键已经定义:
 {0}
 </ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>在 视频/音频 预览中切换翻译和原文</ToggleTranslationAndOriginalInPreviews>

@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.15</Version>
-    <TranslatedBy>Μετάφραση από: CrazyRabbit - Κλεάνθης Μανωλόπουλος 
+    <TranslatedBy>Μετάφραση από: CrazyRabbit - Κλεάνθης Μανωλόπουλος
 Σχόλια για τη μετάφραση στο: mailto:akis_manolopoulos@hotmail.com</TranslatedBy>
     <CultureName>el-GR</CultureName>
     <HelpFile />
@@ -75,9 +75,9 @@
   </General>
   <About>
     <Title>Σχετικά με το Subtitle Edit</Title>
-    <AboutText1>Το Subtitle Edit είναι ένα Δωρεάν Λογισμικό υπό την Άδεια 
-Δημόσιας Χρήσης GNU. 
-Μπορείτε να το διανείμετε, να το τροποποιείτε και να το 
+    <AboutText1>Το Subtitle Edit είναι ένα Δωρεάν Λογισμικό υπό την Άδεια
+Δημόσιας Χρήσης GNU.
+Μπορείτε να το διανείμετε, να το τροποποιείτε και να το
 χρησιμοποιείτε ελεύθερα.
 
 Ο κώδικας σε C# είναι διαθέσιμος στο https://github.com/SubtitleEdit/subtitleedit

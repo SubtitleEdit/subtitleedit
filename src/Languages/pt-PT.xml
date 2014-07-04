@@ -1296,7 +1296,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ExportRulesTitle>Exportar regra(s) de substituição para...</ExportRulesTitle>
     <Rules>Regras de exportação</Rules>
     <MoveToTop>Mover para o inicio</MoveToTop>
-    <MoveToBottom>Mover para o fim</MoveToBottom>	
+    <MoveToBottom>Mover para o fim</MoveToBottom>
   </MultipleReplace>
   <NetworkChat>
     <Title>Conversação</Title>

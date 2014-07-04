@@ -1439,7 +1439,7 @@
             public string ExportRulesTitle { get; set; }
             public string Rules { get; set; }
             public string MoveToTop { get; set; }
-            public string MoveToBottom { get; set; }            
+            public string MoveToBottom { get; set; }
         }
 
         public class NetworkChat
