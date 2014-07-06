@@ -256,13 +256,18 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                     else
                                     {
+                                        bool endsWithComma = newParagraph1.Text.EndsWith(",") || newParagraph1.Text.EndsWith(",</i>");
+
                                         string post = string.Empty;
                                         if (newParagraph1.Text.EndsWith("</i>"))
                                         {
                                             post = "</i>";
                                             newParagraph1.Text = newParagraph1.Text.Remove(newParagraph1.Text.Length - post.Length);
                                         }
-                                        newParagraph1.Text += comboBoxLineContinuationEnd.Text.TrimEnd() + post;
+                                        if (endsWithComma)
+                                            newParagraph1.Text += post;
+                                        else
+                                            newParagraph1.Text += comboBoxLineContinuationEnd.Text.TrimEnd() + post;
 
                                         string pre = string.Empty;
                                         if (newParagraph2.Text.StartsWith("<i>"))
@@ -270,7 +275,10 @@ namespace Nikse.SubtitleEdit.Forms
                                             pre = "<i>";
                                             newParagraph2.Text = newParagraph2.Text.Remove(0, pre.Length);
                                         }
-                                        newParagraph2.Text = pre + comboBoxLineContinuationBegin.Text + newParagraph2.Text;
+                                        if (endsWithComma)
+                                            newParagraph2.Text = pre + newParagraph2.Text;
+                                        else
+                                            newParagraph2.Text = pre + comboBoxLineContinuationBegin.Text + newParagraph2.Text;
                                     }
 
                                     if (newParagraph1.Text.IndexOf("<i>") >= 0 && newParagraph1.Text.IndexOf("<i>") < 10 & newParagraph1.Text.IndexOf("</i>") < 0 &&
