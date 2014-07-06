@@ -210,6 +210,7 @@
             // 
             this.comboBoxLineContinuationBegin.FormattingEnabled = true;
             this.comboBoxLineContinuationBegin.Items.AddRange(new object[] {
+            "",
             "- ",
             "..."});
             this.comboBoxLineContinuationBegin.Location = new System.Drawing.Point(478, 33);
@@ -231,6 +232,7 @@
             // 
             this.comboBoxLineContinuationEnd.FormattingEnabled = true;
             this.comboBoxLineContinuationEnd.Items.AddRange(new object[] {
+            "",
             " -",
             "..."});
             this.comboBoxLineContinuationEnd.Location = new System.Drawing.Point(564, 33);
@@ -255,6 +257,9 @@
             this.SubtitleListview1.Name = "SubtitleListview1";
             this.SubtitleListview1.OwnerDraw = true;
             this.SubtitleListview1.Size = new System.Drawing.Size(750, 301);
+            this.SubtitleListview1.SubtitleFontBold = false;
+            this.SubtitleListview1.SubtitleFontName = "Tahoma";
+            this.SubtitleListview1.SubtitleFontSize = 8;
             this.SubtitleListview1.TabIndex = 5;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.UseSyntaxColoring = true;
