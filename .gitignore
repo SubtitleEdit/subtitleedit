@@ -5,11 +5,15 @@
 *.vsp
 bin/
 obj/
+/cov-int
 /SE*.zip
 /src/Languages/Language.xml
 /src/Languages/LanguageMaster.xml
 /src/Languages/XmlContentTranslator.exe
 /src/Properties/AssemblyInfo.cs
 /src/TestResults/
+/SubtitleEdit.lzma
+/SubtitleEdit.tar
+/SubtitleEdit.tgz
 /tabspace.exe
 SubtitleEdit-*-setup.exe
