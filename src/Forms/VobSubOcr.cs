@@ -6566,6 +6566,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (tmp == null)
                     return string.Empty;
                 bmp = tmp.Clone() as Bitmap;
+                tmp.Dispose();
             }
             catch
             {

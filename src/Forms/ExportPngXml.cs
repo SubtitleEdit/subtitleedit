@@ -1346,7 +1346,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 var nbmp = new NikseBitmap(bmp);
                 nbmp.ConverToFourColors(Color.Transparent, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked);
-                bmp = nbmp.GetBitmap();
+                var temp = nbmp.GetBitmap();
+                bmp.Dispose();
+                return temp;
             }
             return bmp;
         }
@@ -1564,6 +1566,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             //nbmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), false);
             nbmp.CropTransparentSidesAndBottom(0, true);
             bmp.Dispose();
+            font.Dispose();
+            sf.Dispose();
             return nbmp.Width;
         }
 
@@ -1640,6 +1644,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             g.DrawImageUnscaled(lineImage, new Point(l2, bmp.Height + parameter.LineHeight - lineImage.Height));
                             bmp.Dispose();
                             bmp = largeImage;
+                            g.Dispose();
                         }
                         else
                         {
@@ -1649,6 +1654,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             g.DrawImageUnscaled(lineImage, new Point(l2, bmp.Height));
                             bmp.Dispose();
                             bmp = largeImage;
+                            g.Dispose();
                         }
                     }
                     count++;
@@ -1721,8 +1727,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 NikseBitmap nbmpTemp = new NikseBitmap(bmp);
                 nbmpTemp.Fill(parameter.BackgroundColor);
-              //  bmp.Dispose();
-                bmp = nbmpTemp.GetBitmap();
+                var temp = nbmpTemp.GetBitmap();
+                bmp.Dispose();
+                bmp = temp;
 //                g.FillRectangle(new SolidBrush(parameter.BackgroundColor), 0, 0, bmp.Width, bmp.Height);
 
             }
@@ -2110,9 +2117,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 DrawShadowAndPAth(parameter, g, path);
                 g.FillPath(new SolidBrush(c), path);
-                g.Dispose();
             }
-
+            g.Dispose();
 
             var nbmp = new NikseBitmap(bmp);
             if (parameter.BackgroundColor == Color.Transparent)
