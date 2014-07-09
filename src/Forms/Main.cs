@@ -11131,7 +11131,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if ((e.Modifiers == Keys.Shift && e.KeyCode == Keys.F9) || _mainCreateInsertSubAtVideoPos == e.KeyData)
                 {
                     var p = InsertNewTextAtVideoPosition();
-                    p.Text = p.StartTime.ToShortString();
+                    p.Text = string.Empty; // p.StartTime.ToShortString();
                     SubtitleListview1.SetText(_subtitle.GetIndex(p), p.Text);
                     textBoxListViewText.Text = p.Text;
                     e.SuppressKeyPress = true;
