@@ -2767,7 +2767,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         var uknownFormatImporter = new UknownFormatImporter();
                         uknownFormatImporter.UseFrames = true;
-                        var genericParseSubtitle = uknownFormatImporter.AutoGuessImport(s.Replace(Environment.NewLine, "\n").Split('\n'));
+                        var genericParseSubtitle = uknownFormatImporter.AutoGuessImport(s.Replace(Environment.NewLine, "\n").Replace("\r", "\n").Split('\n'));
                         if (genericParseSubtitle.Paragraphs.Count > 1)
                         {
                             _subtitle = genericParseSubtitle;
