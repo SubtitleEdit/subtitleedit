@@ -22,12 +22,8 @@
 
 
 ; preprocessor checks
-#if VER < EncodeVer(5,5,4)
-  #error Update your Inno Setup version (5.5.4 or newer)
-#endif
-
-#if VER > EncodeVer(5,5,4)
-  #error Update script to use Turkish from the compiler dir and remove this check
+#if VER < EncodeVer(5,5,5)
+  #error Update your Inno Setup version (5.5.5 or newer)
 #endif
 
 #ifndef UNICODE
@@ -137,7 +133,7 @@ Name: ru;   MessagesFile: compiler:Languages\Russian.isl
 Name: srC;  MessagesFile: compiler:Languages\SerbianCyrillic.isl
 Name: srL;  MessagesFile: compiler:Languages\SerbianLatin.isl
 Name: sv;   MessagesFile: Languages\Swedish.isl
-Name: tr;   MessagesFile: Languages\Turkish.isl
+Name: tr;   MessagesFile: compiler:Languages\Turkish.isl
 Name: vn;   MessagesFile: Languages\Vietnamese.isl
 Name: zh;   MessagesFile: Languages\ChineseSimplified.isl
 Name: zhTW; MessagesFile: Languages\ChineseTraditional.isl
