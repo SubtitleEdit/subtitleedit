@@ -99,20 +99,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/2006/10/ttaf1");
-                string text = Utilities.RemoveHtmlTags(p.Text);
 
-                bool first = true;
-                foreach (string line in text.Split(Environment.NewLine.ToCharArray(),  StringSplitOptions.RemoveEmptyEntries))
-                {
-                    if (!first)
-                    {
-                        XmlNode br = xml.CreateElement("br", "http://www.w3.org/2006/10/ttaf1");
-                        paragraph.AppendChild(br);
-                    }
-                    XmlNode textNode = xml.CreateTextNode(line);
-                    paragraph.AppendChild(textNode);
-                    first = false;
-                }
+                //string text = p.Text.Replace("<i>", "@iSTART__").Replace("</i>", "@iEND__");
+                string text = p.Text.Replace(Environment.NewLine, "\n").Replace("\n", "@iNEWLINE__");
+                text = Utilities.RemoveHtmlTags(text);
+                paragraph.InnerText = text;
+                paragraph.InnerXml = paragraph.InnerXml.Replace("@iNEWLINE__", "<br />");
+                //paragraph.InnerXml = paragraph.InnerXml.Replace("@iSTART__", "<i>").Replace("@iEND__", "</i>");
 
                 XmlAttribute start = xml.CreateAttribute("begin");
                 start.InnerText = ConvertToTimeString(p.StartTime);
@@ -130,7 +123,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 no++;
             }
 
-            return ToUtf8XmlString(xml);
+            string s = ToUtf8XmlString(xml);
+            s = s.Replace(" xmlns=\"\"", string.Empty);
+            return s;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -210,6 +205,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 if (italic)
                                     pText.Append("</i>");
                                 break;
+                            case "i":
+                                pText.Append("<i>" + innerNode.InnerText + "</i>");
+                                break;
+                            case "b":
+                                pText.Append("<b>" + innerNode.InnerText + "</b>");
+                                break;
                             default:
                                 pText.Append(innerNode.InnerText);
                                 break;
@@ -277,6 +278,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.RemoveEmptyLines();
             subtitle.Renumber(1);
         }
+
+        public override List<string> AlternateExtensions
+        {
+            get
+            {
+                return new List<string>() { ".tt" }; 
+            }
+        }
+
 
     }
 }
