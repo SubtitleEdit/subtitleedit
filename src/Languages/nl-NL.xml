@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.3.15</Version>
-    <TranslatedBy>Vertaald door: Quetsbeek en minouhse 01072014</TranslatedBy>
+    <TranslatedBy>Vertaald door: Quetsbeek en minouhse 08072014</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile />
     <OK>&amp;Oké</OK>
@@ -22,7 +22,7 @@
     <NoVideoLoaded>Geen video geladen</NoVideoLoaded>
     <VideoInformation>Video info</VideoInformation>
     <PositionX>Positie / duur: {0}</PositionX>
-    <StartTime>Start tijd</StartTime>
+    <StartTime>Starttijd</StartTime>
     <EndTime>Eindtijd</EndTime>
     <Duration>Duur</Duration>
     <NumberSymbol>#</NumberSymbol>
@@ -138,7 +138,7 @@ Suggesties zijn van harte welkom
     <InputDescription>Input bestanden (zoek of sleep en plaats)</InputDescription>
     <Status>Status</Status>
     <Output>Output</Output>
-    <ChooseOutputFolder>Kies doel map</ChooseOutputFolder>
+    <ChooseOutputFolder>Kies doelmap</ChooseOutputFolder>
     <OverwriteExistingFiles>Overschrijf bestaande bestanden</OverwriteExistingFiles>
     <Style>Stijl</Style>
     <ConvertOptions>Converteer opties</ConvertOptions>
@@ -157,7 +157,7 @@ Suggesties zijn van harte welkom
     <ScanFolder>Doorzoek de map</ScanFolder>
     <ScanningFolder>Doorzoek {0} en submappen naar ondertitel bestanden</ScanningFolder>
     <Recursive>Inclusief submappen</Recursive>
-    <SetMinMsBetweenSubtitles>Bepaal min. milisec tussen regels</SetMinMsBetweenSubtitles>
+    <SetMinMsBetweenSubtitles>Bepaal min. millisec. tussen regels</SetMinMsBetweenSubtitles>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -168,7 +168,7 @@ Suggesties zijn van harte welkom
     <NormalCasing>Normale Tekenstijl. Zinnen beginnen met hoofdletter.</NormalCasing>
     <FixNamesCasing>Herstel Namen tekenstijl (via Woordenboeken \ NamenEtc.xml)</FixNamesCasing>
     <FixOnlyNamesCasing>Herstel alleen namen tekststijl(via Woordenboeken \ NamenEtc.xml)</FixOnlyNamesCasing>
-    <OnlyChangeAllUppercaseLines>Verander alleen alle regels in hoofdletters .</OnlyChangeAllUppercaseLines>
+    <OnlyChangeAllUppercaseLines>Verander alleen alle regels in hoofdletters.</OnlyChangeAllUppercaseLines>
     <AllUppercase>ALLEMAAL HOOFDLETTERS</AllUppercase>
     <AllLowercase>allemaal kleine letters</AllLowercase>
   </ChangeCasing>
@@ -557,7 +557,7 @@ Suggesties zijn van harte welkom
     <FixDoubleDash>Herstel' - '-&gt;'... '</FixDoubleDash>
     <FixDoubleGreaterThan>Verwijder &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Verwijder beginpunten '...'</FixEllipsesStart>
-    <FixMissingOpenBracket>Herstel missende [in regel</FixMissingOpenBracket>
+    <FixMissingOpenBracket>Herstel missende [ in regel</FixMissingOpenBracket>
     <FixMusicNotation>Vervang muziek symbolen (bijv.ª) door voorkeur symbool</FixMusicNotation>
     <FixDoubleDashs>herstel '-' s -&gt; '. .. 's</FixDoubleDashs>
     <FixDoubleGreaterThans>Verwijder &gt;&gt; van start</FixDoubleGreaterThans>
@@ -579,10 +579,10 @@ Suggesties zijn van harte welkom
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Woordenboeken nodig?</Title>
-    <DescriptionLine1>Subtitle Edit's spellingcontrole is gebaseerd op de NHunspell motor die</DescriptionLine1>
-    <DescriptionLine2>gebruik maakt van de spellingcontrole woordenboeken van Open Office.</DescriptionLine2>
+    <DescriptionLine1>Subtitle Edit's spellingcontrole is gebaseerd op de NHunspell engine die</DescriptionLine1>
+    <DescriptionLine2>gebruik maakt van de spellingcontrole-woordenboeken van Open Office.</DescriptionLine2>
     <GetDictionariesHere>Haal hier woordenboeken:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Open Office Wiki Woordenboeken lijst</OpenOpenOfficeWiki>
+    <OpenOpenOfficeWiki>Open Office Wiki Woordenboeken-lijst</OpenOpenOfficeWiki>
     <GetAllDictionaries>Haal alle woordenboeken</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Kies uw taal en klik op downloaden</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Open 'Woordenboeken' map</OpenDictionariesFolder>
@@ -1548,7 +1548,7 @@ Suggesties zijn van harte welkom
     <MergeLinesShorterThan>Voeg regels samen korter dan</MergeLinesShorterThan>
     <MusicSymbol>Muziek symbolen</MusicSymbol>
     <MusicSymbolsToReplace>Muziek symbolen te vervangen (gescheiden door spatie)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Herstel gemeenschappelijke OCR fouten - maak ook gebruik van hardgecodeerde regels</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonOcrErrorsUseHardcodedRules>Herstel gebruikelijke OCR fouten - Ook hardgecodeerde regels</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Herstel korte weergavetijd-Sta verplaatsen starttijd toe.</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Snelkoppelingen</Shortcuts>
     <Shortcut>Snelkoppeling</Shortcut>
