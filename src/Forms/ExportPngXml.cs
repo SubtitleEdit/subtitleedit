@@ -2119,6 +2119,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 g.FillPath(new SolidBrush(c), path);
             }
             g.Dispose();
+            sf.Dispose();
 
             var nbmp = new NikseBitmap(bmp);
             if (parameter.BackgroundColor == Color.Transparent)
