@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -98,9 +98,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text = Utilities.RemoveHtmlTags(text);
                 }
 
-                // Add top-position SoftNI marker "{" at the beginning of first line.
+                // Add top-position SoftNI marker "}" at the beginning of first line.
                 if (positionTop)
-                    text = "{" + text;
+                    text = "}" + text;
 
                 sb.AppendLine(string.Format("{0}{1}{2}\\{3}", text, Environment.NewLine, p.StartTime.ToHHMMSSPeriodFF(), p.EndTime.ToHHMMSSPeriodFF()));
             }
@@ -161,8 +161,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 string text = sb.ToString().Trim();
 
                                 Boolean positionTop = false;
-                                // If text starts with "{", subtitle appears at the top
-                                if (text.StartsWith("{"))
+                                // If text starts with "}", subtitle appears at the top
+                                if (text.StartsWith("}"))
                                 {
                                     positionTop = true;
                                     // Remove the tag "{"
