@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.3.15</Version>
+    <Version>3.4</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -1294,6 +1294,8 @@ Continue?</SubtitleAppendPrompt>
     <ImportRulesTitle>Import replace rule(s) from...</ImportRulesTitle>
     <ExportRulesTitle>Export replace rule(s) to...</ExportRulesTitle>
     <Rules>Export rules</Rules>
+    <MoveToTop>Move to top</MoveToTop>
+    <MoveToBottom>Move to bottom</MoveToBottom>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
