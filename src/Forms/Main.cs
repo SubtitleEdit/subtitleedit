@@ -2642,6 +2642,30 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (format == null)
+                {
+                    try
+                    {
+                        var satBoxPng = new SatBoxPng();
+                        string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                        var list = new List<string>();
+                        foreach (string l in arr)
+                            list.Add(l);
+                        if (satBoxPng.IsMine(list, fileName))
+                        {
+                            var subtitle = new Subtitle();
+                            satBoxPng.LoadSubtitle(subtitle, list, fileName);
+                            if (ContinueNewOrExit())
+                                ImportAndOcrSrt(fileName, subtitle);
+                            return;
+                        }
+                    }
+                    catch
+                    {
+                        format = null;
+                    }
+                }
+
                 if (format == null || format.Name == new Scenarist().Name)
                 {
                     try
