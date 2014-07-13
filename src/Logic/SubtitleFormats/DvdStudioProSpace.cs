@@ -81,8 +81,8 @@ $HorzAlign          =   Center
                         string[] toPart = line.Substring(0, 25).Split(new[] { " ," }, StringSplitOptions.None);
                         Paragraph p = new Paragraph();
                         if (toPart.Length == 2 &&
-                            GetTimeCode(p.StartTime, toPart[0]) &&
-                            GetTimeCode(p.EndTime, toPart[1]))
+                            DvdStudioPro.GetTimeCode(p.StartTime, toPart[0]) &&
+                            DvdStudioPro.GetTimeCode(p.EndTime, toPart[1]))
                         {
                             number++;
                             p.Number = number;
@@ -100,27 +100,5 @@ $HorzAlign          =   Center
             }
         }
 
-        private static bool GetTimeCode(TimeCode timeCode, string timeString)
-        {
-            try
-            {
-                string[] timeParts = timeString.Split(':');
-                timeCode.Hours = int.Parse(timeParts[0]);
-                timeCode.Minutes = int.Parse(timeParts[1]);
-                timeCode.Seconds = int.Parse(timeParts[2]);
-                int frames = int.Parse(timeParts[3]);
-
-                int milliseconds = (int)Math.Round(1000.0 / Configuration.Settings.General.CurrentFrameRate * frames);
-                if (milliseconds > 999)
-                    milliseconds = 999;
-
-                timeCode.Milliseconds = milliseconds;
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
     }
 }

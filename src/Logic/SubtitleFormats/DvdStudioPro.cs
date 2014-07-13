@@ -160,7 +160,7 @@ $HorzAlign          =   Center
             return text.Replace(Environment.NewLine, "|");
         }
 
-        private static bool GetTimeCode(TimeCode timeCode, string timeString)
+        internal static bool GetTimeCode(TimeCode timeCode, string timeString)
         {
             try
             {
@@ -168,13 +168,7 @@ $HorzAlign          =   Center
                 timeCode.Hours = int.Parse(timeParts[0]);
                 timeCode.Minutes = int.Parse(timeParts[1]);
                 timeCode.Seconds = int.Parse(timeParts[2]);
-                int frames = int.Parse(timeParts[3]);
-
-                int milliseconds = (int)Math.Round(1000.0 / Configuration.Settings.General.CurrentFrameRate * frames);
-                if (milliseconds > 999)
-                    milliseconds = 999;
-
-                timeCode.Milliseconds = milliseconds;
+                timeCode.Milliseconds = FramesToMillisecondsMax999(int.Parse(timeParts[3]));
                 return true;
             }
             catch
@@ -182,5 +176,6 @@ $HorzAlign          =   Center
                 return false;
             }
         }
+       
     }
 }

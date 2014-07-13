@@ -52,7 +52,7 @@
     <RegularExpressionIsNotValid>Expresia nu este valabilă!</RegularExpressionIsNotValid>
     <SubtitleSaved>Subtitrare salvată</SubtitleSaved>
     <CurrentSubtitle>Subtitrarea curentă</CurrentSubtitle>
-    <OriginalText>Textul original</OriginalText>
+    <OriginalText>Text original</OriginalText>
     <OpenOriginalSubtitleFile>Deschide subtitrarea originală ...</OpenOriginalSubtitleFile>
     <PleaseWait>Te rog, așteaptă ...</PleaseWait>
     <SessionKey>Sesiune</SessionKey>
@@ -159,7 +159,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <ScanFolder>Explorare dosar ...</ScanFolder>
     <ScanningFolder>Explorare {0} și sub-directoare pentru fișierele de subtitrare ...</ScanningFolder>
     <Recursive>Include sub-directoare</Recursive>
-    <SetMinMsBetweenSubtitles>Setarea minimumului de milisecunde între subtitrări</SetMinMsBetweenSubtitles>
+    <SetMinMsBetweenSubtitles>Setarea minimului de milisecunde între subtitrări</SetMinMsBetweenSubtitles>
   </BatchConvert>
   <Beamer>
     <Title>Proiector</Title>
@@ -607,8 +607,8 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <From>De la:</From>
     <To>La:</To>
     <Translate>Traduce</Translate>
-    <PleaseWait>Te rog, așteaptă ... aceasta poate dura un timp</PleaseWait>
-    <PoweredByGoogleTranslate>Realizat de Google traslate</PoweredByGoogleTranslate>
+    <PleaseWait>Te rog, așteaptă ... poate dura un timp</PleaseWait>
+    <PoweredByGoogleTranslate>Realizat de Google translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Realizat de Microsoft translate</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
@@ -693,7 +693,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
         <SaveOriginal>Salvează subtitrarea originală</SaveOriginal>
         <CloseOriginal>Închide subtitrarea originală</CloseOriginal>
         <OpenContainingFolder>Deschide dosar de conținut</OpenContainingFolder>
-        <Compare>&amp;Compară ...</Compare>
+        <Compare>&amp;Comparare ...</Compare>
         <Statistics>Statisti&amp;că ...</Statistics>
         <Plugins>Plugin-uri ...</Plugins>
         <ImportOcrFromDvd>Importare subtitrare/OCR din vob/IFO (DVD) ...</ImportOcrFromDvd>
@@ -944,10 +944,10 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
       <Pause>Pauză</Pause>
       <GoToSubtitlePositionAndPause>Trece la sub-poziție și pauză</GoToSubtitlePositionAndPause>
       <SetStartTime>Setează &amp;timpul de start</SetStartTime>
-      <SetEndTimeAndGoToNext>Set. &amp;finalul&amp;și treci mai departe</SetEndTimeAndGoToNext>
+      <SetEndTimeAndGoToNext>Set. &amp;finalul&amp; și treci mai departe</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Corectează prin timpul de final {0}</AdjustedViaEndTime>
       <SetEndTime>Setează f&amp;inalul</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Set. star&amp;tul și decalarea pauzei</SetstartTimeAndOffsetOfRest>
+      <SetstartTimeAndOffsetOfRest>Set. star&amp;tul și decalează pauza</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Caută text online</SearchTextOnline>
       <GoogleTranslate>Traducere Google</GoogleTranslate>
       <GoogleIt>Caută cu Google</GoogleIt>
@@ -1336,7 +1336,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <GetPluginsInfo1>Plugin-urile Subtitle Edit trebuie să fie descărcate în dosarul „Plugin-uri”</GetPluginsInfo1>
     <GetPluginsInfo2>Alege plugin-ul și clic pe „Descărcare”</GetPluginsInfo2>
     <PluginXDownloaded>Plugin-ul {0} descărcat</PluginXDownloaded>
-    <Download>&amp;Descărcă</Download>
+    <Download>&amp;Descărcare</Download>
     <Remove>&amp;Elimină</Remove>
     <UpdateAllX>Actualizează tot ({0})</UpdateAllX>    
 	<UnableToDownloadPluginListX>Imposibilă descărcarea listei de plugin-uri: {0}</UnableToDownloadPluginListX>
@@ -1445,7 +1445,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <DefaultFileEncoding>Codare implicită</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto-detectează codificare ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Lung. max. a unei singure linii</SubtitleLineMaximumLength>
-    <MaximumCharactersPerSecond>Maxim de caractere/secundă</MaximumCharactersPerSecond>
+    <MaximumCharactersPerSecond>Maxim de caractere/sec.</MaximumCharactersPerSecond>
     <AutoWrapWhileTyping>Auto-încadrare în timpul tastării</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Durată minimă, în milisecunde</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Durată maximă, în milisecunde</DurationMaximumMilliseconds>
@@ -1648,7 +1648,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <MainTextBoxUnbreak>Text neîntrerupt</MainTextBoxUnbreak>
     <MainFileSaveAll>Salvează tot</MainFileSaveAll>
     <Miscellaneous>Diverse</Miscellaneous>
-    <UseDoNotBreakAfterList>Folosește lista nu-întrerupe-după (ptr. auto-întrerup.)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Folosește lista nu-întrerupe-după (pentru auto-întrerupere)</UseDoNotBreakAfterList>
  </Settings>
   <ShowEarlierLater>
     <Title>Arată liniile selectate mai devreme/târziu</Title>
@@ -1674,12 +1674,12 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <FullText>Întreg textul</FullText>
     <WordNotFound>Cuvânt negăsit</WordNotFound>
     <Language>Limba</Language>
-    <Change>Schimbare</Change>
+    <Change>Schimbă</Change>
     <ChangeAll>Schimbă tot</ChangeAll>
-    <SkipOnce>Se sare peste &amp;una</SkipOnce>
-    <SkipAll>&amp;Se sare peste tot</SkipAll>
+    <SkipOnce>Sari peste &amp;una</SkipOnce>
+    <SkipAll>&amp;Sari peste tot</SkipAll>
     <AddToUserDictionary>Adaugă la dicționarul utilizatorului</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>Adaugă la lista numelor/suntelor (caractere identice)</AddToNamesAndIgnoreList>
+    <AddToNamesAndIgnoreList>Adaugă la listă nume/sunete (identice)</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>Adaugă perechea la lista realocărilor OCR</AddToOcrReplaceList>
     <Abort>Revocare</Abort>
     <Use>Utilizare</Use>
@@ -1689,7 +1689,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <EditWholeText>Editare text integral</EditWholeText>
     <EditWordOnly>Editare doar cuvânt</EditWordOnly>
     <AddXToNamesEtc>Adaugă '{0}' la lista nume/etc.</AddXToNamesEtc>
-    <AutoFixNames>Auto-repară numele unde diferă doar caracterele (mari/mici)</AutoFixNames>
+    <AutoFixNames>Auto-repară nume dif. doar prin caractere (mari/mici)</AutoFixNames>
     <CheckOneLetterWords>Avizează o literă necunoscută din cuvinte</CheckOneLetterWords>
     <TreatINQuoteAsING>Prelucrează sfârșitul cuvântului „in” ca „ing” (numai în engleză)</TreatINQuoteAsING>
     <ImageText>Imagine text</ImageText>
@@ -1866,7 +1866,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <ThreeSecondsBack>&lt; 3 sec</ThreeSecondsBack>
     <PlayXSecondsAndBack>Redă {0} sec și înapoi</PlayXSecondsAndBack>
     <FindText>Găsește text</FindText>
-    <GoToSubPosition>Trece la poziție</GoToSubPosition>
+    <GoToSubPosition>Treci la poziție</GoToSubPosition>
     <KeepChangesTitle>Se păstrează schimbările?</KeepChangesTitle>
     <KeepChangesMessage>Modificările la subtitrare au fost făcute în „Sincronizare vizuală”. Se păstrează schimbările?</KeepChangesMessage>
     <SynchronizationDone>Sincronizare făcută!</SynchronizationDone>

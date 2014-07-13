@@ -48,6 +48,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new DCinemaSmpte2007(),
                     new DigiBeta(),
                     new DvdStudioPro(),
+                    new DvdStudioProSpaceOne(),
                     new DvdStudioProSpace(),
                     new DvdSubtitle(),
                     new DvdSubtitleSystem(),
