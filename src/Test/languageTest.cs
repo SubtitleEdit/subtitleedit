@@ -23,9 +23,7 @@ namespace Test
             if (Directory.Exists(Path.Combine(Configuration.BaseDirectory, "Languages")))
             {
                 string[] versionInfo = Utilities.AssemblyVersion.Split('.');
-                string currentVersion = String.Format("{0}.{1}", versionInfo[0], versionInfo[1]);
-                if (versionInfo.Length >= 3 && versionInfo[2] != "0")
-                    currentVersion += "." + versionInfo[2];
+                string currentVersion = String.Format("{0}.{1}.{2}", versionInfo[0], versionInfo[1], versionInfo[2]);
 
                 foreach (string fileName in Directory.GetFiles(Path.Combine(Configuration.BaseDirectory, "Languages"), "*.xml"))
                 {
