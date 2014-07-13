@@ -204,9 +204,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_title == null)
                 {
                     string[] versionInfo = Utilities.AssemblyVersion.Split('.');
-                    _title = String.Format("{0} {1}.{2}", _languageGeneral.Title, versionInfo[0], versionInfo[1]);
-                    if (versionInfo.Length >= 3 && versionInfo[2] != "0")
-                        _title += "." + versionInfo[2];
+                    _title = String.Format("{0} {1}.{2}.{3}", _languageGeneral.Title, versionInfo[0], versionInfo[1], versionInfo[2]);
                 }
                 return _title;
             }

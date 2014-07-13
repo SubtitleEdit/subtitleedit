@@ -106,10 +106,7 @@ namespace Nikse.SubtitleEdit.Logic
         private string GetVersionNumber()
         {
             string[] versionInfo = Utilities.AssemblyVersion.Split('.');
-            string minorMinorVersion = string.Empty;
-            if (versionInfo.Length >= 3 && versionInfo[2] != "0")
-                minorMinorVersion = "." + versionInfo[2];
-            return string.Format("{0}.{1}{2}", versionInfo[0], versionInfo[1], minorMinorVersion);
+            return string.Format("{0}.{1}.{2}", versionInfo[0], versionInfo[1], versionInfo[2]);
         }
 
         public Language()
