@@ -11,7 +11,7 @@
    * Export to image based formats, added 2k resolutions - thx Joseph
    * New tool "Merge lines with same text"
    * Spell check undo
-   * Check for updates
+   * Automatic check for updates
 * IMPROVED:
    * Updated Spanish (Mexico) language file - thx pakitonaranjo
    * Updated French language file - thx JM GBT
