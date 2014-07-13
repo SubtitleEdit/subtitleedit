@@ -318,6 +318,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonExportClick(object sender, EventArgs e)
         {
+            FixStartEndWithSameTimeCode();
+
             var errors = new List<string>();
             buttonExport.Enabled = false;
             SetupImageParameters();
@@ -715,6 +717,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
             }
             buttonExport.Enabled = true;
+        }
+
+        private void FixStartEndWithSameTimeCode()
+        {
+            for (int i = 0; i < _subtitle.Paragraphs.Count - 1; i++)
+            {
+                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph next = _subtitle.Paragraphs[i + 1];
+                if (p.EndTime.TotalMilliseconds == next.StartTime.TotalMilliseconds)
+                    p.EndTime.TotalMilliseconds--;
+            }
         }
 
         private void SetResolution(string xAndY)
