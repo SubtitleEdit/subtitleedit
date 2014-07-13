@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.4.0 (xth June 2014)
+3.4.0 (13th July 2014)
 * NEW:
    * Switched to .NET Framework 4.0 (from .NET Framework 2.0)
    * Runs 64-bit on 64-bit operating systems (requires 64-bit codecs!)
@@ -27,6 +27,12 @@
    * Updated Hungarian language file - thx Zityi
    * Updated Italian language file - thx SilverDrake
    * Updated Finnish language file - thx Teijo
+   * Updated Romanian language file - thx Mircea
+   * Updated Swedish language file - thx Ted
+   * Updated Chinese language file - thx Leon
+   * Updated Greek language file thx ΑΚΗΣ
+   * Updated Brazilian Portuguese language file - thx Igor Rückert
+   * Updated Basque language file - thx Xabier
    * Export to image based format now remembers most settings
    * Always close SAMI tags (except when end time=next start time)
    * Merge selected lines in original - better handling of empty line
