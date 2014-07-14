@@ -1936,47 +1936,7 @@ namespace Nikse.SubtitleEdit.Logic
                     label.ForeColor = Color.Orange;
             }
             label.Text = sb.ToString();
-        }
-
-        //public static void DisplayLineLengths(Panel panelSingleLine, string text)
-        //{
-        //    string cleanText = RemoveHtmlTags(text).Replace(Environment.NewLine, "|");
-        //    string[] lines = cleanText.Split('|');
-
-        //    int position = 0;
-
-        //    // we must dispose before clearing controls (or this will occur: "Error creating window handle")
-        //    foreach (Control ctrl in panelSingleLine.Controls)
-        //        ctrl.Dispose();
-        //    panelSingleLine.Controls.Clear();
-
-        //    for (int i = 0; i < lines.Length; i++)
-        //    {
-        //        string line = lines[i];
-        //        if (i > 0)
-        //        {
-        //            var labelSlash = new Label {AutoSize = true, Margin = new Padding(0)};
-        //            panelSingleLine.Controls.Add(labelSlash);
-        //            labelSlash.Text = "/";
-        //            labelSlash.Top = 0;
-        //            labelSlash.Left = position;
-        //            position += labelSlash.Width - 4;
-
-        //        }
-        //        var labelLength = new Label();
-        //        labelLength.AutoSize = true;
-        //        labelLength.Margin = new Padding(0);
-        //        panelSingleLine.Controls.Add(labelLength);
-        //        labelLength.Text = line.Length.ToString();
-        //        labelLength.Top = 0;
-        //        labelLength.Left = position;
-        //        position += labelLength.Width - 4;
-        //        if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-        //            labelLength.ForeColor = Color.Red;
-        //        else if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength - 5)
-        //            labelLength.ForeColor = Color.Orange;
-        //    }
-        //}
+        }        
 
         public static bool IsValidRegex(string testPattern)
         {
@@ -2015,7 +1975,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static void RemoveFromUserDictionary(string word, string languageName)
         {
             word = word.Trim();
-            if (word.Length > 1)
+            if (word.Length > 0)
             {
                 string userWordsXmlFileName = DictionaryFolder + languageName + "_user.xml";
                 var userWords = new XmlDocument();
@@ -2047,7 +2007,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static void AddToUserDictionary(string word, string languageName)
         {
             word = word.Trim();
-            if (word.Length > 1)
+            if (word.Length > 0)
             {
                 string userWordsXmlFileName = DictionaryFolder + languageName + "_user.xml";
                 var userWords = new XmlDocument();
