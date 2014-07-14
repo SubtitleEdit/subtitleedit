@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string x = sb.ToString();
-            if (!x.Contains("<fcpxml version=\"1.3\">") && !x.Contains("<fcpxml version=\"1.2\">"))
+            if (!x.Contains("<fcpxml version=\"1.")) // if (!x.Contains("<fcpxml version=\"1.4\"") && !x.Contains("<fcpxml version=\"1.3\"") && !x.Contains("<fcpxml version=\"1.2\""))
                 return;
 
             var xml = new XmlDocument();
@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 xml.LoadXml(x.Trim());
 
-                foreach (XmlNode node in xml.SelectNodes("fcpxml/project/sequence/spine/clip/video/param[@name='Text']"))
+                foreach (XmlNode node in xml.SelectNodes("//project/sequence/spine/clip/video/param[@name='Text']"))
                 {
                     try
                     {
@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 if (subtitle.Paragraphs.Count == 0)
                 {
-                    foreach (XmlNode node in xml.SelectNodes("fcpxml/project/sequence/spine/clip/title/text"))
+                    foreach (XmlNode node in xml.SelectNodes("//project/sequence/spine/clip/title/text"))
                     {
                         try
                         {
@@ -189,8 +189,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 subtitle.Renumber(1);
             }
-            catch
+            catch (Exception exception)
             {
+                System.Diagnostics.Debug.WriteLine(exception.Message);
                 _errorCount = 1;
                 return;
             }

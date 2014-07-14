@@ -48,6 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemInspectNOcrMatches = new System.Windows.Forms.ToolStripMenuItem();
             this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.EditLastAdditionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nOcrTrainingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetUnItalicFactor = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -150,7 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
-            this.nOcrTrainingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importNewTimeCodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.groupBoxNOCR.SuspendLayout();
@@ -180,6 +181,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxTransportStream.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.contextMenuStripImage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerBottom)).BeginInit();
             this.splitContainerBottom.Panel1.SuspendLayout();
             this.splitContainerBottom.Panel2.SuspendLayout();
             this.splitContainerBottom.SuspendLayout();
@@ -192,6 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.italicToolStripMenuItem,
             this.toolStripSeparator1,
             this.importTextWithMatchingTimeCodesToolStripMenuItem,
+            this.importNewTimeCodesToolStripMenuItem,
             this.toolStripSeparator2,
             this.saveImageAsToolStripMenuItem,
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem,
@@ -206,7 +209,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 320);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 342);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
@@ -268,28 +271,28 @@ namespace Nikse.SubtitleEdit.Forms
             // bDNXMLToolStripMenuItem
             // 
             this.bDNXMLToolStripMenuItem.Name = "bDNXMLToolStripMenuItem";
-            this.bDNXMLToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.bDNXMLToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.bDNXMLToolStripMenuItem.Text = "BDN XML...";
             this.bDNXMLToolStripMenuItem.Click += new System.EventHandler(this.bDNXMLToolStripMenuItem_Click);
             // 
             // bluraySupToolStripMenuItem
             // 
             this.bluraySupToolStripMenuItem.Name = "bluraySupToolStripMenuItem";
-            this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.bluraySupToolStripMenuItem.Text = "Blu-ray sup...";
             this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.bluraySupToolStripMenuItem_Click);
             // 
             // vobSubToolStripMenuItem
             // 
             this.vobSubToolStripMenuItem.Name = "vobSubToolStripMenuItem";
-            this.vobSubToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.vobSubToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.vobSubToolStripMenuItem.Text = "VobSub...";
             this.vobSubToolStripMenuItem.Click += new System.EventHandler(this.vobSubToolStripMenuItem_Click);
             // 
             // dOSTToolStripMenuItem
             // 
             this.dOSTToolStripMenuItem.Name = "dOSTToolStripMenuItem";
-            this.dOSTToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.dOSTToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.dOSTToolStripMenuItem.Text = "DOST...";
             this.dOSTToolStripMenuItem.Click += new System.EventHandler(this.dOSTToolStripMenuItem_Click);
             // 
@@ -318,6 +321,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.EditLastAdditionsToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
             this.EditLastAdditionsToolStripMenuItem.Text = "Edit last ocr image additions...";
             this.EditLastAdditionsToolStripMenuItem.Click += new System.EventHandler(this.inspectLastAdditionsToolStripMenuItem_Click);
+            // 
+            // nOcrTrainingToolStripMenuItem
+            // 
+            this.nOcrTrainingToolStripMenuItem.Name = "nOcrTrainingToolStripMenuItem";
+            this.nOcrTrainingToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.nOcrTrainingToolStripMenuItem.Text = "N-Ocr training..";
+            this.nOcrTrainingToolStripMenuItem.Click += new System.EventHandler(this.nOcrTrainingToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
@@ -1489,12 +1499,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerHideStatus.Interval = 2000;
             this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
             // 
-            // nOcrTrainingToolStripMenuItem
+            // importNewTimeCodesToolStripMenuItem
             // 
-            this.nOcrTrainingToolStripMenuItem.Name = "nOcrTrainingToolStripMenuItem";
-            this.nOcrTrainingToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
-            this.nOcrTrainingToolStripMenuItem.Text = "N-Ocr training..";
-            this.nOcrTrainingToolStripMenuItem.Click += new System.EventHandler(this.nOcrTrainingToolStripMenuItem_Click);
+            this.importNewTimeCodesToolStripMenuItem.Name = "importNewTimeCodesToolStripMenuItem";
+            this.importNewTimeCodesToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.importNewTimeCodesToolStripMenuItem.Text = "Import new time codes...";
+            this.importNewTimeCodesToolStripMenuItem.Click += new System.EventHandler(this.importNewTimeCodesToolStripMenuItem_Click);
             // 
             // VobSubOcr
             // 
@@ -1562,6 +1572,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerBottom.Panel1.ResumeLayout(false);
             this.splitContainerBottom.Panel1.PerformLayout();
             this.splitContainerBottom.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerBottom)).EndInit();
             this.splitContainerBottom.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1690,5 +1701,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ContextMenuStrip contextMenuStripImage;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImageSaveAs;
         private System.Windows.Forms.ToolStripMenuItem nOcrTrainingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importNewTimeCodesToolStripMenuItem;
     }
 }
