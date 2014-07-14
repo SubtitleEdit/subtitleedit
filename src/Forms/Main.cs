@@ -189,6 +189,9 @@ namespace Nikse.SubtitleEdit.Forms
         bool _openFileDialogOn = false;
         bool _resetVideo = true;
 
+        string[] _dragAndDropFiles = null;
+        Timer _dragAndDropTimer = new Timer(); // to prevent locking windows explorer
+
         private bool AutoRepeatContinueOn
         {
             get
@@ -9962,76 +9965,85 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubtitleListview1_DragDrop(object sender, DragEventArgs e)
         {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            if (files.Length == 1)
+            _dragAndDropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (_dragAndDropFiles.Length == 1)
             {
-                if (ContinueNewOrExit())
-                {
-                    string fileName = files[0];
-
-                    saveFileDialog1.InitialDirectory = System.IO.Path.GetDirectoryName(fileName);
-                    openFileDialog1.InitialDirectory = System.IO.Path.GetDirectoryName(fileName);
-
-                    var fi = new FileInfo(fileName);
-                    string ext = Path.GetExtension(fileName).ToLower();
-
-                    if (ext == ".mkv")
-                    {
-                        bool isValid;
-                        var matroska = new Matroska();
-                        var subtitleList = matroska.GetMatroskaSubtitleTracks(fileName, out isValid);
-                        if (isValid)
-                        {
-                            if (subtitleList.Count == 0)
-                            {
-                                MessageBox.Show(_language.NoSubtitlesFound);
-                            }
-                            else if (subtitleList.Count > 1)
-                            {
-                                MatroskaSubtitleChooser subtitleChooser = new MatroskaSubtitleChooser();
-                                subtitleChooser.Initialize(subtitleList);
-                                if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
-                                {
-                                    LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], fileName, false);
-                                }
-                            }
-                            else
-                            {
-                                LoadMatroskaSubtitle(subtitleList[0], fileName, false);
-                            }
-                        }
-                        return;
-                    }
-
-                    if (fi.Length < 1024 * 1024 * 2) // max 2 mb
-                    {
-                        OpenSubtitle(fileName, null);
-                    }
-                    else if (fi.Length < 150000000 && ext == ".sub" && IsVobSubFile(fileName, true)) // max 150 mb
-                    {
-                        OpenSubtitle(fileName, null);
-                    }
-                    else if (fi.Length < 250000000 && ext == ".sup" && IsBluRaySupFile(fileName)) // max 250 mb
-                    {
-                        OpenSubtitle(fileName, null);
-                    }
-                    else if ((ext == ".ts" || ext == ".rec" || ext == ".mpg" || ext == ".mpeg") && IsTransportStream(fileName))
-                    {
-                        OpenSubtitle(fileName, null);
-                    }
-                    else if (ext == ".m2ts" && IsM2TransportStream(fileName))
-                    {
-                        OpenSubtitle(fileName, null);
-                    }
-                    else
-                    {
-                        MessageBox.Show(string.Format(_language.DropFileXNotAccepted, fileName));
-                    }
-                }
+                _dragAndDropTimer.Interval = 50;
+                _dragAndDropTimer.Tick += DoSubtitleListview1Drop;
+                _dragAndDropTimer.Start();
             }
             else
             {
                 MessageBox.Show(_language.DropOnlyOneFile);
+            }
+        }
+
+        private void DoSubtitleListview1Drop(object sender, EventArgs e)
+        {
+            _dragAndDropTimer.Stop();
+
+            if (ContinueNewOrExit())
+            {
+                string fileName = _dragAndDropFiles[0];
+
+                saveFileDialog1.InitialDirectory = System.IO.Path.GetDirectoryName(fileName);
+                openFileDialog1.InitialDirectory = System.IO.Path.GetDirectoryName(fileName);
+
+                var fi = new FileInfo(fileName);
+                string ext = Path.GetExtension(fileName).ToLower();
+
+                if (ext == ".mkv")
+                {
+                    bool isValid;
+                    var matroska = new Matroska();
+                    var subtitleList = matroska.GetMatroskaSubtitleTracks(fileName, out isValid);
+                    if (isValid)
+                    {
+                        if (subtitleList.Count == 0)
+                        {
+                            MessageBox.Show(_language.NoSubtitlesFound);
+                        }
+                        else if (subtitleList.Count > 1)
+                        {
+                            MatroskaSubtitleChooser subtitleChooser = new MatroskaSubtitleChooser();
+                            subtitleChooser.Initialize(subtitleList);
+                            if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
+                            {
+                                LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], fileName, false);
+                            }
+                        }
+                        else
+                        {
+                            LoadMatroskaSubtitle(subtitleList[0], fileName, false);
+                        }
+                    }
+                    return;
+                }
+
+                if (fi.Length < 1024 * 1024 * 2) // max 2 mb
+                {
+                    OpenSubtitle(fileName, null);
+                }
+                else if (fi.Length < 150000000 && ext == ".sub" && IsVobSubFile(fileName, true)) // max 150 mb
+                {
+                    OpenSubtitle(fileName, null);
+                }
+                else if (fi.Length < 250000000 && ext == ".sup" && IsBluRaySupFile(fileName)) // max 250 mb
+                {
+                    OpenSubtitle(fileName, null);
+                }
+                else if ((ext == ".ts" || ext == ".rec" || ext == ".mpg" || ext == ".mpeg") && IsTransportStream(fileName))
+                {
+                    OpenSubtitle(fileName, null);
+                }
+                else if (ext == ".m2ts" && IsM2TransportStream(fileName))
+                {
+                    OpenSubtitle(fileName, null);
+                }
+                else
+                {
+                    MessageBox.Show(string.Format(_language.DropFileXNotAccepted, fileName));
+                }
             }
         }
 
