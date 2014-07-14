@@ -416,6 +416,9 @@ namespace Nikse.SubtitleEdit.Forms
             normalToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Normal;
             italicToolStripMenuItem.Text = Configuration.Settings.Language.General.Italic;
             importTextWithMatchingTimeCodesToolStripMenuItem.Text = language.ImportTextWithMatchingTimeCodes;
+            if (string.IsNullOrEmpty(language.ImportTextWithMatchingTimeCodes))
+                importTextWithMatchingTimeCodesToolStripMenuItem.Visible = false;
+            importNewTimeCodesToolStripMenuItem.Text = language.ImportNewTimeCodes;
             saveImageAsToolStripMenuItem.Text = language.SaveSubtitleImageAs;
             toolStripMenuItemImageSaveAs.Text = language.SaveSubtitleImageAs;
             saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = language.SaveAllSubtitleImagesWithHtml;
@@ -8429,6 +8432,48 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxGuessUnknownWords.Checked)
                 autoGuessLevel = OcrFixEngine.AutoGuessLevel.Aggressive;
             return autoGuessLevel;
+        }
+
+        private void importNewTimeCodesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = Configuration.Settings.Language.General.OpenSubtitle;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                string fileName = openFileDialog1.FileName;
+                if (!File.Exists(fileName))
+                    return;
+
+                var fi = new FileInfo(fileName);
+                if (fi.Length > 1024 * 1024 * 10) // max 10 mb
+                {
+                    if (MessageBox.Show(string.Format(Configuration.Settings.Language.Main.FileXIsLargerThan10Mb + Environment.NewLine +
+                                                      Environment.NewLine +
+                                                      Configuration.Settings.Language.Main.ContinueAnyway,
+                                                      fileName), Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                        return;
+                }
+
+                Subtitle sub = new Subtitle();
+                Encoding encoding = null;
+                SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, encoding);
+                if (format == null || sub == null)
+                    return;
+
+                int index = 0;
+                foreach (Paragraph p in sub.Paragraphs)
+                {
+                    if (index < _subtitle.Paragraphs.Count)
+                    {
+                        Paragraph currentP = _subtitle.Paragraphs[index];
+                        currentP.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
+                        currentP.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
+                        subtitleListView1.SetStartTime(index, currentP);
+                    }
+                    index++;
+                }
+            }
         }
 
     }
