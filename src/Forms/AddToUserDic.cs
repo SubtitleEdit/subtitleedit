@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
             var userWordList = new List<string>();
 
             Utilities.LoadUserWordList(userWordList, language);
-            if (!string.IsNullOrEmpty(language) && NewWord.Length > 1 && !userWordList.Contains(NewWord))
+            if (!string.IsNullOrEmpty(language) && NewWord.Length > 0 && !userWordList.Contains(NewWord))
             {
                 Utilities.AddToUserDictionary(NewWord, language);
                 DialogResult = DialogResult.OK;
