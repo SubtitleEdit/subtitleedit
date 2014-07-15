@@ -2003,7 +2003,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string language = GetCurrentWordListLanguage();
             string text = textBoxUserWord.Text.Trim().ToLower();
-            if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_userWordList.Contains(text))
+            if (!string.IsNullOrEmpty(language) && text.Length > 0 && !_userWordList.Contains(text))
             {
                 Utilities.AddToUserDictionary(text , language);
                 LoadUserWords(language, true);
