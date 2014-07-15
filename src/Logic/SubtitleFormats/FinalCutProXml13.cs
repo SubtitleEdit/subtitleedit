@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    public class FinalCutProXXml13 : SubtitleFormat
+    public class FinalCutProXml13 : SubtitleFormat
     {
         public double FrameRate { get; set; }
 
@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string x = sb.ToString();
-            if (!x.Contains("<fcpxml version=\"1.")) // if (!x.Contains("<fcpxml version=\"1.4\"") && !x.Contains("<fcpxml version=\"1.3\"") && !x.Contains("<fcpxml version=\"1.2\""))
+            if (!x.Contains("<fcpxml version=\"1.3\"") && !x.Contains("<fcpxml version=\"1.2\""))
                 return;
 
             var xml = new XmlDocument();
