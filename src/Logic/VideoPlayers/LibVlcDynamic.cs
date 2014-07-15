@@ -735,16 +735,22 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override void DisposeVideoPlayer()
         {
-            if (_videoLoadedTimer != null)
-                _videoLoadedTimer.Stop();
+            try
+            {
+                if (_videoLoadedTimer != null)
+                    _videoLoadedTimer.Stop();
 
-            if (_videoEndTimer != null)
-                _videoEndTimer.Stop();
+                if (_videoEndTimer != null)
+                    _videoEndTimer.Stop();
 
-            if (_mouseTimer != null)
-                _mouseTimer.Stop();
+                if (_mouseTimer != null)
+                    _mouseTimer.Stop();
 
-            ThreadPool.QueueUserWorkItem(DisposeVLC, this);
+                ThreadPool.QueueUserWorkItem(DisposeVLC, this);
+            }
+            catch
+            { 
+            }
         }
 
         private void DisposeVLC(object player)
