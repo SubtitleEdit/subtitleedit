@@ -1936,7 +1936,7 @@ namespace Nikse.SubtitleEdit.Logic
                     label.ForeColor = Color.Orange;
             }
             label.Text = sb.ToString();
-        }        
+        }
 
         public static bool IsValidRegex(string testPattern)
         {

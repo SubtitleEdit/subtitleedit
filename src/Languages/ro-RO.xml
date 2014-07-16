@@ -15,7 +15,7 @@
     <SubtitleFiles>Fișiere subtitrare</SubtitleFiles>
     <AllFiles>Toate fișierele</AllFiles>
     <VideoFiles>Fișiere video</VideoFiles>
-	<AudioFiles>Fișiere audio</AudioFiles>
+    <AudioFiles>Fișiere audio</AudioFiles>
     <OpenSubtitle>Deschide subtitrare ...</OpenSubtitle>
     <OpenVideoFile>Deschide fișier video ...</OpenVideoFile>
     <OpenVideoFileTitle>Deschidere fișier video ...</OpenVideoFileTitle>
@@ -797,7 +797,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
       <SpellCheck>
         <Title>Verificare ortografică</Title>
         <SpellCheck>&amp;Verifică ortografia ...</SpellCheck>
-		<SpellCheckFromCurrentLine>Verifică ortografia din linia curentă ...</SpellCheckFromCurrentLine>
+        <SpellCheckFromCurrentLine>Verifică ortografia din linia curentă ...</SpellCheckFromCurrentLine>
         <FindDoubleWords>Găsește cuvinte dublate</FindDoubleWords>
         <FindDoubleLines>Găsește linii dublate</FindDoubleLines>
         <GetDictionaries>Ia dicționare ...</GetDictionaries>
@@ -878,7 +878,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
         <ColumnInsertTextFromSubtitle>Introduce text din subtitrare ...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Importă text și coboară celulele</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Lipește din clipboard ...</ColumnPasteFromClipboard>
-        <ColumnCopyOriginalTextToCurrent>Copiază text din original la cel curent</ColumnCopyOriginalTextToCurrent> 
+        <ColumnCopyOriginalTextToCurrent>Copiază text din original la cel curent</ColumnCopyOriginalTextToCurrent>
         <Split>Scindează</Split>
         <MergeSelectedLines>Îmbină linii selectate</MergeSelectedLines>
         <MergeSelectedLinesASDialogue>Îmbină linii selectate ca dialog</MergeSelectedLinesASDialogue>
@@ -1151,8 +1151,8 @@ care ar trebui să fie deja sincronizată cu fișierul video.
     <OcrReplacePairXNotAdded>Perechea listei de înlocuire OCR „{0} -&gt; {1}” NU s-a adăugat listei de înlocuire OCR</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} linii selectate</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Subtitrarea conține caractere muzicale unicode. Salvarea utilizând codificarea ANSI va duce la pierderea acestora. Continui salvarea?</UnicodeMusicSymbolsAnsiWarning>
-    <UnicodeCharactersAnsiWarning>Subtitrarea conține caractere unicode. Salvarea utilizând codificarea ANSI va duce la pierderea acestora. Continui salvarea?</UnicodeCharactersAnsiWarning>    
-	<NegativeTimeWarning>Subtitrarea conține coduri de timp negative. Continui salvarea?</NegativeTimeWarning>
+    <UnicodeCharactersAnsiWarning>Subtitrarea conține caractere unicode. Salvarea utilizând codificarea ANSI va duce la pierderea acestora. Continui salvarea?</UnicodeCharactersAnsiWarning>
+    <NegativeTimeWarning>Subtitrarea conține coduri de timp negative. Continui salvarea?</NegativeTimeWarning>
     <BeforeMergeShortLines>Înaintea îmbinării liniilor scurte</BeforeMergeShortLines>
     <BeforeSplitLongLines>Înaintea scindării liniilor lungi</BeforeSplitLongLines>
     <MergedShortLinesX>Numărul liniilor îmbinate: {0}</MergedShortLinesX>
@@ -1338,8 +1338,8 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <PluginXDownloaded>Plugin-ul {0} descărcat</PluginXDownloaded>
     <Download>&amp;Descărcare</Download>
     <Remove>&amp;Elimină</Remove>
-    <UpdateAllX>Actualizează tot ({0})</UpdateAllX>    
-	<UnableToDownloadPluginListX>Imposibilă descărcarea listei de plugin-uri: {0}</UnableToDownloadPluginListX>
+    <UpdateAllX>Actualizează tot ({0})</UpdateAllX>
+    <UnableToDownloadPluginListX>Imposibilă descărcarea listei de plugin-uri: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Este solicitată o versiune mai nouă a SE!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Actualizare disponibilă!]</UpdateAvailable>
     <UpdateAll>Actualizează tot</UpdateAll>
@@ -1892,8 +1892,8 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <OcrMethod>Metodă OCR</OcrMethod>
     <OcrViaModi>OCR prin Microsoft Office Document Imaging (MODI). Necesită MS Office</OcrViaModi>
     <OcrViaTesseract>OCR prin Tesseract</OcrViaTesseract>
-    <OcrViaNOCR>OCR prin nOCR</OcrViaNOCR>    
-	<Language>Limba</Language>
+    <OcrViaNOCR>OCR prin nOCR</OcrViaNOCR>
+    <Language>Limba</Language>
     <OcrViaImageCompare>OCR prin comparare imagine</OcrViaImageCompare>
     <ImageDatabase>Bază de date a imaginilor</ImageDatabase>
     <NoOfPixelsIsSpace>Nr. de pixeli este spațiu</NoOfPixelsIsSpace>
@@ -1973,8 +1973,8 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <ZoomOut>Transfocare de depărtare</ZoomOut>
     <AddParagraphHere>Adaugă text aici</AddParagraphHere>
     <AddParagraphHereAndPasteText>Adaugă text aici din clipboard</AddParagraphHereAndPasteText>
-    <FocusTextBox>Focalizează casetă text</FocusTextBox>    
-	<DeleteParagraph>Șterge text</DeleteParagraph>
+    <FocusTextBox>Focalizează casetă text</FocusTextBox>
+    <DeleteParagraph>Șterge text</DeleteParagraph>
     <Split>Scindează</Split>
     <SplitAtCursor>Scindează la cursor</SplitAtCursor>
     <MergeWithPrevious>Îmbină cu precedentul</MergeWithPrevious>

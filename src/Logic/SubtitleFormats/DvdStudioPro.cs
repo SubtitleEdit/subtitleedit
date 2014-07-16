@@ -176,6 +176,6 @@ $HorzAlign          =   Center
                 return false;
             }
         }
-       
+
     }
 }
