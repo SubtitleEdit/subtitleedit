@@ -749,7 +749,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 ThreadPool.QueueUserWorkItem(DisposeVLC, this);
             }
             catch
-            { 
+            {
             }
         }
 

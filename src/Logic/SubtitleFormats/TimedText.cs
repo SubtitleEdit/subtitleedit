@@ -283,7 +283,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             get
             {
-                return new List<string>() { ".tt" }; 
+                return new List<string>() { ".tt" };
             }
         }
 

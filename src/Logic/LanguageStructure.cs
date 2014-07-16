@@ -2130,7 +2130,7 @@
             public string OcrAutoCorrectionSpellchecking { get; set; }
             public string FixOcrErrors { get; set; }
             public string ImportTextWithMatchingTimeCodes { get; set; }
-            public string ImportNewTimeCodes { get; set; }            
+            public string ImportNewTimeCodes { get; set; }
             public string SaveSubtitleImageAs { get; set; }
             public string SaveAllSubtitleImagesAsBdnXml { get; set; }
             public string SaveAllSubtitleImagesWithHtml { get; set; }
