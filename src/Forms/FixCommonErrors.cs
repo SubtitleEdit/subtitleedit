@@ -1288,7 +1288,10 @@ namespace Nikse.SubtitleEdit.Forms
                             if (after.Length > 0 && after.ToLower() == before.ToLower())
                                 p.Text = p.Text.Remove(idx + 1, 1);
                             else if (before.Length > 0)
-                                p.Text = p.Text.Remove(idx + 1, 1);
+                                if (Language == "en" && (after.ToLower() == "and" || after.ToLower() == "or")) { }
+                                else if (Language == "nl" && (after.ToLower() == "en" || after.ToLower() == "of")) { }
+                                else
+                                    p.Text = p.Text.Remove(idx + 1, 1);
                         }
                         if (idx + 1 < p.Text.Length && idx != -1)
                             idx = p.Text.IndexOf("- ", idx + 1);
