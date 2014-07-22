@@ -138,6 +138,25 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             return true;
                         }
+
+                        if (fileName.ToLower().EndsWith(".stl") &&
+                            buffer.Length > 1283 &&
+                            buffer[1024] == 0 &&
+                            buffer[1025] == 1 &&
+                            buffer[1026] == 0 &&
+                            buffer[1027] == 0xff &&
+                            buffer[1152] == 0 &&
+                            buffer[1153] == 2 &&
+                            buffer[1154] == 0 &&
+                            buffer[1155] == 0xff &&
+                            buffer[1280] == 0 &&
+                            buffer[1281] == 3 &&
+                            buffer[1282] == 0 &&
+                            buffer[1283] == 0xff)
+                        {
+                            return true;
+                        }
+
                     }
                 }
                 catch
