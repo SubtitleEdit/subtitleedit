@@ -3400,26 +3400,44 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = _subtitle.Paragraphs[i];
 
-                if (p.Text.StartsWith(">> "))
+                if(p.Text != null && p.Text.Length > 2 && AllowFix(p, fixAction))
                 {
-                    if (AllowFix(p, fixAction))
+                    var text = Utilities.RemoveHtmlFontTag(p.Text);
+                    var index = -1;
+                    int count = 3;
+
+                    if (text.StartsWith(">> "))
                     {
                         string oldText = p.Text;
-                        p.Text = p.Text.Substring(3, p.Text.Length - 3);
-                        fixCount++;
-                        _totalFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        index = p.Text.IndexOf(">> ");
+                        if(index > -1)
+                        {
+                            text = p.Text;
+                            text = text.Remove(index, count);
+                            p.Text = text;
+                            //p.Text = p.Text.Substring(3, p.Text.Length - 3);
+                            fixCount++;
+                            _totalFixes++;
+                            AddFixToListView(p, fixAction, oldText, p.Text);
+                        }
                     }
-                }
-                if (p.Text.StartsWith(">>"))
-                {
-                    if (AllowFix(p, fixAction))
+                    count = 2;
+                    if (text.StartsWith(">>"))
                     {
                         string oldText = p.Text;
-                        p.Text = p.Text.Substring(2, p.Text.Length - 2);
-                        fixCount++;
-                        _totalFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        index = p.Text.IndexOf(">>");
+                        while (p.Text.Length > index + 1 && p.Text[index + 1] == '>')
+                            count++;
+
+                        if (index > -1)
+                        {
+                            text = p.Text;
+                            text = text.Remove(index, count);
+                            p.Text = text;
+                            fixCount++;
+                            _totalFixes++;
+                            AddFixToListView(p, fixAction, oldText, p.Text);
+                        }
                     }
                 }
             }
