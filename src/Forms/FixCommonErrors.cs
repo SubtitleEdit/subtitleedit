@@ -3400,26 +3400,96 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = _subtitle.Paragraphs[i];
 
-                if (p.Text.StartsWith(">> "))
+                if(p.Text != null && p.Text.Length > 2 && AllowFix(p, fixAction))
                 {
-                    if (AllowFix(p, fixAction))
+                    var text = Utilities.RemoveHtmlFontTag(p.Text);
+                    var index = -1;
+                    var count = 0;
+                    var @char = ">> ";
+                    if (text.StartsWith(@char))
                     {
                         string oldText = p.Text;
-                        p.Text = p.Text.Substring(3, p.Text.Length - 3);
-                        fixCount++;
-                        _totalFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        index = p.Text.IndexOf(@char);
+                        if(index > -1)
+                        {
+                            count = FixCommonErrorsHelper.CountWhiteSpacesAfterIndex(p.Text, index);
+                            p.Text = p.Text.Remove(index, count + @char.Length);
+                            fixCount++;
+                            _totalFixes++;
+                            AddFixToListView(p, fixAction, oldText, p.Text);
+                        }
                     }
-                }
-                if (p.Text.StartsWith(">>"))
-                {
-                    if (AllowFix(p, fixAction))
+                    @char = ">>";
+                    if (text.StartsWith(@char))
                     {
                         string oldText = p.Text;
-                        p.Text = p.Text.Substring(2, p.Text.Length - 2);
-                        fixCount++;
-                        _totalFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        index = p.Text.IndexOf(@char);
+                        count = 0;
+                        while (p.Text.Length > index + 1 && p.Text[index + 1] == @char[0])
+                            count++;
+
+                        if (index > -1)
+                        {
+                            count += FixCommonErrorsHelper.CountWhiteSpacesAfterIndex(p.Text, index);
+                            p.Text = p.Text.Remove(index, count + @char.Length);
+                            fixCount++;
+                            _totalFixes++;
+                            AddFixToListView(p, fixAction, oldText, p.Text);
+                        }
+                    }
+                    @char = "»";
+                    if (text.StartsWith(@char, StringComparison.Ordinal))
+                    {
+                        string oldText = p.Text;
+                        index = p.Text.IndexOf(@char, StringComparison.Ordinal);
+                        count = 0;
+                        while (p.Text.Length > index + 1 && p.Text[index + 1].ToString() == @char)
+                            count++;
+
+                        if (index > -1)
+                        {
+                            count += FixCommonErrorsHelper.CountWhiteSpacesAfterIndex(p.Text, index);
+                            p.Text = p.Text.Remove(index, count + @char.Length);
+                            fixCount++;
+                            _totalFixes++;
+                            AddFixToListView(p, fixAction, oldText, p.Text);
+                        }
+                    }
+                    @char = "❯";
+                    if (text.StartsWith(@char, StringComparison.Ordinal))
+                    {
+                        string oldText = p.Text;
+                        index = p.Text.IndexOf(@char, StringComparison.Ordinal);
+                        count = 0;
+                        while (p.Text.Length > index + 1 && p.Text[index + 1].ToString() == @char)
+                            count++;
+
+                        if (index > -1)
+                        {
+                            count += FixCommonErrorsHelper.CountWhiteSpacesAfterIndex(p.Text, index);
+                            p.Text = p.Text.Remove(index, count + @char.Length);
+                            fixCount++;
+                            _totalFixes++;
+                            AddFixToListView(p, fixAction, oldText, p.Text);
+                        }
+                    }
+                    @char = "›";
+                    if (text.StartsWith(@char, StringComparison.Ordinal))
+                    {
+                        string oldText = p.Text;
+                        index = p.Text.IndexOf(@char, StringComparison.Ordinal);
+                        count = 0;
+                        while (p.Text.Length > index + 1 && p.Text[index + 1].ToString() == @char)
+                            count++;
+
+                        if (index > -1)
+                        {
+                            count += FixCommonErrorsHelper.CountWhiteSpacesAfterIndex(p.Text, index);
+                            p.Text = p.Text.Remove(index, count + @char.Length);
+                            fixCount++;
+                            _totalFixes++;
+                            AddFixToListView(p, fixAction, oldText, p.Text);
+                        }
                     }
                 }
             }

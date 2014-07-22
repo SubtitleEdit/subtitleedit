@@ -88,5 +88,16 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             return text;
         }
 
+        public static int CountWhiteSpacesAfterIndex(string text, int index)
+        {
+            int count = 0;
+            if (text == null || text.Trim().Length == 0)
+                return count;
+            if (text.Length < index)
+                return count;
+            while (text.Length > index + 1 && text[index + 1] == ' ')
+                count++;
+            return count;
+        }
     }
 }
