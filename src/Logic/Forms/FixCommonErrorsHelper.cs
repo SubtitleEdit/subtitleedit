@@ -75,6 +75,15 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 while (text.Contains(": ."))
                     text = text.Replace(": .", ": ");
             }
+
+            // <i>- ... Foo</i>
+            tag = "<i>- ...";
+            if (text.StartsWith(tag))
+            {
+                text = text.Substring(tag.Length, text.Length - tag.Length);
+                text = text.TrimStart('.', ' ');
+                text = "<i>- " + text;
+            }
             text = text.Replace("  ", " ");
             return text;
         }

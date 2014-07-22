@@ -639,12 +639,6 @@ namespace Nikse.SubtitleEdit.Forms
             UpdatePreviousAndNextButtons();
         }
 
-        private void Compare_Shown(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(labelSubtitle2.Text))
-                ButtonOpenSubtitle2Click(null, null);
-        }
-
         private void Compare_Resize(object sender, EventArgs e)
         {
             subtitleListView1.Width = (Width / 2) - 20;
