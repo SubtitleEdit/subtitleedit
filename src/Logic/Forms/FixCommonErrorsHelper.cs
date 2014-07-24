@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 {
     public static class FixCommonErrorsHelper
     {
-
         public static string FixEllipsesStartHelper(string text)
         {
             if (text == null || text.Trim().Length < 4)
@@ -85,8 +84,21 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 text = "<i>- " + text;
             }
             text = text.Replace("  ", " ");
+
+            // WOMAN 2: <i>...24 hours a day at BabyC.</i>
+            var index = text.IndexOf(':');
+            if (index > 0 && text.Length > index + 1 && !char.IsDigit(text[index + 1]) && text.Contains(".."))
+            {
+                var post = text.Substring(0, index + 1);
+                if (post.Length < 2)
+                    return text;
+
+                text = text.Remove(0, index + 1);
+                text = text.Trim();
+                text = FixEllipsesStartHelper(text);
+                text = post + " " + text;
+            }
             return text;
         }
-
     }
 }
