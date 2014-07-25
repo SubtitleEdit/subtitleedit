@@ -37,6 +37,24 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void AutoBreakLineDialog1()
+        {
+            string s1 = "- Qu'est ce qui se passe ? - Je veux voir ce qu'ils veulent être.";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Assert.AreEqual("- Qu'est ce qui se passe ?" + Environment.NewLine + "- Je veux voir ce qu'ils veulent être.", s2);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void AutoBreakLineDialog2()
+        {
+            string s1 = "- Je veux voir ce qu'ils veulent être. - Qu'est ce qui se passe ?";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Assert.AreEqual("- Je veux voir ce qu'ils veulent être." + Environment.NewLine + "- Qu'est ce qui se passe ?", s2);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void FixInvalidItalicTags2()
         {
             string s1 = "Gledaj prema kameri i rici <i>zdravo!";
