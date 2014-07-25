@@ -744,6 +744,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string GeneralGoToPrevSubtitle { get; set; }
         public string GeneralGoToStartOfCurrentSubtitle { get; set; }
         public string GeneralGoToEndOfCurrentSubtitle { get; set; }
+        public string GeneralPlayFirstSelected { get; set; }
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
         public string MainFileOpenKeepVideo { get; set; }
@@ -843,7 +844,6 @@ namespace Nikse.SubtitleEdit.Logic
         public string WaveformZoomIn { get; set; }
         public string WaveformZoomOut { get; set; }
         public string WaveformPlaySelection { get; set; }
-        public string WaveformPlayFirstSelected { get; set; }
         public string WaveformSearchSilenceForward { get; set; }
         public string WaveformSearchSilenceBack { get; set; }
         public string WaveformAddTextHere { get; set; }
@@ -946,7 +946,7 @@ namespace Nikse.SubtitleEdit.Logic
             WaveformVerticalZoom = "Shift+Add";
             WaveformVerticalZoomOut = "Shift+Subtract";
             WaveformPlaySelection = string.Empty;
-            WaveformPlayFirstSelected = string.Empty;
+            GeneralPlayFirstSelected = string.Empty;
             WaveformSearchSilenceForward = string.Empty;
             WaveformSearchSilenceBack = string.Empty;
             WaveformAddTextHere = string.Empty;
@@ -2154,6 +2154,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("GeneralGoToStartOfCurrentSubtitle");
                 if (subNode != null)
                     settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralPlayFirstSelected");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralPlayFirstSelected = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainFileNew");
                 if (subNode != null)
                     settings.Shortcuts.MainFileNew = subNode.InnerText;
@@ -2451,9 +2454,6 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("WaveformPlaySelection");
                 if (subNode != null)
                     settings.Shortcuts.WaveformPlaySelection = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformPlayFirstSelected");
-                if (subNode != null)
-                    settings.Shortcuts.WaveformPlayFirstSelected = subNode.InnerText;
                 subNode = node.SelectSingleNode("WaveformSearchSilenceForward");
                 if (subNode != null)
                     settings.Shortcuts.WaveformSearchSilenceForward = subNode.InnerText;
@@ -2940,6 +2940,7 @@ namespace Nikse.SubtitleEdit.Logic
                     textWriter.WriteElementString("GeneralGoToPrevSubtitle", settings.Shortcuts.GeneralGoToPrevSubtitle);
                     textWriter.WriteElementString("GeneralGoToEndOfCurrentSubtitle", settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle);
                     textWriter.WriteElementString("GeneralGoToStartOfCurrentSubtitle", settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
+                    textWriter.WriteElementString("GeneralPlayFirstSelected", settings.Shortcuts.GeneralPlayFirstSelected);
                     textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
                     textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
                     textWriter.WriteElementString("MainFileOpenKeepVideo", settings.Shortcuts.MainFileOpenKeepVideo);
@@ -3039,7 +3040,6 @@ namespace Nikse.SubtitleEdit.Logic
                     textWriter.WriteElementString("WaveformZoomIn", settings.Shortcuts.WaveformZoomIn);
                     textWriter.WriteElementString("WaveformZoomOut", settings.Shortcuts.WaveformZoomOut);
                     textWriter.WriteElementString("WaveformPlaySelection", settings.Shortcuts.WaveformPlaySelection);
-                    textWriter.WriteElementString("WaveformPlayFirstSelected", settings.Shortcuts.WaveformPlayFirstSelected);
                     textWriter.WriteElementString("WaveformSearchSilenceForward", settings.Shortcuts.WaveformSearchSilenceForward);
                     textWriter.WriteElementString("WaveformSearchSilenceBack", settings.Shortcuts.WaveformSearchSilenceBack);
                     textWriter.WriteElementString("WaveformAddTextHere", settings.Shortcuts.WaveformAddTextHere);
