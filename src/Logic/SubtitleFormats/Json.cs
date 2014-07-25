@@ -120,7 +120,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out endSeconds) &&
                         text != null)
                     {
-
                         subtitle.Paragraphs.Add(new Paragraph(DecodeJsonText(text), startSeconds * 1000.0, endSeconds * 1000.0));
                     }
                     else
@@ -183,6 +182,82 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     return null;
                 return res.Substring(0, endIndex);
             }
+        }
+
+        public static List<string> ReadArray(string s, string tag)
+        {
+            var list = new List<string>();
+            
+            int startIndex = s.IndexOf("\"" + tag + "\"");
+            if (startIndex == -1)
+                startIndex = s.IndexOf("'" + tag + "'");
+            if (startIndex == -1)
+                return list;
+
+            startIndex += tag.Length + 4;
+
+            string res = s.Substring(startIndex);
+
+            int tagLevel = 1;
+            int nextTag = 0;
+            int oldStart = 0;
+            while (tagLevel >= 1 && nextTag >= 0 && nextTag+1 < res.Length)
+            {               
+                if (res.Substring(oldStart, 1) == "\"")
+                {
+                    nextTag = res.IndexOf('"', oldStart + 1);
+
+                    while (nextTag > 0 && nextTag + 1 < res.Length &&  res.Substring(nextTag - 1, 1) == "\\")
+                        nextTag = res.IndexOf('"', nextTag + 1);
+
+                    if (nextTag > 0)
+                    {
+                        string newValue = res.Substring(oldStart, nextTag - oldStart);
+                        list.Add(newValue.Remove(0, 1));
+                        oldStart = nextTag + 2;
+                    }
+                } 
+                else if (res.Substring(oldStart, 1) != "[" && res.Substring(oldStart, 1) != "]")
+                {
+                    nextTag = res.IndexOf(',', oldStart + 1);
+                    if (nextTag > 0)
+                    {
+                        string newValue = res.Substring(oldStart, nextTag - oldStart);
+                        if (newValue.EndsWith("]"))
+                        {
+                            newValue = newValue.TrimEnd(']');
+                            tagLevel = -10; // return
+                        }
+                        list.Add(newValue.Trim());
+                        oldStart = nextTag + 1;
+                    }
+                }
+                else
+                {
+                    int nextBegin = res.IndexOf("[", nextTag);
+                    int nextEnd = res.IndexOf("]", nextTag);
+                    if (nextBegin < nextEnd && nextBegin != -1)
+                    {
+                        nextTag = nextBegin + 1;
+                        tagLevel++;
+                    }
+                    else
+                    {
+                        nextTag = nextEnd + 1;
+                        tagLevel--;
+                        if (tagLevel == 1)
+                        {
+                            string newValue = res.Substring(oldStart, nextTag - oldStart);
+                            list.Add(newValue);
+                            if (res.Substring(nextTag, 1) == "]")
+                                tagLevel--;
+                            oldStart = nextTag + 1;
+                        }
+                    }
+                }
+                
+            }
+            return list;
         }
 
     }
