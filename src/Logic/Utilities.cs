@@ -651,9 +651,6 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 if (mid - j > 5 && s[mid - j - 1] == ' ' && "!?.".Contains(s[mid - j - 2].ToString()))
                                 {
-                                }
-                                else
-                                {
                                     splitPos = mid - j;
                                     break;
                                 }
