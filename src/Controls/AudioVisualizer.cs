@@ -104,7 +104,6 @@ namespace Nikse.SubtitleEdit.Controls
         public event EventHandler OnPause;
         public event EventHandler OnZoomedChanged;
         public event EventHandler InsertAtVideoPosition;
-        public event EventHandler PlayFirstSelectedSubtitle;
 
         double _wholeParagraphMinMilliseconds;
         double _wholeParagraphMaxMilliseconds = double.MaxValue;
