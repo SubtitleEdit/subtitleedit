@@ -231,6 +231,12 @@ namespace Nikse.SubtitleEdit.Controls
                 numericUpDown1.DownButton();
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyCode == Keys.Enter)
+            {
+                if (TimeCodeChanged != null)
+                    TimeCodeChanged.Invoke(this, e);
+                e.SuppressKeyPress = true;
+            }
         }
 
     }
