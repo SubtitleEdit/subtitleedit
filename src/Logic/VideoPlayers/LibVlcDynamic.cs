@@ -147,8 +147,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         libvlc_media_player_get_length _libvlc_media_player_get_length;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void libvlc_media_list_player_release(IntPtr mediaPlayer);
-        libvlc_media_list_player_release _libvlc_media_list_player_release;
+        private delegate void libvlc_media_player_release(IntPtr mediaPlayer);
+        libvlc_media_player_release _libvlc_media_player_release;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate float libvlc_media_player_get_rate(IntPtr mediaPlayer);
@@ -237,7 +237,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _libvlc_media_player_get_fps = (libvlc_media_player_get_fps)GetDllType(typeof(libvlc_media_player_get_fps), "libvlc_media_player_get_fps");
             _libvlc_media_player_get_state = (libvlc_media_player_get_state)GetDllType(typeof(libvlc_media_player_get_state), "libvlc_media_player_get_state");
             _libvlc_media_player_get_length = (libvlc_media_player_get_length)GetDllType(typeof(libvlc_media_player_get_length), "libvlc_media_player_get_length");
-            _libvlc_media_list_player_release = (libvlc_media_list_player_release)GetDllType(typeof(libvlc_media_list_player_release), "libvlc_media_list_player_release");
+            _libvlc_media_player_release = (libvlc_media_player_release)GetDllType(typeof(libvlc_media_player_release), "libvlc_media_player_release");
             _libvlc_media_player_get_rate = (libvlc_media_player_get_rate)GetDllType(typeof(libvlc_media_player_get_rate), "libvlc_media_player_get_rate");
             _libvlc_media_player_set_rate = (libvlc_media_player_set_rate)GetDllType(typeof(libvlc_media_player_set_rate), "libvlc_media_player_set_rate");
             _libvlc_media_player_next_frame = (libvlc_media_player_next_frame)GetDllType(typeof(libvlc_media_player_next_frame), "libvlc_media_player_next_frame");
@@ -267,7 +267,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                    _libvlc_media_player_get_fps != null &&
                    _libvlc_media_player_get_state != null &&
                    _libvlc_media_player_get_length != null &&
-                   _libvlc_media_list_player_release != null &&
+                   _libvlc_media_player_release != null &&
                    _libvlc_media_player_get_rate != null &&
                    _libvlc_media_player_set_rate != null;
         }
@@ -746,33 +746,55 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 if (_mouseTimer != null)
                     _mouseTimer.Stop();
 
-                ThreadPool.QueueUserWorkItem(DisposeVLC, this);
-            }
-            catch
-            {
-            }
-        }
-
-        private void DisposeVLC(object player)
-        {
-            try
-            {
-                if (_mediaPlayer != IntPtr.Zero)
+                //ThreadPool.QueueUserWorkItem(DisposeVLC, this);
+                lock (this)
                 {
-                    _libvlc_media_player_stop(_mediaPlayer);
-                    _libvlc_media_list_player_release(_mediaPlayer);
+                    if (_mediaPlayer != IntPtr.Zero)
+                    {
+                        _libvlc_media_player_stop(_mediaPlayer);
+                        //_libvlc_media_player_release(_mediaPlayer); // CRASHES in visual sync / point sync!
+                        _mediaPlayer = IntPtr.Zero;
+                        //_libvlc_media_list_player_release(_mediaPlayer);
+                    }
+
+                    if (_libvlc_release != null && _libVlc != IntPtr.Zero)
+                    {
+                        _libvlc_release(_libVlc);
+                        _libVlc = IntPtr.Zero;
+                    }
+
+                    //if (_libVlcDLL != IntPtr.Zero)
+                    //{
+                    //    FreeLibrary(_libVlcDLL);  // CRASHES in visual sync / point sync!
+                    //    _libVlcDLL = IntPtr.Zero;
+                    //}
                 }
-
-                if (_libvlc_release != null && _libVlc != IntPtr.Zero)
-                    _libvlc_release(_libVlc);
-
-                if (_libVlcDLL != IntPtr.Zero)
-                    FreeLibrary(_libVlcDLL);
             }
             catch
             {
             }
         }
+
+        //private void DisposeVLC(object player)
+        //{
+        //    try
+        //    {
+        //        if (_mediaPlayer != IntPtr.Zero)
+        //        {
+        //            _libvlc_media_player_stop(_mediaPlayer);
+        //           // _libvlc_media_list_player_release(_mediaPlayer);
+        //        }
+
+        //        if (_libvlc_release != null && _libVlc != IntPtr.Zero)
+        //            _libvlc_release(_libVlc);
+
+        //        if (_libVlcDLL != IntPtr.Zero)
+        //            FreeLibrary(_libVlcDLL);
+        //    }
+        //    catch
+        //    {
+        //    }
+        //}
 
         public override event EventHandler OnVideoLoaded;
 
