@@ -467,7 +467,6 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.OnTimeChangedAndOffsetRest += AudioWaveForm_OnTimeChangedAndOffsetRest;
                 audioVisualizer.OnZoomedChanged += AudioWaveForm_OnZoomedChanged;
                 audioVisualizer.InsertAtVideoPosition += audioVisualizer_InsertAtVideoPosition;
-                audioVisualizer.PlayFirstSelectedSubtitle += audioVisualizer_PlayFirstSelectedSubtitle;
                 audioVisualizer.DrawGridLines = Configuration.Settings.VideoControls.WaveFormDrawGrid;
                 audioVisualizer.GridColor = Configuration.Settings.VideoControls.WaveFormGridColor;
                 audioVisualizer.SelectedColor = Configuration.Settings.VideoControls.WaveFormSelectedColor;
@@ -498,12 +497,6 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
             }
-        }
-
-        void audioVisualizer_PlayFirstSelectedSubtitle(object sender, EventArgs e)
-        {
-            PlayCurrent();
-            audioVisualizer.Focus();
         }
 
         void audioVisualizer_InsertAtVideoPosition(object sender, EventArgs e)
