@@ -71,10 +71,10 @@ namespace Nikse.SubtitleEdit.Forms
         private string _exportType = "BDNXML";
         private string _fileName;
         private VobSubOcr _vobSubOcr;
+        System.Windows.Forms.Timer previewTimer = new System.Windows.Forms.Timer();
 
         private const string BoxMultiLine = "BoxMultiLine";
         private const string BoxSingleLine = "BoxSingleLine";
-
 
         public ExportPngXml()
         {
@@ -82,6 +82,14 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxImageFormat.SelectedIndex = 4;
             _subtitleColor = Configuration.Settings.Tools.ExportFontColor;
             _borderColor = Configuration.Settings.Tools.ExportBorderColor;
+            previewTimer.Tick += previewTimer_Tick;
+            previewTimer.Interval = 100;
+        }
+
+        void previewTimer_Tick(object sender, EventArgs e)
+        {
+            previewTimer.Stop();
+            GeneratePreview();
         }
 
         private double FrameRate
@@ -2700,6 +2708,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void subtitleListView1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            previewTimer.Stop();
+            previewTimer.Start();
+        }
+
+        private void GeneratePreview()
+        {
             SetupImageParameters();
             if (subtitleListView1.SelectedItems.Count > 0)
             {
@@ -3164,6 +3178,37 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 ListViewToggleTag("i");
                 subtitleListView1_SelectedIndexChanged(null, null);
             }
+            else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control) //SelectAll
+            {
+                subtitleListView1.BeginUpdate();
+                foreach (ListViewItem item in subtitleListView1.Items)
+                    item.Selected = true;
+                subtitleListView1.EndUpdate();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control) //SelectFirstSelectedItemOnly
+            {
+                if (subtitleListView1.SelectedItems.Count > 0)
+                {
+                    bool skipFirst = true;
+                    foreach (ListViewItem item in subtitleListView1.SelectedItems)
+                    {
+                        if (skipFirst)
+                            skipFirst = false;
+                        else
+                            item.Selected = false;
+                    }
+                    e.SuppressKeyPress = true;
+                }
+            }
+            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
+            {
+                subtitleListView1.BeginUpdate();
+                foreach (ListViewItem item in subtitleListView1.Items)
+                    item.Selected = !item.Selected;
+                subtitleListView1.EndUpdate();
+                e.SuppressKeyPress = true;
+            }          
         }
 
     }
