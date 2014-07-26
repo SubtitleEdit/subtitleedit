@@ -13914,10 +13914,10 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = ShowSubtitle();
 
                 double pos = mediaPlayer.CurrentPosition * 1000.0;
-                if (timeUpDownVideoPosition.TimeCode.TotalMilliseconds != pos)
+                if (!timeUpDownVideoPosition.MaskedTextBox.Focused && timeUpDownVideoPosition.TimeCode.TotalMilliseconds != pos)
                     timeUpDownVideoPosition.TimeCode = new TimeCode(pos);
 
-                if (timeUpDownVideoPositionAdjust.TimeCode.TotalMilliseconds != pos)
+                if (!timeUpDownVideoPositionAdjust.MaskedTextBox.Focused && timeUpDownVideoPositionAdjust.TimeCode.TotalMilliseconds != pos)
                     timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(pos);
 
                 mediaPlayer.RefreshProgressBar();
@@ -19546,5 +19546,6 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.LastCheckForUpdates = DateTime.Now;
         }
 
+        
     }
 }
