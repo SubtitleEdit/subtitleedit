@@ -398,6 +398,7 @@
             this.Controls.Add(this.groupBoxScript);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
+            this.MaximizeBox = false;
             this.Name = "SubStationAlphaProperties";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
