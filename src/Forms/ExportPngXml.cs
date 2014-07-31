@@ -1695,6 +1695,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             else
             {
                 Color oldBackgroundColor = parameter.BackgroundColor;
+                string oldText = parameter.P.Text;
                 if (parameter.P.Text.Contains(BoxMultiLine) || parameter.P.Text.Contains(BoxSingleLine))
                 {
                     parameter.P.Text = parameter.P.Text.Replace("<" + BoxMultiLine + ">", string.Empty).Replace("</" + BoxMultiLine + ">", string.Empty);
@@ -1702,6 +1703,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     parameter.BackgroundColor = parameter.BorderColor;
                 }
                 var bmp = GenerateImageFromTextWithStyleInner(parameter);
+                parameter.P.Text = oldText;
                 parameter.BackgroundColor = oldBackgroundColor;
                 return bmp;
             }
