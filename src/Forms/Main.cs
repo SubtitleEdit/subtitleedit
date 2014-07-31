@@ -5253,75 +5253,81 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TranslateViaGoogle(bool onlySelectedLines, bool useGoogle)
         {
-            if (IsSubtitleLoaded)
+            if (!IsSubtitleLoaded)
             {
-                ReloadFromSourceView();
-                var googleTranslate = new GoogleTranslate();
-                _formPositionsAndSizes.SetPositionAndSize(googleTranslate);
-                SaveSubtitleListviewIndexes();
-                string title = _language.GoogleTranslate;
-                if (!useGoogle)
-                    title = _language.MicrosoftTranslate;
-                if (onlySelectedLines)
-                {
-                    var selectedLines = new Subtitle { WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers };
-                    foreach (int index in SubtitleListview1.SelectedIndices)
-                        selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
-                    title += " - " + _language.SelectedLines;
-                    googleTranslate.Initialize(selectedLines, title, useGoogle, GetCurrentEncoding());
-                }
-                else
-                {
-                    googleTranslate.Initialize(_subtitle, title, useGoogle, GetCurrentEncoding());
-                }
-                if (googleTranslate.ShowDialog(this) == DialogResult.OK)
-                {
-                    _subtitleListViewIndex = -1;
+                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-                    MakeHistoryForUndo(_language.BeforeGoogleTranslation);
-                    if (onlySelectedLines)
-                    { // we only update selected lines
-                        int i = 0;
-                        foreach (int index in SubtitleListview1.SelectedIndices)
-                        {
-                            _subtitle.Paragraphs[index] = googleTranslate.TranslatedSubtitle.Paragraphs[i];
-                            i++;
-                        }
-                        ShowStatus(_language.SelectedLinesTranslated);
-                    }
-                    else
-                    {
-                        _subtitleAlternate = new Subtitle(_subtitle);
-                        _subtitleAlternateFileName = _fileName;
-                        _fileName = null;
-                        _subtitle.Paragraphs.Clear();
-                        foreach (Paragraph p in googleTranslate.TranslatedSubtitle.Paragraphs)
-                            _subtitle.Paragraphs.Add(new Paragraph(p));
-                        ShowStatus(_language.SubtitleTranslated);
-                    }
-                    ShowSource();
-
-                    if (!onlySelectedLines)
-                    {
-                        SubtitleListview1.ShowAlternateTextColumn(Configuration.Settings.Language.General.OriginalText);
-                        SubtitleListview1.AutoSizeAllColumns(this);
-                        SetupAlternateEdit();
-                    }
-                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    ResetHistory();
-                    RestoreSubtitleListviewIndexes();
-                    _converted = true;
-                    SetTitle();
-                    //if (googleTranslate.ScreenScrapingEncoding != null)
-                    //    SetEncoding(googleTranslate.ScreenScrapingEncoding);
-                    SetEncoding(Encoding.UTF8);
-                }
-                _formPositionsAndSizes.SavePositionAndSize(googleTranslate);
+            bool isAlternateVisible = SubtitleListview1.IsAlternateTextColumnVisible;
+            ReloadFromSourceView();
+            var googleTranslate = new GoogleTranslate();
+            _formPositionsAndSizes.SetPositionAndSize(googleTranslate);
+            SaveSubtitleListviewIndexes();
+            string title = _language.GoogleTranslate;
+            if (!useGoogle)
+                title = _language.MicrosoftTranslate;
+            if (onlySelectedLines)
+            {
+                var selectedLines = new Subtitle { WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers };
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                    selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
+                title += " - " + _language.SelectedLines;
+                googleTranslate.Initialize(selectedLines, title, useGoogle, GetCurrentEncoding());
             }
             else
             {
-                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                googleTranslate.Initialize(_subtitle, title, useGoogle, GetCurrentEncoding());
             }
+            if (googleTranslate.ShowDialog(this) == DialogResult.OK)
+            {
+                _subtitleListViewIndex = -1;
+
+                MakeHistoryForUndo(_language.BeforeGoogleTranslation);
+                if (onlySelectedLines)
+                { // we only update selected lines
+                    int i = 0;
+                    foreach (int index in SubtitleListview1.SelectedIndices)
+                    {
+                        _subtitle.Paragraphs[index] = googleTranslate.TranslatedSubtitle.Paragraphs[i];
+                        i++;
+                    }
+                    ShowStatus(_language.SelectedLinesTranslated);
+                }
+                else
+                {
+                    _subtitleAlternate = new Subtitle(_subtitle);
+                    _subtitleAlternateFileName = _fileName;
+                    _fileName = null;
+                    _subtitle.Paragraphs.Clear();
+                    foreach (Paragraph p in googleTranslate.TranslatedSubtitle.Paragraphs)
+                        _subtitle.Paragraphs.Add(new Paragraph(p));
+                    ShowStatus(_language.SubtitleTranslated);
+                }
+                ShowSource();
+
+                if (!onlySelectedLines)
+                {
+                    SubtitleListview1.ShowAlternateTextColumn(Configuration.Settings.Language.General.OriginalText);
+                    SubtitleListview1.AutoSizeAllColumns(this);
+                    SetupAlternateEdit();
+                }
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                ResetHistory();
+                RestoreSubtitleListviewIndexes();
+                _converted = true;
+                SetTitle();
+                //if (googleTranslate.ScreenScrapingEncoding != null)
+                //    SetEncoding(googleTranslate.ScreenScrapingEncoding);
+                SetEncoding(Encoding.UTF8);
+                if (!isAlternateVisible)
+                {
+                    toolStripMenuItemShowOriginalInPreview.Checked = false;
+                    Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable = false;
+                    audioVisualizer.Invalidate();
+                }
+            }
+            _formPositionsAndSizes.SavePositionAndSize(googleTranslate);
         }
 
         private static string GetTranslateStringFromNikseDk(string input)
@@ -5350,74 +5356,73 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TranslateFromSwedishToDanishToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (IsSubtitleLoaded)
-            {
-                bool isSwedish = Utilities.AutoDetectGoogleLanguage(_subtitle) == "sv";
-                string promptText = _language.TranslateSwedishToDanish;
-                if (!isSwedish)
-                    promptText = _language.TranslateSwedishToDanishWarning;
-
-                if (MessageBox.Show(promptText, Title, MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    try
-                    {
-                        _subtitleAlternate = new Subtitle(_subtitle);
-                        _subtitleAlternateFileName = null;
-                        int firstSelectedIndex = 0;
-                        if (SubtitleListview1.SelectedItems.Count > 0)
-                            firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
-                        _subtitleListViewIndex = -1;
-
-                        Cursor.Current = Cursors.WaitCursor;
-                        ShowStatus(_language.TranslatingViaNikseDkMt);
-                        var sb = new StringBuilder();
-                        var output = new StringBuilder();
-                        foreach (Paragraph p in _subtitle.Paragraphs)
-                        {
-                            string s = p.Text;
-                            s = s.Replace(Environment.NewLine, "<br/>");
-                            s = "<p>" + s + "</p>";
-                            sb.Append(s);
-
-                            if (sb.Length > 9000)
-                            {
-                                output.Append(GetTranslateStringFromNikseDk(sb.ToString()));
-                                sb = new StringBuilder();
-                            }
-                        }
-                        if (sb.Length > 0)
-                            output.Append(GetTranslateStringFromNikseDk(sb.ToString()));
-
-                        MakeHistoryForUndo(_language.BeforeSwedishToDanishTranslation);
-                        string result = output.ToString();
-                        if (result.Length > 0)
-                        {
-                            int index = 0;
-                            foreach (string s in result.Split(new string[] { "<p>", "</p>" }, StringSplitOptions.RemoveEmptyEntries))
-                            {
-                                if (index < _subtitle.Paragraphs.Count)
-                                    _subtitle.Paragraphs[index].Text = s;
-                                index++;
-                            }
-                            ShowSource();
-                            SubtitleListview1.ShowAlternateTextColumn(Configuration.Settings.Language.General.OriginalText);
-                            SubtitleListview1.AutoSizeAllColumns(this);
-                            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                            ShowStatus(_language.TranslationFromSwedishToDanishComplete);
-                            SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
-                            _converted = true;
-                        }
-                    }
-                    catch
-                    {
-                        ShowStatus(_language.TranslationFromSwedishToDanishFailed);
-                    }
-                    Cursor.Current = Cursors.Default;
-                }
-            }
-            else
+            if (!IsSubtitleLoaded)
             {
                 MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            bool isSwedish = Utilities.AutoDetectGoogleLanguage(_subtitle) == "sv";
+            string promptText = _language.TranslateSwedishToDanish;
+            if (!isSwedish)
+                promptText = _language.TranslateSwedishToDanishWarning;
+
+            if (MessageBox.Show(promptText, Title, MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                try
+                {
+                    _subtitleAlternate = new Subtitle(_subtitle);
+                    _subtitleAlternateFileName = null;
+                    int firstSelectedIndex = 0;
+                    if (SubtitleListview1.SelectedItems.Count > 0)
+                        firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                    _subtitleListViewIndex = -1;
+
+                    Cursor.Current = Cursors.WaitCursor;
+                    ShowStatus(_language.TranslatingViaNikseDkMt);
+                    var sb = new StringBuilder();
+                    var output = new StringBuilder();
+                    foreach (Paragraph p in _subtitle.Paragraphs)
+                    {
+                        string s = p.Text;
+                        s = s.Replace(Environment.NewLine, "<br/>");
+                        s = "<p>" + s + "</p>";
+                        sb.Append(s);
+
+                        if (sb.Length > 9000)
+                        {
+                            output.Append(GetTranslateStringFromNikseDk(sb.ToString()));
+                            sb = new StringBuilder();
+                        }
+                    }
+                    if (sb.Length > 0)
+                        output.Append(GetTranslateStringFromNikseDk(sb.ToString()));
+
+                    MakeHistoryForUndo(_language.BeforeSwedishToDanishTranslation);
+                    string result = output.ToString();
+                    if (result.Length > 0)
+                    {
+                        int index = 0;
+                        foreach (string s in result.Split(new string[] { "<p>", "</p>" }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            if (index < _subtitle.Paragraphs.Count)
+                                _subtitle.Paragraphs[index].Text = s;
+                            index++;
+                        }
+                        ShowSource();
+                        SubtitleListview1.ShowAlternateTextColumn(Configuration.Settings.Language.General.OriginalText);
+                        SubtitleListview1.AutoSizeAllColumns(this);
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        ShowStatus(_language.TranslationFromSwedishToDanishComplete);
+                        SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
+                        _converted = true;
+                    }
+                }
+                catch
+                {
+                    ShowStatus(_language.TranslationFromSwedishToDanishFailed);
+                }
+                Cursor.Current = Cursors.Default;
             }
         }
 
@@ -17393,6 +17398,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (ContinueNewOrExit())
             {
+                bool isAlternateVisible = SubtitleListview1.IsAlternateTextColumnVisible;
                 _subtitleAlternate = new Subtitle(_subtitle);
                 _subtitleAlternateFileName = null;
                 int oldIndex = FirstSelectedIndex;
@@ -17420,7 +17426,13 @@ namespace Nikse.SubtitleEdit.Forms
                 SetupAlternateEdit();
                 ResetHistory();
 
-                if (toolStripMenuItemShowOriginalInPreview.Checked)
+                if (!isAlternateVisible)
+                {
+                    toolStripMenuItemShowOriginalInPreview.Checked = false;
+                    Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable = false;
+                    audioVisualizer.Invalidate();
+                }
+                else if (toolStripMenuItemShowOriginalInPreview.Checked)
                 {
                     toolStripMenuItemShowOriginalInPreview.Checked = false;
                     Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable = false;
