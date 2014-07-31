@@ -818,6 +818,13 @@ namespace Nikse.SubtitleEdit.Logic
             if(s.Contains("< "))
                 s = FixInvalidItalicTags(s);
 
+            s = RemoveSingleLetterHtmlTags(s);
+            s = RemoveParagraphTag(s);
+            return RemoveHtmlFontTag(s);
+        }
+
+        private static string RemoveSingleLetterHtmlTags(string s)
+        {
             s = s.Replace("<i>", string.Empty);
             s = s.Replace("<і>", string.Empty);  // different unicode chars
             s = s.Replace("</i>", string.Empty);
@@ -832,8 +839,7 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace("</B>", string.Empty);
             s = s.Replace("<U>", string.Empty);
             s = s.Replace("</U>", string.Empty);
-            s = RemoveParagraphTag(s);
-            return RemoveHtmlFontTag(s);
+            return s;
         }
 
         public static string RemoveHtmlTags(string s, bool alsoSsaTags)
@@ -2490,6 +2496,8 @@ namespace Nikse.SubtitleEdit.Logic
             text = text.Replace("< /i>", endTag);
             text = text.Replace("< /i >", endTag);
             text = text.Replace("</i >", endTag);
+            text = text.Replace("</ i >", endTag);
+            text = text.Replace("< / i>", endTag);
             text = text.Replace("< /I>", endTag);
             text = text.Replace("</ I>", endTag);
             text = text.Replace("< /I>", endTag);
@@ -2590,7 +2598,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (italicBeginTagCount == 0 && italicEndTagCount == 1)
                 {
-                    string cleanText = RemoveHtmlTags(text);
+                    string cleanText = RemoveSingleLetterHtmlTags(text);
                     bool isFixed= false;
 
                     // Foo.</i>
