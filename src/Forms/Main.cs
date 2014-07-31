@@ -7418,23 +7418,35 @@ namespace Nikse.SubtitleEdit.Forms
                         a = a + "</i>";
                         b = "<i>" + b;
                     }
-                    if (oldText.TrimStart().StartsWith("<b>") && oldText.TrimEnd().EndsWith("</b>") &&
+                    else if (oldText.TrimStart().StartsWith("<b>") && oldText.TrimEnd().EndsWith("</b>") &&
                         Utilities.CountTagInText(oldText, "<b>") == 1 && Utilities.CountTagInText(oldText, "</b>") == 1)
                     {
                         a = a + "</b>";
                         b = "<b>" + b;
                     }
-                    if (a.StartsWith("-") && (a.EndsWith(".") || a.EndsWith("!") || a.EndsWith("?")) &&
+                    else if (a.StartsWith("-") && (a.EndsWith(".") || a.EndsWith("!") || a.EndsWith("?")) &&
                         b.StartsWith("-") && (b.EndsWith(".") || b.EndsWith("!") || b.EndsWith("?")))
                     {
                         a = a.TrimStart('-').TrimStart();
                         b = b.TrimStart('-').TrimStart();
                     }
-                    if (a.StartsWith("<i>-") && (a.EndsWith(".</i>") || a.EndsWith("!</i>") || a.EndsWith("?</i>")) &&
+                    else if (a.StartsWith("<i>-") && (a.EndsWith(".</i>") || a.EndsWith("!</i>") || a.EndsWith("?</i>")) &&
                         b.StartsWith("<i>-") && (b.EndsWith(".</i>") || b.EndsWith("!</i>") || b.EndsWith("?</i>")))
                     {
-                        a = a.Remove(3,1).Replace("  ", " ");
+                        a = a.Remove(3, 1).Replace("  ", " ");
                         b = b.Remove(3, 1).Replace("  ", " ");
+                    }
+                    else if (a.StartsWith("-") && (a.EndsWith(".") || a.EndsWith("!") || a.EndsWith("?")) &&
+                        b.StartsWith("<i>-") && (b.EndsWith(".</i>") || b.EndsWith("!</i>") || b.EndsWith("?</i>")))
+                    {
+                        a = a.TrimStart('-').TrimStart();
+                        b = b.Remove(3, 1).Replace("  ", " ").Trim();
+                    }
+                    else if (a.StartsWith("<i>-") && (a.EndsWith(".</i>") || a.EndsWith("!</i>") || a.EndsWith("?</i>")) &&
+                        b.StartsWith("-") && (b.EndsWith(".") || b.EndsWith("!") || b.EndsWith("?")))
+                    {
+                        a = a.Remove(3, 1).Replace("  ", " ").Trim();
+                        b = b.TrimStart('-').TrimStart();
                     }
 
                     currentParagraph.Text = Utilities.AutoBreakLine(a, language);
