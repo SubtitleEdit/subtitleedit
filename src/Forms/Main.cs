@@ -7408,7 +7408,7 @@ namespace Nikse.SubtitleEdit.Forms
                 currentParagraph.Text = currentParagraph.Text.Replace("< i>", "<i>");
                 string oldText = currentParagraph.Text;
                 string[] lines = currentParagraph.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (textIndex != null && textIndex.Value > 2 && textIndex.Value < oldText.Length -2)
+                if (textIndex != null && textIndex.Value > 2 && textIndex.Value < oldText.Length - 2)
                 {
                     string a = oldText.Substring(0, textIndex.Value).Trim();
                     string b = oldText.Substring(textIndex.Value).Trim();
@@ -7482,6 +7482,12 @@ namespace Nikse.SubtitleEdit.Forms
                             currentParagraph.Text = currentParagraph.Text.Remove(3, 1);
                             newParagraph.Text = newParagraph.Text.Remove(3, 1);
                         }
+                        else if (lines[0].StartsWith("-") && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")) &&
+                                                                      lines[1].StartsWith("<i>-") && (lines[1].EndsWith(".</i>") || lines[1].EndsWith("!</i>") || lines[1].EndsWith("?</i>")))
+                        {
+                            currentParagraph.Text = lines[0].TrimStart('-').TrimStart();
+                            newParagraph.Text = lines[1].Remove(3, 1).Replace("  ", " ").Trim();
+                        }
                     }
                     else if (lines.Length == 2 && (lines[0].EndsWith(".</i>") || lines[0].EndsWith("!</i>") || lines[0].EndsWith("?</i>")))
                     {
@@ -7498,6 +7504,19 @@ namespace Nikse.SubtitleEdit.Forms
                             if (newParagraph.Text[3] == ' ')
                                 newParagraph.Text = newParagraph.Text.Remove(3, 1);
                         }
+                        else if (lines[0].StartsWith("-") && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")) &&
+                                                lines[1].StartsWith("<i>-") && (lines[1].EndsWith(".</i>") || lines[1].EndsWith("!</i>") || lines[1].EndsWith("?</i>")))
+                        {
+                            currentParagraph.Text = lines[0].TrimStart('-').TrimStart();
+                            newParagraph.Text = lines[1].Remove(3, 1).Replace("  ", " ").Trim();
+                        }
+                        else if (lines[0].StartsWith("<i>-") && (lines[0].EndsWith(".</i>") || lines[0].EndsWith("!</i>") || lines[0].EndsWith("?</i>")) &&
+                            lines[1].StartsWith("-") && (lines[1].EndsWith(".") || lines[1].EndsWith("!") || lines[1].EndsWith("?")))
+                        {
+                            currentParagraph.Text = lines[0].Remove(3, 1).Replace("  ", " ").Trim();
+                            newParagraph.Text = lines[1].TrimStart('-').TrimStart();
+                        }
+
                     }
                     else
                     {
@@ -7587,7 +7606,7 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
                 if (Configuration.Settings.General.MininumMillisecondsBetweenLines > 0)
                 {
-                    Paragraph next = _subtitle.GetParagraphOrDefault(firstSelectedIndex+1);
+                    Paragraph next = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
                     if (next == null || next.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines + Configuration.Settings.General.MininumMillisecondsBetweenLines)
                     {
                         newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MininumMillisecondsBetweenLines;
@@ -7759,7 +7778,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _networkSession.TimerStop();
                     SetDurationInSeconds(currentParagraph.Duration.TotalSeconds);
                     _networkSession.UpdateLine(_subtitle.GetIndex(currentParagraph), currentParagraph);
-                    NetworkGetSendUpdates(new List<int>(), firstSelectedIndex+1, newParagraph);
+                    NetworkGetSendUpdates(new List<int>(), firstSelectedIndex + 1, newParagraph);
                 }
                 else
                 {
