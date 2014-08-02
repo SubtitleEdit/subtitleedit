@@ -1823,6 +1823,11 @@
             public string UseDoNotBreakAfterList { get; set; }
         }
 
+        public class SetVideoOffset
+        {
+            public string Title { get; set; }
+        }
+
         public class ShowEarlierLater
         {
             public string Title { get; set; }

@@ -6767,30 +6767,56 @@ namespace Nikse.SubtitleEdit.Forms
                 Replace(Convert.ToChar(0x202E).ToString(), string.Empty).
                 Replace(Convert.ToChar(0x202B).ToString(), string.Empty);
 
-            if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
+            int numberOfLines = 1 + (text.Trim().Length - text.Trim().Replace(Environment.NewLine, string.Empty).Length) / Environment.NewLine.Length;
+            int maxLines = int.MaxValue;
+            if (Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines)
+                maxLines = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
+            if (numberOfLines <= maxLines)
             {
-                lineTotal.ForeColor = Color.Black;
-                if (!textBoxHasFocus)
-                    lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
-            }
-            else if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 2.1)
-            {
-                lineTotal.ForeColor = Color.Orange;
-                if (!textBoxHasFocus)
-                    lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
-            }
-            else
-            {
-                lineTotal.ForeColor = Color.Red;
-                if (!textBoxHasFocus)
-                    lineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, s.Length);
-                if (buttonUnBreak.Visible)
+                if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * numberOfLines)
                 {
+                    lineTotal.ForeColor = Color.Black;
                     if (!textBoxHasFocus)
                         lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
-                    buttonSplitLine.Visible = true;
+                }
+                else
+                {
+                    lineTotal.ForeColor = Color.Red;
+                    if (!textBoxHasFocus)
+                        lineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, s.Length);
+                    if (buttonUnBreak.Visible)
+                    {
+                        if (!textBoxHasFocus)
+                            lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+                        buttonSplitLine.Visible = true;
+                    }
                 }
             }
+
+            //if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
+            //{
+            //    lineTotal.ForeColor = Color.Black;
+            //    if (!textBoxHasFocus)
+            //        lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+            //}
+            //else if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 2.1)
+            //{
+            //    lineTotal.ForeColor = Color.Orange;
+            //    if (!textBoxHasFocus)
+            //        lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+            //}
+            //else
+            //{
+            //    lineTotal.ForeColor = Color.Red;
+            //    if (!textBoxHasFocus)
+            //        lineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, s.Length);
+            //    if (buttonUnBreak.Visible)
+            //    {
+            //        if (!textBoxHasFocus)
+            //            lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+            //        buttonSplitLine.Visible = true;
+            //    }
+            //}
             UpdateListViewTextCharactersPerSeconds(charactersPerSecond, paragraph);
             charactersPerSecond.Left = textBox.Left + (textBox.Width - labelCharactersPerSecond.Width);
             lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
@@ -16806,6 +16832,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             closeVideoToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName);
+            setVideoOffsetToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName) && Configuration.Settings.General.ShowBetaStuff;
+
             toolStripMenuItemSetAudioTrack.Visible = false;
             if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is Logic.VideoPlayers.LibVlc11xDynamic)
             {
@@ -19586,6 +19614,25 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.LastCheckForUpdates = DateTime.Now;
         }
 
+        private void setVideoOffsetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_videoFileName) && mediaPlayer.VideoPlayer != null)
+                mediaPlayer.Pause();
+
+            var form = new SetVideoOffset();
+            form.VideoOffset = new TimeCode(10, 0, 0, 0);
+            if (mediaPlayer.Offset > 0.001)
+                form.VideoOffset = TimeCode.FromSeconds(mediaPlayer.Offset);
+            _formPositionsAndSizes.SetPositionAndSize(form);
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                mediaPlayer.Offset = form.VideoOffset.TotalSeconds;
+                if (audioVisualizer != null && audioVisualizer.WavePeaks != null && audioVisualizer.WavePeaks.AllSamples.Count > 0)
+                    audioVisualizer.Offset = form.VideoOffset.TotalSeconds;
+
+            }
+            _formPositionsAndSizes.SavePositionAndSize(form);
+        }
 
     }
 }

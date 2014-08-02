@@ -241,7 +241,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (videoPlayerContainer.VideoPlayer != null)
             {
-                double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * 1000.0) + 5;
+                double positionInMilliseconds = (videoPlayerContainer.CurrentPosition * 1000.0) + 5;
                 for (int i=0; i<paragraphs.Count; i++)
                 {
                     var p = paragraphs[i];

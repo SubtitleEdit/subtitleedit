@@ -537,6 +537,12 @@
     <Compile Include="Forms\Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SetVideoOffset.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SetVideoOffset.Designer.cs">
+      <DependentUpon>SetVideoOffset.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ShowEarlierLater.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1413,6 +1419,9 @@
     <EmbeddedResource Include="Forms\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SetVideoOffset.resx">
+      <DependentUpon>SetVideoOffset.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ShowHistory.resx">
       <DependentUpon>ShowHistory.cs</DependentUpon>
