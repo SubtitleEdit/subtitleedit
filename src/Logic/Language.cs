@@ -210,8 +210,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             AddToOcrReplaceList = new LanguageStructure.AddToOcrReplaceList
             {
-                Title = "Add to ocr replace list",
-                Description = "Add pair to ocr replace list (case sensitive)",
+                Title = "Add to OCR replace list",
+                Description = "Add pair to OCR replace list (case sensitive)",
             };
 
             AddToUserDictionary = new LanguageStructure.AddToUserDictionary
@@ -668,7 +668,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BreakLongLines = "Break long lines",
                 RemoveLineBreaks = "Remove line breaks in short texts with only one sentence",
                 RemoveLineBreaksAll = "Remove line breaks in short texts (all except dialogues)",
-                FixUppercaseIInsindeLowercaseWords = "Fix uppercase 'i' inside lowercase words (ocr error)",
+                FixUppercaseIInsindeLowercaseWords = "Fix uppercase 'i' inside lowercase words (OCR error)",
                 FixDoubleApostrophes = "Fix double apostrophe characters ('') to a single quote (\")",
                 AddPeriods = "Add period after lines where next line start with uppercase letter",
                 StartWithUppercaseLetterAfterParagraph = "Start with uppercase letter after paragraph",
@@ -1067,8 +1067,8 @@ namespace Nikse.SubtitleEdit.Logic
                 NameXNotAddedToNamesEtcList = "The name '{0}' was NOT added to names/etc list",
                 WordXAddedToUserDic = "The word '{0}' was added to the user dictionary",
                 WordXNotAddedToUserDic = "The name '{0}' was NOT added to the user dictionary",
-                OcrReplacePairXAdded = "The ocr replace list pair '{0} -> {1}' was added to the ocr replace list",
-                OcrReplacePairXNotAdded = "The ocr replace list pair '{0} -> {1}' was NOT added to the ocr replace list",
+                OcrReplacePairXAdded = "The OCR replace list pair '{0} -> {1}' was added to the OCR replace list",
+                OcrReplacePairXNotAdded = "The OCR replace list pair '{0} -> {1}' was NOT added to the OCR replace list",
                 XLinesSelected = "{0} lines selected",
                 UnicodeMusicSymbolsAnsiWarning = "Subtitle contains unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?",
                 UnicodeCharactersAnsiWarning = "Subtitle contains unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?",
@@ -1973,7 +1973,7 @@ can edit in same subtitle file (collaboration)",
                 SkipAll = "&Skip all",
                 AddToUserDictionary = "Add to user dictionary",
                 AddToNamesAndIgnoreList = "Add to names/noise list (case sensitive)",
-                AddToOcrReplaceList = "Add pair to ocr replace list",
+                AddToOcrReplaceList = "Add pair to OCR replace list",
                 Abort = "Abort",
                 Use = "Use",
                 UseAlways = "&Use always",

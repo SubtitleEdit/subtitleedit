@@ -319,7 +319,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.EditLastAdditionsToolStripMenuItem.Name = "EditLastAdditionsToolStripMenuItem";
             this.EditLastAdditionsToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
-            this.EditLastAdditionsToolStripMenuItem.Text = "Edit last ocr image additions...";
+            this.EditLastAdditionsToolStripMenuItem.Text = "Edit last OCR image additions...";
             this.EditLastAdditionsToolStripMenuItem.Click += new System.EventHandler(this.inspectLastAdditionsToolStripMenuItem_Click);
             // 
             // nOcrTrainingToolStripMenuItem
@@ -1053,7 +1053,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonAddToOcrReplaceList.Name = "buttonAddToOcrReplaceList";
             this.buttonAddToOcrReplaceList.Size = new System.Drawing.Size(217, 21);
             this.buttonAddToOcrReplaceList.TabIndex = 2;
-            this.buttonAddToOcrReplaceList.Text = "Add ocr replace pair";
+            this.buttonAddToOcrReplaceList.Text = "Add OCR replace pair";
             this.buttonAddToOcrReplaceList.UseVisualStyleBackColor = true;
             this.buttonAddToOcrReplaceList.Click += new System.EventHandler(this.buttonAddToOcrReplaceList_Click);
             // 

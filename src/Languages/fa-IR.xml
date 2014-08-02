@@ -290,7 +290,7 @@ http://soft98.ir
     <BreakLongLines>شکستن خطوط طولانی</BreakLongLines>
     <RemoveLineBreaks>حذف پرش به خط بعد در متون کوتاه با تنها یک جمله</RemoveLineBreaks>
     <RemoveLineBreaksAll>گزارش پرش به خط بعد در متون کوتاه /همه به جز گفت وگو ها</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Fix uppercase 'i' inside lowercase words (ocr error)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsindeLowercaseWords>Fix uppercase 'i' inside lowercase words (OCR error)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>جایگزین کردن دو علامت (') با یک علامت نقل قول (")</FixDoubleApostrophes>
     <AddPeriods>اضافه کردن مدت زمان اگر شروع خط بعدی با حرف بزرگ باشد</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>شروع با حرف بزرگ پس از یک پاراگراف</StartWithUppercaseLetterAfterParagraph>

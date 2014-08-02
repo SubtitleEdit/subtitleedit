@@ -473,7 +473,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>Dividir líneas largas</BreakLongLines>
     <RemoveLineBreaks>Eliminar saltos de línea en textos cortos con una sola frase</RemoveLineBreaks>
     <RemoveLineBreaksAll>Eliminar saltos de línea en textos cortos (todos excepto diálogos)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Corregir 'i' mayúscula en palabras en minúscula (error de ocr)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsindeLowercaseWords>Corregir 'i' mayúscula en palabras en minúscula (error de OCR)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Sustituir doble comilla simple ('') por comillas dobles (")</FixDoubleApostrophes>
     <AddPeriods>Añadir punto al final de la línea cuando la siguiente comience con mayúscula</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Comenzar párrafo con mayúscula</StartWithUppercaseLetterAfterParagraph>
@@ -1137,8 +1137,8 @@ con el archivo de video, al subtítulo actual cargado.
     <NameXNotAddedToNamesEtcList>El nombre «{0}» NO se ha añadido al listado de nombres</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>La palabra «{0}» se ha añadido al diccionario de usuario</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>«{0}» no está en el diccionario del usuario</WordXNotAddedToUserDic>
-    <OcrReplacePairXAdded>El reemplazo ocr lista par «{0} -&gt; {1}» se ha añadido a la lista de reemplazo ocr</OcrReplacePairXAdded>
-    <OcrReplacePairXNotAdded>El reemplazo ocr lista par «{0} -&gt; {1}» no esta en la lista de reemplazo ocr</OcrReplacePairXNotAdded>
+    <OcrReplacePairXAdded>El reemplazo OCR lista par «{0} -&gt; {1}» se ha añadido a la lista de reemplazo OCR</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>El reemplazo OCR lista par «{0} -&gt; {1}» no esta en la lista de reemplazo OCR</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} líneas seleccionadas</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>El subtítulo contiene notas musicales unicode. Al guardar con codificación ANSI se perderán. ¿Continuar?</UnicodeMusicSymbolsAnsiWarning>
     <UnicodeCharactersAnsiWarning>El subtítulo contiene caracteres unicode. Guardando usando la codificación de archivos ANSI se perderán estos. ¿Continuar?</UnicodeCharactersAnsiWarning>
@@ -1669,7 +1669,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <SkipAll>Saltar todos</SkipAll>
     <AddToUserDictionary>Añadir al diccionario del usuario</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Añadir a lista de nombres (Sensible Mayús.)</AddToNamesAndIgnoreList>
-    <AddToOcrReplaceList>Agregar a la lista de par de sustitución ocr</AddToOcrReplaceList>
+    <AddToOcrReplaceList>Agregar a la lista de par de sustitución OCR</AddToOcrReplaceList>
     <Abort>Cancelar</Abort>
     <Use>Utilizar</Use>
     <UseAlways>Utilizar siempre</UseAlways>
