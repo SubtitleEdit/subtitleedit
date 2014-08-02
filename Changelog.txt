@@ -4,17 +4,17 @@
 3.4.1 (xth August 2014)
 * NEW:
    * Added new subtitle formats
-   * Can now import new time codes into ocr window - thx Music Fan
+   * Can now import new time codes into OCR window - thx Music Fan
 * IMPROVED:
    * Split line improvement regarding italic/dialogue - thx moob
    * Added .avs to list of known video formats - thx Peter
-   * Avid Stl format detection improved
-   * Allow adding words to user dic with a length of 1 - thx Betsy25
+   * Avid STL format detection improved
+   * Allow adding words to user dictionary with a length of 1 - thx Betsy25
 * FIXED:
    * Fixed crash in Visual Sync when using VLC as video player
-   * Do not lock explorer when dropping files (for ocr) in SE main list view - thx Jar
+   * Do not lock explorer when dropping files (for OCR) in SE main list view - thx Jar
    * Fixed dialogue issue in "auto-break lines" - thx fred
-   * Framerate convertion - fix for time based subs
+   * Framerate conversion - fix for time based subs
    * Fixed issue regarding showing current vs original texts on previews - thx Krystian
    * Fixed bug in break long lines - thx moob
    * Fixed bug in export/boxing - thx mood

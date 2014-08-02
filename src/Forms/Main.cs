@@ -19584,6 +19584,6 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.LastCheckForUpdates = DateTime.Now;
         }
 
-        
+
     }
 }
