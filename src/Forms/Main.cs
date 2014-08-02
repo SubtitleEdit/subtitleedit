@@ -12069,6 +12069,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             p.Text = Utilities.AutoBreakLine(p.Text, 5, autoBreakUnbreakLines.MininumLength, autoBreakUnbreakLines.MergeLinesShorterThan, language);
                             SubtitleListview1.SetText(index, p.Text);
+                            SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
                         }
                     }
                     SubtitleListview1.EndUpdate();
@@ -12107,6 +12108,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             p.Text = Utilities.UnbreakLine(p.Text);
                             SubtitleListview1.SetText(index, p.Text);
+                            SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
                         }
                     }
                     SubtitleListview1.EndUpdate();
