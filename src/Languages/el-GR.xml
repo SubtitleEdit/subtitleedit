@@ -93,8 +93,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Description>Προσθήκη στη λίστα ονομάτων (διάκριση πεζών-κεφαλαίων)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
-    <Title>Προσθήκη στη λίστα αντικατάστασης του ocr</Title>
-    <Description>Προσθήκη ζεύγους στη λίστα αντικατάστασης του ocr (ευαίσθητο στα πεζά)</Description>
+    <Title>Προσθήκη στη λίστα αντικατάστασης του OCR</Title>
+    <Description>Προσθήκη ζεύγους στη λίστα αντικατάστασης του OCR (ευαίσθητο στα πεζά)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Προσθήκη στο λεξικό του χρήστη</Title>
@@ -1683,7 +1683,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SkipAll>&amp;Παράλειψη όλων</SkipAll>
     <AddToUserDictionary>Προσθήκη στο λεξικό του χρήστη</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Προσθήκη στη λίστα ονομάτων/παραλείψεων (διάκριση πεζών-κεφαλαίων)</AddToNamesAndIgnoreList>
-    <AddToOcrReplaceList>Προσθήκη ζεύγους στη λίστα αντικατάστασης του ocr</AddToOcrReplaceList>
+    <AddToOcrReplaceList>Προσθήκη ζεύγους στη λίστα αντικατάστασης του OCR</AddToOcrReplaceList>
     <Abort>Ματαίωση</Abort>
     <Use>Χρήση</Use>
     <UseAlways>&amp;Χρήση πάντα</UseAlways>

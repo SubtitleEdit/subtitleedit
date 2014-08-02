@@ -90,8 +90,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Description>Добавяне към имена/списък с игнорирани (отчитане регистъра)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
-    <Title>Добави към списък на ocr за замяна</Title>
-    <Description>Добави двойка към ocr списъка за замяна (точно)</Description>
+    <Title>Добави към списък на OCR за замяна</Title>
+    <Description>Добави двойка към OCR списъка за замяна (точно)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Добави към потребителския речник</Title>
@@ -1676,7 +1676,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SkipAll>Пропусни всички</SkipAll>
     <AddToUserDictionary>Добави към речника</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Добави към имена/списък с игнорирани</AddToNamesAndIgnoreList>
-    <AddToOcrReplaceList>Add pair to ocr replace list</AddToOcrReplaceList>
+    <AddToOcrReplaceList>Add pair to OCR replace list</AddToOcrReplaceList>
     <Abort>Прекрати</Abort>
     <Use>Използвай</Use>
     <UseAlways>Изпол. винаги</UseAlways>
