@@ -322,7 +322,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 return;
             }
-            
+
             foreach (Paragraph p in Paragraphs)
             {
                 p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds * factor;
