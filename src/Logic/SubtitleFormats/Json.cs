@@ -187,7 +187,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public static List<string> ReadArray(string s, string tag)
         {
             var list = new List<string>();
-            
+
             int startIndex = s.IndexOf("\"" + tag + "\"");
             if (startIndex == -1)
                 startIndex = s.IndexOf("'" + tag + "'");
@@ -202,7 +202,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int nextTag = 0;
             int oldStart = 0;
             while (tagLevel >= 1 && nextTag >= 0 && nextTag+1 < res.Length)
-            {               
+            {
                 if (res.Substring(oldStart, 1) == "\"")
                 {
                     nextTag = res.IndexOf('"', oldStart + 1);
@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         list.Add(newValue.Remove(0, 1));
                         oldStart = nextTag + 2;
                     }
-                } 
+                }
                 else if (res.Substring(oldStart, 1) != "[" && res.Substring(oldStart, 1) != "]")
                 {
                     nextTag = res.IndexOf(',', oldStart + 1);
@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                
+
             }
             return list;
         }

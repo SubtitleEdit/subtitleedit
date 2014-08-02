@@ -3210,7 +3210,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     item.Selected = !item.Selected;
                 subtitleListView1.EndUpdate();
                 e.SuppressKeyPress = true;
-            }          
+            }
         }
 
     }
