@@ -509,7 +509,7 @@ namespace Nikse.SubtitleEdit.Controls
                         }
                     }
                     s = s.Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
-                    if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * 2)
+                    if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
                     {
                         if (noOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX && _settings.Tools.ListViewSyntaxMoreThanXLines)
                             item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
