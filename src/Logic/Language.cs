@@ -80,6 +80,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.SetMinimumDisplayTimeBetweenParagraphs SetMinimumDisplayTimeBetweenParagraphs;
         public LanguageStructure.SetSyncPoint SetSyncPoint;
         public LanguageStructure.Settings Settings;
+        public LanguageStructure.SetVideoOffset SetVideoOffset;
         public LanguageStructure.ShowEarlierLater ShowEarlierLater;
         public LanguageStructure.ShowHistory ShowHistory;
         public LanguageStructure.SpellCheck SpellCheck;
@@ -1936,6 +1937,11 @@ can edit in same subtitle file (collaboration)",
                 MainFileSaveAll = "Save all",
                 Miscellaneous = "Misc.",
                 UseDoNotBreakAfterList = "Use do-not-break-after list (for auto-br)",
+            };
+
+            SetVideoOffset = new LanguageStructure.SetVideoOffset
+            {
+                Title = "Set video offset",
             };
 
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater
