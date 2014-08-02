@@ -35,6 +35,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             bool continuation = false;
             foreach (string line in lines)
             {
+                if (line.StartsWith("$FontName") || line.StartsWith("$ColorIndex1"))
+                    return false;
                 Match m = CsvLine.Match(line);
                 if (m.Success)
                 {
@@ -51,6 +53,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
 
             }
+            if (failed > 20)
+                return false;
+
             return fine > failed;
         }
 
