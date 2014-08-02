@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class SetVideoOffset : Form
     {
+        public bool FromCurrentVideoPosition { get; set; }        
+
         private TimeCode _videoOffset = new TimeCode(0);
         public TimeCode VideoOffset 
         {
@@ -45,6 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             VideoOffset = timeUpDownVideoPosition.TimeCode;
+            FromCurrentVideoPosition = checkBoxFromCurrentPosition.Checked;
             DialogResult = DialogResult.OK;
         }
 

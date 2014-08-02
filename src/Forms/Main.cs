@@ -13741,6 +13741,10 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                mediaPlayer.Offset = 0;
+                if (audioVisualizer != null)
+                    audioVisualizer.Offset = 0;
+
                 if (audioVisualizer.WavePeaks != null)
                 {
                     audioVisualizer.WavePeaks = null;
@@ -16832,7 +16836,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             closeVideoToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName);
-            setVideoOffsetToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName) && Configuration.Settings.General.ShowBetaStuff;
+            setVideoOffsetToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName); // && Configuration.Settings.General.ShowBetaStuff;
 
             toolStripMenuItemSetAudioTrack.Visible = false;
             if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is Logic.VideoPlayers.LibVlc11xDynamic)
@@ -19626,10 +19630,12 @@ namespace Nikse.SubtitleEdit.Forms
             _formPositionsAndSizes.SetPositionAndSize(form);
             if (form.ShowDialog(this) == DialogResult.OK)
             {
-                mediaPlayer.Offset = form.VideoOffset.TotalSeconds;
-                if (audioVisualizer != null && audioVisualizer.WavePeaks != null && audioVisualizer.WavePeaks.AllSamples.Count > 0)
-                    audioVisualizer.Offset = form.VideoOffset.TotalSeconds;
-
+                var offsetInSeconds = form.VideoOffset.TotalSeconds;
+                if (form.FromCurrentVideoPosition)
+                    offsetInSeconds -= mediaPlayer.VideoPlayer.CurrentPosition;
+                mediaPlayer.Offset = offsetInSeconds;
+                if (audioVisualizer != null)
+                    audioVisualizer.Offset = offsetInSeconds;
             }
             _formPositionsAndSizes.SavePositionAndSize(form);
         }
