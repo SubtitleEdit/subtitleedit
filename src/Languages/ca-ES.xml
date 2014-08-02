@@ -90,8 +90,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Description>Afegeix a la llista names/noise (sensible majúscules)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
-    <Title>Afegeix llista reemplaçament ocr</Title>
-    <Description>Afegeix parell a llista de reemplaçament ocr (distingueix majús)</Description>
+    <Title>Afegeix llista reemplaçament OCR</Title>
+    <Description>Afegeix parell a llista de reemplaçament OCR (distingueix majús)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Afegeix al diccionari d'usuari</Title>

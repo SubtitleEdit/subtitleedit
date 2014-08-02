@@ -171,7 +171,7 @@
             this.buttonChangeAll.Name = "buttonChangeAll";
             this.buttonChangeAll.Size = new System.Drawing.Size(290, 21);
             this.buttonChangeAll.TabIndex = 1;
-            this.buttonChangeAll.Text = "Change and add to ocr fix list (case sensitive)";
+            this.buttonChangeAll.Text = "Change and add to OCR fix list (case sensitive)";
             this.buttonChangeAll.UseVisualStyleBackColor = true;
             this.buttonChangeAll.Click += new System.EventHandler(this.ButtonChangeAllClick);
             // 

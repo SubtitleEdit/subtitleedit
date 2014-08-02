@@ -180,7 +180,7 @@
   * Fixed (sometimes) missing highlighting of word in spell check dialog - thx Betsy25
   * Fixed bug where textbox lost connection with subtitle after "Replace" - thx HodoreeSubs
   * Fixed issue in OCR regarding expand selection - thx Thomas
-  * Reset loaded image compare bitmaps after creating new ocr image set
+  * Reset loaded image compare bitmaps after creating new OCR image set
   * Freeze fix for subtitle format "spt" - thx Leif
   * Fix a bug in "Fix invalid italic tags" - thx rebawest
   * Fix a bug in waveform regarding ALT + mouse end/start move in frame mode - thx rebawest

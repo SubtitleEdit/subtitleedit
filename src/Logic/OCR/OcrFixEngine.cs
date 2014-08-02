@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         public CultureInfo DictionaryCulture { get; private set; }
 
         /// <summary>
-        /// Advanced ocr fixing via replace/spelling dictionaries + some hardcoded rules
+        /// Advanced OCR fixing via replace/spelling dictionaries + some hardcoded rules
         /// </summary>
         /// <param name="threeLetterIsoLanguageName">E.g. eng for English</param>
         /// <param name="parentForm">Used for centering/show spellcheck dialog</param>
@@ -1708,7 +1708,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         }
 
         /// <summary>
-        /// Spellcheck for ocr
+        /// Spellcheck for OCR
         /// </summary>
         /// <returns>True, if word is fixed</returns>
         private SpellcheckOcrTextResult SpellcheckOcrText(string line, Bitmap bitmap, string[] words, int i, string word, List<string> suggestions)

@@ -91,8 +91,8 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Description>Gehitu izen/etab. zerrendara</Description>
   </AddToNames>
   <AddToOcrReplaceList>
-    <Title>Gehitu ocr ordezpen zerrendara</Title>
-    <Description>Gehitu parea ocr ordezpen zerrendara (hizki larri-xeheak)</Description>
+    <Title>Gehitu OCR ordezpen zerrendara</Title>
+    <Description>Gehitu parea OCR ordezpen zerrendara (hizki larri-xeheak)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Gehitu erabiltzaile hiztegira</Title>
@@ -1144,8 +1144,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <NameXNotAddedToNamesEtcList>'{0}' izena EZ da izen/etab. zerrendara gehitu</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>'{0}' hitza erabiltzaile hiztegira gehitu da</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>'{0}' izena EZ da erabiltzaile hiztegira gehitu</WordXNotAddedToUserDic>
-    <OcrReplacePairXAdded>'{0} -&gt; {1}' ocr ordezpen zerrenda parea ocr ordezpen zerrendara gehitu da</OcrReplacePairXAdded>
-    <OcrReplacePairXNotAdded>'{0} -&gt; {1}' ocr ordezpen zerrenda parea EZ da ocr ordezpen zerrendara gehitu</OcrReplacePairXNotAdded>
+    <OcrReplacePairXAdded>'{0} -&gt; {1}' OCR ordezpen zerrenda parea OCR ordezpen zerrendara gehitu da</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>'{0} -&gt; {1}' OCR ordezpen zerrenda parea EZ da OCR ordezpen zerrendara gehitu</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} lerro hautatuta</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Azpidatziak unicode musika notak ditu. ANSI agiri kodeaketa erabiliz gordez gero galdu egingo dira. Jarraitu gordetzearekin?</UnicodeMusicSymbolsAnsiWarning>
     <UnicodeCharactersAnsiWarning>Azpidatziak unicode kodeko hizkiak ditu. ANSI agiria erabiliz gordez gero kodeaketa hauek galduko ditu. Jarraitu gordetzen?</UnicodeCharactersAnsiWarning>
@@ -1675,7 +1675,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SkipAll>Jauzi &amp;denak</SkipAll>
     <AddToUserDictionary>Gehitu erabiltzaile &amp;hiztegira</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Geh izen/etab. &amp;zerr. (hizki larri-xehe artekoa)</AddToNamesAndIgnoreList>
-    <AddToOcrReplaceList>Gehitu parea ocr ordezpen zerrendara</AddToOcrReplaceList>
+    <AddToOcrReplaceList>Gehitu parea OCR ordezpen zerrendara</AddToOcrReplaceList>
     <Abort>&amp;Utzi</Abort>
     <Use>E&amp;rabili</Use>
     <UseAlways>&amp;Erabili betik</UseAlways>
