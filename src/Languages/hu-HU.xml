@@ -90,8 +90,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Description>Hozzáadás a nevek/zaj-listához (betűérzékeny)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
-    <Title>Hozzáadás az ocr csere listához</Title>
-    <Description>Pár hozzáadása az ocr csere listához (betűérzékeny)</Description>
+    <Title>Hozzáadás az OCR csere listához</Title>
+    <Description>Pár hozzáadása az OCR csere listához (betűérzékeny)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Hozzáadás a felhasználói szótárhoz</Title>
@@ -482,7 +482,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>Hosszú sorok tördelése</BreakLongLines>
     <RemoveLineBreaks>Sortörések eltávolítása rövid szövegekben, csak egy mondatnál</RemoveLineBreaks>
     <RemoveLineBreaksAll>Sortörések eltávolítása rövid szövegekben (a párbeszédablakok kivételével) </RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Nagybetűs 'i' javítása a kisbetűs szavakban (ocr hiba)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsindeLowercaseWords>Nagybetűs 'i' javítása a kisbetűs szavakban (OCR hiba)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Dupla idézőjeles ('') karakterek javítása egyszeres idézőjelesre (')</FixDoubleApostrophes>
     <AddPeriods>Pont hozzáadás azon sorok után, ahol a következő sor nagybetűvel indul</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Indítás nagybetűvel a bekezdés után</StartWithUppercaseLetterAfterParagraph>
@@ -1147,8 +1147,8 @@ Folytatja?</SubtitleAppendPrompt>
     <NameXNotAddedToNamesEtcList>A(z) '{0}' név NEM lett hozzáadva a nevek/etc listához</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>A(z) '{0}' szó hozzá lett adva a felhasználói szótárhoz</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>A(z) '{0}' név NEM lett hozzáadva a felhasználói szótárhoz</WordXNotAddedToUserDic>
-    <OcrReplacePairXAdded>Az ocr csere lista pár '{0} -&gt; {1}' felkerült az ocr csere listára</OcrReplacePairXAdded>
-    <OcrReplacePairXNotAdded>Az ocr csere lista pár '{0} -&gt; {1}' NEM lett hozzáadva az ocr csere listához</OcrReplacePairXNotAdded>
+    <OcrReplacePairXAdded>Az OCR csere lista pár '{0} -&gt; {1}' felkerült az OCR csere listára</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>Az OCR csere lista pár '{0} -&gt; {1}' NEM lett hozzáadva az OCR csere listához</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} sor kiválasztva</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>A felirat unicode karaktereket tartalmaz. Az ANSI-fájl kódolással való mentés esetén, ezek el fognak veszni. Folytatja a mentést?</UnicodeMusicSymbolsAnsiWarning>
     <UnicodeCharactersAnsiWarning>A felirat unicode karaktereket tartalmaz. Az ANSI-fájl kódolással való mentés esetén, ezek el fognak veszni. Folytatja a mentést?</UnicodeCharactersAnsiWarning>
@@ -1680,7 +1680,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <SkipAll>Mind kihagyja</SkipAll>
     <AddToUserDictionary>Hozzáadás a felhasználói szótárhoz</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Hozzáadás a nevek/zaj-listához (nagybetűérzékeny)</AddToNamesAndIgnoreList>
-    <AddToOcrReplaceList>Pár hozzáadása az ocr csere listához</AddToOcrReplaceList>
+    <AddToOcrReplaceList>Pár hozzáadása az OCR csere listához</AddToOcrReplaceList>
     <Abort>Megszakítás</Abort>
     <Use>Használ</Use>
     <UseAlways>Mindig használja</UseAlways>

@@ -90,8 +90,8 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <Description>Lägg till namn/Ignor lista</Description>
   </AddToNames>
   <AddToOcrReplaceList>
-    <Title>Lägg till ocr ersätt lista</Title>
-    <Description>Lägg till par, ocr ersätt lista</Description>
+    <Title>Lägg till OCR ersätt lista</Title>
+    <Description>Lägg till par, OCR ersätt lista</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Lägg till egen ordlista</Title>
@@ -481,15 +481,15 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>Bryt långa rader</BreakLongLines>
     <RemoveLineBreaks>Ta bort radbrytningar i korta stycken med bara en mening</RemoveLineBreaks>
     <RemoveLineBreaksAll>Ta bort radbrytningar i kort text (alla utom dialoger)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Fixa versal 'i' inuti gemener ord (ocr fel)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsindeLowercaseWords>Fixa versal 'i' inuti gemener ord (OCR fel)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Fixa dubbla apostrof tecken ('') till en enda apostrof (")</FixDoubleApostrophes>
     <AddPeriods>Lägg till punkt efter rad där nästa rad börjar med stor bokstav</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Börja med stor bokstav efter punkt</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Börja med stor bokstav efter punkt inne i paragraf</StartWithUppercaseLetterAfterPeriodInsideParagraph>
     <StartWithUppercaseLetterAfterColon>Börja med stor bokstav efter kolon/semikolon</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>Fixa ensam små 'i' till 'I' (engelska)</FixLowercaseIToUppercaseI>
-    <FixCommonOcrErrors>Fixa ocr fel (med ocr listan Ersätt)</FixCommonOcrErrors>
-    <CommonOcrErrorsFixed>Fixa ocr fel (via OcrReplaceList fil): {0}</CommonOcrErrorsFixed>
+    <FixCommonOcrErrors>Fixa OCR fel (med OCR listan Ersätt)</FixCommonOcrErrors>
+    <CommonOcrErrorsFixed>Fixa OCR fel (via OcrReplaceList fil): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Ta bort mellanslag mellan siffror</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Fixa dialogrutor på en rad</FixDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Ta bort blanksteg mellan riktade numme: {0}</RemoveSpaceBetweenNumbersFixed>
@@ -695,10 +695,10 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>Jämför</Compare>
         <Statistics>Statistik</Statistics>
         <Plugins>Plugin</Plugins>
-        <ImportOcrFromDvd>Import/ocr text från vob/ifo (dvd) </ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>Import/ocr VobSub (sub/idx) text</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Import/ocr BluRay text</ImportBluRaySupFile>
-        <ImportXSub>Import/ocr xsub från divx/avi</ImportXSub>
+        <ImportOcrFromDvd>Import/OCR text från vob/ifo (dvd) </ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) text</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Import/OCR BluRay text</ImportBluRaySupFile>
+        <ImportXSub>Import/OCR xsub från divx/avi</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Import text från Matroska fil</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Import text med manuell vald kod</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Import enbart text</ImportText>
@@ -1558,7 +1558,7 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <MergeLinesShorterThan>Sammanfoga rader kortare än</MergeLinesShorterThan>
     <MusicSymbol>Musik symbol</MusicSymbol>
     <MusicSymbolsToReplace>Symbol som ska ersättas (separera med mellanslag)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Fixa vanliga ocr fel - använda hårdkodade regler</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonOcrErrorsUseHardcodedRules>Fixa vanliga OCR fel - använda hårdkodade regler</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix kort tid - tillåt flyttning av starttid</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Genvägar</Shortcuts>
     <Shortcut>Genväg</Shortcut>
@@ -1886,8 +1886,8 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <Image>Bild</Image>
   </VobSubEditCharacters>
   <VobSubOcr>
-    <Title>Import/ocr VobSub (sub/idx) undertext</Title>
-    <TitleBluRay>Import/ocr BluRay text</TitleBluRay>
+    <Title>Import/OCR VobSub (sub/idx) undertext</Title>
+    <TitleBluRay>Import/OCR BluRay text</TitleBluRay>
     <OcrMethod>OCR-metod</OcrMethod>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Kräver MS Office</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
@@ -1899,7 +1899,7 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <MaxErrorPercent>Max. fel%</MaxErrorPercent>
     <New>Ny</New>
     <Edit>Redigera</Edit>
-    <StartOcr>Starta ocr</StartOcr>
+    <StartOcr>Starta OCR</StartOcr>
     <Stop>Stopp</Stop>
     <StartOcrFrom>Börja OCR från text nr:</StartOcrFrom>
     <LoadingVobSubImages>Laddar VobSub bilder</LoadingVobSubImages>

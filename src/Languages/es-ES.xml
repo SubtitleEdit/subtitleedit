@@ -284,7 +284,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>Dividir líneas largas</BreakLongLines>
     <RemoveLineBreaks>Eliminar saltos de línea en textos cortos con una sola frase</RemoveLineBreaks>
     <RemoveLineBreaksAll>Eliminar saltos de línea en textos cortos (todos excepto diálogos)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Corregir 'i' mayúscula en palabras en minúscula (error de ocr)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsindeLowercaseWords>Corregir 'i' mayúscula en palabras en minúscula (error de OCR)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Sustituir doble coma ('') por comillas (")</FixDoubleApostrophes>
     <AddPeriods>Añadir espacio después de líneas cuando la siguiente línea comienza con mayúscula</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Comenzar párrafo con mayúscula</StartWithUppercaseLetterAfterParagraph>

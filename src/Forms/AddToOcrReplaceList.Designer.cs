@@ -85,7 +85,7 @@
             this.labelDescription.Name = "labelDescription";
             this.labelDescription.Size = new System.Drawing.Size(109, 13);
             this.labelDescription.TabIndex = 23;
-            this.labelDescription.Text = "Add to ocr replace list";
+            this.labelDescription.Text = "Add to OCR replace list";
             // 
             // textBoxOcrFixValue
             // 

@@ -88,8 +88,8 @@ Suggesties zijn van harte welkom
     <Description>Toevoegen aan namen/ruis-lijst (hoofdlettergevoelig)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
-    <Title>Toevoegen aan ocr vervangen lijst</Title>
-    <Description>Voeg paar toe aan ocr vervangen lijst (hoofdlettergevoelig)</Description>
+    <Title>Toevoegen aan OCR vervangen lijst</Title>
+    <Description>Voeg paar toe aan OCR vervangen lijst (hoofdlettergevoelig)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Toevoegen aan gebruikerswoordenboek</Title>
@@ -479,7 +479,7 @@ Suggesties zijn van harte welkom
     <BreakLongLines>Breek lange regels af</BreakLongLines>
     <RemoveLineBreaks>Verwijder regeleinden in korte teksten met slechts een zin</RemoveLineBreaks>
     <RemoveLineBreaksAll>Verwijder regeleinden in korte teksten (alles behalve dialogen )</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Herstel hoofdletter 'I' in woorden met kleine letters  (ocr-fout)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsindeLowercaseWords>Herstel hoofdletter 'I' in woorden met kleine letters  (OCR-fout)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Wijzig dubbele enkele aanhalingstekens ('') naar een enkel aanhalingsteken (")</FixDoubleApostrophes>
     <AddPeriods>Voeg punt toe na regel waar volgende regel begint met hoofdletter</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Start met hoofdletter na paragraaf</StartWithUppercaseLetterAfterParagraph>
@@ -1137,8 +1137,8 @@ Suggesties zijn van harte welkom
     <NameXNotAddedToNamesEtcList>De naam '{0} ' is NIET toegevoegd aan namen/etc lijst</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>Het woord' {0} ' werd toegevoegd aan het woordenboek</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>De naam' {0} '  is NIET toegevoegd aan het woordenboek</WordXNotAddedToUserDic>
-    <OcrReplacePairXAdded>De ocr vervangen lijst paar '{0} -&gt; {1}' is toegevoegd aan de ocr vervangen lijst</OcrReplacePairXAdded>
-    <OcrReplacePairXNotAdded>De ocr vervangen lijst paar '{0} -&gt; {1}' is NIET toegevoegd aan de ocr vervangen lijst</OcrReplacePairXNotAdded>
+    <OcrReplacePairXAdded>De OCR vervangen lijst paar '{0} -&gt; {1}' is toegevoegd aan de OCR vervangen lijst</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>De OCR vervangen lijst paar '{0} -&gt; {1}' is NIET toegevoegd aan de OCR vervangen lijst</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} geselecteerde regels</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Ondertitel bevat unicode muziek noten. Bij opslaan met behulp van ANSI-codering gaan deze verloren. Verder gaan met opslaan?</UnicodeMusicSymbolsAnsiWarning>
     <UnicodeCharactersAnsiWarning>Ondertitel bevat unicode karacters. Opslaan als ANSI bestand codering laat deze vervallen. Verder gaan met opslaan?</UnicodeCharactersAnsiWarning>
@@ -1668,7 +1668,7 @@ Suggesties zijn van harte welkom
     <SkipAll>&amp;Alles overslaan</SkipAll>
     <AddToUserDictionary>Toevoegen aan gebruikerswoordenboek</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Toevoegen aan namen/ruis-lijst (hoofdlettergevoelig)</AddToNamesAndIgnoreList>
-    <AddToOcrReplaceList>Voeg paar toe aan ocr vervangen lijst</AddToOcrReplaceList>
+    <AddToOcrReplaceList>Voeg paar toe aan OCR vervangen lijst</AddToOcrReplaceList>
     <Abort>Afbreken</Abort>
     <Use>Gebruik</Use>
     <UseAlways>&amp;Gebruik altijd</UseAlways>

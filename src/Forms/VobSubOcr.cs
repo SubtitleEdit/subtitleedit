@@ -3912,7 +3912,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxRightToLeft.Checked)
                 line = ReverseNumberStrings(line);
 
-            //ocr fix engine
+            //OCR fix engine
             string textWithOutFixes = line;
             //OCR fix engine not loaded, when no dictionary is selected
             if (_ocrFixEngine != null && _ocrFixEngine.IsDictionaryLoaded)
@@ -4054,7 +4054,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         CompareMatch bestGuess;
                         CompareMatch match = GetCompareMatchNew(item, parentBitmap, out bestGuess, list, index);
-                        if (match == null) // Try line ocr if no image compare match
+                        if (match == null) // Try line OCR if no image compare match
                         {
                             if (_nOcrDb != null && _nOcrDb.OcrCharacters.Count > 0)
                                 match = GetNOcrCompareMatchNew(item, parentBitmap, _nOcrDb, _unItalicFactor, true, true);
@@ -4120,7 +4120,7 @@ namespace Nikse.SubtitleEdit.Forms
                 line = ReverseNumberStrings(line);
 
 
-            //ocr fix engine
+            //OCR fix engine
             string textWithOutFixes = line;
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
@@ -4430,7 +4430,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             line = FixNocrHardcodedStuff(line);
 
-            //ocr fix engine
+            //OCR fix engine
             string textWithOutFixes = line;
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
@@ -6407,12 +6407,12 @@ namespace Nikse.SubtitleEdit.Forms
                             }
 
                             if (modiWordsNotFound < wordsNotFound || (textWithOutFixes.Length == 1 && modiWordsNotFound == 0))
-                                line = modiText; // use the modi ocr'ed text
+                                line = modiText; // use the modi OCR'ed text
                             else if (wordsNotFound == modiWordsNotFound && modiText.EndsWith("!") && (line.EndsWith("l") || line.EndsWith("ﬂ")))
                                 line = modiText;
                         }
 
-                        // take the best option - before ocr fixing, which we do again to save suggestions and prompt for user input
+                        // take the best option - before OCR fixing, which we do again to save suggestions and prompt for user input
                         line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, GetAutoGuessLevel());
                     }
                     else
@@ -7887,7 +7887,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 Configuration.Settings.VobSubOcr.AllowDifferenceInPercent = (double)numericUpDownMaxErrorPct.Value;
 
-            if (comboBoxOcrMethod.SelectedIndex == 3) // line ocr
+            if (comboBoxOcrMethod.SelectedIndex == 3) // line OCR
             {
                 Configuration.Settings.VobSubOcr.LineOcrLastSpellcheck = LanguageString;
                 if (comboBoxNOcrLanguage.Items.Count > 0 && comboBoxNOcrLanguage.SelectedIndex >= 0)
@@ -8210,7 +8210,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (string.IsNullOrEmpty(GetNOcrLanguageFileName()))
                 {
-                    MessageBox.Show("No line ocr language loaded - please re-install");
+                    MessageBox.Show("No line OCR language loaded - please re-install");
                     return;
                 }
                 LoadNOcrWithCurrentLanguage();
@@ -8240,7 +8240,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 if (File.Exists(Configuration.DictionariesFolder + "nOCR_" + newFolder.FolderName + ".xml"))
                 {
-                    MessageBox.Show("Line ocr language file already exists!");
+                    MessageBox.Show("Line OCR language file already exists!");
                     return;
                 }
 

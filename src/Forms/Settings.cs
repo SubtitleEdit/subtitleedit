@@ -1746,7 +1746,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // user word list
                 LoadUserWords(language, true);
 
-                // ocr fix words
+                // OCR fix words
                 LoadOcrFixList(true);
 
                 LoadNamesEtc(language, _starting, true);
