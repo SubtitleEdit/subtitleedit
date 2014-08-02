@@ -939,6 +939,19 @@ namespace Nikse.SubtitleEdit.Forms
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
+                    else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
+                             temp.Duration.TotalMilliseconds - p.Duration.TotalMilliseconds < 400 && (next != null && Utilities.GetCharactersPerSecond(new Paragraph(next.Text, next.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds - p.Duration.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines, next.EndTime.TotalMilliseconds)) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds))
+                    {
+                        if (AllowFix(p, fixAction))
+                        {
+                            string oldCurrent = p.ToString();
+                            next.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds - p.Duration.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                            p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                            _totalFixes++;
+                            noOfShortDisplayTimes++;
+                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                        }
+                    }
                     else
                     {
                         LogStatus(_language.FixShortDisplayTimes, string.Format(_language.UnableToFixTextXY, i + 1, p));
