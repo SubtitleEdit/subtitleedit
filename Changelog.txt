@@ -18,6 +18,9 @@
    * Fixed issue regarding showing current vs original texts on previews - thx Krystian
    * Fixed bug in break long lines - thx moob
    * Fixed bug in export/boxing - thx mood
+   * Minor syntax coloring fix regarding 2+ lines - thx Joel
+   * Format "CSV 3" should not load format "SPRUCE STL" - thx Adrian
+   * Added info about chars/sec to Statistics - thx Krystian
 
 
 3.4.0 (13th July 2014)

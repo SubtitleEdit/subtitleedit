@@ -1826,6 +1826,8 @@
         public class SetVideoOffset
         {
             public string Title { get; set; }
+            public string Description { get; set; }
+            public string RelativeToCurrentVideoPosition { get; set; }            
         }
 
         public class ShowEarlierLater
@@ -1962,6 +1964,9 @@
             public string DurationMinimum { get; set; }
             public string DurationMaximum { get; set; }
             public string DurationAvarage { get; set; }
+            public string ChararactersPerSecondMinimum { get; set; }
+            public string ChararactersPerSecondMaximum { get; set; }
+            public string ChararactersPerSecondAverage { get; set; }
         }
 
         public class SubStationAlphaProperties
