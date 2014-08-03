@@ -12,6 +12,7 @@
    * Allow adding words to user dictionary with a length of 1 - thx Betsy25
 * FIXED:
    * Fixed crash in Visual Sync when using VLC as video player
+   * Export to image based formats now uses font from ssa/ass - thx mariner
    * Do not lock explorer when dropping files (for OCR) in SE main list view - thx Jar
    * Fixed dialogue issue in "auto-break lines" - thx fred
    * Framerate conversion - fix for time based subs

@@ -283,6 +283,7 @@ namespace Nikse.SubtitleEdit.Forms
                         parameter.SubtitleColor = style.Primary;
                         parameter.SubtitleFontBold = style.Bold;
                         parameter.SubtitleFontSize = style.FontSize;
+                        parameter.SubtitleFontName = style.FontName;
                         if (style.BorderStyle == "3")
                         {
                             parameter.BackgroundColor = style.Background;
@@ -294,6 +295,7 @@ namespace Nikse.SubtitleEdit.Forms
                         parameter.SubtitleColor = style.Primary;
                         parameter.SubtitleFontBold = style.Bold;
                         parameter.SubtitleFontSize = style.FontSize;
+                        parameter.SubtitleFontName = style.FontName;
                         if (style.BorderStyle == "3")
                         {
                             parameter.BackgroundColor = style.Outline;
