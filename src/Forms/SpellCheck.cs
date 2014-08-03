@@ -364,6 +364,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SpellCheck_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Configuration.Settings.Tools.SpellCheckAutoChangeNames = checkBoxAutoChangeNames.Checked;
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 DialogResult = DialogResult.Abort;
