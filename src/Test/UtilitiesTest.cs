@@ -71,7 +71,104 @@ namespace Test
             Assert.AreEqual(s2, "<i>Line 1." + Environment.NewLine + "Line 2.</i>");
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesDoubleSpace1()
+        {
+            string s1 = "This is  a test";
+            string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
+            Assert.AreEqual(s2, "This is a test");
+        }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesDoubleSpace2()
+        {
+            string s1 = "This is a test  ";
+            string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
+            Assert.AreEqual(s2, "This is a test");
+        }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesItalics1()
+        {
+            string s1 = "<i> This is a test</i>";
+            string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
+            Assert.AreEqual(s2, "<i>This is a test</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesItalics2()
+        {
+            string s1 = "<i>This is a test </i>";
+            string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
+            Assert.AreEqual(s2, "<i>This is a test</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesHyphen1()
+        {
+            string s1 = "This is a low- budget job";
+            string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
+            Assert.AreEqual(s2, "This is a low-budget job");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesHyphen2()
+        {
+            string s1 = "This is a low- budget job";
+            string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
+            Assert.AreEqual(s2, "This is a low-budget job");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesHyphenDoNotChange1()
+        {
+            string s1 = "This is it - and he likes it!";
+            string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
+            Assert.AreEqual(s2, s1);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesHyphenDoNotChange2()
+        {
+            string s1 = "What are your long- and altitude stats?";
+            string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
+            Assert.AreEqual(s2, s1);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesHyphenDoNotChange3()
+        {
+            string s1 = "Did you buy that first- or second-handed?";
+            string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
+            Assert.AreEqual(s2, s1);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesHyphenDoNotChangeDutch1()
+        {
+            string s1 = "Wat zijn je voor- en familienaam?";
+            string s2 = Utilities.RemoveUnneededSpaces(s1, "nl");
+            Assert.AreEqual(s2, s1);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesHyphenDoNotChangeDutch2()
+        {
+            string s1 = "Was het in het voor- of najaar?";
+            string s2 = Utilities.RemoveUnneededSpaces(s1, "nl");
+            Assert.AreEqual(s2, s1);
+        }  
+      
     }
 }
