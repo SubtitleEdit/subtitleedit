@@ -21,6 +21,7 @@
    * Minor syntax coloring fix regarding 2+ lines - thx Joel
    * Format "CSV 3" should not load format "SPRUCE STL" - thx Adrian
    * Added info about chars/sec to Statistics - thx Krystian
+   * Remember "Auto fix names where only casing differ" - thx Betsy25
 
 
 3.4.0 (13th July 2014)
