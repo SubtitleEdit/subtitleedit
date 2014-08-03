@@ -57,6 +57,9 @@ namespace Nikse.SubtitleEdit.Forms
             double minimumDuration = 100000000;
             double maximumDuration = 0;
             double totalDuration = 0;
+            double minimumCharsSec = 100000000;
+            double maximumCharsSec = 0;
+            double totalCharsSec = 0;
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
                 allText.Append(p.Text);
@@ -74,6 +77,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (duration > maximumDuration)
                     maximumDuration = duration;
                 totalDuration += duration;
+
+                var charsSec = Utilities.GetCharactersPerSecond(p);
+                if (charsSec < minimumCharsSec)
+                    minimumCharsSec = charsSec;
+                if (charsSec > maximumCharsSec)
+                    maximumCharsSec = charsSec;
+                totalCharsSec += charsSec;                
 
                 foreach (string line in p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 {
@@ -112,6 +122,13 @@ namespace Nikse.SubtitleEdit.Forms
             sb.AppendLine(string.Format(_l.DurationMaximum, maximumDuration / 1000.0));
             sb.AppendLine(string.Format(_l.DurationAvarage, totalDuration / _subtitle.Paragraphs.Count / 1000.0));
             sb.AppendLine();
+            if (!string.IsNullOrEmpty(_l.ChararactersPerSecondMinimum))
+            {
+                sb.AppendLine(string.Format(_l.ChararactersPerSecondMinimum, minimumCharsSec));
+                sb.AppendLine(string.Format(_l.ChararactersPerSecondMaximum, maximumCharsSec));
+                sb.AppendLine(string.Format(_l.ChararactersPerSecondAverage, totalCharsSec / _subtitle.Paragraphs.Count));
+                sb.AppendLine();
+            }
             textBoxGeneral.Text = sb.ToString().Trim();
             textBoxGeneral.SelectionStart = 0;
             textBoxGeneral.SelectionLength = 0;
