@@ -1270,11 +1270,12 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "en";
 
-            count = GetCount(text, "vi", "er", "og", "jeg", "var", "men");
+            count = GetCount(text, "vi", "han", "og", "jeg", "var", "men") + GetCount(text, "gider", "bliver", "virkelig", "kommer", "tilbage", "Hej");
             if (count > bestCount)
             {
                 int norwegianCount = GetCount(text, "ut", "deg", "meg", "merkelig", "mye", "spørre");
-                if (norwegianCount < 2)
+                int dutchCount = GetCount(text, "van", "het", "een", "Het", "mij", "zijn");
+                if (norwegianCount < 2 && dutchCount < count)
                     return "da";
             }
 
@@ -1282,7 +1283,8 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
             {
                 int danishCount = GetCount(text, "siger", "dig", "mig", "mærkelig", "tilbage", "spørge");
-                if (danishCount < 2)
+                int dutchCount = GetCount(text, "van", "het", "een", "Het", "mij", "zijn");
+                if (danishCount < 2 && dutchCount < count)
                     return "no";
             }
 
@@ -1511,7 +1513,7 @@ namespace Nikse.SubtitleEdit.Logic
                 switch (shortName)
                 {
                     case "da_DK":
-                        count = GetCount(text, "vi", "er", "og", "jeg", "var", "men");
+                        count = GetCount(text, "vi", "hun", "og", "jeg", "var", "men") + GetCount(text, "bliver", "meget", "spørger", "Hej", "utrolig", "dejligt");
                         if (count > bestCount)
                         {
                             int norweigianCount = GetCount(text, "ut", "deg", "meg", "merkelig", "mye", "spørre");
@@ -1524,7 +1526,8 @@ namespace Nikse.SubtitleEdit.Logic
                         if (count > bestCount)
                         {
                             int danishCount = GetCount(text, "siger", "dig", "mig", "mærkelig", "tilbage", "spørge");
-                            if (danishCount < 2)
+                            int dutchCount = GetCount(text, "van", "het", "een", "Het", "mij", "zijn");
+                            if (danishCount < 2 && dutchCount < count)
                                 languageName = shortName;
                         }
                         break;
