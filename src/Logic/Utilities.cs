@@ -4178,5 +4178,187 @@ namespace Nikse.SubtitleEdit.Logic
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Remove unneeded spaces
+        /// </summary>
+        /// <param name="text">text string to remove unneeded spaces from</param>
+        /// <param name="language">two letter language id string</param>
+        /// <returns>text with unneeded spaces removed</returns>
+        public static string RemoveUnneededSpaces(string text, string language)
+        {
+            const string zeroWhiteSpace = "\u200B";
+            const string zeroWidthNoBreakSpace = "\uFEFF";
+            const string noBreakSpace = "\u00A0";
+            const string char160 = " "; // Convert.ToChar(160).ToString()
+
+            text = text.Trim();
+
+            text = text.Replace(zeroWhiteSpace, string.Empty);
+            text = text.Replace(zeroWidthNoBreakSpace, string.Empty);
+            text = text.Replace(noBreakSpace, string.Empty);
+            text = text.Replace(char160, " ");
+
+            text = text.Replace("", string.Empty); // some kind of hidden space!!!
+            while (text.Contains("  "))
+                text = text.Replace("  ", " ");
+
+            if (text.Contains(" " + Environment.NewLine))
+                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+
+            if (text.EndsWith(" "))
+                text = text.TrimEnd(' ');
+
+            text = text.Replace(". . ..", "...");
+            text = text.Replace(". ...", "...");
+            text = text.Replace(". .. .", "...");
+            text = text.Replace(". . .", "...");
+            text = text.Replace(". ..", "...");
+            text = text.Replace(".. .", "...");
+            text = text.Replace("....", "...");
+            text = text.Replace("....", "...");
+            text = text.Replace("....", "...");
+            text = text.Replace(" ..." + Environment.NewLine, "..." + Environment.NewLine);
+            text = text.Replace(Environment.NewLine + "... ", Environment.NewLine + "...");
+            if (text.StartsWith("... "))
+                text = text.Remove(3, 1);
+            if (text.EndsWith(" ..."))
+                text = text.Remove(text.Length - 4, 1);
+            if (text.EndsWith(" ...</i>"))
+                text = text.Remove(text.Length - 8, 1);
+
+            if (language != "fr") // special rules for French
+            {
+                text = text.Replace("... ?", "...?");
+                text = text.Replace("... !", "...!");
+
+                text = text.Replace(" :", ":");
+                text = text.Replace(" :", ":");
+            }
+
+            if (!text.Contains("- ..."))
+                text = text.Replace(" ... ", "... ");
+
+            while (text.Contains(" ,"))
+                text = text.Replace(" ,", ",");
+
+            if (text.EndsWith(" ."))
+                text = text.Substring(0, text.Length - " .".Length) + ".";
+
+            if (text.EndsWith(" \""))
+                text = text.Remove(text.Length - 2, 1);
+
+            if (text.Contains(" \"" + Environment.NewLine))
+                text = text.Replace(" \"" + Environment.NewLine, "\"" + Environment.NewLine);
+
+            if (text.Contains(" ." + Environment.NewLine))
+                text = text.Replace(" ." + Environment.NewLine, "." + Environment.NewLine);
+
+
+            if (language != "fr") // special rules for French
+            {
+                if (text.Contains(" !"))
+                    text = text.Replace(" !", "!");
+
+                if (text.Contains(" ?"))
+                    text = text.Replace(" ?", "?");
+            }
+
+            while (text.Contains("¿ "))
+                text = text.Replace("¿ ", "¿");
+
+            while (text.Contains("¡ "))
+                text = text.Replace("¡ ", "¡");
+
+            if (text.Contains("! </i>" + Environment.NewLine))
+                text = text.Replace("! </i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
+
+            if (text.Contains("? </i>" + Environment.NewLine))
+                text = text.Replace("? </i>" + Environment.NewLine, "?</i>" + Environment.NewLine);
+
+            if (text.EndsWith(" </i>"))
+                text = text.Substring(0, text.Length - " </i>".Length) + "</i>";
+
+            if (text.Contains(" </i>" + Environment.NewLine))
+                text = text.Replace(" </i>" + Environment.NewLine, "</i>" + Environment.NewLine);
+
+            if (text.EndsWith(" </I>"))
+                text = text.Substring(0, text.Length - " </I>".Length) + "</I>";
+
+            if (text.Contains(" </I>" + Environment.NewLine))
+                text = text.Replace(" </I>" + Environment.NewLine, "</I>" + Environment.NewLine);
+
+            if (text.StartsWith("<i> "))
+                text = "<i>" + text.Substring("<i> ".Length);
+
+            if (text.Contains(Environment.NewLine + "<i> "))
+
+                text = text.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
+
+            text = text.Trim();
+            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+            if (text.StartsWith("<I> "))
+                text = "<I>" + text.Substring("<I> ".Length);
+
+            if (text.Contains(Environment.NewLine + "<I> "))
+                text = text.Replace(Environment.NewLine + "<I> ", Environment.NewLine + "<I>");
+
+            text = text.Trim();
+            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+
+
+            if (text.Contains("- ") && text.Length > 5)
+            {
+                int idx = text.IndexOf("- ", 2);
+                if (text.ToLower().StartsWith("<i>"))
+                    idx = text.IndexOf("- ", 5);
+                while (idx > 0)
+                {
+                    if (idx > 0 && idx < text.Length - 2)
+                    {
+                        string before = string.Empty;
+                        int k = idx - 1;
+                        while (k >= 0 && Utilities.AllLettersAndNumbers.Contains(text[k].ToString()))
+                        {
+                            before = text[k].ToString() + before;
+                            k--;
+                        }
+                        string after = string.Empty;
+                        k = idx + 2;
+                        while (k < text.Length && Utilities.AllLetters.Contains(text[k].ToString()))
+                        {
+                            after = after + text[k].ToString();
+                            k++;
+                        }
+                        if (after.Length > 0 && after.ToLower() == before.ToLower())
+                            text = text.Remove(idx + 1, 1);
+                        else if (before.Length > 0)
+                        {
+                            if ((language == "en" && (after.ToLower() == "and" || after.ToLower() == "or")) ||
+                                (language == "es" && (after.ToLower() == "y" || after.ToLower() == "o")) ||
+                                (language == "da" && (after.ToLower() == "og" || after.ToLower() == "eller")) ||
+                                (language == "de" && (after.ToLower() == "und" || after.ToLower() == "oder")) ||
+                                (language == "fi" && (after.ToLower() == "ja" || after.ToLower() == "tai")) ||
+                                (language == "fr" && (after.ToLower() == "et" || after.ToLower() == "ou")) ||
+                                (language == "it" && (after.ToLower() == "e" || after.ToLower() == "o")) ||
+                                (language == "nl" && (after.ToLower() == "en" || after.ToLower() == "of")) ||
+                                (language == "pl" && (after.ToLower() == "i" || after.ToLower() == "czy")) ||
+                                (language == "pt" && (after.ToLower() == "e" || after.ToLower() == "ou")))
+                            {
+                            }
+                            else
+                            {
+                                text = text.Remove(idx + 1, 1);
+                            }
+                        }
+                    }
+                    if (idx + 1 < text.Length && idx != -1)
+                        idx = text.IndexOf("- ", idx + 1);
+                    else
+                        idx = -1;
+                }
+            }
+            return text;
+        }
+
     }
 }
