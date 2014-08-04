@@ -1291,7 +1291,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <Import>Importiere...</Import>
     <Export>Exportiere...</Export>
     <ImportRulesTitle>Importiere Korrekturregeln aus...</ImportRulesTitle>
-    <ExportRulesTitle>Exportiere Korrekturrregeln nach...</ExportRulesTitle>
+    <ExportRulesTitle>Exportiere Korrekturregeln nach...</ExportRulesTitle>
     <Rules>Exportregeln</Rules>
   </MultipleReplace>
   <NetworkChat>

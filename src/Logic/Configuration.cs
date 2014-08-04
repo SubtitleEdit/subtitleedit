@@ -156,9 +156,13 @@ namespace Nikse.SubtitleEdit.Logic
                     else
                     {
                         string installerPath = GetInstallerPath();
-                        string pf = System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).TrimEnd(Path.DirectorySeparatorChar);
+                        bool hasUninstallFiles = Directory.GetFiles(BaseDirectory, "unins*.*").Length > 0;
+                        bool hasDictionaryFolder = Directory.Exists(Path.Combine(BaseDirectory, "Dictionaries"));
                         string appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
-                        if (installerPath != null && BaseDirectory.ToLower().StartsWith(installerPath.ToLower().TrimEnd(Path.DirectorySeparatorChar)))
+
+                        if ((installerPath != null && installerPath.ToLower().TrimEnd(Path.DirectorySeparatorChar) == BaseDirectory.ToLower().TrimEnd(Path.DirectorySeparatorChar))  ||
+                            hasUninstallFiles || 
+                            (!hasDictionaryFolder && Directory.Exists(Path.Combine(appDataRoamingPath, "Dictionaries"))))
                         {
                             if (Directory.Exists(appDataRoamingPath))
                             {
@@ -179,22 +183,7 @@ namespace Nikse.SubtitleEdit.Logic
                                     System.Windows.Forms.Application.ExitThread();
                                 }
                             }
-                        }
-                        else if (BaseDirectory.ToLower().StartsWith(pf.ToLower()) && Environment.OSVersion.Version.Major >= 6 ) // 6 == Vista/Win2008Server/Win7
-                        { // windows vista and newer does not like programs writing to PF (nor does WinXp with non admin...)
-                            try
-                            {
-                                System.IO.Directory.CreateDirectory(appDataRoamingPath);
-                                System.IO.Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));
-                                Instance._dataDir = appDataRoamingPath + Path.DirectorySeparatorChar;
-                            }
-                            catch
-                            {
-                                Instance._dataDir = BaseDirectory;
-                                System.Windows.Forms.MessageBox.Show("Please do not install portable version in 'Program Files' folder.");
-                                System.Windows.Forms.Application.ExitThread();
-                            }
-                        }
+                        }                        
                         else
                         {
                             Instance._dataDir = BaseDirectory;
