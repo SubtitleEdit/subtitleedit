@@ -402,7 +402,7 @@ namespace Nikse.SubtitleEdit.Forms
         public static string TranslateTextViaScreenScraping(string input, string languagePair, Encoding encoding)
         {
             input = input.Replace(Environment.NewLine, _newlineString);
-            input = input.Replace("'", "&apos;");
+            //input = input.Replace("'", "&apos;");
 
             //string url = String.Format("http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}", HttpUtility.UrlEncode(input), languagePair);
             string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
