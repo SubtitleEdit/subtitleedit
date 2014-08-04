@@ -9475,7 +9475,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (noOfErrors > 0)
                 {
-                    MessageBox.Show(string.Format("{0} errror(s) occured during extraction of bdsup\r\n\r\n{1}", noOfErrors, lastError));
+                    MessageBox.Show(string.Format("{0} error(s) occured during extraction of bdsup\r\n\r\n{1}", noOfErrors, lastError));
                 }
 
                 var formSubOcr = new VobSubOcr();
@@ -17922,7 +17922,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (p.EndTime.TotalMilliseconds > ms && p.StartTime.TotalMilliseconds < ms)
                     {
-                        // currrent sub
+                        // current sub
                     }
                     else if (p.Duration.TotalSeconds < 10 && p.StartTime.TotalMilliseconds > ms)
                     {
@@ -17945,7 +17945,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Paragraph p = _subtitle.Paragraphs[i];
                     if (p.EndTime.TotalMilliseconds > ms && p.StartTime.TotalMilliseconds < ms)
                     {
-                        // currrent sub
+                        // current sub
                     }
                     else if (p.Duration.TotalSeconds < 10 && p.StartTime.TotalMilliseconds < ms)
                     {
