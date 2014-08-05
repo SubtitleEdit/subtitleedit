@@ -168,7 +168,7 @@ namespace Test
             string s1 = "Was het in het voor- of najaar?";
             string s2 = Utilities.RemoveUnneededSpaces(s1, "nl");
             Assert.AreEqual(s2, s1);
-        }  
-      
+        }
+
     }
 }

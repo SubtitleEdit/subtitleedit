@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Logic
                         string appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
 
                         if ((installerPath != null && installerPath.ToLower().TrimEnd(Path.DirectorySeparatorChar) == BaseDirectory.ToLower().TrimEnd(Path.DirectorySeparatorChar))  ||
-                            hasUninstallFiles || 
+                            hasUninstallFiles ||
                             (!hasDictionaryFolder && Directory.Exists(Path.Combine(appDataRoamingPath, "Dictionaries"))))
                         {
                             if (Directory.Exists(appDataRoamingPath))
@@ -183,7 +183,7 @@ namespace Nikse.SubtitleEdit.Logic
                                     System.Windows.Forms.Application.ExitThread();
                                 }
                             }
-                        }                        
+                        }
                         else
                         {
                             Instance._dataDir = BaseDirectory;
