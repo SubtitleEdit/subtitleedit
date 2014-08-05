@@ -935,7 +935,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         noOfShortDisplayTimes = MoveStartTime(fixAction, noOfShortDisplayTimes, p, temp, next);
                     }
-                  
+
                     // Make current subtitle duration longer + move next subtitle
                     else if (diffMs < 1200 &&
                              p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&

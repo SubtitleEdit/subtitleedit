@@ -7,10 +7,10 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class SetVideoOffset : Form
     {
-        public bool FromCurrentVideoPosition { get; set; }        
+        public bool FromCurrentVideoPosition { get; set; }
 
         private TimeCode _videoOffset = new TimeCode(0);
-        public TimeCode VideoOffset 
+        public TimeCode VideoOffset
         {
             get
             {
@@ -26,13 +26,13 @@ namespace Nikse.SubtitleEdit.Forms
         public SetVideoOffset()
         {
             InitializeComponent();
-        
+
             Text = Configuration.Settings.Language.SetVideoOffset.Title;
             labelDescription.Text = Configuration.Settings.Language.SetVideoOffset.Description;
             checkBoxFromCurrentPosition.Text = Configuration.Settings.Language.SetVideoOffset.RelativeToCurrentVideoPosition;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            FixLargeFonts();            
+            FixLargeFonts();
         }
 
         private void FixLargeFonts()

@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
                     minimumCharsSec = charsSec;
                 if (charsSec > maximumCharsSec)
                     maximumCharsSec = charsSec;
-                totalCharsSec += charsSec;                
+                totalCharsSec += charsSec;
 
                 foreach (string line in p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 {
