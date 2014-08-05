@@ -849,6 +849,14 @@ namespace Nikse.SubtitleEdit.Logic
 
             s = RemoveHtmlTags(s);
 
+            if (alsoSsaTags)
+                s = RemoveSsaTags(s);
+
+            return s;
+        }
+
+        public static string RemoveSsaTags(string s)
+        {
             int k = s.IndexOf("{");
             while (k >= 0)
             {
@@ -866,7 +874,6 @@ namespace Nikse.SubtitleEdit.Logic
                     k = -1;
                 }
             }
-
             return s;
         }
 
