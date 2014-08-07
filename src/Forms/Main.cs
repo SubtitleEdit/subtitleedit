@@ -16836,7 +16836,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             closeVideoToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName);
-            setVideoOffsetToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName); // && Configuration.Settings.General.ShowBetaStuff;
+            setVideoOffsetToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName) && Configuration.Settings.General.ShowBetaStuff;
 
             toolStripMenuItemSetAudioTrack.Visible = false;
             if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is Logic.VideoPlayers.LibVlc11xDynamic)

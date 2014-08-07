@@ -7,9 +7,11 @@
    * Can now import new time codes into OCR window - thx Music Fan
 * IMPROVED:
    * Split line improvement regarding italic/dialogue - thx moob
+   * Updated Chinese Traditional language file - thx BR
    * Added .avs to list of known video formats - thx Peter
    * Avid STL format detection improved
    * Allow adding words to user dictionary with a length of 1 - thx Betsy25
+   * Spell check now has better suggestions for one letter words - thx Milad
 * FIXED:
    * Fixed crash in Visual Sync when using VLC as video player
    * Export to image based formats now uses font from ssa/ass - thx mariner
