@@ -979,7 +979,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     if (_noOfChangedWords > 0)
-                        _mainWindow.ShowStatus(completedMessage + " - " + string.Format(mainLanguage.NumberOfCorrectedWords, _noOfChangedWords));
+                        _mainWindow.ShowStatus(completedMessage + "  " + string.Format(mainLanguage.NumberOfCorrectedWords, _noOfChangedWords));
                     else
                         _mainWindow.ShowStatus(completedMessage);
                 }
