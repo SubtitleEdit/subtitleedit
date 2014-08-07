@@ -863,6 +863,7 @@
             public string NothingToUndo { get; set; }
             public string InvalidLanguageNameX { get; set; }
             public string UnableToChangeLanguage { get; set; }
+            public string DoNotDisplayMessageAgain { get; set; }
             public string NumberOfCorrectedWords { get; set; }
             public string NumberOfSkippedWords { get; set; }
             public string NumberOfCorrectWords { get; set; }
