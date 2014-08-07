@@ -3500,7 +3500,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (Control.ModifierKeys == (Keys.Control | Keys.Shift))
                     allText = allText.Replace("\r\n", "\n");
 
-                if (format.GetType() == typeof(ItunesTimedText))
+                if (format.GetType() == typeof(ItunesTimedText) || format.GetType() == typeof(ScenaristClosedCaptions) || format.GetType() == typeof(ScenaristClosedCaptionsDropFrame))
                 {
                     Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
                     TextWriter file = new StreamWriter(_fileName, false, outputEnc); // open file with encoding
