@@ -6720,6 +6720,8 @@ namespace Nikse.SubtitleEdit.Forms
                         tesseractName = "chi_sim";
                     if (culture.Name == "zh-CHT" && !File.Exists(dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata"))
                         tesseractName = "chi_tra";
+                    if (tesseractName == "fas" && !File.Exists(dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata"))
+                        tesseractName = "per";
                     string trainDataFileName = dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata";
                     if (!list.Contains(culture.ThreeLetterISOLanguageName) && File.Exists(trainDataFileName))
                     {
@@ -7392,7 +7394,7 @@ namespace Nikse.SubtitleEdit.Forms
             string threeLetterISOLanguageName = string.Empty;
             if (LanguageString == null)
             {
-                _ocrFixEngine = null;
+                _ocrFixEngine = new OcrFixEngine(string.Empty, string.Empty, this);
                 return;
             }
             try

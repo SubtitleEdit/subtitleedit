@@ -76,6 +76,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         /// <param name="parentForm">Used for centering/show spellcheck dialog</param>
         public OcrFixEngine(string threeLetterIsoLanguageName, string hunspellName, Form parentForm)
         {
+            if (threeLetterIsoLanguageName == "per")
+                threeLetterIsoLanguageName = "fas";
+
             _threeLetterIsoLanguageName = threeLetterIsoLanguageName;
             _parentForm = parentForm;
 
