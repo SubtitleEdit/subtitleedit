@@ -730,6 +730,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 count++;
                 int i = 0;
                 string code = string.Empty;
+                if (italic > 0)
+                {
+                    sb.Append("91ae 91ae "); // italic
+                }
                 while (i < text.Length)
                 {
                     string s = text.Substring(i, 1);
@@ -737,7 +741,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string newCode = string.Empty;
                     if (text.Substring(i).StartsWith("<i>"))
                     {
-                        newCode = "91AE";
+                        newCode = "91ae";
                         i += 2;
                         italic++;
                     }
