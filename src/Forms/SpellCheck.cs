@@ -963,13 +963,26 @@ namespace Nikse.SubtitleEdit.Forms
             if (_noOfChangedWords > 0 || _noOfAddedWords > 0 || _noOfSkippedWords > 0 || completedMessage == Configuration.Settings.Language.SpellCheck.SpellCheckCompleted)
             {
                 this.Hide();
-                MessageBox.Show(completedMessage + Environment.NewLine +
-                                Environment.NewLine +
-                                string.Format(mainLanguage.NumberOfCorrectedWords, _noOfChangedWords) + Environment.NewLine +
-                                string.Format(mainLanguage.NumberOfSkippedWords, _noOfSkippedWords) + Environment.NewLine +
-                                string.Format(mainLanguage.NumberOfCorrectWords, _noOfCorrectWords) + Environment.NewLine +
-                                string.Format(mainLanguage.NumberOfWordsAddedToDictionary, _noOfAddedWords) + Environment.NewLine +
-                                string.Format(mainLanguage.NumberOfNameHits, _noOfNamesEtc), _mainWindow.Title + " - " + mainLanguage.SpellCheck);
+                if (Configuration.Settings.Tools.SpellCheckShowCompletedMessage)
+                {
+                    var form = new DialogDoNotShowAgain(_mainWindow.Title + " - " + mainLanguage.SpellCheck,
+                                    completedMessage + Environment.NewLine +
+                                    Environment.NewLine +
+                                    string.Format(mainLanguage.NumberOfCorrectedWords, _noOfChangedWords) + Environment.NewLine +
+                                    string.Format(mainLanguage.NumberOfSkippedWords, _noOfSkippedWords) + Environment.NewLine +
+                                    string.Format(mainLanguage.NumberOfCorrectWords, _noOfCorrectWords) + Environment.NewLine +
+                                    string.Format(mainLanguage.NumberOfWordsAddedToDictionary, _noOfAddedWords) + Environment.NewLine +
+                                    string.Format(mainLanguage.NumberOfNameHits, _noOfNamesEtc));
+                    form.ShowDialog(_mainWindow);
+                    Configuration.Settings.Tools.SpellCheckShowCompletedMessage = !form.DoNoDisplayAgain;
+                }
+                else
+                {
+                    if (_noOfChangedWords > 0)
+                        _mainWindow.ShowStatus(completedMessage + " - " + string.Format(mainLanguage.NumberOfCorrectedWords, _noOfChangedWords));
+                    else
+                        _mainWindow.ShowStatus(completedMessage);
+                }
             }
         }
 

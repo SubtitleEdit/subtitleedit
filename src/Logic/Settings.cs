@@ -82,6 +82,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool SpellCheckAutoChangeNames { get; set; }
         public bool SpellCheckOneLetterWords { get; set; }
         public bool SpellCheckEnglishAllowInQuoteAsIng { get; set; }
+        public bool SpellCheckShowCompletedMessage { get; set; }
         public bool OcrFixUseHardcodedRules { get; set; }
         public string Interjections { get; set; }
         public string MicrosoftBingApiId { get; set; }
@@ -175,6 +176,7 @@ namespace Nikse.SubtitleEdit.Logic
             GoogleTranslateLastTargetLanguage = "en";
             SpellCheckOneLetterWords = true;
             SpellCheckEnglishAllowInQuoteAsIng = false;
+            SpellCheckShowCompletedMessage = true;
             ListViewSyntaxColorDurationSmall = true;
             ListViewSyntaxColorDurationBig = true;
             ListViewSyntaxColorOverlap = true;
@@ -1499,7 +1501,10 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.SpellCheckOneLetterWords = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SpellCheckEnglishAllowInQuoteAsIng");
             if (subNode != null)
-                settings.Tools.SpellCheckEnglishAllowInQuoteAsIng = Convert.ToBoolean(subNode.InnerText);
+                settings.Tools.SpellCheckEnglishAllowInQuoteAsIng = Convert.ToBoolean(subNode.InnerText);            
+            subNode = node.SelectSingleNode("SpellCheckShowCompletedMessage");
+            if (subNode != null)
+                settings.Tools.SpellCheckShowCompletedMessage = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("OcrFixUseHardcodedRules");
             if (subNode != null)
                 settings.Tools.OcrFixUseHardcodedRules = Convert.ToBoolean(subNode.InnerText);
@@ -2703,6 +2708,7 @@ namespace Nikse.SubtitleEdit.Logic
                     textWriter.WriteElementString("SpellCheckAutoChangeNames", settings.Tools.SpellCheckAutoChangeNames.ToString());
                     textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.SpellCheckOneLetterWords.ToString());
                     textWriter.WriteElementString("SpellCheckEnglishAllowInQuoteAsIng", settings.Tools.SpellCheckEnglishAllowInQuoteAsIng.ToString());
+                    textWriter.WriteElementString("SpellCheckShowCompletedMessage", settings.Tools.SpellCheckShowCompletedMessage.ToString());
                     textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString());
                     textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
                     textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);

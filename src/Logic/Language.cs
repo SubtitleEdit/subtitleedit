@@ -987,6 +987,7 @@ namespace Nikse.SubtitleEdit.Logic
                 NothingToUndo = "Nothing to undo",
                 InvalidLanguageNameX = "Invalid language name: {0}",
                 UnableToChangeLanguage = "Unable to change language!",
+                DoNotDisplayMessageAgain = "Don't display this message again",
                 NumberOfCorrectedWords = "Number of corrected words: {0}",
                 NumberOfSkippedWords = "Number of skipped words: {0}",
                 NumberOfCorrectWords = "Number of correct words: {0}",

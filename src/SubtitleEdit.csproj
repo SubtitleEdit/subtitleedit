@@ -561,6 +561,12 @@
     <Compile Include="Forms\SpellCheck.Designer.cs">
       <DependentUpon>SpellCheck.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DialogDoNotShowAgain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DialogDoNotShowAgain.Designer.cs">
+      <DependentUpon>DialogDoNotShowAgain.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Split.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1430,6 +1436,9 @@
     <EmbeddedResource Include="Forms\SpellCheck.resx">
       <DependentUpon>SpellCheck.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DialogDoNotShowAgain.resx">
+      <DependentUpon>DialogDoNotShowAgain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Split.resx">
       <DependentUpon>Split.cs</DependentUpon>
