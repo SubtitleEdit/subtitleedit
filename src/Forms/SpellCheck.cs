@@ -755,6 +755,16 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
 
+                            suggestions.Remove(_currentWord);
+                            if (_currentWord.Length == 1)
+                            {
+                                if ((_currentWord == "L") && _languageName.StartsWith("en_"))
+                                {
+                                    suggestions.Remove("I");
+                                    suggestions.Insert(0, "I");
+                                }
+                            }
+
                             if (AutoFixNames && _currentWord.Length > 1 && suggestions.Contains(_currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1)))
                             {
                                 ChangeWord = _currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1);
