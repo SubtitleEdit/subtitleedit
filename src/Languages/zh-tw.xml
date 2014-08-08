@@ -15,7 +15,7 @@
     <SubtitleFiles>字幕檔案</SubtitleFiles>
     <AllFiles>所有檔案</AllFiles>
     <VideoFiles>視訊檔案</VideoFiles>
-	<AudioFiles>音訊檔案</AudioFiles>
+    <AudioFiles>音訊檔案</AudioFiles>
     <OpenSubtitle>開啟字幕...</OpenSubtitle>
     <OpenVideoFile>開啟視訊檔案...</OpenVideoFile>
     <OpenVideoFileTitle>開啟視訊檔案...</OpenVideoFileTitle>
@@ -241,7 +241,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <XNumberOfDifferenceAndPercentChanged>差異數量: {0}  (已變更單字的 {1}%)</XNumberOfDifferenceAndPercentChanged>
     <XNumberOfDifferenceAndPercentLettersChanged>差異數量: {0}  (已變更字母的 {1}%)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>僅顯示差異處</ShowOnlyDifferences>
-	<IgnoreLineBreaks>忽略換行字元</IgnoreLineBreaks>
+    <IgnoreLineBreaks>忽略換行字元</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>僅尋找文字差異</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>無法比較基於圖像的字幕</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -255,7 +255,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <Language>語言</Language>
     <IssueDate>發行日期</IssueDate>
     <EditRate>編輯速率</EditRate>
-	<TimeCodeRate>時間碼率</TimeCodeRate>
+    <TimeCodeRate>時間碼率</TimeCodeRate>
     <StartTime>起始時間</StartTime>
     <Font>字型</Font>
     <FontId>ID</FontId>
@@ -316,7 +316,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <GeneralSubtitleInformation>一般字幕訊息</GeneralSubtitleInformation>
     <CodePageNumber>代碼頁編號</CodePageNumber>
     <DiskFormatCode>磁碟格式代碼</DiskFormatCode>
-	<DisplayStandardCode>顯示標準碼</DisplayStandardCode>
+    <DisplayStandardCode>顯示標準碼</DisplayStandardCode>
     <CharacterCodeTable>字元表</CharacterCodeTable>
     <LanguageCode>語言代碼</LanguageCode>
     <OriginalProgramTitle>原始節目標題</OriginalProgramTitle>
@@ -389,10 +389,10 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <ShadowWidth>陰影寬度</ShadowWidth>
     <Transparency>透明度</Transparency>
     <ImageFormat>圖像格式</ImageFormat>
-	<SimpleRendering>簡易渲染</SimpleRendering>
+    <SimpleRendering>簡易渲染</SimpleRendering>
     <AntiAliasingWithTransparency>帶透明度反鋸齒</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
-	<SideBySide3D>左右型 3D 格式</SideBySide3D>
+    <SideBySide3D>左右型 3D 格式</SideBySide3D>
     <HalfTopBottom3D>上下型 3D 格式</HalfTopBottom3D>
     <Depth>深度</Depth>
     <ExportAllLines>匯出所有行...</ExportAllLines>
@@ -644,24 +644,24 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <Title>匯入純文字</Title>
     <OneSubtitleIsOneFile>多個檔案 - 每個檔案是獨立的字幕</OneSubtitleIsOneFile>
     <OpenTextFile>開啟文字檔案...</OpenTextFile>
-	<OpenTextFiles>開啟文字檔案...</OpenTextFiles>
+    <OpenTextFiles>開啟文字檔案...</OpenTextFiles>
     <ImportOptions>匯入選項</ImportOptions>
     <Splitting>分割</Splitting>
     <AutoSplitText>自動分割文字</AutoSplitText>
     <OneLineIsOneSubtitle>一行一個字幕</OneLineIsOneSubtitle>
-	<LineBreak>換行</LineBreak>
+    <LineBreak>換行</LineBreak>
     <SplitAtBlankLines>在空行處分割</SplitAtBlankLines>
     <MergeShortLines>用接續字元合併短行</MergeShortLines>
     <RemoveEmptyLines>移除空行</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>移除無字母的行</RemoveLinesWithoutLetters>
-	<GenerateTimeCodes>建立時間碼</GenerateTimeCodes>
+    <GenerateTimeCodes>建立時間碼</GenerateTimeCodes>
     <GapBetweenSubtitles>字幕間隔 (毫秒)</GapBetweenSubtitles>
     <Auto>自動</Auto>
     <Fixed>固定</Fixed>
     <Refresh>重新整理(&amp;R)</Refresh>
     <TextFiles>文字檔案</TextFiles>
     <PreviewLinesModifiedX>預覽 - 已修改字幕: {0}</PreviewLinesModifiedX>
-	<TimeCodes>時間碼</TimeCodes>
+    <TimeCodes>時間碼</TimeCodes>
   </ImportText>
   <Interjections>
     <Title>感嘆詞</Title>
@@ -700,10 +700,10 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <ImportOcrVobSubSubtitle>匯入/OCR VobSub (sub/idx) 字幕...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>匯入/OCR 藍光字幕檔案 (.sup) ...</ImportBluRaySupFile>
         <ImportXSub>從 divx/avi 匯入/OCR xsub...</ImportXSub>
-		<ImportSubtitleFromMatroskaFile>從 Matroska 檔案 (.mkv) 匯入字幕...</ImportSubtitleFromMatroskaFile>
+        <ImportSubtitleFromMatroskaFile>從 Matroska 檔案 (.mkv) 匯入字幕...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>手動選擇編碼方式匯入字幕...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>匯入純文字...</ImportText>
-		<ImportImages>匯入圖像...</ImportImages>
+        <ImportImages>匯入圖像...</ImportImages>
         <ImportTimecodes>匯入時間碼...</ImportTimecodes>
         <Export>匯出</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
@@ -721,7 +721,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
         <ExportUltech130>Ultech 標題...</ExportUltech130>
-		<ExportCustomTextFormat>匯出自訂文字格式...</ExportCustomTextFormat>
+        <ExportCustomTextFormat>匯出自訂文字格式...</ExportCustomTextFormat>
         <Exit>離開(&amp;X)</Exit>
       </File>
       <Edit>
@@ -746,7 +746,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <Title>工具</Title>
         <AdjustDisplayDuration>調整持續時間(&amp;A)...</AdjustDisplayDuration>
         <ApplyDurationLimits>套用持續時間限制...</ApplyDurationLimits>
-		<DurationsBridgeGap>橋接持續時間間的間隔...</DurationsBridgeGap>
+        <DurationsBridgeGap>橋接持續時間間的間隔...</DurationsBridgeGap>
         <FixCommonErrors>修復一般錯誤(&amp;F)...</FixCommonErrors>
         <StartNumberingFrom>重新編號...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>移除妨礙聽覺的文字...</RemoveTextForHearingImpaired>
@@ -754,7 +754,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <ChangeFrameRate>變更影格率...</ChangeFrameRate>
         <ChangeSpeedInPercent>變更速度 (百分比)...</ChangeSpeedInPercent>
         <MergeShortLines>合併短行...</MergeShortLines>
-		<MergeDuplicateText>合併文字相同的行...</MergeDuplicateText>
+        <MergeDuplicateText>合併文字相同的行...</MergeDuplicateText>
         <MergeSameTimeCodes>合併時間碼相同的行...</MergeSameTimeCodes>
         <SplitLongLines>分割長行...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>段落間最小顯示時間...</MinimumDisplayTimeBetweenParagraphs>
@@ -774,7 +774,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <Descending>降冪</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>從目前字幕建立新的空白翻譯</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>批次轉換...</BatchConvert>
-		<GenerateTimeAsText>將時間建立為文字...</GenerateTimeAsText>
+        <GenerateTimeAsText>將時間建立為文字...</GenerateTimeAsText>
         <MeasurementConverter>度量轉換器...</MeasurementConverter>
         <SplitSubtitle>分割字幕...</SplitSubtitle>
         <AppendSubtitle>附加字幕...</AppendSubtitle>
@@ -783,7 +783,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
       <Video>
         <Title>視訊</Title>
         <OpenVideo>開啟視訊檔案...</OpenVideo>
-		<OpenDvd>開啟 DVD...</OpenDvd>
+        <OpenDvd>開啟 DVD...</OpenDvd>
         <ChooseAudioTrack>選擇音軌...</ChooseAudioTrack>
         <CloseVideo>關閉視訊檔案</CloseVideo>
         <ImportSceneChanges>匯入場景變更...</ImportSceneChanges>
@@ -830,7 +830,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <LeaveSession>離開工作階段</LeaveSession>
       </Networking>
       <Help>
-	    <CheckForUpdates>檢查有無更新...</CheckForUpdates>
+        <CheckForUpdates>檢查有無更新...</CheckForUpdates>
         <Title>說明</Title>
         <Help>說明(&amp;H)</Help>
         <About>關於(&amp;A)...</About>
@@ -842,7 +842,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <SaveAs>另存為</SaveAs>
         <Find>尋找</Find>
         <Replace>取代</Replace>
-		<FixCommonErrors>修復一般錯誤</FixCommonErrors>
+        <FixCommonErrors>修復一般錯誤</FixCommonErrors>
         <VisualSync>視覺同步</VisualSync>
         <SpellCheck>拼寫檢查</SpellCheck>
         <Settings>設定</Settings>
@@ -857,7 +857,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha 樣式...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Timed Text - 設定樣式</TimedTextSetStyle>
         <TimedTextStyles>Timed Text 樣式...</TimedTextStyles>
-		<TimedTextSetLanguage>Timed Text - 設定語言</TimedTextSetLanguage>
+        <TimedTextSetLanguage>Timed Text - 設定語言</TimedTextSetLanguage>
         <SamiSetStyle>Sami - 設定類別</SamiSetStyle>
         <Cut>剪下</Cut>
         <Copy>複製</Copy>
@@ -878,7 +878,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <ColumnInsertTextFromSubtitle>從字幕插入文字...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>匯入文字並將單元格下移</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>從剪貼簿貼上...</ColumnPasteFromClipboard>
-		<ColumnCopyOriginalTextToCurrent>從原始文字複製到目前行</ColumnCopyOriginalTextToCurrent>
+        <ColumnCopyOriginalTextToCurrent>從原始文字複製到目前行</ColumnCopyOriginalTextToCurrent>
         <Split>分割</Split>
         <MergeSelectedLines>合併選擇的行</MergeSelectedLines>
         <MergeSelectedLinesASDialogue>將選擇的行合併為對話</MergeSelectedLinesASDialogue>
@@ -1121,7 +1121,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <VobSubFiles>VobSub 字幕檔案</VobSubFiles>
     <OpenBluRaySupFile>開啟藍光 .sup 檔案...</OpenBluRaySupFile>
     <BluRaySupFiles>藍光 .sup 檔案</BluRaySupFiles>
-	<OpenXSubFiles>開啟 xsub 檔案...</OpenXSubFiles>
+    <OpenXSubFiles>開啟 xsub 檔案...</OpenXSubFiles>
     <XSubFiles>xsub 檔案</XSubFiles>
     <BeforeImportingVobSubFile>匯入 VobSub 字幕之前</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>匯入藍光 sup 檔案之前</BeforeImportingBluRaySupFile>
@@ -1340,11 +1340,11 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <PluginXDownloaded>外掛程式 {0} 已下載</PluginXDownloaded>
     <Download>下載(&amp;D)</Download>
     <Remove>移除(&amp;R)</Remove>
-	<UpdateAllX>全部更新 ({0})</UpdateAllX>
+    <UpdateAllX>全部更新 ({0})</UpdateAllX>
     <UnableToDownloadPluginListX>無法下載外掛程式清單: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>需要新版本的 Subtitle Edit！</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[有更新可用！]</UpdateAvailable>
-	<UpdateAll>全部更新</UpdateAll>
+    <UpdateAll>全部更新</UpdateAll>
     <XPluginsUpdated>已更新 {0} 個外掛程式</XPluginsUpdated>
   </PluginsGet>
   <RegularExpressionContextMenu>
@@ -1479,7 +1479,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <AutoBackupEveryMinute>每隔 1 分鐘</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>每隔 5 分鐘</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>每隔 15 分鐘</AutoBackupEveryFifteenMinutes>
-	<CheckForUpdates>檢查有無更新</CheckForUpdates>
+    <CheckForUpdates>檢查有無更新</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>允許編輯原始字幕</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>刪除行時提示</PromptDeleteLines>
     <TimeCodeMode>時間碼模式</TimeCodeMode>
@@ -1528,7 +1528,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <SubStationAlphaStyle>(Advanced) Sub Station Alpha 樣式</SubStationAlphaStyle>
     <ChooseFont>選擇字型</ChooseFont>
     <ChooseColor>選擇色彩</ChooseColor>
-	<SsaOutline>外框</SsaOutline>
+    <SsaOutline>外框</SsaOutline>
     <SsaShadow>陰影</SsaShadow>
     <SsaOpaqueBox>不透明框</SsaOpaqueBox>
     <Testing123>正在測試 123...</Testing123>
@@ -1597,7 +1597,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <AutoDurationSelectedLines>自動設定持續時間 (選擇的行)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>反轉 RTL 開始/結束</ReverseStartAndEndingForRTL>
     <VerticalZoom>垂直放大</VerticalZoom>
-	<VerticalZoomOut>垂直縮小</VerticalZoomOut>
+    <VerticalZoomOut>垂直縮小</VerticalZoomOut>
     <WaveformSeekSilenceForward>向前搜尋靜音</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>向後搜尋靜音</WaveformSeekSilenceBack>
     <WaveformAddTextHere>加入文字到此處 (用於新的選擇部份)</WaveformAddTextHere>
@@ -1610,7 +1610,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <GoForward100Milliseconds>向前 100 毫秒</GoForward100Milliseconds>
     <GoBack500Milliseconds>向後 500 毫秒</GoBack500Milliseconds>
     <GoForward500Milliseconds>向前 500 毫秒</GoForward500Milliseconds>
-	<GoBack1Second>向後 1 秒</GoBack1Second>
+    <GoBack1Second>向後 1 秒</GoBack1Second>
     <GoForward1Second>向前 1 秒</GoForward1Second>
     <TogglePlayPause>切換 播放/暫停</TogglePlayPause>
     <Pause>暫停</Pause>
@@ -1639,7 +1639,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <ListViewColumnDelete>行、移除文字</ListViewColumnDelete>
     <ListViewColumnInsert>行、插入文字</ListViewColumnInsert>
     <ListViewColumnPaste>行、貼上</ListViewColumnPaste>
-	<ListViewFocusWaveform>焦點置於 波形/頻譜圖</ListViewFocusWaveform>
+    <ListViewFocusWaveform>焦點置於 波形/頻譜圖</ListViewFocusWaveform>
     <ListViewGoToNextError>移至下一處錯誤</ListViewGoToNextError>
     <ShowBeamer>啟動字幕全螢幕投影儀</ShowBeamer>
     <MainTextBoxMoveLastWordDown>將上一行的最後一個單字移至下一行</MainTextBoxMoveLastWordDown>
@@ -1826,7 +1826,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <PlusShadow>+ 陰影</PlusShadow>
     <OpaqueBox>不透明框 (使用外框色彩)</OpaqueBox>
     <Import>匯入...</Import>
-	<Export>匯出...</Export>
+    <Export>匯出...</Export>
     <Copy>複製</Copy>
     <CopyOfY>複製 {0}</CopyOfY>
     <CopyXOfY>複製 {0}/{1}</CopyXOfY>
@@ -1871,7 +1871,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <GoToSubPosition>移至字幕位置</GoToSubPosition>
     <KeepChangesTitle>是否保留變更？</KeepChangesTitle>
     <KeepChangesMessage>「視覺同步」中的字幕已被變更。
-	
+
 是否保留變更？</KeepChangesMessage>
     <SynchronizationDone>同步完成！</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>起始場景必須在結束場景之前！</StartSceneMustComeBeforeEndScene>
@@ -1896,12 +1896,12 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <OcrMethod>OCR 方式</OcrMethod>
     <OcrViaModi>使用 Microsoft Office Document Imaging (MODI) 進行 OCR，需要 MS Office</OcrViaModi>
     <OcrViaTesseract>使用 TesserAct 進行 OCR</OcrViaTesseract>
-	<OcrViaNOCR>使用 nOCR 進行 OCR</OcrViaNOCR>
+    <OcrViaNOCR>使用 nOCR 進行 OCR</OcrViaNOCR>
     <Language>語言</Language>
     <OcrViaImageCompare>使用圖像比較進行 OCR</OcrViaImageCompare>
     <ImageDatabase>圖像資料庫</ImageDatabase>
     <NoOfPixelsIsSpace>像素數是空的</NoOfPixelsIsSpace>
-	<MaxErrorPercent>最大錯誤 %</MaxErrorPercent>
+    <MaxErrorPercent>最大錯誤 %</MaxErrorPercent>
     <New>新增</New>
     <Edit>編輯</Edit>
     <StartOcr>開始進行 OCR</StartOcr>
@@ -1977,7 +1977,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <ZoomOut>縮小</ZoomOut>
     <AddParagraphHere>加入文字到此處</AddParagraphHere>
     <AddParagraphHereAndPasteText>從剪貼簿加入文字到此處</AddParagraphHereAndPasteText>
-	<FocusTextBox>焦點置於文字框</FocusTextBox>
+    <FocusTextBox>焦點置於文字框</FocusTextBox>
     <DeleteParagraph>刪除文字</DeleteParagraph>
     <Split>分割</Split>
     <SplitAtCursor>在游標處分割</SplitAtCursor>
