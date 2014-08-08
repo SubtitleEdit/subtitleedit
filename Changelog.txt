@@ -25,6 +25,7 @@
    * Format "CSV 3" should not load format "SPRUCE STL" - thx Adrian
    * Added info about chars/sec to Statistics - thx Krystian
    * Remember "Auto fix names where only casing differ" - thx Betsy25
+   * SCC format multi line italics now works - thx Shawn
 
 
 3.4.0 (13th July 2014)
