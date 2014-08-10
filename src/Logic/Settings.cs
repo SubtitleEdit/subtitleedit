@@ -1501,7 +1501,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.SpellCheckOneLetterWords = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SpellCheckEnglishAllowInQuoteAsIng");
             if (subNode != null)
-                settings.Tools.SpellCheckEnglishAllowInQuoteAsIng = Convert.ToBoolean(subNode.InnerText);            
+                settings.Tools.SpellCheckEnglishAllowInQuoteAsIng = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SpellCheckShowCompletedMessage");
             if (subNode != null)
                 settings.Tools.SpellCheckShowCompletedMessage = Convert.ToBoolean(subNode.InnerText);

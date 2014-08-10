@@ -1,7 +1,7 @@
 @ECHO OFF
 SETLOCAL
 
-SET "VERSION=3.4.0"
+SET "VERSION=3.4.1"
 
 CD /D %~dp0
 
