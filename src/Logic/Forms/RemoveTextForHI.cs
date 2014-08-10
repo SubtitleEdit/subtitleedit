@@ -569,11 +569,23 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 _interjectionList = new List<string>();
                 foreach (string s in arr)
                 {
-                    if (!_interjectionList.Contains(s))
-                        _interjectionList.Add(s);
-                    string lower = s.ToLower();
-                    if (!_interjectionList.Contains(lower))
-                        _interjectionList.Add(lower);
+                    if (s.Length > 0)
+                    {
+                        if (!_interjectionList.Contains(s))
+                            _interjectionList.Add(s);
+
+                        string lower = s.ToLower();
+                        if (!_interjectionList.Contains(lower))
+                            _interjectionList.Add(lower);
+
+                        string upper = s.ToUpper();
+                        if (!_interjectionList.Contains(upper))
+                            _interjectionList.Add(upper);
+
+                        string pascalCasing = s.Substring(0, 1).ToUpper() + s.Remove(0, 1);
+                        if (!_interjectionList.Contains(pascalCasing))
+                            _interjectionList.Add(pascalCasing);
+                    }
                 }
                 _interjectionList.Sort(new Comparison<string>(CompareLength));
             }
@@ -587,7 +599,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     if (text.Contains(s))
                     {
                         var regex = new Regex("\\b" + s + "\\b");
-                        Match match = regex.Match(text);
+                        var match = regex.Match(text);
                         if (match.Success)
                         {
                             int index = match.Index;
@@ -685,6 +697,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                     temp = temp.Remove(0, 1).Insert(0, temp[0].ToString(CultureInfo.InvariantCulture).ToUpper());
                                     doRepeat = true;
                                 }
+
+                                if (pre.EndsWith(" ") && temp.StartsWith("-"))
+                                    temp = temp.Remove(0, 1);
+
                                 temp = pre + temp;
                             }
 
