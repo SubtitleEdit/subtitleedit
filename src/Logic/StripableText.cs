@@ -70,20 +70,25 @@ namespace Nikse.SubtitleEdit.Logic
                         text = text.Substring(0, text.Length - 1);
                     }
 
-                    // tags </i> </b> </u>
-                    if (text.ToLower().EndsWith("</i>") ||
-                        text.ToLower().EndsWith("</b>") ||
-                        text.ToLower().EndsWith("</u>"))
+                    if (text.EndsWith(">"))
                     {
-                        Post = text.Substring(text.Length - 4, 4) + Post;
-                        text = text.Substring(0, text.Length - 4);
-                    }
+                        string lower = text.ToLower();
 
-                    // tag </font>
-                    if (text.ToLower().EndsWith("</font>"))
-                    {
-                        Post = text.Substring(text.Length - 7, 7) + Post;
-                        text = text.Substring(0, text.Length - 7);
+                        // tags </i> </b> </u>
+                        if (lower.EndsWith("</i>") ||
+                            lower.EndsWith("</b>") ||
+                            lower.EndsWith("</u>"))
+                        {
+                            Post = text.Substring(text.Length - 4, 4) + Post;
+                            text = text.Substring(0, text.Length - 4);
+                        }
+
+                        // tag </font>
+                        if (lower.EndsWith("</font>"))
+                        {
+                            Post = text.Substring(text.Length - 7, 7) + Post;
+                            text = text.Substring(0, text.Length - 7);
+                        }
                     }
                 }
             }
