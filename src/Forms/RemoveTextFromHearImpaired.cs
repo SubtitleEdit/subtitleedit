@@ -260,6 +260,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (editInterjections.ShowDialog(this) == DialogResult.OK)
             {
                 Configuration.Settings.Tools.Interjections = editInterjections.GetInterjectionsSemiColonSeperatedString();
+                _removeTextForHILib.ResetInterjections();
                 if (checkBoxRemoveInterjections.Checked)
                 {
                     Cursor = Cursors.WaitCursor;
