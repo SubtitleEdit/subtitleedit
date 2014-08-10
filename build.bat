@@ -1,8 +1,6 @@
 @ECHO OFF
 SETLOCAL
 
-SET "VERSION=3.4.1"
-
 CD /D %~dp0
 
 rem Check for the help switches
@@ -55,6 +53,7 @@ IF /I "%BUILDTYPE%" == "Clean" GOTO END
 
 CALL :SubDetectSevenzipPath
 IF DEFINED SEVENZIP_PATH IF EXIST "%SEVENZIP_PATH%" (
+  CALL :SubGetVersion
   CALL :SubZipFile
 )
 
@@ -135,6 +134,16 @@ ECHO. & ECHO.
 ECHO Executing %~nx0 without any arguments is equivalent to "%~nx0 build"
 ECHO.
 ENDLOCAL
+EXIT /B
+
+
+:SubGetVersion
+FOR /F delims^=^"^ tokens^=2 %%A IN ('FINDSTR /R /C:"AssemblyVersion" "src\Properties\AssemblyInfo.cs.template"') DO (
+  rem 3.4.1.[REVNO]
+  SET "VERSION=%%A"
+)
+rem 3.4.1: 0 from the left and -8 chars from the right
+SET "VERSION=%VERSION:~0,-8%"
 EXIT /B
 
 
