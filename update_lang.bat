@@ -3,6 +3,11 @@ SETLOCAL
 
 PUSHD %~dp0
 
+IF NOT EXIST "src\UpdateLanguageFiles\bin\Release\UpdateLanguageFiles.exe" IF NOT EXIST "src\UpdateLanguageFiles\bin\Debug\UpdateLanguageFiles.exe" (
+  ECHO Compile Subtitle Edit first!
+  GOTO END
+)
+
 IF EXIST "src\UpdateLanguageFiles\bin\Release\UpdateLanguageFiles.exe" (
   "src\UpdateLanguageFiles\bin\Release\UpdateLanguageFiles.exe" "LanguageMaster.xml" "src\Logic\LanguageDeserializer.cs"
 ) ELSE (
@@ -17,5 +22,5 @@ ENDLOCAL
 EXIT /B
 
 :SubError
-ECHO Something went wrong when generating the language files.
+ECHO ERROR: Something went wrong when generating the language files...
 EXIT /B
