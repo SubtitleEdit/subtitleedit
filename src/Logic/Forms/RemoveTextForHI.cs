@@ -12,10 +12,16 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public List<int> Warnings;
         public int WarningIndex;
+        private List<string> _interjectionList;
 
         public RemoveTextForHI(RemoveTextForHISettings removeTextForHISettings)
         {
             Settings = removeTextForHISettings;
+        }
+
+        public void ResetInterjections()
+        {
+            _interjectionList = null;
         }
 
         public string RemoveHearImpairedtagsInsideLine(string newText)
@@ -558,22 +564,25 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             string oldText = text;
 
             string[] arr = Configuration.Settings.Tools.Interjections.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            var interjectionList = new List<string>();
-            foreach (string s in arr)
+            if (_interjectionList == null)
             {
-                if (!interjectionList.Contains(s))
-                    interjectionList.Add(s);
-                string lower = s.ToLower();
-                if (!interjectionList.Contains(lower))
-                    interjectionList.Add(lower);
+                _interjectionList = new List<string>();
+                foreach (string s in arr)
+                {
+                    if (!_interjectionList.Contains(s))
+                        _interjectionList.Add(s);
+                    string lower = s.ToLower();
+                    if (!_interjectionList.Contains(lower))
+                        _interjectionList.Add(lower);
+                }
+                _interjectionList.Sort(new Comparison<string>(CompareLength));
             }
-            interjectionList.Sort(new Comparison<string>(CompareLength));
 
             bool doRepeat = true;
             while (doRepeat)
             {
                 doRepeat = false;
-                foreach (string s in interjectionList)
+                foreach (string s in _interjectionList)
                 {
                     if (text.Contains(s))
                     {
