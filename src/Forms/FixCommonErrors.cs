@@ -2071,8 +2071,9 @@ namespace Nikse.SubtitleEdit.Forms
                     tempNoHtml.Length > 0 &&
                     (!",.!?:;>-])♪♫…".Contains(tempNoHtml[tempNoHtml.Length - 1].ToString())))
                 {
+                    string tempTrimmed = tempNoHtml.TrimEnd().TrimEnd(new char[] { '\'', '"', '“', '”' }).TrimEnd();
                     if (!tempNoHtml.EndsWith(")") && !tempNoHtml.EndsWith("]") && !tempNoHtml.EndsWith("*") && !tempNoHtml.EndsWith("#") && !tempNoHtml.EndsWith("¶") && // hear impaired
-                        !tempNoHtml.EndsWith(".\"") && !tempNoHtml.EndsWith("!\"") && !tempNoHtml.EndsWith("?\"") && !tempNoHtml.EndsWith(".“") && !tempNoHtml.EndsWith(".”"))
+                        !tempTrimmed.EndsWith(".") && !tempTrimmed.EndsWith("!") && !tempTrimmed.EndsWith("?"))
                     {
                         if (p.Text != p.Text.ToUpper())
                         {
