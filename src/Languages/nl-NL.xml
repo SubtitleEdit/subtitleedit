@@ -2,10 +2,11 @@
 <Language Name="Nederlands">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.1</Version>
-    <TranslatedBy>Vertaald door: Quetsbeek en minouhse 08072014</TranslatedBy>
+    <Version>3.4.0</Version>
+    <TranslatedBy>Vertaald door: Quetsbeek en minouhse 11082014</TranslatedBy>
     <CultureName>nl-NL</CultureName>
-    <HelpFile />
+    <HelpFile>
+    </HelpFile>
     <OK>&amp;Oké</OK>
     <Cancel>Afbreken</Cancel>
     <Apply>Voer uit</Apply>
@@ -88,8 +89,8 @@ Suggesties zijn van harte welkom
     <Description>Toevoegen aan namen/ruis-lijst (hoofdlettergevoelig)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
-    <Title>Toevoegen aan OCR vervangen lijst</Title>
-    <Description>Voeg paar toe aan OCR vervangen lijst (hoofdlettergevoelig)</Description>
+    <Title>Toevoegen aan ocr vervangen lijst</Title>
+    <Description>Voeg paar toe aan ocr vervangen lijst (hoofdlettergevoelig)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Toevoegen aan gebruikerswoordenboek</Title>
@@ -126,7 +127,7 @@ Suggesties zijn van harte welkom
     <UnableToFix>Onmogelijk aan te passen:</UnableToFix>
   </ApplyDurationLimits>
   <AutoBreakUnbreakLines>
-    <TitleAutoBreak>Auto balans geselecteerde regels</TitleAutoBreak>
+    <TitleAutoBreak>Lijn geselecteerde regels automatisch uit</TitleAutoBreak>
     <TitleUnbreak>Verwijder regeleinden uit geselecteerde regels</TitleUnbreak>
     <LinesFoundX>Gevonden regels: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>Breek alleen regels af langer dan</OnlyBreakLinesLongerThan>
@@ -153,7 +154,7 @@ Suggesties zijn van harte welkom
     <ConvertedX>Geconverteerd ({0})</ConvertedX>
     <Settings>Instellingen</Settings>
     <SplitLongLines>Splits lange regels</SplitLongLines>
-    <AutoBalance>Balanceer regels automatisch</AutoBalance>
+    <AutoBalance>Lijn regels automatisch uit.</AutoBalance>
     <ScanFolder>Doorzoek de map</ScanFolder>
     <ScanningFolder>Doorzoek {0} en submappen naar ondertitel bestanden</ScanningFolder>
     <Recursive>Inclusief submappen</Recursive>
@@ -479,7 +480,7 @@ Suggesties zijn van harte welkom
     <BreakLongLines>Breek lange regels af</BreakLongLines>
     <RemoveLineBreaks>Verwijder regeleinden in korte teksten met slechts een zin</RemoveLineBreaks>
     <RemoveLineBreaksAll>Verwijder regeleinden in korte teksten (alles behalve dialogen )</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Herstel hoofdletter 'I' in woorden met kleine letters  (OCR-fout)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsindeLowercaseWords>Herstel hoofdletter 'I' in woorden met kleine letters  (ocr-fout)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Wijzig dubbele enkele aanhalingstekens ('') naar een enkel aanhalingsteken (")</FixDoubleApostrophes>
     <AddPeriods>Voeg punt toe na regel waar volgende regel begint met hoofdletter</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Start met hoofdletter na paragraaf</StartWithUppercaseLetterAfterParagraph>
@@ -491,7 +492,7 @@ Suggesties zijn van harte welkom
     <RemoveSpaceBetweenNumber>Verwijder ruimte tussen getallen</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Herstel dialogen op een regel</FixDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Herstelde verwijder ruimte tussen de getallen : {0}</RemoveSpaceBetweenNumbersFixed>
-    <FixTurkishAnsi>Herstel Turkish ANSI (Icelandic) letters naar Unicode</FixTurkishAnsi>
+    <FixTurkishAnsi>Herstel Turkse ANSI (Icelandic) letters naar Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Herstel Deense letter "i"</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Herstel Spaanse omgekeerde vraag en uitroeptekens</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Voeg ontbrekende aanhalingsteken toe(")</AddMissingQuote>
@@ -1056,6 +1057,7 @@ Suggesties zijn van harte welkom
     <NothingToUndo>Niets om ongedaan te maken</NothingToUndo>
     <InvalidLanguageNameX>Ongeldige taal naam: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Kan taal niet wijzigen!</UnableToChangeLanguage>
+    <DoNotDisplayMessageAgain>Toon dit bericht niet meer.</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Aantal gecorrigeerde woorden: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Aantal overgeslagen woorden: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Aantal juiste woorden: {0}</NumberOfCorrectWords>
@@ -1137,8 +1139,8 @@ Suggesties zijn van harte welkom
     <NameXNotAddedToNamesEtcList>De naam '{0} ' is NIET toegevoegd aan namen/etc lijst</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>Het woord' {0} ' werd toegevoegd aan het woordenboek</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>De naam' {0} '  is NIET toegevoegd aan het woordenboek</WordXNotAddedToUserDic>
-    <OcrReplacePairXAdded>De OCR vervangen lijst paar '{0} -&gt; {1}' is toegevoegd aan de OCR vervangen lijst</OcrReplacePairXAdded>
-    <OcrReplacePairXNotAdded>De OCR vervangen lijst paar '{0} -&gt; {1}' is NIET toegevoegd aan de OCR vervangen lijst</OcrReplacePairXNotAdded>
+    <OcrReplacePairXAdded>De ocr vervangen lijst paar '{0} -&gt; {1}' is toegevoegd aan de ocr vervangen lijst</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>De ocr vervangen lijst paar '{0} -&gt; {1}' is NIET toegevoegd aan de ocr vervangen lijst</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} geselecteerde regels</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Ondertitel bevat unicode muziek noten. Bij opslaan met behulp van ANSI-codering gaan deze verloren. Verder gaan met opslaan?</UnicodeMusicSymbolsAnsiWarning>
     <UnicodeCharactersAnsiWarning>Ondertitel bevat unicode karacters. Opslaan als ANSI bestand codering laat deze vervallen. Verder gaan met opslaan?</UnicodeCharactersAnsiWarning>
@@ -1284,6 +1286,8 @@ Suggesties zijn van harte welkom
     <ImportRulesTitle>Importeer vervangingsregel (s) van...</ImportRulesTitle>
     <ExportRulesTitle>Exporteer vervangingsregel (s) naar...</ExportRulesTitle>
     <Rules>Exporteer regels</Rules>
+    <MoveToTop>Verplaats naar boven</MoveToTop>
+    <MoveToBottom>Verplaats naar beneden</MoveToBottom>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1638,6 +1642,11 @@ Suggesties zijn van harte welkom
     <Miscellaneous>Diversen</Miscellaneous>
     <UseDoNotBreakAfterList>Gebruik breek-niet-af-lijst (voor auto-afbr)</UseDoNotBreakAfterList>
   </Settings>
+  <SetVideoOffset>
+    <Title>Bepaal video-verschil</Title>
+    <Description>Bepaal video verschilt (ondertitels moeten niet de echte video tijd volgen, maar bijvoorbeeld +10 uur)</Description>
+    <RelativeToCurrentVideoPosition>Ten opzichte van de huidige video-positie.</RelativeToCurrentVideoPosition>
+  </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Toon geselecteerde regels eerder/later</Title>
     <TitleAll>Toon alle regels eerder/later</TitleAll>
@@ -1668,7 +1677,7 @@ Suggesties zijn van harte welkom
     <SkipAll>&amp;Alles overslaan</SkipAll>
     <AddToUserDictionary>Toevoegen aan gebruikerswoordenboek</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Toevoegen aan namen/ruis-lijst (hoofdlettergevoelig)</AddToNamesAndIgnoreList>
-    <AddToOcrReplaceList>Voeg paar toe aan OCR vervangen lijst</AddToOcrReplaceList>
+    <AddToOcrReplaceList>Voeg paar toe aan ocr vervangen lijst</AddToOcrReplaceList>
     <Abort>Afbreken</Abort>
     <Use>Gebruik</Use>
     <UseAlways>&amp;Gebruik altijd</UseAlways>
@@ -1757,6 +1766,9 @@ Suggesties zijn van harte welkom
     <DurationMinimum>Duur - minimum: {0:0.000} seconden</DurationMinimum>
     <DurationMaximum>Duur - maximum: {0:0.000} seconden</DurationMaximum>
     <DurationAvarage>Duur - gemiddelde: {0:0.000} seconden</DurationAvarage>
+    <ChararactersPerSecondMinimum>Karakters/sec - minimum: {0:0.000}</ChararactersPerSecondMinimum>
+    <ChararactersPerSecondMaximum>Karakters/sec - maximum: {0:0.000}</ChararactersPerSecondMaximum>
+    <ChararactersPerSecondAverage>Karakters/sec - gemiddeld: {0:0.000}</ChararactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Geavanceerde Sub Station Alpha eigenschappen</Title>
@@ -1914,6 +1926,7 @@ Suggesties zijn van harte welkom
     <OcrAutoCorrectionSpellchecking>OCR automatische correctie / spellingcontrole</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Herstel OCR fouten</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importeer tekst met bijpassende tijdcodes...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>Importeer nieuwe tijdcodes.</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Opslaan ondertitel beeld als...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Alle afbeeldingen opslaan (png/BDN xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Alle afbeeldingen opslaan met html index...</SaveAllSubtitleImagesWithHtml>
