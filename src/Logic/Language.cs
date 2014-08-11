@@ -2081,9 +2081,9 @@ can edit in same subtitle file (collaboration)",
                 DurationMinimum = "Duration - minimum: {0:0.000} seconds",
                 DurationMaximum = "Duration - maximum: {0:0.000} seconds",
                 DurationAvarage = "Duration - average: {0:0.000} seconds",
-                ChararactersPerSecondMinimum = "Chararacters/sec - minimum: {0:0.000}",
-                ChararactersPerSecondMaximum = "Chararacters/sec - maximum: {0:0.000}",
-                ChararactersPerSecondAverage = "Chararacters/sec - average: {0:0.000}",
+                CharactersPerSecondMinimum = "Characters/sec - minimum: {0:0.000}",
+                CharactersPerSecondMaximum = "Characters/sec - maximum: {0:0.000}",
+                CharactersPerSecondAverage = "Characters/sec - average: {0:0.000}",
             };
 
             SubStationAlphaProperties = new LanguageStructure.SubStationAlphaProperties
