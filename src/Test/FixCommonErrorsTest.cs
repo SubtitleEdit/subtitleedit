@@ -312,6 +312,17 @@ namespace Test
             target.FixMissingPeriodsAtEndOfLine();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>This is line one!" + Environment.NewLine + "Boy.</i>");
         }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingPeriodsAtEndOfLineWithSpace()
+        {
+            var target = GetFixCommonErrorsLib();
+            InitializeFixCommonErrorsLine(target, "”... and gently down I laid her. ”");
+            target.FixMissingPeriodsAtEndOfLine();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "”... and gently down I laid her. ”");
+        }
+
         #endregion
 
         #region Fix Hyphens (add dash)
