@@ -1965,9 +1965,9 @@
             public string DurationMinimum { get; set; }
             public string DurationMaximum { get; set; }
             public string DurationAvarage { get; set; }
-            public string ChararactersPerSecondMinimum { get; set; }
-            public string ChararactersPerSecondMaximum { get; set; }
-            public string ChararactersPerSecondAverage { get; set; }
+            public string CharactersPerSecondMinimum { get; set; }
+            public string CharactersPerSecondMaximum { get; set; }
+            public string CharactersPerSecondAverage { get; set; }
         }
 
         public class SubStationAlphaProperties
