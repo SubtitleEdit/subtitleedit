@@ -311,7 +311,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <SubtitleImageXofYAndWidthXHeight>字幕圖像 {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>字幕圖像</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>EBU 儲存選項</Title>
     <GeneralSubtitleInformation>一般字幕訊息</GeneralSubtitleInformation>
     <CodePageNumber>代碼頁編號</CodePageNumber>
@@ -341,7 +341,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <TextLeftJustifiedText>靠左對齊的文字</TextLeftJustifiedText>
     <TextCentredText>置中的文字</TextCentredText>
     <TextRightJustifiedText>靠右對齊的文字</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>卡拉 OK 效果</Title>
     <ChooseColor>選擇色彩:</ChooseColor>

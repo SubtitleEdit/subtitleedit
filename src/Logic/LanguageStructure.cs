@@ -357,7 +357,7 @@
             public string SubtitleImage { get; set; }
         }
 
-        public class EbuSaveOtpions
+        public class EbuSaveOptions
         {
             public string Title { get; set; }
             public string GeneralSubtitleInformation { get; set; }

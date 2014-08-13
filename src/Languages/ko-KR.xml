@@ -309,7 +309,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SubtitleImageXofYAndWidthXHeight>이미지 자막 {0}/{1}  -  {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>이미지 자막</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>EBU 저장 옵션</Title>
     <GeneralSubtitleInformation>일반적인 자막 정보</GeneralSubtitleInformation>
     <CodePageNumber>코드 페이지 번호</CodePageNumber>
@@ -339,7 +339,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <TextLeftJustifiedText>왼쪽 정렬</TextLeftJustifiedText>
     <TextCentredText>가운데 정렬</TextCentredText>
     <TextRightJustifiedText>오른쪽 정렬</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>노래방 효과</Title>
     <ChooseColor>색상 선택 :</ChooseColor>

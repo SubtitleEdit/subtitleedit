@@ -187,7 +187,7 @@
     <SubtitleImageXofYAndWidthXHeight>Слика титла ({0}/{1} – {2}×{3}) </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Слика титла</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>Поставке чувања</Title>
     <GeneralSubtitleInformation>Општи подаци о титлу</GeneralSubtitleInformation>
     <CodePageNumber>Број кодног распореда:</CodePageNumber>
@@ -216,7 +216,7 @@
     <TextLeftJustifiedText>текст сложен улево</TextLeftJustifiedText>
     <TextCentredText>центриран текст</TextCentredText>
     <TextRightJustifiedText>текст сложен удесно</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Караоке ефекат</Title>
     <ChooseColor>Изаберите боју:</ChooseColor>

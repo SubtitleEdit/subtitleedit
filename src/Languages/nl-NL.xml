@@ -310,7 +310,7 @@ Suggesties zijn van harte welkom
     <SubtitleImageXofYAndWidthXHeight>Ondertitel beeld {0}/{1} - {2} x {3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Ondertitel beeld</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>EBU opslaan opties</Title>
     <GeneralSubtitleInformation>Algemene informatie over ondertitel</GeneralSubtitleInformation>
     <CodePageNumber>Code paginanummer</CodePageNumber>
@@ -340,7 +340,7 @@ Suggesties zijn van harte welkom
     <TextLeftJustifiedText>Links uitgelijnde tekst</TextLeftJustifiedText>
     <TextCentredText>Gecentreerde tekst</TextCentredText>
     <TextRightJustifiedText>Rechts uitgelijnde tekst</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke effect</Title>
     <ChooseColor>Kies kleur:</ChooseColor>
