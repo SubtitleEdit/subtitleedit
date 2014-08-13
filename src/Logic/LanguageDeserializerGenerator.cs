@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (reader.NodeType == XmlNodeType.Element)
                     {
-                        if ((name.Length > 0 || reader.Name != " + "\"Language\"" + @" && !reader.IsEmptyElement)
+                        if ((name.Length > 0 || reader.Name != " + "\"Language\")" + @" && !reader.IsEmptyElement)
                           name = (name + " + "\"/\" + " + @"reader.Name).TrimStart('/');
                     }
                     else if (reader.NodeType == XmlNodeType.EndElement)
