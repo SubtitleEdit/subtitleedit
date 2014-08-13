@@ -311,7 +311,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Imagine subtitrare {0}/{1} - {2} x {3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Imagine subtitrare</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>Opțiuni salvare EBU</Title>
     <GeneralSubtitleInformation>Informații generale despre subtitrare</GeneralSubtitleInformation>
     <CodePageNumber>Numărul codului de pagină</CodePageNumber>
@@ -341,7 +341,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <TextLeftJustifiedText>Text aliniat stânga</TextLeftJustifiedText>
     <TextCentredText>Text aliniat centru</TextCentredText>
     <TextRightJustifiedText>Text aliniat dreapta</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Efect Karaoke</Title>
     <ChooseColor>Alege culoarea:</ChooseColor>

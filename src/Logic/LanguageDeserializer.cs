@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Logic
             language.DurationsBridgeGaps = new Nikse.SubtitleEdit.Logic.LanguageStructure.DurationsBridgeGaps();
             language.DvdSubRip = new Nikse.SubtitleEdit.Logic.LanguageStructure.DvdSubRip();
             language.DvdSubRipChooseLanguage = new Nikse.SubtitleEdit.Logic.LanguageStructure.DvdSubRipChooseLanguage();
-            language.EbuSaveOtpions = new Nikse.SubtitleEdit.Logic.LanguageStructure.EbuSaveOtpions();
+            language.EbuSaveOptions = new Nikse.SubtitleEdit.Logic.LanguageStructure.EbuSaveOptions();
             language.EffectKaraoke = new Nikse.SubtitleEdit.Logic.LanguageStructure.EffectKaraoke();
             language.EffectTypewriter = new Nikse.SubtitleEdit.Logic.LanguageStructure.EffectTypewriter();
             language.ExportCustomText = new Nikse.SubtitleEdit.Logic.LanguageStructure.ExportCustomText();
@@ -908,92 +908,92 @@ namespace Nikse.SubtitleEdit.Logic
                 case "DvdSubRipChooseLanguage/SubtitleImage":
                     language.DvdSubRipChooseLanguage.SubtitleImage = reader.Value;
                     break;
-                case "EbuSaveOtpions/Title":
-                    language.EbuSaveOtpions.Title = reader.Value;
+                case "EbuSaveOptions/Title":
+                    language.EbuSaveOptions.Title = reader.Value;
                     break;
-                case "EbuSaveOtpions/GeneralSubtitleInformation":
-                    language.EbuSaveOtpions.GeneralSubtitleInformation = reader.Value;
+                case "EbuSaveOptions/GeneralSubtitleInformation":
+                    language.EbuSaveOptions.GeneralSubtitleInformation = reader.Value;
                     break;
-                case "EbuSaveOtpions/CodePageNumber":
-                    language.EbuSaveOtpions.CodePageNumber = reader.Value;
+                case "EbuSaveOptions/CodePageNumber":
+                    language.EbuSaveOptions.CodePageNumber = reader.Value;
                     break;
-                case "EbuSaveOtpions/DiskFormatCode":
-                    language.EbuSaveOtpions.DiskFormatCode = reader.Value;
+                case "EbuSaveOptions/DiskFormatCode":
+                    language.EbuSaveOptions.DiskFormatCode = reader.Value;
                     break;
-                case "EbuSaveOtpions/DisplayStandardCode":
-                    language.EbuSaveOtpions.DisplayStandardCode = reader.Value;
+                case "EbuSaveOptions/DisplayStandardCode":
+                    language.EbuSaveOptions.DisplayStandardCode = reader.Value;
                     break;
-                case "EbuSaveOtpions/CharacterCodeTable":
-                    language.EbuSaveOtpions.CharacterCodeTable = reader.Value;
+                case "EbuSaveOptions/CharacterCodeTable":
+                    language.EbuSaveOptions.CharacterCodeTable = reader.Value;
                     break;
-                case "EbuSaveOtpions/LanguageCode":
-                    language.EbuSaveOtpions.LanguageCode = reader.Value;
+                case "EbuSaveOptions/LanguageCode":
+                    language.EbuSaveOptions.LanguageCode = reader.Value;
                     break;
-                case "EbuSaveOtpions/OriginalProgramTitle":
-                    language.EbuSaveOtpions.OriginalProgramTitle = reader.Value;
+                case "EbuSaveOptions/OriginalProgramTitle":
+                    language.EbuSaveOptions.OriginalProgramTitle = reader.Value;
                     break;
-                case "EbuSaveOtpions/OriginalEpisodeTitle":
-                    language.EbuSaveOtpions.OriginalEpisodeTitle = reader.Value;
+                case "EbuSaveOptions/OriginalEpisodeTitle":
+                    language.EbuSaveOptions.OriginalEpisodeTitle = reader.Value;
                     break;
-                case "EbuSaveOtpions/TranslatedProgramTitle":
-                    language.EbuSaveOtpions.TranslatedProgramTitle = reader.Value;
+                case "EbuSaveOptions/TranslatedProgramTitle":
+                    language.EbuSaveOptions.TranslatedProgramTitle = reader.Value;
                     break;
-                case "EbuSaveOtpions/TranslatedEpisodeTitle":
-                    language.EbuSaveOtpions.TranslatedEpisodeTitle = reader.Value;
+                case "EbuSaveOptions/TranslatedEpisodeTitle":
+                    language.EbuSaveOptions.TranslatedEpisodeTitle = reader.Value;
                     break;
-                case "EbuSaveOtpions/TranslatorsName":
-                    language.EbuSaveOtpions.TranslatorsName = reader.Value;
+                case "EbuSaveOptions/TranslatorsName":
+                    language.EbuSaveOptions.TranslatorsName = reader.Value;
                     break;
-                case "EbuSaveOtpions/SubtitleListReferenceCode":
-                    language.EbuSaveOtpions.SubtitleListReferenceCode = reader.Value;
+                case "EbuSaveOptions/SubtitleListReferenceCode":
+                    language.EbuSaveOptions.SubtitleListReferenceCode = reader.Value;
                     break;
-                case "EbuSaveOtpions/CountryOfOrigin":
-                    language.EbuSaveOtpions.CountryOfOrigin = reader.Value;
+                case "EbuSaveOptions/CountryOfOrigin":
+                    language.EbuSaveOptions.CountryOfOrigin = reader.Value;
                     break;
-                case "EbuSaveOtpions/RevisionNumber":
-                    language.EbuSaveOtpions.RevisionNumber = reader.Value;
+                case "EbuSaveOptions/RevisionNumber":
+                    language.EbuSaveOptions.RevisionNumber = reader.Value;
                     break;
-                case "EbuSaveOtpions/MaxNoOfDisplayableChars":
-                    language.EbuSaveOtpions.MaxNoOfDisplayableChars = reader.Value;
+                case "EbuSaveOptions/MaxNoOfDisplayableChars":
+                    language.EbuSaveOptions.MaxNoOfDisplayableChars = reader.Value;
                     break;
-                case "EbuSaveOtpions/MaxNumberOfDisplayableRows":
-                    language.EbuSaveOtpions.MaxNumberOfDisplayableRows = reader.Value;
+                case "EbuSaveOptions/MaxNumberOfDisplayableRows":
+                    language.EbuSaveOptions.MaxNumberOfDisplayableRows = reader.Value;
                     break;
-                case "EbuSaveOtpions/DiskSequenceNumber":
-                    language.EbuSaveOtpions.DiskSequenceNumber = reader.Value;
+                case "EbuSaveOptions/DiskSequenceNumber":
+                    language.EbuSaveOptions.DiskSequenceNumber = reader.Value;
                     break;
-                case "EbuSaveOtpions/TotalNumberOfDisks":
-                    language.EbuSaveOtpions.TotalNumberOfDisks = reader.Value;
+                case "EbuSaveOptions/TotalNumberOfDisks":
+                    language.EbuSaveOptions.TotalNumberOfDisks = reader.Value;
                     break;
-                case "EbuSaveOtpions/Import":
-                    language.EbuSaveOtpions.Import = reader.Value;
+                case "EbuSaveOptions/Import":
+                    language.EbuSaveOptions.Import = reader.Value;
                     break;
-                case "EbuSaveOtpions/TextAndTimingInformation":
-                    language.EbuSaveOtpions.TextAndTimingInformation = reader.Value;
+                case "EbuSaveOptions/TextAndTimingInformation":
+                    language.EbuSaveOptions.TextAndTimingInformation = reader.Value;
                     break;
-                case "EbuSaveOtpions/JustificationCode":
-                    language.EbuSaveOtpions.JustificationCode = reader.Value;
+                case "EbuSaveOptions/JustificationCode":
+                    language.EbuSaveOptions.JustificationCode = reader.Value;
                     break;
-                case "EbuSaveOtpions/Errors":
-                    language.EbuSaveOtpions.Errors = reader.Value;
+                case "EbuSaveOptions/Errors":
+                    language.EbuSaveOptions.Errors = reader.Value;
                     break;
-                case "EbuSaveOtpions/ErrorsX":
-                    language.EbuSaveOtpions.ErrorsX = reader.Value;
+                case "EbuSaveOptions/ErrorsX":
+                    language.EbuSaveOptions.ErrorsX = reader.Value;
                     break;
-                case "EbuSaveOtpions/MaxLengthError":
-                    language.EbuSaveOtpions.MaxLengthError = reader.Value;
+                case "EbuSaveOptions/MaxLengthError":
+                    language.EbuSaveOptions.MaxLengthError = reader.Value;
                     break;
-                case "EbuSaveOtpions/TextUnchangedPresentation":
-                    language.EbuSaveOtpions.TextUnchangedPresentation = reader.Value;
+                case "EbuSaveOptions/TextUnchangedPresentation":
+                    language.EbuSaveOptions.TextUnchangedPresentation = reader.Value;
                     break;
-                case "EbuSaveOtpions/TextLeftJustifiedText":
-                    language.EbuSaveOtpions.TextLeftJustifiedText = reader.Value;
+                case "EbuSaveOptions/TextLeftJustifiedText":
+                    language.EbuSaveOptions.TextLeftJustifiedText = reader.Value;
                     break;
-                case "EbuSaveOtpions/TextCentredText":
-                    language.EbuSaveOtpions.TextCentredText = reader.Value;
+                case "EbuSaveOptions/TextCentredText":
+                    language.EbuSaveOptions.TextCentredText = reader.Value;
                     break;
-                case "EbuSaveOtpions/TextRightJustifiedText":
-                    language.EbuSaveOtpions.TextRightJustifiedText = reader.Value;
+                case "EbuSaveOptions/TextRightJustifiedText":
+                    language.EbuSaveOptions.TextRightJustifiedText = reader.Value;
                     break;
                 case "EffectKaraoke/Title":
                     language.EffectKaraoke.Title = reader.Value;

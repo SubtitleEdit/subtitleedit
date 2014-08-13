@@ -271,7 +271,7 @@ Rất hân hạnh được chào đón.
     <SubtitleImageXofYAndWidthXHeight>Hình ảnh phụ đề {0}/{1} - {2} x {3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Hình ảnh phụ đề</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title> Lưu tùy chọn EBU</Title>
     <GeneralSubtitleInformation>Thông tin phụ đề</GeneralSubtitleInformation>
     <CodePageNumber>Mã hóa số trang</CodePageNumber>
@@ -301,7 +301,7 @@ Rất hân hạnh được chào đón.
 </TextLeftJustifiedText>
     <TextCentredText>Văn bản ở giữa</TextCentredText>
     <TextRightJustifiedText>Chứng minh văn bản bên phải</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Hiệu ứng karaoke</Title>
     <ChooseColor>Chọn màu sắc:</ChooseColor>

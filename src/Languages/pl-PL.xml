@@ -312,7 +312,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Obraz napisu</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>Opcje zapisu EBU</Title>
     <GeneralSubtitleInformation>Ogólne informacje o napisach</GeneralSubtitleInformation>
     <CodePageNumber>Strona kodowa:</CodePageNumber>
@@ -342,7 +342,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TextLeftJustifiedText>Wyrównane tekstu do lewej</TextLeftJustifiedText>
     <TextCentredText>Wyśrodkowanie tekstu</TextCentredText>
     <TextRightJustifiedText>Wyrównane tekstu do prawej</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Efekt Karaoke</Title>
     <ChooseColor>Wybierz kolor:</ChooseColor>

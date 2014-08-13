@@ -312,7 +312,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Azpidatzi irudia {0}/{1} - {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Azpidatzi irudia</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>EBU gorde aurkerak</Title>
     <GeneralSubtitleInformation>Azpidatzi argibide orokorra</GeneralSubtitleInformation>
     <CodePageNumber>Kode orrialde zenbakia:</CodePageNumber>
@@ -342,7 +342,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <TextLeftJustifiedText>Ezkerreratutako idatzia</TextLeftJustifiedText>
     <TextCentredText>Erdiratutako idatzia </TextCentredText>
     <TextRightJustifiedText>Eskuineratutako idatzia</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke eragina</Title>
     <ChooseColor>Hautatu margoa:</ChooseColor>

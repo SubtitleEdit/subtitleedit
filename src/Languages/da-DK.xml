@@ -312,7 +312,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Undertekst billede {0}/{1} - {2} x {3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Undertekst billede</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>EBU save options</Title>
     <GeneralSubtitleInformation>General subtitle information</GeneralSubtitleInformation>
     <CodePageNumber>Code page number</CodePageNumber>
@@ -342,7 +342,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <TextLeftJustifiedText>Venstre justeret tekst</TextLeftJustifiedText>
     <TextCentredText>Centreret tekst</TextCentredText>
     <TextRightJustifiedText>Højre justeret tekst</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke effekt</Title>
     <ChooseColor>Vælg farve:</ChooseColor>

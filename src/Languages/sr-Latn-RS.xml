@@ -254,7 +254,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Slika prevoda ({0}/{1} – {2}×{3}) </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Slika prevoda</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>Postavke čuvanja</Title>
     <GeneralSubtitleInformation>Opšti podaci o prevodu</GeneralSubtitleInformation>
     <CodePageNumber>Broj kodnog rasporeda:</CodePageNumber>
@@ -283,7 +283,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <TextLeftJustifiedText>tekst složen ulevo</TextLeftJustifiedText>
     <TextCentredText>centriran tekst</TextCentredText>
     <TextRightJustifiedText>tekst složen udesno</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke efekat</Title>
     <ChooseColor>Izaberite boju:</ChooseColor>

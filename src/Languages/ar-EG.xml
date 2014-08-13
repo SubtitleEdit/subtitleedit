@@ -318,7 +318,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>{0}/{1}  -  {2}x{3} ترجمة تصوير</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>ترجمة تصوير</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>EBU حفظ الخيارات</Title>
     <GeneralSubtitleInformation>معلومات الترجمة العامة</GeneralSubtitleInformation>
     <CodePageNumber>رمز رقم الصفحة</CodePageNumber>
@@ -347,7 +347,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TextLeftJustifiedText>يكتب النص باتجاه اليسار</TextLeftJustifiedText>
     <TextCentredText>مركز النص</TextCentredText>
     <TextRightJustifiedText>يكتب النص من اليمين</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>تأثير الكاريوكي</Title>
     <ChooseColor>: اختر اللون</ChooseColor>

@@ -254,7 +254,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <SubtitleImageXofYAndWidthXHeight>字幕イメージ {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>字幕イメージ</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>EBU の保存のオプション</Title>
     <GeneralSubtitleInformation>全般的な字幕の情報</GeneralSubtitleInformation>
     <CodePageNumber>コード ページ番号</CodePageNumber>
@@ -283,7 +283,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <TextLeftJustifiedText>左揃え</TextLeftJustifiedText>
     <TextCentredText>中央揃え</TextCentredText>
     <TextRightJustifiedText>右揃え</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>カラオケ効果</Title>
     <ChooseColor>色の選択:</ChooseColor>
