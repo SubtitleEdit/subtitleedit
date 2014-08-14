@@ -42,8 +42,8 @@ namespace Nikse.SubtitleEdit.Logic
                     }
 
                     // ASS/SSA codes like {\an9}
-                    
-                    if (text.StartsWith("{\\")) 
+
+                    if (text.StartsWith("{\\"))
                     {
                         int endIndex = text.IndexOf("}");
                         if (endIndex > 0 && (text.IndexOf("{", 1) == -1 || text.IndexOf("{", 1) > endIndex))
