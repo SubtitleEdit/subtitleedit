@@ -6773,7 +6773,7 @@ namespace Nikse.SubtitleEdit.Forms
                 maxLines = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
             if (numberOfLines <= maxLines)
             {
-                if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * numberOfLines)
+                if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * Math.Max(numberOfLines, 2))
                 {
                     lineTotal.ForeColor = Color.Black;
                     if (!textBoxHasFocus)
@@ -6792,31 +6792,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-
-            //if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
-            //{
-            //    lineTotal.ForeColor = Color.Black;
-            //    if (!textBoxHasFocus)
-            //        lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
-            //}
-            //else if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 2.1)
-            //{
-            //    lineTotal.ForeColor = Color.Orange;
-            //    if (!textBoxHasFocus)
-            //        lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
-            //}
-            //else
-            //{
-            //    lineTotal.ForeColor = Color.Red;
-            //    if (!textBoxHasFocus)
-            //        lineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, s.Length);
-            //    if (buttonUnBreak.Visible)
-            //    {
-            //        if (!textBoxHasFocus)
-            //            lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
-            //        buttonSplitLine.Visible = true;
-            //    }
-            //}
             UpdateListViewTextCharactersPerSeconds(charactersPerSecond, paragraph);
             charactersPerSecond.Left = textBox.Left + (textBox.Width - labelCharactersPerSecond.Width);
             lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
