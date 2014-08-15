@@ -293,40 +293,14 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public void ChangeFramerate(double oldFramerate, double newFramerate, bool isFrameBased)
+        public void ChangeFramerate(double oldFramerate, double newFramerate)
         {
-            if (isFrameBased)
-            {
-                foreach (Paragraph p in Paragraphs)
-                {
-                    double startFrame = p.StartTime.TotalMilliseconds / 1000.0 * oldFramerate;
-                    double endFrame = p.EndTime.TotalMilliseconds / 1000.0 * oldFramerate;
-                    p.StartTime.TotalMilliseconds = startFrame * (1000.0 / newFramerate);
-                    p.EndTime.TotalMilliseconds = endFrame * (1000.0 / newFramerate);
-                    p.CalculateFrameNumbersFromTimeCodes(newFramerate);
-                }
-                return;
-            }
-
-
-            double factor = 1.0;
-            if (oldFramerate % 1.0 < 0.001 && newFramerate % 1.0 > 0.001)
-            {
-                factor = (((int)(newFramerate + 1)) / newFramerate);
-            }
-            else if (oldFramerate % 1.0 > 0.001 && newFramerate % 1.0 < 0.001)
-            {
-                factor = 2 - (((int)(oldFramerate + 1)) / oldFramerate);
-            }
-            else
-            {
-                return;
-            }
-
             foreach (Paragraph p in Paragraphs)
             {
-                p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds * factor;
-                p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds * factor;
+                double startFrame = p.StartTime.TotalMilliseconds / 1000.0 * oldFramerate;
+                double endFrame = p.EndTime.TotalMilliseconds / 1000.0 * oldFramerate;
+                p.StartTime.TotalMilliseconds = startFrame * (1000.0 / newFramerate);
+                p.EndTime.TotalMilliseconds = endFrame * (1000.0 / newFramerate);
                 p.CalculateFrameNumbersFromTimeCodes(newFramerate);
             }
         }
