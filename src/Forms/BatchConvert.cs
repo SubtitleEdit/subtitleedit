@@ -816,14 +816,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint , CultureInfo.InvariantCulture, out fromFrameRate) &&
                             double.TryParse(comboBoxFrameRateTo.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out toFrameRate))
                         {
-                            bool isFrameBased = false;
-                            foreach (SubtitleFormat f in SubtitleFormat.AllSubtitleFormats)
-                            {
-                                if (f.FriendlyName.ToLower() == toFormat.ToLower() ||
-                                    f.Name.ToLower() == toFormat.ToLower())
-                                    isFrameBased = f.IsFrameBased;
-                            }
-                            sub.ChangeFramerate(fromFrameRate, toFrameRate, isFrameBased);
+                            sub.ChangeFramerate(fromFrameRate, toFrameRate);
                         }
 
                         if (timeUpDownAdjust.TimeCode.TotalMilliseconds > 0.00001)

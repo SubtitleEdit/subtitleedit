@@ -10235,7 +10235,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     double oldFramerate = changeFramerate.OldFrameRate;
                     double newFramerate = changeFramerate.NewFrameRate;
-                    _subtitle.ChangeFramerate(oldFramerate, newFramerate, GetCurrentSubtitleFormat().IsFrameBased);
+                    _subtitle.ChangeFramerate(oldFramerate, newFramerate);
 
                     ShowStatus(string.Format(_language.FrameRateChangedFromXToY, oldFramerate, newFramerate));
                     toolStripComboBoxFrameRate.Text = newFramerate.ToString();
