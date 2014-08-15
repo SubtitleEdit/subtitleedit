@@ -550,9 +550,12 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 string dialogS = Utilities.RemoveHtmlTags(text);
                 var arr = dialogS.Replace(Environment.NewLine, "\n").Split('\n');
-                if (arr.Length == 2 && arr[0].Trim().StartsWith("-") && arr[1].Trim().StartsWith("-") &&
-                   (arr[0].Trim().EndsWith(".") || arr[0].Trim().EndsWith("!") || arr[0].Trim().EndsWith("?")))
-                    return text;
+                if (arr.Length == 2)
+                {
+                    string arr0 = arr[0].Trim().TrimEnd('"').TrimEnd('\'').TrimEnd();
+                    if (arr0.StartsWith("-") && arr[1].Trim().StartsWith("-") && (arr0.EndsWith(".") || arr0.EndsWith("!") || arr0.EndsWith("?"))) 
+                        return text;
+                }
             }
 
             string s = text;
