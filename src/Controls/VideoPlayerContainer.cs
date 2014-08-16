@@ -257,7 +257,11 @@ namespace Nikse.SubtitleEdit.Controls
             var gs = Configuration.Settings.General;
             if (string.IsNullOrEmpty(gs.SubtitleFontName))
                 gs.SubtitleFontName = "Tahoma";
-            _subtitleTextBox.Font = new Font(gs.SubtitleFontName, gs.VideoPlayerPreviewFontSize * FontSizeFactor, FontStyle.Bold);
+            if (gs.VideoPlayerPreviewFontBold)
+                _subtitleTextBox.Font = new Font(gs.SubtitleFontName, gs.VideoPlayerPreviewFontSize * FontSizeFactor, FontStyle.Bold);
+            else
+                _subtitleTextBox.Font = new Font(gs.SubtitleFontName, gs.VideoPlayerPreviewFontSize * FontSizeFactor, FontStyle.Regular);
+            SubtitleText = _subtitleText;
         }
 
         private void SubtitleTextBoxMouseClick(object sender, MouseEventArgs e)
@@ -434,7 +438,9 @@ namespace Nikse.SubtitleEdit.Controls
                 foreach (var entry in italicLookups)
                 {
                     Font currentFont = _subtitleTextBox.SelectionFont;
-                    const FontStyle newFontStyle = FontStyle.Italic | FontStyle.Bold;
+                    FontStyle newFontStyle = FontStyle.Italic | FontStyle.Bold;
+                    if (!Configuration.Settings.General.VideoPlayerPreviewFontBold)
+                        newFontStyle = FontStyle.Italic;
                     _subtitleTextBox.SelectionStart = entry.Key;
                     _subtitleTextBox.SelectionLength = entry.Value;
                     _subtitleTextBox.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, newFontStyle);

@@ -466,6 +466,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string VideoPlayer { get; set; }
         public int VideoPlayerDefaultVolume { get; set; }
         public int VideoPlayerPreviewFontSize { get; set; }
+        public bool VideoPlayerPreviewFontBold { get; set; }
         public bool VideoPlayerShowStopButton { get; set; }
         public bool VideoPlayerShowFullscreenButton { get; set; }
         public bool VideoPlayerShowMuteButton { get; set; }
@@ -564,6 +565,7 @@ namespace Nikse.SubtitleEdit.Logic
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 75;
             VideoPlayerPreviewFontSize = 10;
+            VideoPlayerPreviewFontBold = true;
             VideoPlayerShowStopButton = true;
             VideoPlayerShowMuteButton = true;
             VideoPlayerShowFullscreenButton = true;
@@ -1322,6 +1324,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("VideoPlayerPreviewFontSize");
             if (subNode != null)
                 settings.General.VideoPlayerPreviewFontSize = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("VideoPlayerPreviewFontBold");
+            if (subNode != null)
+                settings.General.VideoPlayerPreviewFontBold = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("VideoPlayerShowStopButton");
             if (subNode != null)
                 settings.General.VideoPlayerShowStopButton = Convert.ToBoolean(subNode.InnerText);
@@ -2644,6 +2649,7 @@ namespace Nikse.SubtitleEdit.Logic
                     textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
                     textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteElementString("VideoPlayerPreviewFontSize", settings.General.VideoPlayerPreviewFontSize.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteElementString("VideoPlayerPreviewFontBold", settings.General.VideoPlayerPreviewFontBold.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteElementString("VideoPlayerShowStopButton", settings.General.VideoPlayerShowStopButton.ToString());
                     textWriter.WriteElementString("VideoPlayerShowStopMute", settings.General.VideoPlayerShowMuteButton.ToString());
                     textWriter.WriteElementString("VideoPlayerShowStopFullscreen", settings.General.VideoPlayerShowFullscreenButton.ToString());
