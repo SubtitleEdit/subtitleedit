@@ -713,7 +713,6 @@
     <LinePart from="misterl" to="misteri" />
     <LinePart from="vivencl" to="vivenci" />
   </PartialLines>
-  </PartialLines>
   <BeginLines />
   <EndLines>
     <Ending from=".»." to="»." />
