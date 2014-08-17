@@ -124,7 +124,6 @@ namespace Test
         }
 
 
-
         /// <summary>
         ///A test for RemoveHIInsideLine
         ///</summary>

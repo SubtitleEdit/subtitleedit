@@ -990,7 +990,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
 
-
                 foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
                 {
                     if (Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList.xml").Length == 1)

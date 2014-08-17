@@ -68,8 +68,6 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
 
-
-
         private void buttonTrain_Click(object sender, EventArgs e)
         {
             if (!System.IO.File.Exists(textBoxInputFile.Text))
@@ -134,8 +132,6 @@ namespace Nikse.SubtitleEdit.Forms
                     this.Refresh();
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(100);
-
-
 
                     NOcrChar nOcrChar = new NOcrChar(s);
                     nOcrChar.Width = list[0].NikseBitmap.Width;

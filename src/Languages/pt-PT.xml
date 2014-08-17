@@ -1067,7 +1067,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <NothingToUndo>Nada para anular</NothingToUndo>
     <InvalidLanguageNameX>Nome de idioma inválido: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Não é possível alterar o idioma!</UnableToChangeLanguage>
-    <DoNotDisplayMessageAgain>Não exibir esta mensagem novamente</DoNotDisplayMessageAgain>	
+    <DoNotDisplayMessageAgain>Não exibir esta mensagem novamente</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Número de palavras corrigidas: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Número de palavras omitidas: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Número de palavras correctas: {0}</NumberOfCorrectWords>
@@ -1297,7 +1297,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ExportRulesTitle>Exportar regra(s) de substituição para...</ExportRulesTitle>
     <Rules>Regras de exportação</Rules>
     <MoveToTop>Mover para o inicio</MoveToTop>
-    <MoveToBottom>Mover para o fim</MoveToBottom>	
+    <MoveToBottom>Mover para o fim</MoveToBottom>
   </MultipleReplace>
   <NetworkChat>
     <Title>Conversação</Title>
@@ -1658,8 +1658,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
    <SetVideoOffset>
     <Title>Definir o deslocamento do vídeo</Title>
     <Description>Definir o deslocamento do vídeo (A legenda não deve seguir o tempo real do vídeo, mas por ex. +10 horas)</Description>
-    <RelativeToCurrentVideoPosition>Em relação à posição do vídeo actual</RelativeToCurrentVideoPosition>	
-  </SetVideoOffset> 
+    <RelativeToCurrentVideoPosition>Em relação à posição do vídeo actual</RelativeToCurrentVideoPosition>
+  </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Mostrar linhas seleccionadas antes/depois</Title>
     <TitleAll>Mostrar todas as linhas antes/depois</TitleAll>
@@ -1780,7 +1780,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DurationAvarage>Duração - média: {0:0.000} segundos</DurationAvarage>
     <ChararactersPerSecondMinimum>Caracteres/seg - mínimo: {0:0.000}</ChararactersPerSecondMinimum>
     <ChararactersPerSecondMaximum>Caracteres/seg - máximo: {0:0.000}</ChararactersPerSecondMaximum>
-    <ChararactersPerSecondAverage>Caracteres/seg - médio: {0:0.000}</ChararactersPerSecondAverage>	
+    <ChararactersPerSecondAverage>Caracteres/seg - médio: {0:0.000}</ChararactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha propriedades</Title>
@@ -1940,7 +1940,7 @@ Manter as alterações?</KeepChangesMessage>
     <OcrAutoCorrectionSpellchecking>Auto correcção OCR / verificação ortográfica</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Corrigir erros de OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importar texto com código de tempo correspondente...</ImportTextWithMatchingTimeCodes>
-    <ImportNewTimeCodes>Importar códigos de tempo novos</ImportNewTimeCodes>	
+    <ImportNewTimeCodes>Importar códigos de tempo novos</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Guardar imagem da legenda como...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Guardar todas as imagens (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Guardar todas as imagens com índice HTML...</SaveAllSubtitleImagesWithHtml>

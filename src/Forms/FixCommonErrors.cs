@@ -959,7 +959,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // Make next subtitle duration shorter +  make current subtitle duration longer
                     else if (diffMs < 1000 &&
-                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && 
+                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime &&
                              next != null && Utilities.GetCharactersPerSecond(new Paragraph(next.Text, p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines, next.EndTime.TotalMilliseconds)) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
                         if (AllowFix(p, fixAction))
@@ -3434,7 +3434,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (fixCount > 0)
                 LogStatus(_language.FixEllipsesStart, string.Format(_language.XFixEllipsesStart, fixCount));
         }
-
 
 
         private string FixMissingOpenBracket(string text, string openB)

@@ -553,7 +553,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (arr.Length == 2)
                 {
                     string arr0 = arr[0].Trim().TrimEnd('"').TrimEnd('\'').TrimEnd();
-                    if (arr0.StartsWith("-") && arr[1].Trim().StartsWith("-") && (arr0.EndsWith(".") || arr0.EndsWith("!") || arr0.EndsWith("?"))) 
+                    if (arr0.StartsWith("-") && arr[1].Trim().StartsWith("-") && (arr0.EndsWith(".") || arr0.EndsWith("!") || arr0.EndsWith("?")))
                         return text;
                 }
             }

@@ -1110,8 +1110,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 case "146f": return new SCCPositionAndStyle(Color.White, FontStyle.Underline | FontStyle.Italic, 15, 0);
 
 
-
-
                 case "91d0": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 1, 0);
                 case "9151": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 1, 0);
                 case "91c2": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 1, 0);
@@ -1343,7 +1341,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 case "946b": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 15, 0);
                 case "94ec": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 15, 0);
                 case "946d": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 15, 0);
-
 
 
                 //Columns 4-28

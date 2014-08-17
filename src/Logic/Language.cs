@@ -2382,6 +2382,6 @@ Keep changes?",
             xml = xml.Replace("<TranslatedBy> </TranslatedBy>", "<TranslatedBy>Translated by Nikse</TranslatedBy>");
             File.WriteAllText(fileName, xml, Encoding.UTF8);
         }
-        
+
     }
 }

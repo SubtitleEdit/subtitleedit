@@ -299,7 +299,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         }
 
 
-
         void VideoEndTimerTick(object sender, EventArgs e)
         {
             const int Ended = 6;

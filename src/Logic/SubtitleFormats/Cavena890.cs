@@ -265,7 +265,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 buffer[194] = 0x56;
 
 
-
                 buffer[208] = 0xf6;
                 buffer[209] = 0x01;
                 buffer[210] = 0xf3;
