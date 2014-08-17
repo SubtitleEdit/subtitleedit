@@ -20,7 +20,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
         public static int[] AllEncodings;
 
 
-
         /// <summary>
         /// Static constructor that fills the default preferred codepages
         /// </summary>
@@ -46,7 +45,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
                 streamEcodings.Add(Encoding.Default.CodePage);
                 mimeEcodings.Add(Encoding.Default.CodePage);
             }
-
 
 
             // prefer JIS over JIS-SHIFT (JIS is detected better than JIS-SHIFT)

@@ -3091,7 +3091,6 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
 
-
         private void SetUndockedWindowsTitle()
         {
             string title = Configuration.Settings.Language.General.NoVideoLoaded;

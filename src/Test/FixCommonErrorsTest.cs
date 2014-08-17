@@ -543,7 +543,7 @@ namespace Test
             Paragraph p = new Paragraph("<i>- moss! Jesus Christ!</i>" + Environment.NewLine + "<i>- what is it?</i>", 1200, 5000);
             var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
             Assert.AreEqual(fixedText, "<i>- Moss! Jesus Christ!</i>" + Environment.NewLine + "<i>- What is it?</i>");
-        }     
+        }
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -573,7 +573,7 @@ namespace Test
             Paragraph p = new Paragraph("- moss!" + Environment.NewLine + " - Bye.", 1200, 5000);
             var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
             Assert.AreEqual(fixedText, "- moss!" + Environment.NewLine + " - Bye.");
-        }     
+        }
 
 
         #endregion

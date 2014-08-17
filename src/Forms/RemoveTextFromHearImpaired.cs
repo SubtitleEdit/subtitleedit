@@ -167,7 +167,6 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
 
-
         private void AddToListView(Paragraph p, string newText)
         {
             var item = new ListViewItem(string.Empty) {Tag = p, Checked = true};

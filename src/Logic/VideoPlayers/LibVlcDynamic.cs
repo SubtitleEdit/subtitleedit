@@ -163,8 +163,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         libvlc_media_player_next_frame _libvlc_media_player_next_frame;
 
 
-
-
         //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         //public unsafe delegate void* LockEventHandler(void* opaque, void** plane);
 

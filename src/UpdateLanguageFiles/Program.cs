@@ -4,7 +4,7 @@ using System.IO;
 namespace UpdateLanguageFiles
 {
     class Program
-    {       
+    {
 
         static int Main(string[] args)
         {

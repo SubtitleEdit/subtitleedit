@@ -127,4 +127,3 @@ namespace Nikse.SubtitleEdit.Logic
 
     }
 }
-

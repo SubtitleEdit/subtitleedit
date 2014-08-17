@@ -299,7 +299,5 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-
-
     }
 }

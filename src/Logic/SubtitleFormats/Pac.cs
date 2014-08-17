@@ -380,7 +380,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         };
 
 
-
         static readonly List<int> ArabicCodes = new List<int> {
             0xe081, //=أ
             0xe09b, //=ؤ

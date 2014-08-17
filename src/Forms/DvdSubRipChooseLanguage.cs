@@ -82,8 +82,6 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var existingLanguageId in uniqueLanguageStreamIds)
                 comboBoxLanguages.Items.Add(string.Format(Configuration.Settings.Language.DvdSubRipChooseLanguage.UnknownLanguage + " (0x{0:x})", existingLanguageId)); // subtitle track not supplied from IFO
 
-
-
             if (comboBoxLanguages.Items.Count > 0 && comboBoxLanguages.SelectedIndex < 0)
                 comboBoxLanguages.SelectedIndex = 0;
 

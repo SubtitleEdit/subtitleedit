@@ -2101,7 +2101,6 @@ namespace Nikse.SubtitleEdit.Forms
               //  }
 
 
-
                 int maxMoveLeft = 9;
                 if (nbmp.Width < 20)
                     maxMoveLeft = 7;
@@ -2649,7 +2648,6 @@ namespace Nikse.SubtitleEdit.Forms
                 //          return c;
                 //      }
                 //  }
-
 
 
             }
@@ -6685,8 +6683,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (!_modiEnabled && comboBoxOcrMethod.Items.Count == 3)
                 comboBoxOcrMethod.Items.RemoveAt(2);
         }
-
-
 
 
         private void InitializeTesseract()

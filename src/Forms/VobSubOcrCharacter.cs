@@ -35,8 +35,6 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoSubmitOfFirstChar.Text = language.AutoSubmitOnFirstChar;
 
 
-
-
             string[] row0 = { "♪", "á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű" };
             string[] row1 = { "♫", "Á", "É", "Í", "Ó", "Ö", "Ő", "Ú", "Ü", "Ű" };
 
