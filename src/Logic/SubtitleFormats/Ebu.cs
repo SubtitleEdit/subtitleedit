@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Forms;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -637,7 +637,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Header = header;
         }
 
-        private EbuGeneralSubtitleInformation ReadHeader(byte[] buffer)
+        public static EbuGeneralSubtitleInformation ReadHeader(byte[] buffer)
         {
             var header = new EbuGeneralSubtitleInformation();
             header.CodePageNumber = Encoding.Default.GetString(buffer, 0, 3);
@@ -1102,6 +1102,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 list.Add(tti);
             }
             return list;
+        }
+
+        public override bool IsTextBased
+        {
+            get
+            {
+                return false;
+            }
         }
 
     }

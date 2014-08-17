@@ -1028,6 +1028,8 @@
                     public string RestoreAutoBackup { get; set; }
                     public string AdvancedSubStationAlphaProperties { get; set; }
                     public string SubStationAlphaProperties { get; set; }
+                    public string EbuProperties { get; set; }
+                    public string PacProperties { get; set; }
                     public string OpenOriginal { get; set; }
                     public string SaveOriginal { get; set; }
                     public string CloseOriginal { get; set; }

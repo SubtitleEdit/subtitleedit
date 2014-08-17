@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
         int _count;
         int _converted;
         int _errors;
-        IList<SubtitleFormat> _allFormats = SubtitleFormat.AllSubtitleFormats;
+        IList<SubtitleFormat> _allFormats;
         bool _abort;
         ListViewItem _matroskaListViewItem;
 
@@ -137,10 +137,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             FixLargeFonts();
 
+            _allFormats = new List<SubtitleFormat>();
             foreach (var f in SubtitleFormat.AllSubtitleFormats)
             {
-                if (!f.IsVobSubIndexFile)
+                if (!f.IsVobSubIndexFile && f.IsTextBased)
+                {
                     comboBoxSubtitleFormats.Items.Add(f.Name);
+                    _allFormats.Add(f);
+                }
 
             }
             comboBoxSubtitleFormats.SelectedIndex = 0;

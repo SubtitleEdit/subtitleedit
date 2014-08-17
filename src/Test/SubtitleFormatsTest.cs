@@ -666,7 +666,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
              int expected = subtitle.Paragraphs.Count;
              foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
              {
-                 if (format.GetType() != typeof(JsonType6))
+                 if (format.GetType() != typeof(JsonType6) && format.IsTextBased)
                  { 
                      format.BatchMode = true;
                      string text = format.ToText(subtitle, "test");
@@ -694,18 +694,21 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
 
              foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
              {
-                 format.BatchMode = true;
-                 string text = format.ToText(subtitle, "test");
-                 var list = new List<string>();
-                 foreach (string line in text.Replace("\r\n", "\n").Split('\n'))
-                     list.Add(line);
-                 var s2 = new Subtitle();
-                 format.LoadSubtitle(s2, list, null);
-
-                 if (s2.Paragraphs.Count == 4)
+                 if (format.IsTextBased)
                  {
-                     Assert.AreEqual(subtitle.Paragraphs[0].Text, s2.Paragraphs[0].Text, format.FriendlyName);
-                     Assert.AreEqual(subtitle.Paragraphs[3].Text, s2.Paragraphs[3].Text, format.FriendlyName);
+                     format.BatchMode = true;
+                     string text = format.ToText(subtitle, "test");
+                     var list = new List<string>();
+                     foreach (string line in text.Replace("\r\n", "\n").Split('\n'))
+                         list.Add(line);
+                     var s2 = new Subtitle();
+                     format.LoadSubtitle(s2, list, null);
+
+                     if (s2.Paragraphs.Count == 4)
+                     {
+                         Assert.AreEqual(subtitle.Paragraphs[0].Text, s2.Paragraphs[0].Text, format.FriendlyName);
+                         Assert.AreEqual(subtitle.Paragraphs[3].Text, s2.Paragraphs[3].Text, format.FriendlyName);
+                     }
                  }
              }
          }
