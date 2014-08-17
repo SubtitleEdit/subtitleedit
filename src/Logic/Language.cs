@@ -1152,6 +1152,8 @@ namespace Nikse.SubtitleEdit.Logic
                         RestoreAutoBackup = "Restore auto-backup...",
                         AdvancedSubStationAlphaProperties = "Advanced Sub Station Alpha properties...",
                         SubStationAlphaProperties = "Sub Station Alpha properties...",
+                        EbuProperties = "EBU stl properties...",
+                        PacProperties = "PAC properties...",
                         OpenOriginal = "Open original subtitle (translator mode)...",
                         SaveOriginal = "Save original subtitle",
                         CloseOriginal = "Close original subtitle",
