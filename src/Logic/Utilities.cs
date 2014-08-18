@@ -4229,6 +4229,10 @@ namespace Nikse.SubtitleEdit.Logic
             text = text.Replace("....", "...");
             text = text.Replace(" ..." + Environment.NewLine, "..." + Environment.NewLine);
             text = text.Replace(Environment.NewLine + "... ", Environment.NewLine + "...");
+            text = text.Replace(Environment.NewLine + "<i>... ", Environment.NewLine + "<i>...");
+            text = text.Replace(Environment.NewLine + "- ... ", Environment.NewLine + "- ...");
+            text = text.Replace(Environment.NewLine + "<i>- ... ", Environment.NewLine + "<i>- ...");
+
             if (text.StartsWith("... "))
                 text = text.Remove(3, 1);
             if (text.EndsWith(" ..."))
