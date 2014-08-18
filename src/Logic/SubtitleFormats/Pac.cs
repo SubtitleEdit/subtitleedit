@@ -1035,18 +1035,25 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var sb = new StringBuilder();
             index = feIndex + 3;
-            string preTextCode = System.Text.Encoding.ASCII.GetString(buffer, index +1, 3);
-            if (preTextCode == "W16")
-                index+=5;
+            bool w16 = buffer[index] == 0x1f && System.Text.Encoding.ASCII.GetString(buffer, index +1, 3) == "W16";
+            if (w16)
+                index += 5;
+
             while (index < buffer.Length && index <= maxIndex) // buffer[index] != endDelimiter)
             {
-                if (preTextCode == "W16")
+                if (buffer.Length > index + 3 && buffer[index] == 0x1f && System.Text.Encoding.ASCII.GetString(buffer, index + 1, 3) == "W16")
+                {
+                    w16 = true;
+                    index += 5;
+                }
+
+                if (w16)
                 {
                     if (buffer[index] == 0xFE)
                     {
                         sb.AppendLine();
-                        preTextCode = System.Text.Encoding.ASCII.GetString(buffer, index + 4, 3);
-                        if (preTextCode == "W16")
+                        w16 = buffer[index + 3] == 0x1f && System.Text.Encoding.ASCII.GetString(buffer, index + 4, 3) == "W16";
+                        if (w16)
                             index += 7;
                         index += 2;
                     }
@@ -1056,7 +1063,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             sb.Append(System.Text.Encoding.ASCII.GetString(buffer, index + 1, 1));
                         }
-                        else
+                        else if (buffer.Length > index + 1)
                         {
                             sb.Append(System.Text.Encoding.GetEncoding(950).GetString(buffer, index, 2));
                         }
