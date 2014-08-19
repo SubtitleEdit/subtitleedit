@@ -689,6 +689,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RestoreAutoBackup>Restore auto-backup...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha properties...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha properties...</SubStationAlphaProperties>
+        <EbuProperties>EBU stl properties...</EbuProperties>
+        <PacProperties>PAC properties...</PacProperties>
         <OpenOriginal>Open original subtitle (translator mode)...</OpenOriginal>
         <SaveOriginal>Save original subtitle</SaveOriginal>
         <CloseOriginal>Close original subtitle</CloseOriginal>
