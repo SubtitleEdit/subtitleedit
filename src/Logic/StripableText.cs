@@ -41,12 +41,17 @@ namespace Nikse.SubtitleEdit.Logic
                         text = text.Substring(1);
                     }
 
-                    // codes like {an9}
-                    if (text.StartsWith("{") && text.IndexOf("}") <= 5)
+                    // ASS/SSA codes like {\an9}
+
+                    if (text.StartsWith("{\\"))
                     {
-                        int index = text.IndexOf("}") + 1;
-                        Pre += text.Substring(0, index);
-                        text = text.Substring(index);
+                        int endIndex = text.IndexOf("}");
+                        if (endIndex > 0 && (text.IndexOf("{", 1) == -1 || text.IndexOf("{", 1) > endIndex))
+                        {
+                            int index = text.IndexOf("}") + 1;
+                            Pre += text.Substring(0, index);
+                            text = text.Substring(index);
+                        }
                     }
 
                     // tags like <i> or <font color="#ff0000">

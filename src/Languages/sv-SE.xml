@@ -311,7 +311,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Text bild {0}/{1} - {2} x {3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Undertex bild</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>EBU sparalternativ</Title>
     <GeneralSubtitleInformation>Allmän textinformation</GeneralSubtitleInformation>
     <CodePageNumber>Sidnummer</CodePageNumber>
@@ -341,7 +341,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <TextLeftJustifiedText>Vänsterjusterade text</TextLeftJustifiedText>
     <TextCentredText>Centrerad text</TextCentredText>
     <TextRightJustifiedText>Höger justerad text</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke effekt</Title>
     <ChooseColor>Välj färg:</ChooseColor>

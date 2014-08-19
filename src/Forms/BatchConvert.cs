@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
         int _count;
         int _converted;
         int _errors;
-        IList<SubtitleFormat> _allFormats = SubtitleFormat.AllSubtitleFormats;
+        IList<SubtitleFormat> _allFormats;
         bool _abort;
         ListViewItem _matroskaListViewItem;
 
@@ -137,10 +137,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             FixLargeFonts();
 
+            _allFormats = new List<SubtitleFormat>();
             foreach (var f in SubtitleFormat.AllSubtitleFormats)
             {
-                if (!f.IsVobSubIndexFile)
+                if (!f.IsVobSubIndexFile && f.IsTextBased)
+                {
                     comboBoxSubtitleFormats.Items.Add(f.Name);
+                    _allFormats.Add(f);
+                }
 
             }
             comboBoxSubtitleFormats.SelectedIndex = 0;
@@ -816,14 +820,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint , CultureInfo.InvariantCulture, out fromFrameRate) &&
                             double.TryParse(comboBoxFrameRateTo.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out toFrameRate))
                         {
-                            bool isFrameBased = false;
-                            foreach (SubtitleFormat f in SubtitleFormat.AllSubtitleFormats)
-                            {
-                                if (f.FriendlyName.ToLower() == toFormat.ToLower() ||
-                                    f.Name.ToLower() == toFormat.ToLower())
-                                    isFrameBased = f.IsFrameBased;
-                            }
-                            sub.ChangeFramerate(fromFrameRate, toFrameRate, isFrameBased);
+                            sub.ChangeFramerate(fromFrameRate, toFrameRate);
                         }
 
                         if (timeUpDownAdjust.TimeCode.TotalMilliseconds > 0.00001)

@@ -260,5 +260,47 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return list;
         }
 
+        internal static List<string> ReadArray(string text)
+        {
+            var list = new List<string>();
+            text = text.Trim();
+            if (text.StartsWith("[") && text.EndsWith("]"))
+            {
+                text = text.Trim('[');
+                text = text.Trim(']');
+                text = text.Trim();
+
+                text = text.Replace("<br />", Environment.NewLine);
+                text = text.Replace("<br>", Environment.NewLine);
+                text = text.Replace("<br/>", Environment.NewLine);
+                text = text.Replace("\\n", Environment.NewLine);
+
+                bool keepNext = false;
+                var sb = new StringBuilder();
+                for (int i = 0; i < text.Length; i++)
+                {
+                    string s = text.Substring(i, 1);
+                    if (s == "\\" && !keepNext)
+                    {
+                        keepNext = true;
+                    }
+                    else if (!keepNext && s == ",")
+                    {
+                        list.Add(sb.ToString());
+                        sb = new StringBuilder();
+                        keepNext = false;
+                    }
+                    else
+                    {
+                        sb.Append(s);
+                        keepNext = false;
+                    }
+                }
+                if (sb.Length > 0)
+                    list.Add(sb.ToString());
+            }
+            return list;
+        }
+
     }
 }

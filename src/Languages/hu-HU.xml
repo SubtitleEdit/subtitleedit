@@ -311,7 +311,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Feliratkép {0}/{1}  -  {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Feliratkép</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>EBU mentési beállítások</Title>
     <GeneralSubtitleInformation>Általános felirat információ</GeneralSubtitleInformation>
     <CodePageNumber>Kódlap szám</CodePageNumber>
@@ -341,7 +341,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TextLeftJustifiedText>Balra zárt szöveg</TextLeftJustifiedText>
     <TextCentredText>Szöveg középre</TextCentredText>
     <TextRightJustifiedText>Jobbra zárt szöveg</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke effektus</Title>
     <ChooseColor>Szín:</ChooseColor>

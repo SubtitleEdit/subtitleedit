@@ -317,7 +317,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleImageXofYAndWidthXHeight>Изображение субтитров {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Изображение субтитра</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>Параметры сохранения EBU</Title>
     <GeneralSubtitleInformation>Общие сведения о субтитрах</GeneralSubtitleInformation>
     <CodePageNumber>Кодовая страница:</CodePageNumber>
@@ -347,7 +347,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TextLeftJustifiedText>Выровнять текст по левому краю</TextLeftJustifiedText>
     <TextCentredText>Выровнять текст по центру</TextCentredText>
     <TextRightJustifiedText>Выровнять текст по правому краю</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Эффект Караоке</Title>
     <ChooseColor>Выбрать цвет:</ChooseColor>

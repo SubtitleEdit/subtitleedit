@@ -314,7 +314,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Εικόνα υπότιτλου {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Εικόνα υπότιτλου</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>Επιλογές αποθήκευσης τύπου EBU</Title>
     <GeneralSubtitleInformation>Γενικές πληροφορίες υπότιτλου</GeneralSubtitleInformation>
     <CodePageNumber>Αριθμός κωδικοσελίδας</CodePageNumber>
@@ -344,7 +344,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TextLeftJustifiedText>Αριστερά στοιχισμένο κείμενο</TextLeftJustifiedText>
     <TextCentredText>Κεντραρισμένο κείμενο </TextCentredText>
     <TextRightJustifiedText>Δεξιά στοιχισμένο κείμενο</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Εφέ καραόκε</Title>
     <ChooseColor>Επιλέξτε χρώμα:</ChooseColor>

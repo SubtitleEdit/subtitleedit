@@ -311,7 +311,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Snímek titulku {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Snímek titulku</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>Možnosti uložení EBU</Title>
     <GeneralSubtitleInformation>Všeobecné informace o titulcích</GeneralSubtitleInformation>
     <CodePageNumber>Číslo kódové stránky</CodePageNumber>
@@ -341,7 +341,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TextLeftJustifiedText>Text zarovnaný doleva</TextLeftJustifiedText>
     <TextCentredText>Text zarovnaný na střed</TextCentredText>
     <TextRightJustifiedText>Text zarovnaný doprava</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Efekt Karaoke</Title>
     <ChooseColor>Vyberte barvu:</ChooseColor>

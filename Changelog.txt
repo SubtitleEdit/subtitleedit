@@ -1,6 +1,20 @@
 ﻿Subtitle Edit Changelog
 
 
+3.4.2 (xth August 2014)
+* NEW:
+   * Added new subtitle format
+* IMPROVED:
+   * Updated Dutch language file - thx Quetsbeek
+   * Updated Romanian language file - thx Mircea
+* FIXED:
+   * Fixed "Split line" button appear wrongly - thx Quetsbeek
+   * Changes to interjections now work instantly
+   * Detection of SSA/ASS tags in remove text for HI - thx Thunderbolt8
+   * Minor bug in "Fix missing period" - thx Joel
+   * Reverted "Framerate conversion" fix from 3.4.1
+
+
 3.4.1 (8th August 2014)
 * NEW:
    * Added new subtitle formats
@@ -14,7 +28,7 @@
    * Spell check now has better suggestions for one letter words - thx Milad
 * FIXED:
    * Fixed crash in Visual Sync when using VLC as video player
-   * Export to image based formats now uses font from ssa/ass - thx mariner
+   * Export to image based formats now uses font from SSA/ASS - thx mariner
    * Do not lock explorer when dropping files (for OCR) in SE main list view - thx Jar
    * Fixed dialogue issue in "auto-break lines" - thx fred
    * Framerate conversion - fix for time based subs
@@ -273,7 +287,7 @@
    * Updated German language file - thx Siegwarth
    * Updated Portuguese language file - thx moob
    * OCR max. error% is now saved for Blu-ray - thx Zoltán
-   * More default values for ASS/SSA in options
+   * More default values for SSA/ASS in options
    * Added split long lines to "Batch convert" - thx menes
    * Added support for multiple languages in TimedText / DFXP - thx Laszlo
    * Custom shortcuts can now use "Home" + "Back" (backspace) keys
@@ -340,7 +354,7 @@
    * Fixed crash in spell check - thx Ruud
    * Fixed Serbian letters in PAC format - thx Arran
    * Can now work with negative time codes in SubRip - thx Salad
-   * Loading styles when importing ASS/SSA from Matroska files - thx the hulk/Scott
+   * Loading styles when importing SSA/ASS from Matroska files - thx the hulk/Scott
 
 
 3.3.8 (1st September 2013)

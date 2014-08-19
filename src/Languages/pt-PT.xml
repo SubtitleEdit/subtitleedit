@@ -119,7 +119,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Percent>Percentagem</Percent>
     <Recalculate>Recalcular</Recalculate>
     <AddSeconds>Adicionar segundos</AddSeconds>
-    <SetAsPercent>Ajustar a percentagem de duração</SetAsPercent>
+    <SetAsPercent>Definir a percentagem de duração</SetAsPercent>
     <Note>Nota: A duração não pode sobrepor o tempo de início do próximo texto</Note>
     <PleaseSelectAValueFromTheDropDownList>Por favor, seleccione um valor da lista abaixo</PleaseSelectAValueFromTheDropDownList>
     <PleaseChoose> - Por favor, escolha - </PleaseChoose>
@@ -196,13 +196,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Info>Alterar a velocidade da legenda em percentagem</Info>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
-    <Title>Verificar se há atualizações</Title>
-    <CheckingForUpdates>A verificar se há atualizações...</CheckingForUpdates>
+    <Title>Verificar se há actualizações</Title>
+    <CheckingForUpdates>A verificar se há actualizações...</CheckingForUpdates>
     <CheckingForUpdatesFailedX>A verificação por actualizações falhou: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Está a usar a última versão do Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Nova versão disponível!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Ir para a página de transferência</InstallUpdate>
-    <NoUpdates>Não atualizar</NoUpdates>
+    <NoUpdates>Não actualizar</NoUpdates>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Escolher a faixa de áudio</Title>
@@ -313,7 +313,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Imagem da legenda {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Imagem de legenda</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>Opções para guardar EBU</Title>
     <GeneralSubtitleInformation>Informação geral da legenda</GeneralSubtitleInformation>
     <CodePageNumber>Número de código da página</CodePageNumber>
@@ -343,7 +343,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TextLeftJustifiedText>Alinhado à esquerda</TextLeftJustifiedText>
     <TextCentredText>Centralizado</TextCentredText>
     <TextRightJustifiedText>Alinhado à direita</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Efeito Karaoke</Title>
     <ChooseColor>Seleccione a cor:</ChooseColor>
@@ -608,7 +608,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <From>De:</From>
     <To>Para:</To>
     <Translate>Traduzir</Translate>
-    <PleaseWait>Por favor, aguarde... isto pode levar algum tempo</PleaseWait>
+    <PleaseWait>Por favor, aguarde... isto pode demorar.</PleaseWait>
     <PoweredByGoogleTranslate>Powered by Google translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Powered by Microsoft translate</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
@@ -831,7 +831,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <LeaveSession>Abandonar sessão</LeaveSession>
       </Networking>
       <Help>
-        <CheckForUpdates>Verificar se há atualizações...</CheckForUpdates>
+        <CheckForUpdates>Verificar se há actualizações...</CheckForUpdates>
         <Title>Ajuda</Title>
         <Help>&amp;Ajuda</Help>
         <About>&amp;Sobre</About>
@@ -852,14 +852,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
-        <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - Ajustar estilo</AdvancedSubStationAlphaSetStyle>
-        <SubStationAlphaSetStyle>Sub Station Alpha - Ajustar estilo</SubStationAlphaSetStyle>
+        <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - Definir estilo</AdvancedSubStationAlphaSetStyle>
+        <SubStationAlphaSetStyle>Sub Station Alpha - Definir estilo</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Sub Station Alpha estilos...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha estilos...</AdvancedSubStationAlphaStyles>
-        <TimedTextSetStyle>Texto cronometrado - Ajustar estilo</TimedTextSetStyle>
+        <TimedTextSetStyle>Texto cronometrado - Definir estilo</TimedTextSetStyle>
         <TimedTextStyles>Texto cronometrado estilos...</TimedTextStyles>
         <TimedTextSetLanguage>Texto cronometrado - definir o idioma</TimedTextSetLanguage>
-        <SamiSetStyle>Sami - Ajustar classe</SamiSetStyle>
+        <SamiSetStyle>Sami - Definir classe</SamiSetStyle>
         <Cut>Cortar</Cut>
         <Copy>Copiar</Copy>
         <Paste>Colar</Paste>
@@ -944,11 +944,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <PlayFromJustBeforeText>Reproduzir antes do &amp;texto</PlayFromJustBeforeText>
       <Pause>Pausar</Pause>
       <GoToSubtitlePositionAndPause>Ir à posição da legenda e pausar</GoToSubtitlePositionAndPause>
-      <SetStartTime>Ajustar t&amp;empo inicial</SetStartTime>
-      <SetEndTimeAndGoToNext>Ajustar t&amp;empo final/seguinte</SetEndTimeAndGoToNext>
+      <SetStartTime>Definir t&amp;empo inicial</SetStartTime>
+      <SetEndTimeAndGoToNext>Definir t&amp;empo final/seguinte</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Adjustado através do tempo final {0}</AdjustedViaEndTime>
-      <SetEndTime>Ajustar tempo fin&amp;al</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Ajusta&amp;r início e compensar o resto</SetstartTimeAndOffsetOfRest>
+      <SetEndTime>Definir tempo fin&amp;al</SetEndTime>
+      <SetstartTimeAndOffsetOfRest>Defini&amp;r início e compensar o resto</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Procurar texto online</SearchTextOnline>
       <GoogleTranslate>Google Tradutor</GoogleTranslate>
       <GoogleIt>Pesquizar no Google</GoogleIt>
@@ -1067,6 +1067,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <NothingToUndo>Nada para anular</NothingToUndo>
     <InvalidLanguageNameX>Nome de idioma inválido: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Não é possível alterar o idioma!</UnableToChangeLanguage>
+    <DoNotDisplayMessageAgain>Não exibir esta mensagem novamente</DoNotDisplayMessageAgain>	
     <NumberOfCorrectedWords>Número de palavras corrigidas: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Número de palavras omitidas: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Número de palavras correctas: {0}</NumberOfCorrectWords>
@@ -1296,7 +1297,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ExportRulesTitle>Exportar regra(s) de substituição para...</ExportRulesTitle>
     <Rules>Regras de exportação</Rules>
     <MoveToTop>Mover para o inicio</MoveToTop>
-    <MoveToBottom>Mover para o fim</MoveToBottom>
+    <MoveToBottom>Mover para o fim</MoveToBottom>	
   </MultipleReplace>
   <NetworkChat>
     <Title>Conversação</Title>
@@ -1449,7 +1450,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AutoDetectAnsiEncoding>Auto detectar codificação ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Comprimento máximo de única linha</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Máximo Caracteres/seg</MaximumCharactersPerSecond>
-    <AutoWrapWhileTyping>Auto-ajustar linha durante digitação</AutoWrapWhileTyping>
+    <AutoWrapWhileTyping>Moldar o texto ao escrever</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Duração Mínima milissegundos</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Duração Máxima milissegundos</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. de intervalo entre legendas em ms</MinimumGapMilliseconds>
@@ -1480,7 +1481,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AutoBackupEveryMinute>Cada minuto</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Cada 5 minutos</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Cada 15 minutos</AutoBackupEveryFifteenMinutes>
-    <CheckForUpdates>Verificar se há atualizações</CheckForUpdates>
+    <CheckForUpdates>Verificar se há actualizações</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Permitir a edição da legenda original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmar eliminação de linhas</PromptDeleteLines>
     <TimeCodeMode>Modo de código de tempo</TimeCodeMode>
@@ -1654,6 +1655,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Miscellaneous>Diversos</Miscellaneous>
     <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista" (para o ajuste-auto)</UseDoNotBreakAfterList>
   </Settings>
+   <SetVideoOffset>
+    <Title>Definir o deslocamento do vídeo</Title>
+    <Description>Definir o deslocamento do vídeo (A legenda não deve seguir o tempo real do vídeo, mas por ex. +10 horas)</Description>
+    <RelativeToCurrentVideoPosition>Em relação à posição do vídeo actual</RelativeToCurrentVideoPosition>	
+  </SetVideoOffset> 
   <ShowEarlierLater>
     <Title>Mostrar linhas seleccionadas antes/depois</Title>
     <TitleAll>Mostrar todas as linhas antes/depois</TitleAll>
@@ -1764,14 +1770,17 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <NumberOfAlignmentTags>Número de etiquetas alinhamento: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Comprimento da legenda - mínimo: {0}</LineLengthMinimum>
     <LineLengthMaximum>Comprimento da legenda - máximo: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Comprimento da legenda - variável: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Legenda, número de linhas - variável: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAvarage>Comprimento da legenda - médio: {0}</LineLengthAvarage>
+    <LinesPerSubtitleAvarage>Legenda, número de linhas - médio: {0:0.0}</LinesPerSubtitleAvarage>
     <SingleLineLengthMinimum>Comprimento de uma linha - mínimo: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Comprimento de uma linha - máximo: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Comprimento de uma linha - variável: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAvarage>Comprimento de uma linha - médio: {0}</SingleLineLengthAvarage>
     <DurationMinimum>Duração - mínima: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duração - máxima: {0:0.000} segundos</DurationMaximum>
-    <DurationAvarage>Duração - variável: {0:0.000} segundos</DurationAvarage>
+    <DurationAvarage>Duração - média: {0:0.000} segundos</DurationAvarage>
+    <ChararactersPerSecondMinimum>Caracteres/seg - mínimo: {0:0.000}</ChararactersPerSecondMinimum>
+    <ChararactersPerSecondMaximum>Caracteres/seg - máximo: {0:0.000}</ChararactersPerSecondMaximum>
+    <ChararactersPerSecondAverage>Caracteres/seg - médio: {0:0.000}</ChararactersPerSecondAverage>	
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha propriedades</Title>
@@ -1910,7 +1919,7 @@ Manter as alterações?</KeepChangesMessage>
     <StartOcrFrom>Iniciar OCR da legenda:</StartOcrFrom>
     <LoadingVobSubImages>Carregamento de imagens VobSub...</LoadingVobSubImages>
     <LoadingImageCompareDatabase>Carregamento de imagem comparativa da base de dados...</LoadingImageCompareDatabase>
-    <ConvertingImageCompareDatabase>Converter imagem comparativa da base de daddos para novo formato (images.db/images.xml)...</ConvertingImageCompareDatabase>
+    <ConvertingImageCompareDatabase>Converter imagem comparativa da base de daddos para o novo formato (images.db/images.xml)...</ConvertingImageCompareDatabase>
     <SubtitleImage>Imagens da legenda</SubtitleImage>
     <SubtitleText>Texto da legenda</SubtitleText>
     <UnableToCreateCharacterDatabaseFolder>Impossível criar 'Pasta de base de dados de caracteres': {0}</UnableToCreateCharacterDatabaseFolder>
@@ -1931,6 +1940,7 @@ Manter as alterações?</KeepChangesMessage>
     <OcrAutoCorrectionSpellchecking>Auto correcção OCR / verificação ortográfica</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Corrigir erros de OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importar texto com código de tempo correspondente...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>Importar códigos de tempo novos</ImportNewTimeCodes>	
     <SaveSubtitleImageAs>Guardar imagem da legenda como...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Guardar todas as imagens (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Guardar todas as imagens com índice HTML...</SaveAllSubtitleImagesWithHtml>
@@ -2000,11 +2010,11 @@ Manter as alterações?</KeepChangesMessage>
     <FromCurrentVideoPosition>Da posição actual do vídeo</FromCurrentVideoPosition>
     <DetectOptions>Eliminar opções</DetectOptions>
     <ScanBlocksOfMs>Examinar blocos de milissegundos</ScanBlocksOfMs>
-    <BlockAverageVolMin1>O volume variável do bloco deve estar a cima</BlockAverageVolMin1>
-    <BlockAverageVolMin2>% do total variável de volume</BlockAverageVolMin2>
-    <BlockAverageVolMax1>O volume variável do bloco deve estar a abaixo</BlockAverageVolMax1>
+    <BlockAverageVolMin1>O volume médio do bloco deve ser mais alto</BlockAverageVolMin1>
+    <BlockAverageVolMin2>% do volume médio total</BlockAverageVolMin2>
+    <BlockAverageVolMax1>O volume médio do bloco deve ser mais baixo</BlockAverageVolMax1>
     <BlockAverageVolMax2>% do total máximo de volume</BlockAverageVolMax2>
-    <SplitLongLinesAt1>Dividir legendas longas em</SplitLongLinesAt1>
+    <SplitLongLinesAt1>Dividir linhas longas em</SplitLongLinesAt1>
     <SplitLongLinesAt2>milissegundos</SplitLongLinesAt2>
     <Other>Outro</Other>
   </WaveFormGenerateTimeCodes>

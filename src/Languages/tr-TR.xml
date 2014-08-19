@@ -255,7 +255,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Altyazı görüntüsü {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Altyazı görüntüsü</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>EBU kaydetme ayarları</Title>
     <GeneralSubtitleInformation>Altyazı bilgisi</GeneralSubtitleInformation>
     <CodePageNumber>Kod sayfası numarası</CodePageNumber>
@@ -284,7 +284,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <TextLeftJustifiedText>Left justified text</TextLeftJustifiedText>
     <TextCentredText>Ortalanmış metin</TextCentredText>
     <TextRightJustifiedText>Right justified text</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke efekti</Title>
     <ChooseColor>Renk seç:</ChooseColor>
