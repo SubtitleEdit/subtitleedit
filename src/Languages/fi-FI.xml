@@ -311,7 +311,7 @@ Siirrytäänkö VLC Media Playerin kotisivulle?
     <SubtitleImageXofYAndWidthXHeight>Tekstityksen näköistiedosto {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Tekstityksen näköistiedosto</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>EBU tallennusasetukset</Title>
     <GeneralSubtitleInformation>Yleinen tekstitystieto</GeneralSubtitleInformation>
     <CodePageNumber>Koodisivun numero</CodePageNumber>
@@ -341,7 +341,7 @@ Siirrytäänkö VLC Media Playerin kotisivulle?
     <TextLeftJustifiedText>Vasemmalle tasattu teksti</TextLeftJustifiedText>
     <TextCentredText>Keskitetty teksti</TextCentredText>
     <TextRightJustifiedText>Oikealle tasattu teksti</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke tehoste</Title>
     <ChooseColor>Valitse väri:</ChooseColor>

@@ -312,7 +312,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Undertekst billede {0}/{1} - {2} x {3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Undertekst billede</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>EBU save options</Title>
     <GeneralSubtitleInformation>General subtitle information</GeneralSubtitleInformation>
     <CodePageNumber>Code page number</CodePageNumber>
@@ -342,7 +342,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <TextLeftJustifiedText>Venstre justeret tekst</TextLeftJustifiedText>
     <TextCentredText>Centreret tekst</TextCentredText>
     <TextRightJustifiedText>Højre justeret tekst</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke effekt</Title>
     <ChooseColor>Vælg farve:</ChooseColor>
@@ -690,6 +690,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <RestoreAutoBackup>Gendan fra auto-backup...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha egenskaber...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha egenskaber...</SubStationAlphaProperties>
+        <EbuProperties>EBU egenskaber...</EbuProperties>
+        <PacProperties>PAC egenskaber...</PacProperties>
         <OpenOriginal>Åbn original undertekst (oversætter mode)...</OpenOriginal>
         <SaveOriginal>Gem original</SaveOriginal>
         <CloseOriginal>Luk original</CloseOriginal>
@@ -1066,6 +1068,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <NothingToUndo>Intet at fortryde</NothingToUndo>
     <InvalidLanguageNameX>Ugyldigt sprog navn: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Kunne ikke skifte sprog!</UnableToChangeLanguage>
+    <DoNotDisplayMessageAgain>Vis ikke denne meddelelse igen</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Antal rettede ord: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Antal oversprungne ord: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Antal korrekte ord: {0}</NumberOfCorrectWords>
@@ -1653,6 +1656,11 @@ Fortsæt?</SubtitleAppendPrompt>
     <Miscellaneous>Diverse</Miscellaneous>
     <UseDoNotBreakAfterList>Benyt skift-ikke-efter-liste (for auto-ombrydning)</UseDoNotBreakAfterList>
   </Settings>
+  <SetVideoOffset>
+    <Title>Indstil video offset</Title>
+    <Description>Indstil video offset (undertekster bør ikke følge real video tid, men fx +10 timer)</Description>
+    <RelativeToCurrentVideoPosition>I forhold til aktuelle video position</RelativeToCurrentVideoPosition>
+  </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Vis valgte linjer tidligere/senere</Title>
     <TitleAll>Vis alle linjer tidligere/senere</TitleAll>
@@ -1772,6 +1780,9 @@ Fortsæt?</SubtitleAppendPrompt>
     <DurationMinimum>Varihed - minimum: {0:0.000} sekunder</DurationMinimum>
     <DurationMaximum>Varihed - maximum: {0:0.000} sekunder</DurationMaximum>
     <DurationAvarage>Varihed - average: {0:0.000} sekunder</DurationAvarage>
+    <CharactersPerSecondMinimum>Karakterer/sek - min: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Karakterer/sek - maks: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Karakterer/sek -  gennemsnit: {0:0.000}</CharactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha egenskaber</Title>
@@ -1929,6 +1940,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <OcrAutoCorrectionSpellchecking>OCR automatisk korrektion / stavekontrol</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Ret OCR-fejl</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importer tekst med matchende tidskoder...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>Importer nye tidskoder</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Gem undertekst billede som...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Gem alle billeder (png/BDN xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Gem alle billeder med html-indeks...</SaveAllSubtitleImagesWithHtml>

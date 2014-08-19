@@ -52,6 +52,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new DvdStudioProSpace(),
                     new DvdSubtitle(),
                     new DvdSubtitleSystem(),
+                    new Ebu(),
                     new Eeg708(),
                     new F4Text(),
                     new F4Rtf(),
@@ -78,6 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new JsonType3(),
                     new JsonType4(),
                     new JsonType5(),
+                    new JsonType6(),
                     new Lrc(),
                     new MicroDvd(),
                     new MidwayInscriberCGX(),
@@ -388,6 +390,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public static string ToUtf8XmlString(XmlDocument xml)
         {
             return ToUtf8XmlString(xml, false);
+        }
+
+        public virtual bool IsTextBased
+        {
+            get
+            {
+                return true;
+            }
         }
 
     }

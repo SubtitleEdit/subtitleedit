@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.DurationsBridgeGaps DurationsBridgeGaps;
         public LanguageStructure.DvdSubRip DvdSubRip;
         public LanguageStructure.DvdSubRipChooseLanguage DvdSubRipChooseLanguage;
-        public LanguageStructure.EbuSaveOtpions EbuSaveOtpions;
+        public LanguageStructure.EbuSaveOptions EbuSaveOptions;
         public LanguageStructure.EffectKaraoke EffectKaraoke;
         public LanguageStructure.EffectTypewriter EffectTypewriter;
         public LanguageStructure.ExportCustomText ExportCustomText;
@@ -478,7 +478,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SubtitleImage = "Subtitle image",
             };
 
-            EbuSaveOtpions = new LanguageStructure.EbuSaveOtpions
+            EbuSaveOptions = new LanguageStructure.EbuSaveOptions
             {
                 Title = "EBU save options",
                 GeneralSubtitleInformation = "General subtitle information",
@@ -1152,6 +1152,8 @@ namespace Nikse.SubtitleEdit.Logic
                         RestoreAutoBackup = "Restore auto-backup...",
                         AdvancedSubStationAlphaProperties = "Advanced Sub Station Alpha properties...",
                         SubStationAlphaProperties = "Sub Station Alpha properties...",
+                        EbuProperties = "EBU stl properties...",
+                        PacProperties = "PAC properties...",
                         OpenOriginal = "Open original subtitle (translator mode)...",
                         SaveOriginal = "Save original subtitle",
                         CloseOriginal = "Close original subtitle",

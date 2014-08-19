@@ -189,7 +189,7 @@ http://soft98.ir
     <SubtitleImageXofYAndWidthXHeight>Subtitle image {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>تصویر زیرنویس</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>ذخیره گزینه های ای بی یو</Title>
     <GeneralSubtitleInformation>اطلاعات عمومی زیرنویس</GeneralSubtitleInformation>
     <CodePageNumber>کد شماره صفحه</CodePageNumber>
@@ -218,7 +218,7 @@ http://soft98.ir
     <TextLeftJustifiedText>متن توجیه شده سمت چپ</TextLeftJustifiedText>
     <TextCentredText>میانه متن</TextCentredText>
     <TextRightJustifiedText>متن توجیه شده سمت راست</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>اثر کارائوکه</Title>
     <ChooseColor>انتخاب رنگ:</ChooseColor>

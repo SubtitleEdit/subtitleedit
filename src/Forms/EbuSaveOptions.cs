@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
-            var language = Configuration.Settings.Language.EbuSaveOtpions;
+            var language = Configuration.Settings.Language.EbuSaveOptions;
             Text = language.Title;
             tabPageHeader.Text = language.GeneralSubtitleInformation;
             tabPageTextAndTiming.Text = language.TextAndTimingInformation;
@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxJustificationCode.SelectedIndex = justificationCode;
 
-            this.Text = Configuration.Settings.Language.EbuSaveOtpions.Title;
+            this.Text = Configuration.Settings.Language.EbuSaveOptions.Title;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
@@ -102,14 +102,14 @@ namespace Nikse.SubtitleEdit.Forms
                     string s = Utilities.RemoveHtmlTags(line);
                     if (s.Length > numericUpDownMaxCharacters.Value)
                     {
-                        sb.AppendLine(string.Format(Configuration.Settings.Language.EbuSaveOtpions.MaxLengthError, i, numericUpDownMaxCharacters.Value, s.Length - numericUpDownMaxCharacters.Value, s));
+                        sb.AppendLine(string.Format(Configuration.Settings.Language.EbuSaveOptions.MaxLengthError, i, numericUpDownMaxCharacters.Value, s.Length - numericUpDownMaxCharacters.Value, s));
                         errorCount++;
                     }
                 }
                 i++;
             }
             textBoxErrors.Text = sb.ToString();
-            tabPageErrors.Text = string.Format(Configuration.Settings.Language.EbuSaveOtpions.ErrorsX, errorCount);
+            tabPageErrors.Text = string.Format(Configuration.Settings.Language.EbuSaveOptions.ErrorsX, errorCount);
         }
 
         private void FillFromHeader(Ebu.EbuGeneralSubtitleInformation header)

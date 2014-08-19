@@ -311,7 +311,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Immagine sottotitolo {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Immagine sottotitolo</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>Opzioni salvataggio EBU</Title>
     <GeneralSubtitleInformation>Informazioni generali sottotitolo</GeneralSubtitleInformation>
     <CodePageNumber>Numero tabella codici</CodePageNumber>
@@ -341,7 +341,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TextLeftJustifiedText>Testo giustificato a sinistra</TextLeftJustifiedText>
     <TextCentredText>Testo centrato </TextCentredText>
     <TextRightJustifiedText>Testo giustificato a destra</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Effetto Karaoke</Title>
     <ChooseColor>Scegli colore:</ChooseColor>

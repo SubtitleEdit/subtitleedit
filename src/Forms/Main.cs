@@ -600,7 +600,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Console.WriteLine("    " + new Captionate().FriendlyName);
                     Console.WriteLine("    " + new Cavena890().FriendlyName);
                     Console.WriteLine("    " + new CheetahCaption().FriendlyName);
-                    Console.WriteLine("    " + new Ebu().FriendlyName);
+//                    Console.WriteLine("    " + new Ebu().FriendlyName);
                     Console.WriteLine("    Matroska (.mkv)");
                     Console.WriteLine("    Matroska subtitle (.mks)");
                     Console.WriteLine("    " + new NciCaption().FriendlyName);
@@ -805,7 +805,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             format = sub.LoadSubtitle(fileName, out encoding, null, true);
 
-                            if (format == null)
+                            if (format == null || format.GetType() == typeof(Ebu))
                             {
                                 var ebu = new Ebu();
                                 if (ebu.IsMine(null, fileName))
@@ -2322,6 +2322,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!change)
                     _changeSubtitleToString = SerializeSubtitle(_subtitle);
 
+                ShowHideTextBasedFeatures(format);
+
                 bool justConverted = false;
                 if (format == null)
                 {
@@ -3036,6 +3038,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void ShowHideTextBasedFeatures(SubtitleFormat format)
+        {
+            if (format != null && !format.IsTextBased)
+            {
+                textBoxSource.Enabled = false;
+            }
+            else
+            {
+                textBoxSource.Enabled = true;
+            }
+        }
+
         private bool IsTransportStream(string fileName)
         {
             try
@@ -3439,6 +3453,16 @@ namespace Nikse.SubtitleEdit.Forms
 
             try
             {
+                if (format != null && !format.IsTextBased)
+                {
+                    if (format.GetType() == typeof(Ebu))
+                    {
+                        var ebu = new Ebu();
+                        ebu.Save(_fileName, _subtitle);
+                    }
+                    return DialogResult.OK;
+                }
+
                 string allText = _subtitle.ToText(format);
 
                 // Seungki begin
@@ -3730,9 +3754,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                     SubtitleListview1.DisplayExtraFromExtra = true;
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-
                 }
             }
+            ShowHideTextBasedFeatures(format);
         }
 
         private List<string> GetNuendoStyles()
@@ -4028,6 +4052,7 @@ namespace Nikse.SubtitleEdit.Forms
             _lastDoNotPrompt = string.Empty;
             ReloadFromSourceView();
             FileNew();
+            ShowHideTextBasedFeatures(GetCurrentSubtitleFormat());
         }
 
         private void ToolStripButtonFileOpenClick(object sender, EventArgs e)
@@ -6773,7 +6798,7 @@ namespace Nikse.SubtitleEdit.Forms
                 maxLines = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
             if (numberOfLines <= maxLines)
             {
-                if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * numberOfLines)
+                if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * Math.Max(numberOfLines, 2))
                 {
                     lineTotal.ForeColor = Color.Black;
                     if (!textBoxHasFocus)
@@ -6792,31 +6817,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-
-            //if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
-            //{
-            //    lineTotal.ForeColor = Color.Black;
-            //    if (!textBoxHasFocus)
-            //        lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
-            //}
-            //else if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 2.1)
-            //{
-            //    lineTotal.ForeColor = Color.Orange;
-            //    if (!textBoxHasFocus)
-            //        lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
-            //}
-            //else
-            //{
-            //    lineTotal.ForeColor = Color.Red;
-            //    if (!textBoxHasFocus)
-            //        lineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, s.Length);
-            //    if (buttonUnBreak.Visible)
-            //    {
-            //        if (!textBoxHasFocus)
-            //            lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
-            //        buttonSplitLine.Visible = true;
-            //    }
-            //}
             UpdateListViewTextCharactersPerSeconds(charactersPerSecond, paragraph);
             charactersPerSecond.Left = textBox.Left + (textBox.Width - labelCharactersPerSecond.Width);
             lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
@@ -10260,7 +10260,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     double oldFramerate = changeFramerate.OldFrameRate;
                     double newFramerate = changeFramerate.NewFrameRate;
-                    _subtitle.ChangeFramerate(oldFramerate, newFramerate, GetCurrentSubtitleFormat().IsFrameBased);
+                    _subtitle.ChangeFramerate(oldFramerate, newFramerate);
 
                     ShowStatus(string.Format(_language.FrameRateChangedFromXToY, oldFramerate, newFramerate));
                     toolStripComboBoxFrameRate.Text = newFramerate.ToString();
@@ -14141,6 +14141,16 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemSubStationAlpha.Visible = false;
             }
 
+            if (format.GetType() == typeof(Ebu))
+            {
+                toolStripMenuItemEbuProperties.Text = Configuration.Settings.Language.Main.Menu.File.EbuProperties;
+                toolStripMenuItemEbuProperties.Visible = true;
+            }
+            else if (format.GetType() == typeof(SubStationAlpha))
+            {
+                toolStripMenuItemEbuProperties.Visible = false;
+            }
+
             if (format.GetType() == typeof(DCSubtitle) || format.GetType() == typeof(DCinemaSmpte2010) || format.GetType() == typeof(DCinemaSmpte2007))
             {
                 toolStripMenuItemDCinemaProperties.Visible = true;
@@ -17388,6 +17398,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (tabControlSubtitle.SelectedIndex != TabControlSourceView && textBoxSource.Text.Trim().Length > 1)
             {
+                var currentFormat = GetCurrentSubtitleFormat();
+                if (currentFormat != null && !currentFormat.IsTextBased)
+                    return;
+
                 var temp = new Subtitle(_subtitle);
                 SubtitleFormat format = temp.ReloadLoadSubtitle(new List<string>(textBoxSource.Lines), null);
                 if (format == null)
@@ -18692,21 +18706,24 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (saveFileDialog1.FilterIndex == index + 1)
                     {
-                        // only allow current extension or ".txt"
-                        string fileName = saveFileDialog1.FileName;
-                        string ext = Path.GetExtension(fileName).ToLower();
-                        bool extOk = ext == format.Extension.ToLower() || format.AlternateExtensions.Contains(ext) || ext == ".txt";
-                        if (!extOk)
+                        if (format.IsTextBased)
                         {
-                            if (fileName.EndsWith("."))
-                                fileName = fileName.Substring(0, _fileName.Length - 1);
-                            fileName += format.Extension;
-                        }
+                            // only allow current extension or ".txt"
+                            string fileName = saveFileDialog1.FileName;
+                            string ext = Path.GetExtension(fileName).ToLower();
+                            bool extOk = ext == format.Extension.ToLower() || format.AlternateExtensions.Contains(ext) || ext == ".txt";
+                            if (!extOk)
+                            {
+                                if (fileName.EndsWith("."))
+                                    fileName = fileName.Substring(0, _fileName.Length - 1);
+                                fileName += format.Extension;
+                            }
 
-                        string allText = newSub.ToText(format);
-                        File.WriteAllText(fileName, allText, GetCurrentEncoding());
-                        ShowStatus(string.Format(_language.XLinesSavedAsY, newSub.Paragraphs.Count, fileName));
-                        return;
+                            string allText = newSub.ToText(format);
+                            File.WriteAllText(fileName, allText, GetCurrentEncoding());
+                            ShowStatus(string.Format(_language.XLinesSavedAsY, newSub.Paragraphs.Count, fileName));
+                            return;
+                        }
                     }
                     index++;
                 }
@@ -19638,6 +19655,28 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.Offset = offsetInSeconds;
             }
             _formPositionsAndSizes.SavePositionAndSize(form);
+        }
+
+        private void toolStripMenuItemEbuProperties_Click(object sender, EventArgs e)
+        {
+            var properties = new EbuSaveOptions();
+
+            var header = new Nikse.SubtitleEdit.Logic.SubtitleFormats.Ebu.EbuGeneralSubtitleInformation();
+            if (_subtitle != null && _subtitle.Header != null && (_subtitle.Header.Contains("STL2") || _subtitle.Header.Contains("STL3")))
+            {
+                header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(_subtitle.Header));
+                properties.Initialize(header, 0, null, _subtitle);
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(_fileName) && new Ebu().IsMine(null, _fileName))
+                    properties.Initialize(header, 0, _fileName, _subtitle);
+                else
+                    properties.Initialize(header, 0, null, _subtitle);
+            }
+            _formPositionsAndSizes.SetPositionAndSize(properties, true);
+            properties.ShowDialog(this);
+            _formPositionsAndSizes.SavePositionAndSize(properties);
         }
 
     }
