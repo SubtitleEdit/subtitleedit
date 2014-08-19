@@ -2238,17 +2238,122 @@ namespace Nikse.SubtitleEdit.Forms
         public void FixStartWithUppercaseLetterAfterParagraph()
         {
             listViewFixes.BeginUpdate();
-            string fixAction1 = _language.FixFirstLetterToUppercaseAfterParagraph + " ";
-            string fixAction2 = _language.FixFirstLetterToUppercaseAfterParagraph;
+            string fixAction = _language.FixFirstLetterToUppercaseAfterParagraph;
             int fixedStartWithUppercaseLetterAfterParagraphTicked = 0;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
                 Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
 
-                if (p.Text != null && p.Text.Length > 1)
+                string oldText = p.Text;
+                string fixedText = FixStartWithUppercaseLetterAfterParagraph(p, prev, _encoding, Language);
+
+                if (oldText != p.Text)
                 {
-                    string text = p.Text;
+                    if (AllowFix(p, fixAction))
+                    {
+                        _totalFixes++;
+                        fixedStartWithUppercaseLetterAfterParagraphTicked++;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
+                    else
+                    {
+                        p.Text = oldText;
+                    }
+                }
+            }
+            listViewFixes.EndUpdate();
+            if (fixedStartWithUppercaseLetterAfterParagraphTicked > 0)
+                LogStatus(_language.StartWithUppercaseLetterAfterParagraph, fixedStartWithUppercaseLetterAfterParagraphTicked.ToString());
+        }
+
+        public static string FixStartWithUppercaseLetterAfterParagraph(Paragraph p, Paragraph prev, Encoding encoding, string language)
+        {
+            if (p.Text != null && p.Text.Length > 1)
+            {
+                string text = p.Text;
+                string pre = string.Empty;
+                if (text.Length > 4 && text.StartsWith("<i> "))
+                {
+                    pre = "<i> ";
+                    text = text.Substring(4);
+                }
+                if (text.Length > 3 && text.StartsWith("<i>"))
+                {
+                    pre = "<i>";
+                    text = text.Substring(3);
+                }
+                if (text.Length > 4 && text.StartsWith("<I> "))
+                {
+                    pre = "<I> ";
+                    text = text.Substring(4);
+                }
+                if (text.Length > 3 && text.StartsWith("<I>"))
+                {
+                    pre = "<I>";
+                    text = text.Substring(3);
+                }
+                if (text.Length > 2 && text.StartsWith("♪"))
+                {
+                    pre = pre + "♪";
+                    text = text.Substring(1);
+                }
+                if (text.Length > 2 && text.StartsWith(" "))
+                {
+                    pre = pre + " ";
+                    text = text.Substring(1);
+                }
+                if (text.Length > 2 && text.StartsWith("♫"))
+                {
+                    pre = pre + "♫";
+                    text = text.Substring(1);
+                }
+                if (text.Length > 2 && text.StartsWith(" "))
+                {
+                    pre = pre + " ";
+                    text = text.Substring(1);
+                }
+
+                string oldText = p.Text;
+                string firstLetter = text.Substring(0, 1);
+
+                string prevText = " .";
+                if (prev != null)
+                    prevText = Utilities.RemoveHtmlTags(prev.Text);
+
+                bool isPrevEndOfLine = IsPrevoiusTextEndOfParagraph(prevText);
+                if (prevText == " .")
+                    isPrevEndOfLine = true;
+                if ((!text.StartsWith("www.") && !text.StartsWith("http:") && !text.StartsWith("https:")) &&
+                    (firstLetter != firstLetter.ToUpper() || IsTurkishLittleI(firstLetter, encoding, language)) &&
+                    !"0123456789".Contains(firstLetter) &&
+                    isPrevEndOfLine)
+                {
+                    bool isMatchInKnowAbbreviations = language == "en" &&
+                        (prevText.EndsWith(" o.r.") ||
+                         prevText.EndsWith(" a.m.") ||
+                         prevText.EndsWith(" p.m."));
+
+                    if (!isMatchInKnowAbbreviations)
+                    {
+                        if (IsTurkishLittleI(firstLetter, encoding, language))
+                            p.Text = pre + GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
+                        else if (language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
+                                                      text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") ||
+                                                      text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc") || text.StartsWith("l'm ")) || text.StartsWith("l am ")) // l > I
+                            p.Text = pre + "I" + text.Substring(1);
+                        else
+                            p.Text = pre + firstLetter.ToUpper() + text.Substring(1);
+                    }
+                }
+            }
+
+            if (p.Text != null && p.Text.Contains(Environment.NewLine))
+            {
+                string[] arr = p.Text.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
+                if (arr.Length == 2 && arr[1].Length > 1)
+                {
+                    string text = arr[1];
                     string pre = string.Empty;
                     if (text.Length > 4 && text.StartsWith("<i> "))
                     {
@@ -2293,213 +2398,139 @@ namespace Nikse.SubtitleEdit.Forms
 
                     string oldText = p.Text;
                     string firstLetter = text.Substring(0, 1);
-
-                    string prevText = " .";
-                    if (prev != null)
-                        prevText = Utilities.RemoveHtmlTags(prev.Text);
-
+                    string prevText = Utilities.RemoveHtmlTags(arr[0]);
                     bool isPrevEndOfLine = IsPrevoiusTextEndOfParagraph(prevText);
-                    if (prevText == " .")
-                        isPrevEndOfLine = true;
                     if ((!text.StartsWith("www.") && !text.StartsWith("http:") && !text.StartsWith("https:")) &&
-                        (firstLetter != firstLetter.ToUpper() || IsTurkishLittleI(firstLetter)) &&
-                        !"0123456789".Contains(firstLetter) &&
+                        (firstLetter != firstLetter.ToUpper() || IsTurkishLittleI(firstLetter, encoding, language)) &&
+                        !prevText.EndsWith("...") &&
                         isPrevEndOfLine)
                     {
-                        bool isMatchInKnowAbbreviations = Language == "en" &&
+                        bool isMatchInKnowAbbreviations = language == "en" &&
                             (prevText.EndsWith(" o.r.") ||
                              prevText.EndsWith(" a.m.") ||
                              prevText.EndsWith(" p.m."));
 
-                        if (!isMatchInKnowAbbreviations && AllowFix(p, fixAction1))
+                        if (!isMatchInKnowAbbreviations)
                         {
-                            if (IsTurkishLittleI(firstLetter))
-                                p.Text = pre + GetTurkishUppercaseLetter(firstLetter) + text.Substring(1);
-                            else if (Language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
-                                                          text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") ||
-                                                          text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc") || text.StartsWith("l'm ")) || text.StartsWith("l am ")) // l > I
-                                p.Text = pre + "I" + text.Substring(1);
+                            if (IsTurkishLittleI(firstLetter, encoding, language))
+                                text = pre + GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
+                            else if (language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
+                                                     text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") ||
+                                                     text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc") || text.StartsWith("l'm ")) || text.StartsWith("l am ")) // l > I
+                                text = pre + "I" + text.Substring(1);
                             else
-                                p.Text = pre + firstLetter.ToUpper() + text.Substring(1);
-                            _totalFixes++;
-                            fixedStartWithUppercaseLetterAfterParagraphTicked++;
-                            AddFixToListView(p, fixAction1, oldText, p.Text);
+                                text = pre + firstLetter.ToUpper() + text.Substring(1);
+                            p.Text = arr[0] + Environment.NewLine + text;
                         }
                     }
-                }
 
-                if (p.Text != null && p.Text.Contains(Environment.NewLine))
-                {
-                    string[] arr = p.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                    if (arr.Length == 2 && arr[1].Length > 1)
+                    arr = p.Text.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
+                    if ((arr[0].StartsWith("-") || arr[0].StartsWith("<i>-")) &&
+                        (arr[1].StartsWith("-") || arr[1].StartsWith("<i>-")) &&
+                        !arr[0].StartsWith("--") && !arr[0].StartsWith("<i>--") &&
+                        !arr[1].StartsWith("--") && !arr[1].StartsWith("<i>--"))
                     {
-                        string text = arr[1];
-                        string pre = string.Empty;
-                        if (text.Length > 4 && text.StartsWith("<i> "))
+                        if (isPrevEndOfLine && arr[1].StartsWith("<i>- ") && arr[1].Length > 6)
                         {
-                            pre = "<i> ";
-                            text = text.Substring(4);
+                            p.Text = arr[0] + Environment.NewLine + "<i>- " + arr[1].Substring(5, 1).ToUpper() + arr[1].Remove(0, 6);
                         }
-                        if (text.Length > 3 && text.StartsWith("<i>"))
+                        else if (isPrevEndOfLine && arr[1].StartsWith("- ") && arr[1].Length > 3)
                         {
-                            pre = "<i>";
-                            text = text.Substring(3);
+                            p.Text = arr[0] + Environment.NewLine + "- " + arr[1].Substring(2, 1).ToUpper() + arr[1].Remove(0, 3);
                         }
-                        if (text.Length > 4 && text.StartsWith("<I> "))
+                        arr = p.Text.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
+
+                        prevText = " .";
+                        if (prev != null && p.StartTime.TotalMilliseconds - 10000 < prev.EndTime.TotalMilliseconds)
+                            prevText = Utilities.RemoveHtmlTags(prev.Text);
+                        bool isPrevLineEndOfLine = IsPrevoiusTextEndOfParagraph(prevText);
+                        if (prevText == " .")
+                            isPrevEndOfLine = true;
+                        if (isPrevLineEndOfLine && arr[0].StartsWith("<i>- ") && arr[0].Length > 6)
                         {
-                            pre = "<I> ";
-                            text = text.Substring(4);
+                            p.Text = "<i>- " + arr[0].Substring(5, 1).ToUpper() + arr[0].Remove(0, 6) + Environment.NewLine + arr[1];
                         }
-                        if (text.Length > 3 && text.StartsWith("<I>"))
+                        else if (isPrevLineEndOfLine && arr[0].StartsWith("- ") && arr[0].Length > 3)
                         {
-                            pre = "<I>";
-                            text = text.Substring(3);
-                        }
-                        if (text.Length > 2 && text.StartsWith("♪"))
-                        {
-                            pre = pre + "♪";
-                            text = text.Substring(1);
-                        }
-                        if (text.Length > 2 && text.StartsWith(" "))
-                        {
-                            pre = pre + " ";
-                            text = text.Substring(1);
-                        }
-                        if (text.Length > 2 && text.StartsWith("♫"))
-                        {
-                            pre = pre + "♫";
-                            text = text.Substring(1);
-                        }
-                        if (text.Length > 2 && text.StartsWith(" "))
-                        {
-                            pre = pre + " ";
-                            text = text.Substring(1);
+                            p.Text =  "- " + arr[0].Substring(2, 1).ToUpper() + arr[0].Remove(0, 3) + Environment.NewLine + arr[1];
                         }
 
-                        string oldText = p.Text;
-                        string firstLetter = text.Substring(0, 1);
-                        string prevText = Utilities.RemoveHtmlTags(arr[0]);
-                        bool isPrevEndOfLine = IsPrevoiusTextEndOfParagraph(prevText);
-                        if ((!text.StartsWith("www.") && !text.StartsWith("http:") && !text.StartsWith("https:")) &&
-                            (firstLetter != firstLetter.ToUpper() || IsTurkishLittleI(firstLetter)) &&
-                            !prevText.EndsWith("...") &&
-                            isPrevEndOfLine)
-                        {
-                            bool isMatchInKnowAbbreviations = Language == "en" &&
-                                (prevText.EndsWith(" o.r.") ||
-                                 prevText.EndsWith(" a.m.") ||
-                                 prevText.EndsWith(" p.m."));
-
-                            if (!isMatchInKnowAbbreviations && AllowFix(p, fixAction2))
-                            {
-                                if (IsTurkishLittleI(firstLetter))
-                                    text = pre + GetTurkishUppercaseLetter(firstLetter) + text.Substring(1);
-                                else if (Language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
-                                                         text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") ||
-                                                         text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc") || text.StartsWith("l'm ")) || text.StartsWith("l am ")) // l > I
-                                    text = pre + "I" + text.Substring(1);
-                                else
-                                    text = pre + firstLetter.ToUpper() + text.Substring(1);
-                                _totalFixes++;
-                                fixedStartWithUppercaseLetterAfterParagraphTicked++;
-                                p.Text = arr[0] + Environment.NewLine + text;
-                                AddFixToListView(p, fixAction2, oldText, p.Text);
-                            }
-                        }
-                    }
-                }
-
-                if (p.Text.Length > 4)
-                {
-                    int len = 0;
-                    int indexOfNewLine = p.Text.IndexOf(Environment.NewLine + " -", 1);
-                    if (indexOfNewLine == -1)
-                    {
-                        indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "- <i> ♪", 1);
-                        len = "- <i> ♪".Length;
-                    }
-                    if (indexOfNewLine == -1)
-                    {
-                        indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "-", 1);
-                        len = "-".Length;
-                    }
-                    if (indexOfNewLine == -1)
-                    {
-                        indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i>-", 1);
-                        len = "<i>-".Length;
-                    }
-                    if (indexOfNewLine == -1)
-                    {
-                        indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i> -", 1);
-                        len = "<i> -".Length;
-                    }
-                    if (indexOfNewLine == -1)
-                    {
-                        indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ -", 1);
-                        len = "♪ -".Length;
-                    }
-                    if (indexOfNewLine == -1)
-                    {
-                        indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ <i> -", 1);
-                        len = "♪ <i> -".Length;
-                    }
-                    if (indexOfNewLine == -1)
-                    {
-                        indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ <i>-", 1);
-                        len = "♪ <i>-".Length;
-                    }
-
-
-                    if (indexOfNewLine > 0)
-                    {
-                        string text = p.Text.Substring(indexOfNewLine + len);
-                        StripableText st = new StripableText(text);
-
-                        if (st.StrippedText.Length > 0 && IsTurkishLittleI(st.StrippedText) && !st.Pre.EndsWith("[") && !st.Pre.Contains("..."))
-                        {
-                            text = st.Pre + st.StrippedText.Remove(0, 1).Insert(0, GetTurkishUppercaseLetter(st.StrippedText)) + st.Post;
-
-                            if (AllowFix(p, fixAction2))
-                            {
-                                string oldText = p.Text;
-                                p.Text = p.Text.Remove(indexOfNewLine + len).Insert(indexOfNewLine + len, text);
-                                _totalFixes++;
-                                fixedStartWithUppercaseLetterAfterParagraphTicked++;
-                                AddFixToListView(p, fixAction2, oldText, p.Text);
-                            }
-                        }
-                        else if (st.StrippedText.Length > 0 && st.StrippedText[0] != char.ToUpper(st.StrippedText[0]) && !st.Pre.EndsWith("[") && !st.Pre.Contains("..."))
-                        {
-                            text = st.Pre + st.StrippedText.Remove(0, 1).Insert(0, st.StrippedText[0].ToString().ToUpper()) + st.Post;
-
-                            if (AllowFix(p, fixAction2))
-                            {
-                                string oldText = p.Text;
-                                p.Text = p.Text.Remove(indexOfNewLine + len).Insert(indexOfNewLine + len, text);
-                                _totalFixes++;
-                                fixedStartWithUppercaseLetterAfterParagraphTicked++;
-                                AddFixToListView(p, fixAction2, oldText, p.Text);
-                            }
-                        }
                     }
                 }
             }
-            listViewFixes.EndUpdate();
-            if (fixedStartWithUppercaseLetterAfterParagraphTicked > 0)
-                LogStatus(_language.StartWithUppercaseLetterAfterParagraph, fixedStartWithUppercaseLetterAfterParagraphTicked.ToString());
+
+            if (p.Text.Length > 4)
+            {
+                int len = 0;
+                int indexOfNewLine = p.Text.IndexOf(Environment.NewLine + " -", 1);
+                if (indexOfNewLine == -1)
+                {
+                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "- <i> ♪", 1);
+                    len = "- <i> ♪".Length;
+                }
+                if (indexOfNewLine == -1)
+                {
+                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "-", 1);
+                    len = "-".Length;
+                }
+                if (indexOfNewLine == -1)
+                {
+                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i>-", 1);
+                    len = "<i>-".Length;
+                }
+                if (indexOfNewLine == -1)
+                {
+                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i> -", 1);
+                    len = "<i> -".Length;
+                }
+                if (indexOfNewLine == -1)
+                {
+                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ -", 1);
+                    len = "♪ -".Length;
+                }
+                if (indexOfNewLine == -1)
+                {
+                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ <i> -", 1);
+                    len = "♪ <i> -".Length;
+                }
+                if (indexOfNewLine == -1)
+                {
+                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ <i>-", 1);
+                    len = "♪ <i>-".Length;
+                }
+
+
+                if (indexOfNewLine > 0)
+                {
+                    string text = p.Text.Substring(indexOfNewLine + len);
+                    StripableText st = new StripableText(text);
+
+                    if (st.StrippedText.Length > 0 && IsTurkishLittleI(st.StrippedText, encoding, language) && !st.Pre.EndsWith("[") && !st.Pre.Contains("..."))
+                    {
+                        text = st.Pre + st.StrippedText.Remove(0, 1).Insert(0, GetTurkishUppercaseLetter(st.StrippedText, encoding)) + st.Post;
+                        p.Text = p.Text.Remove(indexOfNewLine + len).Insert(indexOfNewLine + len, text);
+                    }
+                    else if (st.StrippedText.Length > 0 && st.StrippedText[0] != char.ToUpper(st.StrippedText[0]) && !st.Pre.EndsWith("[") && !st.Pre.Contains("..."))
+                    {
+                        text = st.Pre + st.StrippedText.Remove(0, 1).Insert(0, st.StrippedText[0].ToString().ToUpper()) + st.Post;
+                        p.Text = p.Text.Remove(indexOfNewLine + len).Insert(indexOfNewLine + len, text);
+                    }
+                }
+            }
+            return p.Text;
         }
 
-        private bool IsTurkishLittleI(string firstLetter)
+        private static bool IsTurkishLittleI(string firstLetter, Encoding encoding, string language)
         {
-            if (_encoding == Encoding.UTF8)
-                return Language == "tr" && (firstLetter.StartsWith("ı") || firstLetter.StartsWith("i"));
+            if (encoding == Encoding.UTF8)
+                return language == "tr" && (firstLetter.StartsWith("ı") || firstLetter.StartsWith("i"));
             else
-                return Language == "tr" && (firstLetter.StartsWith("ý") || firstLetter.StartsWith("i"));
+                return language == "tr" && (firstLetter.StartsWith("ý") || firstLetter.StartsWith("i"));
         }
 
-        private string GetTurkishUppercaseLetter(string s)
+        private static string GetTurkishUppercaseLetter(string s, Encoding encoding)
         {
-            if (_encoding == Encoding.UTF8)
+            if (encoding == Encoding.UTF8)
             {
                 if (s.StartsWith("ı"))
                     return "I";
@@ -2559,11 +2590,11 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!IsAbbreviation(text, start))
                             {
                                 StripableText subText = new StripableText(text.Substring(start + 2));
-                                if (subText.StrippedText.Length > 0 && IsTurkishLittleI(subText.StrippedText))
+                                if (subText.StrippedText.Length > 0 && IsTurkishLittleI(subText.StrippedText, _encoding, Language))
                                 {
                                     if (subText.StrippedText.Length > 1 && !(subText.Pre.Contains("'") && subText.StrippedText.StartsWith("s")))
                                     {
-                                        text = text.Substring(0, start + 2) + subText.Pre + GetTurkishUppercaseLetter(subText.StrippedText) + subText.StrippedText.Substring(1) + subText.Post;
+                                        text = text.Substring(0, start + 2) + subText.Pre + GetTurkishUppercaseLetter(subText.StrippedText, _encoding) + subText.StrippedText.Substring(1) + subText.Post;
                                         if (AllowFix(p, fixAction))
                                         {
                                             p.Text = st.Pre + text + st.Post;
@@ -2645,9 +2676,9 @@ namespace Nikse.SubtitleEdit.Forms
                                 skipCount = 2;
                             else if (p.Text.Substring(j).StartsWith("<font ") && p.Text.Substring(j).Contains(">"))
                                 skipCount = p.Text.Substring(j).IndexOf(">") - p.Text.Substring(j).IndexOf("<font ");
-                            else if (IsTurkishLittleI(s))
+                            else if (IsTurkishLittleI(s, _encoding, Language))
                             {
-                                p.Text = p.Text.Remove(j, 1).Insert(j, GetTurkishUppercaseLetter(s));
+                                p.Text = p.Text.Remove(j, 1).Insert(j, GetTurkishUppercaseLetter(s, _encoding));
                                 lastWasColon = false;
                             }
                             else if (s != s.ToUpper())
