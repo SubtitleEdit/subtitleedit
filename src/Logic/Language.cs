@@ -2374,7 +2374,7 @@ Keep changes?",
             return LanguageDeserializer.CustomDeserializeLanguage(fileName);
         }
 
-        public void Save()
+        public void Save(string fileName)
         {
             var s = new XmlSerializer(typeof(Language));
             var sb = new StringBuilder();
@@ -2387,7 +2387,9 @@ Keep changes?",
             xml = xml.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ", string.Empty);
             xml = xml.Replace("encoding=\"utf-16\"", "encoding=\"utf-8\"");
             xml = xml.Replace("<TranslatedBy> </TranslatedBy>", "<TranslatedBy>Translated by Nikse</TranslatedBy>");
-            File.WriteAllText(Path.Combine(Configuration.BaseDirectory, "LanguageMaster.xml"), xml, Encoding.UTF8);
+            if (string.IsNullOrEmpty(fileName))
+                fileName = Path.Combine(Configuration.BaseDirectory, "LanguageMaster.xml");
+            File.WriteAllText(fileName, xml, Encoding.UTF8);
         }
 
         public static void TranslateViaGoogle(string languagePair)

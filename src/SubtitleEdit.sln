@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubtitleEdit", "SubtitleEdit.csproj", "{511A5B59-1C35-4719-8536-23B19AF9B21A}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -17,6 +17,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateAssemblyInfo", "UpdateAssemblyInfo\UpdateAssemblyInfo.csproj", "{DBD4656C-5F40-4067-A70B-C4460DE20F77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateLanguageFiles", "UpdateLanguageFiles\UpdateLanguageFiles.csproj", "{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,10 @@ Global
 		{DBD4656C-5F40-4067-A70B-C4460DE20F77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBD4656C-5F40-4067-A70B-C4460DE20F77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBD4656C-5F40-4067-A70B-C4460DE20F77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

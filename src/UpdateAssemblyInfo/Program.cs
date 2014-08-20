@@ -50,6 +50,7 @@ namespace UpdateAssemblyInfo
                 return 1;
             }
 
+            Console.WriteLine("Updating assembly info...");
             string workingFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             string template = args[0];
             string target = args[1];
