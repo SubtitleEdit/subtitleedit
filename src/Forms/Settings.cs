@@ -499,6 +499,8 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 comboBoxAutoBackup.SelectedIndex = 0;
 
+            checkBoxCheckForUpdates.Checked = Configuration.Settings.General.CheckForUpdates;
+
             if (gs.SpellChecker.ToLower().Contains("word"))
                 comboBoxSpellChecker.SelectedIndex = 1;
             else
@@ -1082,6 +1084,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 gs.AutoBackupSeconds = 0;
 
+            Configuration.Settings.General.CheckForUpdates = checkBoxCheckForUpdates.Checked;
 
             if (comboBoxTimeCodeMode.Visible)
                 Configuration.Settings.General.UseTimeFormatHHMMSSFF = comboBoxTimeCodeMode.SelectedIndex == 1;
