@@ -983,7 +983,7 @@ namespace Nikse.SubtitleEdit.Forms
             string outputFileName;
             foreach (SubtitleFormat sf in formats)
             {
-                if (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower() || sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.Replace(" ", string.Empty).ToLower())
+                if (sf.IsTextBased && (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower() || sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.Replace(" ", string.Empty).ToLower()))
                 {
                     targetFormatFound = true;
                     sf.BatchMode = true;
@@ -1028,7 +1028,7 @@ namespace Nikse.SubtitleEdit.Forms
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite);
                     Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
-                    ebu.Save(outputFileName, sub);
+                    ebu.Save(outputFileName, sub, true);
                     Console.WriteLine(" done.");
                 }
             }

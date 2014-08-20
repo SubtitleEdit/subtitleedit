@@ -458,6 +458,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public void Save(string fileName, Subtitle subtitle)
         {
+            Save(fileName, subtitle, false);
+        }
+
+        public void Save(string fileName, Subtitle subtitle, bool batchMode)
+        {
             var header = new EbuGeneralSubtitleInformation();
             var saveOptions = new EbuSaveOptions();
             if (subtitle.Header != null && subtitle.Header.Length > 1024 && (subtitle.Header.Contains("STL24") || subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL29") || subtitle.Header.Contains("STL30")))
@@ -470,7 +475,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 saveOptions.Initialize(header, 0, fileName, subtitle);
             }
 
-            if (saveOptions.ShowDialog() != DialogResult.OK)
+            if (!batchMode && saveOptions.ShowDialog() != DialogResult.OK)
                 return;
 
             var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
