@@ -375,10 +375,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             string text = p.Text.Replace(Environment.NewLine, "\\N");
             text = text.Replace("<i>", @"{\i1}");
             text = text.Replace("</i>", @"{\i0}");
+            text = text.Replace("</i>", @"{\i}");
             text = text.Replace("<u>", @"{\u1}");
             text = text.Replace("</u>", @"{\u0}");
+            text = text.Replace("</u>", @"{\u}");
             text = text.Replace("<b>", @"{\b1}");
             text = text.Replace("</b>", @"{\b0}");
+            text = text.Replace("</b>", @"{\b}");
             int count = 0;
             while (text.Contains("<font ") && count < 10)
             {
@@ -545,16 +548,19 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
             text = text.Replace(@"{\i1}", "<i>");
             text = text.Replace(@"{\i0}", "</i>");
+            text = text.Replace(@"{\i}", "</i>");
             if (Utilities.CountTagInText(text, "<i>") > Utilities.CountTagInText(text, "</i>"))
                 text += "</i>";
 
             text = text.Replace(@"{\u1}", "<u>");
             text = text.Replace(@"{\u0}", "</u>");
+            text = text.Replace(@"{\u}", "</u>");
             if (Utilities.CountTagInText(text, "<u>") > Utilities.CountTagInText(text, "</u>"))
                 text += "</u>";
 
             text = text.Replace(@"{\b1}", "<b>");
             text = text.Replace(@"{\b0}", "</b>");
+            text = text.Replace(@"{\b}", "</b>");
             if (Utilities.CountTagInText(text, "<b>") > Utilities.CountTagInText(text, "</b>"))
                 text += "</b>";
 
