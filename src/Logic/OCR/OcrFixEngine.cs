@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Forms;
+using Nikse.SubtitleEdit.Logic.SpellCheck;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -7,8 +9,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Forms;
-using Nikse.SubtitleEdit.Logic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Logic.OCR
 {
@@ -1166,72 +1166,96 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 input = input.Remove(0, 1);
             }
 
-            if (input.StartsWith(". .."))
-                input = "..." + input.Remove(0, 4);
-            if (input.StartsWith(".. ."))
-                input = "..." + input.Remove(0, 4);
-            if (input.StartsWith(". . ."))
-                input = "..." + input.Remove(0, 5);
-            if (input.StartsWith("... "))
-                input = input.Remove(3, 1);
+            bool hasDotDot = input.Contains("..") || input.Contains(". .");
+            if (hasDotDot)
+            {
+                if (input.Length > 5 && input.StartsWith("..") && Utilities.AllLettersAndNumbers.Contains(input.Substring(2, 1)))
+                    input = "..." + input.Remove(0, 2);
+                if (input.Length > 7 && input.StartsWith("<i>..") && Utilities.AllLettersAndNumbers.Contains(input.Substring(5, 1)))
+                    input = "<i>..." + input.Remove(0, 5);
+
+                if (input.Length > 5 && input.StartsWith(".. ") && Utilities.AllLettersAndNumbers.Contains(input.Substring(3, 1)))
+                    input = "..." + input.Remove(0, 3);
+                if (input.Length > 7 && input.StartsWith("<i>.. ") && Utilities.AllLettersAndNumbers.Contains(input.Substring(6, 1)))
+                    input = "<i>..." + input.Remove(0, 6);
+                if (input.Contains(Environment.NewLine + ".. "))
+                    input = input.Replace(Environment.NewLine + ".. ", Environment.NewLine + "...");
+                if (input.Contains(Environment.NewLine + "<i>.. "))
+                    input = input.Replace(Environment.NewLine + "<i>.. ", Environment.NewLine + "<i>...");
+
+                if (input.StartsWith(". .."))
+                    input = "..." + input.Remove(0, 4);
+                if (input.StartsWith(".. ."))
+                    input = "..." + input.Remove(0, 4);
+                if (input.StartsWith(". . ."))
+                    input = "..." + input.Remove(0, 5);
+                if (input.StartsWith("... "))
+                    input = input.Remove(3, 1);
+            }
+
             input = pre + input;
 
-            if (input.StartsWith("<i>. .."))
-                input = "<i>..." + input.Remove(0, 7);
-            if (input.StartsWith("<i>.. ."))
-                input = "<i>..." + input.Remove(0, 7);
-            if (input.StartsWith("<i>. . ."))
-                input = "<i>..." + input.Remove(0, 8);
-            if (input.StartsWith("<i>... "))
-                input = input.Remove(6, 1);
-            if (input.StartsWith(". . <i>."))
-                input = "<i>..." + input.Remove(0, 8);
+            if (hasDotDot)
+            {
+                if (input.StartsWith("<i>. .."))
+                    input = "<i>..." + input.Remove(0, 7);
+                if (input.StartsWith("<i>.. ."))
+                    input = "<i>..." + input.Remove(0, 7);
 
-            if (input.StartsWith("...<i>") && (input.IndexOf("</i>") > input.IndexOf(" ")))
-                input = "<i>..." + input.Remove(0, 6);
+                if (input.StartsWith("<i>. . ."))
+                    input = "<i>..." + input.Remove(0, 8);
+                if (input.StartsWith("<i>... "))
+                    input = input.Remove(6, 1);
+                if (input.StartsWith(". . <i>."))
+                    input = "<i>..." + input.Remove(0, 8);
 
-            if (input.EndsWith(". .."))
-                input = input.Remove(input.Length - 4, 4) + "...";
-            if (input.EndsWith(".. ."))
-                input = input.Remove(input.Length - 4, 4) + "...";
-            if (input.EndsWith(". . ."))
-                input = input.Remove(input.Length - 5, 5) + "...";
-            if (input.EndsWith(". ..."))
-                input = input.Remove(input.Length - 5, 5) + "...";
+                if (input.StartsWith("...<i>") && (input.IndexOf("</i>") > input.IndexOf(" ")))
+                    input = "<i>..." + input.Remove(0, 6);
 
-            if (input.EndsWith(". ..</i>"))
-                input = input.Remove(input.Length - 8, 8) + "...</i>";
-            if (input.EndsWith(".. .</i>"))
-                input = input.Remove(input.Length - 8, 8) + "...</i>";
-            if (input.EndsWith(". . .</i>"))
-                input = input.Remove(input.Length - 9, 9) + "...</i>";
-            if (input.EndsWith(". ...</i>"))
-                input = input.Remove(input.Length - 9, 9) + "...</i>";
+                if (input.EndsWith(". .."))
+                    input = input.Remove(input.Length - 4, 4) + "...";
+                if (input.EndsWith(".. ."))
+                    input = input.Remove(input.Length - 4, 4) + "...";
+                if (input.EndsWith(". . ."))
+                    input = input.Remove(input.Length - 5, 5) + "...";
+                if (input.EndsWith(". ..."))
+                    input = input.Remove(input.Length - 5, 5) + "...";
 
-            if (input.EndsWith(".</i> . ."))
-                input = input.Remove(input.Length - 9, 9) + "...</i>";
-            if (input.EndsWith(".</i>.."))
-                input = input.Remove(input.Length - 7, 7) + "...</i>";
-            input = input.Replace(".</i> . ." + Environment.NewLine, "...</i>" + Environment.NewLine);
+                if (input.EndsWith(". ..</i>"))
+                    input = input.Remove(input.Length - 8, 8) + "...</i>";
+                if (input.EndsWith(".. .</i>"))
+                    input = input.Remove(input.Length - 8, 8) + "...</i>";
+                if (input.EndsWith(". . .</i>"))
+                    input = input.Remove(input.Length - 9, 9) + "...</i>";
+                if (input.EndsWith(". ...</i>"))
+                    input = input.Remove(input.Length - 9, 9) + "...</i>";
 
-            input = input.Replace(".. ?", "..?");
-            input = input.Replace("..?", "...?");
-            input = input.Replace("....?", "...?");
+                if (input.EndsWith(".</i> . ."))
+                    input = input.Remove(input.Length - 9, 9) + "...</i>";
+                if (input.EndsWith(".</i>.."))
+                    input = input.Remove(input.Length - 7, 7) + "...</i>";
+                input = input.Replace(".</i> . ." + Environment.NewLine, "...</i>" + Environment.NewLine);
 
-            input = input.Replace(".. !", "..!");
-            input = input.Replace("..!", "...!");
-            input = input.Replace("....!", "...!");
+                input = input.Replace(".. ?", "..?");
+                input = input.Replace("..?", "...?");
+                input = input.Replace("....?", "...?");
 
-            input = input.Replace("... ?", "...?");
-            input = input.Replace("... !", "...!");
+                input = input.Replace(".. !", "..!");
+                input = input.Replace("..!", "...!");
+                input = input.Replace("....!", "...!");
 
-            input = input.Replace("....", "...");
-            input = input.Replace("....", "...");
+                input = input.Replace("... ?", "...?");
+                input = input.Replace("... !", "...!");
 
-            if (input.StartsWith("- ...") && lastLine != null && lastLine.EndsWith("...") && !(input.Contains(Environment.NewLine + "-")))
-                input = input.Remove(0, 2);
-            if (input.StartsWith("-...") && lastLine != null && lastLine.EndsWith("...") && !(input.Contains(Environment.NewLine + "-")))
-                input = input.Remove(0, 1);
+                input = input.Replace("....", "...");
+                input = input.Replace("....", "...");
+
+                if (input.StartsWith("- ...") && lastLine != null && lastLine.EndsWith("...") && !(input.Contains(Environment.NewLine + "-")))
+                    input = input.Remove(0, 2);
+                if (input.StartsWith("-...") && lastLine != null && lastLine.EndsWith("...") && !(input.Contains(Environment.NewLine + "-")))
+                    input = input.Remove(0, 1);
+            }
+
 
             if (input.Length > 2 && input[0] == '-' && Utilities.UppercaseLetters.Contains(input[1].ToString()))
             {
