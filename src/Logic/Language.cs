@@ -335,6 +335,9 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Adjust speed in percent",
                 Info = "Change speed of subtitle in percent",
+                Custom = "Custom",
+                ToDropFrame = "To drop frame",
+                FromDropFrame = "From drop frame",
             };
 
             CheckForUpdates = new LanguageStructure.CheckForUpdates

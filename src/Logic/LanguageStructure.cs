@@ -215,6 +215,9 @@
         {
             public string Title { get; set; }
             public string Info { get; set; }
+            public string Custom { get; set; }
+            public string ToDropFrame { get; set; }
+            public string FromDropFrame { get; set; }
         }
 
         public class CheckForUpdates
