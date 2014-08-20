@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Forms
             _allFormats = new List<SubtitleFormat>();
             foreach (var f in SubtitleFormat.AllSubtitleFormats)
             {
-                if (!f.IsVobSubIndexFile && f.IsTextBased)
+                if (!f.IsVobSubIndexFile)
                 {
                     comboBoxSubtitleFormats.Items.Add(f.Name);
                     _allFormats.Add(f);

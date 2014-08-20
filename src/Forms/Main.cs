@@ -1023,7 +1023,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!targetFormatFound)
             {
                 var ebu = new Ebu();
-                if (ebu.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                if (ebu.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower().Replace(" ", string.Empty))
                 {
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite);
