@@ -60,10 +60,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string text = p.Text.Replace(Environment.NewLine, "[br]");
                 text = text.Replace("<i>", "{\\i1}");
                 text = text.Replace("</i>", "{\\i0}");
+                text = text.Replace("</i>", "{\\i}");
                 text = text.Replace("<b>", "{\\b1}'");
                 text = text.Replace("</b>", "{\\b0}");
+                text = text.Replace("</b>", "{\\b}");
                 text = text.Replace("<u>", "{\\u1}");
                 text = text.Replace("</u>", "{\\u0}");
+                text = text.Replace("</u>", "{\\u}");
 
                 sb.AppendLine(string.Format(paragraphWriteFormat,
                                         p.StartTime.Hours,
@@ -132,10 +135,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             string text = line.Replace("[br]", Environment.NewLine);
                             text = text.Replace("{\\i1}", "<i>");
                             text = text.Replace("{\\i0}", "</i>");
+                            text = text.Replace("{\\i}", "</i>");
                             text = text.Replace("{\\b1}", "<b>'");
                             text = text.Replace("{\\b0}", "</b>");
+                            text = text.Replace("{\\b}", "</b>");
                             text = text.Replace("{\\u1}", "<u>");
                             text = text.Replace("{\\u0}", "</u>");
+                            text = text.Replace("{\\u}", "</u>");
 
                             paragraph.Text = text;
                             subtitle.Paragraphs.Add(paragraph);
