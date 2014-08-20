@@ -15,11 +15,22 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
             Text = Configuration.Settings.Language.ChangeSpeedInPercent.Title;
-            labelInfo.Text = Configuration.Settings.Language.ChangeSpeedInPercent.Info;
+            groupBoxInfo.Text = Configuration.Settings.Language.ChangeSpeedInPercent.Info;
             radioButtonAllLines.Text = Configuration.Settings.Language.ShowEarlierLater.AllLines;
             radioButtonSelectedLinesOnly.Text = Configuration.Settings.Language.ShowEarlierLater.SelectedLinesOnly;
+            radioButtonSpeedCustom.Text = Configuration.Settings.Language.ChangeSpeedInPercent.Custom;
+            radioButtonSpeedFromDropFrame.Text = Configuration.Settings.Language.ChangeSpeedInPercent.FromDropFrame;
+            radioButtonToDropFrame.Text = Configuration.Settings.Language.ChangeSpeedInPercent.ToDropFrame;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+
+            if (string.IsNullOrEmpty(Configuration.Settings.Language.ChangeSpeedInPercent.ToDropFrame))
+            {
+                radioButtonSpeedCustom.Visible = false;
+                radioButtonSpeedFromDropFrame.Visible = false;
+                radioButtonToDropFrame.Visible = false;
+            }
+
             FixLargeFonts();
 
             if (numberOfSelectedLines > 1)
@@ -90,6 +101,22 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.Cancel;
         }
 
+        private void radioButtonSpeedCustom_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDownPercent.Enabled = true;
+        }
+
+        private void radioButtonSpeedFromDropFrame_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDownPercent.Value = Convert.ToDecimal(099.98887);
+            numericUpDownPercent.Enabled = false;
+        }
+
+        private void radioButtonToDropFrame_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDownPercent.Value = Convert.ToDecimal(100.1001001);
+            numericUpDownPercent.Enabled = false;
+        }
 
     }
 }
