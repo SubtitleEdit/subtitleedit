@@ -771,7 +771,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.Control && e.Shift && e.Alt && e.KeyCode == Keys.L)
             {
                 Cursor.Current = Cursors.WaitCursor;
-                Configuration.Settings.Language.Save();
+                Configuration.Settings.Language.Save(null);
                 Language.TranslateViaGoogle((comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|" +
                                             (comboBoxTo.SelectedItem as ComboBoxItem).Value);
                 Cursor.Current = Cursors.Default;

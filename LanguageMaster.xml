@@ -192,6 +192,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <ChangeSpeedInPercent>
     <Title>Adjust speed in percent</Title>
     <Info>Change speed of subtitle in percent</Info>
+    <Custom>Custom</Custom>
+    <ToDropFrame>To drop frame</ToDropFrame>
+    <FromDropFrame>From drop frame</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Check for updates</Title>
