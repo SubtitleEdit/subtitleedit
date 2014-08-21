@@ -103,13 +103,6 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.WaveFormGenerateTimeCodes WaveFormGenerateTimeCodes;
         public LanguageStructure.WebVttNewVoice WebVttNewVoice;
 
-        private string GetVersionNumber()
-        {
-            //string[] versionInfo = Utilities.AssemblyVersion.Split('.');
-            //return string.Format("{0}.{1}.{2}", versionInfo[0], versionInfo[1], versionInfo[2]);
-            return "3.4.x";
-        }
-
         public Language()
         {
             Name = "English";
@@ -117,7 +110,7 @@ namespace Nikse.SubtitleEdit.Logic
             General = new LanguageStructure.General
             {
                 Title = "Subtitle Edit",
-                Version = GetVersionNumber(),
+                Version = "3.4",
                 TranslatedBy = " ",
                 CultureName = "en-US",
                 HelpFile = string.Empty,
