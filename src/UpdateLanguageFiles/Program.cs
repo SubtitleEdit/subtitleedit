@@ -27,7 +27,10 @@ namespace UpdateLanguageFiles
 
             try
             {
-                new Nikse.SubtitleEdit.Logic.Language().Save(args[0]);
+                var language = new Nikse.SubtitleEdit.Logic.Language();
+                language.General.Version = FindVersionNumber();
+                language.Save(args[0]);
+
                 Nikse.SubtitleEdit.Logic.LanguageDeserializerGenerator.GenerateCSharpXmlDeserializerForLanguage(args[1]);
                 return 0;
             }
@@ -37,6 +40,35 @@ namespace UpdateLanguageFiles
                 File.WriteAllText(errorFileName, ex.Message);
                 return 2;
             }
+        }
+
+        private static string FindVersionNumber()
+        {
+            var fileName = @"src\Properties\AssemblyInfo.cs.template";
+            if (!File.Exists(fileName))
+                fileName = @"..\..\src\Properties\AssemblyInfo.cs.template";
+            if (!File.Exists(fileName))
+                fileName = @"..\..\src\Properties\AssemblyInfo.cs.template";
+            if (!File.Exists(fileName))
+                fileName = @"..\..\..\src\Properties\AssemblyInfo.cs.template";
+            if (!File.Exists(fileName))
+                fileName = @"..\..\..\..\src\Properties\AssemblyInfo.cs.template";
+            if (!File.Exists(fileName))
+                fileName = @"..\..\..\..\..\src\Properties\AssemblyInfo.cs.template";
+
+            if (File.Exists(fileName))
+            {
+                string text = File.ReadAllText(fileName);
+                string tag = "[assembly: AssemblyVersion(\"";
+                int start = text.IndexOf(tag);
+                if (start > 0)
+                {
+                    var arr = text.Substring(start + tag.Length, 8).Split('.');
+                    if (arr.Length > 2)
+                        return string.Format("{0}.{1}.{2}", arr[0], arr[1], arr[2]);
+                }
+            }
+            return "unknown";
         }
 
     }
