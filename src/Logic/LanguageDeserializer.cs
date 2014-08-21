@@ -9,7 +9,7 @@ using Nikse.SubtitleEdit.Logic;
 namespace Nikse.SubtitleEdit.Logic
 {
 
-    public class LanguageDeserializer // NOTE: This class is AUTO-GENERATED!!!! (Choose language + press ctrl+alt+shift+C to generate)
+    public class LanguageDeserializer // NOTE: This class is AUTO-GENERATED!!!!
     {
 
         public static Language CustomDeserializeLanguage(string fileName)

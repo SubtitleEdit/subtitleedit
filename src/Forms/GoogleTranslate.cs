@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -771,10 +772,87 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.Control && e.Shift && e.Alt && e.KeyCode == Keys.L)
             {
                 Cursor.Current = Cursors.WaitCursor;
-                Configuration.Settings.Language.Save(null);
-                Language.TranslateViaGoogle((comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|" +
+                Configuration.Settings.Language.Save(Path.Combine(Configuration.BaseDirectory, "LanguageMaster.xml"));
+                TranslateViaGoogle((comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|" +
                                             (comboBoxTo.SelectedItem as ComboBoxItem).Value);
                 Cursor.Current = Cursors.Default;
+            }
+        }
+
+        public static void TranslateViaGoogle(string languagePair)
+        {
+            var doc = new XmlDocument();
+            doc.Load(Configuration.BaseDirectory + "Language.xml");
+            if (doc.DocumentElement != null)
+                foreach (XmlNode node in doc.DocumentElement.ChildNodes)
+                    TranslateNode(node, languagePair);
+
+            doc.Save(Configuration.BaseDirectory + "Language.xml");
+        }
+
+        private static void TranslateNode(XmlNode node, string languagePair)
+        {
+            if (node.ChildNodes.Count == 0)
+            {
+                string oldText = node.InnerText;
+                string newText = Nikse.SubtitleEdit.Forms.GoogleTranslate.TranslateTextViaApi(node.InnerText, languagePair);
+                if (!string.IsNullOrEmpty(oldText) && !string.IsNullOrEmpty(newText))
+                {
+                    if (oldText.Contains("{0:"))
+                    {
+                        newText = oldText;
+                    }
+                    else
+                    {
+                        if (!oldText.Contains(" / "))
+                            newText = newText.Replace(" / ", "/");
+
+                        if (!oldText.Contains(" ..."))
+                            newText = newText.Replace(" ...", "...");
+
+                        if (!oldText.Contains("& "))
+                            newText = newText.Replace("& ", "&");
+
+                        if (!oldText.Contains("# "))
+                            newText = newText.Replace("# ", "#");
+
+                        if (!oldText.Contains("@ "))
+                            newText = newText.Replace("@ ", "@");
+
+                        if (oldText.Contains("{0}"))
+                        {
+                            newText = newText.Replace("(0)", "{0}");
+                            newText = newText.Replace("(1)", "{1}");
+                            newText = newText.Replace("(2)", "{2}");
+                            newText = newText.Replace("(3)", "{3}");
+                            newText = newText.Replace("(4)", "{4}");
+                            newText = newText.Replace("(5)", "{5}");
+                            newText = newText.Replace("(6)", "{6}");
+                            newText = newText.Replace("(7)", "{7}");
+                        }
+                    }
+                }
+                node.InnerText = newText;
+            }
+            else
+            {
+                foreach (XmlNode childNode in node.ChildNodes)
+                    TranslateNode(childNode, languagePair);
+            }
+        }
+
+        private static void CompareNode(XmlNode node, string name, XmlDocument localLanguage, StringBuilder sb)
+        {
+            if (name.EndsWith("/#text"))
+                name = name.Substring(0, name.Length - 6);
+            if (localLanguage.SelectSingleNode(name) == null)
+            {
+                sb.AppendLine(name + " not found!");
+            }
+            else if (node.ChildNodes.Count > 0)
+            {
+                foreach (XmlNode childNode in node.ChildNodes)
+                    CompareNode(childNode, name + "/" + childNode.Name, localLanguage, sb);
             }
         }
 
