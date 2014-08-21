@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Logic
             string name = string.Empty;
             var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             var language = new Language();
-            [NewObjects]
+[NewObjects]
             using (XmlReader reader = XmlReader.Create(stream))
             {
                 while (reader.Read())

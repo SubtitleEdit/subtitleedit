@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Logic
             string name = string.Empty;
             var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             var language = new Language();
-                        language.General = new Nikse.SubtitleEdit.Logic.LanguageStructure.General();
+            language.General = new Nikse.SubtitleEdit.Logic.LanguageStructure.General();
             language.About = new Nikse.SubtitleEdit.Logic.LanguageStructure.About();
             language.AddToNames = new Nikse.SubtitleEdit.Logic.LanguageStructure.AddToNames();
             language.AddToOcrReplaceList = new Nikse.SubtitleEdit.Logic.LanguageStructure.AddToOcrReplaceList();
