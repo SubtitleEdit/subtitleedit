@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (string.IsNullOrEmpty(fileName))
                 fileName = @"C:\Data\subtitleedit\subtitleedit\src\Logic\LanguageDeserializer.cs";
-            System.IO.File.WriteAllText(fileName, sb.ToString().Replace("[NewObjects]", newObjectsString.ToString().Replace("\t", "    ")));
+            System.IO.File.WriteAllText(fileName, sb.ToString().Replace("[NewObjects]", newObjectsString.ToString()).Replace("\t", "    "));
         }
 
         private static string SubElementDeserializer(Type classType, string currentName, string xmlPath, StringBuilder newObjectsString)
