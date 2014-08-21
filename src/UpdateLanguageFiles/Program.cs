@@ -27,7 +27,7 @@ namespace UpdateLanguageFiles
 
             try
             {
-                Nikse.SubtitleEdit.Logic.Configuration.Settings.Language.Save(args[0]);
+                new Nikse.SubtitleEdit.Logic.Language().Save(args[0]);
                 Nikse.SubtitleEdit.Logic.LanguageDeserializerGenerator.GenerateCSharpXmlDeserializerForLanguage(args[1]);
                 return 0;
             }

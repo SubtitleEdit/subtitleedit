@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -106,8 +105,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         private string GetVersionNumber()
         {
-            string[] versionInfo = Utilities.AssemblyVersion.Split('.');
-            return string.Format("{0}.{1}.{2}", versionInfo[0], versionInfo[1], versionInfo[2]);
+            //string[] versionInfo = Utilities.AssemblyVersion.Split('.');
+            //return string.Format("{0}.{1}.{2}", versionInfo[0], versionInfo[1], versionInfo[2]);
+            return "3.4.x";
         }
 
         public Language()
@@ -2387,86 +2387,8 @@ Keep changes?",
             xml = xml.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ", string.Empty);
             xml = xml.Replace("encoding=\"utf-16\"", "encoding=\"utf-8\"");
             xml = xml.Replace("<TranslatedBy> </TranslatedBy>", "<TranslatedBy>Translated by Nikse</TranslatedBy>");
-            if (string.IsNullOrEmpty(fileName))
-                fileName = Path.Combine(Configuration.BaseDirectory, "LanguageMaster.xml");
             File.WriteAllText(fileName, xml, Encoding.UTF8);
         }
-
-        public static void TranslateViaGoogle(string languagePair)
-        {
-            var doc = new XmlDocument();
-            doc.Load(Configuration.BaseDirectory + "Language.xml");
-            if (doc.DocumentElement != null)
-                foreach (XmlNode node in doc.DocumentElement.ChildNodes)
-                    TranslateNode(node, languagePair);
-
-            doc.Save(Configuration.BaseDirectory + "Language.xml");
-        }
-
-        private static void TranslateNode(XmlNode node, string languagePair)
-        {
-            if (node.ChildNodes.Count == 0)
-            {
-                string oldText = node.InnerText;
-                string newText = Nikse.SubtitleEdit.Forms.GoogleTranslate.TranslateTextViaApi(node.InnerText, languagePair);
-                if (!string.IsNullOrEmpty(oldText) && !string.IsNullOrEmpty(newText))
-                {
-                    if (oldText.Contains("{0:"))
-                    {
-                        newText = oldText;
-                    }
-                    else
-                    {
-                        if (!oldText.Contains(" / "))
-                            newText = newText.Replace(" / ", "/");
-
-                        if (!oldText.Contains(" ..."))
-                            newText = newText.Replace(" ...", "...");
-
-                        if (!oldText.Contains("& "))
-                            newText = newText.Replace("& ", "&");
-
-                        if (!oldText.Contains("# "))
-                            newText = newText.Replace("# ", "#");
-
-                        if (!oldText.Contains("@ "))
-                            newText = newText.Replace("@ ", "@");
-
-                        if (oldText.Contains("{0}"))
-                        {
-                            newText = newText.Replace("(0)", "{0}");
-                            newText = newText.Replace("(1)", "{1}");
-                            newText = newText.Replace("(2)", "{2}");
-                            newText = newText.Replace("(3)", "{3}");
-                            newText = newText.Replace("(4)", "{4}");
-                            newText = newText.Replace("(5)", "{5}");
-                            newText = newText.Replace("(6)", "{6}");
-                            newText = newText.Replace("(7)", "{7}");
-                        }
-                    }
-                }
-                node.InnerText = newText;
-            }
-            else
-            {
-                foreach (XmlNode childNode in node.ChildNodes)
-                    TranslateNode(childNode, languagePair);
-            }
-        }
-
-        private static void CompareNode(XmlNode node, string name, XmlDocument localLanguage, StringBuilder sb)
-        {
-            if (name.EndsWith("/#text"))
-                name = name.Substring(0, name.Length - 6);
-            if (localLanguage.SelectSingleNode(name) == null)
-            {
-                sb.AppendLine(name + " not found!");
-            }
-            else if (node.ChildNodes.Count > 0)
-            {
-                foreach (XmlNode childNode in node.ChildNodes)
-                    CompareNode(childNode, name + "/" + childNode.Name, localLanguage, sb);
-            }
-        }
+        
     }
 }

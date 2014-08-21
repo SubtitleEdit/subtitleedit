@@ -42,17 +42,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Logic\Language.cs">
+      <Link>Language.cs</Link>
+    </Compile>
+    <Compile Include="..\Logic\LanguageDeserializer.cs">
+      <Link>LanguageDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\Logic\LanguageStructure.cs">
+      <Link>LanguageStructure.cs</Link>
+    </Compile>
+    <Compile Include="LanguageDeserializerGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SubtitleEdit.csproj">
-      <Project>{511a5b59-1c35-4719-8536-23b19af9b21a}</Project>
-      <Name>SubtitleEdit</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

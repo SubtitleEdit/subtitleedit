@@ -123,11 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Shift && e.Control && e.Alt && e.KeyCode == Keys.L)
             {
-                Configuration.Settings.Language.Save(null);
-            }
-            else if (e.Shift && e.Control && e.Alt && e.KeyCode == Keys.C)
-            {
-                LanguageDeserializerGenerator.GenerateCSharpXmlDeserializerForLanguage(null);
+                Configuration.Settings.Language.Save(Path.Combine(Configuration.BaseDirectory, "LanguageMaster.xml"));
             }
             else if (e.KeyCode == Keys.F1)
             {
