@@ -170,6 +170,8 @@ namespace Nikse.SubtitleEdit.Logic
                     subtitleFormat.LoadSubtitle(this, lines, fileName);
                     _format = subtitleFormat;
                     _wasLoadedWithFrameNumbers = _format.IsFrameBased;
+                    if (_wasLoadedWithFrameNumbers)
+                        CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
                     return subtitleFormat;
                 }
             }
