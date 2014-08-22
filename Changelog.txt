@@ -4,15 +4,25 @@
 3.4.2 (xth August 2014)
 * NEW:
    * Added new subtitle format
+   * Added "Bold" checkbox to subtitle preview settings in video player
 * IMPROVED:
    * Updated Dutch language file - thx Quetsbeek
    * Updated Romanian language file - thx Mircea
+   * Updated Portuguese language file - thx moob
+   * Added ".mxf" to list of known video formats - thx Haroldo
 * FIXED:
+   * Reverted "Framerate conversion" fix from 3.4.1
    * Fixed "Split line" button appear wrongly - thx Quetsbeek
    * Changes to interjections now work instantly
    * Detection of SSA/ASS tags in remove text for HI - thx Thunderbolt8
    * Minor bug in "Fix missing period" - thx Joel
-   * Reverted "Framerate conversion" fix from 3.4.1
+   * It's now possible to turn "Check for updates" off
+   * Fixed issue with end-of-italics and SSA/ASS - thx John
+   * Fixed issue with "..." in "Fix common OCR errors" - thx XhmikosR
+   * Fixed issue wregarding "Fix start with uppercase after paragraph" - thx XhmikosR
+   * Fixed PAC reading (regarding W16)
+   * Fixed bad xml tag in spanish ocr fix list - thx DavidGDFC
+   * Fixed "MicroDvd" sub compare - thx SimplyTheBOSS
 
 
 3.4.1 (8th August 2014)
