@@ -1769,14 +1769,14 @@ Chcesz zapisać?</NegativeTimeWarning>
     <NumberOfAlignmentTags>Ilość tagów wyrównania: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Długość napisów - minimalna: {0}</LineLengthMinimum>
     <LineLengthMaximum>Długość napisów - maksymalna: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Długość napisów - średnia: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Ilość linii w napisach - średnia: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Długość napisów - średnia: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Ilość linii w napisach - średnia: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Długość pojedynczej linii - minimalna: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Długość pojedynczej linii - maksymalna: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Długość pojedynczej linii - średnia: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Długość pojedynczej linii - średnia: {0}</SingleLineLengthAverage>
     <DurationMinimum>Czas trwania - minimalny: {0:0.000} sekundy</DurationMinimum>
     <DurationMaximum>Czas trwania - maksymalny: {0:0.000} sekund</DurationMaximum>
-    <DurationAvarage>Czas trwania - średni: {0:0.000} sekund</DurationAvarage>
+    <DurationAverage>Czas trwania - średni: {0:0.000} sekund</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Właściwości Advanced Sub Station Alpha</Title>

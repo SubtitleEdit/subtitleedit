@@ -1760,14 +1760,14 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <NumberOfAlignmentTags>Ausrichtungs Tags: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Untertitellänge - Minimum:      {0}</LineLengthMinimum>
     <LineLengthMaximum>Untertitellänge - Maximum:      {0}</LineLengthMaximum>
-    <LineLengthAvarage>Untertitellänge - Durchschnitt: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Untertitel, Zeilen - Durchschnitt: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Untertitellänge - Durchschnitt: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Untertitel, Zeilen - Durchschnitt: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Einzelzeilenlänge - Minimum:      {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Einzelzeilenlänge - Maximum:      {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Einzelzeilenlänge - Durchschnitt: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Einzelzeilenlänge - Durchschnitt: {0}</SingleLineLengthAverage>
     <DurationMinimum>Dauer - Minimum:      {0:0.000} seconds</DurationMinimum>
     <DurationMaximum>Dauer - Maximum:      {0:0.000} seconds</DurationMaximum>
-    <DurationAvarage>Dauer - Durchschnitt: {0:0.000} seconds</DurationAvarage>
+    <DurationAverage>Dauer - Durchschnitt: {0:0.000} seconds</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Erweiterte SSA Eigenschaften</Title>

@@ -1479,14 +1479,14 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <NumberOfAlignmentTags>配置タグの数: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>字幕の長さ - 最低: {0}</LineLengthMinimum>
     <LineLengthMaximum>字幕の長さ - 最大: {0}</LineLengthMaximum>
-    <LineLengthAvarage>字幕の長さ - 平均: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>字幕、行数 - 平均: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>字幕の長さ - 平均: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>字幕、行数 - 平均: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>1 行の長さ - 最低: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>1 行の長さ - 最大: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>1 行の長さ - 平均: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>1 行の長さ - 平均: {0}</SingleLineLengthAverage>
     <DurationMinimum>表示時間 - 最低: {0:0.000} 秒</DurationMinimum>
     <DurationMaximum>表示時間 - 最大: {0:0.000} 秒</DurationMaximum>
-    <DurationAvarage>表示時間 - 平均: {0:0.000} 秒</DurationAvarage>
+    <DurationAverage>表示時間 - 平均: {0:0.000} 秒</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha のプロパティ</Title>

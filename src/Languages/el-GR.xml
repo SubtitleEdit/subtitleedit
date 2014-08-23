@@ -1764,14 +1764,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NumberOfAlignmentTags>Αριθμός ετικετών στοίχισης: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Μήκος υποτίτλου - ελάχιστο: {0}</LineLengthMinimum>
     <LineLengthMaximum>Μήκος υποτίτλου - μέγιστο: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Μήκος υποτίτλου - μέσο: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Αριθμός γραμμών υποτίτλων- μέσος: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Μήκος υποτίτλου - μέσο: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Αριθμός γραμμών υποτίτλων- μέσος: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Μήκος μονής γραμμής - ελάχιστο: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Μήκος μονής γραμμής - μέγιστο: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Μήκος μονής γραμμής - μέσο: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Μήκος μονής γραμμής - μέσο: {0}</SingleLineLengthAverage>
     <DurationMinimum>Διάρκεια - ελάχιστη: {0:0.000} δευτερόλεπτα</DurationMinimum>
     <DurationMaximum>Διάρκεια - μέγιστη: {0:0.000} δευτερόλεπτα</DurationMaximum>
-    <DurationAvarage>Διάρκεια - μέση: {0:0.000} δευτερόλεπτα</DurationAvarage>
+    <DurationAverage>Διάρκεια - μέση: {0:0.000} δευτερόλεπτα</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Προχωρημένες ιδιότητες Sub Station Alpha</Title>

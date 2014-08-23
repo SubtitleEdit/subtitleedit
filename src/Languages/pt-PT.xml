@@ -1770,14 +1770,14 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <NumberOfAlignmentTags>Número de etiquetas alinhamento: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Comprimento da legenda - mínimo: {0}</LineLengthMinimum>
     <LineLengthMaximum>Comprimento da legenda - máximo: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Comprimento da legenda - médio: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Legenda, número de linhas - médio: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Comprimento da legenda - médio: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Legenda, número de linhas - médio: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Comprimento de uma linha - mínimo: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Comprimento de uma linha - máximo: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Comprimento de uma linha - médio: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Comprimento de uma linha - médio: {0}</SingleLineLengthAverage>
     <DurationMinimum>Duração - mínima: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duração - máxima: {0:0.000} segundos</DurationMaximum>
-    <DurationAvarage>Duração - média: {0:0.000} segundos</DurationAvarage>
+    <DurationAverage>Duração - média: {0:0.000} segundos</DurationAverage>
     <ChararactersPerSecondMinimum>Caracteres/seg - mínimo: {0:0.000}</ChararactersPerSecondMinimum>
     <ChararactersPerSecondMaximum>Caracteres/seg - máximo: {0:0.000}</ChararactersPerSecondMaximum>
     <ChararactersPerSecondAverage>Caracteres/seg - médio: {0:0.000}</ChararactersPerSecondAverage>

@@ -1758,14 +1758,14 @@ Suggesties zijn van harte welkom
     <NumberOfAlignmentTags>Aantal uitlijning tags: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Ondertitel lengte - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Ondertitel lengte - maximum: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Ondertitel lengte - gemiddelde: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Ondertitel aantal regels - gemiddelde: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Ondertitel lengte - gemiddelde: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Ondertitel aantal regels - gemiddelde: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Enkele regellengte - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Enkele regellengte - maximum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Enkele regellengte - gemiddelde: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Enkele regellengte - gemiddelde: {0}</SingleLineLengthAverage>
     <DurationMinimum>Duur - minimum: {0:0.000} seconden</DurationMinimum>
     <DurationMaximum>Duur - maximum: {0:0.000} seconden</DurationMaximum>
-    <DurationAvarage>Duur - gemiddelde: {0:0.000} seconden</DurationAvarage>
+    <DurationAverage>Duur - gemiddelde: {0:0.000} seconden</DurationAverage>
     <ChararactersPerSecondMinimum>Karakters/sec - minimum: {0:0.000}</ChararactersPerSecondMinimum>
     <ChararactersPerSecondMaximum>Karakters/sec - maximum: {0:0.000}</ChararactersPerSecondMaximum>
     <ChararactersPerSecondAverage>Karakters/sec - gemiddeld: {0:0.000}</ChararactersPerSecondAverage>

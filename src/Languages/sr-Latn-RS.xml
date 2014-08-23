@@ -1480,14 +1480,14 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <NumberOfAlignmentTags>Broj poravnatih oznaka: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Prevod dužina - minimalno: {0}</LineLengthMinimum>
     <LineLengthMaximum>Prevod dužina - maksimalno: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Prevod dužina - prosjek: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Prevod, broj linija - prosek: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Prevod dužina - prosjek: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Prevod, broj linija - prosek: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Jedan red dužina - minimalno: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Jedan red dužina - maksimalno: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Jedan red dužina - prosjek: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Jedan red dužina - prosjek: {0}</SingleLineLengthAverage>
     <DurationMinimum>Trajanje - minimalno: {0:0.000} sekundi</DurationMinimum>
     <DurationMaximum>Trajanje - maksimalno: {0:0.000} sekundi</DurationMaximum>
-    <DurationAvarage>Trajanje - prosek: {0:0.000} sekundi</DurationAvarage>
+    <DurationAverage>Trajanje - prosek: {0:0.000} sekundi</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Napredna Sub Station Alpha svojstva</Title>

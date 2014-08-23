@@ -1760,14 +1760,14 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <NumberOfAlignmentTags>Antal justerade taggar: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Text längd - minst: {0}</LineLengthMinimum>
     <LineLengthMaximum>Text längd - max: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Text längd - genomsnitt: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Text, antal rader - genomsnitt: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Text längd - genomsnitt: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Text, antal rader - genomsnitt: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>En linjelängd - minst: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>En linjelängd - max: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>En linjelängd - genomsnitt: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>En linjelängd - genomsnitt: {0}</SingleLineLengthAverage>
     <DurationMinimum>Längd - minst: {0:0.000} sekunder</DurationMinimum>
     <DurationMaximum>Längd - max: {0:0.000} sekunder</DurationMaximum>
-    <DurationAvarage>Längd - genomsnitt: {0:0.000} sekunder</DurationAvarage>
+    <DurationAverage>Längd - genomsnitt: {0:0.000} sekunder</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Avancerade Sub Station Alpha egenskaper</Title>

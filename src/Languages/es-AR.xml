@@ -1697,14 +1697,14 @@ pueden editar el mismo archivo de subtítulo (colaboración)</Information>
     <NumberOfAlignmentTags>Cantidad de etiquetas de alineación: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>duración - mínimo: {0}</LineLengthMinimum>
     <LineLengthMaximum>longitud - máximo: {0}</LineLengthMaximum>
-    <LineLengthAvarage>longitud Subtítulo - promedio: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Subtitulo, numero de lineas - promedio: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>longitud Subtítulo - promedio: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Subtitulo, numero de lineas - promedio: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>longitud de una sola línea - mínimo: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Una sola línea longitud - máximo: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>longitud de línea individual - Media: {0} Duración</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>longitud de línea individual - Media: {0} Duración</SingleLineLengthAverage>
     <DurationMinimum>Duración - mínima: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duración - máxima: {0:0.000} segundos</DurationMaximum>
-    <DurationAvarage>Duración - promedio: {0:0.000} segundos</DurationAvarage>
+    <DurationAverage>Duración - promedio: {0:0.000} segundos</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha propiedades</Title>

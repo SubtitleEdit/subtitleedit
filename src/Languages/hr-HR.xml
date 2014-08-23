@@ -1631,14 +1631,14 @@ koji bi trebao biti usklađen s video datotekom.
     <NumberOfAlignmentTags>Broj poravnatih oznaka: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Podnaslov duljina - minimalno: {0}</LineLengthMinimum>
     <LineLengthMaximum>Podnaslov duljina - maksimalno: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Podnaslov duljina - prosjek: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Podnaslov, broj linija - prosjek: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Podnaslov duljina - prosjek: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Podnaslov, broj linija - prosjek: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Jedan redak duljina - minimalno: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Jedan redak duljina - maksimalno: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Jedan redak duljina - prosjek: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Jedan redak duljina - prosjek: {0}</SingleLineLengthAverage>
     <DurationMinimum>Trajanje - minimum: {0:0.000} sekundi</DurationMinimum>
     <DurationMaximum>Trajanje - maksimalno: {0:0.000} sekundi</DurationMaximum>
-    <DurationAvarage>Trajanje - prosjek: {0:0.000} sekundi</DurationAvarage>
+    <DurationAverage>Trajanje - prosjek: {0:0.000} sekundi</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Napredna Sub Station Alpha svojstva</Title>

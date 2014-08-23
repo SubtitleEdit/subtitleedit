@@ -1753,14 +1753,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NumberOfAlignmentTags>Nombre etiquetes alínia: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Llargària subtítol - mínim: {0}</LineLengthMinimum>
     <LineLengthMaximum>Llargària subtítol - màxim: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Llargària subtítol - mitjana: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Subtítol, nombre de línies - mitjana: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Llargària subtítol - mitjana: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Subtítol, nombre de línies - mitjana: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Llargària línia única - mínim: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Llargària línia única - màxim: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Llargària línia única - mitjana: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Llargària línia única - mitjana: {0}</SingleLineLengthAverage>
     <DurationMinimum>Durada - mínim: {0:0.000} segons</DurationMinimum>
     <DurationMaximum>Durada - màxim: {0:0.000} segons</DurationMaximum>
-    <DurationAvarage>Durada - mitjana: {0:0.000} segons</DurationAvarage>
+    <DurationAverage>Durada - mitjana: {0:0.000} segons</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Propietats Sub Station Alpha avançat</Title>

@@ -4875,11 +4875,11 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Statistics/LineLengthMaximum":
                     language.Statistics.LineLengthMaximum = reader.Value;
                     break;
-                case "Statistics/LineLengthAvarage":
-                    language.Statistics.LineLengthAvarage = reader.Value;
+                case "Statistics/LineLengthAverage":
+                    language.Statistics.LineLengthAverage = reader.Value;
                     break;
-                case "Statistics/LinesPerSubtitleAvarage":
-                    language.Statistics.LinesPerSubtitleAvarage = reader.Value;
+                case "Statistics/LinesPerSubtitleAverage":
+                    language.Statistics.LinesPerSubtitleAverage = reader.Value;
                     break;
                 case "Statistics/SingleLineLengthMinimum":
                     language.Statistics.SingleLineLengthMinimum = reader.Value;
@@ -4887,8 +4887,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Statistics/SingleLineLengthMaximum":
                     language.Statistics.SingleLineLengthMaximum = reader.Value;
                     break;
-                case "Statistics/SingleLineLengthAvarage":
-                    language.Statistics.SingleLineLengthAvarage = reader.Value;
+                case "Statistics/SingleLineLengthAverage":
+                    language.Statistics.SingleLineLengthAverage = reader.Value;
                     break;
                 case "Statistics/DurationMinimum":
                     language.Statistics.DurationMinimum = reader.Value;
@@ -4896,8 +4896,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Statistics/DurationMaximum":
                     language.Statistics.DurationMaximum = reader.Value;
                     break;
-                case "Statistics/DurationAvarage":
-                    language.Statistics.DurationAvarage = reader.Value;
+                case "Statistics/DurationAverage":
+                    language.Statistics.DurationAverage = reader.Value;
                     break;
                 case "Statistics/CharactersPerSecondMinimum":
                     language.Statistics.CharactersPerSecondMinimum = reader.Value;

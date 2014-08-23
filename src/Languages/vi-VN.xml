@@ -1501,14 +1501,14 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <NumberOfAlignmentTags>Số thẻ liên kết: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Chiều dài phụ đề - tối thiểu: {0}</LineLengthMinimum>
     <LineLengthMaximum>Chiều dài phụ đề - tối đa: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Phụ đề dài - trung bình: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Phụ đề, số dòng- trung bình: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Phụ đề dài - trung bình: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Phụ đề, số dòng- trung bình: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Chiều dài dòng đơn - tối thiểu: {0} chiều dài</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Dòng đơn - tối đa: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Chiều dài dòng đơn - trung bình: {0}Thời gian</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Chiều dài dòng đơn - trung bình: {0}Thời gian</SingleLineLengthAverage>
     <DurationMinimum>Thời hạn - tối thiểu: {0:0.000} seconds</DurationMinimum>
     <DurationMaximum>Thời hạn - tối da: {0:0.000} seconds</DurationMaximum>
-    <DurationAvarage>Thời hạn - trung bình: {0:0.000} seconds</DurationAvarage>
+    <DurationAverage>Thời hạn - trung bình: {0:0.000} seconds</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Thuộc tính Advanced Sub Station Alpha </Title>
