@@ -4354,9 +4354,9 @@ namespace Nikse.SubtitleEdit.Forms
                             _nOcrDb.Add(c);
                             SaveNOcrWithCurrentLanguage();
                             string text = _vobSubOcrNOcrCharacter.NOcrChar.Text;
-                            string name = SaveCompareItem(item.NikseBitmap, text, _vobSubOcrNOcrCharacter.IsItalic, expandSelectionList.Count);
-                            var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrNOcrCharacter.IsItalic, listViewIndex);
-                            _lastAdditions.Add(addition);
+                            //string name = SaveCompareItem(item.NikseBitmap, text, _vobSubOcrNOcrCharacter.IsItalic, expandSelectionList.Count);
+                            //var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrNOcrCharacter.IsItalic, listViewIndex);
+                            //_lastAdditions.Add(addition);
                             matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, expandSelectionList.Count, null));
                             expandSelectionList = new List<ImageSplitterItem>();
                         }
@@ -4393,9 +4393,9 @@ namespace Nikse.SubtitleEdit.Forms
                                 _nOcrDb.Add(_vobSubOcrNOcrCharacter.NOcrChar);
                                 SaveNOcrWithCurrentLanguage();
                                 string text = _vobSubOcrNOcrCharacter.NOcrChar.Text;
-                                string name = SaveCompareItem(item.NikseBitmap, text, _vobSubOcrNOcrCharacter.IsItalic, 0);
-                                var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrNOcrCharacter.IsItalic, listViewIndex);
-                                _lastAdditions.Add(addition);
+                                //string name = SaveCompareItem(item.NikseBitmap, text, _vobSubOcrNOcrCharacter.IsItalic, 0);
+                                //var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrNOcrCharacter.IsItalic, listViewIndex);
+                                //_lastAdditions.Add(addition);
                                 matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, 0, null));
                             }
                             else if (result == DialogResult.Abort)
