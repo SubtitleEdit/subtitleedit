@@ -1804,22 +1804,22 @@ Continue?</SubtitleAppendPrompt>
     </LineLengthMinimum>
     <LineLengthMaximum>
     </LineLengthMaximum>
-    <LineLengthAvarage>
-    </LineLengthAvarage>
-    <LinesPerSubtitleAvarage>
-    </LinesPerSubtitleAvarage>
+    <LineLengthAverage>
+    </LineLengthAverage>
+    <LinesPerSubtitleAverage>
+    </LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>
     </SingleLineLengthMinimum>
     <SingleLineLengthMaximum>
     </SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>
-    </SingleLineLengthAvarage>
+    <SingleLineLengthAverage>
+    </SingleLineLengthAverage>
     <DurationMinimum>
     </DurationMinimum>
     <DurationMaximum>
     </DurationMaximum>
-    <DurationAvarage>
-    </DurationAvarage>
+    <DurationAverage>
+    </DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>

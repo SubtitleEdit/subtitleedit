@@ -1761,14 +1761,14 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <NumberOfAlignmentTags>Igazítási címkék száma: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Felirat hossza - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Felirat hossza - maximum: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Felirat hossza - átlagos: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Felirat, sorok számas - átlagos: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Felirat hossza - átlagos: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Felirat, sorok számas - átlagos: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Egyetlen sor hossza - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Egyetlen sor hossza - maximum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Egyetlen sor hossza - átlag: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Egyetlen sor hossza - átlag: {0}</SingleLineLengthAverage>
     <DurationMinimum>Időtartam - minimum: {0:0.000} másodperc</DurationMinimum>
     <DurationMaximum>Időtartam - maximum: {0:0.000} másodperc</DurationMaximum>
-    <DurationAvarage>Időtartam - átlagos: {0:0.000} másodperc</DurationAvarage>
+    <DurationAverage>Időtartam - átlagos: {0:0.000} másodperc</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha tulajdonságok</Title>

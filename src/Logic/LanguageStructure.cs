@@ -1962,14 +1962,14 @@
             public string NumberOfAlignmentTags { get; set; }
             public string LineLengthMinimum { get; set; }
             public string LineLengthMaximum { get; set; }
-            public string LineLengthAvarage { get; set; }
-            public string LinesPerSubtitleAvarage { get; set; }
+            public string LineLengthAverage { get; set; }
+            public string LinesPerSubtitleAverage { get; set; }
             public string SingleLineLengthMinimum { get; set; }
             public string SingleLineLengthMaximum { get; set; }
-            public string SingleLineLengthAvarage { get; set; }
+            public string SingleLineLengthAverage { get; set; }
             public string DurationMinimum { get; set; }
             public string DurationMaximum { get; set; }
-            public string DurationAvarage { get; set; }
+            public string DurationAverage { get; set; }
             public string CharactersPerSecondMinimum { get; set; }
             public string CharactersPerSecondMaximum { get; set; }
             public string CharactersPerSecondAverage { get; set; }

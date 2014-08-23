@@ -1781,14 +1781,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <NumberOfAlignmentTags>Число тегов выравнивания: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Длина субтитра - минимум: {0}</LineLengthMinimum>
     <LineLengthMaximum>Длина субтитра - максимум: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Длина субтитра - средняя: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Субтитр, число строк - среднее: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Длина субтитра - средняя: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Субтитр, число строк - среднее: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Длина одной строки - минимум: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Длина одной строки - максимум: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Длина одной строки - средняя: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Длина одной строки - средняя: {0}</SingleLineLengthAverage>
     <DurationMinimum>Продолжительность - минимум: {0:0.000} секунд</DurationMinimum>
     <DurationMaximum>Продолжительность - максимум: {0:0.000} секунд</DurationMaximum>
-    <DurationAvarage>Продолжительность - средняя: {0:0.000} секунд</DurationAvarage>
+    <DurationAverage>Продолжительность - средняя: {0:0.000} секунд</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Дополнительные свойства Sub Station Alpha</Title>

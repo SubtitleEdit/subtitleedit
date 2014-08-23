@@ -1763,14 +1763,14 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <NumberOfAlignmentTags>정렬 태그 수: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>자막 길이 - 최소: {0}</LineLengthMinimum>
     <LineLengthMaximum>자막 길이 - 최대: {0}</LineLengthMaximum>
-    <LineLengthAvarage>자막 길이 - 평균: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>자막 안의 줄 수 - 평균: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>자막 길이 - 평균: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>자막 안의 줄 수 - 평균: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>한 줄의 길이 - 최소: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>한 줄의 길이 - 최대: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>한 줄의 길이 - 평균: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>한 줄의 길이 - 평균: {0}</SingleLineLengthAverage>
     <DurationMinimum>표시시간 - 최소: {0:0.000}초</DurationMinimum>
     <DurationMaximum>표시시간 - 최대: {0:0.000}초</DurationMaximum>
-    <DurationAvarage>표시시간 - 평균: {0:0.000}초</DurationAvarage>
+    <DurationAverage>표시시간 - 평균: {0:0.000}초</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>* Advanced Sub Station Alpha(.ass)의 속성</Title>

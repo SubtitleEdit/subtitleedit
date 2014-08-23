@@ -111,16 +111,16 @@ namespace Nikse.SubtitleEdit.Forms
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.LineLengthMinimum, minimumLineLength));
             sb.AppendLine(string.Format(_l.LineLengthMaximum, maximumLineLength));
-            sb.AppendLine(string.Format(_l.LineLengthAvarage, totalLineLength / _subtitle.Paragraphs.Count));
-            sb.AppendLine(string.Format(_l.LinesPerSubtitleAvarage, (((double)totalSingleLines) / _subtitle.Paragraphs.Count)));
+            sb.AppendLine(string.Format(_l.LineLengthAverage, totalLineLength / _subtitle.Paragraphs.Count));
+            sb.AppendLine(string.Format(_l.LinesPerSubtitleAverage, (((double)totalSingleLines) / _subtitle.Paragraphs.Count)));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.SingleLineLengthMinimum, minimumSingleLineLength));
             sb.AppendLine(string.Format(_l.SingleLineLengthMaximum, maximumSingleLineLength));
-            sb.AppendLine(string.Format(_l.SingleLineLengthAvarage, totalSingleLineLength / totalSingleLines));
+            sb.AppendLine(string.Format(_l.SingleLineLengthAverage, totalSingleLineLength / totalSingleLines));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.DurationMinimum, minimumDuration / 1000.0));
             sb.AppendLine(string.Format(_l.DurationMaximum, maximumDuration / 1000.0));
-            sb.AppendLine(string.Format(_l.DurationAvarage, totalDuration / _subtitle.Paragraphs.Count / 1000.0));
+            sb.AppendLine(string.Format(_l.DurationAverage, totalDuration / _subtitle.Paragraphs.Count / 1000.0));
             sb.AppendLine();
             if (!string.IsNullOrEmpty(_l.CharactersPerSecondMinimum))
             {

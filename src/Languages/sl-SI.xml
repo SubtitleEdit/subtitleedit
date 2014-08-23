@@ -1697,14 +1697,14 @@ popravlja enak podnapis (sodelovanje)</Information>
     <NumberOfAlignmentTags>Število poravnav: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Dolžina podnapisov - min.: {0}</LineLengthMinimum>
     <LineLengthMaximum>Dolžina podnapisov - maks.: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Dolžina podnapisov - povprečje: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Število vrstic podnapisov - povprečje: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Dolžina podnapisov - povprečje: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Število vrstic podnapisov - povprečje: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Dolžina posamezne vrstice - min.: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Dolžina posamične vrstice - maks.: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Dolžina posamične vrstice - povprečje: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Dolžina posamične vrstice - povprečje: {0}</SingleLineLengthAverage>
     <DurationMinimum>Trajanje - min.: {0:0.000} sekund</DurationMinimum>
     <DurationMaximum>Trajanje - maks.: {0:0.000} sekund</DurationMaximum>
-    <DurationAvarage>Trajanje - povprečje: {0:0.000} sekund</DurationAvarage>
+    <DurationAverage>Trajanje - povprečje: {0:0.000} sekund</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Lastnosti napredne podnapisne Sup postaje Alpha</Title>

@@ -1763,14 +1763,14 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <NumberOfAlignmentTags>Numero di tag allineamento: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Lunghezza sottotitolo - minima: {0}</LineLengthMinimum>
     <LineLengthMaximum>Lunghezza sottotitolo - massima: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Lunghezza sottotitolo - media: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Sottotitolo, numero di linee - media: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Lunghezza sottotitolo - media: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Sottotitolo, numero di linee - media: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Lunghezza linea singola - minimo : {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Lunghezza linea singola - massimo: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Lunghezza linea singola - media: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Lunghezza linea singola - media: {0}</SingleLineLengthAverage>
     <DurationMinimum>Durata - minima: {0:0.000} secondi</DurationMinimum>
     <DurationMaximum>Durata - massima: {0:0.000} secondi</DurationMaximum>
-    <DurationAvarage>Durata - media: {0:0.000} secondi</DurationAvarage>
+    <DurationAverage>Durata - media: {0:0.000} secondi</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Proprietà Advanced Sub Station Alpha</Title>

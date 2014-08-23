@@ -1749,14 +1749,14 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <NumberOfAlignmentTags>Cantidad de etiquetas de alineación: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Longitud del subtítulo - mínima: {0}</LineLengthMinimum>
     <LineLengthMaximum>Longitud del subtítulo - máxima: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Longitud del subtítulo - promedio: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Subtitulo, número de líneas - promedio: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Longitud del subtítulo - promedio: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Subtitulo, número de líneas - promedio: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Longitud de una sola línea - mínima: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Longitud de una sola línea - máxima: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Longitud de una sola línea - promedio: {0} Duración</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Longitud de una sola línea - promedio: {0} Duración</SingleLineLengthAverage>
     <DurationMinimum>Duración - mínima: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duración - máxima: {0:0.000} segundos</DurationMaximum>
-    <DurationAvarage>Duración - promedio: {0:0.000} segundos</DurationAvarage>
+    <DurationAverage>Duración - promedio: {0:0.000} segundos</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Sub Station Alpha (Propiedades Avanzadas)</Title>

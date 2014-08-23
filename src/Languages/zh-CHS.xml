@@ -1758,14 +1758,14 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <NumberOfAlignmentTags>排列标签数: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>字幕长度 - 最小: {0}</LineLengthMinimum>
     <LineLengthMaximum>字幕长度 - 最大: {0}</LineLengthMaximum>
-    <LineLengthAvarage>字幕长度 - 平均: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>字幕、行数 - 平均: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>字幕长度 - 平均: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>字幕、行数 - 平均: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>单行长度 - 最小: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>单行长度 - 最大: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>单行长度 - 平均: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>单行长度 - 平均: {0}</SingleLineLengthAverage>
     <DurationMinimum>时长 - 最小: {0:0.000} 秒</DurationMinimum>
     <DurationMaximum>时长 - 最大: {0:0.000} 秒</DurationMaximum>
-    <DurationAvarage>时长 - 平均: {0:0.000} 秒</DurationAvarage>
+    <DurationAverage>时长 - 平均: {0:0.000} 秒</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>高级 Sub Station Alpha 特性</Title>

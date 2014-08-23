@@ -1759,14 +1759,14 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <NumberOfAlignmentTags>Número de tags de alinhamento: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Tamanho da legenda - mínimo: {0}</LineLengthMinimum>
     <LineLengthMaximum>Tamanho da legenda - máximo: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Tamanho da legenda - média: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Legenda, número de linhas - média: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Tamanho da legenda - média: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Legenda, número de linhas - média: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Tamanho linha simples - mínimo: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Tamanho linha simples - máximo: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Tamanho linha simples - média: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Tamanho linha simples - média: {0}</SingleLineLengthAverage>
     <DurationMinimum>Duração - mínimo: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duração - máximo: {0:0.000} segundos</DurationMaximum>
-    <DurationAvarage>Duração - média: {0:0.000} segundos</DurationAvarage>
+    <DurationAverage>Duração - média: {0:0.000} segundos</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Propriedades Advanced Sub Station Alpha</Title>

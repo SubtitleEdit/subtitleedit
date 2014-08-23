@@ -1482,14 +1482,14 @@ Yeni oturum başlatın.</Information>
     <NumberOfAlignmentTags>Hizalama etiketleri sayısı: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Altyazı uzunluğu - Minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Altyazı uzunluğu - maksimum: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Altyazı uzunluğu - ortalama: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Altyazı, satır sayısı - ortalama: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Altyazı uzunluğu - ortalama: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Altyazı, satır sayısı - ortalama: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Tek satır uzunluğu - Minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Tek satır uzunluğu - maksimum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Tek satır uzunluğu - ortalama: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Tek satır uzunluğu - ortalama: {0}</SingleLineLengthAverage>
     <DurationMinimum>Süre - minimum: {0:0.000} saniye</DurationMinimum>
     <DurationMaximum>Süre - maksimum: {0:0.000} saniye</DurationMaximum>
-    <DurationAvarage>Süre - ortalama: {0:0.000} saniye</DurationAvarage>
+    <DurationAverage>Süre - ortalama: {0:0.000} saniye</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Gelişmiş Sub Station Alpha özellikleri</Title>

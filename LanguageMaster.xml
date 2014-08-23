@@ -1774,14 +1774,14 @@ can edit in same subtitle file (collaboration)</Information>
     <NumberOfAlignmentTags>Number of alignment tags: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Subtitle length - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Subtitle length - maximum: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Subtitle length - average: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Subtitle, number of lines - average: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Subtitle length - average: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Subtitle, number of lines - average: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Single line length - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Single line length - maximum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Single line length - average: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Single line length - average: {0}</SingleLineLengthAverage>
     <DurationMinimum>Duration - minimum: {0:0.000} seconds</DurationMinimum>
     <DurationMaximum>Duration - maximum: {0:0.000} seconds</DurationMaximum>
-    <DurationAvarage>Duration - average: {0:0.000} seconds</DurationAvarage>
+    <DurationAverage>Duration - average: {0:0.000} seconds</DurationAverage>
     <CharactersPerSecondMinimum>Characters/sec - minimum: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Characters/sec - maximum: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Characters/sec - average: {0:0.000}</CharactersPerSecondAverage>

@@ -1729,14 +1729,14 @@ Poursuivre?</SubtitleAppendPrompt>
     <NumberOfAlignmentTags>Nombre balises alignement: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Longueur sous-titres - le plus petit: {0} caractères</LineLengthMinimum>
     <LineLengthMaximum>Longueur sous-titres - le plus grand: {0} caractères</LineLengthMaximum>
-    <LineLengthAvarage>Longueur sous-titres - moyenne: {0} caractères</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Lignes par sous-titres - moyenne: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Longueur sous-titres - moyenne: {0} caractères</LineLengthAverage>
+    <LinesPerSubtitleAverage>Lignes par sous-titres - moyenne: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Unique longueur de ligne  - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Unique longueur de ligne  - maximum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Unique longueur de ligne - moyenne: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Unique longueur de ligne - moyenne: {0}</SingleLineLengthAverage>
     <DurationMinimum>Durée - minimum: {0:0.000} secondes</DurationMinimum>
     <DurationMaximum>Durée - maximum: {0:0.000} secondes</DurationMaximum>
-    <DurationAvarage>Durée - moyenne: {0:0.000} secondes</DurationAvarage>
+    <DurationAverage>Durée - moyenne: {0:0.000} secondes</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Propriétés Advanced SubStation Alpha</Title>

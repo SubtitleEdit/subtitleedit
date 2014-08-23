@@ -1773,14 +1773,14 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <NumberOfAlignmentTags>Tasaustunnisteiden määrä: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Tekstityksen pituus - pienin: {0}</LineLengthMinimum>
     <LineLengthMaximum>Tekstityksen pituus - suurin: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Tekstityksen pituus - keskiarvo: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Tekstitys, rivien määrä - keskiarvo: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Tekstityksen pituus - keskiarvo: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Tekstitys, rivien määrä - keskiarvo: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Yhden rivin pituus - pienin: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Yhden rivin pituus - suurin: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Yhden rivin pituus - keskiarvo: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Yhden rivin pituus - keskiarvo: {0}</SingleLineLengthAverage>
     <DurationMinimum>Kesto - pienin: {0:0.000} sekuntia</DurationMinimum>
     <DurationMaximum>Kesto - suurin: {0:0.000} sekuntia</DurationMaximum>
-    <DurationAvarage>Kesto - keskiarvo: {0:0.000} sekuntia</DurationAvarage>
+    <DurationAverage>Kesto - keskiarvo: {0:0.000} sekuntia</DurationAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha -ominaisuudet</Title>

@@ -1772,14 +1772,14 @@ Fortsæt?</SubtitleAppendPrompt>
     <NumberOfAlignmentTags>Antal tilpasning tags: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Undertekst længde - mindste: {0}</LineLengthMinimum>
     <LineLengthMaximum>Subtitle længde - største: {0}</LineLengthMaximum>
-    <LineLengthAvarage>Undertekst længde - gennemsnit: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>Undertekst, antal linjer - gennemsnit: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>Undertekst længde - gennemsnit: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Undertekst, antal linjer - gennemsnit: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Enkelt linje længde - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Enkelt linjelængde - maks.: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>Enkelt linje længde - gennemsnit: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>Enkelt linje længde - gennemsnit: {0}</SingleLineLengthAverage>
     <DurationMinimum>Varihed - minimum: {0:0.000} sekunder</DurationMinimum>
     <DurationMaximum>Varihed - maximum: {0:0.000} sekunder</DurationMaximum>
-    <DurationAvarage>Varihed - average: {0:0.000} sekunder</DurationAvarage>
+    <DurationAverage>Varihed - average: {0:0.000} sekunder</DurationAverage>
     <CharactersPerSecondMinimum>Karakterer/sek - min: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Karakterer/sek - maks: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Karakterer/sek -  gennemsnit: {0:0.000}</CharactersPerSecondAverage>
