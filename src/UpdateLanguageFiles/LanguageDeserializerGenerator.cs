@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (fieldInfo.FieldType.Name == "String")
                     {
-                        sb.AppendLine("\t\t\t\tcase \"" + (xmlPath + "/" + fieldInfo.Name).TrimStart('/') + "\": ");
+                        sb.AppendLine("\t\t\t\tcase \"" + (xmlPath + "/" + fieldInfo.Name).TrimStart('/') + "\":");
                         sb.AppendLine("\t\t\t\t\tlanguage." + (xmlPath.Replace("/", ".") + ".").TrimStart('.') + fieldInfo.Name + " = reader.Value;");
                         sb.AppendLine("\t\t\t\t\tbreak;");
                     }
