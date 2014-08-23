@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic
     public static class LanguageDeserializerGenerator
     {
 
-        public static void GenerateCSharpXmlDeserializerForLanguage(string fileName)
+        public static string GenerateCSharpXmlDeserializerForLanguage()
         {
             var sb = new StringBuilder();
             sb.AppendLine(@"using System.IO;
@@ -71,9 +71,7 @@ namespace Nikse.SubtitleEdit.Logic
             sb.AppendLine("\t}");
             sb.AppendLine("}");
 
-            if (string.IsNullOrEmpty(fileName))
-                fileName = @"C:\Data\subtitleedit\subtitleedit\src\Logic\LanguageDeserializer.cs";
-            System.IO.File.WriteAllText(fileName, sb.ToString().Replace("[NewObjects]", newObjectsString.ToString()).Replace("\t", "    "));
+            return sb.ToString().Replace("[NewObjects]", newObjectsString.ToString()).Replace("\t", "    ").Replace(" " + Environment.NewLine, Environment.NewLine);
         }
 
         private static string SubElementDeserializer(Type classType, string currentName, string xmlPath, StringBuilder newObjectsString)

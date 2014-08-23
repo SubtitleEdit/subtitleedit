@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             switch (name)
             {
-                case "Name": 
+                case "Name":
                     language.Name = reader.Value;
                     break;
                 case "General/Title":
