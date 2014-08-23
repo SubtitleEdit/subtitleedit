@@ -30,6 +30,7 @@
    * Added new subtitle formats
    * Can now import new time codes into OCR window - thx Music Fan
 * IMPROVED:
+   * Improved "Fix short display times" - thx Krystian
    * Split line improvement regarding italic/dialogue - thx moob
    * Updated Chinese Traditional language file - thx BR
    * Added .avs to list of known video formats - thx Peter
