@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     labelStatus.Text = Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesNoneAvailable;
-                    Height = 600;
+                    SetLargeSize();
                     textBoxChangeLog.Text = _updatesHelper.LatestChangeLog;
                     textBoxChangeLog.Visible = true;
                     buttonOK.Visible = true;
@@ -108,9 +108,15 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Focus();
         }
 
-        private void ShowAvailableUpdate(bool fromAutoCheck)
+        private void SetLargeSize()
         {
             Height = 600;
+            MinimumSize = new System.Drawing.Size(500, 400);
+        }
+
+        private void ShowAvailableUpdate(bool fromAutoCheck)
+        {
+            SetLargeSize();
             textBoxChangeLog.Text = _updatesHelper.LatestChangeLog;
             textBoxChangeLog.Visible = true;
             labelStatus.Text = Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesNewVersion;
