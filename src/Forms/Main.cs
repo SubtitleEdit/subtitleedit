@@ -6092,8 +6092,29 @@ namespace Nikse.SubtitleEdit.Forms
                     typeEffectToolStripMenuItem.Visible = false;
                     toolStripSeparator7.Visible = false;
 
-                    if (SubtitleListview1.SelectedItems.Count > 5)
+                    if (SubtitleListview1.SelectedItems.Count > 25)
+                    {
                         toolStripMenuItemMergeLines.Visible = false;
+                    }
+                    else if (SubtitleListview1.SelectedItems.Count > 2)
+                    { // only allow merge is text is not way too long 
+                        try
+                        {
+                            int totalLength = 0;
+                            foreach (int index in SubtitleListview1.SelectedIndices)
+                            {
+                                totalLength += _subtitle.Paragraphs[index].Text.Length;
+                            }
+                            if (totalLength > Configuration.Settings.General.SubtitleLineMaximumLength * 2.5)
+                            {
+                                toolStripMenuItemMergeLines.Visible = false;
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+
                     toolStripMenuItemMergeDialogue.Visible = false;
                 }
 
