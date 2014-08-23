@@ -6,24 +6,15 @@ namespace UpdateLanguageFiles
     class Program
     {       
 
-        private static void DoUpdateAssembly(string source, string gitHash, string template, string target)
-        {
-            string templateData = File.ReadAllText(template);
-            string fixedData = templateData.Replace(source, gitHash);
-            File.WriteAllText(target, fixedData);
-        }
-
         static int Main(string[] args)
         {
-            string errorFileName = System.Reflection.Assembly.GetEntryAssembly().Location.Replace(".exe", "_error.txt");
             if (args.Length != 2)
             {
                 Console.WriteLine("UpdateLanguageFiles - wrong number of arguments: " + args.Length);
-                File.WriteAllText(errorFileName, "Wrong number of arguments: " + args.Length);
                 return 1;
             }
 
-            Console.WriteLine("Updating language files...");
+            Console.Write("Updating language files...");
 
             try
             {
@@ -31,13 +22,26 @@ namespace UpdateLanguageFiles
                 language.General.Version = FindVersionNumber();
                 language.Save(args[0]);
 
-                Nikse.SubtitleEdit.Logic.LanguageDeserializerGenerator.GenerateCSharpXmlDeserializerForLanguage(args[1]);
+                string languageDeserializerContent = Nikse.SubtitleEdit.Logic.LanguageDeserializerGenerator.GenerateCSharpXmlDeserializerForLanguage();
+                string languageDeserializerContentOld = string.Empty;
+                if (File.Exists(args[1]))
+                    languageDeserializerContentOld = File.ReadAllText(args[1]);
+                if (languageDeserializerContent != languageDeserializerContentOld)
+                {
+                    File.WriteAllText(args[1], languageDeserializerContent);
+                    Console.WriteLine(" LanguageDeserializer.cs generated... ");
+                }
+                else
+                {
+                    Console.WriteLine(" no changes");
+                }
+
                 return 0;
             }
             catch (Exception ex)
             {
+                Console.WriteLine();
                 Console.WriteLine("UpdateLanguageFiles - " + ex.Message);
-                File.WriteAllText(errorFileName, ex.Message);
                 return 2;
             }
         }
