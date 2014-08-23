@@ -937,7 +937,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     // Make current subtitle duration longer + move next subtitle
-                    else if (diffMs < 1200 &&
+                    else if (diffMs < 1000 &&
+                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime &&
                              p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
                              next != null &&
                              (nextNext == null || next.EndTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MininumMillisecondsBetweenLines * 2 < nextNext.StartTime.TotalMilliseconds))
@@ -957,7 +958,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     // Make next subtitle duration shorter +  make current subtitle duration longer
-                    else if (diffMs < 1200 &&
+                    else if (diffMs < 1000 &&
+                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && 
                              next != null && Utilities.GetCharactersPerSecond(new Paragraph(next.Text, p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines, next.EndTime.TotalMilliseconds)) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
                         if (AllowFix(p, fixAction))
@@ -974,6 +976,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // Make next-next subtitle duration shorter + move next + make current subtitle duration longer
                     else if (diffMs < 500 &&
+                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime &&
                              next != null && nextNext != null &&
                              Utilities.GetCharactersPerSecond(new Paragraph(nextNext.Text, nextNext.StartTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MininumMillisecondsBetweenLines, nextNext.EndTime.TotalMilliseconds - (diffMs))) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
