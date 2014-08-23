@@ -2367,7 +2367,7 @@ Keep changes?",
             return LanguageDeserializer.CustomDeserializeLanguage(fileName);
         }
 
-        public void Save(string fileName)
+        public string GetCurrentLanguageAsXml()
         {
             var s = new XmlSerializer(typeof(Language));
             var sb = new StringBuilder();
@@ -2380,7 +2380,12 @@ Keep changes?",
             xml = xml.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ", string.Empty);
             xml = xml.Replace("encoding=\"utf-16\"", "encoding=\"utf-8\"");
             xml = xml.Replace("<TranslatedBy> </TranslatedBy>", "<TranslatedBy>Translated by Nikse</TranslatedBy>");
-            File.WriteAllText(fileName, xml, Encoding.UTF8);
+            return xml.Trim();
+        }
+
+        public void Save(string fileName)
+        {
+            File.WriteAllText(fileName, GetCurrentLanguageAsXml(), Encoding.UTF8);
         }
 
     }

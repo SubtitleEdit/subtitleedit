@@ -18,8 +18,17 @@ namespace UpdateLanguageFiles
 
             try
             {
+                int noOfChanges = 0;
                 var language = new Nikse.SubtitleEdit.Logic.Language();
                 language.General.Version = FindVersionNumber();
+                string currentLanguageAsXml = language.GetCurrentLanguageAsXml();
+                string oldLanguageAsXml = File.ReadAllText(args[0]);
+                if (oldLanguageAsXml != currentLanguageAsXml)
+                {
+                    File.WriteAllText(args[0], currentLanguageAsXml);
+                    noOfChanges++;
+                    Console.WriteLine(" LanguageMaster.xml generated... ");
+                }
                 language.Save(args[0]);
 
                 string languageDeserializerContent = Nikse.SubtitleEdit.Logic.LanguageDeserializerGenerator.GenerateCSharpXmlDeserializerForLanguage();
@@ -31,7 +40,8 @@ namespace UpdateLanguageFiles
                     File.WriteAllText(args[1], languageDeserializerContent);
                     Console.WriteLine(" LanguageDeserializer.cs generated... ");
                 }
-                else
+
+                if (noOfChanges == 0)
                 {
                     Console.WriteLine(" no changes");
                 }
