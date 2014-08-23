@@ -2973,6 +2973,9 @@ namespace Nikse.SubtitleEdit.Forms
                             if (prev == "." || prev == "'")
                                 fix = false;
 
+                            if (prev == " " && next == ".")
+                                fix = false;
+
                             if (prev == "-" && match.Index > 2)
                                 fix = false;
 
