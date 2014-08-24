@@ -4597,7 +4597,19 @@ namespace Nikse.SubtitleEdit.Forms
                         string msg = string.Empty;
                         if (_findHelper.FindType == FindType.RegEx && _findHelper.Success)
                         {
-                            textBoxListViewText.SelectedText = _findHelper.ReplaceText;
+                            if (_findHelper.FindType == FindType.RegEx)
+                            {
+                                var r = new Regex(_findHelper.FindText, RegexOptions.Multiline);
+                                string result = r.Replace(textBoxListViewText.SelectedText, _findHelper.ReplaceText);
+                                if (result != textBoxListViewText.SelectedText)
+                                {
+                                    textBoxListViewText.SelectedText = result;
+                                }
+                            }
+                            else
+                            {
+                                textBoxListViewText.SelectedText = _findHelper.ReplaceText;
+                            }
                             msg = _language.OneReplacementMade + " ";
                         }
                         else if (textBoxListViewText.SelectionLength == _findHelper.FindTextLength)
@@ -4698,7 +4710,19 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     textBoxListViewText.SelectionStart = _findHelper.SelectedPosition;
                     textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
-                    textBoxListViewText.SelectedText = _findHelper.ReplaceText;
+                    if (_findHelper.FindType == FindType.RegEx)
+                    {
+                        var r = new Regex(_findHelper.FindText, RegexOptions.Multiline);
+                        string result = r.Replace(textBoxListViewText.SelectedText, _findHelper.ReplaceText);
+                        if (result != textBoxListViewText.SelectedText)
+                        {
+                            textBoxListViewText.SelectedText = result;
+                        }
+                    }
+                    else
+                    {
+                        textBoxListViewText.SelectedText = _findHelper.ReplaceText;
+                    }
                 }
             }
         }
