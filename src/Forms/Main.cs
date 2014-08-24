@@ -3555,7 +3555,22 @@ namespace Nikse.SubtitleEdit.Forms
                         MessageBox.Show(string.Format(_language.UnableToSaveSubtitleX, _fileName), String.Empty, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         return DialogResult.Cancel;
                     }
-                    File.WriteAllText(_fileName, allText, currentEncoding);
+                    if (File.Exists(_fileName))
+                    {
+                        // re-use existing link by opening existing file
+                        using (var fs = System.IO.File.Open(_fileName, FileMode.Open, FileAccess.Write, FileShare.Read))
+                        {
+                            fs.Position = 0;
+                            using (StreamWriter sw = new StreamWriter(fs, currentEncoding))
+                            {
+                                sw.Write(allText);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        File.WriteAllText(_fileName, allText, currentEncoding);
+                    }
                 }
 
                 _fileDateTime = File.GetLastWriteTime(_fileName);
