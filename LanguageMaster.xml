@@ -160,6 +160,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ScanningFolder>Scanning {0} and subfolders for subtitle files...</ScanningFolder>
     <Recursive>Include sub folders</Recursive>
     <SetMinMsBetweenSubtitles>Set min. millisecs between subtitles</SetMinMsBetweenSubtitles>
+    <PlainText>Plain text</PlainText>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>

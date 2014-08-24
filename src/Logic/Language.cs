@@ -286,6 +286,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ScanningFolder = "Scanning {0} and subfolders for subtitle files...",
                 Recursive = "Include sub folders",
                 SetMinMsBetweenSubtitles = "Set min. millisecs between subtitles",
+                PlainText = "Plain text",
             };
 
             Beamer = new LanguageStructure.Beamer

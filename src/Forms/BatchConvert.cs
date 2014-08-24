@@ -138,6 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixLargeFonts();
 
             _allFormats = new List<SubtitleFormat>();
+            _allFormats.Add(new Pac());
             foreach (var f in SubtitleFormat.AllSubtitleFormats)
             {
                 if (!f.IsVobSubIndexFile)
@@ -148,6 +149,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             }
             comboBoxSubtitleFormats.SelectedIndex = 0;
+            if (!string.IsNullOrEmpty(l.PlainText))
+                comboBoxSubtitleFormats.Items.Add(l.PlainText);
 
             comboBoxEncoding.Items.Clear();
             int encodingSelectedIndex = 0;
