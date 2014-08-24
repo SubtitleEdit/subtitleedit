@@ -3528,7 +3528,6 @@ namespace Nikse.SubtitleEdit.Forms
                                              Title + " - " + _language.FileOnDiskModified, MessageBoxButtons.YesNo) == DialogResult.No)
                             return DialogResult.No;
                     }
-                    File.Delete(_fileName);
                 }
 
                 if (Control.ModifierKeys == (Keys.Control | Keys.Shift))
@@ -3568,7 +3567,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                     else
-                    {
+                    {                       
                         File.WriteAllText(_fileName, allText, currentEncoding);
                     }
                 }
