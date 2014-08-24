@@ -3559,7 +3559,7 @@ namespace Nikse.SubtitleEdit.Forms
                         // re-use existing link by opening existing file
                         using (var fs = System.IO.File.Open(_fileName, FileMode.Open, FileAccess.Write, FileShare.Read))
                         {
-                            fs.Position = 0;
+                            fs.SetLength(0);
                             using (StreamWriter sw = new StreamWriter(fs, currentEncoding))
                             {
                                 sw.Write(allText);
