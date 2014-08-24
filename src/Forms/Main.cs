@@ -1085,6 +1085,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (!targetFormatFound)
             {
+                if (Configuration.Settings.Language.BatchConvert.PlainText == toFormat || Configuration.Settings.Language.BatchConvert.PlainText.ToLower().Replace(" ", string.Empty) == toFormat.ToLower().Replace(" ", string.Empty))
+                {
+                    targetFormatFound = true;
+                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
+                    Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                    System.IO.File.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub, false, false, false, false, false, false, string.Empty, true, false, true, true, false), targetEncoding);
+                    Console.WriteLine(" done.");
+                }
+            }
+            if (!targetFormatFound)
+            {
                 Console.WriteLine(string.Format("{0}: {1} - target format '{2}' not found!", count, fileName, toFormat));
                 errors++;
                 return false;

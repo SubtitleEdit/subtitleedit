@@ -555,6 +555,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BatchConvert/SetMinMsBetweenSubtitles":
                     language.BatchConvert.SetMinMsBetweenSubtitles = reader.Value;
                     break;
+                case "BatchConvert/PlainText":
+                    language.BatchConvert.PlainText = reader.Value;
+                    break;
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;
                     break;

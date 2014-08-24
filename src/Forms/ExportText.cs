@@ -73,39 +73,50 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAddNewlineAfterLineNumber.Enabled = checkBoxShowLineNumbers.Checked;
             checkBoxAddNewlineAfterTimeCodes.Enabled = checkBoxShowTimeCodes.Checked;
 
+            string text = GeneratePlainText(_subtitle, checkBoxShowLineNumbers.Checked, checkBoxAddNewlineAfterLineNumber.Checked, checkBoxShowTimeCodes.Checked,
+                                            radioButtonTimeCodeSrt.Checked, radioButtonTimeCodeHHMMSSFF.Checked, checkBoxAddNewlineAfterTimeCodes.Checked,
+                                            comboBoxTimeCodeSeperator.Text, checkBoxRemoveStyling.Checked, radioButtonFormatUnbreak.Checked, checkBoxAddAfterText.Checked,
+                                            checkBoxAddNewLine2.Checked, radioButtonFormatMergeAll.Checked);
+            textBoxText.Text = text;
+        }
+
+        public static string GeneratePlainText(Subtitle subtitle, bool showLineNumbers, bool addNewlineAfterLineNumber, bool showTimecodes,
+                                         bool timeCodeSrt, bool timeCodeHHMMSSFF, bool addNewlineAfterTimeCodes, string timeCodeSeperator,
+                                         bool removeStyling, bool formatUnbreak, bool addAfterText, bool checkBoxAddNewLine2, bool formatMergeAll)
+        {
             var sb = new StringBuilder();
-            foreach (Paragraph p in _subtitle.Paragraphs)
+            foreach (Paragraph p in subtitle.Paragraphs)
             {
-                if (checkBoxShowLineNumbers.Checked)
+                if (showLineNumbers)
                 {
                     sb.Append(p.Number.ToString());
-                    if (checkBoxAddNewlineAfterLineNumber.Checked)
+                    if (addNewlineAfterLineNumber)
                         sb.AppendLine();
                     else
                         sb.Append(" ");
                 }
-                if (checkBoxShowTimeCodes.Checked)
+                if (showTimecodes)
                 {
-                    if (radioButtonTimeCodeSrt.Checked)
-                        sb.Append(p.StartTime.ToString() + comboBoxTimeCodeSeperator.Text + p.EndTime.ToString());
-                    else if (radioButtonTimeCodeHHMMSSFF.Checked)
-                        sb.Append(p.StartTime.ToHHMMSSFF() + comboBoxTimeCodeSeperator.Text + p.EndTime.ToHHMMSSFF());
+                    if (timeCodeSrt)
+                        sb.Append(p.StartTime.ToString() + timeCodeSeperator + p.EndTime.ToString());
+                    else if (timeCodeHHMMSSFF)
+                        sb.Append(p.StartTime.ToHHMMSSFF() + timeCodeSeperator + p.EndTime.ToHHMMSSFF());
                     else
-                        sb.Append(p.StartTime.TotalMilliseconds.ToString() + comboBoxTimeCodeSeperator.Text + p.EndTime.TotalMilliseconds.ToString());
+                        sb.Append(p.StartTime.TotalMilliseconds.ToString() + timeCodeSeperator + p.EndTime.TotalMilliseconds.ToString());
 
-                    if (checkBoxAddNewlineAfterTimeCodes.Checked)
+                    if (addNewlineAfterTimeCodes)
                         sb.AppendLine();
                     else
                         sb.Append(" ");
 
                 }
                 string s = p.Text;
-                if (checkBoxRemoveStyling.Checked)
+                if (removeStyling)
                 {
                     s = Utilities.RemoveHtmlTags(s, true);
                 }
 
-                if (radioButtonFormatUnbreak.Checked)
+                if (formatUnbreak)
                 {
                     sb.Append(s.Replace(Environment.NewLine, " ").Replace("  ", " "));
                 }
@@ -113,20 +124,20 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     sb.Append(s);
                 }
-                if (checkBoxAddAfterText.Checked)
+                if (addAfterText)
                     sb.AppendLine();
-                if (checkBoxAddNewLine2.Checked)
+                if (checkBoxAddNewLine2)
                     sb.AppendLine();
-                if (!checkBoxAddAfterText.Checked && !checkBoxAddNewLine2.Checked)
+                if (!addAfterText && !checkBoxAddNewLine2)
                     sb.Append(" ");
             }
             string text = sb.ToString().Trim();
-            if (radioButtonFormatMergeAll.Checked)
+            if (formatMergeAll)
             {
                 text = text.Replace(Environment.NewLine, " ");
                 text = text.Replace("  ", " ").Replace("  ", " ");
             }
-            textBoxText.Text = text;
+            return text;
         }
 
         private Encoding GetCurrentEncoding()
