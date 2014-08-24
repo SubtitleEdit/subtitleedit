@@ -2714,7 +2714,7 @@ namespace Nikse.SubtitleEdit.Logic
                 isStart = true;
             if (text.EndsWith(endTag) || text.EndsWith(e1) || text.EndsWith(e2) || text.EndsWith(e3) || text.EndsWith(e4) || text.EndsWith(e5))
                 isEnd = true;
-            return isStart == isEnd;
+            return isStart && isEnd;
         }
 
         public static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
