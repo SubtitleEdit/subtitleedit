@@ -2072,7 +2072,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     else if (text.Substring(i).ToLower().StartsWith("<i>"))
                     {
-                        if (sb.Length > 0)
+                        if (sb.ToString().Trim().Length > 0)
                         {
                             lastText.Append(sb);
                             TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
@@ -2095,7 +2095,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     else if (text.Substring(i).ToLower().StartsWith("<b>"))
                     {
-                        if (sb.Length > 0)
+                        if (sb.ToString().Trim().Length > 0)
                         {
                             lastText.Append(sb);
                             TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
