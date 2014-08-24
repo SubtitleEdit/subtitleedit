@@ -73,6 +73,24 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void FixInvalidItalicTags4()
+        {
+            string s1 = "It <i>is</i> a telegram," + Environment.NewLine + "it <i>is</i> ordering an advance,";
+            string s2 = Utilities.FixInvalidItalicTags(s1);
+            Assert.AreEqual(s2, s1);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixInvalidItalicTags5()
+        {
+            string s1 = "- <i>It is a telegram?</i>" + Environment.NewLine + "<i>- It is.</i>";
+            string s2 = Utilities.FixInvalidItalicTags(s1);
+            Assert.AreEqual(s2, "<i>- It is a telegram?" + Environment.NewLine + "- It is.</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesDoubleSpace1()
         {
             string s1 = "This is  a test";
