@@ -993,7 +993,26 @@ namespace Nikse.SubtitleEdit.Forms
                         sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
                     else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
                         sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
-                    File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+
+                    if (sf.GetType() == typeof(ItunesTimedText) || sf.GetType() == typeof(ScenaristClosedCaptions) || sf.GetType() == typeof(ScenaristClosedCaptionsDropFrame))
+                    {
+                        Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                        TextWriter file = new StreamWriter(outputFileName, false, outputEnc); // open file with encoding
+                        file.Write(sub.ToText(sf));
+                        file.Close(); // save and close it
+                    }
+                    else if (targetEncoding == Encoding.UTF8 && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
+                    {
+                        Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                        TextWriter file = new StreamWriter(outputFileName, false, outputEnc); // open file with encoding
+                        file.Write(sub.ToText(sf));
+                        file.Close(); // save and close it
+                    }
+                    else
+                    {
+                        File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                    }
+
                     if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
                     {
                         var sami = (Sami)format;
