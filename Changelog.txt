@@ -22,7 +22,7 @@
    * It's now possible to turn "Check for updates" off
    * Fixed issue with end-of-italics and SSA/ASS - thx John
    * Fixed issue with "..." in "Fix common OCR errors" - thx XhmikosR
-   * Fixed issue wregarding "Fix start with uppercase after paragraph" - thx XhmikosR
+   * Fixed issue regarding "Fix start with uppercase after paragraph" - thx XhmikosR
    * Fixed PAC reading (regarding W16)
    * Fixed bad xml tag in spanish ocr fix list - thx DavidGDFC
    * Fixed "MicroDvd" sub compare - thx SimplyTheBOSS
