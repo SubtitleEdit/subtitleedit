@@ -3554,21 +3554,12 @@ namespace Nikse.SubtitleEdit.Forms
                         MessageBox.Show(string.Format(_language.UnableToSaveSubtitleX, _fileName), String.Empty, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         return DialogResult.Cancel;
                     }
-                    if (File.Exists(_fileName))
+                    using (var fs = System.IO.File.Open(_fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
                     {
-                        // re-use existing link by opening existing file
-                        using (var fs = System.IO.File.Open(_fileName, FileMode.Open, FileAccess.Write, FileShare.Read))
+                        using (StreamWriter sw = new StreamWriter(fs, currentEncoding))
                         {
-                            fs.SetLength(0);
-                            using (StreamWriter sw = new StreamWriter(fs, currentEncoding))
-                            {
-                                sw.Write(allText);
-                            }
+                            sw.Write(allText);
                         }
-                    }
-                    else
-                    {                       
-                        File.WriteAllText(_fileName, allText, currentEncoding);
                     }
                 }
 
