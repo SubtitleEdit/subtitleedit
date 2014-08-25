@@ -1420,22 +1420,25 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 string s = l;
                 foreach (string from in _beginLineReplaceList.Keys)
                 {
-                    if (s.StartsWith(from))
-                        s = s.Remove(0, from.Length).Insert(0, _beginLineReplaceList[from]);
-                    if (s.Contains(". " + from))
-                        s = s.Replace(". " + from, ". " + _beginLineReplaceList[from]);
-                    if (s.Contains("! " + from))
-                        s = s.Replace("! " + from, "! " + _beginLineReplaceList[from]);
-                    if (s.Contains("? " + from))
-                        s = s.Replace("? " + from, "? " + _beginLineReplaceList[from]);
-                    if (s.Contains("." + Environment.NewLine + from))
-                        s = s.Replace(". " + Environment.NewLine + from, ". " + Environment.NewLine + _beginLineReplaceList[from]);
-                    if (s.Contains("! " + Environment.NewLine + from))
-                        s = s.Replace("! " + Environment.NewLine + from, "! " + Environment.NewLine + _beginLineReplaceList[from]);
-                    if (s.Contains("? " + Environment.NewLine + from))
-                        s = s.Replace("? " + Environment.NewLine + from, "? " + Environment.NewLine + _beginLineReplaceList[from]);
-                    if (s.StartsWith("\"") && !from.StartsWith("\"") && s.StartsWith("\"" + from))
-                        s = s.Replace("\"" + from, "\"" + _beginLineReplaceList[from]);
+                    if (s.Contains(from))
+                    {
+                        if (s.StartsWith(from))
+                            s = s.Remove(0, from.Length).Insert(0, _beginLineReplaceList[from]);
+                        if (s.Contains(". " + from))
+                            s = s.Replace(". " + from, ". " + _beginLineReplaceList[from]);
+                        if (s.Contains("! " + from))
+                            s = s.Replace("! " + from, "! " + _beginLineReplaceList[from]);
+                        if (s.Contains("? " + from))
+                            s = s.Replace("? " + from, "? " + _beginLineReplaceList[from]);
+                        if (s.Contains("." + Environment.NewLine + from))
+                            s = s.Replace(". " + Environment.NewLine + from, ". " + Environment.NewLine + _beginLineReplaceList[from]);
+                        if (s.Contains("! " + Environment.NewLine + from))
+                            s = s.Replace("! " + Environment.NewLine + from, "! " + Environment.NewLine + _beginLineReplaceList[from]);
+                        if (s.Contains("? " + Environment.NewLine + from))
+                            s = s.Replace("? " + Environment.NewLine + from, "? " + Environment.NewLine + _beginLineReplaceList[from]);
+                        if (s.StartsWith("\"") && !from.StartsWith("\"") && s.StartsWith("\"" + from))
+                            s = s.Replace("\"" + from, "\"" + _beginLineReplaceList[from]);
+                    }
                 }
                 sb.AppendLine(s);
             }
