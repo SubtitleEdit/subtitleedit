@@ -4,7 +4,7 @@
     <Title>Subtitle Edit</Title>
     <Version>3.4.1</Version>
     <TranslatedBy> ------------------------------------------------------------------------------------------------
-Traduzido sem o novo Acordo Ortográfico para Português de Portugal, por moob
+Traduzido para Português de Portugal, por moob
 Email: mailto:moob@live.com.pt</TranslatedBy>
     <CultureName>pt-PT</CultureName>
     <HelpFile />
@@ -35,12 +35,12 @@ Email: mailto:moob@live.com.pt</TranslatedBy>
     <Italic>Itálico</Italic>
     <Underline>Sublinhado</Underline>
     <Visible>Visível</Visible>
-    <FrameRate>Taxa de frames</FrameRate>
+    <FrameRate>Taxa de fotogramas</FrameRate>
     <Name>Nome</Name>
     <FileNameXAndSize>Nome do ficheiro: {0} ({1})</FileNameXAndSize>
     <ResolutionX>Resolução: {0}</ResolutionX>
-    <FrameRateX>Frames por segundo: {0:0.0###}</FrameRateX>
-    <TotalFramesX>Total de frames: {0:#,##0.##}</TotalFramesX>
+    <FrameRateX>Fotogramas por segundo: {0:0.0###}</FrameRateX>
+    <TotalFramesX>Total de fotogramas: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Codificação de vídeo: {0}</VideoEncodingX>
     <SingleLineLengths>Comprimento da linha individual: </SingleLineLengths>
     <TotalLengthX>Comprimento total: {0}</TotalLengthX>
@@ -162,6 +162,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ScanningFolder>A examinar {0} e as sub-pastas por ficheiros de legendas...</ScanningFolder>
     <Recursive>Incluir sub-pastas</Recursive>
     <SetMinMsBetweenSubtitles>Definir mínimo em (ms) entre as legendas</SetMinMsBetweenSubtitles>
+    <PlainText>Texto sem formatação</PlainText>
   </BatchConvert>
   <Beamer>
     <Title>Vídeo projector</Title>
@@ -184,16 +185,19 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
-    <Title>Alterar a taxa de frames</Title>
-    <ConvertFrameRateOfSubtitle>Converter a taxa de frames da legenda</ConvertFrameRateOfSubtitle>
-    <FromFrameRate>Da taxa de frames</FromFrameRate>
-    <ToFrameRate>Para a taxa de frames</ToFrameRate>
-    <FrameRateNotCorrect>Taxa de frames incorrecta</FrameRateNotCorrect>
-    <FrameRateNotChanged>Taxa de frames idêntica - nada para converter</FrameRateNotChanged>
+    <Title>Alterar a taxa de fotogramas</Title>
+    <ConvertFrameRateOfSubtitle>Converter a taxa de fotogramas da legenda</ConvertFrameRateOfSubtitle>
+    <FromFrameRate>Da taxa de fotogramas</FromFrameRate>
+    <ToFrameRate>Para a taxa de fotogramas</ToFrameRate>
+    <FrameRateNotCorrect>Taxa de fotogramas incorrecta</FrameRateNotCorrect>
+    <FrameRateNotChanged>Taxa de fotogramas idêntica - nada para converter</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Ajustar a velocidade em percentagem</Title>
     <Info>Alterar a velocidade da legenda em percentagem</Info>
+    <Custom>Personalizado</Custom>
+    <ToDropFrame>Para descer fotograma</ToDropFrame>
+    <FromDropFrame>Da descida fotograma</FromDropFrame>	
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Verificar se há actualizações</Title>
@@ -637,12 +641,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ImportOptions>Importar opções</ImportOptions>
     <TextFiles>Ficheiros de texto</TextFiles>
     <TimeCodes>Códigos de tempo</TimeCodes>
-    <Frames>Frames</Frames>
+    <Frames>Fotogramas</Frames>
     <Seconds>Segundos</Seconds>
     <Milliseconds>Milissegundos</Milliseconds>
   </ImportSceneChanges>
   <ImportText>
-    <Title>Importar texto simples</Title>
+    <Title>Importar texto sem formatação</Title>
     <OneSubtitleIsOneFile>Vários ficheiros - um ficheiro é uma legenda</OneSubtitleIsOneFile>
     <OpenTextFile>Abrir ficheiro de texto...</OpenTextFile>
     <OpenTextFiles>Abrir múltiplos ficheiros de texto...</OpenTextFiles>
@@ -690,6 +694,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RestoreAutoBackup>Restaurar cópia de segurança automática...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha propriedades...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha propriedades...</SubStationAlphaProperties>
+        <EbuProperties>EBU stl propriedades...</EbuProperties>
+        <PacProperties>PAC propriedades...</PacProperties>		
         <OpenOriginal>Abrir legenda original (modo tradutor)...</OpenOriginal>
         <SaveOriginal>Guardar legenda original</SaveOriginal>
         <CloseOriginal>Fechar legenda original</CloseOriginal>
@@ -703,7 +709,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportXSub>Importar /OCR xsub de ficheiros divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importar legenda de ficheiro Matroska (.mkv)...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importar legenda seleccionando codificação manualmente...</ImportSubtitleWithManualChosenEncoding>
-        <ImportText>Importar texto simples...</ImportText>
+        <ImportText>Importar texto sem formatação...</ImportText>
         <ImportImages>Importar imagens...</ImportImages>
         <ImportTimecodes>Importar códigos de tempo...</ImportTimecodes>
         <Export>Exportar</Export>
@@ -713,7 +719,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportCavena890>Cavena 890...</ExportCavena890>
         <ExportEbu>EBU stl...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
-        <ExportPlainText>Texto simples...</ExportPlainText>
+        <ExportPlainText>Texto sem formatação...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB imagem script...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Par de ficheiros Korean ATS...</ExportKoreanAtsFilePair>
         <ExportAvidStl>Avid stl...</ExportAvidStl>
@@ -752,7 +758,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <StartNumberingFrom>Renumerar...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Eliminar texto para surdos...</RemoveTextForHearingImpaired>
         <ChangeCasing>Alterar maiúsculas ou minúsculas...</ChangeCasing>
-        <ChangeFrameRate>Alterar taxa de frames...</ChangeFrameRate>
+        <ChangeFrameRate>Alterar taxa de fotogramas...</ChangeFrameRate>
         <ChangeSpeedInPercent>Alterar a velocidade (percentagem)...</ChangeSpeedInPercent>
         <MergeShortLines>Combinar as linhas curtas...</MergeShortLines>
         <MergeDuplicateText>Combinar as linhas com o mesmo texto...</MergeDuplicateText>
@@ -984,7 +990,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ContinueAnyway>Continuar mesmo assim?</ContinueAnyway>
     <BeforeLoadOf>Antes de carregar {0}</BeforeLoadOf>
     <LoadedSubtitleX>Legenda carregada {0}</LoadedSubtitleX>
-    <LoadedEmptyOrShort>Legenda carregada vazia ou muito pequena {0}</LoadedEmptyOrShort>
+    <LoadedEmptyOrShort>Legenda carregada em branco ou muito pequena {0}</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>Ficheiro vazio ou muito pequeno!</FileIsEmptyOrShort>
     <FileNotFound>Ficheiro não encontrado: {0}</FileNotFound>
     <SavedSubtitleX>Legenda guardada {0}</SavedSubtitleX>
@@ -1001,8 +1007,8 @@ A legenda parece não ter conteúdo - tente guardar novamente se tiver a trabalh
     <BeforeShowLater>Antes de mostrar o seguinte</BeforeShowLater>
     <LineNumberX>Linha número: {0:#,##0.##}</LineNumberX>
     <OpenVideoFile>Abrir ficheiro de vídeo...</OpenVideoFile>
-    <NewFrameRateUsedToCalculateTimeCodes>Nova taxa de frames ({0}) usada para calcular códigos de tempo inicial/final</NewFrameRateUsedToCalculateTimeCodes>
-    <NewFrameRateUsedToCalculateFrameNumbers>Nova taxa de frames ({0}) usada para calcular número de frames inicial/final</NewFrameRateUsedToCalculateFrameNumbers>
+    <NewFrameRateUsedToCalculateTimeCodes>Nova taxa de fotogramas ({0}) usada para calcular códigos de tempo inicial/final</NewFrameRateUsedToCalculateTimeCodes>
+    <NewFrameRateUsedToCalculateFrameNumbers>Nova taxa de fotogramas ({0}) usada para calcular número de fotogramas inicial/final</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>O item procurado não foi encontrado.
 Deseja pesquisar o documento desde o início novamente?</FindContinue>
     <FindContinueTitle>Continuar a pesquisar?</FindContinueTitle>
@@ -1067,7 +1073,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <NothingToUndo>Nada para anular</NothingToUndo>
     <InvalidLanguageNameX>Nome de idioma inválido: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Não é possível alterar o idioma!</UnableToChangeLanguage>
-    <DoNotDisplayMessageAgain>Não exibir esta mensagem novamente</DoNotDisplayMessageAgain>
+    <DoNotDisplayMessageAgain>Não exibir esta mensagem novamente</DoNotDisplayMessageAgain>	
     <NumberOfCorrectedWords>Número de palavras corrigidas: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Número de palavras omitidas: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Número de palavras correctas: {0}</NumberOfCorrectWords>
@@ -1114,9 +1120,9 @@ Deseja continuar?</SubtitleAppendPrompt>
     <CasingCompleteMessageNoNames>Número de linhas com formato alterado: {0}/{1}</CasingCompleteMessageNoNames>
     <CasingCompleteMessageOnlyNames>Número de linhas com formato de nomes alterado: {0}/{1}</CasingCompleteMessageOnlyNames>
     <CasingCompleteMessage>Número de linhas com formato alterado: {0}/{1}, nomes com formato alterado: {2}</CasingCompleteMessage>
-    <BeforeChangeFrameRate>Antes de alterar a taxa de frames</BeforeChangeFrameRate>
+    <BeforeChangeFrameRate>Antes de alterar a taxa de fotogramas</BeforeChangeFrameRate>
     <BeforeAdjustSpeedInPercent>Antes de alterar a percentagem da velocidade</BeforeAdjustSpeedInPercent>
-    <FrameRateChangedFromXToY>Taxa de frames alterada de {0} para {1}</FrameRateChangedFromXToY>
+    <FrameRateChangedFromXToY>Taxa de fotogramas alterada de {0} para {1}</FrameRateChangedFromXToY>
     <IdxFileNotFoundWarning>{0} não encontrado! Importar ficheiro VobSub mesmo assim?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>Cabeçalho do ficheiro VobSub inválido: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Abrir legenda VobSub (sub/idx)...</OpenVobSubFile>
@@ -1160,7 +1166,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <MergedShortLinesX>Número de linhas combinadas: {0}</MergedShortLinesX>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Antes de estabelecer o tempo de visualização mínimo entre legendas</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Número de linhas com tempo de visualização mínimo entre legendas alteradas: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
-    <BeforeImportText>Antes de importar texto simples</BeforeImportText>
+    <BeforeImportText>Antes de importar texto sem formatação</BeforeImportText>
     <TextImported>Texto importado</TextImported>
     <BeforePointSynchronization>Antes do ponto de sincronização</BeforePointSynchronization>
     <PointSynchronizationDone>Ponto de sincronização concluído</PointSynchronizationDone>
@@ -1172,7 +1178,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <BeforeSetEndAndVideoPosition>Antes de defenir o tempo final e auto calcular o início</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Continuar com a verificação ortográfica corrente?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Caracteres/seg: {0:0.00}</CharactersPerSecond>
-    <GetFrameRateFromVideoFile>Obter a taxa de frames do ficheiro de vídeo</GetFrameRateFromVideoFile>
+    <GetFrameRateFromVideoFile>Obter a taxa de fotogramas do ficheiro de vídeo</GetFrameRateFromVideoFile>
     <NetworkMessage>Nova mensagem: {0} ({1}): {2}</NetworkMessage>
     <NetworkUpdate>Linha actualizada: {0} ({1}): Índice={2}, Texto={3}</NetworkUpdate>
     <NetworkInsert>Linha inserida: {0} ({1}): Índice={2}, Texto={3}</NetworkInsert>
@@ -1189,7 +1195,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <SpellCheckCompletedXCorrections>Verificação ortográfica completa. {0} linhas modificadas.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Abrir outra legenda</OpenOtherSubtitle>
     <BeforeToggleDialogueDashes>Antes de alternar traços de diálogo</BeforeToggleDialogueDashes>
-    <ExportPlainTextAs>Exportar texto simples como</ExportPlainTextAs>
+    <ExportPlainTextAs>Exportar texto sem formatação como</ExportPlainTextAs>
     <TextFiles>Ficheiros de texto</TextFiles>
     <SubtitleExported>Legenda exportada</SubtitleExported>
     <LineNumberXErrorReadingFromSourceLineY>Linha {0} - erro de leitura: {1}</LineNumberXErrorReadingFromSourceLineY>
@@ -1297,7 +1303,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ExportRulesTitle>Exportar regra(s) de substituição para...</ExportRulesTitle>
     <Rules>Regras de exportação</Rules>
     <MoveToTop>Mover para o inicio</MoveToTop>
-    <MoveToBottom>Mover para o fim</MoveToBottom>
+    <MoveToBottom>Mover para o fim</MoveToBottom>	
   </MultipleReplace>
   <NetworkChat>
     <Title>Conversação</Title>
@@ -1412,7 +1418,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <PreviewLinesModifiedX>Pré-visualizar - legendas modificadas: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Mostrar só linhas modificadas</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milissegundos mínimos entre linhas</MinimumMillisecondsBetweenParagraphs>
-    <FrameInfo>Informação da taxa de frames</FrameInfo>
+    <FrameInfo>Informação da taxa de fotogramas</FrameInfo>
     <OneFrameXisYMilliseconds>Um fotograma de {0:0.00} fps é de {1} milissegundos</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
@@ -1444,8 +1450,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SpellCheck>Ortografia</SpellCheck>
     <SettingsName>Configurações</SettingsName>
     <Help>Ajuda</Help>
-    <ShowFrameRate>Mostrar taxa de frames na barra de ferramentas</ShowFrameRate>
-    <DefaultFrameRate>Taxa de frames padrão</DefaultFrameRate>
+    <ShowFrameRate>Mostrar taxa de fotogramas na barra de ferramentas</ShowFrameRate>
+    <DefaultFrameRate>Taxa de fotogramas padrão</DefaultFrameRate>
     <DefaultFileEncoding>Codificação padrão do ficheiro</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto detectar codificação ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Comprimento máximo de única linha</SubtitleLineMaximumLength>
@@ -1607,8 +1613,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformPlayNewSelection>Reproduzir a nova selecção</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Evidenciar a lista de visualização</WaveformFocusListView>
-    <GoBack1Frame>Um frame para atrás</GoBack1Frame>
-    <GoForward1Frame>Um frame para a frente</GoForward1Frame>
+    <GoBack1Frame>Um fotograma para atrás</GoBack1Frame>
+    <GoForward1Frame>Um fotograma para a frente</GoForward1Frame>
     <GoBack100Milliseconds>100 ms atrás</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms adiante</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms para atrás</GoBack500Milliseconds>
@@ -1633,7 +1639,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SyntaxColorOverlap>Cor do código de tempo sobreposto</SyntaxColorOverlap>
     <SyntaxErrorColor>Cor dos erros</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ir para a primeira linha seleccionada</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>Ir para a próxima linha em branco</GoToNextEmptyLine>	
     <MergeSelectedLines>Combinar as linhas seleccionadas</MergeSelectedLines>
+    <MergeSelectedLinesOnlyFirstText>Combinar as linhas seleccionadas, manter só o primeiro texto que não esteja em branco</MergeSelectedLinesOnlyFirstText>	
     <ToggleTranslationMode>Alternar o modo de tradução</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Mudar entre original e tradução</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Combinar o orginal com o traduzido</MergeOriginalAndTranslation>
@@ -1658,8 +1666,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
    <SetVideoOffset>
     <Title>Definir o deslocamento do vídeo</Title>
     <Description>Definir o deslocamento do vídeo (A legenda não deve seguir o tempo real do vídeo, mas por ex. +10 horas)</Description>
-    <RelativeToCurrentVideoPosition>Em relação à posição do vídeo actual</RelativeToCurrentVideoPosition>
-  </SetVideoOffset>
+    <RelativeToCurrentVideoPosition>Em relação à posição do vídeo actual</RelativeToCurrentVideoPosition>	
+  </SetVideoOffset> 
   <ShowEarlierLater>
     <Title>Mostrar linhas seleccionadas antes/depois</Title>
     <TitleAll>Mostrar todas as linhas antes/depois</TitleAll>
@@ -1780,7 +1788,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DurationAverage>Duração - média: {0:0.000} segundos</DurationAverage>
     <ChararactersPerSecondMinimum>Caracteres/seg - mínimo: {0:0.000}</ChararactersPerSecondMinimum>
     <ChararactersPerSecondMaximum>Caracteres/seg - máximo: {0:0.000}</ChararactersPerSecondMaximum>
-    <ChararactersPerSecondAverage>Caracteres/seg - médio: {0:0.000}</ChararactersPerSecondAverage>
+    <ChararactersPerSecondAverage>Caracteres/seg - médio: {0:0.000}</ChararactersPerSecondAverage>	
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha propriedades</Title>
@@ -1940,7 +1948,7 @@ Manter as alterações?</KeepChangesMessage>
     <OcrAutoCorrectionSpellchecking>Auto correcção OCR / verificação ortográfica</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Corrigir erros de OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importar texto com código de tempo correspondente...</ImportTextWithMatchingTimeCodes>
-    <ImportNewTimeCodes>Importar códigos de tempo novos</ImportNewTimeCodes>
+    <ImportNewTimeCodes>Importar códigos de tempo novos</ImportNewTimeCodes>	
     <SaveSubtitleImageAs>Guardar imagem da legenda como...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Guardar todas as imagens (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Guardar todas as imagens com índice HTML...</SaveAllSubtitleImagesWithHtml>
