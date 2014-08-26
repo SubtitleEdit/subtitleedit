@@ -4524,6 +4524,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/MergeSelectedLines":
                     language.Settings.MergeSelectedLines = reader.Value;
                     break;
+                case "Settings/MergeSelectedLinesOnlyFirstText":
+                    language.Settings.MergeSelectedLinesOnlyFirstText = reader.Value;
+                    break;
                 case "Settings/ToggleTranslationMode":
                     language.Settings.ToggleTranslationMode = reader.Value;
                     break;
