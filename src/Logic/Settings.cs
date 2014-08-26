@@ -742,6 +742,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string GeneralGoToFirstSelectedLine { get; set; }
         public string GeneralGoToNextEmptyLine { get; set; }
         public string GeneralMergeSelectedLines { get; set; }
+        public string GeneralMergeSelectedLinesOnlyFirstText { get; set; }
         public string GeneralToggleTranslationMode { get; set; }
         public string GeneralSwitchOriginalAndTranslation { get; set; }
         public string GeneralMergeOriginalAndTranslation { get; set; }
@@ -2147,6 +2148,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("GeneralMergeSelectedLines");
                 if (subNode != null)
                     settings.Shortcuts.GeneralMergeSelectedLines = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralMergeSelectedLinesOnlyFirstText");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText = subNode.InnerText;
                 subNode = node.SelectSingleNode("GeneralToggleTranslationMode");
                 if (subNode != null)
                     settings.Shortcuts.GeneralToggleTranslationMode = subNode.InnerText;
@@ -2950,6 +2954,7 @@ namespace Nikse.SubtitleEdit.Logic
                     textWriter.WriteElementString("GeneralGoToFirstSelectedLine", settings.Shortcuts.GeneralGoToFirstSelectedLine);
                     textWriter.WriteElementString("GeneralGoToNextEmptyLine", settings.Shortcuts.GeneralGoToNextEmptyLine);
                     textWriter.WriteElementString("GeneralMergeSelectedLines", settings.Shortcuts.GeneralMergeSelectedLines);
+                    textWriter.WriteElementString("GeneralMergeSelectedLinesOnlyFirstText", settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
                     textWriter.WriteElementString("GeneralToggleTranslationMode", settings.Shortcuts.GeneralToggleTranslationMode);
                     textWriter.WriteElementString("GeneralSwitchOriginalAndTranslation", settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
                     textWriter.WriteElementString("GeneralMergeOriginalAndTranslation", settings.Shortcuts.GeneralMergeOriginalAndTranslation);
