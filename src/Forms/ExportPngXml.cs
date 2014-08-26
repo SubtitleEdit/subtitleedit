@@ -2704,6 +2704,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxResolution.Items.Add("DVCPROHD-1080i50");
                 comboBoxResolution.Items.Add("HD-(1440x1080)");
                 comboBoxResolution.SelectedIndex = 3; // 720p
+                buttonCustomResolution.Visible = false;
             }
 
             subtitleListView1.Fill(_subtitle);
