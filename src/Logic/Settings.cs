@@ -740,6 +740,7 @@ namespace Nikse.SubtitleEdit.Logic
     public class Shortcuts
     {
         public string GeneralGoToFirstSelectedLine { get; set; }
+        public string GeneralGoToNextEmptyLine { get; set; }
         public string GeneralMergeSelectedLines { get; set; }
         public string GeneralToggleTranslationMode { get; set; }
         public string GeneralSwitchOriginalAndTranslation { get; set; }
@@ -2140,6 +2141,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("GeneralGoToFirstSelectedLine");
                 if (subNode != null)
                     settings.Shortcuts.GeneralGoToFirstSelectedLine = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralGoToNextEmptyLine");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralGoToNextEmptyLine = subNode.InnerText;
                 subNode = node.SelectSingleNode("GeneralMergeSelectedLines");
                 if (subNode != null)
                     settings.Shortcuts.GeneralMergeSelectedLines = subNode.InnerText;
@@ -2944,6 +2948,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                     textWriter.WriteStartElement("Shortcuts", "");
                     textWriter.WriteElementString("GeneralGoToFirstSelectedLine", settings.Shortcuts.GeneralGoToFirstSelectedLine);
+                    textWriter.WriteElementString("GeneralGoToNextEmptyLine", settings.Shortcuts.GeneralGoToNextEmptyLine);
                     textWriter.WriteElementString("GeneralMergeSelectedLines", settings.Shortcuts.GeneralMergeSelectedLines);
                     textWriter.WriteElementString("GeneralToggleTranslationMode", settings.Shortcuts.GeneralToggleTranslationMode);
                     textWriter.WriteElementString("GeneralSwitchOriginalAndTranslation", settings.Shortcuts.GeneralSwitchOriginalAndTranslation);

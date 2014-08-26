@@ -27,7 +27,7 @@ namespace UpdateLanguageFiles
                 {
                     File.WriteAllText(args[0], currentLanguageAsXml);
                     noOfChanges++;
-                    Console.WriteLine(" LanguageMaster.xml generated... ");
+                    Console.Write(" LanguageMaster.xml generated... ");
                 }
                 language.Save(args[0]);
 
@@ -38,12 +38,16 @@ namespace UpdateLanguageFiles
                 if (languageDeserializerContent != languageDeserializerContentOld)
                 {
                     File.WriteAllText(args[1], languageDeserializerContent);
-                    Console.WriteLine(" LanguageDeserializer.cs generated... ");
+                    Console.Write(" LanguageDeserializer.cs generated... ");
                 }
 
                 if (noOfChanges == 0)
                 {
                     Console.WriteLine(" no changes");
+                }
+                else
+                {
+                    Console.WriteLine();
                 }
 
                 return 0;
