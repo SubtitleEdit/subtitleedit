@@ -778,6 +778,7 @@
     <Compile Include="Logic\Forms\SplitLongLinesHelper.cs" />
     <Compile Include="Logic\LanguageDeserializer.cs" />
     <Compile Include="Logic\MurMurHash3.cs" />
+    <Compile Include="Logic\NativeMethods.cs" />
     <Compile Include="Logic\NHunspell\Hunspell.cs" />
     <Compile Include="Logic\NHunspell\Hyphen.cs" />
     <Compile Include="Logic\NHunspell\HyphenResult.cs" />

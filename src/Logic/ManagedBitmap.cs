@@ -27,7 +27,6 @@ namespace Nikse.SubtitleEdit.Logic
                         fd.Write(buffer, 0, nRead);
                     }
                     csStream.Flush();
-                    csStream.Close();
                     buffer = fd.ToArray();
                 }
 
@@ -110,8 +109,6 @@ namespace Nikse.SubtitleEdit.Logic
                 using (GZipStream gz = new GZipStream(f2, CompressionMode.Compress, false))
                 {
                     gz.Write(buffer, 0, buffer.Length);
-                    gz.Flush();
-                    gz.Close();
                 }
             }
         }

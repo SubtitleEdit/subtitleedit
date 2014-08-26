@@ -929,87 +929,86 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-
-                var bom = new byte[12]; // Get the byte-order mark, if there is one
-                file.Position = 0;
-                file.Read(bom, 0, 12);
-                if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf)
-                    encoding = Encoding.UTF8;
-                else if (bom[0] == 0xff && bom[1] == 0xfe)
-                    encoding = Encoding.Unicode;
-                else if (bom[0] == 0xfe && bom[1] == 0xff) // utf-16 and ucs-2
-                    encoding = Encoding.BigEndianUnicode;
-                else if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) // ucs-4
-                    encoding = Encoding.UTF32;
-                else if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76 && (bom[3] == 0x38 || bom[3] == 0x39 ||bom[3] == 0x2b ||bom[3] == 0x2f)) // utf-7
-                    encoding = Encoding.UTF7;
-                else if (file.Length > 12)
+                using (var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    long length = file.Length;
-                    if (length > 500000)
-                        length = 500000;
-
+                    var bom = new byte[12]; // Get the byte-order mark, if there is one
                     file.Position = 0;
-                    var buffer = new byte[length];
-                    file.Read(buffer, 0, (int)length);
-
-                    bool couldBeUtf8;
-                    if (IsUtf8(buffer, out couldBeUtf8))
+                    file.Read(bom, 0, 12);
+                    if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf)
+                        encoding = Encoding.UTF8;
+                    else if (bom[0] == 0xff && bom[1] == 0xfe)
+                        encoding = Encoding.Unicode;
+                    else if (bom[0] == 0xfe && bom[1] == 0xff) // utf-16 and ucs-2
+                        encoding = Encoding.BigEndianUnicode;
+                    else if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) // ucs-4
+                        encoding = Encoding.UTF32;
+                    else if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76 && (bom[3] == 0x38 || bom[3] == 0x39 ||bom[3] == 0x2b ||bom[3] == 0x2f)) // utf-7
+                        encoding = Encoding.UTF7;
+                    else if (file.Length > 12)
                     {
-                        encoding = Encoding.UTF8;
-                    }
-                    else if (couldBeUtf8 && Configuration.Settings.General.DefaultEncoding == Encoding.UTF8.BodyName)
-                    { // keep utf-8 encoding if it's default
-                        encoding = Encoding.UTF8;
-                    }
-                    else if (couldBeUtf8 && fileName.ToLower().EndsWith(".xml") && Encoding.Default.GetString(buffer).ToLower().Replace("'", "\"").Contains("encoding=\"utf-8\""))
-                    { // keep utf-8 encoding for xml files with utf-8 in header (without any utf-8 encoded characters, but with only allowed utf-8 characters)
-                        encoding = Encoding.UTF8;
-                    }
-                    else if (Configuration.Settings.General.AutoGuessAnsiEncoding)
-                    {
-                        encoding = DetectAnsiEncoding(buffer);
+                        long length = file.Length;
+                        if (length > 500000)
+                            length = 500000;
 
-                        Encoding greekEncoding = Encoding.GetEncoding(1253); // Greek
-                        if (GetCount(greekEncoding.GetString(buffer), "μου", "είναι", "Είναι", "αυτό", "Τόμπυ", "καλά") > 5)
-                            return greekEncoding;
+                        file.Position = 0;
+                        var buffer = new byte[length];
+                        file.Read(buffer, 0, (int)length);
 
-                        Encoding russianEncoding = Encoding.GetEncoding(1251); // Cyrillic
-                        if (GetCount(russianEncoding.GetString(buffer), "что", "быть", "весь", "этот", "один", "такой") > 5) // Russian
-                            return russianEncoding;
-                        if (GetCount(russianEncoding.GetString(buffer), "Какво", "тук", "може", "Как", "Ваше", "какво") > 5) // Bulgarian
-                            return russianEncoding;
-                        russianEncoding = Encoding.GetEncoding(28595); // Russian
-                        if (GetCount(russianEncoding.GetString(buffer), "что", "быть", "весь", "этот", "один", "такой") > 5)
-                            return russianEncoding;
-
-                        Encoding thaiEncoding = Encoding.GetEncoding(874); // Thai
-                        if (GetCount(thaiEncoding.GetString(buffer), "โอ", "โรเบิร์ต", "วิตตอเรีย", "ดร", "คุณตำรวจ", "ราเชล") + GetCount(thaiEncoding.GetString(buffer), "ไม่", "เลดดิส", "พระเจ้า", "เท็ดดี้", "หัวหน้า", "แอนดรูว์") > 5)
-                            return thaiEncoding;
-
-                        Encoding arabicEncoding = Encoding.GetEncoding(28596); // Arabic
-                        Encoding hewbrewEncoding = Encoding.GetEncoding(28598); // Hebrew
-                        if (GetCount(arabicEncoding.GetString(buffer), "من", "هل", "لا", "فى", "لقد", "ما") > 5)
+                        bool couldBeUtf8;
+                        if (IsUtf8(buffer, out couldBeUtf8))
                         {
-                            if (GetCount(hewbrewEncoding.GetString(buffer), "אולי", "אולי", "אולי", "אולי", "טוב", "טוב") > 10)
-                                return hewbrewEncoding;
-                            return arabicEncoding;
+                            encoding = Encoding.UTF8;
                         }
-                        if (GetCount(hewbrewEncoding.GetString(buffer), "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב") > 5)
-                            return hewbrewEncoding;
+                        else if (couldBeUtf8 && Configuration.Settings.General.DefaultEncoding == Encoding.UTF8.BodyName)
+                        { // keep utf-8 encoding if it's default
+                            encoding = Encoding.UTF8;
+                        }
+                        else if (couldBeUtf8 && fileName.ToLower().EndsWith(".xml") && Encoding.Default.GetString(buffer).ToLower().Replace("'", "\"").Contains("encoding=\"utf-8\""))
+                        { // keep utf-8 encoding for xml files with utf-8 in header (without any utf-8 encoded characters, but with only allowed utf-8 characters)
+                            encoding = Encoding.UTF8;
+                        }
+                        else if (Configuration.Settings.General.AutoGuessAnsiEncoding)
+                        {
+                            encoding = DetectAnsiEncoding(buffer);
 
-                        Encoding romanianEncoding = Encoding.GetEncoding(1250); // Romanian
-                        if (GetCount(romanianEncoding.GetString(buffer), "să", "şi", "văzut", "regulă", "găsit", "viaţă") > 99)
-                            return romanianEncoding;
+                            Encoding greekEncoding = Encoding.GetEncoding(1253); // Greek
+                            if (GetCount(greekEncoding.GetString(buffer), "μου", "είναι", "Είναι", "αυτό", "Τόμπυ", "καλά") > 5)
+                                return greekEncoding;
 
-                        Encoding koreanEncoding = Encoding.GetEncoding(949); // Korean
-                        if (GetCount(koreanEncoding.GetString(buffer), "그리고", "아니야", "하지만", "말이야", "그들은", "우리가") > 5)
-                            return koreanEncoding;
+                            Encoding russianEncoding = Encoding.GetEncoding(1251); // Cyrillic
+                            if (GetCount(russianEncoding.GetString(buffer), "что", "быть", "весь", "этот", "один", "такой") > 5) // Russian
+                                return russianEncoding;
+                            if (GetCount(russianEncoding.GetString(buffer), "Какво", "тук", "може", "Как", "Ваше", "какво") > 5) // Bulgarian
+                                return russianEncoding;
+                            russianEncoding = Encoding.GetEncoding(28595); // Russian
+                            if (GetCount(russianEncoding.GetString(buffer), "что", "быть", "весь", "этот", "один", "такой") > 5)
+                                return russianEncoding;
+
+                            Encoding thaiEncoding = Encoding.GetEncoding(874); // Thai
+                            if (GetCount(thaiEncoding.GetString(buffer), "โอ", "โรเบิร์ต", "วิตตอเรีย", "ดร", "คุณตำรวจ", "ราเชล") + GetCount(thaiEncoding.GetString(buffer), "ไม่", "เลดดิส", "พระเจ้า", "เท็ดดี้", "หัวหน้า", "แอนดรูว์") > 5)
+                                return thaiEncoding;
+
+                            Encoding arabicEncoding = Encoding.GetEncoding(28596); // Arabic
+                            Encoding hewbrewEncoding = Encoding.GetEncoding(28598); // Hebrew
+                            if (GetCount(arabicEncoding.GetString(buffer), "من", "هل", "لا", "فى", "لقد", "ما") > 5)
+                            {
+                                if (GetCount(hewbrewEncoding.GetString(buffer), "אולי", "אולי", "אולי", "אולי", "טוב", "טוב") > 10)
+                                    return hewbrewEncoding;
+                                return arabicEncoding;
+                            }
+                            if (GetCount(hewbrewEncoding.GetString(buffer), "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב") > 5)
+                                return hewbrewEncoding;
+
+                            Encoding romanianEncoding = Encoding.GetEncoding(1250); // Romanian
+                            if (GetCount(romanianEncoding.GetString(buffer), "să", "şi", "văzut", "regulă", "găsit", "viaţă") > 99)
+                                return romanianEncoding;
+
+                            Encoding koreanEncoding = Encoding.GetEncoding(949); // Korean
+                            if (GetCount(koreanEncoding.GetString(buffer), "그리고", "아니야", "하지만", "말이야", "그들은", "우리가") > 5)
+                                return koreanEncoding;
+                        }
                     }
                 }
-                file.Close();
-                file.Dispose();
             }
             catch
             {

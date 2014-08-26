@@ -12,9 +12,6 @@ namespace Nikse.SubtitleEdit.Logic
     /// </summary>
     internal class WordSpellChecker
     {
-        [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
-        public static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int y, int width, int height, int wFlags);
-
         const int HWND_BOTTOM = 1;
 
         const int SWP_NOACTIVATE = 0x0010;
@@ -123,9 +120,9 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateNormal });
                 _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
-                SetWindowPos(_mainHandle, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE); // make sure c# form is behind spell check dialog
+                NativeMethods.SetWindowPos(_mainHandle, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE); // make sure c# form is behind spell check dialog
                 _wordDocumentType.InvokeMember("CheckSpelling", BindingFlags.InvokeMethod, null, _wordDocument, new Object[] { p, p, p, p, p, p, p, p, p, p, p, p }); // 12 parameters
-                SetWindowPos(_mainHandle, 0 , 0, 0, 0, 0, SWP_SHOWWINDOW | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE); // bring c# form to front again
+                NativeMethods.SetWindowPos(_mainHandle, 0, 0, 0, 0, 0, SWP_SHOWWINDOW | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE); // bring c# form to front again
                 _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
             }
 

@@ -54,7 +54,6 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
             }
-            stream.Close();
             return language;
         }
 
