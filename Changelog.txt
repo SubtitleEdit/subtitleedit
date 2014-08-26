@@ -3,7 +3,7 @@
 
 3.4.2 (xth August 2014)
 * NEW:
-   * Added new subtitle format
+   * Added new subtitle format (200+ formats supported)
    * Added "Plain text" to target format in "Batch convert" - thx Leon
    * Added "Bold" checkbox to subtitle preview settings in video player
 * IMPROVED:
